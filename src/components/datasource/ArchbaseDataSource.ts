@@ -1,11 +1,12 @@
+/* eslint-disable no-unused-vars */
 import { isDate, parse } from 'date-fns'
 import { EventEmitter } from 'events'
 import i18next from 'i18next'
 import { cloneDeep } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 
-import { MandalaDataSourceError } from '../common/exceptions'
-import { MandalaObjectHelper } from '../common/helper'
+import { ArchbaseDataSourceError } from '../core/exceptions'
+import { ArchbaseObjectHelper } from '../core/helper'
 
 const dataSourceDatetimeFormat = 'YYYY-MM-DDTHH:mm:ss.SSS'
 // this._displayDatetimeFormat = "DD/MM/YYYY HH:mm:ss";
@@ -73,10 +74,10 @@ export type DataSourceEventFieldChangedType<T> = {
   oldValue: any
   newValue: any
 }
-export type DataSourceEventBeforeCloseType<T> = { type: DataSourceEventNames.beforeClose }
-export type DataSourceEventAfterCloseType<T> = { type: DataSourceEventNames.afterClose }
-export type DataSourceEventBeforeOpenType<T> = { type: DataSourceEventNames.beforeOpen }
-export type DataSourceEventAfterOpenType<T> = { type: DataSourceEventNames.afterOpen }
+export type DataSourceEventBeforeCloseType<_T> = { type: DataSourceEventNames.beforeClose }
+export type DataSourceEventAfterCloseType<_T> = { type: DataSourceEventNames.afterClose }
+export type DataSourceEventBeforeOpenType<_T> = { type: DataSourceEventNames.beforeOpen }
+export type DataSourceEventAfterOpenType<_T> = { type: DataSourceEventNames.afterOpen }
 export type DataSourceEventBeforeAppendType<T> = {
   type: DataSourceEventNames.beforeAppend
   record?: T
@@ -96,7 +97,7 @@ export type DataSourceEventAfterRemoveType<T> = {
   record?: T
   index: number
 }
-export type DataSourceEventBeforeInsertType<T> = { type: DataSourceEventNames.beforeInsert }
+export type DataSourceEventBeforeInsertType<_T> = { type: DataSourceEventNames.beforeInsert }
 export type DataSourceEventAfterInsertType<T> = {
   type: DataSourceEventNames.afterInsert
   record?: T
@@ -132,8 +133,8 @@ export type DataSourceEventAfterCancelType<T> = {
   record?: T
   index: number
 }
-export type DataSourceEventAfterScrollType<T> = { type: DataSourceEventNames.afterScroll }
-export type DataSourceEventOnErrorType<T> = {
+export type DataSourceEventAfterScrollType<_T> = { type: DataSourceEventNames.afterScroll }
+export type DataSourceEventOnErrorType<_T> = {
   type: DataSourceEventNames.onError
   error: any
   originalError: any
@@ -239,7 +240,7 @@ export interface IDataSource<T> {
   clearFilters: () => this
 }
 
-export class MandalaDataSourceEventEmitter {
+export class ArchbaseDataSourceEventEmitter {
   private eventEmitter: EventEmitter
 
   private listenersDisable: boolean = false
@@ -294,7 +295,7 @@ export class MandalaDataSourceEventEmitter {
   }
 }
 
-export class MandalaDataSource<T, ID> implements IDataSource<T> {
+export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   protected fieldEventListeners: Record<
     string,
     ((fieldName: string, oldValue: any, newValue: any) => void)[]
@@ -322,7 +323,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
 
   protected oldRecordIndex: number = -1
 
-  protected emitter: MandalaDataSourceEventEmitter
+  protected emitter: ArchbaseDataSourceEventEmitter
 
   protected listeners: Set<DataSourceListener<T>> = new Set()
 
@@ -354,7 +355,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
     this.filteredRecords = []
     this.loadOptions(options)
     this.fieldEventListeners = {}
-    this.emitter = new MandalaDataSourceEventEmitter()
+    this.emitter = new ArchbaseDataSourceEventEmitter()
     this.uuid = uuidv4()
   }
 
@@ -383,7 +384,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
 
   protected validateDataSourceActive(operation: string) {
     if (!this.isActive()) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('operationNotAllowed', { dataSourceName: this.name, operation })
       )
     }
@@ -391,7 +392,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
 
   public open(options: DataSourceOptions<T>): void {
     if (this.isActive()) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('operationNotAllowed', { dataSourceName: this.name, operation: 'open' })
       )
     }
@@ -437,7 +438,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
     this.emit({ type: DataSourceEventNames.dataChanged, data: this.records })
   }
 
-  public goToPage(pageNumber: number): this {
+  public goToPage(_pageNumber: number): this {
     this.validateDataSourceActive('goToPage')
     return this
   }
@@ -445,7 +446,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public goToRecord(recordIndex: number): T | undefined {
     this.validateDataSourceActive('goToRecord')
     if (this.inserting || this.editing || this.isBOF() || this.isEOF()) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
       )
     }
@@ -509,7 +510,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public append(record: T): number {
     this.validateDataSourceActive('append')
     if (this.inserting || this.editing) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('insertRecordIsNotAllowed', { dataSourceName: this.name })
       )
     }
@@ -537,7 +538,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public insert(record: T): this {
     this.validateDataSourceActive('insert')
     if (this.inserting || this.editing) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('insertRecordIsNotAllowed', { dataSourceName: this.name })
       )
     }
@@ -568,18 +569,18 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public edit(): this {
     this.validateDataSourceActive('edit')
     if (!this.inserting || !this.editing) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('editRecordIsNotAllowed', { dataSourceName: this.name })
       )
     }
     if (this.isEmpty() || !this.currentRecord) {
-      throw new MandalaDataSourceError(i18next.t('noRecordsToEdit', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('noRecordsToEdit', { dataSourceName: this.name }))
     }
     if (this.isBOF()) {
-      throw new MandalaDataSourceError(i18next.t('BOFDataSource', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('BOFDataSource', { dataSourceName: this.name }))
     }
     if (this.isEOF()) {
-      throw new MandalaDataSourceError(i18next.t('EOFDataSource', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('EOFDataSource', { dataSourceName: this.name }))
     }
 
     this.emitter.emit('beforeEdit', this.currentRecord, this.currentRecordIndex)
@@ -604,18 +605,18 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public async remove(callback: Function): Promise<T | undefined> {
     this.validateDataSourceActive('remove')
     if (this.inserting || this.editing) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('removingRecordIsNotAllowed', { dataSourceName: this.name })
       )
     }
     if (this.isEmpty() || !this.currentRecord) {
-      throw new MandalaDataSourceError(i18next.t('noRecordsToEdit', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('noRecordsToEdit', { dataSourceName: this.name }))
     }
     if (this.isBOF()) {
-      throw new MandalaDataSourceError(i18next.t('BOFDataSource', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('BOFDataSource', { dataSourceName: this.name }))
     }
     if (this.isEOF()) {
-      throw new MandalaDataSourceError(i18next.t('EOFDataSource', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('EOFDataSource', { dataSourceName: this.name }))
     }
 
     this.emitter.emit('beforeRemove', this.currentRecord, this.currentRecordIndex)
@@ -685,12 +686,12 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public async save(callback: Function): Promise<T> {
     this.validateDataSourceActive('save')
     if (!this.inserting || !this.editing) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('saveRecordIsNotAllowed', { dataSourceName: this.name })
       )
     }
     if (!this.currentRecord) {
-      throw new MandalaDataSourceError(i18next.t('noRecordToSave', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('noRecordToSave', { dataSourceName: this.name }))
     }
 
     this.emitter.emit('beforeSave')
@@ -734,7 +735,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public cancel(): this {
     this.validateDataSourceActive('cancel')
     if (!this.inserting || !this.editing) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('notAllowCancelRecord', { dataSourceName: this.name })
       )
     }
@@ -788,13 +789,13 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   getFieldValue(fieldName: string, defaultValue: any = ''): any {
     this.validateDataSourceActive('getFieldValue')
     if (!fieldName) {
-      throw new MandalaDataSourceError(i18next.t('invalidFieldName', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('invalidFieldName', { dataSourceName: this.name }))
     }
     if (this.isEmpty()) {
       return
     }
     if (!this.inserting || !this.editing || this.isBOF() || this.isEOF()) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
       )
     }
@@ -813,7 +814,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
 
   private fieldByName(record: T | undefined, fieldName: string): any {
     if (record === undefined) return
-    const value = MandalaObjectHelper.getNestedProperty(record, fieldName)
+    const value = ArchbaseObjectHelper.getNestedProperty(record, fieldName)
     if (value === undefined) {
       return undefined
     }
@@ -829,19 +830,19 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
       return this
     }
     if (!this.inserting || !this.editing || this.isBOF() || this.isEOF()) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('recordNotBeingEdited', { dataSourceName: this.name })
       )
     }
 
     let newValue: any = value
-    const oldValue: any = MandalaObjectHelper.getNestedProperty(this.currentRecord, fieldName)
+    const oldValue: any = ArchbaseObjectHelper.getNestedProperty(this.currentRecord, fieldName)
     if (isDate(value)) {
       newValue = parse(value, dataSourceDatetimeFormat, new Date())
     }
     const split = fieldName.split('.')
     if (split.length > 1) {
-      MandalaObjectHelper.setNestedProperty(this.currentRecord, fieldName, newValue)
+      ArchbaseObjectHelper.setNestedProperty(this.currentRecord, fieldName, newValue)
     } else {
       this.currentRecord[fieldName] = newValue
     }
@@ -918,7 +919,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public next(): this {
     this.validateDataSourceActive('next')
     if (this.inserting || this.editing || this.isBOF() || this.isEOF()) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
       )
     }
@@ -937,7 +938,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public prior(): this {
     this.validateDataSourceActive('prior')
     if (!this.inserting || !this.editing || this.isBOF() || this.isEOF()) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
       )
     }
@@ -956,12 +957,12 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public gotoRecord(index: number): T | undefined {
     this.validateDataSourceActive('gotoRecord')
     if (!this.inserting || !this.editing || this.isBOF() || this.isEOF()) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
       )
     }
     if (index < 0 || index >= this.filteredRecords.length) {
-      throw new MandalaDataSourceError('Index out of range.')
+      throw new ArchbaseDataSourceError('Index out of range.')
     }
     if (this.currentRecordIndex - 1 < 0) {
       this.currentRecordIndex = -1
@@ -978,7 +979,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public gotoRecordByData(record): boolean {
     this.validateDataSourceActive('gotoRecordByData')
     if (this.inserting || this.editing || this.isBOF() || this.isEOF()) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
       )
     }
@@ -1006,7 +1007,7 @@ export class MandalaDataSource<T, ID> implements IDataSource<T> {
   public locate(filterFn: (record: T) => boolean): boolean {
     this.validateDataSourceActive('locate')
     if (!this.inserting || !this.editing) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
       )
     }

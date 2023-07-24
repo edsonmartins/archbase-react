@@ -1,15 +1,15 @@
-import type { MandalaDataSource } from '../datasource/MandalaDataSource'
+import type { ArchbaseDataSource } from '../datasource/ArchbaseDataSource'
 
-export type UseMandalaDataSourceProps<T, ID> = {
+export type UseArchbaseDataSourceProps<_T, _ID> = {
   initialData: any[]
 }
 
-export type UseMandalaDataSourceReturnType<T, ID> = {
-  dataSource?: MandalaDataSource<T, ID>
+export type UseArchbaseDataSourceReturnType<T, ID> = {
+  dataSource?: ArchbaseDataSource<T, ID>
 }
 
-export const useMandalaDataSource = <T, ID>(
-  props: UseMandalaDataSourceProps<T, ID>
-): UseMandalaDataSourceReturnType<T, ID> => {
+export const useArchbaseDataSource = <T, ID>(
+  _props: UseArchbaseDataSourceProps<T, ID>
+): UseArchbaseDataSourceReturnType<T, ID> => {
   return {}
 }

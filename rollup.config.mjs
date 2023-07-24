@@ -10,6 +10,7 @@ import svgr from '@svgr/rollup';
 import { terser } from 'rollup-plugin-terser';
 import typescriptEngine from 'typescript';
 import pkg from './package.json' assert { type: 'json' };
+import alias from 'rollup-plugin-alias';
 
 const config = {
   input: './src/index.ts',
@@ -28,6 +29,9 @@ const config = {
     },
   ],
   plugins: [
+    alias({
+      "@components": './src/components'
+    }),
     postcss({
       plugins: [],
       minimize: true,

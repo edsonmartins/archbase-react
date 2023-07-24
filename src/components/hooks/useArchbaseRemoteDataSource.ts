@@ -1,40 +1,37 @@
-import { isError, useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-
-import { useMandalaDidMount, useMandalaIsMounted } from '@/components/hooks'
-import type { MandalaApiService } from '@/components/service'
-import type { Page } from '@/components/service/MandalaApiService'
+import type { ArchbaseApiService } from '../service'
+import type { Page } from '../service'
 
 import {
-  MandalaDataSource,
+  ArchbaseDataSource,
   DataSourceEvent,
   DataSourceEventRefreshDataType,
-  DataSourceEvents,
   DataSourceOptions,
-  DataSourceEventNames
-} from '../MandalaDataSource'
-import { MandalaRemoteDataSource } from '../MandalaRemoteDataSource'
-import { processErrorMessage } from '@/components/common/exceptions'
-import { useMandalaDataSourceListener } from './useArchbaseDataSourceListener'
+  DataSourceEventNames,  
+} from '../datasource'
+import {
+  ArchbaseRemoteDataSource
+} from '../datasource/ArchbaseRemoteDataSource'
+import { processErrorMessage } from '../core/exceptions'
 
 export type UseMandalaRemoteDataSourceProps<T, ID> = {
   name: string
-  service: MandalaApiService<T, ID>
+  service: ArchbaseApiService<T, ID>
   filter?: string
   sort?: string[]
   loadOnStart?: boolean
-  initialDataSource?: MandalaRemoteDataSource<T, ID> | undefined
+  initialDataSource?: ArchbaseRemoteDataSource<T, ID> | undefined
   pageSize?: number
   currentPage?: number
   transformData?: (data: any) => Page<T>
-  onLoadComplete?: (dataSource: MandalaRemoteDataSource<T, ID>) => void
+  onLoadComplete?: (dataSource: ArchbaseRemoteDataSource<T, ID>) => void
   onError?: (error, originError) => void
-  onDestroy?: (dataSource: MandalaRemoteDataSource<T, ID>) => void
+  onDestroy?: (dataSource: ArchbaseRemoteDataSource<T, ID>) => void
   filterData?: (data: any) => Page<T>
-  findAll?<T, ID>(page: number, size: number): Promise<Page<T>>
-  findAllWithSort?<T, ID>(page: number, size: number, sort: string[]): Promise<Page<T>>
-  findAllWithFilter?<T, ID>(filter: string, page: number, size: number): Promise<Page<T>>
-  findAllWithFilterAndSort?<T, ID>(
+  findAll?<T, _ID>(page: number, size: number): Promise<Page<T>>
+  findAllWithSort?<T, _ID>(page: number, size: number, sort: string[]): Promise<Page<T>>
+  findAllWithFilter?<T, _ID>(filter: string, page: number, size: number): Promise<Page<T>>
+  findAllWithFilterAndSort?<T, _ID>(
     filter: string,
     page: number,
     size: number,
@@ -44,7 +41,7 @@ export type UseMandalaRemoteDataSourceProps<T, ID> = {
 }
 
 export type UseMandalaRemoteDataSourceReturnType<T, ID> = {
-  dataSource: MandalaRemoteDataSource<T, ID>
+  dataSource: ArchbaseRemoteDataSource<T, ID>
   isLoading: boolean
   isError: boolean
   error: any
@@ -52,7 +49,7 @@ export type UseMandalaRemoteDataSourceReturnType<T, ID> = {
 }
 
 type UseMandalaRemoteDataSourceState<T, ID> = {
-  dataSource: MandalaRemoteDataSource<T, ID>
+  dataSource: ArchbaseRemoteDataSource<T, ID>
   isLoading: boolean
   isError: boolean
   error: any
@@ -79,17 +76,15 @@ export function useMandalaRemoteDataSource<T, ID>(
     findAllWithSort,
     findAllWithFilter,
     findAllWithFilterAndSort,
-    findOne,
     initialDataSource,
     pageSize = 50,
     currentPage = 0,
     loadOnStart = true
   } = props
-  const mounted = useMandalaIsMounted()
   const [internalState, setInternalState] = useState<UseMandalaRemoteDataSourceState<T, ID>>({
     dataSource:
       initialDataSource ??
-      new MandalaRemoteDataSource<T, ID>(service, name, {
+      new ArchbaseRemoteDataSource<T, ID>(service, name, {
         records: [],
         grandTotalRecords: 0,
         currentPage,
@@ -108,7 +103,7 @@ export function useMandalaRemoteDataSource<T, ID>(
   })
 
   const queryFn = async (
-    name: string,
+    _name: string,
     currentPage: number,
     pageSize: number,
     filter?: string,
@@ -232,14 +227,14 @@ export function useMandalaRemoteDataSource<T, ID>(
     }
   }
 
-  const registerListeners = (dataSource: MandalaDataSource<T, string>) => {
+  const registerListeners = (dataSource: ArchbaseDataSource<T, string>) => {
     dataSource.addListener(handleDataSourceEventListener)
   }
   /**
    * Removendo listeners
    * @param dataSource
    */
-  const unRegisterListeners = (dataSource: MandalaDataSource<T, string>) => {
+  const unRegisterListeners = (dataSource: ArchbaseDataSource<T, string>) => {
     dataSource.removeListener(handleDataSourceEventListener)
   }
 

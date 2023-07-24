@@ -1,12 +1,12 @@
 import i18next from 'i18next'
-import { MandalaDataSourceError, processErrorMessage } from '../common/exceptions'
-import type { MandalaApiService } from '../service'
-import { DataSourceEventNames, DataSourceOptions, MandalaDataSource } from './MandalaDataSource'
+import { ArchbaseDataSourceError, processErrorMessage } from '../core/exceptions'
+import type { ArchbaseApiService } from '../service'
+import { DataSourceEventNames, DataSourceOptions, ArchbaseDataSource } from './ArchbaseDataSource'
 
-export class MandalaRemoteDataSource<T, ID> extends MandalaDataSource<T, ID> {
-  private service: MandalaApiService<T, ID>
+export class ArchbaseRemoteDataSource<T, ID> extends ArchbaseDataSource<T, ID> {
+  private service: ArchbaseApiService<T, ID>
 
-  constructor(service: MandalaApiService<T, ID>, name: string, options: DataSourceOptions<T>) {
+  constructor(service: ArchbaseApiService<T, ID>, name: string, options: DataSourceOptions<T>) {
     super(name, options)
     this.service = service
   }
@@ -14,12 +14,12 @@ export class MandalaRemoteDataSource<T, ID> extends MandalaDataSource<T, ID> {
   public async save(callback: Function): Promise<T> {
     this.validateDataSourceActive('save')
     if (!this.inserting || !this.editing) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('saveRecordIsNotAllowed', { dataSourceName: this.name })
       )
     }
     if (!this.currentRecord) {
-      throw new MandalaDataSourceError(i18next.t('noRecordToSave', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('noRecordToSave', { dataSourceName: this.name }))
     }
 
     this.emitter.emit('beforeSave', this.currentRecord)
@@ -32,7 +32,7 @@ export class MandalaRemoteDataSource<T, ID> extends MandalaDataSource<T, ID> {
     try {
       this.currentRecord = await this.service.save<T>(this.currentRecord)
       if (this.editing) {
-        this.filteredRecords[this.getCurrentIndex()] = this.currentRecord
+        this.filteredRecords[this.getCurrentIndex()] = this.currentRecord!
       }
 
       let index = -1
@@ -42,9 +42,9 @@ export class MandalaRemoteDataSource<T, ID> extends MandalaDataSource<T, ID> {
         }
       })
       if (index >= 0) {
-        this.records[index] = this.currentRecord
+        this.records[index] = this.currentRecord!
       } else {
-        this.records.push(this.currentRecord)
+        this.records.push(this.currentRecord!)
       }
       this.editing = false
       this.inserting = false
@@ -72,24 +72,24 @@ export class MandalaRemoteDataSource<T, ID> extends MandalaDataSource<T, ID> {
       }
     }
 
-    return this.currentRecord
+    return this.currentRecord!
   }
 
   public async remove(callback: Function): Promise<T | undefined> {
     this.validateDataSourceActive('remove')
     if (this.inserting || this.editing) {
-      throw new MandalaDataSourceError(
+      throw new ArchbaseDataSourceError(
         i18next.t('removingRecordIsNotAllowed', { dataSourceName: this.name })
       )
     }
     if (this.isEmpty() || !this.currentRecord) {
-      throw new MandalaDataSourceError(i18next.t('noRecordsToEdit', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('noRecordsToEdit', { dataSourceName: this.name }))
     }
     if (this.isBOF()) {
-      throw new MandalaDataSourceError(i18next.t('BOFDataSource', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('BOFDataSource', { dataSourceName: this.name }))
     }
     if (this.isEOF()) {
-      throw new MandalaDataSourceError(i18next.t('EOFDataSource', { dataSourceName: this.name }))
+      throw new ArchbaseDataSourceError(i18next.t('EOFDataSource', { dataSourceName: this.name }))
     }
 
     this.emitter.emit('beforeRemove', this.currentRecord, this.currentRecordIndex)
