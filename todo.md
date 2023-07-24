@@ -1,0 +1,5 @@
+- Aplicar estilo storybook;
+- Criar documentação com docusaurus;
+- Criar feature flags (conceito) nos components;
+- Adicionar localização (language);
+- 
