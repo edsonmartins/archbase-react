@@ -15,7 +15,7 @@ import {
 } from '../MandalaDataSource'
 import { MandalaRemoteDataSource } from '../MandalaRemoteDataSource'
 import { processErrorMessage } from '@/components/common/exceptions'
-import { useMandalaDataSourceListener } from './useMandalaDataSourceListener'
+import { useMandalaDataSourceListener } from './useArchbaseDataSourceListener'
 
 export type UseMandalaRemoteDataSourceProps<T, ID> = {
   name: string

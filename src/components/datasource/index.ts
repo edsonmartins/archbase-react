@@ -1,8 +1,8 @@
 export type {
   UseMandalaDataSourceProps as UseDataSourceProps,
   UseMandalaDataSourceReturnType as UseDataSourceReturnType
-} from '../hooks/useMandalaDataSource'
-export { useMandalaDataSource as useDataSource } from '../hooks/useMandalaDataSource'
+} from '../hooks/useArchbaseDataSource'
+export { useMandalaDataSource as useDataSource } from '../hooks/useArchbaseDataSource'
 export type {
   UseMandalaRemoteDataSourceProps as UseRemoteDataSourceProps,
   UseMandalaRemoteDataSourceReturnType as UseRemoteDataSourceReturnType
