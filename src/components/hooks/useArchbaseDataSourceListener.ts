@@ -6,7 +6,7 @@ export type UseArchbaseDataSourceListenerProps<T, ID> = {
   listener: (event: DataSourceEvent<T>) => void
 }
 
-export const useMandalaDataSourceListener = <T, ID>(
+export const useArchbaseDataSourceListener = <T, ID>(
   props: UseArchbaseDataSourceListenerProps<T, ID>
 ): void => {
   /**
