@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "noEmit": false,
     "declarationDir": "./dist",
     "target": "es5",
     "module": "esnext",
@@ -19,6 +18,7 @@
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "noImplicitThis": true,
+    "noEmit": true,
     "jsx": "react",
     "resolveJsonModule": true,
     "esModuleInterop": true,

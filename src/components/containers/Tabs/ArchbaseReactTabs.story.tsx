@@ -4,7 +4,7 @@ import {Button, ColorScheme} from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 
 export default {
-  title: 'Archbase React Tabs',
+  title: 'Containers/Tabs',
   component: ArchbaseReactTabs,
 };
 
@@ -47,12 +47,11 @@ export const Default = () => {
           <div className="mock-browser">
             <ArchbaseReactTabs
               currentTabs={tabs}
-              dark={colorScheme==='dark'}
+              dark={colorScheme === 'dark'}
               activeTab={current}
               onClick={key => setCurrent(key)}
               onClose={key => onClose(key)}
-              onChange={tabs => setTabs(tabs)}
-            />
+              onChange={tabs => setTabs(tabs)} />
             <div className="chrome-tabs-optional-shadow-below-bottom-bar"></div>
             <div className="mock-browser-content">
               <div className="buttons">

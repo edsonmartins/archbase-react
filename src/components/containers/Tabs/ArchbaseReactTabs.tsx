@@ -135,8 +135,8 @@ export interface ArchbaseReactTabsProps {
   activeTab: any,
   onChange: Function,
   onClose: Function,
-  className: string,
-  style: CSSProperties,
+  className?: string,
+  style?: CSSProperties,
   dark: boolean,
   onClick: Function,
 }

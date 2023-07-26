@@ -568,7 +568,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
   public edit(): this {
     this.validateDataSourceActive('edit')
-    if (!this.inserting || !this.editing) {
+    if (this.inserting || this.editing) {
       throw new ArchbaseDataSourceError(
         i18next.t('editRecordIsNotAllowed', { dataSourceName: this.name })
       )

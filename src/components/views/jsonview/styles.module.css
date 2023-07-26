@@ -1,0 +1,118 @@
+/* add css module styles here (optional) */
+
+.container-base {
+  line-height: 1.2;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.punctuation-base {
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.expander-base {
+  font-size: 1.2em;
+  margin-right: 5px;
+  user-select: none;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.container-light {
+  composes: container-base;
+  background: #eee;
+}
+
+.expander-light {
+  composes: expander-base;
+}
+
+.basic-element-style {
+  margin: 0 10px;
+  padding: 0;
+}
+
+.label-light {
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.punctuation-light {
+  composes: punctuation-base;
+}
+
+.value-null-light {
+  color: #df113a;
+}
+
+.value-undefined-light {
+  color: #df113a;
+}
+
+.value-string-light {
+  color: rgb(42, 63, 60);
+}
+
+.value-number-light {
+  color: #0b75f5;
+}
+
+.value-boolean-light {
+  color: rgb(70, 144, 56);
+}
+
+.value-other-light {
+  color: #43413d;
+}
+
+.container-dark {
+  background: rgb(0, 43, 54);
+  composes: container-base;
+}
+
+.expander-dark {
+  composes: expander-base;
+  font-size: 1.2em;
+  color: rgb(253, 246, 227);
+}
+
+.label-dark {
+  font-weight: bolder;
+  margin-right: 5px;
+  color: rgb(253, 246, 227);
+}
+
+.punctuation-dark {
+  composes: punctuation-base;
+  color: rgb(253, 246, 227);
+}
+
+.value-null-dark {
+  color: rgb(129, 181, 172);
+}
+
+.value-undefined-dark {
+  color: rgb(129, 181, 172);
+}
+
+.value-string-dark {
+  color: rgb(203, 75, 22);
+}
+
+.value-number-dark {
+  color: rgb(211, 54, 130);
+}
+
+.value-boolean-dark {
+  color: rgb(174, 129, 255);
+}
+
+.value-other-dark {
+  color: rgb(38, 139, 210);
+}
