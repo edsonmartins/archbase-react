@@ -12,7 +12,7 @@
       "*": [
         "*",
       ],
-      "@hooks/*": ["./src/components/hooks/*"],
+      "@hooks/*": ["components/hooks/*"],
     },
     "allowJs": true,
     "isolatedModules": true,
