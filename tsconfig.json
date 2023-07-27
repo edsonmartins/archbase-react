@@ -11,7 +11,8 @@
     "paths": {
       "*": [
         "*",
-      ]
+      ],
+      "@hooks/*": ["./src/components/hooks/*"],
     },
     "allowJs": true,
     "isolatedModules": true,

@@ -1,5 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite';
-
+import path from 'path'
 const config: StorybookConfig = {
   stories: [
     '../src/**/*.mdx',
@@ -29,12 +29,21 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
+  async viteFinal(config) {
+    if (config.resolve) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@hooks': path.resolve(__dirname, '../src/components/hooks'),
+      };
+    }
+    return config;
+  },
   docs: {
     autodocs: true,
   },
   core: {
     disableTelemetry: true,
-  }
+  },
 };
 
 export default config;
