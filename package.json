@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development BABEL_ENV=development yarn storybook",
-    "build": "rimraf dist && NODE_ENV=production BABEL_ENV=production rollup -c",
+    "build": "rimraf dist && cross-env NODE_ENV=production BABEL_ENV=production rollup -c",
     "test": "jest",
     "test:coverage": "jest --coverage --forceExit --colors",
     "lint": "yarn check-types && yarn eslint && yarn stylelint",
@@ -54,6 +54,7 @@
     "@tabler/icons": "^2.28.0",
     "axios": "^1.4.0",
     "clsx": "^1.2.1",
+    "cross-env": "^7.0.3",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
     "export-to-csv": "^0.2.1",
