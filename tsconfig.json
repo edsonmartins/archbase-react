@@ -12,6 +12,7 @@
       "*": [
         "*",
       ],
+      "@components/*": ["components/*"],
       "@hooks/*": ["components/hooks/*"],
     },
     "allowJs": true,
