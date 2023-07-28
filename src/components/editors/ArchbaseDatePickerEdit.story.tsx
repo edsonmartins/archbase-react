@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit';
 import { Grid, ScrollArea } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
@@ -16,7 +16,7 @@ export default {
 const data = [pessoas[0]];
 
 export const Default = () => {
-  const forceUpdate = useArchbaseForceUpdate();
+  const [forceUpdate,setForceUpdate] = useState<number>(0);
   const {dataSource} = useArchbaseDataSource<Pessoa,string>({initialData:data,name:"dsPessoas"});
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()){
     dataSource.edit();
@@ -26,7 +26,7 @@ export const Default = () => {
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
         case (DataSourceEventNames.fieldChanged): {
-          forceUpdate();
+          setForceUpdate((prev) => prev + 1)
           break
         }
         default:

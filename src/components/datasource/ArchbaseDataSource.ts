@@ -169,7 +169,7 @@ export type DataSourceListener<T> = (event: DataSourceEvent<T>) => void
 export interface DataSourceEvents<T> {
   dataChanged: (data: T[], options: DataSourceOptions<T>) => void
   recordChanged: (record: T, index: number) => void
-  fieldChanged: () => void
+  fieldChanged: (record: T, index: number, fieldName: string, oldValue: any, newValue: any) => void
   beforeClose: () => void
   afterClose: () => void
   beforeOpen: () => void
@@ -849,7 +849,14 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     }
     this.emitFieldChangeEvent(fieldName, oldValue, newValue)
     this.emitter.emit('fieldChanged', {})
-    //this.emit({ type: DataSourceEventNames.fieldChanged})
+    this.emit({ 
+      type: DataSourceEventNames.fieldChanged,
+      record: this.currentRecord,
+      index: this.getCurrentIndex(),
+      fieldName,
+      oldValue,
+      newValue
+      })
     return this
   }
 
