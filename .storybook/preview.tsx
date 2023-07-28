@@ -38,37 +38,3 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
 }
 
 export const decorators = [(renderStory: Function) => <ThemeWrapper>{renderStory()}</ThemeWrapper>];
-
-
-
-// Crie um novo componente que envolva o ThemeWrapper e os hooks do React
-function ThemeWrapperWithHooks(props: { children: React.ReactNode }) {
-  const colorSchem = useDarkMode() ? 'dark' : 'light';
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-    key: 'mantine-color-scheme',
-    defaultValue: 'light',
-    getInitialValueInEffect: true
-  })
-
-  useEffect(() => {
-    setColorScheme(colorSchem);
-  }, [colorSchem]);
-
-  const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
-
-  useHotkeys([['mod+J', () => toggleColorScheme()]])
-
-  return (
-    <DatesProvider settings={{ locale: i18next.language }}>
-      <MantineProvider theme={colorScheme === 'dark' ? ArchbaseDark : ArchbaseLight} withGlobalStyles withNormalizeCSS>
-        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-          {props.children}
-        </ColorSchemeProvider>
-      </MantineProvider>
-    </DatesProvider>
-  );
-}
-
-// Use o ThemeWrapperWithHooks dentro do decorator
-export const decorators = [(renderStory: Function) => <ThemeWrapperWithHooks>{renderStory()}</ThemeWrapperWithHooks>];
