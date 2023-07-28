@@ -16,6 +16,6 @@ export function ArchbaseFonts() {
 
 export default (_theme: MantineTheme): CSSObject => ({
   body: {
-    overflowY: 'hidden'
+    overflowY: 'auto'
   }
 })

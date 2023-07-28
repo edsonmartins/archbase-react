@@ -272,16 +272,6 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
     
     const { calendarProps, others } = pickCalendarProps(rest)
     const ctx = useDatesContext()
-    const defaultDateParser = (val: string) => {
-      const parsedDate = dateFormats[dateFormat!].parse(val)
-      return Number.isNaN(parsedDate.getTime()) ? dateStringParser(val) : parsedDate
-    }
-
-    const _dateParser = dateParser || defaultDateParser
-    const _allowDeselect = clearable || allowDeselect
-
-    const formatValue = (val: DateValue) => (val ? dateFormats[dateFormat!].format(val) : '')
-
     const [_value, setValue, controlled] = useUncontrolled({
       value,
       defaultValue,
@@ -295,6 +285,18 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
       finalValue: null,
       onChange: onDateChange
     })
+    const formatValue = (val: DateValue) => (val ? dateFormats[dateFormat!].format(val) : '')
+    const [inputValue, setInputValue] = useUncontrolled({
+      value: formatValue(_value),
+    })
+
+    const defaultDateParser = (val: string) => {
+      const parsedDate = dateFormats[dateFormat!].parse(val)
+      return Number.isNaN(parsedDate.getTime()) ? dateStringParser(val) : parsedDate
+    }
+
+    const _dateParser = dateParser || defaultDateParser
+    const _allowDeselect = clearable || allowDeselect    
 
     const fieldChangedListener = useCallback(() => {}, [])
 
@@ -313,12 +315,16 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
       }
     }, [])
 
-    const loadDataSourceFieldValue = () => {
+    const loadDataSourceFieldValue = useCallback(() => {
       if (dataSource && dataField) {
+        console.log("loadDataSourceFieldValue")
         const value = dataSource.getFieldValue(dataField)
+        console.log(value);
         if (value) {
           const resultDate: Date = convertISOStringToDate(value)
+          console.log(resultDate);
           const result = dateFormats[dateFormat!].format(resultDate)
+          console.log(result);
           if (result !== inputValue) {
             setInputValue(result)
             setDate(resultDate)
@@ -326,14 +332,14 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
           }
         }
       }
-    }
+    },[])
 
-    const setDataSourceFieldValue = (value : Date)=>{
+    const setDataSourceFieldValue = useCallback((value : Date|undefined|null)=>{
       if (dataSource && dataField) {
         const fieldValue = dataSource.getFieldValue(dataField);
         if (!value || value === null){
           if (value !== fieldValue){
-            dataSource.setFieldValue(dataField, undefined);
+            dataSource.setFieldValue(dataField, value);
           }
         } else {        
           const resultValue = convertDateToISOString(value)
@@ -342,7 +348,7 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
           }
         }
       }
-    }
+    },[])
 
     useArchbaseDidMount(() => {
       loadDataSourceFieldValue()
@@ -370,7 +376,7 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
       }
     }, [controlled, value])
 
-    const [inputValue, setInputValue] = useState(formatValue(_value))
+    
 
     useEffect(() => {
       setInputValue(formatValue(_value))
@@ -384,6 +390,7 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
 
       if (val.trim() === '' && _allowDeselect) {
         setValue(null)
+        setDataSourceFieldValue(null)
       } else {
         const dateValue = _dateParser(val)
         if (isDateValid({ date: dateValue, minDate, maxDate })) {
@@ -396,23 +403,24 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
     const handleComplete = (maskValue) => {
       if (maskValue.trim() === '' && _allowDeselect) {
         setValue(null)
+        setDataSourceFieldValue(null)
       } else if (maskValue && maskValue.length === 10) {
         const dateValue = dateFormats[dateFormat!].parse(maskValue)
         if (isDateValid({ date: dateValue, minDate, maxDate })) {
           setValue(dateValue)
           setDate(dateValue)
-          !controlled && setInputValue(formatValue(dateValue))
+          setInputValue(formatValue(dateValue))
           setDataSourceFieldValue(dateValue)
         }
       }
     }
 
     const handleAccept = (_maskValue: string, maskRef) => {
-      console.log(maskRef.masked.rawInputValue)
       if (maskRef.masked.rawInputValue === '' && _allowDeselect) {
         setValue(null)
         setDate(null)
-        !controlled && setInputValue('')
+        setDataSourceFieldValue(null)
+        setInputValue('')
       }
     }
 
@@ -443,7 +451,7 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
             : valueWithTime
           : valueWithTime
         setValue(val)
-        !controlled && setInputValue(formatValue(val))
+        setInputValue(formatValue(val))
         setDropdownOpened(false)
       }
     })
@@ -457,7 +465,8 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
           tabIndex={-1}
           onClick={() => {
             setValue(null)
-            !controlled && setInputValue('')
+            setInputValue('')
+            setDataSourceFieldValue(null)
           }}
           unstyled={unstyled}
           {...clearButtonProps}

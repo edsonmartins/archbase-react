@@ -1,22 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit';
-import { Grid, ScrollArea } from '@mantine/core';
+import { Grid } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
 import { Pessoa, pessoas } from '../core';
-import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource';
+import { useArchbaseDataSource } from '../hooks';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { useArchbaseForceUpdate } from '../hooks';
+import { Meta, StoryObj } from "@storybook/react";
+import { useArchbaseForceUpdate } from '../hooks/';
 
-export default {
-  title: 'Editors/DatePicker Edit',
-  component: ArchbaseDatePickerEdit,
-};
 
-const data = [pessoas[0]];
 
-export const Default = () => {
-  const [forceUpdate,setForceUpdate] = useState<number>(0);
+const ArchbaseDatePickerEditExample = () => {
+  const forceUpdate = useArchbaseForceUpdate();
   const {dataSource} = useArchbaseDataSource<Pessoa,string>({initialData:data,name:"dsPessoas"});
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()){
     dataSource.edit();
@@ -26,7 +22,7 @@ export const Default = () => {
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
         case (DataSourceEventNames.fieldChanged): {
-          setForceUpdate((prev) => prev + 1)
+          forceUpdate();
           break
         }
         default:
@@ -35,18 +31,31 @@ export const Default = () => {
     }
   })
   return (
-    <ScrollArea.Autosize mx="auto">
-      <Grid>
-        <Grid.Col span="content">
-          <ArchbaseDatePickerEdit label="Descrição" dataSource={dataSource} dataField='data_nasc' />
-        </Grid.Col>
-        <Grid.Col span={3}>
-          <ArchbaseJsonView data={data} />
-        </Grid.Col>
-        <Grid.Col span={3}>
-          <ArchbaseObjectInspector data={dataSource} />
-        </Grid.Col>
-      </Grid>
-    </ScrollArea.Autosize>
+    <Grid>
+      <Grid.Col span="content">
+        <ArchbaseDatePickerEdit label="Descrição" dataSource={dataSource} dataField='data_nasc' />
+      </Grid.Col>
+      <Grid.Col span={3}>
+        <ArchbaseJsonView data={data} />
+      </Grid.Col>
+      <Grid.Col span={3}>
+        <ArchbaseObjectInspector data={dataSource} />
+      </Grid.Col>
+    </Grid>
   );
 };
+
+
+export default {
+  title: 'Editors/DatePicker Edit',
+  component: ArchbaseDatePickerEditExample,
+} as Meta;
+
+const data = [pessoas[0]];
+
+export const Example: StoryObj<typeof ArchbaseDatePickerEditExample> = {
+  args: {
+    render: ()=>{<ArchbaseDatePickerEditExample/>}
+  },
+};
+

@@ -9,6 +9,7 @@ import '../locales/config';
 import i18next from 'i18next';
 
 
+
 function ThemeWrapper(props: { children: React.ReactNode }) {
   const colorSchem = useDarkMode() ? 'dark' : 'light';
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
