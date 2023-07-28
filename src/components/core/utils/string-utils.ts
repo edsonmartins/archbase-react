@@ -1,4 +1,6 @@
 /* eslint-disable */
+import { parseISO, format } from 'date-fns';
+
 const WHITE_SPACES = [
   ' ',
   '\n',
@@ -395,4 +397,17 @@ export function truncate(str, maxChars, append, onlyFullWords) {
  */
 export function abbreviate(str) {
   return str.match(/\b([A-Z])/g).join('')
+}
+
+export function convertISOStringToDate(isoString: string): Date {
+  const hasTimeInfo = isoString.includes('T');
+  if (!hasTimeInfo) {
+    isoString += 'T00:00:00'; // Adiciona hora padrão '00:00:00' se não houver informação de hora
+  }
+  return parseISO(isoString);
+}
+
+
+export function convertDateToISOString(date: Date): string {
+  return format(date, "yyyy-MM-dd'T'HH:mm:ss");
 }

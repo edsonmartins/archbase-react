@@ -1,0 +1,1 @@
+export {ArchbaseObjectInspector} from "./ArchbaseObjectInspector"

@@ -15,6 +15,7 @@ const config: StorybookConfig = {
     '@storybook/addon-interactions',
     'storybook-addon-mantine',
     'storybook-dark-mode',
+    'storybook-react-i18next',
     {
       name: '@storybook/addon-docs',
       options: {

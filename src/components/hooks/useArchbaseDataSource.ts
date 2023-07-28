@@ -5,8 +5,6 @@ export type UseArchbaseDataSourceProps<T, ID> = {
   initialData: any[],
   initialDataSource?: ArchbaseDataSource<T, ID> | undefined
   name: string,
-  insertOnInit?: boolean,
-  editOnInit?: boolean,
   onLoadComplete?: (dataSource: ArchbaseDataSource<T, ID>) => void
 }
 
@@ -17,11 +15,11 @@ export type UseArchbaseDataSourceReturnType<T, ID> = {
 export const useArchbaseDataSource = <T, ID>(
   props: UseArchbaseDataSourceProps<T, ID>
 ): UseArchbaseDataSourceReturnType<T, ID> => {
-  const {initialData,name,insertOnInit,editOnInit,initialDataSource,onLoadComplete} = props;
+  const {initialData,name,initialDataSource,onLoadComplete} = props;
   const [dataSource,setDataSource] = useState<ArchbaseDataSource<T, ID>>(initialDataSource ??
     new ArchbaseDataSource<T, ID>(name, {
-      records: [],
-      grandTotalRecords: 0,
+      records: initialData,
+      grandTotalRecords: initialData.length,
       currentPage: 0,
       totalPages: 0,
       pageSize: 0
@@ -41,12 +39,12 @@ export const useArchbaseDataSource = <T, ID>(
       } else {
         prevDataSource.open(dsOptions)
       }
-      return prevDataSource
+      return prevDataSource;
     })
     if (onLoadComplete) {
       onLoadComplete(dataSource)
     }
-  },[initialData,name,insertOnInit,editOnInit])
+  },[initialData,name])
 
   return {dataSource}
 }

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource/ArchbaseDataSource'
 
 export type UseArchbaseDataSourceListenerProps<T, ID> = {
-  dataSource: ArchbaseDataSource<T, ID>
+  dataSource?: ArchbaseDataSource<T, ID>
   listener: (event: DataSourceEvent<T>) => void
 }
 
@@ -25,10 +25,14 @@ export const useArchbaseDataSourceListener = <T, ID>(
   }
 
   useEffect(() => {
-    unRegisterListeners(props.dataSource)
-    registerListeners(props.dataSource)
-    return () => {
+    if (props.dataSource) {
       unRegisterListeners(props.dataSource)
+      registerListeners(props.dataSource)
     }
-  }, [props.dataSource.uuid])
+    return () => {
+      if (props.dataSource){
+      unRegisterListeners(props.dataSource)
+      }
+    }
+  }, [props.dataSource!.uuid])
 }

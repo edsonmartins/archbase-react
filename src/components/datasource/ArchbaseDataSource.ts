@@ -169,6 +169,7 @@ export type DataSourceListener<T> = (event: DataSourceEvent<T>) => void
 export interface DataSourceEvents<T> {
   dataChanged: (data: T[], options: DataSourceOptions<T>) => void
   recordChanged: (record: T, index: number) => void
+  fieldChanged: () => void
   beforeClose: () => void
   afterClose: () => void
   beforeOpen: () => void
@@ -794,7 +795,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     if (this.isEmpty()) {
       return
     }
-    if (!this.inserting || !this.editing || this.isBOF() || this.isEOF()) {
+    if (this.isBOF() || this.isEOF()) {
       throw new ArchbaseDataSourceError(
         i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
       )
@@ -829,7 +830,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     if (this.isEmpty() || !this.currentRecord) {
       return this
     }
-    if (!this.inserting || !this.editing || this.isBOF() || this.isEOF()) {
+    if (!(this.inserting || this.editing || this.isBOF() || this.isEOF())) {
       throw new ArchbaseDataSourceError(
         i18next.t('recordNotBeingEdited', { dataSourceName: this.name })
       )
@@ -847,6 +848,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.currentRecord[fieldName] = newValue
     }
     this.emitFieldChangeEvent(fieldName, oldValue, newValue)
+    this.emitter.emit('fieldChanged', {})
+    //this.emit({ type: DataSourceEventNames.fieldChanged})
     return this
   }
 
@@ -1059,9 +1062,11 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     listener: (fieldName: string, oldValue: any, newValue: any) => void
   ): this {
     const listeners = this.fieldEventListeners[`field:${String(fieldName)}`]
-    const index = listeners.indexOf(listener)
-    if (index !== -1) {
-      listeners.splice(index, 1)
+    if (listeners){
+      const index = listeners.indexOf(listener)
+      if (index !== -1) {
+        listeners.splice(index, 1)
+      }
     }
     return this
   }

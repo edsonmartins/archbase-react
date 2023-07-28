@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-nested-ternary */
 import dayjs from 'dayjs'
-import React, { forwardRef, useState, useEffect } from 'react'
+import React, { forwardRef, useState, useEffect, useCallback } from 'react'
 import {
   DefaultProps,
   InputSharedProps,
@@ -33,7 +33,9 @@ import {
   pickCalendarProps,
   useDatesContext
 } from '@mantine/dates'
-import type { ArchbaseDataSource } from '../datasource'
+import { DataSourceEventNames, type ArchbaseDataSource, DataSourceEvent } from '../datasource'
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/'
+import { convertDateToISOString, convertISOStringToDate } from '../core/utils/string-utils'
 
 const dateFormats = {
   'DD/MM/YYYY': {
@@ -263,6 +265,8 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
       showPlaceholderFormat,
       placeholderChar,
       dateFormat,
+      dataSource,
+      dataField,
       ...rest
     } = useInputProps('ArchbaseDatePickerEdit', defaultProps, props)
     
@@ -291,6 +295,74 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
       finalValue: null,
       onChange: onDateChange
     })
+
+    const fieldChangedListener = useCallback(() => {}, [])
+
+    const dataSourceEvent = useCallback((event: DataSourceEvent<any>) => {
+      if (dataSource && dataField) {
+        switch (event.type) {
+          case (DataSourceEventNames.dataChanged,
+          DataSourceEventNames.recordChanged,
+          DataSourceEventNames.afterScroll,
+          DataSourceEventNames.afterCancel): {
+            loadDataSourceFieldValue()          
+            break
+          }
+          default:
+        }
+      }
+    }, [])
+
+    const loadDataSourceFieldValue = () => {
+      if (dataSource && dataField) {
+        const value = dataSource.getFieldValue(dataField)
+        if (value) {
+          const resultDate: Date = convertISOStringToDate(value)
+          const result = dateFormats[dateFormat!].format(resultDate)
+          if (result !== inputValue) {
+            setInputValue(result)
+            setDate(resultDate)
+            setValue(resultDate)
+          }
+        }
+      }
+    }
+
+    const setDataSourceFieldValue = (value : Date)=>{
+      if (dataSource && dataField) {
+        const fieldValue = dataSource.getFieldValue(dataField);
+        if (!value || value === null){
+          if (value !== fieldValue){
+            dataSource.setFieldValue(dataField, undefined);
+          }
+        } else {        
+          const resultValue = convertDateToISOString(value)
+          if (resultValue !== fieldValue){
+            dataSource.setFieldValue(dataField, resultValue);
+          }
+        }
+      }
+    }
+
+    useArchbaseDidMount(() => {
+      loadDataSourceFieldValue()
+      if (dataSource && dataField) {
+        dataSource.addListener(dataSourceEvent)
+        dataSource.addFieldChangeListener(dataField, fieldChangedListener)
+      }
+    });
+
+    useArchbaseDidUpdate(() => {
+      loadDataSourceFieldValue()
+    }, [])
+  
+    useArchbaseWillUnmount(() => {
+      if (dataSource && dataField) {
+        dataSource.removeListener(dataSourceEvent)
+        dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      }
+    })
+  
 
     useEffect(() => {
       if (controlled) {
@@ -330,6 +402,7 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
           setValue(dateValue)
           setDate(dateValue)
           !controlled && setInputValue(formatValue(dateValue))
+          setDataSourceFieldValue(dateValue)
         }
       }
     }
@@ -474,3 +547,5 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
 )
 
 ArchbaseDatePickerEdit.displayName = 'ArchbaseDatePickerEdit'
+
+
