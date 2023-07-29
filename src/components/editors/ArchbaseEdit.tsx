@@ -30,6 +30,7 @@ export function ArchbaseEdit<T>({
   style,
   placeholder,
   label,
+  description,
   error,
   onFocusExit = () => {},
   onFocusEnter = () => {},
@@ -118,6 +119,7 @@ export function ArchbaseEdit<T>({
       onBlur={handleOnFocusExit}
       onFocus={handleOnFocusEnter}
       placeholder={placeholder}
+      description={description}
       label={label}
       error={error}
     />
