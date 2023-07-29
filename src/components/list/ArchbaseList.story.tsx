@@ -1,25 +1,21 @@
 import React from 'react';
 import { Card, Grid, Group, Text } from '@mantine/core';
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa, pessoas } from '../core';
-import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
-import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
-import { DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { ArchbaseEdit } from './ArchbaseEdit';
-import { useArchbaseForceUpdate } from '../hooks/';
+import { Pessoa, pessoas } from '@components/core';
+import { useArchbaseDataSource, useArchbaseForceUpdate, useArchbaseDataSourceListener } from '@components/hooks';
+import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { Meta, StoryObj } from '@storybook/react';
-
-const ArchbaseEditExample = () => {
+import { ArchbaseList } from './ArchbaseList';
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
+const data = pessoas;
+const ArchbaseListExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
-  if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit();
-  }
+  
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
-        case DataSourceEventNames.fieldChanged: {
+        case DataSourceEventNames.afterScroll: {
           forceUpdate();
           break;
         }
@@ -27,30 +23,29 @@ const ArchbaseEditExample = () => {
       }
     },
   });
-
   return (
     <Grid>
-      <Grid.Col span={4}>
+      <Grid.Col span="content">
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>Edit Component</Text>
+              <Text weight={500}>Lista de Pessoas</Text>
             </Group>
           </Card.Section>
-          <ArchbaseEdit label="Nome" dataSource={dataSource} dataField="nome" />
+          <ArchbaseList<Pessoa, string> dataSource={dataSource!} dataFieldId="id" dataFieldText="nome" />
         </Card>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={3}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
               <Text weight={500}>Objeto Pessoa</Text>
             </Group>
           </Card.Section>
-          <ArchbaseJsonView data={data} />
+          <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
         </Card>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={3}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -65,16 +60,14 @@ const ArchbaseEditExample = () => {
 };
 
 export default {
-  title: 'Editors/Edit',
-  component: ArchbaseEditExample,
+  title: 'List/List',
+  component: ArchbaseListExample,
 } as Meta;
 
-const data = [pessoas[0]];
-
-export const Example: StoryObj<typeof ArchbaseEditExample> = {
+export const Example: StoryObj<typeof ArchbaseListExample> = {
   args: {
     render: () => {
-      <ArchbaseEditExample />;
+      <ArchbaseListExample />;
     },
   },
 };

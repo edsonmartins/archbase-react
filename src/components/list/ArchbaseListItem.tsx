@@ -1,147 +1,141 @@
-import React, { ReactNode } from 'react';
-
-export interface ArchbaseListItemProps {
+import React, { ReactNode, useContext, useEffect, useRef } from 'react';
+import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context';
+import { MantineNumberSize } from '@mantine/core';
+export interface ArchbaseListItemProps<T,_ID> {
+  /** Indicador se o item está ativo(selecionado) */
   active: boolean;
-  activeBackColor?: string;
+  /** Cor de fundo do item */
+  activeBackgroundColor?: string;
+  /** Cor do item se ele estiver ativo */
   activeColor?: string;
+  /** Alinhamento do texto do item */
   align?: 'left' | 'right' | 'center';
+  /** Cor de fundo do item não selecionado */
   backgroundColor?: string;
+  /** Texto do item */
   caption: string;
+  /** Cor da fonte do item */
   color: string;
+  /** Filhos do item */
+  children?: ReactNode;
+  /** Indicador se o item está desabilitado */
   disabled: boolean;
-  hide: boolean;
-  href: string;
+  /** Icone a ser apresentado ao lado esquerdo do item */
   icon?: ReactNode | string;
+  /** Id do item */
   id: any;
+  /** Posição do item dentro da lista */
+  index: number;
+  /** Imagem a ser apresentada ao lado esquerdo do item */
   image?: ReactNode | string;
+  /** Indicador se a imagem dever ser em forma de circulo */
   imageCircle?: boolean;
+  /** Altura da Imagem */
   imageHeight?: string;
+  /** Largura da Imagem */
   imageWidth?: string;
+  /** Indicador se o conteúdo do item deve ser justificado */
   justify?: boolean;
-  onSelectListItem?: (index: number, data: any) => void;
+  /** Indicador se o item deve ter uma borda */
   showBorder?: boolean;
+  /** Cor da borda */
+  borderColor?: string;
+  /** Arredondamento dos cantos da borda */
+  borderRadius?: MantineNumberSize;
+  /** Dados do item a ser apresentado */
+  recordData?: T;
+  /** Indicador se o item está visivel na lista */
+  visible?: boolean;
 }
 
-export function ArchbaseListItem({
-//   active,
-//   activeBackColor,
-//   activeColor,
-//   align,
-//   backgroundColor,
-//   caption,
-//   color,
-//   disabled,
-//   hide,
-//   href,
-//   icon,
-//   id,
-//   image,
-//   imageCircle,
-//   imageHeight,
-//   imageWidth,
-//   justify,
-//   onSelectListItem,
-//   showBorder = true,
-}: ArchbaseListItemProps) {
-//   const onClick = (event) => {
-//     event.preventDefault();
-//     if (!disabled) {
-//       if (handleSelectItem) {
-//         handleSelectItem(index, recordData);
-//       }
-//       if (onSelectListItem) {
-//         onSelectListItem(index, recordData);
-//       }
-//     }
-//   };
+export function ArchbaseListItem<T,ID>({
+  active,
+  activeBackgroundColor,
+  activeColor,
+  align,
+  backgroundColor,
+  caption,
+  color,
+  disabled,
+  icon,
+  id,
+  index,
+  image,
+  imageCircle,
+  imageHeight,
+  imageWidth,
+  justify,
+  children,
+  recordData,
+  showBorder = true,
+  borderColor,
+  borderRadius,
+}: ArchbaseListItemProps<T,ID>) {
+  const listContextValue = useContext<ArchbaseListContextValue<T,ID>>(ArchbaseListContext);
+  const itemRef = useRef<any>(null);
 
-//   const onMouseOver = (event) => {
-//     if (onMouseOver) {
-//       onMouseOver(this, event);
-//     }
-//   };
+  useEffect(()=>{
+    if (itemRef.current && active) {
+      itemRef.current.focus();
+    }
+  },[active])
 
-//   const onMouseOut = (event) => {
-//     if (onMouseOut) {
-//       onMouseOut(this, event);
-//     }
-//   };
+  const onClick = (event) => {
+    event.preventDefault();
+    if (!disabled) {
+      if (listContextValue.handleSelectItem) {
+        listContextValue.handleSelectItem(index, recordData!);
+      }
+    }
+  };
 
-//   let className = AnterosUtils.buildClassNames(
-//     showBorder ? 'list-group-item-border' : 'list-group-item',
-//     'list-group-item-action',
-//     className ? className : '',
-//     active ? 'active' : '',
-//     disabled ? 'disabled' : '',
-//     success ? 'list-group-item-success' : '',
-//     info ? 'list-group-item-info' : '',
-//     warning ? 'list-group-item-warning' : '',
-//     danger ? 'list-group-item-danger' : '',
-//     alignRight ? 'justify-content-end' : '',
-//     alignLeft ? 'justify-content-start' : '',
-//     alignCenter ? 'justify-content-center' : '',
-//     justify ? 'justify-content-between' : '',
-//   );
+  const handleMouseOver = (event: React.MouseEvent) => {
+    if (listContextValue.onItemEnter) {
+      listContextValue.onItemEnter(event, recordData!);
+    }
+  };
 
-//   let icon;
-//   if (icon) {
-//     icon = <i style={{ marginLeft: '3px', marginRight: '3px' }} className={icon}></i>;
-//   }
+  const handleMouseOut = (event: React.MouseEvent) => {
+    if (listContextValue.onItemLeave) {
+      listContextValue.onItemLeave(event, recordData!);
+    }
+  };
 
-//   let style = {};
-//   if (activeBackColor && activeColor && active) {
-//     style = { backgroundColor: activeBackColor, color: activeColor };
-//   } else if (backgroundColor && color && !active) {
-//     style = { backgroundColor: backgroundColor, color: color };
-//   }
+  let style = {};
+  if (activeBackgroundColor && activeColor && active) {
+    style = { backgroundColor: activeBackgroundColor, color: activeColor };
+  } else if (backgroundColor && color && !active) {
+    style = { backgroundColor: backgroundColor, color: color };
+  }
 
-//   let classNameImage;
-//   if (imageCircle) {
-//     classNameImage = ' img-circle';
-//   }
+  let classNameImage;
+  if (imageCircle) {
+    classNameImage = ' img-circle';
+  }
 
-//   const idItem = 'lstItem_' + ownerId + '_' + id;
-//   const keyItem = 'lstItem_' + ownerId + '_' + id;
-
-//   if (children) {
-//     return (
-//       <li
-//         href={href}
-//         className={className}
-//         onMouseOver={onMouseOver}
-//         onMouseOut={onMouseOut}
-//         id={idItem}
-//         onClick={onClick}
-//         key={keyItem}
-//       >
-//         {caption}
-//         {children}
-//       </li>
-//     );
-//   }
-
+  const ComponentItem = listContextValue.type==='ordered'?'ol':listContextValue.type==='unordered'?'ul':'div';
   return (
-    // <li
-    //   tabIndex={-1}
-    //   style={style}
-    //   href={href}
-    //   className={className}
-    //   onClick={onClick}
-    //   onMouseOver={onMouseOver}
-    //   onMouseOut={onMouseOut}
-    //   id={idItem}
-    //   key={keyItem}
-    // >
-    //   {icon}{' '}
-    //   <img
-    //     style={{ marginLeft: '3px', marginRight: '3px' }}
-    //     className={classNameImage}
-    //     src={image}
-    //     height={imageHeight}
-    //     width={imageWidth}
-    //   />{' '}
-    //   {caption}
-    // </li>
-    <div></div>
+    <ComponentItem
+      tabIndex={-1}
+      ref={itemRef}
+      style={style}
+      onClick={onClick}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      id={'lstItem_' + listContextValue.ownerId + '_' + id}
+      key={'lstItem_' + listContextValue.ownerId + '_' + id}
+    >
+      {icon} {image} {caption}
+      {children}
+    </ComponentItem>
   );
 }
+
+ArchbaseListItem.defaultProps = {
+  align: 'left',
+  justify: false,
+  showBorder: false,
+  disabled: false
+}
+
+ArchbaseListItem.displayName = 'ArchbaseListItem';

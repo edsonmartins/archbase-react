@@ -3,3 +3,4 @@ export {pessoas}
 export type {Pessoa} from "./data/types"
 
 export {convertDateToISOString as convertDateToString, convertISOStringToDate} from "./utils/string-utils"
+export {ArchbaseError} from './exceptions'
