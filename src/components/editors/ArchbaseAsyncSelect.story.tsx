@@ -1,16 +1,14 @@
 import React from 'react';
 import { Box, Card, Grid, Group, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa, pessoas } from '../core';
+import { Pessoa } from '../core';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks/';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseAsyncSelect } from './ArchbaseAsyncSelect';
-import { pessoasData } from '@components/core/data/pessoasData';
-import { Pedido } from '@components/core/data/types';
-import { pedidosData } from '@components/core/data/pedidosData';
+import { pessoasData, pedidosData, Pedido } from '@components/core';
 
 const pessoasList: Pessoa[] = pessoasData;
 const pedidosList: Pedido[] = pedidosData;
@@ -47,10 +45,10 @@ const ArchbaseAsyncSelectExample = () => {
             <ArchbaseAsyncSelect<Pedido, string, Pessoa>
               label="Nome"
               dataSource={dataSource}
-              dataField="nome"
+              dataField="cliente"
               initialOptions={pessoasList}
               getOptionLabel={(option: Pessoa) => option.nome}
-              getOptionValue={(option: Pessoa) => option.id}
+              getOptionValue={(option: Pessoa) => option}
             />
           </Box>
         </Card>
@@ -84,7 +82,7 @@ export default {
   component: ArchbaseAsyncSelectExample,
 } as Meta;
 
-const data = [pessoas[0]];
+
 
 export const Example: StoryObj<typeof ArchbaseAsyncSelectExample> = {
   args: {

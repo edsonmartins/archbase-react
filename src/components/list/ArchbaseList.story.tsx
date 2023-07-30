@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactNode, useContext, useRef } from 'react';
 import { Avatar, Card, Grid, Group, Text, createStyles } from '@mantine/core';
-import { Pessoa, pessoas } from '@components/core';
+import { Pessoa, pessoasData } from '@components/core';
 import { useArchbaseDataSource, useArchbaseForceUpdate, useArchbaseDataSourceListener } from '@components/hooks';
 import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { Meta, StoryObj } from '@storybook/react';
@@ -10,7 +10,7 @@ import { ThemeIcon } from '@mantine/core';
 import { IconUser } from '@tabler/icons-react';
 import { IconPhoneCall, IconAt } from '@tabler/icons-react';
 import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context';
-const data = pessoas;
+const data = pessoasData;
 
 interface ArchbaseListBasicExampleProps {
   showIcon: boolean;
@@ -251,7 +251,7 @@ export const Example: StoryObj<typeof ArchbaseListBasicExample> = {
 };
 
 export const Example2: StoryObj<typeof ArchbaseListCustomItemExample> = {
-  render: (args) => {
+  render: (_args) => {
     return <ArchbaseListCustomItemExample/>;
   },  
 };

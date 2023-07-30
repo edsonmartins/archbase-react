@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Grid, Group, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa, pessoas } from '../core';
+import { Pessoa, pessoasData } from '../core';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
@@ -69,7 +69,7 @@ export default {
   component: ArchbaseEditExample,
 } as Meta;
 
-const data = [pessoas[0]];
+const data = [pessoasData[0]];
 
 export const Example: StoryObj<typeof ArchbaseEditExample> = {
   args: {

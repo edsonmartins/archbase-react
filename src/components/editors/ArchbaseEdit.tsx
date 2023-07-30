@@ -1,4 +1,4 @@
-import { TextInput } from '@mantine/core';
+import { MantineNumberSize, TextInput } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useState, useCallback } from 'react';
 
@@ -57,6 +57,7 @@ export function ArchbaseEdit<T>({
     if (dataSource && dataField) {
       switch (event.type) {
         case (DataSourceEventNames.dataChanged,
+        DataSourceEventNames.fieldChanged,
         DataSourceEventNames.recordChanged,
         DataSourceEventNames.afterScroll,
         DataSourceEventNames.afterCancel): {
