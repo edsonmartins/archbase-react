@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@mantine/core';
+import { Card, Grid, Group, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
 import { Pessoa, pessoas } from '../core';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
@@ -31,19 +31,40 @@ const ArchbaseEditExample = () => {
   return (
     <Grid>
       <Grid.Col span={4}>
-        <ArchbaseCheckBox
-          label="Masculino"
-          dataSource={dataSource}
-          dataField="sexo"
-          trueValue={'Masculino'}
-          falseValue={'Feminino'}
-        />
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section withBorder inheritPadding py="xs" mb="1rem">
+            <Group position="apart">
+              <Text weight={500}>Checkbox Component</Text>
+            </Group>
+          </Card.Section>
+          <ArchbaseCheckBox
+            label="Masculino"
+            dataSource={dataSource}
+            dataField="sexo"
+            trueValue={'Masculino'}
+            falseValue={'Feminino'}
+          />
+        </Card>
       </Grid.Col>
       <Grid.Col span={4}>
-        <ArchbaseJsonView data={data} />
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section withBorder inheritPadding py="xs">
+            <Group position="apart">
+              <Text weight={500}>Objeto Pessoa</Text>
+            </Group>
+          </Card.Section>
+          <ArchbaseJsonView data={data} />
+        </Card>
       </Grid.Col>
       <Grid.Col span={4}>
-        <ArchbaseObjectInspector data={dataSource} />
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section withBorder inheritPadding py="xs">
+            <Group position="apart">
+              <Text weight={500}>DataSource dsPessoas</Text>
+            </Group>
+          </Card.Section>
+          <ArchbaseObjectInspector data={dataSource} />
+        </Card>
       </Grid.Col>
     </Grid>
   );
