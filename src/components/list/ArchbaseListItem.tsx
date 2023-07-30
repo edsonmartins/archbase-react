@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useEffect, useRef } from 'react';
 import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context';
-import { MantineNumberSize } from '@mantine/core';
+import { Image, MantineNumberSize, Space } from '@mantine/core';
 export interface ArchbaseListItemProps<T,_ID> {
   /** Indicador se o item está ativo(selecionado) */
   active: boolean;
@@ -21,21 +21,21 @@ export interface ArchbaseListItemProps<T,_ID> {
   /** Indicador se o item está desabilitado */
   disabled: boolean;
   /** Icone a ser apresentado ao lado esquerdo do item */
-  icon?: ReactNode | string;
+  icon?: ReactNode;
   /** Id do item */
   id: any;
   /** Posição do item dentro da lista */
   index: number;
   /** Imagem a ser apresentada ao lado esquerdo do item */
   image?: ReactNode | string;
-  /** Indicador se a imagem dever ser em forma de circulo */
-  imageCircle?: boolean;
-  /** Altura da Imagem */
-  imageHeight?: string;
+  /** Arredondamento da Imagem */
+  imageRadius?: MantineNumberSize;
+  /** Altura da imagem */
+  imageHeight?: number | string;
   /** Largura da Imagem */
-  imageWidth?: string;
+  imageWidth?: number | string;
   /** Indicador se o conteúdo do item deve ser justificado */
-  justify?: boolean;
+  justify?: 'flex-start'|'center'|'space-between'|'space-around'|'space-evenly';
   /** Indicador se o item deve ter uma borda */
   showBorder?: boolean;
   /** Cor da borda */
@@ -46,6 +46,8 @@ export interface ArchbaseListItemProps<T,_ID> {
   recordData?: T;
   /** Indicador se o item está visivel na lista */
   visible?: boolean;
+  /** Espaçamento entre os valores do item */
+  spacing?: MantineNumberSize;
 }
 
 export function ArchbaseListItem<T,ID>({
@@ -61,15 +63,16 @@ export function ArchbaseListItem<T,ID>({
   id,
   index,
   image,
-  imageCircle,
+  imageRadius,
   imageHeight,
   imageWidth,
-  justify,
+  justify='flex-start',
   children,
   recordData,
   showBorder = true,
   borderColor,
   borderRadius,
+  spacing='md'
 }: ArchbaseListItemProps<T,ID>) {
   const listContextValue = useContext<ArchbaseListContextValue<T,ID>>(ArchbaseListContext);
   const itemRef = useRef<any>(null);
@@ -101,17 +104,13 @@ export function ArchbaseListItem<T,ID>({
     }
   };
 
-  let style = {};
+  let style = {display:'flex', backgroundColor:'', color: '', justifyContent:justify, alignItems:"center"};
   if (activeBackgroundColor && activeColor && active) {
-    style = { backgroundColor: activeBackgroundColor, color: activeColor };
+    style = { ...style, backgroundColor: activeBackgroundColor, color: activeColor };
   } else if (backgroundColor && color && !active) {
-    style = { backgroundColor: backgroundColor, color: color };
+    style = { ...style, backgroundColor: backgroundColor, color: color };
   }
-
-  let classNameImage;
-  if (imageCircle) {
-    classNameImage = ' img-circle';
-  }
+  let imageComp = image?typeof image === 'string'?<Image src={recordData![image]} radius={imageRadius} width={imageWidth} height={imageHeight}/>:image:image;
 
   const ComponentItem = listContextValue.type==='ordered'?'ol':listContextValue.type==='unordered'?'ul':'div';
   return (
@@ -125,7 +124,7 @@ export function ArchbaseListItem<T,ID>({
       id={'lstItem_' + listContextValue.ownerId + '_' + id}
       key={'lstItem_' + listContextValue.ownerId + '_' + id}
     >
-      {icon} {image} {caption}
+      {icon}{icon?<Space w={spacing}/>:null}{imageComp}{imageComp?<Space w={spacing}/>:null}{caption}
       {children}
     </ComponentItem>
   );

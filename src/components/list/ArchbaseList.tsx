@@ -4,9 +4,29 @@ import { ArchbaseListItem } from './ArchbaseListItem';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { ArchbaseError } from '@components/core';
 import { useArchbaseDidMount, useArchbaseWillUnmount } from '@components/hooks';
-import { Box, MantineNumberSize, Paper, useMantineTheme } from '@mantine/core';
+import { Box, MantineNumberSize, MantineSize, Paper, useMantineTheme } from '@mantine/core';
 import useStyles from './ArchbaseList.styles';
 import { ArchbaseListProvider } from './ArchbaseList.context';
+
+export interface ArchbaseItem<T,_ID> {
+  /** Chave */
+  key: string;
+  /** Id do item */
+  id : any;
+  /** Indicador se o Item está ativo */
+  active : boolean;
+  /** Indice dentro da lista */
+  index : number;
+  /** Registro contendo dados de uma linha na lista */
+  recordData: T
+}
+
+export interface ArchbaseComponentItemDefinition<T,ID> {
+  component: ArchbaseItemType<T,ID>;
+  props: any
+}
+
+export type ArchbaseItemType<T,ID> = React.ComponentType<ReactNode> & ArchbaseItem<T,ID>;
 
 export interface ArchbaseListProps<T, ID> {
   /** Cor de fundo do item ativo */
@@ -24,7 +44,7 @@ export interface ArchbaseListProps<T, ID> {
   /** Largura da lista */
   width?: number | string;
   /** Indicador se os itens da lista devem ser justificados */
-  justify?: boolean;
+  justify?: 'flex-start'|'center'|'space-between'|'space-around'|'space-evenly';
   /** Evento que ocorre quando um item da lista é selecionado */
   onSelectListItem?: (index: number, data: any) => void;
   /** Mostra uma borda ao redor da lista */
@@ -53,8 +73,8 @@ export interface ArchbaseListProps<T, ID> {
   filter?: string;
   /** Function a ser aplicada na lista para filtrar os itens */
   onFilter?: (record: any) => boolean;
-  /** Componente customizado a ser renderizado para um Item da lista */
-  component?: any;
+  /** Definições do componente customizado a ser renderizado para um Item da lista */
+  componentItemDefinition?: ArchbaseComponentItemDefinition<T,ID>;
   /** Somente componentes <ArchbaseListItem /> */
   children?: React.ReactNode[];
   /** Tipo de lista: ol,ul,div */
@@ -65,7 +85,15 @@ export interface ArchbaseListProps<T, ID> {
   size?: MantineNumberSize;
   /** Ícone que deve substituir o ponto do item da lista */
   icon?: React.ReactNode;
-  /** Espaçamento entre itens do tema ou número para definir o valor */
+  /** Imagem ou source de uma imagem para mostrar no item da lista */
+  image?: React.ReactNode | string;
+  /** Arredondamento da Imagem */
+  imageRadius?: MantineNumberSize;
+  /** Altura da imagem */
+  imageHeight?: number | string;
+  /** Largura da Imagem */
+  imageWidth?: number | string;
+  /** Espaçamento entre os valores do item */
   spacing?: MantineNumberSize;
   /** Centralizar itens com ícone */
   center?: boolean;
@@ -83,7 +111,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     align,
     color,
     height = '20rem',
-    justify,
+    justify='flex-start',
     onSelectListItem,
     width,
     showBorder = true,
@@ -104,8 +132,13 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     withPadding = false,
     listStyleType = '',
     center = false,
-    spacing = 0,
+    spacing = 'md',
     type = 'none',
+    icon,
+    image,
+    imageRadius,
+    imageWidth,
+    imageHeight
   } = props;
   const [activeIndexValue, setActiveIndexValue] = useState(
     activeIndex
@@ -266,15 +299,29 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
             active = true;
           }
         }
-        var { component, id, dataSource, ...rest } = props;
-        if (component) {
-          let DynamicComponent: any = component;
-          let compProps = {};
-          if (component.hasOwnProperty('component')) {
-            DynamicComponent = component.component;
+        var { componentItemDefinition, id, dataSource, ...rest } = props;
+        if (componentItemDefinition) {
+          // Validar se o componente informado tem as propriedades necessárias
+          const validComponent = componentItemDefinition.component as ArchbaseItemType<T,ID>;
+          if (
+            !validComponent.key ||
+            typeof validComponent.key !== "string" ||
+            !validComponent.id ||
+            !validComponent.index ||
+            typeof validComponent.index !== "number" ||
+            !validComponent.active ||
+            typeof validComponent.active !== "boolean" ||
+            !validComponent.recordData 
+          ) {
+            throw new Error(
+              "A propriedade 'componentItemDefinition' deve ter um componente personalizado válido do tipo ArchbaseItemType com as propriedades necessárias."
+            );
           }
-          if (component.hasOwnProperty('props')) {
-            compProps = component.props;
+
+          let DynamicComponent: any = componentItemDefinition.component;
+          let compProps = {};
+          if (componentItemDefinition.props) {
+            compProps = componentItemDefinition.props;
           }
 
           let newId = record[dataFieldId];
@@ -291,7 +338,6 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
               active={active}
               index={index}
               dataSource={dataSource}
-              handleSelectItem={handleSelectItem}
               recordData={record}
               {...compProps}
               {...rest}
@@ -318,11 +364,12 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
               activeColor={record.activeColor === undefined ? activeColor : record.activeColor}
               backgroundColor={record.backgroundColor === undefined ? backgroundColor : record.backgroundColor}
               color={record.color === undefined ? color : record.color}
-              imageCircle={record.imageCircle}
-              imageHeight={record.imageHeight}
-              imageWidth={record.imageWidth}
-              icon={record.icon}
-              image={record.image}
+              imageRadius={imageRadius}
+              imageHeight={imageHeight}
+              imageWidth={imageWidth}
+              icon={record.icon?record.icon:icon}
+              image={image}
+              spacing={spacing}
               caption={record[dataFieldText]}
               showBorder={record.showBorder === undefined ? showBorder : record.showBorder}
               visible={true}
@@ -376,11 +423,12 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
           activeColor={child.activeColor === undefined ? activeColor : child.activeColor}
           backgroundColor={child.backgroundColor === undefined ? backgroundColor : child.backgroundColor}
           color={child.color === undefined ? color : child.color}
-          imageCircle={child.imageCircle}
-          imageHeight={child.imageHeight}
-          imageWidth={child.imageWidth}
-          icon={child.icon}
-          image={child.image}
+          imageRadius={child.imageRadius?child.imageRadius:imageRadius}
+          imageHeight={child.imageHeight?child.imageHeight:imageHeight}
+          imageWidth={child.imageWidth?child.imageWidth:imageWidth}
+          icon={child.icon?child.icon:icon}
+          image={child.image?child.image:image}
+          spacing={child.spacing?child.spacing:spacing}
           caption={child.caption}
           showBorder={child.showBorder === undefined ? showBorder : child.showBorder}
           visible={child.visible}
@@ -398,7 +446,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
       return rebuildChildrens();
     }
     return [];
-  }, [dataSource, children, activeIndexValue]);
+  }, [dataSource, children, activeIndexValue, props]);
 
   const { classes } = useStyles({
     withPadding,

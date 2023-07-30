@@ -23,7 +23,8 @@
 		"altura": "1.89",
 		"peso": 63,
 		"tipo_sanguineo": "AB+",
-		"cor": "preto"
+		"cor": "preto",
+		"foto": "https://randomuser.me/api/portraits/men/57.jpg"
 	},
 	{
 		"id": 2,
@@ -49,7 +50,8 @@
 		"altura": "1.57",
 		"peso": 88,
 		"tipo_sanguineo": "O-",
-		"cor": "vermelho"
+		"cor": "vermelho",
+		"foto": "https://randomuser.me/api/portraits/women/44.jpg"
 	},
 	{
 		"id": 3,
@@ -75,7 +77,8 @@
 		"altura": "1.98",
 		"peso": 73,
 		"tipo_sanguineo": "AB-",
-		"cor": "amarelo"
+		"cor": "amarelo",
+		"foto": "https://randomuser.me/api/portraits/men/51.jpg"
 	},
 	{
 		"id": 4,
@@ -101,7 +104,8 @@
 		"altura": "1.60",
 		"peso": 75,
 		"tipo_sanguineo": "O+",
-		"cor": "azul"
+		"cor": "azul",
+		"foto": "https://randomuser.me/api/portraits/women/37.jpg"
 	},
 	{
 		"id": 5,
@@ -127,7 +131,8 @@
 		"altura": "1.88",
 		"peso": 99,
 		"tipo_sanguineo": "O-",
-		"cor": "azul"
+		"cor": "azul",
+		"foto": "https://randomuser.me/api/portraits/men/79.jpg"
 	},
 	{
 		"id": 6,
@@ -153,7 +158,8 @@
 		"altura": "1.84",
 		"peso": 108,
 		"tipo_sanguineo": "A+",
-		"cor": "preto"
+		"cor": "preto",
+		"foto": "https://randomuser.me/api/portraits/men/69.jpg"
 	},
 	{
 		"id": 7,
@@ -179,7 +185,8 @@
 		"altura": "1.96",
 		"peso": 77,
 		"tipo_sanguineo": "O-",
-		"cor": "preto"
+		"cor": "preto",
+		"foto": "https://randomuser.me/api/portraits/men/70.jpg"
 	},
 	{
 		"id": 8,
@@ -205,7 +212,8 @@
 		"altura": "1.96",
 		"peso": 69,
 		"tipo_sanguineo": "B+",
-		"cor": "vermelho"
+		"cor": "vermelho",
+		"foto": "https://randomuser.me/api/portraits/men/46.jpg"
 	},
 	{
 		"id": 9,
@@ -231,7 +239,8 @@
 		"altura": "1.87",
 		"peso": 103,
 		"tipo_sanguineo": "O+",
-		"cor": "amarelo"
+		"cor": "amarelo",
+		"foto": "https://randomuser.me/api/portraits/men/26.jpg"
 	},
 	{
 		"id": 10,
@@ -257,7 +266,8 @@
 		"altura": "1.64",
 		"peso": 82,
 		"tipo_sanguineo": "AB-",
-		"cor": "laranja"
+		"cor": "laranja",
+		"foto": "https://randomuser.me/api/portraits/women/3.jpg"
 	},
 	{
 		"id": 11,
@@ -283,7 +293,8 @@
 		"altura": "1.65",
 		"peso": 54,
 		"tipo_sanguineo": "O-",
-		"cor": "roxo"
+		"cor": "roxo",
+		"foto": "https://randomuser.me/api/portraits/women/65.jpg"
 	},
 	{
 		"id": 12,
@@ -309,7 +320,8 @@
 		"altura": "1.83",
 		"peso": 67,
 		"tipo_sanguineo": "AB-",
-		"cor": "laranja"
+		"cor": "laranja",
+		"foto": "https://randomuser.me/api/portraits/women/85.jpg"
 	},
 	{
 		"id": 13,
@@ -335,7 +347,8 @@
 		"altura": "1.78",
 		"peso": 80,
 		"tipo_sanguineo": "A+",
-		"cor": "vermelho"
+		"cor": "vermelho",
+		"foto": "https://randomuser.me/api/portraits/women/27.jpg"
 	},
 	{
 		"id": 14,
@@ -361,7 +374,8 @@
 		"altura": "1.78",
 		"peso": 88,
 		"tipo_sanguineo": "A+",
-		"cor": "roxo"
+		"cor": "roxo",
+		"foto": "https://randomuser.me/api/portraits/women/63.jpg"
 	},
 	{
 		"id": 15,
@@ -387,7 +401,8 @@
 		"altura": "1.74",
 		"peso": 67,
 		"tipo_sanguineo": "AB+",
-		"cor": "azul"
+		"cor": "azul",
+		"foto": "https://randomuser.me/api/portraits/women/26.jpg"
 	},
 	{
 		"id": 16,
@@ -413,7 +428,8 @@
 		"altura": "1.76",
 		"peso": 86,
 		"tipo_sanguineo": "A+",
-		"cor": "laranja"
+		"cor": "laranja",
+		"foto": "https://randomuser.me/api/portraits/women/43.jpg"
 	},
 	{
 		"id": 17,
@@ -439,7 +455,8 @@
 		"altura": "1.78",
 		"peso": 97,
 		"tipo_sanguineo": "O+",
-		"cor": "vermelho"
+		"cor": "vermelho",
+		"foto": "https://randomuser.me/api/portraits/men/83.jpg"
 	},
 	{
 		"id": 18,
@@ -465,7 +482,8 @@
 		"altura": "1.71",
 		"peso": 62,
 		"tipo_sanguineo": "AB+",
-		"cor": "preto"
+		"cor": "preto",
+		"foto": "https://randomuser.me/api/portraits/women/30.jpg"
 	},
 	{
 		"id": 19,
@@ -491,7 +509,8 @@
 		"altura": "1.69",
 		"peso": 71,
 		"tipo_sanguineo": "AB+",
-		"cor": "preto"
+		"cor": "preto",
+		"foto": "https://randomuser.me/api/portraits/men/22.jpg"
 	},
 	{
 		"id": 20,
@@ -517,7 +536,8 @@
 		"altura": "1.93",
 		"peso": 88,
 		"tipo_sanguineo": "AB-",
-		"cor": "verde"
+		"cor": "verde",
+		"foto": "https://randomuser.me/api/portraits/men/74.jpg"
 	},
 	{
 		"id": 21,
@@ -543,7 +563,8 @@
 		"altura": "1.72",
 		"peso": 89,
 		"tipo_sanguineo": "A+",
-		"cor": "roxo"
+		"cor": "roxo",
+		"foto": "https://randomuser.me/api/portraits/women/54.jpg"
 	},
 	{
 		"id": 22,
@@ -569,7 +590,8 @@
 		"altura": "1.65",
 		"peso": 64,
 		"tipo_sanguineo": "A-",
-		"cor": "laranja"
+		"cor": "laranja",
+		"foto": "https://randomuser.me/api/portraits/men/47.jpg"
 	},
 	{
 		"id": 23,
@@ -595,7 +617,8 @@
 		"altura": "1.50",
 		"peso": 82,
 		"tipo_sanguineo": "AB+",
-		"cor": "vermelho"
+		"cor": "vermelho",
+		"foto": "https://randomuser.me/api/portraits/women/41.jpg"
 	},
 	{
 		"id": 24,
@@ -621,7 +644,8 @@
 		"altura": "1.78",
 		"peso": 103,
 		"tipo_sanguineo": "A+",
-		"cor": "vermelho"
+		"cor": "vermelho",
+		"foto": "https://randomuser.me/api/portraits/men/12.jpg"
 	},
 	{
 		"id": 25,
@@ -647,7 +671,8 @@
 		"altura": "1.80",
 		"peso": 55,
 		"tipo_sanguineo": "B+",
-		"cor": "verde"
+		"cor": "verde",
+		"foto": "https://randomuser.me/api/portraits/women/91.jpg"
 	},
 	{
 		"id": 26,
@@ -673,7 +698,8 @@
 		"altura": "1.58",
 		"peso": 57,
 		"tipo_sanguineo": "A+",
-		"cor": "vermelho"
+		"cor": "vermelho",
+		"foto": "https://randomuser.me/api/portraits/women/67.jpg"
 	},
 	{
 		"id": 27,
@@ -699,7 +725,8 @@
 		"altura": "1.88",
 		"peso": 79,
 		"tipo_sanguineo": "O-",
-		"cor": "vermelho"
+		"cor": "vermelho",
+		"foto": "https://randomuser.me/api/portraits/men/59.jpg"
 	},
 	{
 		"id": 28,
@@ -725,7 +752,8 @@
 		"altura": "1.66",
 		"peso": 58,
 		"tipo_sanguineo": "O+",
-		"cor": "amarelo"
+		"cor": "amarelo",
+		"foto": "https://randomuser.me/api/portraits/women/69.jpg"
 	},
 	{
 		"id": 29,
@@ -751,7 +779,8 @@
 		"altura": "1.68",
 		"peso": 51,
 		"tipo_sanguineo": "AB+",
-		"cor": "laranja"
+		"cor": "laranja",
+		"foto": "https://randomuser.me/api/portraits/women/13.jpg"
 	},
 	{
 		"id": 30,
@@ -777,6 +806,7 @@
 		"altura": "1.71",
 		"peso": 53,
 		"tipo_sanguineo": "O+",
-		"cor": "laranja"
+		"cor": "laranja",
+		"foto": "https://randomuser.me/api/portraits/men/72.jpg"
 	}
 ]
