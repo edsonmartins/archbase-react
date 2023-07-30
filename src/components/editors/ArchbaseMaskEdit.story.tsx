@@ -34,7 +34,7 @@ const ArchbaseEditExample = () => {
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>Edit Component</Text>
+              <Text weight={500}>Mask Edit Component</Text>
             </Group>
           </Card.Section>
           <ArchbaseMaskEdit label="CPF" dataSource={dataSource} dataField="cpf" mask={MaskPattern.CPF} />

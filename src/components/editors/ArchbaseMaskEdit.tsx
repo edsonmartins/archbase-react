@@ -51,7 +51,7 @@ export interface ArchbaseMaskEditProps<T>
   saveWithMask?: boolean;
   onFocusExit?: FocusEventHandler<T> | undefined;
   onFocusEnter?: FocusEventHandler<T> | undefined;
-  onChangeValue?: (value: any, event: any) => void;
+  onChangeValue?: (value: any, maskedValue: any) => void;
 }
 
 const defaultProps: Partial<ArchbaseMaskEditProps<any>> = {
@@ -123,13 +123,10 @@ export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditPro
       loadDataSourceFieldValue();
     }, []);
 
-    const handleChange = (event) => {
-      event.preventDefault();
-      const changedValue = event.currentTarget.value;
-      if (changedValue.replaceAll('_', '').length !== mask?.length) {
+    const handleAccept = (changedValue, maskObject) => {
+      if (maskObject.value.replaceAll('_', '').length !== mask?.length) {
         return;
       }
-      event.persist();
       setValue((_prev) => changedValue);
 
       if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
@@ -137,7 +134,7 @@ export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditPro
       }
 
       if (onChangeValue) {
-        onChangeValue(event, changedValue);
+        onChangeValue(changedValue, maskObject.value);
       }
     };
 
@@ -161,12 +158,13 @@ export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditPro
           ref={ref}
           component={IMaskInput}
           mask={mask}
+          unmask={!saveWithMask}
           lazy={false}
           value={value}
           placeholderChar={placeholderChar}
           id={id}
           placeholder={placeholder}
-          onInput={handleChange}
+          onAccept={handleAccept}
           onBlur={handleOnFocusExit}
           onFocus={handleOnFocusEnter}
         />
