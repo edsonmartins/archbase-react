@@ -9,18 +9,21 @@ import { useArchbaseForceUpdate } from '../hooks/';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseAsyncSelect } from './ArchbaseAsyncSelect';
 import { pessoasData } from '@components/core/data/pessoasData';
+import { Pedido } from '@components/core/data/types';
+import { pedidosData } from '@components/core/data/pedidosData';
 
 const pessoasList: Pessoa[] = pessoasData;
+const pedidosList: Pedido[] = pedidosData;
 
 const ArchbaseAsyncSelectExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
+  const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit();
   }
-  useArchbaseDataSourceListener<Pessoa, string>({
+  useArchbaseDataSourceListener<Pedido, string>({
     dataSource,
-    listener: (event: DataSourceEvent<Pessoa>): void => {
+    listener: (event: DataSourceEvent<Pedido>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
           forceUpdate();
@@ -41,7 +44,7 @@ const ArchbaseAsyncSelectExample = () => {
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({height:500})}>
-            <ArchbaseAsyncSelect<Pessoa, string>
+            <ArchbaseAsyncSelect<Pedido, string, Pessoa>
               label="Nome"
               dataSource={dataSource}
               dataField="nome"
@@ -56,17 +59,17 @@ const ArchbaseAsyncSelectExample = () => {
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
+              <Text weight={500}>Objeto Pedido</Text>
             </Group>
           </Card.Section>
-          <ArchbaseJsonView data={data} />
+          <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
         </Card>
       </Grid.Col>
       <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>DataSource dsPessoas</Text>
+              <Text weight={500}>DataSource dsPedidos</Text>
             </Group>
           </Card.Section>
           <ArchbaseObjectInspector data={dataSource} />
