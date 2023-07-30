@@ -3,7 +3,7 @@ import 'reflect-metadata'
 import axios from 'axios'
 import { injectable, inject } from 'inversify'
 import { API_TYPE } from '../core/ioc'
-import type { ArchbaseAuthenticator } from './ArchbaseAuthenticator'
+import type { ArchbaseAuthenticator } from '../auth/ArchbaseAuthenticator'
 import { ArchbaseJacksonParser } from '../core/json'
 
 export interface Page<T> {

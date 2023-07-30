@@ -6,4 +6,5 @@ export type { ArchbaseCheckBoxProps } from './ArchbaseCheckbox';
 export { ArchbaseMaskEdit } from './ArchbaseMaskEdit';
 export type { MaskPattern } from './ArchbaseMaskEdit';
 export { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit';
+export { ArchbaseAsyncSelect} from './ArchbaseAsyncSelect'
 export type { ArchbaseDatePickerEditProps } from './ArchbaseDatePickerEdit';
