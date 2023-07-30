@@ -24,7 +24,8 @@
 		"peso": 63,
 		"tipo_sanguineo": "AB+",
 		"cor": "preto",
-		"foto": "https://randomuser.me/api/portraits/men/57.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/57.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 2,
@@ -51,7 +52,9 @@
 		"peso": 88,
 		"tipo_sanguineo": "O-",
 		"cor": "vermelho",
-		"foto": "https://randomuser.me/api/portraits/women/44.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/44.jpg",
+		"status":"APROVADO"
+		
 	},
 	{
 		"id": 3,
@@ -78,7 +81,8 @@
 		"peso": 73,
 		"tipo_sanguineo": "AB-",
 		"cor": "amarelo",
-		"foto": "https://randomuser.me/api/portraits/men/51.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/51.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 4,
@@ -105,7 +109,8 @@
 		"peso": 75,
 		"tipo_sanguineo": "O+",
 		"cor": "azul",
-		"foto": "https://randomuser.me/api/portraits/women/37.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/37.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 5,
@@ -132,7 +137,8 @@
 		"peso": 99,
 		"tipo_sanguineo": "O-",
 		"cor": "azul",
-		"foto": "https://randomuser.me/api/portraits/men/79.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/79.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 6,
@@ -159,7 +165,8 @@
 		"peso": 108,
 		"tipo_sanguineo": "A+",
 		"cor": "preto",
-		"foto": "https://randomuser.me/api/portraits/men/69.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/69.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 7,
@@ -186,7 +193,8 @@
 		"peso": 77,
 		"tipo_sanguineo": "O-",
 		"cor": "preto",
-		"foto": "https://randomuser.me/api/portraits/men/70.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/70.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 8,
@@ -213,7 +221,8 @@
 		"peso": 69,
 		"tipo_sanguineo": "B+",
 		"cor": "vermelho",
-		"foto": "https://randomuser.me/api/portraits/men/46.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/46.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 9,
@@ -240,7 +249,8 @@
 		"peso": 103,
 		"tipo_sanguineo": "O+",
 		"cor": "amarelo",
-		"foto": "https://randomuser.me/api/portraits/men/26.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/26.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 10,
@@ -267,7 +277,8 @@
 		"peso": 82,
 		"tipo_sanguineo": "AB-",
 		"cor": "laranja",
-		"foto": "https://randomuser.me/api/portraits/women/3.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/3.jpg",
+		"status":"PENDENTE"
 	},
 	{
 		"id": 11,
@@ -294,7 +305,8 @@
 		"peso": 54,
 		"tipo_sanguineo": "O-",
 		"cor": "roxo",
-		"foto": "https://randomuser.me/api/portraits/women/65.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/65.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 12,
@@ -321,7 +333,8 @@
 		"peso": 67,
 		"tipo_sanguineo": "AB-",
 		"cor": "laranja",
-		"foto": "https://randomuser.me/api/portraits/women/85.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/85.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 13,
@@ -348,7 +361,8 @@
 		"peso": 80,
 		"tipo_sanguineo": "A+",
 		"cor": "vermelho",
-		"foto": "https://randomuser.me/api/portraits/women/27.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/27.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 14,
@@ -375,7 +389,8 @@
 		"peso": 88,
 		"tipo_sanguineo": "A+",
 		"cor": "roxo",
-		"foto": "https://randomuser.me/api/portraits/women/63.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/63.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 15,
@@ -402,7 +417,8 @@
 		"peso": 67,
 		"tipo_sanguineo": "AB+",
 		"cor": "azul",
-		"foto": "https://randomuser.me/api/portraits/women/26.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/26.jpg",
+		"status":"REJEITADO"
 	},
 	{
 		"id": 16,
@@ -429,7 +445,8 @@
 		"peso": 86,
 		"tipo_sanguineo": "A+",
 		"cor": "laranja",
-		"foto": "https://randomuser.me/api/portraits/women/43.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/43.jpg",
+		"status":"PENDENTE"
 	},
 	{
 		"id": 17,
@@ -456,7 +473,8 @@
 		"peso": 97,
 		"tipo_sanguineo": "O+",
 		"cor": "vermelho",
-		"foto": "https://randomuser.me/api/portraits/men/83.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/83.jpg",
+		"status":"PENDENTE"
 	},
 	{
 		"id": 18,
@@ -483,7 +501,8 @@
 		"peso": 62,
 		"tipo_sanguineo": "AB+",
 		"cor": "preto",
-		"foto": "https://randomuser.me/api/portraits/women/30.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/30.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 19,
@@ -510,7 +529,8 @@
 		"peso": 71,
 		"tipo_sanguineo": "AB+",
 		"cor": "preto",
-		"foto": "https://randomuser.me/api/portraits/men/22.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/22.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 20,
@@ -537,7 +557,8 @@
 		"peso": 88,
 		"tipo_sanguineo": "AB-",
 		"cor": "verde",
-		"foto": "https://randomuser.me/api/portraits/men/74.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/74.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 21,
@@ -564,7 +585,8 @@
 		"peso": 89,
 		"tipo_sanguineo": "A+",
 		"cor": "roxo",
-		"foto": "https://randomuser.me/api/portraits/women/54.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/54.jpg",
+		"status":"REJEITADO"
 	},
 	{
 		"id": 22,
@@ -591,7 +613,8 @@
 		"peso": 64,
 		"tipo_sanguineo": "A-",
 		"cor": "laranja",
-		"foto": "https://randomuser.me/api/portraits/men/47.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/47.jpg",
+		"status":"PENDENTE"
 	},
 	{
 		"id": 23,
@@ -618,7 +641,8 @@
 		"peso": 82,
 		"tipo_sanguineo": "AB+",
 		"cor": "vermelho",
-		"foto": "https://randomuser.me/api/portraits/women/41.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/41.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 24,
@@ -645,7 +669,8 @@
 		"peso": 103,
 		"tipo_sanguineo": "A+",
 		"cor": "vermelho",
-		"foto": "https://randomuser.me/api/portraits/men/12.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/12.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 25,
@@ -672,7 +697,8 @@
 		"peso": 55,
 		"tipo_sanguineo": "B+",
 		"cor": "verde",
-		"foto": "https://randomuser.me/api/portraits/women/91.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/91.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 26,
@@ -699,7 +725,8 @@
 		"peso": 57,
 		"tipo_sanguineo": "A+",
 		"cor": "vermelho",
-		"foto": "https://randomuser.me/api/portraits/women/67.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/67.jpg",
+		"status":"REJEITADO"
 	},
 	{
 		"id": 27,
@@ -726,7 +753,8 @@
 		"peso": 79,
 		"tipo_sanguineo": "O-",
 		"cor": "vermelho",
-		"foto": "https://randomuser.me/api/portraits/men/59.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/59.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 28,
@@ -753,7 +781,8 @@
 		"peso": 58,
 		"tipo_sanguineo": "O+",
 		"cor": "amarelo",
-		"foto": "https://randomuser.me/api/portraits/women/69.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/69.jpg",
+		"status":"APROVADO"
 	},
 	{
 		"id": 29,
@@ -780,7 +809,8 @@
 		"peso": 51,
 		"tipo_sanguineo": "AB+",
 		"cor": "laranja",
-		"foto": "https://randomuser.me/api/portraits/women/13.jpg"
+		"foto": "https://randomuser.me/api/portraits/women/13.jpg",
+		"status":"PENDENTE"
 	},
 	{
 		"id": 30,
@@ -807,6 +837,7 @@
 		"peso": 53,
 		"tipo_sanguineo": "O+",
 		"cor": "laranja",
-		"foto": "https://randomuser.me/api/portraits/men/72.jpg"
+		"foto": "https://randomuser.me/api/portraits/men/72.jpg",
+		"status":"APROVADO"
 	}
 ]

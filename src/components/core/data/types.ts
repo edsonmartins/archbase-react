@@ -22,4 +22,6 @@ export interface Pessoa {
   peso: number;
   tipo_sanguineo: string;
   cor: string;
+  foto: string;
+  status: string;
 }

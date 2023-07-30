@@ -1,13 +1,15 @@
-import React, { useState, useEffect, ReactNode } from 'react';
-import { Card, Grid, Group, Text } from '@mantine/core';
+import React, { useState, useEffect, ReactNode, useContext, useRef } from 'react';
+import { Avatar, Card, Grid, Group, Text, createStyles } from '@mantine/core';
 import { Pessoa, pessoas } from '@components/core';
 import { useArchbaseDataSource, useArchbaseForceUpdate, useArchbaseDataSourceListener } from '@components/hooks';
 import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { Meta, StoryObj } from '@storybook/react';
-import { ArchbaseList } from './ArchbaseList';
+import { ArchbaseList, ArchbaseListCustomItemProps } from './ArchbaseList';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
 import { ThemeIcon } from '@mantine/core';
 import { IconUser } from '@tabler/icons-react';
+import { IconPhoneCall, IconAt } from '@tabler/icons-react';
+import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context';
 const data = pessoas;
 
 interface ArchbaseListBasicExampleProps {
@@ -53,7 +55,6 @@ const ArchbaseListBasicExample = ({ showIcon, showPhoto, justifyContent, spacing
     }
   }, [showIcon, showPhoto]);
 
-  console.log(icon);
   return (
     <Grid>
       <Grid.Col span="content">
@@ -74,6 +75,127 @@ const ArchbaseListBasicExample = ({ showIcon, showPhoto, justifyContent, spacing
             imageHeight={24}
             justify={justifyContent}
             spacing={spacing}
+          />
+        </Card>
+      </Grid.Col>
+      <Grid.Col span={3}>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section withBorder inheritPadding py="xs">
+            <Group position="apart">
+              <Text weight={500}>Objeto Pessoa</Text>
+            </Group>
+          </Card.Section>
+          <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
+        </Card>
+      </Grid.Col>
+      <Grid.Col span={3}>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section withBorder inheritPadding py="xs">
+            <Group position="apart">
+              <Text weight={500}>DataSource dsPessoas</Text>
+            </Group>
+          </Card.Section>
+          <ArchbaseObjectInspector data={dataSource} />
+        </Card>
+      </Grid.Col>
+    </Grid>
+  );
+};
+
+interface CustomItemProps extends ArchbaseListCustomItemProps<Pessoa,string> {
+
+}
+
+const useStyles = createStyles((theme) => ({
+  icon: {
+    color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[7],
+  },
+
+  name: {
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+  },
+}));
+
+
+const CustomItem = (props: CustomItemProps) => {
+  const { classes } = useStyles();
+  const listContextValue = useContext<ArchbaseListContextValue<Pessoa,string>>(ArchbaseListContext);
+  const itemRef = useRef<any>(null);
+
+  useEffect(()=>{
+    if (itemRef.current && props.active) {
+      itemRef.current.focus();
+    }
+  },[props.active])
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    if (!props.disabled) {
+      if (listContextValue.handleSelectItem) {
+        listContextValue.handleSelectItem(props.index, props.recordData!);
+      }
+    }
+  };
+
+  const backgroundColor = props.active?listContextValue.activeBackgroundColor:"";
+  const color = props.active?listContextValue.activeColor:"";
+  return (
+    <div onClick={handleClick} style={{padding:"8px",backgroundColor, color}} ref={itemRef} tabIndex={-1}> 
+      <Group noWrap>
+        <Avatar src={props.recordData.foto} size={94} radius="md" />
+        <div>
+          <Text fz="lg" fw={500} className={classes.name}>
+            {props.recordData.nome}
+          </Text>
+
+          <Group noWrap spacing={10} mt={3}>
+            <IconAt stroke={1.5} size="1rem" className={classes.icon} />
+            <Text fz="xs" c="dimmed" className={classes.name}>
+              {props.recordData.email}
+            </Text>
+          </Group>
+
+          <Group noWrap spacing={10} mt={5}>
+            <IconPhoneCall stroke={1.5} size="1rem" className={classes.icon} />
+            <Text fz="xs" c="dimmed" className={classes.name} >
+              {props.recordData.celular}
+            </Text>
+          </Group>
+        </div>
+      </Group>
+    </div>);
+}
+
+const ArchbaseListCustomItemExample = () => {
+  const forceUpdate = useArchbaseForceUpdate();
+  const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
+
+  useArchbaseDataSourceListener<Pessoa, string>({
+    dataSource,
+    listener: (event: DataSourceEvent<Pessoa>): void => {
+      switch (event.type) {
+        case DataSourceEventNames.afterScroll: {
+          forceUpdate();
+          break;
+        }
+        default:
+      }
+    },
+  });
+
+  return (
+    <Grid>
+      <Grid.Col span="content">
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section withBorder inheritPadding py="xs">
+            <Group position="apart">
+              <Text weight={500}>Lista de Pessoas customizada</Text>
+            </Group>
+          </Card.Section>
+          <ArchbaseList<Pessoa, string>
+            height={700}
+            dataSource={dataSource!}
+            component={{type:CustomItem, props:{opcao1:'teste',opcao2:'teste'}}}
           />
         </Card>
       </Grid.Col>
@@ -126,4 +248,10 @@ export const Example: StoryObj<typeof ArchbaseListBasicExample> = {
       control: { type: 'select' },
     },
   },
+};
+
+export const Example2: StoryObj<typeof ArchbaseListCustomItemExample> = {
+  render: (args) => {
+    return <ArchbaseListCustomItemExample/>;
+  },  
 };

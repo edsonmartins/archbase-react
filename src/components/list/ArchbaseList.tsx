@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback, ReactNode, useMemo } from 'react';
+import React, { useState, useEffect, ReactNode, useMemo } from 'react';
 import { uniqueId } from 'lodash';
 import { ArchbaseListItem } from './ArchbaseListItem';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { ArchbaseError } from '@components/core';
 import { useArchbaseDidMount, useArchbaseWillUnmount } from '@components/hooks';
-import { Box, MantineNumberSize, MantineSize, Paper, useMantineTheme } from '@mantine/core';
+import { Box, MantineNumberSize, Paper, useMantineTheme } from '@mantine/core';
 import useStyles from './ArchbaseList.styles';
 import { ArchbaseListProvider } from './ArchbaseList.context';
 
-export interface ArchbaseItem<T,_ID> {
+export interface ArchbaseListCustomItemProps<T,_ID> {
   /** Chave */
   key: string;
   /** Id do item */
@@ -18,15 +18,15 @@ export interface ArchbaseItem<T,_ID> {
   /** Indice dentro da lista */
   index : number;
   /** Registro contendo dados de uma linha na lista */
-  recordData: T
+  recordData: T,
+  /** Indicador se item da lista está desabilitado */
+  disabled: boolean;
 }
 
-export interface ArchbaseComponentItemDefinition<T,ID> {
-  component: ArchbaseItemType<T,ID>;
-  props: any
+export interface ComponentDefinition {
+  type: React.ElementType;
+  props?: any
 }
-
-export type ArchbaseItemType<T,ID> = React.ComponentType<ReactNode> & ArchbaseItem<T,ID>;
 
 export interface ArchbaseListProps<T, ID> {
   /** Cor de fundo do item ativo */
@@ -74,7 +74,7 @@ export interface ArchbaseListProps<T, ID> {
   /** Function a ser aplicada na lista para filtrar os itens */
   onFilter?: (record: any) => boolean;
   /** Definições do componente customizado a ser renderizado para um Item da lista */
-  componentItemDefinition?: ArchbaseComponentItemDefinition<T,ID>;
+  component?: ComponentDefinition;
   /** Somente componentes <ArchbaseListItem /> */
   children?: React.ReactNode[];
   /** Tipo de lista: ol,ul,div */
@@ -299,29 +299,12 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
             active = true;
           }
         }
-        var { componentItemDefinition, id, dataSource, ...rest } = props;
-        if (componentItemDefinition) {
-          // Validar se o componente informado tem as propriedades necessárias
-          const validComponent = componentItemDefinition.component as ArchbaseItemType<T,ID>;
-          if (
-            !validComponent.key ||
-            typeof validComponent.key !== "string" ||
-            !validComponent.id ||
-            !validComponent.index ||
-            typeof validComponent.index !== "number" ||
-            !validComponent.active ||
-            typeof validComponent.active !== "boolean" ||
-            !validComponent.recordData 
-          ) {
-            throw new Error(
-              "A propriedade 'componentItemDefinition' deve ter um componente personalizado válido do tipo ArchbaseItemType com as propriedades necessárias."
-            );
-          }
-
-          let DynamicComponent: any = componentItemDefinition.component;
+        var { component, id, dataSource, ...rest } = props;
+        if (component) {
+          let DynamicComponent = component.type;
           let compProps = {};
-          if (componentItemDefinition.props) {
-            compProps = componentItemDefinition.props;
+          if (component.props) {
+            compProps = component.props;
           }
 
           let newId = record[dataFieldId];
@@ -339,8 +322,10 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
               index={index}
               dataSource={dataSource}
               recordData={record}
+              disabled={record.disabled}
               {...compProps}
               {...rest}
+              {...component.props}
             />
           );
         } else {
