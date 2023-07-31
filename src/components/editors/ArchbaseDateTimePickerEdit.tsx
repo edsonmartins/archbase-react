@@ -301,6 +301,8 @@ export interface ArchbaseDateTimePickerEditProps
   showPlaceholderFormat?: boolean
   onFocusExit?: React.FocusEvent<HTMLInputElement>
   onFocusEnter?: React.FocusEvent<HTMLInputElement>
+  /** Indica se o date time picker tem o preenchimento obrigatório */
+  required?: boolean
 }
 
 const defaultProps: Partial<ArchbaseDateTimePickerEditProps> = {
@@ -310,6 +312,7 @@ const defaultProps: Partial<ArchbaseDateTimePickerEditProps> = {
   readOnly: false,
   disabled: false,
   clearable: true,
+  required: false,
   placeholderChar: '_',
   showPlaceholderFormat: true,
   dateFormat: 'DD/MM/YYYY HH:MM:SS'
@@ -512,7 +515,7 @@ export const ArchbaseDateTimePickerEdit = forwardRef<
           {...popoverProps}
         >
           <Popover.Target>
-            <Input.Wrapper __staticSelector={ARCHBASE_DATETIME_PICKER_EDIT}>
+            <Input.Wrapper required={props.required} __staticSelector={ARCHBASE_DATETIME_PICKER_EDIT}>
               <Input<any>
                 data-dates-input
                 data-read-only={readOnly || undefined}

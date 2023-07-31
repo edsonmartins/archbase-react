@@ -8,6 +8,8 @@ import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { pessoasData, pedidosData, Pedido, Pessoa } from '@demo/index';
 import { ArchbaseSelect } from './ArchbaseSelect';
+import { PedidoStatus } from '@demo/data/types';
+import { ArchbaseSelectItem } from './ArchbaseSelectItem';
 
 const pessoasList: Pessoa[] = pessoasData;
 const pedidosList: Pedido[] = pedidosData;
@@ -49,6 +51,17 @@ const ArchbaseSelectExample = () => {
               getOptionLabel={(option: Pessoa) => option.nome}
               getOptionValue={(option: Pessoa) => option}
             />
+            <ArchbaseSelect<Pedido, string, PedidoStatus>
+              label="Status"
+              dataSource={dataSource}
+              dataField="status"
+              getOptionLabel={(option: PedidoStatus) => option.toString()}
+              getOptionValue={(option: PedidoStatus) => option}
+            >
+              <ArchbaseSelectItem disabled={false} label="Pendente" value={PedidoStatus.PENDENTE} />
+              <ArchbaseSelectItem disabled={false} label="Faturado" value={PedidoStatus.FATURADO} />
+              <ArchbaseSelectItem disabled={false} label="Cancelado" value={PedidoStatus.CANCELADO} />
+            </ArchbaseSelect>
           </Box>
         </Card>
       </Grid.Col>

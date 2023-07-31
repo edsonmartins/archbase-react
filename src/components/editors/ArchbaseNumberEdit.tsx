@@ -109,7 +109,7 @@ function formatNumber(
 
 export type ArchbaseNumberEditStylesNames = InputStylesNames | InputWrapperStylesNames;
 
-export interface ArchbaseNumberEditProps<T>
+export interface ArchbaseNumberEditProps<T,ID>
   extends DefaultProps<ArchbaseNumberEditStylesNames>,
     InputSharedProps,
     InputWrapperBaseProps,
@@ -119,27 +119,45 @@ export interface ArchbaseNumberEditProps<T>
   clearable?: boolean;
   /** Adereços adicionados ao botão limpar */
   clearButtonProps?: React.ComponentPropsWithoutRef<'button'>;
-  dataSource?: ArchbaseDataSource<T, any>;
+  /** Fonte de dados onde será atribuido o valor do number edit */
+  dataSource?: ArchbaseDataSource<T, ID>;
+  /** Campo onde deverá ser atribuido o valor do number edit na fonte de dados */
   dataField?: string;
+  /** Indicador se o number edit está desabilitado */
   disabled: boolean;
+  /** Indicador se o number edit é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly: boolean;
+  /** Estilo do mask edit */
   style?: CSSProperties | undefined;
+  /** Nome da classe para estilo do number edit */
   className?: string;
-  onFocusExit: FocusEventHandler<T> | undefined;
-  onFocusEnter: FocusEventHandler<T> | undefined;
+  /** Evento quando o foco sai do edit */
+  onFocusExit?: FocusEventHandler<T> | undefined;
+  /** Evento quando o edit recebe o foco */
+  onFocusEnter?: FocusEventHandler<T> | undefined;
+  /** Evento quando o valor do edit é alterado */
   onChangeValue: (maskValue: any, value: any, event: any) => void;
+  /** Valor inicial do campo */
   value: string;
+  /** Caracter separador decimal */
   decimalSeparator: string;
+  /** Caracter separador de milhar */
   thousandSeparator: string;
+  /** Número de casas decimais */
   precision: number;
+  /** Permite números negativos */
   allowNegative: boolean;
+  /** Aceita em branco */
   allowEmpty: boolean;
+  /** Prefixo */
   prefix: string;
+  /** Sufixo */
   suffix: string;
+  /** Indicador se aceita apenas números inteiros */
   integer: boolean;
 }
 
-export function ArchbaseNumberEdit<T>({
+export function ArchbaseNumberEdit<T,ID>({
   dataSource,
   dataField,
   disabled = false,
@@ -165,7 +183,7 @@ export function ArchbaseNumberEdit<T>({
   unstyled,
   classNames,
   ...others
-}: ArchbaseNumberEditProps<T>) {
+}: ArchbaseNumberEditProps<T,ID>) {
   const [isOpen, _setIsOpen] = useState(false);
   const [maskedValue, setMaskedValue] = useState<string>('');
   const maskedValuePrev = useArchbasePrevious(maskedValue);
@@ -371,10 +389,13 @@ export function ArchbaseNumberEdit<T>({
       />
     ) : null);
 
-  let _readOnly = readOnly;
-  if (dataSource && !readOnly) {
-    _readOnly = dataSource.isBrowsing();
-  }
+    const isReadOnly = () =>{
+      let _readOnly = readOnly;
+      if (dataSource && !readOnly) {
+        _readOnly = dataSource.isBrowsing();
+      }
+      return _readOnly;
+    }  
 
   return (
     <TextInput
@@ -385,7 +406,7 @@ export function ArchbaseNumberEdit<T>({
       type={'text'}
       value={maskedValue}
       rightSection={_rightSection}
-      readOnly={_readOnly}
+      readOnly={isReadOnly()}
       onChange={handleChange}
       onBlur={handleOnFocusExit}
       onFocus={handleOnFocusEnter}

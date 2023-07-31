@@ -8,20 +8,35 @@ import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 
 export interface ArchbaseCheckBoxProps<T, ID> {
+  /** Fonte de dados onde será atribuido o valor do checkbox */
   dataSource?: ArchbaseDataSource<T, ID>;
+  /** Campo onde deverá ser atribuido o valor do checkbox na fonte de dados */
   dataField?: string;
+  /** Indicador se o checkbox está desabilitado */
   disabled?: boolean;
+  /** Indicador se o checkbox é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean;
+  /** Indicador se o preenchimento do checkbox é obrigatório */
   required?: boolean;
+  /** Estilo do checkbox */
   style?: CSSProperties;
+  /** Valor quando o checkbox estiver true */
   trueValue: any;
+  /** Valor quando o checkbox estiver false */
   falseValue: any;
+  /** Indicador se o checkbox está marcado */
   isChecked?: boolean;
+  /** Título do checkbox */
   label?: string;
+  /** Descrição do checkbox */
   description?: string;
+  /** Último erro ocorrido no checkbox */
   error?: string;
+  /** Evento quando o foco sai do checkbox */
   onFocusExit?: FocusEventHandler<T> | undefined;
+  /** Evento quando o checkbox recebe o foco */
   onFocusEnter?: FocusEventHandler<T> | undefined;
+  /** Evento quando o valor do checkbox é alterado */
   onChangeValue?: (value: any, event: any) => void;
 }
 
@@ -112,10 +127,18 @@ export function ArchbaseCheckBox<T, ID>({
     }
   };
 
+  const isReadOnly = () => {
+    let _readOnly = readOnly;
+    if (dataSource && !readOnly) {
+      _readOnly = dataSource.isBrowsing();
+    }
+    return _readOnly;
+  };
+
   return (
     <Checkbox
       disabled={disabled}
-      readOnly={readOnly}
+      readOnly={isReadOnly()}
       required={required}
       style={style}
       checked={checked}

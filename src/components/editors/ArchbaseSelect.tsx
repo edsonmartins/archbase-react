@@ -1,36 +1,43 @@
 import { MantineSize, Select } from '@mantine/core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import React, {
-  CSSProperties,
-  FocusEventHandler,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { CSSProperties, FocusEventHandler, ReactNode, useCallback, useEffect, useState } from 'react';
 import { uniqueId } from 'lodash';
 import { useArchbaseDidMount, useArchbaseDidUpdate } from '@components/hooks';
 import { useDebouncedState } from '@mantine/hooks';
-import {
-  ArchbaseSelectProvider,
-} from './ArchbaseSelect.context';
+import { ArchbaseSelectProvider } from './ArchbaseSelect.context';
 import { CustomSelectScrollArea } from './ArchbaseAsyncSelect';
 
-
-
 export interface ArchbaseSelectProps<T, ID, O> {
+  /** Permite ou não delecionar um item */
   allowDeselect?: boolean;
+  /** Indicador se permite limpar o select */
   clearable?: boolean;
+  /** Fonte de dados onde será atribuido o item selecionado */
   dataSource?: ArchbaseDataSource<T, ID>;
-  debounceTime?: number;
+  /** Campo onde deverá ser atribuido o item selecionado na fonte de dados */
   dataField?: string;
+  /** Tempo de espero antes de realizar a busca */
+  debounceTime?: number;
+  /** Indicador se o select está desabilitado */
   disabled?: boolean;
+  /** Indicador se o select é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean;
+  /** Estilo do select */
   style?: CSSProperties;
+  /** Texto explicativo do select */
   placeholder?: string;
+  /** Título do select */
   label?: string;
+  /** Descrição do select */
   description?: string;
+  /** Último erro ocorrido no select */
   error?: string;
+  /** Permite pesquisar no select */
   searchable?: boolean;
+  /** Icon a esquerda do select */
+  icon?: ReactNode;
+  /** Largura do icone a esquerda do select */
+  iconWidth?: MantineSize;
   /** Valor de entrada controlado */
   value?: any;
   /** Valor padrão de entrada não controlado */
@@ -57,19 +64,34 @@ export interface ArchbaseSelectProps<T, ID, O> {
   dropdownPosition?: 'bottom' | 'top' | 'flip';
   /** Evento quando um valor é selecionado */
   onSelectValue?: (value: O) => void;
+  /** Evento quando o foco sai do select */
   onFocusExit?: FocusEventHandler<T> | undefined;
+  /** Evento quando o select recebe o foco */
   onFocusEnter?: FocusEventHandler<T> | undefined;
+  /** Opções de seleção iniciais */
   initialOptions?: O[];
+  /** Function que retorna o label de uma opção */
   getOptionLabel: (option: O) => string;
+  /** Function que retorna o valor de uma opção */
   getOptionValue: (option: O) => any;
+  /** Coleção de ArchbaseSelectItem[] que representam as opções do select */
+  children?: ReactNode | ReactNode[];
+  /** Indica se o select tem o preenchimento obrigatório */
+  required?: boolean;
 }
 function buildOptions<O>(
   initialOptions: O[],
+  children: ReactNode | ReactNode[] | undefined,
   getOptionLabel: (option: O) => string,
   getOptionValue: (option: O) => any,
 ): any {
-  if (!initialOptions) {
+  if (!initialOptions && !children) {
     return [];
+  }
+  if (children) {
+    return React.Children.toArray(children).map((item: any) => {
+      return { label: item.props.label, value: item.props.value, origin: item.props.value, key: uniqueId('select') };
+    });
   }
   return initialOptions.map((item: O) => {
     return { label: getOptionLabel(item), value: getOptionValue(item), origin: item, key: uniqueId('select') };
@@ -83,16 +105,18 @@ export function ArchbaseSelect<T, ID, O>({
   dataField,
   disabled = false,
   debounceTime = 500,
-  //readOnly = false,
+  readOnly = false,
   placeholder,
   initialOptions = [],
   searchable = true,
   label,
   description,
   error,
+  icon,
+  iconWidth,
+  required,
   getOptionLabel,
   getOptionValue,
-  //getOptions,
   onFocusEnter,
   onFocusExit,
   onSelectValue,
@@ -108,8 +132,11 @@ export function ArchbaseSelect<T, ID, O>({
   nothingFound,
   zIndex,
   dropdownPosition,
+  children,
 }: ArchbaseSelectProps<T, ID, O>) {
-  const [options, _setOptions] = useState<any[]>(buildOptions<O>(initialOptions, getOptionLabel, getOptionValue));
+  const [options, _setOptions] = useState<any[]>(
+    buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
+  );
   const [selectedValue, setSelectedValue] = useState<any>(value);
   const [queryValue, setQueryValue] = useDebouncedState('', debounceTime);
 
@@ -185,8 +212,10 @@ export function ArchbaseSelect<T, ID, O>({
   };
 
   const handleDropdownScrollEnded = () => {
-    console.log('chegou final da lista ' + new Date());
+    //
   };
+
+  console.log(selectedValue)
 
   return (
     <ArchbaseSelectProvider
@@ -207,12 +236,17 @@ export function ArchbaseSelect<T, ID, O>({
         error={error}
         data={options}
         size={size!}
+        icon={icon}
+        iconWidth={iconWidth}
+        readOnly={readOnly}
+        required={required}
         onChange={handleChange}
         onBlur={handleOnFocusExit}
         onFocus={handleOnFocusEnter}
         value={selectedValue}
         onSearchChange={setQueryValue}
-        defaultValue={defaultValue!}
+        defaultValue={selectedValue?getOptionLabel(selectedValue):defaultValue}
+        searchValue={selectedValue?getOptionLabel(selectedValue):""}
         filter={filter}
         initiallyOpened={initiallyOpened}
         itemComponent={itemComponent}
@@ -226,3 +260,5 @@ export function ArchbaseSelect<T, ID, O>({
     </ArchbaseSelectProvider>
   );
 }
+
+ArchbaseSelect.displayName = 'ArchbaseSelect';

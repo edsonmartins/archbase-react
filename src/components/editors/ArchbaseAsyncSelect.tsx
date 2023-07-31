@@ -3,6 +3,7 @@ import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@comp
 import React, {
   CSSProperties,
   FocusEventHandler,
+  ReactNode,
   forwardRef,
   useCallback,
   useContext,
@@ -26,19 +27,36 @@ export type OptionsResult<O> = {
 };
 
 export interface ArchbaseAsyncSelectProps<T, ID, O> {
+  /** Permite ou não delecionar um item */
   allowDeselect?: boolean;
+  /** Indicador se permite limpar o select */
   clearable?: boolean;
+  /** Fonte de dados onde será atribuido o item selecionado */
   dataSource?: ArchbaseDataSource<T, ID>;
-  debounceTime?: number;
+  /** Campo onde deverá ser atribuido o item selecionado na fonte de dados */
   dataField?: string;
+  /** Tempo de espero antes de realizar a busca */
+  debounceTime?: number;
+  /** Indicador se o select está desabilitado */
   disabled?: boolean;
+  /** Indicador se o select é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean;
+  /** Estilo do select */
   style?: CSSProperties;
+  /** Texto explicativo do select */
   placeholder?: string;
+  /** Título do select */
   label?: string;
+  /** Descrição do select */
   description?: string;
+  /** Último erro ocorrido no select */
   error?: string;
+  /** Permite pesquisar no select */
   searchable?: boolean;
+  /** Icon a esquerda do select */
+  icon?: ReactNode;
+  /** Largura do icone a esquerda do select */
+  iconWidth?: MantineSize;
   /** Valor de entrada controlado */
   value?: any;
   /** Valor padrão de entrada não controlado */
@@ -65,13 +83,22 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
   dropdownPosition?: 'bottom' | 'top' | 'flip';
   /** Evento quando um valor é selecionado */
   onSelectValue?: (value: O) => void;
+  /** Evento quando o foco sai do select */
   onFocusExit?: FocusEventHandler<T> | undefined;
+  /** Evento quando o select recebe o foco */
   onFocusEnter?: FocusEventHandler<T> | undefined;
+  /** Opções de seleção iniciais */
   initialOptions?: OptionsResult<O>;
+  /** Function que retorna o label de uma opção */
   getOptionLabel: (option: O) => string;
+  /** Function que retorna o valor de uma opção */
   getOptionValue: (option: O) => any;
+  /** Function responsável por retornar uma promessa contendo opções. Usado para buscar dados remotos. */
   getOptions: (page: number, value: string) => Promise<OptionsResult<O>>;
+  /** Evento quando ocorreu um erro carregando dados através da promessa fornecida por getOptions. */
   onErrorLoadOptions?: (error: string) => void;
+  /** Indica se o select tem o preenchimento obrigatório */
+  required?: boolean;
 }
 function buildOptions<O>(
   initialOptions: O[],
@@ -100,6 +127,9 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   label,
   description,
   error,
+  icon,
+  iconWidth,
+  required,
   getOptionLabel,
   getOptionValue,
   getOptions,
@@ -251,6 +281,14 @@ export function ArchbaseAsyncSelect<T, ID, O>({
     );
   };
 
+  const isReadOnly = () =>{
+    let _readOnly = readOnly;
+    if (dataSource && !readOnly) {
+      _readOnly = dataSource.isBrowsing();
+    }
+    return _readOnly;
+  }  
+
   return (
     <ArchbaseAsyncSelectProvider
       value={{
@@ -270,13 +308,17 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         error={error}
         data={options}
         size={size!}
-        readOnly={readOnly}
+        icon={icon}
+        iconWidth={iconWidth}
+        readOnly={isReadOnly()}
         onChange={handleChange}
         onBlur={handleOnFocusExit}
         onFocus={handleOnFocusEnter}
         value={selectedValue}
         onSearchChange={setQueryValue}
-        defaultValue={defaultValue!}
+        defaultValue={selectedValue?getOptionLabel(selectedValue):defaultValue}
+        searchValue={selectedValue?getOptionLabel(selectedValue):""}
+        required={required}
         filter={filter}
         initiallyOpened={initiallyOpened}
         itemComponent={itemComponent}

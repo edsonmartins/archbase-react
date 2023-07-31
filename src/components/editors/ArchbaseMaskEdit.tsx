@@ -29,32 +29,50 @@ export enum MaskPattern {
 
 export type ArchbaseMaskEditStylesNames = InputStylesNames | InputWrapperStylesNames;
 
-export interface ArchbaseMaskEditProps<T>
+export interface ArchbaseMaskEditProps<T,ID>
   extends DefaultProps<ArchbaseMaskEditStylesNames>,
     InputSharedProps,
     InputWrapperBaseProps,
     Omit<React.ComponentPropsWithoutRef<'input'>, 'size'> {
+  /** Tipo de campo html */
   type?: React.HTMLInputTypeAttribute;
+  /** Propriedades para atribuir ao wrapper do mask edit */
   wrapperProps?: Record<string, any>;
+  /** Tamanho do mask edit */
   size?: MantineSize;
+  /** Nome do seletor estático */
   __staticSelector?: string;
-  dataSource?: ArchbaseDataSource<any, any>;
+  /** Fonte de dados onde será atribuido o valor do mask edit */
+  dataSource?: ArchbaseDataSource<T, ID>;
+  /** Campo onde deverá ser atribuido o valor do mask edit na fonte de dados */
   dataField?: string;
+  /** Indicador se o mask edit está desabilitado */
   disabled?: boolean;
+  /** Indicador se o mask edit é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean;
+  /** Estilo do mask edit */
   style?: CSSProperties;
+  /** Valor inicial do mask edit */
   value?: any;
+  /** Texto sugestão do mask edit */
   placeholder?: string;
+  /** Caractere a ser mostrado onde não houver valor no campo */
   placeholderChar?: string;
+  /** Indicador se apresenta ou não a máscara */
   showMask?: boolean;
+  /** Mascara podendo ser o tipo MaskPattern, uma Function ou uma string. Mais detalhes em: https://github.com/uNmAnNeR/imaskjs */
   mask?: MaskPattern | Function | string;
+  /** Indicador se deverá ser salvo o valor com a máscara */
   saveWithMask?: boolean;
+  /** Evento quando o foco sai do edit */
   onFocusExit?: FocusEventHandler<T> | undefined;
+  /** Evento quando o edit recebe o foco */
   onFocusEnter?: FocusEventHandler<T> | undefined;
-  onChangeValue?: (value: any, maskedValue: any) => void;
+  /** Evento quando o valor do edit é alterado */
+  onChangeValue?: (value: any, event: any) => void;
 }
 
-const defaultProps: Partial<ArchbaseMaskEditProps<any>> = {
+const defaultProps: Partial<ArchbaseMaskEditProps<any,any>> = {
   type: 'text',
   size: 'sm',
   __staticSelector: 'ArchbaseMaskEdit',
@@ -68,9 +86,9 @@ const defaultProps: Partial<ArchbaseMaskEditProps<any>> = {
   saveWithMask: false,
 };
 
-export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditProps<any>>(
-  (props: ArchbaseMaskEditProps<any>, ref) => {
-    const { inputProps, wrapperProps, mask, placeholderChar, placeholder, ...others } = useInputProps(
+export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditProps<any,any>>(
+  (props: ArchbaseMaskEditProps<any,any>, ref) => {
+    const { inputProps, wrapperProps, mask, placeholderChar, placeholder, readOnly, disabled, ...others } = useInputProps(
       'ArchbaseMaskEdit',
       defaultProps,
       props,
@@ -150,6 +168,14 @@ export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditPro
       }
     };
 
+    const isReadOnly = () =>{
+      let _readOnly = readOnly;
+      if (dataSource && !readOnly) {
+        _readOnly = dataSource.isBrowsing();
+      }
+      return _readOnly;
+    }  
+
     return (
       <Input.Wrapper {...wrapperProps}>
         <Input<any>
@@ -163,6 +189,8 @@ export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditPro
           value={value}
           placeholderChar={placeholderChar}
           id={id}
+          readOnly={isReadOnly()}
+          disabled={disabled}
           placeholder={placeholder}
           onAccept={handleAccept}
           onBlur={handleOnFocusExit}
