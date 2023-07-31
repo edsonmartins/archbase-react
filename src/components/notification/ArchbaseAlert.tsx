@@ -1,7 +1,5 @@
 import {
   Alert,
-  AlertProps,
-  Box,
   DefaultProps,
   MantineColor,
   MantineNumberSize,
@@ -37,25 +35,25 @@ export function MandalaAlert(props: ArchbaseAlertProps) {
     color,
     radius,
     withCloseButton,
-    withBorder,
+    //withBorder,
     title,
     icon,
     children,
     onClose,
     classNames,
-    styles,
+    //styles,
     unstyled,
     variant,
-    backgroundColor,
+    //backgroundColor,
     titleColor,
     autoClose = 0,
-    ...others
+    //...others
   } = useComponentDefaultProps('MandalaAlert', defaultProps, props)
-  const [started, setStarted] = useState(false)
+  const [started, _setStarted] = useState(false)
 
   useEffect(() => {
     if (autoClose > 0 && !started) {
-      const timer = setTimeout(() => (onClose ? onClose() : null), autoClose)
+      setTimeout(() => (onClose ? onClose() : null), autoClose)
     }
   }, [autoClose])
 

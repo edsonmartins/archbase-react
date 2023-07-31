@@ -115,7 +115,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     onSelectListItem,
     width,
     showBorder = true,
-    borderColor,
+    //borderColor,
     borderRadius,
     dataFieldText = 'text',
     dataFieldId = 'id',

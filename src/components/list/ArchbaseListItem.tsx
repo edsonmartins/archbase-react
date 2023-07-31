@@ -54,7 +54,7 @@ export function ArchbaseListItem<T,ID>({
   active,
   activeBackgroundColor,
   activeColor,
-  align,
+  //align,
   backgroundColor,
   caption,
   color,
@@ -69,9 +69,9 @@ export function ArchbaseListItem<T,ID>({
   justify='flex-start',
   children,
   recordData,
-  showBorder = true,
-  borderColor,
-  borderRadius,
+  //showBorder = true,
+  //borderColor,
+  //borderRadius,
   spacing='md'
 }: ArchbaseListItemProps<T,ID>) {
   const listContextValue = useContext<ArchbaseListContextValue<T,ID>>(ArchbaseListContext);

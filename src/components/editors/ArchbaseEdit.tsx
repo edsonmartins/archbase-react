@@ -1,4 +1,4 @@
-import { MantineNumberSize, TextInput } from '@mantine/core';
+import { TextInput } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useState, useCallback } from 'react';
 

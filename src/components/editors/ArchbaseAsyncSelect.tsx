@@ -46,7 +46,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   dataSource,
   dataField,
   disabled = false,
-  readOnly = false,
+  //readOnly = false,
   placeholder,
   initialOptions = [],
   searchable = true,
@@ -56,12 +56,12 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   size,
   getOptionLabel,
   getOptionValue,
-  getOptions,
+  //getOptions,
   onFocusEnter,
   onFocusExit,
   onSelectValue
 }: ArchbaseAsyncSelectProps<T, ID, O>) {
-  const [options, setOptions] = useState<any[]>(buildOptions<O>(initialOptions, getOptionLabel, getOptionValue));
+  const [options, _setOptions] = useState<any[]>(buildOptions<O>(initialOptions, getOptionLabel, getOptionValue));
   const [value, setValue] = useState<any>();
   const [queryValue, setQueryValue] = useDebouncedState('',500)
 
