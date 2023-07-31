@@ -6,12 +6,12 @@ import { FakePedidoService } from '@demo/service/FakePedidoService'
 import { FakeAuthenticator } from '@demo/auth/FakeAuthenticator'
 import { FakeApiClient } from '@demo/service/FakeApiClient'
 
-const container = new Container()
+export const demoContainerIOC = new Container()
 
-container.bind<FakeAuthenticator>(API_TYPE.Authenticator).to(FakeAuthenticator)
-container.bind<FakeApiClient>(API_TYPE.ApiClient).to(FakeApiClient)
-container.bind<FakeProdutoService>(API_TYPE.ProdutoService).to(FakeProdutoService)
-container.bind<FakePessoaService>(API_TYPE.ProdutoService).to(FakePessoaService)
-container.bind<FakePedidoService>(API_TYPE.ProdutoService).to(FakePedidoService)
+demoContainerIOC.bind<FakeAuthenticator>(API_TYPE.Authenticator).to(FakeAuthenticator)
+demoContainerIOC.bind<FakeApiClient>(API_TYPE.ApiClient).to(FakeApiClient)
+demoContainerIOC.bind<FakeProdutoService>(API_TYPE.Produto).to(FakeProdutoService)
+demoContainerIOC.bind<FakePessoaService>(API_TYPE.Pessoa).to(FakePessoaService)
+demoContainerIOC.bind<FakePedidoService>(API_TYPE.Pedido).to(FakePedidoService)
 
-export default container
+

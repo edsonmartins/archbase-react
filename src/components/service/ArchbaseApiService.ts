@@ -6,6 +6,7 @@ import { API_TYPE } from '../core/ioc'
 import type { ArchbaseAuthenticator } from '../auth/ArchbaseAuthenticator'
 import { ArchbaseJacksonParser } from '../core/json'
 
+
 export interface Page<T> {
   content: T[]
   pageable: Pageable
@@ -179,3 +180,62 @@ export abstract class ArchbaseApiService<T, ID> {
     return this.client.delete<void>(`${this.getEndpoint()}/${id}`)
   }
 }
+
+
+export class DefaultPage<T> implements Page<T> {
+  content: T[];
+  pageable: Pageable;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  sort: Sort;
+  number: number;
+  size: number;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+
+  constructor(
+    content: T[],
+    totalElements: number,
+    totalPages: number,
+    pageNumber: number,
+    pageSize: number,
+    sort?: Sort,
+    last?: boolean,
+    first?: boolean,
+    numberOfElements?: number,
+    empty?: boolean
+  ) {
+    this.content = content;
+    this.totalElements = totalElements;
+    this.totalPages = totalPages;
+    this.number = pageNumber;
+    this.size = pageSize;
+    this.sort = sort || { sorted: false, unsorted: true, empty: true };
+    this.last = last !== undefined ? last : pageNumber === totalPages - 1;
+    this.first = first !== undefined ? first : pageNumber === 0;
+    this.numberOfElements = numberOfElements !== undefined ? numberOfElements : content.length;
+    this.empty = empty !== undefined ? empty : content.length === 0;
+
+    this.pageable = {
+      sort: this.sort,
+      offset: pageNumber * pageSize,
+      pageSize: pageSize,
+      pageNumber: pageNumber,
+      unpaged: false,
+      paged: true,
+    };
+  }
+
+  static createFromValues<T>(
+    content: T[],
+    totalElements: number,
+    totalPages: number,
+    pageNumber: number,
+    pageSize: number
+  ): DefaultPage<T> {
+    return new DefaultPage<T>(content, totalElements, totalPages, pageNumber, pageSize);
+  }
+}
+

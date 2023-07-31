@@ -3,7 +3,7 @@ import 'reflect-metadata'
 import { inject, injectable } from 'inversify'
 import { ArchbaseApiClient } from '@components/service'
 import { ArchbaseAuthenticator } from '@components/auth'
-import { API_TYPE } from 'demo/ioc/DemoIOCTypes'
+import { API_TYPE } from '@demo/ioc/DemoIOCTypes'
 
 @injectable()
 export class FakeApiClient implements ArchbaseApiClient {

@@ -7,4 +7,5 @@ export { ArchbaseMaskEdit } from './ArchbaseMaskEdit';
 export type { MaskPattern } from './ArchbaseMaskEdit';
 export { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit';
 export { ArchbaseAsyncSelect} from './ArchbaseAsyncSelect'
+export type { OptionsResult} from './ArchbaseAsyncSelect'
 export type { ArchbaseDatePickerEditProps } from './ArchbaseDatePickerEdit';
