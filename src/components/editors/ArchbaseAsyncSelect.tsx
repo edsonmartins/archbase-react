@@ -1,8 +1,9 @@
 import { MantineSize, Select } from '@mantine/core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import React, { CSSProperties, FocusEventHandler, useCallback, useState } from 'react';
+import React, { CSSProperties, FocusEventHandler, useCallback, useEffect, useState } from 'react';
 import { uniqueId } from 'lodash';
 import { useArchbaseDidMount, useArchbaseDidUpdate } from '@components/hooks';
+import { useDebouncedState } from '@mantine/hooks';
 
 export interface ArchbaseAsyncSelectProps<T, ID, O> {
   allowDeselect?: boolean;
@@ -62,6 +63,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 }: ArchbaseAsyncSelectProps<T, ID, O>) {
   const [options, setOptions] = useState<any[]>(buildOptions<O>(initialOptions, getOptionLabel, getOptionValue));
   const [value, setValue] = useState<any>();
+  const [queryValue, setQueryValue] = useDebouncedState('',500)
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value;
@@ -101,6 +103,10 @@ export function ArchbaseAsyncSelect<T, ID, O>({
       dataSource.addFieldChangeListener(dataField, fieldChangedListener);
     }
   });
+
+  useEffect(()=>{
+    console.log(queryValue)
+  },[queryValue])
 
   useArchbaseDidUpdate(() => {
     loadDataSourceFieldValue();
@@ -147,7 +153,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
       onBlur={handleOnFocusExit}
       onFocus={handleOnFocusEnter}
       value={value}
-      onSearchChange={(query) => console.log(query)}
+      onSearchChange={setQueryValue}
     />
   );
 }

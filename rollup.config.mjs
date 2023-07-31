@@ -32,6 +32,7 @@ const config = {
     alias({
       '@components': './src/components',
       '@hooks': './src/components/hooks',
+      '@demo': './src/demo',
     }),
     postcss({
       plugins: [],

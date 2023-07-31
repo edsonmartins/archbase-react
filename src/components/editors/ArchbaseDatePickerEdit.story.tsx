@@ -2,7 +2,7 @@ import React from 'react';
 import { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit';
 import { Card, Grid, Group, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa, pessoasData } from '@components/core';
+import { Pessoa, pessoasData } from '@demo/index';
 import { useArchbaseDataSource } from '../hooks';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';

@@ -1,14 +1,13 @@
 import React from 'react';
 import { Box, Card, Grid, Group, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa } from '../core';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks/';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseAsyncSelect } from './ArchbaseAsyncSelect';
-import { pessoasData, pedidosData, Pedido } from '@components/core';
+import { pessoasData, pedidosData, Pedido, Pessoa } from '@demo/index';
 
 const pessoasList: Pessoa[] = pessoasData;
 const pedidosList: Pedido[] = pedidosData;

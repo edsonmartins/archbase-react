@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactNode, useContext, useRef } from 'react';
 import { Avatar, Card, Grid, Group, Text, createStyles } from '@mantine/core';
-import { Pessoa, pessoasData } from '@components/core';
+import { Pessoa, pessoasData } from '@demo/index';
 import { useArchbaseDataSource, useArchbaseForceUpdate, useArchbaseDataSourceListener } from '@components/hooks';
 import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { Meta, StoryObj } from '@storybook/react';
