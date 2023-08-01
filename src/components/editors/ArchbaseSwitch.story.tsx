@@ -6,10 +6,10 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { ArchbaseCheckBox } from './ArchbaseCheckbox';
+import { ArchbaseSwitch } from './ArchbaseSwitch';
 import { Pessoa, pessoasData } from '@demo/index';
 
-const ArchbaseEditExample = () => {
+const ArchbaseSwitchExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
@@ -34,10 +34,10 @@ const ArchbaseEditExample = () => {
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs" mb="1rem">
             <Group position="apart">
-              <Text weight={500}>Checkbox Component</Text>
+              <Text weight={500}>Switch Component</Text>
             </Group>
           </Card.Section>
-          <ArchbaseCheckBox
+          <ArchbaseSwitch
             label="Masculino"
             dataSource={dataSource}
             dataField="sexo"
@@ -71,16 +71,16 @@ const ArchbaseEditExample = () => {
 };
 
 export default {
-  title: 'Editors/Checkbox',
-  component: ArchbaseEditExample,
+  title: 'Editors/Switch',
+  component: ArchbaseSwitchExample,
 } as Meta;
 
 const data = [pessoasData[0]];
 
-export const Example: StoryObj<typeof ArchbaseEditExample> = {
+export const Example: StoryObj<typeof ArchbaseSwitchExample> = {
   args: {
     render: () => {
-      <ArchbaseEditExample />;
+      <ArchbaseSwitchExample />;
     },
   },
 };

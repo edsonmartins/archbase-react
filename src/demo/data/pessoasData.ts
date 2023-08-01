@@ -1,4 +1,4 @@
-import { Pessoa } from "./types";
+import { Pessoa, PessoaStatus } from "./types";
 
 export const pessoasData : Pessoa[] = [
 	{
@@ -24,10 +24,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "67991332777",
 		"altura": "1.89",
 		"peso": 63,
+		"avaliacao": 4,
 		"tipo_sanguineo": "AB+",
 		"cor": "preto",
 		"foto": "https://randomuser.me/api/portraits/men/57.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Reprehenderit anim tempor veniam pariatur exercitation nulla officia nulla commodo labore nulla adipisicing. Ad ex minim est consequat irure occaecat eu quis esse quis dolor Lorem duis. Magna fugiat eu duis nostrud nostrud Lorem. Et Lorem aliqua eu eu laboris et minim voluptate nostrud et pariatur magna incididunt nulla."
 	},
 	{
 		"id": 2,
@@ -52,10 +54,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "55996033294",
 		"altura": "1.57",
 		"peso": 88,
+		"avaliacao": 4,
 		"tipo_sanguineo": "O-",
 		"cor": "vermelho",
 		"foto": "https://randomuser.me/api/portraits/women/44.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Ut aliquip magna pariatur qui nostrud ea sint duis incididunt occaecat nostrud minim do. Velit laborum ut do duis Lorem id dolor duis. Ut tempor ullamco laboris quis adipisicing commodo officia nulla tempor minim nisi tempor Lorem. Quis ex do consectetur consectetur ut adipisicing ipsum. Adipisicing non non aute do amet laborum est labore mollit pariatur consequat sunt. Sit ad anim ea irure aliquip consectetur laboris ea consectetur deserunt aliqua consectetur. Veniam eiusmod excepteur sunt ut dolore mollit consectetur laboris elit labore eu id occaecat ipsum."
 		
 	},
 	{
@@ -81,10 +85,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "79991842089",
 		"altura": "1.98",
 		"peso": 73,
+		"avaliacao": 5,
 		"tipo_sanguineo": "AB-",
 		"cor": "amarelo",
 		"foto": "https://randomuser.me/api/portraits/men/51.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Deserunt mollit consectetur do magna pariatur dolore dolor elit ad incididunt excepteur tempor. Enim minim minim aliquip sint irure cillum qui voluptate cillum mollit laborum laboris. Labore ex commodo aliqua Lorem voluptate consectetur minim commodo ullamco enim culpa aliqua dolor. Lorem Lorem irure elit laborum voluptate proident do proident exercitation dolore qui labore excepteur."
 	},
 	{
 		"id": 4,
@@ -109,10 +115,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "81987247839",
 		"altura": "1.60",
 		"peso": 75,
+		"avaliacao": 4,
 		"tipo_sanguineo": "O+",
 		"cor": "azul",
 		"foto": "https://randomuser.me/api/portraits/women/37.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Nisi id commodo reprehenderit qui. Labore deserunt nostrud enim duis non reprehenderit incididunt sint ad voluptate. Ut elit cupidatat officia voluptate adipisicing ex exercitation magna reprehenderit reprehenderit officia. Officia laboris deserunt ipsum sit tempor cupidatat. Elit ut in amet sunt nulla non reprehenderit mollit incididunt dolore eu. Aute dolor duis quis ut irure Lorem magna qui. Labore dolor aute elit reprehenderit enim."
 	},
 	{
 		"id": 5,
@@ -137,10 +145,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "48991649655",
 		"altura": "1.88",
 		"peso": 99,
+		"avaliacao": 5,
 		"tipo_sanguineo": "O-",
 		"cor": "azul",
 		"foto": "https://randomuser.me/api/portraits/men/79.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Voluptate anim sit nostrud laboris sunt nisi cupidatat labore consectetur. Nulla sunt consequat nostrud elit aute ad ullamco proident nulla veniam. Sunt proident dolor consequat laboris incididunt incididunt commodo velit quis pariatur. Deserunt in aliquip nulla proident sint non nostrud eu. Exercitation id aliqua mollit proident dolore aute incididunt et sit deserunt tempor."
 	},
 	{
 		"id": 6,
@@ -165,10 +175,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "85987765264",
 		"altura": "1.84",
 		"peso": 108,
+		"avaliacao": 3,
 		"tipo_sanguineo": "A+",
 		"cor": "preto",
 		"foto": "https://randomuser.me/api/portraits/men/69.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Excepteur incididunt sit velit aliqua et in. Tempor velit id exercitation pariatur. Enim voluptate et duis aute dolor labore consequat nulla magna irure qui ullamco ut laboris. Anim exercitation tempor magna cillum cupidatat sunt laboris veniam sit ipsum duis exercitation. Veniam irure sint adipisicing fugiat ipsum veniam nulla sunt commodo aute excepteur officia et commodo. Id duis eu ullamco sit aute. Sint sit quis labore reprehenderit exercitation ipsum Lorem esse nisi ex."
 	},
 	{
 		"id": 7,
@@ -193,10 +205,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "68995306107",
 		"altura": "1.96",
 		"peso": 77,
+		"avaliacao": 3,
 		"tipo_sanguineo": "O-",
 		"cor": "preto",
 		"foto": "https://randomuser.me/api/portraits/men/70.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Consectetur id nisi deserunt esse aliquip velit duis nostrud ullamco. Aliquip nisi aute velit nisi voluptate excepteur dolore et deserunt do. Do veniam ut id laborum ipsum duis. Aute ut labore laborum Lorem aliquip pariatur nisi ex velit ipsum dolor nulla excepteur anim. Amet labore dolor labore et est labore Lorem est."
 	},
 	{
 		"id": 8,
@@ -221,10 +235,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "95988157795",
 		"altura": "1.96",
 		"peso": 69,
+		"avaliacao": 2,
 		"tipo_sanguineo": "B+",
 		"cor": "vermelho",
 		"foto": "https://randomuser.me/api/portraits/men/46.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Nisi laboris dolor velit consequat. Ea nisi consectetur fugiat minim officia aliqua consectetur aliqua. Veniam non adipisicing cupidatat tempor. Id consequat reprehenderit eiusmod anim enim ullamco. Elit nostrud adipisicing dolor dolor proident sunt elit aute deserunt pariatur enim laborum eiusmod proident. Velit excepteur eiusmod in occaecat eu."
 	},
 	{
 		"id": 9,
@@ -249,10 +265,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "43984239557",
 		"altura": "1.87",
 		"peso": 103,
+		"avaliacao": 1,
 		"tipo_sanguineo": "O+",
 		"cor": "amarelo",
 		"foto": "https://randomuser.me/api/portraits/men/26.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Magna irure do aliquip mollit magna dolor sit ex officia laborum tempor dolor officia. Incididunt eiusmod occaecat deserunt cupidatat ex laborum veniam ullamco enim dolor mollit magna. Quis velit laborum occaecat sit exercitation. Laboris sunt tempor deserunt cillum quis ullamco occaecat. Cupidatat in ipsum dolore in est consequat et proident. Dolore ex proident magna esse eiusmod dolor nostrud eu cupidatat eu voluptate voluptate."
 	},
 	{
 		"id": 10,
@@ -277,10 +295,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "92987262756",
 		"altura": "1.64",
 		"peso": 82,
+		"avaliacao": 0,
 		"tipo_sanguineo": "AB-",
 		"cor": "laranja",
 		"foto": "https://randomuser.me/api/portraits/women/3.jpg",
-		"status":"PENDENTE"
+		"status":PessoaStatus.PENDENTE,
+		"observacao":"Quis voluptate reprehenderit adipisicing ipsum. Nisi proident exercitation amet aliquip dolor officia adipisicing laborum exercitation consectetur culpa. Laborum mollit cupidatat sit cillum commodo eiusmod culpa nisi eu excepteur excepteur magna. Qui nisi eiusmod laborum fugiat sint proident ad quis officia consectetur enim deserunt esse ut. Et pariatur laboris commodo et qui consequat labore consequat est fugiat ullamco voluptate sunt. Fugiat incididunt veniam esse ea sunt occaecat."
 	},
 	{
 		"id": 11,
@@ -305,10 +325,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "67991047714",
 		"altura": "1.65",
 		"peso": 54,
+		"avaliacao": 4,
 		"tipo_sanguineo": "O-",
 		"cor": "roxo",
 		"foto": "https://randomuser.me/api/portraits/women/65.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Proident cillum enim consequat irure laborum minim dolor consequat quis in. Aliquip consequat officia veniam excepteur ex consequat irure pariatur minim excepteur. Nisi duis sunt cupidatat enim qui ad ea duis deserunt exercitation ipsum duis est laborum. Tempor reprehenderit in elit in exercitation dolor amet irure sunt proident. Qui ad commodo sunt dolor quis consequat ex non nisi dolor ex fugiat laboris. Ad labore quis ad Lorem quis ea eiusmod. Sunt sunt labore sunt eu in eiusmod."
 	},
 	{
 		"id": 12,
@@ -333,10 +355,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "66994276471",
 		"altura": "1.83",
 		"peso": 67,
+		"avaliacao": 4,
 		"tipo_sanguineo": "AB-",
 		"cor": "laranja",
 		"foto": "https://randomuser.me/api/portraits/women/85.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Sint Lorem aliqua qui dolore magna Lorem in elit aliqua. Ea adipisicing consectetur et proident officia incididunt non. Reprehenderit ea sint do laborum in mollit adipisicing quis aute est ullamco aliqua mollit. Reprehenderit est voluptate sint do dolore commodo qui labore commodo adipisicing anim do. Cillum sint sit cillum aute excepteur ipsum. Laboris proident laborum exercitation mollit qui est enim eu laborum excepteur excepteur officia."
 	},
 	{
 		"id": 13,
@@ -361,10 +385,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "9699799-8114",
 		"altura": "1.78",
 		"peso": 80,
+		"avaliacao": 3,
 		"tipo_sanguineo": "A+",
 		"cor": "vermelho",
 		"foto": "https://randomuser.me/api/portraits/women/27.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Reprehenderit occaecat in eu deserunt culpa officia aliquip. Enim magna esse et incididunt reprehenderit ad culpa ea amet elit culpa esse. Duis ut commodo laboris incididunt eiusmod laboris laborum ut aute irure tempor. Reprehenderit pariatur anim fugiat laboris in consequat eiusmod laboris minim minim voluptate pariatur irure. Fugiat eu elit velit ipsum ea eiusmod aute. Exercitation ad eiusmod cillum aute voluptate sint eiusmod sit deserunt sit sint. Occaecat minim occaecat occaecat dolore esse esse magna laboris laboris in eiusmod non Lorem."
 	},
 	{
 		"id": 14,
@@ -389,10 +415,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "66996209198",
 		"altura": "1.78",
 		"peso": 88,
+		"avaliacao": 5,
 		"tipo_sanguineo": "A+",
 		"cor": "roxo",
 		"foto": "https://randomuser.me/api/portraits/women/63.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Non velit nostrud sint eu ullamco veniam. Aliquip eu sint enim dolore proident ullamco cupidatat irure exercitation labore nostrud tempor. Ea culpa anim fugiat occaecat irure amet nostrud. Sint mollit duis officia officia aute ad non nostrud. Exercitation cupidatat consequat eu dolor ea non in voluptate nostrud minim."
 	},
 	{
 		"id": 15,
@@ -417,10 +445,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "69989561439",
 		"altura": "1.74",
 		"peso": 67,
+		"avaliacao": 4,
 		"tipo_sanguineo": "AB+",
 		"cor": "azul",
 		"foto": "https://randomuser.me/api/portraits/women/26.jpg",
-		"status":"REJEITADO"
+		"status":PessoaStatus.REJEITADO,
+		"observacao":"Do nostrud incididunt mollit incididunt veniam amet qui sunt. Exercitation exercitation pariatur esse ad sint aliqua labore cupidatat. Fugiat eiusmod aliqua cupidatat mollit laborum occaecat adipisicing aliquip culpa. Elit duis voluptate ipsum ut culpa. Velit ea do ipsum irure."
 	},
 	{
 		"id": 16,
@@ -445,10 +475,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "43982047563",
 		"altura": "1.76",
 		"peso": 86,
+		"avaliacao": 3,
 		"tipo_sanguineo": "A+",
 		"cor": "laranja",
 		"foto": "https://randomuser.me/api/portraits/women/43.jpg",
-		"status":"PENDENTE"
+		"status":PessoaStatus.PENDENTE,
+		"observacao":"Commodo pariatur incididunt excepteur reprehenderit anim non culpa ea occaecat Lorem aliqua ipsum. Labore in ut nostrud culpa est ut. Dolore tempor duis pariatur ea culpa ad. Voluptate mollit aute occaecat reprehenderit mollit laboris incididunt nostrud consequat ut ipsum velit elit. Esse id anim ad enim magna mollit nulla laborum deserunt mollit."
 	},
 	{
 		"id": 17,
@@ -473,10 +505,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "81984388552",
 		"altura": "1.78",
 		"peso": 97,
+		"avaliacao": 5,
 		"tipo_sanguineo": "O+",
 		"cor": "vermelho",
 		"foto": "https://randomuser.me/api/portraits/men/83.jpg",
-		"status":"PENDENTE"
+		"status":PessoaStatus.PENDENTE,
+		"observacao":"Cupidatat nulla adipisicing ad id quis cupidatat tempor nostrud esse cillum laboris. In quis minim eu dolore in proident aliqua enim excepteur occaecat non ipsum. Ipsum aute minim excepteur eiusmod labore."
 	},
 	{
 		"id": 18,
@@ -501,10 +535,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "47994422696",
 		"altura": "1.71",
 		"peso": 62,
+		"avaliacao": 4,
 		"tipo_sanguineo": "AB+",
 		"cor": "preto",
 		"foto": "https://randomuser.me/api/portraits/women/30.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Velit est eu nulla incididunt incididunt irure velit culpa mollit aliquip excepteur. Duis ea labore ex officia laboris officia adipisicing ipsum aliquip elit. Excepteur culpa fugiat nostrud cupidatat occaecat culpa mollit voluptate minim. Dolor ipsum qui ex ad adipisicing veniam ad irure ipsum. Fugiat ipsum pariatur magna fugiat dolore enim culpa nulla do quis cillum nostrud aliqua in. Fugiat tempor elit nostrud ullamco et occaecat."
 	},
 	{
 		"id": 19,
@@ -529,10 +565,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "89992572590",
 		"altura": "1.69",
 		"peso": 71,
+		"avaliacao": 4,
 		"tipo_sanguineo": "AB+",
 		"cor": "preto",
 		"foto": "https://randomuser.me/api/portraits/men/22.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Labore exercitation pariatur mollit laborum. Consequat ea dolore cillum exercitation ad laborum. Aute proident officia esse culpa consequat sit sunt anim esse esse ad aute commodo nisi. Tempor pariatur quis aliquip Lorem exercitation. Mollit elit elit adipisicing officia magna aute Lorem. Ipsum reprehenderit pariatur do irure id officia sint aliquip."
 	},
 	{
 		"id": 20,
@@ -557,10 +595,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "21996334070",
 		"altura": "1.93",
 		"peso": 88,
+		"avaliacao": 4,
 		"tipo_sanguineo": "AB-",
 		"cor": "verde",
 		"foto": "https://randomuser.me/api/portraits/men/74.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Veniam eiusmod ut excepteur ex proident aliqua velit nulla enim irure. Excepteur amet consectetur laborum non aute non minim aute commodo dolore qui pariatur minim laborum. Nisi velit ipsum magna pariatur commodo. Culpa qui amet ullamco ullamco labore. Nulla nostrud esse esse ipsum dolor pariatur Lorem cupidatat veniam in ex reprehenderit. Elit cupidatat duis sit sunt in aute eiusmod aliqua aliqua. Consectetur dolore do aliquip et et cupidatat sint minim."
 	},
 	{
 		"id": 21,
@@ -585,10 +625,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "27991057515",
 		"altura": "1.72",
 		"peso": 89,
+		"avaliacao": 5,
 		"tipo_sanguineo": "A+",
 		"cor": "roxo",
 		"foto": "https://randomuser.me/api/portraits/women/54.jpg",
-		"status":"REJEITADO"
+		"status":PessoaStatus.REJEITADO,
+		"observacao":"Ea excepteur quis non Lorem ut veniam adipisicing sit laborum officia. Minim dolore nulla esse irure. Ipsum qui elit eiusmod elit in consectetur esse in dolor mollit adipisicing ut non irure. Do id ea veniam aliquip magna reprehenderit in qui sit deserunt officia do commodo. Deserunt amet aliquip consequat tempor. Lorem aliquip sint deserunt aute nulla aliquip laborum duis. Esse anim nisi amet quis."
 	},
 	{
 		"id": 22,
@@ -613,10 +655,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "49989966995",
 		"altura": "1.65",
 		"peso": 64,
+		"avaliacao": 3,
 		"tipo_sanguineo": "A-",
 		"cor": "laranja",
 		"foto": "https://randomuser.me/api/portraits/men/47.jpg",
-		"status":"PENDENTE"
+		"status":PessoaStatus.PENDENTE,
+		"observacao":"Sint cillum enim ipsum est sunt duis cillum sit sit labore. Consectetur adipisicing sit voluptate eu do eu mollit. Ad elit exercitation sint do dolor ad labore laborum cillum ex. Tempor voluptate ex dolore veniam."
 	},
 	{
 		"id": 23,
@@ -641,10 +685,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "84991035738",
 		"altura": "1.50",
 		"peso": 82,
+		"avaliacao": 2,
 		"tipo_sanguineo": "AB+",
 		"cor": "vermelho",
 		"foto": "https://randomuser.me/api/portraits/women/41.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Laboris adipisicing sunt id sunt est dolore esse cillum reprehenderit amet laborum qui. Do do nostrud proident non fugiat magna laborum duis laboris dolor ad incididunt. Labore aliqua quis sit pariatur qui laboris sunt. Qui minim esse commodo esse ex aliquip. Proident exercitation anim aute tempor quis et duis enim ullamco nisi aute irure officia aliqua. Aute dolore dolor consequat amet irure ad enim. In commodo enim dolore commodo aliquip adipisicing esse dolor eu deserunt sit exercitation."
 	},
 	{
 		"id": 24,
@@ -669,10 +715,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "92999766041",
 		"altura": "1.78",
 		"peso": 103,
+		"avaliacao": 4,
 		"tipo_sanguineo": "A+",
 		"cor": "vermelho",
 		"foto": "https://randomuser.me/api/portraits/men/12.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Sint culpa veniam eiusmod non cupidatat ex eiusmod mollit eiusmod sunt velit duis culpa. Amet ipsum et aute commodo deserunt. Occaecat incididunt dolore ut voluptate culpa ad excepteur qui."
 	},
 	{
 		"id": 25,
@@ -697,10 +745,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "67992946081",
 		"altura": "1.80",
 		"peso": 55,
+		"avaliacao": 4,
 		"tipo_sanguineo": "B+",
 		"cor": "verde",
 		"foto": "https://randomuser.me/api/portraits/women/91.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Incididunt laborum et et magna id magna velit tempor. Do incididunt excepteur quis elit velit ipsum nostrud irure nulla. Duis mollit magna amet qui. Amet minim excepteur nulla eiusmod velit ut. Ut ea laboris anim do aliquip veniam velit magna laborum reprehenderit. Pariatur nulla duis aliqua minim occaecat pariatur irure tempor ex sit."
 	},
 	{
 		"id": 26,
@@ -725,10 +775,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "46983775967",
 		"altura": "1.58",
 		"peso": 57,
+		"avaliacao": 5,
 		"tipo_sanguineo": "A+",
 		"cor": "vermelho",
 		"foto": "https://randomuser.me/api/portraits/women/67.jpg",
-		"status":"REJEITADO"
+		"status":PessoaStatus.REJEITADO,
+		"observacao":"Aliquip reprehenderit aliqua reprehenderit quis aute. Deserunt voluptate adipisicing culpa tempor ut Lorem Lorem eu ullamco eiusmod ut. Commodo sit ullamco sunt Lorem duis dolore ullamco ex occaecat velit ipsum ad esse occaecat. Non est esse incididunt voluptate laborum nulla officia tempor. Irure nulla non nulla sint mollit duis commodo qui officia ad commodo excepteur."
 	},
 	{
 		"id": 27,
@@ -753,10 +805,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "27987857084",
 		"altura": "1.88",
 		"peso": 79,
+		"avaliacao": 4,
 		"tipo_sanguineo": "O-",
 		"cor": "vermelho",
 		"foto": "https://randomuser.me/api/portraits/men/59.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Proident et anim deserunt ex eu laborum do laborum. Et officia eu do exercitation culpa aute tempor culpa reprehenderit pariatur magna deserunt do. Voluptate tempor velit officia ullamco esse quis minim exercitation enim qui occaecat non occaecat incididunt. Fugiat tempor duis amet irure. Nulla elit enim sint dolore officia irure sit proident consectetur duis esse labore est est. Mollit dolor voluptate mollit ullamco eiusmod cupidatat esse est. Veniam quis ad dolore elit amet."
 	},
 	{
 		"id": 28,
@@ -781,10 +835,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "82991188812",
 		"altura": "1.66",
 		"peso": 58,
+		"avaliacao": 4,
 		"tipo_sanguineo": "O+",
 		"cor": "amarelo",
 		"foto": "https://randomuser.me/api/portraits/women/69.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Consequat do esse nisi officia dolore enim est. Amet excepteur nulla consectetur nulla occaecat amet excepteur proident. Eu occaecat esse ad et voluptate laboris laborum aliquip cillum quis tempor labore in nulla. Nulla dolore cupidatat dolore nisi reprehenderit dolor eiusmod. Veniam minim magna pariatur pariatur in ea eu dolore laboris aliqua et commodo."
 	},
 	{
 		"id": 29,
@@ -809,10 +865,12 @@ export const pessoasData : Pessoa[] = [
 		"celular": "96998953333",
 		"altura": "1.68",
 		"peso": 51,
+		"avaliacao": 4,
 		"tipo_sanguineo": "AB+",
 		"cor": "laranja",
 		"foto": "https://randomuser.me/api/portraits/women/13.jpg",
-		"status":"PENDENTE"
+		"status":PessoaStatus.PENDENTE,
+		"observacao":"Pariatur quis nulla laborum aliqua qui. Excepteur aliqua sunt amet dolor sint sunt do labore non eu ea est aute. Sint nisi veniam consectetur amet laborum mollit amet."
 	},
 	{
 		"id": 30,
@@ -837,9 +895,11 @@ export const pessoasData : Pessoa[] = [
 		"celular": "77981359210",
 		"altura": "1.71",
 		"peso": 53,
+		"avaliacao": 2,
 		"tipo_sanguineo": "O+",
 		"cor": "laranja",
 		"foto": "https://randomuser.me/api/portraits/men/72.jpg",
-		"status":"APROVADO"
+		"status":PessoaStatus.APROVADO,
+		"observacao":"Duis est nulla nostrud culpa occaecat fugiat aliqua. Officia ipsum non aliqua do proident eiusmod aliqua qui voluptate anim incididunt. In dolor deserunt occaecat laborum nostrud dolor laborum nisi sint nisi magna elit labore non. Culpa qui aliqua pariatur laboris officia sit veniam quis duis ullamco consectetur nulla. Officia do enim ex labore consequat esse eu exercitation. Sunt non incididunt pariatur elit et anim."
 	}
 ];

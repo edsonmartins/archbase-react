@@ -1,15 +1,16 @@
 import React from 'react';
 import { Card, Grid, Group, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
+import { Pessoa, pessoasData } from '@demo/index';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { ArchbaseCheckBox } from './ArchbaseCheckbox';
-import { Pessoa, pessoasData } from '@demo/index';
+import { ArchbaseRadioGroup } from './ArchbaseRadioGroup';
+import { PessoaStatus } from '@demo/data/types';
 
-const ArchbaseEditExample = () => {
+const ArchbaseRadioGroupExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
@@ -32,18 +33,12 @@ const ArchbaseEditExample = () => {
     <Grid>
       <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs" mb="1rem">
+          <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>Checkbox Component</Text>
+              <Text weight={500}>RadioGroup Component</Text>
             </Group>
           </Card.Section>
-          <ArchbaseCheckBox
-            label="Masculino"
-            dataSource={dataSource}
-            dataField="sexo"
-            trueValue={'Masculino'}
-            falseValue={'Feminino'}
-          />
+          <ArchbaseRadioGroup label="Status" enumerator={PessoaStatus} dataSource={dataSource} dataField="status" />
         </Card>
       </Grid.Col>
       <Grid.Col span={4}>
@@ -71,16 +66,16 @@ const ArchbaseEditExample = () => {
 };
 
 export default {
-  title: 'Editors/Checkbox',
-  component: ArchbaseEditExample,
+  title: 'Editors/RadioGroup',
+  component: ArchbaseRadioGroupExample,
 } as Meta;
 
 const data = [pessoasData[0]];
 
-export const Example: StoryObj<typeof ArchbaseEditExample> = {
+export const Example: StoryObj<typeof ArchbaseRadioGroupExample> = {
   args: {
     render: () => {
-      <ArchbaseEditExample />;
+      <ArchbaseRadioGroupExample />;
     },
   },
 };

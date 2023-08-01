@@ -11,7 +11,7 @@ const mockDataSource = {
   isBrowsing: jest.fn(),
 };
 
-const mockProps: ArchbaseEditProps<any> = {
+const mockProps: ArchbaseEditProps<any,any> = {
   dataSource: mockDataSource,
   dataField: 'fieldName',
   disabled: false,

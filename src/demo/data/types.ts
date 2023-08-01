@@ -1,3 +1,8 @@
+export enum PessoaStatus {
+  APROVADO,
+  REJEITADO,
+  PENDENTE
+}
 export interface Pessoa {
   id: number;
   nome: string;
@@ -21,10 +26,13 @@ export interface Pessoa {
   celular?: string;
   altura?: string;
   peso?: number;
+  avaliacao?: number;
   tipo_sanguineo?: string;
   cor?: string;
   foto?: string;
-  status?: string;
+  status?: PessoaStatus;
+  observacao?:string;
+  codigoJson?:string;
 }
 
 export interface Produto {

@@ -51,6 +51,7 @@
     "@mantine/core": "^6.0.17",
     "@mantine/dates": "^6.0.17",
     "@mantine/hooks": "^6.0.17",
+    "@mantine/tiptap": "^6.0.17",
     "@tabler/icons": "^2.28.0",
     "@tabler/icons-react": "^2.30.0",
     "axios": "^1.4.0",
@@ -77,6 +78,8 @@
     "storybook-addon-mantine": "^2.0.21",
     "storybook-dark-mode": "^3.0.0",
     "stylis-plugin-rtl": "^2.1.1",
+    "suneditor": "^2.45.1",
+    "suneditor-react": "^3.6.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "usehooks-ts": "^2.9.1"
   },

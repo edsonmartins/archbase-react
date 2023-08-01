@@ -11,3 +11,4 @@ export type { OptionsResult} from './ArchbaseAsyncSelect'
 export type { ArchbaseDatePickerEditProps } from './ArchbaseDatePickerEdit';
 export { ArchbaseSelect} from './ArchbaseSelect'
 export { ArchbaseSelectItem} from './ArchbaseSelectItem'
+export { ArchbaseRichTextEdit} from "./ArchbaseRichTextEdit"

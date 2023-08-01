@@ -1,4 +1,4 @@
-import { Pedido } from "./types";
+import { Pedido, PessoaStatus } from "./types";
 
 export const pedidosData : Pedido[] = [
     {
@@ -29,7 +29,7 @@ export const pedidosData : Pedido[] = [
         "tipo_sanguineo": "AB+",
         "cor": "preto",
         "foto": "https://randomuser.me/api/portraits/men/57.jpg",
-        "status":"APROVADO"
+        "status":PessoaStatus.APROVADO
       },
       "dtPedido": "2023-07-30",
       "dtFaturamento": "2023-07-31",
@@ -88,7 +88,7 @@ export const pedidosData : Pedido[] = [
         "tipo_sanguineo": "O-",
         "cor": "vermelho",
         "foto": "https://randomuser.me/api/portraits/women/44.jpg",
-        "status":"APROVADO"        
+        "status":PessoaStatus.APROVADO
       },
       "dtPedido": "2023-07-29",
       "dtFaturamento": "2023-07-30",
@@ -147,7 +147,7 @@ export const pedidosData : Pedido[] = [
         "tipo_sanguineo": "AB-",
         "cor": "amarelo",
         "foto": "https://randomuser.me/api/portraits/men/51.jpg",
-        "status":"APROVADO"
+        "status":PessoaStatus.APROVADO
       },
       "dtPedido": "2023-07-28",
       "dtFaturamento": "2023-07-29",
@@ -206,7 +206,7 @@ export const pedidosData : Pedido[] = [
         "tipo_sanguineo": "O+",
         "cor": "azul",
         "foto": "https://randomuser.me/api/portraits/women/37.jpg",
-        "status":"APROVADO"
+        "status":PessoaStatus.APROVADO
       },
       "dtPedido": "2023-07-27",
       "dtFaturamento": "2023-07-28",
@@ -265,7 +265,7 @@ export const pedidosData : Pedido[] = [
         "tipo_sanguineo": "O-",
         "cor": "azul",
         "foto": "https://randomuser.me/api/portraits/men/79.jpg",
-        "status":"APROVADO"
+        "status":PessoaStatus.APROVADO
       },
       "dtPedido": "2023-07-26",
       "dtFaturamento": "2023-07-27",
