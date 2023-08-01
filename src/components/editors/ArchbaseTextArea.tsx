@@ -9,23 +9,40 @@ import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { isBase64 } from '@components/core/utils';
 
-export interface ArchbaseTextProps<T> {
+export interface ArchbaseTextAreaProps<T> {
+  /** Fonte de dados onde será atribuido o valor do componente */
   dataSource?: ArchbaseDataSource<T, any>;
+  /** Campo onde deverá ser atribuído o valor do componente na fonte de dados */
   dataField?: string;
+  /** Indicador se o componente está desabilitado */
   disabled?: boolean;
+  /** Indicador se o componente é somente leitura. Obs.: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean;
-  style?: CSSProperties;
-  placeholder?: string;
-  label?: string;
-  description?: string;
-  error?: string;
-  onFocusExit?: FocusEventHandler<T> | undefined;
-  onFocusEnter?: FocusEventHandler<T> | undefined;
-  onChangeValue?: (value: any, event: any) => void;
-  autosize?: boolean;
-  minRows?: number;
-  maxRows?: number;
+  /** Indicador se o preenchimento do componente é obrigatório */
   required?: boolean;
+  /** Estilo do componente*/
+  style?: CSSProperties;
+  /** Texto de sugestão para preenchimento do componente*/
+  placeholder?: string;
+  /** Título*/
+  label?: string;
+  /** Descrição*/
+  description?: string;
+  /** Último erro ocorrido no componente*/
+  error?: string;
+  /** Evento quando o foco sai do componente */
+  onFocusExit?: FocusEventHandler<T> | undefined;
+  /** Evento quando o componente recebe o foco */
+  onFocusEnter?: FocusEventHandler<T> | undefined;
+  /** Evento quando o valor do componente é alterado */
+  onChangeValue?: (value: any, event: any) => void;
+  /** Indicador se o componente irá se auto ajustar de tamanho*/
+  autosize?: boolean;
+  /** Número de linhas inicial*/
+  minRows?: number;
+  /** Número de linhas máximo que o componente irá se auto ajustar de tamanho*/
+  maxRows?: number;
+  /** Indicador para determinar se a conversão de base64 estará desabilitada*/
   disabledBase64Convertion?: boolean;
 }
 
@@ -47,7 +64,7 @@ export function ArchbaseTextArea<T>({
   maxRows,
   required = false,
   disabledBase64Convertion = false,
-}: ArchbaseTextProps<T>) {
+}: ArchbaseTextAreaProps<T>) {
   const [value, setValue] = useState<string>('');
 
   const loadDataSourceFieldValue = () => {
