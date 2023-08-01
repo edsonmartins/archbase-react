@@ -1,15 +1,16 @@
 import React from 'react';
-import { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit';
-import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
+import { Card, Grid, Group, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
 import { Pessoa, pessoasData } from '@demo/index';
-import { useArchbaseDataSource } from '../hooks';
+import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
+import { ArchbaseEdit } from './ArchbaseEdit';
+import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { useArchbaseForceUpdate } from '../hooks/';
+import { ArchbaseNumberEdit } from './ArchbaseNumberEdit';
 
-const ArchbaseDatePickerEditExample = () => {
+const ArchbaseNumberEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
@@ -27,42 +28,37 @@ const ArchbaseDatePickerEditExample = () => {
       }
     },
   });
+
   return (
     <Grid>
-      <Grid.Col span={12}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>Date Picker Component</Text>
+              <Text weight={500}>Number Edit Component</Text>
             </Group>
           </Card.Section>
-          <Box sx={(_theme) => ({height:100})}>
-            <ArchbaseDatePickerEdit width={200} label="Data nascimento" dataSource={dataSource} dataField="data_nasc" />
-          </Box>
+          <ArchbaseNumberEdit label="Altura" dataSource={dataSource} dataField="altura" precision={2} />
         </Card>
       </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
               <Text weight={500}>Objeto Pessoa</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}>
-            <ArchbaseJsonView data={data} />
-          </ScrollArea>
+          <ArchbaseJsonView data={data} />
         </Card>
       </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
               <Text weight={500}>DataSource dsPessoas</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}>
-            <ArchbaseObjectInspector data={dataSource} />
-          </ScrollArea>
+          <ArchbaseObjectInspector data={dataSource} />
         </Card>
       </Grid.Col>
     </Grid>
@@ -70,16 +66,16 @@ const ArchbaseDatePickerEditExample = () => {
 };
 
 export default {
-  title: 'Editors/DatePicker Edit',
-  component: ArchbaseDatePickerEditExample,
+  title: 'Editors/Number Edit',
+  component: ArchbaseNumberEditExample,
 } as Meta;
 
 const data = [pessoasData[0]];
 
-export const Example: StoryObj<typeof ArchbaseDatePickerEditExample> = {
+export const Example: StoryObj<typeof ArchbaseNumberEditExample> = {
   args: {
     render: () => {
-      <ArchbaseDatePickerEditExample />;
+      <ArchbaseNumberEditExample />;
     },
   },
 };

@@ -7,6 +7,7 @@ import {
   Input,
   DefaultProps,
   MantineSize,
+  MantineNumberSize,
 } from '@mantine/core';
 import { useId } from '@mantine/hooks';
 import { IMaskInput } from 'react-imask';
@@ -38,8 +39,6 @@ export interface ArchbaseMaskEditProps<T,ID>
   type?: React.HTMLInputTypeAttribute;
   /** Propriedades para atribuir ao wrapper do mask edit */
   wrapperProps?: Record<string, any>;
-  /** Tamanho do mask edit */
-  size?: MantineSize;
   /** Nome do seletor estático */
   __staticSelector?: string;
   /** Fonte de dados onde será atribuido o valor do mask edit */
@@ -52,6 +51,10 @@ export interface ArchbaseMaskEditProps<T,ID>
   readOnly?: boolean;
   /** Estilo do mask edit */
   style?: CSSProperties;
+  /** Tamanho do mask edit */
+  size?: MantineSize;
+  /** Largura do mask edit */
+  width?: MantineNumberSize;
   /** Valor inicial do mask edit */
   value?: any;
   /** Texto sugestão do mask edit */
@@ -88,7 +91,7 @@ const defaultProps: Partial<ArchbaseMaskEditProps<any,any>> = {
 
 export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditProps<any,any>>(
   (props: ArchbaseMaskEditProps<any,any>, ref) => {
-    const { inputProps, wrapperProps, mask, placeholderChar, placeholder, readOnly, disabled, ...others } = useInputProps(
+    const { inputProps, wrapperProps, mask, placeholderChar, placeholder, readOnly, disabled, width, ...others } = useInputProps(
       'ArchbaseMaskEdit',
       defaultProps,
       props,
@@ -187,6 +190,11 @@ export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditPro
           unmask={!saveWithMask}
           lazy={false}
           value={value}
+          style={{ 
+            width,
+            ...props.style,
+          }}
+          size={props.size}
           placeholderChar={placeholderChar}
           id={id}
           readOnly={isReadOnly()}

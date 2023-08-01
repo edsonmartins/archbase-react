@@ -1,4 +1,4 @@
-import { Loader, MantineSize, ScrollArea, ScrollAreaProps, Select } from '@mantine/core';
+import { Loader, MantineNumberSize, MantineSize, ScrollArea, ScrollAreaProps, Select } from '@mantine/core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import React, {
   CSSProperties,
@@ -41,8 +41,6 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
   disabled?: boolean;
   /** Indicador se o select é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean;
-  /** Estilo do select */
-  style?: CSSProperties;
   /** Texto explicativo do select */
   placeholder?: string;
   /** Título do select */
@@ -63,8 +61,12 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
   defaultValue?: any;
   /** Função com base em quais itens no menu suspenso são filtrados */
   filter?(value: string, item: any): boolean;
-  /** Tamanho de entrada */
+  /** Estilo do select */
+  style?: CSSProperties;
+  /** Tamanho do campo */
   size?: MantineSize;
+  /** Largura do select */
+  width?: MantineNumberSize;
   /** Estado aberto do menu suspenso inicial */
   initiallyOpened?: boolean;
   /** Alterar renderizador de item */
@@ -140,6 +142,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   defaultValue,
   filter,
   size,
+  style,
+  width,
   initiallyOpened,
   itemComponent,
   onDropdownOpen,
@@ -308,6 +312,10 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         error={error}
         data={options}
         size={size!}
+        style={{ 
+          width,
+          ...style,
+        }}
         icon={icon}
         iconWidth={iconWidth}
         readOnly={isReadOnly()}

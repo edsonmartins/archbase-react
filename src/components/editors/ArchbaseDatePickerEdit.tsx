@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-nested-ternary */
 import dayjs from 'dayjs'
-import React, { forwardRef, useState, useEffect, useCallback } from 'react'
+import React, { forwardRef, useState, useEffect, useCallback, CSSProperties } from 'react'
 import {
   DefaultProps,
   InputSharedProps,
@@ -16,7 +16,9 @@ import {
   Input,
   PopoverProps,
   Popover,
-  CloseButton
+  CloseButton,
+  MantineSize,
+  MantineNumberSize
 } from '@mantine/core'
 import { useUncontrolled, useDidUpdate } from '@mantine/hooks'
 import { IMaskInput } from 'react-imask'
@@ -201,6 +203,12 @@ export interface ArchbaseDatePickerEditProps
   disabled?: boolean
   /** Indicador se o date picker é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean
+  /** Estilo do date picker */
+  style?: CSSProperties;
+  /** Tamanho do date picker */
+  size?: MantineSize;
+  /** Largura do date picker */
+  width?: MantineNumberSize;
   /** Possíveis formatos para a data */
   dateFormat?: 'DD/MM/YYYY' | 'DD-MM-YYYY' | 'YYYY/MM/DD' | 'YYYY-MM-DD'
   /** Caracter a ser mostrado quando não houver um valor*/
@@ -265,6 +273,7 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
       dateFormat,
       dataSource,
       dataField,
+      width,
       ...rest
     } = useInputProps('ArchbaseDatePickerEdit', defaultProps, props)
     
@@ -530,6 +539,10 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
                   onAccept={handleAccept}
                   readOnly={isReadOnly()}
                   value={inputValue}
+                  style={{ 
+                    width,
+                    ...props.style,
+                  }}
                   {...inputProps}
                   {...others}
                   format={(date) => {

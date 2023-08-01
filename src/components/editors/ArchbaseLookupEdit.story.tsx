@@ -1,23 +1,26 @@
 import React from 'react';
-import { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit';
 import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa, pessoasData } from '@demo/index';
-import { useArchbaseDataSource } from '../hooks';
+import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
+import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { useArchbaseForceUpdate } from '../hooks/';
+import { pedidosData, Pedido, Pessoa } from '@demo/index';
+import { ArchbaseLookupEdit } from './ArchbaseLoookupEdit';
 
-const ArchbaseDatePickerEditExample = () => {
+
+const pedidosList: Pedido[] = pedidosData;
+
+const ArchbaseLookupEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
+  const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit();
   }
-  useArchbaseDataSourceListener<Pessoa, string>({
+  useArchbaseDataSourceListener<Pedido, string>({
     dataSource,
-    listener: (event: DataSourceEvent<Pessoa>): void => {
+    listener: (event: DataSourceEvent<Pedido>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
           forceUpdate();
@@ -27,17 +30,24 @@ const ArchbaseDatePickerEditExample = () => {
       }
     },
   });
+
   return (
     <Grid>
       <Grid.Col span={12}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>Date Picker Component</Text>
+              <Text weight={500}>LookupEdit Component</Text>
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({height:100})}>
-            <ArchbaseDatePickerEdit width={200} label="Data nascimento" dataSource={dataSource} dataField="data_nasc" />
+            <ArchbaseLookupEdit<Pedido, string, Pessoa>
+              label="Nome"
+              dataSource={dataSource}
+              dataField="cliente"
+              lookupField='cliente.id'
+              width={200}
+            />
           </Box>
         </Card>
       </Grid.Col>
@@ -45,11 +55,11 @@ const ArchbaseDatePickerEditExample = () => {
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
+              <Text weight={500}>Objeto Pedido</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}>
-            <ArchbaseJsonView data={data} />
+          <ScrollArea sx={(_theme) => ({height:500})}>
+            <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
           </ScrollArea>
         </Card>
       </Grid.Col>
@@ -57,10 +67,10 @@ const ArchbaseDatePickerEditExample = () => {
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>DataSource dsPessoas</Text>
+              <Text weight={500}>DataSource dsPedidos</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}>
+          <ScrollArea sx={(_theme) => ({height:500})}>
             <ArchbaseObjectInspector data={dataSource} />
           </ScrollArea>
         </Card>
@@ -70,16 +80,16 @@ const ArchbaseDatePickerEditExample = () => {
 };
 
 export default {
-  title: 'Editors/DatePicker Edit',
-  component: ArchbaseDatePickerEditExample,
+  title: 'Editors/Lookup Edit',
+  component: ArchbaseLookupEditExample,
 } as Meta;
 
-const data = [pessoasData[0]];
 
-export const Example: StoryObj<typeof ArchbaseDatePickerEditExample> = {
+
+export const Example: StoryObj<typeof ArchbaseLookupEditExample> = {
   args: {
     render: () => {
-      <ArchbaseDatePickerEditExample />;
+      <ArchbaseLookupEditExample />;
     },
   },
 };

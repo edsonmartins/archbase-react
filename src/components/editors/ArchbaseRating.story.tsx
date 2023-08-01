@@ -8,6 +8,7 @@ import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { ArchbaseEdit } from './ArchbaseEdit';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
+import { ArchbaseRating } from './ArchbaseRating';
 
 const ArchbaseRatingExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
@@ -37,7 +38,7 @@ const ArchbaseRatingExample = () => {
               <Text weight={500}>Rating Component</Text>
             </Group>
           </Card.Section>
-          <ArchbaseEdit label="Avaliação" dataSource={dataSource} dataField="avaliacao" />
+          <ArchbaseRating label="Avaliação" dataSource={dataSource} dataField="avaliacao" />
         </Card>
       </Grid.Col>
       <Grid.Col span={4}>

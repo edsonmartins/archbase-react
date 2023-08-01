@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Grid, Group, Text } from '@mantine/core';
+import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
@@ -30,40 +30,46 @@ const ArchbaseEditExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={4}>
+      <Grid.Col span={12}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs" mb="1rem">
             <Group position="apart">
               <Text weight={500}>Checkbox Component</Text>
             </Group>
           </Card.Section>
-          <ArchbaseCheckBox
-            label="Masculino"
-            dataSource={dataSource}
-            dataField="sexo"
-            trueValue={'Masculino'}
-            falseValue={'Feminino'}
-          />
+          <Box sx={(_theme) => ({height:100})}>
+            <ArchbaseCheckBox
+              label="Masculino"
+              dataSource={dataSource}
+              dataField="sexo"
+              trueValue={'Masculino'}
+              falseValue={'Feminino'}
+            />
+          </Box>
         </Card>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={6}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
               <Text weight={500}>Objeto Pessoa</Text>
             </Group>
           </Card.Section>
-          <ArchbaseJsonView data={data} />
+          <ScrollArea sx={(_theme) => ({height:500})}>
+            <ArchbaseJsonView data={data} />
+          </ScrollArea>
         </Card>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={6}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
               <Text weight={500}>DataSource dsPessoas</Text>
             </Group>
           </Card.Section>
-          <ArchbaseObjectInspector data={dataSource} />
+          <ScrollArea sx={(_theme) => ({height:500})}>
+            <ArchbaseObjectInspector data={dataSource} />
+          </ScrollArea>
         </Card>
       </Grid.Col>
     </Grid>

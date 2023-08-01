@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card, Grid, Group, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa, pessoas } from '../core';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseMaskEdit, MaskPattern } from './ArchbaseMaskEdit';
+import { Pessoa, pessoasData } from '@demo/index';
 
 const ArchbaseEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
@@ -65,11 +65,11 @@ const ArchbaseEditExample = () => {
 };
 
 export default {
-  title: 'Editors/MaskEdit',
+  title: 'Editors/Mask Edit',
   component: ArchbaseEditExample,
 } as Meta;
 
-const data = [pessoas[0]];
+const data = [pessoasData[0]];
 
 export const Example: StoryObj<typeof ArchbaseEditExample> = {
   args: {

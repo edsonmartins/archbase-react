@@ -1,4 +1,4 @@
-import { TextInput } from '@mantine/core';
+import { MantineNumberSize, MantineSize, TextInput } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useState, useCallback } from 'react';
 
@@ -18,8 +18,12 @@ export interface ArchbaseEditProps<T,ID> {
   readOnly?: boolean;
   /** Indicador se o preenchimento do edit é obrigatório */
   required?: boolean;
-  /** Estilo do checkbox */
+  /** Estilo do edit */
   style?: CSSProperties;
+  /** Tamanho do edit */
+  size?: MantineSize;
+  /** Largura do edit */
+  width?: MantineNumberSize;
   /** Texto sugestão do edit */
   placeholder?: string;
   /** Título do edit */
@@ -47,6 +51,8 @@ export function ArchbaseEdit<T,ID>({
   description,
   error,
   required,
+  size,
+  width,
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
@@ -137,7 +143,11 @@ export function ArchbaseEdit<T,ID>({
       disabled={disabled}
       readOnly={isReadOnly()}
       type={'text'}
-      style={style}
+      size={size!}
+      style={{ 
+        width,
+        ...style,
+      }}
       value={value}
       required={required}
       onChange={handleChange}
