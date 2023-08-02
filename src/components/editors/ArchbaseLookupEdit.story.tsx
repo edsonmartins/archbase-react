@@ -49,7 +49,7 @@ const ArchbaseLookupEditExample = () => {
   };
 
   const handlLookupError = (error: string): void => {
-    ArchbaseNotifications.showError(error, "Atenção","");
+    ArchbaseNotifications.showError(error, "Atenção");
   };
 
   const handleLookupResult = (_value: Pessoa): void => {
@@ -57,7 +57,7 @@ const ArchbaseLookupEditExample = () => {
   };
 
   const handleActionSearchExecute = (): void => {
-    ArchbaseNotifications.showError("Clicou ação localizar.", "Atenção","");
+    ArchbaseNotifications.showError("Clicou ação localizar.", "Atenção");
   };
 
   return (
