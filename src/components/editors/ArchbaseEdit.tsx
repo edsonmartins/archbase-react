@@ -2,7 +2,7 @@ import { MantineNumberSize, MantineSize, TextInput } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useState, useCallback } from 'react';
 
-import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks/lifecycle';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
 
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
@@ -76,16 +76,12 @@ export function ArchbaseEdit<T,ID>({
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      switch (event.type) {
-        case (DataSourceEventNames.dataChanged,
-        DataSourceEventNames.fieldChanged,
-        DataSourceEventNames.recordChanged,
-        DataSourceEventNames.afterScroll,
-        DataSourceEventNames.afterCancel): {
+      if ((event.type === DataSourceEventNames.dataChanged) ||
+          (event.type === DataSourceEventNames.fieldChanged) ||
+          (event.type === DataSourceEventNames.recordChanged) ||
+          (event.type === DataSourceEventNames.afterScroll) ||
+          (event.type === DataSourceEventNames.afterCancel)) {
           loadDataSourceFieldValue();
-          break;
-        }
-        default:
       }
     }
   }, []);
@@ -117,6 +113,13 @@ export function ArchbaseEdit<T,ID>({
       onChangeValue(event, changedValue);
     }
   };
+
+  useArchbaseWillUnmount(() => {
+    if (dataSource && dataField) {
+      dataSource.removeListener(dataSourceEvent)
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+    }
+  })
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {

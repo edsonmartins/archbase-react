@@ -29,7 +29,7 @@ const defaultProps: Partial<ArchbaseAlertProps> = {
   variant: 'light'
 }
 
-export function MandalaAlert(props: ArchbaseAlertProps) {
+export function ArchbaseAlert(props: ArchbaseAlertProps) {
   const {
     className,
     color,

@@ -2,7 +2,7 @@ import { MantineSize, Select } from '@mantine/core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import React, { CSSProperties, FocusEventHandler, ReactNode, useCallback, useEffect, useState } from 'react';
 import { uniqueId } from 'lodash';
-import { useArchbaseDidMount, useArchbaseDidUpdate } from '@components/hooks';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
 import { useDebouncedState } from '@mantine/hooks';
 import { ArchbaseSelectProvider } from './ArchbaseSelect.context';
 import { CustomSelectScrollArea } from './ArchbaseAsyncSelect';
@@ -142,7 +142,6 @@ export function ArchbaseSelect<T, ID, O>({
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value;
-
     if (dataSource && dataField) {
       initialValue = dataSource.getFieldValue(dataField);
       if (!initialValue) {
@@ -157,16 +156,12 @@ export function ArchbaseSelect<T, ID, O>({
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      switch (event.type) {
-        case (DataSourceEventNames.dataChanged,
-        DataSourceEventNames.fieldChanged,
-        DataSourceEventNames.recordChanged,
-        DataSourceEventNames.afterScroll,
-        DataSourceEventNames.afterCancel): {
+      if ((event.type === DataSourceEventNames.dataChanged) ||
+          (event.type === DataSourceEventNames.fieldChanged) ||
+          (event.type === DataSourceEventNames.recordChanged) ||
+          (event.type === DataSourceEventNames.afterScroll) ||
+          (event.type === DataSourceEventNames.afterCancel)) {
           loadDataSourceFieldValue();
-          break;
-        }
-        default:
       }
     }
   }, []);
@@ -178,6 +173,13 @@ export function ArchbaseSelect<T, ID, O>({
       dataSource.addFieldChangeListener(dataField, fieldChangedListener);
     }
   });
+
+  useArchbaseWillUnmount(() => {
+    if (dataSource && dataField) {
+      dataSource.removeListener(dataSourceEvent)
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+    }
+  })
 
   useEffect(() => {
     console.log(queryValue);

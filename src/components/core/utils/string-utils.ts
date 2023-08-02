@@ -411,3 +411,12 @@ export function convertISOStringToDate(isoString: string): Date {
 export function convertDateToISOString(date: Date): string {
   return format(date, "yyyy-MM-dd'T'HH:mm:ss");
 }
+
+export function formatStr(...values) {
+  var formatted = values[0];
+  for (var i = 1; i < values.length; i++) {
+    var regexp = new RegExp("\\{" + (i - 1) + "\\}", "gi");
+    formatted = formatted.replace(regexp, values[i]);
+  }
+  return formatted;
+}

@@ -109,7 +109,7 @@ function formatNumber(
 
 export type ArchbaseNumberEditStylesNames = InputStylesNames | InputWrapperStylesNames;
 
-export interface ArchbaseNumberEditProps<T,ID>
+export interface ArchbaseNumberEditProps<T, ID>
   extends DefaultProps<ArchbaseNumberEditStylesNames>,
     InputSharedProps,
     InputWrapperBaseProps,
@@ -157,7 +157,7 @@ export interface ArchbaseNumberEditProps<T,ID>
   integer: boolean;
 }
 
-export function ArchbaseNumberEdit<T,ID>({
+export function ArchbaseNumberEdit<T, ID>({
   dataSource,
   dataField,
   disabled = false,
@@ -183,7 +183,7 @@ export function ArchbaseNumberEdit<T,ID>({
   unstyled,
   classNames,
   ...others
-}: ArchbaseNumberEditProps<T,ID>) {
+}: ArchbaseNumberEditProps<T, ID>) {
   const [isOpen, _setIsOpen] = useState(false);
   const [maskedValue, setMaskedValue] = useState<string>('');
   const maskedValuePrev = useArchbasePrevious(maskedValue);
@@ -234,34 +234,36 @@ export function ArchbaseNumberEdit<T,ID>({
     return { maskedValue: result.maskedValue, value: result.value };
   };
 
-  useArchbaseWillMount(() => {
-    //
+  useArchbaseWillUnmount(() => {
+    if (dataSource && dataField) {
+      dataSource.removeListener(dataSourceEvent);
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+    }
   });
 
   const fieldChangedListener = useCallback(() => {}, []);
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      switch (event.type) {
-        case (DataSourceEventNames.dataChanged,
-        DataSourceEventNames.recordChanged,
-        DataSourceEventNames.afterScroll,
-        DataSourceEventNames.afterCancel): {
-          const value = dataSource.getFieldValue(dataField);
-          const result = formatNumber(
-            value,
-            precision,
-            decimalSeparator,
-            thousandSeparator,
-            allowNegative,
-            prefix,
-            suffix,
-          );
-          setMaskedValue(result.maskedValue);
-          setCurrentValue(0);
-          break;
-        }
-        default:
+      if (
+        event.type === DataSourceEventNames.dataChanged ||
+        event.type === DataSourceEventNames.fieldChanged ||
+        event.type === DataSourceEventNames.recordChanged ||
+        event.type === DataSourceEventNames.afterScroll ||
+        event.type === DataSourceEventNames.afterCancel
+      ) {
+        const value = dataSource.getFieldValue(dataField);
+        const result = formatNumber(
+          value,
+          precision,
+          decimalSeparator,
+          thousandSeparator,
+          allowNegative,
+          prefix,
+          suffix,
+        );
+        setMaskedValue(result.maskedValue);
+        setCurrentValue(0);
       }
     }
   }, []);
@@ -389,13 +391,13 @@ export function ArchbaseNumberEdit<T,ID>({
       />
     ) : null);
 
-    const isReadOnly = () =>{
-      let _readOnly = readOnly;
-      if (dataSource && !readOnly) {
-        _readOnly = dataSource.isBrowsing();
-      }
-      return _readOnly;
-    }  
+  const isReadOnly = () => {
+    let _readOnly = readOnly;
+    if (dataSource && !readOnly) {
+      _readOnly = dataSource.isBrowsing();
+    }
+    return _readOnly;
+  };
 
   return (
     <TextInput

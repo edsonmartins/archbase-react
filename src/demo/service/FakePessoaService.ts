@@ -19,6 +19,16 @@ export class FakePessoaService extends ArchbaseApiService<Pessoa, number> {
     return entity.id;
   }
 
+  findOne(id: number): Promise<Pessoa> {
+    return new Promise<Pessoa>((resolve, reject) => {
+      const result = pessoasData.filter((pessoa)=>pessoa.id === id);
+      if (result.length===0){
+        reject("Pessoa "+id+" não encontrada.")
+      }
+      resolve(result[0]);
+    })
+  }
+
   findAllWithFilter(filter: string, page: number, size: number): Promise<Page<Pessoa>> {
     return new Promise<Page<Pessoa>>((resolve, _reject) => {
       const pessoasFiltradas = pessoasData.sort((a, b) => {
@@ -34,7 +44,6 @@ export class FakePessoaService extends ArchbaseApiService<Pessoa, number> {
       const indexStart = page * size;
       const indexEnd = indexStart + size;
       const resultPage = pessoasFiltradas.slice(indexStart, indexEnd)
-      console.log(resultPage);
       const result: Page<Pessoa> = DefaultPage.createFromValues<Pessoa>(resultPage, pessoasFiltradas.length, totalPages, page, size);
       setTimeout(() => {
         resolve(result);

@@ -12,7 +12,7 @@ import React, {
   useState,
 } from 'react';
 import { uniqueId } from 'lodash';
-import { useArchbaseDidMount, useArchbaseDidUpdate } from '@components/hooks';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
 import { useDebouncedState } from '@mantine/hooks';
 import ArchbaseAsyncSelectContext, {
   ArchbaseAsyncSelectContextValue,
@@ -182,16 +182,12 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      switch (event.type) {
-        case (DataSourceEventNames.dataChanged,
-        DataSourceEventNames.fieldChanged,
-        DataSourceEventNames.recordChanged,
-        DataSourceEventNames.afterScroll,
-        DataSourceEventNames.afterCancel): {
+      if ((event.type === DataSourceEventNames.dataChanged) ||
+          (event.type === DataSourceEventNames.fieldChanged) ||
+          (event.type === DataSourceEventNames.recordChanged) ||
+          (event.type === DataSourceEventNames.afterScroll) ||
+          (event.type === DataSourceEventNames.afterCancel)) {
           loadDataSourceFieldValue();
-          break;
-        }
-        default:
       }
     }
   }, []);
@@ -203,6 +199,13 @@ export function ArchbaseAsyncSelect<T, ID, O>({
       dataSource.addFieldChangeListener(dataField, fieldChangedListener);
     }
   });
+
+  useArchbaseWillUnmount(() => {
+    if (dataSource && dataField) {
+      dataSource.removeListener(dataSourceEvent)
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+    }
+  })
 
   useEffect(() => {
     if (queryValue && queryValue.length > 0 && queryValue != getOptionLabel(selectedValue)) {
@@ -242,14 +245,6 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   };
 
   const handleDropdownScrollEnded = () => {
-    console.log(
-      'handleDropdownScrollEnded->currentPage ' +
-        currentPage +
-        ' queryValue: ' +
-        queryValue +
-        ' totalPages: ' +
-        totalPages,
-    );
     if (queryValue && queryValue.length > 0 && currentPage < totalPages - 1) {
       setLoading(true);
       loadOptions(currentPage + 1, true);
@@ -258,9 +253,6 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 
   const loadOptions = async (page: number, incremental: boolean = false) => {
     let promise = getOptions(page, queryValue);
-    if (!(promise instanceof Promise)) {
-      throw new ArchbaseError('getOptions deve retornar um objeto Promise<OptionsResult<?>>. ArchbaseAsyncSelect.');
-    }
     promise.then(
       (data: OptionsResult<O>) => {
         setLoading(false);

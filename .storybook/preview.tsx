@@ -9,6 +9,7 @@ import '../locales/config';
 import i18next from 'i18next';
 import { Provider as IOCProvider } from 'inversify-react';
 import { demoContainerIOC } from '../src/demo/index';
+import { Notifications } from '@mantine/notifications';
 
 function ThemeWrapper(props: { children: React.ReactNode }) {
   const colorSchem = useDarkMode() ? 'dark' : 'light';
@@ -35,6 +36,7 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
           withGlobalStyles
           withNormalizeCSS
         >
+          <Notifications autoClose={5000} position="top-right" />
           <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
             {props.children}
           </ColorSchemeProvider>

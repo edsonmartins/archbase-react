@@ -55,7 +55,7 @@ export class ArchbaseAxiosApiClient implements ArchbaseApiClient {
     const token = this.authenticator.getToken()
     const headersTemp = { ...headers, Authorization: `Bearer ${token}` }
     const response = await axios.get(url, { headers: headersTemp })
-    return response.data
+    return ArchbaseJacksonParser.convertJsonToObject(response.data)
   }
 
   async post<T, R>(url: string, data: T, headers?: Record<string, string>): Promise<R> {
@@ -85,7 +85,7 @@ export class ArchbaseAxiosApiClient implements ArchbaseApiClient {
     const response = await axios.put(url, JSON.stringify(data), {
       headers: headersTemp
     })
-    return response.data
+    return ArchbaseJacksonParser.convertJsonToObject(response.data)
   }
 
   async delete<T>(url: string, headers?: Record<string, string>): Promise<T> {
@@ -96,7 +96,7 @@ export class ArchbaseAxiosApiClient implements ArchbaseApiClient {
       Authorization: `Bearer ${token}`
     }
     const response = await axios.delete(url, { headers: headersTemp })
-    return response.data
+    return ArchbaseJacksonParser.convertJsonToObject(response.data)
   }
 }
 

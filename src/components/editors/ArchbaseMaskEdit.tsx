@@ -15,7 +15,7 @@ import { IMaskInput } from 'react-imask';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useState, useCallback, forwardRef } from 'react';
 
-import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks/lifecycle';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
 
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
@@ -30,7 +30,7 @@ export enum MaskPattern {
 
 export type ArchbaseMaskEditStylesNames = InputStylesNames | InputWrapperStylesNames;
 
-export interface ArchbaseMaskEditProps<T,ID>
+export interface ArchbaseMaskEditProps<T, ID>
   extends DefaultProps<ArchbaseMaskEditStylesNames>,
     InputSharedProps,
     InputWrapperBaseProps,
@@ -75,7 +75,7 @@ export interface ArchbaseMaskEditProps<T,ID>
   onChangeValue?: (value: any, event: any) => void;
 }
 
-const defaultProps: Partial<ArchbaseMaskEditProps<any,any>> = {
+const defaultProps: Partial<ArchbaseMaskEditProps<any, any>> = {
   type: 'text',
   size: 'sm',
   __staticSelector: 'ArchbaseMaskEdit',
@@ -89,13 +89,10 @@ const defaultProps: Partial<ArchbaseMaskEditProps<any,any>> = {
   saveWithMask: false,
 };
 
-export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditProps<any,any>>(
-  (props: ArchbaseMaskEditProps<any,any>, ref) => {
-    const { inputProps, wrapperProps, mask, placeholderChar, placeholder, readOnly, disabled, width, ...others } = useInputProps(
-      'ArchbaseMaskEdit',
-      defaultProps,
-      props,
-    );
+export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditProps<any, any>>(
+  (props: ArchbaseMaskEditProps<any, any>, ref) => {
+    const { inputProps, wrapperProps, mask, placeholderChar, placeholder, readOnly, disabled, width, ...others } =
+      useInputProps('ArchbaseMaskEdit', defaultProps, props);
     const id = useId();
 
     const [value, setValue] = useState<string>('');
@@ -119,15 +116,14 @@ export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditPro
 
     const dataSourceEvent = useCallback((event: DataSourceEvent<any>) => {
       if (dataSource && dataField) {
-        switch (event.type) {
-          case (DataSourceEventNames.dataChanged,
-          DataSourceEventNames.recordChanged,
-          DataSourceEventNames.afterScroll,
-          DataSourceEventNames.afterCancel): {
-            loadDataSourceFieldValue();
-            break;
-          }
-          default:
+        if (
+          event.type === DataSourceEventNames.dataChanged ||
+          event.type === DataSourceEventNames.fieldChanged ||
+          event.type === DataSourceEventNames.recordChanged ||
+          event.type === DataSourceEventNames.afterScroll ||
+          event.type === DataSourceEventNames.afterCancel
+        ) {
+          loadDataSourceFieldValue();
         }
       }
     }, []);
@@ -137,6 +133,13 @@ export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditPro
       if (dataSource && dataField) {
         dataSource.addListener(dataSourceEvent);
         dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+      }
+    });
+
+    useArchbaseWillUnmount(() => {
+      if (dataSource && dataField) {
+        dataSource.removeListener(dataSourceEvent);
+        dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
       }
     });
 
@@ -171,13 +174,13 @@ export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditPro
       }
     };
 
-    const isReadOnly = () =>{
+    const isReadOnly = () => {
       let _readOnly = readOnly;
       if (dataSource && !readOnly) {
         _readOnly = dataSource.isBrowsing();
       }
       return _readOnly;
-    }  
+    };
 
     return (
       <Input.Wrapper {...wrapperProps}>
@@ -190,7 +193,7 @@ export const ArchbaseMaskEdit = forwardRef<HTMLInputElement, ArchbaseMaskEditPro
           unmask={!saveWithMask}
           lazy={false}
           value={value}
-          style={{ 
+          style={{
             width,
             ...props.style,
           }}
