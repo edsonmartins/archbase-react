@@ -385,6 +385,9 @@ export function ArchbaseNumberEdit<T, ID>({
         onClick={() => {
           setMaskedValue((_prev) => '');
           setCurrentValue((_prev) => 0);
+          if (dataSource && !dataSource.isBrowsing() && dataField) {
+            dataSource.setFieldValue(dataField, allowEmpty?null:0);
+          }
         }}
         unstyled={unstyled}
         {...clearButtonProps}
@@ -412,7 +415,7 @@ export function ArchbaseNumberEdit<T, ID>({
       onChange={handleChange}
       onBlur={handleOnFocusExit}
       onFocus={handleOnFocusEnter}
-      onMouseUp={handleOnFocusExit}
+      onMouseUp={handleOnFocusExit}      
       styles={{
         input: {
           textAlign: 'right',
