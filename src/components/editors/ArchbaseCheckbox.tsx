@@ -1,6 +1,6 @@
 import { Checkbox } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
 
@@ -38,6 +38,8 @@ export interface ArchbaseCheckBoxProps<T, ID> {
   onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando o valor do checkbox é alterado */
   onChangeValue?: (value: any, event: any) => void;
+  /** Referência para o componente interno */
+  innerRef?: React.RefObject<HTMLInputElement>|undefined;
 }
 
 export function ArchbaseCheckBox<T, ID>({
@@ -56,8 +58,10 @@ export function ArchbaseCheckBox<T, ID>({
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
+  innerRef,
 }: ArchbaseCheckBoxProps<T, ID>) {
   const [checked, setChecked] = useState<boolean>(isChecked ? true : false);
+  const innerComponentRef = innerRef || useRef<any>();
 
   const loadDataSourceFieldValue = () => {
     let currentChecked = checked;
@@ -146,6 +150,7 @@ export function ArchbaseCheckBox<T, ID>({
       required={required}
       style={style}
       checked={checked}
+      ref={innerComponentRef}
       value={checked ? trueValue : falseValue}
       onChange={handleChange}
       onBlur={handleOnFocusExit}

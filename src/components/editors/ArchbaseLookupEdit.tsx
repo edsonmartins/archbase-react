@@ -1,11 +1,9 @@
 import {
   ActionIcon,
-  FocusTrap,
   MantineNumberSize,
   MantineSize,
   TextInput,
   Tooltip,
-  useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
@@ -68,6 +66,8 @@ export interface ArchbaseLookupEditProps<T, ID, O> {
   onLookupError?: (error: string) => void;
   /** Função responsável por localizar um valor */
   lookupValueDelegator: (value: any) => Promise<O>;
+  /** Referência para o componente interno */
+  innerRef?: React.RefObject<HTMLInputElement>|undefined;
 }
 
 export function ArchbaseLookupEdit<T, ID, O>({
@@ -95,11 +95,12 @@ export function ArchbaseLookupEdit<T, ID, O>({
   onFocusEnter = () => {},
   onChangeValue = () => {},
   onActionSearchExecute = () => {},
+  innerRef
 }: ArchbaseLookupEditProps<T, ID, O>) {
   const theme = useMantineTheme();
   const [value, setValue] = useState<any | undefined>('');
   const [currentError, setCurrentError] = useState<string | undefined>(error);
-  const ref = useRef<HTMLInputElement>(null);
+  const innerComponentRef = innerRef || useRef<any>();
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value;
 
@@ -180,7 +181,7 @@ export function ArchbaseLookupEdit<T, ID, O>({
           })
           .catch((error) => {
             dataSource.setFieldValue(dataField, undefined);
-            ref.current?.focus();
+            innerComponentRef.current?.focus();
             if (validateMessage) {
               setCurrentError(formatStr(validateMessage, value));
             }
@@ -215,7 +216,7 @@ export function ArchbaseLookupEdit<T, ID, O>({
             if (validateMessage) {
               setCurrentError(formatStr(validateMessage, value));
             }
-            ref.current?.focus();
+            innerComponentRef.current?.focus();
             if (onLookupError) {
               onLookupError(error);
             }
@@ -249,7 +250,7 @@ export function ArchbaseLookupEdit<T, ID, O>({
 
   return (
     <TextInput
-      ref={ref}
+      ref={innerComponentRef}
       disabled={disabled}
       readOnly={isReadOnly()}
       type={'text'}

@@ -13,16 +13,17 @@ import {
   InputWrapperStylesNames,
   TextInput,
   CloseButton,
+  MantineNumberSize,
+  MantineSize,
 } from '@mantine/core';
-import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { useCallback, useRef, useState } from 'react';
+import type { CSSProperties, FocusEventHandler, Ref } from 'react';
+import React, { forwardRef, useCallback, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 import {
   useArchbaseDidMount,
   useArchbaseDidUpdate,
   useArchbasePrevious,
-  useArchbaseWillMount,
   useArchbaseWillUnmount,
 } from '../hooks/lifecycle';
 
@@ -127,18 +128,24 @@ export interface ArchbaseNumberEditProps<T, ID>
   disabled: boolean;
   /** Indicador se o number edit é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly: boolean;
-  /** Estilo do mask edit */
-  style?: CSSProperties | undefined;
+  /** Estilo do number edit */
+  style?: CSSProperties;
+  /** Tamanho do number edit */
+  size?: MantineSize;
+  /** Largura do number edit */
+  width?: MantineNumberSize;
   /** Nome da classe para estilo do number edit */
   className?: string;
+  /** Último erro ocorrido no number edit */
+  error?: string;
   /** Evento quando o foco sai do edit */
   onFocusExit?: FocusEventHandler<T> | undefined;
   /** Evento quando o edit recebe o foco */
   onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando o valor do edit é alterado */
-  onChangeValue: (maskValue: any, value: any, event: any) => void;
+  onChangeValue: (maskValue: any, value: number, event: any) => void;
   /** Valor inicial do campo */
-  value: string;
+  value: number;
   /** Caracter separador decimal */
   decimalSeparator: string;
   /** Caracter separador de milhar */
@@ -155,6 +162,8 @@ export interface ArchbaseNumberEditProps<T, ID>
   suffix: string;
   /** Indicador se aceita apenas números inteiros */
   integer: boolean;
+  /** Referência para o componente interno */
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
 export function ArchbaseNumberEdit<T, ID>({
@@ -167,7 +176,7 @@ export function ArchbaseNumberEdit<T, ID>({
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
-  value = '0',
+  value = 0,
   decimalSeparator = ',',
   thousandSeparator = '.',
   precision = 2,
@@ -182,13 +191,17 @@ export function ArchbaseNumberEdit<T, ID>({
   rightSection,
   unstyled,
   classNames,
+  width,
+  size,
+  error,
+  innerRef,
   ...others
 }: ArchbaseNumberEditProps<T, ID>) {
   const [isOpen, _setIsOpen] = useState(false);
   const [maskedValue, setMaskedValue] = useState<string>('');
   const maskedValuePrev = useArchbasePrevious(maskedValue);
   const [_currentValue, setCurrentValue] = useState<number | undefined>();
-  const theInput = useRef<any>();
+  const innerComponentRef = innerRef || useRef<any>();
   const [_inputSelectionStart, setInputSelectionStart] = useState(0);
   const [inputSelectionEnd, setInputSelectionEnd] = useState(0);
 
@@ -276,7 +289,7 @@ export function ArchbaseNumberEdit<T, ID>({
       dataSource.addListener(dataSourceEvent);
       dataSource.addFieldChangeListener(dataField, fieldChangedListener);
     }
-    const input = ReactDOM.findDOMNode(theInput.current) as HTMLInputElement;
+    const input = ReactDOM.findDOMNode(innerComponentRef.current) as HTMLInputElement;
     const selectionEnd = Math.min(
       input.selectionEnd ? input.selectionEnd : 0,
       input.value ? input.value.length - suffix.length : 0,
@@ -286,8 +299,8 @@ export function ArchbaseNumberEdit<T, ID>({
   });
 
   useArchbaseDidUpdate(() => {
-    const input = ReactDOM.findDOMNode(theInput.current) as HTMLInputElement;
-    const value = theInput?.current ? input.value : '';
+    const input = ReactDOM.findDOMNode(innerComponentRef.current) as HTMLInputElement;
+    const value = innerComponentRef?.current ? input.value : '';
     const isNegative = (value.match(/-/g) || []).length % 2 === 1;
     const minPos = prefix.length + (isNegative ? 1 : 0);
     let selectionEnd = Math.max(minPos, Math.min(inputSelectionEnd, value.length - suffix.length));
@@ -365,8 +378,8 @@ export function ArchbaseNumberEdit<T, ID>({
   };
 
   const handleOnFocusEnter = (event) => {
-    const input = ReactDOM.findDOMNode(theInput.current) as HTMLInputElement;
-    const value = theInput?.current ? input.value : '';
+    const input = ReactDOM.findDOMNode(innerComponentRef.current) as HTMLInputElement;
+    const value = innerComponentRef?.current ? input.value : '';
     const selectionEnd = value.length - suffix.length;
     const isNegative = (value.match(/-/g) || []).length % 2 === 1;
     const selectionStart = prefix.length + (isNegative ? 1 : 0);
@@ -386,7 +399,7 @@ export function ArchbaseNumberEdit<T, ID>({
           setMaskedValue((_prev) => '');
           setCurrentValue((_prev) => 0);
           if (dataSource && !dataSource.isBrowsing() && dataField) {
-            dataSource.setFieldValue(dataField, allowEmpty?null:0);
+            dataSource.setFieldValue(dataField, allowEmpty ? null : 0);
           }
         }}
         unstyled={unstyled}
@@ -407,15 +420,21 @@ export function ArchbaseNumberEdit<T, ID>({
       disabled={!!disabled}
       {...others}
       className={className}
-      ref={theInput}
+      ref={innerComponentRef}
       type={'text'}
       value={maskedValue}
       rightSection={_rightSection}
+      size={size}
+      error={error}
+      style={{
+        width,
+        ...style,
+      }}
       readOnly={isReadOnly()}
       onChange={handleChange}
       onBlur={handleOnFocusExit}
       onFocus={handleOnFocusEnter}
-      onMouseUp={handleOnFocusExit}      
+      onMouseUp={handleOnFocusExit}
       styles={{
         input: {
           textAlign: 'right',
@@ -431,7 +450,6 @@ ArchbaseNumberEdit.defaultProps = {
   decimalSeparator: ',',
   thousandSeparator: '.',
   precision: 2,
-  inputType: 'text',
   allowNegative: false,
   prefix: '',
   suffix: '',

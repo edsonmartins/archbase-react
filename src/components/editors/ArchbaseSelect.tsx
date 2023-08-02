@@ -1,6 +1,6 @@
 import { MantineSize, Select } from '@mantine/core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import React, { CSSProperties, FocusEventHandler, ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { CSSProperties, FocusEventHandler, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { uniqueId } from 'lodash';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
 import { useDebouncedState } from '@mantine/hooks';
@@ -78,6 +78,8 @@ export interface ArchbaseSelectProps<T, ID, O> {
   children?: ReactNode | ReactNode[];
   /** Indica se o select tem o preenchimento obrigatório */
   required?: boolean;
+  /** Referência para o componente interno */
+  innerRef?: React.RefObject<HTMLInputElement>|undefined;
 }
 function buildOptions<O>(
   initialOptions: O[],
@@ -133,10 +135,12 @@ export function ArchbaseSelect<T, ID, O>({
   zIndex,
   dropdownPosition,
   children,
+  innerRef
 }: ArchbaseSelectProps<T, ID, O>) {
   const [options, _setOptions] = useState<any[]>(
     buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
   );
+  const innerComponentRef = innerRef || useRef<any>();
   const [selectedValue, setSelectedValue] = useState<any>(value);
   const [queryValue, setQueryValue] = useDebouncedState('', debounceTime);
 
@@ -233,6 +237,7 @@ export function ArchbaseSelect<T, ID, O>({
         placeholder={placeholder}
         searchable={searchable}
         maxDropdownHeight={280}
+        ref={innerComponentRef}
         dropdownComponent={CustomSelectScrollArea}
         label={label}
         error={error}

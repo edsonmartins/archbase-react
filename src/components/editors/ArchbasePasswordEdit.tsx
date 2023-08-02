@@ -30,6 +30,8 @@ export interface ArchbasePasswordEditProps<T, ID> {
   onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando o valor do edit é alterado */
   onChangeValue?: (value: any, event: any) => void;
+  /** Referência para o componente interno */
+  innerRef?: React.RefObject<HTMLInputElement>|undefined;
 }
 
 export function ArchbasePasswordEdit<T, ID>(_props: ArchbasePasswordEditProps<T, ID>) {

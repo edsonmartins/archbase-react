@@ -1,6 +1,6 @@
 import { JsonInput } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
 
@@ -34,6 +34,8 @@ export interface ArchbaseJsonEditProps<T,ID> {
   onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando o valor do json edit  é alterado */
   onChangeValue?: (value: any, event: any) => void;
+  /** Referência para o componente interno */
+  innerRef?: React.RefObject<HTMLTextAreaElement>|undefined;
 }
 
 export function ArchbaseEdit<T,ID>({
@@ -50,8 +52,10 @@ export function ArchbaseEdit<T,ID>({
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
+  innerRef
 }: ArchbaseJsonEditProps<T,ID>) {
   const [value, setValue] = useState<string>('');
+  const innerComponentRef = innerRef || useRef<any>();
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value;
@@ -142,6 +146,7 @@ export function ArchbaseEdit<T,ID>({
       formatOnBlur={true}
       style={style}
       value={value}
+      ref={innerComponentRef}
       required={required}
       onChange={handleChange}
       onBlur={handleOnFocusExit}

@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-nested-ternary */
 import dayjs from 'dayjs';
-import React, { forwardRef, useState, useEffect, useCallback, CSSProperties } from 'react';
+import React, { forwardRef, useState, useEffect, useCallback, CSSProperties, useRef } from 'react';
 import {
   DefaultProps,
   InputSharedProps,
@@ -155,7 +155,7 @@ function isDateValid({ date, maxDate, minDate }: IsDateValid) {
 
 export type ArchbaseDatePickerEditStylesNames = CalendarStylesNames | InputStylesNames | InputWrapperStylesNames;
 
-export interface ArchbaseDatePickerEditProps
+export interface ArchbaseDatePickerEditProps<T, ID>
   extends DefaultProps<ArchbaseDatePickerEditStylesNames>,
     InputSharedProps,
     InputWrapperBaseProps,
@@ -193,7 +193,7 @@ export interface ArchbaseDatePickerEditProps
   /** Chamado quando o nível muda */
   onLevelChange?(level: CalendarLevel): void;
   /** Fonte de dados onde será atribuido o valor do datePicker */
-  dataSource?: ArchbaseDataSource<any, any>;
+  dataSource?: ArchbaseDataSource<ID, String>;
   /** Campo onde deverá ser atribuido o valor do datePicker na fonte de dados */
   dataField?: string;
   /** Indicador se o date picker está desabilitado */
@@ -218,9 +218,11 @@ export interface ArchbaseDatePickerEditProps
   onFocusEnter?: React.FocusEvent<HTMLInputElement>;
   /** Indica se o date picker tem o preenchimento obrigatório */
   required?: boolean;
+  /** Referência para o componente interno */
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
-const defaultProps: Partial<ArchbaseDatePickerEditProps> = {
+const defaultProps: Partial<ArchbaseDatePickerEditProps<any, any>> = {
   fixOnBlur: true,
   preserveTime: true,
   size: 'sm',
@@ -233,7 +235,7 @@ const defaultProps: Partial<ArchbaseDatePickerEditProps> = {
   dateFormat: 'DD/MM/YYYY',
 };
 
-export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDatePickerEditProps>((props, ref) => {
+export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps<T, ID>) {
   const {
     inputProps,
     wrapperProps,
@@ -270,10 +272,12 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
     dataSource,
     dataField,
     width,
+    innerRef,
     ...rest
   } = useInputProps('ArchbaseDatePickerEdit', defaultProps, props);
 
   const { calendarProps, others } = pickCalendarProps(rest);
+  const innerComponentRef = innerRef || useRef<any>();
   const ctx = useDatesContext();
   const [_value, setValue, controlled] = useUncontrolled({
     value,
@@ -511,7 +515,7 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
                 data-dates-input
                 data-read-only={readOnly || undefined}
                 autoComplete="off"
-                ref={ref}
+                ref={innerComponentRef}
                 component={IMaskInput}
                 rightSection={_rightSection}
                 lazy={!showPlaceholderFormat}
@@ -568,6 +572,6 @@ export const ArchbaseDatePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateP
       </Input.Wrapper>
     </>
   );
-});
+}
 
 ArchbaseDatePickerEdit.displayName = 'ArchbaseDatePickerEdit';

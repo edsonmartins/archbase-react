@@ -18,7 +18,6 @@ import ArchbaseAsyncSelectContext, {
   ArchbaseAsyncSelectContextValue,
   ArchbaseAsyncSelectProvider,
 } from './ArchbaseAsyncSelect.context';
-import { ArchbaseError } from '@components/core';
 
 export type OptionsResult<O> = {
   options: O[];
@@ -101,6 +100,8 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
   onErrorLoadOptions?: (error: string) => void;
   /** Indica se o select tem o preenchimento obrigatório */
   required?: boolean;
+  /** Referência para o componente interno */
+  innerRef?: React.RefObject<HTMLInputElement>|undefined;
 }
 function buildOptions<O>(
   initialOptions: O[],
@@ -153,6 +154,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   zIndex,
   dropdownPosition,
   onErrorLoadOptions,
+  innerRef,
 }: ArchbaseAsyncSelectProps<T, ID, O>) {
   const [options, setOptions] = useState<any[]>(
     buildOptions<O>(initialOptions.options, getOptionLabel, getOptionValue),
@@ -164,6 +166,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   const [totalPages, setTotalPages] = useState(initialOptions.totalPages);
   const [_isLastPage, setIsLastPage] = useState(currentPage === totalPages - 1);
   const [originData, setOriginData] = useState(initialOptions.options);
+  const innerComponentRef = innerRef || useRef<any>();
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value;
@@ -300,6 +303,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         searchable={searchable}
         maxDropdownHeight={280}
         dropdownComponent={CustomSelectScrollArea}
+        ref={innerComponentRef}
         label={label}
         error={error}
         data={options}

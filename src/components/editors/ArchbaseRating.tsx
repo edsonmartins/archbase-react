@@ -29,6 +29,8 @@ export interface ArchbaseRatingProps<T, ID> {
   onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando o valor do rating é alterado */
   onChangeValue?: (value: any, event: any) => void;
+  /** Referência para o componente interno */
+  innerRef?: React.RefObject<HTMLInputElement>|undefined;
 }
 
 export function ArchbaseRating<T, ID>(_props: ArchbaseRatingProps<T, ID>) {
