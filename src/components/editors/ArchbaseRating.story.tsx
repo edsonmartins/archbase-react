@@ -5,7 +5,6 @@ import { Pessoa, pessoasData } from '@demo/index';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { ArchbaseEdit } from './ArchbaseEdit';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseRating } from './ArchbaseRating';

@@ -1,4 +1,4 @@
-import React, { CSSProperties, FocusEventHandler, useRef } from 'react';
+import React, { CSSProperties, FocusEventHandler } from 'react';
 import 'suneditor/dist/css/suneditor.min.css';
 
 import { ArchbaseDataSource } from '@components/datasource';
@@ -38,8 +38,8 @@ export interface ArchbaseRichTextEditProps<T, ID> {
   innerRef?: React.RefObject<HTMLInputElement>|undefined;
 }
 
-export function ArchbaseRichTextEdit<T,ID>({innerRef}: ArchbaseRichTextEditProps<T,ID>) {
-  const _innerComponentRef = innerRef || useRef<any>();
+export function ArchbaseRichTextEdit<T,ID>(_props: ArchbaseRichTextEditProps<T,ID>) {
+  //const _innerComponentRef = innerRef || useRef<any>();
 
   return (
     <div>

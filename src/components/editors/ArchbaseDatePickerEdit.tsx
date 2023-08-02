@@ -4,24 +4,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-nested-ternary */
-import dayjs from 'dayjs';
-import React, { forwardRef, useState, useEffect, useCallback, CSSProperties, useRef } from 'react';
 import {
-  DefaultProps,
-  InputSharedProps,
-  InputWrapperBaseProps,
-  InputStylesNames,
-  InputWrapperStylesNames,
-  useInputProps,
-  Input,
-  PopoverProps,
-  Popover,
   CloseButton,
-  MantineSize,
+  DefaultProps,
+  Input,
+  InputSharedProps,
+  InputStylesNames,
+  InputWrapperBaseProps,
+  InputWrapperStylesNames,
   MantineNumberSize,
+  MantineSize,
+  Popover,
+  PopoverProps,
+  useInputProps,
 } from '@mantine/core';
-import { useUncontrolled, useDidUpdate } from '@mantine/hooks';
-import { IMaskInput } from 'react-imask';
 import {
   Calendar,
   CalendarBaseProps,
@@ -35,9 +31,13 @@ import {
   pickCalendarProps,
   useDatesContext,
 } from '@mantine/dates';
-import { DataSourceEventNames, type ArchbaseDataSource, DataSourceEvent } from '../datasource';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/';
+import { useDidUpdate, useUncontrolled } from '@mantine/hooks';
+import dayjs from 'dayjs';
+import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
+import { IMaskInput } from 'react-imask';
 import { convertDateToISOString, convertISOStringToDate } from '../core/utils/string-utils';
+import { DataSourceEvent, DataSourceEventNames, type ArchbaseDataSource } from '../datasource';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/';
 
 const dateFormats = {
   'DD/MM/YYYY': {
@@ -193,7 +193,7 @@ export interface ArchbaseDatePickerEditProps<T, ID>
   /** Chamado quando o nível muda */
   onLevelChange?(level: CalendarLevel): void;
   /** Fonte de dados onde será atribuido o valor do datePicker */
-  dataSource?: ArchbaseDataSource<ID, String>;
+  dataSource?: ArchbaseDataSource<T, ID>;
   /** Campo onde deverá ser atribuido o valor do datePicker na fonte de dados */
   dataField?: string;
   /** Indicador se o date picker está desabilitado */

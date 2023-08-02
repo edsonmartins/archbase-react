@@ -13,7 +13,7 @@ import { useId } from '@mantine/hooks';
 import { IMaskInput } from 'react-imask';
 
 import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { useState, useCallback, forwardRef, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
 
@@ -72,7 +72,7 @@ export interface ArchbaseMaskEditProps<T, ID>
   /** Evento quando o edit recebe o foco */
   onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando o valor do edit é alterado */
-  onChangeValue?: (value: any, event: any) => void;
+  onChangeValue?: (value: string, event: any) => void;
   /** Referência para o componente interno */
   innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }

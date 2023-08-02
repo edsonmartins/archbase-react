@@ -52,7 +52,7 @@ const ArchbaseLookupEditExample = () => {
     ArchbaseNotifications.showError(error, "Atenção","");
   };
 
-  const handleLookupResult = (value: Pessoa): void => {
+  const handleLookupResult = (_value: Pessoa): void => {
     //
   };
 

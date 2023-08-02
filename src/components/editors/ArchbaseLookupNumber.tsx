@@ -1,4 +1,4 @@
-import { ActionIcon, MantineNumberSize, MantineSize, TextInput, Tooltip, useMantineTheme } from '@mantine/core';
+import { ActionIcon, MantineNumberSize, MantineSize, Tooltip, useMantineTheme } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useRef, useState } from 'react';
 
@@ -254,6 +254,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
       description={description}
       label={label}
       error={currentError}
+      style={style}
       size={size}
       width={width}
       rightSection={

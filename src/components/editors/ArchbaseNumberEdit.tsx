@@ -16,8 +16,8 @@ import {
   MantineNumberSize,
   MantineSize,
 } from '@mantine/core';
-import type { CSSProperties, FocusEventHandler, Ref } from 'react';
-import React, { forwardRef, useCallback, useRef, useState } from 'react';
+import type { CSSProperties, FocusEventHandler } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 import {
