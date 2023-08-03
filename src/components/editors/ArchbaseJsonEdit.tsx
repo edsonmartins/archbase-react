@@ -1,4 +1,5 @@
-import { JsonInput } from '@mantine/core';
+import { JsonInput, MantineNumberSize, MantineSize} from '@mantine/core';
+
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useState, useCallback, useRef } from 'react';
 
@@ -6,39 +7,55 @@ import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } fro
 
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
+import { isBase64 } from '@components/core/utils';
 
-export interface ArchbaseJsonEditProps<T,ID> {
-  /** Fonte de dados onde será atribuido o valor do json edit  */
+
+export interface ArchbaseJsonInputProps<T,ID> {
+  /** Fonte de dados onde será atribuido o valor do json input */
   dataSource?: ArchbaseDataSource<T, ID>;
-  /** Campo onde deverá ser atribuido o valor do json edit  na fonte de dados */
+  /** Campo onde deverá ser atribuido o valor do json input na fonte de dados */
   dataField?: string;
-  /** Indicador se o json edit  está desabilitado */
+  /** Indicador se o json input está desabilitado */
   disabled?: boolean;
-  /** Indicador se o json edit  é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
+  /** Indicador se o json input é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean;
-  /** Indicador se o preenchimento do json edit  é obrigatório */
+  /** Indicador se o preenchimento do json input é obrigatório */
   required?: boolean;
-  /** Estilo do checkbox */
+  /** Estilo do json input */
   style?: CSSProperties;
-  /** Texto sugestão do json edit  */
+  /** Tamanho do json input */
+  size?: MantineSize;
+  /** Largura do json input */
+  width?: MantineNumberSize;
+  /** Indicador se json input crescerá com o conteúdo até que maxRows sejam atingidos  */
+  autosize?: boolean;
+  /** Número mínimo de linhas obrigatórias */
+  minRows?: number;
+  /** Número máximo de linhas aceitas */
+  maxRows?: number;
+  /** Tamanho máximo em caracteres aceitos */
+  maxLength?: number;
+  /** Desabilita conversão do conteúdo em base64 antes de salvar na fonte de dados */
+  disabledBase64Convertion?: boolean;
+  /** Texto sugestão do json input */
   placeholder?: string;
-  /** Título do json edit  */
+  /** Título do json input */
   label?: string;
-  /** Descrição do json edit  */
+  /** Descrição do json input */
   description?: string;
-  /** Último erro ocorrido no json edit  */
+  /** Último erro ocorrido no json input */
   error?: string;
-  /** Evento quando o foco sai do json edit  */
+  /** Evento quando o foco sai do json input */
   onFocusExit?: FocusEventHandler<T> | undefined;
-  /** Evento quando o json edit  recebe o foco */
+  /** Evento quando o json input recebe o foco */
   onFocusEnter?: FocusEventHandler<T> | undefined;
-  /** Evento quando o valor do json edit  é alterado */
-  onChangeValue?: (value: any, event: any) => void;
+  /** Evento quando o valor do json input é alterado */
+  onChangeValue?: (value: any) => void;
   /** Referência para o componente interno */
   innerRef?: React.RefObject<HTMLTextAreaElement>|undefined;
 }
 
-export function ArchbaseEdit<T,ID>({
+export function ArchbaseJsonInput<T,ID>({
   dataSource,
   dataField,
   disabled = false,
@@ -48,12 +65,17 @@ export function ArchbaseEdit<T,ID>({
   label,
   description,
   error,
-  required,
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
+  autosize = false,
+  minRows,
+  maxRows,
+  maxLength,
+  required = false,
+  disabledBase64Convertion = false,
   innerRef
-}: ArchbaseJsonEditProps<T,ID>) {
+}: ArchbaseJsonInputProps<T,ID>) {
   const [value, setValue] = useState<string>('');
   const innerComponentRef = innerRef || useRef<any>();
 
@@ -65,6 +87,10 @@ export function ArchbaseEdit<T,ID>({
       if (!initialValue) {
         initialValue = '';
       }
+    }
+
+    if (isBase64(initialValue) && !disabledBase64Convertion) {
+      initialValue = atob(initialValue);
     }
 
     setValue(initialValue);
@@ -96,28 +122,24 @@ export function ArchbaseEdit<T,ID>({
     loadDataSourceFieldValue();
   }, []);
 
+  const handleChange = (value) => {
+    setValue((_prev) => value);
+
+    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== value) {
+      dataSource.setFieldValue(dataField, disabledBase64Convertion ? value : btoa(value));
+    }
+
+    if (onChangeValue) {
+      onChangeValue(value);
+    }
+  };
+
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
       dataSource.removeListener(dataSourceEvent)
       dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
     }
   })
-
-  const handleChange = (event) => {
-    event.preventDefault();
-    const changedValue = event.target.value;
-
-    event.persist();
-    setValue((_prev) => changedValue);
-
-    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-      dataSource.setFieldValue(dataField, changedValue);
-    }
-
-    if (onChangeValue) {
-      onChangeValue(event, changedValue);
-    }
-  };
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {
@@ -139,6 +161,7 @@ export function ArchbaseEdit<T,ID>({
     return _readOnly;
   }    
 
+
   return (
     <JsonInput
       disabled={disabled}
@@ -146,6 +169,10 @@ export function ArchbaseEdit<T,ID>({
       formatOnBlur={true}
       style={style}
       value={value}
+      autosize={autosize}
+      minRows={minRows}
+      maxRows={maxRows}
+      maxLength={maxLength}
       ref={innerComponentRef}
       required={required}
       onChange={handleChange}

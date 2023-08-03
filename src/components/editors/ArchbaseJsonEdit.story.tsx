@@ -5,9 +5,9 @@ import { Pessoa, pessoasData } from '@demo/index';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { ArchbaseEdit } from './ArchbaseEdit';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
+import { ArchbaseJsonInput } from './ArchbaseJsonEdit';
 
 const ArchbaseJsonEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
@@ -34,11 +34,11 @@ const ArchbaseJsonEditExample = () => {
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>JsonEdit Component</Text>
+              <Text weight={500}>Json Edit Component</Text>
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({height:100})}>
-            <ArchbaseEdit label="Código" dataSource={dataSource} dataField="codigoJson" />
+            <ArchbaseJsonInput<Pessoa,string> maxRows={100} maxLength={1000} label="Json" dataSource={dataSource} dataField="codigoJson" />
           </Box>
         </Card>
       </Grid.Col>
