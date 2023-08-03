@@ -364,8 +364,9 @@ export function ArchbaseNumberEdit<T, ID>({
     event.persist();
     setMaskedValue((_prev) => changedMaskedValue);
     setCurrentValue((_prev) => changedValue);
+    console.log(changedValue);
     if (onChangeValue) {
-      onChangeValue(event, changedMaskedValue, changedValue);
+      onChangeValue(changedMaskedValue, changedValue,event);
     }
   };
 

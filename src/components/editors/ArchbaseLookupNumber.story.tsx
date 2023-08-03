@@ -7,17 +7,17 @@ import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate, useArchbaseServiceApi } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { pedidosData, Pedido, Pessoa } from '@demo/index';
-import { ArchbaseLookupEdit } from './ArchbaseLookupEdit';
 import { ArchbaseEdit } from './ArchbaseEdit';
 import { ArchbaseNotifications } from '@components/notification';
 import { FakePessoaService } from '@demo/service/FakePessoaService';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { processErrorMessage } from '@components/core/exceptions';
+import { ArchbaseLookupNumber } from './ArchbaseLookupNumber';
 
 
 const pedidosList: Pedido[] = pedidosData;
 
-const ArchbaseLookupEditExample = () => {
+const ArchbaseLookupNumberExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
   const pessoaApi = useArchbaseServiceApi<FakePessoaService>(API_TYPE.Pessoa)
   const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
@@ -66,12 +66,12 @@ const ArchbaseLookupEditExample = () => {
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>Lookup Edit Component</Text>
+              <Text weight={500}>Lookup Number Component</Text>
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({ height: 100 })}>
             <Flex justify="flex-start" align="center" direction="row" wrap="nowrap" gap="xs">
-              <ArchbaseLookupEdit<Pedido, string, Pessoa>
+              <ArchbaseLookupNumber<Pedido, string, Pessoa>
                 label="Código"
                 dataSource={dataSource}
                 dataField="cliente"
@@ -119,14 +119,14 @@ const ArchbaseLookupEditExample = () => {
 };
 
 export default {
-  title: 'Editors/Lookup Edit',
-  component: ArchbaseLookupEditExample,
+  title: 'Editors/Lookup Number',
+  component: ArchbaseLookupNumberExample,
 } as Meta;
 
-export const Example: StoryObj<typeof ArchbaseLookupEditExample> = {
+export const Example: StoryObj<typeof ArchbaseLookupNumberExample> = {
   args: {
     render: () => {
-      <ArchbaseLookupEditExample />;
+      <ArchbaseLookupNumberExample />;
     },
   },
 };

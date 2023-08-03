@@ -38,7 +38,14 @@ const ArchbaseNumberEditExample = () => {
               <Text weight={500}>Number Edit Component</Text>
             </Group>
           </Card.Section>
-          <ArchbaseNumberEdit<Pessoa,string> width={200} innerRef={inputRef} label="Altura" dataSource={dataSource} dataField="altura" precision={2} />
+          <ArchbaseNumberEdit<Pessoa, string>
+            width={200}
+            innerRef={inputRef}
+            label="Altura"
+            dataSource={dataSource}
+            dataField="altura"
+            precision={2}
+          />
         </Card>
       </Grid.Col>
       <Grid.Col span={6}>

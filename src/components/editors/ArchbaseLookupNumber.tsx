@@ -46,6 +46,18 @@ export interface ArchbaseLookupNumberProps<T, ID, O> {
   iconSearch?: ReactNode;
   /** Dica para botão localizar */
   tooltipIconSearch?: String;
+  /** Caracter separador decimal */
+  decimalSeparator?: string;
+  /** Caracter separador de milhar */
+  thousandSeparator?: string;
+  /** Número de casas decimais */
+  precision?: number;
+  /** Permite números negativos */
+  allowNegative?: boolean;
+  /** Aceita em branco */
+  allowEmpty?: boolean;
+  /** Valor atual caso não esteje usando fonte de dados*/
+  value?: any;
   /** Evento ocorre quando clica no botão localizar */
   onActionSearchExecute?: () => void;
   /** Evento quando o foco sai do lookup edit */
@@ -64,6 +76,17 @@ export interface ArchbaseLookupNumberProps<T, ID, O> {
   innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
+function getInitialValue<T, ID>(value: any, dataSource?: ArchbaseDataSource<T, ID>, lookupField?: string): any {
+  let initialValue: any = value;
+  if (dataSource && lookupField) {
+    initialValue = dataSource.getFieldValue(lookupField);
+    if (!initialValue) {
+      initialValue = '';
+    }
+  }
+  return initialValue;
+}
+
 export function ArchbaseLookupNumber<T, ID, O>({
   dataSource,
   dataField,
@@ -79,6 +102,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
   required,
   size,
   width,
+  value,
   lookupValueDelegator,
   onLookupError,
   onLookupResult,
@@ -90,22 +114,22 @@ export function ArchbaseLookupNumber<T, ID, O>({
   onChangeValue = () => {},
   onActionSearchExecute = () => {},
   innerRef,
+  decimalSeparator,
+  thousandSeparator,
+  precision = 0,
+  allowNegative = false,
+  allowEmpty = true,
 }: ArchbaseLookupNumberProps<T, ID, O>) {
   const theme = useMantineTheme();
-  const [value, setValue] = useState<any | undefined>('');
+  const [currentValue, setCurrentValue] = useState<any | undefined>(
+    getInitialValue<T, ID>(value, dataSource, lookupField),
+  );
   const [currentError, setCurrentError] = useState<string | undefined>(error);
   const innerComponentRef = innerRef || useRef<any>();
+
   const loadDataSourceFieldValue = () => {
-    let initialValue: any = value;
-
-    if (dataSource && lookupField) {
-      initialValue = dataSource.getFieldValue(lookupField);
-      if (!initialValue) {
-        initialValue = '';
-      }
-    }
-
-    setValue(initialValue);
+    let initialValue: any = getInitialValue<T, ID>(currentValue, dataSource, lookupField);
+    setCurrentValue(initialValue);
     setCurrentError(undefined);
   };
 
@@ -146,7 +170,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
 
   const handleChange = (_maskValue: any, value: number, event: any) => {
     setCurrentError(undefined);
-    setValue((_prev) => value);
+    setCurrentValue((_prev) => value);
 
     if (onChangeValue) {
       onChangeValue(event, value);
@@ -155,32 +179,36 @@ export function ArchbaseLookupNumber<T, ID, O>({
 
   const lookupValue = () => {
     if (dataSource && dataField && !dataSource.isBrowsing() && lookupField) {
-      if (value != dataSource.getFieldValue(lookupField)) {
-        const promise = lookupValueDelegator(value);
-        promise
-          .then((data: O) => {
-            if (!data || data == null) {
-              if (validateOnExit && validateMessage) {
-                if (onLookupError) {
-                  onLookupError(formatStr(validateMessage, value));
+      if (currentValue != dataSource.getFieldValue(lookupField)) {
+        if (!currentValue || currentValue == null) {
+          dataSource.setFieldValue(dataField, null);
+        } else {
+          const promise = lookupValueDelegator(currentValue);
+          promise
+            .then((data: O) => {
+              if (!data || data == null) {
+                if (validateOnExit && validateMessage) {
+                  if (onLookupError) {
+                    onLookupError(formatStr(validateMessage, value));
+                  }
                 }
               }
-            }
-            if (onLookupResult) {
-              onLookupResult(data);
-            }
-            dataSource.setFieldValue(dataField, data);
-          })
-          .catch((error) => {
-            dataSource.setFieldValue(dataField, undefined);
-            innerComponentRef.current?.focus();
-            if (validateMessage) {
-              setCurrentError(formatStr(validateMessage, value));
-            }
-            if (onLookupError) {
-              onLookupError(error);
-            }
-          });
+              if (onLookupResult) {
+                onLookupResult(data);
+              }
+              dataSource.setFieldValue(dataField, data);
+            })
+            .catch((error) => {
+              dataSource.setFieldValue(dataField, null);
+              innerComponentRef.current?.focus();
+              if (validateMessage) {
+                setCurrentError(formatStr(validateMessage, value));
+              }
+              if (onLookupError) {
+                onLookupError(error);
+              }
+            });
+        }
       }
     } else {
       if (value && value != null) {
@@ -201,10 +229,10 @@ export function ArchbaseLookupNumber<T, ID, O>({
             if (!newValue) {
               newValue = '';
             }
-            setValue(newValue);
+            setCurrentValue(newValue);
           })
           .catch((error) => {
-            setValue(undefined);
+            setCurrentValue(undefined);
             if (validateMessage) {
               setCurrentError(formatStr(validateMessage, value));
             }
@@ -244,7 +272,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
     <ArchbaseNumberEdit
       disabled={disabled}
       required={required}
-      value={value}
+      value={currentValue}
       readOnly={isReadOnly()}
       onChangeValue={handleChange}
       innerRef={innerComponentRef}
@@ -257,6 +285,11 @@ export function ArchbaseLookupNumber<T, ID, O>({
       style={style}
       size={size}
       width={width}
+      decimalSeparator={decimalSeparator}
+      thousandSeparator={thousandSeparator}
+      precision={precision}
+      allowNegative={allowNegative}
+      allowEmpty={allowEmpty}
       rightSection={
         <Tooltip label={tooltipIconSearch}>
           <ActionIcon

@@ -1,11 +1,4 @@
-import {
-  ActionIcon,
-  MantineNumberSize,
-  MantineSize,
-  TextInput,
-  Tooltip,
-  useMantineTheme,
-} from '@mantine/core';
+import { ActionIcon, MantineNumberSize, MantineSize, TextInput, Tooltip, useMantineTheme } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useRef, useState } from 'react';
 
@@ -67,7 +60,7 @@ export interface ArchbaseLookupEditProps<T, ID, O> {
   /** Função responsável por localizar um valor */
   lookupValueDelegator: (value: any) => Promise<O>;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement>|undefined;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
 export function ArchbaseLookupEdit<T, ID, O>({
@@ -95,7 +88,7 @@ export function ArchbaseLookupEdit<T, ID, O>({
   onFocusEnter = () => {},
   onChangeValue = () => {},
   onActionSearchExecute = () => {},
-  innerRef
+  innerRef,
 }: ArchbaseLookupEditProps<T, ID, O>) {
   const theme = useMantineTheme();
   const [value, setValue] = useState<any | undefined>('');
@@ -119,12 +112,14 @@ export function ArchbaseLookupEdit<T, ID, O>({
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      if ((event.type === DataSourceEventNames.dataChanged) ||
-          (event.type === DataSourceEventNames.fieldChanged) ||
-          (event.type === DataSourceEventNames.recordChanged) ||
-          (event.type === DataSourceEventNames.afterScroll) ||
-          (event.type === DataSourceEventNames.afterCancel)) {
-          loadDataSourceFieldValue();
+      if (
+        event.type === DataSourceEventNames.dataChanged ||
+        event.type === DataSourceEventNames.fieldChanged ||
+        event.type === DataSourceEventNames.recordChanged ||
+        event.type === DataSourceEventNames.afterScroll ||
+        event.type === DataSourceEventNames.afterCancel
+      ) {
+        loadDataSourceFieldValue();
       }
     }
   }, []);
@@ -143,10 +138,10 @@ export function ArchbaseLookupEdit<T, ID, O>({
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent)
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.removeListener(dataSourceEvent);
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   const handleChange = (event) => {
     setCurrentError(undefined);
@@ -164,31 +159,35 @@ export function ArchbaseLookupEdit<T, ID, O>({
   const lookupValue = () => {
     if (dataSource && dataField && !dataSource.isBrowsing() && lookupField) {
       if (value != dataSource.getFieldValue(lookupField)) {
-        const promise = lookupValueDelegator(value);
-        promise
-          .then((data: O) => {
-            if (!data || data == null) {
-              if (validateOnExit && validateMessage) {
-                if (onLookupError) {
-                  onLookupError(formatStr(validateMessage, value));
+        if (!value || value == null) {
+          dataSource.setFieldValue(dataField, null);
+        } else {
+          const promise = lookupValueDelegator(value);
+          promise
+            .then((data: O) => {
+              if (!data || data == null) {
+                if (validateOnExit && validateMessage) {
+                  if (onLookupError) {
+                    onLookupError(formatStr(validateMessage, value));
+                  }
                 }
               }
-            }
-            if (onLookupResult) {
-              onLookupResult(data);
-            }
-            dataSource.setFieldValue(dataField, data);
-          })
-          .catch((error) => {
-            dataSource.setFieldValue(dataField, undefined);
-            innerComponentRef.current?.focus();
-            if (validateMessage) {
-              setCurrentError(formatStr(validateMessage, value));
-            }
-            if (onLookupError) {
-              onLookupError(error);
-            }
-          });
+              if (onLookupResult) {
+                onLookupResult(data);
+              }
+              dataSource.setFieldValue(dataField, data);
+            })
+            .catch((error) => {
+              dataSource.setFieldValue(dataField, undefined);
+              innerComponentRef.current?.focus();
+              if (validateMessage) {
+                setCurrentError(formatStr(validateMessage, value));
+              }
+              if (onLookupError) {
+                onLookupError(error);
+              }
+            });
+        }
       }
     } else {
       if (value && value != null) {
