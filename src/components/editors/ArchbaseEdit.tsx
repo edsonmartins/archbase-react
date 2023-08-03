@@ -18,6 +18,8 @@ export interface ArchbaseEditProps<T,ID> {
   readOnly?: boolean;
   /** Indicador se o preenchimento do edit é obrigatório */
   required?: boolean;
+  /** Valor inicial */
+  value?: string;
   /** Estilo do edit */
   style?: CSSProperties;
   /** Tamanho do edit */
@@ -56,15 +58,16 @@ export function ArchbaseEdit<T,ID>({
   size,
   width,
   innerRef,
+  value,
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
 }: ArchbaseEditProps<T,ID>) {
-  const [value, setValue] = useState<string>('');
+  const [currentValue, setCurrentValue] = useState<string>(value||'');
   const innerComponentRef = innerRef || useRef<any>();
 
   const loadDataSourceFieldValue = () => {
-    let initialValue: any = value;
+    let initialValue: any = currentValue;
 
     if (dataSource && dataField) {
       initialValue = dataSource.getFieldValue(dataField);
@@ -73,7 +76,7 @@ export function ArchbaseEdit<T,ID>({
       }
     }
 
-    setValue(initialValue);
+    setCurrentValue(initialValue);
   };
 
   const fieldChangedListener = useCallback(() => {}, []);
@@ -107,7 +110,7 @@ export function ArchbaseEdit<T,ID>({
     const changedValue = event.target.value;
 
     event.persist();
-    setValue((_prev) => changedValue);
+    setCurrentValue((_prev) => changedValue);
 
     if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
       dataSource.setFieldValue(dataField, changedValue);
@@ -155,7 +158,7 @@ export function ArchbaseEdit<T,ID>({
         width,
         ...style,
       }}
-      value={value}
+      value={currentValue}
       ref={innerComponentRef}
       required={required}
       onChange={handleChange}
