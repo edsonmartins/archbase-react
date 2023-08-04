@@ -1,13 +1,33 @@
-import React, { CSSProperties, FocusEventHandler } from 'react';
+import React, { CSSProperties, useCallback, useState } from 'react';
 import 'suneditor/dist/css/suneditor.min.css';
-
-import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import SunEditor from 'suneditor-react';
+import { useTranslation } from 'react-i18next';
+import { UploadBeforeHandler, UploadBeforeReturn, UploadInfo } from 'suneditor-react/dist/types/upload';
+import en from "suneditor/src/lang/en";
+import es from "suneditor/src/lang/es";
+import ptBR from "suneditor/src/lang/pt_br";
+import { Input } from '@mantine/core';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
+import { isBase64 } from '@components/core/utils';
 
-const content =
-  '<h2 style="text-align: center;">Welcome to Mantine rich text editor</h2><p><code>RichTextEditor</code> component focuses on usability and is designed to be as simple as possible to bring a familiar editing experience to regular users. <code>RichTextEditor</code> is based on <a href="https://tiptap.dev/" rel="noopener noreferrer" target="_blank">Tiptap.dev</a> and supports all of its features:</p><ul><li>General text formatting: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strike-through</s> </li><li>Headings (h1-h6)</li><li>Sub and super scripts (<sup>&lt;sup /&gt;</sup> and <sub>&lt;sub /&gt;</sub> tags)</li><li>Ordered and bullet lists</li><li>Text align&nbsp;</li><li>And all <a href="https://tiptap.dev/extensions" target="_blank" rel="noopener noreferrer">other extensions</a></li></ul>';
+function getInitialValue<T, ID>(value: any, dataSource?: ArchbaseDataSource<T, ID>, dataField?: string, disabledBase64Convertion?: boolean): any {
+  let initialValue: any = value;
+  if (dataSource && dataField) {
+    initialValue = dataSource.getFieldValue(dataField);
+    if (!initialValue) {
+      initialValue = '';
+    }
+    if (isBase64(initialValue) && !disabledBase64Convertion) {
+      initialValue = atob(initialValue);
+    }
+  }
+  return initialValue;
+}
 
 export interface ArchbaseRichTextEditProps<T, ID> {
+  /** Indicador se o rich editor recebe o foco automaticamente */
+  autoFocus?: boolean;
   /** Fonte de dados onde será atribuido o valor do rich edit*/
   dataSource?: ArchbaseDataSource<T, ID>;
   /** Campo onde deverá ser atribuido o valor do rich edit na fonte de dados */
@@ -22,29 +42,266 @@ export interface ArchbaseRichTextEditProps<T, ID> {
   style?: CSSProperties;
   /** Texto sugestão do rich edit */
   placeholder?: string;
+  /** Largura do edit */
+  width?: string | undefined;
+  /** Altura do edit */
+  height?: string | undefined;
   /** Título do rich edit */
   label?: string;
   /** Descrição do rich edit */
   description?: string;
   /** Último erro ocorrido no rich edit */
   error?: string;
+  /** Esconder barra de ações */
+  hideToolbar?: boolean;
+  /** Desabilitar barra de açõess */
+  disableToolbar?: boolean;
+  /** Valor inicial */
+  value?: string;
+  /** Desabilita conversão do conteúdo em base64 antes de salvar na fonte de dados */
+  disabledBase64Convertion?: boolean;
   /** Evento quando o foco sai do rich edit */
-  onFocusExit?: FocusEventHandler<T> | undefined;
+  onFocusExit?: (event: FocusEvent) => void;
   /** Evento quando o rich edit recebe o foco */
-  onFocusEnter?: FocusEventHandler<T> | undefined;
+  onFocusEnter?: (event: FocusEvent) => void;
   /** Evento quando o valor do rich edit é alterado */
-  onChangeValue?: (value: any, event: any) => void;
+  onChangeValue?: (value: any) => void;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement>|undefined;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
+  onScroll?: (event: UIEvent) => void;
+  onCopy?: (event: ClipboardEvent, clipboardData: ClipboardEvent['clipboardData']) => boolean;
+  onCut?: (event: ClipboardEvent, clipboardData: ClipboardEvent['clipboardData']) => boolean;
+  onClick?: (event: MouseEvent) => void;
+  onMouseDown?: (event: MouseEvent) => void;
+  onKeyUp?: (event: KeyboardEvent) => void;
+  onKeyDown?: (event: KeyboardEvent) => void;
+  onSave?: (contents: string) => void;
+  onSetToolbarButtons?: (buttonList: Array<any>) => void;
+  onLoad?: (reload: boolean) => void;
+  onDrop?: (event: DragEvent, cleanData: string, maxCharCount: boolean) => boolean | Array<any> | void;
+  onPaste?: (event: ClipboardEvent, cleanData: string, maxCharCount: boolean) => void;
+  onImageUpload?: (
+    targetImgElement: HTMLImageElement,
+    index: number,
+    state: 'create' | 'update' | 'delete',
+    imageInfo: UploadInfo<HTMLImageElement>,
+    remainingFilesCount: number,
+  ) => void;
+  onVideoUpload?: (
+    targetElement: HTMLVideoElement,
+    index: number,
+    state: 'create' | 'update' | 'delete',
+    videoInfo: UploadInfo<HTMLVideoElement>,
+    remainingFilesCount: number,
+  ) => void;
+  onAudioUpload?: (
+    targetElement: HTMLAudioElement,
+    index: number,
+    state: 'create' | 'update' | 'delete',
+    audioInfo: UploadInfo<HTMLAudioElement>,
+    remainingFilesCount: number,
+  ) => void;
+  onImageUploadBefore?: (files: Array<File>, info: object, uploadHandler: UploadBeforeHandler) => UploadBeforeReturn;
+  onVideoUploadBefore?: (files: Array<File>, info: object, uploadHandler: UploadBeforeHandler) => UploadBeforeReturn;
+  onAudioUploadBefore?: (files: Array<File>, info: object, uploadHandler: UploadBeforeHandler) => UploadBeforeReturn;
+  onImageUploadError?: (errorMessage: string, result: any) => void;
+  onVideoUploadError?: (errorMessage: string, result: any) => void;
+  onAudioUploadError?: (errorMessage: string, result: any) => void;
+  toggleCodeView?: (isCodeView: boolean) => void;
+  toggleFullScreen?: (isFullScreen: boolean) => void;
+  showInline?: (toolbar: Element, context: any) => void;
+  showController?: (name: string, controllers: Array<any>) => void;
+  imageUploadHandler?: (
+    xmlHttpRequest: XMLHttpRequest,
+    info: {
+      isUpdate: boolean;
+      linkValue: any;
+      element: Element;
+      align: any;
+      linkNewWindow: any;
+      [key: string]: any;
+    },
+  ) => void;
+  onResizeEditor?: (height: number, prevHeight: number) => any;
 }
 
-export function ArchbaseRichTextEdit<T,ID>(_props: ArchbaseRichTextEditProps<T,ID>) {
-  //const _innerComponentRef = innerRef || useRef<any>();
+export function ArchbaseRichTextEdit<T, ID>({
+  autoFocus,
+  dataSource,
+  dataField,
+  disabled,
+  readOnly,
+  required,
+  placeholder,
+  label,
+  description,
+  error,
+  width,
+  height,
+  hideToolbar,
+  disableToolbar,
+  value,
+  disabledBase64Convertion,
+  onFocusExit,
+  onFocusEnter,
+  onChangeValue,
+  onScroll,
+  onCopy,
+  onCut,
+  onClick,
+  onMouseDown,
+  onKeyUp,
+  onKeyDown,
+  onSave,
+  onSetToolbarButtons,
+  onLoad,
+  onDrop,
+  onPaste,
+  onImageUpload,
+  onVideoUpload,
+  onAudioUpload,
+  onImageUploadBefore,
+  onVideoUploadBefore,
+  onAudioUploadBefore,
+  onImageUploadError,
+  onVideoUploadError,
+  onAudioUploadError,
+  toggleCodeView,
+  toggleFullScreen,
+  showInline,
+  showController,
+  imageUploadHandler,
+}: ArchbaseRichTextEditProps<T, ID>) {
+  const { i18n } = useTranslation();
+  const [currentValue, setCurrentValue] = useState<string|undefined>(getInitialValue(value,dataSource,dataField, disabledBase64Convertion));
+
+  const loadDataSourceFieldValue = () => {
+    let initialValue: any = value;
+
+    if (dataSource && dataField) {
+      initialValue = dataSource.getFieldValue(dataField);
+      if (!initialValue) {
+        initialValue = '';
+      }
+    }
+
+    if (isBase64(initialValue) && !disabledBase64Convertion) {
+      initialValue = atob(initialValue);
+    }
+
+    setCurrentValue(initialValue);
+  };
+
+  const fieldChangedListener = useCallback(() => {}, []);
+
+  const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
+    if (dataSource && dataField) {
+      if ((event.type === DataSourceEventNames.dataChanged) ||
+          (event.type === DataSourceEventNames.fieldChanged) ||
+          (event.type === DataSourceEventNames.recordChanged) ||
+          (event.type === DataSourceEventNames.afterScroll) ||
+          (event.type === DataSourceEventNames.afterCancel)) {
+          loadDataSourceFieldValue();
+      }
+    }
+  }, []);
+
+  useArchbaseDidMount(() => {
+    loadDataSourceFieldValue();
+    if (dataSource && dataField) {
+      dataSource.addListener(dataSourceEvent);
+      dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+    }
+  });
+
+  useArchbaseDidUpdate(() => {
+    loadDataSourceFieldValue();
+  }, []);
+
+
+  useArchbaseWillUnmount(() => {
+    if (dataSource && dataField) {
+      dataSource.removeListener(dataSourceEvent)
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+    }
+  })
+
+  const handleChange = (content: string) => {
+    setCurrentValue((_prev) => content);
+
+    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== content) {
+      dataSource.setFieldValue(dataField, disabledBase64Convertion ? content : btoa(content));
+    }
+
+    if (onChangeValue){
+      onChangeValue(content);
+    }
+  };
+  const handleOnBlur = (event: FocusEvent, _editorContents: string) => {
+    if (onFocusExit) {
+      onFocusExit(event);
+    }
+  };
+
+  const isReadOnly = () =>{
+    let _readOnly = readOnly;
+    if (dataSource && !readOnly) {
+      _readOnly = dataSource.isBrowsing();
+    }
+    return _readOnly;
+  }   
 
   return (
-    <div>
-      <p> My Other Contents </p>
-      <SunEditor  defaultValue={content}/>
-    </div>
+    <Input.Wrapper
+      withAsterisk={required}
+      label={label}
+      placeholder={placeholder}
+      description={description}
+      error={error}
+    >
+      <SunEditor
+        autoFocus={autoFocus}
+        disable={disabled}
+        readOnly={isReadOnly()}
+        setAllPlugins={true}
+        defaultValue={currentValue}
+        hideToolbar={hideToolbar}
+        disableToolbar={disableToolbar}
+        width={width}
+        height={height}
+        onChange={handleChange}
+        onScroll={onScroll}
+        onCopy={onCopy}
+        onCut={onCut}
+        onClick={onClick}
+        onMouseDown={onMouseDown}
+        onKeyUp={onKeyUp}
+        onKeyDown={onKeyDown}
+        onFocus={onFocusEnter}
+        onBlur={handleOnBlur}
+        onSave={onSave}
+        onSetToolbarButtons={onSetToolbarButtons}
+        onLoad={onLoad}
+        onDrop={onDrop}
+        onPaste={onPaste}
+        onImageUpload={onImageUpload}
+        onVideoUpload={onVideoUpload}
+        onAudioUpload={onAudioUpload}
+        onImageUploadBefore={onImageUploadBefore}
+        onVideoUploadBefore={onVideoUploadBefore}
+        onAudioUploadBefore={onAudioUploadBefore}
+        onImageUploadError={onImageUploadError}
+        onVideoUploadError={onVideoUploadError}
+        onAudioUploadError={onAudioUploadError}
+        toggleCodeView={toggleCodeView}
+        toggleFullScreen={toggleFullScreen}
+        showInline={showInline}
+        showController={showController}
+        imageUploadHandler={imageUploadHandler}
+        setOptions={{
+          lang:i18n.language === 'es' ? es : i18n.language === 'pt-BR' ? ptBR : en
+        }}       
+      />
+    </Input.Wrapper>
   );
 }
