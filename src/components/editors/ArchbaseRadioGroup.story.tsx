@@ -38,7 +38,12 @@ const ArchbaseRadioGroupExample = () => {
               <Text weight={500}>RadioGroup Component</Text>
             </Group>
           </Card.Section>
-          <ArchbaseRadioGroup label="Status" enumerator={PessoaStatus} dataSource={dataSource} dataField="status" />
+          <ArchbaseRadioGroup<Pedido, string, PedidoStatus>
+            label="Status"
+            initialOptions={PessoaStatus}
+            dataSource={dataSource}
+            dataField="status"
+          />
         </Card>
       </Grid.Col>
       <Grid.Col span={4}>
