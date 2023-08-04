@@ -36,10 +36,8 @@ const ArchbaseRichTextEditExample = () => {
             <Group position="apart">
               <Text weight={500}>RichTextEdit Component</Text>
             </Group>
-          </Card.Section>   
-          <Box sx={(_theme) => ({height:400})}>
-            <ArchbaseRichTextEdit label="Observação" height='100%' dataSource={dataSource} dataField="observacao" />
-          </Box>       
+          </Card.Section>
+          <ArchbaseRichTextEdit label="Observação" height="300px" dataSource={dataSource} dataField="observacao" />
         </Card>
       </Grid.Col>
       <Grid.Col span={6}>
@@ -49,7 +47,7 @@ const ArchbaseRichTextEditExample = () => {
               <Text weight={500}>Objeto Pessoa</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({height:250})}>
+          <ScrollArea sx={(_theme) => ({ height: 250 })}>
             <ArchbaseJsonView data={data} />
           </ScrollArea>
         </Card>
@@ -61,7 +59,7 @@ const ArchbaseRichTextEditExample = () => {
               <Text weight={500}>DataSource dsPessoas</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({height:250})}>
+          <ScrollArea sx={(_theme) => ({ height: 250 })}>
             <ArchbaseObjectInspector data={dataSource} />
           </ScrollArea>
         </Card>
