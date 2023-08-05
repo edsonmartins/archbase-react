@@ -47,7 +47,7 @@ const ArchbaseRadioGroupExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={4}>
+      <Grid.Col span={12}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -63,7 +63,7 @@ const ArchbaseRadioGroupExample = () => {
           />
         </Card>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={6}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -73,7 +73,7 @@ const ArchbaseRadioGroupExample = () => {
           <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
         </Card>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={6}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
