@@ -6,11 +6,6 @@ import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks/lifecycle';
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 
-export interface RadioGroupEnum {
-  [id: number]: string;
-  [id: string]: string;
-}
-
 export interface ArchbaseRadioGroupProps<T, ID, O> {
   /** Fonte de dados onde será atribuido o valor do RadioGroup*/
   dataSource?: ArchbaseDataSource<T, ID>;
@@ -33,13 +28,15 @@ export interface ArchbaseRadioGroupProps<T, ID, O> {
   /** Evento quando o RadioGroup recebe o foco */
   onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando um valor é selecionado */
-  onSelectValue?: (value: O) => void;
+  onSelectValue?: (value: any) => void;
   /** Function que retorna o label de uma RadioItem */
-  getRadioLabel: (option: O) => string;
+  getOptionLabel?: (option: O) => string;
   /** Function que retorna o valor de uma RadioItem */
-  getRadioValue: (option: O) => any;
+  getOptionValue?: (option: O) => any;
+  /** Function que converte o valor selecionado do tipo padrão string para o tipo desejado */
+  convertFromString?: (selected: string) => any;
   /** Opções de seleção iniciais */
-  initialOptions?: O[] | RadioGroupEnum;
+  initialOptions?: O[] | object;
   /** Coleção de RadioItem[] que representam as opções do select */
   children?: ReactNode | ReactNode[];
   /** Valor de entrada controlado */
@@ -52,15 +49,15 @@ export interface ArchbaseRadioGroupProps<T, ID, O> {
 
 interface RadioItemProps {
   label: string;
-  value: string;
+  value: any;
   key: string;
 }
 
 function buildOptions<O>(
-  initialOptions: O[] | RadioGroupEnum,
+  initialOptions: O[] | object,
   children: ReactNode | ReactNode[] | undefined,
-  getRadioLabel: (option: O) => string,
-  getRadioValue: (option: O) => any,
+  getOptionLabel: (option: O) => string,
+  getOptionValue: (option: O) => any,
 ): any {
   if (!initialOptions && !children) {
     return [];
@@ -68,17 +65,20 @@ function buildOptions<O>(
 
   if (children) {
     return React.Children.toArray(children).map((item: any) => {
-      return { label: item.props.label, value: item.props.value, key: uniqueId('radio') };
+      return { label: item.props.label, value: item.props.value.toString(), key: uniqueId('radio') };
     });
   }
-
   if (Array.isArray(initialOptions)) {
     return initialOptions.map((item: O) => {
-      return { label: getRadioLabel(item), value: getRadioValue(item), key: uniqueId('radio') };
+      return { label: getOptionLabel(item), value: getOptionValue(item), key: uniqueId('radio') };
     });
   }
 
-  return Object.keys(initialOptions).map((key) => ({ label: initialOptions[key], value: key, key: uniqueId('radio') }));
+  return Object.keys(initialOptions).map((key) => ({
+    label: key,
+    value: initialOptions[key].toString(),
+    key: uniqueId('radio'),
+  }));
 }
 
 export function ArchbaseRadioGroup<T, ID, O>({
@@ -93,8 +93,9 @@ export function ArchbaseRadioGroup<T, ID, O>({
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onSelectValue = () => {},
-  getRadioLabel,
-  getRadioValue,
+  getOptionLabel = (o: any) => o.label,
+  getOptionValue = (o: any) => o.value,
+  convertFromString,
   value,
   defaultValue,
   initialOptions = [],
@@ -102,7 +103,7 @@ export function ArchbaseRadioGroup<T, ID, O>({
   direction = 'vertical',
 }: ArchbaseRadioGroupProps<T, ID, O>) {
   const [options, _setOptions] = useState<RadioItemProps[]>(
-    buildOptions<O>(initialOptions, children, getRadioLabel, getRadioValue),
+    buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
   );
   const [selectedValue, setSelectedValue] = useState<any>(value);
 
@@ -115,7 +116,13 @@ export function ArchbaseRadioGroup<T, ID, O>({
         initialValue = '';
       }
     }
-
+    console.log('initial value antes');
+    console.log(initialValue);
+    if (typeof initialValue !== 'string') {
+      initialValue = initialValue.toString();
+    }
+    console.log('initial value depois');
+    console.log(initialValue);
     setSelectedValue(initialValue);
   };
 
@@ -149,15 +156,26 @@ export function ArchbaseRadioGroup<T, ID, O>({
     loadDataSourceFieldValue();
   }, []);
 
-  const handleChange = (value) => {
-    setSelectedValue((_prev) => value);
+  const handleChange = (currentSelectedValue: string) => {
+    setSelectedValue((_prev) => currentSelectedValue);
 
-    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== value) {
-      dataSource.setFieldValue(dataField, value);
+    console.log(options);
+    console.log(currentSelectedValue);
+    console.log(typeof currentSelectedValue);
+
+    let savedValue = currentSelectedValue;
+    if (convertFromString) {
+      savedValue = convertFromString(currentSelectedValue);
+    }
+    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== savedValue) {
+      dataSource.setFieldValue(dataField, savedValue);
     }
 
+    console.log(savedValue);
+    console.log(typeof savedValue);
+
     if (onSelectValue) {
-      onSelectValue(value);
+      onSelectValue(savedValue);
     }
   };
 
@@ -176,7 +194,7 @@ export function ArchbaseRadioGroup<T, ID, O>({
   return (
     <Radio.Group
       description={description}
-      defaultValue={selectedValue ? getRadioLabel(selectedValue) : defaultValue}
+      defaultValue={selectedValue ? getOptionValue(selectedValue) : defaultValue}
       value={selectedValue}
       label={label}
       style={style}
@@ -195,6 +213,7 @@ export function ArchbaseRadioGroup<T, ID, O>({
           value={item.value}
           key={item.key}
           pr={direction === 'horizontal' ? 20 : 0}
+          checked={item.value === selectedValue}
         />
       ))}
     </Radio.Group>
