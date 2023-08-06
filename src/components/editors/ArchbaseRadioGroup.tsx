@@ -116,13 +116,9 @@ export function ArchbaseRadioGroup<T, ID, O>({
         initialValue = '';
       }
     }
-    console.log('initial value antes');
-    console.log(initialValue);
     if (typeof initialValue !== 'string') {
       initialValue = initialValue.toString();
     }
-    console.log('initial value depois');
-    console.log(initialValue);
     setSelectedValue(initialValue);
   };
 
@@ -159,10 +155,6 @@ export function ArchbaseRadioGroup<T, ID, O>({
   const handleChange = (currentSelectedValue: string) => {
     setSelectedValue((_prev) => currentSelectedValue);
 
-    console.log(options);
-    console.log(currentSelectedValue);
-    console.log(typeof currentSelectedValue);
-
     let savedValue = currentSelectedValue;
     if (convertFromString) {
       savedValue = convertFromString(currentSelectedValue);
@@ -170,9 +162,6 @@ export function ArchbaseRadioGroup<T, ID, O>({
     if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== savedValue) {
       dataSource.setFieldValue(dataField, savedValue);
     }
-
-    console.log(savedValue);
-    console.log(typeof savedValue);
 
     if (onSelectValue) {
       onSelectValue(savedValue);
