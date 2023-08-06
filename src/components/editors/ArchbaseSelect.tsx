@@ -1,4 +1,4 @@
-import { MantineSize, Select } from '@mantine/core';
+import { MantineNumberSize, MantineSize, Select, SelectItem } from '@mantine/core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import React, { CSSProperties, FocusEventHandler, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { uniqueId } from 'lodash';
@@ -50,6 +50,8 @@ export interface ArchbaseSelectProps<T, ID, O> {
   initiallyOpened?: boolean;
   /** Alterar renderizador de item */
   itemComponent?: React.FC<any>;
+  /** Largura do select */
+  width?: MantineNumberSize;
   /** Chamado quando o menu suspenso é aberto */
   onDropdownOpen?(): void;
   /** Chamado quando o menu suspenso é aberto */
@@ -80,23 +82,31 @@ export interface ArchbaseSelectProps<T, ID, O> {
   required?: boolean;
   /** Referência para o componente interno */
   innerRef?: React.RefObject<HTMLInputElement>|undefined;
+  /** Selecione os dados usados ​​para renderizar itens no menu suspenso */
+  data?: ReadonlyArray<string | SelectItem>;
+  customGetDataSourceFieldValue?: () => any;
+  customSetDataSourceFieldValue?: (value: any)=>void;
 }
 function buildOptions<O>(
-  initialOptions: O[],
-  children: ReactNode | ReactNode[] | undefined,
-  getOptionLabel: (option: O) => string,
-  getOptionValue: (option: O) => any,
+  data?: ReadonlyArray<string | SelectItem>,
+  initialOptions?: O[],
+  children?: ReactNode | ReactNode[] | undefined,
+  getOptionLabel?: (option: O) => string,
+  getOptionValue?: (option: O) => any,
 ): any {
-  if (!initialOptions && !children) {
+  if (!initialOptions && !children && !data) {
     return [];
+  }
+  if (data) {
+    return data;
   }
   if (children) {
     return React.Children.toArray(children).map((item: any) => {
       return { label: item.props.label, value: item.props.value, origin: item.props.value, key: uniqueId('select') };
     });
   }
-  return initialOptions.map((item: O) => {
-    return { label: getOptionLabel(item), value: getOptionValue(item), origin: item, key: uniqueId('select') };
+  return initialOptions!.map((item: O) => {
+    return { label: getOptionLabel!(item), value: getOptionValue!(item), origin: item, key: uniqueId('select') };
   });
 }
 
@@ -117,6 +127,7 @@ export function ArchbaseSelect<T, ID, O>({
   icon,
   iconWidth,
   required,
+  width,
   getOptionLabel,
   getOptionValue,
   onFocusEnter,
@@ -135,10 +146,13 @@ export function ArchbaseSelect<T, ID, O>({
   zIndex,
   dropdownPosition,
   children,
-  innerRef
+  innerRef,
+  data,
+  customGetDataSourceFieldValue,
+  customSetDataSourceFieldValue
 }: ArchbaseSelectProps<T, ID, O>) {
   const [options, _setOptions] = useState<any[]>(
-    buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
+    buildOptions<O>(data, initialOptions, children, getOptionLabel, getOptionValue),
   );
   const innerComponentRef = innerRef || useRef<any>();
   const [selectedValue, setSelectedValue] = useState<any>(value);
@@ -147,7 +161,7 @@ export function ArchbaseSelect<T, ID, O>({
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value;
     if (dataSource && dataField) {
-      initialValue = dataSource.getFieldValue(dataField);
+      initialValue = customGetDataSourceFieldValue?customGetDataSourceFieldValue():dataSource.getFieldValue(dataField);
       if (!initialValue) {
         initialValue = '';
       }
@@ -196,8 +210,8 @@ export function ArchbaseSelect<T, ID, O>({
   const handleChange = (value) => {
     setSelectedValue((_prev) => value);
 
-    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== value) {
-      dataSource.setFieldValue(dataField, value);
+    if (dataSource && !dataSource.isBrowsing() && dataField && (customGetDataSourceFieldValue?customGetDataSourceFieldValue():dataSource.getFieldValue(dataField)) !== value) {
+      customSetDataSourceFieldValue?customSetDataSourceFieldValue(value):dataSource.setFieldValue(dataField, value);
     }
 
     if (onSelectValue) {
@@ -244,6 +258,7 @@ export function ArchbaseSelect<T, ID, O>({
         data={options}
         size={size!}
         icon={icon}
+        width={width}
         iconWidth={iconWidth}
         readOnly={readOnly}
         required={required}
@@ -261,7 +276,7 @@ export function ArchbaseSelect<T, ID, O>({
         onDropdownClose={onDropdownClose}
         limit={limit}
         nothingFound={nothingFound}
-        zIndex={zIndex}
+        zIndex={9999}
         dropdownPosition={dropdownPosition}
       />
     </ArchbaseSelectProvider>

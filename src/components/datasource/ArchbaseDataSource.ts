@@ -239,6 +239,8 @@ export interface IDataSource<T> {
   addFilter: (filterFn: FilterFn<T>) => this
   removeFilter: (filterFn: FilterFn<T>) => this
   clearFilters: () => this
+  locate(values:any) : boolean;
+  locateByFilter(filterFn: (record: T) => boolean): boolean;
 }
 
 export class ArchbaseDataSourceEventEmitter {
@@ -806,14 +808,14 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       record = this.currentRecord
     }
 
-    let value = this.fieldByName(record, fieldName)
+    let value = this.fieldValueByName(record, fieldName)
     if (value === undefined && defaultValue !== undefined) {
       value = defaultValue
     }
     return value
   }
 
-  private fieldByName(record: T | undefined, fieldName: string): any {
+  private fieldValueByName(record: T | undefined, fieldName: string): any {
     if (record === undefined) return
     const value = ArchbaseObjectHelper.getNestedProperty(record, fieldName)
     if (value === undefined) {
@@ -1014,7 +1016,34 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     return found
   }
 
-  public locate(filterFn: (record: T) => boolean): boolean {
+  locate(values:any) {
+    if (!this.isBrowsing()) {
+        throw new ArchbaseDataSourceError( i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name }));
+    }
+
+    if (this.isEmpty()) {
+        return false;
+    }
+
+    let found = -1;
+    let index = -1;
+    this.records.forEach((record) => {
+        index++;
+        for (var propertyName in values) {
+            if (this.fieldValueByName(record, propertyName) == values[propertyName]) {
+                found = index;
+            }
+        }
+    });
+
+    if (found >= 0) {
+        this.gotoRecord(found);
+    }
+    return found >= 0;
+
+}
+
+  public locateByFilter(filterFn: (record: T) => boolean): boolean {
     this.validateDataSourceActive('locate')
     if (!this.inserting || !this.editing) {
       throw new ArchbaseDataSourceError(

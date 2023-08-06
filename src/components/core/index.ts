@@ -1,2 +1,2 @@
-export {convertDateToISOString as convertDateToString, convertISOStringToDate, formatStr} from "./utils/string-utils"
+export {convertDateToISOString, convertISOStringToDate, formatStr, archbaseLogo, convertImageToBase64} from "./utils"
 export {ArchbaseError} from './exceptions'

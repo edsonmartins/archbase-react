@@ -12,6 +12,8 @@ import hasComplexChildren from './hasComplexChildren.js';
 import onlyText from './onlyText.js';
 import onlyValid from './onlyValid.js';
 import isBase64 from './isBase64.js';
+import { archbaseLogo } from './archbaseLogo.js';
+import {convertImageToBase64} from './convertImageToBase64.js';
 
 import {
   removeNonWord,
@@ -45,6 +47,9 @@ import {
   lpad,
   repeat,
   truncate,
+  convertDateToISOString,
+  convertISOStringToDate,
+  formatStr
 } from './string-utils.js';
 
 export {
@@ -91,6 +96,11 @@ export {
   repeat,
   truncate,
   isBase64,
+  archbaseLogo,
+  convertDateToISOString,
+  convertISOStringToDate,
+  formatStr,
+  convertImageToBase64
 };
 
 export default {
