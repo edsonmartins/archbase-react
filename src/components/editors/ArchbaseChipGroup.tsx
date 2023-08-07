@@ -1,5 +1,4 @@
-import { Chip, MantineSize } from '@mantine/core';
-import type { CSSProperties, FocusEventHandler } from 'react';
+import { Chip } from '@mantine/core';
 import React, { useState, useCallback, ReactNode } from 'react';
 import { uniqueId } from 'lodash';
 import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks/lifecycle';
@@ -7,47 +6,37 @@ import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 
 export interface ArchbaseChipGroupProps<T, ID, O> {
-  /** Fonte de dados onde será atribuido o valor do RadioGroup*/
+  /** Fonte de dados onde será atribuido o valor do ChipGroup*/
   dataSource?: ArchbaseDataSource<T, ID>;
-  /** Campo onde deverá ser atribuido o valor do RadioGroup na fonte de dados */
+  /** Campo onde deverá ser atribuido o valor do ChipGroup na fonte de dados */
   dataField?: string;
-  /** Estilo do componente */
-  style?: CSSProperties;
-  /** Estilo do componente filho */
-  childStyle?: CSSProperties;
-  /** Tamanho do edit */
-  size?: MantineSize;
-  /** Título do RadioGroup */
-  label?: string;
-  /** Descrição do RadioGroup */
-  description?: string;
-  /** Último erro ocorrido no RadioGroup */
-  error?: string;
-  /** Evento quando o foco sai do RadioGroup */
-  onFocusExit?: FocusEventHandler<T> | undefined;
-  /** Evento quando o RadioGroup recebe o foco */
-  onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando um valor é selecionado */
   onSelectValue?: (value: any) => void;
-  /** Function que retorna o label de uma RadioItem */
+  /** Function que retorna o label de uma ChipItem */
   getOptionLabel?: (option: O) => string;
-  /** Function que retorna o valor de uma RadioItem */
+  /** Function que retorna o valor de uma ChipItem */
   getOptionValue?: (option: O) => any;
+  /** Function que converte os valores do datasource para uma lista de chips selecionados do tipo padrão string */
+  convertToValue?: (source: any[]) => string[];
   /** Function que converte o valor selecionado do tipo padrão string para o tipo desejado */
-  convertFromString?: (selected: string) => any;
+  convertFromValue?: (selected: string[]) => any;
   /** Opções de seleção iniciais */
   initialOptions?: O[] | object;
-  /** Coleção de RadioItem[] que representam as opções do select */
+  /** Coleção de ChipItem[] que representam as opções do select */
   children?: ReactNode | ReactNode[];
   /** Valor de entrada controlado */
   value?: any;
   /** Valor padrão de entrada não controlado */
   defaultValue?: any;
-  /** Direção dos itens do RadioGroup */
-  direction?: 'horizontal' | 'vertical';
+  /** Controla a aparência do chip, sendo padrão "filled" para dark theme e "outline" para light theme. ("outline" | "light" | "filled")*/
+  variant?: 'outline' | 'light' | 'filled';
+  /** Tipo do chip */
+  type?: 'checkbox' | 'radio';
+  /** Permite que múltiplos valores sejam selecionados */
+  multiple?: boolean;
 }
 
-interface RadioItemProps {
+interface ChipItemProps {
   label: string;
   value: any;
   key: string;
@@ -65,19 +54,19 @@ function buildOptions<O>(
 
   if (children) {
     return React.Children.toArray(children).map((item: any) => {
-      return { label: item.props.label, value: item.props.value.toString(), key: uniqueId('radio') };
+      return { label: item.props.label, value: item.props.value.toString(), key: uniqueId('chip') };
     });
   }
   if (Array.isArray(initialOptions)) {
     return initialOptions.map((item: O) => {
-      return { label: getOptionLabel(item), value: getOptionValue(item), key: uniqueId('radio') };
+      return { label: getOptionLabel(item), value: getOptionValue(item), key: uniqueId('chip') };
     });
   }
 
   return Object.keys(initialOptions).map((key) => ({
     label: key,
     value: initialOptions[key].toString(),
-    key: uniqueId('radio'),
+    key: uniqueId('chip'),
   }));
 }
 
@@ -87,13 +76,17 @@ export function ArchbaseChipGroup<T, ID, O>({
   onSelectValue = () => {},
   getOptionLabel = (o: any) => o.label,
   getOptionValue = (o: any) => o.value,
-  convertFromString,
+  convertToValue = (value) => value,
+  convertFromValue,
   value,
   defaultValue,
   initialOptions = [],
   children,
+  variant,
+  type,
+  multiple,
 }: ArchbaseChipGroupProps<T, ID, O>) {
-  const [options, _setOptions] = useState<RadioItemProps[]>(
+  const [options, _setOptions] = useState<ChipItemProps[]>(
     buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
   );
   const [selectedValue, setSelectedValue] = useState<any>(value);
@@ -102,18 +95,13 @@ export function ArchbaseChipGroup<T, ID, O>({
     let initialValue: any = value;
 
     if (dataSource && dataField) {
-      initialValue = dataSource.getFieldValue(dataField);
+      initialValue = dataSource.getFieldValue(dataField).map((it) => convertToValue(it));
+
       if (!initialValue) {
-        initialValue = '';
+        initialValue = [];
       }
     }
-    console.log('initial value antes');
-    console.log(initialValue);
-    if (typeof initialValue !== 'string') {
-      initialValue = initialValue.toString();
-    }
-    console.log('initial value depois');
-    console.log(initialValue);
+
     setSelectedValue(initialValue);
   };
 
@@ -147,12 +135,12 @@ export function ArchbaseChipGroup<T, ID, O>({
     loadDataSourceFieldValue();
   }, []);
 
-  const handleChange = (currentSelectedValue: string) => {
+  const handleChange = (currentSelectedValue: string[]) => {
     setSelectedValue((_prev) => currentSelectedValue);
 
     let savedValue = currentSelectedValue;
-    if (convertFromString) {
-      savedValue = convertFromString(currentSelectedValue);
+    if (convertFromValue) {
+      savedValue = convertFromValue(currentSelectedValue);
     }
     if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== savedValue) {
       dataSource.setFieldValue(dataField, savedValue);
@@ -168,9 +156,10 @@ export function ArchbaseChipGroup<T, ID, O>({
       defaultValue={selectedValue ? getOptionValue(selectedValue) : defaultValue}
       value={selectedValue}
       onChange={handleChange}
+      multiple={multiple}
     >
       {options.map((item) => (
-        <Chip value={item.value} key={item.key}>
+        <Chip value={item.value} key={item.key} variant={variant} type={type}>
           {item.label}
         </Chip>
       ))}

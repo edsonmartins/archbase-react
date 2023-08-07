@@ -1,27 +1,44 @@
 import React from 'react';
 import { Card, Grid, Group, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { pedidosData, Pedido } from '@demo/index';
+import { pedidosData, Pedido, produtosData } from '@demo/index';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
-import { DataSourceEvent, DataSourceEventNames } from '../datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseChipGroup } from './ArchbaseChipGroup';
-import { PedidoStatus } from '@demo/data/types';
+import { Produto } from '@demo/data/types';
 
 const pedido: Pedido[] = [pedidosData[0]];
+const produtos: Produto[] = produtosData;
 
-const enumToOptionsArray = (enumObject, reverse = false) => {
-  const bothDirectionsArray = Object.keys(enumObject).map((key) => ({ label: enumObject[key], value: key }));
-  if (reverse) {
-    return bothDirectionsArray.slice(bothDirectionsArray.length / 2);
+const getProdutosFromIds = (produtoIds: string[]) => {
+  if (produtoIds === null) {
+    return [];
   }
 
-  return bothDirectionsArray.slice(0, bothDirectionsArray.length / 2);
+  return produtos.filter((produto) => produtoIds.includes(produto.id.toString()));
 };
 
-const statusArray = enumToOptionsArray(PedidoStatus);
+const getIdFromProduto = (produto: any) => {
+  return produto.produto.id;
+};
+
+const getValueFromProduto = (produto: any) => {
+  return produto.id;
+};
+
+const getLabelFromProduto = (produto: any) => {
+  return produto.descricao;
+};
+
+const updateTotalValue = (dataSource: ArchbaseDataSource<Pedido, string>, produtos: Produto[]) => {
+  const total = produtos.reduce((acumulado, produto) => {
+    return acumulado + produto.preco;
+  }, 0);
+  dataSource?.setFieldValue('vlTotal', total);
+};
 
 const ArchbaseChipGroupExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
@@ -47,23 +64,27 @@ const ArchbaseChipGroupExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={12}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
               <Text weight={500}>ChipGroup Component</Text>
             </Group>
           </Card.Section>
-          <ArchbaseChipGroup<Pedido, string, PedidoStatus>
-            label="Status"
-            initialOptions={statusArray}
+          <ArchbaseChipGroup<Pedido, string, Produto>
+            initialOptions={produtos}
             dataSource={dataSource}
-            dataField="status"
-            convertFromString={(selected) => Number(selected)}
+            dataField="itens"
+            convertFromValue={getProdutosFromIds}
+            getOptionLabel={getLabelFromProduto}
+            getOptionValue={getValueFromProduto}
+            convertToValue={getIdFromProduto}
+            onSelectValue={() => updateTotalValue(dataSource!, dataSource?.getFieldValue('itens'))}
+            multiple={true}
           />
         </Card>
       </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -73,7 +94,7 @@ const ArchbaseChipGroupExample = () => {
           <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
         </Card>
       </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
