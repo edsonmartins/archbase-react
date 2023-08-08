@@ -1,24 +1,40 @@
 import React from 'react';
 import { Card, Grid, Group, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa, pessoasData } from '@demo/index';
+import { pedidosData, Pedido } from '@demo/index';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseRadioGroup } from './ArchbaseRadioGroup';
-import { PessoaStatus } from '@demo/data/types';
+import { PedidoStatus } from '@demo/data/types';
+
+const pedido: Pedido[] = [pedidosData[0]];
+
+const enumToOptionsArray = (enumObject, reverse = false) => {
+  const bothDirectionsArray = Object.keys(enumObject).map((key) => ({ label: enumObject[key], value: key }));
+  if (reverse) {
+    return bothDirectionsArray.slice(bothDirectionsArray.length / 2);
+  }
+
+  return bothDirectionsArray.slice(0, bothDirectionsArray.length / 2);
+};
+
+const statusArray = enumToOptionsArray(PedidoStatus);
 
 const ArchbaseRadioGroupExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
+  const { dataSource } = useArchbaseDataSource<Pedido, string>({
+    initialData: pedido,
+    name: 'dsPedidos',
+  });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit();
   }
-  useArchbaseDataSourceListener<Pessoa, string>({
+  useArchbaseDataSourceListener<Pedido, string>({
     dataSource,
-    listener: (event: DataSourceEvent<Pessoa>): void => {
+    listener: (event: DataSourceEvent<Pedido>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
           forceUpdate();
@@ -31,7 +47,7 @@ const ArchbaseRadioGroupExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={4}>
+      <Grid.Col span={12}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -40,23 +56,24 @@ const ArchbaseRadioGroupExample = () => {
           </Card.Section>
           <ArchbaseRadioGroup<Pedido, string, PedidoStatus>
             label="Status"
-            initialOptions={PessoaStatus}
+            initialOptions={statusArray}
             dataSource={dataSource}
             dataField="status"
+            convertFromString={(selected) => Number(selected)}
           />
         </Card>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={6}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
               <Text weight={500}>Objeto Pessoa</Text>
             </Group>
           </Card.Section>
-          <ArchbaseJsonView data={data} />
+          <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
         </Card>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={6}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -74,8 +91,6 @@ export default {
   title: 'Editors/RadioGroup',
   component: ArchbaseRadioGroupExample,
 } as Meta;
-
-const data = [pessoasData[0]];
 
 export const Example: StoryObj<typeof ArchbaseRadioGroupExample> = {
   args: {
