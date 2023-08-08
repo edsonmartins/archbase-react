@@ -30,7 +30,6 @@ import {
   DecadeLevelSettings,
   HiddenDatesInput,
   MonthLevelSettings,
-  TimeInputProps,
   YearLevelSettings,
   pickCalendarProps,
   useDatesContext
@@ -259,8 +258,6 @@ export interface ArchbaseDateTimePickerEditProps
   /** Adereços adicionados ao componente Popover */
   popoverProps?: Partial<Omit<PopoverProps, 'children'>>
 
-  timeInputProps?: TimeInputProps
-
   /** Determina se o valor de entrada pode ser limpo, adiciona o botão limpar à seção direita, falso por padrão */
   clearable?: boolean
 
@@ -334,7 +331,6 @@ export const ArchbaseDateTimePickerEdit = forwardRef<
     getDayProps,
     locale,
     dateParser,
-    timeInputProps,
     minDate,
     maxDate,
     fixOnBlur,
@@ -425,11 +421,13 @@ export const ArchbaseDateTimePickerEdit = forwardRef<
   const handleComplete = (maskValue) => {
     if (maskValue.trim() === '' && _allowDeselect) {
       setValue(null)
+      onChange!(null)
     } else if (maskValue && maskValue.length === dateFormats[dateFormat!].mask.length) {
       const dateValue = dateFormats[dateFormat!].parse(maskValue)
       if (isDateValid({ date: dateValue, minDate, maxDate })) {
         setValue(dateValue)
         setDate(dateValue)
+        onChange!(dateValue)
         !controlled && setInputValue(formatValue(dateValue))
       }
     }
