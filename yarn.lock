@@ -3173,6 +3173,13 @@
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-6.0.17.tgz#dc942c87e6dcfa14a70e4e4a162c22eeb4ff3724"
   integrity sha512-7vf2w1NlzKlUynSuyI2DAIKoEOYKYC8k+tlSsk3BRdbzhbJAiWxcYzJy5seg5dFW1WIpKAZ0wiVdHXf/WRlRgg==
 
+"@mantine/modals@^6.0.17":
+  version "6.0.17"
+  resolved "https://registry.yarnpkg.com/@mantine/modals/-/modals-6.0.17.tgz#65d2e03c732a1937cf166942220db9368ebcefb4"
+  integrity sha512-57S4+G7+iPZOd6utzx3aYRKA1FcfJX7tfnbPafk303gSbZ9KQ3UWKJn9bk1HWev8AQsrNDyPH1zhjxVGpnqTZA==
+  dependencies:
+    "@mantine/utils" "6.0.17"
+
 "@mantine/notifications@^6.0.17":
   version "6.0.17"
   resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-6.0.17.tgz#719b89583b9350baa6502e8428e10c8491e553f9"
@@ -8460,6 +8467,11 @@ execa@^5.0.0, execa@^5.1.1:
     signal-exit "^3.0.3"
     strip-final-newline "^2.0.0"
 
+exenv@^1.2.0:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
+  integrity sha512-Z+ktTxTwv9ILfgKCk32OX3n/doe+OcLTRtqK9pcL+JsP3J1/VW8Uvl4ZjLlKqeW4rzK4oesDOGMEMRIZqtP4Iw==
+
 exit@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/exit/-/exit-0.1.2.tgz#0632638f8d877cc82107d30a0fff1a17cba1cd0c"
@@ -11852,7 +11864,7 @@ nwsapi@^2.2.0:
   resolved "https://registry.yarnpkg.com/nwsapi/-/nwsapi-2.2.4.tgz#fd59d5e904e8e1f03c25a7d5a15cfa16c714a1e5"
   integrity sha512-NHj4rzRo0tQdijE9ZqAx6kYDcoRwYwSYzCA8MY3JzfxlrvEU0jhnhJT9BhqhJs7I/dKcrDm6TyulaRqZPIhN5g==
 
-object-assign@^4.0.1, object-assign@^4.1.1:
+object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
@@ -12940,6 +12952,18 @@ raw-body@2.5.1:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+react-accessible-accordion@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-accessible-accordion/-/react-accessible-accordion-4.0.0.tgz#83bf0c3e403e7627dbf3109c628b597142923937"
+  integrity sha512-MovuWj2Uweo57LSgTIPpB83IYq8BNdZJ44j4NmDKYxaHC/H0JjYiqt8OfNMt+YK+XN8qRON13ERQnLfM73vmqw==
+
+react-addons-shallow-compare@^15.6.3:
+  version "15.6.3"
+  resolved "https://registry.yarnpkg.com/react-addons-shallow-compare/-/react-addons-shallow-compare-15.6.3.tgz#28a94b0dfee71530852c66a69053d59a1baf04cb"
+  integrity sha512-EDJbgKTtGRLhr3wiGDXK/+AEJ59yqGS+tKE6mue0aNXT6ZMR7VJbbzIiT6akotmHg1BLj46ElJSb+NBMp80XBg==
+  dependencies:
+    object-assign "^4.1.0"
+
 react-app-polyfill@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-app-polyfill/-/react-app-polyfill-3.0.0.tgz#95221e0a9bd259e5ca6b177c7bb1cb6768f68fd7"
@@ -12972,6 +12996,11 @@ react-css-modules@^4.7.11:
     hoist-non-react-statics "^2.5.5"
     lodash "^4.16.6"
     object-unfreeze "^1.1.0"
+
+react-date-object@^2.1.5:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/react-date-object/-/react-date-object-2.1.7.tgz#a21fff40ef18344fee3616f40ee86169c1e83f5e"
+  integrity sha512-810eaGk/xvQBJNncPvhwXaKcSwPRKX48jtY/5U5T1bSUnGFqmBdMvl4EVl76cyzQ8U3KX6hpF6xZ1c0eY9vvJA==
 
 react-docgen-typescript@^2.2.2:
   version "2.2.2"
@@ -13017,6 +13046,11 @@ react-dom@^18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-element-popper@^2.1.6:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/react-element-popper/-/react-element-popper-2.1.6.tgz#4afb912287d57de5d442fb85e76f4d7b94fde879"
+  integrity sha512-8va7mUmrKIkUnaM2t5Dyctd8cjgVgVcrv5vVD0FRay0sN6EPBCKa0bDi1/KmVDAjfgSIn7zQnjtc4VojcGrkgQ==
 
 react-element-to-jsx-string@^15.0.0:
   version "15.0.0"
@@ -13107,6 +13141,29 @@ react-konva@^18.2.10:
     its-fine "^1.1.1"
     react-reconciler "~0.29.0"
     scheduler "^0.23.0"
+
+react-lifecycles-compat@^3.0.0:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+  integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-modal@^3.16.1:
+  version "3.16.1"
+  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.16.1.tgz#34018528fc206561b1a5467fc3beeaddafb39b2b"
+  integrity sha512-VStHgI3BVcGo7OXczvnJN7yT2TWHJPDXZWyI/a0ssFNhGZWsPmB8cF0z33ewDXq4VfYMO1vXgiv/g8Nj9NDyWg==
+  dependencies:
+    exenv "^1.2.0"
+    prop-types "^15.7.2"
+    react-lifecycles-compat "^3.0.0"
+    warning "^4.0.3"
+
+react-multi-date-picker@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/react-multi-date-picker/-/react-multi-date-picker-4.1.2.tgz#a8ce21946d3b9785e3aab0b7ab48b5a72bd3ebde"
+  integrity sha512-slpfl4uzXs9mA31WvJQGqbOVbFVUR+dogSya2SEjC2AVvIKPMHf3fAaEmF6OKpgd7NDldlSpfVG7Ubhju/wB8w==
+  dependencies:
+    react-date-object "^2.1.5"
+    react-element-popper "^2.1.6"
 
 react-reconciler@~0.29.0:
   version "0.29.0"
@@ -15227,6 +15284,13 @@ walker@^1.0.7, walker@^1.0.8:
   integrity sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==
   dependencies:
     makeerror "1.0.12"
+
+warning@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.3.tgz#16e9e077eb8a86d6af7d64aa1e05fd85b4678ca3"
+  integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
+  dependencies:
+    loose-envify "^1.0.0"
 
 watchpack@^2.2.0, watchpack@^2.4.0:
   version "2.4.0"

@@ -221,6 +221,8 @@ export interface IDataSource<T> {
   isActive: () => boolean
   next: () => this
   prior: () => this
+  first: () => this
+  last: () => this
   goToPage: (pageNumber: number) => this
   goToRecord: (recordIndex: number) => T | undefined
   gotoRecordByData: (record: T) => boolean
@@ -959,6 +961,44 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.currentRecord = undefined
     } else {
       this.currentRecordIndex--
+      this.currentRecord = this.filteredRecords[this.currentRecordIndex]
+      this.emitter.emit('afterScroll')
+      this.emit({ type: DataSourceEventNames.afterScroll })
+    }
+    return this
+  }
+
+  public first(): this {
+    this.validateDataSourceActive('first')
+    if (this.inserting || this.editing) {
+      throw new ArchbaseDataSourceError(
+        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+      )
+    }
+    if (this.getTotalRecords() === 0) {
+      this.currentRecordIndex = -1;
+      this.currentRecord = undefined
+    } else {
+      this.currentRecordIndex = 0;
+      this.currentRecord = this.filteredRecords[this.currentRecordIndex]
+      this.emitter.emit('afterScroll')
+      this.emit({ type: DataSourceEventNames.afterScroll })
+    }
+    return this
+  }
+
+  public last(): this {
+    this.validateDataSourceActive('last')
+    if (this.inserting || this.editing) {
+      throw new ArchbaseDataSourceError(
+        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+      )
+    }
+    if (this.getTotalRecords() === 0) {
+      this.currentRecordIndex = -1;
+      this.currentRecord = undefined
+    } else {
+      this.currentRecordIndex = this.getTotalRecords()-1;
       this.currentRecord = this.filteredRecords[this.currentRecordIndex]
       this.emitter.emit('afterScroll')
       this.emit({ type: DataSourceEventNames.afterScroll })

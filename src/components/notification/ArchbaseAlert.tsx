@@ -48,7 +48,7 @@ export function ArchbaseAlert(props: ArchbaseAlertProps) {
     titleColor,
     autoClose = 0,
     //...others
-  } = useComponentDefaultProps('MandalaAlert', defaultProps, props)
+  } = useComponentDefaultProps('ArchbaseAlert', defaultProps, props)
   const [started, _setStarted] = useState(false)
 
   useEffect(() => {

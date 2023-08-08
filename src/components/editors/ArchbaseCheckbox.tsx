@@ -1,4 +1,4 @@
-import { Checkbox } from '@mantine/core';
+import { Checkbox, MantineNumberSize } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useState, useCallback, useRef } from 'react';
 
@@ -21,13 +21,15 @@ export interface ArchbaseCheckBoxProps<T, ID> {
   /** Estilo do checkbox */
   style?: CSSProperties;
   /** Valor quando o checkbox estiver true */
-  trueValue: any;
+  trueValue?: any;
   /** Valor quando o checkbox estiver false */
-  falseValue: any;
+  falseValue?: any;
   /** Indicador se o checkbox está marcado */
   isChecked?: boolean;
   /** Título do checkbox */
   label?: string;
+  /** Largura do checkbox */
+  width?: MantineNumberSize;
   /** Descrição do checkbox */
   description?: string;
   /** Último erro ocorrido no checkbox */
@@ -49,9 +51,10 @@ export function ArchbaseCheckBox<T, ID>({
   readOnly = false,
   required = false,
   style,
-  trueValue,
-  falseValue,
+  trueValue=true,
+  falseValue=false,
   isChecked,
+  width,
   label,
   description,
   error,
@@ -119,7 +122,7 @@ export function ArchbaseCheckBox<T, ID>({
     }
 
     if (onChangeValue) {
-      onChangeValue(event, resultValue);
+      onChangeValue(resultValue,event);
     }
   };
 
@@ -148,7 +151,7 @@ export function ArchbaseCheckBox<T, ID>({
       disabled={disabled}
       readOnly={isReadOnly()}
       required={required}
-      style={style}
+      style={{...style,width}}
       checked={checked}
       ref={innerComponentRef}
       value={checked ? trueValue : falseValue}

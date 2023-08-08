@@ -1,5 +1,5 @@
-import { MantineNumberSize, MantineSize, TextInput } from '@mantine/core';
-import type { CSSProperties, FocusEventHandler } from 'react';
+import { ActionIcon, MantineNumberSize, MantineSize, TextInput, Tooltip, useMantineTheme } from '@mantine/core';
+import type { CSSProperties, FocusEventHandler, KeyboardEventHandler, ReactNode } from 'react';
 import React, { useState, useCallback, useRef } from 'react';
 
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
@@ -26,6 +26,12 @@ export interface ArchbaseEditProps<T,ID> {
   size?: MantineSize;
   /** Largura do edit */
   width?: MantineNumberSize;
+  /** Icone à direita */
+  icon?: ReactNode;
+  /** Dica para botão localizar */
+  tooltipIconSearch?: String;
+  /** Evento ocorre quando clica no botão localizar */
+  onActionSearchExecute?: () => void;
   /** Texto sugestão do edit */
   placeholder?: string;
   /** Título do edit */
@@ -40,6 +46,8 @@ export interface ArchbaseEditProps<T,ID> {
   onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando o valor do edit é alterado */
   onChangeValue?: (value: any, event: any) => void;
+  onKeyDown?: (event:any)=>void;
+  onKeyUp?: (event:any)=>void;
   /** Referência para o componente interno */
   innerRef?: React.RefObject<HTMLInputElement>|undefined;
 }
@@ -59,12 +67,18 @@ export function ArchbaseEdit<T,ID>({
   width,
   innerRef,
   value,
+  icon,
+  onKeyDown,
+  onKeyUp,
+  onActionSearchExecute = () => {},
+  tooltipIconSearch = 'Clique aqui para Localizar',
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
 }: ArchbaseEditProps<T,ID>) {
   const [currentValue, setCurrentValue] = useState<string>(value||'');
   const innerComponentRef = innerRef || useRef<any>();
+  const theme = useMantineTheme();
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = currentValue;
@@ -166,8 +180,27 @@ export function ArchbaseEdit<T,ID>({
       onFocus={handleOnFocusEnter}
       placeholder={placeholder}
       description={description}
+      onKeyDown={onKeyDown}
+      onKeyUp={onKeyUp}
       label={label}
       error={error}
+      rightSection={
+        <Tooltip label={tooltipIconSearch}>
+          <ActionIcon
+            sx={{
+              backgroundColor:
+                theme.colorScheme === 'dark'
+                  ? theme.colors[theme.primaryColor][5]
+                  : theme.colors[theme.primaryColor][6],
+            }}
+            tabIndex={-1}
+            variant="filled"
+            onClick={onActionSearchExecute}
+          >
+            {icon}
+          </ActionIcon>
+        </Tooltip>
+      }
     />
   );
 }
