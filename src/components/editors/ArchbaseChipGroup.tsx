@@ -1,5 +1,5 @@
 import { Chip } from '@mantine/core';
-import React, { useState, useCallback, ReactNode } from 'react';
+import React, { useState, useCallback, ReactNode, CSSProperties } from 'react';
 import { uniqueId } from 'lodash';
 import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks/lifecycle';
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
@@ -34,6 +34,8 @@ export interface ArchbaseChipGroupProps<T, ID, O> {
   type?: 'checkbox' | 'radio';
   /** Permite que múltiplos valores sejam selecionados */
   multiple?: boolean;
+  /** Estilo do chip */
+  style?: CSSProperties;
 }
 
 interface ChipItemProps {
@@ -84,7 +86,8 @@ export function ArchbaseChipGroup<T, ID, O>({
   children,
   variant,
   type,
-  multiple,
+  multiple = false,
+  style,
 }: ArchbaseChipGroupProps<T, ID, O>) {
   const [options, _setOptions] = useState<ChipItemProps[]>(
     buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
@@ -98,7 +101,7 @@ export function ArchbaseChipGroup<T, ID, O>({
       initialValue = dataSource.getFieldValue(dataField).map((it) => convertToValue(it));
 
       if (!initialValue) {
-        initialValue = [];
+        initialValue = multiple ? [] : '';
       }
     }
 
@@ -154,12 +157,12 @@ export function ArchbaseChipGroup<T, ID, O>({
   return (
     <Chip.Group
       defaultValue={selectedValue ? getOptionValue(selectedValue) : defaultValue}
-      value={selectedValue}
+      value={multiple ? selectedValue : undefined}
       onChange={handleChange}
       multiple={multiple}
     >
       {options.map((item) => (
-        <Chip value={item.value} key={item.key} variant={variant} type={type}>
+        <Chip style={style} value={item.value} key={item.key} variant={variant} type={type}>
           {item.label}
         </Chip>
       ))}

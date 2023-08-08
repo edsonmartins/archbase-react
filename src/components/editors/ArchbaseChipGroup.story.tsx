@@ -80,7 +80,7 @@ const ArchbaseChipGroupExample = () => {
             getOptionValue={getValueFromProduto}
             convertToValue={getIdFromProduto}
             onSelectValue={() => updateTotalValue(dataSource!, dataSource?.getFieldValue('itens'))}
-            multiple={true}
+            multiple={false}
           />
         </Card>
       </Grid.Col>
