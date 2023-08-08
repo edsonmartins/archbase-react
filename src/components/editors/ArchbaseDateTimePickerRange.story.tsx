@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit';
-import { Box, Card, Grid, Group, JsonInput, ScrollArea, Text } from '@mantine/core';
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
+import { Box, Card, Grid, Group, Text } from '@mantine/core';
 import { Pessoa, pessoasData } from '@demo/index';
 import { useArchbaseDataSource } from '../hooks';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';

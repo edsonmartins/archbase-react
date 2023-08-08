@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core';
+import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
 import { pedidosData, Pedido, produtosData } from '@demo/index';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';

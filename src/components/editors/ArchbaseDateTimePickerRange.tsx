@@ -1,8 +1,8 @@
 import { Flex, Input, MantineNumberSize, MantineSize } from '@mantine/core';
-import { DateTimePicker, DateValue } from '@mantine/dates';
-import { IconArrowLeft, IconArrowRight, IconCalendar } from '@tabler/icons-react';
+import { DateValue } from '@mantine/dates';
+import { IconArrowRight, IconCalendar } from '@tabler/icons-react';
 import React, { useState } from 'react';
-import { CSSProperties, FocusEventHandler, ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 import { ArchbaseDateTimePickerEdit } from './ArchbaseDateTimePickerEdit';
 
 export interface ArchbaseDateTimerPickerRangeProps {
