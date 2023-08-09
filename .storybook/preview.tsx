@@ -11,6 +11,7 @@ import { Provider as IOCProvider } from 'inversify-react';
 import { demoContainerIOC } from '../src/demo/index';
 import { Notifications } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
+import { ArchbaseScreenClassProvider} from '../src/components/containers/gridLayout';
 
 function ThemeWrapper(props: { children: React.ReactNode }) {
   const colorSchem = useDarkMode() ? 'dark' : 'light';
@@ -30,22 +31,22 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
   useHotkeys([['mod+J', () => toggleColorScheme()]]);
 
   return (
-    <IOCProvider container={demoContainerIOC}>
-      <DatesProvider settings={{ locale: i18next.language }}>
-        <MantineProvider
-          theme={colorScheme === 'dark' ? ArchbaseDark : ArchbaseLight}
-          withGlobalStyles
-          withNormalizeCSS
-        >
-          <ModalsProvider>
-            <Notifications autoClose={5000} position="top-right" />
-            <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-              {props.children}
-            </ColorSchemeProvider>
-          </ModalsProvider>
-        </MantineProvider>
-      </DatesProvider>
-    </IOCProvider>
+      <IOCProvider container={demoContainerIOC}>
+        <DatesProvider settings={{ locale: i18next.language }}>
+          <MantineProvider
+            theme={colorScheme === 'dark' ? ArchbaseDark : ArchbaseLight}
+            withGlobalStyles
+            withNormalizeCSS
+          >
+            <ModalsProvider>
+              <Notifications autoClose={5000} position="top-right" />
+              <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+                {props.children}
+              </ColorSchemeProvider>
+            </ModalsProvider>
+          </MantineProvider>
+        </DatesProvider>
+      </IOCProvider>
   );
 }
 

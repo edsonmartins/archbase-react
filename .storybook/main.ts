@@ -13,6 +13,7 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
+    '@storybook/addon-actions',
     'storybook-addon-mantine',
     'storybook-dark-mode',
     'storybook-react-i18next',
