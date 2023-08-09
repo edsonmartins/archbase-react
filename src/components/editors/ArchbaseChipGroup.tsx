@@ -1,4 +1,4 @@
-import { Chip } from '@mantine/core';
+import { Chip, Flex } from '@mantine/core';
 import React, { useState, useCallback, ReactNode, CSSProperties } from 'react';
 import { uniqueId } from 'lodash';
 import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks/lifecycle';
@@ -161,11 +161,13 @@ export function ArchbaseChipGroup<T, ID, O>({
       onChange={handleChange}
       multiple={multiple}
     >
-      {options.map((item) => (
-        <Chip style={style} value={item.value} key={item.key} variant={variant} type={type}>
-          {item.label}
-        </Chip>
-      ))}
+      <Flex gap="md" justify="center" align="center" direction="column" wrap="wrap">
+        {options.map((item) => (
+          <Chip style={style} value={item.value} key={item.key} variant={variant} type={type}>
+            {item.label}
+          </Chip>
+        ))}
+      </Flex>
     </Chip.Group>
   );
 }

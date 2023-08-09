@@ -6,10 +6,10 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { ArchbaseCheckBox } from './ArchbaseCheckbox';
 import { Pessoa, pessoasData } from '@demo/index';
+import { ArchbaseCheckbox } from './ArchbaseCheckbox';
 
-const ArchbaseEditExample = () => {
+const ArchbaseCheckboxExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
@@ -38,7 +38,7 @@ const ArchbaseEditExample = () => {
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({height:100})}>
-            <ArchbaseCheckBox
+            <ArchbaseCheckbox
               label="Masculino"
               dataSource={dataSource}
               dataField="sexo"
@@ -78,15 +78,15 @@ const ArchbaseEditExample = () => {
 
 export default {
   title: 'Editors/Checkbox',
-  component: ArchbaseEditExample,
+  component: ArchbaseCheckboxExample,
 } as Meta;
 
 const data = [pessoasData[0]];
 
-export const Example: StoryObj<typeof ArchbaseEditExample> = {
+export const Example: StoryObj<typeof ArchbaseCheckboxExample> = {
   args: {
     render: () => {
-      <ArchbaseEditExample />;
+      <ArchbaseCheckboxExample />;
     },
   },
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Grid, Group, Text } from '@mantine/core';
+import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
 import { pedidosData, Pedido, produtosData } from '@demo/index';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
@@ -64,7 +64,7 @@ const ArchbaseChipGroupExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={4}>
+      <Grid.Col span={12}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -84,14 +84,16 @@ const ArchbaseChipGroupExample = () => {
           />
         </Card>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={6}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
               <Text weight={500}>Objeto Pessoa</Text>
             </Group>
           </Card.Section>
-          <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
+          <ScrollArea sx={(_theme) => ({ height: 500 })}>
+            <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
+          </ScrollArea>
         </Card>
       </Grid.Col>
       <Grid.Col span={4}>
@@ -101,7 +103,9 @@ const ArchbaseChipGroupExample = () => {
               <Text weight={500}>DataSource dsPessoas</Text>
             </Group>
           </Card.Section>
-          <ArchbaseObjectInspector data={dataSource} />
+          <ScrollArea sx={(_theme) => ({ height: 500 })}>
+            <ArchbaseObjectInspector data={dataSource} />
+          </ScrollArea>
         </Card>
       </Grid.Col>
     </Grid>
@@ -109,7 +113,7 @@ const ArchbaseChipGroupExample = () => {
 };
 
 export default {
-  title: 'Editors/ChipGroup',
+  title: 'Editors/Chip Group',
   component: ArchbaseChipGroupExample,
 } as Meta;
 

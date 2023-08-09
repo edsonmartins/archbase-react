@@ -72,7 +72,7 @@ export function replaceAccents(str) {
 /**
  * Remove chars from beginning of string.
  */
-export function ltrim(str, chars) {
+export function ltrim(str, chars?) {
   chars = chars || WHITE_SPACES
 
   var start = 0,

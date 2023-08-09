@@ -1,4 +1,4 @@
-import { Checkbox } from '@mantine/core';
+import { Checkbox, MantineNumberSize, MantineSize } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useState, useCallback, useRef } from 'react';
 
@@ -7,7 +7,7 @@ import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } fro
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 
-export interface ArchbaseCheckBoxProps<T, ID> {
+export interface ArchbaseCheckboxProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do checkbox */
   dataSource?: ArchbaseDataSource<T, ID>;
   /** Campo onde deverá ser atribuido o valor do checkbox na fonte de dados */
@@ -20,18 +20,24 @@ export interface ArchbaseCheckBoxProps<T, ID> {
   required?: boolean;
   /** Estilo do checkbox */
   style?: CSSProperties;
+   /** Chave de theme.radius ou qualquer valor CSS válido para definir border-radius, theme.defaultRadius por padrão */
+   radius?: MantineNumberSize;
   /** Valor quando o checkbox estiver true */
-  trueValue: any;
+  trueValue?: any;
   /** Valor quando o checkbox estiver false */
-  falseValue: any;
+  falseValue?: any;
   /** Indicador se o checkbox está marcado */
   isChecked?: boolean;
   /** Título do checkbox */
   label?: string;
+  /** Largura do checkbox */
+  width?: MantineNumberSize;
   /** Descrição do checkbox */
   description?: string;
   /** Último erro ocorrido no checkbox */
   error?: string;
+  /** Valor de tamanho predefinido */
+  size?: MantineSize;
   /** Evento quando o foco sai do checkbox */
   onFocusExit?: FocusEventHandler<T> | undefined;
   /** Evento quando o checkbox recebe o foco */
@@ -42,24 +48,27 @@ export interface ArchbaseCheckBoxProps<T, ID> {
   innerRef?: React.RefObject<HTMLInputElement>|undefined;
 }
 
-export function ArchbaseCheckBox<T, ID>({
+export function ArchbaseCheckbox<T, ID>({
   dataSource,
   dataField,
   disabled = false,
   readOnly = false,
   required = false,
   style,
-  trueValue,
-  falseValue,
+  trueValue=true,
+  falseValue=false,
   isChecked,
+  width,
   label,
   description,
   error,
+  size,
+  radius,
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
   innerRef,
-}: ArchbaseCheckBoxProps<T, ID>) {
+}: ArchbaseCheckboxProps<T, ID>) {
   const [checked, setChecked] = useState<boolean>(isChecked ? true : false);
   const innerComponentRef = innerRef || useRef<any>();
 
@@ -119,7 +128,7 @@ export function ArchbaseCheckBox<T, ID>({
     }
 
     if (onChangeValue) {
-      onChangeValue(event, resultValue);
+      onChangeValue(resultValue,event);
     }
   };
 
@@ -148,7 +157,7 @@ export function ArchbaseCheckBox<T, ID>({
       disabled={disabled}
       readOnly={isReadOnly()}
       required={required}
-      style={style}
+      style={{...style,width}}
       checked={checked}
       ref={innerComponentRef}
       value={checked ? trueValue : falseValue}
@@ -158,8 +167,8 @@ export function ArchbaseCheckBox<T, ID>({
       description={description}
       label={label}
       labelPosition="right"
-      size="sm"
-      radius="sm"
+      size={size}
+      radius={radius}
       error={error}
     />
   );
