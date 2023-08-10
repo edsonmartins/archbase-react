@@ -1,5 +1,5 @@
 import { Chip, Flex } from '@mantine/core';
-import React, { useState, useCallback, ReactNode } from 'react';
+import React, { useState, useCallback, ReactNode, CSSProperties } from 'react';
 import { uniqueId } from 'lodash';
 import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks/lifecycle';
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
@@ -16,10 +16,10 @@ export interface ArchbaseChipGroupProps<T, ID, O> {
   getOptionLabel?: (option: O) => string;
   /** Function que retorna o valor de uma ChipItem */
   getOptionValue?: (option: O) => any;
-  /** Function que converte os valores do datasource para uma lista de chips selecionados do tipo padrão string */
-  convertToValue?: (source: any[]) => string[];
-  /** Function que converte o valor selecionado do tipo padrão string para o tipo desejado */
-  convertFromValue?: (selected: string[]) => any;
+  /** Function que converte os valores do datasource para uma lista de chips selecionados do tipo padrão string[] ou string */
+  convertToValue?: (source: any) => string[] | string;
+  /** Function que converte o valor selecionado do tipo padrão string[] ou string para o tipo desejado */
+  convertFromValue?: (selected: string[] | string) => any;
   /** Opções de seleção iniciais */
   initialOptions?: O[] | object;
   /** Coleção de ChipItem[] que representam as opções do select */
@@ -34,6 +34,8 @@ export interface ArchbaseChipGroupProps<T, ID, O> {
   type?: 'checkbox' | 'radio';
   /** Permite que múltiplos valores sejam selecionados */
   multiple?: boolean;
+  /** Estilo do chip */
+  style?: CSSProperties;
 }
 
 interface ChipItemProps {
@@ -76,7 +78,7 @@ export function ArchbaseChipGroup<T, ID, O>({
   onSelectValue = () => {},
   getOptionLabel = (o: any) => o.label,
   getOptionValue = (o: any) => o.value,
-  convertToValue = (value) => value,
+  convertToValue = (value) => value.toString(),
   convertFromValue,
   value,
   defaultValue,
@@ -84,7 +86,8 @@ export function ArchbaseChipGroup<T, ID, O>({
   children,
   variant,
   type,
-  multiple,
+  multiple = false,
+  style,
 }: ArchbaseChipGroupProps<T, ID, O>) {
   const [options, _setOptions] = useState<ChipItemProps[]>(
     buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
@@ -95,10 +98,12 @@ export function ArchbaseChipGroup<T, ID, O>({
     let initialValue: any = value;
 
     if (dataSource && dataField) {
-      initialValue = dataSource.getFieldValue(dataField).map((it) => convertToValue(it));
+      initialValue = multiple
+        ? dataSource.getFieldValue(dataField).map((it) => convertToValue(it))
+        : convertToValue(dataSource.getFieldValue(dataField));
 
       if (!initialValue) {
-        initialValue = [];
+        initialValue = multiple ? [] : '';
       }
     }
 
@@ -159,11 +164,11 @@ export function ArchbaseChipGroup<T, ID, O>({
       multiple={multiple}
     >
       <Flex gap="md" justify="center" align="center" direction="column" wrap="wrap">
-      {options.map((item) => (
-        <Chip value={item.value} key={item.key} variant={variant} type={type}>
-          {item.label}
-        </Chip>
-      ))}
+        {options.map((item) => (
+          <Chip style={style} value={item.value} key={item.key} variant={variant} type={type}>
+            {item.label}
+          </Chip>
+        ))}
       </Flex>
     </Chip.Group>
   );

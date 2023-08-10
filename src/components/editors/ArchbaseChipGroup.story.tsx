@@ -13,12 +13,18 @@ import { Produto } from '@demo/data/types';
 const pedido: Pedido[] = [pedidosData[0]];
 const produtos: Produto[] = produtosData;
 
-const getProdutosFromIds = (produtoIds: string[]) => {
+const getProdutosFromIds = (produtoIds: string[] | string) => {
   if (produtoIds === null) {
     return [];
   }
 
-  return produtos.filter((produto) => produtoIds.includes(produto.id.toString()));
+  return produtos
+    .filter((produto) => produtoIds.includes(produto.id.toString()))
+    .map((produto) => ({
+      produto: produto,
+      quantidade: 1,
+      total: produto.preco,
+    }));
 };
 
 const getIdFromProduto = (produto: any) => {
@@ -33,9 +39,9 @@ const getLabelFromProduto = (produto: any) => {
   return produto.descricao;
 };
 
-const updateTotalValue = (dataSource: ArchbaseDataSource<Pedido, string>, produtos: Produto[]) => {
+const updateTotalValue = (dataSource: ArchbaseDataSource<Pedido, string>, produtos: any) => {
   const total = produtos.reduce((acumulado, produto) => {
-    return acumulado + produto.preco;
+    return acumulado + produto.total;
   }, 0);
   dataSource?.setFieldValue('vlTotal', total);
 };
@@ -68,20 +74,20 @@ const ArchbaseChipGroupExample = () => {
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>ChipGroup Component</Text>
+              <Text weight={500}>Chip Group Component</Text>
             </Group>
           </Card.Section>
-            <ArchbaseChipGroup<Pedido, string, Produto>
-              initialOptions={produtos}
-              dataSource={dataSource}
-              dataField="itens"
-              convertFromValue={getProdutosFromIds}
-              getOptionLabel={getLabelFromProduto}
-              getOptionValue={getValueFromProduto}
-              convertToValue={getIdFromProduto}
-              onSelectValue={() => updateTotalValue(dataSource!, dataSource?.getFieldValue('itens'))}
-              multiple={true}
-            />
+          <ArchbaseChipGroup<Pedido, string, Produto>
+            initialOptions={produtos}
+            dataSource={dataSource}
+            dataField="itens"
+            convertFromValue={getProdutosFromIds}
+            getOptionLabel={getLabelFromProduto}
+            getOptionValue={getValueFromProduto}
+            convertToValue={getIdFromProduto}
+            onSelectValue={() => updateTotalValue(dataSource!, dataSource?.getFieldValue('itens'))}
+            multiple={true}
+          />
         </Card>
       </Grid.Col>
       <Grid.Col span={6}>
