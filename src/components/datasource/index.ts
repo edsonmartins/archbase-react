@@ -8,4 +8,4 @@ export type {
   DataSourceEventRefreshDataType,
 } from './ArchbaseDataSource'
 export { DataSourceEventNames, ArchbaseDataSource } from './ArchbaseDataSource'
-export type { ArchbaseRemoteDataSource } from './ArchbaseRemoteDataSource'
+export { ArchbaseRemoteDataSource } from './ArchbaseRemoteDataSource'

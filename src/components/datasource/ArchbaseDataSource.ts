@@ -48,6 +48,7 @@ export interface DataSourceOptions<T> {
   pageSize: number
   filter?: string
   sort?: string[]
+  defaultSortFields?: string[]
   originFilter?: any
   originGlobalFilter?: any
   originSort?: any
@@ -196,8 +197,8 @@ export interface IDataSource<T> {
   setData: (options: DataSourceOptions<T>) => void
   insert: (record: T) => this
   edit: () => this
-  remove: (callback: Function) => Promise<T | undefined>
-  save: (callback: Function) => Promise<T | undefined>
+  remove: (callback?: Function) => Promise<T | undefined>
+  save: (callback?: Function) => Promise<T | undefined>
   cancel: () => this
   getOptions: () => DataSourceOptions<T>
   refreshData: (options?: DataSourceOptions<T>) => void
@@ -354,6 +355,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
   protected originGlobalFilter: any | undefined
 
+  protected defaultSortFields : string[] = [];
+
   constructor(name: string, options: DataSourceOptions<T>) {
     this.name = name
     this.records = []
@@ -385,6 +388,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.originFilter = options.originFilter
     this.originSort = options.originSort
     this.originGlobalFilter = options.originGlobalFilter
+    this.defaultSortFields = options.defaultSortFields?options.defaultSortFields:[];
   }
 
   protected validateDataSourceActive(operation: string) {
@@ -607,7 +611,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     return this
   }
 
-  public async remove(callback: Function): Promise<T | undefined> {
+  public async remove(callback?: Function): Promise<T | undefined> {
     this.validateDataSourceActive('remove')
     if (this.inserting || this.editing) {
       throw new ArchbaseDataSourceError(
@@ -688,7 +692,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     return this.pageSize
   }
 
-  public async save(callback: Function): Promise<T> {
+  public async save(callback?: Function): Promise<T> {
     this.validateDataSourceActive('save')
     if (!this.inserting || !this.editing) {
       throw new ArchbaseDataSourceError(

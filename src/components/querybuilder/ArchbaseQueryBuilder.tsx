@@ -19,9 +19,12 @@ import {
   Field,
   SortField,
   ArchbaseQueryFilter,
+  ArchbaseQueryFilterDelegator,
+  QueryFilterEntity,
+  IQueryFilterEntity,
+  getDefaultEmptyFilter,
 } from './ArchbaseFilterCommons';
 import { endOfMonth } from 'date-fns';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from 'components/datasource';
 import { processErrorMessage } from 'components/core/exceptions';
 import { ArchbaseDialog } from 'components/notification';
 import { Button, Tooltip } from '@mantine/core';
@@ -31,12 +34,12 @@ import { IconCalendarDue } from '@tabler/icons-react';
 import { ArchbaseFilterSelectFields } from './ArchbaseFilterSelectFields';
 import { ArchbaseFilterSelectRange } from './ArchbaseFilterSelectRange';
 
-export interface ArchbaseQueryBuilderProps<T, ID> {
-  dataSource: ArchbaseDataSource<T, ID>;
+export interface ArchbaseQueryBuilderProps {
+  persistenceDelegator: ArchbaseQueryFilterDelegator;
   showClearButton?: boolean;
   showToggleButton?: boolean;
   onClearFilter?: (self: any) => {};
-  formName: string;
+  viewName: string;
   id: string;
   apiVersion: string;
   width?: string;
@@ -50,7 +53,7 @@ export interface ArchbaseQueryBuilderProps<T, ID> {
   onFilterChanged?: (currentFilter: ArchbaseQueryFilter, index: number, callback?: () => void) => void;
   onSearchByFilter?: () => void;
   onSelectedFilter?: (filter: ArchbaseQueryFilter, index: number) => void;
-  user?: any;
+  userName?: any;
   children?: ReactNode | ReactNode[];
 }
 
@@ -72,10 +75,7 @@ export interface ArchbaseQueryBuilderState {
   modalHandleOnChange?: (value: string) => void;
 }
 
-export class ArchbaseQueryBuilder<T, ID> extends Component<
-  ArchbaseQueryBuilderProps<T, ID>,
-  ArchbaseQueryBuilderState
-> {
+export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, ArchbaseQueryBuilderState> {
   static defaultProps = {
     showClearButton: true,
     showToggleButton: true,
@@ -86,7 +86,8 @@ export class ArchbaseQueryBuilder<T, ID> extends Component<
   private timeout: any;
   private divMain: any;
   private refEdit: RefObject<HTMLInputElement>;
-  constructor(props: ArchbaseQueryBuilderProps<T, ID>) {
+  private inputValue: any;
+  constructor(props: ArchbaseQueryBuilderProps) {
     super(props);
     this.refEdit = React.createRef();
     this.state = {
@@ -99,30 +100,13 @@ export class ArchbaseQueryBuilder<T, ID> extends Component<
       update: Math.random(),
       activeFilterIndex: this.props.currentFilter ? this.props.activeFilterIndex! : QUICK_FILTER_INDEX,
     };
-
-    if (this.props.dataSource) {
-      if (this.props.dataSource) {
-        this.props.dataSource.addListener(this.handleDataSourceEvent);
-      }
-    }
   }
 
-  handleDataSourceEvent = (event: DataSourceEvent<T>) => {
-    if (this.props.dataSource) {
-      if ((event.type === DataSourceEventNames.dataChanged) ||
-          (event.type === DataSourceEventNames.recordChanged) ||
-          (event.type === DataSourceEventNames.afterScroll) ||
-          (event.type === DataSourceEventNames.afterCancel)) {
-         
-      }
-    }
-  }
-
-  shouldComponentUpdate = (nextProps: ArchbaseQueryBuilderProps<T, ID>, nextState: ArchbaseQueryBuilderState) => {
+  shouldComponentUpdate = (nextProps: ArchbaseQueryBuilderProps, nextState: ArchbaseQueryBuilderState) => {
     return shallowCompare(this, nextProps, nextState);
   };
 
-  componentWillReceiveProps = (nextProps: ArchbaseQueryBuilderProps<T, ID>) => {
+  componentWillReceiveProps = (nextProps: ArchbaseQueryBuilderProps) => {
     this.setState({
       ...this.state,
       currentFilter: nextProps.currentFilter ? nextProps.currentFilter : getDefaultFilter(nextProps, QUICK),
@@ -134,22 +118,10 @@ export class ArchbaseQueryBuilder<T, ID> extends Component<
 
   componentDidMount = () => {
     window.addEventListener('resize', this.onResize);
-    if (this.props.dataSource != null) {
-      this.props.dataSource.open({
-        records: [],
-        grandTotalRecords: 0,
-        currentPage: 0,
-        pageSize: 30,
-        totalPages: 0,
-      });
-    }
   };
 
   componentWillUnmount = () => {
     window.removeEventListener('resize', this.onResize);
-    if (this.props.dataSource) {
-      this.props.dataSource.removeListener(this.handleDataSourceEvent);
-    }
   };
 
   toggleExpandedFilter = () => {
@@ -167,12 +139,14 @@ export class ArchbaseQueryBuilder<T, ID> extends Component<
       },
       () => {
         if (!this.state.currentFilter || this.state.currentFilter.filter.filterType === QUICK) {
-          if (!this.props.dataSource.isEmpty()) {
-            let filter = JSON.parse(atob(this.props.dataSource.getFieldValue('filter')));
-            filter.id = this.props.dataSource.getFieldValue('idFilter');
-            filter.name = this.props.dataSource.getFieldValue('filterName');
-            filter.formName = this.props.dataSource.getFieldValue('formName');
-            this.onChangeSelectedFilter(filter, 0);
+          let firstFilter: IQueryFilterEntity | undefined = this.props.persistenceDelegator.getFirstFilter();
+          if (firstFilter) {
+            let currentFilter: ArchbaseQueryFilter = getDefaultEmptyFilter();
+            currentFilter.id = firstFilter.id;
+            currentFilter.name = firstFilter.name;
+            currentFilter.viewName = firstFilter.viewName;
+            currentFilter.filter = JSON.parse(atob(firstFilter.filter || ''));
+            this.onChangeSelectedFilter(currentFilter, 0);
           } else {
             this.addNewFilter();
           }
@@ -326,14 +300,10 @@ export class ArchbaseQueryBuilder<T, ID> extends Component<
         () => {
           let currentFilter = this.state.currentFilter;
           currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(currentFilter, getFields(this.props));
-          if (
-            this.props.dataSource.locate({
-              idFilter: currentFilter.id,
-            })
-          ) {
-            this.props.dataSource.edit();
-            this.props.dataSource.setFieldValue('filter', btoa(JSON.stringify(currentFilter)));
-            this.props.dataSource.save((error) => {
+          let filter: IQueryFilterEntity|undefined = this.props.persistenceDelegator.getFilterById(currentFilter.id);
+          if (filter) {
+            filter.setFilter(btoa(JSON.stringify(currentFilter)));
+            this.props.persistenceDelegator.saveFilter(filter, (error: any) => {
               if (error) {
                 ArchbaseDialog.showError(processErrorMessage(error));
               }
@@ -343,46 +313,42 @@ export class ArchbaseQueryBuilder<T, ID> extends Component<
         () => {},
       );
     } else if ((itemId === 'mnuItemSalvar' || itemId === 'mnuItemSalvarComo') && this.state.currentFilter) {
-      // ArchbaseDialog.showConfirmDialogYesNo(
-      //   "Confirme",
-      //   "Salvar como...",
-      //   (result) => {
-      //     let currentFilter = this.state.currentFilter;
-      //     currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(
-      //       currentFilter,
-      //       getFields(this.props)
-      //     );
-      //     this.props.dataSource.insert();
-      //     this.props.dataSource.setFieldValue(
-      //       "componentFilter",
-      //       this.props.id
-      //     );
-      //     this.props.dataSource.setFieldValue("filterName", result);
-      //     this.props.dataSource.setFieldValue(
-      //       "formName",
-      //       this.props.formName
-      //     );
-      //     this.props.dataSource.setFieldValue("user", this.props.user);
-      //     this.props.dataSource.setFieldValue("boPublic", true);
-      //     this.props.dataSource.setFieldValue(
-      //       "filter",
-      //       btoa(JSON.stringify(currentFilter))
-      //     );
-      //     this.props.dataSource.save((error) => {
-      //       if (error) {
-      //         ArchbaseDialog.showError(processErrorMessage(error));
-      //       } else {
-      //         currentFilter.id = this.props.dataSource.getFieldValue("idFilter");
-      //         currentFilter.filterName = result;
-      //         this.setState({
-      //           ...this.state,
-      //           currentFilter,
-      //           modalOpen: "modalSaveFilter",
-      //         });
-      //       }
-      //     });
-      //   },()=>{
-      //   });
+      this.inputValue = '';
+      ArchbaseDialog.showInputDialog(
+        'Salvar como...',
+        'Informe um nome para o fitro...',
+        'Confirme',
+        (value: any) => (this.inputValue = value),
+        () => {
+          let currentFilter = this.state.currentFilter;
+          currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(currentFilter, getFields(this.props));
+
+          let newFilter: IQueryFilterEntity = QueryFilterEntity.createInstanceWithValues({
+            filter: btoa(JSON.stringify(currentFilter)),
+            id: this.props.id,
+            name: this.inputValue,
+            componentName: this.props.id,
+            userName: this.props.userName,
+            shared: true,
+            viewName: this.props.viewName,
+          });
+
+          this.props.persistenceDelegator.saveFilter(newFilter, (error: any, id: any) => {
+            if (error) {
+              ArchbaseDialog.showError(processErrorMessage(error));
+            } else {
+              currentFilter.id = id;
+              currentFilter.name = newFilter.name;
+              this.setState({
+                ...this.state,
+                currentFilter,
+                modalOpen: 'modalSaveFilter',
+              });
+            }
+          });
+        },
+        () => {},
+      );
     }
   };
 
@@ -442,22 +408,20 @@ export class ArchbaseQueryBuilder<T, ID> extends Component<
       'Deseja remover o Filtro ?',
       () => {
         let currentFilter = this.state.currentFilter;
-        if (
-          this.props.dataSource.locate({
-            idFilter: currentFilter.id,
-          })
-        ) {
-          this.props.dataSource.remove((error: any) => {
-            if (error) {
+        let filter: IQueryFilterEntity | undefined = this.props.persistenceDelegator.getFilterById(currentFilter.id);
+        if (filter) {
+          this.props.persistenceDelegator.removeFilterBy(filter.id, (error: any) => {
+            if (error && error!==null) {
               ArchbaseDialog.showError(processErrorMessage(error));
             } else {
-              if (!this.props.dataSource.isEmpty()) {
-                this.props.dataSource.first();
-                let filter = JSON.parse(atob(this.props.dataSource.getFieldValue('filter')));
-                filter.id = this.props.dataSource.getFieldValue('idFilter');
-                filter.name = this.props.dataSource.getFieldValue('filterName');
-                filter.formName = this.props.dataSource.getFieldValue('formName');
-                this.onChangeSelectedFilter(filter, 0);
+              let firstFilter = this.props.persistenceDelegator.getFirstFilter();
+              if (firstFilter) {
+                let currentFilter: ArchbaseQueryFilter = getDefaultEmptyFilter();
+                currentFilter.id = firstFilter.id;
+                currentFilter.name = firstFilter.name;
+                currentFilter.viewName = firstFilter.viewName;
+                currentFilter.filter = JSON.parse(atob(firstFilter.filter || ''));
+                this.onChangeSelectedFilter(currentFilter, 0);
               } else {
                 this.addNewFilter();
               }
@@ -743,7 +707,7 @@ export class ArchbaseQueryBuilder<T, ID> extends Component<
           <SearchComponent
             key={'modal' + field.name}
             isOpen={this.state.modalOpen && this.state.modalOpen === 'modal' + field.name}
-            user={this.props.user}
+            user={this.props.userName}
             onClickOk={this.onClickOk}
             onClickCancel={this.onClickCancel}
             selectedRecords={[]}
@@ -950,7 +914,7 @@ export class ArchbaseQueryBuilder<T, ID> extends Component<
           isOpen={this.state.expandedFilter}
           currentFilter={this.state.currentFilter}
           activeFilterIndex={this.state.activeFilterIndex}
-          dataSource={this.props.dataSource}
+          persistenceDelegator={this.props.persistenceDelegator}
           onFilterChanged={(currentFilter: ArchbaseQueryFilter, activeFilterIndex: number) =>
             this.onFilterChanged(currentFilter, activeFilterIndex, () => {})
           }

@@ -147,6 +147,14 @@ export abstract class ArchbaseApiService<T, ID> {
     )
   }
 
+  async findAllMultipleFields(value: string, fields: string, page: number, size: number, sort: string): Promise<Page<T>> {
+    return this.client.get<Page<T>>(
+      `${this.getEndpoint()}/findMultipleFields?page=${page}&size=${size}&fields=${encodeURIComponent(fields)}&filter=${encodeURIComponent(
+        value
+      )}&sort=${encodeURIComponent(sort)}`
+    )
+  }
+
   async findAllWithFilterAndSort(
     filter: string,
     page: number,

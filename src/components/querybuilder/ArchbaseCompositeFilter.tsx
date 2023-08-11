@@ -15,6 +15,7 @@ import {
   ArchbaseQueryFilter,
   Field,
   FilterType,
+  ArchbaseQueryFilterDelegator,
 } from './ArchbaseFilterCommons';
 import { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter';
 import shallowCompare from 'react-addons-shallow-compare';
@@ -29,18 +30,18 @@ interface ArchbaseCompositeFilterProps {
   isOpen: boolean;
   activeFilterIndex: number;
   currentFilter: ArchbaseQueryFilter;
-  left?: string|number|undefined;
-  top?: string|number|undefined;
-  width?: string|number|undefined;
-  height?: string|number|undefined;
-  dataSource: ArchbaseDataSource<any, any>;
+  left?: string | number | undefined;
+  top?: string | number | undefined;
+  width?: string | number | undefined;
+  height?: string | number | undefined;
+  persistenceDelegator: ArchbaseQueryFilterDelegator;
   update?: number;
   children?: ReactNode | ReactNode[];
   onSaveFilter?: (itemId: string) => void;
   onChangeFilterType?: (index: number) => void;
   onChangeSelectedFilter?: (filter: ArchbaseQueryFilter, index: number) => void;
   onFilterChanged: (currentFilter: ArchbaseQueryFilter, activeFilterIndex: number) => void;
-  onSearchButtonClick?: (field: string, event?: any, handleOnChange?: any, operator?: any, searchField?: any)=>void;
+  onSearchButtonClick?: (field: string, event?: any, handleOnChange?: any, operator?: any, searchField?: any) => void;
   onActionClick?: (event: React.MouseEvent, action: string) => void;
 }
 
@@ -133,7 +134,15 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
           <ArchbaseList
             height="105px"
             activeIndex={this.state.activeFilterIndex}
-            dataSource={this.props.dataSource}
+            dataSource={
+              new ArchbaseDataSource('dsSortFields', {
+                records: this.props.persistenceDelegator.getFilters(),
+                grandTotalRecords: this.props.persistenceDelegator.getFilters().length,
+                currentPage: 0,
+                totalPages: 0,
+                pageSize: 999999,
+              })
+            }
             onSelectListItem={this.onSelectItem}
             style={{ borderRadius: '6px', marginBottom: '4px' }}
             component={{ type: FilterItem, props: {} }}
@@ -141,7 +150,11 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
           <div className="filter-apply">
             <Fragment>
               <Tooltip label="Novo filtro">
-                <Button id="btnNew" leftIcon={<IconPlus />} onClick={(event)=>this.props.onActionClick&&this.props.onActionClick(event,"new")} />
+                <Button
+                  id="btnNew"
+                  leftIcon={<IconPlus />}
+                  onClick={(event) => this.props.onActionClick && this.props.onActionClick(event, 'new')}
+                />
               </Tooltip>
               <Tooltip label="Remover filtro">
                 <Button
@@ -151,7 +164,8 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
                     this.props.currentFilter && (!this.props.currentFilter.id || this.props.currentFilter.id <= 0)
                   }
                   leftIcon={<IconTrash />}
-                  onClick={(event)=>this.props.onActionClick&&this.props.onActionClick(event,"remove")} />
+                  onClick={(event) => this.props.onActionClick && this.props.onActionClick(event, 'remove')}
+                />
               </Tooltip>
               <Menu shadow="md" width={200} disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}>
                 <Menu.Target>
@@ -182,12 +196,18 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
                 id="btnApply"
                 leftIcon={<IconFilter />}
                 disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
-                onClick={(event)=>this.props.onActionClick&&this.props.onActionClick(event,"apply")}>              
+                onClick={(event) => this.props.onActionClick && this.props.onActionClick(event, 'apply')}
+              >
                 {'Aplicar'}
               </Button>
             </Tooltip>
             <Tooltip label="Fechar filtro">
-              <Button id="btnClose" color="red" leftIcon={<IconDoorExit />} onClick={(event)=>this.props.onActionClick&&this.props.onActionClick(event,"close")}>        
+              <Button
+                id="btnClose"
+                color="red"
+                leftIcon={<IconDoorExit />}
+                onClick={(event) => this.props.onActionClick && this.props.onActionClick(event, 'close')}
+              >
                 {'Fechar'}
               </Button>
             </Tooltip>
@@ -224,7 +244,6 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
               update={this.props.update}
               width={'100%'}
               height={'100%'}
-              dataSource={this.props.dataSource}
               selectedOptions={getQuickFields(this.state.fields)}
               onFilterChanged={this.props.onFilterChanged}
               onSearchButtonClick={this.props.onSearchButtonClick}
@@ -254,7 +273,6 @@ interface ArchbaseDetailedFilterProps {
   onSearchButtonClick?: (field: string) => void;
   isOpen?: boolean;
   update?: number;
-  dataSource?: ArchbaseDataSource<any, any>;
   selectedOptions?: Field[];
 }
 

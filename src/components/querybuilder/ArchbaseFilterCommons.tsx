@@ -7,28 +7,25 @@ const NEW_FILTER_INDEX = -1;
 const NORMAL = 'normal';
 const QUICK = 'quick';
 const ADVANCED = 'advanced';
-const OPERATORS = {
-  OP_NULL: 'null',
-  OP_NOT_NULL: 'notNull',
-  OP_CONTAINS: 'contains',
-  OP_STARTSWITH: 'startsWith',
-  OP_ENDSWITH: 'endsWith',
-  OP_EQUALS: '=',
-  OP_NOT_EQUALS: '!=',
-  OP_GREATER: '>',
-  OP_LESS: '<',
-  OP_GREATER_OR_EQUAL: '>=',
-  OP_LESS_OR_EQUAL: '<=',
-  OP_BETWEEN: 'between',
-  OP_IN_LIST: 'inList',
-  OP_NOT_IN_LIST: 'notInList',
-};
+const OP_NULL = 'null';
+const OP_NOT_NULL = 'notNull';
+const OP_CONTAINS = 'contains';
+const OP_STARTSWITH = 'startsWith';
+const OP_ENDSWITH = 'endsWith';
+const OP_EQUALS = '=';
+const OP_NOT_EQUALS = '!=';
+const OP_GREATER = '>';
+const OP_LESS = '<';
+const OP_GREATER_OR_EQUAL = '>=';
+const OP_LESS_OR_EQUAL = '<=';
+const OP_BETWEEN = 'between';
+const OP_IN_LIST = 'inList';
+const OP_NOT_IN_LIST = 'notInList';
 
 type FilterType = 'quick' | 'normal' | 'advanced' | undefined;
 type PositionType = 'filter' | 'fields' | 'range' | undefined;
 type RangeType = 'month' | 'week' | 'range' | 'day' | undefined;
 type DataType = 'string' | 'number' | 'date' | 'date_time' | 'time' | 'boolean';
-
 
 interface Operator {
   name: string;
@@ -68,7 +65,7 @@ interface Filter {
   selectedFields: Field[];
   quickFilterText: string;
   quickFilterFieldsText: string;
-  rules: any[];
+  rules: Rule[];
   condition: string;
   filterType: FilterType;
 }
@@ -83,11 +80,17 @@ interface ArchbaseQueryFilter {
   id?: number;
   filter: Filter;
   sort: Sort;
-  filterName?: string;
-  formName?: string;
+  name?: string;
+  viewName?: string;
   type?: FilterType;
   apiVersion?: string;
-  selectedFields?: Field[]
+  selectedFields?: Field[];
+}
+
+interface ArchbaseQueryFilterState {
+  currentFilter: ArchbaseQueryFilter;
+  activeFilterIndex: number;
+  expandedFilter: boolean;
 }
 
 interface Position {
@@ -118,6 +121,164 @@ interface Rule {
 interface Condition {
   name: string;
   label: string;
+}
+
+interface IQueryFilterEntity {
+  id?: any;
+  companyId?: any;
+  filter?: string;
+  name?: string;
+  viewName?: string;
+  componentName?: string;
+  userName?: string;
+  shared?: boolean;
+  code?: string;
+  setId: (id: any) => void;
+  setCompanyId: (companyId: any) => void;
+  setFilter: (filter: string) => void;
+  setName: (name: string) => void;
+  setViewName: (viewName: string) => void;
+  setComponentName: (componentName: string) => void;
+  setUserName: (userName: string) => void;
+  setShared: (shared: boolean) => void;
+  setCode: (code: string) => void;
+}
+
+class QueryFilterEntity implements IQueryFilterEntity {
+  private _id?: any;
+  private _companyId?: any;
+  private _filter?: string;
+  private _name?: string;
+  private _viewName?: string;
+  private _componentName?: string;
+  private _userName?: string;
+  private _shared?: boolean;
+  private _code?: string;
+
+  constructor() {
+    // Construtor vazio ou com inicializações adicionais
+  }
+
+  // Getters
+  get id(): any {
+    return this._id;
+  }
+
+  get companyId(): any {
+    return this._companyId;
+  }
+
+  get filter(): string | undefined {
+    return this._filter;
+  }
+
+  get name(): string | undefined {
+    return this._name;
+  }
+
+  get viewName(): string | undefined {
+    return this._viewName;
+  }
+
+  get componentName(): string | undefined {
+    return this._componentName;
+  }
+
+  get userName(): string | undefined {
+    return this._userName;
+  }
+
+  get isShared(): boolean | undefined {
+    return this._shared;
+  }
+
+  get code(): string | undefined {
+    return this._code;
+  }
+
+  setId(id: any): void {
+    this._id = id;
+  }
+
+  setCompanyId(companyId: any): void {
+    this._companyId = companyId;
+  }
+
+  setFilter(filter: string): void {
+    this._filter = filter;
+  }
+
+  setName(name: string): void {
+    this._name = name;
+  }
+
+  setViewName(viewName: string): void {
+    this._viewName = viewName;
+  }
+
+  setComponentName(componentName: string): void {
+    this._componentName = componentName;
+  }
+
+  setUserName(userName: string): void {
+    this._userName = userName;
+  }
+
+  setShared(shared: boolean): void {
+    this._shared = shared;
+  }
+
+  setCode(code: string): void {
+    this._code = code;
+  }
+
+  static createInstance(): QueryFilterEntity {
+    return new QueryFilterEntity();
+  }
+
+  static createInstanceWithValues(values: Partial<IQueryFilterEntity>): IQueryFilterEntity {
+    const instance = new QueryFilterEntity();
+
+    if (values.id !== undefined) {
+      instance.setId(values.id);
+    }
+    if (values.companyId !== undefined) {
+      instance.setCompanyId(values.companyId);
+    }
+    if (typeof values.filter === 'string') {
+      instance.setFilter(values.filter);
+    }
+    if (typeof values.name === 'string') {
+      instance.setName(values.name);
+    }
+    if (typeof values.viewName === 'string') {
+      instance.setViewName(values.viewName);
+    }
+    if (typeof values.componentName === 'string') {
+      instance.setComponentName(values.componentName);
+    }
+    if (typeof values.userName === 'string') {
+      instance.setUserName(values.userName);
+    }
+    if (typeof values.shared === 'boolean') {
+      instance.setShared(values.shared);
+    }
+    if (typeof values.code === 'string') {
+      instance.setCode(values.code);
+    }
+
+    return instance;
+  }
+}
+
+type DelegatorCallback = (error: any, id?: any) => void;
+interface ArchbaseQueryFilterDelegator {
+  getFilterById: (id: any) => IQueryFilterEntity|undefined;
+  addNewFilter: (filter: IQueryFilterEntity, onResult: DelegatorCallback) => void;
+  saveFilter: (filter: IQueryFilterEntity, onResult: DelegatorCallback) => void;
+  removeFilterBy: (filter: IQueryFilterEntity, onResult: DelegatorCallback) => void;
+  getFirstFilter: () => IQueryFilterEntity|undefined;
+  getFilters: () => IQueryFilterEntity[];
 }
 
 interface Schema {
@@ -166,17 +327,17 @@ const getFields = (props): Field[] => {
   let children = convertQueryFields(props.children);
   if (children) {
     let arrChildren = React.Children.toArray(children);
-    arrChildren.forEach((child:any)=> {
+    arrChildren.forEach((child: any) => {
       if (child.type && child.type.componentName === 'FilterFields') {
         if (child.props.children) {
           let arrChild = React.Children.toArray(child.props.children);
-          arrChild.forEach((chd:any)=> {
+          arrChild.forEach((chd: any) => {
             if (chd.type && chd.type.componentName !== 'FilterField') {
               throw new ArchbaseError('Somente filhos do tipo FilterField podem ser usados com FilterFields.');
             }
-            let values :FilterValue[] = [];
+            let values: FilterValue[] = [];
             let chld = React.Children.toArray(chd.props.children);
-            chld.forEach((val:any) => {
+            chld.forEach((val: any) => {
               if (val.type && val.type.componentName !== 'FilterFieldValue') {
                 throw new ArchbaseError('Somente filhos do tipo FilterFieldValue podem ser usados com FilterFields');
               }
@@ -221,10 +382,11 @@ const getFieldValues = (field: any, fields: string | any[]) => {
 const getQuickFields = (fields: Field[]) => {
   let result: Field[] = [];
   if (fields) {
-    fields.forEach((field:any) => {
+    fields.forEach((field: any) => {
       if (field.quickFilter === true) {
         result.push({
-          name: field.name, label: field.label,
+          name: field.name,
+          label: field.label,
           dataType: 'string',
           operator: '',
           quickFilter: false,
@@ -232,7 +394,7 @@ const getQuickFields = (fields: Field[]) => {
           sortable: false,
           listValues: [],
           searchComponent: undefined,
-          searchField: undefined
+          searchField: undefined,
         });
       }
     }, this);
@@ -240,16 +402,17 @@ const getQuickFields = (fields: Field[]) => {
   return result;
 };
 
-const getQuickFieldsSort = (fields: Field[]) :SortField[] => {
-  let result :SortField[] = [];
+const getQuickFieldsSort = (fields: Field[]): SortField[] => {
+  let result: SortField[] = [];
   if (fields) {
-    fields.forEach((field,index) => {
+    fields.forEach((field, index) => {
       if (field.quickFilterSort === true) {
         result.push({
-          name: field.name, label: field.label,
+          name: field.name,
+          label: field.label,
           selected: false,
           order: index,
-          asc_desc: 'asc'
+          asc_desc: 'asc',
         });
       }
     }, this);
@@ -257,8 +420,8 @@ const getQuickFieldsSort = (fields: Field[]) :SortField[] => {
   return result;
 };
 
-const getQuickFilterSort = (fields: any[]) : string => {
-  let result : string = '';
+const getQuickFilterSort = (fields: any[]): string => {
+  let result: string = '';
   let appendDelimiter = false;
   fields.forEach(function (field) {
     if (field.quickFilterSort === true) {
@@ -272,10 +435,10 @@ const getQuickFilterSort = (fields: any[]) : string => {
   return result;
 };
 
-const getQuickFilterSortBySelectedFields = (fields: any[]) : string => {
-  let result : string = '';
+const getQuickFilterSortBySelectedFields = (fields: any[]): string => {
+  let result: string = '';
   let appendDelimiter = false;
-  fields.forEach((field:any) => {
+  fields.forEach((field: any) => {
     if (field.selected) {
       if (appendDelimiter) {
         result += ',';
@@ -323,7 +486,7 @@ const getQuickFilterFields = (currentFilter: ArchbaseQueryFilter | null, fields:
   let appendDelimiter = false;
   if (currentFilter && currentFilter.filter) {
     if (!currentFilter.filter.selectedFields || currentFilter.filter.selectedFields.length === 0) {
-      fields.forEach((item:any) => {
+      fields.forEach((item: any) => {
         if (item.quickFilter === true) {
           if (appendDelimiter) {
             result = result + ',';
@@ -333,7 +496,7 @@ const getQuickFilterFields = (currentFilter: ArchbaseQueryFilter | null, fields:
         appendDelimiter = true;
       }, this);
     } else {
-      currentFilter.filter.selectedFields.forEach((item:any)=> {
+      currentFilter.filter.selectedFields.forEach((item: any) => {
         if (appendDelimiter) {
           result = result + ',';
         }
@@ -349,8 +512,8 @@ const getQuickFilterFields = (currentFilter: ArchbaseQueryFilter | null, fields:
 const getDefaultEmptyFilter = (): ArchbaseQueryFilter => {
   return {
     id: 0,
-    filterName: '',
-    formName: '',
+    name: '',
+    viewName: '',
     apiVersion: '',
     filter: {
       id: 'root',
@@ -459,10 +622,10 @@ const defaultConditions = (): Condition[] => {
 
 const getDefaultFilter = (props, type): ArchbaseQueryFilter => {
   let fields = getFields(props);
-  let result : ArchbaseQueryFilter = {
+  let result: ArchbaseQueryFilter = {
     id: 0,
-    filterName: '',
-    formName: '',
+    name: '',
+    viewName: '',
     apiVersion: '',
     filter: {
       id: 'root',
@@ -489,7 +652,7 @@ const getDefaultFilter = (props, type): ArchbaseQueryFilter => {
 interface QueryFieldProps {
   name: string;
   label: string;
-  dataType: 'string' | 'number' | 'date' | 'date_time' | 'time';
+  dataType: 'string' | 'number' | 'date' | 'date_time' | 'time' | 'boolean';
   operator:
     | 'contains'
     | 'startsWith'
@@ -515,7 +678,11 @@ interface QueryFieldValueProps {
   value: string;
 }
 
-class QueryFields extends Component<QueryFieldProps> {
+interface QueryFieldsProps {
+  children: ReactNode | ReactNode[];
+}
+
+class QueryFields extends Component<QueryFieldsProps> {
   static get componentName() {
     return 'QueryFields';
   }
@@ -526,7 +693,7 @@ class QueryFields extends Component<QueryFieldProps> {
   }
 }
 
-class QueryField extends React.Component {
+class QueryField extends React.Component<QueryFieldProps> {
   static get componentName() {
     return 'QueryField';
   }
@@ -559,6 +726,7 @@ export {
   QueryFieldValue,
   QueryField,
   QueryFields,
+  QueryFilterEntity,
   getDefaultFilter,
   defaultConditions,
   defaultOperators,
@@ -578,7 +746,20 @@ export {
   NORMAL,
   QUICK,
   ADVANCED,
-  OPERATORS,
+  OP_NULL,
+  OP_NOT_NULL,
+  OP_CONTAINS,
+  OP_STARTSWITH,
+  OP_ENDSWITH,
+  OP_EQUALS,
+  OP_NOT_EQUALS,
+  OP_GREATER,
+  OP_LESS,
+  OP_GREATER_OR_EQUAL,
+  OP_LESS_OR_EQUAL,
+  OP_BETWEEN,
+  OP_IN_LIST,
+  OP_NOT_IN_LIST,
 };
 
 export type {
@@ -586,6 +767,8 @@ export type {
   SortField,
   Filter,
   ArchbaseQueryFilter,
+  ArchbaseQueryFilterState,
+  ArchbaseQueryFilterDelegator,
   PositionType,
   RangeType,
   Position,
@@ -597,4 +780,6 @@ export type {
   Rule,
   Condition,
   Schema,
+  DelegatorCallback,
+  IQueryFilterEntity
 };

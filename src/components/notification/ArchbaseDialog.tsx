@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEventHandler } from 'react';
 import { Button, Flex, Paper, Text, TextInput } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import i18next from 'i18next';
@@ -85,6 +85,35 @@ export class ArchbaseDialog {
             mt="md"
           >
             Ok
+          </Button>
+        </Paper>
+      ),
+    });
+  };
+
+  static showInputDialog = (label: string, placeholder?: string, title?: string, onInputChange?: ChangeEventHandler<any> | undefined, onConfirm?: () => void, onCancel?: () => void) => {
+    modals.open({
+      title: title?title:i18next.t("Informe"),
+      children: (
+        <Paper>
+          <TextInput label={label} placeholder={placeholder} data-autofocus onChange={onInputChange}/>
+          <Button
+            onClick={() => {
+              modals.closeAll();
+              onConfirm && onConfirm();
+            }}
+            mt="md"
+          >
+            Ok
+          </Button>
+          <Button
+            onClick={() => {
+              modals.closeAll();
+              onCancel && onCancel();
+            }}
+            mt="md"
+          >
+            Cancela
           </Button>
         </Paper>
       ),
