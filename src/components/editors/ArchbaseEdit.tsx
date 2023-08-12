@@ -1,5 +1,5 @@
 import { ActionIcon, MantineNumberSize, MantineSize, TextInput, Tooltip, useMantineTheme } from '@mantine/core';
-import type { CSSProperties, FocusEventHandler, KeyboardEventHandler, ReactNode } from 'react';
+import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useState, useCallback, useRef } from 'react';
 
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';

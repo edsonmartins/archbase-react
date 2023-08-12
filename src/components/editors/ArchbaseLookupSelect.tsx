@@ -21,7 +21,7 @@ const getTextValue = (lookupDataFieldText: string | ((record: any) => string), r
   }
 };
 
-function rebuildOptions<T,ID,O>(lookupDataSource: ArchbaseDataSource<O, ID> | undefined,
+function rebuildOptions<_T,ID,O>(lookupDataSource: ArchbaseDataSource<O, ID> | undefined,
   lookupDataFieldText: string | ((record: any) => string),
   lookupDataFieldId: string): SelectItem[] | undefined {
   let options: SelectItem[] = [];

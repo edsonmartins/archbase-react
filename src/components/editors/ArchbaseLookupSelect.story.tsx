@@ -4,21 +4,16 @@ import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { useArchbaseForceUpdate, useArchbaseServiceApi } from '../hooks';
+import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { pedidosData, Pedido, Pessoa, pessoasData } from '@demo/index';
 import { ArchbaseEdit } from './ArchbaseEdit';
-import { ArchbaseNotifications } from '@components/notification';
-import { FakePessoaService } from '@demo/service/FakePessoaService';
-import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
-import { processErrorMessage } from '@components/core/exceptions';
 import { ArchbaseLookupSelect } from './ArchbaseLookupSelect';
 
 const pedidosList: Pedido[] = pedidosData;
 
 const ArchbaseLookupSelectExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const pessoaApi = useArchbaseServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   const { dataSource: dsPessoas } = useArchbaseDataSource<Pessoa, string>({ initialData: pessoasData, name: 'dsPessoas' });
   const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {

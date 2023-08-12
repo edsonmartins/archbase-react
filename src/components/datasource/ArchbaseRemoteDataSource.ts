@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import { ArchbaseDataSourceError, processErrorMessage } from '../core/exceptions';
-import type { ArchbaseApiService } from '../service';
+import type { ArchbaseRemoteApiService } from '../service';
 import { DataSourceEventNames, DataSourceOptions, ArchbaseDataSource, IDataSource } from './ArchbaseDataSource';
 import { ADVANCED, ArchbaseQueryFilter, NORMAL, QUICK } from '@components/querybuilder/ArchbaseFilterCommons';
 import { ArchbaseFilterDSL } from '@components/querybuilder/ArchbaseFilterDSL';
@@ -10,9 +10,9 @@ export interface IRemoteDataSource<T> extends IDataSource<T> {
 }
 
 export class ArchbaseRemoteDataSource<T, ID> extends ArchbaseDataSource<T, ID> implements IRemoteDataSource<T> {
-  protected service: ArchbaseApiService<T, ID>;
+  protected service: ArchbaseRemoteApiService<T, ID>;
 
-  constructor(service: ArchbaseApiService<T, ID>, name: string, options: DataSourceOptions<T>) {
+  constructor(service: ArchbaseRemoteApiService<T, ID>, name: string, options: DataSourceOptions<T>) {
     super(name, options);
     this.service = service;
   }
@@ -154,7 +154,7 @@ export class ArchbaseRemoteDataSource<T, ID> extends ArchbaseDataSource<T, ID> i
     }
   }
 
-  public applyRemoteFilter(filter: ArchbaseQueryFilter, page: number, callback?: (() => void) | undefined) {
+  public applyRemoteFilter(filter: ArchbaseQueryFilter, page: number, _callback?: (() => void) | undefined) {
     if (filter && filter.filter.filterType === QUICK && filter.filter.quickFilterText && filter.filter.quickFilterText !== '') {
       return this.getDataWithQuickFilter(filter, page);
     } else if (filter && (filter.filter.filterType === NORMAL || filter.filter.filterType === ADVANCED)) {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { ArchbaseApiService } from '../service'
+import type { ArchbaseRemoteApiService } from '../service'
 import type { Page } from '../service'
 
 import {
@@ -14,9 +14,9 @@ import {
 } from '../datasource/ArchbaseRemoteDataSource'
 import { processErrorMessage } from '../core/exceptions'
 
-export type UseMandalaRemoteDataSourceProps<T, ID> = {
+export type UseArchbaseRemoteDataSourceProps<T, ID> = {
   name: string
-  service: ArchbaseApiService<T, ID>
+  service: ArchbaseRemoteApiService<T, ID>
   filter?: string
   sort?: string[]
   loadOnStart?: boolean
@@ -40,7 +40,7 @@ export type UseMandalaRemoteDataSourceProps<T, ID> = {
   findOne?<T, ID>(id: ID): Promise<Page<T>>
 }
 
-export type UseMandalaRemoteDataSourceReturnType<T, ID> = {
+export type UseArchbaseRemoteDataSourceReturnType<T, ID> = {
   dataSource: ArchbaseRemoteDataSource<T, ID>
   isLoading: boolean
   isError: boolean
@@ -48,7 +48,7 @@ export type UseMandalaRemoteDataSourceReturnType<T, ID> = {
   clearError: () => void
 }
 
-type UseMandalaRemoteDataSourceState<T, ID> = {
+type UseArchbaseRemoteDataSourceState<T, ID> = {
   dataSource: ArchbaseRemoteDataSource<T, ID>
   isLoading: boolean
   isError: boolean
@@ -60,9 +60,9 @@ type UseMandalaRemoteDataSourceState<T, ID> = {
   pageSize?: number
   loadDataCount: number
 }
-export function useMandalaRemoteDataSource<T, ID>(
-  props: UseMandalaRemoteDataSourceProps<T, ID>
-): UseMandalaRemoteDataSourceReturnType<T, ID> {
+export function useArchbaseRemoteDataSource<T, ID>(
+  props: UseArchbaseRemoteDataSourceProps<T, ID>
+): UseArchbaseRemoteDataSourceReturnType<T, ID> {
   const {
     name,
     service,
@@ -81,7 +81,7 @@ export function useMandalaRemoteDataSource<T, ID>(
     currentPage = 0,
     loadOnStart = true
   } = props
-  const [internalState, setInternalState] = useState<UseMandalaRemoteDataSourceState<T, ID>>({
+  const [internalState, setInternalState] = useState<UseArchbaseRemoteDataSourceState<T, ID>>({
     dataSource:
       initialDataSource ??
       new ArchbaseRemoteDataSource<T, ID>(service, name, {

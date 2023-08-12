@@ -4,11 +4,13 @@ export {
   useArchbaseForceUpdate,
   useArchbaseIsMounted,
   useArchbaseWillMount,
-  useArchbaseWillUnmount
-} from './lifecycle'
-export { useArchbaseContainerDimensions } from './useArchbaseContainerDimensions'
-export { useArchbaseVisible } from './useArchbaseVisible'
-export { useArchbaseDataSource } from './useArchbaseDataSource'
-export {useArchbaseDataSourceListener} from './useArchbaseDataSourceListener'
-export {useArchbaseServiceApi} from './useArchbaseServiceApi'
-
+  useArchbaseWillUnmount,
+} from './lifecycle';
+export { useArchbaseContainerDimensions } from './useArchbaseContainerDimensions';
+export { useArchbaseVisible } from './useArchbaseVisible';
+export { useArchbaseDataSource } from './useArchbaseDataSource';
+export { useArchbaseRemoteDataSource } from './useArchbaseRemoteDataSource';
+export { useArchbaseLocalFilterDataSource } from './useArchbaseLocalFilterDataSource';
+export { useArchbaseRemoteFilterDataSource } from './useArchbaseRemoteFilterDataSource';
+export { useArchbaseDataSourceListener } from './useArchbaseDataSourceListener';
+export { useArchbaseRemoteServiceApi as useArchbaseServiceApi } from './useArchbaseRemoteServiceApi';

@@ -1,4 +1,4 @@
-import { Pedido, PessoaStatus } from "./types";
+import { Pedido, PessoaStatus, Sexo } from "./types";
 
 export const pedidosData : Pedido[] = [
     {
@@ -10,7 +10,7 @@ export const pedidosData : Pedido[] = [
         "cpf": "25936544575",
         "rg": "292597332",
         "data_nasc": "1992-04-19",
-        "sexo": "Masculino",
+        "sexo": Sexo.MASCULINO,
         "signo": "Áries",
         "mae": "Alice Raimunda",
         "pai": "Theo Guilherme Joaquim Mendes",
@@ -69,7 +69,7 @@ export const pedidosData : Pedido[] = [
         "cpf": "65858382622",
         "rg": "225418228",
         "data_nasc": "1988-03-23",
-        "sexo": "Feminino",
+        "sexo": Sexo.FEMININO,
         "signo": "Áries",
         "mae": "Brenda Francisca Clara",
         "pai": "Enrico Arthur Silveira",
@@ -128,7 +128,7 @@ export const pedidosData : Pedido[] = [
         "cpf": "69509967807",
         "rg": "187178380",
         "data_nasc": "1984-04-07",
-        "sexo": "Masculino",
+        "sexo": Sexo.MASCULINO,
         "signo": "Câncer",
         "mae": "Tereza Alessandra",
         "pai": "Severino Murilo Lucas Gomes",
@@ -187,7 +187,7 @@ export const pedidosData : Pedido[] = [
         "cpf": "88842788058",
         "rg": "212138248",
         "data_nasc": "1958-02-04",
-        "sexo": "Feminino",
+        "sexo": Sexo.FEMININO,
         "signo": "Áries",
         "mae": "Larissa Ayla Caroline",
         "pai": "Samuel Severino Almeida",
@@ -246,7 +246,7 @@ export const pedidosData : Pedido[] = [
         "cpf": "21374616257",
         "rg": "287562219",
         "data_nasc": "10/05/1962",
-        "sexo": "Masculino",
+        "sexo": Sexo.MASCULINO,
         "signo": "Touro",
         "mae": "Daiane Rita Antonella",
         "pai": "Anderson Caio Rodrigo da Mata",

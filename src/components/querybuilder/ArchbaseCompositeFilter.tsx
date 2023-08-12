@@ -1,6 +1,6 @@
 import React, { CSSProperties, Component, Fragment, ReactNode } from 'react';
 import { ArchbaseAdvancedFilter } from './ArchbaseAdvancedFilter';
-import ArchbaseSaveFilter from './ArchbaseSaveFilter';
+import {ArchbaseSaveFilter} from './ArchbaseSaveFilter';
 import Modal from 'react-modal';
 import { uniqueId } from 'lodash';
 import {

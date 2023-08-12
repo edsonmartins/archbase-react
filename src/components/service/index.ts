@@ -1,2 +1,2 @@
-export type { ArchbaseApiClient, Page} from './ArchbaseApiService'
-export { ArchbaseApiService, ArchbaseAxiosApiClient, DefaultPage } from './ArchbaseApiService'
+export type { ArchbaseRemoteApiClient, Page} from './ArchbaseRemoteApiService'
+export { ArchbaseRemoteApiService, ArchbaseAxiosRemoteApiClient, DefaultPage } from './ArchbaseRemoteApiService'

@@ -11,7 +11,8 @@ import { Provider as IOCProvider } from 'inversify-react';
 import { demoContainerIOC } from '../src/demo/index';
 import { Notifications } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
-import { ArchbaseScreenClassProvider} from '../src/components/containers/gridLayout';
+import { ArchbaseScreenClassProvider } from '../src/components/containers/gridLayout';
+import { ArchbaseGlobalProvider } from '../src/components/core';
 
 function ThemeWrapper(props: { children: React.ReactNode }) {
   const colorSchem = useDarkMode() ? 'dark' : 'light';
@@ -31,7 +32,15 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
   useHotkeys([['mod+J', () => toggleColorScheme()]]);
 
   return (
-      <IOCProvider container={demoContainerIOC}>
+    // <ArchbaseGlobalProvider
+    //   colorScheme={'dark'}
+    //   containerIOC={demoContainerIOC}
+    //   themeDark={ArchbaseDark}
+    //   themeLight={ArchbaseLight}    
+    //   toggleColorScheme={toggleColorScheme}>
+    //   {props.children}
+    // </ArchbaseGlobalProvider>
+    <IOCProvider container={demoContainerIOC}>
         <DatesProvider settings={{ locale: i18next.language }}>
           <MantineProvider
             theme={colorScheme === 'dark' ? ArchbaseDark : ArchbaseLight}
@@ -51,3 +60,4 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
 }
 
 export const decorators = [(renderStory: Function) => <ThemeWrapper>{renderStory()}</ThemeWrapper>];
+

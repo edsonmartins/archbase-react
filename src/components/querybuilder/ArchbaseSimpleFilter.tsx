@@ -12,16 +12,16 @@ import {
 } from './ArchbaseFilterCommons';
 import shallowCompare from 'react-addons-shallow-compare';
 
-import { ltrim } from 'components/core/utils';
-import { ArchbaseCheckBox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from 'components/editors';
+import { ltrim } from '@components/core/utils';
+import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors';
 import { IconArrowDown, IconArrowUp } from '@tabler/icons-react';
-import { ArchbaseList } from 'components/list';
-import { ArchbaseDataSource } from 'components/datasource';
+import { ArchbaseList } from '@components/list';
+import { ArchbaseDataSource } from '@components/datasource';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
 import { Accordion, ActionIcon, MultiSelect, Switch, Text, Tooltip } from '@mantine/core';
-import { ArchbaseCol, ArchbaseRow } from 'components/containers/gridLayout';
-import { ArchbaseDateTimerPickerRange } from 'components/editors/ArchbaseDateTimePickerRange';
-import { ArchbaseDateTimePickerEdit } from 'components/editors/ArchbaseDateTimePickerEdit';
+import { ArchbaseCol, ArchbaseRow } from '@components/containers/gridLayout';
+import { ArchbaseDateTimerPickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
+import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
 
 const rnd = (() => {
   const gen = (min: number, max: number) => max++ && [...Array(max - min)].map((_s, i) => String.fromCharCode(min + i));
@@ -502,7 +502,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
         >
           <Accordion.Control className={rule.disabled === true ? 'simple-filter-disabled' : 'simple-filter-enabled'}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <ArchbaseCheckBox
+              <ArchbaseCheckbox
                 isChecked={!rule.disabled}
                 width="24px"
                 style={{ margin: 0 }}
