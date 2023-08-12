@@ -5,8 +5,6 @@ import { DataSourceEventNames, DataSourceOptions, ArchbaseDataSource, IDataSourc
 import { ADVANCED, ArchbaseQueryFilter, NORMAL, QUICK } from '@components/querybuilder/ArchbaseFilterCommons';
 import { ArchbaseFilterDSL } from '@components/querybuilder/ArchbaseFilterDSL';
 
-
-
 export interface IRemoteDataSource<T> extends IDataSource<T> {
   applyRemoteFilter: (filter: ArchbaseQueryFilter, page: number, callback?: (() => void) | undefined) => void;
 }
@@ -140,6 +138,7 @@ export class ArchbaseRemoteDataSource<T, ID> extends ArchbaseDataSource<T, ID> i
       if (callback) {
         callback();
       }
+
       return deletedRecord;
     } catch (error) {
       const userError = processErrorMessage(error);
@@ -175,6 +174,7 @@ export class ArchbaseRemoteDataSource<T, ID> extends ArchbaseDataSource<T, ID> i
     } else {
       result = this.getDataWithoutFilter(page);
     }
+
     return result;
   }
 
@@ -182,6 +182,7 @@ export class ArchbaseRemoteDataSource<T, ID> extends ArchbaseDataSource<T, ID> i
     let result: any = undefined;
     if (this.defaultSortFields.length > 0) result = this.service.findAllWithSort(page, this.getPageSize(), this.defaultSortFields);
     else result = this.service.findAll(page, this.getPageSize());
+
     return result;
   }
 
@@ -199,6 +200,7 @@ export class ArchbaseRemoteDataSource<T, ID> extends ArchbaseDataSource<T, ID> i
     if (currentFilter && currentFilter.sort) {
       return currentFilter.sort.quickFilterSort;
     }
+
     return this.defaultSortFields;
   }
 }

@@ -92,6 +92,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
         result = item;
       }
     });
+
     return result;
   };
 
@@ -123,6 +124,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
         result = item;
       }
     });
+
     return result;
   };
 

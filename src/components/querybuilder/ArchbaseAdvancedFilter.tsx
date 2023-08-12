@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from 'react';
-import uniqueId from 'uuid';
+import { uniqueId } from 'lodash';
 import {
   getDefaultEmptyFilter,
   defaultOperators,
@@ -94,6 +94,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
         result.push({ name: field.name, label: field.label });
       }
     }, this);
+
     return result;
   };
 
@@ -107,6 +108,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
         appendDelimiter = true;
       }
     }, this);
+
     return result;
   };
 
@@ -126,7 +128,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
 
   createRuleGroup = (): Rule => {
     return {
-      id: `g-${uniqueId()}`,
+      id: `g-${uuidv4()}`,
       rules: [],
       condition: this.props.conditions![0].name,
     };
@@ -134,6 +136,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
 
   createSchema = (): Schema => {
     const { operators, conditions } = this.props;
+
     return {
       fields: this.getFields(this.props),
       operators,
@@ -160,6 +163,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
         }
       });
     }
+
     return result;
   };
 
@@ -172,6 +176,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
         }
       });
     }
+
     return result;
   };
 
@@ -184,6 +189,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
         }
       });
     }
+
     return result;
   };
 
@@ -331,6 +337,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
         }
       });
     }
+
     return result;
   };
 
@@ -343,7 +350,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
     const fields = this.getFields(this.props);
 
     return {
-      id: `r-${uniqueId()}`,
+      id: `r-${uuidv4()}`,
       field: fields[0].name,
       fieldSql: fields[0].nameSql,
       dataType: fields[0].dataType,
@@ -361,6 +368,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
         result = field;
       }
     }, this);
+
     return result;
   };
 
@@ -460,6 +468,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
         }
       });
     }
+
     return foundAtIndex;
   };
 
@@ -480,6 +489,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
         }
       }
     }
+
     return undefined;
   };
 
@@ -697,6 +707,7 @@ export class CustomSortItem<T, ID> extends Component<CustomSortItemProps<T, ID>>
         checked = item.selected;
       }
     });
+
     return checked;
   }
 
@@ -718,6 +729,7 @@ export class CustomSortItem<T, ID> extends Component<CustomSortItemProps<T, ID>>
         asc = !item.asc_desc || item.asc_desc === 'asc';
       }
     });
+
     return asc;
   }
 
@@ -803,6 +815,7 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
       schema: { isRuleGroup, getLevel },
     } = this.props;
     const level = getLevel(this.props.id);
+
     return (
       <dl
         className={'rules-group-container'}
@@ -1018,6 +1031,7 @@ class RuleItem extends Component<RuleItemProps> {
     let twoFields = operator === 'between' && dt !== 'date' && dt !== 'date_time' && dt !== 'time';
     var level = getLevel(this.props.id);
     let listValues = this.getFieldValues(field, fields);
+
     return (
       <li className={'rule-container'}>
         <ArchbaseCheckbox
@@ -1248,11 +1262,13 @@ export class ValueEditor extends Component<ValueEditorProps> {
         result.forEach((item) => {
           _value.push(item.replaceAll("'", ''));
         });
+
         return _value;
       }
     } else {
       return value.split(',');
     }
+
     return value;
   };
 
@@ -1270,6 +1286,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
         if (operator === 'between') {
           if (newValue === '' && newValue2 === '') newValue = '';
           else newValue = [newValue, newValue2];
+
           return (
             <DatePickerInput
               type="range"
@@ -1303,6 +1320,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
         if (operator === 'between') {
           if (newValue === '' && newValue2 === '') newValue = '';
           else newValue = [newValue, newValue2];
+
           return (
             <ArchbaseDateTimerPickerRange
               disabled={disabled}
@@ -1324,6 +1342,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
       } else if (dataType === 'time') {
         if (newValue === '' && newValue2 === '') newValue = '';
         else newValue = newValue + ' - ' + newValue2;
+
         return (
           <TimeInput
             disabled={disabled}
@@ -1339,6 +1358,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
       } else {
         if (listValues && listValues.length > 0 && (operator === 'notInList' || operator === 'inList')) {
           let _value = this.convertValueCombobox(newValue, dataType);
+
           return (
             <ArchbaseSelect<any, any, any>
               disabled={disabled}
@@ -1432,6 +1452,7 @@ class ValueSelector extends Component<ValueSelectorProps> {
         result = opt.label;
       }
     });
+
     return result;
   };
 
