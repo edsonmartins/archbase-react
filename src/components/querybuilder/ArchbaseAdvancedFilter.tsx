@@ -18,19 +18,19 @@ import {
   ArchbaseQueryFilter,
 } from './ArchbaseFilterCommons';
 import shallowCompare from 'react-addons-shallow-compare';
-import { ArchbaseError } from 'components/core';
-import { ltrim } from 'components/core/utils';
-import { ArchbaseDataSource } from 'components/datasource';
-import { ArchbaseCheckBox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from 'components/editors';
+import { ArchbaseError } from '@components/core';
+import { ltrim } from '@components/core/utils';
+import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors';
 import { ActionIcon, Chip, Group, Text, Tooltip } from '@mantine/core';
 import { IconArrowUp, IconSearch } from '@tabler/icons-react';
-import { ArchbaseList } from 'components/list';
+import { ArchbaseList } from '@components/list';
 import { IconArrowDown } from '@tabler/icons-react';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
-import { ArchbaseDateTimerPickerRange } from 'components/editors/ArchbaseDateTimePickerRange';
-import { ArchbaseDateTimePickerEdit } from 'components/editors/ArchbaseDateTimePickerEdit';
-import { ArchbaseSwitch } from 'components/editors/ArchbaseSwitch';
-import { ArchbaseCol, ArchbaseRow } from 'components/containers/gridLayout';
+import { ArchbaseDateTimerPickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
+import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
+import { ArchbaseSwitch } from '@components/editors/ArchbaseSwitch';
+import { ArchbaseCol, ArchbaseRow } from '@components/containers/gridLayout';
 
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
   id: string;
@@ -740,7 +740,7 @@ export class CustomSortItem<T, ID> extends Component<CustomSortItemProps<T, ID>>
         onClick={this.onClick}
         key={key}
       >
-        <ArchbaseCheckBox
+        <ArchbaseCheckbox
           label={this.props.recordData.label}
           isChecked={this.getChecked()}
           onChangeValue={this.onCheckboxChange}
@@ -817,7 +817,7 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
               display: 'inline-flex',
             }}
           >
-            <ArchbaseCheckBox
+            <ArchbaseCheckbox
               label="Não"
               isChecked={condition!.indexOf('not') >= 0}
               onChangeValue={this.onNotConditionChange}
@@ -1020,7 +1020,7 @@ class RuleItem extends Component<RuleItemProps> {
     let listValues = this.getFieldValues(field, fields);
     return (
       <li className={'rule-container'}>
-        <ArchbaseCheckBox
+        <ArchbaseCheckbox
           label=""
           style={{ margin: 0, width: '24px', height: '32px' }}
           isChecked={!disabled}

@@ -3,14 +3,14 @@ import Modal from 'react-modal';
 import { CustomSortItem } from './ArchbaseAdvancedFilter';
 import { cloneDeep } from 'lodash';
 import { getQuickFieldsSort, getQuickFields, ArchbaseQueryFilter, Field, SortField } from './ArchbaseFilterCommons';
-import { ArchbaseCheckBox } from 'components/editors';
+import { ArchbaseCheckbox } from '@components/editors';
 import { ActionIcon, Box, Button, Paper, Text, Tooltip } from '@mantine/core';
-import { ArchbaseDataSource } from 'components/datasource';
-import { ArchbaseList } from 'components/list';
+import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseList } from '@components/list';
 import { IconArrowDown } from '@tabler/icons-react';
 import { IconArrowUp } from '@tabler/icons-react';
-import { ArchbaseCol, ArchbaseRow } from 'components/containers/gridLayout';
-import { ArchbaseForm } from 'components/containers/form';
+import { ArchbaseCol, ArchbaseRow } from '@components/containers/gridLayout';
+import { ArchbaseForm } from '@components/containers/form';
 
 interface ArchbaseFilterSelectFieldsProps {
   currentFilter: ArchbaseQueryFilter;
@@ -72,7 +72,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
         });
 
         return (
-          <ArchbaseCheckBox
+          <ArchbaseCheckbox
             label={sl.label}
             isChecked={checked}
             //option={sl}
@@ -236,7 +236,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
               }}
             >
               <Text style={{ fontWeight: '700' }}>{'Selecione os campos p/ o filtro rápido:'}</Text>
-              <ArchbaseCheckBox
+              <ArchbaseCheckbox
                 isChecked={this.state.allChecked}
                 trueValue={true}
                 falseValue={false}

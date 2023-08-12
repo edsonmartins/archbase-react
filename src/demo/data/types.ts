@@ -3,6 +3,11 @@ export enum PessoaStatus {
   REJEITADO,
   PENDENTE
 }
+
+export enum Sexo {
+  MASCULINO="Masculino",
+  FEMININO="Feminino"
+}
 export interface Pessoa {
   id: number;
   nome: string;
@@ -10,7 +15,7 @@ export interface Pessoa {
   cpf?: string;
   rg?: string;
   data_nasc?: string;
-  sexo?: string;
+  sexo?: Sexo;
   signo?: string;
   mae?: string;
   pai?: string;

@@ -1,94 +1,74 @@
-import { Button } from '@mantine/core';
-import { ArchbaseCheckBox, ArchbaseEdit } from 'components/editors';
-import { ArchbaseDialog } from 'components/notification';
-import React, { Component } from 'react';
+import { Button, Group, Modal } from '@mantine/core';
+import { ArchbaseForm } from '@components/containers/form';
+import { ArchbaseCheckbox, ArchbaseEdit } from '@components/editors';
+import { ArchbaseDialog } from '@components/notification';
+import React, { useState } from 'react';
 
 interface ArchbaseSaveFilterProps {
   title: string;
   id: string;
-  onClickOk?: (event?: React.MouseEvent) => void;
+  onClickOk?: (filterName: string, shared: boolean) => void;
   onClickCancel?: (event?: React.MouseEvent) => void;
   modalOpen?: string;
   placeholder?: string;
 }
 
-class ArchbaseSaveFilter extends Component<ArchbaseSaveFilterProps> {
-  private edFilterName: any;
-  private edFilterPublic: any;
-  constructor(props: ArchbaseSaveFilterProps) {
-    super(props);
-    this.edFilterName = React.createRef();
-    this.edFilterPublic = React.createRef();
-  }
-  onClick = (id: string, event: React.MouseEvent) => {
+export const ArchbaseSaveFilter: React.FC<ArchbaseSaveFilterProps> = ({
+  title,
+  id,
+  onClickCancel,
+  onClickOk,
+  modalOpen,
+  placeholder,
+}) => {
+  const [filterName, setFilterName] = useState<string>();
+  const [shared, setShared] = useState(true);
+
+  const onClick = (id: string, event: React.MouseEvent) => {
     if (id === 'btnOK') {
-      if (!this.edFilterName.current.value || this.edFilterName.current.value === '') {
+      if (!filterName || filterName === '') {
         ArchbaseDialog.showWarning('Informe o nome do filtro.');
         return;
-      } else if (!this.edFilterPublic.current.value) {
-        ArchbaseDialog.showWarning('Informe se o filtro é público.');
-        return;
       }
-      if (this.props.onClickOk) {
-        this.props.onClickOk(event);
+      if (onClickOk) {
+        onClickOk(filterName, shared);
       }
     } else if (id === 'btnCancel') {
-      if (this.props.onClickCancel) {
-        this.props.onClickCancel(event);
+      if (onClickCancel) {
+        onClickCancel(event);
       }
     }
   };
 
-  onCloseButton() {
-    if (this.props.onClickCancel) {
-      this.props.onClickCancel();
+  const onCloseButton = () => {
+    if (onClickCancel) {
+      onClickCancel();
     }
-  }
+  };
 
-  render() {
-    return (
-      <ArchbaseModal
-        title={this.props.title}
-        id={this.props.id}
-        primary
-        showHeaderColor={true}
-        showContextIcon={false}
-        isOpen={this.props.modalOpen === this.props.id}
-        onCloseButton={this.onCloseButton}
-        withScroll={false}
-        hideExternalScroll={true}
-      >
-        <ModalActions>
-          {this.positionUserActions === 'first' ? (this.hasUserActions ? this.getUserActions() : null) : null}
-          <Button onClick={(event)=>this.onClick("btnOK",event)}>
-            OK
-          </Button>{' '}
-          <Button color="red" onClick={(event)=>this.onClick("btnCancel",event)}>
-            Fechar
-          </Button>
-          {this.positionUserActions === 'last' ? (this.hasUserActions ? this.getUserActions() : null) : null}
-        </ModalActions>
-        <ArchbaseForm inline>
-          <ArchbaseFormGroup row={false}>
-            <ArchbaseEdit
-              ref={this.edFilterName}
-              placeHolder={this.props.placeholder}
-              style={{ width: '100%' }}
-            />
-          </ArchbaseFormGroup>
-          <ArchbaseFormGroup>
-            <ArchbaseCheckBox
-              ref={this.edFilterPublic}
-              valueChecked={true}
-              valueUnchecked={false}
-              small={{ size: 8, push: 2 }}
-              value="Filtro público ?"
-            />
-          </ArchbaseFormGroup>
-        </ArchbaseForm>
-      </ArchbaseModal>
-    );
-  }
-}
+  return (
+    <Modal title={title} id={id} opened={modalOpen === id} onClose={onCloseButton}>
+      <Group>
+        <Button onClick={(event) => onClick('btnOK', event)}>OK</Button>{' '}
+        <Button color="red" onClick={(event) => onClick('btnCancel', event)}>
+          Fechar
+        </Button>
+      </Group>
+      <ArchbaseForm>
+        <ArchbaseEdit
+          placeholder={placeholder}
+          style={{ width: '100%' }}
+          onChangeValue={(value: any) => setFilterName(value)}
+        />
+        <ArchbaseCheckbox
+          trueValue={true}
+          falseValue={false}
+          onChangeValue={(value: any) => setShared(value === true)}
+          label="Filtro compartilhado ?"
+        />
+      </ArchbaseForm>
+    </Modal>
+  );
+};
 
-export default ArchbaseSaveFilter;
+

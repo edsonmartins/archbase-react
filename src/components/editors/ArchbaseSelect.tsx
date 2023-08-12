@@ -276,7 +276,7 @@ export function ArchbaseSelect<T, ID, O>({
         onDropdownClose={onDropdownClose}
         limit={limit}
         nothingFound={nothingFound}
-        zIndex={9999}
+        zIndex={zIndex}
         dropdownPosition={dropdownPosition}
       />
     </ArchbaseSelectProvider>

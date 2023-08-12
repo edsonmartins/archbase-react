@@ -1,13 +1,13 @@
 /* eslint class-methods-use-this: "off" */
 import { inject, injectable } from 'inversify';
-import { ArchbaseApiClient, ArchbaseApiService, DefaultPage, Page } from '@components/service';
+import { ArchbaseRemoteApiClient, ArchbaseRemoteApiService, DefaultPage, Page } from '@components/service';
 import { Pessoa } from '@demo/data/types';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { pessoasData } from '@demo/data/pessoasData';
 
 @injectable()
-export class FakePessoaService extends ArchbaseApiService<Pessoa, number> {
-  constructor(@inject(API_TYPE.ApiClient) client: ArchbaseApiClient) {
+export class FakePessoaService extends ArchbaseRemoteApiService<Pessoa, number> {
+  constructor(@inject(API_TYPE.ApiClient) client: ArchbaseRemoteApiClient) {
     super(client);
   }
 

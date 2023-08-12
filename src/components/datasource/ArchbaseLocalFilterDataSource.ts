@@ -1,14 +1,13 @@
-import { DataSourceOptions } from './ArchbaseDataSource';
+import { ArchbaseDataSource, DataSourceOptions } from './ArchbaseDataSource';
 import {
   ArchbaseQueryFilterDelegator,
   DelegatorCallback,
   IQueryFilterEntity,
   QueryFilterEntity,
 } from '@components/querybuilder/ArchbaseFilterCommons';
-import { ArchbaseRemoteDataSource } from '.';
-import { ArchbaseRemoteApiService } from '@components/service';
 
-export class RemoteFilter {
+
+export class LocalFilter {
   id?: any;
   companyId?: any;
   filter?: string;
@@ -19,17 +18,17 @@ export class RemoteFilter {
   shared?: boolean;
   code?: string;
 
-  constructor(data: Partial<RemoteFilter> = {}) {
+  constructor(data: Partial<LocalFilter> = {}) {
     Object.assign(this, data);
   }
 }
 
-export class ArchbaseRemoteFilterDataSource
-  extends ArchbaseRemoteDataSource<RemoteFilter, number>
+export class ArchbaseLocalFilterDataSource
+  extends ArchbaseDataSource<LocalFilter, number>
   implements ArchbaseQueryFilterDelegator
 {
-  constructor(service: ArchbaseRemoteApiService<RemoteFilter, number>, name: string, options: DataSourceOptions<RemoteFilter>) {
-    super(service, name, options);
+  constructor(name: string, options: DataSourceOptions<LocalFilter>) {
+    super(name, options);
   }
 
   public getFilterById(id: any): IQueryFilterEntity | undefined {
@@ -54,7 +53,7 @@ export class ArchbaseRemoteFilterDataSource
   }
 
   public async addNewFilter(filter: IQueryFilterEntity, onResult: DelegatorCallback){
-    this.insert(new RemoteFilter({
+    this.insert(new LocalFilter({
       id: filter.id,
       code: filter.code,
       name: filter.name,
@@ -99,7 +98,7 @@ export class ArchbaseRemoteFilterDataSource
 
   public getFilters(): IQueryFilterEntity[] {
     if (this.getTotalRecords() > 0) {
-      return this.browseRecords().map((filter: RemoteFilter) =>
+      return this.browseRecords().map((filter: LocalFilter) =>
         QueryFilterEntity.createInstanceWithValues({
           id: filter.id,
           name: filter.name,

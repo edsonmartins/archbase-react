@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { ArchbaseApiService } from '../service'
+import type { ArchbaseRemoteApiService } from '../service'
 import type { Page } from '../service'
 
 import {
@@ -10,11 +10,11 @@ import {
   DataSourceEventNames,  
 } from '../datasource'
 import { processErrorMessage } from '../core/exceptions'
-import { ArchbaseRemoteFilterDataSource, RemoteFilter } from 'components/datasource/ArchbaseRemoteFilterDataSource'
+import { ArchbaseRemoteFilterDataSource, RemoteFilter } from '@components/datasource/ArchbaseRemoteFilterDataSource'
 
-export type UseMandalaRemoteFilterDataSourceProps= {
+export type UseArchbaseRemoteFilterDataSourceProps= {
   name: string
-  service: ArchbaseApiService<RemoteFilter, number>
+  service: ArchbaseRemoteApiService<RemoteFilter, number>
   filter?: string
   sort?: string[]
   loadOnStart?: boolean
@@ -38,7 +38,7 @@ export type UseMandalaRemoteFilterDataSourceProps= {
   findOne?<T, ID>(id: ID): Promise<Page<T>>
 }
 
-export type UseMandalaRemoteFilterDataSourceReturnType = {
+export type UseArchbaseRemoteFilterDataSourceReturnType = {
   dataSource: ArchbaseRemoteFilterDataSource
   isLoading: boolean
   isError: boolean
@@ -46,7 +46,7 @@ export type UseMandalaRemoteFilterDataSourceReturnType = {
   clearError: () => void
 }
 
-type UseMandalaRemoteFilterDataSourceState = {
+type UseArchbaseRemoteFilterDataSourceState = {
   dataSource: ArchbaseRemoteFilterDataSource
   isLoading: boolean
   isError: boolean
@@ -58,9 +58,9 @@ type UseMandalaRemoteFilterDataSourceState = {
   pageSize?: number
   loadDataCount: number
 }
-export function useMandalaRemoteFilterDataSource(
-  props: UseMandalaRemoteFilterDataSourceProps
-): UseMandalaRemoteFilterDataSourceReturnType {
+export function useArchbaseRemoteFilterDataSource(
+  props: UseArchbaseRemoteFilterDataSourceProps
+): UseArchbaseRemoteFilterDataSourceReturnType {
   const {
     name,
     service,
@@ -79,7 +79,7 @@ export function useMandalaRemoteFilterDataSource(
     currentPage = 0,
     loadOnStart = true
   } = props
-  const [internalState, setInternalState] = useState<UseMandalaRemoteFilterDataSourceState>({
+  const [internalState, setInternalState] = useState<UseArchbaseRemoteFilterDataSourceState>({
     dataSource:
       initialDataSource ??
       new ArchbaseRemoteFilterDataSource(service, name, {

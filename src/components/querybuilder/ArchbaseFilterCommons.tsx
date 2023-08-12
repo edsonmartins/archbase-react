@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import { FilterField, FilterFields, FilterFieldValue } from './ArchbaseAdvancedFilter';
-import { ArchbaseError } from 'components/core';
+import { ArchbaseError } from '@components/core';
+import { MaskPattern } from '@components/editors';
 
 const QUICK_FILTER_INDEX = -2;
 const NEW_FILTER_INDEX = -1;
@@ -671,6 +672,8 @@ interface QueryFieldProps {
   quickFilterSort: boolean;
   searchComponent?: any;
   children?: ReactNode | ReactNode[] | undefined;
+  mask?: MaskPattern | Function | string;
+  filterWithMask?: boolean;
 }
 
 interface QueryFieldValueProps {
@@ -702,6 +705,7 @@ class QueryField extends React.Component<QueryFieldProps> {
     quickFilter: true,
     quickFilterSort: false,
     operator: '=',
+    mask:''
   };
   render() {
     return null;

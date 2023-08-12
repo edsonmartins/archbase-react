@@ -25,11 +25,11 @@ import {
   getDefaultEmptyFilter,
 } from './ArchbaseFilterCommons';
 import { endOfMonth } from 'date-fns';
-import { processErrorMessage } from 'components/core/exceptions';
-import { ArchbaseDialog } from 'components/notification';
+import { processErrorMessage } from '@components/core/exceptions';
+import { ArchbaseDialog } from '@components/notification';
 import { Button, Tooltip } from '@mantine/core';
 import { IconCalendar, IconClearFormatting, IconFilter, IconSubtask } from '@tabler/icons-react';
-import { ArchbaseEdit } from 'components/editors';
+import { ArchbaseEdit } from '@components/editors';
 import { IconCalendarDue } from '@tabler/icons-react';
 import { ArchbaseFilterSelectFields } from './ArchbaseFilterSelectFields';
 import { ArchbaseFilterSelectRange } from './ArchbaseFilterSelectRange';

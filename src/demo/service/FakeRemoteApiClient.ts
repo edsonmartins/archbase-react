@@ -1,12 +1,12 @@
 /* eslint max-classes-per-file: "off" */
 import 'reflect-metadata'
 import { inject, injectable } from 'inversify'
-import { ArchbaseApiClient } from '@components/service'
+import { ArchbaseRemoteApiClient } from '@components/service'
 import { ArchbaseAuthenticator } from '@components/auth'
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes'
 
 @injectable()
-export class FakeApiClient implements ArchbaseApiClient {
+export class FakeRemoteApiClient implements ArchbaseRemoteApiClient {
   protected authenticator: ArchbaseAuthenticator
 
   constructor(@inject(API_TYPE.Authenticator) authenticator: ArchbaseAuthenticator) {

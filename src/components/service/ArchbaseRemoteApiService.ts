@@ -36,7 +36,7 @@ export interface Sort {
   empty: boolean
 }
 
-export interface ArchbaseApiClient {
+export interface ArchbaseRemoteApiClient {
   get<T>(url: string, headers?: Record<string, string>): Promise<T>
   post<T, R>(url: string, data: T, headers?: Record<string, string>): Promise<R>
   put<T, R>(url: string, data: T, headers?: Record<string, string>): Promise<R>
@@ -44,7 +44,7 @@ export interface ArchbaseApiClient {
 }
 
 @injectable()
-export class ArchbaseAxiosApiClient implements ArchbaseApiClient {
+export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   protected authenticator: ArchbaseAuthenticator
 
   constructor(@inject(API_TYPE.Authenticator) authenticator: ArchbaseAuthenticator) {
@@ -101,10 +101,10 @@ export class ArchbaseAxiosApiClient implements ArchbaseApiClient {
 }
 
 @injectable()
-export abstract class ArchbaseApiService<T, ID> {
-  protected readonly client: ArchbaseApiClient
+export abstract class ArchbaseRemoteApiService<T, ID> {
+  protected readonly client: ArchbaseRemoteApiClient
 
-  constructor(client: ArchbaseApiClient) {
+  constructor(client: ArchbaseRemoteApiClient) {
     this.client = client
   }
 

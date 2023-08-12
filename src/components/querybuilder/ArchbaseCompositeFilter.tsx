@@ -1,6 +1,6 @@
 import React, { CSSProperties, Component, Fragment, ReactNode } from 'react';
 import { ArchbaseAdvancedFilter } from './ArchbaseAdvancedFilter';
-import ArchbaseSaveFilter from './ArchbaseSaveFilter';
+import {ArchbaseSaveFilter} from './ArchbaseSaveFilter';
 import Modal from 'react-modal';
 import uniqueId from 'uuid';
 import {
@@ -20,8 +20,8 @@ import {
 import { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter';
 import shallowCompare from 'react-addons-shallow-compare';
 import { Badge, Button, Group, Menu, Radio, Text, Tooltip } from '@mantine/core';
-import { ArchbaseDataSource } from 'components/datasource';
-import { ArchbaseList } from 'components/list';
+import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseList } from '@components/list';
 import { IconDeviceFloppy, IconDoorExit, IconFilter, IconPlus, IconTrash } from '@tabler/icons-react';
 
 interface ArchbaseCompositeFilterProps {

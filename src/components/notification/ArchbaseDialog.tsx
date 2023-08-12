@@ -2,7 +2,7 @@ import React, { ChangeEventHandler } from 'react';
 import { Button, Flex, Paper, Text, TextInput } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import i18next from 'i18next';
-import { IconBug, IconCircleFilled, IconOctagonFilled, IconTriangle} from '@tabler/icons-react';
+import { IconBug, IconCircleFilled, IconTriangle} from '@tabler/icons-react';
 
 export class ArchbaseDialog {
 

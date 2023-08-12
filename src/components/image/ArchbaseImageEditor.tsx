@@ -14,24 +14,6 @@ export interface ArchbaseImageEditorProps {
   avoidChangesNotSavedAlertOnLeave?: boolean
 }
 
-const blackTheme = {
-  palette: {
-    'bg-secondary': 'green',
-    'bg-primary': 'red',
-    'bg-primary-active': 'blue',
-    'accent-primary': 'yellow',
-    'accent-primary-active': 'silver',
-    'icons-primary': 'black',
-    'icons-secondary': 'white',
-    'borders-secondary': 'green',
-    'borders-primary': 'red',
-    'borders-strong': 'marrom',
-    'light-shadow': 'preto',
-    'warning': 'yellow',
-
-  }
-}
-
 export function ArchbaseImageEditor({
   src,
   language = 'pt_br',
@@ -44,9 +26,6 @@ export function ArchbaseImageEditor({
 }: ArchbaseImageEditorProps) {
   const closeImgEditor = () => {};
   const theme = useMantineTheme();
-
-  console.log(theme);
-
   return (
     <div>
       <FilerobotImageEditor

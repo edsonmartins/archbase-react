@@ -3,27 +3,79 @@ import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
-import { useArchbaseForceUpdate } from '../../hooks';
+import {
+  useArchbaseForceUpdate,
+  useArchbaseLocalFilterDataSource,
+  useArchbaseRemoteDataSource,
+} from '../../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { Pessoa, pessoasData } from '@demo/index';
 import { ArchbaseQueryBuilder } from '../ArchbaseQueryBuilder';
+import { t } from 'i18next';
 import {
   ArchbaseQueryFilter,
+  ArchbaseQueryFilterDelegator,
   ArchbaseQueryFilterState,
   OP_CONTAINS,
+  OP_EQUALS,
   QueryField,
+  QueryFieldValue,
   QueryFields,
   getDefaultEmptyFilter,
 } from '../ArchbaseFilterCommons';
+import { LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
+import { FakePessoaService } from '@demo/service/FakePessoaService';
+import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
+import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
+import { ArchbaseNotifications } from '@components/notification';
+import { MaskPattern } from '@components/editors';
 
-const ArchbaseEditExample = () => {
+const filters: LocalFilter[] = [];
+
+const ArchbaseQueryBuilderExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
+  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
+  /**
+   * Criando dataSource remoto
+   * @param dataSource Fonte de dados
+   */
+  const {
+    dataSource: dsPessoas,
+    isLoading,
+    error,
+    isError,
+    clearError,
+  } = useArchbaseRemoteDataSource<Pessoa, number>({
+    name: 'dsPessoas',
+    service: pessoaApi,
+    pageSize: 50,
+    loadOnStart: true,
+    currentPage: 0,
+    onLoadComplete: (_dataSource) => {
+      //
+    },
+    onDestroy: (_dataSource) => {
+      //
+    },
+    onError: (error, origin) => {
+      ArchbaseNotifications.showError(t('WARNING'), error, origin);
+    },
+  });
+
+  useArchbaseDataSourceListener<Pessoa, string>({
+    dataSource: dsPessoas,
+    listener: (_event: DataSourceEvent<Pessoa>): void => {
+      //
+    },
+  });
+
   const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
     currentFilter: getDefaultEmptyFilter(),
     activeFilterIndex: -1,
     expandedFilter: false,
   });
   const filterRef = useRef<any>();
+  const { dataSource: dsFilters } = useArchbaseLocalFilterDataSource({ initialData: filters, name: 'dsFilters' });
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit();
@@ -41,33 +93,27 @@ const ArchbaseEditExample = () => {
     },
   });
 
-  const onFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
+  const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
     setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
   };
 
-  const onToggleExpandedFilter = (expanded: boolean) => {
+  const handleToggleExpandedFilter = (expanded: boolean) => {
     setFilterState({ ...filterState, expandedFilter: expanded });
   };
 
-  const onSelectedFilter = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
+  const handleSelectedFilter = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
     setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
   };
+
+  const handleSearchByFilter = () => {};
 
   const queryFields: ReactNode = useMemo(() => {
     return (
       <QueryFields>
         <QueryField name="id" label="ID" dataType="number" sortable={true} quickFilter={true} quickFilterSort={true} />
-        <QueryField name="cdPessoa" label="Código" dataType="string" sortable={true} quickFilter={true} />
         <QueryField
-          name="boEnderecoHomologado"
-          label="Endereço homologado"
-          dataType="boolean"
-          sortable={true}
-          quickFilter={true}
-        />
-        <QueryField
-          name="razaoSocial"
-          label="Razão social"
+          name="nome"
+          label="Nome da pessoa"
           dataType="string"
           sortable={true}
           quickFilter={true}
@@ -75,41 +121,98 @@ const ArchbaseEditExample = () => {
           quickFilterSort={true}
         />
         <QueryField
-          name="nome"
-          label="Nome"
+          name="sexo"
+          label="Sexo"
           dataType="string"
           sortable={true}
           quickFilter={true}
-          operator={OP_CONTAINS}
-        />
+          quickFilterSort={true}
+        >
+          <QueryFieldValue label="Masculino" value="Masculino" />
+          <QueryFieldValue label="Feminino" value="Feminino" />
+        </QueryField>
         <QueryField
           name="cpf"
           label="CPF"
           dataType="string"
           sortable={true}
           quickFilter={true}
-          operator={OP_CONTAINS}
-          quickFilterSort={true}
+          mask={MaskPattern.CPF}
         />
         <QueryField
-          name="cnpj"
-          label="CNPJ"
+          name="pai"
+          label="Nome do pai"
           dataType="string"
           sortable={true}
           quickFilter={true}
           operator={OP_CONTAINS}
+          quickFilterSort={true}
         />
         <QueryField
-          name="tpStatus"
-          label="Status"
+          name="mae"
+          label="Nome do mãe"
+          dataType="string"
+          sortable={true}
+          quickFilter={true}
+          operator={OP_CONTAINS}
+          quickFilterSort={true}
+        />
+        <QueryField
+          name="cidade"
+          label="Cidade"
+          dataType="string"
+          sortable={true}
+          quickFilter={true}
+          operator={OP_CONTAINS}
+          quickFilterSort={true}
+        />
+
+        <QueryField
+          name="Estado"
+          label="Estado"
+          dataType="string"
+          sortable={true}
+          quickFilter={true}
+          operator={OP_CONTAINS}
+          quickFilterSort={true}
+        />
+        <QueryField
+          name="email"
+          label="E-mail"
+          dataType="string"
+          sortable={true}
+          quickFilter={true}
+          operator={OP_CONTAINS}
+          quickFilterSort={true}
+        />
+        <QueryField
+          name="data_nasc"
+          label="Data nascimento"
+          dataType="date"
+          sortable={true}
+          quickFilter={true}
+          operator={OP_EQUALS}
+        />
+        <QueryField
+          name="peso"
+          label="Peso KG"
+          dataType="number"
+          sortable={true}
+          quickFilter={true}
+          operator={OP_EQUALS}
+          quickFilterSort={true}
+        />
+        <QueryField
+          name="status"
+          label="Status da pessoa"
           dataType="string"
           sortable={true}
           quickFilter={true}
           quickFilterSort={true}
         >
-          <QueryFieldValue label="ATIVO" value="ATIVO" />
-          <QueryFieldValue label="INATIVO" value="INATIVO" />
-          <QueryFieldValue label="BLOQUEADO" value="BLOQUEADO" />
+          <QueryFieldValue label="APROVADO" value="0" />
+          <QueryFieldValue label="REJEITADO" value="1" />
+          <QueryFieldValue label="PENDENTE" value="2" />
         </QueryField>
       </QueryFields>
     );
@@ -130,13 +233,13 @@ const ArchbaseEditExample = () => {
             apiVersion="1.00"
             ref={filterRef}
             expandedFilter={filterState.expandedFilter}
-            persistenceDelegator={this._dataSourceFilter}
+            persistenceDelegator={dsFilters as ArchbaseQueryFilterDelegator}
             currentFilter={filterState.currentFilter}
             activeFilterIndex={filterState.activeFilterIndex}
-            onSelectedFilter={onSelectedFilter}
-            onFilterChanged={onFilterChanged}
-            onSearchByFilter={onSearchByFilter}
-            onToggleExpandedFilter={onToggleExpandedFilter}
+            onSelectedFilter={handleSelectedFilter}
+            onFilterChanged={handleFilterChanged}
+            onSearchByFilter={handleSearchByFilter}
+            onToggleExpandedFilter={handleToggleExpandedFilter}
             width={'660px'}
             height="170px"
           >
@@ -159,16 +262,16 @@ const ArchbaseEditExample = () => {
 };
 
 export default {
-  title: 'Editors/Textarea',
-  component: ArchbaseEditExample,
+  title: 'Editors/Query Builder',
+  component: ArchbaseQueryBuilderExample,
 } as Meta;
 
 const data = [pessoasData[0]];
 
-export const Example: StoryObj<typeof ArchbaseEditExample> = {
+export const Example: StoryObj<typeof ArchbaseQueryBuilderExample> = {
   args: {
     render: () => {
-      <ArchbaseEditExample />;
+      <ArchbaseQueryBuilderExample />;
     },
   },
 };
