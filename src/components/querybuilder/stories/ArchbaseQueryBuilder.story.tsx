@@ -16,7 +16,7 @@ import {
   getDefaultEmptyFilter,
 } from '../ArchbaseFilterCommons';
 
-const ArchbaseEditExample = () => {
+const ArchbaseQueryBuilderExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
   const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
     currentFilter: getDefaultEmptyFilter(),
@@ -159,16 +159,16 @@ const ArchbaseEditExample = () => {
 };
 
 export default {
-  title: 'Editors/Textarea',
-  component: ArchbaseEditExample,
+  title: 'Editors/QueryBuilder',
+  component: ArchbaseQueryBuilderExample,
 } as Meta;
 
 const data = [pessoasData[0]];
 
-export const Example: StoryObj<typeof ArchbaseEditExample> = {
+export const Example: StoryObj<typeof ArchbaseQueryBuilderExample> = {
   args: {
     render: () => {
-      <ArchbaseEditExample />;
+      <ArchbaseQueryBuilderExample />;
     },
   },
 };

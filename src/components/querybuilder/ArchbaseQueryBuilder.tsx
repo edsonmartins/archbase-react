@@ -25,11 +25,11 @@ import {
   getDefaultEmptyFilter,
 } from './ArchbaseFilterCommons';
 import { endOfMonth } from 'date-fns';
-import { processErrorMessage } from 'components/core/exceptions';
-import { ArchbaseDialog } from 'components/notification';
+import { processErrorMessage } from '@components/core/exceptions';
+import { ArchbaseDialog } from '@components/notification';
 import { Button, Tooltip } from '@mantine/core';
 import { IconCalendar, IconClearFormatting, IconFilter, IconSubtask } from '@tabler/icons-react';
-import { ArchbaseEdit } from 'components/editors';
+import { ArchbaseEdit } from '@components/editors';
 import { IconCalendarDue } from '@tabler/icons-react';
 import { ArchbaseFilterSelectFields } from './ArchbaseFilterSelectFields';
 import { ArchbaseFilterSelectRange } from './ArchbaseFilterSelectRange';
@@ -300,7 +300,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
         () => {
           let currentFilter = this.state.currentFilter;
           currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(currentFilter, getFields(this.props));
-          let filter: IQueryFilterEntity|undefined = this.props.persistenceDelegator.getFilterById(currentFilter.id);
+          let filter: IQueryFilterEntity | undefined = this.props.persistenceDelegator.getFilterById(currentFilter.id);
           if (filter) {
             filter.setFilter(btoa(JSON.stringify(currentFilter)));
             this.props.persistenceDelegator.saveFilter(filter, (error: any) => {
@@ -411,7 +411,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
         let filter: IQueryFilterEntity | undefined = this.props.persistenceDelegator.getFilterById(currentFilter.id);
         if (filter) {
           this.props.persistenceDelegator.removeFilterBy(filter.id, (error: any) => {
-            if (error && error!==null) {
+            if (error && error !== null) {
               ArchbaseDialog.showError(processErrorMessage(error));
             } else {
               let firstFilter = this.props.persistenceDelegator.getFirstFilter();
@@ -463,6 +463,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
     if (bb.left + width > window.innerWidth - 100) {
       left = bb.right - width;
     }
+
     return {
       left,
       top: bb.bottom + 2,
@@ -602,6 +603,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
         appendDelimiter = true;
       }
     });
+
     return result;
   }
 
@@ -715,6 +717,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
         );
       }
     });
+
     return result;
   };
 
@@ -728,6 +731,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
       type = 'A';
       backgroundColor = '#007bff';
     }
+
     return (
       <div
         ref={(ref) => (this.divMain = ref)}

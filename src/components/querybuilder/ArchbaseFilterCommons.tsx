@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react';
 import { FilterField, FilterFields, FilterFieldValue } from './ArchbaseAdvancedFilter';
-import { ArchbaseError } from 'components/core';
+import { ArchbaseError } from '@components/core';
 
 const QUICK_FILTER_INDEX = -2;
 const NEW_FILTER_INDEX = -1;
@@ -273,11 +273,11 @@ class QueryFilterEntity implements IQueryFilterEntity {
 
 type DelegatorCallback = (error: any, id?: any) => void;
 interface ArchbaseQueryFilterDelegator {
-  getFilterById: (id: any) => IQueryFilterEntity|undefined;
+  getFilterById: (id: any) => IQueryFilterEntity | undefined;
   addNewFilter: (filter: IQueryFilterEntity, onResult: DelegatorCallback) => void;
   saveFilter: (filter: IQueryFilterEntity, onResult: DelegatorCallback) => void;
   removeFilterBy: (filter: IQueryFilterEntity, onResult: DelegatorCallback) => void;
-  getFirstFilter: () => IQueryFilterEntity|undefined;
+  getFirstFilter: () => IQueryFilterEntity | undefined;
   getFilters: () => IQueryFilterEntity[];
 }
 
@@ -319,6 +319,7 @@ const convertQueryFields = (children: React.ReactNode): React.ReactNode => {
       }
     }
   });
+
   return <FilterFields>{result}</FilterFields>;
 };
 
@@ -360,6 +361,7 @@ const getFields = (props): Field[] => {
       }
     });
   }
+
   return result;
 };
 
@@ -399,6 +401,7 @@ const getQuickFields = (fields: Field[]) => {
       }
     }, this);
   }
+
   return result;
 };
 
@@ -417,6 +420,7 @@ const getQuickFieldsSort = (fields: Field[]): SortField[] => {
       }
     }, this);
   }
+
   return result;
 };
 
@@ -432,6 +436,7 @@ const getQuickFilterSort = (fields: any[]): string => {
       appendDelimiter = true;
     }
   });
+
   return result;
 };
 
@@ -447,6 +452,7 @@ const getQuickFilterSortBySelectedFields = (fields: any[]): string => {
     result += field.name;
     appendDelimiter = true;
   });
+
   return result;
 };
 
@@ -478,6 +484,7 @@ const mergeSortWithFields = (sort: any[], fields: any[]): SortField[] => {
       return a.order - b.order;
     });
   }
+
   return result;
 };
 
@@ -646,6 +653,7 @@ const getDefaultFilter = (props, type): ArchbaseQueryFilter => {
   result.filter.quickFilterFieldsText = getQuickFilterFields(null, fields);
   result.sort.sortFields = mergeSortWithFields([], fields);
   result.sort.quickFilterSort = getQuickFilterSort(fields);
+
   return result;
 };
 
@@ -689,6 +697,7 @@ class QueryFields extends Component<QueryFieldsProps> {
 
   render() {
     const { children } = this.props;
+
     return <div>{children}</div>;
   }
 }
@@ -781,5 +790,5 @@ export type {
   Condition,
   Schema,
   DelegatorCallback,
-  IQueryFilterEntity
+  IQueryFilterEntity,
 };

@@ -2,7 +2,7 @@ import React, { CSSProperties, Component, Fragment, ReactNode } from 'react';
 import { ArchbaseAdvancedFilter } from './ArchbaseAdvancedFilter';
 import ArchbaseSaveFilter from './ArchbaseSaveFilter';
 import Modal from 'react-modal';
-import uniqueId from 'uuid';
+import { uniqueId } from 'lodash';
 import {
   convertQueryFields,
   getFields,
@@ -20,8 +20,8 @@ import {
 import { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter';
 import shallowCompare from 'react-addons-shallow-compare';
 import { Badge, Button, Group, Menu, Radio, Text, Tooltip } from '@mantine/core';
-import { ArchbaseDataSource } from 'components/datasource';
-import { ArchbaseList } from 'components/list';
+import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseList } from '@components/list';
 import { IconDeviceFloppy, IconDoorExit, IconFilter, IconPlus, IconTrash } from '@tabler/icons-react';
 
 interface ArchbaseCompositeFilterProps {
@@ -100,6 +100,7 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
     if (this.props.currentFilter) {
       filterType = this.props.currentFilter.filter.filterType;
     }
+
     return (
       <Modal
         id={this.props.id}
@@ -381,6 +382,7 @@ class FilterItem extends Component<FilterItemProps> {
     }
 
     if (this.props.recordData.disabled) className += ' disabled';
+
     return (
       <div className={className} style={style} onClick={this.onClick}>
         <Text>{this.props.recordData.filterName}</Text>
