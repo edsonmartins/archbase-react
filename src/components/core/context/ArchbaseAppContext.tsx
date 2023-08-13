@@ -9,6 +9,9 @@ interface ArchbaseAppContextValues {
   selectedCompany: any | null;
   theme: MantineTheme | null;
   iocContainer: Container | null;
+  dateFormat: string;
+  dateTimeFormat: string;
+  timeFormat: string;
 }
 
 const ArchbaseAppContext = createContext<ArchbaseAppContextValues>({
@@ -17,21 +20,39 @@ const ArchbaseAppContext = createContext<ArchbaseAppContextValues>({
   selectedCompany: null,
   theme: null,
   iocContainer: null,
+  dateFormat: 'dd/MM/yyyy',
+  dateTimeFormat: 'dd/MM/yyyy HH:mm:ss',
+  timeFormat: 'HH:mm:ss',
 });
 
 interface ArchbaseAppProviderProps {
-    children: ReactNode | ReactNode[]
-    user: any | null;
+  children?: ReactNode | ReactNode[];
+  user: any | null;
   owner: string | null;
   selectedCompany: any | null;
   theme: MantineTheme | null;
-  iocContainer: any;
+  iocContainer?: any;
+  dateFormat?: string;
+  dateTimeFormat?: string;
+  timeFormat?: string;
 }
 
-// Remova o provedor interno para evitar a dependência circular
-const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({ user, owner, selectedCompany, children, theme,iocContainer }) => {
+
+const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
+  user,
+  owner,
+  selectedCompany,
+  children,
+  theme,
+  iocContainer,
+  dateFormat= 'dd/MM/yyyy',
+  dateTimeFormat= 'dd/MM/yyyy HH:mm:ss',
+  timeFormat= 'HH:mm:ss',
+}) => {
   return (
-    <ArchbaseAppContext.Provider value={{ user,owner,selectedCompany,theme,iocContainer }}>
+    <ArchbaseAppContext.Provider
+      value={{ user, owner, selectedCompany, theme, iocContainer, dateFormat, dateTimeFormat, timeFormat }}
+    >
       {children}
     </ArchbaseAppContext.Provider>
   );
@@ -44,6 +65,5 @@ const useArchbaseAppContext = () => {
   }
   return context;
 };
-
 
 export { ArchbaseAppContext, ArchbaseAppProvider, useArchbaseAppContext };

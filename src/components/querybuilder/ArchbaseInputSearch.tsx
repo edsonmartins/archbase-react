@@ -8,7 +8,7 @@ interface ArchbaseInputSearchProps {
   onSearchClick?: () => void;
 }
 
-export default class ArchbaseInputSearch extends Component<ArchbaseInputSearchProps> {
+export class ArchbaseInputSearch extends Component<ArchbaseInputSearchProps> {
   render() {
     const { theme, onSearchClick } = this.props;
     return (

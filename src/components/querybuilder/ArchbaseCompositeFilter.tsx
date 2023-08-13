@@ -398,4 +398,4 @@ class FilterItem extends Component<FilterItemProps> {
   };
 }
 
-export default ArchbaseCompositeFilter;
+export {ArchbaseCompositeFilter, ArchbaseDetailedFilter};

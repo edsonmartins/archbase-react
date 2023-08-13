@@ -1,7 +1,7 @@
 import React, { Component, ReactNode, RefObject } from 'react';
 import DateObject from 'react-date-object';
 import shallowCompare from 'react-addons-shallow-compare';
-import ArchbaseCompositeFilter from './ArchbaseCompositeFilter';
+import {ArchbaseCompositeFilter} from './ArchbaseCompositeFilter';
 import { uniqueId } from 'lodash';
 import {
   getDefaultFilter,

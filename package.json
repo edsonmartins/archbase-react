@@ -54,7 +54,7 @@
     "@mantine/modals": "^6.0.19",
     "@mantine/notifications": "^6.0.19",
     "@mantine/tiptap": "^6.0.19",
-    "@tabler/icons": "^2.28.0",
+    "@tabler/icons": "^2.30.0",
     "@tabler/icons-react": "^2.30.0",
     "axios": "^1.4.0",
     "clsx": "^1.2.1",

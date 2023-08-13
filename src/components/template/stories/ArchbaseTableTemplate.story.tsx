@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo, useRef, useState } from 'react';
-import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
+import { Grid} from '@mantine/core';
 import {
   useArchbaseDataSource,
   useArchbaseDataSourceListener,
@@ -9,19 +9,7 @@ import {
 } from '@hooks/index';
 import { Meta, StoryObj } from '@storybook/react';
 import { Pessoa, pessoasData } from '@demo/index';
-import { ArchbaseQueryBuilder } from '../ArchbaseQueryBuilder';
 import { t } from 'i18next';
-import {
-  ArchbaseQueryFilter,
-  ArchbaseQueryFilterDelegator,
-  ArchbaseQueryFilterState,
-  OP_CONTAINS,
-  OP_EQUALS,
-  QueryField,
-  QueryFieldValue,
-  QueryFields,
-  getDefaultEmptyFilter,
-} from '../ArchbaseFilterCommons';
 import { LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
 import { FakePessoaService } from '@demo/service/FakePessoaService';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
@@ -29,10 +17,41 @@ import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemote
 import { ArchbaseNotifications } from '@components/notification';
 import { MaskPattern } from '@components/editors';
 import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+import {
+  ArchbaseQueryFilter,
+  ArchbaseQueryFilterState,
+  OP_CONTAINS,
+  OP_EQUALS,
+  QueryField,
+  QueryFieldValue,
+  QueryFields,
+  getDefaultEmptyFilter,
+} from '@components/querybuilder';
+import { ArchbaseTableTemplate } from '../ArchbaseTableTemplate';
+import { ArchbaseDataTableColumn, ArchbaseStatusRender, ArchbaseStatusType, ArchbaseTableRowActions, Columns } from '@components/datatable';
+import { PessoaStatus } from '@demo/data/types';
 
 const filters: LocalFilter[] = [];
 
-const ArchbaseQueryBuilderExample = () => {
+const StatusValues: ArchbaseStatusType[] = [
+  {
+    value: PessoaStatus.APROVADO,
+    label: 'Aprovado',
+    color: 'green'
+  },
+  {
+    value: PessoaStatus.REJEITADO,
+    label: 'Rejeitado',
+    color: 'red'
+  },
+  {
+    value: PessoaStatus.PENDENTE,
+    label: 'Pendente',
+    color: 'orange'
+  }
+]
+
+const ArchbaseTableTemplateExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
   const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   /**
@@ -48,7 +67,7 @@ const ArchbaseQueryBuilderExample = () => {
   } = useArchbaseRemoteDataSource<Pessoa, number>({
     name: 'dsPessoas',
     service: pessoaApi,
-    pageSize: 50,
+    pageSize: 10,
     loadOnStart: true,
     currentPage: 0,
     onLoadComplete: (_dataSource) => {
@@ -218,62 +237,75 @@ const ArchbaseQueryBuilderExample = () => {
     );
   }, []);
 
+  const columns: ReactNode = useMemo(() => {
+    return (
+      <Columns>
+        <ArchbaseDataTableColumn<Pessoa> dataField="id" dataType="uuid" header={'Id'} enableClickToCopy={true} />
+        <ArchbaseDataTableColumn<Pessoa> dataField="nome" dataType="text" header={'Nome da pessoa'} />
+        <ArchbaseDataTableColumn<Pessoa>
+          dataField="data_nasc"
+          dataType="date"
+          header='Data nascimento'
+          inputFilterType="date"
+        />
+        <ArchbaseDataTableColumn<Pessoa>
+          dataField="creditoOK"
+          dataType="boolean"
+          header='Crédito OK?'
+        />
+        <ArchbaseDataTableColumn<Pessoa>
+          dataField="status"
+          dataType="enum"
+          inputFilterType="select"
+          enumValues={StatusValues}
+          header={'Status'}
+          render={(data): ReactNode => {
+            return <ArchbaseStatusRender currentValue={`${data.getValue()}`} values={StatusValues} />;
+          }} 
+        />        
+      </Columns>
+    );
+  }, []);
+
   return (
     <Grid>
       <Grid.Col span={12}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>QueryBuilder Filter Component</Text>
-            </Group>
-          </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}>
-            <ArchbaseQueryBuilder
-              id={'this.props.filterName'}
-              viewName={'ViewPessoa'}
-              apiVersion="1.00"
-              ref={filterRef}
-              expandedFilter={filterState.expandedFilter}
-              persistenceDelegator={dsFilters as ArchbaseQueryFilterDelegator}
-              currentFilter={filterState.currentFilter}
-              activeFilterIndex={filterState.activeFilterIndex}
-              onSelectedFilter={handleSelectedFilter}
-              onFilterChanged={handleFilterChanged}
-              onSearchByFilter={handleSearchByFilter}
-              onToggleExpandedFilter={handleToggleExpandedFilter}
-              width={'660px'}
-              height="170px"
-            >
-              {queryFields}
-            </ArchbaseQueryBuilder>
-          </ScrollArea>
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={12}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
-            </Group>
-          </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}></ScrollArea>
-        </Card>
+        <ArchbaseTableTemplate
+          title={'Pessoas'}
+          dataSource={dsPessoas}
+          pageSize={10}
+          isLoading={isLoading}
+          error={error}
+          isError={isError}
+          clearError={clearError}
+          filterOptions={{
+            activeFilterIndex: 0,
+            enabledAdvancedFilter: false,
+            apiVersion: '1.01',
+            componentName: 'templateTableExemplo',
+            viewName: 'templateTableView',
+          }}
+          columns={columns}
+          userRowActions={{
+            actions: ArchbaseTableRowActions<Pessoa>,
+          }}
+        />
       </Grid.Col>
     </Grid>
   );
 };
 
 export default {
-  title: 'Editors/Query Builder',
-  component: ArchbaseQueryBuilderExample,
+  title: 'Templates/Table template',
+  component: ArchbaseTableTemplateExample,
 } as Meta;
 
 const data = [pessoasData[0]];
 
-export const Example: StoryObj<typeof ArchbaseQueryBuilderExample> = {
+export const Example: StoryObj<typeof ArchbaseTableTemplateExample> = {
   args: {
     render: () => {
-      <ArchbaseQueryBuilderExample />;
+      <ArchbaseTableTemplateExample />;
     },
   },
 };

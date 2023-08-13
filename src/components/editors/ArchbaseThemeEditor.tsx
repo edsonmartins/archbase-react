@@ -1,15 +1,11 @@
 import {
-  ActionIcon,
   MantineNumberSize,
   MantineSize,
-  TextInput,
-  Tooltip,
-  useMantineTheme,
   Card,
   ColorPicker,
 } from '@mantine/core';
-import type { CSSProperties, FocusEventHandler, KeyboardEventHandler, ReactNode } from 'react';
-import React, { useState, useCallback, useRef } from 'react';
+import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
 
@@ -64,30 +60,9 @@ export interface ArchbaseThemeEditorProps<T, ID> {
 export function ArchbaseThemeEditor<T, ID>({
   dataSource,
   dataField,
-  disabled = false,
-  readOnly = false,
-  style,
-  placeholder,
-  label,
-  description,
-  error,
-  required,
-  size,
-  width,
-  innerRef,
   value,
-  icon,
-  onKeyDown,
-  onKeyUp,
-  onActionSearchExecute = () => {},
-  tooltipIconSearch = 'Clique aqui para Localizar',
-  onFocusExit = () => {},
-  onFocusEnter = () => {},
-  onChangeValue = () => {},
 }: ArchbaseThemeEditorProps<T, ID>) {
   const [currentValue, setCurrentValue] = useState<string>(value || '');
-  const innerComponentRef = innerRef || useRef<any>();
-  const theme = useMantineTheme();
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = currentValue;
@@ -130,21 +105,21 @@ export function ArchbaseThemeEditor<T, ID>({
     loadDataSourceFieldValue();
   }, []);
 
-  const handleChange = (event) => {
-    event.preventDefault();
-    const changedValue = event.target.value;
+  // const handleChange = (event) => {
+  //   event.preventDefault();
+  //   const changedValue = event.target.value;
 
-    event.persist();
-    setCurrentValue((_prev) => changedValue);
+  //   event.persist();
+  //   setCurrentValue((_prev) => changedValue);
 
-    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-      dataSource.setFieldValue(dataField, changedValue);
-    }
+  //   if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
+  //     dataSource.setFieldValue(dataField, changedValue);
+  //   }
 
-    if (onChangeValue) {
-      onChangeValue(event, changedValue);
-    }
-  };
+  //   if (onChangeValue) {
+  //     onChangeValue(event, changedValue);
+  //   }
+  // };
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
@@ -153,26 +128,26 @@ export function ArchbaseThemeEditor<T, ID>({
     }
   });
 
-  const handleOnFocusExit = (event) => {
-    if (onFocusExit) {
-      onFocusExit(event);
-    }
-  };
+  // const handleOnFocusExit = (event) => {
+  //   if (onFocusExit) {
+  //     onFocusExit(event);
+  //   }
+  // };
 
-  const handleOnFocusEnter = (event) => {
-    if (onFocusEnter) {
-      onFocusEnter(event);
-    }
-  };
+  // const handleOnFocusEnter = (event) => {
+  //   if (onFocusEnter) {
+  //     onFocusEnter(event);
+  //   }
+  // };
 
-  const isReadOnly = () => {
-    let _readOnly = readOnly;
-    if (dataSource && !readOnly) {
-      _readOnly = dataSource.isBrowsing();
-    }
+  // const isReadOnly = () => {
+  //   let _readOnly = readOnly;
+  //   if (dataSource && !readOnly) {
+  //     _readOnly = dataSource.isBrowsing();
+  //   }
 
-    return _readOnly;
-  };
+  //   return _readOnly;
+  // };
 
   return (
     <Card>

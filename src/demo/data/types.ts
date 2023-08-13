@@ -38,6 +38,7 @@ export interface Pessoa {
   status?: PessoaStatus;
   observacao?:string;
   codigoJson?:string;
+  creditoOK?: boolean;
 }
 
 export interface Produto {

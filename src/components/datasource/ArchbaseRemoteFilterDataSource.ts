@@ -5,7 +5,7 @@ import {
   IQueryFilterEntity,
   QueryFilterEntity,
 } from '@components/querybuilder/ArchbaseFilterCommons';
-import { ArchbaseRemoteDataSource } from '.';
+import { ArchbaseRemoteDataSource } from './ArchbaseRemoteDataSource';
 import { ArchbaseRemoteApiService } from '@components/service';
 
 export class RemoteFilter {

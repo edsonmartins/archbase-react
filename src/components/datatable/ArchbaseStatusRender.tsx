@@ -1,18 +1,18 @@
 import { Badge, Box } from '@mantine/core'
 import React from 'react'
 
-export type MandalaStatusType = {
+export type ArchbaseStatusType = {
   value: any
   label: string
   color: string
 }
 
-export interface MandalaStatusRenderProps {
+export interface ArchbaseStatusRenderProps {
   currentValue: string | undefined
-  values: MandalaStatusType[]
+  values: ArchbaseStatusType[]
 }
 
-export function MandalaStatusRender({ currentValue, values }: MandalaStatusRenderProps) {
+export function ArchbaseStatusRender({ currentValue, values }: ArchbaseStatusRenderProps) {
   const index = values.findIndex((item) => item.value.toString() === currentValue)
   if (index !== -1) {
     return (

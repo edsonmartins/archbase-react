@@ -29,7 +29,8 @@ export const pessoasData : Pessoa[] = [
 		"cor": "preto",
 		"foto": "https://randomuser.me/api/portraits/men/57.jpg",
 		"status":PessoaStatus.APROVADO,
-		"observacao":"Reprehenderit anim tempor veniam pariatur exercitation nulla officia nulla commodo labore nulla adipisicing. Ad ex minim est consequat irure occaecat eu quis esse quis dolor Lorem duis. Magna fugiat eu duis nostrud nostrud Lorem. Et Lorem aliqua eu eu laboris et minim voluptate nostrud et pariatur magna incididunt nulla."
+		"observacao":"Reprehenderit anim tempor veniam pariatur exercitation nulla officia nulla commodo labore nulla adipisicing. Ad ex minim est consequat irure occaecat eu quis esse quis dolor Lorem duis. Magna fugiat eu duis nostrud nostrud Lorem. Et Lorem aliqua eu eu laboris et minim voluptate nostrud et pariatur magna incididunt nulla.",
+		"creditoOK": true
 	},
 	{
 		"id": 2,
@@ -59,8 +60,8 @@ export const pessoasData : Pessoa[] = [
 		"cor": "vermelho",
 		"foto": "https://randomuser.me/api/portraits/women/44.jpg",
 		"status":PessoaStatus.APROVADO,
-		"observacao":"Ut aliquip magna pariatur qui nostrud ea sint duis incididunt occaecat nostrud minim do. Velit laborum ut do duis Lorem id dolor duis. Ut tempor ullamco laboris quis adipisicing commodo officia nulla tempor minim nisi tempor Lorem. Quis ex do consectetur consectetur ut adipisicing ipsum. Adipisicing non non aute do amet laborum est labore mollit pariatur consequat sunt. Sit ad anim ea irure aliquip consectetur laboris ea consectetur deserunt aliqua consectetur. Veniam eiusmod excepteur sunt ut dolore mollit consectetur laboris elit labore eu id occaecat ipsum."
-		
+		"observacao":"Ut aliquip magna pariatur qui nostrud ea sint duis incididunt occaecat nostrud minim do. Velit laborum ut do duis Lorem id dolor duis. Ut tempor ullamco laboris quis adipisicing commodo officia nulla tempor minim nisi tempor Lorem. Quis ex do consectetur consectetur ut adipisicing ipsum. Adipisicing non non aute do amet laborum est labore mollit pariatur consequat sunt. Sit ad anim ea irure aliquip consectetur laboris ea consectetur deserunt aliqua consectetur. Veniam eiusmod excepteur sunt ut dolore mollit consectetur laboris elit labore eu id occaecat ipsum.",
+		"creditoOK": true
 	},
 	{
 		"id": 3,
@@ -90,7 +91,8 @@ export const pessoasData : Pessoa[] = [
 		"cor": "amarelo",
 		"foto": "https://randomuser.me/api/portraits/men/51.jpg",
 		"status":PessoaStatus.APROVADO,
-		"observacao":"Deserunt mollit consectetur do magna pariatur dolore dolor elit ad incididunt excepteur tempor. Enim minim minim aliquip sint irure cillum qui voluptate cillum mollit laborum laboris. Labore ex commodo aliqua Lorem voluptate consectetur minim commodo ullamco enim culpa aliqua dolor. Lorem Lorem irure elit laborum voluptate proident do proident exercitation dolore qui labore excepteur."
+		"observacao":"Deserunt mollit consectetur do magna pariatur dolore dolor elit ad incididunt excepteur tempor. Enim minim minim aliquip sint irure cillum qui voluptate cillum mollit laborum laboris. Labore ex commodo aliqua Lorem voluptate consectetur minim commodo ullamco enim culpa aliqua dolor. Lorem Lorem irure elit laborum voluptate proident do proident exercitation dolore qui labore excepteur.",
+		"creditoOK": true
 	},
 	{
 		"id": 4,
@@ -120,7 +122,8 @@ export const pessoasData : Pessoa[] = [
 		"cor": "azul",
 		"foto": "https://randomuser.me/api/portraits/women/37.jpg",
 		"status":PessoaStatus.APROVADO,
-		"observacao":"Nisi id commodo reprehenderit qui. Labore deserunt nostrud enim duis non reprehenderit incididunt sint ad voluptate. Ut elit cupidatat officia voluptate adipisicing ex exercitation magna reprehenderit reprehenderit officia. Officia laboris deserunt ipsum sit tempor cupidatat. Elit ut in amet sunt nulla non reprehenderit mollit incididunt dolore eu. Aute dolor duis quis ut irure Lorem magna qui. Labore dolor aute elit reprehenderit enim."
+		"observacao":"Nisi id commodo reprehenderit qui. Labore deserunt nostrud enim duis non reprehenderit incididunt sint ad voluptate. Ut elit cupidatat officia voluptate adipisicing ex exercitation magna reprehenderit reprehenderit officia. Officia laboris deserunt ipsum sit tempor cupidatat. Elit ut in amet sunt nulla non reprehenderit mollit incididunt dolore eu. Aute dolor duis quis ut irure Lorem magna qui. Labore dolor aute elit reprehenderit enim.",
+		"creditoOK": true
 	},
 	{
 		"id": 5,
@@ -128,7 +131,7 @@ export const pessoasData : Pessoa[] = [
 		"idade": 61,
 		"cpf": "21374616257",
 		"rg": "287562219",
-		"data_nasc": "10/05/1962",
+		"data_nasc": "1962-05-10",
 		"sexo": Sexo.MASCULINO,
 		"signo": "Touro",
 		"mae": "Daiane Rita Antonella",
@@ -150,7 +153,8 @@ export const pessoasData : Pessoa[] = [
 		"cor": "azul",
 		"foto": "https://randomuser.me/api/portraits/men/79.jpg",
 		"status":PessoaStatus.APROVADO,
-		"observacao":"Voluptate anim sit nostrud laboris sunt nisi cupidatat labore consectetur. Nulla sunt consequat nostrud elit aute ad ullamco proident nulla veniam. Sunt proident dolor consequat laboris incididunt incididunt commodo velit quis pariatur. Deserunt in aliquip nulla proident sint non nostrud eu. Exercitation id aliqua mollit proident dolore aute incididunt et sit deserunt tempor."
+		"observacao":"Voluptate anim sit nostrud laboris sunt nisi cupidatat labore consectetur. Nulla sunt consequat nostrud elit aute ad ullamco proident nulla veniam. Sunt proident dolor consequat laboris incididunt incididunt commodo velit quis pariatur. Deserunt in aliquip nulla proident sint non nostrud eu. Exercitation id aliqua mollit proident dolore aute incididunt et sit deserunt tempor.",
+		"creditoOK": false
 	},
 	{
 		"id": 6,
@@ -180,7 +184,8 @@ export const pessoasData : Pessoa[] = [
 		"cor": "preto",
 		"foto": "https://randomuser.me/api/portraits/men/69.jpg",
 		"status":PessoaStatus.APROVADO,
-		"observacao":"Excepteur incididunt sit velit aliqua et in. Tempor velit id exercitation pariatur. Enim voluptate et duis aute dolor labore consequat nulla magna irure qui ullamco ut laboris. Anim exercitation tempor magna cillum cupidatat sunt laboris veniam sit ipsum duis exercitation. Veniam irure sint adipisicing fugiat ipsum veniam nulla sunt commodo aute excepteur officia et commodo. Id duis eu ullamco sit aute. Sint sit quis labore reprehenderit exercitation ipsum Lorem esse nisi ex."
+		"observacao":"Excepteur incididunt sit velit aliqua et in. Tempor velit id exercitation pariatur. Enim voluptate et duis aute dolor labore consequat nulla magna irure qui ullamco ut laboris. Anim exercitation tempor magna cillum cupidatat sunt laboris veniam sit ipsum duis exercitation. Veniam irure sint adipisicing fugiat ipsum veniam nulla sunt commodo aute excepteur officia et commodo. Id duis eu ullamco sit aute. Sint sit quis labore reprehenderit exercitation ipsum Lorem esse nisi ex.",
+		"creditoOK": true
 	},
 	{
 		"id": 7,
@@ -210,7 +215,8 @@ export const pessoasData : Pessoa[] = [
 		"cor": "preto",
 		"foto": "https://randomuser.me/api/portraits/men/70.jpg",
 		"status":PessoaStatus.APROVADO,
-		"observacao":"Consectetur id nisi deserunt esse aliquip velit duis nostrud ullamco. Aliquip nisi aute velit nisi voluptate excepteur dolore et deserunt do. Do veniam ut id laborum ipsum duis. Aute ut labore laborum Lorem aliquip pariatur nisi ex velit ipsum dolor nulla excepteur anim. Amet labore dolor labore et est labore Lorem est."
+		"observacao":"Consectetur id nisi deserunt esse aliquip velit duis nostrud ullamco. Aliquip nisi aute velit nisi voluptate excepteur dolore et deserunt do. Do veniam ut id laborum ipsum duis. Aute ut labore laborum Lorem aliquip pariatur nisi ex velit ipsum dolor nulla excepteur anim. Amet labore dolor labore et est labore Lorem est.",
+		"creditoOK": false
 	},
 	{
 		"id": 8,
@@ -240,7 +246,8 @@ export const pessoasData : Pessoa[] = [
 		"cor": "vermelho",
 		"foto": "https://randomuser.me/api/portraits/men/46.jpg",
 		"status":PessoaStatus.APROVADO,
-		"observacao":"Nisi laboris dolor velit consequat. Ea nisi consectetur fugiat minim officia aliqua consectetur aliqua. Veniam non adipisicing cupidatat tempor. Id consequat reprehenderit eiusmod anim enim ullamco. Elit nostrud adipisicing dolor dolor proident sunt elit aute deserunt pariatur enim laborum eiusmod proident. Velit excepteur eiusmod in occaecat eu."
+		"observacao":"Nisi laboris dolor velit consequat. Ea nisi consectetur fugiat minim officia aliqua consectetur aliqua. Veniam non adipisicing cupidatat tempor. Id consequat reprehenderit eiusmod anim enim ullamco. Elit nostrud adipisicing dolor dolor proident sunt elit aute deserunt pariatur enim laborum eiusmod proident. Velit excepteur eiusmod in occaecat eu.",
+		"creditoOK": true
 	},
 	{
 		"id": 9,
@@ -270,7 +277,8 @@ export const pessoasData : Pessoa[] = [
 		"cor": "amarelo",
 		"foto": "https://randomuser.me/api/portraits/men/26.jpg",
 		"status":PessoaStatus.APROVADO,
-		"observacao":"Magna irure do aliquip mollit magna dolor sit ex officia laborum tempor dolor officia. Incididunt eiusmod occaecat deserunt cupidatat ex laborum veniam ullamco enim dolor mollit magna. Quis velit laborum occaecat sit exercitation. Laboris sunt tempor deserunt cillum quis ullamco occaecat. Cupidatat in ipsum dolore in est consequat et proident. Dolore ex proident magna esse eiusmod dolor nostrud eu cupidatat eu voluptate voluptate."
+		"observacao":"Magna irure do aliquip mollit magna dolor sit ex officia laborum tempor dolor officia. Incididunt eiusmod occaecat deserunt cupidatat ex laborum veniam ullamco enim dolor mollit magna. Quis velit laborum occaecat sit exercitation. Laboris sunt tempor deserunt cillum quis ullamco occaecat. Cupidatat in ipsum dolore in est consequat et proident. Dolore ex proident magna esse eiusmod dolor nostrud eu cupidatat eu voluptate voluptate.",
+		"creditoOK": true
 	},
 	{
 		"id": 10,

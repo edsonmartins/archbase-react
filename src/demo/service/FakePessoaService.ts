@@ -29,6 +29,21 @@ export class FakePessoaService extends ArchbaseRemoteApiService<Pessoa, number> 
     })
   }
 
+  findAll(page: number, size: number): Promise<Page<Pessoa>> {
+    return new Promise<Page<Pessoa>>((resolve, _reject) => {
+      const totalPages = Math.ceil(pessoasData.length / size);
+      const indexStart = page * size;
+      const indexEnd = indexStart + size;
+      const resultPage = pessoasData.slice(indexStart, indexEnd)
+      const result: Page<Pessoa> = DefaultPage.createFromValues<Pessoa>(resultPage, pessoasData.length, totalPages, page, size);
+      setTimeout(() => {
+        resolve(result);
+      }, 3000);
+    }); 
+  }
+
+  
+
   findAllWithFilter(filter: string, page: number, size: number): Promise<Page<Pessoa>> {
     return new Promise<Page<Pessoa>>((resolve, _reject) => {
       const pessoasFiltradas = pessoasData.sort((a, b) => {

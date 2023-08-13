@@ -1,5 +1,5 @@
 import { useDarkMode } from 'storybook-dark-mode';
-import { MantineProvider, ColorSchemeProvider, ColorScheme } from '@mantine/core';
+import { MantineProvider, ColorSchemeProvider, ColorScheme, useMantineTheme } from '@mantine/core';
 import { ArchbaseDark } from './archbase-dark.theme';
 import { ArchbaseLight } from './archbase-ligth.theme';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
@@ -12,18 +12,22 @@ import { demoContainerIOC } from '../src/demo/index';
 import { Notifications } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
 import { ArchbaseScreenClassProvider } from '../src/components/containers/gridLayout';
-import { ArchbaseGlobalProvider } from '../src/components/core';
+import { ArchbaseAppContext, ArchbaseAppProvider, ArchbaseGlobalProvider } from '../src/components/core';
+
 
 function ThemeWrapper(props: { children: React.ReactNode }) {
   const colorSchem = useDarkMode() ? 'dark' : 'light';
+  const theme = useMantineTheme();
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: 'mantine-color-scheme',
     defaultValue: 'light',
     getInitialValueInEffect: true,
-  });
+  });  
 
   useEffect(() => {
     setColorScheme(colorSchem);
+    const body = window.document.body;
+    body.style.backgroundColor = colorSchem==='dark'?'black':'white';
   }, [colorSchem]);
 
   const toggleColorScheme = (value?: ColorScheme) =>
@@ -32,32 +36,18 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
   useHotkeys([['mod+J', () => toggleColorScheme()]]);
 
   return (
-    // <ArchbaseGlobalProvider
-    //   colorScheme={'dark'}
-    //   containerIOC={demoContainerIOC}
-    //   themeDark={ArchbaseDark}
-    //   themeLight={ArchbaseLight}    
-    //   toggleColorScheme={toggleColorScheme}>
-    //   {props.children}
-    // </ArchbaseGlobalProvider>
-    <IOCProvider container={demoContainerIOC}>
-        <DatesProvider settings={{ locale: i18next.language }}>
-          <MantineProvider
-            theme={colorScheme === 'dark' ? ArchbaseDark : ArchbaseLight}
-            withGlobalStyles
-            withNormalizeCSS
-          >
-            <ModalsProvider>
-              <Notifications autoClose={5000} position="top-right" />
-              <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-                {props.children}
-              </ColorSchemeProvider>
-            </ModalsProvider>
-          </MantineProvider>
-        </DatesProvider>
-      </IOCProvider>
+    <ArchbaseGlobalProvider
+      colorScheme={colorSchem}
+      containerIOC={demoContainerIOC}
+      themeDark={ArchbaseDark}
+      themeLight={ArchbaseLight}
+      toggleColorScheme={toggleColorScheme}
+    >
+      <ArchbaseAppProvider user={null} owner={null} selectedCompany={undefined} theme={theme}>
+        {props.children}
+      </ArchbaseAppProvider>
+    </ArchbaseGlobalProvider>
   );
 }
 
 export const decorators = [(renderStory: Function) => <ThemeWrapper>{renderStory()}</ThemeWrapper>];
-

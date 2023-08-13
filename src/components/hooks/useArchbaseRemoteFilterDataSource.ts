@@ -10,7 +10,7 @@ import {
   DataSourceEventNames,  
 } from '../datasource'
 import { processErrorMessage } from '../core/exceptions'
-import { ArchbaseRemoteFilterDataSource, RemoteFilter } from '@components/datasource/ArchbaseRemoteFilterDataSource'
+import { ArchbaseRemoteFilterDataSource, RemoteFilter } from '@components/datasource/index'
 
 export type UseArchbaseRemoteFilterDataSourceProps= {
   name: string

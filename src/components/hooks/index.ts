@@ -13,4 +13,4 @@ export { useArchbaseRemoteDataSource } from './useArchbaseRemoteDataSource';
 export { useArchbaseLocalFilterDataSource } from './useArchbaseLocalFilterDataSource';
 export { useArchbaseRemoteFilterDataSource } from './useArchbaseRemoteFilterDataSource';
 export { useArchbaseDataSourceListener } from './useArchbaseDataSourceListener';
-export { useArchbaseRemoteServiceApi as useArchbaseServiceApi } from './useArchbaseRemoteServiceApi';
+export { useArchbaseRemoteServiceApi } from './useArchbaseRemoteServiceApi';

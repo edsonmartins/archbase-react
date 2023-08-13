@@ -89,6 +89,16 @@ interface ArchbaseQueryFilter {
   selectedFields?: Field[];
 }
 
+interface FilterOptions {
+  currentFilter?: ArchbaseQueryFilter;
+  activeFilterIndex: number;
+  enabledAdvancedFilter: boolean;
+  apiVersion: string;
+  viewName: string;
+  componentName: string;  
+  onApplyFilter?: (currentFilter: ArchbaseQueryFilter, index: number) => void;
+}
+
 interface ArchbaseQueryFilterState {
   currentFilter: ArchbaseQueryFilter;
   activeFilterIndex: number;
@@ -780,6 +790,7 @@ export type {
   Field,
   SortField,
   Filter,
+  FilterOptions,
   ArchbaseQueryFilter,
   ArchbaseQueryFilterState,
   ArchbaseQueryFilterDelegator,
