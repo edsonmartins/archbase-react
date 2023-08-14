@@ -2,6 +2,7 @@ import React, { ReactNode, createContext, useContext } from 'react';
 import { MantineTheme } from '@mantine/styles';
 import '../../../../locales/config';
 import { Container } from 'inversify';
+import { useMantineTheme } from '@mantine/core';
 
 interface ArchbaseAppContextValues {
   user: any | null;
@@ -30,7 +31,6 @@ interface ArchbaseAppProviderProps {
   user: any | null;
   owner: string | null;
   selectedCompany: any | null;
-  theme: MantineTheme | null;
   iocContainer?: any;
   dateFormat?: string;
   dateTimeFormat?: string;
@@ -43,12 +43,12 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
   owner,
   selectedCompany,
   children,
-  theme,
   iocContainer,
   dateFormat= 'dd/MM/yyyy',
   dateTimeFormat= 'dd/MM/yyyy HH:mm:ss',
   timeFormat= 'HH:mm:ss',
 }) => {
+  const theme = useMantineTheme();
   return (
     <ArchbaseAppContext.Provider
       value={{ user, owner, selectedCompany, theme, iocContainer, dateFormat, dateTimeFormat, timeFormat }}

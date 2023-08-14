@@ -1,6 +1,6 @@
 import React, { CSSProperties, Component, Fragment, ReactNode } from 'react';
 import { ArchbaseAdvancedFilter } from './ArchbaseAdvancedFilter';
-import {ArchbaseSaveFilter} from './ArchbaseSaveFilter';
+import { ArchbaseSaveFilter } from './ArchbaseSaveFilter';
 import Modal from 'react-modal';
 import { uniqueId } from 'lodash';
 import {
@@ -23,6 +23,7 @@ import { Badge, Button, Group, Menu, Radio, Text, Tooltip } from '@mantine/core'
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseList } from '@components/list';
 import { IconDeviceFloppy, IconDoorExit, IconFilter, IconPlus, IconTrash } from '@tabler/icons-react';
+import { ArchbaseAppContext } from '@components/core';
 
 interface ArchbaseCompositeFilterProps {
   id: string;
@@ -54,6 +55,7 @@ interface ArchbaseCompositeFilterState {
 }
 
 class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, ArchbaseCompositeFilterState> {
+  context!: React.ContextType<typeof ArchbaseAppContext>;
   constructor(props: ArchbaseCompositeFilterProps) {
     super(props);
     this.state = {
@@ -114,14 +116,17 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
             width: this.props.width,
             height: this.props.height,
             zIndex: 600,
-            backgroundColor: 'rgba(255, 255, 255, 0.75)',
+            backgroundColor:
+              this.context.theme!.colorScheme === 'dark'
+                ? this.context.theme!.colors.dark[7]
+                : this.context.theme!.colors.gray[0],
           },
           content: {
             inset: 0,
             padding: 0,
             position: 'absolute',
-            border: '1px solid rgb(204, 204, 204)',
-            background: 'rgb(255, 255, 255)',
+            background: 'transparent',
+            border: `1px solid ${this.context.theme!.colorScheme==='dark'?this.context.theme!.colors.gray[7]:this.context.theme!.colors.gray[2]}`,
             borderRadius: '4px',
             outline: 'none',
           },
@@ -149,13 +154,15 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
             component={{ type: FilterItem, props: {} }}
           />
           <div className="filter-apply">
-            <Fragment>
+            <Group spacing="xs">
               <Tooltip label="Novo filtro">
                 <Button
                   id="btnNew"
                   leftIcon={<IconPlus />}
                   onClick={(event) => this.props.onActionClick && this.props.onActionClick(event, 'new')}
-                />
+                >
+                  Novo
+                </Button>
               </Tooltip>
               <Tooltip label="Remover filtro">
                 <Button
@@ -166,8 +173,12 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
                   }
                   leftIcon={<IconTrash />}
                   onClick={(event) => this.props.onActionClick && this.props.onActionClick(event, 'remove')}
-                />
+                >
+                  Remover
+                </Button>
               </Tooltip>
+            </Group>
+            <Group spacing="xs">
               <Menu shadow="md" width={200} disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}>
                 <Menu.Target>
                   <Button>Salvar</Button>
@@ -191,33 +202,33 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
-            </Fragment>
-            <Tooltip label="Aplicar filtro">
-              <Button
-                id="btnApply"
-                leftIcon={<IconFilter />}
-                disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
-                onClick={(event) => this.props.onActionClick && this.props.onActionClick(event, 'apply')}
-              >
-                {'Aplicar'}
-              </Button>
-            </Tooltip>
-            <Tooltip label="Fechar filtro">
-              <Button
-                id="btnClose"
-                color="red"
-                leftIcon={<IconDoorExit />}
-                onClick={(event) => this.props.onActionClick && this.props.onActionClick(event, 'close')}
-              >
-                {'Fechar'}
-              </Button>
-            </Tooltip>
+
+              <Tooltip label="Aplicar filtro">
+                <Button
+                  id="btnApply"
+                  leftIcon={<IconFilter />}
+                  disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
+                  onClick={(event) => this.props.onActionClick && this.props.onActionClick(event, 'apply')}
+                >
+                  {'Aplicar'}
+                </Button>
+              </Tooltip>
+              <Tooltip label="Fechar filtro">
+                <Button
+                  id="btnClose"
+                  color="red"
+                  leftIcon={<IconDoorExit />}
+                  onClick={(event) => this.props.onActionClick && this.props.onActionClick(event, 'close')}
+                >
+                  {'Fechar'}
+                </Button>
+              </Tooltip>
+            </Group>
           </div>
           {this.props.activeFilterIndex === NEW_FILTER_INDEX ? (
             <Radio.Group
               name="filterType"
-              label="Tipo filtro"
-              description="Selecione o tipo do filtro"
+              label="Selecione o tipo do filtro"
               withAsterisk
               onChange={(value: string) => this.onChangeFilterType(value === 'normal' ? 0 : 1)}
             >
@@ -237,6 +248,7 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
               onFilterChanged={this.props.onFilterChanged}
               onSearchButtonClick={this.props.onSearchButtonClick}
               fields={this.state.fields}
+              theme={this.context.theme}
             />
           ) : null}
           {filterType === ADVANCED ? (
@@ -259,6 +271,8 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
     );
   };
 }
+
+ArchbaseCompositeFilter.contextType = ArchbaseAppContext;
 
 interface ArchbaseDetailedFilterProps {
   currentFilter: ArchbaseQueryFilter;
@@ -398,4 +412,4 @@ class FilterItem extends Component<FilterItemProps> {
   };
 }
 
-export {ArchbaseCompositeFilter, ArchbaseDetailedFilter};
+export { ArchbaseCompositeFilter, ArchbaseDetailedFilter };

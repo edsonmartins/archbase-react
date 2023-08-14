@@ -1,7 +1,7 @@
 import React, { Component, ReactNode, RefObject } from 'react';
 import DateObject from 'react-date-object';
 import shallowCompare from 'react-addons-shallow-compare';
-import {ArchbaseCompositeFilter} from './ArchbaseCompositeFilter';
+import { ArchbaseCompositeFilter } from './ArchbaseCompositeFilter';
 import { uniqueId } from 'lodash';
 import {
   getDefaultFilter,
@@ -27,12 +27,14 @@ import {
 import { endOfMonth } from 'date-fns';
 import { processErrorMessage } from '@components/core/exceptions';
 import { ArchbaseDialog } from '@components/notification';
-import { Button, Tooltip } from '@mantine/core';
-import { IconCalendar, IconClearFormatting, IconFilter, IconSubtask } from '@tabler/icons-react';
+import { ActionIcon, Button, Menu, Tooltip } from '@mantine/core';
+import { IconCalendar, IconClearFormatting, IconDeselect, IconFilter, IconFilterCancel, IconSubtask } from '@tabler/icons-react';
 import { ArchbaseEdit } from '@components/editors';
 import { IconCalendarDue } from '@tabler/icons-react';
 import { ArchbaseFilterSelectFields } from './ArchbaseFilterSelectFields';
 import { ArchbaseFilterSelectRange } from './ArchbaseFilterSelectRange';
+import { ArchbaseAppContext } from '@components/core';
+import { IconFilterOff } from '@tabler/icons-react';
 
 export interface ArchbaseQueryBuilderProps {
   persistenceDelegator: ArchbaseQueryFilterDelegator;
@@ -45,6 +47,7 @@ export interface ArchbaseQueryBuilderProps {
   width?: string;
   height?: string;
   placeholder?: string;
+  detailsWidth?: string;
   detailsHeight?: string;
   currentFilter: ArchbaseQueryFilter;
   expandedFilter?: boolean;
@@ -82,11 +85,14 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
     expandedFilter: false,
     width: '50px',
     height: '500px',
+    detailsHeight: 480,
+    detailsWidth: 768
   };
   private timeout: any;
   private divMain: any;
   private refEdit: RefObject<HTMLInputElement>;
   private inputValue: any;
+  context!: React.ContextType<typeof ArchbaseAppContext>;
   constructor(props: ArchbaseQueryBuilderProps) {
     super(props);
     this.refEdit = React.createRef();
@@ -517,8 +523,8 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
     });
   };
 
-  onConfirmSelectRange = (values) => {
-    let newValue;
+  onConfirmSelectRange = (values: any) => {
+    let newValue: string = '';
     if (this.state.selectRangeType === 'month') {
       let first = values[0].toString();
       let last = new DateObject({
@@ -739,8 +745,13 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
           minWidth: this.props.width,
           maxWidth: this.props.width,
           height: '50px',
-          backgroundColor: 'white',
+          backgroundColor:
+            this.context.theme!.colorScheme === 'dark'
+              ? this.context.theme!.colors.dark[7]
+              : this.context.theme!.colors.gray[0],
           position: 'relative',
+          border: `1px solid ${this.context.theme!.colorScheme==='dark'?this.context.theme!.colors.gray[7]:this.context.theme!.colors.gray[2]}`,
+          borderRadius: 4,
           display: 'flex',
           flexFlow: 'column nowrap',
         }}
@@ -754,7 +765,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
             flexFlow: 'row nowrap',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             position: 'relative',
           }}
         >
@@ -769,16 +780,14 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
               placeholder={this.props.placeholder}
               style={{
                 height: '36px',
-                padding: '3px',
-                border: '1px solid #ccd4db',
-                borderRadius: '6px',
+                paddingLeft: '3px',
               }}
             />
             <span
               style={{
                 position: 'relative',
                 top: '8px',
-                right: '25px',
+                right: '28px',
                 background: backgroundColor,
                 color: 'white',
                 border: '1px solid silver',
@@ -795,119 +804,82 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
             </span>
           </div>
           <Tooltip label="Filtrar">
-            <Button
-              leftIcon={<IconFilter />}
-              style={{ width: '38px', height: '38px' }}
+            <ActionIcon
+              variant="filled"
+              size="lg"
+              color="primary"
+              sx={{ width: '36px', height: '36px', marginRight: 2 }}
               onClick={() => {
                 this.onSearchClick();
               }}
-            />
+            >
+              <IconFilter size="1.4rem" />
+            </ActionIcon>
           </Tooltip>
           {this.props.showClearButton ? (
-            <Tooltip label="Filtrar">
-              <Button
-                leftIcon={<IconClearFormatting />}
-                style={{ width: '38px', height: '38px' }}
-                onClick={this.clearFilter}
-              />
+            <Tooltip label="Limpar filtro">
+              <ActionIcon
+                variant="filled"
+                size="lg"
+                color="primary"
+                sx={{ width: '36px', height: '36px', marginRight: 2 }}
+                onClick={() => {
+                  this.clearFilter();
+                }}
+              >
+                <IconFilterOff size="1.4rem" />
+              </ActionIcon>
             </Tooltip>
           ) : null}
-          <div
-            style={{
-              width: '38px',
-              height: '38px',
-              display: 'block',
-              marginLeft: '4px',
-            }}
-          >
-            <div style={{ width: '38px', height: '19px', display: 'flex' }}>
+          <Menu shadow="md" width={200} trigger="hover" openDelay={100} closeDelay={200}>
+            <Menu.Target>
               <Tooltip label="Selecionar período">
-                <Button
-                  leftIcon={<IconCalendar />}
-                  style={{
-                    width: '18px',
-                    height: '18px',
-                    padding: 0,
-                    margin: 0,
-                    marginRight: 2,
-                    marginBottom: 2,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  onClick={() => {
-                    this.onSelectRange('range');
-                  }}
-                />
+                <ActionIcon
+                  variant="filled"
+                  size="lg"
+                  color="primary"
+                  sx={{ width: '36px', height: '36px', marginRight: 2 }}
+                >
+                  <IconCalendar size="1.4rem" />
+                </ActionIcon>
               </Tooltip>
-              <Tooltip label="Mês">
-                <Button
-                  leftIcon={<IconCalendar />}
-                  style={{
-                    width: '18px',
-                    height: '18px',
-                    padding: 0,
-                    margin: 0,
-                    marginRight: 0,
-                    marginBottom: 2,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  onClick={() => {
-                    this.onSelectRange('month');
-                  }}
-                />
-              </Tooltip>
-            </div>
-            <div style={{ width: '38px', height: '19px', display: 'flex' }}>
-              <Tooltip label="Semana">
-                <Button
-                  leftIcon={<IconCalendarDue />}
-                  style={{
-                    width: '18px',
-                    height: '18px',
-                    padding: 0,
-                    margin: 0,
-                    marginRight: 2,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  onClick={() => {
-                    this.onSelectRange('week');
-                  }}
-                />
-              </Tooltip>
-              <Tooltip label="Dia">
-                <Button
-                  leftIcon={<IconCalendarDue />}
-                  style={{
-                    width: '18px',
-                    height: '18px',
-                    padding: 0,
-                    margin: 0,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  onClick={() => {
-                    this.onSelectRange('day');
-                  }}
-                />
-              </Tooltip>
-            </div>
-          </div>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Label>Período</Menu.Label>
+              <Menu.Item onClick={() => this.onSelectRange('range')} icon={<IconCalendarDue size={16} />}>Intervalo</Menu.Item>
+              <Menu.Item onClick={() => this.onSelectRange('month')} icon={<IconCalendarDue size={16} />}>Mês</Menu.Item>
+              <Menu.Item onClick={() => this.onSelectRange('week')} icon={<IconCalendarDue size={16} />}>Semana</Menu.Item>
+              <Menu.Item onClick={() => this.onSelectRange('day')} icon={<IconCalendarDue size={16} />}>Dia</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+
           <Tooltip label="Selecionar campos filtro rápido">
-            <Button leftIcon={<IconSubtask />} style={{ width: '38px', height: '38px' }} onClick={this.selectFields} />
+            <ActionIcon
+              variant="filled"
+              size="lg"
+              color="primary"
+              sx={{ width: '36px', height: '36px', marginRight: 2 }}
+              onClick={() => {
+                this.selectFields();
+              }}
+            >
+              <IconSubtask size="1.4rem" />
+            </ActionIcon>
           </Tooltip>
           {this.props.showToggleButton ? (
             <Tooltip label="Filtro avançado">
-              <Button
-                leftIcon={<IconFilter />}
-                style={{ width: '38px', height: '38px' }}
-                onClick={this.toggleExpandedFilter}
-              />
+              <ActionIcon
+                variant="filled"
+                size="lg"
+                color="primary"
+                sx={{ width: '36px', height: '36px', marginRight: 2 }}
+                onClick={() => {
+                  this.toggleExpandedFilter();
+                }}
+              >
+                <IconFilter size="1.4rem" />
+              </ActionIcon>
             </Tooltip>
           ) : null}
         </div>
@@ -929,8 +901,8 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
           onSearchButtonClick={this.onSearchButtonClick}
           left={this.state.detailsLeft}
           top={this.state.detailsTop}
-          width={this.props.width}
-          height={this.state.detailsHeight}
+          width={this.props.detailsWidth}
+          height={this.props.detailsHeight}
         >
           {this.props.children}
         </ArchbaseCompositeFilter>
@@ -963,3 +935,5 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
     );
   };
 }
+
+ArchbaseQueryBuilder.contextType = ArchbaseAppContext;

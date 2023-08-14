@@ -306,7 +306,7 @@ interface Schema {
   onPropChange: (prop: any, value: any, ruleId: any) => void;
   getLevel: (id: any) => number;
   isRuleGroup: (rule: any) => boolean;
-  getOperators: (...args: any) => Operator[];
+  getOperators: (field: any) => Operator[];
 }
 
 const convertQueryFields = (children: React.ReactNode): React.ReactNode => {
