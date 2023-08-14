@@ -7,7 +7,7 @@ import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } fro
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 
-export interface ArchbaseEditProps<T,ID> {
+export interface ArchbaseEditProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do edit */
   dataSource?: ArchbaseDataSource<T, ID>;
   /** Campo onde deverá ser atribuido o valor do edit na fonte de dados */
@@ -46,13 +46,13 @@ export interface ArchbaseEditProps<T,ID> {
   onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando o valor do edit é alterado */
   onChangeValue?: (value: any, event: any) => void;
-  onKeyDown?: (event:any)=>void;
-  onKeyUp?: (event:any)=>void;
+  onKeyDown?: (event: any) => void;
+  onKeyUp?: (event: any) => void;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement>|undefined;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
-export function ArchbaseEdit<T,ID>({
+export function ArchbaseEdit<T, ID>({
   dataSource,
   dataField,
   disabled = false,
@@ -75,8 +75,8 @@ export function ArchbaseEdit<T,ID>({
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
-}: ArchbaseEditProps<T,ID>) {
-  const [currentValue, setCurrentValue] = useState<string>(value||'');
+}: ArchbaseEditProps<T, ID>) {
+  const [currentValue, setCurrentValue] = useState<string>(value || '');
   const innerComponentRef = innerRef || useRef<any>();
   const theme = useMantineTheme();
 
@@ -97,12 +97,14 @@ export function ArchbaseEdit<T,ID>({
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      if ((event.type === DataSourceEventNames.dataChanged) ||
-          (event.type === DataSourceEventNames.fieldChanged) ||
-          (event.type === DataSourceEventNames.recordChanged) ||
-          (event.type === DataSourceEventNames.afterScroll) ||
-          (event.type === DataSourceEventNames.afterCancel)) {
-          loadDataSourceFieldValue();
+      if (
+        event.type === DataSourceEventNames.dataChanged ||
+        event.type === DataSourceEventNames.fieldChanged ||
+        event.type === DataSourceEventNames.recordChanged ||
+        event.type === DataSourceEventNames.afterScroll ||
+        event.type === DataSourceEventNames.afterCancel
+      ) {
+        loadDataSourceFieldValue();
       }
     }
   }, []);
@@ -137,10 +139,10 @@ export function ArchbaseEdit<T,ID>({
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent)
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.removeListener(dataSourceEvent);
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {
@@ -154,13 +156,14 @@ export function ArchbaseEdit<T,ID>({
     }
   };
 
-  const isReadOnly = () =>{
+  const isReadOnly = () => {
     let _readOnly = readOnly;
     if (dataSource && !readOnly) {
       _readOnly = dataSource.isBrowsing();
     }
+
     return _readOnly;
-  }    
+  };
 
   return (
     <TextInput
@@ -168,7 +171,7 @@ export function ArchbaseEdit<T,ID>({
       readOnly={isReadOnly()}
       type={'text'}
       size={size!}
-      style={{ 
+      style={{
         width,
         ...style,
       }}
@@ -185,21 +188,23 @@ export function ArchbaseEdit<T,ID>({
       label={label}
       error={error}
       rightSection={
-        onActionSearchExecute?<Tooltip label={tooltipIconSearch}>
-          <ActionIcon
-            sx={{
-              backgroundColor:
-                theme.colorScheme === 'dark'
-                  ? theme.colors[theme.primaryColor][5]
-                  : theme.colors[theme.primaryColor][6],
-            }}
-            tabIndex={-1}
-            variant="filled"
-            onClick={onActionSearchExecute}
-          >
-            {icon}
-          </ActionIcon>
-        </Tooltip>:null
+        onActionSearchExecute ? (
+          <Tooltip label={tooltipIconSearch}>
+            <ActionIcon
+              sx={{
+                backgroundColor:
+                  theme.colorScheme === 'dark'
+                    ? theme.colors[theme.primaryColor][5]
+                    : theme.colors[theme.primaryColor][6],
+              }}
+              tabIndex={-1}
+              variant="filled"
+              onClick={onActionSearchExecute}
+            >
+              {icon}
+            </ActionIcon>
+          </Tooltip>
+        ) : null
       }
     />
   );

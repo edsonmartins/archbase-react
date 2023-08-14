@@ -1,15 +1,15 @@
-import React from 'react';
 import { Switch, useMantineColorScheme, useMantineTheme } from '@mantine/core';
-import { IconSun, IconMoonStars } from '@tabler/icons-react';
+import { IconMoonStars, IconSun } from '@tabler/icons-react';
+import React from 'react';
 
-export function ArchbaseThemeDrawerTitle() {
+interface ArchbaseThemeDrawerTitleProps {
+  toggleDarkMode: () => void;
+}
+
+export function ArchbaseThemeDrawerTitle({ toggleDarkMode }: ArchbaseThemeDrawerTitleProps) {
   const theme = useMantineTheme();
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
-  const handleClick = () => {
-    toggleColorScheme();
-    console.log(colorScheme);
-  };
+  const { colorScheme } = useMantineColorScheme();
 
   const dark = colorScheme === 'dark';
 
@@ -17,15 +17,15 @@ export function ArchbaseThemeDrawerTitle() {
     <>
       <Switch
         size="md"
-        color={dark ? 'gray' : 'dark'}
+        color={!dark ? theme.white : theme.black}
         thumbIcon={
-          dark ? (
-            <IconMoonStars size="1rem" stroke={2.5} color={theme.colors.blue[6]} />
-          ) : (
+          !dark ? (
             <IconSun size="1rem" stroke={2.5} color={theme.colors.yellow[4]} />
+          ) : (
+            <IconMoonStars size="1rem" stroke={2.5} color={theme.colors.blue[6]} />
           )
         }
-        onClick={handleClick}
+        onClick={toggleDarkMode}
       />
     </>
   );

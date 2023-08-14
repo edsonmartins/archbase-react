@@ -15,18 +15,26 @@ export interface ArchbaseThemeEditorProps<T, ID> {
   drawerLabel?: string;
   /** Título do button */
   buttonLabel?: ReactNode;
+  /** Função para alternar entre os temas escuro e claro */
+  toggleDarkMode: () => void;
 }
 
 export function ArchbaseThemeEditor<T, ID>({
   disabled,
   drawerLabel = 'Theme Editor',
   buttonLabel = 'Open Theme Editor',
+  toggleDarkMode,
 }: ArchbaseThemeEditorProps<T, ID>) {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <>
-      <Drawer opened={opened} onClose={close} position="right" title={<ArchbaseThemeDrawerTitle />}>
+      <Drawer
+        opened={opened}
+        onClose={close}
+        position="right"
+        title={<ArchbaseThemeDrawerTitle toggleDarkMode={toggleDarkMode} />}
+      >
         <Accordion defaultValue="colors">
           <Accordion.Item value="colors">
             <Accordion.Control>
