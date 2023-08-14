@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { CSSProperties, Component, ReactNode } from 'react';
 import { uniqueId} from 'lodash';
 import { 
   getDefaultEmptyFilter,
@@ -16,12 +16,12 @@ import {
   ArchbaseQueryFilter,
 } from './ArchbaseFilterCommons';
 import shallowCompare from 'react-addons-shallow-compare';
-import { ArchbaseError } from '@components/core';
+import { ArchbaseAppContext, ArchbaseError } from '@components/core';
 import { ltrim } from '@components/core/utils';
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors';
-import { ActionIcon, Chip, Group, Text, Tooltip } from '@mantine/core';
-import { IconArrowUp, IconSearch } from '@tabler/icons-react';
+import { ActionIcon, Button, Chip, Group, Text, Tooltip } from '@mantine/core';
+import { IconArrowUp, IconSearch, IconTrash } from '@tabler/icons-react';
 import { ArchbaseList } from '@components/list';
 import { IconArrowDown } from '@tabler/icons-react';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
@@ -29,7 +29,7 @@ import { ArchbaseDateTimerPickerRange } from '@components/editors/ArchbaseDateTi
 import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
 import { ArchbaseSwitch } from '@components/editors/ArchbaseSwitch';
 import { ArchbaseCol, ArchbaseRow } from '@components/containers/gridLayout';
-
+import '../../styles/querybuilder.scss';
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
   id: string;
   currentFilter: ArchbaseQueryFilter;
@@ -228,7 +228,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
       onPropChange: this._notifyQueryChange.bind(this, this.onPropChange),
       getLevel: this.getLevel.bind(this),
       isRuleGroup: this.isRuleGroup.bind(this),
-      getOperators: (...args) => this.getOperators(args),
+      getOperators: (field) => this.getOperators(field),
     };
   };
 
@@ -603,7 +603,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
           overflowX: 'hidden',
         }}
       >
-        <div style={{ width: this.props.width, overflow: 'scroll' }}>
+        <div style={{ width: this.props.width, overflow: 'auto' }}>
           <ArchbaseRow
             style={{
               border: this.props.border!,
@@ -905,7 +905,7 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
         <dt className="rules-group-header">
           <div
             style={{
-              display: 'inline-flex',
+              display: 'flex',
             }}
           >
             <ArchbaseCheckbox
@@ -933,18 +933,16 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
                 </Chip>
               </Group>
             </Chip.Group>
-          </div>
-          <div className="btn-group pull-right group-actions">
+            <Button.Group>
             <ActionElement
               label="Condição"
-              className="ruleGroup-addRule btn btn-xs btn-success"
+              style={{}}
               handleOnClick={this.addRule}
               rules={rules}
               level={level}
             />
             <ActionElement
               label="Grupo"
-              className="ruleGroup-addGroup btn btn-xs btn-success"
               handleOnClick={this.addGroup}
               rules={rules}
               level={level}
@@ -952,13 +950,15 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
             {this.hasParentGroup() ? (
               <ActionElement
                 label="Remover"
-                className="ruleGroup-remove btn btn-xs btn-danger"
+                color="red"
                 handleOnClick={this.removeGroup}
                 rules={rules}
                 level={level}
               />
             ) : null}
+          </Button.Group>
           </div>
+          
         </dt>
         <dd className="rules-group-body">
           <ul className="rules-list">
@@ -1054,6 +1054,8 @@ class RuleItem extends Component<RuleItemProps> {
     value2: null,
     disabled: false,
   };
+  static contextType = ArchbaseAppContext;
+  context!: React.ContextType<typeof ArchbaseAppContext>;
   constructor(props: RuleItemProps) {
     super(props);
   }
@@ -1114,7 +1116,6 @@ class RuleItem extends Component<RuleItemProps> {
       <li className={'rule-container'}>
         <ArchbaseCheckbox
           label=""
-          style={{ margin: 0, width: '24px', height: '32px' }}
           isChecked={!disabled}
           onChangeValue={this.onDisabledChanged}
           trueValue={true}
@@ -1124,6 +1125,7 @@ class RuleItem extends Component<RuleItemProps> {
           options={fields}
           value={field!}
           className="custom-select-field"
+          style={{color:this.context.theme!.colorScheme==='dark'?'white':'black'}}
           disabled={disabled}
           handleOnChange={this.onFieldChanged}
           level={level}
@@ -1133,6 +1135,7 @@ class RuleItem extends Component<RuleItemProps> {
           field={field!}
           options={getOperators(field)}
           value={operator!}
+          style={{color:this.context.theme!.colorScheme==='dark'?'white':'black'}}
           className="custom-select-operator"
           disabled={disabled}
           handleOnChange={this.onOperatorChanged}
@@ -1171,7 +1174,9 @@ class RuleItem extends Component<RuleItemProps> {
         ) : (
           ''
         )}
-        <ActionElement label="" className="rule-remove fa fa-times" handleOnClick={this.removeRule} level={level} />
+        <ActionIcon id={`btnRemoveRule_${field}`} onClick={this.removeRule}>
+          <IconTrash color={this.context.theme!.colors.red[3]}/>
+        </ActionIcon>
       </li>
     );
   }
@@ -1264,10 +1269,11 @@ class RuleItem extends Component<RuleItemProps> {
 
 interface ActionElementProps {
   label: string;
-  className: string;
+  style?: CSSProperties;
   level: number;
   handleOnClick: (event: React.MouseEvent) => void;
   rules?: Rule[];
+  color?: string;
 }
 
 class ActionElement extends Component<ActionElementProps> {
@@ -1276,12 +1282,10 @@ class ActionElement extends Component<ActionElementProps> {
   }
 
   render() {
-    const { label, className, handleOnClick } = this.props;
+    const { label, handleOnClick, style, color } = this.props;
 
     return (
-      <div className={className} onClick={(e: React.MouseEvent) => handleOnClick(e)}>
-        {label}
-      </div>
+      <Button style={style} size="xs" color={color} onClick={(e: React.MouseEvent) => handleOnClick(e)}>{label}</Button>
     );
   }
 }
@@ -1507,6 +1511,7 @@ interface ValueSelectorProps {
   handleOnChange: (value: string) => void;
   width?: string;
   disabled: boolean;
+  style?: CSSProperties;
 }
 
 class ValueSelector extends Component<ValueSelectorProps> {
@@ -1559,10 +1564,10 @@ class ValueSelector extends Component<ValueSelectorProps> {
   };
 
   render = () => {
-    const { value, options, className, disabled } = this.props;
+    const { value, options, className, disabled, style } = this.props;
 
     return (
-      <select className={className} disabled={disabled} value={value} tabIndex={-1} onChange={this.handleOnChange}>
+      <select className={className} style={style} disabled={disabled} value={value} tabIndex={-1} onChange={this.handleOnChange}>
         {options.map((option) => {
           return (
             <option key={option.name} value={option.name}>

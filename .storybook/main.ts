@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import path from 'path'
+import { mergeConfig } from 'vite';
 const config: StorybookConfig = {
   stories: [
     '../src/**/*.mdx',
@@ -14,9 +15,18 @@ const config: StorybookConfig = {
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     '@storybook/addon-actions',
+    '@storybook/react',
     'storybook-addon-mantine',
     'storybook-dark-mode',
     'storybook-react-i18next',
+    {
+      name: '@storybook/addon-styling',
+      options: {
+        sass: {
+          implementation: require('sass'),
+        },
+      },
+    },
     {
       name: '@storybook/addon-docs',
       options: {

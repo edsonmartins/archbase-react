@@ -1,5 +1,5 @@
 /* eslint-disable no-lone-blocks */
-import React, { Component, Fragment, ReactNode } from 'react';
+import React, { CSSProperties, Component, Fragment, ReactNode } from 'react';
 import { CustomSortItem } from './ArchbaseAdvancedFilter';
 import {
   getDefaultEmptyFilter,
@@ -9,19 +9,28 @@ import {
   Operator,
   Field,
   SelectedSort,
+  ArchbaseQueryFilter,
 } from './ArchbaseFilterCommons';
 import shallowCompare from 'react-addons-shallow-compare';
 
 import { ltrim } from '@components/core/utils';
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors';
-import { IconArrowDown, IconArrowUp } from '@tabler/icons-react';
+import { IconArrowDown, IconArrowUp, IconSearch } from '@tabler/icons-react';
 import { ArchbaseList } from '@components/list';
 import { ArchbaseDataSource } from '@components/datasource';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
-import { Accordion, ActionIcon, MultiSelect, Switch, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, MantineTheme, MultiSelect, Switch, Text, Tooltip } from '@mantine/core';
 import { ArchbaseCol, ArchbaseRow } from '@components/containers/gridLayout';
 import { ArchbaseDateTimerPickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
 import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
+import {
+  Accordion,
+  AccordionItem,
+  AccordionItemButton,
+  AccordionItemHeading,
+  AccordionItemPanel,
+} from "react-accessible-accordion";
+import { ArchbaseAppContext } from '@components/core';
 
 const rnd = (() => {
   const gen = (min: number, max: number) => max++ && [...Array(max - min)].map((_s, i) => String.fromCharCode(min + i));
@@ -68,6 +77,7 @@ export interface ArchbaseSimpleFilterProps {
   sortFocused?: boolean;
   onSearchButtonClick?: (field: string, event?: any, handleOnChange?: any, operator?: any, searchField?: any) => void;
   update?: number;
+  theme?: MantineTheme|null;
 }
 
 export interface ArchbaseSimpleFilterState {
@@ -75,7 +85,7 @@ export interface ArchbaseSimpleFilterState {
   update: number;
   activeFilterIndex?: number;
   simpleFields: ReactNode[];
-  schema: Schema;
+  schema: Schema;  
 }
 
 class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, ArchbaseSimpleFilterState> {
@@ -85,7 +95,6 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
     onFilterChanged: null,
     onError: null,
   };
-
   private prefixId: string;
   constructor(props: ArchbaseSimpleFilterProps) {
     super(props);
@@ -470,7 +479,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
     return result;
   };
 
-  createFilterFields = (props, schema: Schema, currentFilter): ReactNode[] => {
+  createFilterFields = (props, schema: Schema, currentFilter: ArchbaseQueryFilter): ReactNode[] => {
     const { operators } = schema;
     let _this = this;
     let result: ReactNode[] = [];
@@ -495,12 +504,28 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
       let textValue = rule.value && rule.value !== '' ? rule.value : null;
       textValue = rule.value2 && rule.value2 !== '' ? `${textValue} a ${rule.value2}` : textValue;
       result.push(
-        <Accordion.Item
-          value={_this.prefixId + '_' + index}
-          key={'flk' + index}
-          //VER AQUI DEPOIS disabled={rule.disabled!}
+        <AccordionItem
+          uuid={_this.prefixId + "_" + index}
+          id={_this.prefixId + "_" + index}
+          key={"flk" + index}
+          //disabled={rule.disabled}
+          dangerouslySetExpanded={!rule.disabled}
+          //label={child.label}
         >
-          <Accordion.Control className={rule.disabled === true ? 'simple-filter-disabled' : 'simple-filter-enabled'}>
+          <AccordionItemHeading
+            className={
+              rule.disabled === true
+                ? "simple-filter-disabled"
+                : "simple-filter-enabled"
+            }
+          >
+            <AccordionItemButton
+              className={
+                rule.disabled === true
+                  ? "accordion__button simple-filter-disabled"
+                  : "accordion__button simple-filter-enabled"
+              }
+            >
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <ArchbaseCheckbox
                 isChecked={!rule.disabled}
@@ -510,12 +535,13 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                   _this.onDisabledChanged(value, value === true, rule, _this.prefixId + '_' + index)
                 }
               />
-              {child.label}
+              <Text color={this.props.theme!.colorScheme==='dark'?'white':'black'}>{child.label}</Text>
               <SimpleValueSelector
                 field={child.name}
                 options={_this.getOperators(child.name)}
                 value={rule.operator}
                 className="custom-select-operator"
+                style={{color:this.props.theme!.colors.blue[5], backgroundColor:'transparent'}}
                 disabled={true}
                 handleOnChange={(value) => _this.onOperatorChanged(rule, value)}
                 level={0}
@@ -524,8 +550,15 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 {textValue}
               </Text>
             </div>
-          </Accordion.Control>
-          <Accordion.Panel className={rule.disabled === true ? 'simple-filter-disabled' : 'simple-filter-enabled'}>
+          </AccordionItemButton>
+          </AccordionItemHeading>
+          <AccordionItemPanel
+            className={
+              rule.disabled === true
+                ? "simple-filter-disabled"
+                : "simple-filter-enabled"
+            }
+          >
             <div
               style={{
                 display: 'flex',
@@ -538,6 +571,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 options={_this.getOperators(child.name)}
                 value={rule.operator}
                 className="custom-select-operator"
+                style={{color:this.props.theme!.colorScheme==='dark'?'white':'black'}}
                 disabled={child.disabled}
                 handleOnChange={(value) => _this.onOperatorChanged(rule, value)}
                 level={0}
@@ -581,8 +615,8 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 ''
               )}
             </div>
-          </Accordion.Panel>
-        </Accordion.Item>,
+            </AccordionItemPanel>
+        </AccordionItem>
       );
     });
 
@@ -597,14 +631,15 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
 
     if (this.props.allowSort === true) {
       result.push(
-        <Accordion.Item
-          value={_this.prefixId + '_' + 9999}
-          key={'flk' + 9999}
-          //VER DEPOIS label="Ordenação"
-          // blockStyle={{ padding: '4px', overflow: 'hidden' }}
-          // headerStyle={{ paddingRight: '10px', minHeight: '20px!important' }}
+        <AccordionItem
+          uuid={_this.prefixId + "_" + 9999}
+          key={"flk" + 9999}
+          //label="Ordenação"
+          //blockStyle={{ padding: "4px", overflow: "hidden" }}
+          //headerStyle={{ paddingRight: "10px", minHeight: "20px!important" }}
         >
-          <Accordion.Control>
+          <AccordionItemHeading>
+            <AccordionItemButton>
             <div style={{ fontWeight: 'bold', color: '#3d3d69' }}>
               {'Ordenação  '}
               <Text
@@ -623,8 +658,9 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 {this.getSortString(currentFilter)}
               </Text>
             </div>
-          </Accordion.Control>
-          <Accordion.Panel>
+            </AccordionItemButton>
+          </AccordionItemHeading>
+          <AccordionItemPanel>
             <ArchbaseRow>
               <ArchbaseCol style={{ padding: 13 }}>
                 <div
@@ -654,8 +690,8 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                       width="100%"
                       dataSource={
                         new ArchbaseDataSource('dsSortFields', {
-                          records: this.state.currentFilter.sort.sortFields,
-                          grandTotalRecords: this.state.currentFilter.sort.sortFields.length,
+                          records: currentFilter.sort.sortFields,
+                          grandTotalRecords: currentFilter.sort.sortFields.length,
                           currentPage: 0,
                           totalPages: 0,
                           pageSize: 999999,
@@ -663,7 +699,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                       }
                       dataFieldId="name"
                       dataFieldText="name"
-                      activeIndex={this.props.currentFilter.sort.activeIndex}
+                      activeIndex={currentFilter.sort.activeIndex}
                       component={{
                         type: CustomSortItem,
                         props: {
@@ -677,8 +713,8 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 </div>
               </ArchbaseCol>
             </ArchbaseRow>
-          </Accordion.Panel>
-        </Accordion.Item>,
+            </AccordionItemPanel>
+        </AccordionItem>,
       );
     }
 
@@ -713,13 +749,20 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
 
     return (
       <Fragment>
-        <Accordion  multiple={true} value={preExpandedItems} id="acc1">
+        <Accordion
+          allowZeroExpanded={true}
+          allowMultipleExpanded={true}
+          preExpanded={preExpandedItems}
+          id="acc1"
+        >
           {items}
         </Accordion>
       </Fragment>
     );
   };
 }
+
+ArchbaseSimpleFilter.contextType = ArchbaseAppContext;
 
 interface SimpleValueEditorProps {
   field: string;
@@ -905,7 +948,7 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
             <ArchbaseEdit
               disabled={disabled}
               width={'100%'}
-              icon={searchComponent ? searchComponent : null}
+              icon={searchComponent ? searchComponent : <IconSearch size="1.2rem"/>}
               onActionSearchExecute={() => this.onButtonClick()}
               value={newValue}
               onChangeValue={(value: any, _event: any) => handleOnChange(value)}
@@ -940,6 +983,7 @@ interface SimpleValueSelectorProps {
   width?: string;
   disabled?: boolean;
   level: number;
+  style?: CSSProperties
 }
 
 interface SimpleValueEditorState {
@@ -994,7 +1038,7 @@ class SimpleValueSelector extends React.Component<SimpleValueSelectorProps, Simp
   };
 
   render() {
-    const { value, options, className, disabled } = this.props;
+    const { value, options, className, disabled, style } = this.props;
 
     return (
       <select
@@ -1002,7 +1046,7 @@ class SimpleValueSelector extends React.Component<SimpleValueSelectorProps, Simp
         disabled={disabled}
         value={value}
         tabIndex={-1}
-        style={{ width: this.state.width }}
+        style={{ ...style, width: this.state.width}}
         onChange={this.handleOnChange}
       >
         {options.map((option) => {

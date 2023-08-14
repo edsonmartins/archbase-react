@@ -70,7 +70,7 @@ export function ArchbaseEdit<T,ID>({
   icon,
   onKeyDown,
   onKeyUp,
-  onActionSearchExecute = () => {},
+  onActionSearchExecute,
   tooltipIconSearch = 'Clique aqui para Localizar',
   onFocusExit = () => {},
   onFocusEnter = () => {},
@@ -185,7 +185,7 @@ export function ArchbaseEdit<T,ID>({
       label={label}
       error={error}
       rightSection={
-        <Tooltip label={tooltipIconSearch}>
+        onActionSearchExecute?<Tooltip label={tooltipIconSearch}>
           <ActionIcon
             sx={{
               backgroundColor:
@@ -199,7 +199,7 @@ export function ArchbaseEdit<T,ID>({
           >
             {icon}
           </ActionIcon>
-        </Tooltip>
+        </Tooltip>:null
       }
     />
   );

@@ -31,7 +31,7 @@ import {
 import { MRT_Localization_EN } from 'mantine-react-table/locales/en';
 import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
 import { MRT_Localization_PT_BR } from 'mantine-react-table/locales/pt-BR';
-import React, { Fragment, isValidElement, useMemo, ReactNode, useRef, useState, useEffect, RefObject } from 'react';
+import React, { Fragment, isValidElement, useMemo, ReactNode, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { convertISOStringToDate, filter, isEmpty } from '../core/utils';

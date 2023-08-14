@@ -43,7 +43,7 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
       themeLight={ArchbaseLight}
       toggleColorScheme={toggleColorScheme}
     >
-      <ArchbaseAppProvider user={null} owner={null} selectedCompany={undefined} theme={theme}>
+      <ArchbaseAppProvider user={null} owner={null} selectedCompany={undefined}>
         {props.children}
       </ArchbaseAppProvider>
     </ArchbaseGlobalProvider>
