@@ -1,4 +1,4 @@
-import React, { CSSProperties, Component, Fragment, ReactNode } from 'react';
+import React, { CSSProperties, Component, ReactNode } from 'react';
 import { ArchbaseAdvancedFilter } from './ArchbaseAdvancedFilter';
 import { ArchbaseSaveFilter } from './ArchbaseSaveFilter';
 import Modal from 'react-modal';

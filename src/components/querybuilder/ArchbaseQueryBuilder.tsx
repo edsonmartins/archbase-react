@@ -27,8 +27,8 @@ import {
 import { endOfMonth } from 'date-fns';
 import { processErrorMessage } from '@components/core/exceptions';
 import { ArchbaseDialog } from '@components/notification';
-import { ActionIcon, Button, Menu, Tooltip } from '@mantine/core';
-import { IconCalendar, IconClearFormatting, IconDeselect, IconFilter, IconFilterCancel, IconSubtask } from '@tabler/icons-react';
+import { ActionIcon,  Menu, Tooltip } from '@mantine/core';
+import { IconCalendar, IconFilter, IconSubtask } from '@tabler/icons-react';
 import { ArchbaseEdit } from '@components/editors';
 import { IconCalendarDue } from '@tabler/icons-react';
 import { ArchbaseFilterSelectFields } from './ArchbaseFilterSelectFields';

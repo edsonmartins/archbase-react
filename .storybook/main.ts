@@ -15,6 +15,7 @@ const config: StorybookConfig = {
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     '@storybook/addon-actions',
+    'storybook-addon-measure-viewport',
     '@storybook/react',
     'storybook-addon-mantine',
     'storybook-dark-mode',

@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo, useRef, useState } from 'react';
-import { Grid} from '@mantine/core';
+import { Grid } from '@mantine/core';
 import {
   useArchbaseDataSource,
   useArchbaseDataSourceListener,
@@ -19,6 +19,7 @@ import { MaskPattern } from '@components/editors';
 import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import {
   ArchbaseQueryFilter,
+  ArchbaseQueryFilterDelegator,
   ArchbaseQueryFilterState,
   OP_CONTAINS,
   OP_EQUALS,
@@ -28,7 +29,13 @@ import {
   getDefaultEmptyFilter,
 } from '@components/querybuilder';
 import { ArchbaseTableTemplate } from '../ArchbaseTableTemplate';
-import { ArchbaseDataTableColumn, ArchbaseStatusRender, ArchbaseStatusType, ArchbaseTableRowActions, Columns } from '@components/datatable';
+import {
+  ArchbaseDataTableColumn,
+  ArchbaseStatusRender,
+  ArchbaseStatusType,
+  ArchbaseTableRowActions,
+  Columns,
+} from '@components/datatable';
 import { PessoaStatus } from '@demo/data/types';
 
 const filters: LocalFilter[] = [];
@@ -37,19 +44,19 @@ const StatusValues: ArchbaseStatusType[] = [
   {
     value: PessoaStatus.APROVADO,
     label: 'Aprovado',
-    color: 'green'
+    color: 'green',
   },
   {
     value: PessoaStatus.REJEITADO,
     label: 'Rejeitado',
-    color: 'red'
+    color: 'red',
   },
   {
     value: PessoaStatus.PENDENTE,
     label: 'Pendente',
-    color: 'orange'
-  }
-]
+    color: 'orange',
+  },
+];
 
 const ArchbaseTableTemplateExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
@@ -245,14 +252,10 @@ const ArchbaseTableTemplateExample = () => {
         <ArchbaseDataTableColumn<Pessoa>
           dataField="data_nasc"
           dataType="date"
-          header='Data nascimento'
+          header="Data nascimento"
           inputFilterType="date"
         />
-        <ArchbaseDataTableColumn<Pessoa>
-          dataField="creditoOK"
-          dataType="boolean"
-          header='Crédito OK?'
-        />
+        <ArchbaseDataTableColumn<Pessoa> dataField="creditoOK" dataType="boolean" header="Crédito OK?" />
         <ArchbaseDataTableColumn<Pessoa>
           dataField="status"
           dataType="enum"
@@ -261,8 +264,8 @@ const ArchbaseTableTemplateExample = () => {
           header={'Status'}
           render={(data): ReactNode => {
             return <ArchbaseStatusRender currentValue={`${data.getValue()}`} values={StatusValues} />;
-          }} 
-        />        
+          }}
+        />
       </Columns>
     );
   }, []);
@@ -289,6 +292,8 @@ const ArchbaseTableTemplateExample = () => {
           userRowActions={{
             actions: ArchbaseTableRowActions<Pessoa>,
           }}
+          filterType={'advanced'}
+          filterPersistenceDelegator={dsFilters as ArchbaseQueryFilterDelegator}
         />
       </Grid.Col>
     </Grid>
@@ -309,3 +314,7 @@ export const Example: StoryObj<typeof ArchbaseTableTemplateExample> = {
     },
   },
 };
+
+
+
+

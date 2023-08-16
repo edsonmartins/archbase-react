@@ -1,6 +1,6 @@
-import React, { Fragment, ReactNode, useRef } from 'react';
+import React, { Fragment, ReactNode, useRef, useState } from 'react';
 import type { ArchbaseDataSource } from '../datasource';
-import { FilterOptions } from '@components/querybuilder';
+import { ArchbaseQueryBuilder, ArchbaseQueryFilter, ArchbaseQueryFilterDelegator, ArchbaseQueryFilterState, FilterOptions, getDefaultEmptyFilter } from '@components/querybuilder';
 import { ArchbaseAlert } from '@components/notification';
 import { IconBug } from '@tabler/icons-react';
 import { t } from 'i18next';
@@ -30,19 +30,22 @@ export interface UserRowActionsOptions<T> {
   onViewRow?: (row: T) => void;
 }
 
+
+
 export interface ArchbaseTableTemplateProps<T, ID> {
   title: string;
   printTitle?: string;
   logoPrint?: string;
   dataSource: ArchbaseDataSource<T, ID>;
   dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined;
+  filterType: "none"|"normal"|"advanced";
   filterOptions?: FilterOptions;
+  filterPersistenceDelegator: ArchbaseQueryFilterDelegator;
   pageSize?: number;
   columns: ReactNode;
   filterFields?: ReactNode | undefined;
   userActions?: UserActionsOptions;
   userRowActions?: UserRowActionsOptions<T>;
-  /** Referência para o componente interno */
   innerRef?: React.RefObject<HTMLInputElement> | undefined;
   isLoading?: boolean;
   isError?: boolean;
@@ -50,6 +53,7 @@ export interface ArchbaseTableTemplateProps<T, ID> {
   clearError?: () => void;
   width?: number | string | undefined;
   height?: number | string | undefined;
+  onSearchByFilter?: () => void;
 }
 
 export function ArchbaseTableTemplate<T extends object, ID>({
@@ -57,10 +61,10 @@ export function ArchbaseTableTemplate<T extends object, ID>({
   printTitle,
   dataSource,
 //  dataSourceEdition,
-//  filterOptions,
+  filterOptions,
   pageSize,
   columns,
-//  filterFields,
+  filterFields,
   logoPrint,
   userActions,
   userRowActions,
@@ -69,10 +73,19 @@ export function ArchbaseTableTemplate<T extends object, ID>({
   isError = false,
   error = '',
   clearError = () => {},
+  filterType = 'normal',
   width = '100%',
   height = '100%',
+  onSearchByFilter = ()=>{},
+  filterPersistenceDelegator,
 }: ArchbaseTableTemplateProps<T, ID>) {
   const innerComponentRef = innerRef || useRef<any>();
+  const filterRef = useRef<any>();
+  const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
+    currentFilter: getDefaultEmptyFilter(),
+    activeFilterIndex: -1,
+    expandedFilter: false,
+  });
 
   const buildRowActions = ({ row }): ReactNode | undefined => {
     if (!userRowActions && !userRowActions!.actions) {
@@ -88,6 +101,39 @@ export function ArchbaseTableTemplate<T extends object, ID>({
       />
     );
   };
+
+  const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
+    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
+  };
+
+  const handleToggleExpandedFilter = (expanded: boolean) => {
+    setFilterState({ ...filterState, expandedFilter: expanded });
+  };
+
+  const handleSelectedFilter = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
+    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
+  };
+
+  const buildFilter = ()=>{
+      return (<ArchbaseQueryBuilder
+        id={filterOptions?.componentName!}
+        viewName={filterOptions?.viewName!}
+        apiVersion={filterOptions?.apiVersion!}
+        ref={filterRef}
+        expandedFilter={filterState.expandedFilter}
+        persistenceDelegator={filterPersistenceDelegator}
+        currentFilter={filterState.currentFilter}
+        activeFilterIndex={filterState.activeFilterIndex}
+        onSelectedFilter={handleSelectedFilter}
+        onFilterChanged={handleFilterChanged}
+        onSearchByFilter={onSearchByFilter}
+        onToggleExpandedFilter={handleToggleExpandedFilter}
+        width={'560px'}
+        height="170px"
+      >
+        {filterFields}
+      </ArchbaseQueryBuilder>);
+  }
 
   return (
     <Paper ref={innerComponentRef} style={{ overflow: 'none', height: '100%' }}>
@@ -116,6 +162,8 @@ export function ArchbaseTableTemplate<T extends object, ID>({
         isLoading={isLoading}
         pageSize={pageSize}
         isError={isError}
+        enableGlobalFilter={filterType==='normal'}
+        renderToolbarInternalActions={filterType==='advanced'?buildFilter:undefined}
         renderRowActions={buildRowActions}
         error={<span>{error}</span>}
       >

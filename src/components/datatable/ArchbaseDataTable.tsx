@@ -78,6 +78,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
   enableRowActions?: boolean;
   enableColumnFilterModes?: boolean;
   enableGrouping?: boolean;
+  enableGlobalFilter?: boolean;
   enablePinning?: boolean;
   manualFiltering?: boolean;
   manualPagination?: boolean;
@@ -108,6 +109,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
   globalDateFormat?: string;
   renderRowActionMenuItems?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
   renderRowActions?: (props: { cell: MRT_Cell<T>; row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
+  renderToolbarInternalActions?: (props: { table: MRT_TableInstance<T>}) => ReactNode | null;
   positionActionsColumn?: 'first' | 'last';
 }
 
@@ -850,7 +852,7 @@ const getRenderByDataType = (dataType: FieldDataType, render:(data: any) => Reac
     positionActionsColumn: props.positionActionsColumn,
     renderRowActions: props.renderRowActions,
     renderRowActionMenuItems: props.renderRowActionMenuItems,
-    renderToolbarInternalActions: ({}) => (
+    renderToolbarInternalActions: props.renderToolbarInternalActions?props.renderToolbarInternalActions: ({}) => (
       <Flex gap="xs" align="center" className="no-print">
         <MRT_ToggleGlobalFilterButton table={table} />
         <Tooltip withinPortal withArrow label={i18next.t('Refresh')}>
@@ -909,7 +911,7 @@ const getRenderByDataType = (dataType: FieldDataType, render:(data: any) => Reac
       showSkeletons: props.isLoading,
       showAlertBanner: props.isError,
       pagination,
-      showGlobalFilter: !globalFilter || globalFilter !== '',
+      showGlobalFilter: (!globalFilter || globalFilter !== '') && props.enableGlobalFilter,
     },
     mantineProgressProps: {
       striped: false,
@@ -998,6 +1000,7 @@ ArchbaseDataTable.defaultProps = {
   enableRowActions: true,
   positionActionsColumn: 'first',
   enableColumnFilterModes: true,
+  enableGlobalFilter: true,
   enableGrouping: false,
   enablePinning: true,
   allowColumnFilters: true,

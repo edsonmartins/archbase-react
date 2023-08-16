@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   useArchbaseDataSource,
   useArchbaseDataSourceListener,
@@ -14,7 +14,7 @@ import { FakePessoaService } from '@demo/service/FakePessoaService';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
 import { ArchbaseNotifications } from '@components/notification';
-import { ArchbaseCheckbox, MaskPattern } from '@components/editors';
+import { MaskPattern } from '@components/editors';
 import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import {
   ArchbaseQueryFilter,
@@ -27,13 +27,33 @@ import {
   QueryFields,
   getDefaultEmptyFilter,
 } from '@components/querybuilder';
-import { ArchbasePanelTemplate } from '../ArchbasePanelTemplate';
-import { Button } from '@mantine/core';
+import {
+  Avatar,
+  Button,
+  Card,
+  Center,
+  Grid,
+  Group,
+  Paper,
+  Progress,
+  Rating,
+  RingProgress,
+  Stack,
+  Text,
+  createStyles,
+} from '@mantine/core';
+import { ArchbaseMasonryTemplate } from '../ArchbaseMasonryTemplate';
+import {
+  ArchbaseMasonryContext,
+  ArchbaseMasonryContextValue,
+  ArchbaseMasonryCustomItemProps,
+} from '@components/masonry/index';
+import { IconAt, IconPhoneCall } from '@tabler/icons-react';
+import { IconArrowDownRight } from '@tabler/icons-react';
 const filters: LocalFilter[] = [];
 
-const ArchbasePanelTemplateExample = () => {
+const ArchbaseMasonryTemplateExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const [debug, setDebug] = useState<boolean>(true);
   const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   /**
    * Criando dataSource remoto
@@ -51,8 +71,8 @@ const ArchbasePanelTemplateExample = () => {
     pageSize: 10,
     loadOnStart: true,
     currentPage: 0,
-    onLoadComplete: (_dataSource) => {
-      //
+    onLoadComplete: (dataSource) => {
+      console.log(dataSource);
     },
     onDestroy: (_dataSource) => {
       //
@@ -218,13 +238,8 @@ const ArchbasePanelTemplateExample = () => {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: 'calc(100vh - 50px)' }}>
-      <ArchbaseCheckbox
-        label="Debug"
-        isChecked={debug}
-        onChangeValue={(value: any, _event: any) => setDebug(value === true)}
-      ></ArchbaseCheckbox>
-      <ArchbasePanelTemplate
+    <div style={{ width: '100%', height: 'calc(100vh - 30px)' }}>
+      <ArchbaseMasonryTemplate
         title={'Pessoas'}
         dataSource={dsPessoas}
         pageSize={10}
@@ -234,7 +249,6 @@ const ArchbasePanelTemplateExample = () => {
         clearError={clearError}
         width={'100%'}
         height={'100%'}
-        debug={debug}
         filterOptions={{
           activeFilterIndex: 0,
           enabledAdvancedFilter: false,
@@ -245,58 +259,148 @@ const ArchbasePanelTemplateExample = () => {
         userActions={{ visible: true, customUserActions: <Button>Liberar</Button> }}
         filterFields={filterFields}
         filterPersistenceDelegator={dsFilters as ArchbaseQueryFilterDelegator}
-      />
+        columnsCount={5}
+        gutter="10px"
+        columnsCountBreakPoints={{ 320: 1, 640: 2, 960: 3, 1280: 4, 1600: 5 }}
+        component={{ type: CustomItem }}
+      ></ArchbaseMasonryTemplate>
     </div>
   );
 };
 
 export default {
-  title: 'Templates/Panel template',
-  component: ArchbasePanelTemplateExample,
+  title: 'Templates/Masonry template',
+  component: ArchbaseMasonryTemplateExample,
 } as Meta;
 
 const data = [pessoasData[0]];
 
-export const Example: StoryObj<typeof ArchbasePanelTemplateExample> = {
+export const Example: StoryObj<typeof ArchbaseMasonryTemplateExample> = {
   args: {
     render: () => {
-      <ArchbasePanelTemplateExample />;
+      <ArchbaseMasonryTemplateExample />;
     },
   },
 };
 
-const Container = ({ children }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerHeight, setContainerHeight] = useState(0);
+const useStyles = createStyles((theme) => ({
+  icon: {
+    color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[7],
+  },
+
+  name: {
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+  },
+  card: {
+    backgroundColor: theme.fn.primaryColor(),
+  },
+
+  title: {
+    color: theme.fn.rgba(theme.white, 0.65),
+  },
+
+  stats: {
+    color: theme.white,
+  },
+
+  progressBar: {
+    backgroundColor: theme.white,
+  },
+
+  progressTrack: {
+    backgroundColor: theme.fn.rgba(theme.white, 0.4),
+  },
+}));
+
+interface CustomItemProps extends ArchbaseMasonryCustomItemProps<Pessoa, string> {}
+
+const CustomItem = (props: CustomItemProps) => {
+  const { classes } = useStyles();
+  const masonryContextValue = useContext<ArchbaseMasonryContextValue<Pessoa, string>>(ArchbaseMasonryContext);
+  const itemRef = useRef<any>(null);
 
   useEffect(() => {
-    const getParentHeight = () => {
-      if (containerRef.current && containerRef.current.parentElement) {
-        const parentHeight = containerRef.current.parentElement.clientHeight;
-        setContainerHeight(parentHeight);
+    if (itemRef.current && props.active) {
+      itemRef.current.focus();
+    }
+  }, [props.active]);
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    if (!props.disabled) {
+      if (masonryContextValue.handleSelectItem) {
+        masonryContextValue.handleSelectItem(props.index, props.recordData!);
       }
-    };
+    }
+  };
 
-    getParentHeight(); // Set initial height
-    window.addEventListener('resize', getParentHeight);
-    return () => {
-      window.removeEventListener('resize', getParentHeight);
-    };
-  }, []);
-
+  const backgroundColor = props.active ? masonryContextValue.activeBackgroundColor : '';
+  const color = props.active ? masonryContextValue.activeColor : '';
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        border: '1px solid red', // Customize as needed
-        // boxSizing: 'border-box',
-        // position: 'relative',
-        // overflow: 'hidden', // To handle content that might overflow
-      }}
-      ref={containerRef}
+    <Paper
+      withBorder={true}
+      onClick={handleClick}
+      style={{ maxWidth: 380, overflow: 'hidden', width: 320, height: 240, padding: '8px', backgroundColor, color }}
+      ref={itemRef}
+      tabIndex={-1}
     >
-      {children}
-    </div>
+      <Group noWrap>
+        <Avatar src={props.recordData.foto} size={94} radius="md" />
+        <div>
+          <Text fz="lg" fw={500} className={classes.name} truncate={true}>
+            {props.recordData.nome}
+          </Text>
+
+          <Group noWrap spacing={10} mt={3}>
+            <IconAt stroke={1.5} size="1rem" className={classes.icon} />
+            <Text fz="xs" c="dimmed" className={classes.name}>
+              {props.recordData.email}
+            </Text>
+          </Group>
+
+          <Group noWrap spacing={10} mt={5}>
+            <IconPhoneCall stroke={1.5} size="1rem" className={classes.icon} />
+            <Text fz="xs" c="dimmed" className={classes.name}>
+              {props.recordData.celular}
+            </Text>
+          </Group>
+        </div>
+      </Group>
+      <Card withBorder radius="md" p="xl" className={classes.card}>
+        <Grid>
+          <Grid.Col span={8}>
+            <Text fz="xs" tt="uppercase" fw={700} className={classes.title}>
+              Total mês
+            </Text>
+            <Text fz="lg" fw={500} className={classes.stats}>
+              R$5.431 / R$10.000
+            </Text>
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <RingProgress
+              size={80}
+              roundCaps
+              thickness={8}
+              sections={[{ value: 34, color: 'red' }]}
+              label={
+                <Center>
+                  <IconArrowDownRight size="1.4rem" stroke={1.5} />
+                </Center>
+              }
+            />
+          </Grid.Col>
+        </Grid>
+        <Progress
+          value={54.31}
+          mt="md"
+          size="lg"
+          radius="xl"
+          classNames={{
+            root: classes.progressTrack,
+            bar: classes.progressBar,
+          }}
+        />
+      </Card>
+    </Paper>
   );
 };
