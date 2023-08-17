@@ -5,7 +5,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconBorderRadius, IconShadow, IconSpacingHorizontal, IconTypography } from '@tabler/icons-react';
 import { IconColorPicker } from '@tabler/icons-react';
 import { ArchbaseThemeDrawerTitle } from './ArchbaseThemeDrawerTitle';
-import { ArchbaseThemeColor } from './ArchbaseThemeColor';
+import { ArchbaseThemeColorList } from './ArchbaseThemeColorList';
 
 export interface ArchbaseThemeEditorProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do edit */
@@ -21,6 +21,7 @@ export interface ArchbaseThemeEditorProps<T, ID> {
 }
 
 export function ArchbaseThemeEditor<T, ID>({
+  dataSource,
   disabled,
   drawerLabel = 'Theme Editor',
   buttonLabel = 'Open Theme Editor',
@@ -43,7 +44,7 @@ export function ArchbaseThemeEditor<T, ID>({
               Colors
             </Accordion.Control>
             <Accordion.Panel>
-              <ArchbaseThemeColor label="Primary" placeholder="#00000" />
+              <ArchbaseThemeColorList dataSource={dataSource} />
             </Accordion.Panel>
           </Accordion.Item>
 

@@ -1,16 +1,22 @@
-import { Box, ColorInput, ColorPicker, Flex, Popover, Text } from '@mantine/core';
+import { Box, ColorInput, ColorPicker, Flex, MantineThemeColorsOverride, Popover, Text } from '@mantine/core';
 import React, { useState } from 'react';
 import { generateColors } from '@components/core/utils';
 
 interface ArchbaseThemeColorProps {
   label: string;
   placeholder: string;
+  onChangeValue?: (colors: MantineThemeColorsOverride) => void;
+  initialColors?: MantineThemeColorsOverride;
 }
 
-export function ArchbaseThemeColor({ label, placeholder }: ArchbaseThemeColorProps) {
-  const [color, setColor] = useState('');
-  const [colors, setColors] = useState(['', '', '', '', '', '', '', '', '', '']);
-
+export function ArchbaseThemeColor({ label, placeholder, onChangeValue, initialColors }: ArchbaseThemeColorProps) {
+  const [color, setColor] = useState(initialColors ? initialColors[4] : '');
+  const [colors, setColors] = useState(
+    initialColors
+      ? ({ [label]: initialColors } as MantineThemeColorsOverride)
+      : ({ [label]: ['', '', '', '', '', '', '', '', '', ''] } as MantineThemeColorsOverride),
+  );
+  console.log(initialColors);
   const paletteAccents = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 
   const borderRadius = (accent) => {
@@ -32,8 +38,12 @@ export function ArchbaseThemeColor({ label, placeholder }: ArchbaseThemeColorPro
 
   const handleChange = (currentColor) => {
     setColor(currentColor);
-    setColors([...generateColors(currentColor)]);
-    console.log(colors);
+    const currentColors = { [label]: [...generateColors(currentColor)] };
+    setColors(currentColors);
+
+    if (onChangeValue) {
+      onChangeValue(currentColors);
+    }
   };
 
   return (

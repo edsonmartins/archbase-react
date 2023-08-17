@@ -66,6 +66,7 @@ const ArchbaseThemeEditorExample = () => {
               drawerLabel="Editor de Tema"
               buttonLabel={<IconAdjustments size={'1.5rem'} />}
               toggleDarkMode={toggleDarkMode}
+              dataSource={dataSource}
             />
           </Box>
         </Card>
