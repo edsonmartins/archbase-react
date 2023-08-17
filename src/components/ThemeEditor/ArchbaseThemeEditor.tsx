@@ -5,6 +5,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconBorderRadius, IconShadow, IconSpacingHorizontal, IconTypography } from '@tabler/icons-react';
 import { IconColorPicker } from '@tabler/icons-react';
 import { ArchbaseThemeDrawerTitle } from './ArchbaseThemeDrawerTitle';
+import { ArchbaseThemeColor } from './ArchbaseThemeColor';
 
 export interface ArchbaseThemeEditorProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do edit */
@@ -42,11 +43,7 @@ export function ArchbaseThemeEditor<T, ID>({
               Colors
             </Accordion.Control>
             <Accordion.Panel>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce varius consequat velit a viverra. Nunc
-              varius ornare velit id pharetra. Nam maximus, nulla ut facilisis consequat, urna turpis tempor lacus, ut
-              convallis mi nibh sit amet nunc. Phasellus ultricies euismod vestibulum. Phasellus vel magna non odio
-              hendrerit volutpat. Suspendisse vehicula maximus sapien, non ultrices risus pulvinar id. Etiam ultricies
-              ullamcorper erat.
+              <ArchbaseThemeColor label="Primary" placeholder="#00000" />
             </Accordion.Panel>
           </Accordion.Item>
 
