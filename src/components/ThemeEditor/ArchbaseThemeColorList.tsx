@@ -10,7 +10,7 @@ interface ArchbaseThemeColorListProps<T, ID> {
 
 export function ArchbaseThemeColorList<T, ID>({ dataSource }: ArchbaseThemeColorListProps<T, ID>) {
   const theme = useMantineTheme();
-  const [colorsList, setColorsList] = useState(theme.colors as MantineThemeColorsOverride);
+  const [colorsList, setColorsList] = useState(theme.colors);
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = colorsList;
@@ -70,10 +70,10 @@ export function ArchbaseThemeColorList<T, ID>({ dataSource }: ArchbaseThemeColor
         initialColors={colorsList['dark']}
       />
       <ArchbaseThemeColor
-        label="light"
+        label="archbase"
         placeholder="#ffffff"
         onChangeValue={handleChange}
-        initialColors={colorsList['light']}
+        initialColors={colorsList['archbase']}
       />
     </>
   );

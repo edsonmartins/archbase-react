@@ -16,7 +16,6 @@ export function ArchbaseThemeColor({ label, placeholder, onChangeValue, initialC
       ? ({ [label]: initialColors } as MantineThemeColorsOverride)
       : ({ [label]: ['', '', '', '', '', '', '', '', '', ''] } as MantineThemeColorsOverride),
   );
-  console.log(initialColors);
   const paletteAccents = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 
   const borderRadius = (accent) => {
@@ -40,7 +39,7 @@ export function ArchbaseThemeColor({ label, placeholder, onChangeValue, initialC
     setColor(currentColor);
     const currentColors = { [label]: [...generateColors(currentColor)] };
     setColors(currentColors);
-
+    console.log(currentColors);
     if (onChangeValue) {
       onChangeValue(currentColors);
     }
@@ -70,7 +69,7 @@ export function ArchbaseThemeColor({ label, placeholder, onChangeValue, initialC
                 align={'center'}
                 w={'2.5rem'}
                 h={'1.5rem'}
-                bg={colors[index]}
+                bg={colors[label][index]}
                 key={accent}
                 sx={{ borderRadius: borderRadius(accent) }}
               >
@@ -85,7 +84,7 @@ export function ArchbaseThemeColor({ label, placeholder, onChangeValue, initialC
                 align={'center'}
                 w={'2.5rem'}
                 h={'1.5rem'}
-                bg={colors[index + 5]}
+                bg={colors[label][index + 5]}
                 key={accent}
                 sx={{ borderRadius: borderRadius(accent) }}
               >
