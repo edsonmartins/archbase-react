@@ -12,10 +12,9 @@ import { ArchbaseAlert } from '@components/notification';
 import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
 import { t } from 'i18next';
 import useComponentSize from '@rehooks/component-size';
-import { Box, Button, Container, Flex, Grid, MantineNumberSize, Pagination, Paper, ScrollArea, Text } from '@mantine/core';
+import { Box, Button, Flex, Grid, MantineNumberSize, Pagination, Paper, ScrollArea, Text } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { IconTrash } from '@tabler/icons-react';
-import { ArchbaseCheckbox } from '@components/editors';
 
 export interface UserActionsOptions {
   visible?: boolean;

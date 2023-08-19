@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect, CSSProperties, ReactNode } from 'react';
-import './ArchbaseReactTabs.scss';
+import './ArchbaseAdvancedTabs.scss';
 
 
-export interface ArchbaseTab {
+
+export interface ArchbaseAdvancedTab {
   key: any;
   favicon: ReactNode | string | undefined;
   title: string;
 }
 
-export interface ArchbaseReactTabProps {
+export interface ArchbaseAdvancedTabProps {
   favicon : ReactNode | string | undefined;
   title : string;
   activeTab : boolean; 
@@ -25,7 +26,7 @@ export interface ArchbaseReactTabProps {
   sorting : boolean;
 }
 
-const ArchbaseReactTab : React.FC<ArchbaseReactTabProps> = (props) => {
+const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 	const { favicon, title, activeTab, position, contentWidth, onClick, onClose, setDragging, tabsContentWidth, animateTabMove,
 		isDragging, index, sorting } = props;
 	const [width, setWidth] = useState(0);
@@ -130,20 +131,19 @@ const ArchbaseReactTab : React.FC<ArchbaseReactTabProps> = (props) => {
 	);
 }
 
-export interface ArchbaseReactTabsProps {
-  currentTabs: ArchbaseTab[],
+export interface ArchbaseAdvancedTabsProps {
+  currentTabs: ArchbaseAdvancedTab[],
   activeTab: any,
-  onChange: Function,
-  onClose: Function,
+  onTabChange: Function,
+  onTabClose: Function,
   className?: string,
   style?: CSSProperties,
   dark: boolean,
   onClick: Function,
 }
 
-export const ArchbaseReactTabs: React.FC<ArchbaseReactTabsProps> = (props) => {
-	const { currentTabs, onChange, activeTab, onClose, className, style, dark, onClick } = props;
-	const [active, setActive] = useState<string>();
+export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props) => {
+	const { currentTabs, onTabChange: onChange, activeTab, onTabClose: onClose, className, style, dark, onClick } = props;
 	const [tabContentWidths, setTabContentWidths] = useState<number[]>([]);
 	const [positions, setPositions] = useState<number[]>([]);
 	const [tabs, setTabs] = useState(currentTabs || []);
@@ -173,10 +173,6 @@ export const ArchbaseReactTabs: React.FC<ArchbaseReactTabsProps> = (props) => {
 	useEffect(() => {
 		!!currentTabs && setTabs(currentTabs);
 	}, [currentTabs]);
-
-	useEffect(() => {
-		active != activeTab && setActive(activeTab);
-	}, [activeTab]);
 
 	const handleResize = () => {
     const widths = getContentWidths();
@@ -225,7 +221,7 @@ export const ArchbaseReactTabs: React.FC<ArchbaseReactTabsProps> = (props) => {
 		setSorting(true)
 		let closest = Infinity
 		let closestIndex = -1
-		let tabsDrag : ArchbaseTab[] = []
+		let tabsDrag : ArchbaseAdvancedTab[] = []
 		positions.forEach((v, i) => {
 			if (Math.abs(position - v) < closest) {
 				closest = Math.abs(position - v)
@@ -268,16 +264,16 @@ export const ArchbaseReactTabs: React.FC<ArchbaseReactTabsProps> = (props) => {
 			>
 				<div className={`archbase_tabs_content`} ref={tabContentEl} >
 					{
-						!!tabs && tabs.map((m : ArchbaseTab, index) =>
+						!!tabs && tabs.map((m : ArchbaseAdvancedTab, index) =>
 							!!positions[index] &&
-							<ArchbaseReactTab
+							<ArchbaseAdvancedTab
 								key={m.key}
 								favicon={m.favicon}
 								title={m.title}
-								activeTab={active === m.key}
+								activeTab={activeTab === m.key}
 								position={positions[index]}
 								contentWidth={tabContentWidths[index]}
-								onClick={_e => (setActive(m.key), onClick(m.key))}
+								onClick={_e => onClick(m.key)}
 								onClose={_e => closeTab(m.key)}
 								setDragging={setDragging}
 								tabsContentWidth={tabContentEl.current && tabContentEl.current.clientWidth}

@@ -579,7 +579,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     }
     const result = table.getSelectedRowModel().flatRows.filter((row) => row.index === cell.row.index);
     if (result && result.length > 0) {
-      return convertHexToRGBA(theme.colors.archbase[theme.colorScheme === 'dark' ? 8 : 4], 0.1);
+      return convertHexToRGBA(theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 8 : 4], 0.1);
     }
     return undefined;
   };

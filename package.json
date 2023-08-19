@@ -53,6 +53,7 @@
     "@mantine/hooks": "^6.0.19",
     "@mantine/modals": "^6.0.19",
     "@mantine/notifications": "^6.0.19",
+    "@mantine/spotlight": "^6.0.19",
     "@mantine/tiptap": "^6.0.19",
     "@react-hookz/web": "^23.1.0",
     "@rehooks/component-size": "^1.0.3",
@@ -98,6 +99,10 @@
     "react-masonry-list": "^1.0.4",
     "react-modal": "^3.16.1",
     "react-multi-date-picker": "^4.1.2",
+    "react-pro-sidebar": "^1.1.0-alpha.1",
+    "react-router": "^6.15.0",
+    "react-router-dom": "^6.15.0",
+    "react-tracked": "^1.7.11",
     "reflect-metadata": "^0.1.13",
     "rollup-plugin-alias": "^2.2.0",
     "rollup-plugin-generate-package-json": "^3.2.0",
@@ -110,7 +115,8 @@
     "suneditor-react": "^3.6.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "usehooks-ts": "^2.9.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.22.8",

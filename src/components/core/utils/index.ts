@@ -12,7 +12,7 @@ import hasComplexChildren from './hasComplexChildren.js';
 import onlyText from './onlyText.js';
 import onlyValid from './onlyValid.js';
 import isBase64 from './isBase64.js';
-import { archbaseLogo } from './archbaseLogo.js';
+import { archbaseLogo, archbaseLogo2, archbaseLogo3 } from './archbaseLogo.js';
 import {convertImageToBase64} from './convertImageToBase64.js';
 
 import {
@@ -97,6 +97,8 @@ export {
   truncate,
   isBase64,
   archbaseLogo,
+  archbaseLogo2,
+  archbaseLogo3,
   convertDateToISOString,
   convertISOStringToDate,
   formatStr,

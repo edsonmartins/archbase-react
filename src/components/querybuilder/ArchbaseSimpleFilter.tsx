@@ -19,8 +19,7 @@ import { IconArrowDown, IconArrowUp, IconSearch } from '@tabler/icons-react';
 import { ArchbaseList } from '@components/list';
 import { ArchbaseDataSource } from '@components/datasource';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
-import { ActionIcon, MantineTheme, MultiSelect, Switch, Text, Tooltip } from '@mantine/core';
-import { ArchbaseCol, ArchbaseRow } from '@components/containers/gridLayout';
+import { ActionIcon, Grid, MantineTheme, MultiSelect, Switch, Text, Tooltip } from '@mantine/core';
 import { ArchbaseDateTimerPickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
 import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
 import {
@@ -661,8 +660,8 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
             </AccordionItemButton>
           </AccordionItemHeading>
           <AccordionItemPanel>
-            <ArchbaseRow>
-              <ArchbaseCol style={{ padding: 13 }}>
+            <Grid>
+              <Grid.Col style={{ padding: 13 }}>
                 <div
                   className="sort-group-container"
                   style={{
@@ -711,8 +710,8 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                     />
                   </div>
                 </div>
-              </ArchbaseCol>
-            </ArchbaseRow>
+              </Grid.Col>
+            </Grid>
             </AccordionItemPanel>
         </AccordionItem>,
       );

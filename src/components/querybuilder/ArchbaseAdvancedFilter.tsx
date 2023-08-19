@@ -1,6 +1,6 @@
 import React, { CSSProperties, Component, ReactNode } from 'react';
-import { uniqueId} from 'lodash';
-import { 
+import { uniqueId } from 'lodash';
+import {
   getDefaultEmptyFilter,
   Field,
   FilterValue,
@@ -20,7 +20,7 @@ import { ArchbaseAppContext, ArchbaseError } from '@components/core';
 import { ltrim } from '@components/core/utils';
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors';
-import { ActionIcon, Button, Chip, Group, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Chip, Grid, Group, Text, Tooltip } from '@mantine/core';
 import { IconArrowUp, IconSearch, IconTrash } from '@tabler/icons-react';
 import { ArchbaseList } from '@components/list';
 import { IconArrowDown } from '@tabler/icons-react';
@@ -28,7 +28,6 @@ import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine
 import { ArchbaseDateTimerPickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
 import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
 import { ArchbaseSwitch } from '@components/editors/ArchbaseSwitch';
-import { ArchbaseCol, ArchbaseRow } from '@components/containers/gridLayout';
 import '../../styles/querybuilder.scss';
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
   id: string;
@@ -593,7 +592,7 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
   };
 
   render() {
-    let displayMode = this.props.horizontal ? 'flex' : 'block';
+    //let displayMode = this.props.horizontal ? 'flex' : 'block';
 
     return (
       <div
@@ -604,14 +603,8 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
         }}
       >
         <div style={{ width: this.props.width, overflow: 'auto' }}>
-          <ArchbaseRow
-            style={{
-              border: this.props.border!,
-              margin: 0,
-              display: displayMode,
-            }}
-          >
-            <ArchbaseCol>
+          <Grid>
+            <Grid.Col span={12}>
               <RuleGroupItem
                 rules={this.state.currentFilter.filter.rules}
                 condition={this.state.currentFilter.filter.condition}
@@ -620,13 +613,13 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
                 onSearchButtonClick={this.props.onSearchButtonClick}
                 parentId={null}
               />
-            </ArchbaseCol>
-          </ArchbaseRow>
+            </Grid.Col>
+          </Grid>
         </div>
 
         {this.props.allowSort === true ? (
-          <ArchbaseRow>
-            <ArchbaseCol style={{ padding: 13 }}>
+          <Grid>
+            <Grid.Col span={12} style={{ padding: 13 }}>
               <div
                 className="sort-group-container"
                 style={{
@@ -675,8 +668,8 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<ArchbaseAdvancedFilterProp
                   />
                 </div>
               </div>
-            </ArchbaseCol>
-          </ArchbaseRow>
+            </Grid.Col>
+          </Grid>
         ) : null}
       </div>
     );
@@ -934,31 +927,19 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
               </Group>
             </Chip.Group>
             <Button.Group>
-            <ActionElement
-              label="Condição"
-              style={{}}
-              handleOnClick={this.addRule}
-              rules={rules}
-              level={level}
-            />
-            <ActionElement
-              label="Grupo"
-              handleOnClick={this.addGroup}
-              rules={rules}
-              level={level}
-            />{' '}
-            {this.hasParentGroup() ? (
-              <ActionElement
-                label="Remover"
-                color="red"
-                handleOnClick={this.removeGroup}
-                rules={rules}
-                level={level}
-              />
-            ) : null}
-          </Button.Group>
+              <ActionElement label="Condição" style={{}} handleOnClick={this.addRule} rules={rules} level={level} />
+              <ActionElement label="Grupo" handleOnClick={this.addGroup} rules={rules} level={level} />{' '}
+              {this.hasParentGroup() ? (
+                <ActionElement
+                  label="Remover"
+                  color="red"
+                  handleOnClick={this.removeGroup}
+                  rules={rules}
+                  level={level}
+                />
+              ) : null}
+            </Button.Group>
           </div>
-          
         </dt>
         <dd className="rules-group-body">
           <ul className="rules-list">
@@ -1125,7 +1106,7 @@ class RuleItem extends Component<RuleItemProps> {
           options={fields}
           value={field!}
           className="custom-select-field"
-          style={{color:this.context.theme!.colorScheme==='dark'?'white':'black'}}
+          style={{ color: this.context.theme!.colorScheme === 'dark' ? 'white' : 'black' }}
           disabled={disabled}
           handleOnChange={this.onFieldChanged}
           level={level}
@@ -1135,7 +1116,7 @@ class RuleItem extends Component<RuleItemProps> {
           field={field!}
           options={getOperators(field)}
           value={operator!}
-          style={{color:this.context.theme!.colorScheme==='dark'?'white':'black'}}
+          style={{ color: this.context.theme!.colorScheme === 'dark' ? 'white' : 'black' }}
           className="custom-select-operator"
           disabled={disabled}
           handleOnChange={this.onOperatorChanged}
@@ -1175,7 +1156,7 @@ class RuleItem extends Component<RuleItemProps> {
           ''
         )}
         <ActionIcon id={`btnRemoveRule_${field}`} onClick={this.removeRule}>
-          <IconTrash color={this.context.theme!.colors.red[3]}/>
+          <IconTrash color={this.context.theme!.colors.red[3]} />
         </ActionIcon>
       </li>
     );
@@ -1285,7 +1266,9 @@ class ActionElement extends Component<ActionElementProps> {
     const { label, handleOnClick, style, color } = this.props;
 
     return (
-      <Button style={style} size="xs" color={color} onClick={(e: React.MouseEvent) => handleOnClick(e)}>{label}</Button>
+      <Button style={style} size="xs" color={color} onClick={(e: React.MouseEvent) => handleOnClick(e)}>
+        {label}
+      </Button>
     );
   }
 }
@@ -1567,7 +1550,14 @@ class ValueSelector extends Component<ValueSelectorProps> {
     const { value, options, className, disabled, style } = this.props;
 
     return (
-      <select className={className} style={style} disabled={disabled} value={value} tabIndex={-1} onChange={this.handleOnChange}>
+      <select
+        className={className}
+        style={style}
+        disabled={disabled}
+        value={value}
+        tabIndex={-1}
+        onChange={this.handleOnChange}
+      >
         {options.map((option) => {
           return (
             <option key={option.name} value={option.name}>

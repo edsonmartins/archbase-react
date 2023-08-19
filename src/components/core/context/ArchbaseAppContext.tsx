@@ -3,6 +3,8 @@ import { MantineTheme } from '@mantine/styles';
 import '../../../../locales/config';
 import { Container } from 'inversify';
 import { useMantineTheme } from '@mantine/core';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ProSidebarProvider } from 'react-pro-sidebar';
 
 interface ArchbaseAppContextValues {
   user: any | null;
@@ -37,23 +39,24 @@ interface ArchbaseAppProviderProps {
   timeFormat?: string;
 }
 
-
 const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
   user,
   owner,
   selectedCompany,
   children,
   iocContainer,
-  dateFormat= 'dd/MM/yyyy',
-  dateTimeFormat= 'dd/MM/yyyy HH:mm:ss',
-  timeFormat= 'HH:mm:ss',
+  dateFormat = 'dd/MM/yyyy',
+  dateTimeFormat = 'dd/MM/yyyy HH:mm:ss',
+  timeFormat = 'HH:mm:ss',
 }) => {
   const theme = useMantineTheme();
   return (
     <ArchbaseAppContext.Provider
       value={{ user, owner, selectedCompany, theme, iocContainer, dateFormat, dateTimeFormat, timeFormat }}
     >
-      {children}
+      <ProSidebarProvider>
+        <Router>{children}</Router>
+      </ProSidebarProvider>
     </ArchbaseAppContext.Provider>
   );
 };

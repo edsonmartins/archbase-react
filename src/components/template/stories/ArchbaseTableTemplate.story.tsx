@@ -37,6 +37,7 @@ import {
   Columns,
 } from '@components/datatable';
 import { PessoaStatus } from '@demo/data/types';
+import { usePessoaStore } from '@demo/store/usePessoaStore';
 
 const filters: LocalFilter[] = [];
 
@@ -58,8 +59,9 @@ const StatusValues: ArchbaseStatusType[] = [
   },
 ];
 
-const ArchbaseTableTemplateExample = () => {
+export const ArchbaseTableTemplateExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
+  const pessoaStore = usePessoaStore();
   const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   /**
    * Criando dataSource remoto
@@ -76,9 +78,10 @@ const ArchbaseTableTemplateExample = () => {
     service: pessoaApi,
     pageSize: 10,
     loadOnStart: true,
-    currentPage: 0,
-    onLoadComplete: (_dataSource) => {
-      //
+    initialDataSource: pessoaStore.dataSource,
+    currentPage: pessoaStore.dataSource ? pessoaStore.dataSource.getCurrentPage() : 0,
+    onLoadComplete: (dataSource) => {
+      pessoaStore.setDataSource(dataSource);
     },
     onDestroy: (_dataSource) => {
       //
@@ -100,7 +103,6 @@ const ArchbaseTableTemplateExample = () => {
     activeFilterIndex: -1,
     expandedFilter: false,
   });
-  const filterRef = useRef<any>();
   const { dataSource: dsFilters } = useArchbaseLocalFilterDataSource({ initialData: filters, name: 'dsFilters' });
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {

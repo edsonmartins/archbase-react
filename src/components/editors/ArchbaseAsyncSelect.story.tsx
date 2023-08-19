@@ -8,7 +8,7 @@ import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseAsyncSelect, OptionsResult } from './ArchbaseAsyncSelect';
 import { pedidosData, Pedido, Pessoa } from '@demo/index';
-import { useArchbaseServiceApi } from '@components/hooks';
+import { useArchbaseRemoteServiceApi } from '@components/hooks';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { FakePessoaService } from 'demo/service/FakePessoaService';
 import { Page } from '@components/service';
@@ -19,7 +19,7 @@ const PAGE_SIZE = 10;
 
 const ArchbaseAsyncSelectExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const pessoaApi = useArchbaseServiceApi<FakePessoaService>(API_TYPE.Pessoa)
+  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa)
   const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit();

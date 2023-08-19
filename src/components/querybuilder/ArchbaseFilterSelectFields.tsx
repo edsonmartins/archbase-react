@@ -4,12 +4,11 @@ import { CustomSortItem } from './ArchbaseAdvancedFilter';
 import { cloneDeep } from 'lodash';
 import { getQuickFieldsSort, getQuickFields, ArchbaseQueryFilter, Field, SortField } from './ArchbaseFilterCommons';
 import { ArchbaseCheckbox } from '@components/editors';
-import { ActionIcon, Box, Button, Paper, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Box, Button, Grid, Paper, Text, Tooltip } from '@mantine/core';
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseList } from '@components/list';
 import { IconArrowDown } from '@tabler/icons-react';
 import { IconArrowUp } from '@tabler/icons-react';
-import { ArchbaseCol, ArchbaseRow } from '@components/containers/gridLayout';
 import { ArchbaseForm } from '@components/containers/form';
 
 interface ArchbaseFilterSelectFieldsProps {
@@ -223,7 +222,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
         centered={true}
       >
         <ArchbaseForm>
-          <ArchbaseRow
+          <Grid
             style={{
               paddingBottom: '10px',
               overflowY: 'auto',
@@ -248,7 +247,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
                 label="Selecionar todos ?"
               />
             </Paper>
-            <ArchbaseCol
+            <Grid.Col
               style={{
                 height: '128px',
                 overflowY: 'auto',
@@ -256,10 +255,10 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
               }}
             >
               <Box>{this.renderCheckboxFields()}</Box>
-            </ArchbaseCol>
-          </ArchbaseRow>
-          <ArchbaseRow>
-            <ArchbaseCol style={{ padding: 13 }}>
+            </Grid.Col>
+          </Grid>
+          <Grid>
+            <Grid.Col style={{ padding: 13 }}>
               <div
                 className="sort-group-container"
                 style={{
@@ -308,8 +307,8 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
                   />
                 </div>
               </div>
-            </ArchbaseCol>
-          </ArchbaseRow>
+            </Grid.Col>
+          </Grid>
         </ArchbaseForm>
         <Paper
           style={{

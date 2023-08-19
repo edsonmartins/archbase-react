@@ -1,2 +1,2 @@
-export { ArchbaseReactTabs } from '@components/containers/tabs';
-export type { ArchbaseTab, ArchbaseReactTabProps, ArchbaseReactTabsProps } from '@components/containers/tabs/ArchbaseReactTabs';
+export { ArchbaseAdvancedTabs } from '@components/containers/tabs';
+export type { ArchbaseAdvancedTab as ArchbaseTab, ArchbaseAdvancedTabProps as ArchbaseReactTabProps, ArchbaseAdvancedTabsProps as ArchbaseReactTabsProps } from 'components/containers/tabs/ArchbaseAdvancedTabs';
