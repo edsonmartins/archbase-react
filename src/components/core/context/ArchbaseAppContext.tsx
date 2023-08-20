@@ -70,3 +70,4 @@ const useArchbaseAppContext = () => {
 };
 
 export { ArchbaseAppContext, ArchbaseAppProvider, useArchbaseAppContext };
+export type {ArchbaseAppContextValues}

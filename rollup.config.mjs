@@ -11,6 +11,8 @@ import { terser } from 'rollup-plugin-terser';
 import typescriptEngine from 'typescript';
 import pkg from './package.json' assert { type: 'json' };
 import alias from 'rollup-plugin-alias';
+import json from "@rollup/plugin-json";
+
 
 const config = {
   input: './src/index.ts',
@@ -65,18 +67,19 @@ const config = {
         '**/*.stories.ts+(|x)',
       ],
     }),
+    json(),
     babel({
       extensions: [...DEFAULT_EXTENSIONS, '.ts', 'tsx'],
       babelHelpers: 'runtime',
       exclude: /node_modules/,
     }),
-
     url(),
     svgr(),
-    resolve(),
+    resolve({ preferBuiltins: true, mainFields: ['browser'] }),
     commonjs(),
     terser(),
   ],
+  context: 'null',
   watch: {
     clearScreen: false,
   },

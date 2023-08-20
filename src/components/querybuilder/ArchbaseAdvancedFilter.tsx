@@ -25,7 +25,7 @@ import { IconArrowUp, IconSearch, IconTrash } from '@tabler/icons-react';
 import { ArchbaseList } from '@components/list';
 import { IconArrowDown } from '@tabler/icons-react';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
-import { ArchbaseDateTimerPickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
+import { ArchbaseDateTimePickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
 import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
 import { ArchbaseSwitch } from '@components/editors/ArchbaseSwitch';
 import '../../styles/querybuilder.scss';
@@ -1387,7 +1387,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
           else newValue = [newValue, newValue2];
 
           return (
-            <ArchbaseDateTimerPickerRange
+            <ArchbaseDateTimePickerRange
               disabled={disabled}
               value={newValue}
               width={this.props.twoFields ? '128px' : '260px'}

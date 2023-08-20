@@ -7,7 +7,7 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { ArchbaseJsonInput } from './ArchbaseJsonEdit';
+import { ArchbaseJsonEdit } from './ArchbaseJsonEdit';
 
 const ArchbaseJsonEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
@@ -38,7 +38,7 @@ const ArchbaseJsonEditExample = () => {
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({height:100})}>
-            <ArchbaseJsonInput<Pessoa,string> maxRows={100} maxLength={1000} label="Json" dataSource={dataSource} dataField="codigoJson" />
+            <ArchbaseJsonEdit<Pessoa,string> maxRows={100} maxLength={1000} label="Json" dataSource={dataSource} dataField="codigoJson" />
           </Box>
         </Card>
       </Grid.Col>

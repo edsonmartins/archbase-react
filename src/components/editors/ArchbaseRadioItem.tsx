@@ -7,8 +7,8 @@ export interface ArchbaseRadioItemProps<T> {
   disabled: boolean;
 }
 
-export function ArchbaseSelectItem<T>(_props: ArchbaseRadioItemProps<T>) {
+export function ArchbaseRadioItem<T>(_props: ArchbaseRadioItemProps<T>) {
   return null;
 }
 
-ArchbaseSelectItem.displayName = 'ArchbaseRadioItem';
+ArchbaseRadioItem.displayName = 'ArchbaseRadioItem';

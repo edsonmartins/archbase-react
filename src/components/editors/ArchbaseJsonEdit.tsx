@@ -10,7 +10,7 @@ import { DataSourceEventNames } from '../datasource';
 import { isBase64 } from '@components/core/utils';
 
 
-export interface ArchbaseJsonInputProps<T,ID> {
+export interface ArchbaseJsonEditProps<T,ID> {
   /** Fonte de dados onde será atribuido o valor do json input */
   dataSource?: ArchbaseDataSource<T, ID>;
   /** Campo onde deverá ser atribuido o valor do json input na fonte de dados */
@@ -55,7 +55,7 @@ export interface ArchbaseJsonInputProps<T,ID> {
   innerRef?: React.RefObject<HTMLTextAreaElement>|undefined;
 }
 
-export function ArchbaseJsonInput<T,ID>({
+export function ArchbaseJsonEdit<T,ID>({
   dataSource,
   dataField,
   disabled = false,
@@ -75,7 +75,7 @@ export function ArchbaseJsonInput<T,ID>({
   required = false,
   disabledBase64Convertion = false,
   innerRef
-}: ArchbaseJsonInputProps<T,ID>) {
+}: ArchbaseJsonEditProps<T,ID>) {
   const [value, setValue] = useState<string>('');
   const innerComponentRef = innerRef || useRef<any>();
 

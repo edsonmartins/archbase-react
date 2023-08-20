@@ -7,7 +7,7 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { ArchbaseJsonInput } from './ArchbaseJsonEdit';
+import { ArchbaseJsonEdit } from './ArchbaseJsonEdit';
 import { ArchbaseImageEdit } from './ArchbaseImageEdit';
 
 const ArchbaseImageEditExample = () => {

@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { CSSProperties, ReactNode } from 'react';
 import { ArchbaseDateTimePickerEdit } from './ArchbaseDateTimePickerEdit';
 
-export interface ArchbaseDateTimerPickerRangeProps {
+export interface ArchbaseDateTimePickerRangeProps {
   /** Indicador se o date picker range está desabilitado */
   disabled?: boolean;
   /** Indicador se o date picker range é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
@@ -46,7 +46,7 @@ export interface ArchbaseDateTimerPickerRangeProps {
   innerRefEnd?: React.RefObject<HTMLInputElement> | undefined;
 }
 
-export function ArchbaseDateTimerPickerRange({
+export function ArchbaseDateTimePickerRange({
   label,
   disabled,
   readOnly,
@@ -62,7 +62,7 @@ export function ArchbaseDateTimerPickerRange({
   icon,
   innerRefStart,
   innerRefEnd
-}: ArchbaseDateTimerPickerRangeProps) {
+}: ArchbaseDateTimePickerRangeProps) {
   const [startDate, setStartDate] = useState<DateValue>();
   const [endDate, setEndDate] = useState<DateValue>();
 

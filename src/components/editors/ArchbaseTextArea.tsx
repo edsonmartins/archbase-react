@@ -9,7 +9,7 @@ import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { isBase64 } from '@components/core/utils';
 
-export interface ArchbaseTextProps<T,ID> {
+export interface ArchbaseTextAreaProps<T,ID> {
   /** Fonte de dados onde será atribuido o valor do textarea */
   dataSource?: ArchbaseDataSource<T, ID>;
   /** Campo onde deverá ser atribuido o valor do textarea na fonte de dados */
@@ -71,7 +71,7 @@ export function ArchbaseTextArea<T,ID>({
   required = false,
   disabledBase64Convertion = false,
   innerRef
-}: ArchbaseTextProps<T,ID>) {
+}: ArchbaseTextAreaProps<T,ID>) {
   const [value, setValue] = useState<string>('');
   const innerComponentRef = innerRef || useRef<any>();
 

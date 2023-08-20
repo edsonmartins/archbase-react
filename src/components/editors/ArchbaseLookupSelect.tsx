@@ -5,7 +5,7 @@ import { ArchbaseError } from '@components/core';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
 import { SelectItem } from '@mantine/core';
 
-interface ArchbaseLookupSelectProps<T, ID, O> extends ArchbaseSelectProps<T, ID, O> {
+export interface ArchbaseLookupSelectProps<T, ID, O> extends ArchbaseSelectProps<T, ID, O> {
   lookupDataSource: ArchbaseDataSource<O, ID> | undefined;
   lookupDataFieldText: string | ((record: any) => string);
   lookupDataFieldId: string;

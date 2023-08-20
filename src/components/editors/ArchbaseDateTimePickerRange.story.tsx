@@ -6,7 +6,7 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { Meta, StoryObj } from '@storybook/react';
 import { useArchbaseForceUpdate } from '../hooks';
-import { ArchbaseDateTimerPickerRange } from './ArchbaseDateTimePickerRange';
+import { ArchbaseDateTimePickerRange } from './ArchbaseDateTimePickerRange';
 import { DateValue } from '@mantine/dates';
 import { formatISO } from 'date-fns';
 
@@ -39,7 +39,7 @@ const ArchbaseDateTimePickerRangeExample = () => {
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({height:500})}>
-            <ArchbaseDateTimerPickerRange onSelectDateRange={setSelectedRange} label="Informe o período"/>
+            <ArchbaseDateTimePickerRange onSelectDateRange={setSelectedRange} label="Informe o período"/>
             <Text size={"1rem"}>{selectedRange&&formatISO(selectedRange![0]!)+" -> "+formatISO(selectedRange![1]!)}</Text>
           </Box>
         </Card>

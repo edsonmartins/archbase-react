@@ -20,7 +20,7 @@ import { ArchbaseList } from '@components/list';
 import { ArchbaseDataSource } from '@components/datasource';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
 import { ActionIcon, Grid, MantineTheme, MultiSelect, Switch, Text, Tooltip } from '@mantine/core';
-import { ArchbaseDateTimerPickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
+import { ArchbaseDateTimePickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
 import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
 import {
   Accordion,
@@ -216,7 +216,6 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
   };
 
   onSortDown = (_event: any) => {
-    let _this = this;
     let activeIndex = this.state.currentFilter.sort.activeIndex;
     if (activeIndex >= 0) {
       let item = this.state.currentFilter.sort.sortFields[activeIndex];
@@ -231,7 +230,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
         });
       }
       let sortFields = this.state.currentFilter.sort.sortFields;
-      sortFields = sortFields.sort(function (a: { order: number }, b: { order: number }) {
+      sortFields = sortFields.sort((a: { order: number }, b: { order: number }) => {
         return a.order - b.order;
       });
       let currentFilter = this.state.currentFilter;
@@ -243,14 +242,13 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
           currentFilter,
         },
         () => {
-          _this.propagateFilterChanged();
+          this.propagateFilterChanged();
         },
       );
     }
   };
 
   onSortUp = (_event: any) => {
-    let _this = this;
     let { currentFilter } = this.state;
     let activeIndex = currentFilter.sort.activeIndex;
     if (activeIndex >= 0) {
@@ -266,7 +264,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
         });
       }
       let sortFields = currentFilter.sort.sortFields;
-      sortFields = sortFields.sort(function (a: { order: number }, b: { order: number }) {
+      sortFields = sortFields.sort((a: { order: number }, b: { order: number }) => {
         return a.order - b.order;
       });
       currentFilter.sort.sortFields = sortFields;
@@ -277,7 +275,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
           currentFilter,
         },
         () => {
-          _this.propagateFilterChanged();
+          this.propagateFilterChanged();
         },
       );
     }
@@ -480,12 +478,11 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
 
   createFilterFields = (props, schema: Schema, currentFilter: ArchbaseQueryFilter): ReactNode[] => {
     const { operators } = schema;
-    let _this = this;
     let result: ReactNode[] = [];
     let arrChildren = props.fields;
     arrChildren.forEach((child, index) => {
-      let listValues = _this.getFieldValues(child.name, props.fields);
-      let rule = _this._findRule(`r-${child.name}`, currentFilter.filter);
+      let listValues = this.getFieldValues(child.name, props.fields);
+      let rule = this._findRule(`r-${child.name}`, currentFilter.filter);
       if (!rule) {
         rule = {
           id: `r-${child.name}`,
@@ -504,8 +501,8 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
       textValue = rule.value2 && rule.value2 !== '' ? `${textValue} a ${rule.value2}` : textValue;
       result.push(
         <AccordionItem
-          uuid={_this.prefixId + "_" + index}
-          id={_this.prefixId + "_" + index}
+          uuid={this.prefixId + "_" + index}
+          id={this.prefixId + "_" + index}
           key={"flk" + index}
           //disabled={rule.disabled}
           dangerouslySetExpanded={!rule.disabled}
@@ -531,18 +528,18 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 width="24px"
                 style={{ margin: 0 }}
                 onChangeValue={(value: any, _event: any) =>
-                  _this.onDisabledChanged(value, value === true, rule, _this.prefixId + '_' + index)
+                  this.onDisabledChanged(value, value === true, rule, this.prefixId + '_' + index)
                 }
               />
               <Text color={this.props.theme!.colorScheme==='dark'?'white':'black'}>{child.label}</Text>
               <SimpleValueSelector
                 field={child.name}
-                options={_this.getOperators(child.name)}
+                options={this.getOperators(child.name)}
                 value={rule.operator}
                 className="custom-select-operator"
                 style={{color:this.props.theme!.colors.blue[5], backgroundColor:'transparent'}}
                 disabled={true}
-                handleOnChange={(value) => _this.onOperatorChanged(rule, value)}
+                handleOnChange={(value) => this.onOperatorChanged(rule, value)}
                 level={0}
               />
               <Text style={{ fontSize: '12px' }} color="blue">
@@ -567,12 +564,12 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
             >
               <SimpleValueSelector
                 field={child.name}
-                options={_this.getOperators(child.name)}
+                options={this.getOperators(child.name)}
                 value={rule.operator}
                 className="custom-select-operator"
                 style={{color:this.props.theme!.colorScheme==='dark'?'white':'black'}}
                 disabled={child.disabled}
-                handleOnChange={(value) => _this.onOperatorChanged(rule, value)}
+                handleOnChange={(value) => this.onOperatorChanged(rule, value)}
                 level={0}
               />
               <SimpleValueEditor
@@ -586,7 +583,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 searchField={child.searchField}
                 disabled={rule.disabled}
                 className="rule-value"
-                handleOnChange={(value) => _this.onValueChanged(rule, value)}
+                handleOnChange={(value) => this.onValueChanged(rule, value)}
                 onSearchButtonClick={props.onSearchButtonClick}
                 searchComponent={child.searchComponent}
                 level={0}
@@ -605,7 +602,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                   searchField={child.searchField}
                   disabled={rule.disabled}
                   className="rule-value"
-                  handleOnChange={(value) => _this.onValue2Changed(rule, value)}
+                  handleOnChange={(value) => this.onValue2Changed(rule, value)}
                   onSearchButtonClick={props.onSearchButtonClick}
                   searchComponent={child.searchComponent}
                   level={0}
@@ -631,7 +628,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
     if (this.props.allowSort === true) {
       result.push(
         <AccordionItem
-          uuid={_this.prefixId + "_" + 9999}
+          uuid={this.prefixId + "_" + 9999}
           key={"flk" + 9999}
           //label="Ordenação"
           //blockStyle={{ padding: "4px", overflow: "hidden" }}
@@ -874,7 +871,7 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
           if (newValue === '' && newValue2 === '') newValue = '';
           else newValue = [newValue, newValue2];
           return (
-            <ArchbaseDateTimerPickerRange
+            <ArchbaseDateTimePickerRange
               disabled={disabled}
               value={newValue}
               width="100%"

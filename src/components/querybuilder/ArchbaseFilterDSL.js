@@ -628,13 +628,12 @@ export class ArchbaseFilterDSL {
   }
 
   buildFrom(query, sort) {
-    let _this = this;
     if (query.rules) {
       this.processRules(query.condition, query.rules, true);
       if (sort && sort.sortFields) {
-        sort.sortFields.forEach(function(field) {
+        sort.sortFields.forEach((field) =>{
           if (field.selected) {
-            _this.fieldsToSort.push(field.name + " " + field.asc_desc);
+            this.fieldsToSort.push(field.name + " " + field.asc_desc);
           }
         });
       }
@@ -642,7 +641,6 @@ export class ArchbaseFilterDSL {
   }
 
   processRules(condition, rules, addWhere) {
-    let _this = this;
     rules.forEach((rule) => {
       if (rule.field && !rule.disabled) {
         let CONDITION = _this.AND;
@@ -761,9 +759,9 @@ export class ArchbaseFilterDSL {
       }
     });
 
-    rules.forEach(function(rule) {
+    rules.forEach((rule) => {
       if (rule.rules) {
-        _this.processRules(rule.condition, rule.rules, addWhere);
+        this.processRules(rule.condition, rule.rules, addWhere);
       }
     });
   }

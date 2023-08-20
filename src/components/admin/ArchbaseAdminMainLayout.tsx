@@ -13,7 +13,7 @@ import {
   ArchbaseAdminLayoutProvider,
 } from '@components/admin/ArchbaseAdminLayout.context';
 
-interface ArchbaseAdminMainLayoutProps {
+export interface ArchbaseAdminMainLayoutProps {
   navigationData: ArchbaseNavigationItem[];
   user?: ArchbaseUser;
   owner?: ArchbaseOwner;

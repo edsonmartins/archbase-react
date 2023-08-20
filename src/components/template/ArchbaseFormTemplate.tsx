@@ -60,7 +60,8 @@ export function ArchbaseFormTemplate<T extends object, ID>({
         <Group>
             <Button color="green">{`${t('Save')}`}</Button>
             <Button color="red">{`${t('Cancel')}`}</Button>
-        </Group>        
+        </Group>   
+        {children}     
       </Stack>
     </Paper>
   );

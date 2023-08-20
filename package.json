@@ -57,6 +57,8 @@
     "@mantine/tiptap": "^6.0.19",
     "@react-hookz/web": "^23.1.0",
     "@rehooks/component-size": "^1.0.3",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-sucrase": "^5.0.1",
     "@tabler/icons": "^2.30.0",
     "@tabler/icons-react": "^2.30.0",
     "axios": "^1.4.0",

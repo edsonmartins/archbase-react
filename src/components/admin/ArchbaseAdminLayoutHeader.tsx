@@ -125,7 +125,7 @@ class CommandPaletteButton extends Component<CommandPaletteButtonProps, CommandP
   }
 }
 
-type ArchbaseAdminLayoutHeaderProps = {
+export type ArchbaseAdminLayoutHeaderProps = {
   logo: string;
   userMenuItems: ReactNode;
   user?: ArchbaseUser;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Group } from "@mantine/core"
 import { ReactNode } from "react"
 
-interface ArchbaseHeaderNavActionProps {
+export interface ArchbaseHeaderNavActionProps {
     children: ReactNode[]
   }
   
