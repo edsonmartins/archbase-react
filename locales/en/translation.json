@@ -58,5 +58,7 @@
   "Remove":"Remove",
   "Name":"Name",
   "Attention":"Attention",
-  "Information":"Information"
+  "Information":"Information",
+  "Save":"Save",
+  "Cancel":"Cancel"
 }

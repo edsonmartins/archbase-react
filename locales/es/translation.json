@@ -59,5 +59,7 @@
   "View":"Vista",
   "Name":"Nome",
   "Attention":"Atención",
-  "Information":"Información"
+  "Information":"Información",
+  "Save":"Ahorrar",
+  "Cancel":"Cancelar"
 }
