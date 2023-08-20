@@ -1,7 +1,7 @@
 export * from '@components/admin';
 export * from '@components/auth';
 export * from '@components/containers';
-export * from '@components/core';
+export {ArchbaseAppContext, ArchbaseAppProvider, ArchbaseGlobalProvider} from '@components/core';
 export * from '@components/datasource';
 export * from '@components/datatable';
 export * from '@components/editors';

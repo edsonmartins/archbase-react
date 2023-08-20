@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "declarationDir": "./dist",
+     "declaration": true,
+     "declarationDir": "./dist",
+     "emitDeclarationOnly": true,
+     "declarationMap": true,
     "target": "es5",
     "module": "esnext",
     "moduleResolution": "node",
     "baseUrl": "./src",
     "outDir": "./dist",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "types":["reflect-metadata"],
     "paths": {
       "*": [
         "*",
@@ -21,7 +24,6 @@
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "noImplicitThis": true,
-    "noEmit": true,
     "jsx": "react",
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -35,6 +37,7 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
   },
   "include": [
     "src",

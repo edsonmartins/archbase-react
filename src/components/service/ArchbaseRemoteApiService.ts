@@ -1,8 +1,8 @@
 /* eslint max-classes-per-file: "off" */
 import 'reflect-metadata'
 import axios from 'axios'
-import { injectable, inject } from 'inversify'
-import { API_TYPE } from '../core/ioc'
+import inversify from 'inversify'
+import { API_TYPE, IOCContainer } from '../core/ioc'
 import type { ArchbaseAuthenticator } from '../auth/ArchbaseAuthenticator'
 import { ArchbaseJacksonParser } from '../core/json'
 
@@ -43,12 +43,11 @@ export interface ArchbaseRemoteApiClient {
   delete<T>(url: string, headers?: Record<string, string>): Promise<T>
 }
 
-@injectable()
 export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   protected authenticator: ArchbaseAuthenticator
 
-  constructor(@inject(API_TYPE.Authenticator) authenticator: ArchbaseAuthenticator) {
-    this.authenticator = authenticator
+  constructor() {
+    this.authenticator = IOCContainer.getContainer().get(API_TYPE.Authenticator);
   }
 
   async get<T>(url: string, headers?: Record<string, string>): Promise<T> {
@@ -100,7 +99,9 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   }
 }
 
-@injectable()
+inversify.decorate(inversify.injectable(), ArchbaseAxiosRemoteApiClient);
+
+
 export abstract class ArchbaseRemoteApiService<T, ID> {
   protected readonly client: ArchbaseRemoteApiClient
 
@@ -188,6 +189,8 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
     return this.client.delete<void>(`${this.getEndpoint()}/${id}`)
   }
 }
+
+inversify.decorate(inversify.injectable(), ArchbaseRemoteApiService);
 
 
 export class DefaultPage<T> implements Page<T> {

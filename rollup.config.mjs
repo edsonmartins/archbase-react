@@ -12,6 +12,7 @@ import typescriptEngine from 'typescript';
 import pkg from './package.json' assert { type: 'json' };
 import alias from 'rollup-plugin-alias';
 import json from "@rollup/plugin-json";
+import generatePackageJson from 'rollup-plugin-generate-package-json';
 
 
 const config = {
@@ -21,13 +22,13 @@ const config = {
       file: pkg.main,
       format: 'cjs',
       exports: 'named',
-      sourcemap: false,
+      sourcemap: true,
     },
     {
       file: pkg.module,
       format: 'es',
       exports: 'named',
-      sourcemap: false,
+      sourcemap: true,
     },
   ],
   plugins: [
@@ -54,6 +55,7 @@ const config = {
         'storybook-static',
         'config',
         'dist',
+        'src/demo',
         'node_modules/**',
         '*.cjs',
         '*.mjs',
@@ -67,6 +69,7 @@ const config = {
         '**/*.stories.ts+(|x)',
       ],
     }),
+    generatePackageJson(),
     json(),
     babel({
       extensions: [...DEFAULT_EXTENSIONS, '.ts', 'tsx'],

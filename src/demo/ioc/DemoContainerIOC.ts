@@ -1,12 +1,12 @@
-import { Container } from 'inversify'
 import { API_TYPE } from './DemoIOCTypes'
 import { FakeProdutoService } from '@demo/service/FakeProdutoService'
 import { FakePessoaService } from '@demo/service/FakePessoaService'
 import { FakePedidoService } from '@demo/service/FakePedidoService'
 import { FakeAuthenticator } from '@demo/auth/FakeAuthenticator'
 import { FakeRemoteApiClient } from '@demo/service/FakeRemoteApiClient'
+import { IOCContainer } from 'components/core/ioc'
 
-export const demoContainerIOC = new Container()
+export const demoContainerIOC = IOCContainer.getContainer();
 
 demoContainerIOC.bind<FakeAuthenticator>(API_TYPE.Authenticator).to(FakeAuthenticator)
 demoContainerIOC.bind<FakeRemoteApiClient>(API_TYPE.ApiClient).to(FakeRemoteApiClient)
