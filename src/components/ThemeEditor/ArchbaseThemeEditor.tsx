@@ -6,6 +6,7 @@ import { IconBorderRadius, IconShadow, IconSpacingHorizontal, IconTypography } f
 import { IconColorPicker } from '@tabler/icons-react';
 import { ArchbaseThemeDrawerTitle } from './ArchbaseThemeDrawerTitle';
 import { ArchbaseThemeColorList } from './ArchbaseThemeColorList';
+import { ArchbaseThemeDarkAndLight } from './ArchbaseThemeDarkAndLight';
 
 export interface ArchbaseThemeEditorProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do edit */
@@ -36,6 +37,7 @@ export function ArchbaseThemeEditor<T, ID>({
         onClose={close}
         position="right"
         title={<ArchbaseThemeDrawerTitle toggleDarkMode={toggleDarkMode} />}
+        size={500}
       >
         <Accordion defaultValue="colors">
           <Accordion.Item value="colors">
@@ -44,7 +46,20 @@ export function ArchbaseThemeEditor<T, ID>({
               Colors
             </Accordion.Control>
             <Accordion.Panel>
-              <ArchbaseThemeColorList dataSource={dataSource} />
+              <Accordion defaultValue="darkAndLight" variant="filled">
+                <Accordion.Item value="darkAndLight">
+                  <Accordion.Control>Dark and Light</Accordion.Control>
+                  <Accordion.Panel>
+                    <ArchbaseThemeDarkAndLight dataSource={dataSource} />
+                  </Accordion.Panel>
+                </Accordion.Item>
+                <Accordion.Item value="colors">
+                  <Accordion.Control>Colors</Accordion.Control>
+                  <Accordion.Panel>
+                    <ArchbaseThemeColorList dataSource={dataSource} />
+                  </Accordion.Panel>
+                </Accordion.Item>
+              </Accordion>
             </Accordion.Panel>
           </Accordion.Item>
 
