@@ -3,6 +3,7 @@ import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@comp
 import React, { useCallback, useState } from 'react';
 import { ArchbaseThemeColor } from './ArchbaseThemeColor';
 import { useArchbaseDidMount, useArchbaseDidUpdate } from '@components/hooks';
+import { OriginColor } from './ArchbaseThemeEditorCommon';
 
 interface ArchbaseThemeColorListProps<T, ID> {
   dataSource?: ArchbaseDataSource<T, ID>;
@@ -11,18 +12,28 @@ interface ArchbaseThemeColorListProps<T, ID> {
 export function ArchbaseThemeColorList<T, ID>({ dataSource }: ArchbaseThemeColorListProps<T, ID>) {
   const theme = useMantineTheme();
   const [colorsList, setColorsList] = useState(theme.colors);
+  const initialEmptyOriginColors = Object.fromEntries(
+    Object.keys(theme.colors).map((color) => [color, theme.colors[color][4]]),
+  );
+  const [originColorsList, setOriginColorsList] = useState(initialEmptyOriginColors);
 
   const loadDataSourceFieldValue = () => {
-    let initialValue: any = colorsList;
+    let initialColors: any = colorsList;
+    let initialOriginColors: any = originColorsList;
 
     if (dataSource) {
-      initialValue = dataSource.getFieldValue('colors');
-      if (!initialValue) {
-        initialValue = {};
+      initialColors = dataSource.getFieldValue('colors');
+      initialOriginColors = dataSource.getFieldValue('other.originColors');
+      if (!initialColors) {
+        initialColors = {};
+      }
+      if (!initialOriginColors) {
+        initialOriginColors = initialEmptyOriginColors;
       }
     }
 
-    setColorsList(initialValue);
+    setColorsList(initialColors);
+    setOriginColorsList(initialOriginColors);
   };
 
   const fieldChangedListener = useCallback(() => {}, []);
@@ -46,6 +57,7 @@ export function ArchbaseThemeColorList<T, ID>({ dataSource }: ArchbaseThemeColor
     if (dataSource) {
       dataSource.addListener(dataSourceEvent);
       dataSource.addFieldChangeListener('colors', fieldChangedListener);
+      dataSource.addFieldChangeListener('other.originColors', fieldChangedListener);
     }
   });
 
@@ -53,28 +65,35 @@ export function ArchbaseThemeColorList<T, ID>({ dataSource }: ArchbaseThemeColor
     loadDataSourceFieldValue();
   }, []);
 
-  const handleChange = (colors: MantineThemeColorsOverride) => {
-    const changedValue = { ...colorsList, ...colors };
-    setColorsList(changedValue);
-    if (dataSource && !dataSource.isBrowsing() && dataSource.getFieldValue('colors') !== changedValue) {
-      dataSource.setFieldValue('colors', changedValue);
+  const handleChange = (colors: MantineThemeColorsOverride, originColor: OriginColor) => {
+    const changedColors = { ...colorsList, ...colors };
+    const changedOriginColors = { ...originColorsList, ...originColor };
+    setColorsList(changedColors);
+    setOriginColorsList(changedOriginColors);
+    if (dataSource && !dataSource.isBrowsing()) {
+      if (dataSource.getFieldValue('colors') !== changedColors) {
+        dataSource.setFieldValue('colors', changedColors);
+      }
+      if (dataSource.getFieldValue('other.originColors') !== changedOriginColors) {
+        dataSource.setFieldValue('other.originColors', changedOriginColors);
+      }
     }
   };
 
   return (
     <>
-      <ArchbaseThemeColor
-        label="dark"
-        placeholder="#000000"
-        onChangeValue={handleChange}
-        initialColors={colorsList['dark']}
-      />
-      <ArchbaseThemeColor
-        label="archbase"
-        placeholder="#ffffff"
-        onChangeValue={handleChange}
-        initialColors={colorsList['archbase']}
-      />
+      {Object.keys(theme.colors)
+        .filter((color) => color !== 'dark')
+        .map((color) => (
+          <ArchbaseThemeColor
+            label={color}
+            placeholder="Pick a color"
+            onChangeValue={handleChange}
+            initialColors={colorsList[color]}
+            initialOriginColor={originColorsList[color]}
+            key={color}
+          />
+        ))}
     </>
   );
 }

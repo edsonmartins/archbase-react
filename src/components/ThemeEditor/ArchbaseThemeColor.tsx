@@ -1,21 +1,23 @@
 import { Box, ColorInput, ColorPicker, Flex, MantineThemeColorsOverride, Popover, Text } from '@mantine/core';
-import React, { useState } from 'react';
+import React from 'react';
 import { generateColors } from '@components/core/utils';
+import { OriginColor } from './ArchbaseThemeEditorCommon';
 
 interface ArchbaseThemeColorProps {
   label: string;
   placeholder: string;
-  onChangeValue?: (colors: MantineThemeColorsOverride) => void;
-  initialColors?: MantineThemeColorsOverride;
+  onChangeValue?: (colors: MantineThemeColorsOverride, originColor: OriginColor) => void;
+  initialColors: MantineThemeColorsOverride;
+  initialOriginColor: string;
 }
 
-export function ArchbaseThemeColor({ label, placeholder, onChangeValue, initialColors }: ArchbaseThemeColorProps) {
-  const [color, setColor] = useState(initialColors ? initialColors[4] : '');
-  const [colors, setColors] = useState(
-    initialColors
-      ? ({ [label]: initialColors } as MantineThemeColorsOverride)
-      : ({ [label]: ['', '', '', '', '', '', '', '', '', ''] } as MantineThemeColorsOverride),
-  );
+export function ArchbaseThemeColor({
+  label,
+  placeholder,
+  onChangeValue,
+  initialColors = ['', '', '', '', '', '', '', '', '', ''],
+  initialOriginColor,
+}: ArchbaseThemeColorProps) {
   const paletteAccents = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 
   const borderRadius = (accent) => {
@@ -35,13 +37,10 @@ export function ArchbaseThemeColor({ label, placeholder, onChangeValue, initialC
     return '0';
   };
 
-  const handleChange = (currentColor) => {
-    setColor(currentColor);
+  const handleChange = (currentColor: string) => {
     const currentColors = { [label]: [...generateColors(currentColor)] };
-    setColors(currentColors);
-    console.log(currentColors);
     if (onChangeValue) {
-      onChangeValue(currentColors);
+      onChangeValue(currentColors, { [label]: currentColor });
     }
   };
 
@@ -53,14 +52,20 @@ export function ArchbaseThemeColor({ label, placeholder, onChangeValue, initialC
       <Flex justify={'space-between'} align={'center'}>
         <Popover trapFocus position="bottom" withArrow shadow="md">
           <Popover.Target>
-            <Box w={'2rem'} h={'2rem'} bg={color} sx={{ borderRadius: '1rem' }}></Box>
+            <Box w={'2rem'} h={'2rem'} bg={initialOriginColor} sx={{ borderRadius: '1rem' }}></Box>
           </Popover.Target>
           <Popover.Dropdown>
-            <ColorPicker value={color} onChange={setColor} />
+            <ColorPicker value={initialOriginColor} onChange={handleChange} />
           </Popover.Dropdown>
         </Popover>
 
-        <ColorInput placeholder={placeholder} withPreview={false} value={color} onChange={handleChange} w={'7rem'} />
+        <ColorInput
+          placeholder={placeholder}
+          withPreview={false}
+          value={initialOriginColor}
+          onChange={handleChange}
+          w={'7rem'}
+        />
         <Flex direction={'column'}>
           <Flex>
             {paletteAccents.slice(0, 5).map((accent, index) => (
@@ -69,7 +74,7 @@ export function ArchbaseThemeColor({ label, placeholder, onChangeValue, initialC
                 align={'center'}
                 w={'2.5rem'}
                 h={'1.5rem'}
-                bg={colors[label][index]}
+                bg={initialColors[index]}
                 key={accent}
                 sx={{ borderRadius: borderRadius(accent) }}
               >
@@ -84,7 +89,7 @@ export function ArchbaseThemeColor({ label, placeholder, onChangeValue, initialC
                 align={'center'}
                 w={'2.5rem'}
                 h={'1.5rem'}
-                bg={colors[label][index + 5]}
+                bg={initialColors[index + 5]}
                 key={accent}
                 sx={{ borderRadius: borderRadius(accent) }}
               >
