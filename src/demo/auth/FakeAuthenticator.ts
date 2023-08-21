@@ -1,4 +1,4 @@
-import { ArchbaseAuthenticator } from '@components/auth';
+import { ArchbaseAuthenticator } from '../../components/auth';
 import { injectable } from 'inversify'
 
 @injectable()

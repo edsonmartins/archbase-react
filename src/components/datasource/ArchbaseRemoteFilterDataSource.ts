@@ -4,9 +4,9 @@ import {
   DelegatorCallback,
   IQueryFilterEntity,
   QueryFilterEntity,
-} from '@components/querybuilder/ArchbaseFilterCommons';
+} from '../../components/querybuilder';
 import { ArchbaseRemoteDataSource } from './ArchbaseRemoteDataSource';
-import { ArchbaseRemoteApiService } from '@components/service';
+import { ArchbaseRemoteApiService } from '../../components/service';
 
 export class RemoteFilter {
   id?: any;

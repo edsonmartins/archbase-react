@@ -20,10 +20,10 @@ import {
 import { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter';
 import shallowCompare from 'react-addons-shallow-compare';
 import { Badge, Button, Group, Menu, Radio, Text, Tooltip } from '@mantine/core';
-import { ArchbaseDataSource } from '@components/datasource';
-import { ArchbaseList } from '@components/list';
+import { ArchbaseDataSource } from '../../components/datasource';
+import { ArchbaseList } from '../../components/list';
 import { IconDeviceFloppy, IconDoorExit, IconFilter, IconPlus, IconTrash } from '@tabler/icons-react';
-import { ArchbaseAppContext } from '@components/core';
+import { ArchbaseAppContext } from '../../components/core';
 
 interface ArchbaseCompositeFilterProps {
   id: string;

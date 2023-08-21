@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { ArchbaseSelect, ArchbaseSelectProps } from './ArchbaseSelect';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import { ArchbaseError } from '@components/core';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
+import { ArchbaseError } from '../../components/core';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../../components/hooks';
 import { SelectItem } from '@mantine/core';
 
 export interface ArchbaseLookupSelectProps<T, ID, O> extends ArchbaseSelectProps<T, ID, O> {

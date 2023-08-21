@@ -1,6 +1,6 @@
 {
-  "name": "@rs/archbase-react",
-  "version": "0.0.1",
+  "name": "archbase-react",
+  "version": "0.0.2",
   "description": "Biblioteca de compontentes React TypeScript focada em produtividade no desenvolvimento web.",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -109,6 +109,7 @@
     "reflect-metadata": "^0.1.13",
     "rollup-plugin-alias": "^2.2.0",
     "rollup-plugin-generate-package-json": "^3.2.0",
+    "rollup-plugin-typescript-paths": "^1.4.0",
     "storybook-addon-mantine": "^2.0.21",
     "storybook-dark-mode": "^3.0.1",
     "styled-components": "^6.0.7",
@@ -116,6 +117,7 @@
     "stylus": "^0.59.0",
     "suneditor": "^2.45.1",
     "suneditor-react": "^3.6.1",
+    "ts-loader": "^9.4.4",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "usehooks-ts": "^2.9.1",
     "uuid": "^9.0.0",
@@ -159,7 +161,7 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.4.3",
     "@types/bluebird": "^3.5.38",
-    "@types/jest": "^27.4.1",
+    "@types/jest": "^29.5.3",
     "@types/node": "^20.4.1",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
@@ -228,6 +230,8 @@
     "url-loader": "^4.1.1",
     "vite": "^4.4.2",
     "webpack": "^5.88.1",
+    "webpack-cli": "^4.10.0",
+    "webpack-node-externals": "^3.0.0",
     "yarn-audit-fix": "^9.3.12"
   },
   "resolutions": {

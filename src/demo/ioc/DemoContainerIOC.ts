@@ -1,10 +1,10 @@
 import { API_TYPE } from './DemoIOCTypes'
-import { FakeProdutoService } from '@demo/service/FakeProdutoService'
-import { FakePessoaService } from '@demo/service/FakePessoaService'
-import { FakePedidoService } from '@demo/service/FakePedidoService'
-import { FakeAuthenticator } from '@demo/auth/FakeAuthenticator'
-import { FakeRemoteApiClient } from '@demo/service/FakeRemoteApiClient'
-import { IOCContainer } from 'components/core/ioc'
+import { FakeProdutoService } from '../service/FakeProdutoService'
+import { FakePessoaService } from '../service/FakePessoaService'
+import { FakePedidoService } from '../service/FakePedidoService'
+import { FakeAuthenticator } from '../auth/FakeAuthenticator'
+import { FakeRemoteApiClient } from '../service/FakeRemoteApiClient'
+import { IOCContainer } from '../../components/core/ioc'
 
 export const demoContainerIOC = IOCContainer.getContainer();
 

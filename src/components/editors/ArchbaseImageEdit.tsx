@@ -1,9 +1,9 @@
 import { ActionIcon, Image, ImageProps, Input, MantineNumberSize, Modal, Paper } from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
-import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseDataSource } from '../../components/datasource';
 import React, { CSSProperties, useState } from 'react';
-import { archbaseLogo } from '@components/core';
-import { ArchbaseImageEditor } from '@components/image/ArchbaseImageEditor';
+import { archbaseLogo } from '../../components/core';
+import { ArchbaseImageEditor } from '../../components/image/ArchbaseImageEditor';
 
 export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
   /** Fonte de dados onde será atribuido o valor do rich edit*/

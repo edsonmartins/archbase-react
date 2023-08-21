@@ -1,10 +1,10 @@
 import React, { Fragment, ReactNode, useRef, useState } from 'react';
 import type { ArchbaseDataSource } from '../datasource';
-import { ArchbaseQueryBuilder, ArchbaseQueryFilter, ArchbaseQueryFilterDelegator, ArchbaseQueryFilterState, FilterOptions, getDefaultEmptyFilter } from '@components/querybuilder';
-import { ArchbaseAlert } from '@components/notification';
+import { ArchbaseQueryBuilder, ArchbaseQueryFilter, ArchbaseQueryFilterDelegator, ArchbaseQueryFilterState, FilterOptions, getDefaultEmptyFilter } from '../../components/querybuilder';
+import { ArchbaseAlert } from '../../components/notification';
 import { IconBug } from '@tabler/icons-react';
 import { t } from 'i18next';
-import { ArchbaseDataTable, ToolBarActions } from '@components/datatable';
+import { ArchbaseDataTable, ToolBarActions } from '../../components/datatable';
 import { Button, Flex, Paper } from '@mantine/core';
 import "../../styles/template.scss";
 

@@ -6,9 +6,9 @@ import {
   useArchbaseForceUpdate,
   useArchbaseLocalFilterDataSource,
   useArchbaseRemoteDataSource,
-} from '@hooks/index';
+} from '../../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '@demo/index';
+import { Pessoa, pessoasData } from '../../../demo/index';
 import { ArchbaseQueryBuilder } from '../ArchbaseQueryBuilder';
 import { t } from 'i18next';
 import {
@@ -22,13 +22,13 @@ import {
   QueryFields,
   getDefaultEmptyFilter,
 } from '../ArchbaseFilterCommons';
-import { LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
-import { FakePessoaService } from '@demo/service/FakePessoaService';
-import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
-import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
-import { ArchbaseNotifications } from '@components/notification';
-import { MaskPattern } from '@components/editors';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+import { LocalFilter } from '../../../components/datasource/ArchbaseLocalFilterDataSource';
+import { FakePessoaService } from '../../../demo/service/FakePessoaService';
+import { API_TYPE } from '../../../demo/ioc/DemoIOCTypes';
+import { useArchbaseRemoteServiceApi } from '../../../components/hooks/useArchbaseRemoteServiceApi';
+import { ArchbaseNotifications } from '../../../components/notification';
+import { MaskPattern } from '../../../components/editors';
+import { DataSourceEvent, DataSourceEventNames } from '../../../components/datasource';
 
 const filters: LocalFilter[] = [];
 
@@ -41,10 +41,10 @@ const ArchbaseQueryBuilderExample = () => {
    */
   const {
     dataSource: dsPessoas,
-    isLoading,
-    error,
-    isError,
-    clearError,
+    // isLoading,
+    // error,
+    // isError,
+    // clearError,
   } = useArchbaseRemoteDataSource<Pessoa, number>({
     name: 'dsPessoas',
     service: pessoaApi,

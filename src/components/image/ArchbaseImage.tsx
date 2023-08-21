@@ -1,5 +1,5 @@
 import { Rating } from '@mantine/core';
-import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseDataSource } from '../../components/datasource';
 import React, { CSSProperties, FocusEventHandler } from 'react';
 
 export interface ArchbaseImageProps<T, ID> {

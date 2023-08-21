@@ -1,6 +1,6 @@
 import React, { CSSProperties, useCallback, useState } from 'react';
 import 'suneditor/dist/css/suneditor.min.css';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
 import SunEditor from 'suneditor-react';
 import { useTranslation } from 'react-i18next';
 import { UploadBeforeHandler, UploadBeforeReturn, UploadInfo } from 'suneditor-react/dist/types/upload';
@@ -8,8 +8,8 @@ import en from "suneditor/src/lang/en";
 import es from "suneditor/src/lang/es";
 import ptBR from "suneditor/src/lang/pt_br";
 import { Input } from '@mantine/core';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
-import { isBase64 } from '@components/core/utils';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../../components/hooks';
+import { isBase64 } from '../../components/core/utils';
 
 function getInitialValue<T, ID>(value: any, dataSource?: ArchbaseDataSource<T, ID>, dataField?: string, disabledBase64Convertion?: boolean): any {
   let initialValue: any = value;

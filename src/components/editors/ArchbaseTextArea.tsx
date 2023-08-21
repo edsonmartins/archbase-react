@@ -7,7 +7,7 @@ import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } fro
 
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
-import { isBase64 } from '@components/core/utils';
+import { isBase64 } from '../../components/core/utils';
 
 export interface ArchbaseTextAreaProps<T,ID> {
   /** Fonte de dados onde será atribuido o valor do textarea */

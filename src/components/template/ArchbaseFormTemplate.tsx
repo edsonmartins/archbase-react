@@ -2,7 +2,7 @@ import { Button, Group, MantineNumberSize, Paper, Space, Stack } from '@mantine/
 import React, { useRef } from 'react';
 import { t } from 'i18next';
 import { IconBug } from '@tabler/icons-react';
-import { ArchbaseAlert } from '@components/notification';
+import { ArchbaseAlert } from '../../components/notification';
 
 export interface ArchbaseFormTemplateProps<_T, _ID> {
   title: string;

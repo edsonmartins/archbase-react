@@ -1,8 +1,8 @@
 import { MantineNumberSize, MantineSize, Select, SelectItem } from '@mantine/core';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
 import React, { CSSProperties, FocusEventHandler, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { uniqueId } from 'lodash';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../../components/hooks';
 import { useDebouncedState } from '@mantine/hooks';
 import { ArchbaseSelectProvider } from './ArchbaseSelect.context';
 import { CustomSelectScrollArea } from './ArchbaseAsyncSelect';

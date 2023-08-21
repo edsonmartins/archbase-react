@@ -1,5 +1,5 @@
 import { Loader, MantineNumberSize, MantineSize, ScrollArea, ScrollAreaProps, Select } from '@mantine/core';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
 import React, {
   CSSProperties,
   FocusEventHandler,
@@ -12,7 +12,7 @@ import React, {
   useState,
 } from 'react';
 import { uniqueId } from 'lodash';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../../components/hooks';
 import { useDebouncedState } from '@mantine/hooks';
 import ArchbaseAsyncSelectContext, {
   ArchbaseAsyncSelectContextValue,

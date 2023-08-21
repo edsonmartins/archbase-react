@@ -1,4 +1,4 @@
-import { ArchbaseAdvancedTab, ArchbaseAdvancedTabs } from '@components/containers/tabs';
+import { ArchbaseAdvancedTab, ArchbaseAdvancedTabs } from '../../components/containers/tabs';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ArchbaseNavigationItem, ArchbaseTabItem } from './types';
 import { useLocation, useNavigate } from 'react-router';

@@ -13,15 +13,13 @@ import {
 } from './ArchbaseFilterCommons';
 import shallowCompare from 'react-addons-shallow-compare';
 
-import { ltrim } from '@components/core/utils';
-import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors';
+import { ltrim } from '../../components/core/utils';
+import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem,ArchbaseDateTimePickerEdit,ArchbaseDateTimePickerRange } from '../../components/editors';
 import { IconArrowDown, IconArrowUp, IconSearch } from '@tabler/icons-react';
-import { ArchbaseList } from '@components/list';
-import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseList } from '../../components/list';
+import { ArchbaseDataSource } from '../../components/datasource';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
 import { ActionIcon, Grid, MantineTheme, MultiSelect, Switch, Text, Tooltip } from '@mantine/core';
-import { ArchbaseDateTimePickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
-import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
 import {
   Accordion,
   AccordionItem,
@@ -29,7 +27,8 @@ import {
   AccordionItemHeading,
   AccordionItemPanel,
 } from "react-accessible-accordion";
-import { ArchbaseAppContext } from '@components/core';
+import { ArchbaseAppContext } from '../../components/core';
+
 
 const rnd = (() => {
   const gen = (min: number, max: number) => max++ && [...Array(max - min)].map((_s, i) => String.fromCharCode(min + i));

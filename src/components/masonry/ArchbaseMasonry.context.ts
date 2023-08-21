@@ -1,4 +1,4 @@
-import { ArchbaseDataSource } from '@components/datasource'
+import { ArchbaseDataSource } from '../../components/datasource'
 import React from 'react'
 
 export interface ArchbaseMasonryContextValue<T,ID> {

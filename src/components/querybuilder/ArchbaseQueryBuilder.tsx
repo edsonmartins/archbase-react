@@ -25,15 +25,15 @@ import {
   getDefaultEmptyFilter,
 } from './ArchbaseFilterCommons';
 import { endOfMonth } from 'date-fns';
-import { processErrorMessage } from '@components/core/exceptions';
-import { ArchbaseDialog } from '@components/notification';
+import { processErrorMessage } from '../../components/core/exceptions';
+import { ArchbaseDialog } from '../../components/notification';
 import { ActionIcon,  Menu, Tooltip } from '@mantine/core';
 import { IconCalendar, IconFilter, IconSubtask } from '@tabler/icons-react';
-import { ArchbaseEdit } from '@components/editors';
+import { ArchbaseEdit } from '../../components/editors';
 import { IconCalendarDue } from '@tabler/icons-react';
 import { ArchbaseFilterSelectFields } from './ArchbaseFilterSelectFields';
 import { ArchbaseFilterSelectRange } from './ArchbaseFilterSelectRange';
-import { ArchbaseAppContext } from '@components/core';
+import { ArchbaseAppContext } from '../../components/core';
 import { IconFilterOff } from '@tabler/icons-react';
 
 export interface ArchbaseQueryBuilderProps {

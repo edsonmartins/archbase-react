@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo, useRef, useState } from 'react';
+import React, { ReactNode, useMemo} from 'react';
 import { Grid } from '@mantine/core';
 import {
   useArchbaseDataSource,
@@ -6,28 +6,19 @@ import {
   useArchbaseForceUpdate,
   useArchbaseLocalFilterDataSource,
   useArchbaseRemoteDataSource,
-} from '@hooks/index';
+} from '../../hooks/index';
 import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '@demo/index';
+import { Pessoa, pessoasData } from '../../../demo/index';
 import { t } from 'i18next';
-import { LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
-import { FakePessoaService } from '@demo/service/FakePessoaService';
-import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
-import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
-import { ArchbaseNotifications } from '@components/notification';
-import { MaskPattern } from '@components/editors';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+import { LocalFilter } from '../../../components/datasource/ArchbaseLocalFilterDataSource';
+import { FakePessoaService } from '../../../demo/service/FakePessoaService';
+import { API_TYPE } from '../../../demo/ioc/DemoIOCTypes';
+import { useArchbaseRemoteServiceApi } from '../../../components/hooks/useArchbaseRemoteServiceApi';
+import { ArchbaseNotifications } from '../../../components/notification';
+import { DataSourceEvent, DataSourceEventNames } from '../../../components/datasource';
 import {
-  ArchbaseQueryFilter,
   ArchbaseQueryFilterDelegator,
-  ArchbaseQueryFilterState,
-  OP_CONTAINS,
-  OP_EQUALS,
-  QueryField,
-  QueryFieldValue,
-  QueryFields,
-  getDefaultEmptyFilter,
-} from '@components/querybuilder';
+} from '../../../components/querybuilder';
 import { ArchbaseTableTemplate } from '../ArchbaseTableTemplate';
 import {
   ArchbaseDataTableColumn,
@@ -35,9 +26,9 @@ import {
   ArchbaseStatusType,
   ArchbaseTableRowActions,
   Columns,
-} from '@components/datatable';
-import { PessoaStatus } from '@demo/data/types';
-import { usePessoaStore } from '@demo/store/usePessoaStore';
+} from '../../../components/datatable';
+import { PessoaStatus } from '../../../demo/data/types';
+import { usePessoaStore } from '../../../demo/store/usePessoaStore';
 
 const filters: LocalFilter[] = [];
 
@@ -98,11 +89,11 @@ export const ArchbaseTableTemplateExample = () => {
     },
   });
 
-  const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
-    currentFilter: getDefaultEmptyFilter(),
-    activeFilterIndex: -1,
-    expandedFilter: false,
-  });
+  // const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
+  //   currentFilter: getDefaultEmptyFilter(),
+  //   activeFilterIndex: -1,
+  //   expandedFilter: false,
+  // });
   const { dataSource: dsFilters } = useArchbaseLocalFilterDataSource({ initialData: filters, name: 'dsFilters' });
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
@@ -121,130 +112,130 @@ export const ArchbaseTableTemplateExample = () => {
     },
   });
 
-  const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
-    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
-  };
+  // const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
+  //   setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
+  // };
 
-  const handleToggleExpandedFilter = (expanded: boolean) => {
-    setFilterState({ ...filterState, expandedFilter: expanded });
-  };
+  // const handleToggleExpandedFilter = (expanded: boolean) => {
+  //   setFilterState({ ...filterState, expandedFilter: expanded });
+  // };
 
-  const handleSelectedFilter = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
-    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
-  };
+  // const handleSelectedFilter = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
+  //   setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
+  // };
 
-  const handleSearchByFilter = () => {};
+  // const handleSearchByFilter = () => {};
 
-  const queryFields: ReactNode = useMemo(() => {
-    return (
-      <QueryFields>
-        <QueryField name="id" label="ID" dataType="number" sortable={true} quickFilter={true} quickFilterSort={true} />
-        <QueryField
-          name="nome"
-          label="Nome da pessoa"
-          dataType="string"
-          sortable={true}
-          quickFilter={true}
-          operator={OP_CONTAINS}
-          quickFilterSort={true}
-        />
-        <QueryField
-          name="sexo"
-          label="Sexo"
-          dataType="string"
-          sortable={true}
-          quickFilter={true}
-          quickFilterSort={true}
-        >
-          <QueryFieldValue label="Masculino" value="Masculino" />
-          <QueryFieldValue label="Feminino" value="Feminino" />
-        </QueryField>
-        <QueryField
-          name="cpf"
-          label="CPF"
-          dataType="string"
-          sortable={true}
-          quickFilter={true}
-          mask={MaskPattern.CPF}
-        />
-        <QueryField
-          name="pai"
-          label="Nome do pai"
-          dataType="string"
-          sortable={true}
-          quickFilter={true}
-          operator={OP_CONTAINS}
-          quickFilterSort={true}
-        />
-        <QueryField
-          name="mae"
-          label="Nome do mãe"
-          dataType="string"
-          sortable={true}
-          quickFilter={true}
-          operator={OP_CONTAINS}
-          quickFilterSort={true}
-        />
-        <QueryField
-          name="cidade"
-          label="Cidade"
-          dataType="string"
-          sortable={true}
-          quickFilter={true}
-          operator={OP_CONTAINS}
-          quickFilterSort={true}
-        />
+  // const _queryFields: ReactNode = useMemo(() => {
+  //   return (
+  //     <QueryFields>
+  //       <QueryField name="id" label="ID" dataType="number" sortable={true} quickFilter={true} quickFilterSort={true} />
+  //       <QueryField
+  //         name="nome"
+  //         label="Nome da pessoa"
+  //         dataType="string"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         operator={OP_CONTAINS}
+  //         quickFilterSort={true}
+  //       />
+  //       <QueryField
+  //         name="sexo"
+  //         label="Sexo"
+  //         dataType="string"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         quickFilterSort={true}
+  //       >
+  //         <QueryFieldValue label="Masculino" value="Masculino" />
+  //         <QueryFieldValue label="Feminino" value="Feminino" />
+  //       </QueryField>
+  //       <QueryField
+  //         name="cpf"
+  //         label="CPF"
+  //         dataType="string"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         mask={MaskPattern.CPF}
+  //       />
+  //       <QueryField
+  //         name="pai"
+  //         label="Nome do pai"
+  //         dataType="string"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         operator={OP_CONTAINS}
+  //         quickFilterSort={true}
+  //       />
+  //       <QueryField
+  //         name="mae"
+  //         label="Nome do mãe"
+  //         dataType="string"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         operator={OP_CONTAINS}
+  //         quickFilterSort={true}
+  //       />
+  //       <QueryField
+  //         name="cidade"
+  //         label="Cidade"
+  //         dataType="string"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         operator={OP_CONTAINS}
+  //         quickFilterSort={true}
+  //       />
 
-        <QueryField
-          name="Estado"
-          label="Estado"
-          dataType="string"
-          sortable={true}
-          quickFilter={true}
-          operator={OP_CONTAINS}
-          quickFilterSort={true}
-        />
-        <QueryField
-          name="email"
-          label="E-mail"
-          dataType="string"
-          sortable={true}
-          quickFilter={true}
-          operator={OP_CONTAINS}
-          quickFilterSort={true}
-        />
-        <QueryField
-          name="data_nasc"
-          label="Data nascimento"
-          dataType="date"
-          sortable={true}
-          quickFilter={true}
-          operator={OP_EQUALS}
-        />
-        <QueryField
-          name="peso"
-          label="Peso KG"
-          dataType="number"
-          sortable={true}
-          quickFilter={true}
-          operator={OP_EQUALS}
-          quickFilterSort={true}
-        />
-        <QueryField
-          name="status"
-          label="Status da pessoa"
-          dataType="string"
-          sortable={true}
-          quickFilter={true}
-          quickFilterSort={true}
-        >
-          <QueryFieldValue label="APROVADO" value="0" />
-          <QueryFieldValue label="REJEITADO" value="1" />
-          <QueryFieldValue label="PENDENTE" value="2" />
-        </QueryField>
-      </QueryFields>
-    );
-  }, []);
+  //       <QueryField
+  //         name="Estado"
+  //         label="Estado"
+  //         dataType="string"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         operator={OP_CONTAINS}
+  //         quickFilterSort={true}
+  //       />
+  //       <QueryField
+  //         name="email"
+  //         label="E-mail"
+  //         dataType="string"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         operator={OP_CONTAINS}
+  //         quickFilterSort={true}
+  //       />
+  //       <QueryField
+  //         name="data_nasc"
+  //         label="Data nascimento"
+  //         dataType="date"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         operator={OP_EQUALS}
+  //       />
+  //       <QueryField
+  //         name="peso"
+  //         label="Peso KG"
+  //         dataType="number"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         operator={OP_EQUALS}
+  //         quickFilterSort={true}
+  //       />
+  //       <QueryField
+  //         name="status"
+  //         label="Status da pessoa"
+  //         dataType="string"
+  //         sortable={true}
+  //         quickFilter={true}
+  //         quickFilterSort={true}
+  //       >
+  //         <QueryFieldValue label="APROVADO" value="0" />
+  //         <QueryFieldValue label="REJEITADO" value="1" />
+  //         <QueryFieldValue label="PENDENTE" value="2" />
+  //       </QueryField>
+  //     </QueryFields>
+  //   );
+  // }, []);
 
   const columns: ReactNode = useMemo(() => {
     return (

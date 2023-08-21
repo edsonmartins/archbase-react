@@ -1,9 +1,9 @@
 /* eslint class-methods-use-this: "off" */
 import { inject, injectable } from 'inversify'
-import type { ArchbaseRemoteApiClient } from '@components/service'
-import { ArchbaseRemoteApiService } from '@components/service'
-import { Pedido } from '@demo/data/types'
-import { API_TYPE } from '@demo/ioc/DemoIOCTypes'
+import type { ArchbaseRemoteApiClient } from '../../components/service'
+import { ArchbaseRemoteApiService } from '../../components/service'
+import { Pedido } from '../data/types'
+import { API_TYPE } from '../ioc/DemoIOCTypes'
 
 
 @injectable()

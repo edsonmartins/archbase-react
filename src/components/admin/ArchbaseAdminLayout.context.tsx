@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
-import { ArchbaseUser } from 'components/auth/ArchbaseUser';
+import { ArchbaseUser } from '../../components/auth/ArchbaseUser';
 
 export interface ArchbaseAdminLayoutListener {
   onChangeLocationPath: (item: ArchbaseNavigationItem) => void;

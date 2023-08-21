@@ -16,18 +16,15 @@ import {
   ArchbaseQueryFilter,
 } from './ArchbaseFilterCommons';
 import shallowCompare from 'react-addons-shallow-compare';
-import { ArchbaseAppContext, ArchbaseError } from '@components/core';
-import { ltrim } from '@components/core/utils';
-import { ArchbaseDataSource } from '@components/datasource';
-import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors';
+import { ArchbaseAppContext, ArchbaseError, ltrim } from '../../components/core';
+import { ArchbaseDataSource } from '../../components/datasource';
+import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '../../components/editors';
 import { ActionIcon, Button, Chip, Grid, Group, Text, Tooltip } from '@mantine/core';
 import { IconArrowUp, IconSearch, IconTrash } from '@tabler/icons-react';
-import { ArchbaseList } from '@components/list';
+import { ArchbaseList } from '../../components/list';
 import { IconArrowDown } from '@tabler/icons-react';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
-import { ArchbaseDateTimePickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
-import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
-import { ArchbaseSwitch } from '@components/editors/ArchbaseSwitch';
+import { ArchbaseDateTimePickerRange, ArchbaseDateTimePickerEdit, ArchbaseSwitch } from '../../components/editors';
 import '../../styles/querybuilder.scss';
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
   id: string;
