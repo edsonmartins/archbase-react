@@ -1,18 +1,12 @@
 import { useDarkMode } from 'storybook-dark-mode';
-import { MantineProvider, ColorSchemeProvider, ColorScheme, useMantineTheme } from '@mantine/core';
+import { ColorScheme, useMantineTheme } from '@mantine/core';
 import { ArchbaseDark } from './archbase-dark.theme';
 import { ArchbaseLight } from './archbase-ligth.theme';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import React, { useEffect } from 'react';
-import { DatesProvider } from '@mantine/dates';
 import '../locales/config';
-import i18next from 'i18next';
-import { Provider as IOCProvider } from 'inversify-react';
 import { demoContainerIOC } from '../src/demo/index';
-import { Notifications } from '@mantine/notifications';
-import { ModalsProvider } from '@mantine/modals';
-import { ArchbaseScreenClassProvider } from '../src/components/containers/gridLayout';
-import { ArchbaseAppContext, ArchbaseAppProvider, ArchbaseGlobalProvider } from '../src/components/core';
+import { ArchbaseAppProvider, ArchbaseGlobalProvider } from '../src/components/core';
 
 
 function ThemeWrapper(props: { children: React.ReactNode }) {
