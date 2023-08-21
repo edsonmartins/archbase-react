@@ -10,10 +10,15 @@ import svgr from '@svgr/rollup';
 import { terser } from 'rollup-plugin-terser';
 import typescriptEngine from 'typescript';
 import pkg from './package.json' assert { type: 'json' };
-import alias from 'rollup-plugin-alias';
-import json from "@rollup/plugin-json";
+import alias from '@rollup/plugin-alias';
+import json from '@rollup/plugin-json';
 import generatePackageJson from 'rollup-plugin-generate-package-json';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dts } from 'rollup-plugin-dts';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const config = {
   input: './src/index.ts',
@@ -33,9 +38,11 @@ const config = {
   ],
   plugins: [
     alias({
-      '@components': './src/components',
-      '@hooks': './src/components/hooks',
-      '@demo': './src/demo',
+      entries: [
+        { find: '@components', replacement: path.resolve(__dirname, './src/components') },
+        { find: '@hooks', replacement: path.resolve(__dirname, './src/components/hooks') },
+        { find: '@demo', replacement: path.resolve(__dirname, './src/demo') },
+      ],
     }),
     postcss({
       plugins: [],
@@ -81,6 +88,7 @@ const config = {
     resolve({ preferBuiltins: true, mainFields: ['browser'] }),
     commonjs(),
     terser(),
+    dts(),
   ],
   context: 'null',
   watch: {

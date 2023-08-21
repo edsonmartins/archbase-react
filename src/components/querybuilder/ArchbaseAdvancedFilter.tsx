@@ -1036,7 +1036,7 @@ class RuleItem extends Component<RuleItemProps> {
     disabled: false,
   };
   static contextType = ArchbaseAppContext;
-  context!: React.ContextType<typeof ArchbaseAppContext>;
+  declare context: React.ContextType<typeof ArchbaseAppContext>;
   constructor(props: RuleItemProps) {
     super(props);
   }
