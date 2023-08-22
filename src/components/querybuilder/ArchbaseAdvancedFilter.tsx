@@ -28,7 +28,7 @@ import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine
 import { ArchbaseDateTimePickerRange } from '@components/editors/ArchbaseDateTimePickerRange';
 import { ArchbaseDateTimePickerEdit } from '@components/editors/ArchbaseDateTimePickerEdit';
 import { ArchbaseSwitch } from '@components/editors/ArchbaseSwitch';
-import '../../styles/querybuilder.scss';
+// import '../../styles/querybuilder.scss';
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
   id: string;
   currentFilter: ArchbaseQueryFilter;
@@ -1036,7 +1036,7 @@ class RuleItem extends Component<RuleItemProps> {
     disabled: false,
   };
   static contextType = ArchbaseAppContext;
-  context!: React.ContextType<typeof ArchbaseAppContext>;
+  declare context: React.ContextType<typeof ArchbaseAppContext>;
   constructor(props: RuleItemProps) {
     super(props);
   }

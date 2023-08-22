@@ -1,13 +1,19 @@
 import React, { Fragment, ReactNode, useRef, useState } from 'react';
 import type { ArchbaseDataSource } from '../datasource';
-import { ArchbaseQueryBuilder, ArchbaseQueryFilter, ArchbaseQueryFilterDelegator, ArchbaseQueryFilterState, FilterOptions, getDefaultEmptyFilter } from '@components/querybuilder';
+import {
+  ArchbaseQueryBuilder,
+  ArchbaseQueryFilter,
+  ArchbaseQueryFilterDelegator,
+  ArchbaseQueryFilterState,
+  FilterOptions,
+  getDefaultEmptyFilter,
+} from '@components/querybuilder';
 import { ArchbaseAlert } from '@components/notification';
 import { IconBug } from '@tabler/icons-react';
 import { t } from 'i18next';
 import { ArchbaseDataTable, ToolBarActions } from '@components/datatable';
 import { Button, Flex, Paper } from '@mantine/core';
-import "../../styles/template.scss";
-
+// import "../../styles/template.scss";
 
 export interface UserActionsOptions {
   visible?: boolean;
@@ -30,15 +36,13 @@ export interface UserRowActionsOptions<T> {
   onViewRow?: (row: T) => void;
 }
 
-
-
 export interface ArchbaseTableTemplateProps<T, ID> {
   title: string;
   printTitle?: string;
   logoPrint?: string;
   dataSource: ArchbaseDataSource<T, ID>;
   dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined;
-  filterType: "none"|"normal"|"advanced";
+  filterType: 'none' | 'normal' | 'advanced';
   filterOptions?: FilterOptions;
   filterPersistenceDelegator: ArchbaseQueryFilterDelegator;
   pageSize?: number;
@@ -60,7 +64,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
   title,
   printTitle,
   dataSource,
-//  dataSourceEdition,
+  //  dataSourceEdition,
   filterOptions,
   pageSize,
   columns,
@@ -76,7 +80,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
   filterType = 'normal',
   width = '100%',
   height = '100%',
-  onSearchByFilter = ()=>{},
+  onSearchByFilter = () => {},
   filterPersistenceDelegator,
 }: ArchbaseTableTemplateProps<T, ID>) {
   const innerComponentRef = innerRef || useRef<any>();
@@ -92,6 +96,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
       return;
     }
     const Comp: any = userRowActions!.actions;
+
     return (
       <Comp
         onEditRow={userRowActions!.onEditRow}
@@ -114,8 +119,9 @@ export function ArchbaseTableTemplate<T extends object, ID>({
     setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
   };
 
-  const buildFilter = ()=>{
-      return (<ArchbaseQueryBuilder
+  const buildFilter = () => {
+    return (
+      <ArchbaseQueryBuilder
         id={filterOptions?.componentName!}
         viewName={filterOptions?.viewName!}
         apiVersion={filterOptions?.apiVersion!}
@@ -132,8 +138,9 @@ export function ArchbaseTableTemplate<T extends object, ID>({
         height="170px"
       >
         {filterFields}
-      </ArchbaseQueryBuilder>);
-  }
+      </ArchbaseQueryBuilder>
+    );
+  };
 
   return (
     <Paper ref={innerComponentRef} style={{ overflow: 'none', height: '100%' }}>
@@ -162,24 +169,24 @@ export function ArchbaseTableTemplate<T extends object, ID>({
         isLoading={isLoading}
         pageSize={pageSize}
         isError={isError}
-        enableGlobalFilter={filterType==='normal'}
-        renderToolbarInternalActions={filterType==='advanced'?buildFilter:undefined}
+        enableGlobalFilter={filterType === 'normal'}
+        renderToolbarInternalActions={filterType === 'advanced' ? buildFilter : undefined}
         renderRowActions={buildRowActions}
         error={<span>{error}</span>}
       >
         {columns}
         <ToolBarActions>
           <Fragment>
-            <h3 className="only-print">{printTitle?printTitle:title}</h3>
+            <h3 className="only-print">{printTitle ? printTitle : title}</h3>
             <div className="no-print">
               <Flex gap="8px" rowGap="8px">
-                <Button color="green" variant="filled" onClick={()=>userActions && userActions!.onAddExecute}>
+                <Button color="green" variant="filled" onClick={() => userActions && userActions!.onAddExecute}>
                   {t('New')}
                 </Button>
-                <Button color="blue" variant="filled" onClick={()=>userActions && userActions!.onEditExecute}>
+                <Button color="blue" variant="filled" onClick={() => userActions && userActions!.onEditExecute}>
                   {t('Edit')}
                 </Button>
-                <Button color="red" variant="filled" onClick={()=>userActions && userActions!.onEditExecute}>
+                <Button color="red" variant="filled" onClick={() => userActions && userActions!.onEditExecute}>
                   {t('Remove')}
                 </Button>
               </Flex>
