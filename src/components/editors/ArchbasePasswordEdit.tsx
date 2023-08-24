@@ -1,6 +1,6 @@
 import { PasswordInput } from '@mantine/core';
 import { IconLock } from '@tabler/icons-react';
-import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseDataSource } from '../../components/datasource';
 import React, { CSSProperties, FocusEventHandler } from 'react';
 
 export interface ArchbasePasswordEditProps<T, ID> {

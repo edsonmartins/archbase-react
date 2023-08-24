@@ -30,8 +30,8 @@ export {ArchbaseDatePickerRange} from "./ArchbaseDatePickerRange"
 export type {ArchbaseDateTimePickerEditProps} from "./ArchbaseDateTimePickerEdit"
 export {ArchbaseDateTimePickerEdit} from "./ArchbaseDateTimePickerEdit"
 
-export type {ArchbaseDateTimePickerRangeProps as ArchbaseDateTimerPickerRangeProps} from "./ArchbaseDateTimePickerRange";
-export {ArchbaseDateTimePickerRange as ArchbaseDateTimerPickerRange} from "./ArchbaseDateTimePickerRange";
+export type {ArchbaseDateTimePickerRangeProps} from "./ArchbaseDateTimePickerRange";
+export {ArchbaseDateTimePickerRange} from "./ArchbaseDateTimePickerRange";
 
 export {ArchbaseImageEdit} from "./ArchbaseImageEdit";
 export type {ArchbaseImageEditProps} from "./ArchbaseImageEdit";

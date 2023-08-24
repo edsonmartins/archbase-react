@@ -8,16 +8,15 @@ import {
   ArchbaseQueryFilterState,
   FilterOptions,
   getDefaultEmptyFilter,
-} from '@components/querybuilder';
-import { ArchbaseAlert } from '@components/notification';
+} from '../../components/querybuilder';
+import { ArchbaseAlert } from '../../components/notification';
 import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
 import { t } from 'i18next';
 import useComponentSize from '@rehooks/component-size';
 import { Box, Button, Flex, Grid, MantineNumberSize, Pagination, Paper, ScrollArea } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { IconTrash } from '@tabler/icons-react';
-import { ArchbaseMasonry, ArchbaseMasonryResponsive, ComponentDefinition } from '@components/masonry/index';
-import { ArchbaseMasonryProvider } from '@components/masonry/ArchbaseMasonry.context';
+import { ArchbaseMasonry, ArchbaseMasonryResponsive, ComponentDefinition, ArchbaseMasonryProvider } from '../../components/masonry';
 
 
 export interface UserActionsOptions {

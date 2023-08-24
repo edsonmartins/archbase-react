@@ -7,8 +7,8 @@ import {
   ArchbaseQueryFilterState,
   FilterOptions,
   getDefaultEmptyFilter,
-} from '@components/querybuilder';
-import { ArchbaseAlert } from '@components/notification';
+} from '../../components/querybuilder';
+import { ArchbaseAlert } from '../../components/notification';
 import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
 import { t } from 'i18next';
 import useComponentSize from '@rehooks/component-size';

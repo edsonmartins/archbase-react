@@ -1,32 +1,29 @@
-import React, { ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useMemo, useRef } from 'react';
 import {
   useArchbaseDataSource,
   useArchbaseDataSourceListener,
   useArchbaseForceUpdate,
   useArchbaseLocalFilterDataSource,
   useArchbaseRemoteDataSource,
-} from '@hooks/index';
+} from '../../hooks/index';
 import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '@demo/index';
+import { Pessoa, pessoasData } from '../../../demo/index';
 import { t } from 'i18next';
-import { LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
-import { FakePessoaService } from '@demo/service/FakePessoaService';
-import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
-import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
-import { ArchbaseNotifications } from '@components/notification';
-import { MaskPattern } from '@components/editors';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+import { LocalFilter } from '../../../components/datasource/ArchbaseLocalFilterDataSource';
+import { FakePessoaService } from '../../../demo/service/FakePessoaService';
+import { API_TYPE } from '../../../demo/ioc/DemoIOCTypes';
+import { useArchbaseRemoteServiceApi } from '../../../components/hooks/useArchbaseRemoteServiceApi';
+import { ArchbaseNotifications } from '../../../components/notification';
+import { MaskPattern } from '../../../components/editors';
+import { DataSourceEvent, DataSourceEventNames } from '../../../components/datasource';
 import {
-  ArchbaseQueryFilter,
   ArchbaseQueryFilterDelegator,
-  ArchbaseQueryFilterState,
   OP_CONTAINS,
   OP_EQUALS,
   QueryField,
   QueryFieldValue,
   QueryFields,
-  getDefaultEmptyFilter,
-} from '@components/querybuilder';
+} from '../../../components/querybuilder';
 import {
   Avatar,
   Button,
@@ -36,9 +33,7 @@ import {
   Group,
   Paper,
   Progress,
-  Rating,
   RingProgress,
-  Stack,
   Text,
   createStyles,
 } from '@mantine/core';
@@ -47,7 +42,7 @@ import {
   ArchbaseMasonryContext,
   ArchbaseMasonryContextValue,
   ArchbaseMasonryCustomItemProps,
-} from '@components/masonry/index';
+} from '../../../components/masonry/index';
 import { IconAt, IconPhoneCall } from '@tabler/icons-react';
 import { IconArrowDownRight } from '@tabler/icons-react';
 const filters: LocalFilter[] = [];
@@ -89,11 +84,11 @@ const ArchbaseMasonryTemplateExample = () => {
     },
   });
 
-  const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
-    currentFilter: getDefaultEmptyFilter(),
-    activeFilterIndex: -1,
-    expandedFilter: false,
-  });
+  // const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
+  //   currentFilter: getDefaultEmptyFilter(),
+  //   activeFilterIndex: -1,
+  //   expandedFilter: false,
+  // });
   const { dataSource: dsFilters } = useArchbaseLocalFilterDataSource({ initialData: filters, name: 'dsFilters' });
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
@@ -112,19 +107,19 @@ const ArchbaseMasonryTemplateExample = () => {
     },
   });
 
-  const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
-    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
-  };
+  // const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
+  //   setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
+  // };
 
-  const handleToggleExpandedFilter = (expanded: boolean) => {
-    setFilterState({ ...filterState, expandedFilter: expanded });
-  };
+  // const handleToggleExpandedFilter = (expanded: boolean) => {
+  //   setFilterState({ ...filterState, expandedFilter: expanded });
+  // };
 
-  const handleSelectedFilter = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
-    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
-  };
+  // const handleSelectedFilter = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
+  //   setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
+  // };
 
-  const handleSearchByFilter = () => {};
+  // const handleSearchByFilter = () => {};
 
   const filterFields: ReactNode = useMemo(() => {
     return (

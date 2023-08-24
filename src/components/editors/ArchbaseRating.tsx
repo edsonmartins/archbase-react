@@ -1,6 +1,6 @@
 import { MantineSize, Rating } from '@mantine/core';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import { useArchbaseDidMount, useArchbaseDidUpdate } from '@components/hooks';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
+import { useArchbaseDidMount, useArchbaseDidUpdate } from '../../components/hooks';
 import React, { CSSProperties, FocusEventHandler, useCallback, useRef, useState } from 'react';
 
 export interface ArchbaseRatingProps<T, ID> {

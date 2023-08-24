@@ -1,19 +1,19 @@
 import { Children } from 'react';
 
-import deepFilter from './deepFilter.js';
-import deepFind from './deepFind.js';
-import deepForEach from './deepForEach.js';
-import deepMap from './deepMap.js';
-import filter from './filter.js';
-import getElementName from './getElementName.js';
-import groupByType from './groupByType.js';
-import hasChildren from './hasChildren.js';
-import hasComplexChildren from './hasComplexChildren.js';
-import onlyText from './onlyText.js';
-import onlyValid from './onlyValid.js';
-import isBase64 from './isBase64.js';
-import { archbaseLogo, archbaseLogo2, archbaseLogo3 } from './archbaseLogo.js';
-import {convertImageToBase64} from './convertImageToBase64.js';
+import deepFilter from './deepFilter';
+import deepFind from './deepFind';
+import deepForEach from './deepForEach';
+import deepMap from './deepMap';
+import filter from './filter';
+import getElementName from './getElementName';
+import groupByType from './groupByType';
+import hasChildren from './hasChildren';
+import hasComplexChildren from './hasComplexChildren';
+import onlyText from './onlyText';
+import onlyValid from './onlyValid';
+import isBase64 from './isBase64';
+import { archbaseLogo, archbaseLogo2, archbaseLogo3 } from './archbaseLogo';
+import {convertImageToBase64} from './convertImageToBase64';
 
 import {
   removeNonWord,
@@ -50,7 +50,7 @@ import {
   convertDateToISOString,
   convertISOStringToDate,
   formatStr
-} from './string-utils.js';
+} from './string-utils';
 
 export {
   deepFilter,

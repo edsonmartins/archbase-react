@@ -21,7 +21,7 @@ module.exports = {
   },
   'moduleFileExtensions': ['js', 'jsx', 'json', 'ts', 'tsx'],
   'watchPlugins': ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
-  moduleNameMapper: {
-    "^@components/(.*)$": "<rootDir>/src/components/$1",
-  }
+  // moduleNameMapper: {
+  //   "^@components/(.*)$": "<rootDir>/src/components/$1",
+  // }
 };

@@ -1,12 +1,7 @@
-import React, { useState, useEffect, ReactNode, useContext, useRef } from 'react';
-import { Avatar, Card, Grid, Group, Text, createStyles } from '@mantine/core';
-import { Pessoa, pessoasData } from '@demo/index';
-import { useArchbaseDataSource, useArchbaseForceUpdate, useArchbaseDataSourceListener } from '@components/hooks';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+import React from 'react';
+import { Card, Grid, Group, Text } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
-import { IconPhoneCall, IconAt } from '@tabler/icons-react';
 import { ArchbaseMasonry, ArchbaseMasonryResponsive } from './ArchbaseMasonry';
-const data = pessoasData;
 
 const images = [
   'https://picsum.photos/200/300?image=1050',

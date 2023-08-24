@@ -11,7 +11,7 @@ import {
 } from '@tabler/icons-react';
 
 import { ArchbaseNavigationItem } from './types';
-import { ArchbaseTableTemplateExample } from '@components/template/stories/ArchbaseTableTemplate.story';
+import { ArchbaseTableTemplateExample } from '../../components/template/stories/ArchbaseTableTemplate.story';
 
 const dashBoardView: ArchbaseNavigationItem = {
   label: 'Dashboard',

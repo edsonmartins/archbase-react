@@ -35,15 +35,15 @@ import React, { Fragment, isValidElement, useMemo, ReactNode, useRef, useState, 
 import { useTranslation } from 'react-i18next';
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { convertISOStringToDate, filter, isEmpty } from '../core/utils';
-import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
+import { useArchbaseDataSourceListener } from '../hooks';
 import builder from '../datasource/rsql/builder';
 import { emit } from '../datasource/rsql/emitter';
 import { ExpressionNode } from '../datasource/rsql/ast';
 import { ArchbaseObjectHelper } from '../core/helper';
 import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { t } from 'i18next';
-import { useArchbaseAppContext } from '@components/core';
-import { ArchbaseSwitch } from '@components/editors/ArchbaseSwitch';
+import { useArchbaseAppContext } from '../../components/core';
+import { ArchbaseSwitch } from '../../components/editors/ArchbaseSwitch';
 
 interface JsPDFCustom extends JsPDF {
   autoTable: (options: UserOptions) => void;

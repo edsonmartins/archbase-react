@@ -2,9 +2,9 @@ import { createTrackedSelector } from 'react-tracked'
 import { create } from 'zustand'
 
 
-import { Pessoa } from 'demo/data/types'
-import { ArchbaseTemplateState } from 'components/template'
-import { ArchbaseRemoteDataSource } from 'components/datasource'
+import { Pessoa } from '../data/types'
+import { ArchbaseTemplateState } from '../../components/template'
+import { ArchbaseRemoteDataSource } from '../../components/datasource'
 
 export interface PessoaState extends ArchbaseTemplateState<Pessoa, number> {}
 

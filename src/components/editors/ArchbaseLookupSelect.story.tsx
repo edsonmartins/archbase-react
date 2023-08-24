@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { pedidosData, Pedido, Pessoa, pessoasData } from '@demo/index';
+import { pedidosData, Pedido, Pessoa, pessoasData } from '../../demo/index';
 import { ArchbaseEdit } from './ArchbaseEdit';
 import { ArchbaseLookupSelect } from './ArchbaseLookupSelect';
 

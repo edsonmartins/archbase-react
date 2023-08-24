@@ -1,7 +1,7 @@
 import { Button, Group, Modal } from '@mantine/core';
-import { ArchbaseForm } from '@components/containers/form';
-import { ArchbaseCheckbox, ArchbaseEdit } from '@components/editors';
-import { ArchbaseDialog } from '@components/notification';
+import { ArchbaseForm } from '../../components/containers/form';
+import { ArchbaseCheckbox, ArchbaseEdit } from '../../components/editors';
+import { ArchbaseDialog } from '../../components/notification';
 import React, { useState } from 'react';
 
 interface ArchbaseSaveFilterProps {

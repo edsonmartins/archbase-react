@@ -3,13 +3,13 @@ import Modal from 'react-modal';
 import { CustomSortItem } from './ArchbaseAdvancedFilter';
 import { cloneDeep } from 'lodash';
 import { getQuickFieldsSort, getQuickFields, ArchbaseQueryFilter, Field, SortField } from './ArchbaseFilterCommons';
-import { ArchbaseCheckbox } from '@components/editors';
+import { ArchbaseCheckbox } from '../../components/editors';
 import { ActionIcon, Box, Button, Grid, Paper, Text, Tooltip } from '@mantine/core';
-import { ArchbaseDataSource } from '@components/datasource';
-import { ArchbaseList } from '@components/list';
+import { ArchbaseDataSource } from '../../components/datasource';
+import { ArchbaseList } from '../../components/list';
 import { IconArrowDown } from '@tabler/icons-react';
 import { IconArrowUp } from '@tabler/icons-react';
-import { ArchbaseForm } from '@components/containers/form';
+import { ArchbaseForm } from '../../components/containers/form';
 
 interface ArchbaseFilterSelectFieldsProps {
   currentFilter: ArchbaseQueryFilter;

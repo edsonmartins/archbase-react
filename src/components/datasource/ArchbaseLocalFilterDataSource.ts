@@ -4,7 +4,7 @@ import {
   DelegatorCallback,
   IQueryFilterEntity,
   QueryFilterEntity,
-} from '@components/querybuilder/ArchbaseFilterCommons';
+} from '../../components/querybuilder';
 
 
 export class LocalFilter {

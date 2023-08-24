@@ -2,8 +2,8 @@ import i18next from 'i18next';
 import { ArchbaseDataSourceError, processErrorMessage } from '../core/exceptions';
 import type { ArchbaseRemoteApiService } from '../service';
 import { DataSourceEventNames, DataSourceOptions, ArchbaseDataSource, IDataSource } from './ArchbaseDataSource';
-import { ADVANCED, ArchbaseQueryFilter, NORMAL, QUICK } from '@components/querybuilder/ArchbaseFilterCommons';
-import { ArchbaseFilterDSL } from '@components/querybuilder/ArchbaseFilterDSL';
+import { ADVANCED, ArchbaseQueryFilter, NORMAL, QUICK } from '../../components/querybuilder/ArchbaseFilterCommons';
+import { ArchbaseFilterDSL } from '../../components/querybuilder/ArchbaseFilterDSL';
 
 export interface IRemoteDataSource<T> extends IDataSource<T> {
   applyRemoteFilter: (filter: ArchbaseQueryFilter, page: number, callback?: (() => void) | undefined) => void;

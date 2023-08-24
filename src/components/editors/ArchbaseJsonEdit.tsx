@@ -7,7 +7,7 @@ import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } fro
 
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
-import { isBase64 } from '@components/core/utils';
+import { isBase64 } from '../../components/core/utils';
 
 
 export interface ArchbaseJsonEditProps<T,ID> {

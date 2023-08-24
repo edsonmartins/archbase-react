@@ -46,9 +46,9 @@ const config: StorybookConfig = {
     if (config.resolve) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        '@hooks': path.resolve(__dirname, '../src/components/hooks'),
-        '@components': path.resolve(__dirname, '../src/components'),
-        '@demo': path.resolve(__dirname, '../src/demo'),
+        // '@hooks': path.resolve(__dirname, '../src/components/hooks'),
+        // '@components': path.resolve(__dirname, '../src/components'),
+        // '@demo': path.resolve(__dirname, '../src/demo'),
       };
     }
     return config;

@@ -1,18 +1,18 @@
 import React from 'react';
 import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseAsyncSelect, OptionsResult } from './ArchbaseAsyncSelect';
-import { pedidosData, Pedido, Pessoa } from '@demo/index';
-import { useArchbaseRemoteServiceApi } from '@components/hooks';
-import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
-import { FakePessoaService } from 'demo/service/FakePessoaService';
-import { Page } from '@components/service';
-import { processErrorMessage } from '@components/core/exceptions';
+import { pedidosData, Pedido, Pessoa } from '../../demo/index';
+import { useArchbaseRemoteServiceApi } from '../../components/hooks';
+import { API_TYPE } from '../../demo/ioc/DemoIOCTypes';
+import { FakePessoaService } from '../../demo/service/FakePessoaService';
+import { Page } from '../../components/service';
+import { processErrorMessage } from '../../components/core/exceptions';
 
 const pedidosList: Pedido[] = pedidosData;
 const PAGE_SIZE = 10;

@@ -1,8 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import { FilterField, FilterFields, FilterFieldValue } from './ArchbaseAdvancedFilter';
-import { ArchbaseError } from '@components/core';
-
-import { MaskPattern } from '@components/editors';
+import { ArchbaseError } from '../../components/core';
+import { MaskPattern } from '../../components/editors';
 
 const QUICK_FILTER_INDEX = -2;
 const NEW_FILTER_INDEX = -1;

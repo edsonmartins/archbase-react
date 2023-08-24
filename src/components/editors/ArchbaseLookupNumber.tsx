@@ -7,8 +7,8 @@ import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } fro
 import { IconSearch } from '@tabler/icons-react';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
-import { formatStr } from '@components/core';
-import { ArchbaseObjectHelper } from '@components/core/helper';
+import { formatStr } from '../../components/core';
+import { ArchbaseObjectHelper } from '../../components/core/helper';
 import { ArchbaseNumberEdit } from './ArchbaseNumberEdit';
 
 export interface ArchbaseLookupNumberProps<T, ID, O> {

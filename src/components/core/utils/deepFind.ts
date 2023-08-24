@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Children, isValidElement } from 'react'
 
-import hasComplexChildren from './hasComplexChildren.js'
+import hasComplexChildren from './hasComplexChildren'
 
 const deepFind = (
   children: ReactNode | ReactNode[],

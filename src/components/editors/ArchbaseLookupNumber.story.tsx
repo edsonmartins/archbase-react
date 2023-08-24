@@ -1,17 +1,17 @@
 import React from 'react';
 import { Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { useArchbaseForceUpdate, useArchbaseServiceApi } from '../hooks';
+import { useArchbaseForceUpdate, useArchbaseRemoteServiceApi } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { pedidosData, Pedido, Pessoa } from '@demo/index';
+import { pedidosData, Pedido, Pessoa } from '../../demo/index';
 import { ArchbaseEdit } from './ArchbaseEdit';
-import { ArchbaseNotifications } from '@components/notification';
-import { FakePessoaService } from '@demo/service/FakePessoaService';
-import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
-import { processErrorMessage } from '@components/core/exceptions';
+import { ArchbaseNotifications } from '../../components/notification';
+import { FakePessoaService } from '../../demo/service/FakePessoaService';
+import { API_TYPE } from '../../demo/ioc/DemoIOCTypes';
+import { processErrorMessage } from '../../components/core/exceptions';
 import { ArchbaseLookupNumber } from './ArchbaseLookupNumber';
 
 
@@ -19,7 +19,7 @@ const pedidosList: Pedido[] = pedidosData;
 
 const ArchbaseLookupNumberExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const pessoaApi = useArchbaseServiceApi<FakePessoaService>(API_TYPE.Pessoa)
+  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa)
   const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit();
