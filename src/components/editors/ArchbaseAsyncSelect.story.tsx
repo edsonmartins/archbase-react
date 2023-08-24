@@ -7,19 +7,19 @@ import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseAsyncSelect, OptionsResult } from './ArchbaseAsyncSelect';
-import { pedidosData, Pedido, Pessoa } from '../../demo/index';
-import { useArchbaseRemoteServiceApi } from '../../components/hooks';
-import { API_TYPE } from '../../demo/ioc/DemoIOCTypes';
-import { FakePessoaService } from '../../demo/service/FakePessoaService';
-import { Page } from '../../components/service';
-import { processErrorMessage } from '../../components/core/exceptions';
+import { pedidosData, Pedido, Pessoa } from '@demo/index';
+import { useArchbaseRemoteServiceApi } from '@components/hooks';
+import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
+import { FakePessoaService } from '@demo/service/FakePessoaService';
+import { Page } from '@components/service';
+import { processErrorMessage } from '@components/core/exceptions';
 
 const pedidosList: Pedido[] = pedidosData;
 const PAGE_SIZE = 10;
 
 const ArchbaseAsyncSelectExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa)
+  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit();
@@ -40,13 +40,13 @@ const ArchbaseAsyncSelectExample = () => {
   const loadRemotePessoas = async (page, value): Promise<OptionsResult<Pessoa>> => {
     return new Promise<OptionsResult<Pessoa>>(async (resolve, reject) => {
       try {
-      const result : Page<Pessoa> = await pessoaApi.findAllWithFilter(value,page,PAGE_SIZE)
-      resolve({options: result.content, page: result.pageable.pageNumber, totalPages: result.totalPages});
+        const result: Page<Pessoa> = await pessoaApi.findAllWithFilter(value, page, PAGE_SIZE);
+        resolve({ options: result.content, page: result.pageable.pageNumber, totalPages: result.totalPages });
       } catch (error) {
         reject(processErrorMessage(error));
       }
     });
-  }
+  };
 
   return (
     <Grid>
@@ -57,7 +57,7 @@ const ArchbaseAsyncSelectExample = () => {
               <Text weight={500}>AsyncSelect Component</Text>
             </Group>
           </Card.Section>
-          <Box sx={(_theme) => ({height:100})}>
+          <Box sx={(_theme) => ({ height: 100 })}>
             <ArchbaseAsyncSelect<Pedido, string, Pessoa>
               label="Nome"
               dataSource={dataSource}
@@ -76,7 +76,7 @@ const ArchbaseAsyncSelectExample = () => {
               <Text weight={500}>Objeto Pedido</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({height:500})}>
+          <ScrollArea sx={(_theme) => ({ height: 500 })}>
             <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
           </ScrollArea>
         </Card>
@@ -88,7 +88,7 @@ const ArchbaseAsyncSelectExample = () => {
               <Text weight={500}>DataSource dsPedidos</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({height:500})}>
+          <ScrollArea sx={(_theme) => ({ height: 500 })}>
             <ArchbaseObjectInspector data={dataSource} />
           </ScrollArea>
         </Card>
@@ -101,8 +101,6 @@ export default {
   title: 'Editors/AsyncSelect',
   component: ArchbaseAsyncSelectExample,
 } as Meta;
-
-
 
 export const Example: StoryObj<typeof ArchbaseAsyncSelectExample> = {
   args: {

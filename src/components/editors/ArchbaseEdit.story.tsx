@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa, pessoasData } from '../../demo/index';
+import { Pessoa, pessoasData } from '@demo/index';
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
@@ -37,7 +37,7 @@ const ArchbaseEditExample = () => {
               <Text weight={500}>Edit Component</Text>
             </Group>
           </Card.Section>
-          <Box sx={(_theme) => ({height:100})}>
+          <Box sx={(_theme) => ({ height: 100 })}>
             <ArchbaseEdit label="Nome" dataSource={dataSource} dataField="nome" />
           </Box>
         </Card>
@@ -49,7 +49,7 @@ const ArchbaseEditExample = () => {
               <Text weight={500}>Objeto Pessoa</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({height:500})}>
+          <ScrollArea sx={(_theme) => ({ height: 500 })}>
             <ArchbaseJsonView data={data} />
           </ScrollArea>
         </Card>
@@ -61,7 +61,7 @@ const ArchbaseEditExample = () => {
               <Text weight={500}>DataSource dsPessoas</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({height:500})}>
+          <ScrollArea sx={(_theme) => ({ height: 500 })}>
             <ArchbaseObjectInspector data={dataSource} />
           </ScrollArea>
         </Card>

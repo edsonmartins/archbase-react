@@ -7,11 +7,11 @@ import {
   IconNews,
   IconSettings,
   IconUserPlus,
-  IconUsers
+  IconUsers,
 } from '@tabler/icons-react';
 
 import { ArchbaseNavigationItem } from './types';
-import { ArchbaseTableTemplateExample } from '../../components/template/stories/ArchbaseTableTemplate.story';
+import { ArchbaseTableTemplateExample } from '@components/template/stories/ArchbaseTableTemplate.story';
 
 const dashBoardView: ArchbaseNavigationItem = {
   label: 'Dashboard',
@@ -20,7 +20,7 @@ const dashBoardView: ArchbaseNavigationItem = {
   category: 'DASHBOARD',
   color: 'teal',
   component: <div></div>,
-  showInSidebar: true
+  showInSidebar: true,
 };
 
 const homeView: ArchbaseNavigationItem = {
@@ -30,7 +30,7 @@ const homeView: ArchbaseNavigationItem = {
   category: 'HOME',
   color: 'teal',
   component: <div></div>,
-  showInSidebar: true
+  showInSidebar: true,
 };
 
 const pessoaConsultaView: ArchbaseNavigationItem = {
@@ -39,8 +39,8 @@ const pessoaConsultaView: ArchbaseNavigationItem = {
   icon: <IconListSearch />,
   category: 'PESSOAS',
   color: 'pink',
-  component: <ArchbaseTableTemplateExample/>,
-  showInSidebar: true
+  component: <ArchbaseTableTemplateExample />,
+  showInSidebar: true,
 };
 
 const pessoaNovaView: ArchbaseNavigationItem = {
@@ -50,7 +50,7 @@ const pessoaNovaView: ArchbaseNavigationItem = {
   category: 'PESSOAS',
   color: 'pink',
   component: <div></div>,
-  showInSidebar: true
+  showInSidebar: true,
 };
 
 const pessoasMenu: ArchbaseNavigationItem = {
@@ -59,7 +59,7 @@ const pessoasMenu: ArchbaseNavigationItem = {
   links: [pessoaConsultaView, pessoaNovaView],
   category: 'PESSOAS',
   color: 'pink',
-  showInSidebar: true
+  showInSidebar: true,
 };
 
 const pedidoConsultaView: ArchbaseNavigationItem = {
@@ -69,7 +69,7 @@ const pedidoConsultaView: ArchbaseNavigationItem = {
   category: 'PEDIDOS',
   color: 'yellow',
   component: <div></div>,
-  showInSidebar: true
+  showInSidebar: true,
 };
 
 const pedidoNovoView: ArchbaseNavigationItem = {
@@ -79,7 +79,7 @@ const pedidoNovoView: ArchbaseNavigationItem = {
   category: 'PEDIDOS',
   color: 'yellow',
   component: <div></div>,
-  showInSidebar: true
+  showInSidebar: true,
 };
 
 const pedidosMenu: ArchbaseNavigationItem = {
@@ -88,7 +88,7 @@ const pedidosMenu: ArchbaseNavigationItem = {
   links: [pedidoConsultaView, pedidoNovoView],
   category: 'PEDIDOS',
   color: 'yellow',
-  showInSidebar: true
+  showInSidebar: true,
 };
 
 const configuracoesView: ArchbaseNavigationItem = {
@@ -98,7 +98,13 @@ const configuracoesView: ArchbaseNavigationItem = {
   category: 'CONFIGURAÇÕES',
   color: 'lime',
   component: <div></div>,
-  showInSidebar: true
+  showInSidebar: true,
 };
 
-export const navigationDataSample: ArchbaseNavigationItem[] = [homeView, dashBoardView, pessoasMenu, pedidosMenu, configuracoesView];
+export const navigationDataSample: ArchbaseNavigationItem[] = [
+  homeView,
+  dashBoardView,
+  pessoasMenu,
+  pedidosMenu,
+  configuracoesView,
+];

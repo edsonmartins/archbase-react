@@ -1,4 +1,4 @@
-import { JsonInput, MantineNumberSize, MantineSize} from '@mantine/core';
+import { JsonInput, MantineNumberSize, MantineSize } from '@mantine/core';
 
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useState, useCallback, useRef } from 'react';
@@ -7,10 +7,9 @@ import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } fro
 
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
-import { isBase64 } from '../../components/core/utils';
+import { isBase64 } from '@components/core/utils';
 
-
-export interface ArchbaseJsonEditProps<T,ID> {
+export interface ArchbaseJsonEditProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do json input */
   dataSource?: ArchbaseDataSource<T, ID>;
   /** Campo onde deverá ser atribuido o valor do json input na fonte de dados */
@@ -52,10 +51,10 @@ export interface ArchbaseJsonEditProps<T,ID> {
   /** Evento quando o valor do json input é alterado */
   onChangeValue?: (value: any) => void;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLTextAreaElement>|undefined;
+  innerRef?: React.RefObject<HTMLTextAreaElement> | undefined;
 }
 
-export function ArchbaseJsonEdit<T,ID>({
+export function ArchbaseJsonEdit<T, ID>({
   dataSource,
   dataField,
   disabled = false,
@@ -74,8 +73,8 @@ export function ArchbaseJsonEdit<T,ID>({
   maxLength,
   required = false,
   disabledBase64Convertion = false,
-  innerRef
-}: ArchbaseJsonEditProps<T,ID>) {
+  innerRef,
+}: ArchbaseJsonEditProps<T, ID>) {
   const [value, setValue] = useState<string>('');
   const innerComponentRef = innerRef || useRef<any>();
 
@@ -100,12 +99,14 @@ export function ArchbaseJsonEdit<T,ID>({
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      if ((event.type === DataSourceEventNames.dataChanged) ||
-          (event.type === DataSourceEventNames.fieldChanged) ||
-          (event.type === DataSourceEventNames.recordChanged) ||
-          (event.type === DataSourceEventNames.afterScroll) ||
-          (event.type === DataSourceEventNames.afterCancel)) {
-          loadDataSourceFieldValue();
+      if (
+        event.type === DataSourceEventNames.dataChanged ||
+        event.type === DataSourceEventNames.fieldChanged ||
+        event.type === DataSourceEventNames.recordChanged ||
+        event.type === DataSourceEventNames.afterScroll ||
+        event.type === DataSourceEventNames.afterCancel
+      ) {
+        loadDataSourceFieldValue();
       }
     }
   }, []);
@@ -136,10 +137,10 @@ export function ArchbaseJsonEdit<T,ID>({
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent)
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.removeListener(dataSourceEvent);
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {
@@ -153,14 +154,14 @@ export function ArchbaseJsonEdit<T,ID>({
     }
   };
 
-  const isReadOnly = () =>{
+  const isReadOnly = () => {
     let _readOnly = readOnly;
     if (dataSource && !readOnly) {
       _readOnly = dataSource.isBrowsing();
     }
-    return _readOnly;
-  }    
 
+    return _readOnly;
+  };
 
   return (
     <JsonInput

@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { ArchbaseSelect, ArchbaseSelectProps } from './ArchbaseSelect';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
-import { ArchbaseError } from '../../components/core';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../../components/hooks';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+import { ArchbaseError } from '@components/core';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
 import { SelectItem } from '@mantine/core';
 
 export interface ArchbaseLookupSelectProps<T, ID, O> extends ArchbaseSelectProps<T, ID, O> {
@@ -21,9 +21,11 @@ const getTextValue = (lookupDataFieldText: string | ((record: any) => string), r
   }
 };
 
-function rebuildOptions<_T,ID,O>(lookupDataSource: ArchbaseDataSource<O, ID> | undefined,
+function rebuildOptions<_T, ID, O>(
+  lookupDataSource: ArchbaseDataSource<O, ID> | undefined,
   lookupDataFieldText: string | ((record: any) => string),
-  lookupDataFieldId: string): SelectItem[] | undefined {
+  lookupDataFieldId: string,
+): SelectItem[] | undefined {
   let options: SelectItem[] = [];
   if (lookupDataSource && lookupDataSource.getTotalRecords() > 0) {
     lookupDataSource.browseRecords().map((record: any) => {
@@ -58,9 +60,9 @@ export function ArchbaseLookupSelect<T, ID, O>({
   options,
   ...otherProps
 }: ArchbaseLookupSelectProps<T, ID, O>) {
-  const [currentOptions, setCurrentOptions] = useState<SelectItem[] | undefined>(() => rebuildOptions(lookupDataSource,
-    lookupDataFieldText,
-    lookupDataFieldId));
+  const [currentOptions, setCurrentOptions] = useState<SelectItem[] | undefined>(() =>
+    rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId),
+  );
 
   const lookupDataSourceEvent = useCallback((event: DataSourceEvent<O>) => {
     if (dataSource && dataField) {
@@ -72,14 +74,11 @@ export function ArchbaseLookupSelect<T, ID, O>({
         event.type === DataSourceEventNames.afterCancel
       ) {
         if (lookupDataSource) {
-          setCurrentOptions(rebuildOptions(lookupDataSource,
-            lookupDataFieldText,
-            lookupDataFieldId));
+          setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
         }
       }
     }
   }, []);
-
 
   const getDataSourceFieldValue = () => {
     let result = '';
@@ -95,6 +94,7 @@ export function ArchbaseLookupSelect<T, ID, O>({
         result = '';
       }
     }
+
     return result;
   };
 
@@ -124,18 +124,14 @@ export function ArchbaseLookupSelect<T, ID, O>({
   };
 
   useArchbaseDidMount(() => {
-    setCurrentOptions(rebuildOptions(lookupDataSource,
-      lookupDataFieldText,
-      lookupDataFieldId,));
+    setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
     if (lookupDataSource) {
       lookupDataSource.addListener(lookupDataSourceEvent);
     }
   });
 
   useArchbaseDidUpdate(() => {
-    setCurrentOptions(rebuildOptions(lookupDataSource,
-      lookupDataFieldText,
-      lookupDataFieldId,));
+    setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
   }, []);
 
   useArchbaseWillUnmount(() => {

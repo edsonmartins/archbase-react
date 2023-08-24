@@ -1,5 +1,5 @@
 import { Loader, MantineNumberSize, MantineSize, ScrollArea, ScrollAreaProps, Select } from '@mantine/core';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import React, {
   CSSProperties,
   FocusEventHandler,
@@ -12,7 +12,7 @@ import React, {
   useState,
 } from 'react';
 import { uniqueId } from 'lodash';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../../components/hooks';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
 import { useDebouncedState } from '@mantine/hooks';
 import ArchbaseAsyncSelectContext, {
   ArchbaseAsyncSelectContextValue,
@@ -101,7 +101,7 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
   /** Indica se o select tem o preenchimento obrigatório */
   required?: boolean;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement>|undefined;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 function buildOptions<O>(
   initialOptions: O[],
@@ -111,6 +111,7 @@ function buildOptions<O>(
   if (!initialOptions) {
     return [];
   }
+
   return initialOptions.map((item: O) => {
     return { label: getOptionLabel(item), value: getOptionValue(item), origin: item, key: uniqueId('select') };
   });
@@ -185,12 +186,14 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      if ((event.type === DataSourceEventNames.dataChanged) ||
-          (event.type === DataSourceEventNames.fieldChanged) ||
-          (event.type === DataSourceEventNames.recordChanged) ||
-          (event.type === DataSourceEventNames.afterScroll) ||
-          (event.type === DataSourceEventNames.afterCancel)) {
-          loadDataSourceFieldValue();
+      if (
+        event.type === DataSourceEventNames.dataChanged ||
+        event.type === DataSourceEventNames.fieldChanged ||
+        event.type === DataSourceEventNames.recordChanged ||
+        event.type === DataSourceEventNames.afterScroll ||
+        event.type === DataSourceEventNames.afterCancel
+      ) {
+        loadDataSourceFieldValue();
       }
     }
   }, []);
@@ -205,10 +208,10 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent)
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.removeListener(dataSourceEvent);
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   useEffect(() => {
     if (queryValue && queryValue.length > 0 && queryValue != getOptionLabel(selectedValue)) {
@@ -280,13 +283,14 @@ export function ArchbaseAsyncSelect<T, ID, O>({
     );
   };
 
-  const isReadOnly = () =>{
+  const isReadOnly = () => {
     let _readOnly = readOnly;
     if (dataSource && !readOnly) {
       _readOnly = dataSource.isBrowsing();
     }
+
     return _readOnly;
-  }  
+  };
 
   return (
     <ArchbaseAsyncSelectProvider
@@ -308,7 +312,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         error={error}
         data={options}
         size={size!}
-        style={{ 
+        style={{
           width,
           ...style,
         }}
@@ -320,8 +324,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         onFocus={handleOnFocusEnter}
         value={selectedValue}
         onSearchChange={setQueryValue}
-        defaultValue={selectedValue?getOptionLabel(selectedValue):defaultValue}
-        searchValue={selectedValue?getOptionLabel(selectedValue):""}
+        defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
+        searchValue={selectedValue ? getOptionLabel(selectedValue) : ''}
         required={required}
         filter={filter}
         initiallyOpened={initiallyOpened}
@@ -350,6 +354,7 @@ export const CustomSelectScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps
         }
       }
     };
+
     return (
       <ScrollArea
         {...others}

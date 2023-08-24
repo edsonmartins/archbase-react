@@ -1,9 +1,9 @@
 import { ActionIcon, Image, ImageProps, Input, MantineNumberSize, Modal, Paper } from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
-import { ArchbaseDataSource } from '../../components/datasource';
+import { ArchbaseDataSource } from '@components/datasource';
 import React, { CSSProperties, useState } from 'react';
-import { archbaseLogo } from '../../components/core';
-import { ArchbaseImageEditor } from '../../components/image/ArchbaseImageEditor';
+import { archbaseLogo } from '@components/core';
+import { ArchbaseImageEditor } from '@components/image/ArchbaseImageEditor';
 
 export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
   /** Fonte de dados onde será atribuido o valor do rich edit*/
@@ -65,6 +65,7 @@ export function ArchbaseImageEdit<T, ID>({
   ...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
   const [isEditing, setIsEditing] = useState(false);
+
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
       <Input.Wrapper
@@ -74,15 +75,7 @@ export function ArchbaseImageEdit<T, ID>({
         description={description}
         error={error}
       >
-        <Image
-          src={
-            archbaseLogo
-          }
-          width={width}
-          height={height}
-          radius={radius}
-          {...otherProps}
-        />
+        <Image src={archbaseLogo} width={width} height={height} radius={radius} {...otherProps} />
       </Input.Wrapper>
       <ActionIcon
         size="xl"
@@ -95,7 +88,7 @@ export function ArchbaseImageEdit<T, ID>({
       {isEditing && (
         <Modal opened={isEditing} onClose={() => setIsEditing(false)} size="80%" padding="md" title="Editar Imagem">
           <Paper>
-            <ArchbaseImageEditor src={archbaseLogo}/>
+            <ArchbaseImageEditor src={archbaseLogo} />
           </Paper>
         </Modal>
       )}

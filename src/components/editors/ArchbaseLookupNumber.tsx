@@ -7,8 +7,8 @@ import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } fro
 import { IconSearch } from '@tabler/icons-react';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
-import { formatStr } from '../../components/core';
-import { ArchbaseObjectHelper } from '../../components/core/helper';
+import { formatStr } from '@components/core';
+import { ArchbaseObjectHelper } from '@components/core/helper';
 import { ArchbaseNumberEdit } from './ArchbaseNumberEdit';
 
 export interface ArchbaseLookupNumberProps<T, ID, O> {
@@ -84,6 +84,7 @@ function getInitialValue<T, ID>(value: any, dataSource?: ArchbaseDataSource<T, I
       initialValue = '';
     }
   }
+
   return initialValue;
 }
 
@@ -263,6 +264,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
     if (dataSource && !readOnly) {
       _readOnly = dataSource.isBrowsing();
     }
+
     return _readOnly;
   };
 

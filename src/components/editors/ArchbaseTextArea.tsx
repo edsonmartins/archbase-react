@@ -7,9 +7,9 @@ import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } fro
 
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
-import { isBase64 } from '../../components/core/utils';
+import { isBase64 } from '@components/core/utils';
 
-export interface ArchbaseTextAreaProps<T,ID> {
+export interface ArchbaseTextAreaProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do textarea */
   dataSource?: ArchbaseDataSource<T, ID>;
   /** Campo onde deverá ser atribuido o valor do textarea na fonte de dados */
@@ -49,10 +49,10 @@ export interface ArchbaseTextAreaProps<T,ID> {
   /** Evento quando o valor do textarea é alterado */
   onChangeValue?: (value: any, event: any) => void;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLTextAreaElement>|undefined;
+  innerRef?: React.RefObject<HTMLTextAreaElement> | undefined;
 }
 
-export function ArchbaseTextArea<T,ID>({
+export function ArchbaseTextArea<T, ID>({
   dataSource,
   dataField,
   disabled = false,
@@ -70,8 +70,8 @@ export function ArchbaseTextArea<T,ID>({
   maxRows,
   required = false,
   disabledBase64Convertion = false,
-  innerRef
-}: ArchbaseTextAreaProps<T,ID>) {
+  innerRef,
+}: ArchbaseTextAreaProps<T, ID>) {
   const [value, setValue] = useState<string>('');
   const innerComponentRef = innerRef || useRef<any>();
 
@@ -96,12 +96,14 @@ export function ArchbaseTextArea<T,ID>({
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      if ((event.type === DataSourceEventNames.dataChanged) ||
-          (event.type === DataSourceEventNames.fieldChanged) ||
-          (event.type === DataSourceEventNames.recordChanged) ||
-          (event.type === DataSourceEventNames.afterScroll) ||
-          (event.type === DataSourceEventNames.afterCancel)) {
-          loadDataSourceFieldValue();
+      if (
+        event.type === DataSourceEventNames.dataChanged ||
+        event.type === DataSourceEventNames.fieldChanged ||
+        event.type === DataSourceEventNames.recordChanged ||
+        event.type === DataSourceEventNames.afterScroll ||
+        event.type === DataSourceEventNames.afterCancel
+      ) {
+        loadDataSourceFieldValue();
       }
     }
   }, []);
@@ -136,10 +138,10 @@ export function ArchbaseTextArea<T,ID>({
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent)
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.removeListener(dataSourceEvent);
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {

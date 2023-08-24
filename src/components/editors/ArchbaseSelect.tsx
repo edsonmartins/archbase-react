@@ -1,8 +1,8 @@
 import { MantineNumberSize, MantineSize, Select, SelectItem } from '@mantine/core';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import React, { CSSProperties, FocusEventHandler, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { uniqueId } from 'lodash';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../../components/hooks';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
 import { useDebouncedState } from '@mantine/hooks';
 import { ArchbaseSelectProvider } from './ArchbaseSelect.context';
 import { CustomSelectScrollArea } from './ArchbaseAsyncSelect';
@@ -81,11 +81,11 @@ export interface ArchbaseSelectProps<T, ID, O> {
   /** Indica se o select tem o preenchimento obrigatório */
   required?: boolean;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement>|undefined;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
   /** Selecione os dados usados ​​para renderizar itens no menu suspenso */
   data?: ReadonlyArray<string | SelectItem>;
   customGetDataSourceFieldValue?: () => any;
-  customSetDataSourceFieldValue?: (value: any)=>void;
+  customSetDataSourceFieldValue?: (value: any) => void;
 }
 function buildOptions<O>(
   data?: ReadonlyArray<string | SelectItem>,
@@ -105,6 +105,7 @@ function buildOptions<O>(
       return { label: item.props.label, value: item.props.value, origin: item.props.value, key: uniqueId('select') };
     });
   }
+
   return initialOptions!.map((item: O) => {
     return { label: getOptionLabel!(item), value: getOptionValue!(item), origin: item, key: uniqueId('select') };
   });
@@ -149,7 +150,7 @@ export function ArchbaseSelect<T, ID, O>({
   innerRef,
   data,
   customGetDataSourceFieldValue,
-  customSetDataSourceFieldValue
+  customSetDataSourceFieldValue,
 }: ArchbaseSelectProps<T, ID, O>) {
   const [options, _setOptions] = useState<any[]>(
     buildOptions<O>(data, initialOptions, children, getOptionLabel, getOptionValue),
@@ -161,7 +162,9 @@ export function ArchbaseSelect<T, ID, O>({
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value;
     if (dataSource && dataField) {
-      initialValue = customGetDataSourceFieldValue?customGetDataSourceFieldValue():dataSource.getFieldValue(dataField);
+      initialValue = customGetDataSourceFieldValue
+        ? customGetDataSourceFieldValue()
+        : dataSource.getFieldValue(dataField);
       if (!initialValue) {
         initialValue = '';
       }
@@ -174,12 +177,14 @@ export function ArchbaseSelect<T, ID, O>({
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      if ((event.type === DataSourceEventNames.dataChanged) ||
-          (event.type === DataSourceEventNames.fieldChanged) ||
-          (event.type === DataSourceEventNames.recordChanged) ||
-          (event.type === DataSourceEventNames.afterScroll) ||
-          (event.type === DataSourceEventNames.afterCancel)) {
-          loadDataSourceFieldValue();
+      if (
+        event.type === DataSourceEventNames.dataChanged ||
+        event.type === DataSourceEventNames.fieldChanged ||
+        event.type === DataSourceEventNames.recordChanged ||
+        event.type === DataSourceEventNames.afterScroll ||
+        event.type === DataSourceEventNames.afterCancel
+      ) {
+        loadDataSourceFieldValue();
       }
     }
   }, []);
@@ -194,10 +199,10 @@ export function ArchbaseSelect<T, ID, O>({
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent)
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.removeListener(dataSourceEvent);
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   useEffect(() => {
     console.log(queryValue);
@@ -210,8 +215,13 @@ export function ArchbaseSelect<T, ID, O>({
   const handleChange = (value) => {
     setSelectedValue((_prev) => value);
 
-    if (dataSource && !dataSource.isBrowsing() && dataField && (customGetDataSourceFieldValue?customGetDataSourceFieldValue():dataSource.getFieldValue(dataField)) !== value) {
-      customSetDataSourceFieldValue?customSetDataSourceFieldValue(value):dataSource.setFieldValue(dataField, value);
+    if (
+      dataSource &&
+      !dataSource.isBrowsing() &&
+      dataField &&
+      (customGetDataSourceFieldValue ? customGetDataSourceFieldValue() : dataSource.getFieldValue(dataField)) !== value
+    ) {
+      customSetDataSourceFieldValue ? customSetDataSourceFieldValue(value) : dataSource.setFieldValue(dataField, value);
     }
 
     if (onSelectValue) {
@@ -235,7 +245,7 @@ export function ArchbaseSelect<T, ID, O>({
     //
   };
 
-  console.log(selectedValue)
+  console.log(selectedValue);
 
   return (
     <ArchbaseSelectProvider
@@ -267,8 +277,8 @@ export function ArchbaseSelect<T, ID, O>({
         onFocus={handleOnFocusEnter}
         value={selectedValue}
         onSearchChange={setQueryValue}
-        defaultValue={selectedValue?getOptionLabel(selectedValue):defaultValue}
-        searchValue={selectedValue?getOptionLabel(selectedValue):""}
+        defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
+        searchValue={selectedValue ? getOptionLabel(selectedValue) : ''}
         filter={filter}
         initiallyOpened={initiallyOpened}
         itemComponent={itemComponent}

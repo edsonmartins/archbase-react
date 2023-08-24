@@ -1,11 +1,5 @@
 import { ArchbaseDataSource, DataSourceOptions } from './ArchbaseDataSource';
-import {
-  ArchbaseQueryFilterDelegator,
-  DelegatorCallback,
-  IQueryFilterEntity,
-  QueryFilterEntity,
-} from '../../components/querybuilder';
-
+import { ArchbaseQueryFilterDelegator, DelegatorCallback, IQueryFilterEntity, QueryFilterEntity } from '@components/querybuilder';
 
 export class LocalFilter {
   id?: any;
@@ -23,10 +17,7 @@ export class LocalFilter {
   }
 }
 
-export class ArchbaseLocalFilterDataSource
-  extends ArchbaseDataSource<LocalFilter, number>
-  implements ArchbaseQueryFilterDelegator
-{
+export class ArchbaseLocalFilterDataSource extends ArchbaseDataSource<LocalFilter, number> implements ArchbaseQueryFilterDelegator {
   constructor(name: string, options: DataSourceOptions<LocalFilter>) {
     super(name, options);
   }
@@ -35,6 +26,7 @@ export class ArchbaseLocalFilterDataSource
     if (this.locate({ id })) {
       return this.convertCurrentRecordToFilter();
     }
+
     return;
   }
 
@@ -52,18 +44,20 @@ export class ArchbaseLocalFilterDataSource
     });
   }
 
-  public async addNewFilter(filter: IQueryFilterEntity, onResult: DelegatorCallback){
-    this.insert(new LocalFilter({
-      id: filter.id,
-      code: filter.code,
-      name: filter.name,
-      companyId: filter.companyId,
-      componentName: filter.componentName,
-      filter: btoa(JSON.stringify(filter.filter)),
-      shared: filter.shared,
-      viewName: filter.viewName,
-      userName: filter.userName
-    }));
+  public async addNewFilter(filter: IQueryFilterEntity, onResult: DelegatorCallback) {
+    this.insert(
+      new LocalFilter({
+        id: filter.id,
+        code: filter.code,
+        name: filter.name,
+        companyId: filter.companyId,
+        componentName: filter.componentName,
+        filter: btoa(JSON.stringify(filter.filter)),
+        shared: filter.shared,
+        viewName: filter.viewName,
+        userName: filter.userName,
+      }),
+    );
     const result = await this.save();
     onResult(null, result.id);
   }
@@ -91,8 +85,10 @@ export class ArchbaseLocalFilterDataSource
   public getFirstFilter(): IQueryFilterEntity | undefined {
     if (this.getTotalRecords() > 0) {
       this.first();
+
       return this.convertCurrentRecordToFilter();
     }
+
     return;
   }
 
@@ -112,6 +108,7 @@ export class ArchbaseLocalFilterDataSource
         }),
       );
     }
+
     return [];
   }
 }

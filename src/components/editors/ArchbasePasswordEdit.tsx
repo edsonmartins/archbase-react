@@ -1,6 +1,6 @@
 import { PasswordInput } from '@mantine/core';
 import { IconLock } from '@tabler/icons-react';
-import { ArchbaseDataSource } from '../../components/datasource';
+import { ArchbaseDataSource } from '@components/datasource';
 import React, { CSSProperties, FocusEventHandler } from 'react';
 
 export interface ArchbasePasswordEditProps<T, ID> {
@@ -31,7 +31,7 @@ export interface ArchbasePasswordEditProps<T, ID> {
   /** Evento quando o valor do edit é alterado */
   onChangeValue?: (value: any, event: any) => void;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement>|undefined;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
 export function ArchbasePasswordEdit<T, ID>(_props: ArchbasePasswordEditProps<T, ID>) {

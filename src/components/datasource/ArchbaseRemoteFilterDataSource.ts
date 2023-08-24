@@ -1,12 +1,7 @@
 import { DataSourceOptions } from './ArchbaseDataSource';
-import {
-  ArchbaseQueryFilterDelegator,
-  DelegatorCallback,
-  IQueryFilterEntity,
-  QueryFilterEntity,
-} from '../../components/querybuilder';
+import { ArchbaseQueryFilterDelegator, DelegatorCallback, IQueryFilterEntity, QueryFilterEntity } from '@components/querybuilder';
 import { ArchbaseRemoteDataSource } from './ArchbaseRemoteDataSource';
-import { ArchbaseRemoteApiService } from '../../components/service';
+import { ArchbaseRemoteApiService } from '@components/service';
 
 export class RemoteFilter {
   id?: any;
@@ -24,10 +19,7 @@ export class RemoteFilter {
   }
 }
 
-export class ArchbaseRemoteFilterDataSource
-  extends ArchbaseRemoteDataSource<RemoteFilter, number>
-  implements ArchbaseQueryFilterDelegator
-{
+export class ArchbaseRemoteFilterDataSource extends ArchbaseRemoteDataSource<RemoteFilter, number> implements ArchbaseQueryFilterDelegator {
   constructor(service: ArchbaseRemoteApiService<RemoteFilter, number>, name: string, options: DataSourceOptions<RemoteFilter>) {
     super(service, name, options);
   }
@@ -36,6 +28,7 @@ export class ArchbaseRemoteFilterDataSource
     if (this.locate({ id })) {
       return this.convertCurrentRecordToFilter();
     }
+
     return;
   }
 
@@ -53,18 +46,20 @@ export class ArchbaseRemoteFilterDataSource
     });
   }
 
-  public async addNewFilter(filter: IQueryFilterEntity, onResult: DelegatorCallback){
-    this.insert(new RemoteFilter({
-      id: filter.id,
-      code: filter.code,
-      name: filter.name,
-      companyId: filter.companyId,
-      componentName: filter.componentName,
-      filter: btoa(JSON.stringify(filter.filter)),
-      shared: filter.shared,
-      viewName: filter.viewName,
-      userName: filter.userName
-    }));
+  public async addNewFilter(filter: IQueryFilterEntity, onResult: DelegatorCallback) {
+    this.insert(
+      new RemoteFilter({
+        id: filter.id,
+        code: filter.code,
+        name: filter.name,
+        companyId: filter.companyId,
+        componentName: filter.componentName,
+        filter: btoa(JSON.stringify(filter.filter)),
+        shared: filter.shared,
+        viewName: filter.viewName,
+        userName: filter.userName,
+      }),
+    );
     const result = await this.save();
     onResult(null, result.id);
   }
@@ -92,8 +87,10 @@ export class ArchbaseRemoteFilterDataSource
   public getFirstFilter(): IQueryFilterEntity | undefined {
     if (this.getTotalRecords() > 0) {
       this.first();
+
       return this.convertCurrentRecordToFilter();
     }
+
     return;
   }
 
@@ -113,6 +110,7 @@ export class ArchbaseRemoteFilterDataSource
         }),
       );
     }
+
     return [];
   }
 }

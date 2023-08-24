@@ -7,7 +7,7 @@ import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { ArchbaseTextArea } from './ArchbaseTextArea';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '../../demo/index';
+import { Pessoa, pessoasData } from '@demo/index';
 
 const ArchbaseEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
@@ -54,7 +54,7 @@ const ArchbaseEditExample = () => {
               <Text weight={500}>Objeto Pessoa</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({height:500})}>
+          <ScrollArea sx={(_theme) => ({ height: 500 })}>
             <ArchbaseJsonView data={data} />
           </ScrollArea>
         </Card>
@@ -66,7 +66,7 @@ const ArchbaseEditExample = () => {
               <Text weight={500}>DataSource dsPessoas</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({height:500})}>
+          <ScrollArea sx={(_theme) => ({ height: 500 })}>
             <ArchbaseObjectInspector data={dataSource} />
           </ScrollArea>
         </Card>

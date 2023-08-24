@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as DataTypeDetection from './ArchbaseJsonViewDataTypeDetection';
-import { useArchbaseBool } from '../../hooks/useArchbaseBool';
+import { useArchbaseBool } from '@hooks/useArchbaseBool';
 
 const expandedIcon = '\u25BE';
 const collapsedIcon = '\u25B8';
@@ -54,12 +54,10 @@ function renderExpandableObject({
   closeBracket,
   level,
   style,
-  shouldInitiallyExpand
+  shouldInitiallyExpand,
 }: ExpandableRenderProps) {
   const shouldInitiallyExpandCalledRef = React.useRef(false);
-  const [expanded, toggleExpanded, setExpanded] = useArchbaseBool(() =>
-    shouldInitiallyExpand(level, value, field)
-  );
+  const [expanded, toggleExpanded, setExpanded] = useArchbaseBool(() => shouldInitiallyExpand(level, value, field));
 
   React.useEffect(() => {
     if (!shouldInitiallyExpandCalledRef.current) {
@@ -80,10 +78,10 @@ function renderExpandableObject({
   };
 
   return (
-    <div className={style.basicChildStyle} role='list'>
+    <div className={style.basicChildStyle} role="list">
       <span
         className={combineStyles(style.expander, style.pointer)}
-        role='button'
+        role="button"
         onClick={toggleExpanded}
         onKeyDown={onKeyDown}
         tabIndex={0}
@@ -110,7 +108,7 @@ function renderExpandableObject({
       ) : (
         <span
           className={combineStyles(style.punctuation, style.pointer)}
-          role='button'
+          role="button"
           tabIndex={0}
           onClick={toggleExpanded}
           onKeyDown={onKeyDown}
@@ -125,14 +123,7 @@ function renderExpandableObject({
   );
 }
 
-function JsonObject({
-  field,
-  value,
-  style,
-  lastElement,
-  shouldInitiallyExpand,
-  level
-}: JsonRenderProps<Object>) {
+function JsonObject({ field, value, style, lastElement, shouldInitiallyExpand, level }: JsonRenderProps<Object>) {
   return renderExpandableObject({
     field,
     value,
@@ -142,18 +133,11 @@ function JsonObject({
     closeBracket: '}',
     style,
     shouldInitiallyExpand,
-    data: Object.keys(value).map((key) => [key, value[key]])
+    data: Object.keys(value).map((key) => [key, value[key]]),
   });
 }
 
-function JsonArray({
-  field,
-  value,
-  style,
-  lastElement,
-  level,
-  shouldInitiallyExpand
-}: JsonRenderProps<Array<any>>) {
+function JsonArray({ field, value, style, lastElement, level, shouldInitiallyExpand }: JsonRenderProps<Array<any>>) {
   return renderExpandableObject({
     field,
     value,
@@ -163,7 +147,7 @@ function JsonArray({
     closeBracket: ']',
     style,
     shouldInitiallyExpand,
-    data: value.map((element) => [undefined, element])
+    data: value.map((element) => [undefined, element]),
   });
 }
 
@@ -171,7 +155,7 @@ function JsonPrimitiveValue({
   field,
   value,
   style,
-  lastElement
+  lastElement,
 }: JsonRenderProps<string | number | boolean | null | undefined>) {
   let stringValue = value;
   let valueStyle = style.otherValue;
@@ -199,7 +183,7 @@ function JsonPrimitiveValue({
   }
 
   return (
-    <div className={style.basicChildStyle} role='listitem'>
+    <div className={style.basicChildStyle} role="listitem">
       {field && <span className={style.label}>{field}:</span>}
       <span className={valueStyle}>{stringValue}</span>
       {!lastElement && <span className={style.punctuation}>,</span>}

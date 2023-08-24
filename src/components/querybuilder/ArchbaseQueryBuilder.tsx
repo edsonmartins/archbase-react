@@ -25,15 +25,15 @@ import {
   getDefaultEmptyFilter,
 } from './ArchbaseFilterCommons';
 import { endOfMonth } from 'date-fns';
-import { processErrorMessage } from '../../components/core/exceptions';
-import { ArchbaseDialog } from '../../components/notification';
-import { ActionIcon,  Menu, Tooltip } from '@mantine/core';
+import { processErrorMessage } from '@components/core/exceptions';
+import { ArchbaseDialog } from '@components/notification';
+import { ActionIcon, Menu, Tooltip } from '@mantine/core';
 import { IconCalendar, IconFilter, IconSubtask } from '@tabler/icons-react';
-import { ArchbaseEdit } from '../../components/editors';
+import { ArchbaseEdit } from '@components/editors';
 import { IconCalendarDue } from '@tabler/icons-react';
 import { ArchbaseFilterSelectFields } from './ArchbaseFilterSelectFields';
 import { ArchbaseFilterSelectRange } from './ArchbaseFilterSelectRange';
-import { ArchbaseAppContext } from '../../components/core';
+import { ArchbaseAppContext } from '@components/core';
 import { IconFilterOff } from '@tabler/icons-react';
 
 export interface ArchbaseQueryBuilderProps {
@@ -86,7 +86,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
     width: '50px',
     height: '500px',
     detailsHeight: 480,
-    detailsWidth: 768
+    detailsWidth: 768,
   };
   private timeout: any;
   private divMain: any;
@@ -750,7 +750,11 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
               ? this.context.theme!.colors.dark[7]
               : this.context.theme!.colors.gray[0],
           position: 'relative',
-          border: `1px solid ${this.context.theme!.colorScheme==='dark'?this.context.theme!.colors.gray[7]:this.context.theme!.colors.gray[2]}`,
+          border: `1px solid ${
+            this.context.theme!.colorScheme === 'dark'
+              ? this.context.theme!.colors.gray[7]
+              : this.context.theme!.colors.gray[2]
+          }`,
           borderRadius: 4,
           display: 'flex',
           flexFlow: 'column nowrap',
@@ -847,10 +851,18 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 
             <Menu.Dropdown>
               <Menu.Label>Período</Menu.Label>
-              <Menu.Item onClick={() => this.onSelectRange('range')} icon={<IconCalendarDue size={16} />}>Intervalo</Menu.Item>
-              <Menu.Item onClick={() => this.onSelectRange('month')} icon={<IconCalendarDue size={16} />}>Mês</Menu.Item>
-              <Menu.Item onClick={() => this.onSelectRange('week')} icon={<IconCalendarDue size={16} />}>Semana</Menu.Item>
-              <Menu.Item onClick={() => this.onSelectRange('day')} icon={<IconCalendarDue size={16} />}>Dia</Menu.Item>
+              <Menu.Item onClick={() => this.onSelectRange('range')} icon={<IconCalendarDue size={16} />}>
+                Intervalo
+              </Menu.Item>
+              <Menu.Item onClick={() => this.onSelectRange('month')} icon={<IconCalendarDue size={16} />}>
+                Mês
+              </Menu.Item>
+              <Menu.Item onClick={() => this.onSelectRange('week')} icon={<IconCalendarDue size={16} />}>
+                Semana
+              </Menu.Item>
+              <Menu.Item onClick={() => this.onSelectRange('day')} icon={<IconCalendarDue size={16} />}>
+                Dia
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
 

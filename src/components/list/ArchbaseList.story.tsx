@@ -1,8 +1,8 @@
 import React, { useState, useEffect, ReactNode, useContext, useRef } from 'react';
 import { Avatar, Card, Grid, Group, Text, createStyles } from '@mantine/core';
-import { Pessoa, pessoasData } from '../../demo/index';
-import { useArchbaseDataSource, useArchbaseForceUpdate, useArchbaseDataSourceListener } from '../../components/hooks';
-import { DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
+import { Pessoa, pessoasData } from '@demo/index';
+import { useArchbaseDataSource, useArchbaseForceUpdate, useArchbaseDataSourceListener } from '@components/hooks';
+import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseList, ArchbaseListCustomItemProps } from './ArchbaseList';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
@@ -102,9 +102,7 @@ const ArchbaseListBasicExample = ({ showIcon, showPhoto, justifyContent, spacing
   );
 };
 
-interface CustomItemProps extends ArchbaseListCustomItemProps<Pessoa,string> {
-
-}
+interface CustomItemProps extends ArchbaseListCustomItemProps<Pessoa, string> {}
 
 const useStyles = createStyles((theme) => ({
   icon: {
@@ -116,17 +114,16 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-
 const CustomItem = (props: CustomItemProps) => {
   const { classes } = useStyles();
-  const listContextValue = useContext<ArchbaseListContextValue<Pessoa,string>>(ArchbaseListContext);
+  const listContextValue = useContext<ArchbaseListContextValue<Pessoa, string>>(ArchbaseListContext);
   const itemRef = useRef<any>(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (itemRef.current && props.active) {
       itemRef.current.focus();
     }
-  },[props.active])
+  }, [props.active]);
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -137,10 +134,11 @@ const CustomItem = (props: CustomItemProps) => {
     }
   };
 
-  const backgroundColor = props.active?listContextValue.activeBackgroundColor:"";
-  const color = props.active?listContextValue.activeColor:"";
+  const backgroundColor = props.active ? listContextValue.activeBackgroundColor : '';
+  const color = props.active ? listContextValue.activeColor : '';
+
   return (
-    <div onClick={handleClick} style={{padding:"8px",backgroundColor, color}} ref={itemRef} tabIndex={-1}> 
+    <div onClick={handleClick} style={{ padding: '8px', backgroundColor, color }} ref={itemRef} tabIndex={-1}>
       <Group noWrap>
         <Avatar src={props.recordData.foto} size={94} radius="md" />
         <div>
@@ -157,14 +155,15 @@ const CustomItem = (props: CustomItemProps) => {
 
           <Group noWrap spacing={10} mt={5}>
             <IconPhoneCall stroke={1.5} size="1rem" className={classes.icon} />
-            <Text fz="xs" c="dimmed" className={classes.name} >
+            <Text fz="xs" c="dimmed" className={classes.name}>
               {props.recordData.celular}
             </Text>
           </Group>
         </div>
       </Group>
-    </div>);
-}
+    </div>
+  );
+};
 
 const ArchbaseListCustomItemExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
@@ -195,7 +194,7 @@ const ArchbaseListCustomItemExample = () => {
           <ArchbaseList<Pessoa, string>
             height={700}
             dataSource={dataSource!}
-            component={{type:CustomItem, props:{opcao1:'teste',opcao2:'teste'}}}
+            component={{ type: CustomItem, props: { opcao1: 'teste', opcao2: 'teste' } }}
           />
         </Card>
       </Grid.Col>
@@ -236,7 +235,7 @@ export const Example: StoryObj<typeof ArchbaseListBasicExample> = {
     showIcon: false,
     showPhoto: false,
     justifyContent: 'flex-start',
-    spacing: 'md'
+    spacing: 'md',
   },
   argTypes: {
     justifyContent: {
@@ -244,7 +243,7 @@ export const Example: StoryObj<typeof ArchbaseListBasicExample> = {
       control: { type: 'radio' },
     },
     spacing: {
-      options: ['xs' , 'sm' , 'md' , 'lg' , 'xl'],
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
       control: { type: 'select' },
     },
   },
@@ -252,6 +251,6 @@ export const Example: StoryObj<typeof ArchbaseListBasicExample> = {
 
 export const Example2: StoryObj<typeof ArchbaseListCustomItemExample> = {
   render: (_args) => {
-    return <ArchbaseListCustomItemExample/>;
-  },  
+    return <ArchbaseListCustomItemExample />;
+  },
 };

@@ -6,7 +6,7 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { pedidosData, Pedido, Pessoa, pessoasData } from '../../demo/index';
+import { pedidosData, Pedido, Pessoa, pessoasData } from '@demo/index';
 import { ArchbaseEdit } from './ArchbaseEdit';
 import { ArchbaseLookupSelect } from './ArchbaseLookupSelect';
 
@@ -14,7 +14,10 @@ const pedidosList: Pedido[] = pedidosData;
 
 const ArchbaseLookupSelectExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const { dataSource: dsPessoas } = useArchbaseDataSource<Pessoa, string>({ initialData: pessoasData, name: 'dsPessoas' });
+  const { dataSource: dsPessoas } = useArchbaseDataSource<Pessoa, string>({
+    initialData: pessoasData,
+    name: 'dsPessoas',
+  });
   const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit();

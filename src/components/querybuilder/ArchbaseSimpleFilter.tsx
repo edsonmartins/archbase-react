@@ -13,11 +13,18 @@ import {
 } from './ArchbaseFilterCommons';
 import shallowCompare from 'react-addons-shallow-compare';
 
-import { ltrim } from '../../components/core/utils';
-import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem,ArchbaseDateTimePickerEdit,ArchbaseDateTimePickerRange } from '../../components/editors';
+import { ltrim } from '@components/core/utils';
+import {
+  ArchbaseCheckbox,
+  ArchbaseEdit,
+  ArchbaseSelect,
+  ArchbaseSelectItem,
+  ArchbaseDateTimePickerEdit,
+  ArchbaseDateTimePickerRange,
+} from '@components/editors';
 import { IconArrowDown, IconArrowUp, IconSearch } from '@tabler/icons-react';
-import { ArchbaseList } from '../../components/list';
-import { ArchbaseDataSource } from '../../components/datasource';
+import { ArchbaseList } from '@components/list';
+import { ArchbaseDataSource } from '@components/datasource';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
 import { ActionIcon, Grid, MantineTheme, MultiSelect, Switch, Text, Tooltip } from '@mantine/core';
 import {
@@ -26,9 +33,8 @@ import {
   AccordionItemButton,
   AccordionItemHeading,
   AccordionItemPanel,
-} from "react-accessible-accordion";
-import { ArchbaseAppContext } from '../../components/core';
-
+} from 'react-accessible-accordion';
+import { ArchbaseAppContext } from '@components/core';
 
 const rnd = (() => {
   const gen = (min: number, max: number) => max++ && [...Array(max - min)].map((_s, i) => String.fromCharCode(min + i));
@@ -75,7 +81,7 @@ export interface ArchbaseSimpleFilterProps {
   sortFocused?: boolean;
   onSearchButtonClick?: (field: string, event?: any, handleOnChange?: any, operator?: any, searchField?: any) => void;
   update?: number;
-  theme?: MantineTheme|null;
+  theme?: MantineTheme | null;
 }
 
 export interface ArchbaseSimpleFilterState {
@@ -83,7 +89,7 @@ export interface ArchbaseSimpleFilterState {
   update: number;
   activeFilterIndex?: number;
   simpleFields: ReactNode[];
-  schema: Schema;  
+  schema: Schema;
 }
 
 class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, ArchbaseSimpleFilterState> {
@@ -132,6 +138,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
 
   createSchema = (): Schema => {
     const { operators, conditions, fields } = this.props;
+
     return {
       fields: fields,
       operators,
@@ -158,6 +165,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
         result.push({ name: item.name, asc_desc: item.asc_desc });
       }
     });
+
     return result;
   };
 
@@ -168,6 +176,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
         result = item;
       }
     });
+
     return result;
   };
 
@@ -178,6 +187,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
         result = item;
       }
     });
+
     return result;
   };
 
@@ -291,6 +301,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
         result = field;
       }
     }, this);
+
     return result;
   };
 
@@ -344,6 +355,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
         }
       });
     }
+
     return foundAtIndex;
   };
 
@@ -457,6 +469,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
         return fields[i].listValues;
       }
     }
+
     return [];
   };
 
@@ -472,6 +485,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
         appendDelimiter = true;
       }
     });
+
     return result;
   };
 
@@ -500,60 +514,48 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
       textValue = rule.value2 && rule.value2 !== '' ? `${textValue} a ${rule.value2}` : textValue;
       result.push(
         <AccordionItem
-          uuid={this.prefixId + "_" + index}
-          id={this.prefixId + "_" + index}
-          key={"flk" + index}
+          uuid={this.prefixId + '_' + index}
+          id={this.prefixId + '_' + index}
+          key={'flk' + index}
           //disabled={rule.disabled}
           dangerouslySetExpanded={!rule.disabled}
           //label={child.label}
         >
-          <AccordionItemHeading
-            className={
-              rule.disabled === true
-                ? "simple-filter-disabled"
-                : "simple-filter-enabled"
-            }
-          >
+          <AccordionItemHeading className={rule.disabled === true ? 'simple-filter-disabled' : 'simple-filter-enabled'}>
             <AccordionItemButton
               className={
                 rule.disabled === true
-                  ? "accordion__button simple-filter-disabled"
-                  : "accordion__button simple-filter-enabled"
+                  ? 'accordion__button simple-filter-disabled'
+                  : 'accordion__button simple-filter-enabled'
               }
             >
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <ArchbaseCheckbox
-                isChecked={!rule.disabled}
-                width="24px"
-                style={{ margin: 0 }}
-                onChangeValue={(value: any, _event: any) =>
-                  this.onDisabledChanged(value, value === true, rule, this.prefixId + '_' + index)
-                }
-              />
-              <Text color={this.props.theme!.colorScheme==='dark'?'white':'black'}>{child.label}</Text>
-              <SimpleValueSelector
-                field={child.name}
-                options={this.getOperators(child.name)}
-                value={rule.operator}
-                className="custom-select-operator"
-                style={{color:this.props.theme!.colors.blue[5], backgroundColor:'transparent'}}
-                disabled={true}
-                handleOnChange={(value) => this.onOperatorChanged(rule, value)}
-                level={0}
-              />
-              <Text style={{ fontSize: '12px' }} color="blue">
-                {textValue}
-              </Text>
-            </div>
-          </AccordionItemButton>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <ArchbaseCheckbox
+                  isChecked={!rule.disabled}
+                  width="24px"
+                  style={{ margin: 0 }}
+                  onChangeValue={(value: any, _event: any) =>
+                    this.onDisabledChanged(value, value === true, rule, this.prefixId + '_' + index)
+                  }
+                />
+                <Text color={this.props.theme!.colorScheme === 'dark' ? 'white' : 'black'}>{child.label}</Text>
+                <SimpleValueSelector
+                  field={child.name}
+                  options={this.getOperators(child.name)}
+                  value={rule.operator}
+                  className="custom-select-operator"
+                  style={{ color: this.props.theme!.colors.blue[5], backgroundColor: 'transparent' }}
+                  disabled={true}
+                  handleOnChange={(value) => this.onOperatorChanged(rule, value)}
+                  level={0}
+                />
+                <Text style={{ fontSize: '12px' }} color="blue">
+                  {textValue}
+                </Text>
+              </div>
+            </AccordionItemButton>
           </AccordionItemHeading>
-          <AccordionItemPanel
-            className={
-              rule.disabled === true
-                ? "simple-filter-disabled"
-                : "simple-filter-enabled"
-            }
-          >
+          <AccordionItemPanel className={rule.disabled === true ? 'simple-filter-disabled' : 'simple-filter-enabled'}>
             <div
               style={{
                 display: 'flex',
@@ -566,7 +568,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 options={this.getOperators(child.name)}
                 value={rule.operator}
                 className="custom-select-operator"
-                style={{color:this.props.theme!.colorScheme==='dark'?'white':'black'}}
+                style={{ color: this.props.theme!.colorScheme === 'dark' ? 'white' : 'black' }}
                 disabled={child.disabled}
                 handleOnChange={(value) => this.onOperatorChanged(rule, value)}
                 level={0}
@@ -610,8 +612,8 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 ''
               )}
             </div>
-            </AccordionItemPanel>
-        </AccordionItem>
+          </AccordionItemPanel>
+        </AccordionItem>,
       );
     });
 
@@ -621,38 +623,39 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
       } else if (a.props.disabled) {
         return -1;
       }
+
       return 1;
     });
 
     if (this.props.allowSort === true) {
       result.push(
         <AccordionItem
-          uuid={this.prefixId + "_" + 9999}
-          key={"flk" + 9999}
+          uuid={this.prefixId + '_' + 9999}
+          key={'flk' + 9999}
           //label="Ordenação"
           //blockStyle={{ padding: "4px", overflow: "hidden" }}
           //headerStyle={{ paddingRight: "10px", minHeight: "20px!important" }}
         >
           <AccordionItemHeading>
             <AccordionItemButton>
-            <div style={{ fontWeight: 'bold', color: '#3d3d69' }}>
-              {'Ordenação  '}
-              <Text
-                key={'txto_' + 9999}
-                truncate
-                color="blue"
-                style={{
-                  wordBreak: 'break-word',
-                  display: 'block',
-                  wordWrap: 'break-word',
-                  width: '100%',
-                  whiteSpace: 'normal',
-                  fontSize: '12px',
-                }}
-              >
-                {this.getSortString(currentFilter)}
-              </Text>
-            </div>
+              <div style={{ fontWeight: 'bold', color: '#3d3d69' }}>
+                {'Ordenação  '}
+                <Text
+                  key={'txto_' + 9999}
+                  truncate
+                  color="blue"
+                  style={{
+                    wordBreak: 'break-word',
+                    display: 'block',
+                    wordWrap: 'break-word',
+                    width: '100%',
+                    whiteSpace: 'normal',
+                    fontSize: '12px',
+                  }}
+                >
+                  {this.getSortString(currentFilter)}
+                </Text>
+              </div>
             </AccordionItemButton>
           </AccordionItemHeading>
           <AccordionItemPanel>
@@ -708,7 +711,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 </div>
               </Grid.Col>
             </Grid>
-            </AccordionItemPanel>
+          </AccordionItemPanel>
         </AccordionItem>,
       );
     }
@@ -744,12 +747,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
 
     return (
       <Fragment>
-        <Accordion
-          allowZeroExpanded={true}
-          allowMultipleExpanded={true}
-          preExpanded={preExpandedItems}
-          id="acc1"
-        >
+        <Accordion allowZeroExpanded={true} allowMultipleExpanded={true} preExpanded={preExpandedItems} id="acc1">
           {items}
         </Accordion>
       </Fragment>
@@ -814,11 +812,13 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
         result.forEach((item) => {
           return _value.push(item.replaceAll("'", ''));
         });
+
         return _value;
       }
     } else {
       return value.split(',');
     }
+
     return value;
   };
 
@@ -836,6 +836,7 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
         if (operator === 'between') {
           if (newValue === '' && newValue2 === '') newValue = '';
           else newValue = [newValue, newValue2];
+
           return (
             <DatePickerInput
               type="range"
@@ -869,6 +870,7 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
         if (operator === 'between') {
           if (newValue === '' && newValue2 === '') newValue = '';
           else newValue = [newValue, newValue2];
+
           return (
             <ArchbaseDateTimePickerRange
               disabled={disabled}
@@ -890,6 +892,7 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
       } else if (dataType === 'time') {
         if (newValue === '' && newValue2 === '') newValue = '';
         else newValue = newValue + ' - ' + newValue2;
+
         return (
           <TimeInput
             disabled={disabled}
@@ -914,6 +917,7 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
       } else {
         if (listValues && listValues.length > 0 && (operator === 'notInList' || operator === 'inList')) {
           let _value = this.convertValueCombobox(newValue, dataType);
+
           return (
             <MultiSelect
               disabled={disabled}
@@ -943,7 +947,7 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
             <ArchbaseEdit
               disabled={disabled}
               width={'100%'}
-              icon={searchComponent ? searchComponent : <IconSearch size="1.2rem"/>}
+              icon={searchComponent ? searchComponent : <IconSearch size="1.2rem" />}
               onActionSearchExecute={() => this.onButtonClick()}
               value={newValue}
               onChangeValue={(value: any, _event: any) => handleOnChange(value)}
@@ -978,7 +982,7 @@ interface SimpleValueSelectorProps {
   width?: string;
   disabled?: boolean;
   level: number;
-  style?: CSSProperties
+  style?: CSSProperties;
 }
 
 interface SimpleValueEditorState {
@@ -1005,6 +1009,7 @@ class SimpleValueSelector extends React.Component<SimpleValueSelectorProps, Simp
       if (opt.name === name) {
         return opt.label;
       }
+
       return undefined;
     });
   };
@@ -1041,7 +1046,7 @@ class SimpleValueSelector extends React.Component<SimpleValueSelectorProps, Simp
         disabled={disabled}
         value={value}
         tabIndex={-1}
-        style={{ ...style, width: this.state.width}}
+        style={{ ...style, width: this.state.width }}
         onChange={this.handleOnChange}
       >
         {options.map((option) => {

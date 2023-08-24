@@ -1,20 +1,19 @@
-import React  from 'react';
+import React from 'react';
 import {
   useArchbaseDataSource,
   useArchbaseDataSourceListener,
   useArchbaseForceUpdate,
   useArchbaseRemoteDataSource,
-} from '../../hooks/index';
+} from '@hooks/index';
 import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '../../../demo/index';
+import { Pessoa, pessoasData } from '../@demo/index';
 import { t } from 'i18next';
-import { FakePessoaService } from '../../../demo/service/FakePessoaService';
-import { API_TYPE } from '../../../demo/ioc/DemoIOCTypes';
-import { useArchbaseRemoteServiceApi } from '../../../components/hooks/useArchbaseRemoteServiceApi';
-import { ArchbaseNotifications } from '../../../components/notification';
-import { DataSourceEvent, DataSourceEventNames } from '../../../components/datasource';
+import { FakePessoaService } from '../@demo/service/FakePessoaService';
+import { API_TYPE } from '../@demo/ioc/DemoIOCTypes';
+import { useArchbaseRemoteServiceApi } from '../@components/hooks/useArchbaseRemoteServiceApi';
+import { ArchbaseNotifications } from '../@components/notification';
+import { DataSourceEvent, DataSourceEventNames } from '../@components/datasource';
 import { ArchbaseFormTemplate } from '../ArchbaseFormTemplate';
-
 
 const ArchbaseFormTemplateExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
@@ -76,12 +75,9 @@ const ArchbaseFormTemplateExample = () => {
     },
   });
 
-
   return (
     <div style={{ width: '100%', height: 'calc(100vh - 50px)' }}>
-      <ArchbaseFormTemplate title="Edição" isError={true} error='Testando erro'>
-
-      </ArchbaseFormTemplate>
+      <ArchbaseFormTemplate title="Edição" isError={true} error="Testando erro"></ArchbaseFormTemplate>
     </div>
   );
 };
@@ -100,4 +96,3 @@ export const Example: StoryObj<typeof ArchbaseFormTemplateExample> = {
     },
   },
 };
-

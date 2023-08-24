@@ -1,9 +1,9 @@
-import { ArchbaseAuthenticator } from '../../components/auth';
-import { injectable } from 'inversify'
+import { ArchbaseAuthenticator } from '@components/auth';
+import { injectable } from 'inversify';
 
 @injectable()
 export class FakeAuthenticator implements ArchbaseAuthenticator {
   getToken(): string | null {
-    return "fake_token";
+    return 'fake_token';
   }
 }

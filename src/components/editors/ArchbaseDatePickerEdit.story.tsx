@@ -2,7 +2,7 @@ import React from 'react';
 import { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit';
 import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa, pessoasData } from '../../demo/index';
+import { Pessoa, pessoasData } from '@demo/index';
 import { useArchbaseDataSource } from '../hooks';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
@@ -27,6 +27,7 @@ const ArchbaseDatePickerEditExample = () => {
       }
     },
   });
+
   return (
     <Grid>
       <Grid.Col span={12}>
@@ -36,7 +37,7 @@ const ArchbaseDatePickerEditExample = () => {
               <Text weight={500}>Date Picker Component</Text>
             </Group>
           </Card.Section>
-          <Box sx={(_theme) => ({height:100})}>
+          <Box sx={(_theme) => ({ height: 100 })}>
             <ArchbaseDatePickerEdit width={200} label="Data nascimento" dataSource={dataSource} dataField="data_nasc" />
           </Box>
         </Card>

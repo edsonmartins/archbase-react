@@ -1,17 +1,17 @@
-import { ActionIcon, AppShell, MantineTheme,  useMantineTheme } from '@mantine/core';
+import { ActionIcon, AppShell, MantineTheme, useMantineTheme } from '@mantine/core';
 import React, { ReactNode, useContext, useMemo } from 'react';
 import type { MenuItemStyles } from 'react-pro-sidebar';
 import { Menu as SidebarMenu, menuClasses, MenuItem, Sidebar, sidebarClasses, SubMenu } from 'react-pro-sidebar';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
-import { ArchbaseUser } from '../../components/auth/ArchbaseUser';
-import { useArchbaseVisible } from '../../components/hooks';
+import { ArchbaseUser } from '@components/auth/ArchbaseUser';
+import { useArchbaseVisible } from '@components/hooks';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import {
   ArchbaseAdminLayoutContext,
   ArchbaseAdminLayoutContextValue,
   ArchbaseAdminLayoutProvider,
-} from '../../components/admin/ArchbaseAdminLayout.context';
+} from '@components/admin/ArchbaseAdminLayout.context';
 
 export interface ArchbaseAdminMainLayoutProps {
   navigationData: ArchbaseNavigationItem[];

@@ -7,8 +7,8 @@ import {
   ArchbaseQueryFilterState,
   FilterOptions,
   getDefaultEmptyFilter,
-} from '../../components/querybuilder';
-import { ArchbaseAlert } from '../../components/notification';
+} from '@components/querybuilder';
+import { ArchbaseAlert } from '@components/notification';
 import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
 import { t } from 'i18next';
 import useComponentSize from '@rehooks/component-size';
@@ -34,7 +34,7 @@ export interface UserActionsOptions {
   positionCustomUserActions?: 'before' | 'after';
 }
 
-const defaultUserActions : UserActionsOptions = {
+const defaultUserActions: UserActionsOptions = {
   visible: true,
   labelAdd: t('Add'),
   labelEdit: t('Edit'),
@@ -45,7 +45,7 @@ const defaultUserActions : UserActionsOptions = {
   allowView: true,
   allowRemove: true,
   positionCustomUserActions: 'after',
-}
+};
 
 export interface UserRowActionsOptions<T> {
   actions?: any;
@@ -99,7 +99,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
   children,
   radius,
   userActions = defaultUserActions,
-  debug = false
+  debug = false,
 }: ArchbasePanelTemplateProps<T, ID>) {
   const innerComponentRef = innerRef || useRef<any>();
   const filterRef = useRef<any>();
@@ -111,29 +111,49 @@ export function ArchbasePanelTemplate<T extends object, ID>({
   });
 
   const userActionsBuilded: ReactNode = useMemo(() => {
-    const userActionsEnd = {...defaultUserActions, ...userActions};
+    const userActionsEnd = { ...defaultUserActions, ...userActions };
+
     return (
       <Flex gap="8px" rowGap="8px" direction="row" justify={'flex-start'} align={'center'}>
         {userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'before'
           ? userActionsEnd.customUserActions
           : null}
         {userActionsEnd.allowAdd ? (
-          <Button leftIcon={<IconPlus/>} color="green" variant="filled" onClick={() => userActionsEnd && userActionsEnd!.onAddExecute}>
+          <Button
+            leftIcon={<IconPlus />}
+            color="green"
+            variant="filled"
+            onClick={() => userActionsEnd && userActionsEnd!.onAddExecute}
+          >
             {userActionsEnd.labelAdd ? userActionsEnd.labelAdd : t('New')}
           </Button>
         ) : null}
         {userActionsEnd.allowAdd ? (
-          <Button leftIcon={<IconEdit/>} color="blue" variant="filled" onClick={() => userActionsEnd && userActionsEnd!.onEditExecute}>
+          <Button
+            leftIcon={<IconEdit />}
+            color="blue"
+            variant="filled"
+            onClick={() => userActionsEnd && userActionsEnd!.onEditExecute}
+          >
             {userActionsEnd.labelEdit ? userActionsEnd.labelEdit : t('Edit')}
           </Button>
         ) : null}
         {userActionsEnd.allowAdd ? (
-          <Button leftIcon={<IconTrash/>} color="red" variant="filled" onClick={() => userActionsEnd && userActionsEnd!.onEditExecute}>
+          <Button
+            leftIcon={<IconTrash />}
+            color="red"
+            variant="filled"
+            onClick={() => userActionsEnd && userActionsEnd!.onEditExecute}
+          >
             {userActionsEnd.labelRemove ? userActionsEnd.labelRemove : t('Remove')}
           </Button>
         ) : null}
         {userActionsEnd.allowView ? (
-          <Button leftIcon={<IconEye/>} variant="filled" onClick={() => userActionsEnd && userActionsEnd!.onEditExecute}>
+          <Button
+            leftIcon={<IconEye />}
+            variant="filled"
+            onClick={() => userActionsEnd && userActionsEnd!.onEditExecute}
+          >
             {userActionsEnd.labelView ? userActionsEnd.labelView : t('View')}
           </Button>
         ) : null}
@@ -167,7 +187,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
     >
       <Box sx={{ height: 60 }}>
         <Grid m={0} gutter="xs" justify="center" align="center">
-          <Grid.Col sx={{border:debug?"1px dashed":""}} span="auto">
+          <Grid.Col sx={{ border: debug ? '1px dashed' : '' }} span="auto">
             {userActionsBuilded}
           </Grid.Col>
           <Grid.Col span="content">
@@ -192,7 +212,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
           </Grid.Col>
         </Grid>
       </Box>
-      <ScrollArea sx={{border:debug?"1px dashed":"", height: size.height - 120 }}>
+      <ScrollArea sx={{ border: debug ? '1px dashed' : '', height: size.height - 120 }}>
         {children ? (
           <Fragment>
             {isError ? (
@@ -211,18 +231,11 @@ export function ArchbasePanelTemplate<T extends object, ID>({
             ) : null}
             {children}
           </Fragment>
-        ) : (
-          debug?<Flex
-            style={{ height: '100%' }}
-            gap="md"
-            justify="center"
-            align="center"
-            direction="row"
-            wrap="wrap"
-          >
+        ) : debug ? (
+          <Flex style={{ height: '100%' }} gap="md" justify="center" align="center" direction="row" wrap="wrap">
             <Text size="lg">INSIRA O CONTEÚDO DO PAINEL AQUI.</Text>
-          </Flex>:null
-        )}
+          </Flex>
+        ) : null}
       </ScrollArea>
       <Grid
         m={0}
@@ -231,7 +244,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
         justify="center"
         align="center"
       >
-        <Grid.Col sx={{border:debug?"1px dashed":"", height:debug?'70%':'auto'}} span="auto"></Grid.Col>
+        <Grid.Col sx={{ border: debug ? '1px dashed' : '', height: debug ? '70%' : 'auto' }} span="auto"></Grid.Col>
         {withPagination ? (
           <Grid.Col span="content">
             <Pagination total={10} />

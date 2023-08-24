@@ -7,7 +7,7 @@ import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseMaskEdit, MaskPattern } from './ArchbaseMaskEdit';
-import { Pessoa, pessoasData } from '../../demo/index';
+import { Pessoa, pessoasData } from '@demo/index';
 
 const ArchbaseEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
