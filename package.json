@@ -12,7 +12,7 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "files": [
     "dist"
   ],
@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development BABEL_ENV=development yarn storybook",
-    "build": "rimraf dist && cross-env NODE_ENV=production BABEL_ENV=production rollup -c",
+    "build": "rimraf dist && cross-env NODE_ENV=production BABEL_ENV=production rollup -c && tsc-alias -p tscaliasconfig.json",
     "test": "jest",
     "test:coverage": "jest --coverage --forceExit --colors",
     "lint": "yarn check-types && yarn eslint && yarn stylelint",
@@ -133,7 +133,6 @@
     "@babel/preset-typescript": "^7.22.5",
     "@babel/runtime": "^7.22.6",
     "@popperjs/core": "^2.11.8",
-    "@rollup/plugin-alias": "^5.0.0",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -209,7 +208,6 @@
     "resolve-url-loader": "^5.0.0",
     "rimraf": "^5.0.1",
     "rollup": "^3.26.2",
-    "rollup-plugin-dts": "^6.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-typescript2": "^0.35.0",
@@ -223,6 +221,7 @@
     "stylelint-prettier": "^3.0.0",
     "stylelint-scss": "^5.0.1",
     "ts-toolbelt": "^9.6.0",
+    "tsc-alias": "^1.8.7",
     "tsconfig-paths": "^4.2.0",
     "tslib": "^2.6.0",
     "typescript": "^5.1.6",

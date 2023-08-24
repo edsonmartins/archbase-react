@@ -13,7 +13,7 @@ import { IconBug } from '@tabler/icons-react';
 import { t } from 'i18next';
 import { ArchbaseDataTable, ToolBarActions } from '@components/datatable';
 import { Button, Flex, Paper } from '@mantine/core';
-// import "../../styles/template.scss";
+import '../../styles/template.scss';
 
 export interface UserActionsOptions {
   visible?: boolean;

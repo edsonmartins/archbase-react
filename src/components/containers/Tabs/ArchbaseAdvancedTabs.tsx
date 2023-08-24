@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, CSSProperties, ReactNode } from 'react';
-// import './ArchbaseAdvancedTabs.scss';
+import './ArchbaseAdvancedTabs.scss';
 
 export interface ArchbaseAdvancedTab {
   key: any;

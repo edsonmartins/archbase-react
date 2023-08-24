@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-     "declaration": true,
-     "declarationDir": "./dist",
-     "emitDeclarationOnly": true,
-     "declarationMap": true,
+    "declaration": true,
+    "declarationDir": "./dist",
+    "emitDeclarationOnly": true,
+    "declarationMap": true,
     "target": "es5",
     "module": "esnext",
     "moduleResolution": "node",
