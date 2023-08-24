@@ -6,13 +6,13 @@ import {
   useArchbaseRemoteDataSource,
 } from '@hooks/index';
 import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '../@demo/index';
+import { Pessoa, pessoasData } from '@demo/index';
 import { t } from 'i18next';
-import { FakePessoaService } from '../@demo/service/FakePessoaService';
-import { API_TYPE } from '../@demo/ioc/DemoIOCTypes';
-import { useArchbaseRemoteServiceApi } from '../@components/hooks/useArchbaseRemoteServiceApi';
-import { ArchbaseNotifications } from '../@components/notification';
-import { DataSourceEvent, DataSourceEventNames } from '../@components/datasource';
+import { FakePessoaService } from '@demo/service/FakePessoaService';
+import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
+import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
+import { ArchbaseNotifications } from '@components/notification';
+import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { ArchbaseFormTemplate } from '../ArchbaseFormTemplate';
 
 const ArchbaseFormTemplateExample = () => {

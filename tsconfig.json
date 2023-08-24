@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "sourceMap": true,
     "declaration": true,
     "declarationDir": "./dist",
     "emitDeclarationOnly": true,
@@ -8,9 +9,9 @@
     "module": "esnext",
     "moduleResolution": "node",
     "baseUrl": "./src",
-    "outDir": "./dist",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "types":["reflect-metadata"],
+    "outDir": "dist/esm",
+    "lib": ["es5", "es2015", "es2016", "dom", "esnext"],
+    "types": ["node", "reflect-metadata"],
     "paths": {
       "*": [
         "*",
