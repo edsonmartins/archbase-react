@@ -1015,8 +1015,8 @@ interface RuleItemProps {
   parentId?: string | null;
   field?: string | null;
   operator?: string | null;
-  value?: string | null;
-  value2?: string | null;
+  value?: string | number | (string | number)[] | null;
+  value2?: string | number | null;
   disabled?: boolean;
   schema: Schema;
   onSearchButtonClick?: () => void;

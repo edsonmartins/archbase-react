@@ -468,7 +468,7 @@ const buildExpressionNode = (
     } else if (column.columnDef._filterFn === STARTS_WITH) {
       return builder.eq(column.id, `^${formatedValue}*`);
     } else if (column.columnDef._filterFn === ENDS_WITH) {
-      return builder.eq(column.id, `^${formatedValue}*`);
+      return builder.eq(column.id, `^*${formatedValue}`);
     } else if (column.columnDef._filterFn === EQUALS) {
       if (originColumn.dataType === 'uuid') {
         if (!checkIfValidUUID(formatedValue)) {
