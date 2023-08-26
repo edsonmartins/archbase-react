@@ -20,10 +20,10 @@ import {
 import { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter';
 import shallowCompare from 'react-addons-shallow-compare';
 import { Badge, Button, Group, Menu, Radio, Text, Tooltip } from '@mantine/core';
-import { ArchbaseDataSource } from '../../components/datasource';
-import { ArchbaseList } from '../../components/list';
+import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseList } from '@components/list';
 import { IconDeviceFloppy, IconDoorExit, IconFilter, IconPlus, IconTrash } from '@tabler/icons-react';
-import { ArchbaseAppContext } from '../../components/core';
+import { ArchbaseAppContext } from '@components/core';
 
 interface ArchbaseCompositeFilterProps {
   id: string;
@@ -55,7 +55,7 @@ interface ArchbaseCompositeFilterState {
 }
 
 class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, ArchbaseCompositeFilterState> {
-  context!: React.ContextType<typeof ArchbaseAppContext>;
+  declare context: React.ContextType<typeof ArchbaseAppContext>;
   constructor(props: ArchbaseCompositeFilterProps) {
     super(props);
     this.state = {
@@ -126,7 +126,11 @@ class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, Ar
             padding: 0,
             position: 'absolute',
             background: 'transparent',
-            border: `1px solid ${this.context.theme!.colorScheme==='dark'?this.context.theme!.colors.gray[7]:this.context.theme!.colors.gray[2]}`,
+            border: `1px solid ${
+              this.context.theme!.colorScheme === 'dark'
+                ? this.context.theme!.colors.gray[7]
+                : this.context.theme!.colors.gray[2]
+            }`,
             borderRadius: '4px',
             outline: 'none',
           },

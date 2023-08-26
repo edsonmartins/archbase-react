@@ -1,4 +1,4 @@
-import { ArchbaseAdvancedTab, ArchbaseAdvancedTabs } from '../../components/containers/tabs';
+import { ArchbaseAdvancedTab, ArchbaseAdvancedTabs } from '@components/containers/tabs';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ArchbaseNavigationItem, ArchbaseTabItem } from './types';
 import { useLocation, useNavigate } from 'react-router';
@@ -35,6 +35,7 @@ export function ArchbaseAdminTabContainer({ navigationData }: ArchbaseAdminTabCo
         });
       }
     });
+
     return result;
   };
 
@@ -81,10 +82,10 @@ export function ArchbaseAdminTabContainer({ navigationData }: ArchbaseAdminTabCo
     openedTabs.forEach((f, index) => f.id === activeTabId && (idx = index));
     let tmpCurrent = tmpTabs.length > 0 ? (tmpTabs[idx] ? tmpTabs[idx].id : tmpTabs[tmpTabs.length - 1].id) : null;
     setOpenedTabs(tmpTabs.map((tab) => ({ ...tab, active: tmpCurrent === tab.id })));
-    if (tmpCurrent){
+    if (tmpCurrent) {
       setActiveTabId(tmpCurrent);
       openedTabs.forEach((f, index) => f.id === tmpCurrent && (idx = index));
-      if (idx !== -1){
+      if (idx !== -1) {
         navigate(tmpTabs[idx].path);
       }
     } else {
@@ -96,6 +97,7 @@ export function ArchbaseAdminTabContainer({ navigationData }: ArchbaseAdminTabCo
   const buildAdvancedTabs = (openedTabs: ArchbaseTabItem[]): ArchbaseAdvancedTab[] => {
     return openedTabs.map((tab) => {
       const result: ArchbaseAdvancedTab = { key: tab.id, favicon: tab.iconClass, title: tab.title };
+
       return result;
     });
   };

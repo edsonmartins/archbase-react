@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Card, Grid, Group, Text } from '@mantine/core';
-import { Pessoa, pessoasData } from '../../demo/index';
+import { Pessoa, pessoasData } from '@demo/index';
 import { useArchbaseDataSource } from '../hooks';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
@@ -29,6 +29,7 @@ const ArchbaseDateTimePickerRangeExample = () => {
       }
     },
   });
+
   return (
     <Grid>
       <Grid.Col span={12}>
@@ -38,9 +39,11 @@ const ArchbaseDateTimePickerRangeExample = () => {
               <Text weight={500}>DateTime Picker Range Component</Text>
             </Group>
           </Card.Section>
-          <Box sx={(_theme) => ({height:500})}>
-            <ArchbaseDateTimePickerRange onSelectDateRange={setSelectedRange} label="Informe o período"/>
-            <Text size={"1rem"}>{selectedRange&&formatISO(selectedRange![0]!)+" -> "+formatISO(selectedRange![1]!)}</Text>
+          <Box sx={(_theme) => ({ height: 500 })}>
+            <ArchbaseDateTimePickerRange onSelectDateRange={setSelectedRange} label="Informe o período" />
+            <Text size={'1rem'}>
+              {selectedRange && formatISO(selectedRange![0]!) + ' -> ' + formatISO(selectedRange![1]!)}
+            </Text>
           </Box>
         </Card>
       </Grid.Col>

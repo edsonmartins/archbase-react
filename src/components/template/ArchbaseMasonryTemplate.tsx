@@ -8,16 +8,20 @@ import {
   ArchbaseQueryFilterState,
   FilterOptions,
   getDefaultEmptyFilter,
-} from '../../components/querybuilder';
-import { ArchbaseAlert } from '../../components/notification';
+} from '@components/querybuilder';
+import { ArchbaseAlert } from '@components/notification';
 import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
 import { t } from 'i18next';
 import useComponentSize from '@rehooks/component-size';
 import { Box, Button, Flex, Grid, MantineNumberSize, Pagination, Paper, ScrollArea } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { IconTrash } from '@tabler/icons-react';
-import { ArchbaseMasonry, ArchbaseMasonryResponsive, ComponentDefinition, ArchbaseMasonryProvider } from '../../components/masonry';
-
+import {
+  ArchbaseMasonry,
+  ArchbaseMasonryResponsive,
+  ComponentDefinition,
+  ArchbaseMasonryProvider,
+} from '@components/masonry';
 
 export interface UserActionsOptions {
   visible?: boolean;
@@ -140,6 +144,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 
   const userActionsBuilded: ReactNode = useMemo(() => {
     const userActionsEnd = { ...defaultUserActions, ...userActions };
+
     return (
       <Flex gap="8px" rowGap="8px" direction="row" justify={'flex-start'} align={'center'}>
         {userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'before'
@@ -209,6 +214,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
             active = true;
           }
         }
+
         return (
           <DynamicComponent
             key={newKey}
@@ -223,6 +229,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         );
       });
     }
+
     return [];
   }, [dataSource.browseRecords(), columnsCount, columnsCountBreakPoints, gutter]);
 

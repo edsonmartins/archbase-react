@@ -20,7 +20,7 @@ import {
 } from '@mantine/core';
 import React, { Component, ReactNode, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArchbaseUser } from '../../components/auth/ArchbaseUser';
+import { ArchbaseUser } from '@components/auth/ArchbaseUser';
 import { ArchbaseNavigationItem, ArchbaseOwner, ArchbaseCompany } from './types';
 import { IconTerminal } from '@tabler/icons-react';
 import { ArchbaseHeaderNavAction } from './ArchbaseHeaderNavAction';
@@ -179,6 +179,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
         }
       });
     }
+
     return result;
   }, [navigationItems]);
 

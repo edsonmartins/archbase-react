@@ -6,9 +6,9 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { pessoasData, pedidosData, Pedido, Pessoa } from '../../demo/index';
+import { pessoasData, pedidosData, Pedido, Pessoa } from '@demo/index';
 import { ArchbaseSelect } from './ArchbaseSelect';
-import { PedidoStatus } from '../../demo/data/types';
+import { PedidoStatus } from '@demo/data/types';
 import { ArchbaseSelectItem } from './ArchbaseSelectItem';
 
 const pessoasList: Pessoa[] = pessoasData;
@@ -42,7 +42,7 @@ const ArchbaseSelectExample = () => {
               <Text weight={500}>Select Component</Text>
             </Group>
           </Card.Section>
-          <Box sx={(_theme) => ({height:150})}>
+          <Box sx={(_theme) => ({ height: 150 })}>
             <ArchbaseSelect<Pedido, string, Pessoa>
               label="Nome"
               dataSource={dataSource}
@@ -73,7 +73,7 @@ const ArchbaseSelectExample = () => {
               <Text weight={500}>Objeto Pedido</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({height:500})}>
+          <ScrollArea sx={(_theme) => ({ height: 500 })}>
             <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
           </ScrollArea>
         </Card>
@@ -85,7 +85,7 @@ const ArchbaseSelectExample = () => {
               <Text weight={500}>DataSource dsPedidos</Text>
             </Group>
           </Card.Section>
-          <ScrollArea sx={(_theme) => ({height:500})}>
+          <ScrollArea sx={(_theme) => ({ height: 500 })}>
             <ArchbaseObjectInspector data={dataSource} />
           </ScrollArea>
         </Card>
@@ -98,8 +98,6 @@ export default {
   title: 'Editors/Select',
   component: ArchbaseSelectExample,
 } as Meta;
-
-
 
 export const Example: StoryObj<typeof ArchbaseSelectExample> = {
   args: {

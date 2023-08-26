@@ -6,7 +6,7 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '../../demo/index';
+import { Pessoa, pessoasData } from '@demo/index';
 import { ArchbaseChip } from './ArchbaseChip';
 
 const ArchbaseChipExample = () => {

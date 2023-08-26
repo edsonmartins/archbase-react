@@ -7,7 +7,7 @@ import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseSwitch } from './ArchbaseSwitch';
-import { Pessoa, pessoasData } from '../../demo/index';
+import { Pessoa, pessoasData } from '@demo/index';
 
 const ArchbaseSwitchExample = () => {
   const forceUpdate = useArchbaseForceUpdate();

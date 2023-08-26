@@ -42,8 +42,8 @@ import { ExpressionNode } from '../datasource/rsql/ast';
 import { ArchbaseObjectHelper } from '../core/helper';
 import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { t } from 'i18next';
-import { useArchbaseAppContext } from '../../components/core';
-import { ArchbaseSwitch } from '../../components/editors/ArchbaseSwitch';
+import { useArchbaseAppContext } from '@components/core';
+import { ArchbaseSwitch } from '@components/editors/ArchbaseSwitch';
 
 interface JsPDFCustom extends JsPDF {
   autoTable: (options: UserOptions) => void;
@@ -67,6 +67,7 @@ const convertHexToRGBA = (hexCode, opacity = 1) => {
   if (opacity > 1 && opacity <= 100) {
     newOpacity = opacity / 100;
   }
+
   return `rgba(${r},${g},${b},${newOpacity})`;
 };
 
@@ -109,7 +110,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
   globalDateFormat?: string;
   renderRowActionMenuItems?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
   renderRowActions?: (props: { cell: MRT_Cell<T>; row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
-  renderToolbarInternalActions?: (props: { table: MRT_TableInstance<T>}) => ReactNode | null;
+  renderToolbarInternalActions?: (props: { table: MRT_TableInstance<T> }) => ReactNode | null;
   positionActionsColumn?: 'first' | 'last';
 }
 
@@ -150,6 +151,7 @@ function isBoolean(value: string) {
   } else if (value && value.toLowerCase() === 'false') {
     return true;
   }
+
   return false;
 }
 
@@ -162,6 +164,7 @@ const formatGlobalValueRSQL = (value: string, globalDateFormat): GlobalFilterVal
   } else if (isBoolean(value)) {
     return { value, type: 'boolean' };
   }
+
   return { value, type: 'string' };
 };
 
@@ -183,10 +186,9 @@ const formatValueRSQL = (value: any) => {
       .map((key) => `${key}: ${formatValueRSQL(value[key])}`)
       .join(', ');
   }
+
   return '';
 };
-
-
 
 const STARTS_WITH = 'startsWith';
 const CONTAINS = 'contains';
@@ -204,6 +206,7 @@ const LESS_THAN_OR_EQUAL_TO = 'lessThanOrEqualTo';
 
 function checkIfValidUUID(str) {
   const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+
   return regexExp.test(str);
 }
 
@@ -508,6 +511,7 @@ const buildSortRSQL = (sorting: any[] | undefined): string[] | undefined => {
     if (result.length === 0) {
       return;
     }
+
     return result;
   }
 };
@@ -542,6 +546,7 @@ const getToolBarCustomActions = (_table, props): ReactNode => {
   if (actions && actions.length === 0) {
     return <div style={{ display: 'flex', gap: '8px' }}></div>;
   }
+
   return actions;
 };
 
@@ -581,6 +586,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     if (result && result.length > 0) {
       return convertHexToRGBA(theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 8 : 4], 0.1);
     }
+
     return undefined;
   };
 
@@ -588,71 +594,75 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     if (cell.row.index === currentCell.rowIndex && cell.column.id === currentCell.columnName) {
       return 'white';
     }
+
     return undefined;
   };
 
-  const renderInteger = (data: any) : ReactNode => {
-    return <span>{data.getValue()}</span>
-}
+  const renderInteger = (data: any): ReactNode => {
+    return <span>{data.getValue()}</span>;
+  };
 
-const renderCurrency = (data: any) : ReactNode => {
-  return <span>{data.getValue()}</span>
-}
+  const renderCurrency = (data: any): ReactNode => {
+    return <span>{data.getValue()}</span>;
+  };
 
-const renderBoolean = (data: any) : ReactNode => {
-  const checked = data.getValue()===true?true:false;
-  return <ArchbaseSwitch isChecked={checked}></ArchbaseSwitch>
-}
+  const renderBoolean = (data: any): ReactNode => {
+    const checked = data.getValue() === true ? true : false;
 
-const renderDate = (data: any) : ReactNode => {
-  try {
-    if (!data.getValue() || data.getValue() === ''){
-      return <span></span>;
+    return <ArchbaseSwitch isChecked={checked}></ArchbaseSwitch>;
+  };
+
+  const renderDate = (data: any): ReactNode => {
+    try {
+      if (!data.getValue() || data.getValue() === '') {
+        return <span></span>;
+      }
+      const parsedDateValue = convertISOStringToDate(data.getValue());
+
+      return <span>{format(parsedDateValue, appContext.dateFormat)}</span>;
+    } catch (error) {
+      return <span>Invalid Date</span>;
     }
-    const parsedDateValue = convertISOStringToDate(data.getValue());
-    return <span>{format(parsedDateValue,appContext.dateFormat)}</span>
-  } catch (error) {
-    return <span>Invalid Date</span>
-  }
-}
+  };
 
-const renderDateTime = (data: any) : ReactNode => {
-  try {
-    if (!data.getValue() || data.getValue() === ''){
-      return <span></span>;
+  const renderDateTime = (data: any): ReactNode => {
+    try {
+      if (!data.getValue() || data.getValue() === '') {
+        return <span></span>;
+      }
+      const parsedDateValue = convertISOStringToDate(data.getValue());
+
+      return <span>{format(parsedDateValue, appContext.dateTimeFormat)}</span>;
+    } catch (error) {
+      return <span>Invalid Datetime</span>;
     }
-    const parsedDateValue = convertISOStringToDate(data.getValue());
-    return <span>{format(parsedDateValue,appContext.dateTimeFormat)}</span>
-  } catch (error) {
-    return <span>Invalid Datetime</span>
-  }
-}
+  };
 
-const renderTime = (data: any) : ReactNode => {
-  return <span>{data.getValue()}</span>
-}
+  const renderTime = (data: any): ReactNode => {
+    return <span>{data.getValue()}</span>;
+  };
 
-const getRenderByDataType = (dataType: FieldDataType, render:(data: any) => ReactNode) : any | undefined => {
-  if (render){
-    return render;
-  }
-  switch (dataType) {
-    case 'integer':
-      return renderInteger;
-    case 'currency':
-      return renderCurrency;
-    case 'boolean':
-      return renderBoolean;
-    case 'date':
-      return renderDate;
-    case 'datetime':
-      return renderDateTime;
-    case 'time':
-      return renderTime;
-    default:
-      return;
-  }
-}
+  const getRenderByDataType = (dataType: FieldDataType, render: (data: any) => ReactNode): any | undefined => {
+    if (render) {
+      return render;
+    }
+    switch (dataType) {
+      case 'integer':
+        return renderInteger;
+      case 'currency':
+        return renderCurrency;
+      case 'boolean':
+        return renderBoolean;
+      case 'date':
+        return renderDate;
+      case 'datetime':
+        return renderDateTime;
+      case 'time':
+        return renderTime;
+      default:
+        return;
+    }
+  };
 
   const originColumns = useMemo(() => {
     const result: any[] = [];
@@ -663,7 +673,7 @@ const getRenderByDataType = (dataType: FieldDataType, render:(data: any) => Reac
         const childrenWithProps = React.Children.toArray(child.props.children);
         childrenWithProps.forEach((col) => {
           if (isValidElement(col) && col.props.visible) {
-            const render = getRenderByDataType(col.props.dataType,col.props.render);
+            const render = getRenderByDataType(col.props.dataType, col.props.render);
             let element: any = {
               id: col.props.dataField,
               accessorKey: col.props.dataField,
@@ -680,7 +690,7 @@ const getRenderByDataType = (dataType: FieldDataType, render:(data: any) => Reac
               filterVariant: col.props.inputFilterType,
               mantineFilterSelectProps: { data: col.props.enumValues },
               mantineFilterMultiSelectProps: { data: col.props.enumValues },
-              Cell: render ? ({ cell }) => render(cell) : undefined, 
+              Cell: render ? ({ cell }) => render(cell) : undefined,
               Header: ({ column }) => (
                 <i
                   style={{
@@ -722,6 +732,7 @@ const getRenderByDataType = (dataType: FieldDataType, render:(data: any) => Reac
         });
       }
     });
+
     return result;
   }, [props.children, theme.colorScheme, getCellBackgroundColor, getCellColorFont, theme.colors.Archbase]);
 
@@ -852,46 +863,48 @@ const getRenderByDataType = (dataType: FieldDataType, render:(data: any) => Reac
     positionActionsColumn: props.positionActionsColumn,
     renderRowActions: props.renderRowActions,
     renderRowActionMenuItems: props.renderRowActionMenuItems,
-    renderToolbarInternalActions: props.renderToolbarInternalActions?props.renderToolbarInternalActions: ({}) => (
-      <Flex gap="xs" align="center" className="no-print">
-        <MRT_ToggleGlobalFilterButton table={table} />
-        <Tooltip withinPortal withArrow label={i18next.t('Refresh')}>
-          <ActionIcon onClick={handleRefresh}>
-            <IconRefresh />
-          </ActionIcon>
-        </Tooltip>
-        {props.allowColumnFilters ? <MRT_ToggleFiltersButton table={table} /> : null}
-        <MRT_ShowHideColumnsButton table={table} />
-        <Menu position="top-start" width={200} onOpen={handleOpenMenu} onClose={handleCloseMenu}>
-          <Menu.Target>
-            <Tooltip withinPortal withArrow label={i18next.t('Export')}>
-              <ActionIcon>
-                <IconDownload />
+    renderToolbarInternalActions: props.renderToolbarInternalActions
+      ? props.renderToolbarInternalActions
+      : ({}) => (
+          <Flex gap="xs" align="center" className="no-print">
+            <MRT_ToggleGlobalFilterButton table={table} />
+            <Tooltip withinPortal withArrow label={i18next.t('Refresh')}>
+              <ActionIcon onClick={handleRefresh}>
+                <IconRefresh />
               </ActionIcon>
             </Tooltip>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item
-              disabled={table.getRowModel().rows.length === 0}
-              onClick={() => handleExportRows(table.getRowModel().rows, originColumns)}
-            >
-              {`${i18next.t('AllRows')}`}
-            </Menu.Item>
-            <Menu.Item
-              disabled={table.getSelectedRowModel().rows.length === 0}
-              onClick={() => handleExportRows(table.getSelectedRowModel().rows, originColumns)}
-            >
-              {`${i18next.t('OnlySelectedRows')}`}
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-        <Tooltip withinPortal withArrow label={i18next.t('Print')}>
-          <ActionIcon onClick={handlePrint}>
-            <IconPrinter />
-          </ActionIcon>
-        </Tooltip>
-      </Flex>
-    ),
+            {props.allowColumnFilters ? <MRT_ToggleFiltersButton table={table} /> : null}
+            <MRT_ShowHideColumnsButton table={table} />
+            <Menu position="top-start" width={200} onOpen={handleOpenMenu} onClose={handleCloseMenu}>
+              <Menu.Target>
+                <Tooltip withinPortal withArrow label={i18next.t('Export')}>
+                  <ActionIcon>
+                    <IconDownload />
+                  </ActionIcon>
+                </Tooltip>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item
+                  disabled={table.getRowModel().rows.length === 0}
+                  onClick={() => handleExportRows(table.getRowModel().rows, originColumns)}
+                >
+                  {`${i18next.t('AllRows')}`}
+                </Menu.Item>
+                <Menu.Item
+                  disabled={table.getSelectedRowModel().rows.length === 0}
+                  onClick={() => handleExportRows(table.getSelectedRowModel().rows, originColumns)}
+                >
+                  {`${i18next.t('OnlySelectedRows')}`}
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+            <Tooltip withinPortal withArrow label={i18next.t('Print')}>
+              <ActionIcon onClick={handlePrint}>
+                <IconPrinter />
+              </ActionIcon>
+            </Tooltip>
+          </Flex>
+        ),
     mantineToolbarAlertBannerProps: props.isError
       ? {
           color: 'error',
@@ -1099,7 +1112,6 @@ export interface ArchbaseTableRowActionsProps<T> {
   row: T;
 }
 
-
 export function ArchbaseTableRowActions<T>({
   onEditRow,
   onRemoveRow,
@@ -1107,6 +1119,7 @@ export function ArchbaseTableRowActions<T>({
   row,
 }: ArchbaseTableRowActionsProps<T>) {
   const theme = useMantineTheme();
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Tooltip withArrow position="left" label={t('Edit')}>

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "dist/src",
+    "declarationDir": "dist/src",
+    "baseUrl": "./src",
+    "paths": {
+      "*": [
+        "*"
+      ],
+      "@components/*": ["components/*"],
+      "@hooks/*": ["components/hooks/*"],
+      "@demo/*": ["demo/*"]
+    }
+  }
+}

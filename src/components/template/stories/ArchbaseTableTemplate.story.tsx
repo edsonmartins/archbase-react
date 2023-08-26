@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo} from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import { Grid } from '@mantine/core';
 import {
   useArchbaseDataSource,
@@ -6,19 +6,17 @@ import {
   useArchbaseForceUpdate,
   useArchbaseLocalFilterDataSource,
   useArchbaseRemoteDataSource,
-} from '../../hooks/index';
+} from '@hooks/index';
 import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '../../../demo/index';
+import { Pessoa, pessoasData } from '@demo/index';
 import { t } from 'i18next';
-import { LocalFilter } from '../../../components/datasource/ArchbaseLocalFilterDataSource';
-import { FakePessoaService } from '../../../demo/service/FakePessoaService';
-import { API_TYPE } from '../../../demo/ioc/DemoIOCTypes';
-import { useArchbaseRemoteServiceApi } from '../../../components/hooks/useArchbaseRemoteServiceApi';
-import { ArchbaseNotifications } from '../../../components/notification';
-import { DataSourceEvent, DataSourceEventNames } from '../../../components/datasource';
-import {
-  ArchbaseQueryFilterDelegator,
-} from '../../../components/querybuilder';
+import { LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
+import { FakePessoaService } from '@demo/service/FakePessoaService';
+import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
+import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
+import { ArchbaseNotifications } from '@components/notification';
+import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+import { ArchbaseQueryFilterDelegator } from '@components/querybuilder';
 import { ArchbaseTableTemplate } from '../ArchbaseTableTemplate';
 import {
   ArchbaseDataTableColumn,
@@ -26,9 +24,9 @@ import {
   ArchbaseStatusType,
   ArchbaseTableRowActions,
   Columns,
-} from '../../../components/datatable';
-import { PessoaStatus } from '../../../demo/data/types';
-import { usePessoaStore } from '../../../demo/store/usePessoaStore';
+} from '@components/datatable';
+import { PessoaStatus } from '@demo/data/types';
+import { usePessoaStore } from '@demo/store/usePessoaStore';
 
 const filters: LocalFilter[] = [];
 
@@ -307,7 +305,3 @@ export const Example: StoryObj<typeof ArchbaseTableTemplateExample> = {
     },
   },
 };
-
-
-
-

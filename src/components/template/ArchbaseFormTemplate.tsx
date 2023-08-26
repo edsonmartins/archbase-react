@@ -2,7 +2,7 @@ import { Button, Group, MantineNumberSize, Paper, Space, Stack } from '@mantine/
 import React, { useRef } from 'react';
 import { t } from 'i18next';
 import { IconBug } from '@tabler/icons-react';
-import { ArchbaseAlert } from '../../components/notification';
+import { ArchbaseAlert } from '@components/notification';
 
 export interface ArchbaseFormTemplateProps<_T, _ID> {
   title: string;
@@ -33,6 +33,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
   radius,
 }: ArchbaseFormTemplateProps<T, ID>) {
   const innerComponentRef = innerRef || useRef<any>();
+
   return (
     <Paper
       ref={innerComponentRef}
@@ -54,14 +55,14 @@ export function ArchbaseFormTemplate<T extends object, ID>({
           <span>{error}</span>
         </ArchbaseAlert>
       ) : null}
-      
+
       <Stack>
         <Space h="lg" />
         <Group>
-            <Button color="green">{`${t('Save')}`}</Button>
-            <Button color="red">{`${t('Cancel')}`}</Button>
-        </Group>   
-        {children}     
+          <Button color="green">{`${t('Save')}`}</Button>
+          <Button color="red">{`${t('Cancel')}`}</Button>
+        </Group>
+        {children}
       </Stack>
     </Paper>
   );

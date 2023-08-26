@@ -1,5 +1,5 @@
 import { Rating } from '@mantine/core';
-import { ArchbaseDataSource } from '../../components/datasource';
+import { ArchbaseDataSource } from '@components/datasource';
 import React, { CSSProperties, FocusEventHandler } from 'react';
 
 export interface ArchbaseImageProps<T, ID> {
@@ -30,7 +30,7 @@ export interface ArchbaseImageProps<T, ID> {
   /** Evento quando o valor do rating é alterado */
   onChangeValue?: (value: any, event: any) => void;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement>|undefined;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
 export function ArchbaseImage<T, ID>(_props: ArchbaseImageProps<T, ID>) {

@@ -5,17 +5,17 @@ import {
   useArchbaseForceUpdate,
   useArchbaseLocalFilterDataSource,
   useArchbaseRemoteDataSource,
-} from '../../hooks/index';
+} from '@hooks/index';
 import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '../../../demo/index';
+import { Pessoa, pessoasData } from '@demo/index';
 import { t } from 'i18next';
-import { LocalFilter } from '../../../components/datasource/ArchbaseLocalFilterDataSource';
-import { FakePessoaService } from '../../../demo/service/FakePessoaService';
-import { API_TYPE } from '../../../demo/ioc/DemoIOCTypes';
-import { useArchbaseRemoteServiceApi } from '../../../components/hooks/useArchbaseRemoteServiceApi';
-import { ArchbaseNotifications } from '../../../components/notification';
-import { MaskPattern } from '../../../components/editors';
-import { DataSourceEvent, DataSourceEventNames } from '../../../components/datasource';
+import { LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
+import { FakePessoaService } from '@demo/service/FakePessoaService';
+import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
+import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
+import { ArchbaseNotifications } from '@components/notification';
+import { MaskPattern } from '@components/editors';
+import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import {
   ArchbaseQueryFilterDelegator,
   OP_CONTAINS,
@@ -23,7 +23,7 @@ import {
   QueryField,
   QueryFieldValue,
   QueryFields,
-} from '../../../components/querybuilder';
+} from '@components/querybuilder';
 import {
   Avatar,
   Button,
@@ -42,7 +42,7 @@ import {
   ArchbaseMasonryContext,
   ArchbaseMasonryContextValue,
   ArchbaseMasonryCustomItemProps,
-} from '../../../components/masonry/index';
+} from '@components/masonry/index';
 import { IconAt, IconPhoneCall } from '@tabler/icons-react';
 import { IconArrowDownRight } from '@tabler/icons-react';
 const filters: LocalFilter[] = [];
@@ -331,6 +331,7 @@ const CustomItem = (props: CustomItemProps) => {
 
   const backgroundColor = props.active ? masonryContextValue.activeBackgroundColor : '';
   const color = props.active ? masonryContextValue.activeColor : '';
+
   return (
     <Paper
       withBorder={true}

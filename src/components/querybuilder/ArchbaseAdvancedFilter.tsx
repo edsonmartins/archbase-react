@@ -16,15 +16,15 @@ import {
   ArchbaseQueryFilter,
 } from './ArchbaseFilterCommons';
 import shallowCompare from 'react-addons-shallow-compare';
-import { ArchbaseAppContext, ArchbaseError, ltrim } from '../../components/core';
-import { ArchbaseDataSource } from '../../components/datasource';
-import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '../../components/editors';
+import { ArchbaseAppContext, ArchbaseError, ltrim } from '@components/core';
+import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors';
 import { ActionIcon, Button, Chip, Grid, Group, Text, Tooltip } from '@mantine/core';
 import { IconArrowUp, IconSearch, IconTrash } from '@tabler/icons-react';
-import { ArchbaseList } from '../../components/list';
+import { ArchbaseList } from '@components/list';
 import { IconArrowDown } from '@tabler/icons-react';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
-import { ArchbaseDateTimePickerRange, ArchbaseDateTimePickerEdit, ArchbaseSwitch } from '../../components/editors';
+import { ArchbaseDateTimePickerRange, ArchbaseDateTimePickerEdit, ArchbaseSwitch } from '@components/editors';
 import '../../styles/querybuilder.scss';
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
   id: string;
@@ -1033,7 +1033,7 @@ class RuleItem extends Component<RuleItemProps> {
     disabled: false,
   };
   static contextType = ArchbaseAppContext;
-  context!: React.ContextType<typeof ArchbaseAppContext>;
+  declare context: React.ContextType<typeof ArchbaseAppContext>;
   constructor(props: RuleItemProps) {
     super(props);
   }

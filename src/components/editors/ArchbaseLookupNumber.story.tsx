@@ -6,20 +6,19 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate, useArchbaseRemoteServiceApi } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
-import { pedidosData, Pedido, Pessoa } from '../../demo/index';
+import { pedidosData, Pedido, Pessoa } from '@demo/index';
 import { ArchbaseEdit } from './ArchbaseEdit';
-import { ArchbaseNotifications } from '../../components/notification';
-import { FakePessoaService } from '../../demo/service/FakePessoaService';
-import { API_TYPE } from '../../demo/ioc/DemoIOCTypes';
-import { processErrorMessage } from '../../components/core/exceptions';
+import { ArchbaseNotifications } from '@components/notification';
+import { FakePessoaService } from '@demo/service/FakePessoaService';
+import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
+import { processErrorMessage } from '@components/core/exceptions';
 import { ArchbaseLookupNumber } from './ArchbaseLookupNumber';
-
 
 const pedidosList: Pedido[] = pedidosData;
 
 const ArchbaseLookupNumberExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa)
+  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit();
@@ -40,8 +39,8 @@ const ArchbaseLookupNumberExample = () => {
   const lookupValueDelegator = (value: any): Promise<Pessoa> => {
     return new Promise<Pessoa>(async (resolve, reject) => {
       try {
-      const result : Pessoa = await pessoaApi.findOne(parseInt(value));
-      resolve(result);
+        const result: Pessoa = await pessoaApi.findOne(parseInt(value));
+        resolve(result);
       } catch (error) {
         reject(processErrorMessage(error));
       }
@@ -49,7 +48,7 @@ const ArchbaseLookupNumberExample = () => {
   };
 
   const handlLookupError = (error: string): void => {
-    ArchbaseNotifications.showError(error, "Atenção");
+    ArchbaseNotifications.showError(error, 'Atenção');
   };
 
   const handleLookupResult = (_value: Pessoa): void => {
@@ -57,7 +56,7 @@ const ArchbaseLookupNumberExample = () => {
   };
 
   const handleActionSearchExecute = (): void => {
-    ArchbaseNotifications.showError("Clicou ação localizar.", "Atenção");
+    ArchbaseNotifications.showError('Clicou ação localizar.', 'Atenção');
   };
 
   return (
@@ -82,11 +81,11 @@ const ArchbaseLookupNumberExample = () => {
                 onActionSearchExecute={handleActionSearchExecute}
                 validateOnExit={true}
                 required={true}
-                validateMessage='Pessoa {0} não encontrada.'
+                validateMessage="Pessoa {0} não encontrada."
                 width={150}
               />
               <ArchbaseEdit label="Nome" dataSource={dataSource} dataField="cliente.nome" disabled width={500} />
-            </Flex>            
+            </Flex>
           </Box>
         </Card>
       </Grid.Col>

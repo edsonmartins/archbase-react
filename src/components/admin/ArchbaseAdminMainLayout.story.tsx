@@ -3,9 +3,9 @@ import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseAdminMainLayout } from './ArchbaseAdminMainLayout';
 import { ArchbaseAdminLayoutFooter } from './ArchbaseAdminLayoutFooter';
 import { ArchbaseAdminLayoutHeader } from './ArchbaseAdminLayoutHeader';
-import { ArchbaseUser } from '../../components/auth/ArchbaseUser';
+import { ArchbaseUser } from '@components/auth/ArchbaseUser';
 import { ArchbaseAdminTabContainer } from './ArchbaseAdminTabContainer';
-import { ActionIcon,  Menu, Tooltip } from '@mantine/core';
+import { ActionIcon, Menu, Tooltip } from '@mantine/core';
 import {
   IconArrowsMaximize,
   IconBell,
@@ -17,7 +17,7 @@ import { IconSettings } from '@tabler/icons-react';
 import { IconLogout } from '@tabler/icons-react';
 import { IconBrandMessenger } from '@tabler/icons-react';
 import { navigationDataSample } from './navigationData';
-import { archbaseLogo3 } from '../../components/core';
+import { archbaseLogo3 } from '@components/core';
 
 const fakeUser: ArchbaseUser = {
   id: '1',
@@ -87,7 +87,7 @@ const ArchbaseAdminMainLayoutExample = () => {
           />
         }
       >
-        <ArchbaseAdminTabContainer navigationData={navigationDataSample}/>
+        <ArchbaseAdminTabContainer navigationData={navigationDataSample} />
       </ArchbaseAdminMainLayout>
     </div>
   );

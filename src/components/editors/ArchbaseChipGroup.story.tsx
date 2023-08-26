@@ -1,14 +1,14 @@
 import React from 'react';
 import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { pedidosData, Pedido, produtosData } from '../../demo/index';
+import { pedidosData, Pedido, produtosData } from '@demo/index';
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseForceUpdate } from '../hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import { ArchbaseChipGroup } from './ArchbaseChipGroup';
-import { Produto } from '../../demo/data/types';
+import { Produto } from '@demo/data/types';
 
 const pedido: Pedido[] = [pedidosData[0]];
 const produtos: Produto[] = produtosData;

@@ -1,17 +1,22 @@
 import React, { CSSProperties, useCallback, useState } from 'react';
 import 'suneditor/dist/css/suneditor.min.css';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import SunEditor from 'suneditor-react';
 import { useTranslation } from 'react-i18next';
 import { UploadBeforeHandler, UploadBeforeReturn, UploadInfo } from 'suneditor-react/dist/types/upload';
-import en from "suneditor/src/lang/en";
-import es from "suneditor/src/lang/es";
-import ptBR from "suneditor/src/lang/pt_br";
+import en from 'suneditor/src/lang/en';
+import es from 'suneditor/src/lang/es';
+import ptBR from 'suneditor/src/lang/pt_br';
 import { Input } from '@mantine/core';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../../components/hooks';
-import { isBase64 } from '../../components/core/utils';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
+import { isBase64 } from '@components/core/utils';
 
-function getInitialValue<T, ID>(value: any, dataSource?: ArchbaseDataSource<T, ID>, dataField?: string, disabledBase64Convertion?: boolean): any {
+function getInitialValue<T, ID>(
+  value: any,
+  dataSource?: ArchbaseDataSource<T, ID>,
+  dataField?: string,
+  disabledBase64Convertion?: boolean,
+): any {
   let initialValue: any = value;
   if (dataSource && dataField) {
     initialValue = dataSource.getFieldValue(dataField);
@@ -22,6 +27,7 @@ function getInitialValue<T, ID>(value: any, dataSource?: ArchbaseDataSource<T, I
       initialValue = atob(initialValue);
     }
   }
+
   return initialValue;
 }
 
@@ -173,7 +179,9 @@ export function ArchbaseRichTextEdit<T, ID>({
   imageUploadHandler,
 }: ArchbaseRichTextEditProps<T, ID>) {
   const { i18n } = useTranslation();
-  const [currentValue, setCurrentValue] = useState<string|undefined>(getInitialValue(value,dataSource,dataField, disabledBase64Convertion));
+  const [currentValue, setCurrentValue] = useState<string | undefined>(
+    getInitialValue(value, dataSource, dataField, disabledBase64Convertion),
+  );
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value;
@@ -196,12 +204,14 @@ export function ArchbaseRichTextEdit<T, ID>({
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
-      if ((event.type === DataSourceEventNames.dataChanged) ||
-          (event.type === DataSourceEventNames.fieldChanged) ||
-          (event.type === DataSourceEventNames.recordChanged) ||
-          (event.type === DataSourceEventNames.afterScroll) ||
-          (event.type === DataSourceEventNames.afterCancel)) {
-          loadDataSourceFieldValue();
+      if (
+        event.type === DataSourceEventNames.dataChanged ||
+        event.type === DataSourceEventNames.fieldChanged ||
+        event.type === DataSourceEventNames.recordChanged ||
+        event.type === DataSourceEventNames.afterScroll ||
+        event.type === DataSourceEventNames.afterCancel
+      ) {
+        loadDataSourceFieldValue();
       }
     }
   }, []);
@@ -218,13 +228,12 @@ export function ArchbaseRichTextEdit<T, ID>({
     loadDataSourceFieldValue();
   }, []);
 
-
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent)
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.removeListener(dataSourceEvent);
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   const handleChange = (content: string) => {
     setCurrentValue((_prev) => content);
@@ -233,7 +242,7 @@ export function ArchbaseRichTextEdit<T, ID>({
       dataSource.setFieldValue(dataField, disabledBase64Convertion ? content : btoa(content));
     }
 
-    if (onChangeValue){
+    if (onChangeValue) {
       onChangeValue(content);
     }
   };
@@ -243,13 +252,14 @@ export function ArchbaseRichTextEdit<T, ID>({
     }
   };
 
-  const isReadOnly = () =>{
+  const isReadOnly = () => {
     let _readOnly = readOnly;
     if (dataSource && !readOnly) {
       _readOnly = dataSource.isBrowsing();
     }
+
     return _readOnly;
-  }   
+  };
 
   return (
     <Input.Wrapper
@@ -299,8 +309,8 @@ export function ArchbaseRichTextEdit<T, ID>({
         showController={showController}
         imageUploadHandler={imageUploadHandler}
         setOptions={{
-          lang:i18n.language === 'es' ? es : i18n.language === 'pt-BR' ? ptBR : en
-        }}       
+          lang: i18n.language === 'es' ? es : i18n.language === 'pt-BR' ? ptBR : en,
+        }}
       />
     </Input.Wrapper>
   );

@@ -7,13 +7,11 @@ import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
 import url from '@rollup/plugin-url';
 import svgr from '@svgr/rollup';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import typescriptEngine from 'typescript';
 import pkg from './package.json' assert { type: 'json' };
-import alias from 'rollup-plugin-alias';
-import json from "@rollup/plugin-json";
-
-
+import json from '@rollup/plugin-json';
+import generatePackageJson from 'rollup-plugin-generate-package-json';
 
 const config = {
   input: './src/index.ts',
@@ -22,11 +20,13 @@ const config = {
       file: pkg.main,
       format: 'cjs',
       exports: 'named',
+      sourcemap: true,
     },
     {
       file: pkg.module,
       format: 'es',
       exports: 'named',
+      sourcemap: true,
     },
   ],
   plugins: [
@@ -38,6 +38,7 @@ const config = {
     external({
       includeDependencies: true,
     }),
+    commonjs(),
     typescript({
       tsconfig: './tsconfig.json',
       typescript: typescriptEngine,
@@ -62,6 +63,7 @@ const config = {
         '**/*.stories.ts+(|x)',
       ],
     }),
+    generatePackageJson(),
     json(),
     babel({
       extensions: [...DEFAULT_EXTENSIONS, '.ts', 'tsx'],
@@ -71,7 +73,6 @@ const config = {
     url(),
     svgr(),
     resolve({ preferBuiltins: true, mainFields: ['browser'] }),
-    commonjs(),
     terser(),
   ],
   context: 'null',
