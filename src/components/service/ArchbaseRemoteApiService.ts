@@ -1,7 +1,7 @@
 /* eslint max-classes-per-file: "off" */
 import 'reflect-metadata'
 import axios from 'axios'
-import inversify from 'inversify'
+import * as inversify from 'inversify'
 import { API_TYPE, IOCContainer } from '../core/ioc'
 import type { ArchbaseAuthenticator } from '../auth/ArchbaseAuthenticator'
 import { ArchbaseJacksonParser } from '../core/json'
