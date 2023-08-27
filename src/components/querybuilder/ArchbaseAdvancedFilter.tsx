@@ -1273,8 +1273,8 @@ class ActionElement extends Component<ActionElementProps> {
 interface ValueEditorProps {
   field: string;
   operator: string;
-  value: string;
-  value2?: string;
+  value: string | number | (string | number)[];
+  value2?: string | number;
   level?: number;
   listValues?: string[];
   searchField: string;
