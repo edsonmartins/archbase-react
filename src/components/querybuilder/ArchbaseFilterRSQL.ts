@@ -1,6 +1,7 @@
 import { ExpressionNode } from 'components/core';
 import { ArchbaseQueryFilter, Rule } from './ArchbaseFilterCommons';
 import builder from '@components/core/rsql/builder';
+import { formatISO } from 'date-fns';
 
 function buildFrom(filter: ArchbaseQueryFilter) {
   const sortStrings: string[] = [];
@@ -35,6 +36,13 @@ function processRules(condition, rules: Rule[]) {
       if (rule.field && !rule.disabled) {
         let newValue = rule.value;
         let newValue2 = rule.value2;
+        if (newValue && newValue !== '' && (typeof newValue === 'number' || newValue instanceof Date)) {
+          newValue = convertToIsoDate(rule, newValue);
+        }
+
+        if (newValue2 && newValue2 !== '' && (typeof newValue2 === 'number' || newValue2 instanceof Date)) {
+          newValue2 = convertToIsoDate(rule, newValue2);
+        }
         if (rule.operator === 'null') {
           return builder.eq(rule.field, `null`);
         } else if (rule.operator === 'notNull') {
@@ -95,9 +103,9 @@ function processRules(condition, rules: Rule[]) {
           (typeof newValue === 'string' || typeof newValue === 'number')
         ) {
           return builder.nb(rule.field, newValue, newValue2);
-        } else if (rule.operator === 'inList' && newValue && newValue !== '' && typeof newValue === 'object') {
+        } else if (rule.operator === 'inList' && newValue && newValue !== '' && Array.isArray(newValue)) {
           return builder.in(rule.field, newValue);
-        } else if (rule.operator === 'notInList' && newValue && newValue !== '' && typeof newValue === 'object') {
+        } else if (rule.operator === 'notInList' && newValue && newValue !== '' && Array.isArray(newValue)) {
           return builder.out(rule.field, newValue);
         }
         if (rule.rules) {
@@ -106,6 +114,14 @@ function processRules(condition, rules: Rule[]) {
       }
     }),
   );
+}
+
+function convertToIsoDate(rule, value: Date | number) {
+  if (rule.dataType === 'date') {
+    return formatISO(value, { representation: 'date' });
+  } else if (rule.dataType === 'date_time') {
+    return formatISO(value, { representation: 'complete' });
+  }
 }
 
 export { buildFrom };
