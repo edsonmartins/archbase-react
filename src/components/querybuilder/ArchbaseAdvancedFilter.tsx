@@ -1015,8 +1015,8 @@ interface RuleItemProps {
   parentId?: string | null;
   field?: string | null;
   operator?: string | null;
-  value?: string | number | (string | number)[] | null;
-  value2?: string | number | null;
+  value?: string | number | (string | number)[] | Date | null;
+  value2?: string | number | Date | null;
   disabled?: boolean;
   schema: Schema;
   onSearchButtonClick?: () => void;
@@ -1273,8 +1273,8 @@ class ActionElement extends Component<ActionElementProps> {
 interface ValueEditorProps {
   field: string;
   operator: string;
-  value: string | number | (string | number)[];
-  value2?: string | number;
+  value: string | number | Date | (string | number)[];
+  value2?: string | number | Date;
   level?: number;
   listValues?: string[];
   searchField: string;
