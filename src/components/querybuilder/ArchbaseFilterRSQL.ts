@@ -36,11 +36,21 @@ function processRules(condition, rules: Rule[]) {
       if (rule.field && !rule.disabled) {
         let newValue = rule.value;
         let newValue2 = rule.value2;
-        if (newValue && newValue !== '' && (typeof newValue === 'number' || newValue instanceof Date)) {
+        if (
+          newValue &&
+          newValue !== '' &&
+          (typeof newValue === 'number' || newValue instanceof Date) &&
+          (rule.dataType === 'date' || rule.dataType === 'date_time')
+        ) {
           newValue = convertToIsoDate(rule, newValue);
         }
 
-        if (newValue2 && newValue2 !== '' && (typeof newValue2 === 'number' || newValue2 instanceof Date)) {
+        if (
+          newValue2 &&
+          newValue2 !== '' &&
+          (typeof newValue2 === 'number' || newValue2 instanceof Date) &&
+          (rule.dataType === 'date' || rule.dataType === 'date_time')
+        ) {
           newValue2 = convertToIsoDate(rule, newValue2);
         }
         if (rule.operator === 'null') {
@@ -91,7 +101,8 @@ function processRules(condition, rules: Rule[]) {
           newValue !== '' &&
           newValue2 &&
           newValue2 !== '' &&
-          (typeof newValue === 'string' || typeof newValue === 'number')
+          (typeof newValue === 'string' || typeof newValue === 'number') &&
+          (typeof newValue2 === 'string' || typeof newValue2 === 'number')
         ) {
           return builder.bt(rule.field, newValue, newValue2);
         } else if (
@@ -100,7 +111,8 @@ function processRules(condition, rules: Rule[]) {
           newValue !== '' &&
           newValue2 &&
           newValue2 !== '' &&
-          (typeof newValue === 'string' || typeof newValue === 'number')
+          (typeof newValue === 'string' || typeof newValue === 'number') &&
+          (typeof newValue2 === 'string' || typeof newValue2 === 'number')
         ) {
           return builder.nb(rule.field, newValue, newValue2);
         } else if (rule.operator === 'inList' && newValue && newValue !== '' && Array.isArray(newValue)) {
@@ -108,9 +120,9 @@ function processRules(condition, rules: Rule[]) {
         } else if (rule.operator === 'notInList' && newValue && newValue !== '' && Array.isArray(newValue)) {
           return builder.out(rule.field, newValue);
         }
-        if (rule.rules) {
-          return processRules(rule.condition, rule.rules);
-        }
+      }
+      if (rule.rules && !rule.disabled) {
+        return processRules(rule.condition, rule.rules);
       }
     }),
   );
