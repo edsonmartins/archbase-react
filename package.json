@@ -24,6 +24,7 @@
     "start": "NODE_ENV=development BABEL_ENV=development yarn storybook",
     "build": "rimraf dist && cross-env NODE_ENV=production BABEL_ENV=production rollup -c && tsc-alias -p tscaliasconfig.json",
     "test": "jest",
+    "test:debug" : "jest --runInBand",
     "test:coverage": "jest --coverage --forceExit --colors",
     "lint": "yarn check-types && yarn eslint && yarn stylelint",
     "lint:fix": "yarn eslint:fix && yarn stylelint:fix",

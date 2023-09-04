@@ -122,8 +122,8 @@ interface Rule {
   fieldSql?: string | null;
   dataType?: DataType;
   operator?: string | null;
-  value?: string | null;
-  value2?: string | null;
+  value?: string | number | (string | number)[] | Date | null;
+  value2?: string | number | Date | null;
   disabled?: boolean;
   rules?: Rule[];
   condition?: string;

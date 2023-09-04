@@ -36,9 +36,9 @@ import { useTranslation } from 'react-i18next';
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
 import { convertISOStringToDate, filter, isEmpty } from '../core/utils';
 import { useArchbaseDataSourceListener } from '../hooks';
-import builder from '../datasource/rsql/builder';
-import { emit } from '../datasource/rsql/emitter';
-import { ExpressionNode } from '../datasource/rsql/ast';
+import builder from '../core/rsql/builder';
+import { emit } from '../core/rsql/emitter';
+import { ExpressionNode } from '../core/rsql/ast';
 import { ArchbaseObjectHelper } from '../core/helper';
 import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { t } from 'i18next';
@@ -468,7 +468,7 @@ const buildExpressionNode = (
     } else if (column.columnDef._filterFn === STARTS_WITH) {
       return builder.eq(column.id, `^${formatedValue}*`);
     } else if (column.columnDef._filterFn === ENDS_WITH) {
-      return builder.eq(column.id, `^${formatedValue}*`);
+      return builder.eq(column.id, `^*${formatedValue}`);
     } else if (column.columnDef._filterFn === EQUALS) {
       if (originColumn.dataType === 'uuid') {
         if (!checkIfValidUUID(formatedValue)) {
