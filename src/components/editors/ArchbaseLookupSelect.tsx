@@ -101,14 +101,13 @@ export function ArchbaseLookupSelect<T, ID, O>({
   const setDataSourceFieldValue = (value: any) => {
     if (value !== undefined && value !== '') {
       if (
-        dataField &&
         lookupDataSource &&
         lookupDataFieldId &&
         lookupDataSource.locate({
           [lookupDataFieldId]: value,
         })
       ) {
-        if (dataSource) {
+        if (dataSource && dataField) {
           if (!simpleValue) {
             dataSource.setFieldValue(dataField, lookupDataSource.getCurrentRecord());
           } else {
