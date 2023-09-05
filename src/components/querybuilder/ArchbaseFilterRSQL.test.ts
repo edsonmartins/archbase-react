@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import { buildFrom } from './ArchbaseFilterRSQL';
-import { baseFilterDemo } from '../../demo/data/filterDemo';
+import { baseFilterDemo } from '@demo/data/filterDemo';
 import builder from 'components/core/rsql/builder';
 import { Rule } from '@components/querybuilder';
 

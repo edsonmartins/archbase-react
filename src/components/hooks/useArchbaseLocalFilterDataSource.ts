@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArchbaseDataSource, DataSourceOptions } from '../datasource/ArchbaseDataSource';
+import { ArchbaseDataSource, DataSourceOptions } from '@components/datasource/ArchbaseDataSource';
 import { ArchbaseLocalFilterDataSource, LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
 
 export type UseArchbaseLocalFilterDataSourceProps = {

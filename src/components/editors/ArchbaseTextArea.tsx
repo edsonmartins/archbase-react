@@ -3,10 +3,10 @@ import { MantineNumberSize, MantineSize, Textarea } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useState, useCallback, useRef } from 'react';
 
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@hooks/lifecycle';
 
-import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
-import { DataSourceEventNames } from '../datasource';
+import type { DataSourceEvent, ArchbaseDataSource } from '@components/datasource';
+import { DataSourceEventNames } from '@components/datasource';
 import { isBase64 } from '@components/core/utils';
 
 export interface ArchbaseTextAreaProps<T, ID> {

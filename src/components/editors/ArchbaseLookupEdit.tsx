@@ -2,11 +2,11 @@ import { ActionIcon, MantineNumberSize, MantineSize, TextInput, Tooltip, useMant
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useRef, useState } from 'react';
 
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@hooks/lifecycle';
 
 import { IconSearch } from '@tabler/icons-react';
-import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
-import { DataSourceEventNames } from '../datasource';
+import type { ArchbaseDataSource, DataSourceEvent } from '@components/datasource';
+import { DataSourceEventNames } from '@components/datasource';
 import { formatStr } from '@components/core';
 import { ArchbaseObjectHelper } from '@components/core/helper';
 
