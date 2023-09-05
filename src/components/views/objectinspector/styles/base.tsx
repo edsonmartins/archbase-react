@@ -1,100 +1,100 @@
-import { unselectable } from './unselectable';
+import { unselectable } from './unselectable'
 
 export const createTheme = (theme: any) => ({
   DOMNodePreview: {
     htmlOpenTag: {
       base: {
-        color: theme.HTML_TAG_COLOR,
+        color: theme.HTML_TAG_COLOR
       },
       tagName: {
         color: theme.HTML_TAGNAME_COLOR,
-        textTransform: theme.HTML_TAGNAME_TEXT_TRANSFORM,
+        textTransform: theme.HTML_TAGNAME_TEXT_TRANSFORM
       },
       htmlAttributeName: {
-        color: theme.HTML_ATTRIBUTE_NAME_COLOR,
+        color: theme.HTML_ATTRIBUTE_NAME_COLOR
       },
       htmlAttributeValue: {
-        color: theme.HTML_ATTRIBUTE_VALUE_COLOR,
-      },
+        color: theme.HTML_ATTRIBUTE_VALUE_COLOR
+      }
     },
     htmlCloseTag: {
       base: {
-        color: theme.HTML_TAG_COLOR,
+        color: theme.HTML_TAG_COLOR
       },
       offsetLeft: {
         /* hack: offset placeholder */
-        marginLeft: -theme.TREENODE_PADDING_LEFT,
+        marginLeft: -theme.TREENODE_PADDING_LEFT
       },
       tagName: {
         color: theme.HTML_TAGNAME_COLOR,
-        textTransform: theme.HTML_TAGNAME_TEXT_TRANSFORM,
-      },
+        textTransform: theme.HTML_TAGNAME_TEXT_TRANSFORM
+      }
     },
     htmlComment: {
-      color: theme.HTML_COMMENT_COLOR,
+      color: theme.HTML_COMMENT_COLOR
     },
     htmlDoctype: {
-      color: theme.HTML_DOCTYPE_COLOR,
-    },
+      color: theme.HTML_DOCTYPE_COLOR
+    }
   },
 
   ObjectPreview: {
     objectDescription: {
-      fontStyle: 'italic',
+      fontStyle: 'italic'
     },
     preview: {
-      fontStyle: 'italic',
+      fontStyle: 'italic'
     },
     arrayMaxProperties: theme.OBJECT_PREVIEW_ARRAY_MAX_PROPERTIES,
-    objectMaxProperties: theme.OBJECT_PREVIEW_OBJECT_MAX_PROPERTIES,
+    objectMaxProperties: theme.OBJECT_PREVIEW_OBJECT_MAX_PROPERTIES
   },
 
   ObjectName: {
     base: {
-      color: theme.OBJECT_NAME_COLOR,
+      color: theme.OBJECT_NAME_COLOR
     },
     dimmed: {
-      opacity: 0.6,
-    },
+      opacity: 0.6
+    }
   },
 
   ObjectValue: {
     objectValueNull: {
-      color: theme.OBJECT_VALUE_NULL_COLOR,
+      color: theme.OBJECT_VALUE_NULL_COLOR
     },
     objectValueUndefined: {
-      color: theme.OBJECT_VALUE_UNDEFINED_COLOR,
+      color: theme.OBJECT_VALUE_UNDEFINED_COLOR
     },
     objectValueRegExp: {
-      color: theme.OBJECT_VALUE_REGEXP_COLOR,
+      color: theme.OBJECT_VALUE_REGEXP_COLOR
     },
     objectValueString: {
-      color: theme.OBJECT_VALUE_STRING_COLOR,
+      color: theme.OBJECT_VALUE_STRING_COLOR
     },
     objectValueSymbol: {
-      color: theme.OBJECT_VALUE_SYMBOL_COLOR,
+      color: theme.OBJECT_VALUE_SYMBOL_COLOR
     },
     objectValueNumber: {
-      color: theme.OBJECT_VALUE_NUMBER_COLOR,
+      color: theme.OBJECT_VALUE_NUMBER_COLOR
     },
     objectValueBoolean: {
-      color: theme.OBJECT_VALUE_BOOLEAN_COLOR,
+      color: theme.OBJECT_VALUE_BOOLEAN_COLOR
     },
     objectValueFunctionPrefix: {
       color: theme.OBJECT_VALUE_FUNCTION_PREFIX_COLOR,
-      fontStyle: 'italic',
+      fontStyle: 'italic'
     },
     objectValueFunctionName: {
-      fontStyle: 'italic',
-    },
+      fontStyle: 'italic'
+    }
   },
 
   TreeView: {
     treeViewOutline: {
       padding: 0,
       margin: 0,
-      listStyleType: 'none',
-    },
+      listStyleType: 'none'
+    }
   },
 
   TreeNode: {
@@ -109,7 +109,7 @@ export const createTheme = (theme: any) => ({
       listStyle: 'none',
 
       fontFamily: theme.TREENODE_FONT_FAMILY,
-      fontSize: theme.TREENODE_FONT_SIZE,
+      fontSize: theme.TREENODE_FONT_SIZE
     },
     treeNodePreviewContainer: {},
     treeNodePlaceholder: {
@@ -117,7 +117,7 @@ export const createTheme = (theme: any) => ({
 
       fontSize: theme.ARROW_FONT_SIZE,
       marginRight: theme.ARROW_MARGIN_RIGHT,
-      ...unselectable,
+      ...unselectable
     },
     treeNodeArrow: {
       base: {
@@ -128,26 +128,26 @@ export const createTheme = (theme: any) => ({
         marginRight: theme.ARROW_MARGIN_RIGHT,
         ...(parseFloat(theme.ARROW_ANIMATION_DURATION) > 0
           ? {
-              transition: `transform ${theme.ARROW_ANIMATION_DURATION} ease 0s`,
+              transition: `transform ${theme.ARROW_ANIMATION_DURATION} ease 0s`
             }
           : {}),
-        ...unselectable,
+        ...unselectable
       },
       expanded: {
         WebkitTransform: 'rotateZ(90deg)',
         MozTransform: 'rotateZ(90deg)',
-        transform: 'rotateZ(90deg)',
+        transform: 'rotateZ(90deg)'
       },
       collapsed: {
         WebkitTransform: 'rotateZ(0deg)',
         MozTransform: 'rotateZ(0deg)',
-        transform: 'rotateZ(0deg)',
-      },
+        transform: 'rotateZ(0deg)'
+      }
     },
     treeNodeChildNodesContainer: {
       margin: 0, // reset user-agent style
-      paddingLeft: theme.TREENODE_PADDING_LEFT,
-    },
+      paddingLeft: theme.TREENODE_PADDING_LEFT
+    }
   },
 
   TableInspector: {
@@ -160,8 +160,8 @@ export const createTheme = (theme: any) => ({
       fontSize: theme.BASE_FONT_SIZE,
       lineHeight: '120%',
       boxSizing: 'border-box',
-      cursor: 'default',
-    },
+      cursor: 'default'
+    }
   },
 
   TableInspectorHeaderContainer: {
@@ -170,7 +170,7 @@ export const createTheme = (theme: any) => ({
       height: '17px',
       left: 0,
       right: 0,
-      overflowX: 'hidden',
+      overflowX: 'hidden'
     },
     table: {
       tableLayout: 'fixed',
@@ -178,13 +178,13 @@ export const createTheme = (theme: any) => ({
       borderCollapse: 'separate',
       height: '100%',
       width: '100%',
-      margin: 0,
-    },
+      margin: 0
+    }
   },
 
   TableInspectorDataContainer: {
     tr: {
-      display: 'table-row',
+      display: 'table-row'
     },
     td: {
       boxSizing: 'border-box',
@@ -197,7 +197,7 @@ export const createTheme = (theme: any) => ({
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       overflow: 'hidden',
-      lineHeight: '14px',
+      lineHeight: '14px'
     },
     div: {
       position: 'static',
@@ -208,7 +208,7 @@ export const createTheme = (theme: any) => ({
 
       left: 0,
       right: 0,
-      overflowX: 'hidden',
+      overflowX: 'hidden'
     },
     table: {
       positon: 'static',
@@ -230,8 +230,8 @@ export const createTheme = (theme: any) => ({
       width: '100%',
 
       fontSize: theme.BASE_FONT_SIZE,
-      lineHeight: '120%',
-    },
+      lineHeight: '120%'
+    }
   },
 
   TableInspectorTH: {
@@ -251,8 +251,8 @@ export const createTheme = (theme: any) => ({
       lineHeight: '14px',
 
       ':hover': {
-        backgroundColor: theme.TABLE_TH_HOVER_COLOR,
-      },
+        backgroundColor: theme.TABLE_TH_HOVER_COLOR
+      }
     },
     div: {
       whiteSpace: 'nowrap',
@@ -261,17 +261,17 @@ export const createTheme = (theme: any) => ({
 
       // prevent user agent stylesheet overrides
       fontSize: theme.BASE_FONT_SIZE,
-      lineHeight: '120%',
-    },
+      lineHeight: '120%'
+    }
   },
 
   TableInspectorLeftBorder: {
     none: {
-      borderLeft: 'none',
+      borderLeft: 'none'
     },
     solid: {
-      borderLeft: `1px solid ${theme.TABLE_BORDER_COLOR}`,
-    },
+      borderLeft: `1px solid ${theme.TABLE_BORDER_COLOR}`
+    }
   },
 
   TableInspectorSortIcon: {
@@ -284,6 +284,6 @@ export const createTheme = (theme: any) => ({
     color: theme.TABLE_SORT_ICON_COLOR,
     fontSize: 12,
     // lineHeight: 14
-    ...unselectable,
-  },
-});
+    ...unselectable
+  }
+})

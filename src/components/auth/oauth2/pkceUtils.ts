@@ -1,3 +1,4 @@
+/* eslint-disable */
 export function getRandomInteger(range: number): number {
   const max_range = 256 // Maior número possível em Uint8
 

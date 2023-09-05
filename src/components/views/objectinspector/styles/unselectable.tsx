@@ -5,5 +5,5 @@ export const unselectable = {
   MozUserSelect: 'none',
   msUserSelect: 'none',
   OUserSelect: 'none',
-  userSelect: 'none',
-};
+  userSelect: 'none'
+}

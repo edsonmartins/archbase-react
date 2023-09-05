@@ -1,5 +1,12 @@
+/* eslint-disable */
 import React, { createContext, useEffect, useMemo, useRef, useState } from 'react'
-import { fetchTokens, fetchWithRefreshToken, redirectToLogin, redirectToLogout, validateState } from './authentication'
+import {
+  fetchTokens,
+  fetchWithRefreshToken,
+  redirectToLogin,
+  redirectToLogout,
+  validateState
+} from './authentication'
 import useBrowserStorage from './hooks'
 import {
   IArchbaseAuthContext,
@@ -7,10 +14,15 @@ import {
   TInternalConfig,
   TArchbaseRefreshTokenExpiredEvent,
   TTokenData,
-  TTokenResponse,
+  TTokenResponse
 } from './Types'
 import { createInternalConfig } from './authConfig'
-import { epochAtSecondsFromNow, epochTimeIsPast, FALLBACK_EXPIRE_TIME, getRefreshExpiresIn } from './timeUtils'
+import {
+  epochAtSecondsFromNow,
+  epochTimeIsPast,
+  FALLBACK_EXPIRE_TIME,
+  getRefreshExpiresIn
+} from './timeUtils'
 import { decodeJWT } from './decodeJWT'
 import { FetchError } from './errors'
 
@@ -19,7 +31,7 @@ export const ArchbaseAuthContext = createContext<IArchbaseAuthContext>({
   login: () => null,
   logOut: () => null,
   error: null,
-  loginInProgress: false,
+  loginInProgress: false
 })
 
 export const ArchbaseAuthProvider = ({ authConfig, children }: IArchbaseAuthProvider) => {
@@ -41,7 +53,11 @@ export const ArchbaseAuthProvider = ({ authConfig, children }: IArchbaseAuthProv
     epochAtSecondsFromNow(FALLBACK_EXPIRE_TIME),
     config.storage
   )
-  const [idToken, setIdToken] = useBrowserStorage<string | undefined>('ROCP_idToken', undefined, config.storage)
+  const [idToken, setIdToken] = useBrowserStorage<string | undefined>(
+    'ROCP_idToken',
+    undefined,
+    config.storage
+  )
   const [loginInProgress, setLoginInProgress] = useBrowserStorage<boolean>(
     'ROCP_loginInProgress',
     false,
@@ -72,7 +88,8 @@ export const ArchbaseAuthProvider = ({ authConfig, children }: IArchbaseAuthProv
   function logOut(state?: string, logoutHint?: string) {
     clearStorage()
     setError(null)
-    if (config?.logoutEndpoint) redirectToLogout(config, token, refreshToken, idToken, state, logoutHint)
+    if (config?.logoutEndpoint)
+      redirectToLogout(config, token, refreshToken, idToken, state, logoutHint)
   }
 
   function login(state?: string) {
@@ -80,7 +97,9 @@ export const ArchbaseAuthProvider = ({ authConfig, children }: IArchbaseAuthProv
     setLoginInProgress(true)
     let typeSafePassedState = state
     if (state && typeof state !== 'string') {
-      console.warn(`O estado de login aprovado deve ser do tipo 'string'. Recebido'${state}'. Ignorando o valor...`)
+      console.warn(
+        `O estado de login aprovado deve ser do tipo 'string'. Recebido'${state}'. Ignorando o valor...`
+      )
       typeSafePassedState = undefined
     }
     redirectToLogin(config, typeSafePassedState).catch((error) => {
@@ -95,7 +114,8 @@ export const ArchbaseAuthProvider = ({ authConfig, children }: IArchbaseAuthProv
     setRefreshToken(response.refresh_token)
     const tokenExpiresIn = config.tokenExpiresIn ?? response.expires_in ?? FALLBACK_EXPIRE_TIME
     setTokenExpire(epochAtSecondsFromNow(tokenExpiresIn))
-    const refreshTokenExpiresIn = config.refreshTokenExpiresIn ?? getRefreshExpiresIn(tokenExpiresIn, response)
+    const refreshTokenExpiresIn =
+      config.refreshTokenExpiresIn ?? getRefreshExpiresIn(tokenExpiresIn, response)
     setRefreshTokenExpire(epochAtSecondsFromNow(refreshTokenExpiresIn))
     setIdToken(response.id_token)
     try {
@@ -114,8 +134,8 @@ export const ArchbaseAuthProvider = ({ authConfig, children }: IArchbaseAuthProv
     // Se for o primeiro carregamento de página OU não houver callback sessionExpire, acionamos um novo login
     if (initial) return login()
     // TODO: Mudança de última hora - remover login automático durante a sessão em andamento
-    else if (!config.onRefreshTokenExpire) return login()
-    else return config.onRefreshTokenExpire({ login } as TArchbaseRefreshTokenExpiredEvent)
+    if (!config.onRefreshTokenExpire) return login()
+    return config.onRefreshTokenExpire({ login } as TArchbaseRefreshTokenExpiredEvent)
   }
 
   function refreshAccessToken(initial = false): void {
@@ -182,10 +202,11 @@ export const ArchbaseAuthProvider = ({ authConfig, children }: IArchbaseAuthProv
       const urlParams = new URLSearchParams(window.location.search)
       if (!urlParams.get('code')) {
         // Isso não deveria acontecer. Deve haver um parâmetro 'código' no URL agora..."
-        const error_description =
-          urlParams.get('error_description') || 'Estado de autorização inválido. Atualizar a página pode resolver o problema.'
-        console.error(error_description)
-        setError(error_description)
+        const errorDescription =
+          urlParams.get('error_description') ||
+          'Estado de autorização inválido. Atualizar a página pode resolver o problema.'
+        console.error(errorDescription)
+        setError(errorDescription)
         logOut()
         return
       }
@@ -211,7 +232,7 @@ export const ArchbaseAuthProvider = ({ authConfig, children }: IArchbaseAuthProv
           })
           .finally(() => {
             if (config.clearURL) {
-              // Limpar parâmetros de url 
+              // Limpar parâmetros de url
               window.history.replaceState(null, '', window.location.pathname)
             }
             setLoginInProgress(false)
@@ -238,7 +259,9 @@ export const ArchbaseAuthProvider = ({ authConfig, children }: IArchbaseAuthProv
   }, []) // eslint-disable-line
 
   return (
-    <ArchbaseAuthContext.Provider value={{ token, tokenData, idToken, idTokenData, login, logOut, error, loginInProgress }}>
+    <ArchbaseAuthContext.Provider
+      value={{ token, tokenData, idToken, idTokenData, login, logOut, error, loginInProgress }}
+    >
       {children}
     </ArchbaseAuthContext.Provider>
   )

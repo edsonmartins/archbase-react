@@ -1,19 +1,10 @@
-import { Children } from 'react';
+import { Children } from 'react'
 
-import deepFilter from './deepFilter';
-import deepFind from './deepFind';
-import deepForEach from './deepForEach';
-import deepMap from './deepMap';
-import filter from './filter';
-import getElementName from './getElementName';
-import groupByType from './groupByType';
-import hasChildren from './hasChildren';
-import hasComplexChildren from './hasComplexChildren';
-import onlyText from './onlyText';
-import onlyValid from './onlyValid';
-import isBase64 from './isBase64';
-import { archbaseLogo, archbaseLogo2, archbaseLogo3 } from './archbaseLogo';
-import {convertImageToBase64} from './convertImageToBase64';
+import getElementName from './getElementName'
+import isBase64 from './isBase64'
+import { archbaseLogo, archbaseLogo2, archbaseLogo3 } from './archbaseLogo'
+import { convertImageToBase64 } from './convertImageToBase64'
+import filter from './filter'
 
 import {
   removeNonWord,
@@ -50,20 +41,10 @@ import {
   convertDateToISOString,
   convertISOStringToDate,
   formatStr
-} from './string-utils';
+} from './string-utils'
 
 export {
-  deepFilter,
-  deepFind,
-  deepForEach,
-  deepMap,
-  filter,
   getElementName,
-  groupByType,
-  hasChildren,
-  hasComplexChildren,
-  onlyText,
-  onlyValid,
   removeNonWord,
   replaceAccents,
   ltrim,
@@ -102,20 +83,11 @@ export {
   convertDateToISOString,
   convertISOStringToDate,
   formatStr,
-  convertImageToBase64
-};
+  convertImageToBase64,
+  filter
+}
 
 export default {
   ...Children,
-  deepFilter,
-  deepFind,
-  deepForEach,
-  deepMap,
-  filter,
-  getElementName,
-  groupByType,
-  hasChildren,
-  hasComplexChildren,
-  onlyText,
-  onlyValid,
-};
+  getElementName
+}

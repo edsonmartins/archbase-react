@@ -1,39 +1,74 @@
-import React from 'react';
-import { Provider as IOCProvider } from 'inversify-react';
-import { DatesProvider } from '@mantine/dates';
-import { ModalsProvider } from '@mantine/modals';
-import { Notifications } from '@mantine/notifications';
+import React, { useLayoutEffect } from 'react'
+import { Provider as IOCProvider } from 'inversify-react'
+import i18next, { ResourceLanguage } from 'i18next'
+import setDefaultOptions from 'date-fns/setDefaultOptions'
+import { enUS, es, ptBR } from 'date-fns/locale'
+import dayjs from 'dayjs'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import { initReactI18next } from 'react-i18next'
+import { DatesProvider } from '@mantine/dates'
+import { ModalsProvider } from '@mantine/modals'
+import { Notifications } from '@mantine/notifications'
 import {
   ColorScheme,
   ColorSchemeProvider,
   EmotionCache,
   MantineProvider,
-  MantineThemeOverride,
-} from '@mantine/styles';
-import '../../../../locales/config';
-import i18next from 'i18next';
+  MantineThemeOverride
+} from '@mantine/styles'
+import '../../locales/config'
 
-interface ArchbaseThemeOverride extends MantineThemeOverride {
+import { useArchbaseDidMount } from '@/components/hooks'
+import { archbaseTranslationResources } from '../../locales/config'
+import { Resource } from 'i18next'
+
+interface ArchbaseThemeOverride extends MantineThemeOverride {}
+
+interface ArchbaseTranslationResource {
+  [language: string]: ResourceLanguage;
 }
 
 interface ArchbaseAppProviderProps {
-  children?: React.ReactNode;
-  colorScheme: 'dark' | 'light';
-  containerIOC: any | undefined;
-  themeDark?: ArchbaseThemeOverride;
-  themeLight?: ArchbaseThemeOverride;
-  emotionCache?: EmotionCache;
-  withNormalizeCSS?: boolean;
-  withGlobalStyles?: boolean;
-  withCSSVariables?: boolean;
-  toggleColorScheme: (colorScheme?: ColorScheme) => void;
-  notificationAutoClose?: number;
-  notificationPosition?: 'top-left' | 'top-right' | 'top-center' | 'bottom-left' | 'bottom-right' | 'bottom-center';
+  children?: React.ReactNode
+  colorScheme: 'dark' | 'light'
+  containerIOC: any | undefined
+  themeDark?: ArchbaseThemeOverride
+  themeLight?: ArchbaseThemeOverride
+  emotionCache?: EmotionCache
+  withNormalizeCSS?: boolean
+  withGlobalStyles?: boolean
+  withCSSVariables?: boolean
+  toggleColorScheme: (colorScheme?: ColorScheme) => void
+  notificationAutoClose?: number
+  translationName?: string;
+  translationResource?: ArchbaseTranslationResource;
+  notificationPosition?:
+    | 'top-left'
+    | 'top-right'
+    | 'top-center'
+    | 'bottom-left'
+    | 'bottom-right'
+    | 'bottom-center'
+}
+
+const buildResources = (resource: Resource, translationName? : string, translationResource?: ArchbaseTranslationResource) : Resource|undefined => {
+    let result = resource;
+    if (translationResource){
+      const name = translationName?translationName:'app';
+      Object.keys(translationResource).forEach((language)=>{
+        if (!resource[language]) {
+          resource[language] = {[name]:translationResource[language]}
+        } if (!resource[language][name]){
+            resource[language][name] = translationResource[language];
+        }       
+      })
+      return result;
+    }
 }
 
 const ArchbaseGlobalProvider: React.FC<ArchbaseAppProviderProps> = ({
   children,
-  colorScheme='light',
+  colorScheme = 'light',
   containerIOC,
   themeDark,
   themeLight,
@@ -41,10 +76,34 @@ const ArchbaseGlobalProvider: React.FC<ArchbaseAppProviderProps> = ({
   withCSSVariables,
   withGlobalStyles,
   withNormalizeCSS,
-  notificationAutoClose=5000,
-  notificationPosition="top-right",
+  notificationAutoClose = 5000,
+  notificationPosition = 'top-right',
+  translationName,
+  translationResource,
   toggleColorScheme
 }) => {
+  useLayoutEffect(()=>{
+    i18next.use(initReactI18next).use(LanguageDetector).init({
+      debug: false,
+      resources: buildResources(archbaseTranslationResources, translationName, translationResource),
+      keySeparator: ".",
+      ns: translationName?["archbase",translationName]:["archbase"],
+      defaultNS: "archbase",
+    })
+    
+    i18next.on('languageChanged', (lng: string) => {
+      if (lng === 'en') {
+        setDefaultOptions({ locale: enUS })
+        dayjs.locale('en')
+      } else if (lng === 'es') {
+        setDefaultOptions({ locale: es })
+        dayjs.locale('es')
+      } else if (lng === 'pt-BR') {
+        setDefaultOptions({ locale: ptBR })
+        dayjs.locale('pt-BR')
+      }
+    }) 
+  })
   return (
     <IOCProvider container={containerIOC}>
       <DatesProvider settings={{ locale: i18next.language }}>
@@ -64,9 +123,8 @@ const ArchbaseGlobalProvider: React.FC<ArchbaseAppProviderProps> = ({
         </MantineProvider>
       </DatesProvider>
     </IOCProvider>
-  );
-};
+  )
+}
 
-export { ArchbaseGlobalProvider };  
-export type { ArchbaseThemeOverride };
-
+export { ArchbaseGlobalProvider }
+export type { ArchbaseThemeOverride }

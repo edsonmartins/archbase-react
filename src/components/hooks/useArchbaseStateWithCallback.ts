@@ -1,17 +1,17 @@
-import * as React from 'react';
+import * as React from 'react'
 
-export function useArchbaseStateWithCallback<T>(initialState : T, callback) {
-  const [state, setState] = React.useState<T>(initialState);
+export function useArchbaseStateWithCallback<T>(initialState: T, callback) {
+  const [state, setState] = React.useState<T>(initialState)
 
-  const didMount = React.useRef(false);
+  const didMount = React.useRef(false)
 
   React.useEffect(() => {
     if (didMount.current) {
-      callback(state);
+      callback(state)
     } else {
-      didMount.current = true;
+      didMount.current = true
     }
-  }, [state, callback]);
+  }, [state, callback])
 
-  return [state, setState];
-};
+  return [state, setState]
+}

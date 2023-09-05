@@ -7,28 +7,32 @@ import {
   Input,
   DefaultProps,
   MantineSize,
-  MantineNumberSize,
-} from '@mantine/core';
-import { useId } from '@mantine/hooks';
-import { IMaskInput } from 'react-imask';
+  MantineNumberSize
+} from '@mantine/core'
+import { useId } from '@mantine/hooks'
+import { IMaskInput } from 'react-imask'
 
-import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { useState, useCallback, useRef } from 'react';
+import type { CSSProperties, FocusEventHandler } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import {
+  useArchbaseDidMount,
+  useArchbaseDidUpdate,
+  useArchbaseWillUnmount
+} from '../hooks/lifecycle'
 
-import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
-import { DataSourceEventNames } from '../datasource';
+import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
+import { DataSourceEventNames } from '../datasource'
 
 export enum MaskPattern {
   CNPJ = '00.000.000/0000-00',
   CEP = '00.000-000',
   CPF = '000.000.000-00',
   PLACA = 'aaa-00*00',
-  PHONE = '(00) 00000-0000',
+  PHONE = '(00) 00000-0000'
 }
 
-export type ArchbaseMaskEditStylesNames = InputStylesNames | InputWrapperStylesNames;
+export type ArchbaseMaskEditStylesNames = InputStylesNames | InputWrapperStylesNames
 
 export interface ArchbaseMaskEditProps<T, ID>
   extends DefaultProps<ArchbaseMaskEditStylesNames>,
@@ -36,45 +40,45 @@ export interface ArchbaseMaskEditProps<T, ID>
     InputWrapperBaseProps,
     Omit<React.ComponentPropsWithoutRef<'input'>, 'size'> {
   /** Tipo de campo html */
-  type?: React.HTMLInputTypeAttribute;
+  type?: React.HTMLInputTypeAttribute
   /** Propriedades para atribuir ao wrapper do mask edit */
-  wrapperProps?: Record<string, any>;
+  wrapperProps?: Record<string, any>
   /** Nome do seletor estático */
-  __staticSelector?: string;
+  __staticSelector?: string
   /** Fonte de dados onde será atribuido o valor do mask edit */
-  dataSource?: ArchbaseDataSource<T, ID>;
+  dataSource?: ArchbaseDataSource<T, ID>
   /** Campo onde deverá ser atribuido o valor do mask edit na fonte de dados */
-  dataField?: string;
+  dataField?: string
   /** Indicador se o mask edit está desabilitado */
-  disabled?: boolean;
+  disabled?: boolean
   /** Indicador se o mask edit é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
-  readOnly?: boolean;
+  readOnly?: boolean
   /** Estilo do mask edit */
-  style?: CSSProperties;
+  style?: CSSProperties
   /** Tamanho do mask edit */
-  size?: MantineSize;
+  size?: MantineSize
   /** Largura do mask edit */
-  width?: MantineNumberSize;
+  width?: MantineNumberSize
   /** Valor inicial do mask edit */
-  value?: any;
+  value?: any
   /** Texto sugestão do mask edit */
-  placeholder?: string;
+  placeholder?: string
   /** Caractere a ser mostrado onde não houver valor no campo */
-  placeholderChar?: string;
+  placeholderChar?: string
   /** Indicador se apresenta ou não a máscara */
-  showMask?: boolean;
+  showMask?: boolean
   /** Mascara podendo ser o tipo MaskPattern, uma Function ou uma string. Mais detalhes em: https://github.com/uNmAnNeR/imaskjs */
-  mask?: MaskPattern | Function | string;
+  mask?: MaskPattern | Function | string
   /** Indicador se deverá ser salvo o valor com a máscara */
-  saveWithMask?: boolean;
+  saveWithMask?: boolean
   /** Evento quando o foco sai do edit */
-  onFocusExit?: FocusEventHandler<T> | undefined;
+  onFocusExit?: FocusEventHandler<T> | undefined
   /** Evento quando o edit recebe o foco */
-  onFocusEnter?: FocusEventHandler<T> | undefined;
+  onFocusEnter?: FocusEventHandler<T> | undefined
   /** Evento quando o valor do edit é alterado */
-  onChangeValue?: (value: string, event: any) => void;
+  onChangeValue?: (value: string, event: any) => void
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement> | undefined;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined
 }
 
 const defaultProps: Partial<ArchbaseMaskEditProps<any, any>> = {
@@ -88,8 +92,8 @@ const defaultProps: Partial<ArchbaseMaskEditProps<any, any>> = {
   placeholder: '',
   mask: '',
   showMask: true,
-  saveWithMask: false,
-};
+  saveWithMask: false
+}
 
 export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) {
   const {
@@ -103,26 +107,26 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
     width,
     innerRef,
     ...others
-  } = useInputProps('ArchbaseMaskEdit', defaultProps, props);
-  const id = useId();
-  const innerComponentRef = innerRef || useRef<any>();
-  const [value, setValue] = useState<string>('');
-  const { dataSource, dataField, onChangeValue, onFocusEnter, onFocusExit, saveWithMask } = props;
+  } = useInputProps('ArchbaseMaskEdit', defaultProps, props)
+  const id = useId()
+  const innerComponentRef = innerRef || useRef<any>()
+  const [value, setValue] = useState<string>('')
+  const { dataSource, dataField, onChangeValue, onFocusEnter, onFocusExit, saveWithMask } = props
 
   const loadDataSourceFieldValue = () => {
-    let initialValue: any = value;
+    let initialValue: any = value
 
     if (dataSource && dataField) {
-      initialValue = dataSource.getFieldValue(dataField);
+      initialValue = dataSource.getFieldValue(dataField)
       if (!initialValue) {
-        initialValue = '';
+        initialValue = ''
       }
     }
 
-    setValue(initialValue);
-  };
+    setValue(initialValue)
+  }
 
-  const fieldChangedListener = useCallback(() => {}, []);
+  const fieldChangedListener = useCallback(() => {}, [])
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<any>) => {
     if (dataSource && dataField) {
@@ -133,64 +137,69 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel
       ) {
-        loadDataSourceFieldValue();
+        loadDataSourceFieldValue()
       }
     }
-  }, []);
+  }, [])
 
   useArchbaseDidMount(() => {
-    loadDataSourceFieldValue();
+    loadDataSourceFieldValue()
     if (dataSource && dataField) {
-      dataSource.addListener(dataSourceEvent);
-      dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+      dataSource.addListener(dataSourceEvent)
+      dataSource.addFieldChangeListener(dataField, fieldChangedListener)
     }
-  });
+  })
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent);
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+      dataSource.removeListener(dataSourceEvent)
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
     }
-  });
+  })
 
   useArchbaseDidUpdate(() => {
-    loadDataSourceFieldValue();
-  }, []);
+    loadDataSourceFieldValue()
+  }, [])
 
   const handleAccept = (changedValue, maskObject) => {
     if (maskObject.value.replaceAll('_', '').length !== mask?.length) {
-      return;
+      return
     }
-    setValue((_prev) => changedValue);
+    setValue((_prev) => changedValue)
 
-    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-      dataSource.setFieldValue(dataField, changedValue);
+    if (
+      dataSource &&
+      !dataSource.isBrowsing() &&
+      dataField &&
+      dataSource.getFieldValue(dataField) !== changedValue
+    ) {
+      dataSource.setFieldValue(dataField, changedValue)
     }
 
     if (onChangeValue) {
-      onChangeValue(changedValue, maskObject.value);
+      onChangeValue(changedValue, maskObject.value)
     }
-  };
+  }
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {
-      onFocusExit(event);
+      onFocusExit(event)
     }
-  };
+  }
 
   const handleOnFocusEnter = (event) => {
     if (onFocusEnter) {
-      onFocusEnter(event);
+      onFocusEnter(event)
     }
-  };
+  }
 
   const isReadOnly = () => {
-    let _readOnly = readOnly;
+    let tmpRreadOnly = readOnly
     if (dataSource && !readOnly) {
-      _readOnly = dataSource.isBrowsing();
+      tmpRreadOnly = dataSource.isBrowsing()
     }
-    return _readOnly;
-  };
+    return tmpRreadOnly
+  }
 
   return (
     <Input.Wrapper {...wrapperProps}>
@@ -205,7 +214,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
         value={value}
         style={{
           width,
-          ...props.style,
+          ...props.style
         }}
         size={props.size}
         placeholderChar={placeholderChar}
@@ -218,7 +227,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
         onFocus={handleOnFocusEnter}
       />
     </Input.Wrapper>
-  );
+  )
 }
 
-ArchbaseMaskEdit.displayName = 'ArchbaseMaskEdit';
+ArchbaseMaskEdit.displayName = 'ArchbaseMaskEdit'

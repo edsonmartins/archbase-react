@@ -1,14 +1,14 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
-import type { DebouncedFunc } from 'lodash';
+import { useEffect, useState, useRef, useCallback } from 'react'
+import type { DebouncedFunc } from 'lodash'
 
-import { patchResizeCallback } from './utils';
+import { patchResizeCallback } from './utils'
 
 import type {
   OnRefChangeType,
   ReactResizeDetectorDimensions,
   UseArchbaseResizeDetectorReturn,
   useArchbaseResizeDetectorProps
-} from './types';
+} from './types'
 
 function useArchbaseResizeDetector<T extends HTMLElement = any>({
   skipOnMount = false,
@@ -21,15 +21,15 @@ function useArchbaseResizeDetector<T extends HTMLElement = any>({
   observerOptions,
   onResize
 }: useArchbaseResizeDetectorProps<T> = {}): UseArchbaseResizeDetectorReturn<T> {
-  const skipResize = useRef<boolean>(skipOnMount);
+  const skipResize = useRef<boolean>(skipOnMount)
 
   const [size, setSize] = useState<ReactResizeDetectorDimensions>({
     width: undefined,
     height: undefined
-  });
+  })
 
   // we are going to use this ref to store the last element that was passed to the hook
-  const [refElement, setRefElement] = useState<T | null>(targetRef?.current || null);
+  const [refElement, setRefElement] = useState<T | null>(targetRef?.current || null)
 
   // if targetRef is passed, we need to update the refElement
   // we have to use setTimeout because ref get assigned after the hook is called
@@ -37,9 +37,9 @@ function useArchbaseResizeDetector<T extends HTMLElement = any>({
   if (targetRef) {
     setTimeout(() => {
       if (targetRef.current !== refElement) {
-        setRefElement(targetRef.current);
+        setRefElement(targetRef.current)
       }
-    }, 0);
+    }, 0)
   }
 
   // this is a callback that will be called every time the ref is changed
@@ -47,28 +47,28 @@ function useArchbaseResizeDetector<T extends HTMLElement = any>({
   const onRefChange: OnRefChangeType = useCallback(
     (node: T | null) => {
       if (node !== refElement) {
-        setRefElement(node);
+        setRefElement(node)
       }
     },
     [refElement]
-  );
+  )
   // adding `current` to make it compatible with useRef shape
-  onRefChange.current = refElement;
+  onRefChange.current = refElement
 
   useEffect(() => {
     return () => {
       // component is unmounted
       // clear ref to avoid memory leaks
-      setRefElement(null);
-      onRefChange.current = null;
-    };
-  }, []);
+      setRefElement(null)
+      onRefChange.current = null
+    }
+  }, [])
 
   const shouldSetSize = useCallback(
     (prevSize: ReactResizeDetectorDimensions, nextSize: ReactResizeDetectorDimensions) => {
       if (prevSize.width === nextSize.width && prevSize.height === nextSize.height) {
         // skip if dimensions haven't changed
-        return false;
+        return false
       }
 
       if (
@@ -76,64 +76,60 @@ function useArchbaseResizeDetector<T extends HTMLElement = any>({
         (prevSize.height === nextSize.height && !handleWidth)
       ) {
         // process `handleHeight/handleWidth` props
-        return false;
+        return false
       }
 
-      return true;
+      return true
     },
     [handleWidth, handleHeight]
-  );
+  )
 
   const resizeCallback: ResizeObserverCallback = useCallback(
     (entries: ResizeObserverEntry[]) => {
-      if (!handleWidth && !handleHeight) return;
+      if (!handleWidth && !handleHeight) return
 
       if (skipResize.current) {
-        skipResize.current = false;
-        return;
+        skipResize.current = false
+        return
       }
 
-      entries.forEach(entry => {
-        const { width, height } = entry?.contentRect || {};
-        setSize(prevSize => {
-          if (!shouldSetSize(prevSize, { width, height })) return prevSize;
-          return { width, height };
-        });
-      });
+      entries.forEach((entry) => {
+        const { width, height } = entry?.contentRect || {}
+        setSize((prevSize) => {
+          if (!shouldSetSize(prevSize, { width, height })) return prevSize
+          return { width, height }
+        })
+      })
     },
     [handleWidth, handleHeight, skipResize, shouldSetSize]
-  );
+  )
 
-  const resizeHandler = useCallback(patchResizeCallback(resizeCallback, refreshMode, refreshRate, refreshOptions), [
-    resizeCallback,
-    refreshMode,
-    refreshRate,
-    refreshOptions
-  ]);
+  const resizeHandler = useCallback(
+    patchResizeCallback(resizeCallback, refreshMode, refreshRate, refreshOptions),
+    [resizeCallback, refreshMode, refreshRate, refreshOptions]
+  )
 
   // on refElement change
   useEffect(() => {
-    let resizeObserver: ResizeObserver | undefined;
+    let resizeObserver: ResizeObserver | undefined
     if (refElement) {
-      resizeObserver = new window.ResizeObserver(resizeHandler);
-      resizeObserver.observe(refElement, observerOptions);
-    } else {
-      if (size.width || size.height) {
-        setSize({ width: undefined, height: undefined });
-      }
+      resizeObserver = new window.ResizeObserver(resizeHandler)
+      resizeObserver.observe(refElement, observerOptions)
+    } else if (size.width || size.height) {
+      setSize({ width: undefined, height: undefined })
     }
 
     return () => {
-      resizeObserver?.disconnect?.();
-      (resizeHandler as DebouncedFunc<ResizeObserverCallback>).cancel?.();
-    };
-  }, [resizeHandler, refElement]);
+      resizeObserver?.disconnect?.()
+      ;(resizeHandler as DebouncedFunc<ResizeObserverCallback>).cancel?.()
+    }
+  }, [resizeHandler, refElement])
 
   useEffect(() => {
-    onResize?.(size.width, size.height);
-  }, [size]);
+    onResize?.(size.width, size.height)
+  }, [size])
 
-  return { ref: onRefChange, ...size };
+  return { ref: onRefChange, ...size }
 }
 
-export default useArchbaseResizeDetector;
+export default useArchbaseResizeDetector

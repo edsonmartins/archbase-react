@@ -1,17 +1,21 @@
+/* eslint-disable */
 import { generateCodeChallenge, generateRandomString } from './pkceUtils'
 import {
   TInternalConfig,
   TTokenResponse,
   TTokenRequest,
   TTokenRequestWithCodeAndVerifier,
-  TTokenRequestForRefresh,
+  TTokenRequestForRefresh
 } from './Types'
 import { postWithXForm } from './httpUtils'
 
 const codeVerifierStorageKey = 'PKCE_code_verifier'
 const stateStorageKey = 'ROCP_auth_state'
 
-export async function redirectToLogin(config: TInternalConfig, customState?: string): Promise<void> {
+export async function redirectToLogin(
+  config: TInternalConfig,
+  customState?: string
+): Promise<void> {
   // Crie e armazene uma string aleatória em sessionStorage, usada como 'code_verifier'
   const codeVerifier = generateRandomString(96)
   sessionStorage.setItem(codeVerifierStorageKey, codeVerifier)
@@ -25,7 +29,7 @@ export async function redirectToLogin(config: TInternalConfig, customState?: str
       redirect_uri: config.redirectUri,
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
-      ...config.extraAuthParameters,
+      ...config.extraAuthParameters
     })
 
     if (config.scope !== undefined) {
@@ -49,7 +53,10 @@ function isTokenResponse(body: any | TTokenResponse): body is TTokenResponse {
   return (body as TTokenResponse).access_token !== undefined
 }
 
-function postTokenRequest(tokenEndpoint: string, tokenRequest: TTokenRequest): Promise<TTokenResponse> {
+function postTokenRequest(
+  tokenEndpoint: string,
+  tokenRequest: TTokenRequest
+): Promise<TTokenResponse> {
   return postWithXForm(tokenEndpoint, tokenRequest).then((response) => {
     return response.json().then((body: TTokenResponse | any): TTokenResponse => {
       if (isTokenResponse(body)) {
@@ -75,7 +82,7 @@ export const fetchTokens = (config: TInternalConfig): Promise<TTokenResponse> =>
     throw Error("Parâmetro 'código' não encontrado na URL. \nA autenticação ocorreu?")
   }
   if (!codeVerifier) {
-    throw Error("Não é possível obter tokens sem o CodeVerifier. \nA autenticação ocorreu?")
+    throw Error('Não é possível obter tokens sem o CodeVerifier. \nA autenticação ocorreu?')
   }
 
   const tokenRequest: TTokenRequestWithCodeAndVerifier = {
@@ -86,7 +93,7 @@ export const fetchTokens = (config: TInternalConfig): Promise<TTokenResponse> =>
     redirect_uri: config.redirectUri,
     code_verifier: codeVerifier,
     ...config.extraTokenParameters,
-    ...config.extraAuthParams,
+    ...config.extraAuthParams
   }
   return postTokenRequest(config.tokenEndpoint, tokenRequest)
 }
@@ -102,7 +109,7 @@ export const fetchWithRefreshToken = (props: {
     scope: config.scope,
     client_id: config.clientId,
     redirect_uri: config.redirectUri,
-    ...config.extraTokenParameters,
+    ...config.extraTokenParameters
   }
   return postTokenRequest(config.tokenEndpoint, refreshRequest)
 }
@@ -121,7 +128,7 @@ export function redirectToLogout(
     client_id: config.clientId,
     post_logout_redirect_uri: config.logoutRedirect ?? config.redirectUri,
     ui_locales: window.navigator.languages.reduce((a: string, b: string) => a + ' ' + b),
-    ...config.extraLogoutParameters,
+    ...config.extraLogoutParameters
   })
   if (idToken) params.append('id_token_hint', idToken)
   if (state) params.append('state', state)

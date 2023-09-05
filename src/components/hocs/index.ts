@@ -1,2 +1,2 @@
-export {withArchbaseMantineThemeHOC} from "./withMantineThemeHOC"
-export {withArchbaseResizeDetector} from "./withArchbaseResizeDetector"
+export { withArchbaseMantineThemeHOC } from './withMantineThemeHOC'
+export { withArchbaseResizeDetector } from './withArchbaseResizeDetector'

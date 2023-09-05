@@ -25,7 +25,7 @@ import { ArchbaseList } from '@components/list';
 import { IconArrowDown } from '@tabler/icons-react';
 import { DatePickerInput, DateValue, DatesRangeValue, TimeInput } from '@mantine/dates';
 import { ArchbaseDateTimePickerRange, ArchbaseDateTimePickerEdit, ArchbaseSwitch } from '@components/editors';
-import '../../styles/querybuilder.scss';
+import './querybuilder.scss';
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
   id: string;
   currentFilter: ArchbaseQueryFilter;

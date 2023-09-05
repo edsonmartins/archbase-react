@@ -1,1 +1,1 @@
-export {ArchbaseObjectInspector} from "./ArchbaseObjectInspector"
+export { ArchbaseObjectInspector } from './ArchbaseObjectInspector'

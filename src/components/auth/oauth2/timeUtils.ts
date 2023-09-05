@@ -1,8 +1,10 @@
+/* eslint-disable */
 import { TTokenResponse } from './Types'
 export const FALLBACK_EXPIRE_TIME = 600 // 10minutes
 
 // Retorna o tempo da época (em segundos) para quando o token expirará
-export const epochAtSecondsFromNow = (secondsFromNow: number) => Math.round(Date.now() / 1000 + secondsFromNow)
+export const epochAtSecondsFromNow = (secondsFromNow: number) =>
+  Math.round(Date.now() / 1000 + secondsFromNow)
 
 /**
  * Verifique se o token de acesso expirou.
@@ -16,7 +18,7 @@ export function epochTimeIsPast(timestamp: number): boolean {
 
 const refreshExpireKeys = [
   'refresh_expires_in', // KeyCloak
-  'refresh_token_expires_in', // Azure AD
+  'refresh_token_expires_in' // Azure AD
 ] as const
 
 export function getRefreshExpiresIn(tokenExpiresIn: number, response: TTokenResponse): number {

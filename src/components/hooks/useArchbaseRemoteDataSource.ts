@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react'
-import type { ArchbaseRemoteApiService } from '../service'
-import type { Page } from '../service'
-
 import {
   ArchbaseDataSource,
   DataSourceEvent,
   DataSourceEventRefreshDataType,
   DataSourceOptions,
-  DataSourceEventNames,  
+  DataSourceEventNames
 } from '../datasource'
-import {
-  ArchbaseRemoteDataSource
-} from '../datasource/ArchbaseRemoteDataSource'
+import { ArchbaseRemoteDataSource } from '../datasource/ArchbaseRemoteDataSource'
 import { processErrorMessage } from '../core/exceptions'
+import { ArchbaseRemoteApiService, DefaultPage, Page } from '../service/ArchbaseRemoteApiService'
+import { ArchbaseStateValues } from '../template'
 
 export type UseArchbaseRemoteDataSourceProps<T, ID> = {
   name: string
   service: ArchbaseRemoteApiService<T, ID>
+  store?: ArchbaseStateValues
   filter?: string
   sort?: string[]
+  id?: ID
   loadOnStart?: boolean
   initialDataSource?: ArchbaseRemoteDataSource<T, ID> | undefined
   pageSize?: number
@@ -28,10 +27,10 @@ export type UseArchbaseRemoteDataSourceProps<T, ID> = {
   onError?: (error, originError) => void
   onDestroy?: (dataSource: ArchbaseRemoteDataSource<T, ID>) => void
   filterData?: (data: any) => Page<T>
-  findAll?<T, _ID>(page: number, size: number): Promise<Page<T>>
-  findAllWithSort?<T, _ID>(page: number, size: number, sort: string[]): Promise<Page<T>>
-  findAllWithFilter?<T, _ID>(filter: string, page: number, size: number): Promise<Page<T>>
-  findAllWithFilterAndSort?<T, _ID>(
+  findAll?<T, ID>(page: number, size: number): Promise<Page<T>>
+  findAllWithSort?<T, ID>(page: number, size: number, sort: string[]): Promise<Page<T>>
+  findAllWithFilter?<T, ID>(filter: string, page: number, size: number): Promise<Page<T>>
+  findAllWithFilterAndSort?<T, ID>(
     filter: string,
     page: number,
     size: number,
@@ -56,6 +55,7 @@ type UseArchbaseRemoteDataSourceState<T, ID> = {
   name: string
   filter?: string
   sort?: string[]
+  id?: ID
   currentPage?: number
   pageSize?: number
   loadDataCount: number
@@ -79,27 +79,55 @@ export function useArchbaseRemoteDataSource<T, ID>(
     initialDataSource,
     pageSize = 50,
     currentPage = 0,
-    loadOnStart = true
+    loadOnStart = true,
+    store,
+    id
   } = props
+  const existsDataSource = () => {
+    if (store && store.existsValue(name)) {
+      return true
+    }
+    if (initialDataSource) {
+      return true
+    }
+    return false
+  }
+  const buildDataSource = () => {
+    if (store && store.existsValue(name)) {
+      return store.values.get(name)
+    }
+    if (initialDataSource) {
+      return initialDataSource
+    }
+    return new ArchbaseRemoteDataSource<T, ID>(service, name, {
+      records: [],
+      grandTotalRecords: 0,
+      currentPage,
+      totalPages: 0,
+      pageSize
+    })
+  }
+  const getCurrentPage = () => {
+    if (store && store.existsValue(name)) {
+      return (store.values.get(name) as ArchbaseRemoteDataSource<T, ID>).getCurrentPage()
+    }
+    if (initialDataSource) {
+      return initialDataSource.getCurrentPage()
+    }
+    return 0
+  }
   const [internalState, setInternalState] = useState<UseArchbaseRemoteDataSourceState<T, ID>>({
-    dataSource:
-      initialDataSource ??
-      new ArchbaseRemoteDataSource<T, ID>(service, name, {
-        records: [],
-        grandTotalRecords: 0,
-        currentPage,
-        totalPages: 0,
-        pageSize
-      }),
+    dataSource: buildDataSource(),
     isLoading: false,
     isError: false,
     error: '',
     name,
     filter,
     sort,
-    currentPage,
+    id,
+    currentPage: getCurrentPage(),
     pageSize,
-    loadDataCount: initialDataSource ? 1 : 0
+    loadDataCount: existsDataSource() ? 1 : 0
   })
 
   const queryFn = async (
@@ -108,12 +136,20 @@ export function useArchbaseRemoteDataSource<T, ID>(
     pageSize: number,
     filter?: string,
     sort?: string[],
+    id?: ID,
     originFilter?: any,
     originSort?: any,
     originGlobalFilter?: any
   ): Promise<void> => {
     let result: Page<T>
-    if (findAllWithFilterAndSort && filter && sort && sort.length > 0) {
+    if (id) {
+      const value = await service.findOne(id)
+      if (value){
+        result = DefaultPage.createFromValues([value],1,0,0,0);
+      } else {
+        result = DefaultPage.createFromValues([],0,0,0,0);
+      }
+    } else if (findAllWithFilterAndSort && filter && sort && sort.length > 0) {
       result = await findAllWithFilterAndSort(filter, currentPage, pageSize, sort)
     } else if (findAllWithFilter && filter) {
       result = await findAllWithFilter(filter, currentPage, pageSize)
@@ -163,12 +199,16 @@ export function useArchbaseRemoteDataSource<T, ID>(
         pageSize,
         filter,
         sort,
+        id,
         isLoading: false,
         isError: false,
         error: '',
         loadDataCount: prev.loadDataCount + 1
       }
     })
+    if (store) {
+      store.setValue(name, internalState.dataSource)
+    }
     if (onLoadComplete) {
       onLoadComplete(internalState.dataSource)
     }
@@ -197,6 +237,7 @@ export function useArchbaseRemoteDataSource<T, ID>(
           options.pageSize,
           options.filter,
           options.sort,
+          internalState.id,
           options.originFilter,
           options.originSort,
           options.originGlobalFilter
@@ -250,7 +291,8 @@ export function useArchbaseRemoteDataSource<T, ID>(
           currentPage,
           pageSize,
           internalState.filter,
-          internalState.sort
+          internalState.sort,
+          internalState.id
         ).catch((err) => {
           const userError = processErrorMessage(err)
           setInternalState((prev) => ({
@@ -286,6 +328,7 @@ export function useArchbaseRemoteDataSource<T, ID>(
     internalState.name,
     internalState.sort,
     internalState.filter,
+    internalState.id,
     internalState.currentPage,
     internalState.pageSize
   ])

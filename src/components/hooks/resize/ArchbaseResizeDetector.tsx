@@ -6,227 +6,239 @@ import React, {
   ReactNode,
   ReactElement,
   MutableRefObject
-} from 'react';
-import { findDOMNode } from 'react-dom';
+} from 'react'
+import { findDOMNode } from 'react-dom'
 
-import { patchResizeCallback, isFunction, isSSR, isDOMElement } from './utils';
-import { ReactResizeDetectorDimensions, ArchbaseResizeDetectorProps, ChildFunctionProps } from './types';
+import { patchResizeCallback, isFunction, isSSR, isDOMElement } from './utils'
+import {
+  ReactResizeDetectorDimensions,
+  ArchbaseResizeDetectorProps,
+  ChildFunctionProps
+} from './types'
 
 class ArchbaseResizeDetector<ElementT extends HTMLElement = HTMLElement> extends PureComponent<
   ArchbaseResizeDetectorProps<ElementT>,
   ReactResizeDetectorDimensions
 > {
-  skipOnMount: boolean | undefined;
-  targetRef;
-  observableElement;
-  resizeHandler;
-  resizeObserver;
+  skipOnMount: boolean | undefined
+  targetRef
+  observableElement
+  resizeHandler
+  resizeObserver
   /**
    * To access the current size in the ResizeObserver without having to recreate it each time size updates.
    */
-  private readonly sizeRef: MutableRefObject<ReactResizeDetectorDimensions>;
+  private readonly sizeRef: MutableRefObject<ReactResizeDetectorDimensions>
 
   constructor(props: ArchbaseResizeDetectorProps<ElementT>) {
-    super(props);
+    super(props)
 
-    const { skipOnMount, refreshMode, refreshRate = 1000, refreshOptions } = props;
+    const { skipOnMount, refreshMode, refreshRate = 1000, refreshOptions } = props
 
     this.state = {
       width: undefined,
       height: undefined
-    };
+    }
     this.sizeRef = {
       current: this.state
-    };
-
-    this.skipOnMount = skipOnMount;
-    this.targetRef = createRef();
-    this.observableElement = null;
-
-    if (isSSR()) {
-      return;
     }
 
-    this.resizeHandler = patchResizeCallback(this.createResizeHandler, refreshMode, refreshRate, refreshOptions);
-    this.resizeObserver = new window.ResizeObserver(this.resizeHandler);
+    this.skipOnMount = skipOnMount
+    this.targetRef = createRef()
+    this.observableElement = null
+
+    if (isSSR()) {
+      return
+    }
+
+    this.resizeHandler = patchResizeCallback(
+      this.createResizeHandler,
+      refreshMode,
+      refreshRate,
+      refreshOptions
+    )
+    this.resizeObserver = new window.ResizeObserver(this.resizeHandler)
   }
 
   componentDidMount(): void {
-    this.attachObserver();
+    this.attachObserver()
   }
 
   componentDidUpdate(): void {
-    this.attachObserver();
-    this.sizeRef.current = this.state;
+    this.attachObserver()
+    this.sizeRef.current = this.state
   }
 
   componentWillUnmount(): void {
     if (isSSR()) {
-      return;
+      return
     }
-    this.observableElement = null;
-    this.resizeObserver.disconnect();
-    this.cancelHandler();
+    this.observableElement = null
+    this.resizeObserver.disconnect()
+    this.cancelHandler()
   }
 
   cancelHandler = (): void => {
     if (this.resizeHandler && this.resizeHandler.cancel) {
       // cancel debounced handler
-      this.resizeHandler.cancel();
-      this.resizeHandler = null;
+      this.resizeHandler.cancel()
+      this.resizeHandler = null
     }
-  };
+  }
 
   attachObserver = (): void => {
-    const { targetRef, observerOptions } = this.props;
+    const { targetRef, observerOptions } = this.props
 
     if (isSSR()) {
-      return;
+      return
     }
 
     if (targetRef && targetRef.current) {
-      this.targetRef.current = targetRef.current;
+      this.targetRef.current = targetRef.current
     }
 
-    const element = this.getElement();
+    const element = this.getElement()
     if (!element) {
       // can't find element to observe
-      return;
+      return
     }
 
     if (this.observableElement && this.observableElement === element) {
       // element is already observed
-      return;
+      return
     }
 
-    this.observableElement = element;
-    this.resizeObserver.observe(element, observerOptions);
-  };
+    this.observableElement = element
+    this.resizeObserver.observe(element, observerOptions)
+  }
 
   getElement = (): Element | Text | null => {
-    const { querySelector, targetDomEl } = this.props;
+    const { querySelector, targetDomEl } = this.props
 
-    if (isSSR()) return null;
+    if (isSSR()) return null
 
     // in case we pass a querySelector
-    if (querySelector) return document.querySelector(querySelector);
+    if (querySelector) return document.querySelector(querySelector)
     // in case we pass a DOM element
-    if (targetDomEl && isDOMElement(targetDomEl)) return targetDomEl;
+    if (targetDomEl && isDOMElement(targetDomEl)) return targetDomEl
     // in case we pass a React ref using React.createRef()
-    if (this.targetRef && isDOMElement(this.targetRef.current)) return this.targetRef.current;
+    if (this.targetRef && isDOMElement(this.targetRef.current)) return this.targetRef.current
 
     // the worse case when we don't receive any information from the parent and the library doesn't add any wrappers
     // we have to use a deprecated `findDOMNode` method in order to find a DOM element to attach to
-    let _this : any = this;
-    const currentElement = findDOMNode(_this);
+    const tmpThis: any = this
+    const currentElement = findDOMNode(tmpThis)
 
-    if (!currentElement) return null;
+    if (!currentElement) return null
 
-    const renderType = this.getRenderType();
+    const renderType = this.getRenderType()
     switch (renderType) {
       case 'renderProp':
-        return currentElement;
+        return currentElement
       case 'childFunction':
-        return currentElement;
+        return currentElement
       case 'child':
-        return currentElement;
+        return currentElement
       case 'childArray':
-        return currentElement;
+        return currentElement
       default:
-        return currentElement.parentElement;
+        return currentElement.parentElement
     }
-  };
+  }
 
   createResizeHandler: ResizeObserverCallback = (entries: ResizeObserverEntry[]): void => {
-    const { handleWidth = true, handleHeight = true, onResize } = this.props;
+    const { handleWidth = true, handleHeight = true, onResize } = this.props
 
-    if (!handleWidth && !handleHeight) return;
+    if (!handleWidth && !handleHeight) return
 
     const notifyResize = ({ width, height }: ReactResizeDetectorDimensions): void => {
       if (this.state.width === width && this.state.height === height) {
         // skip if dimensions haven't changed
-        return;
+        return
       }
 
-      if ((this.state.width === width && !handleHeight) || (this.state.height === height && !handleWidth)) {
+      if (
+        (this.state.width === width && !handleHeight) ||
+        (this.state.height === height && !handleWidth)
+      ) {
         // process `handleHeight/handleWidth` props
-        return;
+        return
       }
 
-      onResize?.(width, height);
-      this.setState({ width, height });
-    };
+      onResize?.(width, height)
+      this.setState({ width, height })
+    }
 
-    entries.forEach(entry => {
-      const { width, height } = (entry && entry.contentRect) || {};
+    entries.forEach((entry) => {
+      const { width, height } = (entry && entry.contentRect) || {}
 
-      const shouldSetSize = !this.skipOnMount && !isSSR();
+      const shouldSetSize = !this.skipOnMount && !isSSR()
       if (shouldSetSize) {
-        notifyResize({ width, height });
+        notifyResize({ width, height })
       }
 
-      this.skipOnMount = false;
-    });
-  };
+      this.skipOnMount = false
+    })
+  }
 
   getRenderType = (): string => {
-    const { render, children } = this.props;
+    const { render, children } = this.props
     if (isFunction(render)) {
       // DEPRECATED. Use `Child Function Pattern` instead
-      return 'renderProp';
+      return 'renderProp'
     }
 
     if (isFunction(children)) {
-      return 'childFunction';
+      return 'childFunction'
     }
 
     if (isValidElement(children)) {
-      return 'child';
+      return 'child'
     }
 
     if (Array.isArray(children)) {
       // DEPRECATED. Wrap children with a single parent
-      return 'childArray';
+      return 'childArray'
     }
 
     // DEPRECATED. Use `Child Function Pattern` instead
-    return 'parent';
-  };
+    return 'parent'
+  }
 
   render() {
-    const { render, children, nodeType: WrapperTag = 'div' } = this.props;
-    const { width, height } = this.state;
+    const { render, children, nodeType: WrapperTag = 'div' } = this.props
+    const { width, height } = this.state
 
-    const childProps = { width, height, targetRef: this.targetRef };
-    const renderType = this.getRenderType();
+    const childProps = { width, height, targetRef: this.targetRef }
+    const renderType = this.getRenderType()
 
     switch (renderType) {
       case 'renderProp':
-        return render?.(childProps);
+        return render?.(childProps)
       case 'childFunction': {
-        const childFunction = children as (props: ChildFunctionProps<ElementT>) => ReactNode;
-        return childFunction?.(childProps);
+        const childFunction = children as (props: ChildFunctionProps<ElementT>) => ReactNode
+        return childFunction?.(childProps)
       }
       case 'child': {
         // @TODO bug prone logic
-        const child = children as ReactElement;
+        const child = children as ReactElement
         if (child.type && typeof child.type === 'string') {
           // child is a native DOM elements such as div, span etc
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { targetRef, ...nativeProps } = childProps;
-          return cloneElement(child, nativeProps);
+          const { targetRef, ...nativeProps } = childProps
+          return cloneElement(child, nativeProps)
         }
         // class or functional component otherwise
-        return cloneElement(child, childProps);
+        return cloneElement(child, childProps)
       }
       case 'childArray': {
-        const childArray = children as ReactElement[];
-        return childArray.map(el => !!el && cloneElement(el, childProps));
+        const childArray = children as ReactElement[]
+        return childArray.map((el) => !!el && cloneElement(el, childProps))
       }
       default:
-        return <WrapperTag />;
+        return <WrapperTag />
     }
   }
 }
 
-export default ArchbaseResizeDetector;
+export default ArchbaseResizeDetector

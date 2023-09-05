@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { TTokenRequest } from './Types'
 import { FetchError } from './errors'
 
@@ -13,7 +14,7 @@ export async function postWithXForm(url: string, request: TTokenRequest): Promis
   return fetch(url, {
     method: 'POST',
     body: buildUrlEncodedRequest(request),
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   }).then(async (response: Response) => {
     if (!response.ok) {
       const responseBody = await response.text()

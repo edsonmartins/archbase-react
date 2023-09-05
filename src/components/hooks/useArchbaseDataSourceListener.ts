@@ -30,8 +30,8 @@ export const useArchbaseDataSourceListener = <T, ID>(
       registerListeners(props.dataSource)
     }
     return () => {
-      if (props.dataSource){
-      unRegisterListeners(props.dataSource)
+      if (props.dataSource) {
+        unRegisterListeners(props.dataSource)
       }
     }
   }, [props.dataSource!.uuid])

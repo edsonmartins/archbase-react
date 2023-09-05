@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ReactNode } from 'react'
 
 interface TTokenRqBase {

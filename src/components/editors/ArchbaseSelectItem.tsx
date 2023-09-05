@@ -1,14 +1,14 @@
 export interface ArchbaseSelectItemProps<T> {
   /** Texto a ser apresentado no select */
-  label: string;
+  label: string
   /** Cor de fundo do item */
-  value?: T;
+  value?: T
   /** Indicador se o item está desabilitado */
-  disabled: boolean;
+  disabled: boolean
 }
 
 export function ArchbaseSelectItem<T>(_props: ArchbaseSelectItemProps<T>) {
-  return null;
+  return null
 }
 
-ArchbaseSelectItem.displayName = 'ArchbaseSelectItem';
+ArchbaseSelectItem.displayName = 'ArchbaseSelectItem'

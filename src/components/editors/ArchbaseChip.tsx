@@ -1,47 +1,51 @@
-import { Chip, MantineNumberSize, MantineSize } from '@mantine/core';
-import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { useState, useCallback, useRef } from 'react';
+import { Chip, MantineNumberSize, MantineSize } from '@mantine/core'
+import type { CSSProperties, FocusEventHandler } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import {
+  useArchbaseDidMount,
+  useArchbaseDidUpdate,
+  useArchbaseWillUnmount
+} from '../hooks/lifecycle'
 
-import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
-import { DataSourceEventNames } from '../datasource';
+import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
+import { DataSourceEventNames } from '../datasource'
 
 export interface ArchbaseChipProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do chip */
-  dataSource?: ArchbaseDataSource<T, ID>;
+  dataSource?: ArchbaseDataSource<T, ID>
   /** Campo onde deverá ser atribuido o valor do chip na fonte de dados */
-  dataField?: string;
+  dataField?: string
   /** Indicador se o chip está desabilitado */
-  disabled?: boolean;
+  disabled?: boolean
   /** Indicador se o chip é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
-  readOnly?: boolean;
+  readOnly?: boolean
   /** Indicador se o preenchimento do chip é obrigatório */
-  required?: boolean;
+  required?: boolean
   /** Estilo do chip */
-  style?: CSSProperties;
+  style?: CSSProperties
   /** Chave de theme.radius ou qualquer valor CSS válido para definir border-radius, theme.defaultRadius por padrão */
-  radius?: MantineNumberSize;
+  radius?: MantineNumberSize
   /** Valor quando o chip estiver true */
-  trueValue?: any;
+  trueValue?: any
   /** Valor quando o chip estiver false */
-  falseValue?: any;
+  falseValue?: any
   /** Indicador se o chip está marcado */
-  isChecked?: boolean;
+  isChecked?: boolean
   /** Título do chip */
-  label?: string;
+  label?: string
   /** Largura do chip */
-  width?: MantineNumberSize;
+  width?: MantineNumberSize
   /** Valor de tamanho predefinido */
-  size?: MantineSize;
+  size?: MantineSize
   /** Evento quando o foco sai do chip */
-  onFocusExit?: FocusEventHandler<T> | undefined;
+  onFocusExit?: FocusEventHandler<T> | undefined
   /** Evento quando o chip recebe o foco */
-  onFocusEnter?: FocusEventHandler<T> | undefined;
+  onFocusEnter?: FocusEventHandler<T> | undefined
   /** Evento quando o valor do chip é alterado */
-  onChangeValue?: (value: any) => void;
+  onChangeValue?: (value: any) => void
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement> | undefined;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined
 }
 
 export function ArchbaseChip<T, ID>({
@@ -61,24 +65,24 @@ export function ArchbaseChip<T, ID>({
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
-  innerRef,
+  innerRef
 }: ArchbaseChipProps<T, ID>) {
-  const [checked, setChecked] = useState<boolean>(isChecked ? true : false);
-  const innerComponentRef = innerRef || useRef<any>();
+  const [checked, setChecked] = useState<boolean>(isChecked ? true : false)
+  const innerComponentRef = innerRef || useRef<any>()
 
   const loadDataSourceFieldValue = () => {
-    let currentChecked = checked;
+    let currentChecked = checked
     if (dataSource && dataField) {
-      const fieldValue = dataSource.getFieldValue(dataField);
+      const fieldValue = dataSource.getFieldValue(dataField)
       if (fieldValue !== null && fieldValue !== undefined) {
-        currentChecked = fieldValue === trueValue;
+        currentChecked = fieldValue === trueValue
       }
     }
 
-    setChecked(currentChecked);
-  };
+    setChecked(currentChecked)
+  }
 
-  const fieldChangedListener = useCallback(() => {}, []);
+  const fieldChangedListener = useCallback(() => {}, [])
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
@@ -89,64 +93,68 @@ export function ArchbaseChip<T, ID>({
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel
       ) {
-        loadDataSourceFieldValue();
+        loadDataSourceFieldValue()
       }
     }
-  }, []);
+  }, [])
 
   useArchbaseDidMount(() => {
-    loadDataSourceFieldValue();
+    loadDataSourceFieldValue()
     if (dataSource && dataField) {
-      dataSource.addListener(dataSourceEvent);
-      dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+      dataSource.addListener(dataSourceEvent)
+      dataSource.addFieldChangeListener(dataField, fieldChangedListener)
     }
-  });
+  })
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent);
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+      dataSource.removeListener(dataSourceEvent)
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
     }
-  });
+  })
 
   useArchbaseDidUpdate(() => {
-    loadDataSourceFieldValue();
-  }, []);
+    loadDataSourceFieldValue()
+  }, [])
 
   const handleChange = (changedChecked) => {
-    const resultValue = changedChecked ? trueValue : falseValue;
+    const resultValue = changedChecked ? trueValue : falseValue
 
-    setChecked(changedChecked);
+    setChecked(changedChecked)
 
-    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== resultValue) {
-      dataSource.setFieldValue(dataField, resultValue);
+    if (
+      dataSource &&
+      !dataSource.isBrowsing() &&
+      dataField &&
+      dataSource.getFieldValue(dataField) !== resultValue
+    ) {
+      dataSource.setFieldValue(dataField, resultValue)
     }
 
     if (onChangeValue) {
-      onChangeValue(resultValue);
+      onChangeValue(resultValue)
     }
-  };
+  }
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {
-      onFocusExit(event);
+      onFocusExit(event)
     }
-  };
+  }
 
   const handleOnFocusEnter = (event) => {
     if (onFocusEnter) {
-      onFocusEnter(event);
+      onFocusEnter(event)
     }
-  };
+  }
 
   const isReadOnly = () => {
-    let _readOnly = readOnly;
+    let tmpRreadOnly = readOnly
     if (dataSource && !readOnly) {
-      _readOnly = dataSource.isBrowsing();
+      tmpRreadOnly = dataSource.isBrowsing()
     }
-
-    return _readOnly;
-  };
+    return tmpRreadOnly
+  }
 
   return (
     <Chip
@@ -165,5 +173,5 @@ export function ArchbaseChip<T, ID>({
     >
       {label}
     </Chip>
-  );
+  )
 }

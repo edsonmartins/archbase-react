@@ -1,64 +1,64 @@
-import { ReactNode, RefObject } from 'react';
-import type { MutableRefObject } from 'react';
+import { ReactNode, RefObject } from 'react'
+import type { MutableRefObject } from 'react'
 
 export type ReactResizeDetectorDimensions = {
-  height?: number;
-  width?: number;
-};
+  height?: number
+  width?: number
+}
 
 export type ChildFunctionProps<ElementT extends HTMLElement> = ReactResizeDetectorDimensions & {
-  targetRef?: RefObject<ElementT>;
-};
+  targetRef?: RefObject<ElementT>
+}
 
-export type ResfreshModeType = 'throttle' | 'debounce';
-export type ResfreshOptionsType = { leading?: boolean; trailing?: boolean };
-export type OnResizeCallback = (width?: number, height?: number) => void;
+export type ResfreshModeType = 'throttle' | 'debounce'
+export type ResfreshOptionsType = { leading?: boolean; trailing?: boolean }
+export type OnResizeCallback = (width?: number, height?: number) => void
 
 export type Props = {
   /**
    * Function that will be invoked with observable element's width and height.
    * Default: undefined
    */
-  onResize?: OnResizeCallback;
+  onResize?: OnResizeCallback
   /**
    * Trigger update on height change.
    * Default: true
    */
-  handleHeight?: boolean;
+  handleHeight?: boolean
   /**
    * Trigger onResize on width change.
    * Default: true
    */
-  handleWidth?: boolean;
+  handleWidth?: boolean
   /**
    * Do not trigger update when a component mounts.
    * Default: false
    */
-  skipOnMount?: boolean;
+  skipOnMount?: boolean
   /**
    * Changes the update strategy. Possible values: "throttle" and "debounce".
    * See `lodash` docs for more information https://lodash.com/docs/
    * undefined - callback will be fired for every frame.
    * Default: undefined
    */
-  refreshMode?: ResfreshModeType;
+  refreshMode?: ResfreshModeType
   /**
    * Set the timeout/interval for `refreshMode` strategy
    * Default: undefined
    */
-  refreshRate?: number;
+  refreshRate?: number
   /**
    * Pass additional params to `refreshMode` according to lodash docs
    * Default: undefined
    */
-  refreshOptions?: ResfreshOptionsType;
+  refreshOptions?: ResfreshOptionsType
   /**
    * These options will be used as a second parameter of `resizeObserver.observe` method
    * @see https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver/observe
    * Default: undefined
    */
-  observerOptions?: ResizeObserverOptions;
-};
+  observerOptions?: ResizeObserverOptions
+}
 
 export type ArchbaseResizeDetectorProps<ElementT extends HTMLElement> = Props & {
   /**
@@ -69,7 +69,7 @@ export type ArchbaseResizeDetectorProps<ElementT extends HTMLElement> = Props & 
    * @deprecated since version 5.0.0. It will be removed in version 7.0.0.
    * Use targetRef instead
    */
-  querySelector?: string;
+  querySelector?: string
   /**
    * Valid only for a callback-pattern.
    * Ignored for other render types.
@@ -80,7 +80,7 @@ export type ArchbaseResizeDetectorProps<ElementT extends HTMLElement> = Props & 
    * @deprecated since version 5.0.0. It will be removed in version 7.0.0.
    * Use targetRef instead
    */
-  nodeType?: keyof JSX.IntrinsicElements; // will be passed to React.createElement()
+  nodeType?: keyof JSX.IntrinsicElements // will be passed to React.createElement()
   /**
    * A DOM element to observe.
    * By default it's a parent element in relation to the ReactResizeDetector component.
@@ -90,29 +90,29 @@ export type ArchbaseResizeDetectorProps<ElementT extends HTMLElement> = Props & 
    * @deprecated since version 5.0.0. It will be removed in version 6.0.0.
    * Use targetRef instead
    */
-  targetDomEl?: ElementT;
+  targetDomEl?: ElementT
   /**
    * A React reference of the element to observe.
    * Pass a reference to the element you want to attach resize handlers to.
    * It must be an instance of React.useRef or React.createRef functions
    * Default: undefined
    */
-  targetRef?: RefObject<ElementT>;
+  targetRef?: RefObject<ElementT>
 
-  render?: (props: ReactResizeDetectorDimensions) => ReactNode;
+  render?: (props: ReactResizeDetectorDimensions) => ReactNode
 
-  children?: ReactNode | ((props: ChildFunctionProps<ElementT>) => ReactNode);
-};
+  children?: ReactNode | ((props: ChildFunctionProps<ElementT>) => ReactNode)
+}
 
 export type OnRefChangeType<T = any> = {
-  (node: T | null): void;
-  current?: T | null;
-};
+  (node: T | null): void
+  current?: T | null
+}
 
 export interface UseArchbaseResizeDetectorReturn<T> extends ReactResizeDetectorDimensions {
-  ref: OnRefChangeType<T>;
+  ref: OnRefChangeType<T>
 }
 
 export interface useArchbaseResizeDetectorProps<T extends HTMLElement> extends Props {
-  targetRef?: MutableRefObject<T | null>;
+  targetRef?: MutableRefObject<T | null>
 }

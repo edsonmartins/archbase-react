@@ -1,3 +1,4 @@
+/* eslint-disable */
 export class FetchError extends Error {
   status: number
   statusText: string

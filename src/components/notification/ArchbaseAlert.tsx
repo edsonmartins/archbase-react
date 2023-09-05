@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react'
 import {
   Alert,
   DefaultProps,
@@ -6,8 +7,6 @@ import {
   Variants,
   useComponentDefaultProps
 } from '@mantine/core'
-import React from 'react'
-import { useEffect, useState } from 'react'
 
 export interface ArchbaseAlertProps extends DefaultProps {
   title?: React.ReactNode
@@ -35,21 +34,17 @@ export function ArchbaseAlert(props: ArchbaseAlertProps) {
     color,
     radius,
     withCloseButton,
-    //withBorder,
     title,
     icon,
     children,
     onClose,
     classNames,
-    //styles,
     unstyled,
     variant,
-    //backgroundColor,
     titleColor,
-    autoClose = 0,
-    //...others
+    autoClose = 0
   } = useComponentDefaultProps('ArchbaseAlert', defaultProps, props)
-  const [started, _setStarted] = useState(false)
+  const [started, ] = useState(false)
 
   useEffect(() => {
     if (autoClose > 0 && !started) {

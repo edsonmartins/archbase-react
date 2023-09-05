@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export function useAsyncFunction<T>(
   asyncFunction: () => Promise<T>,
@@ -8,16 +8,16 @@ export function useAsyncFunction<T>(
     value: defaultValue,
     error: null,
     isPending: true
-  });
+  })
 
   React.useEffect(() => {
     asyncFunction()
-      .then(value => setState({ value, error: null, isPending: false }))
-      .catch(error =>
+      .then((value) => setState({ value, error: null, isPending: false }))
+      .catch((error) =>
         setState({ value: defaultValue, error: error.toString(), isPending: false })
-      );
-  }, [asyncFunction, defaultValue]);
+      )
+  }, [asyncFunction, defaultValue])
 
-  const { value, error, isPending } = state;
-  return [value, error, isPending];
+  const { value, error, isPending } = state
+  return [value, error, isPending]
 }

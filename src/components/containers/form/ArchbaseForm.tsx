@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react'
 
 export interface ArchbaseFormProps {
-    children: React.ReactNode;
+  children: React.ReactNode
 }
 
-export function ArchbaseForm({children}: ArchbaseFormProps) {
-    return <form>{children}</form>
+export function ArchbaseForm({ children }: ArchbaseFormProps) {
+  return <form>{children}</form>
 }

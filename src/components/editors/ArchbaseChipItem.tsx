@@ -1,20 +1,20 @@
-import { CSSProperties } from 'react';
+import { CSSProperties } from 'react'
 
 export interface ArchbaseChipItemProps<T> {
   /** Texto a ser apresentado no select */
-  label: string;
+  label: string
   /** Cor de fundo do item */
-  value?: T;
+  value?: T
   /** Controla a aparência do chip, sendo padrão "filled" para dark theme e "outline" para light theme. ("outline" | "light" | "filled")*/
-  variant?: 'outline' | 'light' | 'filled';
+  variant?: 'outline' | 'light' | 'filled'
   /** Tipo do chip */
-  type?: 'checkbox' | 'radio';
+  type?: 'checkbox' | 'radio'
   /** Estilo do chip */
-  style?: CSSProperties;
+  style?: CSSProperties
 }
 
 export function ArchbaseChipItem<T>(_props: ArchbaseChipItemProps<T>) {
-  return null;
+  return null
 }
 
-ArchbaseChipItem.displayName = 'ArchbaseChipItem';
+ArchbaseChipItem.displayName = 'ArchbaseChipItem'

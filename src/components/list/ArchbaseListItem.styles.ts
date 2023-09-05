@@ -1,12 +1,12 @@
-import { createStyles, getStylesRef, getSize } from '@mantine/styles';
-import type { ArchbaseListStylesParams } from './ArchbaseList.styles';
+import { createStyles, getStylesRef, getSize } from '@mantine/styles'
+import type { ArchbaseListStylesParams } from './ArchbaseList.styles'
 
 export default createStyles((theme, { spacing, center }: ArchbaseListStylesParams) => ({
   itemWrapper: {
     ref: getStylesRef('itemWrapper'),
     display: 'inline-flex',
     flexDirection: 'column',
-    whiteSpace: 'normal',
+    whiteSpace: 'normal'
   },
 
   item: {
@@ -14,7 +14,7 @@ export default createStyles((theme, { spacing, center }: ArchbaseListStylesParam
     lineHeight: center ? 1 : theme.lineHeight,
 
     '&:not(:first-of-type)': {
-      marginTop: getSize({ size: spacing, sizes: theme.spacing }),
+      marginTop: getSize({ size: spacing, sizes: theme.spacing })
     },
 
     '&[data-with-icon]': {
@@ -23,14 +23,14 @@ export default createStyles((theme, { spacing, center }: ArchbaseListStylesParam
       [`& .${getStylesRef('itemWrapper')}`]: {
         display: 'inline-flex',
         alignItems: center ? 'center' : 'flex-start',
-        flexDirection: 'row',
-      },
-    },
+        flexDirection: 'row'
+      }
+    }
   },
 
   itemIcon: {
     display: 'inline-block',
     verticalAlign: 'middle',
-    marginRight: theme.spacing.sm,
-  },
-}));
+    marginRight: theme.spacing.sm
+  }
+}))

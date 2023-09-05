@@ -17,7 +17,7 @@ import {
   PopoverProps,
   Popover,
   CloseButton,
-  createStyles,
+  createStyles
 } from '@mantine/core'
 import { useUncontrolled, useDidUpdate } from '@mantine/hooks'
 import { IMaskInput } from 'react-imask'
@@ -35,7 +35,6 @@ import {
   useDatesContext
 } from '@mantine/dates'
 import type { ArchbaseDataSource } from '../datasource'
-
 
 const ARCHBASE_DATETIME_PICKER_EDIT = 'ArchbaseDateTimePickerEdit'
 
@@ -433,15 +432,12 @@ export const ArchbaseDateTimePickerEdit = forwardRef<
     }
   }
 
-  
-
   const handleDateChange = (date: Date) => {
     setValue(assignTime(_value, date))
     timeInputRef.current?.focus()
   }
 
   const handleAccept = (_maskValue: string, maskRef) => {
-    console.log(maskRef.masked.rawInputValue)
     if (maskRef.masked.rawInputValue === '' && _allowDeselect) {
       setValue(null)
       setDate(null)
@@ -513,7 +509,10 @@ export const ArchbaseDateTimePickerEdit = forwardRef<
           {...popoverProps}
         >
           <Popover.Target>
-            <Input.Wrapper required={props.required} __staticSelector={ARCHBASE_DATETIME_PICKER_EDIT}>
+            <Input.Wrapper
+              required={props.required}
+              __staticSelector={ARCHBASE_DATETIME_PICKER_EDIT}
+            >
               <Input<any>
                 data-dates-input
                 data-read-only={readOnly || undefined}
@@ -577,6 +576,5 @@ export const ArchbaseDateTimePickerEdit = forwardRef<
     </>
   )
 })
-
 
 ArchbaseDateTimePickerEdit.displayName = ARCHBASE_DATETIME_PICKER_EDIT

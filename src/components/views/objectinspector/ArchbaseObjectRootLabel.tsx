@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
-import { ObjectName } from './object/ObjectName';
-import { ArchbaseObjectPreview } from './ArchbaseObjectPreview';
+import React, { FC } from 'react'
+import { ObjectName } from './object/ObjectName'
+import { ArchbaseObjectPreview } from './ArchbaseObjectPreview'
 
 export const ArchbaseObjectRootLabel: FC<any> = ({ name, data }) => {
   if (typeof name === 'string') {
@@ -10,8 +10,8 @@ export const ArchbaseObjectRootLabel: FC<any> = ({ name, data }) => {
         <span>: </span>
         <ArchbaseObjectPreview data={data} />
       </span>
-    );
+    )
   } else {
-    return <ArchbaseObjectPreview data={data} />;
+    return <ArchbaseObjectPreview data={data} />
   }
-};
+}

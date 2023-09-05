@@ -1,102 +1,111 @@
-import React, { ReactNode, useMemo, useRef, useState } from 'react';
-import type { ArchbaseDataSource } from '../datasource';
-import { uniqueId } from 'lodash';
+import React, { CSSProperties, ReactNode, useMemo, useRef, useState } from 'react'
+import type { ArchbaseDataSource } from '../datasource'
+import { uniqueId } from 'lodash'
 import {
   ArchbaseQueryBuilder,
   ArchbaseQueryFilter,
   ArchbaseQueryFilterDelegator,
   ArchbaseQueryFilterState,
   FilterOptions,
-  getDefaultEmptyFilter,
-} from '@components/querybuilder';
-import { ArchbaseAlert } from '@components/notification';
-import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
-import { t } from 'i18next';
-import useComponentSize from '@rehooks/component-size';
-import { Box, Button, Flex, Grid, MantineNumberSize, Pagination, Paper, ScrollArea } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
-import { IconTrash } from '@tabler/icons-react';
+  getDefaultEmptyFilter
+} from '../querybuilder'
+import { ArchbaseAlert } from '../notification'
+import { IconBug, IconEdit, IconEye } from '@tabler/icons-react'
+import { t } from 'i18next'
+import useComponentSize from '@rehooks/component-size'
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  MantineNumberSize,
+  Pagination,
+  Paper,
+  ScrollArea,
+  Variants
+} from '@mantine/core'
+import { IconPlus } from '@tabler/icons-react'
+import { IconTrash } from '@tabler/icons-react'
 import {
   ArchbaseMasonry,
   ArchbaseMasonryResponsive,
   ComponentDefinition,
-  ArchbaseMasonryProvider,
-} from '@components/masonry';
+  ArchbaseMasonryProvider
+} from '../masonry'
+import { useArchbaseAppContext } from '../core'
 
 export interface UserActionsOptions {
-  visible?: boolean;
-  labelAdd?: string;
-  labelEdit?: string;
-  labelRemove?: string;
-  labelView?: string;
-  allowAdd?: boolean;
-  allowEdit?: boolean;
-  allowView?: boolean;
-  allowRemove?: boolean;
-  onAddExecute?: () => void;
-  onEditExecute?: () => void;
-  onRemoveExecute?: () => void;
-  onView?: () => void;
-  customUserActions?: ReactNode | undefined;
-  positionCustomUserActions?: 'before' | 'after';
+  visible?: boolean
+  labelAdd?: string | undefined | null
+  labelEdit?: string | undefined | null
+  labelRemove?: string | undefined | null
+  labelView?: string | undefined | null
+  allowAdd?: boolean
+  allowEdit?: boolean
+  allowView?: boolean
+  allowRemove?: boolean
+  onAddExecute?: () => void
+  onEditExecute?: () => void
+  onRemoveExecute?: () => void
+  onView?: () => void
+  customUserActions?: ReactNode | undefined
+  positionCustomUserActions?: 'before' | 'after'
 }
 
 const defaultUserActions: UserActionsOptions = {
   visible: true,
-  labelAdd: t('Add'),
-  labelEdit: t('Edit'),
-  labelRemove: t('Remove'),
-  labelView: t('View'),
   allowAdd: true,
   allowEdit: true,
   allowView: true,
   allowRemove: true,
-  positionCustomUserActions: 'after',
-};
+  positionCustomUserActions: 'after'
+}
 
 export interface UserRowActionsOptions<T> {
-  actions?: any;
-  onAddRow?: (row: T) => void;
-  onEditRow?: (row: T) => void;
-  onRemoveRow?: (row: T) => void;
-  onViewRow?: (row: T) => void;
+  actions?: any
+  onAddRow?: (row: T) => void
+  onEditRow?: (row: T) => void
+  onRemoveRow?: (row: T) => void
+  onViewRow?: (row: T) => void
 }
 
 export interface ArchbaseMasonryTemplateProps<T, ID> {
-  title: string;
-  dataSource: ArchbaseDataSource<T, ID>;
-  dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined;
-  filterOptions: FilterOptions;
-  pageSize?: number;
-  filterFields: ReactNode | undefined;
-  filterPersistenceDelegator: ArchbaseQueryFilterDelegator;
-  userActions?: UserActionsOptions;
+  title: string
+  dataSource: ArchbaseDataSource<T, ID>
+  dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined
+  filterOptions: FilterOptions
+  pageSize?: number
+  filterFields: ReactNode | undefined
+  filterPersistenceDelegator: ArchbaseQueryFilterDelegator
+  userActions?: UserActionsOptions
+  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement> | undefined;
-  isLoading?: boolean;
-  isError?: boolean;
-  error?: string | undefined;
-  clearError?: () => void;
-  width?: number | string | undefined;
-  height?: number | string | undefined;
-  withBorder?: boolean;
-  withPagination?: boolean;
-  radius?: MantineNumberSize;
-  columnsCountBreakPoints?: Record<number, number>;
-  columnsCount?: number;
-  gutter?: string;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined
+  isLoading?: boolean
+  isError?: boolean
+  error?: string | undefined
+  clearError?: () => void
+  width?: number | string | undefined
+  height?: number | string | undefined
+  withBorder?: boolean
+  withPagination?: boolean
+  radius?: MantineNumberSize
+  columnsCountBreakPoints?: Record<number, number>
+  columnsCount?: number
+  gutter?: string
   /** Definições do componente customizado a ser renderizado para um Item da lista */
-  component?: ComponentDefinition;
-  id?: string;
-  activeIndex?: number;
+  component?: ComponentDefinition
+  id?: string
+  activeIndex?: number
   /** Cor de fundo do item ativo */
-  activeBackgroundColor?: string;
+  activeBackgroundColor?: string
   /** Cor do item ativo */
-  activeColor?: string;
+  activeColor?: string
   /** Evento gerado quando o mouse está sobre um item */
-  onItemEnter?: (event: React.MouseEvent, data: any) => void;
+  onItemEnter?: (event: React.MouseEvent, data: any) => void
   /** Evento gerado quando o mouse sai de um item */
-  onItemLeave?: (event: React.MouseEvent, data: any) => void;
+  onItemLeave?: (event: React.MouseEvent, data: any) => void
+  style?: CSSProperties;
 }
 
 export function ArchbaseMasonryTemplate<T extends object, ID>({
@@ -127,24 +136,25 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
   activeColor,
   onItemEnter,
   onItemLeave,
-  id = uniqueId('masonry'),
+  style,
+  variant,
+  id = uniqueId('masonry')
 }: ArchbaseMasonryTemplateProps<T, ID>) {
-  const [idMasonry] = useState(id);
-  const innerComponentRef = innerRef || useRef<any>();
-  const filterRef = useRef<any>();
+  const appContext = useArchbaseAppContext();
+  const [idMasonry] = useState(id)
+  const innerComponentRef = innerRef || useRef<any>()
+  const filterRef = useRef<any>()
   const [activeIndexValue, setActiveIndexValue] = useState(
-    activeIndex ? activeIndex : dataSource && dataSource.getTotalRecords() > 0 ? 0 : -1,
-  );
-  let size = useComponentSize(innerComponentRef);
+    activeIndex ? activeIndex : dataSource && dataSource.getTotalRecords() > 0 ? 0 : -1
+  )
+  let size = useComponentSize(innerComponentRef)
   const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
-    currentFilter: getDefaultEmptyFilter(),
     activeFilterIndex: -1,
-    expandedFilter: false,
-  });
+    expandedFilter: false
+  })
 
   const userActionsBuilded: ReactNode = useMemo(() => {
-    const userActionsEnd = { ...defaultUserActions, ...userActions };
-
+    const userActionsEnd = { ...defaultUserActions, ...userActions }
     return (
       <Flex gap="8px" rowGap="8px" direction="row" justify={'flex-start'} align={'center'}>
         {userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'before'
@@ -154,67 +164,66 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
           <Button
             leftIcon={<IconPlus />}
             color="green"
-            variant="filled"
+            variant={variant??appContext.variant}
             onClick={() => userActionsEnd && userActionsEnd!.onAddExecute}
           >
-            {userActionsEnd.labelAdd ? userActionsEnd.labelAdd : t('New')}
+            {userActionsEnd.labelAdd ? userActionsEnd.labelAdd : t('archbase:New')}
           </Button>
         ) : null}
         {userActionsEnd.allowAdd ? (
           <Button
             leftIcon={<IconEdit />}
             color="blue"
-            variant="filled"
+            variant={variant??appContext.variant}
             onClick={() => userActionsEnd && userActionsEnd!.onEditExecute}
           >
-            {userActionsEnd.labelEdit ? userActionsEnd.labelEdit : t('Edit')}
+            {userActionsEnd.labelEdit ? userActionsEnd.labelEdit : t('archbase:Edit')}
           </Button>
         ) : null}
         {userActionsEnd.allowAdd ? (
           <Button
             leftIcon={<IconTrash />}
             color="red"
-            variant="filled"
+            variant={variant??appContext.variant}
             onClick={() => userActionsEnd && userActionsEnd!.onEditExecute}
           >
-            {userActionsEnd.labelRemove ? userActionsEnd.labelRemove : t('Remove')}
+            {userActionsEnd.labelRemove ? userActionsEnd.labelRemove : t('archbase:Remove')}
           </Button>
         ) : null}
         {userActionsEnd.allowView ? (
           <Button
             leftIcon={<IconEye />}
-            variant="filled"
+            variant={variant??appContext.variant}
             onClick={() => userActionsEnd && userActionsEnd!.onEditExecute}
           >
-            {userActionsEnd.labelView ? userActionsEnd.labelView : t('View')}
+            {userActionsEnd.labelView ? userActionsEnd.labelView : t('archbase:View')}
           </Button>
         ) : null}
         {userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'after'
           ? userActionsEnd.customUserActions
           : null}
       </Flex>
-    );
-  }, [userActions]);
+    )
+  }, [userActions])
 
   const cards: ReactNode[] = useMemo(() => {
     if (component) {
-      let DynamicComponent = component.type;
-      let compProps = {};
+      let DynamicComponent = component.type
+      let compProps = {}
       if (component.props) {
-        compProps = component.props;
+        compProps = component.props
       }
 
       return dataSource.browseRecords().map((record: any, index: number) => {
-        const newKey = `${idMasonry}_${index}`;
-        const newId = `${idMasonry}_${index}`;
-        let active = record.active === undefined ? false : record.active;
+        const newKey = `${idMasonry}_${index}`
+        const newId = `${idMasonry}_${index}`
+        let active = record.active === undefined ? false : record.active
         if (activeIndexValue >= 0) {
-          active = false;
+          active = false
           if (activeIndexValue === index) {
-            active = true;
+            active = true
           }
         }
-
         return (
           <DynamicComponent
             key={newKey}
@@ -226,40 +235,39 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
             disabled={record.disabled}
             {...compProps}
           />
-        );
-      });
+        )
+      })
     }
-
-    return [];
-  }, [dataSource.browseRecords(), columnsCount, columnsCountBreakPoints, gutter]);
+    return []
+  }, [dataSource.browseRecords(), columnsCount, columnsCountBreakPoints, gutter, activeIndexValue])
 
   const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
-    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
-  };
+    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex })
+  }
 
   const handleToggleExpandedFilter = (expanded: boolean) => {
-    setFilterState({ ...filterState, expandedFilter: expanded });
-  };
+    setFilterState({ ...filterState, expandedFilter: expanded })
+  }
 
   const handleSelectedFilter = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
-    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
-  };
+    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex })
+  }
 
-  const handleSearchByFilter = () => {};
+  const handleSearchByFilter = () => {}
 
   const handleSelectItem = (index: number, data: T) => {
-    setActiveIndexValue(index);
+    setActiveIndexValue(index)
     if (dataSource) {
-      dataSource.gotoRecordByData(data);
+      dataSource.gotoRecordByData(data)
     }
-  };
+  }
 
   return (
     <Paper
       ref={innerComponentRef}
       withBorder={withBorder}
       radius={radius}
-      style={{ width: width, height: height, padding: 4 }}
+      style={{ width: width, height: height, ...style }}
     >
       <Box sx={{ height: 60 }}>
         <Grid gutter="xs" justify="center" align="center">
@@ -278,6 +286,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
               onFilterChanged={handleFilterChanged}
               onSearchByFilter={handleSearchByFilter}
               onToggleExpandedFilter={handleToggleExpandedFilter}
+              variant={variant??appContext.variant}
               width={'660px'}
               height="170px"
             >
@@ -295,7 +304,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
             icon={<IconBug size="1.4rem" />}
             title={t('WARNING')}
             titleColor="rgb(250, 82, 82)"
-            variant="filled"
+            variant={variant??appContext.variant}
             onClose={() => clearError && clearError()}
           >
             <span>{error}</span>
@@ -309,7 +318,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
             activeBackgroundColor,
             activeColor,
             onItemEnter,
-            onItemLeave,
+            onItemLeave
           }}
         >
           <ArchbaseMasonryResponsive columnsCountBreakPoints={columnsCountBreakPoints}>
@@ -333,5 +342,5 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         ) : null}
       </Grid>
     </Paper>
-  );
+  )
 }

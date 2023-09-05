@@ -1,6 +1,11 @@
+/* eslint-disable */
 import { useEffect, useState } from 'react'
 
-function useBrowserStorage<T>(key: string, initialValue: T, type: 'session' | 'local'): [T, (v: T) => void] {
+function useBrowserStorage<T>(
+  key: string,
+  initialValue: T,
+  type: 'session' | 'local'
+): [T, (v: T) => void] {
   const storage = type === 'session' ? sessionStorage : localStorage
 
   const [storedValue, setStoredValue] = useState<T>(() => {
