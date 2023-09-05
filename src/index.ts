@@ -1,10 +1,10 @@
 export * from './components/admin';
 export * from './components/auth';
 export * from './components/containers';
-export {ArchbaseAppContext, ArchbaseAppProvider, ArchbaseGlobalProvider} from './components/core';
+export { ArchbaseAppContext, ArchbaseAppProvider, ArchbaseGlobalProvider } from './components/core';
 export * from './components/datasource';
 export * from './components/datatable';
-export {ArchbaseEdit, ArchbaseNumberEdit} from './components/editors';
+export { ArchbaseEdit, ArchbaseNumberEdit } from './components/editors';
 export * from './components/hocs';
 export * from './components/hooks';
 export * from './components/image';

@@ -4,7 +4,7 @@
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-use-before-define */
-import { ActionIcon, Box, Chip, Flex, MantineTheme, Menu, Tooltip, useMantineTheme } from '@mantine/core';
+import { ActionIcon, Box, Chip, Flex, MantineTheme, Menu, Tooltip, Variants, useMantineTheme } from '@mantine/core';
 import { parse as parseDate, formatISO, format } from 'date-fns';
 import i18next from 'i18next';
 import { DatePickerInput, DateValue, DatesRangeValue } from '@mantine/dates';
@@ -33,13 +33,13 @@ import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
 import { MRT_Localization_PT_BR } from 'mantine-react-table/locales/pt-BR';
 import React, { Fragment, isValidElement, useMemo, ReactNode, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { DataSourceEvent, ArchbaseDataSource } from '../datasource';
-import { convertISOStringToDate, filter, isEmpty } from '../core/utils';
-import { useArchbaseDataSourceListener } from '../hooks';
-import builder from '../core/rsql/builder';
-import { emit } from '../core/rsql/emitter';
-import { ExpressionNode } from '../core/rsql/ast';
-import { ArchbaseObjectHelper } from '../core/helper';
+import type { DataSourceEvent, ArchbaseDataSource } from '@components/datasource';
+import { convertISOStringToDate, filter, isEmpty } from '@components/core/utils';
+import { useArchbaseDataSourceListener } from '@components/hooks';
+import builder from '@components/core/rsql/builder';
+import { emit } from '@components/core/rsql/emitter';
+import { ExpressionNode } from '@components/core/rsql/ast';
+import { ArchbaseObjectHelper } from '@components/core/helper';
 import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { t } from 'i18next';
 import { useArchbaseAppContext } from '@components/core';
@@ -112,6 +112,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
   renderRowActions?: (props: { cell: MRT_Cell<T>; row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
   renderToolbarInternalActions?: (props: { table: MRT_TableInstance<T> }) => ReactNode | null;
   positionActionsColumn?: 'first' | 'last';
+  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
 }
 
 export interface ToolBarActionsProps {

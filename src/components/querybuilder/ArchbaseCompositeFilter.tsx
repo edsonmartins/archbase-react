@@ -3,7 +3,6 @@ import React, { CSSProperties, Component, ReactNode } from 'react'
 import {
   IconDeviceFloppy,
   IconDoorExit,
-  IconFilter,
   IconPlus,
   IconTrash
 } from '@tabler/icons-react'
@@ -28,13 +27,11 @@ import {
 } from './ArchbaseFilterCommons'
 import { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter'
 import shallowCompare from 'react-addons-shallow-compare'
-import { ArchbaseDataSource } from '../datasource'
+import { ArchbaseDataSource } from '@components/datasource'
 import { ArchbaseList } from '../list'
-import { ArchbaseAppContext } from '../core'
-import { IconFilters } from '@tabler/icons-react'
+import { ArchbaseAppContext } from '@components/core'
 import { IconFilterSearch } from '@tabler/icons-react'
 import { IconRefresh } from '@tabler/icons-react'
-import { ArchbaseClickOutside } from '../core/helper'
 
 interface ArchbaseCompositeFilterProps {
   isOpen: boolean
@@ -206,7 +203,7 @@ class ArchbaseCompositeFilter extends Component<
                     id="btnNew"
                     variant={this.props.variant}
                     leftIcon={<IconPlus />}
-                    onClick={(event) => this.props.onActionClick && this.props.onActionClick('new')}
+                    onClick={(_event) => this.props.onActionClick && this.props.onActionClick('new')}
                   >
                     Novo
                   </Button>
@@ -221,7 +218,7 @@ class ArchbaseCompositeFilter extends Component<
                       (!this.props.currentFilter.id || this.props.currentFilter.id <= 0)
                     }
                     leftIcon={<IconTrash />}
-                    onClick={(event) =>
+                    onClick={(_event) =>
                       this.props.onActionClick && this.props.onActionClick('remove')
                     }
                   >
@@ -264,7 +261,7 @@ class ArchbaseCompositeFilter extends Component<
                     variant={this.props.variant}
                     leftIcon={<IconRefresh />}
                     disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
-                    onClick={(event) =>
+                    onClick={(_event) =>
                       this.props.onActionClick && this.props.onActionClick('apply')
                     }
                   >
@@ -277,7 +274,7 @@ class ArchbaseCompositeFilter extends Component<
                     variant={this.props.variant}
                     color="red"
                     leftIcon={<IconDoorExit />}
-                    onClick={(event) =>
+                    onClick={(_event) =>
                       this.props.onActionClick && this.props.onActionClick('close')
                     }
                   >

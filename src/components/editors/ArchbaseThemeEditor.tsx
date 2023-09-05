@@ -1,82 +1,74 @@
-import { MantineNumberSize, MantineSize, Card, ColorPicker } from '@mantine/core'
-import type { CSSProperties, FocusEventHandler, ReactNode } from 'react'
-import React, { useState, useCallback } from 'react'
+import { MantineNumberSize, MantineSize, Card, ColorPicker } from '@mantine/core';
+import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
+import React, { useState, useCallback } from 'react';
 
-import {
-  useArchbaseDidMount,
-  useArchbaseDidUpdate,
-  useArchbaseWillUnmount
-} from '../hooks/lifecycle'
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@hooks/lifecycle';
 
-import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
-import { DataSourceEventNames } from '../datasource'
+import type { DataSourceEvent, ArchbaseDataSource } from '@components/datasource';
+import { DataSourceEventNames } from '@components/datasource';
 
 export interface ArchbaseThemeEditorProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do edit */
-  dataSource?: ArchbaseDataSource<T, ID>
+  dataSource?: ArchbaseDataSource<T, ID>;
   /** Campo onde deverá ser atribuido o valor do edit na fonte de dados */
-  dataField?: string
+  dataField?: string;
   /** Indicador se o edit está desabilitado */
-  disabled?: boolean
+  disabled?: boolean;
   /** Indicador se o edit é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
-  readOnly?: boolean
+  readOnly?: boolean;
   /** Indicador se o preenchimento do edit é obrigatório */
-  required?: boolean
+  required?: boolean;
   /** Valor inicial */
-  value?: string
+  value?: string;
   /** Estilo do edit */
-  style?: CSSProperties
+  style?: CSSProperties;
   /** Tamanho do edit */
-  size?: MantineSize
+  size?: MantineSize;
   /** Largura do edit */
-  width?: MantineNumberSize
+  width?: MantineNumberSize;
   /** Icone à direita */
-  icon?: ReactNode
+  icon?: ReactNode;
   /** Dica para botão localizar */
-  tooltipIconSearch?: String
+  tooltipIconSearch?: String;
   /** Evento ocorre quando clica no botão localizar */
-  onActionSearchExecute?: () => void
+  onActionSearchExecute?: () => void;
   /** Texto sugestão do edit */
-  placeholder?: string
+  placeholder?: string;
   /** Título do edit */
-  label?: string
+  label?: string;
   /** Descrição do edit */
-  description?: string
+  description?: string;
   /** Último erro ocorrido no edit */
-  error?: string
+  error?: string;
   /** Evento quando o foco sai do edit */
-  onFocusExit?: FocusEventHandler<T> | undefined
+  onFocusExit?: FocusEventHandler<T> | undefined;
   /** Evento quando o edit recebe o foco */
-  onFocusEnter?: FocusEventHandler<T> | undefined
+  onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Evento quando o valor do edit é alterado */
-  onChangeValue?: (value: any, event: any) => void
-  onKeyDown?: (event: any) => void
-  onKeyUp?: (event: any) => void
+  onChangeValue?: (value: any, event: any) => void;
+  onKeyDown?: (event: any) => void;
+  onKeyUp?: (event: any) => void;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement> | undefined
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
-export function ArchbaseThemeEditor<T, ID>({
-  dataSource,
-  dataField,
-  value
-}: ArchbaseThemeEditorProps<T, ID>) {
-  const [currentValue, setCurrentValue] = useState<string>(value || '')
+export function ArchbaseThemeEditor<T, ID>({ dataSource, dataField, value }: ArchbaseThemeEditorProps<T, ID>) {
+  const [currentValue, setCurrentValue] = useState<string>(value || '');
 
   const loadDataSourceFieldValue = () => {
-    let initialValue: any = currentValue
+    let initialValue: any = currentValue;
 
     if (dataSource && dataField) {
-      initialValue = dataSource.getFieldValue(dataField)
+      initialValue = dataSource.getFieldValue(dataField);
       if (!initialValue) {
-        initialValue = ''
+        initialValue = '';
       }
     }
 
-    setCurrentValue(initialValue)
-  }
+    setCurrentValue(initialValue);
+  };
 
-  const fieldChangedListener = useCallback(() => {}, [])
+  const fieldChangedListener = useCallback(() => {}, []);
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
@@ -87,22 +79,22 @@ export function ArchbaseThemeEditor<T, ID>({
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel
       ) {
-        loadDataSourceFieldValue()
+        loadDataSourceFieldValue();
       }
     }
-  }, [])
+  }, []);
 
   useArchbaseDidMount(() => {
-    loadDataSourceFieldValue()
+    loadDataSourceFieldValue();
     if (dataSource && dataField) {
-      dataSource.addListener(dataSourceEvent)
-      dataSource.addFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.addListener(dataSourceEvent);
+      dataSource.addFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   useArchbaseDidUpdate(() => {
-    loadDataSourceFieldValue()
-  }, [])
+    loadDataSourceFieldValue();
+  }, []);
 
   // const handleChange = (event) => {
   //   event.preventDefault();
@@ -122,10 +114,10 @@ export function ArchbaseThemeEditor<T, ID>({
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent)
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.removeListener(dataSourceEvent);
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   // const handleOnFocusExit = (event) => {
   //   if (onFocusExit) {
@@ -152,5 +144,5 @@ export function ArchbaseThemeEditor<T, ID>({
     <Card>
       <ColorPicker />
     </Card>
-  )
+  );
 }

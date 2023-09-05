@@ -19,7 +19,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import { ArchbaseAppContext, ArchbaseError, ltrim } from '@components/core';
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors';
-import { ActionIcon, Button, Chip, Grid, Group, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Chip, Grid, Group, Text, Tooltip, Variants } from '@mantine/core';
 import { IconArrowUp, IconSearch, IconTrash } from '@tabler/icons-react';
 import { ArchbaseList } from '@components/list';
 import { IconArrowDown } from '@tabler/icons-react';
@@ -44,6 +44,7 @@ interface ArchbaseAdvancedFilterProps<_T, _ID> {
   disabled?: boolean;
   onSearchButtonClick?: () => void;
   border?: string;
+  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
 }
 
 interface ArchbaseAdvancedFilterState {

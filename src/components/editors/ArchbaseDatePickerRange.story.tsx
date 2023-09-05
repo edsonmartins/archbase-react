@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Card, Grid, Group, Text } from '@mantine/core';
 import { Pessoa, pessoasData } from '@demo/index';
-import { useArchbaseDataSource } from '../hooks';
-import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
-import { DataSourceEvent, DataSourceEventNames } from '../datasource';
+import { useArchbaseDataSource } from '@components/hooks';
+import { useArchbaseDataSourceListener } from '@hooks/useArchbaseDataSourceListener';
+import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { Meta, StoryObj } from '@storybook/react';
-import { useArchbaseForceUpdate } from '../hooks';
+import { useArchbaseForceUpdate } from '@components/hooks';
 import { ArchbaseDatePickerRange } from './ArchbaseDatePickerRange';
 import { DateValue } from '@mantine/dates';
 import { formatISO } from 'date-fns';

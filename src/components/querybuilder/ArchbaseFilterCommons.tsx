@@ -2,6 +2,7 @@ import React, { Component, ReactNode } from 'react';
 import { FilterField, FilterFields, FilterFieldValue } from './ArchbaseAdvancedFilter';
 import { ArchbaseError } from '@components/core';
 import { MaskPattern } from '@components/editors';
+import { Variants } from '@mantine/core';
 
 const QUICK_FILTER_INDEX = -2;
 const NEW_FILTER_INDEX = -1;
@@ -88,6 +89,28 @@ interface ArchbaseQueryFilter {
   selectedFields?: Field[];
 }
 
+interface ArchbaseQueryBuilderProps {
+  currentFilter: ArchbaseQueryFilter;
+  expandedFilter: boolean;
+  onFilterChanged: (filter: ArchbaseQueryFilter, index: number) => void;
+  userName: string;
+  id: string;
+  viewName: string;
+  width: number;
+  placeholder: string;
+  variant: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
+  showClearButton: boolean;
+  showToggleButton: boolean;
+  persistenceDelegator: ArchbaseQueryFilterDelegator;
+  detailsWidth: number;
+  detailsHeight: number;
+  children: ReactNode;
+  onToggleExpandedFilter: (togle: boolean) => void;
+  onClearFilter: (any: any) => void;
+  onSearchByFilter: () => void;
+  onSelectedFilter: (filter: ArchbaseQueryFilter, index: number) => void;
+}
+
 interface FilterOptions {
   currentFilter?: ArchbaseQueryFilter;
   activeFilterIndex: number;
@@ -99,7 +122,7 @@ interface FilterOptions {
 }
 
 interface ArchbaseQueryFilterState {
-  currentFilter: ArchbaseQueryFilter;
+  currentFilter?: ArchbaseQueryFilter;
   activeFilterIndex: number;
   expandedFilter: boolean;
 }
@@ -668,6 +691,10 @@ const getDefaultFilter = (props, type): ArchbaseQueryFilter => {
   return result;
 };
 
+const getSortString = (_filter: ArchbaseQueryFilter) => {
+  return 'TODO - Ver o que esta funcao faz.';
+};
+
 interface QueryFieldProps {
   name: string;
   label: string;
@@ -750,6 +777,7 @@ export {
   QueryField,
   QueryFields,
   QueryFilterEntity,
+  getSortString,
   getDefaultFilter,
   defaultConditions,
   defaultOperators,
@@ -806,4 +834,5 @@ export type {
   Schema,
   DelegatorCallback,
   IQueryFilterEntity,
+  ArchbaseQueryBuilderProps,
 };
