@@ -15,6 +15,8 @@ export interface ArchbaseTreeNode {
   color?: string
   backgroundColor?: string
   image?: string
+  data?: any
+  type?: string
 }
 
 export interface ArchbaseTreeViewOptions {

@@ -1,54 +1,54 @@
-import React, { ReactNode, useContext, useEffect, useRef } from 'react';
-import { Image, MantineNumberSize, Space } from '@mantine/core';
-import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context';
+import React, { ReactNode, useContext, useEffect, useRef } from 'react'
+import { Image, MantineNumberSize, Space } from '@mantine/core'
+import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context'
 
 export interface ArchbaseListItemProps<T, _ID> {
   /** Indicador se o item está ativo(selecionado) */
-  active: boolean;
+  active: boolean
   /** Cor de fundo do item */
-  activeBackgroundColor?: string;
+  activeBackgroundColor?: string
   /** Cor do item se ele estiver ativo */
-  activeColor?: string;
+  activeColor?: string
   /** Alinhamento do texto do item */
-  align?: 'left' | 'right' | 'center';
+  align?: 'left' | 'right' | 'center'
   /** Cor de fundo do item não selecionado */
-  backgroundColor?: string;
+  backgroundColor?: string
   /** Texto do item */
-  caption: string;
+  caption: string
   /** Cor da fonte do item */
-  color: string;
+  color: string
   /** Filhos do item */
-  children?: ReactNode;
+  children?: ReactNode
   /** Indicador se o item está desabilitado */
-  disabled: boolean;
+  disabled: boolean
   /** Icone a ser apresentado ao lado esquerdo do item */
-  icon?: ReactNode;
+  icon?: ReactNode
   /** Id do item */
-  id: any;
+  id: any
   /** Posição do item dentro da lista */
-  index: number;
+  index: number
   /** Imagem a ser apresentada ao lado esquerdo do item */
-  image?: ReactNode | string;
+  image?: ReactNode | string
   /** Arredondamento da Imagem */
-  imageRadius?: MantineNumberSize;
+  imageRadius?: MantineNumberSize
   /** Altura da imagem */
-  imageHeight?: number | string;
+  imageHeight?: number | string
   /** Largura da Imagem */
-  imageWidth?: number | string;
+  imageWidth?: number | string
   /** Indicador se o conteúdo do item deve ser justificado */
-  justify?: 'flex-start' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
+  justify?: 'flex-start' | 'center' | 'space-between' | 'space-around' | 'space-evenly'
   /** Indicador se o item deve ter uma borda */
-  showBorder?: boolean;
+  withBorder?: boolean
   /** Cor da borda */
-  borderColor?: string;
+  borderColor?: string
   /** Arredondamento dos cantos da borda */
-  borderRadius?: MantineNumberSize;
+  borderRadius?: MantineNumberSize
   /** Dados do item a ser apresentado */
-  recordData?: T;
+  recordData?: T
   /** Indicador se o item está visivel na lista */
-  visible?: boolean;
+  visible?: boolean
   /** Espaçamento entre os valores do item */
-  spacing?: MantineNumberSize;
+  spacing?: MantineNumberSize
 }
 
 export function ArchbaseListItem<T, ID>({
@@ -70,63 +70,71 @@ export function ArchbaseListItem<T, ID>({
   justify = 'flex-start',
   children,
   recordData,
-  spacing = 'md',
+  spacing = 'md'
 }: ArchbaseListItemProps<T, ID>) {
-  const listContextValue = useContext<ArchbaseListContextValue<T, ID>>(ArchbaseListContext);
-  const itemRef = useRef<any>(null);
+  const listContextValue = useContext<ArchbaseListContextValue<T, ID>>(ArchbaseListContext)
+  const itemRef = useRef<any>(null)
 
   useEffect(() => {
     if (itemRef.current && active) {
-      itemRef.current.focus();
+      itemRef.current.focus()
     }
-  }, [active]);
+  }, [active])
 
   const onClick = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     if (!disabled) {
       if (listContextValue.handleSelectItem) {
-        listContextValue.handleSelectItem(index, recordData!);
+        listContextValue.handleSelectItem(index, recordData!)
       }
     }
-  };
+  }
 
   const handleMouseOver = (event: React.MouseEvent) => {
     if (listContextValue.onItemEnter) {
-      listContextValue.onItemEnter(event, recordData!);
+      listContextValue.onItemEnter(event, recordData!)
     }
-  };
+  }
 
   const handleMouseOut = (event: React.MouseEvent) => {
     if (listContextValue.onItemLeave) {
-      listContextValue.onItemLeave(event, recordData!);
+      listContextValue.onItemLeave(event, recordData!)
     }
-  };
+  }
 
   let style = {
     display: 'flex',
     backgroundColor: '',
     color: '',
     justifyContent: justify,
-    alignItems: 'center',
-  };
+    alignItems: 'center'
+  }
   if (activeBackgroundColor && activeColor && active) {
-    style = { ...style, backgroundColor: activeBackgroundColor, color: activeColor };
+    style = { ...style, backgroundColor: activeBackgroundColor, color: activeColor }
   } else if (backgroundColor && color && !active) {
-    style = { ...style, backgroundColor: backgroundColor, color: color };
+    style = { ...style, backgroundColor: backgroundColor, color: color }
   }
   const imageComp = image ? (
     typeof image === 'string' ? (
-      <Image src={recordData![image]} radius={imageRadius} width={imageWidth} height={imageHeight} />
+      <Image
+        src={recordData![image]}
+        radius={imageRadius}
+        width={imageWidth}
+        height={imageHeight}
+      />
     ) : (
       image
     )
   ) : (
     image
-  );
+  )
 
   const ComponentItem =
-    listContextValue.type === 'ordered' ? 'ol' : listContextValue.type === 'unordered' ? 'ul' : 'div';
-
+    listContextValue.type === 'ordered'
+      ? 'ol'
+      : listContextValue.type === 'unordered'
+      ? 'ul'
+      : 'div'
   return (
     <ComponentItem
       tabIndex={-1}
@@ -145,14 +153,14 @@ export function ArchbaseListItem<T, ID>({
       {caption}
       {children}
     </ComponentItem>
-  );
+  )
 }
 
 ArchbaseListItem.defaultProps = {
   align: 'left',
   justify: false,
   showBorder: false,
-  disabled: false,
-};
+  disabled: false
+}
 
-ArchbaseListItem.displayName = 'ArchbaseListItem';
+ArchbaseListItem.displayName = 'ArchbaseListItem'
