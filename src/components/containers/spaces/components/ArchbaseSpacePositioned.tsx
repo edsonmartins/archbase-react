@@ -1,10 +1,10 @@
 import { Type, SizeUnit, ResizeType } from "../core-types";
 import * as React from "react";
-import { Space } from "./Space";
+import { ArchbaseSpace } from "./ArchbaseSpace";
 import * as PropTypes from "prop-types";
-import { commonProps, IReactSpaceCommonProps } from "../core-react";
+import { commonProps, IArchbaseSpaceCommonProps } from "../core-react";
 
-interface IPositionedProps extends IReactSpaceCommonProps {
+interface IArchbaseSpacePositionedProps extends IArchbaseSpaceCommonProps {
 	left?: SizeUnit;
 	top?: SizeUnit;
 	right?: SizeUnit;
@@ -16,11 +16,11 @@ interface IPositionedProps extends IReactSpaceCommonProps {
 	onResizeEnd?: (newSize: SizeUnit) => void;
 }
 
-export const Positioned: React.FC<IPositionedProps> = ({ left, top, right, bottom, width, height, resizable, ...props }) => {
+export const ArchbaseSpacePositioned: React.FC<IArchbaseSpacePositionedProps> = ({ left, top, right, bottom, width, height, resizable, ...props }) => {
 	const resizeTypes = resizable || [];
 
 	return (
-		<Space
+		<ArchbaseSpace
 			{...props}
 			type={Type.Positioned}
 			position={{
@@ -40,11 +40,11 @@ export const Positioned: React.FC<IPositionedProps> = ({ left, top, right, botto
 				height: height,
 			}}>
 			{props.children}
-		</Space>
+		</ArchbaseSpace>
 	);
 };
 
-Positioned.propTypes = {
+ArchbaseSpacePositioned.propTypes = {
 	...commonProps,
 	...{
 		left: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

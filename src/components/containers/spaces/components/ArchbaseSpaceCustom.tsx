@@ -1,12 +1,12 @@
 import { Type, SizeUnit, IPositionalProps, AnchorType, ResizeType } from "../core-types";
 import * as React from "react";
-import { Space } from "./Space";
+import { ArchbaseSpace } from "./ArchbaseSpace";
 import * as PropTypes from "prop-types";
-import { IReactSpaceCommonProps } from "../core-react";
-import { anchoredProps, IAnchorProps } from "./Anchored";
+import { IArchbaseSpaceCommonProps } from "../core-react";
+import { anchoredProps, IArchbaseAnchorProps } from "./ArchbaseSpaceAnchored";
 import { omit } from "../core-utils";
 
-type ICustomProps = Omit<IReactSpaceCommonProps & IAnchorProps, "size"> & {
+type IArchbaseSpaceCustomProps = Omit<IArchbaseSpaceCommonProps & IArchbaseAnchorProps, "size"> & {
 	type?: Type;
 
 	// Anchored
@@ -44,7 +44,7 @@ const customProps = omit(
 	"size",
 );
 
-export const Custom: React.FC<ICustomProps> = ({
+export const ArchbaseSpaceCustom: React.FC<IArchbaseSpaceCustomProps> = ({
 	children,
 	type,
 	left,
@@ -104,10 +104,10 @@ export const Custom: React.FC<ICustomProps> = ({
 	}
 
 	return (
-		<Space {...props} type={type} anchor={anchor} position={position}>
+		<ArchbaseSpace {...props} type={type} anchor={anchor} position={position}>
 			{children}
-		</Space>
+		</ArchbaseSpace>
 	);
 };
 
-Custom.propTypes = customProps;
+ArchbaseSpaceCustom.propTypes = customProps;

@@ -7,8 +7,8 @@ interface IProps {
 	children?: React.ReactNode;
 }
 
-export const Layer: React.FC<IProps> = (props) => <LayerContext.Provider value={props.zIndex}>{props.children}</LayerContext.Provider>;
+export const ArchbaseSpaceLayer: React.FC<IProps> = (props) => <LayerContext.Provider value={props.zIndex}>{props.children}</LayerContext.Provider>;
 
-Layer.propTypes = {
+ArchbaseSpaceLayer.propTypes = {
 	zIndex: PropTypes.number.isRequired,
 };

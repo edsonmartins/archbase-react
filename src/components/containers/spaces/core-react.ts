@@ -55,7 +55,7 @@ export const useEffectOnce = (effect: () => void | (() => void)) => {
 export const ParentContext = React.createContext<string | undefined>(undefined);
 export const DOMRectContext = React.createContext<DOMRect | undefined>(undefined);
 export const LayerContext = React.createContext<number | undefined>(undefined);
-export const OptionsContext = React.createContext<IReactSpacesOptions>({});
+export const OptionsContext = React.createContext<IArchbaseSpacesOptions>({});
 export const currentStore = createStore();
 
 export const commonProps = {
@@ -80,7 +80,7 @@ export const commonProps = {
 	onTouchEnd: PropTypes.func,
 };
 
-export interface IReactSpacesOptions {
+export interface IArchbaseSpacesOptions {
 	debug?: boolean;
 }
 
@@ -96,17 +96,17 @@ export interface IReactEvents {
 	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void;
 }
 
-export interface IReactSpaceCommonProps extends ICommonProps, IReactEvents {
+export interface IArchbaseSpaceCommonProps extends ICommonProps, IReactEvents {
 	style?: React.CSSProperties;
 	as?: keyof React.ReactDOM | React.ComponentType<ICommonProps>;
 	children?: React.ReactNode;
 }
 
-export interface IReactSpaceInnerProps extends IReactSpaceCommonProps, ISpaceProps, IReactEvents {
+export interface IArchbaseSpaceInnerProps extends IArchbaseSpaceCommonProps, ISpaceProps, IReactEvents {
 	handleRender?: (handleProps: IResizeHandleProps) => React.ReactNode;
 }
 
-export interface IReactSpacesOptions {
+export interface IArchbaseSpacesOptions {
 	debug?: boolean;
 }
 
@@ -131,7 +131,7 @@ export function useUniqueId() {
 	return `s${shortuuid()}`;
 }
 
-export function useSpace(props: IReactSpaceInnerProps) {
+export function useSpace(props: IArchbaseSpaceInnerProps) {
 	const store = currentStore;
 	const update = useForceUpdate();
 	const parent = React.useContext(ParentContext);
@@ -258,7 +258,7 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 	};
 }
 
-export function useCurrentSpace() {
+export function useArchbaseCurrentSpace() {
 	const store = currentStore;
 	const spaceId = React.useContext(ParentContext);
 

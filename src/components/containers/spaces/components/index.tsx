@@ -1,14 +1,14 @@
 import "../styles.css";
 
-export * from "./Anchored";
-export * from "./Centered";
-export * from "./CenteredVertically";
-export * from "./Custom";
-export * from "./Fill";
-export * from "./Fixed";
-export * from "./Layer";
-export * from "./Positioned";
-export * from "./SpaceInfo";
-export * from "./ViewPort";
-export * from "./SSR";
-export * from "./Options";
+export * from "./ArchbaseSpaceAnchored";
+export * from "./ArchbaseSpaceCentered";
+export * from "./ArchbaseSpaceCenteredVertically";
+export * from "./ArchbaseSpaceCustom";
+export * from "./ArchbaseSpaceFill";
+export * from "./ArchbaseSpaceFixed";
+export * from "./ArchbaseSpaceLayer";
+export * from "./ArchbaseSpacePositioned";
+export * from "./ArchbaseSpaceInfo";
+export * from "./ArchbaseSpaceViewPort";
+export * from "./ArchbaseSpaceSSR";
+export * from "./ArchbaseSpaceOptions";

@@ -1,14 +1,14 @@
 import * as React from "react";
 import { DOMRectContext } from "../core-react";
 
-interface ISpaceInfoProps {
+interface IArchbaseSpaceSpaceInfoProps {
 	children: (info: DOMRect) => JSX.Element;
 }
 
 /**
  * @deprecated use useCurrentSpace() hook instead
  */
-export const Info: React.FC<ISpaceInfoProps> = (props) => {
+export const ArchbaseSpaceInfo: React.FC<IArchbaseSpaceSpaceInfoProps> = (props) => {
 	const domRect = React.useContext(DOMRectContext);
 
 	if (domRect) {

@@ -4,33 +4,33 @@ import {
 	ParentContext,
 	LayerContext,
 	DOMRectContext,
-	IReactSpaceInnerProps,
+	IArchbaseSpaceInnerProps,
 	useEffectOnce,
 	SSR_SUPPORT_ENABLED,
 	useUniqueId,
 } from "../core-react";
 import * as React from "react";
-import { Centered } from "./Centered";
-import { CenteredVertically } from "./CenteredVertically";
+import { ArchbaseSpaceCentered } from "./ArchbaseSpaceCentered";
+import { ArchbaseSpaceCenteredVertically } from "./ArchbaseSpaceCenteredVertically";
 import { isServer, updateStyleDefinition } from "../core-utils";
 
 function applyCentering(children: React.ReactNode, centerType: CenterType | undefined) {
 	switch (centerType) {
 		case CenterType.Vertical:
-			return <CenteredVertically>{children}</CenteredVertically>;
+			return <ArchbaseSpaceCenteredVertically>{children}</ArchbaseSpaceCenteredVertically>;
 		case CenterType.HorizontalVertical:
-			return <Centered>{children}</Centered>;
+			return <ArchbaseSpaceCentered>{children}</ArchbaseSpaceCentered>;
 	}
 	return children;
 }
 
-export class Space extends React.Component<IReactSpaceInnerProps> {
+export class ArchbaseSpace extends React.Component<IArchbaseSpaceInnerProps> {
 	public render() {
 		return <SpaceInner {...this.props} wrapperInstance={this} />;
 	}
 }
 
-const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> = (props) => {
+const SpaceInner: React.FC<IArchbaseSpaceInnerProps & { wrapperInstance: ArchbaseSpace }> = (props) => {
 	let idToUse = props.id ?? props.wrapperInstance["_react_spaces_uniqueid"];
 	const [initialRender, setInitialRender] = React.useState(SSR_SUPPORT_ENABLED ? true : false);
 
