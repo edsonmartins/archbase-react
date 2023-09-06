@@ -5,3 +5,4 @@ export type {
   ArchbaseAdvancedTabProps,
   ArchbaseAdvancedTabsProps
 } from './tabs'
+export * from "./spaces"

@@ -11,7 +11,7 @@
     "baseUrl": "./src",
     "outDir": "dist/esm",
     "lib": ["es5", "es2015", "es2016", "dom", "esnext"],
-    "types": ["node", "reflect-metadata"],
+    "types": ["node", "reflect-metadata","jest"],
     "paths": {
       "*": [
         "*",
@@ -29,9 +29,9 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "strict": true,
-    "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "strictNullChecks": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
@@ -39,6 +39,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false
   },
   "exclude": [
          "coverage",

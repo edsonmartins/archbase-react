@@ -15,12 +15,7 @@ export { useArchbaseLocalFilterDataSource } from './useArchbaseLocalFilterDataSo
 export { useArchbaseRemoteFilterDataSource } from './useArchbaseRemoteFilterDataSource'
 export { useArchbaseDataSourceListener } from './useArchbaseDataSourceListener'
 export { useArchbaseRemoteServiceApi } from './useArchbaseRemoteServiceApi'
-export { useArchbaseResizeDetector } from './resize'
-export type {
-  ArchbaseResizeDetectorProps,
-  UseArchbaseResizeDetectorReturn,
-  useArchbaseResizeDetectorProps
-} from './resize'
+export { useArchbaseSize} from './useArchbaseSize'
 export {useArchbaseElementSizeArea}
 export {useArchbaseTheme} from "./useArchbaseTheme"
 export {useArchbaseAdminStore} from "./useArchbaseAdminStore"

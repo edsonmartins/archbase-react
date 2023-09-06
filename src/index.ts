@@ -15,3 +15,4 @@ export * from './components/querybuilder';
 export * from './components/service';
 export * from './components/template';
 export * from './components/views';
+export * from './components/validator';
