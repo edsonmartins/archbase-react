@@ -18,6 +18,7 @@
   "eventMonitor": "Event Monitor",
   "survey": "Survey",
   "monitor": "Monitor",
+  "errorSavingRecord":"An error occurred saving current record. Data source: {{dataSourceName}} ",
   "saveRecordIsNotAllowed": " Record is not being entered or edited. Data source: {{dataSourceName}} it is not possible to save it.",
   "cancelRecordIsNotAllowed": " Record is not being entered or edited. Data source: {{dataSourceName}} can't cancel edit.",
   "insertRecordIsNotAllowed": "Record is already being inserted or edited. Data source: {{dataSourceName}} cannot insert a new.",

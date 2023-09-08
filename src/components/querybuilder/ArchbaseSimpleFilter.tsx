@@ -36,7 +36,7 @@ import {
   ArchbaseQueryFilter,
   getSortString
 } from './ArchbaseFilterCommons'
-import { ltrim } from '@components/core/utils'
+import { ltrim } from '../core/utils'
 import {
   ArchbaseCheckbox,
   ArchbaseEdit,
@@ -46,8 +46,8 @@ import {
   ArchbaseDateTimePickerRange
 } from '../editors'
 import { ArchbaseList } from '../list'
-import { ArchbaseDataSource } from '@components/datasource'
-import { ArchbaseAppContext } from '@components/core'
+import { ArchbaseDataSource } from '../datasource'
+import { ArchbaseAppContext } from '../core'
 import { IconFilterSearch } from '@tabler/icons-react'
 import { IconChevronUp } from '@tabler/icons-react'
 

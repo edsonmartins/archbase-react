@@ -1,35 +1,36 @@
-import { DataSourceOptions } from './ArchbaseDataSource';
-import { ArchbaseQueryFilterDelegator, DelegatorCallback, IQueryFilterEntity, QueryFilterEntity } from '@components/querybuilder';
-import { ArchbaseRemoteDataSource } from './ArchbaseRemoteDataSource';
-import { ArchbaseRemoteApiService } from '@components/service';
+import { DataSourceOptions } from './ArchbaseDataSource'
+import {
+  ArchbaseQueryFilterDelegator,
+  DelegatorCallback,
+  IQueryFilterEntity,
+  QueryFilterEntity
+} from '../querybuilder'
+import { ArchbaseRemoteDataSource } from './ArchbaseRemoteDataSource'
 
 export class RemoteFilter {
-  id?: any;
-  companyId?: any;
-  filter?: string;
-  name?: string;
-  viewName?: string;
-  componentName?: string;
-  userName?: string;
-  shared?: boolean;
-  code?: string;
+  id?: any
+  companyId?: any
+  filter?: string
+  name?: string
+  viewName?: string
+  componentName?: string
+  userName?: string
+  shared?: boolean
+  code?: string
 
   constructor(data: Partial<RemoteFilter> = {}) {
-    Object.assign(this, data);
+    Object.assign(this, data)
   }
 }
 
-export class ArchbaseRemoteFilterDataSource extends ArchbaseRemoteDataSource<RemoteFilter, number> implements ArchbaseQueryFilterDelegator {
-  constructor(service: ArchbaseRemoteApiService<RemoteFilter, number>, name: string, options: DataSourceOptions<RemoteFilter>) {
-    super(service, name, options);
-  }
-
+export class ArchbaseRemoteFilterDataSource
+  extends ArchbaseRemoteDataSource<RemoteFilter, number>
+  implements ArchbaseQueryFilterDelegator
+{
   public getFilterById(id: any): IQueryFilterEntity | undefined {
     if (this.locate({ id })) {
-      return this.convertCurrentRecordToFilter();
+      return this.convertCurrentRecordToFilter()
     }
-
-    return;
   }
 
   protected convertCurrentRecordToFilter(): IQueryFilterEntity | undefined {
@@ -42,8 +43,8 @@ export class ArchbaseRemoteFilterDataSource extends ArchbaseRemoteDataSource<Rem
       componentName: this.getFieldValue('componentName'),
       userName: this.getFieldValue('userName'),
       shared: this.getFieldValue('shared'),
-      filter: atob(this.getFieldValue('filter')),
-    });
+      filter: atob(this.getFieldValue('filter'))
+    })
   }
 
   public async addNewFilter(filter: IQueryFilterEntity, onResult: DelegatorCallback) {
@@ -57,41 +58,38 @@ export class ArchbaseRemoteFilterDataSource extends ArchbaseRemoteDataSource<Rem
         filter: btoa(JSON.stringify(filter.filter)),
         shared: filter.shared,
         viewName: filter.viewName,
-        userName: filter.userName,
-      }),
-    );
-    const result = await this.save();
-    onResult(null, result.id);
+        userName: filter.userName
+      })
+    )
+    const result = await this.save()
+    onResult(null, result.id)
   }
 
   public async saveFilter(filter: IQueryFilterEntity, onResult: DelegatorCallback) {
     if (this.locate({ id: filter.id })) {
-      this.edit();
-      this.setFieldValue('filter', btoa(JSON.stringify(filter.filter)));
-      const result = await this.save();
-      onResult(null, result.id);
+      this.edit()
+      this.setFieldValue('filter', btoa(JSON.stringify(filter.filter)))
+      const result = await this.save()
+      onResult(null, result.id)
     } else {
-      onResult('Filtro não encontrado.');
+      onResult('Filtro não encontrado.')
     }
   }
 
   public async removeFilterBy(filter: IQueryFilterEntity, onResult: DelegatorCallback) {
     if (this.locate({ id: filter.id })) {
-      await this.remove();
-      onResult(null, filter.id);
+      await this.remove()
+      onResult(null, filter.id)
     } else {
-      onResult('Filtro não encontrado.');
+      onResult('Filtro não encontrado.')
     }
   }
 
   public getFirstFilter(): IQueryFilterEntity | undefined {
     if (this.getTotalRecords() > 0) {
-      this.first();
-
-      return this.convertCurrentRecordToFilter();
+      this.first()
+      return this.convertCurrentRecordToFilter()
     }
-
-    return;
   }
 
   public getFilters(): IQueryFilterEntity[] {
@@ -106,11 +104,10 @@ export class ArchbaseRemoteFilterDataSource extends ArchbaseRemoteDataSource<Rem
           componentName: filter.componentName,
           userName: filter.userName,
           shared: filter.shared,
-          filter: atob(filter.filter || ''),
-        }),
-      );
+          filter: atob(filter.filter || '')
+        })
+      )
     }
-
-    return [];
+    return []
   }
 }

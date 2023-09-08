@@ -20,3 +20,4 @@ export {useArchbaseElementSizeArea}
 export {useArchbaseTheme} from "./useArchbaseTheme"
 export {useArchbaseAdminStore} from "./useArchbaseAdminStore"
 export {useArchbaseStore} from "./useArchbaseStore"
+export {useArchbaseNavigateParams} from "./useArchbaseNavigateParams"
