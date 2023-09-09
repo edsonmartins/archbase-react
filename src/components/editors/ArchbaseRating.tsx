@@ -5,7 +5,7 @@ import {
   DataSourceEventNames
 } from '../datasource'
 import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks'
-import React, { CSSProperties, FocusEventHandler, useCallback, useRef, useState } from 'react'
+import React, { CSSProperties, FocusEventHandler, useCallback, useEffect, useRef, useState } from 'react'
 
 export interface ArchbaseRatingProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do rating*/

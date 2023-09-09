@@ -84,7 +84,7 @@ export function ArchbaseSwitch<T, ID>({
   const innerComponentRef = useRef<any>()
   const [internalError, setInternalError] = useState<string|undefined>(error);
 
-  useEffectt(()=>{
+  useEffect(()=>{
     setInternalError(undefined)
   },[checked])
 
