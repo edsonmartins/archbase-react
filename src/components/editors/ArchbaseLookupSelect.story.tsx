@@ -1,39 +1,42 @@
-import React from 'react';
-import { Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core';
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
-import { useArchbaseDataSourceListener } from '@hooks/useArchbaseDataSourceListener';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import { useArchbaseForceUpdate } from '@components/hooks';
-import { Meta, StoryObj } from '@storybook/react';
-import { pedidosData, Pedido, Pessoa, pessoasData } from '@demo/index';
-import { ArchbaseEdit } from './ArchbaseEdit';
-import { ArchbaseLookupSelect } from './ArchbaseLookupSelect';
+import React from 'react'
+import { Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
+import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
+import { DataSourceEvent, DataSourceEventNames } from '../datasource'
+import { useArchbaseForceUpdate } from '../hooks'
+import { Meta, StoryObj } from '@storybook/react'
+import { pedidosData, Pedido, Pessoa, pessoasData } from '../../demo/index'
+import { ArchbaseEdit } from './ArchbaseEdit'
+import { ArchbaseLookupSelect } from './ArchbaseLookupSelect'
 
-const pedidosList: Pedido[] = pedidosData;
+const pedidosList: Pedido[] = pedidosData
 
 const ArchbaseLookupSelectExample = () => {
-  const forceUpdate = useArchbaseForceUpdate();
+  const forceUpdate = useArchbaseForceUpdate()
   const { dataSource: dsPessoas } = useArchbaseDataSource<Pessoa, string>({
     initialData: pessoasData,
-    name: 'dsPessoas',
-  });
-  const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
+    name: 'dsPessoas'
+  })
+  const { dataSource } = useArchbaseDataSource<Pedido, string>({
+    initialData: pedidosList,
+    name: 'dsPedidos'
+  })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit();
+    dataSource.edit()
   }
   useArchbaseDataSourceListener<Pedido, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pedido>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
-          forceUpdate();
-          break;
+          forceUpdate()
+          break
         }
         default:
       }
-    },
-  });
+    }
+  })
 
   return (
     <Grid>
@@ -58,7 +61,13 @@ const ArchbaseLookupSelectExample = () => {
                 getOptionLabel={(option: Pessoa) => option.nome}
                 getOptionValue={(option: Pessoa) => option}
               />
-              <ArchbaseEdit label="Nome" dataSource={dataSource} dataField="cliente.nome" disabled width={500} />
+              <ArchbaseEdit
+                label="Nome"
+                dataSource={dataSource}
+                dataField="cliente.nome"
+                disabled
+                width={500}
+              />
             </Flex>
           </Box>
         </Card>
@@ -88,18 +97,18 @@ const ArchbaseLookupSelectExample = () => {
         </Card>
       </Grid.Col>
     </Grid>
-  );
-};
+  )
+}
 
 export default {
   title: 'Editors/Lookup Select',
-  component: ArchbaseLookupSelectExample,
-} as Meta;
+  component: ArchbaseLookupSelectExample
+} as Meta
 
 export const Example: StoryObj<typeof ArchbaseLookupSelectExample> = {
   args: {
     render: () => {
-      <ArchbaseLookupSelectExample />;
-    },
-  },
-};
+      ;<ArchbaseLookupSelectExample />
+    }
+  }
+}

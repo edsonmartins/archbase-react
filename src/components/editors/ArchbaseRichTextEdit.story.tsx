@@ -1,32 +1,35 @@
-import React from 'react';
-import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { Pessoa, pessoasData } from '@demo/index';
-import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
-import { useArchbaseDataSourceListener } from '@hooks/useArchbaseDataSourceListener';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import { useArchbaseForceUpdate } from '@components/hooks';
-import { Meta, StoryObj } from '@storybook/react';
-import { ArchbaseRichTextEdit } from './ArchbaseRichTextEdit';
+import React from 'react'
+import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
+import { Pessoa, pessoasData } from '../../demo/index'
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
+import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
+import { DataSourceEvent, DataSourceEventNames } from '../datasource'
+import { useArchbaseForceUpdate } from '../hooks'
+import { Meta, StoryObj } from '@storybook/react'
+import { ArchbaseRichTextEdit } from './ArchbaseRichTextEdit'
 
 const ArchbaseRichTextEditExample = () => {
-  const forceUpdate = useArchbaseForceUpdate();
-  const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
+  const forceUpdate = useArchbaseForceUpdate()
+  const { dataSource } = useArchbaseDataSource<Pessoa, string>({
+    initialData: data,
+    name: 'dsPessoas'
+  })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit();
+    dataSource.edit()
   }
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
-          forceUpdate();
-          break;
+          forceUpdate()
+          break
         }
         default:
       }
-    },
-  });
+    }
+  })
 
   return (
     <Grid>
@@ -37,7 +40,12 @@ const ArchbaseRichTextEditExample = () => {
               <Text weight={500}>RichTextEdit Component</Text>
             </Group>
           </Card.Section>
-          <ArchbaseRichTextEdit label="Observação" height="300px" dataSource={dataSource} dataField="observacao" />
+          <ArchbaseRichTextEdit
+            label="Observação"
+            height="300px"
+            dataSource={dataSource}
+            dataField="observacao"
+          />
         </Card>
       </Grid.Col>
       <Grid.Col span={6}>
@@ -65,20 +73,20 @@ const ArchbaseRichTextEditExample = () => {
         </Card>
       </Grid.Col>
     </Grid>
-  );
-};
+  )
+}
 
 export default {
   title: 'Editors/RichText Edit',
-  component: ArchbaseRichTextEditExample,
-} as Meta;
+  component: ArchbaseRichTextEditExample
+} as Meta
 
-const data = [pessoasData[0]];
+const data = [pessoasData[0]]
 
 export const Example: StoryObj<typeof ArchbaseRichTextEditExample> = {
   args: {
     render: () => {
-      <ArchbaseRichTextEditExample />;
-    },
-  },
-};
+      ;<ArchbaseRichTextEditExample />
+    }
+  }
+}

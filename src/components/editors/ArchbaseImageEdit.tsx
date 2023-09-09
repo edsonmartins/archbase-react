@@ -1,52 +1,60 @@
-import { ActionIcon, Image, ImageProps, Input, MantineNumberSize, Modal, Paper } from '@mantine/core';
-import { IconEdit } from '@tabler/icons-react';
-import { ArchbaseDataSource } from '@components/datasource';
-import React, { CSSProperties, useState } from 'react';
-import { archbaseLogo } from '@components/core';
-import { ArchbaseImageEditor } from '@components/image/ArchbaseImageEditor';
+import {
+  ActionIcon,
+  Image,
+  ImageProps,
+  Input,
+  MantineNumberSize,
+  Modal,
+  Paper
+} from '@mantine/core'
+import { IconEdit } from '@tabler/icons-react'
+import { ArchbaseDataSource } from '../datasource'
+import React, { CSSProperties, useState } from 'react'
+import { archbaseLogo } from '../core'
+import { ArchbaseImageEditor } from '../image/ArchbaseImageEditor'
 
 export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
   /** Fonte de dados onde será atribuido o valor do rich edit*/
-  dataSource?: ArchbaseDataSource<T, ID>;
+  dataSource?: ArchbaseDataSource<T, ID>
   /** Campo onde deverá ser atribuido o valor do rich edit na fonte de dados */
-  dataField?: string;
+  dataField?: string
   /** Indicador se o rich edit está desabilitado */
-  disabled?: boolean;
+  disabled?: boolean
   /** Indicador se o rich edit é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
-  readOnly?: boolean;
+  readOnly?: boolean
   /** Indicador se o preenchimento do rich edit é obrigatório */
-  required?: boolean;
+  required?: boolean
   /** Estilo do checkbox */
-  style?: CSSProperties;
+  style?: CSSProperties
   /** Texto sugestão do rich edit */
-  placeholder?: string;
+  placeholder?: string
   /** Título do rich edit */
-  label?: string;
+  label?: string
   /** Descrição do rich edit */
-  description?: string;
+  description?: string
   /** Último erro ocorrido no rich edit */
-  error?: string;
-  variant?: string;
+  error?: string
+  variant?: string
   /** Image src */
-  src?: string | null;
+  src?: string | null
   /** Texto alternativo da imagem, usado como título para espaço reservado se a imagem não foi carregada */
-  alt?: string;
+  alt?: string
   /** Propriedade de ajuste do objeto da imagem */
-  fit?: React.CSSProperties['objectFit'];
+  fit?: React.CSSProperties['objectFit']
   /** Largura da imagem, padrão de 100%, não pode exceder 100% */
-  width?: number | string;
+  width?: number | string
   /** Altura da imagem, o padrão é a altura da imagem original ajustada para determinada largura */
-  height?: number | string;
+  height?: number | string
   /** Chave de theme.radius ou qualquer valor CSS válido para definir border-radius, 0 por padrão */
-  radius?: MantineNumberSize;
+  radius?: MantineNumberSize
   /** Ativar espaço reservado quando a imagem está carregando e quando a imagem falha ao carregar */
-  withPlaceholder?: boolean;
+  withPlaceholder?: boolean
   /** Os adereços se espalham para o elemento img */
-  imageProps?: React.ComponentPropsWithoutRef<'img'>;
+  imageProps?: React.ComponentPropsWithoutRef<'img'>
   /** Obter ref do elemento de imagem */
-  imageRef?: React.ForwardedRef<HTMLImageElement>;
+  imageRef?: React.ForwardedRef<HTMLImageElement>
   /** Legenda da imagem, exibida abaixo da imagem */
-  caption?: React.ReactNode;
+  caption?: React.ReactNode
 }
 
 export function ArchbaseImageEdit<T, ID>({
@@ -64,7 +72,8 @@ export function ArchbaseImageEdit<T, ID>({
   radius = 'md',
   ...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false)
+  const [internalError, setInternalError] = useState<string|undefined>(error);
 
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -73,7 +82,7 @@ export function ArchbaseImageEdit<T, ID>({
         label={label}
         placeholder={placeholder}
         description={description}
-        error={error}
+        error={internalError}
       >
         <Image src={archbaseLogo} width={width} height={height} radius={radius} {...otherProps} />
       </Input.Wrapper>
@@ -86,12 +95,18 @@ export function ArchbaseImageEdit<T, ID>({
         <IconEdit />
       </ActionIcon>
       {isEditing && (
-        <Modal opened={isEditing} onClose={() => setIsEditing(false)} size="80%" padding="md" title="Editar Imagem">
+        <Modal
+          opened={isEditing}
+          onClose={() => setIsEditing(false)}
+          size="80%"
+          padding="md"
+          title="Editar Imagem"
+        >
           <Paper>
             <ArchbaseImageEditor src={archbaseLogo} />
           </Paper>
         </Modal>
       )}
     </div>
-  );
+  )
 }

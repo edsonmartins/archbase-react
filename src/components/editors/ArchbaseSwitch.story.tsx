@@ -1,32 +1,35 @@
-import React from 'react';
-import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
-import { useArchbaseDataSourceListener } from '@hooks/useArchbaseDataSourceListener';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import { useArchbaseForceUpdate } from '@components/hooks';
-import { Meta, StoryObj } from '@storybook/react';
-import { ArchbaseSwitch } from './ArchbaseSwitch';
-import { Pessoa, pessoasData } from '@demo/index';
+import React from 'react'
+import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
+import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
+import { DataSourceEvent, DataSourceEventNames } from '../datasource'
+import { useArchbaseForceUpdate } from '../hooks'
+import { Meta, StoryObj } from '@storybook/react'
+import { ArchbaseSwitch } from './ArchbaseSwitch'
+import { Pessoa, pessoasData } from '../../demo/index'
 
 const ArchbaseSwitchExample = () => {
-  const forceUpdate = useArchbaseForceUpdate();
-  const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
+  const forceUpdate = useArchbaseForceUpdate()
+  const { dataSource } = useArchbaseDataSource<Pessoa, string>({
+    initialData: data,
+    name: 'dsPessoas'
+  })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit();
+    dataSource.edit()
   }
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
-          forceUpdate();
-          break;
+          forceUpdate()
+          break
         }
         default:
       }
-    },
-  });
+    }
+  })
 
   return (
     <Grid>
@@ -71,20 +74,20 @@ const ArchbaseSwitchExample = () => {
         </Card>
       </Grid.Col>
     </Grid>
-  );
-};
+  )
+}
 
 export default {
   title: 'Editors/Switch',
-  component: ArchbaseSwitchExample,
-} as Meta;
+  component: ArchbaseSwitchExample
+} as Meta
 
-const data = [pessoasData[0]];
+const data = [pessoasData[0]]
 
 export const Example: StoryObj<typeof ArchbaseSwitchExample> = {
   args: {
     render: () => {
-      <ArchbaseSwitchExample />;
-    },
-  },
-};
+      ;<ArchbaseSwitchExample />
+    }
+  }
+}

@@ -9,6 +9,7 @@ import React, {
   FocusEventHandler,
   ReactNode,
   useCallback,
+  useEffect,
   useRef,
   useState
 } from 'react'
@@ -98,22 +99,40 @@ export interface ArchbaseSelectProps<T, ID, O> {
   /** Referência para o componente interno */
   innerRef?: React.RefObject<HTMLInputElement> | undefined
   /** Selecione os dados usados ​​para renderizar itens no menu suspenso */
-  data?: ReadonlyArray<string | SelectItem>
+  options?: ReadonlyArray<string | SelectItem> | ArchbaseDataSource<any,any>
+  optionsLabelField?: string
   customGetDataSourceFieldValue?: () => any
   customSetDataSourceFieldValue?: (value: any) => void
 }
 function buildOptions<O>(
-  data?: ReadonlyArray<string | SelectItem>,
+  options?: ReadonlyArray<string | SelectItem> | ArchbaseDataSource<any,any>,
   initialOptions?: O[],
   children?: ReactNode | ReactNode[] | undefined,
   getOptionLabel?: (option: O) => ReactNode,
-  getOptionValue?: (option: O) => any
+  getOptionValue?: (option: O) => any,
+  optionsLabelField?: string
 ): any {
-  if (!initialOptions && !children && !data) {
+  if (!initialOptions && !children && !options) {
     return []
   }
-  if (data) {
-    return data
+  if (options && options instanceof ArchbaseDataSource && getOptionLabel && getOptionValue && optionsLabelField){
+    const ds = options as ArchbaseDataSource<any,any>;
+    ds.first();
+    const result : SelectItem[] = []
+    while (!ds.isEOF()){
+      result.push({
+        label: ds.getFieldValue(optionsLabelField),
+        value: ds.getCurrentRecord(),
+        origin: ds.getCurrentRecord(),
+        key: uniqueId('select')
+      })
+      ds.next();
+    }
+    ds.first();
+    return result
+  }
+  if (options) {
+    return options
   }
   if (children) {
     return React.Children.toArray(children).map((item: any) => {
@@ -145,7 +164,7 @@ export function ArchbaseSelect<T, ID, O>({
   readOnly = false,
   placeholder,
   initialOptions = [],
-  searchable = true,
+  searchable = false,
   label,
   description,
   error,
@@ -155,6 +174,7 @@ export function ArchbaseSelect<T, ID, O>({
   width,
   getOptionLabel,
   getOptionValue,
+  optionsLabelField,
   onFocusEnter,
   onFocusExit,
   onSelectValue,
@@ -172,16 +192,21 @@ export function ArchbaseSelect<T, ID, O>({
   dropdownPosition,
   children,
   innerRef,
-  data,
+  options,
   customGetDataSourceFieldValue,
   customSetDataSourceFieldValue
 }: ArchbaseSelectProps<T, ID, O>) {
-  const [options, _setOptions] = useState<any[]>(
-    buildOptions<O>(data, initialOptions, children, getOptionLabel, getOptionValue)
+  const [currentOptions, setCurrentOptions] = useState<any[]>(
+    buildOptions<O>(options, initialOptions, children, getOptionLabel, getOptionValue, optionsLabelField)
   )
   const innerComponentRef = innerRef || useRef<any>()
   const [selectedValue, setSelectedValue] = useState<any>(value)
-  const [, setQueryValue] = useDebouncedState('', debounceTime)
+  const [queryValue, setQueryValue] = useDebouncedState('', debounceTime)
+  const [internalError, setInternalError] = useState<string|undefined>(error);
+
+  useEffect(()=>{
+    setInternalError(undefined)
+  },[selectedValue])
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value
@@ -210,6 +235,19 @@ export function ArchbaseSelect<T, ID, O>({
       ) {
         loadDataSourceFieldValue()
       }
+      if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
+        setInternalError(event.error)
+      }
+    }
+  }, [])
+
+  const dataSourceOptionsEvent = useCallback((event: DataSourceEvent<T>) => {
+    if (dataSource && dataField) {
+      if (
+        event.type === DataSourceEventNames.dataChanged 
+      ) {
+        setCurrentOptions(buildOptions<O>(options, initialOptions, children, getOptionLabel, getOptionValue, optionsLabelField))
+      }
     }
   }, [])
 
@@ -219,12 +257,20 @@ export function ArchbaseSelect<T, ID, O>({
       dataSource.addListener(dataSourceEvent)
       dataSource.addFieldChangeListener(dataField, fieldChangedListener)
     }
+
+    if (options && options instanceof ArchbaseDataSource){
+      (options as ArchbaseDataSource<T,ID>).addListener(dataSourceOptionsEvent)
+    }
   })
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
       dataSource.removeListener(dataSourceEvent)
       dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+    }
+
+    if (options && options instanceof ArchbaseDataSource){
+      (options as ArchbaseDataSource<T,ID>).removeListener(dataSourceOptionsEvent)
     }
   })
 
@@ -294,8 +340,8 @@ export function ArchbaseSelect<T, ID, O>({
         ref={innerComponentRef}
         dropdownComponent={CustomSelectScrollArea}
         label={label}
-        error={error}
-        data={options}
+        error={internalError}
+        data={currentOptions}
         size={size!}
         icon={icon}
         width={width}
@@ -308,7 +354,7 @@ export function ArchbaseSelect<T, ID, O>({
         value={selectedValue}
         onSearchChange={setQueryValue}
         defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
-        searchValue={selectedValue ? selectedValue : ''}
+        searchValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
         filter={filter}
         initiallyOpened={initiallyOpened}
         itemComponent={itemComponent}

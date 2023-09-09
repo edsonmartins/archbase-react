@@ -61,10 +61,13 @@ export function ArchbaseDateTimePickerRange({
   onFocusEnter,
   icon,
   innerRefStart,
-  innerRefEnd
+  innerRefEnd,
+  error
 }: ArchbaseDateTimePickerRangeProps) {
   const [startDate, setStartDate] = useState<DateValue>()
   const [endDate, setEndDate] = useState<DateValue>()
+  const [internalError, setInternalError] = useState<string|undefined>(error);
+
 
   const handleSelectRange = (sDt?: DateValue, eDt?: DateValue) => {
     setStartDate(sDt)
@@ -78,6 +81,7 @@ export function ArchbaseDateTimePickerRange({
     <Input.Wrapper
       label={label}
       size={size!}
+      error={internalError}
       description={description}
       style={{
         width,

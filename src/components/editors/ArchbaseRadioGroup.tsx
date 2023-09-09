@@ -1,84 +1,84 @@
-import { MantineSize, Radio } from '@mantine/core';
-import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { useState, useCallback, ReactNode } from 'react';
-import { uniqueId } from 'lodash';
-import { useArchbaseDidMount, useArchbaseDidUpdate } from '@hooks/lifecycle';
-import type { DataSourceEvent, ArchbaseDataSource } from '@components/datasource';
-import { DataSourceEventNames } from '@components/datasource';
+import { MantineSize, Radio } from '@mantine/core'
+import type { CSSProperties, FocusEventHandler } from 'react'
+import React, { useState, useCallback, ReactNode, useEffect } from 'react'
+import { uniqueId } from 'lodash'
+import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks/lifecycle'
+import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
+import { DataSourceEventNames } from '../datasource'
 
 export interface ArchbaseRadioGroupProps<T, ID, O> {
   /** Fonte de dados onde será atribuido o valor do RadioGroup*/
-  dataSource?: ArchbaseDataSource<T, ID>;
+  dataSource?: ArchbaseDataSource<T, ID>
   /** Campo onde deverá ser atribuido o valor do RadioGroup na fonte de dados */
-  dataField?: string;
+  dataField?: string
   /** Estilo do componente */
-  style?: CSSProperties;
+  style?: CSSProperties
   /** Estilo do componente filho */
-  childStyle?: CSSProperties;
+  childStyle?: CSSProperties
   /** Tamanho do edit */
-  size?: MantineSize;
+  size?: MantineSize
   /** Título do RadioGroup */
-  label?: string;
+  label?: string
   /** Descrição do RadioGroup */
-  description?: string;
+  description?: string
   /** Último erro ocorrido no RadioGroup */
-  error?: string;
+  error?: string
   /** Evento quando o foco sai do RadioGroup */
-  onFocusExit?: FocusEventHandler<T> | undefined;
+  onFocusExit?: FocusEventHandler<T> | undefined
   /** Evento quando o RadioGroup recebe o foco */
-  onFocusEnter?: FocusEventHandler<T> | undefined;
+  onFocusEnter?: FocusEventHandler<T> | undefined
   /** Evento quando um valor é selecionado */
-  onSelectValue?: (value: any) => void;
+  onSelectValue?: (value: any) => void
   /** Function que retorna o label de uma RadioItem */
-  getOptionLabel?: (option: O) => string;
+  getOptionLabel?: (option: O) => string
   /** Function que retorna o valor de uma RadioItem */
-  getOptionValue?: (option: O) => any;
+  getOptionValue?: (option: O) => any
   /** Function que converte o valor selecionado do tipo padrão string para o tipo desejado */
-  convertFromString?: (selected: string) => any;
+  convertFromString?: (selected: string) => any
   /** Opções de seleção iniciais */
-  initialOptions?: O[] | object;
+  initialOptions?: O[] | object
   /** Coleção de RadioItem[] que representam as opções do select */
-  children?: ReactNode | ReactNode[];
+  children?: ReactNode | ReactNode[]
   /** Valor de entrada controlado */
-  value?: any;
+  value?: any
   /** Valor padrão de entrada não controlado */
-  defaultValue?: any;
+  defaultValue?: any
   /** Direção dos itens do RadioGroup */
-  direction?: 'horizontal' | 'vertical';
+  direction?: 'horizontal' | 'vertical'
 }
 
 interface RadioItemProps {
-  label: string;
-  value: any;
-  key: string;
+  label: string
+  value: any
+  key: string
 }
 
 function buildOptions<O>(
   initialOptions: O[] | object,
   children: ReactNode | ReactNode[] | undefined,
   getOptionLabel: (option: O) => string,
-  getOptionValue: (option: O) => any,
+  getOptionValue: (option: O) => any
 ): any {
   if (!initialOptions && !children) {
-    return [];
+    return []
   }
 
   if (children) {
     return React.Children.toArray(children).map((item: any) => {
-      return { label: item.props.label, value: item.props.value.toString(), key: uniqueId('radio') };
-    });
+      return { label: item.props.label, value: item.props.value.toString(), key: uniqueId('radio') }
+    })
   }
   if (Array.isArray(initialOptions)) {
     return initialOptions.map((item: O) => {
-      return { label: getOptionLabel(item), value: getOptionValue(item), key: uniqueId('radio') };
-    });
+      return { label: getOptionLabel(item), value: getOptionValue(item), key: uniqueId('radio') }
+    })
   }
 
   return Object.keys(initialOptions).map((key) => ({
     label: key,
     value: initialOptions[key].toString(),
-    key: uniqueId('radio'),
-  }));
+    key: uniqueId('radio')
+  }))
 }
 
 export function ArchbaseRadioGroup<T, ID, O>({
@@ -100,29 +100,34 @@ export function ArchbaseRadioGroup<T, ID, O>({
   defaultValue,
   initialOptions = [],
   children,
-  direction = 'vertical',
+  direction = 'vertical'
 }: ArchbaseRadioGroupProps<T, ID, O>) {
   const [options, _setOptions] = useState<RadioItemProps[]>(
-    buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
-  );
-  const [selectedValue, setSelectedValue] = useState<any>(value);
+    buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue)
+  )
+  const [selectedValue, setSelectedValue] = useState<any>(value)
+  const [internalError, setInternalError] = useState<string|undefined>(error);
+
+  useEffect(()=>{
+    setInternalError(undefined)
+  },[options, selectedValue])
 
   const loadDataSourceFieldValue = () => {
-    let initialValue: any = value;
+    let initialValue: any = value
 
     if (dataSource && dataField) {
-      initialValue = dataSource.getFieldValue(dataField);
+      initialValue = dataSource.getFieldValue(dataField)
       if (!initialValue) {
-        initialValue = '';
+        initialValue = ''
       }
     }
     if (typeof initialValue !== 'string') {
-      initialValue = initialValue.toString();
+      initialValue = initialValue.toString()
     }
-    setSelectedValue(initialValue);
-  };
+    setSelectedValue(initialValue)
+  }
 
-  const fieldChangedListener = useCallback(() => {}, []);
+  const fieldChangedListener = useCallback(() => {}, [])
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
@@ -132,53 +137,61 @@ export function ArchbaseRadioGroup<T, ID, O>({
         DataSourceEventNames.recordChanged,
         DataSourceEventNames.afterScroll,
         DataSourceEventNames.afterCancel): {
-          loadDataSourceFieldValue();
-          break;
+          loadDataSourceFieldValue()
+          break
         }
         default:
       }
+      if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
+        setInternalError(event.error)
+      }
     }
-  }, []);
+  }, [])
 
   useArchbaseDidMount(() => {
-    loadDataSourceFieldValue();
+    loadDataSourceFieldValue()
     if (dataSource && dataField) {
-      dataSource.addListener(dataSourceEvent);
-      dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+      dataSource.addListener(dataSourceEvent)
+      dataSource.addFieldChangeListener(dataField, fieldChangedListener)
     }
-  });
+  })
 
   useArchbaseDidUpdate(() => {
-    loadDataSourceFieldValue();
-  }, []);
+    loadDataSourceFieldValue()
+  }, [])
 
   const handleChange = (currentSelectedValue: string) => {
-    setSelectedValue((_prev) => currentSelectedValue);
+    setSelectedValue((_prev) => currentSelectedValue)
 
-    let savedValue = currentSelectedValue;
+    let savedValue = currentSelectedValue
     if (convertFromString) {
-      savedValue = convertFromString(currentSelectedValue);
+      savedValue = convertFromString(currentSelectedValue)
     }
-    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== savedValue) {
-      dataSource.setFieldValue(dataField, savedValue);
+    if (
+      dataSource &&
+      !dataSource.isBrowsing() &&
+      dataField &&
+      dataSource.getFieldValue(dataField) !== savedValue
+    ) {
+      dataSource.setFieldValue(dataField, savedValue)
     }
 
     if (onSelectValue) {
-      onSelectValue(savedValue);
+      onSelectValue(savedValue)
     }
-  };
+  }
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {
-      onFocusExit(event);
+      onFocusExit(event)
     }
-  };
+  }
 
   const handleOnFocusEnter = (event) => {
     if (onFocusEnter) {
-      onFocusEnter(event);
+      onFocusEnter(event)
     }
-  };
+  }
 
   return (
     <Radio.Group
@@ -188,7 +201,7 @@ export function ArchbaseRadioGroup<T, ID, O>({
       label={label}
       style={style}
       size={size}
-      error={error}
+      error={internalError}
       onChange={handleChange}
       onBlur={handleOnFocusExit}
       onFocus={handleOnFocusEnter}
@@ -206,5 +219,5 @@ export function ArchbaseRadioGroup<T, ID, O>({
         />
       ))}
     </Radio.Group>
-  );
+  )
 }

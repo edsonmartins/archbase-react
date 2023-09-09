@@ -1,6 +1,6 @@
 import { Flex, Input, MantineNumberSize, MantineSize } from '@mantine/core'
 import { IconArrowRight, IconCalendar } from '@tabler/icons-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit'
 import { DateValue } from '@mantine/dates'
@@ -59,10 +59,16 @@ export function ArchbaseDatePickerRange({
   onFocusEnter,
   onFocusExit,
   placeholderStart,
-  placeholderEnd
+  placeholderEnd,
+  error
 }: ArchbaseDatePickerRangeProps) {
   const [startDate, setStartDate] = useState<DateValue>()
   const [endDate, setEndDate] = useState<DateValue>()
+  const [internalError, setInternalError] = useState<string|undefined>(error);
+
+  useEffect(()=>{
+    setInternalError(undefined)
+  },[startDate,endDate])
 
   const handleSelectRange = (sDt?: DateValue, eDt?: DateValue) => {
     setStartDate(sDt)
@@ -76,6 +82,7 @@ export function ArchbaseDatePickerRange({
     <Input.Wrapper
       label={label}
       size={size!}
+      error={internalError}
       style={{
         width,
         ...style
@@ -109,29 +116,3 @@ export function ArchbaseDatePickerRange({
     </Input.Wrapper>
   )
 }
-
-/*
-  {
-    dataSource,
-    dataField,
-    disabled = false,
-    readOnly = false,
-    style,
-    placeholder,
-    label,
-    description,
-    error,
-    required,
-    size,
-    width,
-    innerRef,
-    value,
-    icon,
-    onKeyDown,
-    onKeyUp,
-    onActionSearchExecute = () => {},
-    tooltipIconSearch = 'Clique aqui para Localizar',
-    onFocusExit = () => {},
-    onFocusEnter = () => {},
-    onChangeValue = () => {},
-  }*/
