@@ -10,7 +10,7 @@ import {
   IconTrash,
   IconUpload,
 } from '@tabler/icons-react';
-import { Box, Space } from '@mantine/core';
+import { Box, Button } from '@mantine/core';
 import { IconPrinter } from '@tabler/icons-react';
 import { IconTableExport } from '@tabler/icons-react';
 import { IconTableImport } from '@tabler/icons-react';
@@ -23,6 +23,7 @@ const actions: ArchbaseAction[] = [
     label: 'Salvar',
     executeAction: () => {},
     enabled: true,
+    hint: 'Clique para salvar.',
   },
   {
     id: '2',
@@ -31,6 +32,7 @@ const actions: ArchbaseAction[] = [
     label: 'Remover',
     executeAction: () => {},
     enabled: true,
+    hint: 'Clique para remover.',
   },
   {
     id: '3',
@@ -39,6 +41,7 @@ const actions: ArchbaseAction[] = [
     label: 'Imprimir',
     executeAction: () => {},
     enabled: true,
+    hint: 'Clique para imprimir.',
   },
   {
     id: '4',
@@ -47,6 +50,7 @@ const actions: ArchbaseAction[] = [
     label: 'Baixar',
     executeAction: () => {},
     enabled: true,
+    hint: 'Clique para baixar.',
   },
   {
     id: '5',
@@ -55,6 +59,7 @@ const actions: ArchbaseAction[] = [
     label: 'Carregar',
     executeAction: () => {},
     enabled: true,
+    hint: 'Clique para carregar.',
   },
   {
     id: '6',
@@ -63,6 +68,7 @@ const actions: ArchbaseAction[] = [
     label: 'Importar',
     executeAction: () => {},
     enabled: true,
+    hint: 'Clique para importar.',
   },
   {
     id: '7',
@@ -71,6 +77,7 @@ const actions: ArchbaseAction[] = [
     label: 'Exportar',
     executeAction: () => {},
     enabled: true,
+    hint: 'Clique para exportar.',
   },
   {
     id: '8',
@@ -79,6 +86,7 @@ const actions: ArchbaseAction[] = [
     label: 'Editar',
     executeAction: () => {},
     enabled: true,
+    hint: 'Clique para editar.',
   },
   {
     id: '9',
@@ -87,6 +95,7 @@ const actions: ArchbaseAction[] = [
     label: 'Recarregar',
     executeAction: () => {},
     enabled: true,
+    hint: 'Clique para recarregar.',
   },
   {
     id: '10',
@@ -98,11 +107,22 @@ const actions: ArchbaseAction[] = [
   },
 ];
 
+function CustomMediumButtom(props: any) {
+  return (
+    <Button style={{ borderRadius: '2rem' }} color={props.action.color} {...props}>
+      {props.action.icon}
+    </Button>
+  );
+}
+
 const ArchbaseActionButtonsExample = () => {
   return (
     <Box maw={1600}>
       <ArchbaseActionButtons
         actions={actions}
+        customComponents={{
+          mediumButtonType: CustomMediumButtom,
+        }}
         options={{
           largerBreakPoint: '800px',
           smallerBreakPoint: '600px',
@@ -111,9 +131,10 @@ const ArchbaseActionButtonsExample = () => {
           largerButtonVariant: 'filled',
           smallerButtonVariant: 'filled',
           menuItemVariant: 'filled',
-          menuButtonVariant: 'gradient',
+          menuButtonVariant: 'filled',
           menuButtonColor: 'blue.5',
-          menuVariant: 'gradient',
+          menuDropdownPosition: 'bottom',
+          menuItemApplyActionColor: true,
           menuPosition: 'left',
         }}
       />
@@ -122,7 +143,7 @@ const ArchbaseActionButtonsExample = () => {
 };
 
 export default {
-  title: 'ActionButtons',
+  title: 'Templates/Components/ActionButtons',
   component: ArchbaseActionButtonsExample,
 } as Meta;
 

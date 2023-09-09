@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Menu, Space, Text, Variants, px, useMantineTheme } from '@mantine/core';
+import { ActionIcon, Button, Menu, Space, Text, Tooltip, Variants, px, useMantineTheme } from '@mantine/core';
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useArchbaseSize } from '@hooks/useArchbaseSize';
 import { useMediaQuery } from '@mantine/hooks';
@@ -29,9 +29,11 @@ export interface ArchbaseAction {
   executeAction: () => void;
   /** Indicador se o Action Button está habilitado para executar a ação */
   enabled: boolean;
+  /** Detalhamento da ação para ajudar o usuário*/
+  hint?: string;
 }
 
-interface ActionButtonOptions {
+interface ArchbaseActionButtonsOptions {
   /** Limite que determina a partir de quantos px o botão maior será renderizado*/
   largerBreakPoint?: string;
   /** Limite que determina a partir de quantos px o botão menor será renderizado*/
@@ -50,10 +52,23 @@ interface ActionButtonOptions {
   menuButtonVariant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
   /** Cor do botão do menu */
   menuButtonColor?: string;
-  /** Variação do menu */
-  menuVariant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
+  /** Posição do dropdown do menu */
+  menuDropdownPosition?:
+    | 'bottom'
+    | 'left'
+    | 'right'
+    | 'top'
+    | 'bottom-end'
+    | 'bottom-start'
+    | 'left-end'
+    | 'left-start'
+    | 'right-end'
+    | 'right-start'
+    | 'top-end'
+    | 'top-start';
   /** Posição do menu */
   menuPosition?: 'right' | 'left';
+  menuItemApplyActionColor?: boolean;
 }
 
 export interface ArchbaseActionButtonsProps {
@@ -62,9 +77,142 @@ export interface ArchbaseActionButtonsProps {
   /**  Variação padrão para todo o componente, que será sobrescrito pela variação mais específica de options */
   variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
   /** Opções de personalização */
-  options?: ActionButtonOptions;
+  options?: ArchbaseActionButtonsOptions;
   /** Definição dos componentes personalizados */
   customComponents?: ActionButtonsCustomComponentsDefinition;
+}
+
+interface ArchbaseActionButtonProps {
+  /** Ação */
+  action: ArchbaseAction;
+  /**  Variação padrão */
+  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
+  /** Opções de personalização */
+  options?: ArchbaseActionButtonsOptions;
+  /** Definição dos componentes personalizados */
+  customComponents?: ActionButtonsCustomComponentsDefinition;
+  /** Ação a ser executada ao clicar no Action Button */
+  handleExecuteAction: (action: ArchbaseAction) => void;
+}
+
+function buildLargeActionButton({
+  action,
+  options,
+  variant,
+  handleExecuteAction,
+  customComponents,
+}: ArchbaseActionButtonProps) {
+  const LargeActionButton = customComponents ? customComponents.largeButtonType : null;
+  if (LargeActionButton) {
+    let largeButtonProps = {};
+    if (customComponents.largeButtonProps) {
+      largeButtonProps = customComponents.largeButtonProps;
+    }
+
+    return (
+      <LargeActionButton
+        action={action}
+        variant={options && options.largerButtonVariant ? options.largerButtonVariant : variant}
+        key={action.id}
+        disabled={!action.enabled}
+        onClick={() => handleExecuteAction(action)}
+        {...largeButtonProps}
+      />
+    );
+  } else {
+    return (
+      <Button
+        color={action.color}
+        variant={options && options.largerButtonVariant ? options.largerButtonVariant : variant}
+        key={action.id}
+        disabled={!action.enabled}
+        onClick={() => handleExecuteAction(action)}
+      >
+        {action.icon}
+        <Text>{action.label}</Text>
+      </Button>
+    );
+  }
+}
+
+function buildMediumActionButton({
+  action,
+  options,
+  variant,
+  handleExecuteAction,
+  customComponents,
+}: ArchbaseActionButtonProps) {
+  const MediumActionButton = customComponents ? customComponents.mediumButtonType : null;
+  if (MediumActionButton) {
+    let mediumButtonProps = {};
+    if (customComponents.mediumButtonProps) {
+      mediumButtonProps = customComponents.mediumButtonProps;
+    }
+
+    return (
+      <MediumActionButton
+        action={action}
+        variant={options && options.smallerButtonVariant ? options.smallerButtonVariant : variant}
+        key={action.id}
+        disabled={!action.enabled}
+        onClick={() => handleExecuteAction(action)}
+        {...mediumButtonProps}
+      />
+    );
+  } else {
+    return (
+      <ActionIcon
+        color={action.color}
+        variant={options && options.smallerButtonVariant ? options.smallerButtonVariant : variant}
+        key={action.id}
+        disabled={!action.enabled}
+        onClick={() => handleExecuteAction(action)}
+      >
+        {action.icon}
+      </ActionIcon>
+    );
+  }
+}
+
+function buildHiddenActionButton({
+  action,
+  options,
+  variant,
+  handleExecuteAction,
+  customComponents,
+}: ArchbaseActionButtonProps) {
+  const SmallActionButton = customComponents ? customComponents.smallButtonType : null;
+
+  return (
+    <Menu.Item
+      icon={action.icon}
+      key={action.id}
+      disabled={!action.enabled}
+      color={options && options.menuItemApplyActionColor ? action.color : undefined}
+      onClick={() => handleExecuteAction(action)}
+    >
+      <Tooltip withArrow position="left" disabled={!action.hint} label={action.hint}>
+        {SmallActionButton ? (
+          <div>
+            <SmallActionButton
+              action={action}
+              variant={options && options.menuItemVariant ? options.menuItemVariant : variant}
+            />
+          </div>
+        ) : (
+          <Text variant={options && options.menuItemVariant ? options.menuItemVariant : variant}>{action.label}</Text>
+        )}
+      </Tooltip>
+    </Menu.Item>
+  );
+}
+
+function buildVisibleActionButton(props: ArchbaseActionButtonProps, isLarge: boolean) {
+  if (isLarge) {
+    return buildLargeActionButton(props);
+  } else {
+    return buildMediumActionButton(props);
+  }
 }
 
 export function ArchbaseActionButtons({ actions, variant, customComponents, options }: ArchbaseActionButtonsProps) {
@@ -82,80 +230,11 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
   const isLarge = useMediaQuery(`(min-width: ${_largerBreakPoint})`);
   const isSmall = useMediaQuery(`(max-width: ${_smallerBreakPoint})`);
 
-  const LargeActionButton = customComponents ? customComponents.largeButtonType : null;
-  const MediumActionButton = customComponents ? customComponents.mediumButtonType : null;
-  const SmallActionButton = customComponents ? customComponents.smallButtonType : null;
-
   const largerSpacingPx = options && options.largerSpacing ? px(options.largerSpacing) : px('1rem');
   const smallerSpacingPx = options && options.smallerSpacing ? px(options.smallerSpacing) : px('0.25rem');
   const spacingPx = isLarge ? largerSpacingPx : smallerSpacingPx;
 
   const _menuPosition = options && options.menuPosition ? options.menuPosition : 'right';
-
-  const buildMediumActionButtons = useCallback(
-    (action: ArchbaseAction) => {
-      if (MediumActionButton) {
-        return (
-          <MediumActionButton
-            action={action}
-            variant={options && options.smallerButtonVariant ? options.smallerButtonVariant : variant}
-            key={action.id}
-          />
-        );
-      } else {
-        return (
-          <ActionIcon
-            color={action.color}
-            variant={options && options.smallerButtonVariant ? options.smallerButtonVariant : variant}
-            key={action.id}
-            onClick={() => handleExecuteAction(action)}
-          >
-            {action.icon}
-          </ActionIcon>
-        );
-      }
-    },
-    [MediumActionButton, variant, options],
-  );
-
-  const buildLargeActionButtons = useCallback(
-    (action: ArchbaseAction) => {
-      if (LargeActionButton) {
-        return (
-          <LargeActionButton
-            action={action}
-            variant={options && options.largerButtonVariant ? options.largerButtonVariant : variant}
-            key={action.id}
-          />
-        );
-      } else {
-        return (
-          <Button
-            color={action.color}
-            variant={options && options.largerButtonVariant ? options.largerButtonVariant : variant}
-            key={action.id}
-            disabled={!action.enabled}
-            onClick={() => handleExecuteAction(action)}
-          >
-            {action.icon}
-            <Text>{action.label}</Text>
-          </Button>
-        );
-      }
-    },
-    [LargeActionButton, variant, options],
-  );
-
-  const buildVisibleActionButtons = useCallback(
-    (action: ArchbaseAction) => {
-      if (isLarge) {
-        return buildLargeActionButtons(action);
-      } else {
-        return buildMediumActionButtons(action);
-      }
-    },
-    [buildMediumActionButtons, buildLargeActionButtons, isLarge],
-  );
 
   const calculateVisibleActions = useCallback(() => {
     const container = containerRef.current;
@@ -178,7 +257,10 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
       container.removeChild(menuButtonHtml);
 
       actions.forEach((action, index) => {
-        const button = buildVisibleActionButtons(action);
+        const button = buildVisibleActionButton(
+          { action, options, variant, handleExecuteAction, customComponents },
+          isLarge,
+        );
 
         const buttonHtmlString = ReactDOMServer.renderToStaticMarkup(button);
         const buttonHtml = createElementFromHTML(buttonHtmlString);
@@ -200,7 +282,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
         setHiddenActions(actions.slice(maxVisibleActions));
       }
     }
-  }, [actions, buildVisibleActionButtons, isSmall, spacingPx, theme.fontFamily]);
+  }, [actions, isSmall, spacingPx, theme.fontFamily, customComponents, variant, isLarge, options]);
 
   useEffect(() => {
     calculateVisibleActions();
@@ -212,26 +294,6 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
     }
   }
 
-  function buildHiddenActionButtons(action: ArchbaseAction) {
-    return (
-      <Menu.Item
-        icon={action.icon}
-        key={action.id}
-        disabled={!action.enabled}
-        onClick={() => handleExecuteAction(action)}
-      >
-        {SmallActionButton ? (
-          <SmallActionButton
-            action={action}
-            variant={options && options.menuItemVariant ? options.menuItemVariant : variant}
-          />
-        ) : (
-          <Text variant={options && options.menuItemVariant ? options.menuItemVariant : variant}>{action.label}</Text>
-        )}
-      </Menu.Item>
-    );
-  }
-
   function buildMenu() {
     return (
       hiddenActions.length > 0 && (
@@ -240,7 +302,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
           <Menu
             opened={opened}
             onChange={setOpened}
-            variant={options && options.menuVariant ? options.menuVariant : variant}
+            position={options && options.menuDropdownPosition ? options.menuDropdownPosition : 'bottom'}
           >
             <Menu.Target>
               <Button
@@ -250,7 +312,11 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
                 <IconMenu2 />
               </Button>
             </Menu.Target>
-            <Menu.Dropdown>{hiddenActions.map((action) => buildHiddenActionButtons(action))}</Menu.Dropdown>
+            <Menu.Dropdown>
+              {hiddenActions.map((action) =>
+                buildHiddenActionButton({ action, options, variant, handleExecuteAction, customComponents }),
+              )}
+            </Menu.Dropdown>
           </Menu>
           {visibleActions.length === 0 && _menuPosition === 'left' ? undefined : <Space w={spacingPx} />}
         </>
@@ -264,7 +330,11 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
       {visibleActions.map((action, index) => {
         return (
           <>
-            {buildVisibleActionButtons(action)}
+            <Tooltip withArrow disabled={!action.hint} position="left" label={action.hint}>
+              <div>
+                {buildVisibleActionButton({ action, options, variant, handleExecuteAction, customComponents }, isLarge)}
+              </div>
+            </Tooltip>
             {isLastElementOfArray(visibleActions, index) ? undefined : <Space w={spacingPx} key={index} />}
           </>
         );
