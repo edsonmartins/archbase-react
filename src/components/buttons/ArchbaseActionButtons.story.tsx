@@ -15,7 +15,7 @@ import { IconPrinter } from '@tabler/icons-react';
 import { IconTableExport } from '@tabler/icons-react';
 import { IconTableImport } from '@tabler/icons-react';
 
-const actions: ArchbaseAction[] = [
+export const Actions: ArchbaseAction[] = [
   {
     id: '1',
     icon: <IconDeviceFloppy />,
@@ -119,15 +119,15 @@ const ArchbaseActionButtonsExample = () => {
   return (
     <Box maw={1600}>
       <ArchbaseActionButtons
-        actions={actions}
-        customComponents={{
-          mediumButtonType: CustomMediumButtom,
-        }}
+        actions={Actions}
+        // customComponents={{
+        //   mediumButtonType: CustomMediumButtom,
+        // }}
         options={{
-          largerBreakPoint: '800px',
-          smallerBreakPoint: '600px',
+          largerBreakPoint: '600px',
+          smallerBreakPoint: '400px',
           largerSpacing: '2rem',
-          smallerSpacing: '0.1rem',
+          smallerSpacing: '5rem',
           largerButtonVariant: 'filled',
           smallerButtonVariant: 'filled',
           menuItemVariant: 'filled',
@@ -135,7 +135,7 @@ const ArchbaseActionButtonsExample = () => {
           menuButtonColor: 'blue.5',
           menuDropdownPosition: 'bottom',
           menuItemApplyActionColor: true,
-          menuPosition: 'left',
+          menuPosition: 'right',
         }}
       />
     </Box>
@@ -143,7 +143,7 @@ const ArchbaseActionButtonsExample = () => {
 };
 
 export default {
-  title: 'Templates/Components/ActionButtons',
+  title: 'Buttons/ActionButtons',
   component: ArchbaseActionButtonsExample,
 } as Meta;
 

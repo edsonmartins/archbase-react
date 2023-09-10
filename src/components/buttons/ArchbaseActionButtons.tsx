@@ -191,7 +191,7 @@ function buildHiddenActionButton({
       color={options && options.menuItemApplyActionColor ? action.color : undefined}
       onClick={() => handleExecuteAction(action)}
     >
-      <Tooltip withArrow position="left" disabled={!action.hint} label={action.hint}>
+      <Tooltip withArrow disabled={!action.hint} label={action.hint}>
         {SmallActionButton ? (
           <div>
             <SmallActionButton
@@ -243,10 +243,14 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
       let totalWidth = 0;
       let menuWidth = 0;
       let maxVisibleActions = 0;
-      const menuButton = (
-        <Button>
+      const menuButton = isLarge ? (
+        <Button px={'10px'}>
           <IconMenu2 />
         </Button>
+      ) : (
+        <ActionIcon>
+          <IconMenu2 />
+        </ActionIcon>
       );
 
       const menuButtonHtmlString = ReactDOMServer.renderToStaticMarkup(menuButton);
@@ -298,19 +302,29 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
     return (
       hiddenActions.length > 0 && (
         <>
-          {visibleActions.length === 0 && _menuPosition === 'right' ? undefined : <Space w={spacingPx} />}
+          {visibleActions.length !== 0 && _menuPosition === 'right' ? <Space w={spacingPx} /> : undefined}
           <Menu
             opened={opened}
             onChange={setOpened}
             position={options && options.menuDropdownPosition ? options.menuDropdownPosition : 'bottom'}
           >
             <Menu.Target>
-              <Button
-                color={options && options.menuButtonColor ? options.menuButtonColor : 'blue.5'}
-                variant={options && options.menuButtonVariant ? options.menuButtonVariant : variant}
-              >
-                <IconMenu2 />
-              </Button>
+              {isLarge ? (
+                <Button
+                  color={options && options.menuButtonColor ? options.menuButtonColor : 'blue.5'}
+                  variant={options && options.menuButtonVariant ? options.menuButtonVariant : variant}
+                  px={'10px'}
+                >
+                  <IconMenu2 />
+                </Button>
+              ) : (
+                <ActionIcon
+                  color={options && options.menuButtonColor ? options.menuButtonColor : 'blue.5'}
+                  variant={options && options.menuButtonVariant ? options.menuButtonVariant : variant}
+                >
+                  <IconMenu2 />
+                </ActionIcon>
+              )}
             </Menu.Target>
             <Menu.Dropdown>
               {hiddenActions.map((action) =>
@@ -318,19 +332,22 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
               )}
             </Menu.Dropdown>
           </Menu>
-          {visibleActions.length === 0 && _menuPosition === 'left' ? undefined : <Space w={spacingPx} />}
+          {visibleActions.length !== 0 && _menuPosition === 'left' ? <Space w={spacingPx} /> : undefined}
         </>
       )
     );
   }
 
   return (
-    <div style={{ width: '100%', display: 'flex' }} ref={containerRef}>
+    <div
+      style={{ width: '100%', display: 'flex', justifyContent: _menuPosition === 'right' ? 'flex-end' : 'flex-start' }}
+      ref={containerRef}
+    >
       {_menuPosition === 'left' ? buildMenu() : undefined}
       {visibleActions.map((action, index) => {
         return (
           <>
-            <Tooltip withArrow disabled={!action.hint} position="left" label={action.hint}>
+            <Tooltip withArrow disabled={!action.hint} label={action.hint}>
               <div>
                 {buildVisibleActionButton({ action, options, variant, handleExecuteAction, customComponents }, isLarge)}
               </div>
