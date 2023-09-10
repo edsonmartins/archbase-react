@@ -18,6 +18,7 @@
   "eventMonitor": "Monitor eventos",
   "survey": "Pesquisa",
   "monitor": "Monitor",
+  "errorSavingRecord":"Ocorreu um erro salvando registro corrente. Fonte de dados: {{dataSourceName}} ",
   "saveRecordIsNotAllowed": "Registro não está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível salvá-lo.",
   "cancelRecordIsNotAllowed": "Registro não está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível cancelar a edição.",
   "insertRecordIsNotAllowed": "Registro já está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível inserir um novo.",

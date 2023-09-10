@@ -1,57 +1,61 @@
-import { MantineSize, Rating } from '@mantine/core';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import { useArchbaseDidMount, useArchbaseDidUpdate } from '@components/hooks';
-import React, { CSSProperties, FocusEventHandler, useCallback, useRef, useState } from 'react';
+import { Input, MantineSize, Rating } from '@mantine/core'
+import {
+  ArchbaseDataSource,
+  DataSourceEvent,
+  DataSourceEventNames
+} from '../datasource'
+import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks'
+import React, { CSSProperties, FocusEventHandler, useCallback, useEffect, useRef, useState } from 'react'
 
 export interface ArchbaseRatingProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do rating*/
-  dataSource?: ArchbaseDataSource<T, ID>;
+  dataSource?: ArchbaseDataSource<T, ID>
   /** Campo onde deverá ser atribuido o valor do rating na fonte de dados */
-  dataField?: string;
+  dataField?: string
   /** Indicador se o rating está desabilitado */
-  disabled?: boolean;
+  disabled?: boolean
   /** Indicador se o rating é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
-  readOnly?: boolean;
+  readOnly?: boolean
   /** Indicador se o preenchimento do rating é obrigatório */
-  required?: boolean;
+  required?: boolean
   /** Quantidade de controles a ser renderizado */
-  count: number;
+  count: number
   /** Valor inicial */
-  value?: number;
+  value?: number
   /** O ícone que é exibido quando o símbolo está vazio*/
-  emptySymbol?: React.ReactNode | ((value: number) => React.ReactNode);
+  emptySymbol?: React.ReactNode | ((value: number) => React.ReactNode)
   /** Este ícone que é exibido quando o símbolo está cheio */
-  fullSymbol?: React.ReactNode | ((value: number) => React.ReactNode);
+  fullSymbol?: React.ReactNode | ((value: number) => React.ReactNode)
   /** Número de frações em que cada item pode ser dividido, 1 por padrão */
-  fractions?: number;
+  fractions?: number
   /** Chamado quando o item é pairado */
-  onHover?(value: number): void;
+  onHover?(value: number): void
   /** A função deve retornar labelText para os símbolos */
-  getSymbolLabel?: (value: number) => string;
+  getSymbolLabel?: (value: number) => string
   /** Nome da avaliação, deve ser único na página */
-  name?: string;
+  name?: string
   /** Se verdadeiro, apenas o símbolo selecionado mudará para símbolo completo */
-  highlightSelectedOnly?: boolean;
+  highlightSelectedOnly?: boolean
   /** Estilo do rating */
-  style?: CSSProperties;
+  style?: CSSProperties
   /** Texto sugestão do rating */
-  placeholder?: string;
+  placeholder?: string
   /** Título do rating */
-  label?: string;
+  label?: string
   /** Descrição do rating */
-  description?: string;
+  description?: string
   /** Último erro ocorrido no rating */
-  error?: string;
+  error?: string
   /** Tamanho do rating */
-  size?: MantineSize;
+  size?: MantineSize
   /** Evento quando o foco sai do rating */
-  onFocusExit?: FocusEventHandler<T> | undefined;
+  onFocusExit?: FocusEventHandler<T> | undefined
   /** Evento quando o rating recebe o foco */
-  onFocusEnter?: FocusEventHandler<T> | undefined;
+  onFocusEnter?: FocusEventHandler<T> | undefined
   /** Evento quando o valor do rating é alterado */
-  onChangeValue?: (value?: number) => void;
+  onChangeValue?: (value?: number) => void
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement> | undefined;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined
 }
 
 export function ArchbaseRating<T, ID>({
@@ -67,24 +71,32 @@ export function ArchbaseRating<T, ID>({
   onFocusExit = () => {},
   onFocusEnter = () => {},
   onChangeValue = () => {},
+  error,
+  label,
+  description,
 }: ArchbaseRatingProps<T, ID>) {
-  const [currentValue, setCurrentValue] = useState<number | undefined>(value);
-  const innerComponentRef = innerRef || useRef<any>();
+  const [currentValue, setCurrentValue] = useState<number | undefined>(value)
+  const innerComponentRef = innerRef || useRef<any>()
+  const [internalError, setInternalError] = useState<string|undefined>(error);
+
+  useEffect(()=>{
+    setInternalError(undefined)
+  },[currentValue])
 
   const loadDataSourceFieldValue = () => {
-    let initialValue: number | undefined = currentValue;
+    let initialValue: number | undefined = currentValue
 
     if (dataSource && dataField) {
-      initialValue = dataSource.getFieldValue(dataField);
+      initialValue = dataSource.getFieldValue(dataField)
       if (!initialValue) {
-        initialValue = 0;
+        initialValue = 0
       }
     }
 
-    setCurrentValue(initialValue);
-  };
+    setCurrentValue(initialValue)
+  }
 
-  const fieldChangedListener = useCallback(() => {}, []);
+  const fieldChangedListener = useCallback(() => {}, [])
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
@@ -95,57 +107,65 @@ export function ArchbaseRating<T, ID>({
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel
       ) {
-        loadDataSourceFieldValue();
+        loadDataSourceFieldValue()
+      }
+      if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
+        setInternalError(event.error)
       }
     }
-  }, []);
+  }, [])
 
   useArchbaseDidMount(() => {
-    loadDataSourceFieldValue();
+    loadDataSourceFieldValue()
     if (dataSource && dataField) {
-      dataSource.addListener(dataSourceEvent);
-      dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+      dataSource.addListener(dataSourceEvent)
+      dataSource.addFieldChangeListener(dataField, fieldChangedListener)
     }
-  });
+  })
 
   useArchbaseDidUpdate(() => {
-    loadDataSourceFieldValue();
-  }, []);
+    loadDataSourceFieldValue()
+  }, [])
 
   const handleChange = (value?: number) => {
-    setCurrentValue((_prev) => value);
+    setCurrentValue((_prev) => value)
 
-    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== value) {
-      dataSource.setFieldValue(dataField, value);
+    if (
+      dataSource &&
+      !dataSource.isBrowsing() &&
+      dataField &&
+      dataSource.getFieldValue(dataField) !== value
+    ) {
+      dataSource.setFieldValue(dataField, value)
     }
 
     if (onChangeValue) {
-      onChangeValue(value);
+      onChangeValue(value)
     }
-  };
+  }
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {
-      onFocusExit(event);
+      onFocusExit(event)
     }
-  };
+  }
 
   const handleOnFocusEnter = (event) => {
     if (onFocusEnter) {
-      onFocusEnter(event);
+      onFocusEnter(event)
     }
-  };
+  }
 
   const isReadOnly = () => {
-    let _readOnly = readOnly;
+    let tmpRreadOnly = readOnly
     if (dataSource && !readOnly) {
-      _readOnly = dataSource.isBrowsing();
+      tmpRreadOnly = dataSource.isBrowsing()
     }
-
-    return _readOnly;
-  };
+    return tmpRreadOnly
+  }
 
   return (
+    <Input.Wrapper label={label} error={internalError} placeholder={placeholder} description={description}>
     <Rating
       readOnly={isReadOnly()}
       size={size!}
@@ -158,5 +178,6 @@ export function ArchbaseRating<T, ID>({
       onFocus={handleOnFocusEnter}
       placeholder={placeholder}
     />
-  );
+    </Input.Wrapper>
+  )
 }

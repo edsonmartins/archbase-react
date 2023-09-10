@@ -202,6 +202,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   const [_isLastPage, setIsLastPage] = useState(currentPage === totalPages - 1)
   const [originData, setOriginData] = useState(initialOptions.options)
   const innerComponentRef = innerRef || useRef<any>()
+  const [internalError, setInternalError] = useState<string|undefined>(error);
+
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value
@@ -228,6 +230,10 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         event.type === DataSourceEventNames.afterCancel
       ) {
         loadDataSourceFieldValue()
+      }
+
+      if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
+        setInternalError(event.error)
       }
     }
   }, [])
@@ -259,6 +265,10 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   useArchbaseDidUpdate(() => {
     loadDataSourceFieldValue()
   }, [])
+
+  useEffect(()=>{
+    setInternalError(undefined)
+  },[value,selectedValue,queryValue])
 
   const handleChange = (value) => {
     setSelectedValue((_prev) => value)
@@ -346,7 +356,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         dropdownComponent={CustomSelectScrollArea}
         ref={innerComponentRef}
         label={label}
-        error={error}
+        error={internalError}
         data={options}
         size={size!}
         style={{

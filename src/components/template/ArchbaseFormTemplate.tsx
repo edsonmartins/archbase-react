@@ -1,48 +1,76 @@
-import { Button, Group, MantineNumberSize, Paper, ScrollArea, Space, Stack, Variants } from '@mantine/core';
-import React, { useRef } from 'react';
-import { t } from 'i18next';
-import { IconBug } from '@tabler/icons-react';
-import { ArchbaseAlert } from '../notification';
-import { ArchbaseDataSource } from '@components/datasource';
-import { useArchbaseAppContext } from '@components/core';
+import { Button, Group, MantineNumberSize, Paper, ScrollArea, Space, Stack, Variants } from '@mantine/core'
+import React, { useRef, useState } from 'react'
+import { t } from 'i18next'
+import { IconBug } from '@tabler/icons-react'
+import { ArchbaseAlert } from '../notification'
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
+import { useArchbaseAppContext } from '../core'
+import { useArchbaseDataSourceListener } from '../hooks'
 
 export interface ArchbaseFormTemplateProps<T, ID> {
-  title: string;
-  dataSource: ArchbaseDataSource<T, ID>;
+  title: string
+  dataSource: ArchbaseDataSource<T,ID>
   variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement> | undefined;
-  isLoading?: boolean;
-  isError?: boolean;
-  error?: string | undefined;
-  clearError?: () => void;
-  width?: number | string | undefined;
-  height?: number | string | undefined;
-  withBorder?: boolean;
-  children?: React.ReactNode | React.ReactNode[];
-  radius?: MantineNumberSize;
-  onBeforeSave?: (entityToSave: T) => void;
-  onAfterSave?: (savedEntity: T) => void;
-  onBeforeCancel?: () => void;
-  onAfterCancel?: () => void;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined
+  isLoading?: boolean
+  isError?: boolean
+  error?: string | undefined
+  clearError?: () => void
+  autoCloseAlertError?: number
+  width?: number | string | undefined
+  height?: number | string | undefined
+  withBorder?: boolean
+  children?: React.ReactNode | React.ReactNode[]
+  radius?: MantineNumberSize
+  onBeforeSave?: (entityToSave : T) => void
+  onAfterSave?: (savedEntity : T)=>void
+  onBeforeCancel?: ()=>void
+  onAfterCancel?: ()=>void;
 }
 
 export function ArchbaseFormTemplate<T extends object, ID>({
-  //title,
   innerRef,
-  //isLoading = false,
   isError = false,
   error = '',
   clearError = () => {},
+  autoCloseAlertError = 15000,
   width = '100%',
   height = '100%',
   withBorder = true,
   children,
   radius,
   variant,
+  dataSource
 }: ArchbaseFormTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
-  const innerComponentRef = innerRef || useRef<any>();
+  const innerComponentRef = innerRef || useRef<any>()
+  const [isInternalError, setIsInternalError] = useState<boolean>(isError)
+  const [internalError, setInternalError] = useState<string>(error);
+
+  useArchbaseDataSourceListener<T, ID>({
+    dataSource,
+    listener: (event: DataSourceEvent<T>): void => {
+      if (event.type === DataSourceEventNames.onError) {
+        setIsInternalError(true);
+        setInternalError(event.error);
+      }
+    }
+  })
+
+  const handleSave = () =>{
+      dataSource.save()
+  }
+
+  const handleCancel = () => {
+      dataSource.cancel()
+  }
+
+  const handleCloseAlert = () => {
+    clearError && clearError()
+    setIsInternalError(false)
+    setInternalError("")
+  }
 
   return (
     <Paper
@@ -51,30 +79,30 @@ export function ArchbaseFormTemplate<T extends object, ID>({
       radius={radius}
       style={{ width: width, height: height, padding: 20 }}
     >
-      {isError ? (
+      {isInternalError ? (
         <ArchbaseAlert
-          autoClose={20000}
+          autoClose={autoCloseAlertError}
           withCloseButton={true}
           withBorder={true}
           icon={<IconBug size="1.4rem" />}
           title={t('WARNING')}
           titleColor="rgb(250, 82, 82)"
-          variant={variant ?? appContext.variant}
-          onClose={() => clearError && clearError()}
+          variant={variant??appContext.variant}
+          onClose={handleCloseAlert}
         >
-          <span>{error}</span>
+          <span>{internalError}</span>
         </ArchbaseAlert>
       ) : null}
-      <ScrollArea h={`calc(100% - ${isError ? '80px' : '0px'})`}>
-        {children}
+      <ScrollArea h={`calc(100% - ${isError?'80px':'0px'})`}>
+        {children}  
         <Stack>
           <Space h="lg" />
           <Group>
-            <Button variant={variant ?? appContext.variant} color="green">{`${t('Save')}`}</Button>
-            <Button variant={variant ?? appContext.variant} color="red">{`${t('Cancel')}`}</Button>
+            <Button onClick={handleSave} disabled={dataSource.isBrowsing()} variant={variant??appContext.variant} color="green">{`${t('Save')}`}</Button>
+            <Button onClick={handleCancel} disabled={dataSource.isBrowsing()} variant={variant??appContext.variant} color="red">{`${t('Cancel')}`}</Button>
           </Group>
         </Stack>
       </ScrollArea>
     </Paper>
-  );
+  )
 }

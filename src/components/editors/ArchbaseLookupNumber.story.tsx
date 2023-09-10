@@ -1,63 +1,66 @@
-import React from 'react';
-import { Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core';
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
-import { useArchbaseDataSource } from '@hooks/useArchbaseDataSource';
-import { useArchbaseDataSourceListener } from '@hooks/useArchbaseDataSourceListener';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import { useArchbaseForceUpdate, useArchbaseRemoteServiceApi } from '@components/hooks';
-import { Meta, StoryObj } from '@storybook/react';
-import { pedidosData, Pedido, Pessoa } from '@demo/index';
-import { ArchbaseEdit } from './ArchbaseEdit';
-import { ArchbaseNotifications } from '@components/notification';
-import { FakePessoaService } from '@demo/service/FakePessoaService';
-import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
-import { processErrorMessage } from '@components/core/exceptions';
-import { ArchbaseLookupNumber } from './ArchbaseLookupNumber';
+import React from 'react'
+import { Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
+import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
+import { DataSourceEvent, DataSourceEventNames } from '../datasource'
+import { useArchbaseForceUpdate, useArchbaseRemoteServiceApi } from '../hooks'
+import { Meta, StoryObj } from '@storybook/react'
+import { pedidosData, Pedido, Pessoa } from '../../demo/index'
+import { ArchbaseEdit } from './ArchbaseEdit'
+import { ArchbaseNotifications } from '../notification'
+import { FakePessoaService } from '../../demo/service/FakePessoaService'
+import { API_TYPE } from '../../demo/ioc/DemoIOCTypes'
+import { processErrorMessage } from '../core/exceptions'
+import { ArchbaseLookupNumber } from './ArchbaseLookupNumber'
 
-const pedidosList: Pedido[] = pedidosData;
+const pedidosList: Pedido[] = pedidosData
 
 const ArchbaseLookupNumberExample = () => {
-  const forceUpdate = useArchbaseForceUpdate();
-  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
-  const { dataSource } = useArchbaseDataSource<Pedido, string>({ initialData: pedidosList, name: 'dsPedidos' });
+  const forceUpdate = useArchbaseForceUpdate()
+  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa)
+  const { dataSource } = useArchbaseDataSource<Pedido, string>({
+    initialData: pedidosList,
+    name: 'dsPedidos'
+  })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit();
+    dataSource.edit()
   }
   useArchbaseDataSourceListener<Pedido, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pedido>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
-          forceUpdate();
-          break;
+          forceUpdate()
+          break
         }
         default:
       }
-    },
-  });
+    }
+  })
 
   const lookupValueDelegator = (value: any): Promise<Pessoa> => {
     return new Promise<Pessoa>(async (resolve, reject) => {
       try {
-        const result: Pessoa = await pessoaApi.findOne(parseInt(value));
-        resolve(result);
+        const result: Pessoa = await pessoaApi.findOne(parseInt(value))
+        resolve(result)
       } catch (error) {
-        reject(processErrorMessage(error));
+        reject(processErrorMessage(error))
       }
-    });
-  };
+    })
+  }
 
   const handlLookupError = (error: string): void => {
-    ArchbaseNotifications.showError(error, 'Atenção');
-  };
+    ArchbaseNotifications.showError(error, 'Atenção')
+  }
 
   const handleLookupResult = (_value: Pessoa): void => {
     //
-  };
+  }
 
   const handleActionSearchExecute = (): void => {
-    ArchbaseNotifications.showError('Clicou ação localizar.', 'Atenção');
-  };
+    ArchbaseNotifications.showError('Clicou ação localizar.', 'Atenção')
+  }
 
   return (
     <Grid>
@@ -84,7 +87,13 @@ const ArchbaseLookupNumberExample = () => {
                 validateMessage="Pessoa {0} não encontrada."
                 width={150}
               />
-              <ArchbaseEdit label="Nome" dataSource={dataSource} dataField="cliente.nome" disabled width={500} />
+              <ArchbaseEdit
+                label="Nome"
+                dataSource={dataSource}
+                dataField="cliente.nome"
+                disabled
+                width={500}
+              />
             </Flex>
           </Box>
         </Card>
@@ -114,18 +123,18 @@ const ArchbaseLookupNumberExample = () => {
         </Card>
       </Grid.Col>
     </Grid>
-  );
-};
+  )
+}
 
 export default {
   title: 'Editors/Lookup Number',
-  component: ArchbaseLookupNumberExample,
-} as Meta;
+  component: ArchbaseLookupNumberExample
+} as Meta
 
 export const Example: StoryObj<typeof ArchbaseLookupNumberExample> = {
   args: {
     render: () => {
-      <ArchbaseLookupNumberExample />;
-    },
-  },
-};
+      ;<ArchbaseLookupNumberExample />
+    }
+  }
+}

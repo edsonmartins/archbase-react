@@ -5,6 +5,6 @@ export {
   Columns,
   ToolBarActions
 } from './ArchbaseDataTable'
-export type { ArchbaseStatusType } from './ArchbaseStatusRender'
-export { ArchbaseStatusRender } from './ArchbaseStatusRender'
+export type { ArchbaseItemRenderType } from './ArchbaseItemRender'
+export { ArchbaseItemRender } from './ArchbaseItemRender'
 export { ArchbaseTableRowActions } from './ArchbaseDataTable'

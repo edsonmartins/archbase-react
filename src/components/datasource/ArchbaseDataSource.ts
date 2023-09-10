@@ -34,7 +34,8 @@ export enum DataSourceEventNames {
   beforeCancel,
   afterCancel,
   afterScroll,
-  onError
+  onError,
+  onFieldError
 }
 export type FilterFn<T> = (record: T) => boolean
 
@@ -51,6 +52,7 @@ export interface DataSourceOptions<T> {
   originFilter?: any
   originGlobalFilter?: any
   originSort?: any
+  validator?: IDataSourceValidator
 }
 
 export type DataSourceEventDataChangedType<T> = {
@@ -140,6 +142,14 @@ export type DataSourceEventOnErrorType<_T> = {
   originalError: any
 }
 
+export type DataSourceEventOnFieldErrorType<_T> = {
+  type: DataSourceEventNames.onFieldError
+  error: any
+  originalError: any
+  fieldName: string
+}
+
+
 export type DataSourceEvent<T> =
   | DataSourceEventDataChangedType<T>
   | DataSourceEventRecordChangedType<T>
@@ -163,6 +173,7 @@ export type DataSourceEvent<T> =
   | DataSourceEventAfterCancelType<T>
   | DataSourceEventAfterScrollType<T>
   | DataSourceEventOnErrorType<T>
+  | DataSourceEventOnFieldErrorType<T>
 
 export type DataSourceListener<T> = (event: DataSourceEvent<T>) => void
 
@@ -244,6 +255,17 @@ export interface IDataSource<T> {
   clearFilters: () => this
   locate(values: any): boolean
   locateByFilter(filterFn: (record: T) => boolean): boolean
+}
+
+export type DataSourceValidationError = {
+  errorMessage: string;
+  debugMessage: string;
+  fieldName: string;
+}
+
+
+export interface IDataSourceValidator {
+  validateEntity<T>(value: T): DataSourceValidationError[]
 }
 
 export class ArchbaseDataSourceEventEmitter {
@@ -366,6 +388,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
   protected defaultSortFields: string[] = []
 
+  protected validator?: IDataSourceValidator
+
   constructor(name: string, options: DataSourceOptions<T>) {
     this.name = name
     this.records = []
@@ -374,6 +398,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.fieldEventListeners = {}
     this.emitter = new ArchbaseDataSourceEventEmitter()
     this.uuid = uniqueId()
+    this.validator = options.validator
   }
 
   private loadOptions(options: DataSourceOptions<T>) {
@@ -402,17 +427,19 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
   protected validateDataSourceActive(operation: string) {
     if (!this.isActive()) {
+      const msg = i18next.t('archbase:operationNotAllowed', { dataSourceName: this.name, operation })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('operationNotAllowed', { dataSourceName: this.name, operation })
+        msg
       )
     }
   }
 
   public clear(): void {
     if (!this.isActive()) {
-      throw new ArchbaseDataSourceError(
-        i18next.t('operationNotAllowed', { dataSourceName: this.name, operation: 'clear' })
-      )
+      const msg = i18next.t('archbase:operationNotAllowed', { dataSourceName: this.name, operation: 'clear' })
+      this.publishEventError(msg,{})
+      throw new ArchbaseDataSourceError(msg)
     }
 
     this.emitter.emit('beforeClose')
@@ -431,7 +458,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.emitter.emit('afterOpen')
     this.emit({ type: DataSourceEventNames.afterOpen })
 
-    this.emitter.emit('dataChanged')
+    this.emitter.emit('dataChanged', this.records)
     this.emit({ type: DataSourceEventNames.dataChanged, data: this.records })
 
     this.emitter.emit('afterScroll')
@@ -452,7 +479,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.emitter.emit('afterOpen')
     this.emit({ type: DataSourceEventNames.afterOpen })
 
-    this.emitter.emit('dataChanged')
+    this.emitter.emit('dataChanged', this.records)
     this.emit({ type: DataSourceEventNames.dataChanged, data: this.records })
 
     this.emitter.emit('afterScroll')
@@ -479,7 +506,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
     this.loadOptions(options)
 
-    this.emitter.emit('dataChanged')
+    this.emitter.emit('dataChanged', this.records)
     this.emit({ type: DataSourceEventNames.dataChanged, data: this.records })
   }
 
@@ -492,8 +519,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public goToRecord(recordIndex: number): T | undefined {
     this.validateDataSourceActive('goToRecord')
     if (this.inserting || this.editing || this.isBOF() || this.isEOF()) {
+      const msg = i18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+        msg
       )
     }
     if (recordIndex <= this.getTotalRecords() - 1) {
@@ -563,8 +592,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public append(record: T): number {
     this.validateDataSourceActive('append')
     if (this.inserting || this.editing) {
+      const msg = i18next.t('archbase:insertRecordIsNotAllowed', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('insertRecordIsNotAllowed', { dataSourceName: this.name })
+        msg
       )
     }
     this.emitter.emit('beforeAppend', record)
@@ -577,7 +608,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.currentRecordIndex = -1
     }
 
-    this.emitter.emit('afterAppend', record)
+    this.emitter.emit('afterAppend', record, this.currentRecordIndex)
     this.emit({
       type: DataSourceEventNames.afterAppend,
       record,
@@ -592,8 +623,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public insert(record: T): this {
     this.validateDataSourceActive('insert')
     if (this.inserting || this.editing) {
+      const msg = i18next.t('archbase:insertRecordIsNotAllowed', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('insertRecordIsNotAllowed', { dataSourceName: this.name })
+        msg
       )
     }
     this.emitter.emit('beforeInsert')
@@ -609,7 +642,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.currentRecord = record
     this.inserting = true
 
-    this.emitter.emit('afterInsert', record)
+    this.emitter.emit('afterInsert', record, this.currentRecordIndex)
     this.emit({
       type: DataSourceEventNames.afterInsert,
       record,
@@ -625,18 +658,26 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public edit(): this {
     this.validateDataSourceActive('edit')
     if (this.inserting || this.editing) {
+      const msg = i18next.t('archbase:editRecordIsNotAllowed', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('editRecordIsNotAllowed', { dataSourceName: this.name })
+        msg
       )
     }
     if (this.isEmpty() || !this.currentRecord) {
-      throw new ArchbaseDataSourceError(i18next.t('noRecordsToEdit', { dataSourceName: this.name }))
+      const msg = i18next.t('archbase:noRecordsToEdit', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
+      throw new ArchbaseDataSourceError(msg)
     }
     if (this.isBOF()) {
-      throw new ArchbaseDataSourceError(i18next.t('BOFDataSource', { dataSourceName: this.name }))
+      const msg = i18next.t('archbase:BOFDataSource', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
+      throw new ArchbaseDataSourceError(msg)
     }
     if (this.isEOF()) {
-      throw new ArchbaseDataSourceError(i18next.t('EOFDataSource', { dataSourceName: this.name }))
+      const msg = i18next.t('archbase:EOFDataSource', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
+      throw new ArchbaseDataSourceError(msg)
     }
 
     this.emitter.emit('beforeEdit', this.currentRecord, this.currentRecordIndex)
@@ -649,7 +690,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.editing = true
     this.currentRecord = cloneDeep(this.currentRecord)
 
-    this.emitter.emit('afterEdit')
+    this.emitter.emit('afterEdit', this.currentRecord, this.getCurrentIndex())
     this.emit({
       type: DataSourceEventNames.afterEdit,
       record: this.currentRecord,
@@ -662,18 +703,26 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public async remove(callback?: Function): Promise<T | undefined> {
     this.validateDataSourceActive('remove')
     if (this.inserting || this.editing) {
+      const msg = i18next.t('archbase:removingRecordIsNotAllowed', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('removingRecordIsNotAllowed', { dataSourceName: this.name })
+        msg
       )
     }
     if (this.isEmpty() || !this.currentRecord) {
-      throw new ArchbaseDataSourceError(i18next.t('noRecordsToEdit', { dataSourceName: this.name }))
+      const msg = i18next.t('archbase:noRecordsToEdit', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
+      throw new ArchbaseDataSourceError(msg)
     }
     if (this.isBOF()) {
-      throw new ArchbaseDataSourceError(i18next.t('BOFDataSource', { dataSourceName: this.name }))
+      const msg = i18next.t('archbase:BOFDataSource', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
+      throw new ArchbaseDataSourceError(msg)
     }
     if (this.isEOF()) {
-      throw new ArchbaseDataSourceError(i18next.t('EOFDataSource', { dataSourceName: this.name }))
+      const msg = i18next.t('archbase:EOFDataSource', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
+      throw new ArchbaseDataSourceError(msg)
     }
 
     this.emitter.emit('beforeRemove', this.currentRecord, this.currentRecordIndex)
@@ -741,23 +790,63 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     return this.pageSize
   }
 
+  protected publishEventErrors = (errors : DataSourceValidationError[]) => {
+    errors.forEach(error => {
+      if (error.fieldName){
+        this.emitter.emit("onFieldError",error.fieldName, error.errorMessage)
+        this.emit({
+          type: DataSourceEventNames.onFieldError,
+          fieldName: error.fieldName,
+          error: error.errorMessage,
+          originalError: error
+        })
+      } else {
+        this.publishEventError(error.errorMessage, error)
+      }
+    })
+  }
+
+  protected publishEventError = (errorMessage: string, error: any) => {
+    this.emitter.emit("onError", errorMessage)
+    this.emit({
+      type: DataSourceEventNames.onError,
+      error: errorMessage,
+      originalError: error
+    })
+  }
+
   public async save(callback?: Function): Promise<T> {
     this.validateDataSourceActive('save')
-    if (!this.inserting || !this.editing) {
-      throw new ArchbaseDataSourceError(
-        i18next.t('saveRecordIsNotAllowed', { dataSourceName: this.name })
-      )
+    if (!this.inserting && !this.editing) {
+      const msg = i18next.t('archbase:saveRecordIsNotAllowed', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
+      throw new ArchbaseDataSourceError(msg)
     }
     if (!this.currentRecord) {
-      throw new ArchbaseDataSourceError(i18next.t('noRecordToSave', { dataSourceName: this.name }))
+      const msg = i18next.t('archbase:noRecordToSave', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
+      throw new ArchbaseDataSourceError(msg)
     }
 
-    this.emitter.emit('beforeSave')
+    this.emitter.emit('beforeSave', this.currentRecord, this.getCurrentIndex())
     this.emit({
       type: DataSourceEventNames.beforeSave,
       record: this.currentRecord,
       index: this.getCurrentIndex()
     })
+
+    if (this.validator){
+      const errors = this.validator.validateEntity<T>(this.currentRecord);
+      if (errors && errors.length>0){
+        this.publishEventErrors(errors);
+        if (!errors[0].fieldName) {
+          throw new ArchbaseDataSourceError(errors[0].errorMessage)
+        } else {
+          const msg = i18next.t('archbase:errorSavingRecord', { dataSourceName: this.name })
+          throw new ArchbaseDataSourceError(msg)
+        }
+      }
+    }
 
     if (this.editing) {
       this.filteredRecords[this.getCurrentIndex()] = this.currentRecord
@@ -777,7 +866,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.editing = false
     this.inserting = false
 
-    this.emitter.emit('afterSave')
+    this.emitter.emit('afterSave', this.currentRecord, this.getCurrentIndex())
     this.emit({
       type: DataSourceEventNames.afterSave,
       record: this.currentRecord,
@@ -793,9 +882,11 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
   public cancel(): this {
     this.validateDataSourceActive('cancel')
-    if (!this.inserting || !this.editing) {
+    if (!this.inserting && !this.editing) {
+      const msg = i18next.t('archbase:notAllowCancelRecord', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('notAllowCancelRecord', { dataSourceName: this.name })
+        msg
       )
     }
 
@@ -848,8 +939,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   getFieldValue(fieldName: string, defaultValue: any = ''): any {
     this.validateDataSourceActive('getFieldValue')
     if (!fieldName) {
+      const msg = i18next.t('archbase:invalidFieldName', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('invalidFieldName', { dataSourceName: this.name })
+        msg
       )
     }
     if (this.isEmpty() || this.isBOF()) {
@@ -893,8 +986,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       return this
     }
     if (!(this.inserting || this.editing || this.isBOF() || this.isEOF())) {
+      const msg = i18next.t('archbase:recordNotBeingEdited', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('recordNotBeingEdited', { dataSourceName: this.name })
+        msg
       )
     }
 
@@ -910,7 +1005,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.currentRecord[fieldName] = newValue
     }
     this.emitFieldChangeEvent(fieldName, oldValue, newValue)
-    this.emitter.emit('fieldChanged', {})
+    this.emitter.emit('fieldChanged', this.currentRecord, this.getCurrentIndex(),fieldName, oldValue, newValue)
     this.emit({
       type: DataSourceEventNames.fieldChanged,
       record: this.currentRecord,
@@ -993,8 +1088,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public next(): this {
     this.validateDataSourceActive('next')
     if (this.inserting || this.editing || this.isBOF() || this.isEOF()) {
+      const msg = i18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+        msg
       )
     }
     if (this.currentRecordIndex + 1 > this.getTotalRecords() - 1) {
@@ -1013,8 +1110,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public prior(): this {
     this.validateDataSourceActive('prior')
     if (!this.inserting || !this.editing || this.isBOF() || this.isEOF()) {
+      const msg = i18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+        msg
       )
     }
     if (this.currentRecordIndex - 1 < 0) {
@@ -1033,8 +1132,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public first(): this {
     this.validateDataSourceActive('first')
     if (this.inserting || this.editing) {
+      const msg = i18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+        msg
       )
     }
     if (this.getTotalRecords() === 0) {
@@ -1053,8 +1154,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public last(): this {
     this.validateDataSourceActive('last')
     if (this.inserting || this.editing) {
+      const msg = i18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+        msg
       )
     }
     if (this.getTotalRecords() === 0) {
@@ -1073,12 +1176,16 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public gotoRecord(index: number): T | undefined {
     this.validateDataSourceActive('gotoRecord')
     if (!this.inserting || !this.editing || this.isBOF() || this.isEOF()) {
+      const msg = i18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+        msg
       )
     }
     if (index < 0 || index >= this.filteredRecords.length) {
-      throw new ArchbaseDataSourceError('Index out of range.')
+      const msg = 'Indice fora da faixa.';
+      this.publishEventError(msg,{})
+      throw new ArchbaseDataSourceError(msg)
     }
     if (this.currentRecordIndex - 1 < 0) {
       this.currentRecordIndex = -1
@@ -1096,8 +1203,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public gotoRecordByData(record): boolean {
     this.validateDataSourceActive('gotoRecordByData')
     if (this.inserting || this.editing || this.isBOF() || this.isEOF()) {
+      const msg = i18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+        msg
       )
     }
 
@@ -1124,8 +1233,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
   locate(values: any) {
     if (!this.isBrowsing()) {
+      const msg = i18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+        msg
       )
     }
 
@@ -1154,8 +1265,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
   public locateByFilter(filterFn: (record: T) => boolean): boolean {
     this.validateDataSourceActive('locate')
     if (!this.inserting || !this.editing) {
+      const msg = i18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name })
+      this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(
-        i18next.t('notAllowedBrowseRecords', { dataSourceName: this.name })
+        msg
       )
     }
     if (this.isEmpty()) {

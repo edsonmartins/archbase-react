@@ -1,22 +1,26 @@
-import { useEffect, useState } from 'react';
-import { ArchbaseDataSource, DataSourceOptions } from '@components/datasource/ArchbaseDataSource';
-import { ArchbaseLocalFilterDataSource, LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
+import { useEffect, useState } from 'react'
+import { ArchbaseDataSource, DataSourceOptions, IDataSourceValidator } from '../datasource/ArchbaseDataSource'
+import {
+  ArchbaseLocalFilterDataSource,
+  LocalFilter
+} from '../datasource/ArchbaseLocalFilterDataSource'
 
 export type UseArchbaseLocalFilterDataSourceProps = {
-  initialData: LocalFilter[];
-  initialDataSource?: ArchbaseLocalFilterDataSource | undefined;
-  name: string;
-  onLoadComplete?: (dataSource: ArchbaseDataSource<LocalFilter, number>) => void;
-};
+  initialData: LocalFilter[]
+  initialDataSource?: ArchbaseLocalFilterDataSource | undefined
+  name: string
+  onLoadComplete?: (dataSource: ArchbaseDataSource<LocalFilter, number>) => void
+  validator?: IDataSourceValidator
+}
 
 export type UseArchbaseLocalFilterDataSourceReturnType = {
-  dataSource?: ArchbaseLocalFilterDataSource;
-};
+  dataSource?: ArchbaseLocalFilterDataSource
+}
 
 export const useArchbaseLocalFilterDataSource = (
-  props: UseArchbaseLocalFilterDataSourceProps,
+  props: UseArchbaseLocalFilterDataSourceProps
 ): UseArchbaseLocalFilterDataSourceReturnType => {
-  const { initialData, name, initialDataSource, onLoadComplete } = props;
+  const { initialData, name, initialDataSource, onLoadComplete, validator } = props
   const [dataSource, setDataSource] = useState<ArchbaseLocalFilterDataSource>(
     initialDataSource ??
       new ArchbaseLocalFilterDataSource(name, {
@@ -25,8 +29,9 @@ export const useArchbaseLocalFilterDataSource = (
         currentPage: 0,
         totalPages: 0,
         pageSize: 0,
-      }),
-  );
+        validator
+      })
+  )
 
   useEffect(() => {
     setDataSource((prevDataSource) => {
@@ -36,19 +41,19 @@ export const useArchbaseLocalFilterDataSource = (
         totalPages: 0,
         currentPage: 0,
         pageSize: 0,
-      };
-      if (prevDataSource.isActive()) {
-        prevDataSource.setData(dsOptions);
-      } else {
-        prevDataSource.open(dsOptions);
+        validator
       }
-
-      return prevDataSource;
-    });
+      if (prevDataSource.isActive()) {
+        prevDataSource.setData(dsOptions)
+      } else {
+        prevDataSource.open(dsOptions)
+      }
+      return prevDataSource
+    })
     if (onLoadComplete) {
-      onLoadComplete(dataSource);
+      onLoadComplete(dataSource)
     }
-  }, [initialData, name]);
+  }, [initialData, name])
 
-  return { dataSource };
-};
+  return { dataSource }
+}

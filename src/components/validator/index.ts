@@ -5,10 +5,6 @@ import { getMetadataStorage } from './metadata/MetadataStorage';
 import { Validator } from './validation/Validator';
 import { getFromContainer } from './container';
 
-// -------------------------------------------------------------------------
-// Export everything api users needs
-// -------------------------------------------------------------------------
-
 export * from './container';
 export * from './decorator/decorators';
 export * from './decorator/ValidationOptions';
@@ -23,16 +19,16 @@ export * from './register-decorator';
 export * from './metadata/MetadataStorage';
 
 // -------------------------------------------------------------------------
-// Shortcut methods for api users
+// Métodos de atalho para usuários de API
 // -------------------------------------------------------------------------
 
 /**
- * Validates given object.
+ * Valida determinado objeto.
  */
 export function validate(object: object, validatorOptions?: ValidatorOptions): Promise<ValidationError[]>;
 
 /**
- * Validates given object by a given validation schema.
+ * Valida determinado objeto por um determinado esquema de validação.
  */
 export function validate(
   schemaName: string,
@@ -41,7 +37,7 @@ export function validate(
 ): Promise<ValidationError[]>;
 
 /**
- * Validates given object by object's decorators or given validation schema.
+ * Valida determinado objeto pelos decoradores do objeto ou determinado esquema de validação.
  */
 export function validate(
   schemaNameOrObject: object | string,
@@ -60,12 +56,12 @@ export function validate(
 }
 
 /**
- * Validates given object and reject on error.
+ * Valida determinado objeto e rejeita em caso de erro.
  */
 export function validateOrReject(object: object, validatorOptions?: ValidatorOptions): Promise<void>;
 
 /**
- * Validates given object by a given validation schema and reject on error.
+ * Valida determinado objeto por um determinado esquema de validação e rejeita em caso de erro.
  */
 export function validateOrReject(
   schemaName: string,
@@ -74,7 +70,7 @@ export function validateOrReject(
 ): Promise<void>;
 
 /**
- * Validates given object by object's decorators or given validation schema and reject on error.
+ * Valida determinado objeto pelos decoradores do objeto ou determinado esquema de validação e rejeita em caso de erro.
  */
 export function validateOrReject(
   schemaNameOrObject: object | string,
@@ -96,16 +92,16 @@ export function validateOrReject(
 }
 
 /**
- * Performs sync validation of the given object.
- * Note that this method completely ignores async validations.
- * If you want to properly perform validation you need to call validate method instead.
+ * Executa a validação de sincronização do objeto fornecido.
+ * Observe que este método ignora completamente as validações assíncronas.
+ * Se você deseja realizar a validação corretamente, você precisa chamar o método activate.
  */
 export function validateSync(object: object, validatorOptions?: ValidatorOptions): ValidationError[];
 
 /**
- * Validates given object by a given validation schema.
- * Note that this method completely ignores async validations.
- * If you want to properly perform validation you need to call validate method instead.
+ * Valida determinado objeto por um determinado esquema de validação.
+ * Observe que este método ignora completamente as validações assíncronas.
+ * Se você deseja realizar a validação corretamente, você precisa chamar o método activate.
  */
 export function validateSync(
   schemaName: string,
@@ -114,9 +110,9 @@ export function validateSync(
 ): ValidationError[];
 
 /**
- * Validates given object by object's decorators or given validation schema.
- * Note that this method completely ignores async validations.
- * If you want to properly perform validation you need to call validate method instead.
+ * Valida determinado objeto pelos decoradores do objeto ou determinado esquema de validação.
+ * Observe que este método ignora completamente as validações assíncronas.
+ * Se você deseja realizar a validação corretamente, você precisa chamar o método activate.
  */
 export function validateSync(
   schemaNameOrObject: object | string,
@@ -135,7 +131,7 @@ export function validateSync(
 }
 
 /**
- * Registers a new validation schema.
+ * Registra um novo esquema de validação.
  */
 export function registerSchema(schema: ValidationSchema): void {
   getMetadataStorage().addValidationSchema(schema);

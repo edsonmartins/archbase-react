@@ -1,55 +1,59 @@
-import { MantineNumberSize, MantineSize, Textarea } from '@mantine/core';
+import { MantineNumberSize, MantineSize, Textarea } from '@mantine/core'
 
-import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { useState, useCallback, useRef } from 'react';
+import type { CSSProperties, FocusEventHandler } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@hooks/lifecycle';
+import {
+  useArchbaseDidMount,
+  useArchbaseDidUpdate,
+  useArchbaseWillUnmount
+} from '../hooks/lifecycle'
 
-import type { DataSourceEvent, ArchbaseDataSource } from '@components/datasource';
-import { DataSourceEventNames } from '@components/datasource';
-import { isBase64 } from '@components/core/utils';
+import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
+import { DataSourceEventNames } from '../datasource'
+import { isBase64 } from '../core/utils'
 
 export interface ArchbaseTextAreaProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do textarea */
-  dataSource?: ArchbaseDataSource<T, ID>;
+  dataSource?: ArchbaseDataSource<T, ID>
   /** Campo onde deverá ser atribuido o valor do textarea na fonte de dados */
-  dataField?: string;
+  dataField?: string
   /** Indicador se o textarea está desabilitado */
-  disabled?: boolean;
+  disabled?: boolean
   /** Indicador se o textarea é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
-  readOnly?: boolean;
+  readOnly?: boolean
   /** Indicador se o preenchimento do textarea é obrigatório */
-  required?: boolean;
+  required?: boolean
   /** Estilo do textarea */
-  style?: CSSProperties;
+  style?: CSSProperties
   /** Tamanho do textarea */
-  size?: MantineSize;
+  size?: MantineSize
   /** Largura do textarea */
-  width?: MantineNumberSize;
+  width?: MantineNumberSize
   /** Indicador se textarea crescerá com o conteúdo até que maxRows sejam atingidos  */
-  autosize?: boolean;
+  autosize?: boolean
   /** Número mínimo de linhas obrigatórias */
-  minRows?: number;
+  minRows?: number
   /** Número máximo de linhas aceitas */
-  maxRows?: number;
+  maxRows?: number
   /** Desabilita conversão do conteúdo em base64 antes de salvar na fonte de dados */
-  disabledBase64Convertion?: boolean;
+  disabledBase64Convertion?: boolean
   /** Texto sugestão do textarea */
-  placeholder?: string;
+  placeholder?: string
   /** Título do textarea */
-  label?: string;
+  label?: string
   /** Descrição do textarea */
-  description?: string;
+  description?: string
   /** Último erro ocorrido no textarea */
-  error?: string;
+  error?: string
   /** Evento quando o foco sai do textarea */
-  onFocusExit?: FocusEventHandler<T> | undefined;
+  onFocusExit?: FocusEventHandler<T> | undefined
   /** Evento quando o textarea recebe o foco */
-  onFocusEnter?: FocusEventHandler<T> | undefined;
+  onFocusEnter?: FocusEventHandler<T> | undefined
   /** Evento quando o valor do textarea é alterado */
-  onChangeValue?: (value: any, event: any) => void;
+  onChangeValue?: (value: any, event: any) => void
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLTextAreaElement> | undefined;
+  innerRef?: React.RefObject<HTMLTextAreaElement> | undefined
 }
 
 export function ArchbaseTextArea<T, ID>({
@@ -70,29 +74,34 @@ export function ArchbaseTextArea<T, ID>({
   maxRows,
   required = false,
   disabledBase64Convertion = false,
-  innerRef,
+  innerRef
 }: ArchbaseTextAreaProps<T, ID>) {
-  const [value, setValue] = useState<string>('');
-  const innerComponentRef = innerRef || useRef<any>();
+  const [value, setValue] = useState<string>('')
+  const innerComponentRef = innerRef || useRef<any>()
+  const [internalError, setInternalError] = useState<string|undefined>(error)
+
+  useEffect(()=>{
+    setInternalError(undefined)
+  },[value])
 
   const loadDataSourceFieldValue = () => {
-    let initialValue: any = value;
+    let initialValue: any = value
 
     if (dataSource && dataField) {
-      initialValue = dataSource.getFieldValue(dataField);
+      initialValue = dataSource.getFieldValue(dataField)
       if (!initialValue) {
-        initialValue = '';
+        initialValue = ''
       }
     }
 
     if (isBase64(initialValue) && !disabledBase64Convertion) {
-      initialValue = atob(initialValue);
+      initialValue = atob(initialValue)
     }
 
-    setValue(initialValue);
-  };
+    setValue(initialValue)
+  }
 
-  const fieldChangedListener = useCallback(() => {}, []);
+  const fieldChangedListener = useCallback(() => {}, [])
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
@@ -103,57 +112,68 @@ export function ArchbaseTextArea<T, ID>({
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel
       ) {
-        loadDataSourceFieldValue();
+        loadDataSourceFieldValue()
+      }
+      if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
+        setInternalError(event.error)
       }
     }
-  }, []);
+  }, [])
 
   useArchbaseDidMount(() => {
-    loadDataSourceFieldValue();
+    loadDataSourceFieldValue()
     if (dataSource && dataField) {
-      dataSource.addListener(dataSourceEvent);
-      dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+      dataSource.addListener(dataSourceEvent)
+      dataSource.addFieldChangeListener(dataField, fieldChangedListener)
     }
-  });
+  })
 
   useArchbaseDidUpdate(() => {
-    loadDataSourceFieldValue();
-  }, []);
+    loadDataSourceFieldValue()
+  }, [])
 
   const handleChange = (event) => {
-    event.preventDefault();
-    const changedValue = event.target.value;
+    event.preventDefault()
+    const changedValue = event.target.value
 
-    event.persist();
-    setValue((_prev) => changedValue);
+    event.persist()
+    setValue((_prev) => changedValue)
 
-    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-      dataSource.setFieldValue(dataField, disabledBase64Convertion ? changedValue : btoa(changedValue));
+    if (
+      dataSource &&
+      !dataSource.isBrowsing() &&
+      dataField &&
+      dataSource.getFieldValue(dataField) !== changedValue
+    ) {
+      dataSource.setFieldValue(
+        dataField,
+        disabledBase64Convertion ? changedValue : btoa(changedValue)
+      )
     }
 
     if (onChangeValue) {
-      onChangeValue(event, changedValue);
+      onChangeValue(event, changedValue)
     }
-  };
+  }
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent);
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+      dataSource.removeListener(dataSourceEvent)
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
     }
-  });
+  })
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {
-      onFocusExit(event);
+      onFocusExit(event)
     }
-  };
+  }
 
   const handleOnFocusEnter = (event) => {
     if (onFocusEnter) {
-      onFocusEnter(event);
+      onFocusEnter(event)
     }
-  };
+  }
 
   return (
     <Textarea
@@ -168,11 +188,11 @@ export function ArchbaseTextArea<T, ID>({
       placeholder={placeholder}
       label={label}
       description={description}
-      error={error}
+      error={internalError}
       autosize={autosize}
       minRows={minRows}
       maxRows={maxRows}
       required={required}
     />
-  );
+  )
 }

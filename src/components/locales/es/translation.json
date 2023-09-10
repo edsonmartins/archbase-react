@@ -18,6 +18,7 @@
   "eventMonitor": "Monitorear eventos",
   "survey": "Encuesta",
   "monitor": "Monitorear",
+  "errorSavingRecord":"Se produjo un error al guardar el registro actual. Fuente de datos: {{dataSourceName}} ",
   "saveRecordIsNotAllowed": "El registro no se está ingresando o editando. Fuente de datos: {{dataSourceName}} no es posible guardarlo.",
   "cancelRecordIsNotAllowed": "El registro no se está ingresando o editando. Fuente de datos: {{dataSourceName}} no puedo cancelar editar.",
   "insertRecordIsNotAllowed": "El registro ya se está insertando o editando. Fuente de datos: {{dataSourceName}} no puede insertar uno nuevo.",

@@ -1,34 +1,35 @@
-import React, { Fragment, ReactNode, useRef } from 'react';
-// import type { ArchbaseDataSource } from '@components/datasource';
-// import {
-//   ArchbaseQueryBuilder,
-//   ArchbaseQueryFilter,
-//   ArchbaseQueryFilterDelegator,
-//   ArchbaseQueryFilterState,
-//   FilterOptions,
-//   getDefaultEmptyFilter,
-// } from '../querybuilder';
-import { ArchbaseAlert } from '../notification';
-import { IconBug } from '@tabler/icons-react';
-import { t } from 'i18next';
-// import useComponentSize from '@rehooks/component-size';
+import React, { Fragment, ReactNode, useMemo, useRef, useState } from 'react'
+import type { ArchbaseDataSource } from '../datasource'
+import {
+  ArchbaseQueryBuilder,
+  ArchbaseQueryFilter,
+  ArchbaseQueryFilterDelegator,
+  ArchbaseQueryFilterState,
+  FilterOptions,
+  getDefaultEmptyFilter
+} from '../querybuilder'
+import { ArchbaseAlert } from '../notification'
+import { IconBug, IconEdit, IconEye } from '@tabler/icons-react'
+import { t } from 'i18next'
+import useComponentSize from '@rehooks/component-size'
 import {
   Box,
-  // Button,
+  Button,
   Flex,
   Grid,
   MantineNumberSize,
-  // Pagination,
+  Pagination,
   Paper,
   ScrollArea,
   Text,
-  Variants,
-} from '@mantine/core';
-import { useArchbaseAppContext } from '@components/core';
+  Variants
+} from '@mantine/core'
+import { useArchbaseAppContext } from '../core'
 
-export interface ArchbaseSpaceTemplateProps<_T, _ID> {
+
+export interface ArchbaseSpaceTemplateProps<T, ID> {
   title: string;
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
+  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
   headerLeft?: ReactNode;
   headerMiddle?: ReactNode;
   headerRight?: ReactNode;
@@ -43,13 +44,13 @@ export interface ArchbaseSpaceTemplateProps<_T, _ID> {
   children?: React.ReactNode | React.ReactNode[];
   radius?: MantineNumberSize;
   debug?: boolean;
-  isError?: boolean;
-  error?: string | undefined;
-  clearError?: () => void;
+  isError?: boolean
+  error?: string | undefined
+  clearError?: () => void
 }
 
 export function ArchbaseSpaceTemplate<T extends object, ID>({
-  // title,
+  title,
   innerRef,
   isError = false,
   error = '',
@@ -61,17 +62,17 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
   radius,
   debug = false,
   headerLeft,
-  // headerMiddle,
+  headerMiddle,
   headerRight,
-  // footerLeft,
-  // footerMiddle,
-  // footerRight,
-  variant,
+  footerLeft,
+  footerMiddle,
+  footerRight,
+  variant
 }: ArchbaseSpaceTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
-  const innerComponentRef = innerRef || useRef<any>();
-  // const filterRef = useRef<any>();
-  // let size = useComponentSize(innerComponentRef);
+  const innerComponentRef = innerRef || useRef<any>()
+  const filterRef = useRef<any>()
+  let size = useComponentSize(innerComponentRef)
 
   return (
     <Paper
@@ -82,30 +83,12 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
     >
       <Box sx={{ height: 'auto' }}>
         <Grid m={0} gutter="xs" justify="center" align="center" grow>
-          <Grid.Col
-            sx={{
-              border: debug ? '1px dashed' : '',
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-            }}
-            span="auto"
-          >
+          <Grid.Col sx={{ border: debug ? '1px dashed' : '', display:'flex', justifyContent:'flex-start', alignItems:'center'}} span="auto">
             {headerLeft}
           </Grid.Col>
-          <Grid.Col
-            span="auto"
-            sx={{ border: debug ? '1px dashed' : '', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-          ></Grid.Col>
-          <Grid.Col
-            span="content"
-            sx={{
-              border: debug ? '1px dashed' : '',
-              display: 'flex',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-            }}
-          >
+          <Grid.Col span="auto" sx={{ border: debug ? '1px dashed' : '', display:'flex', justifyContent:'center', alignItems:'center'}}> 
+          </Grid.Col>
+          <Grid.Col span="content" sx={{ border: debug ? '1px dashed' : '', display:'flex', justifyContent:'flex-end', alignItems:'center'}}> 
             {headerRight}
           </Grid.Col>
         </Grid>
@@ -121,7 +104,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
                 icon={<IconBug size="1.4rem" />}
                 title={t('WARNING')}
                 titleColor="rgb(250, 82, 82)"
-                variant={variant ?? appContext.variant}
+                variant={variant??appContext.variant}
                 onClose={() => clearError && clearError()}
               >
                 <span>{error}</span>
@@ -130,7 +113,14 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
             {children}
           </Fragment>
         ) : debug ? (
-          <Flex style={{ height: '100%' }} gap="md" justify="center" align="center" direction="row" wrap="wrap">
+          <Flex
+            style={{ height: '100%' }}
+            gap="md"
+            justify="center"
+            align="center"
+            direction="row"
+            wrap="wrap"
+          >
             <Text size="lg">INSIRA O CONTEÚDO DO PAINEL AQUI.</Text>
           </Flex>
         ) : null}
@@ -144,24 +134,15 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
         grow
       >
         <Grid.Col
-          sx={{
-            border: debug ? '1px dashed' : '',
-            height: debug ? '70%' : 'auto',
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-          }}
+          sx={{ border: debug ? '1px dashed' : '', height: debug ? '70%' : 'auto', display:'flex', justifyContent:'flex-start', alignItems:'center'}}
           span="auto"
-        ></Grid.Col>
-        <Grid.Col
-          span="auto"
-          sx={{ border: debug ? '1px dashed' : '', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-        ></Grid.Col>
-        <Grid.Col
-          span="auto"
-          sx={{ border: debug ? '1px dashed' : '', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}
-        ></Grid.Col>
+        >
+        </Grid.Col>
+        <Grid.Col span="auto" sx={{ border: debug ? '1px dashed' : '', display:'flex', justifyContent:'center', alignItems:'center'}}>
+        </Grid.Col>
+        <Grid.Col span="auto" sx={{ border: debug ? '1px dashed' : '', display:'flex', justifyContent:'flex-end', alignItems:'center'}}> 
+        </Grid.Col>
       </Grid>
     </Paper>
-  );
+  )
 }
