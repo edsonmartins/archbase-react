@@ -15,7 +15,7 @@ import { IconPrinter } from '@tabler/icons-react';
 import { IconTableExport } from '@tabler/icons-react';
 import { IconTableImport } from '@tabler/icons-react';
 
-const actions: ArchbaseAction[] = [
+export const Actions: ArchbaseAction[] = [
   {
     id: '1',
     icon: <IconDeviceFloppy />,
@@ -119,7 +119,7 @@ const ArchbaseActionButtonsExample = () => {
   return (
     <Box maw={1600}>
       <ArchbaseActionButtons
-        actions={actions}
+        actions={Actions}
         // customComponents={{
         //   mediumButtonType: CustomMediumButtom,
         // }}
