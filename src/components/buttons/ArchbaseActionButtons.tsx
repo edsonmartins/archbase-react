@@ -105,7 +105,7 @@ function buildLargeActionButton({
   const LargeActionButton = customComponents ? customComponents.largeButtonType : null;
   if (LargeActionButton) {
     let largeButtonProps = {};
-    if (customComponents.largeButtonProps) {
+    if (customComponents && customComponents.largeButtonProps) {
       largeButtonProps = customComponents.largeButtonProps;
     }
 
@@ -145,7 +145,7 @@ function buildMediumActionButton({
   const MediumActionButton = customComponents ? customComponents.mediumButtonType : null;
   if (MediumActionButton) {
     let mediumButtonProps = {};
-    if (customComponents.mediumButtonProps) {
+    if (customComponents && customComponents.mediumButtonProps) {
       mediumButtonProps = customComponents.mediumButtonProps;
     }
 
@@ -255,7 +255,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 
       const menuButtonHtmlString = ReactDOMServer.renderToStaticMarkup(menuButton);
       const menuButtonHtml = createElementFromHTML(menuButtonHtmlString);
-      applyFontFamily(menuButtonHtml, theme.fontFamily);
+      theme.fontFamily && applyFontFamily(menuButtonHtml, theme.fontFamily);
       container.appendChild(menuButtonHtml);
       menuWidth += menuButtonHtml.offsetWidth;
       container.removeChild(menuButtonHtml);
@@ -268,7 +268,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 
         const buttonHtmlString = ReactDOMServer.renderToStaticMarkup(button);
         const buttonHtml = createElementFromHTML(buttonHtmlString);
-        applyFontFamily(buttonHtml, theme.fontFamily);
+        theme.fontFamily && applyFontFamily(buttonHtml, theme.fontFamily);
         container.appendChild(buttonHtml);
         totalWidth += buttonHtml.offsetWidth + (isLastElementOfArray(actions, index) ? 0 : spacingPx);
         container.removeChild(buttonHtml);

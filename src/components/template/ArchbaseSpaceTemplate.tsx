@@ -27,6 +27,7 @@ import {
 } from '@mantine/core';
 import { useArchbaseAppContext } from '../core';
 
+
 interface ArchbaseBreakpointsColSpans {
   /** Col span em (min-width: theme.breakpoints.xs) */
   xs?: ColSpan;
@@ -153,6 +154,9 @@ function buildHeader(
           w={headerFlexGrow === 'left' || headerFlexGrow === 'even' ? '100%' : undefined}
           maw={headerFlexGrow === 'left' || headerFlexGrow === 'even' ? undefined : '100%'}
           align={'center'}
+          sx={{
+            border: debug ? '1px dashed' : '',
+          }}
         >
           {headerLeft}
         </Flex>
@@ -160,6 +164,9 @@ function buildHeader(
           w={headerFlexGrow === 'right' || headerFlexGrow === 'even' ? '100%' : undefined}
           maw={headerFlexGrow === 'right' || headerFlexGrow === 'even' ? undefined : '100%'}
           align={'center'}
+          sx={{
+            border: debug ? '1px dashed' : '',
+          }}
         >
           {headerRight}
         </Flex>
@@ -279,7 +286,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
   footerMiddle,
   footerRight,
   variant,
-  options,
+  options = {},
 }: ArchbaseSpaceTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>();
