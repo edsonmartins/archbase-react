@@ -49,6 +49,14 @@ export interface ArchbaseSpaceTemplateOptions {
     middle?: ArchbaseBreakpointsColSpans;
     left?: ArchbaseBreakpointsColSpans;
   };
+  /** Indicar qual lado do footer irá crescer para preencher o espaço sobrando (Válido somente quando footerGridColumns não é atribuído ao options) */
+  footerFlexGrow?: 'left' | 'even' | 'right';
+  /** Indicar os ColSpan das grids para cada parte do footer (left, middle, right) de acordo com os breakpoints */
+  footerGridColumns?: {
+    right?: ArchbaseBreakpointsColSpans;
+    middle?: ArchbaseBreakpointsColSpans;
+    left?: ArchbaseBreakpointsColSpans;
+  };
 }
 
 export interface ArchbaseSpaceTemplateProps<T, ID> {
@@ -82,23 +90,23 @@ function buildHeader(
   debug: boolean,
 ) {
   if (options && options.headerGridColumns) {
-    const headerGridColumnsLeft: ArchbaseBreakpointsColSpans = options.headerGridColumns.left
+    const footerGridColumnsLeft: ArchbaseBreakpointsColSpans = options.headerGridColumns.left
       ? options.headerGridColumns.left
       : { xs: 'auto', sm: 'auto', md: 'auto', lg: 'auto' };
-    const headerGridColumnsMiddle: ArchbaseBreakpointsColSpans = options.headerGridColumns.middle
+    const footerGridColumnsMiddle: ArchbaseBreakpointsColSpans = options.headerGridColumns.middle
       ? options.headerGridColumns.middle
       : { xs: 'auto', sm: 'auto', md: 'auto', lg: 'auto' };
     const headerGridColumnsRight: ArchbaseBreakpointsColSpans = options.headerGridColumns.right
       ? options.headerGridColumns.right
-      : { xs: 'content', sm: 'content', md: 'content', lg: 'content' };
+      : { xs: 'auto', sm: 'auto', md: 'auto', lg: 'auto' };
 
     return (
       <Grid m={0} gutter="xs" justify="center" align="center" grow>
         <Grid.Col
-          xs={headerGridColumnsLeft.xs}
-          sm={headerGridColumnsLeft.sm}
-          md={headerGridColumnsLeft.md}
-          lg={headerGridColumnsLeft.lg}
+          xs={footerGridColumnsLeft.xs}
+          sm={footerGridColumnsLeft.sm}
+          md={footerGridColumnsLeft.md}
+          lg={footerGridColumnsLeft.lg}
           sx={{
             border: debug ? '1px dashed' : '',
             display: 'flex',
@@ -109,10 +117,10 @@ function buildHeader(
           {headerLeft}
         </Grid.Col>
         <Grid.Col
-          xs={headerGridColumnsMiddle.xs}
-          sm={headerGridColumnsMiddle.sm}
-          md={headerGridColumnsMiddle.md}
-          lg={headerGridColumnsMiddle.lg}
+          xs={footerGridColumnsMiddle.xs}
+          sm={footerGridColumnsMiddle.sm}
+          md={footerGridColumnsMiddle.md}
+          lg={footerGridColumnsMiddle.lg}
           sx={{
             border: debug ? '1px dashed' : '',
             display: 'flex',
@@ -137,23 +145,115 @@ function buildHeader(
       </Grid>
     );
   } else {
-    const headerGrow = options && options.headerFlexGrow ? options.headerFlexGrow : 'even';
+    const headerFlexGrow = options && options.headerFlexGrow ? options.headerFlexGrow : 'even';
 
     return (
       <Flex justify={'space-between'}>
         <Flex
-          w={headerGrow === 'left' || headerGrow === 'even' ? '100%' : undefined}
-          maw={headerGrow === 'left' || headerGrow === 'even' ? undefined : '100%'}
+          w={headerFlexGrow === 'left' || headerFlexGrow === 'even' ? '100%' : undefined}
+          maw={headerFlexGrow === 'left' || headerFlexGrow === 'even' ? undefined : '100%'}
           align={'center'}
         >
           {headerLeft}
         </Flex>
         <Flex
-          w={headerGrow === 'right' || headerGrow === 'even' ? '100%' : undefined}
-          maw={headerGrow === 'right' || headerGrow === 'even' ? undefined : '100%'}
+          w={headerFlexGrow === 'right' || headerFlexGrow === 'even' ? '100%' : undefined}
+          maw={headerFlexGrow === 'right' || headerFlexGrow === 'even' ? undefined : '100%'}
           align={'center'}
         >
           {headerRight}
+        </Flex>
+      </Flex>
+    );
+  }
+}
+
+function buildFooter(
+  options: ArchbaseSpaceTemplateOptions,
+  footerLeft: ReactNode,
+  footerRight: ReactNode,
+  debug: boolean,
+) {
+  if (options && options.footerGridColumns) {
+    const footerGridColumnsLeft: ArchbaseBreakpointsColSpans = options.footerGridColumns.left
+      ? options.footerGridColumns.left
+      : { xs: 'auto', sm: 'auto', md: 'auto', lg: 'auto' };
+    const footerGridColumnsMiddle: ArchbaseBreakpointsColSpans = options.footerGridColumns.middle
+      ? options.footerGridColumns.middle
+      : { xs: 'auto', sm: 'auto', md: 'auto', lg: 'auto' };
+    const footerGridColumnsRight: ArchbaseBreakpointsColSpans = options.footerGridColumns.right
+      ? options.footerGridColumns.right
+      : { xs: 'auto', sm: 'auto', md: 'auto', lg: 'auto' };
+
+    return (
+      <Grid
+        m={0}
+        sx={{ height: 60, position: 'relative', bottom: 6, left: 0, right: 0 }}
+        gutter="xs"
+        justify="center"
+        align="center"
+        grow
+      >
+        <Grid.Col
+          xs={footerGridColumnsLeft.xs}
+          sm={footerGridColumnsLeft.sm}
+          md={footerGridColumnsLeft.md}
+          lg={footerGridColumnsLeft.lg}
+          sx={{
+            border: debug ? '1px dashed' : '',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}
+        >
+          {footerLeft}
+        </Grid.Col>
+        <Grid.Col
+          xs={footerGridColumnsMiddle.xs}
+          sm={footerGridColumnsMiddle.sm}
+          md={footerGridColumnsMiddle.md}
+          lg={footerGridColumnsMiddle.lg}
+          sx={{
+            border: debug ? '1px dashed' : '',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        ></Grid.Col>
+        <Grid.Col
+          xs={footerGridColumnsRight.xs}
+          sm={footerGridColumnsRight.sm}
+          md={footerGridColumnsRight.md}
+          lg={footerGridColumnsRight.lg}
+          sx={{
+            border: debug ? '1px dashed' : '',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}
+        >
+          {footerRight}
+        </Grid.Col>
+      </Grid>
+    );
+  } else {
+    const footerFlexGrow = options && options.footerFlexGrow ? options.footerFlexGrow : 'even';
+
+    return (
+      <Flex justify={'space-between'}>
+        <Flex
+          w={footerFlexGrow === 'left' || footerFlexGrow === 'even' ? '100%' : undefined}
+          maw={footerFlexGrow === 'left' || footerFlexGrow === 'even' ? undefined : '100%'}
+          align={'center'}
+        >
+          {footerLeft}
+        </Flex>
+        <Flex
+          w={footerFlexGrow === 'right' || footerFlexGrow === 'even' ? '100%' : undefined}
+          maw={footerFlexGrow === 'right' || footerFlexGrow === 'even' ? undefined : '100%'}
+          align={'center'}
+        >
+          {footerRight}
         </Flex>
       </Flex>
     );
@@ -219,33 +319,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
           </Flex>
         ) : null}
       </ScrollArea>
-      <Grid
-        m={0}
-        sx={{ height: 60, position: 'relative', bottom: 6, left: 0, right: 0 }}
-        gutter="xs"
-        justify="center"
-        align="center"
-        grow
-      >
-        <Grid.Col
-          sx={{
-            border: debug ? '1px dashed' : '',
-            height: debug ? '70%' : 'auto',
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-          }}
-          span="auto"
-        ></Grid.Col>
-        <Grid.Col
-          span="auto"
-          sx={{ border: debug ? '1px dashed' : '', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-        ></Grid.Col>
-        <Grid.Col
-          span="auto"
-          sx={{ border: debug ? '1px dashed' : '', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}
-        ></Grid.Col>
-      </Grid>
+      {buildFooter(options, footerLeft, footerRight, debug)}
     </Paper>
   );
 }
