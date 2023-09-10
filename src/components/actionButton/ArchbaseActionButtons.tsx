@@ -191,7 +191,7 @@ function buildHiddenActionButton({
       color={options && options.menuItemApplyActionColor ? action.color : undefined}
       onClick={() => handleExecuteAction(action)}
     >
-      <Tooltip withArrow position="left" disabled={!action.hint} label={action.hint}>
+      <Tooltip withArrow disabled={!action.hint} label={action.hint}>
         {SmallActionButton ? (
           <div>
             <SmallActionButton
@@ -330,7 +330,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
       {visibleActions.map((action, index) => {
         return (
           <>
-            <Tooltip withArrow disabled={!action.hint} position="left" label={action.hint}>
+            <Tooltip withArrow disabled={!action.hint} label={action.hint}>
               <div>
                 {buildVisibleActionButton({ action, options, variant, handleExecuteAction, customComponents }, isLarge)}
               </div>
