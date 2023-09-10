@@ -306,7 +306,13 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
           <Menu
             opened={opened}
             onChange={setOpened}
-            position={options && options.menuDropdownPosition ? options.menuDropdownPosition : 'bottom'}
+            position={
+              options && options.menuDropdownPosition
+                ? options.menuDropdownPosition
+                : _menuPosition === 'right'
+                ? 'bottom-end'
+                : 'bottom-start'
+            }
           >
             <Menu.Target>
               {isLarge ? (

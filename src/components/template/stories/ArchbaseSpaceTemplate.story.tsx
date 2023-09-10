@@ -33,7 +33,6 @@ export const ArchbaseSpaceTemplateExample = () => {
                 menuItemVariant: 'filled',
                 menuButtonVariant: 'filled',
                 menuButtonColor: 'blue.5',
-                menuDropdownPosition: 'bottom',
                 menuItemApplyActionColor: true,
                 menuPosition: 'right',
               }}
