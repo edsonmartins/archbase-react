@@ -243,10 +243,14 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
       let totalWidth = 0;
       let menuWidth = 0;
       let maxVisibleActions = 0;
-      const menuButton = (
+      const menuButton = isLarge ? (
         <Button px={'10px'}>
           <IconMenu2 />
         </Button>
+      ) : (
+        <ActionIcon>
+          <IconMenu2 />
+        </ActionIcon>
       );
 
       const menuButtonHtmlString = ReactDOMServer.renderToStaticMarkup(menuButton);
