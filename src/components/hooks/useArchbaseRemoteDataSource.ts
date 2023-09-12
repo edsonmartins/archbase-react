@@ -11,11 +11,12 @@ import { processErrorMessage } from '../core/exceptions'
 import { ArchbaseRemoteApiService, DefaultPage, Page } from '../service/ArchbaseRemoteApiService'
 import { ArchbaseStateValues } from '../template'
 import { IDataSourceValidator } from '../datasource/ArchbaseDataSource'
+import { ArchbaseStore } from './useArchbaseStore'
 
 export type UseArchbaseRemoteDataSourceProps<T, ID> = {
   name: string
   service: ArchbaseRemoteApiService<T, ID>
-  store?: ArchbaseStateValues
+  store?: ArchbaseStore
   filter?: string
   sort?: string[]
   id?: ID
@@ -97,7 +98,7 @@ export function useArchbaseRemoteDataSource<T, ID>(
   }
   const buildDataSource = () => {
     if (store && store.existsValue(name)) {
-      return store.values.get(name)
+      return store.getValue(name)
     }
     if (initialDataSource) {
       return initialDataSource
@@ -113,7 +114,7 @@ export function useArchbaseRemoteDataSource<T, ID>(
   }
   const getCurrentPage = () => {
     if (store && store.existsValue(name)) {
-      return (store.values.get(name) as ArchbaseRemoteDataSource<T, ID>).getCurrentPage()
+      return (store.getValue(name) as ArchbaseRemoteDataSource<T, ID>).getCurrentPage()
     }
     if (initialDataSource) {
       return initialDataSource.getCurrentPage()

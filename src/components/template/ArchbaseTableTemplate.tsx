@@ -1,5 +1,5 @@
 import React, { Fragment, ReactNode, useRef, useState } from 'react'
-import { IconBug, IconEdit, IconTrash } from '@tabler/icons-react'
+import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react'
 import { t } from 'i18next'
 import { MRT_Row } from 'mantine-react-table'
 import { Button, Flex, Paper, Variants } from '@mantine/core'
@@ -21,16 +21,16 @@ import { useArchbaseAppContext } from '../core'
 
 
 export interface UserActionsOptions {
-  visible?: boolean
+  visible: boolean
   labelAdd?: string
   labelEdit?: string
   labelRemove?: string
   labelView?: string
-  allowRemove?: boolean
+  allowRemove: boolean
   onAddExecute?: () => void
   onEditExecute?: () => void
   onRemoveExecute?: () => void
-  onView?: () => void
+  onViewExecute?: () => void
 }
 
 export interface UserRowActionsOptions<T extends Object> {
@@ -191,7 +191,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
         error={<span>{error}</span>}
       >
         {columns}
-        <ToolBarActions>
+        {userActions?.visible?<ToolBarActions>
           <Fragment>
             <h3 className="only-print">{printTitle || title}</h3>
             <div className="no-print">
@@ -207,6 +207,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
                 <Button
                   color="blue"
                   leftIcon={<IconEdit/>}
+                  disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
                   variant={variant??appContext.variant}
                   onClick={() => userActions && userActions.onEditExecute && userActions!.onEditExecute()}
                 >
@@ -215,15 +216,25 @@ export function ArchbaseTableTemplate<T extends object, ID>({
                 <Button
                   color="red"
                   leftIcon={<IconTrash/>}
+                  disabled={!userActions?.allowRemove || !dataSource.isBrowsing() || dataSource.isEmpty()}
                   variant={variant??appContext.variant}
                   onClick={() => userActions && userActions.onRemoveExecute && userActions!.onRemoveExecute()}
                 >
                   {t('archbase:Remove')}
                 </Button>
+                <Button
+                  color="silver"
+                  leftIcon={<IconEye/>}
+                  disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
+                  variant={variant??appContext.variant}
+                  onClick={() => userActions && userActions.onViewExecute && userActions!.onViewExecute()}
+                >
+                  {t('archbase:View')}
+                </Button>
               </Flex>
             </div>
           </Fragment>
-        </ToolBarActions>
+        </ToolBarActions>:null}
       </ArchbaseDataTable>
     </Paper>
   )

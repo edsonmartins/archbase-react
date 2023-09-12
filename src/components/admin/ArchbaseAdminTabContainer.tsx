@@ -10,6 +10,7 @@ import {
 } from './ArchbaseAdminLayout.context'
 import { matchPath } from 'react-router'
 import i18next from 'i18next'
+import { ArchbaseNavigationContext, useArchbaseNavigationContext } from './ArchbaseNavigation.context'
 
 export interface ArchbaseAdminTabContainerProps {
   navigationData: ArchbaseNavigationItem[]
@@ -23,6 +24,7 @@ interface ResultItem {
   item: ArchbaseNavigationItem | undefined;
   title: string | undefined;
   link: string;
+  redirect?: string;
 }
 
 export function ArchbaseAdminTabContainer({ navigationData, onChangeOpenedTabs, onChangeActiveTabId, activeTabId:defaultActiveTabId, openedTabs:defaultOpenedTabs = [] }: ArchbaseAdminTabContainerProps) {
@@ -34,12 +36,54 @@ export function ArchbaseAdminTabContainer({ navigationData, onChangeOpenedTabs, 
   const currentLocation = useLocation()
   const tabsRef = useRef<any>([])
   const size = useComponentSize(tabsRef)
+  const { state, dispatch }  = useArchbaseNavigationContext()
   const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(
     ArchbaseAdminLayoutContext
   )
 
+  const handleOnClose = (id: string) => {
+    const closedIndex = openedTabs.findIndex((tab) => tab.path === id)
+    let redirect:string|undefined;
+    if (closedIndex >=0){
+      redirect = openedTabs[closedIndex].redirect
+    }
+    const tmpTabs = openedTabs.filter((f) => f.id !== id)
+    let idx = -1
+    tmpTabs.forEach((f, index) => f.id === activeTabId && (idx = index))
+    let tmpCurrent : string|null = null;
+    if (tmpTabs.length > 0 && tmpTabs[idx] ){
+      tmpCurrent = tmpTabs[idx].id ;
+    } else if (tmpTabs.length > 0) {
+      tmpCurrent = tmpTabs[tmpTabs.length-1].id ;
+    } else {
+      tmpCurrent = null;
+    }
+    const nextTabs = tmpTabs.map((tab) => ({ ...tab, active: tmpCurrent === tab.id }));
+    setOpenedTabs(nextTabs)
+    onChangeOpenedTabs && onChangeOpenedTabs(nextTabs)
+    if (tmpCurrent && tmpCurrent != null) {
+      setActiveTabId(tmpCurrent)
+      onChangeActiveTabId && onChangeActiveTabId(tmpCurrent)
+      if (redirect){
+        navigate(redirect)
+      } else {
+        navigate(tmpCurrent)
+      }
+    } else {
+      setActiveTabId(undefined)
+      onChangeActiveTabId && onChangeActiveTabId(undefined)
+      navigate(adminLayoutContextValue.navigationRootLink!)
+    }
+  }
+
+  useEffect(()=>{
+    if (state?.linkClosed) {
+      handleOnClose(state?.linkClosed)
+    }
+  },[state?.linkClosed])
+
   const getNavigationItemByLink = (link: string): ResultItem => {
-    let result: ResultItem = {item: undefined, title: undefined, link}
+    let result: ResultItem = {item: undefined, title: undefined, link, redirect: undefined}
     navigationData.forEach((item) => {
       if (item.links) {
         item.links.forEach((subItem) => {
@@ -47,6 +91,7 @@ export function ArchbaseAdminTabContainer({ navigationData, onChangeOpenedTabs, 
           if (found) {
             result.item = subItem;
             result.title = `${i18next.t(subItem.label)}`;
+            result.redirect = subItem.redirect;
           }
         })
       } else if (item.link) {
@@ -57,12 +102,17 @@ export function ArchbaseAdminTabContainer({ navigationData, onChangeOpenedTabs, 
           } else {
             result.title = `${i18next.t(item.label)}`;
           }
+          result.redirect = item.redirect;
           result.item = item;
         }
       }
     })
     return result
   }
+  
+  useEffect(()=>{
+    setOpenedTabs(defaultOpenedTabs)
+  },[defaultOpenedTabs])
 
   useEffect(() => {
     const resultItem: ResultItem = getNavigationItemByLink(
@@ -71,11 +121,9 @@ export function ArchbaseAdminTabContainer({ navigationData, onChangeOpenedTabs, 
     if (resultItem && resultItem.item) {
       const index = openedTabs.findIndex((tab) => tab.path === resultItem.link)
       if (index !== -1) {
-        startTransition(() => {
           openedTabs[index].title = resultItem.title!;
           setActiveTabId(openedTabs[index].id);
           onChangeActiveTabId && onChangeActiveTabId(openedTabs[index].id)
-        });
       } else {
           setOpenedTabs((prevTabs)=>{
             prevTabs.push({
@@ -85,7 +133,8 @@ export function ArchbaseAdminTabContainer({ navigationData, onChangeOpenedTabs, 
               active: true,
               content: resultItem.item!.component,
               iconClass: resultItem.item!.icon,
-              closeButton: true
+              closeButton: true,
+              redirect: resultItem.redirect
             })
             onChangeOpenedTabs && onChangeOpenedTabs(openedTabs)
             setActiveTabId(`${resultItem.link}`)
@@ -108,36 +157,11 @@ export function ArchbaseAdminTabContainer({ navigationData, onChangeOpenedTabs, 
     });
   }
 
-  const handleOnClose = (id: string) => {
-    const tmpTabs = openedTabs.filter((f) => f.id !== id)
-    let idx = -1
-    tmpTabs.forEach((f, index) => f.id === activeTabId && (idx = index))
-    let tmpCurrent : string|null = null;
-    if (tmpTabs.length > 0 && tmpTabs[idx] ){
-      tmpCurrent = tmpTabs[idx].id ;
-    } else if (tmpTabs.length > 0) {
-      tmpCurrent = tmpTabs[tmpTabs.length-1].id ;
-    } else {
-      tmpCurrent = null;
-    }
-    startTransition(() => {
-      const nextTabs = tmpTabs.map((tab) => ({ ...tab, active: tmpCurrent === tab.id }));
-      setOpenedTabs(nextTabs)
-      onChangeOpenedTabs && onChangeOpenedTabs(nextTabs)
-      if (tmpCurrent && tmpCurrent != null) {
-        setActiveTabId(tmpCurrent)
-        onChangeActiveTabId && onChangeActiveTabId(tmpCurrent)
-        openedTabs.forEach((f, index) => f.id === tmpCurrent && (idx = index))
-        if (idx !== -1) {
-          navigate(tmpTabs[idx].path)
-        }
-      } else {
-        setActiveTabId(undefined)
-        onChangeActiveTabId && onChangeActiveTabId(undefined)
-        navigate(adminLayoutContextValue.navigationRootLink!)
-      }
-    });
+  const handleOnCloseRequest = (id: string) => {
+    dispatch({type: 'USER_CLOSE_REQUEST', link: id})
   }
+
+  
 
   const buildAdvancedTabs = (openedTabs: ArchbaseTabItem[]): ArchbaseAdvancedTabItem[] => {
     return openedTabs.map((tab) => {
@@ -146,13 +170,12 @@ export function ArchbaseAdminTabContainer({ navigationData, onChangeOpenedTabs, 
     })
   }
 
-  console.log(openedTabs)
-
   return (
     <div ref={tabsRef}>
       <ArchbaseAdvancedTabs
+        buttonCloseOnlyActiveTab={true}
         onClick={(key: any) => handleOnActive(key)}
-        onTabClose={(key: any) => handleOnClose(key)}
+        onTabClose={(key: any) => handleOnCloseRequest(key)}
         onTabChange={(_tabs: ArchbaseAdvancedTabItem[]) => {}}
         currentTabs={buildAdvancedTabs(openedTabs)}
         activeTab={activeTabId}

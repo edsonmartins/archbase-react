@@ -95,7 +95,7 @@ export function useArchbaseRemoteFilterDataSource(
   }
   const buildDataSource = () => {
     if (store && store.existsValue(name)) {
-      return store.values.get(name)
+      return store.getValue(name)
     }
     if (initialDataSource) {
       return initialDataSource
@@ -111,7 +111,7 @@ export function useArchbaseRemoteFilterDataSource(
   }
   const getCurrentPage = () => {
     if (store && store.existsValue(name)) {
-      return (store.values.get(name) as ArchbaseRemoteFilterDataSource).getCurrentPage()
+      return (store.getValue(name) as ArchbaseRemoteFilterDataSource).getCurrentPage()
     }
     if (initialDataSource) {
       return initialDataSource.getCurrentPage()

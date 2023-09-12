@@ -26,11 +26,12 @@ export interface ArchbaseAdvancedTabProps {
   id: any;
   index : number;
   sorting : boolean;
+  showButtonClose: boolean;
 }
 
 const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 	const { favicon, title, activeTab, position, contentWidth, onClick, onClose, setDragging, tabsContentWidth, animateTabMove,
-		isDragging, index, sorting } = props;
+		isDragging, index, sorting, showButtonClose } = props;
 	const [width, setWidth] = useState(0);
 	const [isAdded, setAdd] = useState(false);
 	const [movePosition, setMovePosition] = useState<Number|null>(null);
@@ -127,14 +128,15 @@ const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 				{!!favicon && <div className="archbase_tab-favicon" style={{ "backgroundImage": `url(${favicon})` }}></div>}
 				<div className="archbase_tab-title">{title}</div>
 				<div className="archbase_tab-drag-handle" title={title} onClick={onClick} onPointerDown={e => (onClick(e))} onMouseUp={onDragEnd} onMouseMove={onDragMove} onMouseDown={onDragStart}></div>
-				<div className="archbase_tab-close" onClick={onClose}></div>
+				{showButtonClose?<div className="archbase_tab-close" onClick={onClose}></div>:null}
 			</div>
 		</div>
 	);
 }
 
 export interface ArchbaseAdvancedTabsProps {
-  currentTabs: ArchbaseAdvancedTabItem[],
+  currentTabs: ArchbaseAdvancedTabItem[]
+  buttonCloseOnlyActiveTab: boolean
   activeTab: any,
   onTabChange: Function,
   onTabClose: Function,
@@ -145,7 +147,7 @@ export interface ArchbaseAdvancedTabsProps {
 }
 
 export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props) => {
-	const { currentTabs, onTabChange: onChange, activeTab, onTabClose: onClose, className, style, dark, onClick } = props;
+	const { currentTabs, onTabChange: onChange, activeTab, onTabClose: onClose, className, style, dark, onClick, buttonCloseOnlyActiveTab = false } = props;
 	const [tabContentWidths, setTabContentWidths] = useState<number[]>([]);
 	const [positions, setPositions] = useState<number[]>([]);
 	const [tabs, setTabs] = useState(currentTabs || []);
@@ -275,6 +277,7 @@ export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props)
 								onClick={_e => onClick(m.key)}
 								onClose={_e => closeTab(m.key)}
 								setDragging={setDragging}
+								showButtonClose={buttonCloseOnlyActiveTab?activeTab === m.key:true}
 								tabsContentWidth={tabContentEl.current && tabContentEl.current.clientWidth}
 								animateTabMove={(p: any) => animateTabMove(p, index)}
 								isDragging={isDragging}

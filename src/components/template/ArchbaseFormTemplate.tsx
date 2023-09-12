@@ -1,11 +1,13 @@
-import { Button, Group, MantineNumberSize, Paper, ScrollArea, Space, Stack, Variants } from '@mantine/core'
+import { Button, Group, LoadingOverlay, MantineNumberSize, Paper, ScrollArea, Space, Stack, Variants } from '@mantine/core'
 import React, { useRef, useState } from 'react'
 import { t } from 'i18next'
-import { IconBug } from '@tabler/icons-react'
+import { IconBug, IconDeviceFloppy } from '@tabler/icons-react'
 import { ArchbaseAlert } from '../notification'
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseAppContext } from '../core'
 import { useArchbaseDataSourceListener } from '../hooks'
+import { IconX } from '@tabler/icons-react'
+import { processErrorMessage } from '../core/exceptions'
 
 export interface ArchbaseFormTemplateProps<T, ID> {
   title: string
@@ -14,6 +16,8 @@ export interface ArchbaseFormTemplateProps<T, ID> {
   /** Referência para o componente interno */
   innerRef?: React.RefObject<HTMLInputElement> | undefined
   isLoading?: boolean
+  isCanceling?: boolean
+  isSaving?: boolean
   isError?: boolean
   error?: string | undefined
   clearError?: () => void
@@ -23,6 +27,8 @@ export interface ArchbaseFormTemplateProps<T, ID> {
   withBorder?: boolean
   children?: React.ReactNode | React.ReactNode[]
   radius?: MantineNumberSize
+  onSave?: (entityToSave) => void
+  onCancel?: () => void
   onBeforeSave?: (entityToSave : T) => void
   onAfterSave?: (savedEntity : T)=>void
   onBeforeCancel?: ()=>void
@@ -32,6 +38,8 @@ export interface ArchbaseFormTemplateProps<T, ID> {
 export function ArchbaseFormTemplate<T extends object, ID>({
   innerRef,
   isError = false,
+  isCanceling = false,
+  isSaving = false,
   error = '',
   clearError = () => {},
   autoCloseAlertError = 15000,
@@ -41,7 +49,13 @@ export function ArchbaseFormTemplate<T extends object, ID>({
   children,
   radius,
   variant,
-  dataSource
+  dataSource,
+  onSave,
+  onCancel,
+  onBeforeSave,
+  onAfterSave,
+  onBeforeCancel,
+  onAfterCancel
 }: ArchbaseFormTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>()
@@ -58,12 +72,38 @@ export function ArchbaseFormTemplate<T extends object, ID>({
     }
   })
 
-  const handleSave = () =>{
-      dataSource.save()
+  const handleSave = (entity) =>{
+    try {
+      if (onSave){
+          onSave(entity);
+      } else {
+        onBeforeSave && onBeforeSave(entity)
+        if (!dataSource.isBrowsing()){
+          dataSource.save()
+        }
+        onAfterSave && onAfterSave(entity)
+      }
+    } catch (e){
+      setIsInternalError(true)
+      setInternalError(processErrorMessage(e))
+    }
   }
 
-  const handleCancel = () => {
-      dataSource.cancel()
+  const handleCancel = () => {    
+    try {
+      if (onCancel){
+        onCancel()
+      } else {
+        onBeforeCancel && onBeforeCancel()
+        if (!dataSource.isBrowsing()){
+          dataSource.cancel()
+        }
+        onAfterCancel && onAfterCancel()
+      }
+    } catch (e){
+      setIsInternalError(true)
+      setInternalError(processErrorMessage(e))
+    }
   }
 
   const handleCloseAlert = () => {
@@ -94,13 +134,32 @@ export function ArchbaseFormTemplate<T extends object, ID>({
         </ArchbaseAlert>
       ) : null}
       <ScrollArea h={`calc(100% - ${isError?'80px':'0px'})`}>
+        <LoadingOverlay visible={isCanceling || isSaving} overlayOpacity={0.3} />
         {children}  
         <Stack>
           <Space h="lg" />
-          <Group>
-            <Button onClick={handleSave} disabled={dataSource.isBrowsing()} variant={variant??appContext.variant} color="green">{`${t('Save')}`}</Button>
-            <Button onClick={handleCancel} disabled={dataSource.isBrowsing()} variant={variant??appContext.variant} color="red">{`${t('Cancel')}`}</Button>
-          </Group>
+          {dataSource && !dataSource.isBrowsing()?<Group spacing="md">
+              <Button
+                leftIcon={<IconDeviceFloppy />}
+                onClick={()=>handleSave(dataSource.getCurrentRecord())}
+                disabled={dataSource && dataSource.isBrowsing()}
+                variant={variant ?? appContext.variant}
+                color="green"
+              >{`${t('Ok')}`}</Button>
+              <Button
+                leftIcon={<IconX />}
+                onClick={handleCancel}
+                disabled={dataSource && dataSource.isBrowsing()}
+                variant={variant ?? appContext.variant}
+                color="red"
+              >{`${t('Cancel')}`}</Button>
+            </Group>:<Group spacing="md">
+              <Button
+                leftIcon={<IconX />}
+                onClick={handleCancel}
+                variant={variant ?? appContext.variant}
+              >{`${t('Close')}`}</Button>
+            </Group>}
         </Stack>
       </ScrollArea>
     </Paper>

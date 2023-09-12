@@ -1,4 +1,4 @@
-export { ArchbaseColorSchemeAction } from './ArchbaseActionSchemeAction'
+export { ArchbaseColorSchemeAction } from './ArchbaseColorSchemeAction'
 export {
   ArchbaseAdminLayoutContext,
   ArchbaseAdminLayoutProvider

@@ -7727,7 +7727,7 @@ css-declaration-sorter@^6.3.1:
   resolved "https://registry.yarnpkg.com/css-declaration-sorter/-/css-declaration-sorter-6.4.0.tgz#630618adc21724484b3e9505bce812def44000ad"
   integrity sha512-jDfsatwWMWN0MODAFuHszfjphEXfNw9JUAhmY4pLu3TyTU+ohUpsbVtbU+1MZn4a47D9kqh03i4eyOm+74+zew==
 
-css-element-queries@^1.2.3:
+css-element-queries@^1.2.1, css-element-queries@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/css-element-queries/-/css-element-queries-1.2.3.tgz#e14940b1fcd4bf0da60ea4145d05742d7172e516"
   integrity sha512-QK9uovYmKTsV2GXWQiMOByVNrLn2qz6m3P7vWpOR4IdD6I3iXoDw5qtgJEN3Xq7gIbdHVKvzHjdAtcl+4Arc4Q==
@@ -11839,6 +11839,11 @@ makeerror@1.0.12:
   dependencies:
     tmpl "1.0.5"
 
+mantine-flagpack@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/mantine-flagpack/-/mantine-flagpack-2.0.0.tgz#264b982c91c4f224f93725692b623e96d28dae9f"
+  integrity sha512-GETfECGOl/U/ruvzGOixKYIciibuR0Gg6bku4Y1nQJiSuvqRsPp8J0fZ0AgzOf5z0AId53UYLRMAFffUHqSDeg==
+
 mantine-react-table@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/mantine-react-table/-/mantine-react-table-1.1.1.tgz#89456ada759b1f4fa809199edc97d02ad3a6f33b"
@@ -14277,6 +14282,14 @@ react-shallow-renderer@^16.15.0:
   dependencies:
     object-assign "^4.1.1"
     react-is "^16.12.0 || ^17.0.0 || ^18.0.0"
+
+react-spaces@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/react-spaces/-/react-spaces-0.4.1.tgz#8dbaa959e34b9731294a13244beac48af02bbdcf"
+  integrity sha512-H9mf1vQsBqsnCLUg6K7Mgh9EkIeFuDBLtJmD9Z3w0bV5lRUNRj7sVvx6JhOGMF5u1l7GCexhgVykDYIMBoiIIA==
+  dependencies:
+    css-element-queries "^1.2.1"
+    prop-types "^15.7.2"
 
 react-style-singleton@^2.2.1:
   version "2.2.1"

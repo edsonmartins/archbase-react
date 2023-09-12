@@ -11,6 +11,7 @@ export type ArchbaseNavigationItem = {
   component?: ReactNode
   showInSidebar: boolean
   disabled?: boolean;
+  redirect?: string;
 }
 
 export type ArchbaseCommandColor = {
@@ -47,7 +48,8 @@ export type ArchbaseTabItem = {
   content: React.ReactNode
   iconClass: any
   closeButton: boolean
-  active: boolean
+  active: boolean,
+  redirect?: string
 }
 
 export type LocationDataItem = {

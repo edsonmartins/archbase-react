@@ -27,7 +27,6 @@ import {
 } from '@mantine/core';
 import { useArchbaseAppContext } from '../core';
 
-
 interface ArchbaseBreakpointsColSpans {
   /** Col span em (min-width: theme.breakpoints.xs) */
   xs?: ColSpan;

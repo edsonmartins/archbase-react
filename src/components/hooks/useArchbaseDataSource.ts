@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { ArchbaseDataSource, DataSourceOptions, IDataSourceValidator } from '../datasource/ArchbaseDataSource'
 import { ArchbaseStateValues } from '../template'
+import { ArchbaseStore } from './useArchbaseStore'
 
 export type UseArchbaseDataSourceProps<T, ID> = {
-  store?: ArchbaseStateValues
+  store?: ArchbaseStore
   initialData: any[]
   initialDataSource?: ArchbaseDataSource<T, ID> | undefined
   name: string
@@ -21,7 +22,7 @@ export const useArchbaseDataSource = <T, ID>(
   const { initialData, name, initialDataSource, onLoadComplete, store, validator } = props
   const buildDataSource = () =>{
     if (store && store.existsValue(name)){
-      return store.values.get(name);
+      return store.getValue(name);
     }
     if (initialDataSource){
       return initialDataSource;

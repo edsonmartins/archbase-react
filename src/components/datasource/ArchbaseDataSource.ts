@@ -211,6 +211,7 @@ export interface IDataSource<T> {
   remove: (callback?: Function) => Promise<T | undefined>
   save: (callback?: Function) => Promise<T | undefined>
   cancel: () => this
+  getName: () => string
   getOptions: () => DataSourceOptions<T>
   refreshData: (options?: DataSourceOptions<T>) => void
   browseRecords: () => T[]
@@ -433,6 +434,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
         msg
       )
     }
+  }
+
+  public getName(): string {
+    return this.name
   }
 
   public clear(): void {
