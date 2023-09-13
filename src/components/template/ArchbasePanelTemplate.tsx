@@ -28,7 +28,7 @@ import { IconPlus } from '@tabler/icons-react';
 import { IconTrash } from '@tabler/icons-react';
 import { useArchbaseAppContext } from '../core';
 import { ArchbaseSpaceTemplate } from './ArchbaseSpaceTemplate';
-import { ArchbaseAction, ArchbaseActionButtons } from 'components/buttons/ArchbaseActionButtons';
+import { ArchbaseAction, ArchbaseActionButtons } from '@components/buttons/ArchbaseActionButtons';
 
 export interface UserActionsOptions {
   visible?: boolean;
@@ -243,7 +243,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
           {filterFields}
         </ArchbaseQueryBuilder>
       }
-      footerRight={<Pagination total={10} />}
+      footerRight={<Pagination total={10}>{children}</Pagination>}
     />
   );
 }

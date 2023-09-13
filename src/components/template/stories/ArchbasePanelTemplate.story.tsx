@@ -239,7 +239,7 @@ const ArchbasePanelTemplateExample = () => {
           componentName: 'templatePanelExemplo',
           viewName: 'templatePanelView',
         }}
-        actions={[]}
+        userActions={{}}
         filterFields={filterFields}
         filterPersistenceDelegator={dsFilters as ArchbaseQueryFilterDelegator}
       />
