@@ -8,10 +8,16 @@ import {
   FilterOptions,
   getDefaultEmptyFilter,
 } from '../querybuilder';
+import {
+  ArchbaseSpaceTop,
+  ArchbaseSpaceFill,
+  ArchbaseSpaceBottom,
+  ArchbaseSpaceFixed,
+} from '@components/containers/spaces';
 import { ArchbaseAlert } from '../notification';
 import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
 import { t } from 'i18next';
-import useComponentSize from '@rehooks/component-size';
+import useComponentSize, { ComponentSize } from '@rehooks/component-size';
 import {
   Box,
   Button,
@@ -24,6 +30,7 @@ import {
   ScrollArea,
   Text,
   Variants,
+  px,
 } from '@mantine/core';
 import { useArchbaseAppContext } from '../core';
 
@@ -73,7 +80,7 @@ export interface ArchbaseSpaceTemplateProps<T, ID> {
   width?: number | string | undefined;
   height?: number | string | undefined;
   withBorder?: boolean;
-  children?: React.ReactNode | React.ReactNode[];
+  children?: React.ReactNode;
   radius?: MantineNumberSize;
   debug?: boolean;
   isError?: boolean;
@@ -194,7 +201,7 @@ function buildFooter(
     return (
       <Grid
         m={0}
-        sx={{ height: 60, position: 'relative', bottom: 6, left: 0, right: 0 }}
+        // sx={{ height: 60, position: 'relative', bottom: 6, left: 0, right: 0 }}
         gutter="xs"
         justify="center"
         align="center"
@@ -205,12 +212,13 @@ function buildFooter(
           sm={footerGridColumnsLeft.sm}
           md={footerGridColumnsLeft.md}
           lg={footerGridColumnsLeft.lg}
-          sx={{
+          style={{
             border: debug ? '1px dashed' : '',
             display: 'flex',
             justifyContent: 'flex-start',
             alignItems: 'center',
           }}
+          span="content"
         >
           {footerLeft}
         </Grid.Col>
@@ -219,24 +227,26 @@ function buildFooter(
           sm={footerGridColumnsMiddle.sm}
           md={footerGridColumnsMiddle.md}
           lg={footerGridColumnsMiddle.lg}
-          sx={{
+          style={{
             border: debug ? '1px dashed' : '',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
           }}
+          span="auto"
         ></Grid.Col>
         <Grid.Col
           xs={footerGridColumnsRight.xs}
           sm={footerGridColumnsRight.sm}
           md={footerGridColumnsRight.md}
           lg={footerGridColumnsRight.lg}
-          sx={{
+          style={{
             border: debug ? '1px dashed' : '',
             display: 'flex',
             justifyContent: 'flex-end',
             alignItems: 'center',
           }}
+          span="content"
         >
           {footerRight}
         </Grid.Col>
@@ -251,6 +261,7 @@ function buildFooter(
           w={footerFlexGrow === 'left' || footerFlexGrow === 'even' ? '100%' : undefined}
           maw={footerFlexGrow === 'left' || footerFlexGrow === 'even' ? undefined : '100%'}
           align={'center'}
+          sx={{ border: debug ? '1px dashed' : '', height: 'auto', padding: 'calc(0.625rem / 2)' }}
         >
           {footerLeft}
         </Flex>
@@ -258,6 +269,7 @@ function buildFooter(
           w={footerFlexGrow === 'right' || footerFlexGrow === 'even' ? '100%' : undefined}
           maw={footerFlexGrow === 'right' || footerFlexGrow === 'even' ? undefined : '100%'}
           align={'center'}
+          sx={{ border: debug ? '1px dashed' : '', height: 'auto', padding: 'calc(0.625rem / 2)' }}
         >
           {footerRight}
         </Flex>
@@ -289,8 +301,15 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 }: ArchbaseSpaceTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>();
-  const filterRef = useRef<any>();
-  let size = useComponentSize(innerComponentRef);
+  const headerRef = useRef<any>();
+  const footerRef = useRef<any>();
+  let headerSize = useComponentSize(headerRef);
+  let footerSize = useComponentSize(footerRef);
+  let innerComponentSize = useComponentSize(innerComponentRef);
+  let contentSize: ComponentSize = {
+    height: innerComponentSize.height - headerSize.height - footerSize.height - px('0.625rem'),
+    width: innerComponentSize.width - headerSize.width - footerSize.width,
+  };
 
   return (
     <Paper
@@ -299,33 +318,41 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
       radius={radius}
       style={{ width: width, height: height, padding: 4 }}
     >
-      <Box sx={{ height: 'auto' }}>{buildHeader(options, headerLeft, headerRight, debug)}</Box>
-      <ScrollArea sx={{ border: debug ? '1px dashed' : '', height: 'auto', padding: 'calc(0.625rem / 2)' }}>
-        {children ? (
-          <Fragment>
-            {isError ? (
-              <ArchbaseAlert
-                autoClose={20000}
-                withCloseButton={true}
-                withBorder={true}
-                icon={<IconBug size="1.4rem" />}
-                title={t('WARNING')}
-                titleColor="rgb(250, 82, 82)"
-                variant={variant ?? appContext.variant}
-                onClose={() => clearError && clearError()}
-              >
-                <span>{error}</span>
-              </ArchbaseAlert>
+      <ArchbaseSpaceFixed height={'100%'}>
+        <ArchbaseSpaceTop size={headerSize.height}>
+          <div ref={headerRef}>{buildHeader(options, headerLeft, headerRight, debug)}</div>
+        </ArchbaseSpaceTop>
+        <ArchbaseSpaceFill>
+          <ScrollArea h={contentSize.height} sx={{ border: debug ? '1px dashed' : '', padding: 'calc(0.625rem / 2)' }}>
+            {children ? (
+              <Fragment>
+                {isError ? (
+                  <ArchbaseAlert
+                    autoClose={20000}
+                    withCloseButton={true}
+                    withBorder={true}
+                    icon={<IconBug size="1.4rem" />}
+                    title={t('WARNING')}
+                    titleColor="rgb(250, 82, 82)"
+                    variant={variant ?? appContext.variant}
+                    onClose={() => clearError && clearError()}
+                  >
+                    <span>{error}</span>
+                  </ArchbaseAlert>
+                ) : null}
+                {children}
+              </Fragment>
+            ) : debug ? (
+              <Flex h={contentSize.height + 80} justify="center" align="center" wrap="wrap">
+                <Text size="lg">INSIRA O CONTEÚDO DO PAINEL AQUI.</Text>
+              </Flex>
             ) : null}
-            {children}
-          </Fragment>
-        ) : debug ? (
-          <Flex style={{ height: '100%' }} gap="md" justify="center" align="center" direction="row" wrap="wrap">
-            <Text size="lg">INSIRA O CONTEÚDO DO PAINEL AQUI.</Text>
-          </Flex>
-        ) : null}
-      </ScrollArea>
-      {buildFooter(options, footerLeft, footerRight, debug)}
+          </ScrollArea>
+        </ArchbaseSpaceFill>
+        <ArchbaseSpaceBottom size={footerSize.height}>
+          <div ref={footerRef}>{buildFooter(options, footerLeft, footerRight, debug)}</div>
+        </ArchbaseSpaceBottom>
+      </ArchbaseSpaceFixed>
     </Paper>
   );
 }

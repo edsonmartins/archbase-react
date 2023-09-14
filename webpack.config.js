@@ -8,7 +8,6 @@ let libraryName = pkg.name;
 
 let outputFile, mode;
 
-
 mode = 'production';
 outputFile = libraryName + '.min.js';
 
@@ -24,7 +23,7 @@ const config = {
     library: libraryName,
     libraryTarget: 'umd',
     umdNamedDefine: true,
-    globalObject: "typeof self !== 'undefined' ? self : this"
+    globalObject: "typeof self !== 'undefined' ? self : this",
   },
   module: {
     rules: [
@@ -34,7 +33,7 @@ const config = {
         test: /\.(js|jsx)$/,
         // we do not want anything from node_modules to be compiled
         exclude: /node_modules/,
-        use: ['babel-loader']
+        use: ['babel-loader'],
       },
       {
         test: [/\.ts$/, /\.tsx$/],
@@ -44,22 +43,21 @@ const config = {
       {
         test: /\.(css|scss)$/,
         use: [
-          "style-loader", // creates style nodes from JS strings
-          "css-loader", // translates CSS into CommonJS
-          "sass-loader" // compiles Sass to CSS, using Node Sass by default
-        ]
+          'style-loader', // creates style nodes from JS strings
+          'css-loader', // translates CSS into CommonJS
+          'sass-loader', // compiles Sass to CSS, using Node Sass by default
+        ],
       },
       {
         test: /\.(jpg|jpeg|png|gif|mp3|svg)$/,
-        loader: 'file-loader'
-      }
-    ]
+        loader: 'file-loader',
+      },
+    ],
   },
   resolve: {
     modules: [path.resolve('./node_modules'), path.resolve('./src')],
-    extensions: ['.json', '.js','.jsx','.tsx', '.ts', '.js']
-  }
+    extensions: ['.json', '.js', '.jsx', '.tsx', '.ts', '.js'],
+  },
 };
 
 module.exports = config;
-

@@ -33,7 +33,7 @@ export interface ArchbaseAction {
   hint?: string;
 }
 
-interface ArchbaseActionButtonsOptions {
+export interface ArchbaseActionButtonsOptions {
   /** Limite que determina a partir de quantos px o botão maior será renderizado*/
   largerBreakPoint?: string;
   /** Limite que determina a partir de quantos px o botão menor será renderizado*/
@@ -220,7 +220,6 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
   const [visibleActions, setVisibleActions] = useState<ArchbaseAction[]>(actions);
   const [hiddenActions, setHiddenActions] = useState<ArchbaseAction[]>([]);
   const [containerWidth, _containerHeight] = useArchbaseSize(containerRef);
-
   const [opened, setOpened] = useState(false);
 
   const theme = useMantineTheme();
