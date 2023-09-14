@@ -25,7 +25,7 @@ import {
   QueryFields,
 } from '@components/querybuilder';
 import { ArchbasePanelTemplate } from '../ArchbasePanelTemplate';
-import { Button } from '@mantine/core';
+import { Button, Flex } from '@mantine/core';
 const filters: LocalFilter[] = [];
 
 const ArchbasePanelTemplateExample = () => {
@@ -242,7 +242,7 @@ const ArchbasePanelTemplateExample = () => {
         userActions={{}}
         filterFields={filterFields}
         filterPersistenceDelegator={dsFilters as ArchbaseQueryFilterDelegator}
-      />
+      ></ArchbasePanelTemplate>
     </div>
   );
 };

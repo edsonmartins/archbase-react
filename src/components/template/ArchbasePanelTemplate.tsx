@@ -27,8 +27,12 @@ import {
 import { IconPlus } from '@tabler/icons-react';
 import { IconTrash } from '@tabler/icons-react';
 import { useArchbaseAppContext } from '../core';
-import { ArchbaseSpaceTemplate } from './ArchbaseSpaceTemplate';
-import { ArchbaseAction, ArchbaseActionButtons } from '@components/buttons/ArchbaseActionButtons';
+import { ArchbaseSpaceTemplate, ArchbaseSpaceTemplateOptions } from './ArchbaseSpaceTemplate';
+import {
+  ArchbaseAction,
+  ArchbaseActionButtons,
+  ArchbaseActionButtonsOptions,
+} from '@components/buttons/ArchbaseActionButtons';
 
 export interface UserActionsOptions {
   visible?: boolean;
@@ -86,14 +90,16 @@ export interface ArchbasePanelTemplateProps<T, ID> {
   height?: number | string | undefined;
   withBorder?: boolean;
   withPagination?: boolean;
-  children?: React.ReactNode | React.ReactNode[];
+  children?: React.ReactNode;
   radius?: MantineNumberSize;
   debug?: boolean;
+  actionsButtonsOptions?: ArchbaseActionButtonsOptions;
+  spaceOptions?: ArchbaseSpaceTemplateOptions;
 }
 
 export function ArchbasePanelTemplate<T extends object, ID>({
-  //title,
-  //dataSource,
+  title,
+  dataSource,
   //  dataSourceEdition,
   filterOptions,
   //pageSize,
@@ -110,9 +116,11 @@ export function ArchbasePanelTemplate<T extends object, ID>({
   withPagination = true,
   children,
   radius,
-  userActions = defaultUserActions,
+  userActions,
   debug = false,
   variant,
+  actionsButtonsOptions,
+  spaceOptions,
 }: ArchbasePanelTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>();
@@ -126,7 +134,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
     let resultActions: ArchbaseAction[] = [];
     const userActionsEnd = { ...defaultUserActions, ...userActions };
 
-    const defaultActions = [
+    const defaultActions: ArchbaseAction[] = [
       userActionsEnd.allowAdd
         ? {
             id: '1',
@@ -134,7 +142,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
             color: 'green',
             label: userActionsEnd.labelAdd ? userActionsEnd.labelAdd : t('archbase:New'),
             executeAction: () => userActionsEnd && userActionsEnd!.onAddExecute,
-            enabled: userActionsEnd.allowAdd,
+            enabled: true,
             hint: 'Clique para criar.',
           }
         : undefined,
@@ -145,7 +153,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
             color: 'blue',
             label: userActionsEnd.labelEdit ? userActionsEnd.labelEdit : t('archbase:Edit'),
             executeAction: () => userActionsEnd && userActionsEnd!.onEditExecute,
-            enabled: userActionsEnd.allowEdit,
+            enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
             hint: 'Clique para editar.',
           }
         : undefined,
@@ -156,7 +164,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
             color: 'red',
             label: userActionsEnd.labelRemove ? userActionsEnd.labelRemove : t('archbase:Remove'),
             executeAction: () => userActionsEnd && userActionsEnd!.onRemoveExecute,
-            enabled: userActionsEnd.allowRemove,
+            enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
             hint: 'Clique para remover.',
           }
         : undefined,
@@ -167,21 +175,22 @@ export function ArchbasePanelTemplate<T extends object, ID>({
             color: 'green',
             label: userActionsEnd.labelView ? userActionsEnd.labelView : t('archbase:View'),
             executeAction: () => userActionsEnd && userActionsEnd!.onView,
-            enabled: userActionsEnd.allowView,
+            enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
             hint: 'Clique para visualizar.',
           }
         : undefined,
     ];
+
     if (userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'before') {
-      resultActions = [...userActionsEnd.customUserActions, ...defaultActions];
+      return [...userActionsEnd.customUserActions, ...defaultActions];
     }
 
     if (userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'after') {
-      resultActions = [...defaultActions, ...userActionsEnd.customUserActions];
+      return [...defaultActions, ...userActionsEnd.customUserActions];
     }
 
-    return resultActions;
-  }, [userActions]);
+    return defaultActions;
+  }, [userActions, dataSource]);
 
   const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
     setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
@@ -196,32 +205,25 @@ export function ArchbasePanelTemplate<T extends object, ID>({
   };
 
   const handleSearchByFilter = () => {};
+  const defaultActionsButtonsOptions: ArchbaseActionButtonsOptions = {
+    menuButtonColor: 'blue.5',
+    menuPosition: 'left',
+  };
+
+  const defaultSpaceTemplateOptions: ArchbaseSpaceTemplateOptions = {
+    headerFlexGrow: 'left',
+    footerGridColumns: {},
+  };
+
+  const _actionsButtonsOptions = { ...defaultActionsButtonsOptions, ...actionsButtonsOptions };
+  const _spaceTemplateOptions = { ...defaultSpaceTemplateOptions, ...spaceOptions };
 
   return (
     <ArchbaseSpaceTemplate
-      title={'Pessoas'}
-      options={{
-        headerFlexGrow: 'right',
-      }}
-      headerLeft={
-        <ArchbaseActionButtons
-          actions={userActionsBuilded}
-          options={{
-            largerBreakPoint: '800px',
-            smallerBreakPoint: '400px',
-            largerSpacing: '2rem',
-            smallerSpacing: '0.5rem',
-            largerButtonVariant: 'filled',
-            smallerButtonVariant: 'filled',
-            menuItemVariant: 'filled',
-            menuButtonVariant: 'filled',
-            menuButtonColor: 'blue.5',
-            menuDropdownPosition: 'bottom',
-            menuItemApplyActionColor: true,
-            menuPosition: 'right',
-          }}
-        />
-      }
+      title={title}
+      debug={debug}
+      options={_spaceTemplateOptions}
+      headerLeft={<ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />}
       headerRight={
         <ArchbaseQueryBuilder
           id={filterOptions.componentName}
@@ -243,7 +245,9 @@ export function ArchbasePanelTemplate<T extends object, ID>({
           {filterFields}
         </ArchbaseQueryBuilder>
       }
-      footerRight={<Pagination total={10}>{children}</Pagination>}
-    />
+      footerRight={withPagination ? <Pagination total={10} /> : undefined}
+    >
+      {children}
+    </ArchbaseSpaceTemplate>
   );
 }
