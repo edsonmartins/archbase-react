@@ -136,7 +136,7 @@ class CommandPaletteButton extends Component<CommandPaletteButtonProps, CommandP
         actions={this.props.commands}
         actionComponent={CustomCommand}
       >
-        <Tooltip label="Comandos ⌘M">
+        <Tooltip withinPortal withArrow label="Comandos ⌘M">
           <Button leftIcon={<IconTerminal size="24px" />} onClick={() => spotlight.open()}></Button>
         </Tooltip>
       </SpotlightProvider>

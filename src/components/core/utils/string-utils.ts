@@ -1,5 +1,7 @@
 /* eslint-disable */
 import { parseISO, format } from 'date-fns'
+import LZString from 'lz-string';
+
 
 const WHITE_SPACES = [
   ' ',
@@ -419,3 +421,28 @@ export function formatStr(...values) {
   }
   return formatted
 }
+
+
+const decimalToHex = d => {
+  let hex = Number(d).toString(16);
+  const padding = 2;
+
+  while (hex.length < padding) {
+    hex = `0${hex}`;
+  }
+
+  return hex;
+};
+
+const hexToDecimal = h => parseInt(h, 16);
+
+export const compressString = str =>
+  LZString.compressToUint8Array(str).reduce(
+    (acc, value) => `${acc}${decimalToHex(value)}`,
+    '',
+  );
+
+export const decompressString = str => {
+  const compressed = str.match(/.{2}/g).map(hexToDecimal);
+  return LZString.decompressFromUint8Array(compressed);
+};

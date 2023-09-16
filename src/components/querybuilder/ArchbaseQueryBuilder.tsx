@@ -850,7 +850,7 @@ export class ArchbaseQueryBuilder extends Component<
               {type}
             </span>
           </div>
-          <Tooltip label="Filtrar">
+          <Tooltip withinPortal withArrow label="Filtrar">
             <ActionIcon
               variant={this.props.variant}
               size="lg"
@@ -864,7 +864,7 @@ export class ArchbaseQueryBuilder extends Component<
             </ActionIcon>
           </Tooltip>
           {this.props.showClearButton ? (
-            <Tooltip label="Limpar filtro">
+            <Tooltip withinPortal withArrow label="Limpar filtro">
               <ActionIcon
                 variant={this.props.variant}
                 size="lg"
@@ -880,7 +880,7 @@ export class ArchbaseQueryBuilder extends Component<
           ) : null}
           <Menu shadow="md" width={200} trigger="hover" openDelay={100} closeDelay={200}>
             <Menu.Target>
-              <Tooltip label="Selecionar período">
+              <Tooltip withinPortal withArrow label="Selecionar período">
                 <ActionIcon
                   variant={this.props.variant}
                   size="lg"
@@ -921,7 +921,7 @@ export class ArchbaseQueryBuilder extends Component<
             </Menu.Dropdown>
           </Menu>
 
-          <Tooltip label="Selecionar campos filtro rápido">
+          <Tooltip withinPortal withArrow label="Selecionar campos filtro rápido">
             <ActionIcon
               variant={this.props.variant}
               size="lg"
@@ -935,7 +935,7 @@ export class ArchbaseQueryBuilder extends Component<
             </ActionIcon>
           </Tooltip>
           {this.props.showToggleButton ? (
-            <Tooltip label="Filtro avançado">
+            <Tooltip withinPortal withArrow label="Filtro avançado">
               <ActionIcon
                 ref={this.toggleFilterButtonRef}
                 variant={this.props.variant}

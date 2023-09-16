@@ -191,7 +191,7 @@ function buildHiddenActionButton({
       color={options && options.menuItemApplyActionColor ? action.color : undefined}
       onClick={() => handleExecuteAction(action)}
     >
-      <Tooltip withArrow disabled={!action.hint} label={action.hint}>
+      <Tooltip withinPortal withArrow disabled={!action.hint} label={action.hint}>
         {SmallActionButton ? (
           <div>
             <SmallActionButton

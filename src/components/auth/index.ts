@@ -1,6 +1,5 @@
 export type { ArchbaseAuthenticator } from './ArchbaseAuthenticator'
-export { ArchbaseAuthenticatorImpl } from './ArchbaseAuthenticator'
-export type { ArchbaseUser } from './ArchbaseUser'
+export type { ArchbaseUser, ArchbaseUsernameAndPassword } from './ArchbaseUser'
 export { ArchbaseAuthProvider, ArchbaseAuthContext } from './oauth2'
 export type {
   TArchbaseAuthConfig,
@@ -8,3 +7,5 @@ export type {
   IArchbaseAuthContext,
   TArchbaseRefreshTokenExpiredEvent
 } from './oauth2'
+export type { ArchbaseTokenManager } from './ArchbaseTokenManager'
+export {DefaultArchbaseTokenManager} from './DefaultArchbaseTokenManager'

@@ -305,7 +305,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
       allowNegative={allowNegative}
       allowEmpty={allowEmpty}
       rightSection={
-        <Tooltip label={tooltipIconSearch}>
+        <Tooltip withinPortal withArrow label={tooltipIconSearch}>
           <ActionIcon
             sx={{
               backgroundColor:

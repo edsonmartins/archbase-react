@@ -602,7 +602,7 @@ export const CustomToggleGlobalFilterButton = <
   };
 
   return (
-    <Tooltip withinPortal label={rest?.title ?? localization.showHideSearch}>
+    <Tooltip withinPortal withArrow label={rest?.title ?? localization.showHideSearch}>
       <ActionIcon
         variant={variant}
         size="lg"
@@ -642,7 +642,7 @@ export const CustomToggleFiltersButton = <
   };
 
   return (
-    <Tooltip withinPortal label={rest?.title ?? localization.showHideFilters}>
+    <Tooltip withinPortal withArrow label={rest?.title ?? localization.showHideFilters}>
       <ActionIcon
         variant={variant}
         size="lg"
@@ -674,7 +674,7 @@ export const CustomShowHideColumnsButton = <
 
   return (
     <Menu closeOnItemClick={false} withinPortal>
-      <Tooltip withinPortal label={rest?.title ?? localization.showHideColumns}>
+      <Tooltip withinPortal withArrow label={rest?.title ?? localization.showHideColumns}>
         <Menu.Target>
           <ActionIcon
             variant={variant}
@@ -1329,21 +1329,21 @@ export function ArchbaseTableRowActions<T extends Object>({
   const theme = useMantineTheme()
   return (
     <Box sx={{ display: 'flex' }}>
-      <Tooltip withArrow position="left" label={t('Edit')}>
+      <Tooltip withinPortal withArrow position="left" label={t('Edit')}>
         <ActionIcon variant={variant==='filled'?'white':variant} color="green" onClick={() => onEditRow && onEditRow(row)}>
           <IconEdit
             color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]}
           />
         </ActionIcon>
       </Tooltip>
-      <Tooltip withArrow position="right" label={t('Remove')}>
+      <Tooltip withinPortal withArrow position="right" label={t('Remove')}>
         <ActionIcon variant={variant==='filled'?'white':variant} color="red" onClick={() => onRemoveRow && onRemoveRow(row)}>
           <IconTrash
             color={theme.colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]}
           />
         </ActionIcon>
       </Tooltip>
-      <Tooltip withArrow position="right" label={t('View')}>
+      <Tooltip withinPortal withArrow position="right" label={t('View')}>
         <ActionIcon variant={variant==='filled'?'white':variant}   color="black" onClick={() =>  onViewRow && onViewRow(row)}>
           <IconEye
             color={theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]}
