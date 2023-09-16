@@ -347,6 +347,7 @@ export function ArchbaseSelect<T, ID, O>({
         nothingFound={nothingFound}
         zIndex={zIndex}
         dropdownPosition={dropdownPosition}
+        withinPortal
       />
     </ArchbaseSelectProvider>
   );

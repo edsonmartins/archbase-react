@@ -385,6 +385,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         dropdownPosition={dropdownPosition}
         rightSection={loading ? <Loader size="xs" /> : null}
         rightSectionWidth={30}
+        withinPortal
       />
     </ArchbaseAsyncSelectProvider>
   )
