@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   useArchbaseDataSource,
   useArchbaseDataSourceListener,
@@ -14,7 +14,7 @@ import { FakePessoaService } from '@demo/service/FakePessoaService';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
 import { ArchbaseNotifications } from '@components/notification';
-import { MaskPattern } from '@components/editors';
+import { ArchbaseCheckbox, MaskPattern } from '@components/editors';
 import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import {
   ArchbaseQueryFilterDelegator,
@@ -45,10 +45,12 @@ import {
 } from '@components/masonry/index';
 import { IconAt, IconPhoneCall } from '@tabler/icons-react';
 import { IconArrowDownRight } from '@tabler/icons-react';
+import { IconArrowForwardUp } from '@tabler/icons-react';
 const filters: LocalFilter[] = [];
 
 const ArchbaseMasonryTemplateExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
+  const [debug, setDebug] = useState<boolean>(true);
   const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   /**
    * Criando dataSource remoto
@@ -234,6 +236,11 @@ const ArchbaseMasonryTemplateExample = () => {
 
   return (
     <div style={{ width: '100%', height: 'calc(100vh - 30px)' }}>
+      <ArchbaseCheckbox
+        label="Debug"
+        isChecked={debug}
+        onChangeValue={(value: any, _event: any) => setDebug(value === true)}
+      ></ArchbaseCheckbox>
       <ArchbaseMasonryTemplate
         title={'Pessoas'}
         dataSource={dsPessoas}
@@ -241,6 +248,7 @@ const ArchbaseMasonryTemplateExample = () => {
         isLoading={isLoading}
         error={error}
         isError={isError}
+        debug={debug}
         clearError={clearError}
         width={'100%'}
         height={'100%'}
@@ -251,7 +259,20 @@ const ArchbaseMasonryTemplateExample = () => {
           componentName: 'templatePanelExemplo',
           viewName: 'templatePanelView',
         }}
-        userActions={{ visible: true, customUserActions: <Button>Liberar</Button> }}
+        userActions={{
+          visible: true,
+          customUserActions: [
+            {
+              id: '5',
+              icon: <IconArrowForwardUp />,
+              color: 'cyan',
+              label: 'liberar',
+              executeAction: () => {},
+              enabled: true,
+              hint: 'Clique para liberar.',
+            },
+          ],
+        }}
         filterFields={filterFields}
         filterPersistenceDelegator={dsFilters as ArchbaseQueryFilterDelegator}
         columnsCount={5}

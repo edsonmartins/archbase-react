@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode, useMemo, useRef, useState } from 'react';
+import React, { CSSProperties, Fragment, ReactNode, useMemo, useRef, useState } from 'react';
 import type { ArchbaseDataSource } from '../datasource';
 import {
   ArchbaseQueryBuilder,
@@ -88,6 +88,7 @@ export interface ArchbaseSpaceTemplateProps<T, ID> {
   clearError?: () => void;
   /** Opções de personalização */
   options?: ArchbaseSpaceTemplateOptions;
+  style?: CSSProperties;
 }
 
 function buildHeader(
@@ -298,6 +299,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
   footerRight,
   variant,
   options = {},
+  style,
 }: ArchbaseSpaceTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>();
@@ -316,7 +318,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
       ref={innerComponentRef}
       withBorder={withBorder}
       radius={radius}
-      style={{ width: width, height: height, padding: 4 }}
+      style={{ width: width, height: height, padding: 4, ...style }}
     >
       <ArchbaseSpaceFixed height={'100%'}>
         <ArchbaseSpaceTop size={headerSize.height}>

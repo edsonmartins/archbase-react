@@ -25,7 +25,6 @@ import {
   QueryFields,
 } from '@components/querybuilder';
 import { ArchbasePanelTemplate } from '../ArchbasePanelTemplate';
-import { Button, Flex } from '@mantine/core';
 const filters: LocalFilter[] = [];
 
 const ArchbasePanelTemplateExample = () => {

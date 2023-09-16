@@ -1,4 +1,13 @@
-import React, { Fragment, ReactNode, useMemo, useRef, useState } from 'react';
+import {
+  ArchbaseAction,
+  ArchbaseActionButtons,
+  ArchbaseActionButtonsOptions,
+} from '@components/buttons/ArchbaseActionButtons';
+import { MantineNumberSize, Pagination, Variants } from '@mantine/core';
+import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
+import { t } from 'i18next';
+import React, { CSSProperties, ReactNode, useMemo, useRef, useState } from 'react';
+import { useArchbaseAppContext } from '../core';
 import type { ArchbaseDataSource } from '../datasource';
 import {
   ArchbaseQueryBuilder,
@@ -6,33 +15,8 @@ import {
   ArchbaseQueryFilterDelegator,
   ArchbaseQueryFilterState,
   FilterOptions,
-  getDefaultEmptyFilter,
 } from '../querybuilder';
-import { ArchbaseAlert } from '../notification';
-import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
-import { t } from 'i18next';
-import useComponentSize from '@rehooks/component-size';
-import {
-  Box,
-  Button,
-  Flex,
-  Grid,
-  MantineNumberSize,
-  Pagination,
-  Paper,
-  ScrollArea,
-  Text,
-  Variants,
-} from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
-import { IconTrash } from '@tabler/icons-react';
-import { useArchbaseAppContext } from '../core';
 import { ArchbaseSpaceTemplate, ArchbaseSpaceTemplateOptions } from './ArchbaseSpaceTemplate';
-import {
-  ArchbaseAction,
-  ArchbaseActionButtons,
-  ArchbaseActionButtonsOptions,
-} from '@components/buttons/ArchbaseActionButtons';
 
 export interface UserActionsOptions {
   visible?: boolean;
@@ -95,6 +79,7 @@ export interface ArchbasePanelTemplateProps<T, ID> {
   debug?: boolean;
   actionsButtonsOptions?: ArchbaseActionButtonsOptions;
   spaceOptions?: ArchbaseSpaceTemplateOptions;
+  style?: CSSProperties;
 }
 
 export function ArchbasePanelTemplate<T extends object, ID>({
@@ -121,17 +106,16 @@ export function ArchbasePanelTemplate<T extends object, ID>({
   variant,
   actionsButtonsOptions,
   spaceOptions,
+  style,
 }: ArchbasePanelTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>();
   const filterRef = useRef<any>();
-  let size = useComponentSize(innerComponentRef);
   const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
     activeFilterIndex: -1,
     expandedFilter: false,
   });
   const userActionsBuilded: ArchbaseAction[] = useMemo(() => {
-    let resultActions: ArchbaseAction[] = [];
     const userActionsEnd = { ...defaultUserActions, ...userActions };
 
     const defaultActions: ArchbaseAction[] = [
@@ -220,8 +204,17 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 
   return (
     <ArchbaseSpaceTemplate
+      innerRef={innerComponentRef}
+      width={width}
+      height={height}
+      radius={radius}
+      withBorder={withBorder}
+      isError={isError}
+      error={error}
+      clearError={clearError}
       title={title}
       debug={debug}
+      style={style}
       options={_spaceTemplateOptions}
       headerLeft={<ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />}
       headerRight={

@@ -305,6 +305,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
           <Menu
             opened={opened}
             onChange={setOpened}
+            withinPortal={true}
             position={
               options && options.menuDropdownPosition
                 ? options.menuDropdownPosition
@@ -352,7 +353,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
       {visibleActions.map((action, index) => {
         return (
           <>
-            <Tooltip withinPortal withArrow disabled={!action.hint} label={action.hint}>
+            <Tooltip withArrow withinPortal={true} disabled={!action.hint} label={action.hint}>
               <div>
                 {buildVisibleActionButton({ action, options, variant, handleExecuteAction, customComponents }, isLarge)}
               </div>
