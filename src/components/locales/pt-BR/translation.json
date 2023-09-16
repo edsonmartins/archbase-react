@@ -25,6 +25,7 @@
   "editRecordIsNotAllowed": "Registro já está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível editar o registro.",
   "removingRecordIsNotAllowed": "Registro está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível remover o registro.",
   "noBrowsingRecordsAllowed": "Registro está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível navegar nos registros.",
+  "notAllowCancelRecord":"Registro não está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível cancelar a edição.",
   "noRecordsToEdit": "Não há registros para edição. Fonte de dados: {{dataSourceName}}",
   "noRecordsToRemove": "Não há registros para remover. Fonte de dados: {{dataSourceName}}",
   "noRecordToSave": "Não há registro para salvar. Fonte de dados: {{dataSourceName}}",
@@ -36,7 +37,7 @@
   "indexOutOfRange": "Índice fora do intervalo.",
   "invalidFieldName": "Nome do campo inválido. Fonte de dados: {{dataSourceName}}",
   "recordNotBeingEdited": "Registro não está sendo inserido ou editado. Fonte de dados: {{dataSourceName}}",
-  "getStarted": "Para começar, faça login na sua conta da Microsoft abaixo.",
+  "getStarted": "Para começar, faça login com sua conta Microsoft abaixo.",
   "loginMicrosoft": "Entrar com a conta Microsoft",
   "toggleColorScheme": "Alternar combinación de colores",
   "signIn": "Entrar",
@@ -65,5 +66,15 @@
   "Information":"Informação",
   "Save":"Salvar",
   "Cancel":"Cancelar",
-  "Integration":"Integração"
+  "Integration":"Integração",
+  "Ok":"Ok",
+  "Click on Ok or Cancel to close":"Clique em Ok ou Cancela para fechar",
+  "Close":"Fechar",
+  "Yes":"Sim",
+  "No":"Não",
+  "Pick path":"Clique aqui para selecionar o caminho",
+  "Clique para criar um novo registro":"Clique para criar um novo registro",
+  "Clique para editar o registro":"Clique para editar o registro",
+  "Clique para remover o registro":"Clique para remover o registro",
+  "Clique para visualizar o registro":"Clique para visualizar o registro"
 }

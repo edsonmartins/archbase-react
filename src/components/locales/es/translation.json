@@ -27,6 +27,7 @@
   "noBrowsingRecordsAllowed": "Record is being inserted or edited. Fuente de datos: {{dataSourceName}} no puede navegar por los registros.",
   "operationNotAllowed": "Operación no permitida cuando la fuente de datos está cerrada. Fuente de datos: {{dataSourceName}}, operación {{operation}}",
   "operationNotAllowedOnOpened": "Operación no permitida cuando la fuente de datos está abierta. Fuente de datos: {{dataSourceName}}, operación {{operation}}",
+  "notAllowCancelRecord":"El registro no se está ingresando o editando. Fuente de datos: {{dataSourceName}} no es posible cancelar la edición.",
   "noRecordsToEdit": "No hay registros para editar. Fuente de datos: {{dataSourceName}}",
   "noRecordsToRemove": "No hay registros para eliminar. Fuente de datos: {{dataSourceName}}",
   "noRecordToSave": "No hay registro para guardar. Fuente de datos: {{dataSourceName}}",
@@ -36,7 +37,7 @@
   "indexOutOfRange": "Índice fuera de rango.",
   "invalidFieldName": "Invalid field name. Data source: {{dataSourceName}}",
   "recordNotBeingEdited": "Registro no insertado o editado. Fuente de datos: {{dataSourceName}}",
-  "getStarted": "Para comenzar, inicie sesión en su cuenta de Microsoft a continuación.",
+  "getStarted": "Para comenzar, inicie sesión con su cuenta de Microsoft a continuación.",
   "loginMicrosoft": "Iniciar sesión con la cuenta de Microsoft",
   "toggleColorScheme": "Alternar combinación de colores",
   "signIn": "Iniciar sesión",
@@ -65,5 +66,15 @@
   "Information":"Información",
   "Save":"Ahorrar",
   "Cancel":"Cancelar",
-  "Integration":"Integración"
+  "Integration":"Integración",
+  "Ok":"Ok",
+  "Click on Ok or Cancel to close":"Haga clic en Aceptar o Cancelar para cerrar",
+  "Close":"Cerrar",
+  "Yes":"Si",
+  "No":"No",
+  "Pick path":"Haga clic aquí para seleccionar la ruta",
+  "Clique para criar um novo registro":"Haga clic para crear un nuevo registro",
+  "Clique para editar o registro":"Haga clic para editar el registro",
+  "Clique para remover o registro":"Haga clic para eliminar el registro",
+  "Clique para visualizar o registro":"Haga clic para ver el registro"
 }
