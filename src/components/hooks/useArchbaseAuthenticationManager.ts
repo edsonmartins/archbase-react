@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 import { ArchbaseAccessToken } from '../auth/ArchbaseAccessToken'
-import Cookies from 'js-cookie'
-import CryptoJS from 'crypto-js'
 import { useContainer } from 'inversify-react'
 import { ArchbaseAuthenticator } from '../auth/ArchbaseAuthenticator'
-import { API_TYPE } from '../core/ioc'
+import { ARCHBASE_IOC_API_TYPE } from '../core/ioc'
 import { ArchbaseTokenManager } from '../auth/ArchbaseTokenManager'
 import { ENCRYPTION_KEY } from '../auth/DefaultArchbaseTokenManager'
 import { processErrorMessage } from '../core/exceptions'
@@ -21,10 +19,10 @@ export interface AuthenticationManagerReturnType {
 }
 export const useArchbaseAuthenticationManager = (): AuthenticationManagerReturnType => {
   const tokenManager = useContainer((container) =>
-    container.get<ArchbaseTokenManager>(API_TYPE.TokenManager)
+    container.get<ArchbaseTokenManager>(ARCHBASE_IOC_API_TYPE.TokenManager)
   )
   const authenticator = useContainer((container) =>
-    container.get<ArchbaseAuthenticator>(API_TYPE.Authenticator)
+    container.get<ArchbaseAuthenticator>(ARCHBASE_IOC_API_TYPE.Authenticator)
   )
   const [accessToken, setAccessToken] = useState<ArchbaseAccessToken | null>(null)
   const [isAuthenticating, setAuthenticating] = useState<boolean>(false)

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { processErrorMessage } from '../core/exceptions'
 import { Avatar, AvatarProps } from '@mantine/core'
 

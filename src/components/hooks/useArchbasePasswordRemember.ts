@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useContainer } from 'inversify-react'
-import { API_TYPE } from '../core/ioc'
+import { ARCHBASE_IOC_API_TYPE } from '../core/ioc'
 import { ArchbaseTokenManager } from '../auth/ArchbaseTokenManager'
 
 
@@ -13,7 +13,7 @@ export interface PasswordRememberReturnType {
 }
 export const useArchbasePasswordRemember = (): PasswordRememberReturnType => {
   const tokenManager = useContainer((container) =>
-    container.get<ArchbaseTokenManager>(API_TYPE.TokenManager)
+    container.get<ArchbaseTokenManager>(ARCHBASE_IOC_API_TYPE.TokenManager)
   )
   const [username, setUsername] = useState<string | null>(null)
   const [password, setPassword] = useState<string | null>(null)

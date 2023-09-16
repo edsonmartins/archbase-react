@@ -2,7 +2,7 @@
 import 'reflect-metadata'
 import axios from 'axios'
 import * as inversify from 'inversify'
-import { API_TYPE, IOCContainer } from '../core/ioc'
+import { ARCHBASE_IOC_API_TYPE, IOCContainer } from '../core/ioc'
 import type { ArchbaseAuthenticator } from '../auth/ArchbaseAuthenticator'
 import { ArchbaseJacksonParser } from '../core/json'
 import { ArchbaseAccessToken } from '../auth/ArchbaseAccessToken'
@@ -48,7 +48,7 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   protected tokenManager: ArchbaseTokenManager
 
   constructor() {
-    this.tokenManager = IOCContainer.getContainer().get(API_TYPE.TokenManager)
+    this.tokenManager = IOCContainer.getContainer().get(ARCHBASE_IOC_API_TYPE.TokenManager)
   }
 
   async get<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean): Promise<T> {
