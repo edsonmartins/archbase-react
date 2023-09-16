@@ -216,7 +216,7 @@ export function ArchbaseEdit<T, ID>({
       error={internalError}
       rightSection={
         onActionSearchExecute ? (
-          <Tooltip label={tooltipIconSearch}>
+          <Tooltip withinPortal withArrow label={tooltipIconSearch}>
             <ActionIcon
               sx={{
                 backgroundColor: variant === 'filled'?

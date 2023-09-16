@@ -1,13 +1,8 @@
 import { injectable } from 'inversify'
+import { ArchbaseAccessToken } from './ArchbaseAccessToken'
 
 export interface ArchbaseAuthenticator {
-  getToken(): string | null
+  login(username: string, password: string): Promise<ArchbaseAccessToken>
+  refreshToken(refresh_token: string): Promise<ArchbaseAccessToken>
 }
 
-@injectable()
-export class ArchbaseAuthenticatorImpl implements ArchbaseAuthenticator {
-  getToken(): string | null {
-    const token = localStorage.getItem('ROCP_token')
-    return token
-  }
-}

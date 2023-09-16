@@ -17,7 +17,7 @@ export class ArchbaseInputSearch extends Component<ArchbaseInputSearchProps> {
         placeholder={this.props.placeholder}
         style={{ width: '100%' }}
         rightSection={
-          <Tooltip label={'Localizar'}>
+          <Tooltip withinPortal withArrow label={'Localizar'}>
             <ActionIcon
               sx={{
                 backgroundColor:

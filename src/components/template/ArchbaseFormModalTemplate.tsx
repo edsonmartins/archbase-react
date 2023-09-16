@@ -1,20 +1,22 @@
 import { Button, Flex, Group, MantineNumberSize, Modal, ModalProps } from '@mantine/core'
 import React, { ReactNode } from 'react'
 import { useArchbaseAppContext } from '../core'
-import { Bottom, Fill, Fixed } from 'react-spaces'
+import { Bottom, Fill, Fixed, Left } from 'react-spaces'
 import { useArchbaseTheme } from '../hooks'
-import { IconCheck } from '@tabler/icons-react'
+import { IconCheck, IconDeviceFloppy } from '@tabler/icons-react'
 import { IconX } from '@tabler/icons-react'
+import { ArchbaseDataSource } from '../datasource'
 import { t } from 'i18next'
 import { ArchbaseDialog } from '../notification'
-import { ArchbaseForm, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '../containers'
+import { ArchbaseForm } from '../containers'
 
-export interface ArchbaseModalTemplateProps extends ModalProps {
+export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends ModalProps {
+  dataSource?: ArchbaseDataSource<T, ID>
   height: MantineNumberSize
   userActions?: ReactNode
 }
 
-export function ArchbaseModalTemplate({
+export function ArchbaseFormModalTemplate<T extends object, ID>({
   title,
   withOverlay = true,
   overlayProps,
@@ -27,10 +29,11 @@ export function ArchbaseModalTemplate({
   variant,
   closeOnEscape = true,
   size,
+  dataSource,
   height,
   onClose,
   userActions
-}: ArchbaseModalTemplateProps) {
+}: ArchbaseFormModalTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext()
   const theme = useArchbaseTheme()
 
@@ -65,34 +68,38 @@ export function ArchbaseModalTemplate({
       closeOnEscape={closeOnEscape}
       size={size}
     >
-      <ArchbaseSpaceFixed height={height}>
-        <ArchbaseSpaceFill>
-          <ArchbaseForm>
-            {children}
-          </ArchbaseForm>
-        </ArchbaseSpaceFill>
+      <Fixed height={height}>
+        <Fill><ArchbaseForm>{children}</ArchbaseForm></Fill>
         <Bottom size="40px">
           <Flex justify="space-between" align="center">
             <Group>
                 {userActions}
             </Group>
-            <Group spacing="md">
+            {dataSource && !dataSource.isBrowsing()?<Group spacing="md">
               <Button
                 leftIcon={<IconCheck />}
                 onClick={handleSave}
+                disabled={dataSource && dataSource.isBrowsing()}
                 variant={variant ?? appContext.variant}
                 color="green"
               >{`${t('Ok')}`}</Button>
               <Button
                 leftIcon={<IconX />}
                 onClick={handleCancel}
+                disabled={dataSource && dataSource.isBrowsing()}
                 variant={variant ?? appContext.variant}
                 color="red"
               >{`${t('Cancel')}`}</Button>
-            </Group>
+            </Group>:<Group spacing="md">
+              <Button
+                leftIcon={<IconX />}
+                onClick={handleCancel}
+                variant={variant ?? appContext.variant}
+              >{`${t('Close')}`}</Button>
+            </Group>}
           </Flex>
         </Bottom>
-      </ArchbaseSpaceFixed>
+      </Fixed>
     </Modal>
   )
 }

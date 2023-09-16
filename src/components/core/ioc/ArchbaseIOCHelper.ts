@@ -1,4 +1,7 @@
+import { ArchbaseTokenManager } from '@/components/auth/ArchbaseTokenManager';
 import { Container } from 'inversify'
+import { API_TYPE } from '.';
+import { DefaultArchbaseTokenManager } from '@/components/auth/DefaultArchbaseTokenManager';
 
 let instance:any;
 const container = new Container()
@@ -14,6 +17,9 @@ class ArchbaseIOCHelper {
 
   getContainer(): Container {
     return container
+  }
+  registerDefaultTokenManager(): void {
+    container.bind<ArchbaseTokenManager>(API_TYPE.TokenManager).to(DefaultArchbaseTokenManager)
   }
 }
 

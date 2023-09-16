@@ -282,7 +282,7 @@ export function ArchbaseLookupEdit<T, ID, O>({
       error={internalError}
       size={size}
       rightSection={
-        <Tooltip label={tooltipIconSearch}>
+        <Tooltip withinPortal withArrow label={tooltipIconSearch}>
           <ActionIcon
             sx={{
               backgroundColor:

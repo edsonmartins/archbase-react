@@ -40,7 +40,9 @@ import {
   truncate,
   convertDateToISOString,
   convertISOStringToDate,
-  formatStr
+  formatStr,
+  compressString,
+  decompressString
 } from './string-utils'
 
 export {

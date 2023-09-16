@@ -281,12 +281,12 @@ class ArchbaseFilterSelectFields extends Component<
               >
                 <div className="sort-header">
                   <div>
-                    <Tooltip label="Para baixo">
+                    <Tooltip withinPortal withArrow label="Para baixo">
                       <ActionIcon id="btnFilterSortDown" onClick={this.onSortDown}>
                         <IconArrowDown />
                       </ActionIcon>
                     </Tooltip>
-                    <Tooltip label="Para cima">
+                    <Tooltip withinPortal withArrow label="Para cima">
                       <ActionIcon id="btnFilterSortUp" onClick={this.onSortUp}>
                         <IconArrowUp />
                       </ActionIcon>

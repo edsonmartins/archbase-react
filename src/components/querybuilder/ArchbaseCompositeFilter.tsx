@@ -201,7 +201,7 @@ class ArchbaseCompositeFilter extends Component<
             </Accordion>
             <div className="filter-apply">
               <Group spacing="xs">
-                <Tooltip label="Novo filtro">
+                <Tooltip withinPortal withArrow label="Novo filtro">
                   <Button
                     id="btnNew"
                     variant={this.props.variant}
@@ -211,7 +211,7 @@ class ArchbaseCompositeFilter extends Component<
                     Novo
                   </Button>
                 </Tooltip>
-                <Tooltip label="Remover filtro">
+                <Tooltip withinPortal withArrow label="Remover filtro">
                   <Button
                     id="btnRemove"
                     color="red"
@@ -258,7 +258,7 @@ class ArchbaseCompositeFilter extends Component<
                   </Menu.Dropdown>
                 </Menu>
 
-                <Tooltip label="Aplicar filtro">
+                <Tooltip withinPortal withArrow label="Aplicar filtro">
                   <Button
                     id="btnApply"
                     variant={this.props.variant}
@@ -271,7 +271,7 @@ class ArchbaseCompositeFilter extends Component<
                     {'Aplicar'}
                   </Button>
                 </Tooltip>
-                <Tooltip label="Fechar filtro">
+                <Tooltip withinPortal withArrow label="Fechar filtro">
                   <Button
                     id="btnClose"
                     variant={this.props.variant}

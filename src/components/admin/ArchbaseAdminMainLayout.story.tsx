@@ -30,22 +30,22 @@ const fakeUser: ArchbaseUser = {
 const ArchbaseAdminMainLayoutExample = () => {
   const headerActions = useMemo((): ReactNode => {
     return [
-      <Tooltip label="Trocar empresa">
+      <Tooltip withinPortal withArrow label="Trocar empresa">
         <ActionIcon variant="transparent">
           <IconSwitchHorizontal size="2rem" />
         </ActionIcon>
       </Tooltip>,
-      <Tooltip label="Tela cheia">
+      <Tooltip withinPortal withArrow label="Tela cheia">
         <ActionIcon variant="transparent">
           <IconArrowsMaximize size="2rem" />
         </ActionIcon>
       </Tooltip>,
-      <Tooltip label="Notificações">
+      <Tooltip withinPortal withArrow label="Notificações">
         <ActionIcon variant="transparent">
           <IconBell size="2rem" />
         </ActionIcon>
       </Tooltip>,
-      <Tooltip label="Chat">
+      <Tooltip withinPortal withArrow label="Chat">
         <ActionIcon variant="transparent">
           <IconMessageChatbot size="2rem" />
         </ActionIcon>
