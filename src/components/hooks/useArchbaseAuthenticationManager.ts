@@ -17,7 +17,16 @@ export interface AuthenticationManagerReturnType {
   clearError: () => void
   accessToken?: string | null
 }
-export const useArchbaseAuthenticationManager = (): AuthenticationManagerReturnType => {
+
+export interface ArchbaseAuthenticationManagerProps {
+  checkIntervalTokenHasExpired?: number
+  expirationThresholdOfToken?: number
+}
+
+export const useArchbaseAuthenticationManager = ({
+  checkIntervalTokenHasExpired = 30000, // Verificar a 30 segundos
+  expirationThresholdOfToken = 300 // Antecipar em 5 minutos
+} : ArchbaseAuthenticationManagerProps): AuthenticationManagerReturnType => {
   const tokenManager = useContainer((container) =>
     container.get<ArchbaseTokenManager>(ARCHBASE_IOC_API_TYPE.TokenManager)
   )
@@ -78,11 +87,11 @@ export const useArchbaseAuthenticationManager = (): AuthenticationManagerReturnT
   useEffect(() => {
     const checkTokenExpirationInterval = setInterval(() => {
       if (accessToken && accessToken.access_token) {
-        if (tokenManager.isTokenExpired(accessToken)) {
+        if (tokenManager.isTokenExpired(accessToken, expirationThresholdOfToken)) {
           renovarToken()
         }
       }
-    }, 30000) // Verificar a 30 segundos
+    }, checkIntervalTokenHasExpired) 
 
     return () => {
       clearInterval(checkTokenExpirationInterval)
