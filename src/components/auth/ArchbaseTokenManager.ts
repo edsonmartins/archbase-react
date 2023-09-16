@@ -9,6 +9,6 @@ export interface ArchbaseTokenManager {
   clearToken(): void
   clearUsernameAndPassword(): void
   getToken(): ArchbaseAccessToken | null
-  isTokenExpired(token?: ArchbaseAccessToken): boolean;
+  isTokenExpired(token?: ArchbaseAccessToken, expirationThreshold?: number): boolean;
 }
 

@@ -33,7 +33,7 @@ export class DefaultArchbaseTokenManager implements ArchbaseTokenManager {
     localStorage.setItem(USER_NAME_AND_PASSWORD, encryptedPassword)
   }
 
-  isTokenExpired(token?: ArchbaseAccessToken): boolean {
+  isTokenExpired(token?: ArchbaseAccessToken, expirationThreshold: number = 300 ): boolean {
     let currentToken = token
     if (!currentToken) {
       const currentToken = this.getToken()
@@ -46,9 +46,9 @@ export class DefaultArchbaseTokenManager implements ArchbaseTokenManager {
       if (!decodedToken) {
         return true
       }
-      const currentTime = Date.now() / 1000
-      const tokenExpiration = decodedToken.exp
-      return currentTime > tokenExpiration
+      const currentTime = Math.floor(Date.now() / 1000);
+      const tokenExpiration = decodedToken.exp;
+      return currentTime > (tokenExpiration - expirationThreshold);
     } catch (error) {
       return true
     }

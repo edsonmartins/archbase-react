@@ -1,4 +1,4 @@
-export { ArchbaseFormModalTemplate } from './ArchbaseFormModalTemple'
+export { ArchbaseFormModalTemplate } from './ArchbaseFormModalTemplate'
 export { ArchbaseFormTemplate } from './ArchbaseFormTemplate'
 export { ArchbaseMasonryTemplate } from './ArchbaseMasonryTemplate'
 export { ArchbaseModalTemplate } from './ArchbaseModalTemplate'
