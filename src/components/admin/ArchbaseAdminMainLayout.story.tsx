@@ -18,6 +18,8 @@ import { IconLogout } from '@tabler/icons-react'
 import { IconBrandMessenger } from '@tabler/icons-react'
 import { navigationDataSample } from './navigationData'
 import { archbaseLogo3 } from '../core'
+import { useArchbaseAdminStore } from 'components/hooks'
+import { ArchbaseTabItem } from './types'
 
 const fakeUser: ArchbaseUser = {
   id: '1',
@@ -28,6 +30,8 @@ const fakeUser: ArchbaseUser = {
 }
 
 const ArchbaseAdminMainLayoutExample = () => {
+  const adminStore = useArchbaseAdminStore()
+
   const headerActions = useMemo((): ReactNode => {
     return [
       <Tooltip withinPortal withArrow label="Trocar empresa">
@@ -87,6 +91,15 @@ const ArchbaseAdminMainLayoutExample = () => {
           />
         }
       >
+        <ArchbaseAdminTabContainer
+            onChangeActiveTabId={(activeTabId: any) => adminStore.setActiveTabId(activeTabId)}
+            onChangeOpenedTabs={(openedTabs: ArchbaseTabItem[]) => {
+               adminStore.setOpenedTabs(openedTabs)
+            }}
+            openedTabs={adminStore.openedTabs}
+            activeTabId={adminStore.activeTabId}
+            navigationData={navigationDataSample}
+          />
         <ArchbaseAdminTabContainer navigationData={navigationDataSample} />
       </ArchbaseAdminMainLayout>
     </div>

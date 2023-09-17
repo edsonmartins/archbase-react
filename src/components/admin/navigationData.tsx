@@ -11,6 +11,11 @@ import {
 } from '@tabler/icons-react'
 
 import { ArchbaseNavigationItem } from './types'
+import { PessoaView } from 'demo/view/PessoaView'
+import { PessoaForm } from 'demo/view/PessoaForm'
+import { PedidoView } from 'demo/view/PedidoView'
+import { PedidoForm } from 'demo/view/PedidoForm'
+import { HomeView } from 'demo/view/HomeView'
 
 const dashBoardView: ArchbaseNavigationItem = {
   label: 'Dashboard',
@@ -28,7 +33,7 @@ const homeView: ArchbaseNavigationItem = {
   link: '/home',
   category: 'HOME',
   color: 'teal',
-  component: <div></div>,
+  component: <HomeView/>,
   showInSidebar: true
 }
 
@@ -38,17 +43,17 @@ const pessoaConsultaView: ArchbaseNavigationItem = {
   icon: <IconListSearch />,
   category: 'PESSOAS',
   color: 'pink',
-  component: <div />,
+  component: <PessoaView/>,
   showInSidebar: true
 }
 
 const pessoaNovaView: ArchbaseNavigationItem = {
   label: 'Nova pessoa',
-  link: '/pessoa/novo',
+  link: '/pessoa/nova',
   icon: <IconUserPlus />,
   category: 'PESSOAS',
   color: 'pink',
-  component: <div></div>,
+  component: <PessoaForm/>,
   showInSidebar: true
 }
 
@@ -67,7 +72,7 @@ const pedidoConsultaView: ArchbaseNavigationItem = {
   icon: <IconListSearch />,
   category: 'PEDIDOS',
   color: 'yellow',
-  component: <div></div>,
+  component: <PedidoView/>,
   showInSidebar: true
 }
 
@@ -77,7 +82,7 @@ const pedidoNovoView: ArchbaseNavigationItem = {
   icon: <IconFilePlus />,
   category: 'PEDIDOS',
   color: 'yellow',
-  component: <div></div>,
+  component: <PedidoForm/>,
   showInSidebar: true
 }
 
