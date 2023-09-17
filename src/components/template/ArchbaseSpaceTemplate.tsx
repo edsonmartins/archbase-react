@@ -28,6 +28,7 @@ import {
   Pagination,
   Paper,
   ScrollArea,
+  SystemProp,
   Text,
   Variants,
   px,
@@ -50,6 +51,10 @@ interface ArchbaseBreakpointsColSpans {
 export interface ArchbaseSpaceTemplateOptions {
   /** Indicar qual lado do header irá crescer para preencher o espaço sobrando (Válido somente quando headerGridColumns não é atribuído ao options) */
   headerFlexGrow?: 'left' | 'even' | 'right';
+  /** Justificar o conteúdo interno da parte direita do header.*/
+  headerFlexRightJustifyContent?: SystemProp<CSSProperties['justifyContent']>;
+  /** Justificar o conteúdo interno da parte esquerda do header.*/
+  headerFlexLeftJustifyContent?: SystemProp<CSSProperties['justifyContent']>;
   /** Indicar os ColSpan das grids para cada parte do header (left, middle, right) de acordo com os breakpoints */
   headerGridColumns?: {
     right?: ArchbaseBreakpointsColSpans;
@@ -58,6 +63,10 @@ export interface ArchbaseSpaceTemplateOptions {
   };
   /** Indicar qual lado do footer irá crescer para preencher o espaço sobrando (Válido somente quando footerGridColumns não é atribuído ao options) */
   footerFlexGrow?: 'left' | 'even' | 'right';
+  /** Justificar o conteúdo interno da parte direita do footer.*/
+  footerFlexRightJustifyContent?: SystemProp<CSSProperties['justifyContent']>;
+  /** Justificar o conteúdo interno da parte esquerda do footer.*/
+  footerFlexLeftJustifyContent?: SystemProp<CSSProperties['justifyContent']>;
   /** Indicar os ColSpan das grids para cada parte do footer (left, middle, right) de acordo com os breakpoints */
   footerGridColumns?: {
     right?: ArchbaseBreakpointsColSpans;
@@ -154,6 +163,10 @@ function buildHeader(
     );
   } else {
     const headerFlexGrow = options && options.headerFlexGrow ? options.headerFlexGrow : 'even';
+    const headerFlexRightJustifyContent =
+      options && options.headerFlexRightJustifyContent ? options.headerFlexRightJustifyContent : 'flex-end';
+    const headerFlexLeftJustifyContent =
+      options && options.headerFlexLeftJustifyContent ? options.headerFlexLeftJustifyContent : 'flex-start';
 
     return (
       <Flex justify={'space-between'}>
@@ -161,6 +174,7 @@ function buildHeader(
           w={headerFlexGrow === 'left' || headerFlexGrow === 'even' ? '100%' : undefined}
           maw={headerFlexGrow === 'left' || headerFlexGrow === 'even' ? undefined : '100%'}
           align={'center'}
+          justify={headerFlexLeftJustifyContent}
           sx={{
             border: debug ? '1px dashed' : '',
           }}
@@ -171,6 +185,7 @@ function buildHeader(
           w={headerFlexGrow === 'right' || headerFlexGrow === 'even' ? '100%' : undefined}
           maw={headerFlexGrow === 'right' || headerFlexGrow === 'even' ? undefined : '100%'}
           align={'center'}
+          justify={headerFlexRightJustifyContent}
           sx={{
             border: debug ? '1px dashed' : '',
           }}
@@ -255,6 +270,10 @@ function buildFooter(
     );
   } else {
     const footerFlexGrow = options && options.footerFlexGrow ? options.footerFlexGrow : 'even';
+    const footerFlexRightJustifyContent =
+      options && options.footerFlexRightJustifyContent ? options.footerFlexRightJustifyContent : 'flex-end';
+    const footerFlexLeftJustifyContent =
+      options && options.footerFlexLeftJustifyContent ? options.footerFlexLeftJustifyContent : 'flex-start';
 
     return (
       <Flex justify={'space-between'}>
@@ -262,6 +281,7 @@ function buildFooter(
           w={footerFlexGrow === 'left' || footerFlexGrow === 'even' ? '100%' : undefined}
           maw={footerFlexGrow === 'left' || footerFlexGrow === 'even' ? undefined : '100%'}
           align={'center'}
+          justify={footerFlexLeftJustifyContent}
           sx={{ border: debug ? '1px dashed' : '', height: 'auto', padding: 'calc(0.625rem / 2)' }}
         >
           {footerLeft}
@@ -270,6 +290,7 @@ function buildFooter(
           w={footerFlexGrow === 'right' || footerFlexGrow === 'even' ? '100%' : undefined}
           maw={footerFlexGrow === 'right' || footerFlexGrow === 'even' ? undefined : '100%'}
           align={'center'}
+          justify={footerFlexRightJustifyContent}
           sx={{ border: debug ? '1px dashed' : '', height: 'auto', padding: 'calc(0.625rem / 2)' }}
         >
           {footerRight}

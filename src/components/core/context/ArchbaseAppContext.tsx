@@ -9,8 +9,7 @@ import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import queryString from 'query-string';
 import { ModalsProvider } from '@mantine/modals';
-import { ArchbaseNavigationProvider } from 'components/admin/ArchbaseNavigation.context';
-
+import { ArchbaseNavigationProvider } from '../../admin/ArchbaseNavigation.context';
 
 export type ArchbaseLanguage = {
   lang: string;
