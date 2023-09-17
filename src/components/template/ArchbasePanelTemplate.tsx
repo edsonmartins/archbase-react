@@ -196,7 +196,8 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 
   const defaultSpaceTemplateOptions: ArchbaseSpaceTemplateOptions = {
     headerFlexGrow: 'left',
-    footerGridColumns: {},
+    footerFlexGrow: 'right',
+    // footerGridColumns: {},
   };
 
   const _actionsButtonsOptions = { ...defaultActionsButtonsOptions, ...actionsButtonsOptions };
