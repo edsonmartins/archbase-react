@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   IconDashboard,
   IconFilePlus,
@@ -7,15 +7,15 @@ import {
   IconNews,
   IconSettings,
   IconUserPlus,
-  IconUsers
-} from '@tabler/icons-react'
+  IconUsers,
+} from '@tabler/icons-react';
 
-import { ArchbaseNavigationItem } from './types'
-import { PessoaView } from 'demo/view/PessoaView'
-import { PessoaForm } from 'demo/view/PessoaForm'
-import { PedidoView } from 'demo/view/PedidoView'
-import { PedidoForm } from 'demo/view/PedidoForm'
-import { HomeView } from 'demo/view/HomeView'
+import { ArchbaseNavigationItem } from './types';
+import { PessoaForm } from '@demo/view/PessoaForm';
+import { PessoaView } from '@demo/view/PessoaView';
+import { PedidoView } from '@demo/view/PedidoView';
+import { PedidoForm } from '@demo/view/PedidoForm';
+import { HomeView } from '@demo/view/HomeView';
 
 const dashBoardView: ArchbaseNavigationItem = {
   label: 'Dashboard',
@@ -24,8 +24,8 @@ const dashBoardView: ArchbaseNavigationItem = {
   category: 'DASHBOARD',
   color: 'teal',
   component: <div></div>,
-  showInSidebar: true
-}
+  showInSidebar: true,
+};
 
 const homeView: ArchbaseNavigationItem = {
   label: 'Home',
@@ -33,9 +33,9 @@ const homeView: ArchbaseNavigationItem = {
   link: '/home',
   category: 'HOME',
   color: 'teal',
-  component: <HomeView/>,
-  showInSidebar: true
-}
+  component: <HomeView />,
+  showInSidebar: true,
+};
 
 const pessoaConsultaView: ArchbaseNavigationItem = {
   label: 'Consulta lista pessoas',
@@ -43,9 +43,9 @@ const pessoaConsultaView: ArchbaseNavigationItem = {
   icon: <IconListSearch />,
   category: 'PESSOAS',
   color: 'pink',
-  component: <PessoaView/>,
-  showInSidebar: true
-}
+  component: <PessoaView />,
+  showInSidebar: true,
+};
 
 const pessoaNovaView: ArchbaseNavigationItem = {
   label: 'Nova pessoa',
@@ -53,9 +53,9 @@ const pessoaNovaView: ArchbaseNavigationItem = {
   icon: <IconUserPlus />,
   category: 'PESSOAS',
   color: 'pink',
-  component: <PessoaForm/>,
-  showInSidebar: true
-}
+  component: <PessoaForm />,
+  showInSidebar: true,
+};
 
 const pessoasMenu: ArchbaseNavigationItem = {
   label: 'Pessoas',
@@ -63,8 +63,8 @@ const pessoasMenu: ArchbaseNavigationItem = {
   links: [pessoaConsultaView, pessoaNovaView],
   category: 'PESSOAS',
   color: 'pink',
-  showInSidebar: true
-}
+  showInSidebar: true,
+};
 
 const pedidoConsultaView: ArchbaseNavigationItem = {
   label: 'Consulta lista pedidos',
@@ -72,9 +72,9 @@ const pedidoConsultaView: ArchbaseNavigationItem = {
   icon: <IconListSearch />,
   category: 'PEDIDOS',
   color: 'yellow',
-  component: <PedidoView/>,
-  showInSidebar: true
-}
+  component: <PedidoView />,
+  showInSidebar: true,
+};
 
 const pedidoNovoView: ArchbaseNavigationItem = {
   label: 'Novo pedido',
@@ -82,9 +82,9 @@ const pedidoNovoView: ArchbaseNavigationItem = {
   icon: <IconFilePlus />,
   category: 'PEDIDOS',
   color: 'yellow',
-  component: <PedidoForm/>,
-  showInSidebar: true
-}
+  component: <PedidoForm />,
+  showInSidebar: true,
+};
 
 const pedidosMenu: ArchbaseNavigationItem = {
   label: 'Pedidos',
@@ -92,8 +92,8 @@ const pedidosMenu: ArchbaseNavigationItem = {
   links: [pedidoConsultaView, pedidoNovoView],
   category: 'PEDIDOS',
   color: 'yellow',
-  showInSidebar: true
-}
+  showInSidebar: true,
+};
 
 const configuracoesView: ArchbaseNavigationItem = {
   label: 'Configurações',
@@ -102,13 +102,13 @@ const configuracoesView: ArchbaseNavigationItem = {
   category: 'CONFIGURAÇÕES',
   color: 'lime',
   component: <div></div>,
-  showInSidebar: true
-}
+  showInSidebar: true,
+};
 
 export const navigationDataSample: ArchbaseNavigationItem[] = [
   homeView,
   dashBoardView,
   pessoasMenu,
   pedidosMenu,
-  configuracoesView
-]
+  configuracoesView,
+];

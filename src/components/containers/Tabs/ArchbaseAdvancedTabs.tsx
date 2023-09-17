@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect, CSSProperties, ReactNode } from 'react';
 import { useWindowSize } from 'usehooks-ts'
-// import './ArchbaseAdvancedTabs.scss';
+import './ArchbaseAdvancedTabs.scss';
 
 
 
@@ -169,11 +169,11 @@ export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props)
 
 	useEffect(() => {
 		handleResize();
-	}, [tabs, width, height]);
+	}, [JSON.stringify(tabs), width, height]);
 
 	useEffect(() => {
 		!!currentTabs && setTabs(currentTabs);
-	}, [currentTabs]);
+	}, [JSON.stringify(currentTabs)]);
 
 	const handleResize = () => {
 		const widths = getContentWidths();

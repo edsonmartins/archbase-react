@@ -1,15 +1,15 @@
-import React  from 'react'
-import { Paper, Text } from '@mantine/core'
-import { useArchbaseNavigationListener } from 'components/admin/ArchbaseNavigation.context'
+import React from 'react';
+import { Paper, Text } from '@mantine/core';
+import { useArchbaseNavigationListener } from '@components/admin/ArchbaseNavigation.context';
 
 export function PedidoForm() {
-  const { closeAllowed }  = useArchbaseNavigationListener('/pedido/novo',()=>{
-    closeAllowed()
-  })  
-  
+  const { closeAllowed } = useArchbaseNavigationListener('/pedido/novo', () => {
+    closeAllowed();
+  });
+
   return (
     <Paper style={{ overflow: 'none', height: '100%', width: '100%' }}>
       <Text>Novo pedido</Text>
     </Paper>
-  )
+  );
 }
