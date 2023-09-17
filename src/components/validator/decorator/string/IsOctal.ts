@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isOctalValidator from 'validator/lib/isOctal';
@@ -23,7 +24,7 @@ export function IsOctal(validationOptions?: ValidationOptions): PropertyDecorato
       validator: {
         validate: (value, args): boolean => isOctal(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be valid octal number',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be valid octal number')}`,
           validationOptions
         ),
       },

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -20,7 +21,7 @@ export function IsInt(validationOptions?: ValidationOptions): PropertyDecorator 
       validator: {
         validate: (value, args): boolean => isInt(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be an integer number',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be an integer number')}`,
           validationOptions
         ),
       },

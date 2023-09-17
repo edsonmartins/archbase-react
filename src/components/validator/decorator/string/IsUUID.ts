@@ -2,6 +2,7 @@ import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isUuidValidator from 'validator/lib/isUUID';
 import type ValidatorJS from 'validator';
+import { t } from 'i18next';
 
 export const IS_UUID = 'isUuid';
 
@@ -24,7 +25,7 @@ export function IsUUID(version?: ValidatorJS.UUIDVersion, validationOptions?: Va
       constraints: [version],
       validator: {
         validate: (value, args): boolean => isUUID(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be a UUID', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a UUID')}`, validationOptions),
       },
     },
     validationOptions

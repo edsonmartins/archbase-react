@@ -2,6 +2,7 @@ import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isAlphanumericValidator from 'validator/lib/isAlphanumeric';
 import ValidatorJS from 'validator';
+import { t } from 'i18next';
 
 export const IS_ALPHANUMERIC = 'isAlphanumeric';
 
@@ -28,7 +29,7 @@ export function IsAlphanumeric(
       validator: {
         validate: (value, args): boolean => isAlphanumeric(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must contain only letters and numbers',
+          eachPrefix => eachPrefix + `${t('archbase:$property must contain only letters and numbers')}`,
           validationOptions
         ),
       },

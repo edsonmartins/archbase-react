@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -21,7 +22,7 @@ export function MinDate(date: Date | (() => Date), validationOptions?: Validatio
       validator: {
         validate: (value, args): boolean => minDate(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => 'minimal allowed date for ' + eachPrefix + '$property is $constraint1',
+          eachPrefix => `${t('archbase:minimal allowed date for ')}${eachPrefix}${t('archbase:$property is $constraint1')}`,
           validationOptions
         ),
       },

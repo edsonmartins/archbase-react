@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -25,7 +26,7 @@ export function ArrayNotContains(values: any[], validationOptions?: ValidationOp
       validator: {
         validate: (value, args): boolean => arrayNotContains(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property should not contain $constraint1 values',
+          eachPrefix => eachPrefix + `${t('archbase:$property should not contain $constraint1 values')}`,
           validationOptions
         ),
       },

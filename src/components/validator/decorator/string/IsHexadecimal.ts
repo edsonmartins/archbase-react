@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isHexadecimalValidator from 'validator/lib/isHexadecimal';
@@ -23,7 +24,7 @@ export function IsHexadecimal(validationOptions?: ValidationOptions): PropertyDe
       validator: {
         validate: (value, args): boolean => isHexadecimal(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a hexadecimal number',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a hexadecimal number')}`,
           validationOptions
         ),
       },

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isLengthValidator from 'validator/lib/isLength';
@@ -24,7 +25,7 @@ export function MinLength(min: number, validationOptions?: ValidationOptions): P
       validator: {
         validate: (value, args): boolean => minLength(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be longer than or equal to $constraint1 characters',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be longer than or equal to $constraint1 characters')}`,
           validationOptions
         ),
       },

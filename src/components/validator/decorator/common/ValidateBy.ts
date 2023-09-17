@@ -2,6 +2,7 @@ import { ValidationOptions } from '../ValidationOptions';
 import { registerDecorator } from '../../register-decorator';
 import { ValidationArguments } from '../../validation/ValidationArguments';
 import { ValidatorConstraintInterface } from '../../validation/ValidatorConstraintInterface';
+import { t } from 'i18next';
 
 export interface ValidateByOptions {
   name: string;
@@ -15,7 +16,7 @@ export function buildMessage(
   validationOptions?: ValidationOptions
 ): (validationArguments?: ValidationArguments) => string {
   return (validationArguments?: ValidationArguments): string => {
-    const eachPrefix = validationOptions && validationOptions.each ? 'each value in ' : '';
+    const eachPrefix = validationOptions && validationOptions.each ? `${t('archbase:each value in ')}` : '';
     return impl(eachPrefix, validationArguments);
   };
 }

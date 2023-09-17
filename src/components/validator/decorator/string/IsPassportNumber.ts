@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isPassportNumberValidator from 'validator/lib/isPassportNumber';
@@ -24,7 +25,7 @@ export function IsPassportNumber(countryCode: string, validationOptions?: Valida
       validator: {
         validate: (value, args): boolean => isPassportNumber(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be valid passport number',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be valid passport number')}`,
           validationOptions
         ),
       },

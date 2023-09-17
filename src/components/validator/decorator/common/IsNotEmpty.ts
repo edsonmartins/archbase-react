@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -19,7 +20,7 @@ export function IsNotEmpty(validationOptions?: ValidationOptions): PropertyDecor
       name: IS_NOT_EMPTY,
       validator: {
         validate: (value, args): boolean => isNotEmpty(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property should not be empty', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property should not be empty')}`, validationOptions),
       },
     },
     validationOptions

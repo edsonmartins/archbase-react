@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isLocaleValidator from 'validator/lib/isLocale';
@@ -22,7 +23,7 @@ export function IsLocale(validationOptions?: ValidationOptions): PropertyDecorat
       name: IS_LOCALE,
       validator: {
         validate: (value, args): boolean => isLocale(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be locale', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be locale')}`, validationOptions),
       },
     },
     validationOptions

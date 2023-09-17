@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -21,7 +22,7 @@ export function Equals(comparison: any, validationOptions?: ValidationOptions): 
       validator: {
         validate: (value, args): boolean => equals(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be equal to $constraint1',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a latitude string or number')}`,
           validationOptions
         ),
       },

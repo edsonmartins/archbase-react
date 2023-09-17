@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -31,7 +32,7 @@ export function IsEnum(entity: object, validationOptions?: ValidationOptions): P
       validator: {
         validate: (value, args): boolean => isEnum(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be one of the following values: $constraint2',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be one of the following values: $constraint2')}`,
           validationOptions
         ),
       },

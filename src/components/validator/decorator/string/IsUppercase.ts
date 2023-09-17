@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isUppercaseValidator from 'validator/lib/isUppercase';
@@ -22,7 +23,7 @@ export function IsUppercase(validationOptions?: ValidationOptions): PropertyDeco
       name: IS_UPPERCASE,
       validator: {
         validate: (value, args): boolean => isUppercase(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be uppercase', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be uppercase')}`, validationOptions),
       },
     },
     validationOptions

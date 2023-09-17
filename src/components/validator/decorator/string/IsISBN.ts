@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isIsbnValidator from 'validator/lib/isISBN';
@@ -27,7 +28,7 @@ export function IsISBN(version?: IsISBNVersion, validationOptions?: ValidationOp
       constraints: [version],
       validator: {
         validate: (value, args): boolean => isISBN(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be an ISBN', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be an ISBN')}`, validationOptions),
       },
     },
     validationOptions

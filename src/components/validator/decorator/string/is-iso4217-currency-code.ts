@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isISO4217Validator from 'validator/lib/isISO4217';
@@ -21,7 +22,7 @@ export function IsISO4217CurrencyCode(validationOptions?: ValidationOptions): Pr
       validator: {
         validate: (value, args): boolean => isISO4217CurrencyCode(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a valid ISO4217 currency code',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid ISO4217 currency code')}`,
           validationOptions
         ),
       },

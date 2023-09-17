@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import matchesValidator from 'validator/lib/matches';
@@ -24,7 +25,7 @@ export function IsMilitaryTime(validationOptions?: ValidationOptions): PropertyD
       validator: {
         validate: (value, args): boolean => isMilitaryTime(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a valid representation of military time in the format HH:MM',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid representation of military time in the format HH:MM')}`,
           validationOptions
         ),
       },

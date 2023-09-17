@@ -2,6 +2,7 @@ import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isFqdnValidator from 'validator/lib/isFQDN';
 import ValidatorJS from 'validator';
+import { t } from 'i18next';
 
 export const IS_FQDN = 'isFqdn';
 
@@ -25,7 +26,7 @@ export function IsFQDN(options?: ValidatorJS.IsFQDNOptions, validationOptions?: 
       validator: {
         validate: (value, args): boolean => isFQDN(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a valid domain name',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid domain name')}`,
           validationOptions
         ),
       },

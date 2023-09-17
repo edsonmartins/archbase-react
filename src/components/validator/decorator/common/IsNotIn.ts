@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -21,7 +22,7 @@ export function IsNotIn(values: readonly any[], validationOptions?: ValidationOp
       validator: {
         validate: (value, args): boolean => isNotIn(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property should not be one of the following values: $constraint1',
+          eachPrefix => eachPrefix + `${t('archbase:$property should not be one of the following values: $constraint1')}`,
           validationOptions
         ),
       },

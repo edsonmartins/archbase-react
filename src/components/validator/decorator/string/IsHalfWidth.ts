@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isHalfWidthValidator from 'validator/lib/isHalfWidth';
@@ -23,7 +24,7 @@ export function IsHalfWidth(validationOptions?: ValidationOptions): PropertyDeco
       validator: {
         validate: (value, args): boolean => isHalfWidth(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must contain a half-width characters',
+          eachPrefix => eachPrefix + `${t('archbase:$property must contain a half-width characters')}`,
           validationOptions
         ),
       },

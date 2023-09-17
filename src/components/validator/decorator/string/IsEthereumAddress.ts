@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isEthereumAddressValidator from 'validator/lib/isEthereumAddress';
@@ -23,7 +24,7 @@ export function IsEthereumAddress(validationOptions?: ValidationOptions): Proper
       validator: {
         validate: (value, args): boolean => isEthereumAddress(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be an Ethereum address',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be an Ethereum address')}`,
           validationOptions
         ),
       },

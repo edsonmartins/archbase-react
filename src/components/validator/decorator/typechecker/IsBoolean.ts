@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -19,7 +20,7 @@ export function IsBoolean(validationOptions?: ValidationOptions): PropertyDecora
       name: IS_BOOLEAN,
       validator: {
         validate: (value, args): boolean => isBoolean(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be a boolean value', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a boolean value')}`, validationOptions),
       },
     },
     validationOptions

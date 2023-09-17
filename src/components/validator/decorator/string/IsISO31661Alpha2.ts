@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isISO31661Alpha2Validator from 'validator/lib/isISO31661Alpha2';
@@ -21,7 +22,7 @@ export function IsISO31661Alpha2(validationOptions?: ValidationOptions): Propert
       validator: {
         validate: (value, args): boolean => isISO31661Alpha2(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a valid ISO31661 Alpha2 code',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid ISO31661 Alpha2 code')}`,
           validationOptions
         ),
       },

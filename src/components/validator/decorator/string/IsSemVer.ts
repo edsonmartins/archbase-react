@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isSemVerValidator from 'validator/lib/isSemVer';
@@ -23,7 +24,7 @@ export function IsSemVer(validationOptions?: ValidationOptions): PropertyDecorat
       validator: {
         validate: (value, args): boolean => isSemVer(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a Semantic Versioning Specification',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a Semantic Versioning Specification')}`,
           validationOptions
         ),
       },

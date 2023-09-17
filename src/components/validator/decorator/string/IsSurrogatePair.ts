@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isSurrogatePairValidator from 'validator/lib/isSurrogatePair';
@@ -23,7 +24,7 @@ export function IsSurrogatePair(validationOptions?: ValidationOptions): Property
       validator: {
         validate: (value, args): boolean => isSurrogatePair(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must contain any surrogate pairs chars',
+          eachPrefix => eachPrefix + `${t('archbase:$property must contain any surrogate pairs chars')}`,
           validationOptions
         ),
       },

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isByteLengthValidator from 'validator/lib/isByteLength';
@@ -24,7 +25,7 @@ export function IsByteLength(min: number, max?: number, validationOptions?: Vali
       validator: {
         validate: (value, args): boolean => isByteLength(value, args?.constraints[0], args?.constraints[1]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + "$property's byte length must fall into ($constraint1, $constraint2) range",
+          eachPrefix => eachPrefix + `${t("archbase:$property's byte length must fall into ($constraint1, $constraint2) range")}`,
           validationOptions
         ),
       },

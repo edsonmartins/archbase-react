@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isHSLValidator from 'validator/lib/isHSL';
@@ -24,7 +25,7 @@ export function IsHSL(validationOptions?: ValidationOptions): PropertyDecorator 
       name: IS_HSL,
       validator: {
         validate: (value, args): boolean => isHSL(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be a HSL color', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a HSL color')}`, validationOptions),
       },
     },
     validationOptions

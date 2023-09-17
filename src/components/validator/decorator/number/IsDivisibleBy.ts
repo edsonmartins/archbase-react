@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isDivisibleByValidator from 'validator/lib/isDivisibleBy';
@@ -22,7 +23,7 @@ export function IsDivisibleBy(num: number, validationOptions?: ValidationOptions
       validator: {
         validate: (value, args): boolean => isDivisibleBy(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be divisible by $constraint1',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be divisible by $constraint1')}`,
           validationOptions
         ),
       },

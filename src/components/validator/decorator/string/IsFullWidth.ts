@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isFullWidthValidator from 'validator/lib/isFullWidth';
@@ -23,7 +24,7 @@ export function IsFullWidth(validationOptions?: ValidationOptions): PropertyDeco
       validator: {
         validate: (value, args): boolean => isFullWidth(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must contain a full-width characters',
+          eachPrefix => eachPrefix + `${t('archbase:$property must contain a full-width characters')}`,
           validationOptions
         ),
       },

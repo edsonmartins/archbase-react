@@ -2,6 +2,7 @@ import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isBase64Validator from 'validator/lib/isBase64';
 import type ValidatorJS from 'validator';
+import { t } from 'i18next';
 
 export const IS_BASE64 = 'isBase64';
 
@@ -27,7 +28,7 @@ export function IsBase64(
       constraints: [options],
       validator: {
         validate: (value, args): boolean => isBase64(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be base64 encoded', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be base64 encoded')}`, validationOptions),
       },
     },
     validationOptions

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from './ValidateBy';
 import isLatLongValidator from 'validator/lib/isLatLong';
@@ -21,7 +22,7 @@ export function IsLatLong(validationOptions?: ValidationOptions): PropertyDecora
       validator: {
         validate: (value, args): boolean => isLatLong(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a latitude,longitude string',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a latitude,longitude string')}`,
           validationOptions
         ),
       },

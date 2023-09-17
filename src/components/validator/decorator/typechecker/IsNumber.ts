@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -31,7 +32,7 @@ export function isNumber(value: unknown, options: IsNumberOptions = {}): value i
   if (options.maxDecimalPlaces !== undefined) {
     let decimalPlaces = 0;
     if (value % 1 !== 0) {
-      decimalPlaces = value.toString().split('.')[1].length;
+      decimalPlaces = value.toString().split('archbase:.')[1].length;
     }
     if (decimalPlaces > options.maxDecimalPlaces) {
       return false;
@@ -52,7 +53,7 @@ export function IsNumber(options: IsNumberOptions = {}, validationOptions?: Vali
       validator: {
         validate: (value, args): boolean => isNumber(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a number conforming to the specified constraints',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a number conforming to the specified constraints')}`,
           validationOptions
         ),
       },

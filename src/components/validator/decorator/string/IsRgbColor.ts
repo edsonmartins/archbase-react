@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isRgbColorValidator from 'validator/lib/isRgbColor';
@@ -25,7 +26,7 @@ export function IsRgbColor(includePercentValues?: boolean, validationOptions?: V
       constraints: [includePercentValues],
       validator: {
         validate: (value, args): boolean => isRgbColor(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be RGB color', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be RGB color')}`, validationOptions),
       },
     },
     validationOptions

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isIsinValidator from 'validator/lib/isISIN';
@@ -23,7 +24,7 @@ export function IsISIN(validationOptions?: ValidationOptions): PropertyDecorator
       validator: {
         validate: (value, args): boolean => isISIN(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be an ISIN (stock/security identifier)',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be an ISIN (stock/security identifier)')}`,
           validationOptions
         ),
       },

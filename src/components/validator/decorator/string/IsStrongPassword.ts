@@ -1,6 +1,7 @@
 import validator from 'validator';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
+import { t } from 'i18next';
 
 export const IS_STRONG_PASSWORD = 'isStrongPassword';
 
@@ -34,7 +35,7 @@ export function IsStrongPassword(
       constraints: [options],
       validator: {
         validate: (value, args): boolean => isStrongPassword(value, args.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property is not strong enough', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property is not strong enough')}`, validationOptions),
       },
     },
     validationOptions

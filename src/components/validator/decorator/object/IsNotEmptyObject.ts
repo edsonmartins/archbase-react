@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import { isObject } from '../typechecker/IsObject';
@@ -41,7 +42,7 @@ export function IsNotEmptyObject(
       validator: {
         validate: (value, args): boolean => isNotEmptyObject(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a non-empty object',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a non-empty object')}`,
           validationOptions
         ),
       },

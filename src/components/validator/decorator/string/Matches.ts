@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import matchesValidator from 'validator/lib/matches';
@@ -39,7 +40,7 @@ export function Matches(
       validator: {
         validate: (value, args): boolean => matches(value, args?.constraints[0], args?.constraints[1]),
         defaultMessage: buildMessage(
-          (eachPrefix, args) => eachPrefix + '$property must match $constraint1 regular expression',
+          (eachPrefix, args) => eachPrefix + t('archbase:$property must match $constraint1 regular expression'),
           validationOptions
         ),
       },

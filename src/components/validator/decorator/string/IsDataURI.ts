@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isDataURIValidator from 'validator/lib/isDataURI';
@@ -23,7 +24,7 @@ export function IsDataURI(validationOptions?: ValidationOptions): PropertyDecora
       validator: {
         validate: (value, args): boolean => isDataURI(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a data uri format',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a data uri format')}`,
           validationOptions
         ),
       },

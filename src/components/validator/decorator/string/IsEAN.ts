@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isEANValidator from 'validator/lib/isEAN';
@@ -23,7 +24,7 @@ export function IsEAN(validationOptions?: ValidationOptions): PropertyDecorator 
       validator: {
         validate: (value, args): boolean => isEAN(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be an EAN (European Article Number)',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be an EAN (European Article Number)')}`,
           validationOptions
         ),
       },

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -19,7 +20,7 @@ export function IsArray(validationOptions?: ValidationOptions): PropertyDecorato
       name: IS_ARRAY,
       validator: {
         validate: (value, args): boolean => isArray(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be an array', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be an array')}`, validationOptions),
       },
     },
     validationOptions

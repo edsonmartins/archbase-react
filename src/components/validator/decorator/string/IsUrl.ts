@@ -2,6 +2,7 @@ import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isUrlValidator from 'validator/lib/isURL';
 import ValidatorJS from 'validator';
+import { t } from 'i18next';
 
 export const IS_URL = 'isUrl';
 
@@ -24,7 +25,7 @@ export function IsUrl(options?: ValidatorJS.IsURLOptions, validationOptions?: Va
       constraints: [options],
       validator: {
         validate: (value, args): boolean => isURL(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be a URL address', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a URL address')}`, validationOptions),
       },
     },
     validationOptions

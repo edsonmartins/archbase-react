@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isCreditCardValidator from 'validator/lib/isCreditCard';
@@ -22,7 +23,7 @@ export function IsCreditCard(validationOptions?: ValidationOptions): PropertyDec
       name: IS_CREDIT_CARD,
       validator: {
         validate: (value, args): boolean => isCreditCard(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be a credit card', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a credit card')}`, validationOptions),
       },
     },
     validationOptions

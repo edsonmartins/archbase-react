@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -23,7 +24,7 @@ export function ArrayMinSize(min: number, validationOptions?: ValidationOptions)
       validator: {
         validate: (value, args): boolean => arrayMinSize(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must contain at least $constraint1 elements',
+          eachPrefix => eachPrefix + `${t('archbase:$property must contain at least $constraint1 elements')}`,
           validationOptions
         ),
       },

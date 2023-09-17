@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -21,7 +22,7 @@ export function IsObject(validationOptions?: ValidationOptions): PropertyDecorat
       name: IS_OBJECT,
       validator: {
         validate: (value, args): boolean => isObject(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be an object', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be an object')}`, validationOptions),
       },
     },
     validationOptions

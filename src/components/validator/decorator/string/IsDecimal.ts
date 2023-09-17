@@ -2,6 +2,7 @@ import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isDecimalValidator from 'validator/lib/isDecimal';
 import ValidatorJS from 'validator';
+import { t } from 'i18next';
 
 export const IS_DECIMAL = 'isDecimal';
 
@@ -28,7 +29,7 @@ export function IsDecimal(
       validator: {
         validate: (value, args): boolean => isDecimal(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property is not a valid decimal number.',
+          eachPrefix => eachPrefix + `${t('archbase:$property is not a valid decimal number.')}`,
           validationOptions
         ),
       },

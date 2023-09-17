@@ -1,6 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from './ValidateBy';
 import { isLatLong } from './IsLatLong';
+import { t } from 'i18next';
 
 export const IS_LATITUDE = 'isLatitude';
 
@@ -21,7 +22,7 @@ export function IsLatitude(validationOptions?: ValidationOptions): PropertyDecor
       validator: {
         validate: (value, args): boolean => isLatitude(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a latitude string or number',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a latitude string or number')}`,
           validationOptions
         ),
       },

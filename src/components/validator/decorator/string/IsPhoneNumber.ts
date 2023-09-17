@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import { parsePhoneNumber, CountryCode } from 'libphonenumber-js/max';
@@ -49,7 +50,7 @@ export function IsPhoneNumber(region?: CountryCode, validationOptions?: Validati
       validator: {
         validate: (value, args): boolean => isPhoneNumber(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a valid phone number',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid phone number')}`,
           validationOptions
         ),
       },

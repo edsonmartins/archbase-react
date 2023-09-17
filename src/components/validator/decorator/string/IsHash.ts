@@ -2,6 +2,7 @@ import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isHashValidator from 'validator/lib/isHash';
 import ValidatorJS from 'validator';
+import { t } from 'i18next';
 
 export const IS_HASH = 'isHash';
 
@@ -27,7 +28,7 @@ export function IsHash(algorithm: string, validationOptions?: ValidationOptions)
       validator: {
         validate: (value, args): boolean => isHash(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a hash of type $constraint1',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a hash of type $constraint1')}`,
           validationOptions
         ),
       },

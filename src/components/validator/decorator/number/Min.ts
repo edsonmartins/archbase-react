@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -21,7 +22,7 @@ export function Min(minValue: number, validationOptions?: ValidationOptions): Pr
       validator: {
         validate: (value, args): boolean => min(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must not be less than $constraint1',
+          eachPrefix => eachPrefix + `${t('archbase:$property must not be less than $constraint1')}`,
           validationOptions
         ),
       },

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 
@@ -23,7 +24,7 @@ export function IsFirebasePushId(validationOptions?: ValidationOptions): Propert
       validator: {
         validate: (value, args): boolean => isFirebasePushId(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must be a Firebase Push Id',
+          eachPrefix => eachPrefix + `${t('archbase:$property must be a Firebase Push Id')}`,
           validationOptions
         ),
       },

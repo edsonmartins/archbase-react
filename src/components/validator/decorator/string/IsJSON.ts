@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isJSONValidator from 'validator/lib/isJSON';
@@ -22,7 +23,7 @@ export function IsJSON(validationOptions?: ValidationOptions): PropertyDecorator
       name: IS_JSON,
       validator: {
         validate: (value, args): boolean => isJSON(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + '$property must be a json string', validationOptions),
+        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a json string')}`, validationOptions),
       },
     },
     validationOptions

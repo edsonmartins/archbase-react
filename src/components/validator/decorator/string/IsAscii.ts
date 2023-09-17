@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isAsciiValidator from 'validator/lib/isAscii';
@@ -23,7 +24,7 @@ export function IsAscii(validationOptions?: ValidationOptions): PropertyDecorato
       validator: {
         validate: (value, args): boolean => isAscii(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + '$property must contain only ASCII characters',
+          eachPrefix => eachPrefix + `${t('archbase:$property must contain only ASCII characters')}`,
           validationOptions
         ),
       },
