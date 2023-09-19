@@ -35,7 +35,7 @@ export interface UserActionsOptions {
   onAddExecute?: () => void
   onEditExecute?: () => void
   onRemoveExecute?: () => void
-  onView?: () => void
+  onViewExecute?: () => void
   customUserActions?: ArchbaseAction[]
   positionCustomUserActions?: 'before' | 'after'
 }
@@ -190,7 +190,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         icon: <IconEye />,
         color: 'green',
         label: userActionsEnd.labelView ? userActionsEnd.labelView : t('archbase:View'),
-        executeAction: () => userActionsEnd && userActionsEnd!.onView,
+        executeAction: () => userActionsEnd && userActionsEnd!.onViewExecute,
         enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
         hint: `${t('archbase:Clique para visualizar o registro')}`
       })
