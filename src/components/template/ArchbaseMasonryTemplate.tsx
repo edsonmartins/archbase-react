@@ -156,7 +156,11 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         icon: <IconPlus />,
         color: 'green',
         label: userActionsEnd.labelAdd ? userActionsEnd.labelAdd : t('archbase:New'),
-        executeAction: () => userActionsEnd && userActionsEnd!.onAddExecute,
+        executeAction: () => {
+          if (userActionsEnd && userActionsEnd.onAddExecute) {
+            userActionsEnd.onAddExecute()
+          }
+        },
         enabled: true,
         hint:`${t('archbase:Clique para criar um novo registro')}`
       })
@@ -167,7 +171,11 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         icon: <IconEdit />,
         color: 'blue',
         label: userActionsEnd.labelEdit ? userActionsEnd.labelEdit : t('archbase:Edit'),
-        executeAction: () => userActionsEnd && userActionsEnd!.onEditExecute,
+        executeAction: () => {
+          if (userActionsEnd && userActionsEnd.onEditExecute) {
+            userActionsEnd.onEditExecute()
+          }
+        },
         enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
         hint: `${t('archbase:Clique para editar o registro')}`
       })
@@ -178,7 +186,11 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         icon: <IconTrash />,
         color: 'red',
         label: userActionsEnd.labelRemove ? userActionsEnd.labelRemove : t('archbase:Remove'),
-        executeAction: () => userActionsEnd && userActionsEnd!.onRemoveExecute,
+        executeAction: () => {
+          if (userActionsEnd && userActionsEnd.onRemoveExecute) {
+            userActionsEnd.onRemoveExecute()
+          }
+        },
         enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
         hint: `${t('archbase:Clique para remover o registro')}`
       })
@@ -190,7 +202,11 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         icon: <IconEye />,
         color: 'green',
         label: userActionsEnd.labelView ? userActionsEnd.labelView : t('archbase:View'),
-        executeAction: () => userActionsEnd && userActionsEnd!.onViewExecute,
+        executeAction: () => {
+          if (userActionsEnd && userActionsEnd.onViewExecute) {
+              userActionsEnd.onViewExecute()
+          }
+        },
         enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
         hint: `${t('archbase:Clique para visualizar o registro')}`
       })
