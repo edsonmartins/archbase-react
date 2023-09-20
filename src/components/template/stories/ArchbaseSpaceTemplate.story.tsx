@@ -1,9 +1,10 @@
-import { Card, Input, Text } from '@mantine/core';
+import { Card } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { ArchbaseSpaceTemplate } from '../ArchbaseSpaceTemplate';
 import { ArchbaseActionButtons } from '@components/buttons/ArchbaseActionButtons';
 import { Actions } from '@components/buttons/ArchbaseActionButtons.story';
+import { ArchbaseGlobalFilter } from '@components/querybuilder/ArchbaseGlobalFilter';
 
 export const ArchbaseSpaceTemplateExample = () => {
   return (
@@ -15,8 +16,16 @@ export const ArchbaseSpaceTemplateExample = () => {
         }}
         headerLeft={
           <Card>
-            <Text>Pesquisar</Text>
-            <Input miw={'300px'} />
+            <ArchbaseGlobalFilter
+              minFilterValueLength={3}
+              searchableFields={['id', 'cpf', 'nome', 'idade']}
+              onFilter={(value) => console.log(value)}
+              options={{
+                flexContainerProps: {
+                  miw: 300,
+                },
+              }}
+            />
           </Card>
         }
         headerRight={
