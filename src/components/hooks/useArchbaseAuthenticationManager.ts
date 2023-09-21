@@ -4,7 +4,6 @@ import { useContainer } from 'inversify-react'
 import { ArchbaseAuthenticator } from '../auth/ArchbaseAuthenticator'
 import { ARCHBASE_IOC_API_TYPE } from '../core/ioc'
 import { ArchbaseTokenManager } from '../auth/ArchbaseTokenManager'
-import { ENCRYPTION_KEY } from '../auth/DefaultArchbaseTokenManager'
 import { processErrorMessage } from '../core/exceptions'
 
 export interface AuthenticationManagerReturnType {

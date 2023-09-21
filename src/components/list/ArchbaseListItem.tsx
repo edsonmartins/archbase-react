@@ -2,7 +2,7 @@ import React, { ReactNode, useContext, useEffect, useRef } from 'react'
 import { Image, MantineNumberSize, Space } from '@mantine/core'
 import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context'
 
-export interface ArchbaseListItemProps<T, _ID> {
+export interface ArchbaseListItemProps<T, ID> {
   /** Indicador se o item está ativo(selecionado) */
   active: boolean
   /** Cor de fundo do item */

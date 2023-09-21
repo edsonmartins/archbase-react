@@ -82,7 +82,7 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
     }   
     const response = await axios.post(
       url,
-      JSON.stringify(ArchbaseJacksonParser.convertObjectToJson(data)),
+      ArchbaseJacksonParser.convertObjectToJson(data),
       {
         headers: headersTemp
       }

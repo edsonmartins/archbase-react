@@ -53,7 +53,8 @@ function rebuildOptions<_T, ID, O>(
       options.push({
         label: record.label ? record.label : getTextValue(lookupDataFieldText, record),
         disabled: record.disabled,
-        value: record[lookupDataFieldId]
+        value: record[lookupDataFieldId],
+        origin: record
       })
     })
   }
@@ -79,8 +80,8 @@ export function ArchbaseLookupSelect<T, ID, O>({
   const [internalError, setInternalError] = useState<string|undefined>(error);
 
 
-  const lookupDataSourceEvent = useCallback((event: DataSourceEvent<O>) => {
-    if (dataSource && dataField) {
+  const lookupDataSourceEvent = (event: DataSourceEvent<O>) => {
+    if (lookupDataSource) {
       if (
         event.type === DataSourceEventNames.dataChanged ||
         event.type === DataSourceEventNames.fieldChanged ||
@@ -98,7 +99,7 @@ export function ArchbaseLookupSelect<T, ID, O>({
         setInternalError(event.error)
       }
     }
-  }, [])
+  }
 
   const getDataSourceFieldValue = () => {
     let result = ''

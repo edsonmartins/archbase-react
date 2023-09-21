@@ -13,7 +13,7 @@ export type UseArchbaseDataSourceProps<T, ID> = {
 }
 
 export type UseArchbaseDataSourceReturnType<T, ID> = {
-  dataSource?: ArchbaseDataSource<T, ID>
+  dataSource: ArchbaseDataSource<T, ID>
 }
 
 export const useArchbaseDataSource = <T, ID>(
@@ -28,8 +28,8 @@ export const useArchbaseDataSource = <T, ID>(
       return initialDataSource;
     }
     return new ArchbaseDataSource<T, ID>(name, {
-      records: [],
-      grandTotalRecords: 0,
+      records: initialData,
+      grandTotalRecords: initialData.length,
       currentPage : 0,
       totalPages: 0,
       pageSize: 0,

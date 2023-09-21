@@ -95,7 +95,7 @@ export function ArchbaseAdminTabContainer({
             result.redirect = subItem.redirect;
           }
         });
-      } else if (item.link) {
+      } else if (item.link && !result.item) {
         const found = matchPath({ path: item.link }, location.pathname);
         if (found) {
           if (found.params) {

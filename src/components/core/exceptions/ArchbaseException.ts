@@ -1,14 +1,20 @@
-export function ArchbaseError(this: any, message) {
-  this.message = message
-  this.name = 'ArchbaseError'
+export class ArchbaseError extends Error {
+  constructor(message) {
+    super(message); 
+    this.name = "ArchbaseError"; 
+  }
 }
 
-export function ArchbaseServiceError(this: any, message) {
-  this.message = message
-  this.name = 'ArchbaseServiceError'
+export class ArchbaseServiceError extends Error {
+  constructor(message) {
+    super(message); 
+    this.name = "ArchbaseServiceError"; 
+  }
 }
 
-export function ArchbaseDataSourceError(this: any, message) {
-  this.message = message
-  this.name = 'ArchbaseDataSourceError'
+export class ArchbaseDataSourceError extends Error {
+  constructor(message) {
+    super(message); 
+    this.name = "ArchbaseDataSourceError"; 
+  }
 }

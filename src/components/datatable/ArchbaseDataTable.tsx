@@ -12,7 +12,10 @@ import {
   MantineTheme,
   Menu,
   Tooltip,
-  useMantineTheme, type ActionIconProps, Variants
+  useMantineTheme,
+  type ActionIconProps,
+  Variants,
+  Checkbox
 } from '@mantine/core'
 import { parse as parseDate, formatISO, format } from 'date-fns'
 import i18next from 'i18next'
@@ -37,7 +40,8 @@ import {
   MRT_Header,
   useMantineReactTable,
   HTMLPropsRef,
-  MRT_ShowHideColumnsMenu
+  MRT_ShowHideColumnsMenu,
+  MRT_RowSelectionState
 } from 'mantine-react-table'
 import { MRT_Localization_EN } from 'mantine-react-table/locales/en'
 import { MRT_Localization_ES } from 'mantine-react-table/locales/es'
@@ -54,7 +58,7 @@ import React, {
 import { useTranslation } from 'react-i18next'
 import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react'
 import { t } from 'i18next'
-import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
+import { type DataSourceEvent, type ArchbaseDataSource, DataSourceEventNames } from '../datasource'
 import { convertISOStringToDate, filter, isEmpty } from '../core/utils'
 import { useArchbaseDataSourceListener } from '../hooks'
 import builder from '../datasource/rsql/builder'
@@ -63,6 +67,7 @@ import { ExpressionNode } from '../datasource/rsql/ast'
 import { ArchbaseObjectHelper } from '../core/helper'
 import { useArchbaseAppContext } from '../core'
 import { ArchbaseSwitch } from '../editors/ArchbaseSwitch'
+import { ArchbaseCheckbox } from '../editors'
 
 interface JsPDFCustom extends JsPDF {
   autoTable: (options: UserOptions) => void
@@ -99,12 +104,14 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
   enableGrouping?: boolean
   enableGlobalFilter?: boolean
   enablePinning?: boolean
+  enableTopToolbar?: boolean
   manualFiltering?: boolean
   manualPagination?: boolean
   manualSorting?: boolean
   variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
   getRowId?: (originalRow: T, index: number) => string
   onCellDoubleClick?: (event) => void
+  onSelectedRowsChanged?: (rows: T[]) => void
   allowColumnFilters?: boolean
   allowExportData?: boolean
   allowPrintData?: boolean
@@ -574,12 +581,10 @@ const getToolBarCustomActions = (_table, props): ReactNode => {
 interface Props<TData extends Record<string, any> = {}>
   extends ActionIconProps,
     HTMLPropsRef<HTMLButtonElement> {
-  table: MRT_TableInstance<TData>;
+  table: MRT_TableInstance<TData>
 }
 
-export const CustomToggleGlobalFilterButton = <
-  TData extends Record<string, any> = {},
->({
+export const CustomToggleGlobalFilterButton = <TData extends Record<string, any> = {}>({
   table,
   variant,
   ...rest
@@ -589,17 +594,17 @@ export const CustomToggleGlobalFilterButton = <
     options: {
       icons: { IconSearch, IconSearchOff },
 
-      localization,
+      localization
     },
     refs: { searchInputRef },
-    setShowGlobalFilter,
-  } = table;
-  const { globalFilter, showGlobalFilter } = getState();
+    setShowGlobalFilter
+  } = table
+  const { globalFilter, showGlobalFilter } = getState()
 
   const handleToggleSearch = () => {
-    setShowGlobalFilter(!showGlobalFilter);
-    setTimeout(() => searchInputRef.current?.focus(), 100);
-  };
+    setShowGlobalFilter(!showGlobalFilter)
+    setTimeout(() => searchInputRef.current?.focus(), 100)
+  }
 
   return (
     <Tooltip withinPortal withArrow label={rest?.title ?? localization.showHideSearch}>
@@ -614,15 +619,13 @@ export const CustomToggleGlobalFilterButton = <
         {...rest}
         title={undefined}
       >
-        {showGlobalFilter ? <IconSearchOff size="1.4rem"/> : <IconSearch size="1.4rem"/>}
+        {showGlobalFilter ? <IconSearchOff size="1.4rem" /> : <IconSearch size="1.4rem" />}
       </ActionIcon>
     </Tooltip>
-  );
-};
+  )
+}
 
-export const CustomToggleFiltersButton = <
-  TData extends Record<string, any> = {},
->({
+export const CustomToggleFiltersButton = <TData extends Record<string, any> = {}>({
   table,
   variant,
   ...rest
@@ -631,15 +634,15 @@ export const CustomToggleFiltersButton = <
     getState,
     options: {
       icons: { IconFilter, IconFilterOff },
-      localization,
+      localization
     },
-    setShowColumnFilters,
-  } = table;
-  const { showColumnFilters } = getState();
+    setShowColumnFilters
+  } = table
+  const { showColumnFilters } = getState()
 
   const handleToggleShowFilters = () => {
-    setShowColumnFilters(!showColumnFilters);
-  };
+    setShowColumnFilters(!showColumnFilters)
+  }
 
   return (
     <Tooltip withinPortal withArrow label={rest?.title ?? localization.showHideFilters}>
@@ -652,15 +655,13 @@ export const CustomToggleFiltersButton = <
         {...rest}
         title={undefined}
       >
-        {showColumnFilters ? <IconFilterOff size="1.4rem"/> : <IconFilter size="1.4rem"/>}
+        {showColumnFilters ? <IconFilterOff size="1.4rem" /> : <IconFilter size="1.4rem" />}
       </ActionIcon>
     </Tooltip>
-  );
-};
+  )
+}
 
-export const CustomShowHideColumnsButton = <
-  TData extends Record<string, any> = {},
->({
+export const CustomShowHideColumnsButton = <TData extends Record<string, any> = {}>({
   table,
   variant,
   ...rest
@@ -668,9 +669,9 @@ export const CustomShowHideColumnsButton = <
   const {
     options: {
       icons: { IconColumns },
-      localization,
-    },
-  } = table;
+      localization
+    }
+  } = table
 
   return (
     <Menu closeOnItemClick={false} withinPortal>
@@ -685,21 +686,22 @@ export const CustomShowHideColumnsButton = <
             {...rest}
             title={undefined}
           >
-            <IconColumns size="1.4rem"/>
+            <IconColumns size="1.4rem" />
           </ActionIcon>
         </Menu.Target>
       </Tooltip>
       <MRT_ShowHideColumnsMenu table={table} />
     </Menu>
-  );
-};
-
+  )
+}
 
 export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTableProps<T, ID>) {
   const { i18n } = useTranslation()
   const theme = useMantineTheme()
   const appContext = useArchbaseAppContext()
   const divTable = useRef<HTMLDivElement>(null)
+  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({}); 
+  const [updateCounter, setUpdateCounter] = useState(0);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: props.dataSource ? props.dataSource.getCurrentPage() : props.pageIndex,
     pageSize: props.dataSource ? props.dataSource.getPageSize() : props.pageSize
@@ -720,12 +722,23 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
       ? props.dataSource.getOptions().originSort
       : []
   )
-
   const [currentCell, setCurrentCell] = useState<ArchbaseDataTableCurrentCell>({
     rowIndex: 0,
     columnName: '',
     rowData: undefined
   })
+
+  useEffect(()=>{
+    if (rowSelection && table && props.onSelectedRowsChanged){
+      const result :T[]= []
+      for (const [key, value] of Object.entries(rowSelection)) {
+        if (rowSelection[key]){
+          result.push(table.getRow(key).original)
+        }
+      }
+      props.onSelectedRowsChanged(result)
+    }
+  },[rowSelection])
 
   const getCellBackgroundColor = (cell, table): any => {
     if (cell.row.index === currentCell.rowIndex && cell.column.id === currentCell.columnName) {
@@ -760,7 +773,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 
   const renderBoolean = (data: any): ReactNode => {
     const checked = data.getValue()
-    return <ArchbaseSwitch isChecked={checked}></ArchbaseSwitch>
+    return <Checkbox readOnly={true} checked={checked}/>
   }
 
   const renderDate = (data: any): ReactNode => {
@@ -890,7 +903,16 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     theme.colorScheme,
     getCellBackgroundColor,
     getCellColorFont,
-    theme.colors[theme.primaryColor]
+    theme.colors[theme.primaryColor],
+    updateCounter,
+    props.enableRowSelection,
+    props.renderRowActions,
+    props.enableRowActions,
+    props.enableColumnFilterModes,
+    props.enableRowSelection,
+    props.allowColumnFilters,
+    props.allowExportData,
+    props.allowPrintData
   ])
 
   const handleRefresh = () => {
@@ -993,7 +1015,75 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     }
   }
 
-  const maxHeight = `${props.height}`.includes('px') || `${props.height}`.includes('%')?`calc(${props.height} - 120px)`:`calc(${props.height}px - 120px)`;
+  const maxHeight =
+    `${props.height}`.includes('px') || `${props.height}`.includes('%')
+      ? `calc(${props.height} - 120px)`
+      : `calc(${props.height}px - 120px)`
+
+  const buildInternalActionsToolbar = () => {
+    if (!props.enableTopToolbar) {
+      return <div/>
+    }
+    return (
+      <Flex style={{ gap: 0, paddingLeft: 10 }} align="center" className="no-print">
+        <CustomToggleGlobalFilterButton variant={props.variant} table={table} />
+        <Tooltip withinPortal withArrow label={i18next.t('Refresh')}>
+          <ActionIcon
+            variant={props.variant}
+            size="lg"
+            color="primary"
+            sx={{ width: '36px', height: '36px', marginRight: 2 }}
+            onClick={handleRefresh}
+          >
+            <IconRefresh size="1.4rem" />
+          </ActionIcon>
+        </Tooltip>
+        {props.allowColumnFilters ? (
+          <CustomToggleFiltersButton variant={props.variant} table={table} />
+        ) : null}
+        <CustomShowHideColumnsButton variant={props.variant} table={table} />
+        <Menu position="top-start" width={200} onOpen={handleOpenMenu} onClose={handleCloseMenu}>
+          <Menu.Target>
+            <Tooltip withinPortal withArrow label={i18next.t('Export')}>
+              <ActionIcon
+                variant={props.variant}
+                size="lg"
+                color="primary"
+                sx={{ width: '36px', height: '36px', marginRight: 2 }}
+              >
+                <IconDownload size="1.4rem" />
+              </ActionIcon>
+            </Tooltip>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Item
+              disabled={table.getRowModel().rows.length === 0}
+              onClick={() => handleExportRows(table.getRowModel().rows, originColumns)}
+            >
+              {`${i18next.t('AllRows')}`}
+            </Menu.Item>
+            <Menu.Item
+              disabled={table.getSelectedRowModel().rows.length === 0}
+              onClick={() => handleExportRows(table.getSelectedRowModel().rows, originColumns)}
+            >
+              {`${i18next.t('OnlySelectedRows')}`}
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+        <Tooltip withinPortal withArrow label={i18next.t('Print')}>
+          <ActionIcon
+            variant={props.variant}
+            size="lg"
+            color="primary"
+            sx={{ width: '36px', height: '36px', marginRight: 2 }}
+            onClick={(event) => handlePrint(table)}
+          >
+            <IconPrinter size="1.4rem" />
+          </ActionIcon>
+        </Tooltip>
+      </Flex>
+    )
+  }
 
   const table = useMantineReactTable({
     manualFiltering: true,
@@ -1004,6 +1094,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     onGlobalFilterChange: setGlobalFilter,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
+    enableTopToolbar: props.enableTopToolbar || true,
     enableColumnFilterModes: props.enableColumnFilterModes,
     enableColumnOrdering: props.enableColumnOrdering,
     enableGrouping: props.enableGrouping,
@@ -1018,9 +1109,9 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     positionToolbarAlertBanner: 'bottom',
     mantinePaperProps: {
       withBorder: props.withBorder,
-      shadow: props.withBorder?'xs':'',
+      shadow: props.withBorder ? 'xs' : '',
       sx: {
-        width: props.width,
+        width: props.width
       }
     },
     mantineFilterTextInputProps: {
@@ -1036,68 +1127,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     renderRowActionMenuItems: props.renderRowActionMenuItems,
     renderToolbarInternalActions: props.renderToolbarInternalActions
       ? props.renderToolbarInternalActions
-      : () => (
-          <Flex style={{gap:0, paddingLeft:10}} align="center" className="no-print">
-            <CustomToggleGlobalFilterButton variant={props.variant} table={table} />
-            <Tooltip withinPortal withArrow label={i18next.t('Refresh')}>
-              <ActionIcon
-                variant={props.variant}
-                size="lg"
-                color="primary"
-                sx={{ width: '36px', height: '36px', marginRight: 2 }}
-                onClick={handleRefresh}
-              >
-                <IconRefresh size="1.4rem"/>
-              </ActionIcon>
-            </Tooltip>
-            {props.allowColumnFilters ? <CustomToggleFiltersButton variant={props.variant} table={table} /> : null}
-            <CustomShowHideColumnsButton variant={props.variant} table={table} />
-            <Menu
-              position="top-start"
-              width={200}
-              onOpen={handleOpenMenu}
-              onClose={handleCloseMenu}
-            >
-              <Menu.Target>
-                <Tooltip withinPortal withArrow label={i18next.t('Export')}>
-                  <ActionIcon
-                    variant={props.variant}
-                    size="lg"
-                    color="primary"
-                    sx={{ width: '36px', height: '36px', marginRight: 2 }}
-                  >
-                    <IconDownload size="1.4rem"/>
-                  </ActionIcon>
-                </Tooltip>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item
-                  disabled={table.getRowModel().rows.length === 0}
-                  onClick={() => handleExportRows(table.getRowModel().rows, originColumns)}
-                >
-                  {`${i18next.t('AllRows')}`}
-                </Menu.Item>
-                <Menu.Item
-                  disabled={table.getSelectedRowModel().rows.length === 0}
-                  onClick={() => handleExportRows(table.getSelectedRowModel().rows, originColumns)}
-                >
-                  {`${i18next.t('OnlySelectedRows')}`}
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-            <Tooltip withinPortal withArrow label={i18next.t('Print')}>
-              <ActionIcon
-                variant={props.variant}
-                size="lg"
-                color="primary"
-                sx={{ width: '36px', height: '36px', marginRight: 2 }}
-                onClick={(event) => handlePrint(table)}
-              >
-                <IconPrinter size="1.4rem"/>
-              </ActionIcon>
-            </Tooltip>
-          </Flex>
-        ),
+      : () => buildInternalActionsToolbar(),
     mantineToolbarAlertBannerProps: props.isError
       ? {
           color: 'error',
@@ -1117,6 +1147,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
       showSkeletons: props.isLoading,
       showAlertBanner: props.isError,
       pagination,
+      rowSelection,
       showGlobalFilter: (!globalFilter || globalFilter !== '') && props.enableGlobalFilter
     },
     mantineProgressProps: {
@@ -1138,6 +1169,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     mantinePaginationProps: {
       showRowsPerPage: false
     },
+    onRowSelectionChange: setRowSelection,
     renderTopToolbarCustomActions: (table) => getToolBarCustomActions(table, props),
     localization: languages[i18n.language],
     data: props.dataSource.browseRecords(),
@@ -1160,7 +1192,11 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 
   useArchbaseDataSourceListener<T, ID>({
     dataSource: props.dataSource,
-    listener: (_event: DataSourceEvent<T>): void => {}
+    listener: (event: DataSourceEvent<T>): void => {
+      if (event.type === DataSourceEventNames.dataChanged){
+        setUpdateCounter((prevCounter) => prevCounter + 1);
+      }
+    }
   })
 
   useEffect(() => {
@@ -1330,21 +1366,33 @@ export function ArchbaseTableRowActions<T extends Object>({
   return (
     <Box sx={{ display: 'flex' }}>
       <Tooltip withinPortal withArrow position="left" label={t('Edit')}>
-        <ActionIcon variant={variant==='filled'?'white':variant} color="green" onClick={() => onEditRow && onEditRow(row)}>
+        <ActionIcon
+          variant={variant === 'filled' ? 'white' : variant}
+          color="green"
+          onClick={() => onEditRow && onEditRow(row)}
+        >
           <IconEdit
             color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]}
           />
         </ActionIcon>
       </Tooltip>
       <Tooltip withinPortal withArrow position="right" label={t('Remove')}>
-        <ActionIcon variant={variant==='filled'?'white':variant} color="red" onClick={() => onRemoveRow && onRemoveRow(row)}>
+        <ActionIcon
+          variant={variant === 'filled' ? 'white' : variant}
+          color="red"
+          onClick={() => onRemoveRow && onRemoveRow(row)}
+        >
           <IconTrash
             color={theme.colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]}
           />
         </ActionIcon>
       </Tooltip>
       <Tooltip withinPortal withArrow position="right" label={t('View')}>
-        <ActionIcon variant={variant==='filled'?'white':variant}   color="black" onClick={() =>  onViewRow && onViewRow(row)}>
+        <ActionIcon
+          variant={variant === 'filled' ? 'white' : variant}
+          color="black"
+          onClick={() => onViewRow && onViewRow(row)}
+        >
           <IconEye
             color={theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]}
           />

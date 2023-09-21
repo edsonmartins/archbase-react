@@ -1,5 +1,7 @@
 import { create } from 'zustand'
-import { ArchbaseStateValues } from 'components/template/ArchbaseStateValues'
+import { ArchbaseStateValues } from '../template/ArchbaseStateValues'
+import { createTrackedSelector } from 'react-tracked';
+
 
 const useArchbaseStoreInternal = create<ArchbaseStateValues>((set, get) => ({
   values: new Map(),
@@ -31,6 +33,8 @@ const useArchbaseStoreInternal = create<ArchbaseStateValues>((set, get) => ({
     }),  
 }))
 
+const useArchbaseTrackedStoreInternal = createTrackedSelector(useArchbaseStoreInternal);
+
 export type ArchbaseStore = {
   setValue: (key : string, value: any) => void
   getValue: (key : string) => any
@@ -38,10 +42,23 @@ export type ArchbaseStore = {
   clearValue: (key: string) => void
   clearAllValues: () => void
   reset: () => void
+  values: Map<string,any>
+}
+
+function filterMapByKey(mapOriginal, key) {
+  const result = new Map();
+
+  for (const [chave, valor] of mapOriginal) {
+    if (chave.startsWith(key)) {
+      result.set(chave, valor);
+    }
+  }
+
+  return result;
 }
 
 export const useArchbaseStore = (nameSpace: string = 'default') : ArchbaseStore => {
-  const store = useArchbaseStoreInternal()
+  const store = useArchbaseTrackedStoreInternal()
 
   const setValue = (key: string, value: any) => {
     store.setValue(`${nameSpace}.${key}`,value)
@@ -71,7 +88,7 @@ export const useArchbaseStore = (nameSpace: string = 'default') : ArchbaseStore 
     store.clearAllValues()
   }
 
-  const result : ArchbaseStore = {setValue, getValue, clearValue, existsValue, clearAllValues, reset}
+  const result : ArchbaseStore = {setValue, getValue, clearValue, existsValue, clearAllValues, reset, values: store.values}
 
   return result;
 };

@@ -28,7 +28,7 @@ import {
   useArchbaseDidUpdate,
   useArchbaseWillUnmount
 } from '../hooks'
-import { useDebouncedState } from '@mantine/hooks'
+import { useDebouncedState, useDebouncedValue } from '@mantine/hooks'
 import ArchbaseAsyncSelectContext, {
   ArchbaseAsyncSelectContextValue,
   ArchbaseAsyncSelectProvider
@@ -51,6 +51,8 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
   dataField?: string
   /** Tempo de espero antes de realizar a busca */
   debounceTime?: number
+  /** Minimo caracteres para busca */
+  minCharsToSearch?: number
   /** Indicador se o select está desabilitado */
   disabled?: boolean
   /** Indicador se o select é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
@@ -119,6 +121,8 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
   required?: boolean
   /** Referência para o componente interno */
   innerRef?: React.RefObject<HTMLInputElement> | undefined
+  /** Chamado sempre que o valor da pesquisa muda */
+  onSearchChange?(query: string): void;
 }
 function buildOptions<O>(
   initialOptions: O[],
@@ -156,7 +160,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   dataSource,
   dataField,
   disabled = false,
-  debounceTime = 100,
+  debounceTime = 500,
+  minCharsToSearch = 3,
   readOnly = false,
   placeholder,
   initialOptions = { options: [], page: 0, totalPages: 0 },
@@ -189,13 +194,15 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   zIndex,
   dropdownPosition,
   onErrorLoadOptions,
-  innerRef
+  innerRef,
+  onSearchChange
 }: ArchbaseAsyncSelectProps<T, ID, O>) {
   const [options, setOptions] = useState<any[]>(
     buildOptions<O>(initialOptions.options, getOptionLabel, getOptionValue, getOptionImage)
   )
   const [selectedValue, setSelectedValue] = useState<any>(value)
-  const [queryValue, setQueryValue] = useDebouncedState('', debounceTime)
+  const [queryValue, setQueryValue] = useState<string>('')
+  const [debouncedQueryValue] = useDebouncedValue(queryValue, debounceTime)
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(initialOptions.page)
   const [totalPages, setTotalPages] = useState(initialOptions.totalPages)
@@ -254,11 +261,14 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   })
 
   useEffect(() => {
-    if (queryValue && queryValue.length > 0 && queryValue != getOptionLabel(selectedValue)) {
+    if (onSearchChange){
+      onSearchChange(debouncedQueryValue)
+    }
+    if (debouncedQueryValue && debouncedQueryValue.length >= minCharsToSearch && debouncedQueryValue != getOptionLabel(selectedValue)) {
       setLoading(true)
       loadOptions(0, false)
     }
-  }, [queryValue])
+  }, [debouncedQueryValue])
 
   useEffect(() => {}, [currentPage, totalPages])
 
@@ -268,7 +278,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 
   useEffect(()=>{
     setInternalError(undefined)
-  },[value,selectedValue,queryValue])
+  },[value,selectedValue,debouncedQueryValue])
 
   const handleChange = (value) => {
     setSelectedValue((_prev) => value)
@@ -300,14 +310,18 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   }
 
   const handleDropdownScrollEnded = () => {
-    if (queryValue && queryValue.length > 0 && currentPage < totalPages - 1) {
+    if (debouncedQueryValue && debouncedQueryValue.length >= minCharsToSearch && currentPage < totalPages - 1) {
       setLoading(true)
       loadOptions(currentPage + 1, true)
     }
   }
 
+  const handleSearchChange = (query: string) => {
+    setQueryValue(query)    
+  }
+
   const loadOptions = async (page: number, incremental: boolean = false) => {
-    let promise = getOptions(page, queryValue)
+    let promise = getOptions(page, debouncedQueryValue)
     promise.then(
       (data: OptionsResult<O>) => {
         setLoading(false)
@@ -370,7 +384,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         onBlur={handleOnFocusExit}
         onFocus={handleOnFocusEnter}
         value={selectedValue}
-        onSearchChange={setQueryValue}
+        onSearchChange={handleSearchChange}
         defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
         searchValue={selectedValue ? getOptionLabel(selectedValue) : queryValue}
         required={required}

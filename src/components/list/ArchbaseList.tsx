@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode, useMemo } from 'react'
+import React, { useState, useEffect, ReactNode, useMemo, FocusEventHandler, useRef } from 'react'
 import { uniqueId } from 'lodash'
 import { ArchbaseListItem } from './ArchbaseListItem'
 import {
@@ -11,6 +11,9 @@ import { useArchbaseDidMount, useArchbaseWillUnmount } from '../hooks'
 import { Box, MantineNumberSize, Paper, useMantineTheme } from '@mantine/core'
 import useStyles from './ArchbaseList.styles'
 import { ArchbaseListProvider } from './ArchbaseList.context'
+import { ArchbaseObjectHelper } from '../core/helper'
+import { useUncontrolled } from '@mantine/hooks'
+import { useArchbaseForceRerender } from '../hooks/useArchbaseForceRenderer'
 
 export interface ArchbaseListCustomItemProps<T, _ID> {
   /** Chave */
@@ -47,6 +50,8 @@ export interface ArchbaseListProps<T, ID> {
   height?: number | string
   /** Largura da lista */
   width?: number | string
+  /** desabilita todos os itens da lista */
+  disabled?: boolean
   /** Indicador se os itens da lista devem ser justificados */
   justify?: 'flex-start' | 'center' | 'space-between' | 'space-around' | 'space-evenly'
   /** Evento que ocorre quando um item da lista é selecionado */
@@ -63,6 +68,8 @@ export interface ArchbaseListProps<T, ID> {
   dataFieldId?: string
   /** Indice do item ativo na lista */
   activeIndex?: number
+  /** Indice default do item ativo na lista */
+  defaultActiveIndex?: number
   /** Evento gerado quando o mouse está sobre um item */
   onItemEnter?: (event: React.MouseEvent, data: any) => void
   /** Evento gerado quando o mouse sai de um item */
@@ -103,9 +110,15 @@ export interface ArchbaseListProps<T, ID> {
   center?: boolean
   /** Lista horizontal */
   horizontal?: boolean
+  /** force update list */
+  update?: number
   /** Estilo de lista */
   listStyleType?: React.CSSProperties['listStyleType']
+  onFocusEnter?: FocusEventHandler<HTMLDivElement> | undefined;
+  onFocusExit?: FocusEventHandler<HTMLDivElement> | undefined;
+
 }
+
 export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   const theme = useMantineTheme()
   const {
@@ -122,11 +135,12 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     borderRadius,
     dataFieldText = 'text',
     dataFieldId = 'id',
-    activeIndex = 0,
+    activeIndex,
+    defaultActiveIndex,
     onItemEnter,
     onItemLeave,
     style,
-    id = uniqueId('list'),
+    id,
     dataSource,
     filter,
     horizontal = false,
@@ -141,17 +155,21 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     image,
     imageRadius,
     imageWidth,
-    imageHeight
+    imageHeight,
+    disabled,
+    update = 0,
+    onFocusEnter = ()=>{},
+    onFocusExit = ()=>{}
   } = props
-  const [activeIndexValue, setActiveIndexValue] = useState(
-    activeIndex
-      ? activeIndex
-      : children && children.length > 0
-      ? 0
-      : dataSource && dataSource.getTotalRecords() > 0
-      ? 0
-      : -1
-  )
+  const [_activeIndex, setActiveIndex] = useUncontrolled({
+    value: activeIndex,
+    defaultValue : defaultActiveIndex,
+    finalValue: 0
+  });
+
+  const [updateCounter, setUpdateCounter] = useState(0);
+  const activeIndexRef = useRef<boolean>(false)
+  const [rebuildedChildrens, setRebuildedChildrens] = useState<ReactNode[]>([]);
   const { classes } = useStyles({
     withPadding,
     listStyleType,
@@ -162,6 +180,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   })
   const [currentFilter, setCurrentFilter] = useState(filter)
   const [idList] = useState(id)
+
   useArchbaseDidMount(() => {
     if (dataSource) {
       dataSource.addListener(dataSourceEvent)
@@ -175,40 +194,57 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   })
 
   useEffect(() => {
-    setActiveIndexValue(activeIndex)
     setCurrentFilter(filter)
-  }, [activeIndex, filter])
+  }, [filter])
 
   const dataSourceEvent = (event: DataSourceEvent<T>) => {
     if (dataSource) {
-      switch (event.type) {
-        case DataSourceEventNames.afterScroll: {
-          if (onSelectListItem && !dataSource.isEmpty()) {
-            setActiveIndexValue(dataSource.getCurrentIndex())
+      if (event.type === DataSourceEventNames.afterScroll) {
+        if (dataSource.isEmpty()){
+          setActiveIndex(-1)
+        }
+        if (onSelectListItem && !dataSource.isEmpty()) {
+          if (_activeIndex != dataSource.getCurrentIndex()){
+            setActiveIndex(dataSource.getCurrentIndex())
             onSelectListItem(dataSource.getCurrentIndex(), dataSource.getCurrentRecord())
           }
-          break
         }
-        case (DataSourceEventNames.fieldChanged,
-        DataSourceEventNames.dataChanged,
-        DataSourceEventNames.recordChanged,
-        DataSourceEventNames.afterCancel): {
-          setActiveIndexValue(dataSource.getCurrentIndex())
-          if (onSelectListItem && !dataSource.isEmpty()) {
-            onSelectListItem(dataSource.getCurrentIndex(), dataSource.getCurrentRecord())
+        setUpdateCounter((prevCounter) => prevCounter + 1);
+      } 
+      
+      if ((event.type === DataSourceEventNames.fieldChanged) ||
+      (event.type === DataSourceEventNames.dataChanged) ||
+        (event.type === DataSourceEventNames.recordChanged)) {
+          if (dataSource.isEmpty()){
+            setActiveIndex(-1)
           }
-          break
-        }
-        default:
+          if (onSelectListItem && !dataSource.isEmpty()) {
+            if (_activeIndex!==dataSource.getCurrentIndex()){
+              setActiveIndex(dataSource.getCurrentIndex())            
+              onSelectListItem(dataSource.getCurrentIndex(), dataSource.getCurrentRecord())
+            } 
+          }
+          setUpdateCounter((prevCounter) => prevCounter + 1);
       }
     }
   }
 
-  const handleSelectItem = (index: number, data: T) => {
-    setActiveIndexValue(index)
-    if (dataSource) {
-      dataSource.gotoRecordByData(data)
+  useEffect(()=>{
+    if (activeIndexRef.current){
+      activeIndexRef.current = false
+      if (dataSource) {
+        const record = dataSource.gotoRecord(_activeIndex)
+        if (onSelectListItem && record){
+          onSelectListItem(_activeIndex, record)
+        }
+      }   
     }
+  },[_activeIndex])
+  
+
+  const handleSelectItem = (index: number, data: T) => {
+    activeIndexRef.current = true
+    setActiveIndex(index)    
   }
 
   const handleKeyDown = (event) => {
@@ -222,7 +258,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
       36: () => handleHome(),
       35: () => handleEnd()
     }
-    if (activeIndexValue >= 0 && rebuildedChildrens.length > 0) {
+    if (_activeIndex >= 0 && rebuildedChildrens.length > 0) {
       const action = keyActions[event.keyCode]
       if (action) {
         event.preventDefault()
@@ -232,9 +268,9 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   }
 
   const handleArrowUp = () => {
-    let index = activeIndexValue
+    let index = _activeIndex
     if (index - 1 >= 0) {
-      setActiveIndexValue(index - 1)
+      setActiveIndex(index - 1)
       handleSelectItem(index - 1, getRecordDataFromChildren(index - 1))
     }
   }
@@ -244,9 +280,9 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   }
 
   const handleArrowDown = () => {
-    let index = activeIndexValue
+    let index = _activeIndex
     if (index + 1 < rebuildedChildrens.length) {
-      setActiveIndexValue(index + 1)
+      setActiveIndex(index + 1)
       handleSelectItem(index + 1, getRecordDataFromChildren(index + 1))
     }
   }
@@ -256,25 +292,25 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   }
 
   const handlePageUp = () => {
-    let index = Math.max(activeIndexValue - 5, 0)
-    setActiveIndexValue(index)
+    let index = Math.max(_activeIndex - 5, 0)
+    setActiveIndex(index)
     handleSelectItem(index, getRecordDataFromChildren(index))
   }
 
   const handlePageDown = () => {
-    let index = Math.min(activeIndexValue + 5, rebuildedChildrens.length - 1)
-    setActiveIndexValue(index)
+    let index = Math.min(_activeIndex + 5, rebuildedChildrens.length - 1)
+    setActiveIndex(index)
     handleSelectItem(index, getRecordDataFromChildren(index))
   }
 
   const handleHome = () => {
-    setActiveIndexValue(0)
+    setActiveIndex(0)
     handleSelectItem(0, getRecordDataFromChildren(0))
   }
 
   const handleEnd = () => {
     const index = rebuildedChildrens.length - 1
-    setActiveIndexValue(index)
+    setActiveIndex(index)
     handleSelectItem(index, getRecordDataFromChildren(index))
   }
 
@@ -291,8 +327,8 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 
       let itemIsValid = true
       if (currentFilter && dataFieldText) {
-        if (record[dataFieldText]) {
-          if (!record[dataFieldText].includes(currentFilter)) {
+        if (ArchbaseObjectHelper.getNestedProperty(record, dataFieldText)) {
+          if (!ArchbaseObjectHelper.getNestedProperty(record, dataFieldText).includes(currentFilter)) {
             itemIsValid = false
           }
         }
@@ -303,9 +339,9 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 
       if (itemIsValid) {
         let active = record.active === undefined ? false : record.active
-        if (activeIndexValue >= 0) {
+        if (_activeIndex >= 0) {
           active = false
-          if (activeIndexValue === index) {
+          if (_activeIndex === index) {
             active = true
           }
         }
@@ -317,7 +353,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
             compProps = component.props
           }
 
-          let newId = record[dataFieldId]
+          let newId = ArchbaseObjectHelper.getNestedProperty(record, dataFieldId)
           if (!newId) {
             newId = `${idList}_${index}`
           }
@@ -332,14 +368,14 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
               index={index}
               dataSource={dataSource}
               recordData={record}
-              disabled={record.disabled}
+              disabled={record.disabled || disabled}
               {...compProps}
               {...rest}
               {...component.props}
             />
           )
         } else {
-          let newId = record[dataFieldId]
+          let newId = ArchbaseObjectHelper.getNestedProperty(record, dataFieldId)
           if (!newId) {
             newId = `${idList}_${index}`
           }
@@ -347,7 +383,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
           return (
             <ArchbaseListItem
               key={newKey}
-              disabled={record.disabled}
+              disabled={record.disabled || disabled}
               id={newId}
               index={index}
               active={active}
@@ -369,7 +405,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
               icon={record.icon ? record.icon : icon}
               image={image}
               spacing={spacing}
-              caption={record[dataFieldText]}
+              caption={ArchbaseObjectHelper.getNestedProperty(record, dataFieldText)}
               withBorder={record.withBorder === undefined ? withBorder : record.withBorder}
               visible={true}
               recordData={record}
@@ -403,16 +439,16 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
         throw new ArchbaseError('Todos os itens da lista devem conter um ID.')
       }
       let active: boolean = child.active
-      if (activeIndexValue >= 0) {
+      if (_activeIndex >= 0) {
         active = false
-        if (activeIndexValue === index) {
+        if (_activeIndex === index) {
           active = true
         }
       }
       return (
         <ArchbaseListItem
           key={child.id}
-          disabled={child.disabled}
+          disabled={child.disabled || disabled}
           id={child.id}
           index={index}
           active={active}
@@ -442,16 +478,17 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     })
   }
 
-  const rebuildedChildrens = useMemo(() => {
+   useEffect(() => {
     if (dataSource) {
-      return buildChildrensFromDataSource(dataSource)
+      const newChildrens = buildChildrensFromDataSource(dataSource);
+      setRebuildedChildrens(newChildrens);
     } else if (children) {
-      return rebuildChildrens()
+      const newChildrens = rebuildChildrens();
+      setRebuildedChildrens(newChildrens);
+    } else {
+      setRebuildedChildrens([]);
     }
-    return []
-  }, [dataSource, children, activeIndexValue, props])
-
-  
+  }, [_activeIndex, dataSource, children, update, updateCounter]);
 
   return (
     <Paper
@@ -460,6 +497,9 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
       withBorder={withBorder}
       radius={borderRadius}
       onKeyDown={handleKeyDown}
+      onFocus={onFocusEnter}
+      onBlur={onFocusExit}
+
     >
       <Box<any>
         component={type === 'unordered' ? 'ul' : type === 'ordered' ? 'ol' : 'div'}

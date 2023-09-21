@@ -6,3 +6,4 @@ export type {
   ArchbaseAdvancedTabsProps
 } from './tabs'
 export * from "./spaces"
+export * from './window'

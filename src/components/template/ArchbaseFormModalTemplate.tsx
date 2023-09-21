@@ -9,11 +9,16 @@ import { ArchbaseDataSource } from '../datasource'
 import { t } from 'i18next'
 import { ArchbaseDialog } from '../notification'
 import { ArchbaseForm } from '../containers'
+import { processErrorMessage } from '../core/exceptions'
 
-export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends ModalProps {
+export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Omit<ModalProps, "onClose"> {
   dataSource?: ArchbaseDataSource<T, ID>
   height: MantineNumberSize
   userActions?: ReactNode
+  onAfterSave?(record?: T): void;
+  onClickOk(record?: T, result?: any): void;
+  onClickCancel(record?: T): void;
+  onBeforeOk?(record? : T): Promise<any> | boolean | undefined;
 }
 
 export function ArchbaseFormModalTemplate<T extends object, ID>({
@@ -31,22 +36,69 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
   size,
   dataSource,
   height,
-  onClose,
-  userActions
+  userActions,
+  onAfterSave,
+  onClickOk,
+  onClickCancel,
+  onBeforeOk
 }: ArchbaseFormModalTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext()
   const theme = useArchbaseTheme()
 
-  const handleSave = () => {
-    onClose()
+  const save = async () : Promise<boolean> => {
+    if (dataSource) {
+      if (!dataSource.isBrowsing()) {
+        try {
+          await dataSource.save()
+          onAfterSave && onAfterSave(dataSource.getCurrentRecord())
+        } catch (ex) {
+          ArchbaseDialog.showError(processErrorMessage(ex), "Atenção")
+          return false
+        }
+      }
+    }
+    return true
+  }
+
+  const cancel = () => {
+    if (dataSource) {
+      if (!dataSource.isBrowsing()) {
+        try {
+          dataSource.cancel()
+        } catch (ex) {
+          // null
+        }
+      }
+    }
+  }
+
+  const handleSave = async () => {
+    if (onBeforeOk) {
+      let result = onBeforeOk();
+      if (result instanceof Promise) {
+        result.then(async ()=>{
+          if (await save()) {
+            onClickOk && onClickOk()
+          }
+        }).catch((error)=>{
+          ArchbaseDialog.showError(processErrorMessage(error),"Atenção")
+        })
+      }
+    } else {
+      if (await save()) {
+        onClickOk && onClickOk()
+      }
+    }  
+    
   }
 
   const handleCancel = () => {
-    onClose()
+    cancel()
+    onClickCancel && onClickCancel()
   }
 
   const handleClose = () => {
-      ArchbaseDialog.showWarning(t("Click on Ok or Cancel to close"))
+      ArchbaseDialog.showWarning(t("archbase:Click on Ok or Cancel to close"))
   }
 
   return (
