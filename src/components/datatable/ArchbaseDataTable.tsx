@@ -15,18 +15,7 @@ import {
   useMantineTheme,
   type ActionIconProps,
   Variants,
-<<<<<<< HEAD
-  Checkbox
-} from '@mantine/core'
-import { parse as parseDate, formatISO, format } from 'date-fns'
-import i18next from 'i18next'
-import { DatePickerInput, DateValue, DatesRangeValue } from '@mantine/dates'
-import { jsPDF as JsPDF } from 'jspdf'
-import 'jspdf-autotable'
-import { UserOptions } from 'jspdf-autotable'
-import { IconDownload, IconPrinter, IconRefresh } from '@tabler/icons-react'
-import { ExportToCsv, Options } from 'export-to-csv'
-=======
+  Checkbox,
 } from '@mantine/core';
 import { parse as parseDate, formatISO, format } from 'date-fns';
 import i18next from 'i18next';
@@ -36,7 +25,6 @@ import 'jspdf-autotable';
 import { UserOptions } from 'jspdf-autotable';
 import { IconDownload, IconPrinter, IconRefresh } from '@tabler/icons-react';
 import { ExportToCsv, Options } from 'export-to-csv';
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
 import {
   MRT_Cell,
   MRT_Column,
@@ -53,35 +41,6 @@ import {
   useMantineReactTable,
   HTMLPropsRef,
   MRT_ShowHideColumnsMenu,
-<<<<<<< HEAD
-  MRT_RowSelectionState
-} from 'mantine-react-table'
-import { MRT_Localization_EN } from 'mantine-react-table/locales/en'
-import { MRT_Localization_ES } from 'mantine-react-table/locales/es'
-import { MRT_Localization_PT_BR } from 'mantine-react-table/locales/pt-BR'
-import React, {
-  Fragment,
-  isValidElement,
-  useMemo,
-  ReactNode,
-  useRef,
-  useState,
-  useEffect
-} from 'react'
-import { useTranslation } from 'react-i18next'
-import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react'
-import { t } from 'i18next'
-import { type DataSourceEvent, type ArchbaseDataSource, DataSourceEventNames } from '../datasource'
-import { convertISOStringToDate, filter, isEmpty } from '../core/utils'
-import { useArchbaseDataSourceListener } from '../hooks'
-import builder from '../datasource/rsql/builder'
-import { emit } from '../datasource/rsql/emitter'
-import { ExpressionNode } from '../datasource/rsql/ast'
-import { ArchbaseObjectHelper } from '../core/helper'
-import { useArchbaseAppContext } from '../core'
-import { ArchbaseSwitch } from '../editors/ArchbaseSwitch'
-import { ArchbaseCheckbox } from '../editors'
-=======
 } from 'mantine-react-table';
 import { MRT_Localization_EN } from 'mantine-react-table/locales/en';
 import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
@@ -99,7 +58,6 @@ import { ExpressionNode } from '../datasource/rsql/ast';
 import { ArchbaseObjectHelper } from '../core/helper';
 import { useArchbaseAppContext } from '../core';
 import { ArchbaseSwitch } from '../editors/ArchbaseSwitch';
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
 
 interface JsPDFCustom extends JsPDF {
   autoTable: (options: UserOptions) => void;
@@ -128,55 +86,6 @@ const convertHexToRGBA = (hexCode, opacity = 1) => {
 };
 
 export interface ArchbaseDataTableProps<T extends object, ID> {
-<<<<<<< HEAD
-  enableColumnResizing?: boolean
-  enableColumnOrdering?: boolean
-  enableRowNumbers?: boolean
-  enableRowSelection?: boolean | ((row: MRT_Row<T>) => boolean)
-  enableRowActions?: boolean
-  enableColumnFilterModes?: boolean
-  enableGrouping?: boolean
-  enableGlobalFilter?: boolean
-  enablePinning?: boolean
-  enableTopToolbar?: boolean
-  manualFiltering?: boolean
-  manualPagination?: boolean
-  manualSorting?: boolean
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
-  getRowId?: (originalRow: T, index: number) => string
-  onCellDoubleClick?: (event) => void
-  onSelectedRowsChanged?: (rows: T[]) => void
-  allowColumnFilters?: boolean
-  allowExportData?: boolean
-  allowPrintData?: boolean
-  dataSource: ArchbaseDataSource<T, ID>
-  isLoading?: boolean
-  isError?: boolean
-  error?: ReactNode
-  showProgressBars?: boolean
-  children: ReactNode
-  withBorder?: boolean
-  withColumnBorders?: boolean
-  fontSize?: number | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  highlightOnHover?: boolean
-  striped?: boolean
-  height?: number | string | undefined
-  width?: number | string | undefined
-  pageSize: number
-  pageIndex: 0
-  printTitle: string
-  logoPrint?: string
-  csvOptions?: Options
-  globalDateFormat?: string
-  renderRowActionMenuItems?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode
-  renderRowActions?: (props: {
-    cell: MRT_Cell<T>
-    row: MRT_Row<T>
-    table: MRT_TableInstance<T>
-  }) => ReactNode
-  renderToolbarInternalActions?: (props: { table: MRT_TableInstance<T> }) => ReactNode | null
-  positionActionsColumn?: 'first' | 'last'
-=======
   enableColumnResizing?: boolean;
   enableColumnOrdering?: boolean;
   enableRowNumbers?: boolean;
@@ -218,7 +127,6 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
   renderRowActions?: (props: { cell: MRT_Cell<T>; row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
   renderToolbarInternalActions?: (props: { table: MRT_TableInstance<T> }) => ReactNode | null;
   positionActionsColumn?: 'first' | 'last';
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
 }
 
 export interface ToolBarActionsProps {
@@ -654,18 +562,11 @@ const getToolBarCustomActions = (_table, props): ReactNode => {
     return <div style={{ display: 'flex', gap: '8px' }}></div>;
   }
 
-<<<<<<< HEAD
-interface Props<TData extends Record<string, any> = {}>
-  extends ActionIconProps,
-    HTMLPropsRef<HTMLButtonElement> {
-  table: MRT_TableInstance<TData>
-=======
   return actions;
 };
 
 interface Props<TData extends Record<string, any> = {}> extends ActionIconProps, HTMLPropsRef<HTMLButtonElement> {
   table: MRT_TableInstance<TData>;
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
 }
 
 export const CustomToggleGlobalFilterButton = <TData extends Record<string, any> = {}>({
@@ -678,17 +579,17 @@ export const CustomToggleGlobalFilterButton = <TData extends Record<string, any>
     options: {
       icons: { IconSearch, IconSearchOff },
 
-      localization
+      localization,
     },
     refs: { searchInputRef },
-    setShowGlobalFilter
-  } = table
-  const { globalFilter, showGlobalFilter } = getState()
+    setShowGlobalFilter,
+  } = table;
+  const { globalFilter, showGlobalFilter } = getState();
 
   const handleToggleSearch = () => {
-    setShowGlobalFilter(!showGlobalFilter)
-    setTimeout(() => searchInputRef.current?.focus(), 100)
-  }
+    setShowGlobalFilter(!showGlobalFilter);
+    setTimeout(() => searchInputRef.current?.focus(), 100);
+  };
 
   return (
     <Tooltip withinPortal withArrow label={rest?.title ?? localization.showHideSearch}>
@@ -706,8 +607,8 @@ export const CustomToggleGlobalFilterButton = <TData extends Record<string, any>
         {showGlobalFilter ? <IconSearchOff size="1.4rem" /> : <IconSearch size="1.4rem" />}
       </ActionIcon>
     </Tooltip>
-  )
-}
+  );
+};
 
 export const CustomToggleFiltersButton = <TData extends Record<string, any> = {}>({
   table,
@@ -718,15 +619,15 @@ export const CustomToggleFiltersButton = <TData extends Record<string, any> = {}
     getState,
     options: {
       icons: { IconFilter, IconFilterOff },
-      localization
+      localization,
     },
-    setShowColumnFilters
-  } = table
-  const { showColumnFilters } = getState()
+    setShowColumnFilters,
+  } = table;
+  const { showColumnFilters } = getState();
 
   const handleToggleShowFilters = () => {
-    setShowColumnFilters(!showColumnFilters)
-  }
+    setShowColumnFilters(!showColumnFilters);
+  };
 
   return (
     <Tooltip withinPortal withArrow label={rest?.title ?? localization.showHideFilters}>
@@ -742,8 +643,8 @@ export const CustomToggleFiltersButton = <TData extends Record<string, any> = {}
         {showColumnFilters ? <IconFilterOff size="1.4rem" /> : <IconFilter size="1.4rem" />}
       </ActionIcon>
     </Tooltip>
-  )
-}
+  );
+};
 
 export const CustomShowHideColumnsButton = <TData extends Record<string, any> = {}>({
   table,
@@ -753,9 +654,9 @@ export const CustomShowHideColumnsButton = <TData extends Record<string, any> = 
   const {
     options: {
       icons: { IconColumns },
-      localization
-    }
-  } = table
+      localization,
+    },
+  } = table;
 
   return (
     <Menu closeOnItemClick={false} withinPortal>
@@ -776,18 +677,6 @@ export const CustomShowHideColumnsButton = <TData extends Record<string, any> = 
       </Tooltip>
       <MRT_ShowHideColumnsMenu table={table} />
     </Menu>
-<<<<<<< HEAD
-  )
-}
-
-export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTableProps<T, ID>) {
-  const { i18n } = useTranslation()
-  const theme = useMantineTheme()
-  const appContext = useArchbaseAppContext()
-  const divTable = useRef<HTMLDivElement>(null)
-  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({}); 
-  const [updateCounter, setUpdateCounter] = useState(0);
-=======
   );
 };
 
@@ -796,7 +685,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
   const theme = useMantineTheme();
   const appContext = useArchbaseAppContext();
   const divTable = useRef<HTMLDivElement>(null);
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
+  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
+  const [updateCounter, setUpdateCounter] = useState(0);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: props.dataSource ? props.dataSource.getCurrentPage() : props.pageIndex,
     pageSize: props.dataSource ? props.dataSource.getPageSize() : props.pageSize,
@@ -811,33 +701,25 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
   );
   const [stickyEnable, setStickyEnable] = useState(true);
   const [sorting, setSorting] = useState<MRT_SortingState>(
-<<<<<<< HEAD
-    props.dataSource && props.dataSource.getOptions().originSort
-      ? props.dataSource.getOptions().originSort
-      : []
-  )
-=======
     props.dataSource && props.dataSource.getOptions().originSort ? props.dataSource.getOptions().originSort : [],
   );
-
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
   const [currentCell, setCurrentCell] = useState<ArchbaseDataTableCurrentCell>({
     rowIndex: 0,
     columnName: '',
     rowData: undefined,
   });
 
-  useEffect(()=>{
-    if (rowSelection && table && props.onSelectedRowsChanged){
-      const result :T[]= []
+  useEffect(() => {
+    if (rowSelection && table && props.onSelectedRowsChanged) {
+      const result: T[] = [];
       for (const [key, value] of Object.entries(rowSelection)) {
-        if (rowSelection[key]){
-          result.push(table.getRow(key).original)
+        if (rowSelection[key]) {
+          result.push(table.getRow(key).original);
         }
       }
-      props.onSelectedRowsChanged(result)
+      props.onSelectedRowsChanged(result);
     }
-  },[rowSelection])
+  }, [rowSelection]);
 
   const getCellBackgroundColor = (cell, table): any => {
     if (cell.row.index === currentCell.rowIndex && cell.column.id === currentCell.columnName) {
@@ -868,16 +750,10 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
   };
 
   const renderBoolean = (data: any): ReactNode => {
-<<<<<<< HEAD
-    const checked = data.getValue()
-    return <Checkbox readOnly={true} checked={checked}/>
-  }
-=======
     const checked = data.getValue();
 
-    return <ArchbaseSwitch isChecked={checked}></ArchbaseSwitch>;
+    return <Checkbox readOnly={true} checked={checked} />;
   };
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
 
   const renderDate = (data: any): ReactNode => {
     try {
@@ -997,9 +873,9 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
           }
         });
       }
-<<<<<<< HEAD
-    })
-    return result
+    });
+
+    return result;
   }, [
     props.children,
     theme.colorScheme,
@@ -1014,14 +890,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     props.enableRowSelection,
     props.allowColumnFilters,
     props.allowExportData,
-    props.allowPrintData
-  ])
-=======
-    });
-
-    return result;
-  }, [props.children, theme.colorScheme, getCellBackgroundColor, getCellColorFont, theme.colors[theme.primaryColor]]);
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
+    props.allowPrintData,
+  ]);
 
   const handleRefresh = () => {
     props.dataSource.refreshData();
@@ -1121,13 +991,13 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
   const maxHeight =
     `${props.height}`.includes('px') || `${props.height}`.includes('%')
       ? `calc(${props.height} - 120px)`
-<<<<<<< HEAD
-      : `calc(${props.height}px - 120px)`
+      : `calc(${props.height}px - 120px)`;
 
   const buildInternalActionsToolbar = () => {
     if (!props.enableTopToolbar) {
-      return <div/>
+      return <div />;
     }
+
     return (
       <Flex style={{ gap: 0, paddingLeft: 10 }} align="center" className="no-print">
         <CustomToggleGlobalFilterButton variant={props.variant} table={table} />
@@ -1142,9 +1012,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
             <IconRefresh size="1.4rem" />
           </ActionIcon>
         </Tooltip>
-        {props.allowColumnFilters ? (
-          <CustomToggleFiltersButton variant={props.variant} table={table} />
-        ) : null}
+        {props.allowColumnFilters ? <CustomToggleFiltersButton variant={props.variant} table={table} /> : null}
         <CustomShowHideColumnsButton variant={props.variant} table={table} />
         <Menu position="top-start" width={200} onOpen={handleOpenMenu} onClose={handleCloseMenu}>
           <Menu.Target>
@@ -1186,11 +1054,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
           </ActionIcon>
         </Tooltip>
       </Flex>
-    )
-  }
-=======
-      : `calc(${props.height}px - 120px)`;
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
+    );
+  };
 
   const table = useMantineReactTable({
     manualFiltering: true,
@@ -1218,13 +1083,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
       withBorder: props.withBorder,
       shadow: props.withBorder ? 'xs' : '',
       sx: {
-<<<<<<< HEAD
-        width: props.width
-      }
-=======
         width: props.width,
       },
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
     },
     mantineFilterTextInputProps: {
       sx: { borderBottom: 'unset', marginTop: '8px' },
@@ -1239,67 +1099,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     renderRowActionMenuItems: props.renderRowActionMenuItems,
     renderToolbarInternalActions: props.renderToolbarInternalActions
       ? props.renderToolbarInternalActions
-<<<<<<< HEAD
       : () => buildInternalActionsToolbar(),
-=======
-      : () => (
-          <Flex style={{ gap: 0, paddingLeft: 10 }} align="center" className="no-print">
-            <CustomToggleGlobalFilterButton variant={props.variant} table={table} />
-            <Tooltip withinPortal withArrow label={i18next.t('Refresh')}>
-              <ActionIcon
-                variant={props.variant}
-                size="lg"
-                color="primary"
-                sx={{ width: '36px', height: '36px', marginRight: 2 }}
-                onClick={handleRefresh}
-              >
-                <IconRefresh size="1.4rem" />
-              </ActionIcon>
-            </Tooltip>
-            {props.allowColumnFilters ? <CustomToggleFiltersButton variant={props.variant} table={table} /> : null}
-            <CustomShowHideColumnsButton variant={props.variant} table={table} />
-            <Menu position="top-start" width={200} onOpen={handleOpenMenu} onClose={handleCloseMenu}>
-              <Menu.Target>
-                <Tooltip withinPortal withArrow label={i18next.t('Export')}>
-                  <ActionIcon
-                    variant={props.variant}
-                    size="lg"
-                    color="primary"
-                    sx={{ width: '36px', height: '36px', marginRight: 2 }}
-                  >
-                    <IconDownload size="1.4rem" />
-                  </ActionIcon>
-                </Tooltip>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item
-                  disabled={table.getRowModel().rows.length === 0}
-                  onClick={() => handleExportRows(table.getRowModel().rows, originColumns)}
-                >
-                  {`${i18next.t('AllRows')}`}
-                </Menu.Item>
-                <Menu.Item
-                  disabled={table.getSelectedRowModel().rows.length === 0}
-                  onClick={() => handleExportRows(table.getSelectedRowModel().rows, originColumns)}
-                >
-                  {`${i18next.t('OnlySelectedRows')}`}
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-            <Tooltip withinPortal withArrow label={i18next.t('Print')}>
-              <ActionIcon
-                variant={props.variant}
-                size="lg"
-                color="primary"
-                sx={{ width: '36px', height: '36px', marginRight: 2 }}
-                onClick={(event) => handlePrint(table)}
-              >
-                <IconPrinter size="1.4rem" />
-              </ActionIcon>
-            </Tooltip>
-          </Flex>
-        ),
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
     mantineToolbarAlertBannerProps: props.isError
       ? {
           color: 'error',
@@ -1319,12 +1119,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
       showSkeletons: props.isLoading,
       showAlertBanner: props.isError,
       pagination,
-<<<<<<< HEAD
       rowSelection,
-      showGlobalFilter: (!globalFilter || globalFilter !== '') && props.enableGlobalFilter
-=======
       showGlobalFilter: (!globalFilter || globalFilter !== '') && props.enableGlobalFilter,
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
     },
     mantineProgressProps: {
       striped: false,
@@ -1368,17 +1164,12 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 
   useArchbaseDataSourceListener<T, ID>({
     dataSource: props.dataSource,
-<<<<<<< HEAD
     listener: (event: DataSourceEvent<T>): void => {
-      if (event.type === DataSourceEventNames.dataChanged){
+      if (event.type === DataSourceEventNames.dataChanged) {
         setUpdateCounter((prevCounter) => prevCounter + 1);
       }
-    }
-  })
-=======
-    listener: (_event: DataSourceEvent<T>): void => {},
+    },
   });
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
 
   useEffect(() => {
     const sortResult = buildSortRSQL(sorting);
@@ -1540,13 +1331,7 @@ export function ArchbaseTableRowActions<T extends Object>({
           color="green"
           onClick={() => onEditRow && onEditRow(row)}
         >
-<<<<<<< HEAD
-          <IconEdit
-            color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]}
-          />
-=======
           <IconEdit color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
         </ActionIcon>
       </Tooltip>
       <Tooltip withinPortal withArrow position="right" label={t('Remove')}>
@@ -1555,13 +1340,7 @@ export function ArchbaseTableRowActions<T extends Object>({
           color="red"
           onClick={() => onRemoveRow && onRemoveRow(row)}
         >
-<<<<<<< HEAD
-          <IconTrash
-            color={theme.colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]}
-          />
-=======
           <IconTrash color={theme.colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
         </ActionIcon>
       </Tooltip>
       <Tooltip withinPortal withArrow position="right" label={t('View')}>
@@ -1570,13 +1349,7 @@ export function ArchbaseTableRowActions<T extends Object>({
           color="black"
           onClick={() => onViewRow && onViewRow(row)}
         >
-<<<<<<< HEAD
-          <IconEye
-            color={theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]}
-          />
-=======
           <IconEye color={theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]} />
->>>>>>> 8ed79723a823ff99b2059252744bd94f2e07f4a5
         </ActionIcon>
       </Tooltip>
     </Box>
