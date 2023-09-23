@@ -14,11 +14,10 @@ import {
   ArchbaseQueryFilterState,
   FilterOptions,
   getFields,
-  ArchbaseGlobalFilter,
-  Field,
 } from '../querybuilder';
 import { ArchbaseSpaceTemplate, ArchbaseSpaceTemplateOptions } from './ArchbaseSpaceTemplate';
 import { ArchbaseAction, ArchbaseActionButtons, ArchbaseActionButtonsOptions } from '../buttons';
+import { ArchbaseGlobalFilter, Field } from '../querybuilder';
 import { ArchbaseDebugOptions } from './ArchbaseTemplateCommonTypes';
 
 export interface UserActionsOptions {
