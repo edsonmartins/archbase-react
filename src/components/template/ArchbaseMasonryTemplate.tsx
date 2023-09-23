@@ -16,6 +16,7 @@ import {
 } from '../querybuilder';
 import { ArchbaseSpaceTemplate, ArchbaseSpaceTemplateOptions } from './ArchbaseSpaceTemplate';
 import { ArchbaseAction, ArchbaseActionButtons, ArchbaseActionButtonsOptions } from '../buttons';
+import { ArchbaseDebugOptions } from './ArchbaseTemplateCommonTypes';
 
 export interface UserActionsOptions {
   visible?: boolean;

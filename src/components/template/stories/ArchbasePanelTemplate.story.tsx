@@ -235,7 +235,7 @@ const ArchbasePanelTemplateExample = () => {
         debugOptions={{
           debugLayoutHotKey: 'ctrl+shift+S',
           debugObjectInspectorHotKey: 'ctrl+shift+D',
-          objectsToInspect: [],
+          objectsToInspect: [{ name: 'Pessoa', object: dsPessoas }],
         }}
         filterOptions={{
           activeFilterIndex: 0,
