@@ -232,7 +232,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   useEffect(()=>{
     if (activeIndexRef.current){
       activeIndexRef.current = false
-      if (dataSource) {
+      if (dataSource && !dataSource.isEmpty()) {
         const record = dataSource.gotoRecord(_activeIndex)
         if (onSelectListItem && record){
           onSelectListItem(_activeIndex, record)

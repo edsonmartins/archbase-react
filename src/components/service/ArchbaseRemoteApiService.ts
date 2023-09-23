@@ -122,7 +122,7 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
         headersTemp = {
           ...headers,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token.access_token}`
         }
       }
     } else {
