@@ -3,7 +3,7 @@ import useComponentSize from '@rehooks/component-size'
 import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react'
 import { t } from 'i18next'
 import { uniqueId } from 'lodash'
-import React, { CSSProperties, ReactNode, useMemo, useRef, useState } from 'react'
+import React, { CSSProperties, Fragment, ReactNode, useMemo, useRef, useState } from 'react'
 import { useArchbaseAppContext } from '../core'
 import type { ArchbaseDataSource } from '../datasource'
 import {
@@ -17,10 +17,12 @@ import {
   ArchbaseQueryFilter,
   ArchbaseQueryFilterDelegator,
   ArchbaseQueryFilterState,
-  FilterOptions
+  FilterOptions,
+  getFields
 } from '../querybuilder'
 import { ArchbaseSpaceTemplate, ArchbaseSpaceTemplateOptions } from './ArchbaseSpaceTemplate'
 import { ArchbaseAction, ArchbaseActionButtons, ArchbaseActionButtonsOptions } from '../buttons'
+import { ArchbaseGlobalFilter, Field } from '../querybuilder'
 
 export interface UserActionsOptions {
   visible?: boolean
@@ -61,6 +63,8 @@ export interface ArchbaseMasonryTemplateProps<T, ID> {
   title: string
   dataSource: ArchbaseDataSource<T, ID>
   dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined
+  onlyGlobalFilter?: boolean
+  globalFilterFieldNames?: string[]
   filterOptions: FilterOptions
   pageSize?: number
   filterFields: ReactNode | undefined
@@ -104,11 +108,13 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
   dataSource,
   //  dataSourceEdition,
   filterOptions,
+  globalFilterFieldNames,
   //pageSize,
   filterFields,
   innerRef,
   //isLoading = false,
   debug = false,
+  onlyGlobalFilter = true,
   isError = false,
   error = '',
   clearError = () => {},
@@ -138,6 +144,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
   const [idMasonry] = useState(id)
   const innerComponentRef = innerRef || useRef<any>()
   const filterRef = useRef<any>()
+  const [activePage, setPage] = useState(dataSource.getCurrentPage());
   const [activeIndexValue, setActiveIndexValue] = useState(
     activeIndex ? activeIndex : dataSource && dataSource.getTotalRecords() > 0 ? 0 : -1
   )
@@ -281,6 +288,61 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
     }
   }
 
+  // const getGlobalFilters = () : string[] => {
+  //   const fields : Field[] = getFields(<Fragment>{filterFields}</Fragment>);
+  //   const result : string[] = []
+  //   if (fields) {
+  //     fields.forEach((f)=>{
+  //       if (f.quickFilter){
+  //         result.push(f.name)
+  //       }
+  //     })
+  //   }
+  //   return result
+  // } 
+
+  const handleGlobalFilter = (buildedQuery : string) => {
+    if (dataSource){
+      const options = dataSource.getOptions()
+      options.filter = buildedQuery
+      options.currentPage = activePage
+      dataSource.refreshData(options)
+    }
+  }
+
+  const handlePageChange = (page: number) => {
+    if (dataSource){
+      const options = dataSource.getOptions()
+      options.currentPage = page
+      dataSource.refreshData(options)
+    }
+  }
+
+  const buildFilter = () : ReactNode => {
+    if (onlyGlobalFilter && globalFilterFieldNames) {
+      return <ArchbaseGlobalFilter searchableFields={globalFilterFieldNames} onFilter={handleGlobalFilter} minFilterValueLength={1} />
+    }    
+    return <ArchbaseQueryBuilder
+      id={filterOptions.componentName}
+      viewName={filterOptions.viewName}
+      apiVersion={filterOptions.apiVersion}
+      ref={filterRef}
+      variant={variant ?? appContext.variant}
+      expandedFilter={filterState.expandedFilter}
+      persistenceDelegator={filterPersistenceDelegator}
+      currentFilter={filterState.currentFilter}
+      activeFilterIndex={filterState.activeFilterIndex}
+      onSelectedFilter={handleSelectedFilter}
+      onFilterChanged={handleFilterChanged}
+      onSearchByFilter={handleSearchByFilter}
+      onToggleExpandedFilter={handleToggleExpandedFilter}
+      width={'660px'}
+      height="170px"
+    >
+      {filterFields}
+    </ArchbaseQueryBuilder>
+  }
+
   const defaultActionsButtonsOptions: ArchbaseActionButtonsOptions = {
     menuButtonColor: 'blue.5',
     menuPosition: 'left'
@@ -312,27 +374,9 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         <ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />
       }
       headerRight={
-        <ArchbaseQueryBuilder
-          id={filterOptions.componentName}
-          viewName={filterOptions.viewName}
-          apiVersion={filterOptions.apiVersion}
-          ref={filterRef}
-          variant={variant ?? appContext.variant}
-          expandedFilter={filterState.expandedFilter}
-          persistenceDelegator={filterPersistenceDelegator}
-          currentFilter={filterState.currentFilter}
-          activeFilterIndex={filterState.activeFilterIndex}
-          onSelectedFilter={handleSelectedFilter}
-          onFilterChanged={handleFilterChanged}
-          onSearchByFilter={handleSearchByFilter}
-          onToggleExpandedFilter={handleToggleExpandedFilter}
-          width={'660px'}
-          height="170px"
-        >
-          {filterFields}
-        </ArchbaseQueryBuilder>
+        buildFilter()
       }
-      footerRight={withPagination ? <Pagination total={10} /> : undefined}
+      footerRight={withPagination ? <Pagination total={dataSource.getTotalPages()} onChange={handlePageChange} /> : undefined}
     >
       <ArchbaseMasonryProvider
         value={{

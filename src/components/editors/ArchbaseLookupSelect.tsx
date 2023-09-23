@@ -11,6 +11,7 @@ import {
   useArchbaseDidUpdate,
   useArchbaseWillUnmount
 } from '../hooks'
+import { ArchbaseObjectHelper } from '../core/helper'
 import { SelectItem } from '@mantine/core'
 
 export interface ArchbaseLookupSelectProps<T, ID, O> extends ArchbaseSelectProps<T, ID, O> {
@@ -25,7 +26,7 @@ const getTextValue = (lookupDataFieldText: string | ((record: any) => string), r
   if (typeof lookupDataFieldText === 'function') {
     return lookupDataFieldText(record)
   } else {
-    return record[lookupDataFieldText]
+    return ArchbaseObjectHelper.getNestedProperty(record,lookupDataFieldText)
   }
 }
 
@@ -37,23 +38,25 @@ function rebuildOptions<_T, ID, O>(
   let options: SelectItem[] = []
   if (lookupDataSource && lookupDataSource.getTotalRecords() > 0) {
     lookupDataSource.browseRecords().map((record: any) => {
-      if (!record.hasOwnProperty(lookupDataFieldId) || !record[lookupDataFieldId]) {
-        throw new ArchbaseError(
-          'Foi encontrado um registro sem ID no dataSource passado para o Select.'
-        )
-      }
-      if (typeof lookupDataFieldText !== 'function') {
-        if (!record.hasOwnProperty(lookupDataFieldText) || !record[lookupDataFieldText]) {
+      if (lookupDataFieldId && !lookupDataFieldId.includes('.')){
+        if (!record.hasOwnProperty(lookupDataFieldId) || !record[lookupDataFieldId]) {
           throw new ArchbaseError(
-            'Foi encontrado um registro sem o texto no dataSource passado para a Select.'
+            'Foi encontrado um registro sem ID no dataSource passado para o Select.'
           )
+        }
+        if (typeof lookupDataFieldText !== 'function') {
+          if (!record.hasOwnProperty(lookupDataFieldText) || !record[lookupDataFieldText]) {
+            throw new ArchbaseError(
+              'Foi encontrado um registro sem o texto no dataSource passado para a Select.'
+            )
+          }
         }
       }
 
       options.push({
         label: record.label ? record.label : getTextValue(lookupDataFieldText, record),
         disabled: record.disabled,
-        value: record[lookupDataFieldId],
+        value: ArchbaseObjectHelper.getNestedProperty(record,lookupDataFieldId),
         origin: record
       })
     })
@@ -109,7 +112,7 @@ export function ArchbaseLookupSelect<T, ID, O>({
         if (typeof lookupDataFieldText === 'function') {
           result = lookupDataFieldText(dataSource.getCurrentRecord())
         } else {
-          result = result[lookupDataFieldId]
+          result = ArchbaseObjectHelper.getNestedProperty(result,lookupDataFieldId)
         }
       } else if (!result) {
         result = ''

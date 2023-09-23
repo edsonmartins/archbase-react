@@ -27,9 +27,10 @@ export class ArchbaseRemoteDataSource<T, ID>
   constructor(
     service: ArchbaseRemoteApiService<T, ID>,
     name: string,
-    options: DataSourceOptions<T>
+    options: DataSourceOptions<T>,
+    label?: string
   ) {
-    super(name, options)
+    super(name, options, label)
     this.service = service
   }
 
@@ -60,7 +61,7 @@ export class ArchbaseRemoteDataSource<T, ID>
         if (!errors[0].fieldName) {
           throw new ArchbaseDataSourceError(errors[0].errorMessage)
         } else {
-          const msg = i18next.t('archbase:errorSavingRecord', { dataSourceName: this.name })
+          const msg = i18next.t('archbase:errorSavingRecord', { dataSourceName: this.label })
           throw new ArchbaseDataSourceError(msg)
         }
       }
@@ -96,7 +97,22 @@ export class ArchbaseRemoteDataSource<T, ID>
       if (callback) {
         callback()
       }
-    } catch (error) {
+    } catch (error:any) {
+      if (error.response && error.response.data && error.response.data.apierror) {
+        if (error.response.data.apierror.subErrors) {
+          error.response.data.apierror.subErrors.forEach((element: any) => {
+            if (element.field){
+              this.emitter.emit("onFieldError",element.field, element.message)
+              this.emit({
+                type: DataSourceEventNames.onFieldError,
+                fieldName: element.field,
+                error: element.message,
+                originalError: element.message
+              })
+            }
+          })
+        }
+      }
       const userError = processErrorMessage(error)
       this.emitter.emit('onError', userError, error)
       this.emit({
@@ -105,8 +121,9 @@ export class ArchbaseRemoteDataSource<T, ID>
         originalError: error
       })
       if (callback) {
-        callback(error)
+        callback(userError)
       }
+      throw new ArchbaseDataSourceError(userError)
     }
 
     return this.currentRecord!
@@ -164,6 +181,9 @@ export class ArchbaseRemoteDataSource<T, ID>
         this.currentRecord = undefined
         this.currentRecordIndex = -1
       } else {
+        if (this.currentRecordIndex>this.filteredRecords.length-1){
+          this.currentRecordIndex-- 
+        }
         this.currentRecord = this.filteredRecords[this.currentRecordIndex]
       }
       this.editing = false
@@ -183,7 +203,8 @@ export class ArchbaseRemoteDataSource<T, ID>
       }
 
       return deletedRecord
-    } catch (error) {
+    } catch (error : any) {     
+
       const userError = processErrorMessage(error)
       this.emitter.emit('onError', userError, error)
       this.emit({
@@ -192,8 +213,9 @@ export class ArchbaseRemoteDataSource<T, ID>
         originalError: error
       })
       if (callback) {
-        callback(error)
+        callback(userError)
       }
+      throw new ArchbaseDataSourceError(userError)
     }
   }
 

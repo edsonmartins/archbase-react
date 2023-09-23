@@ -15,6 +15,7 @@ import { ArchbaseStore } from './useArchbaseStore'
 
 export type UseArchbaseRemoteDataSourceProps<T, ID> = {
   name: string
+  label?: string
   service: ArchbaseRemoteApiService<T, ID>
   store?: ArchbaseStore
   filter?: string
@@ -56,6 +57,7 @@ type UseArchbaseRemoteDataSourceState<T, ID> = {
   isError: boolean
   error: any
   name: string
+  label?: string
   filter?: string
   sort?: string[]
   id?: ID
@@ -68,6 +70,7 @@ export function useArchbaseRemoteDataSource<T, ID>(
 ): UseArchbaseRemoteDataSourceReturnType<T, ID> {
   const {
     name,
+    label,
     service,
     filter,
     sort,
@@ -110,7 +113,7 @@ export function useArchbaseRemoteDataSource<T, ID>(
       totalPages: 0,
       pageSize,
       validator
-    })
+    }, label)
   }
   const getCurrentPage = () => {
     if (store && store.existsValue(name)) {
@@ -127,6 +130,7 @@ export function useArchbaseRemoteDataSource<T, ID>(
     isError: false,
     error: '',
     name,
+    label,
     filter,
     sort,
     id,

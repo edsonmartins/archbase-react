@@ -33,6 +33,7 @@ export interface ArchbaseFormTemplateProps<T, ID> {
   onAfterSave?: (savedEntity : T)=>void
   onBeforeCancel?: ()=>void
   onAfterCancel?: ()=>void;
+  onError?: (error: string)=>void;
 }
 
 export function ArchbaseFormTemplate<T extends object, ID>({
@@ -55,7 +56,8 @@ export function ArchbaseFormTemplate<T extends object, ID>({
   onBeforeSave,
   onAfterSave,
   onBeforeCancel,
-  onAfterCancel
+  onAfterCancel,
+  onError
 }: ArchbaseFormTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>()
@@ -72,18 +74,24 @@ export function ArchbaseFormTemplate<T extends object, ID>({
     }
   })
 
-  const handleSave = (entity) =>{
+  const handleSave = async (entity) =>{
     try {
       if (onSave){
           onSave(entity);
       } else {
         onBeforeSave && onBeforeSave(entity)
         if (!dataSource.isBrowsing()){
-          dataSource.save()
-        }
-        onAfterSave && onAfterSave(entity)
+          dataSource.save().then(()=>{
+            onAfterSave && onAfterSave(entity)
+          }).catch((e)=>{
+            onError && onError(processErrorMessage(e))
+            setIsInternalError(true)
+            setInternalError(processErrorMessage(e))
+          })
+        }        
       }
     } catch (e){
+      onError && onError(processErrorMessage(e))
       setIsInternalError(true)
       setInternalError(processErrorMessage(e))
     }
@@ -101,6 +109,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
         onAfterCancel && onAfterCancel()
       }
     } catch (e){
+      onError && onError(processErrorMessage(e))
       setIsInternalError(true)
       setInternalError(processErrorMessage(e))
     }

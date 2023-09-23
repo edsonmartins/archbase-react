@@ -1,4 +1,5 @@
 import {
+  Input,
   Loader,
   MantineNumberSize,
   MantineSize,
@@ -6,11 +7,7 @@ import {
   ScrollAreaProps,
   Select
 } from '@mantine/core'
-import {
-  ArchbaseDataSource,
-  DataSourceEvent,
-  DataSourceEventNames
-} from '../datasource'
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
 import React, {
   CSSProperties,
   FocusEventHandler,
@@ -23,11 +20,7 @@ import React, {
   useState
 } from 'react'
 import { uniqueId } from 'lodash'
-import {
-  useArchbaseDidMount,
-  useArchbaseDidUpdate,
-  useArchbaseWillUnmount
-} from '../hooks'
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks'
 import { useDebouncedState, useDebouncedValue } from '@mantine/hooks'
 import ArchbaseAsyncSelectContext, {
   ArchbaseAsyncSelectContextValue,
@@ -122,7 +115,7 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
   /** Referência para o componente interno */
   innerRef?: React.RefObject<HTMLInputElement> | undefined
   /** Chamado sempre que o valor da pesquisa muda */
-  onSearchChange?(query: string): void;
+  onSearchChange?(query: string): void
 }
 function buildOptions<O>(
   initialOptions: O[],
@@ -133,7 +126,7 @@ function buildOptions<O>(
   if (!initialOptions) {
     return []
   }
-  if (getOptionImage){
+  if (getOptionImage) {
     return initialOptions.map((item: O) => {
       return {
         label: getOptionLabel(item),
@@ -201,6 +194,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
     buildOptions<O>(initialOptions.options, getOptionLabel, getOptionValue, getOptionImage)
   )
   const [selectedValue, setSelectedValue] = useState<any>(value)
+  const [updateCounter, setUpdateCounter] = useState(0);
   const [queryValue, setQueryValue] = useState<string>('')
   const [debouncedQueryValue] = useDebouncedValue(queryValue, debounceTime)
   const [loading, setLoading] = useState(false)
@@ -209,8 +203,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   const [_isLastPage, setIsLastPage] = useState(currentPage === totalPages - 1)
   const [originData, setOriginData] = useState(initialOptions.options)
   const innerComponentRef = innerRef || useRef<any>()
-  const [internalError, setInternalError] = useState<string|undefined>(error);
-
+  const [internalError, setInternalError] = useState<string | undefined>(error)
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = value
@@ -239,7 +232,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         loadDataSourceFieldValue()
       }
 
-      if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
+      if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
         setInternalError(event.error)
       }
     }
@@ -261,10 +254,14 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   })
 
   useEffect(() => {
-    if (onSearchChange){
+    if (onSearchChange) {
       onSearchChange(debouncedQueryValue)
     }
-    if (debouncedQueryValue && debouncedQueryValue.length >= minCharsToSearch && debouncedQueryValue != getOptionLabel(selectedValue)) {
+    if (
+      debouncedQueryValue &&
+      debouncedQueryValue.length >= minCharsToSearch &&
+      debouncedQueryValue != getOptionLabel(selectedValue)
+    ) {
       setLoading(true)
       loadOptions(0, false)
     }
@@ -276,9 +273,9 @@ export function ArchbaseAsyncSelect<T, ID, O>({
     loadDataSourceFieldValue()
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     setInternalError(undefined)
-  },[value,selectedValue,debouncedQueryValue])
+  }, [value, selectedValue, debouncedQueryValue])
 
   const handleChange = (value) => {
     setSelectedValue((_prev) => value)
@@ -310,14 +307,18 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   }
 
   const handleDropdownScrollEnded = () => {
-    if (debouncedQueryValue && debouncedQueryValue.length >= minCharsToSearch && currentPage < totalPages - 1) {
+    if (
+      debouncedQueryValue &&
+      debouncedQueryValue.length >= minCharsToSearch &&
+      currentPage < totalPages - 1
+    ) {
       setLoading(true)
       loadOptions(currentPage + 1, true)
     }
   }
 
   const handleSearchChange = (query: string) => {
-    setQueryValue(query)    
+    setQueryValue(query)
   }
 
   const loadOptions = async (page: number, incremental: boolean = false) => {
@@ -336,6 +337,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         setCurrentPage(data.page)
         setTotalPages(data.totalPages)
         setIsLastPage(data.page === data.totalPages - 1)
+        setUpdateCounter((prevCounter) => prevCounter + 1);
       },
       (err) => {
         setLoading(false)
@@ -359,48 +361,51 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         handleDropdownScrollEnded: handleDropdownScrollEnded
       }}
     >
-      <Select
-        allowDeselect={allowDeselect}
-        clearable={clearable}
-        disabled={disabled}
-        description={description}
-        placeholder={placeholder}
-        searchable={searchable}
-        maxDropdownHeight={280}
-        dropdownComponent={CustomSelectScrollArea}
-        ref={innerComponentRef}
+      <Input.Wrapper
         label={label}
         error={internalError}
-        data={options}
-        size={size!}
-        style={{
-          width,
-          ...style
-        }}
-        icon={icon}
-        iconWidth={iconWidth}
-        readOnly={isReadOnly()}
-        onChange={handleChange}
-        onBlur={handleOnFocusExit}
-        onFocus={handleOnFocusEnter}
-        value={selectedValue}
-        onSearchChange={handleSearchChange}
-        defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
-        searchValue={selectedValue ? getOptionLabel(selectedValue) : queryValue}
-        required={required}
-        filter={filter}
-        initiallyOpened={initiallyOpened}
-        itemComponent={itemComponent}
-        onDropdownOpen={onDropdownOpen}
-        onDropdownClose={onDropdownClose}
-        limit={limit}
-        nothingFound={nothingFound}
-        zIndex={zIndex}
-        dropdownPosition={dropdownPosition}
-        rightSection={loading ? <Loader size="xs" /> : null}
-        rightSectionWidth={30}
-        withinPortal
-      />
+        description={description}
+        placeholder={placeholder}
+      >
+        <Select
+          allowDeselect={allowDeselect}
+          clearable={clearable}
+          disabled={disabled}
+          searchable={searchable}
+          maxDropdownHeight={280}
+          dropdownComponent={CustomSelectScrollArea}
+          ref={innerComponentRef}
+          data={options}
+          size={size!}
+          style={{
+            width,
+            ...style
+          }}
+          icon={icon}
+          iconWidth={iconWidth}
+          readOnly={isReadOnly()}
+          onChange={handleChange}
+          onBlur={handleOnFocusExit}
+          onFocus={handleOnFocusEnter}
+          value={selectedValue}
+          onSearchChange={handleSearchChange}
+          defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
+          searchValue={selectedValue ? getOptionLabel(selectedValue) : queryValue}
+          required={required}
+          filter={filter}
+          initiallyOpened={initiallyOpened}
+          itemComponent={itemComponent}
+          onDropdownOpen={onDropdownOpen}
+          onDropdownClose={onDropdownClose}
+          limit={limit}
+          nothingFound={nothingFound}
+          zIndex={zIndex}
+          dropdownPosition={dropdownPosition}
+          rightSection={loading ? <Loader size="xs" /> : null}
+          rightSectionWidth={30}
+          withinPortal
+        />
+      </Input.Wrapper>
     </ArchbaseAsyncSelectProvider>
   )
 }
