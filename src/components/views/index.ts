@@ -1,3 +1,4 @@
-export { ArchbaseJsonView } from './jsonview/index'
-export { ArchbaseObjectInspector } from './objectinspector'
-export {ArchbaseJsonPathPicker} from "./jsonpathpicker"
+export { ArchbaseJsonView } from './jsonview/index';
+export { ArchbaseJsonPathPicker } from './jsonpathpicker';
+export { ArchbaseObjectInspector } from './objectinspector';
+export type { ArchbaseObjectToInspect } from './objectinspector';

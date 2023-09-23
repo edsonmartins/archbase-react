@@ -1,4 +1,4 @@
-import React, { CSSProperties, Fragment, ReactNode, useMemo, useRef, useState } from 'react';
+import React, { CSSProperties, Fragment, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import type { ArchbaseDataSource } from '../datasource';
 import {
   ArchbaseQueryBuilder,
@@ -34,6 +34,9 @@ import {
   px,
 } from '@mantine/core';
 import { useArchbaseAppContext } from '../core';
+import { ArchbaseObjectInspector } from '@components/views';
+import { useHotkeys, useUncontrolled } from '@mantine/hooks';
+import { ArchbaseDebugOptions } from './ArchbaseTemplateCommonTypes';
 
 interface ArchbaseBreakpointsColSpans {
   /** Col span em (min-width: theme.breakpoints.xs) */
@@ -92,12 +95,14 @@ export interface ArchbaseSpaceTemplateProps<T, ID> {
   children?: React.ReactNode;
   radius?: MantineNumberSize;
   debug?: boolean;
+  defaultDebug?: boolean;
   isError?: boolean;
   error?: string | undefined;
   clearError?: () => void;
   /** Opções de personalização */
   options?: ArchbaseSpaceTemplateOptions;
   style?: CSSProperties;
+  debugOptions?: ArchbaseDebugOptions;
 }
 
 function buildHeader(
@@ -311,7 +316,8 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
   withBorder = true,
   children,
   radius,
-  debug = false,
+  debug,
+  defaultDebug,
   headerLeft,
   headerMiddle,
   headerRight,
@@ -321,7 +327,14 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
   variant,
   options = {},
   style,
+  debugOptions,
 }: ArchbaseSpaceTemplateProps<T, ID>) {
+  const [_debug, setDebug] = useUncontrolled({
+    value: debug,
+    defaultValue: defaultDebug,
+    finalValue: false,
+  });
+  useHotkeys([[debugOptions && debugOptions.debugLayoutHotKey, () => setDebug(!_debug)]]);
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>();
   const headerRef = useRef<any>();
@@ -334,48 +347,68 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
     width: innerComponentSize.width - headerSize.width - footerSize.width,
   };
 
+  const debugRef = useRef<boolean>(defaultDebug);
+
+  useEffect(() => {
+    if (defaultDebug !== debugRef.current) {
+      setDebug(defaultDebug);
+      debugRef.current = defaultDebug;
+    }
+  }, [defaultDebug, setDebug]);
+
   return (
-    <Paper
-      ref={innerComponentRef}
-      withBorder={withBorder}
-      radius={radius}
-      style={{ width: width, height: height, padding: 4, ...style }}
-    >
-      <ArchbaseSpaceFixed height={'100%'}>
-        <ArchbaseSpaceTop size={headerSize.height}>
-          <div ref={headerRef}>{buildHeader(options, headerLeft, headerRight, debug)}</div>
-        </ArchbaseSpaceTop>
-        <ArchbaseSpaceFill>
-          <ScrollArea h={contentSize.height} sx={{ border: debug ? '1px dashed' : '', padding: 'calc(0.625rem / 2)' }}>
-            {children ? (
-              <Fragment>
-                {isError ? (
-                  <ArchbaseAlert
-                    autoClose={20000}
-                    withCloseButton={true}
-                    withBorder={true}
-                    icon={<IconBug size="1.4rem" />}
-                    title={t('WARNING')}
-                    titleColor="rgb(250, 82, 82)"
-                    variant={variant ?? appContext.variant}
-                    onClose={() => clearError && clearError()}
-                  >
-                    <span>{error}</span>
-                  </ArchbaseAlert>
-                ) : null}
-                {children}
-              </Fragment>
-            ) : debug ? (
-              <Flex h={contentSize.height + 80} justify="center" align="center" wrap="wrap">
-                <Text size="lg">INSIRA O CONTEÚDO DO PAINEL AQUI.</Text>
-              </Flex>
-            ) : null}
-          </ScrollArea>
-        </ArchbaseSpaceFill>
-        <ArchbaseSpaceBottom size={footerSize.height}>
-          <div ref={footerRef}>{buildFooter(options, footerLeft, footerRight, debug)}</div>
-        </ArchbaseSpaceBottom>
-      </ArchbaseSpaceFixed>
-    </Paper>
+    <>
+      <Paper
+        ref={innerComponentRef}
+        withBorder={withBorder}
+        radius={radius}
+        style={{ width: width, height: height, padding: 4, ...style }}
+      >
+        <ArchbaseSpaceFixed height={'100%'}>
+          <ArchbaseSpaceTop size={headerSize.height}>
+            <div ref={headerRef}>{buildHeader(options, headerLeft, headerRight, _debug)}</div>
+          </ArchbaseSpaceTop>
+          <ArchbaseSpaceFill>
+            <ScrollArea
+              h={contentSize.height}
+              sx={{ border: _debug ? '1px dashed' : '', padding: 'calc(0.625rem / 2)' }}
+            >
+              {children ? (
+                <Fragment>
+                  {isError && (
+                    <ArchbaseAlert
+                      autoClose={20000}
+                      withCloseButton={true}
+                      withBorder={true}
+                      icon={<IconBug size="1.4rem" />}
+                      title={t('WARNING')}
+                      titleColor="rgb(250, 82, 82)"
+                      variant={variant ?? appContext.variant}
+                      onClose={() => clearError && clearError()}
+                    >
+                      <span>{error}</span>
+                    </ArchbaseAlert>
+                  )}
+                  {children}
+                </Fragment>
+              ) : (
+                _debug && (
+                  <Flex h={contentSize.height + 80} justify="center" align="center" wrap="wrap">
+                    <Text size="lg">INSIRA O CONTEÚDO DO PAINEL AQUI.</Text>
+                  </Flex>
+                )
+              )}
+            </ScrollArea>
+          </ArchbaseSpaceFill>
+          <ArchbaseSpaceBottom size={footerSize.height}>
+            <div ref={footerRef}>{buildFooter(options, footerLeft, footerRight, _debug)}</div>
+          </ArchbaseSpaceBottom>
+        </ArchbaseSpaceFixed>
+      </Paper>
+      <ArchbaseObjectInspector
+        debugObjectInspectorHotKey={debugOptions && debugOptions.debugObjectInspectorHotKey}
+        objectsToInspect={debugOptions && debugOptions.objectsToInspect}
+      />
+    </>
   );
 }

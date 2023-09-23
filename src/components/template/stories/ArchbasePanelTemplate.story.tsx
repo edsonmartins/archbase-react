@@ -223,6 +223,7 @@ const ArchbasePanelTemplateExample = () => {
       <ArchbasePanelTemplate
         title={'Pessoas'}
         dataSource={dsPessoas}
+        withPagination={true}
         pageSize={10}
         isLoading={isLoading}
         error={error}
@@ -231,6 +232,11 @@ const ArchbasePanelTemplateExample = () => {
         width={'100%'}
         height={'100%'}
         debug={debug}
+        debugOptions={{
+          debugLayoutHotKey: 'ctrl+shift+S',
+          debugObjectInspectorHotKey: 'ctrl+shift+D',
+          objectsToInspect: [],
+        }}
         filterOptions={{
           activeFilterIndex: 0,
           enabledAdvancedFilter: false,

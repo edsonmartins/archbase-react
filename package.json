@@ -103,6 +103,7 @@
     "react-grid-system": "^8.1.9",
     "react-i18next": "^13.0.2",
     "react-imask": "^7.1.3",
+    "react-inspector": "^6.0.2",
     "react-intersection-observer": "^9.5.2",
     "react-konva": "^18.2.10",
     "react-masonry": "^1.0.7",

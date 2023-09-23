@@ -17,6 +17,7 @@ import {
   FilterOptions,
 } from '../querybuilder';
 import { ArchbaseSpaceTemplate, ArchbaseSpaceTemplateOptions } from './ArchbaseSpaceTemplate';
+import { ArchbaseDebugOptions } from './ArchbaseTemplateCommonTypes';
 
 export interface UserActionsOptions {
   visible?: boolean;
@@ -80,6 +81,7 @@ export interface ArchbasePanelTemplateProps<T, ID> {
   actionsButtonsOptions?: ArchbaseActionButtonsOptions;
   spaceOptions?: ArchbaseSpaceTemplateOptions;
   style?: CSSProperties;
+  debugOptions?: ArchbaseDebugOptions;
 }
 
 export function ArchbasePanelTemplate<T extends object, ID>({
@@ -107,6 +109,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
   actionsButtonsOptions,
   spaceOptions,
   style,
+  debugOptions,
 }: ArchbasePanelTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>();
@@ -214,7 +217,8 @@ export function ArchbasePanelTemplate<T extends object, ID>({
       error={error}
       clearError={clearError}
       title={title}
-      debug={debug}
+      defaultDebug={debug}
+      debugOptions={debugOptions}
       style={style}
       options={_spaceTemplateOptions}
       headerLeft={<ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />}
@@ -239,7 +243,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
           {filterFields}
         </ArchbaseQueryBuilder>
       }
-      footerRight={withPagination ? <Pagination total={10} /> : undefined}
+      footerRight={withPagination && <Pagination total={10} />}
     >
       {children}
     </ArchbaseSpaceTemplate>
