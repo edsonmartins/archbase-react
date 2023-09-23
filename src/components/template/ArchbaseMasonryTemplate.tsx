@@ -24,22 +24,23 @@ import { ArchbaseSpaceTemplate, ArchbaseSpaceTemplateOptions } from './ArchbaseS
 import { ArchbaseAction, ArchbaseActionButtons, ArchbaseActionButtonsOptions } from '../buttons'
 import { ArchbaseGlobalFilter, Field } from '../querybuilder'
 
+
 export interface UserActionsOptions {
-  visible?: boolean
-  labelAdd?: string | undefined | null
-  labelEdit?: string | undefined | null
-  labelRemove?: string | undefined | null
-  labelView?: string | undefined | null
-  allowAdd?: boolean
-  allowEdit?: boolean
-  allowView?: boolean
-  allowRemove?: boolean
-  onAddExecute?: () => void
-  onEditExecute?: () => void
-  onRemoveExecute?: () => void
-  onViewExecute?: () => void
-  customUserActions?: ArchbaseAction[]
-  positionCustomUserActions?: 'before' | 'after'
+  visible?: boolean;
+  labelAdd?: string | undefined | null;
+  labelEdit?: string | undefined | null;
+  labelRemove?: string | undefined | null;
+  labelView?: string | undefined | null;
+  allowAdd?: boolean;
+  allowEdit?: boolean;
+  allowView?: boolean;
+  allowRemove?: boolean;
+  onAddExecute?: () => void;
+  onEditExecute?: () => void;
+  onRemoveExecute?: () => void;
+  onViewExecute?: () => void;
+  customUserActions?: ArchbaseAction[];
+  positionCustomUserActions?: 'before' | 'after';
 }
 
 const defaultUserActions: UserActionsOptions = {
@@ -48,15 +49,15 @@ const defaultUserActions: UserActionsOptions = {
   allowEdit: true,
   allowView: true,
   allowRemove: true,
-  positionCustomUserActions: 'after'
-}
+  positionCustomUserActions: 'after',
+};
 
 export interface UserRowActionsOptions<T> {
-  actions?: any
-  onAddRow?: (row: T) => void
-  onEditRow?: (row: T) => void
-  onRemoveRow?: (row: T) => void
-  onViewRow?: (row: T) => void
+  actions?: any;
+  onAddRow?: (row: T) => void;
+  onEditRow?: (row: T) => void;
+  onRemoveRow?: (row: T) => void;
+  onViewRow?: (row: T) => void;
 }
 
 export interface ArchbaseMasonryTemplateProps<T, ID> {
@@ -72,35 +73,36 @@ export interface ArchbaseMasonryTemplateProps<T, ID> {
   userActions?: UserActionsOptions
   variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement> | undefined
-  isLoading?: boolean
-  debug?: boolean
-  isError?: boolean
-  error?: string | undefined
-  clearError?: () => void
-  width?: number | string | undefined
-  height?: number | string | undefined
-  withBorder?: boolean
-  withPagination?: boolean
-  radius?: MantineNumberSize
-  columnsCountBreakPoints?: Record<number, number>
-  columnsCount?: number
-  gutter?: string
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
+  isLoading?: boolean;
+  debug?: boolean;
+  isError?: boolean;
+  error?: string | undefined;
+  clearError?: () => void;
+  width?: number | string | undefined;
+  height?: number | string | undefined;
+  withBorder?: boolean;
+  withPagination?: boolean;
+  radius?: MantineNumberSize;
+  columnsCountBreakPoints?: Record<number, number>;
+  columnsCount?: number;
+  gutter?: string;
   /** Definições do componente customizado a ser renderizado para um Item da lista */
-  component?: ComponentDefinition
-  id?: string
-  activeIndex?: number
+  component?: ComponentDefinition;
+  id?: string;
+  activeIndex?: number;
   /** Cor de fundo do item ativo */
-  activeBackgroundColor?: string
+  activeBackgroundColor?: string;
   /** Cor do item ativo */
-  activeColor?: string
+  activeColor?: string;
   /** Evento gerado quando o mouse está sobre um item */
-  onItemEnter?: (event: React.MouseEvent, data: any) => void
+  onItemEnter?: (event: React.MouseEvent, data: any) => void;
   /** Evento gerado quando o mouse sai de um item */
-  onItemLeave?: (event: React.MouseEvent, data: any) => void
-  style?: CSSProperties
-  actionsButtonsOptions?: ArchbaseActionButtonsOptions
-  spaceOptions?: ArchbaseSpaceTemplateOptions
+  onItemLeave?: (event: React.MouseEvent, data: any) => void;
+  style?: CSSProperties;
+  actionsButtonsOptions?: ArchbaseActionButtonsOptions;
+  spaceOptions?: ArchbaseSpaceTemplateOptions;
+  debugOptions?: ArchbaseDebugOptions;
 }
 
 export function ArchbaseMasonryTemplate<T extends object, ID>({
@@ -138,7 +140,8 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
   actionsButtonsOptions,
   spaceOptions,
   variant,
-  id = uniqueId('masonry')
+  id = uniqueId('masonry'),
+  debugOptions,
 }: ArchbaseMasonryTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext()
   const [idMasonry] = useState(id)
@@ -146,17 +149,17 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
   const filterRef = useRef<any>()
   const [activePage, setPage] = useState(dataSource.getCurrentPage());
   const [activeIndexValue, setActiveIndexValue] = useState(
-    activeIndex ? activeIndex : dataSource && dataSource.getTotalRecords() > 0 ? 0 : -1
-  )
-  let size = useComponentSize(innerComponentRef)
+    activeIndex ? activeIndex : dataSource && dataSource.getTotalRecords() > 0 ? 0 : -1,
+  );
+  let size = useComponentSize(innerComponentRef);
   const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
     activeFilterIndex: -1,
-    expandedFilter: false
-  })
+    expandedFilter: false,
+  });
 
   const userActionsBuilded: ArchbaseAction[] = useMemo(() => {
-    const userActionsEnd = { ...defaultUserActions, ...userActions }
-    const defaultActions: ArchbaseAction[] = []
+    const userActionsEnd = { ...defaultUserActions, ...userActions };
+    const defaultActions: ArchbaseAction[] = [];
     if (userActionsEnd.allowAdd) {
       defaultActions.push({
         id: 'actAdd',
@@ -165,12 +168,12 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         label: userActionsEnd.labelAdd ? userActionsEnd.labelAdd : t('archbase:New'),
         executeAction: () => {
           if (userActionsEnd && userActionsEnd.onAddExecute) {
-            userActionsEnd.onAddExecute()
+            userActionsEnd.onAddExecute();
           }
         },
         enabled: true,
-        hint:`${t('archbase:Clique para criar um novo registro')}`
-      })
+        hint: `${t('archbase:Clique para criar um novo registro')}`,
+      });
     }
     if (userActionsEnd.allowEdit) {
       defaultActions.push({
@@ -180,12 +183,12 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         label: userActionsEnd.labelEdit ? userActionsEnd.labelEdit : t('archbase:Edit'),
         executeAction: () => {
           if (userActionsEnd && userActionsEnd.onEditExecute) {
-            userActionsEnd.onEditExecute()
+            userActionsEnd.onEditExecute();
           }
         },
         enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-        hint: `${t('archbase:Clique para editar o registro')}`
-      })
+        hint: `${t('archbase:Clique para editar o registro')}`,
+      });
     }
     if (userActionsEnd.allowRemove) {
       defaultActions.push({
@@ -195,12 +198,12 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         label: userActionsEnd.labelRemove ? userActionsEnd.labelRemove : t('archbase:Remove'),
         executeAction: () => {
           if (userActionsEnd && userActionsEnd.onRemoveExecute) {
-            userActionsEnd.onRemoveExecute()
+            userActionsEnd.onRemoveExecute();
           }
         },
         enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-        hint: `${t('archbase:Clique para remover o registro')}`
-      })
+        hint: `${t('archbase:Clique para remover o registro')}`,
+      });
     }
 
     if (userActionsEnd.allowView) {
@@ -211,41 +214,41 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         label: userActionsEnd.labelView ? userActionsEnd.labelView : t('archbase:View'),
         executeAction: () => {
           if (userActionsEnd && userActionsEnd.onViewExecute) {
-              userActionsEnd.onViewExecute()
+            userActionsEnd.onViewExecute();
           }
         },
         enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-        hint: `${t('archbase:Clique para visualizar o registro')}`
-      })
+        hint: `${t('archbase:Clique para visualizar o registro')}`,
+      });
     }
 
     if (userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'before') {
-      return [...userActionsEnd.customUserActions, ...defaultActions]
+      return [...userActionsEnd.customUserActions, ...defaultActions];
     }
 
     if (userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'after') {
-      return [...defaultActions, ...userActionsEnd.customUserActions]
+      return [...defaultActions, ...userActionsEnd.customUserActions];
     }
 
-    return defaultActions
-  }, [userActions, dataSource])
+    return defaultActions;
+  }, [userActions, dataSource]);
 
   const cards: ReactNode[] = useMemo(() => {
     if (component) {
-      let DynamicComponent = component.type
-      let compProps = {}
+      let DynamicComponent = component.type;
+      let compProps = {};
       if (component.props) {
-        compProps = component.props
+        compProps = component.props;
       }
 
       return dataSource.browseRecords().map((record: any, index: number) => {
-        const newKey = `${idMasonry}_${index}`
-        const newId = `${idMasonry}_${index}`
-        let active = record.active === undefined ? false : record.active
+        const newKey = `${idMasonry}_${index}`;
+        const newId = `${idMasonry}_${index}`;
+        let active = record.active === undefined ? false : record.active;
         if (activeIndexValue >= 0) {
-          active = false
+          active = false;
           if (activeIndexValue === index) {
-            active = true
+            active = true;
           }
         }
 
@@ -260,33 +263,33 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
             disabled={record.disabled}
             {...compProps}
           />
-        )
-      })
+        );
+      });
     }
 
-    return []
-  }, [activeIndexValue, component, idMasonry, dataSource])
+    return [];
+  }, [activeIndexValue, component, idMasonry, dataSource]);
 
   const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
-    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex })
-  }
+    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
+  };
 
   const handleToggleExpandedFilter = (expanded: boolean) => {
-    setFilterState({ ...filterState, expandedFilter: expanded })
-  }
+    setFilterState({ ...filterState, expandedFilter: expanded });
+  };
 
   const handleSelectedFilter = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
-    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex })
-  }
+    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
+  };
 
-  const handleSearchByFilter = () => {}
+  const handleSearchByFilter = () => {};
 
   const handleSelectItem = (index: number, data: T) => {
-    setActiveIndexValue(index)
+    setActiveIndexValue(index);
     if (dataSource) {
-      dataSource.gotoRecordByData(data)
+      dataSource.gotoRecordByData(data);
     }
-  }
+  };
 
   // const getGlobalFilters = () : string[] => {
   //   const fields : Field[] = getFields(<Fragment>{filterFields}</Fragment>);
@@ -345,16 +348,16 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 
   const defaultActionsButtonsOptions: ArchbaseActionButtonsOptions = {
     menuButtonColor: 'blue.5',
-    menuPosition: 'left'
-  }
+    menuPosition: 'left',
+  };
 
   const defaultSpaceTemplateOptions: ArchbaseSpaceTemplateOptions = {
     headerFlexGrow: 'left',
-    footerGridColumns: {}
-  }
+    footerGridColumns: {},
+  };
 
-  const _actionsButtonsOptions = { ...defaultActionsButtonsOptions, ...actionsButtonsOptions }
-  const _spaceTemplateOptions = { ...defaultSpaceTemplateOptions, ...spaceOptions }
+  const _actionsButtonsOptions = { ...defaultActionsButtonsOptions, ...actionsButtonsOptions };
+  const _spaceTemplateOptions = { ...defaultSpaceTemplateOptions, ...spaceOptions };
 
   return (
     <ArchbaseSpaceTemplate
@@ -367,12 +370,11 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
       error={error}
       clearError={clearError}
       title={title}
-      debug={debug}
+      defaultDebug={debug}
+      debugOptions={debugOptions}
       style={style}
       options={_spaceTemplateOptions}
-      headerLeft={
-        <ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />
-      }
+      headerLeft={<ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />}
       headerRight={
         buildFilter()
       }
@@ -386,7 +388,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
           activeBackgroundColor,
           activeColor,
           onItemEnter,
-          onItemLeave
+          onItemLeave,
         }}
       >
         <ArchbaseMasonryResponsive columnsCountBreakPoints={columnsCountBreakPoints}>
@@ -396,5 +398,5 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         </ArchbaseMasonryResponsive>
       </ArchbaseMasonryProvider>
     </ArchbaseSpaceTemplate>
-  )
+  );
 }

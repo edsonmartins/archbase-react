@@ -5324,29 +5324,29 @@
   dependencies:
     remove-accents "0.4.2"
 
-"@tanstack/react-table@8.9.3":
-  version "8.9.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.9.3.tgz#03a52e9e15f65c82a8c697a445c42bfca0c5cfc4"
-  integrity sha512-Ng9rdm3JPoSCi6cVZvANsYnF+UoGVRxflMb270tVj0+LjeT/ZtZ9ckxF6oLPLcKesza6VKBqtdF9mQ+vaz24Aw==
+"@tanstack/react-table@8.10.0":
+  version "8.10.0"
+  resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.10.0.tgz#6ff84dfccdf6e567b87053f727f4b758a1a9aa01"
+  integrity sha512-FNhKE3525hryvuWw90xRbP16qNiq7OLJkDZopOKcwyktErLi1ibJzAN9DFwA/gR1br9SK4StXZh9JPvp9izrrQ==
   dependencies:
-    "@tanstack/table-core" "8.9.3"
+    "@tanstack/table-core" "8.10.0"
 
-"@tanstack/react-virtual@3.0.0-beta.54":
-  version "3.0.0-beta.54"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-virtual/-/react-virtual-3.0.0-beta.54.tgz#755979455adf13f2584937204a3f38703e446037"
-  integrity sha512-D1mDMf4UPbrtHRZZriCly5bXTBMhylslm4dhcHqTtDJ6brQcgGmk8YD9JdWBGWfGSWPKoh2x1H3e7eh+hgPXtQ==
+"@tanstack/react-virtual@3.0.0-beta.60":
+  version "3.0.0-beta.60"
+  resolved "https://registry.npmjs.org/@tanstack/react-virtual/-/react-virtual-3.0.0-beta.60.tgz#2b37c0d72997a54f7927f6b159a77311429fec1e"
+  integrity sha512-F0wL9+byp7lf/tH6U5LW0ZjBqs+hrMXJrj5xcIGcklI0pggvjzMNW9DdIBcyltPNr6hmHQ0wt8FDGe1n1ZAThA==
   dependencies:
-    "@tanstack/virtual-core" "3.0.0-beta.54"
+    "@tanstack/virtual-core" "3.0.0-beta.60"
 
-"@tanstack/table-core@8.9.3":
-  version "8.9.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.9.3.tgz#991da6b015f6200fdc841c48048bee5e197f6a46"
-  integrity sha512-NpHZBoHTfqyJk0m/s/+CSuAiwtebhYK90mDuf5eylTvgViNOujiaOaxNDxJkQQAsVvHWZftUGAx1EfO1rkKtLg==
+"@tanstack/table-core@8.10.0":
+  version "8.10.0"
+  resolved "https://registry.npmjs.org/@tanstack/table-core/-/table-core-8.10.0.tgz#d6e88157f536f7f29009670b207e60462c84be7f"
+  integrity sha512-e701yAJ18aGDP6mzVworlFAmQ+gi3Wtqx5mGZUe2BUv4W4D80dJxUfkHdtEGJ6GryAnlCCNTej7eaJiYmPhyYg==
 
-"@tanstack/virtual-core@3.0.0-beta.54":
-  version "3.0.0-beta.54"
-  resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.0.0-beta.54.tgz#12259d007911ad9fce1388385c54a9141f4ecdc4"
-  integrity sha512-jtkwqdP2rY2iCCDVAFuaNBH3fiEi29aTn2RhtIoky8DTTiCdc48plpHHreLwmv1PICJ4AJUUESaq3xa8fZH8+g==
+"@tanstack/virtual-core@3.0.0-beta.60":
+  version "3.0.0-beta.60"
+  resolved "https://registry.npmjs.org/@tanstack/virtual-core/-/virtual-core-3.0.0-beta.60.tgz#fcac07cb182d41929208899062de8c9510cf42ed"
+  integrity sha512-QlCdhsV1+JIf0c0U6ge6SQmpwsyAT0oQaOSZk50AtEeAyQl9tQrd6qCHAslxQpgphrfe945abvKG8uYvw3hIGA==
 
 "@testing-library/dom@^9.0.0":
   version "9.2.0"
@@ -11873,14 +11873,14 @@ mantine-flagpack@^2.0.0:
   resolved "https://registry.npmjs.org/mantine-flagpack/-/mantine-flagpack-2.0.0.tgz#264b982c91c4f224f93725692b623e96d28dae9f"
   integrity sha512-GETfECGOl/U/ruvzGOixKYIciibuR0Gg6bku4Y1nQJiSuvqRsPp8J0fZ0AgzOf5z0AId53UYLRMAFffUHqSDeg==
 
-mantine-react-table@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/mantine-react-table/-/mantine-react-table-1.1.1.tgz#89456ada759b1f4fa809199edc97d02ad3a6f33b"
-  integrity sha512-sKYZ+S7pS1HJZrKKmLUFUaC+9zYODgBoFwpkO12YUgAQ3e/vIVNwgaGHvbnfoZfW8BZ8Pc69KlWx6+EZYJU8Bg==
+mantine-react-table@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.npmjs.org/mantine-react-table/-/mantine-react-table-1.3.0.tgz#c5dcb2650ed67aa74cf62421bf3bd4cb49824dc3"
+  integrity sha512-ljAd9ZI7S89glI8OGbM5DsNHzInZPfigbeDXboR5gLGPuuseLVgezlVjqV1h8MUQkY06++d9ah9zsMLr2VNxlQ==
   dependencies:
     "@tanstack/match-sorter-utils" "8.8.4"
-    "@tanstack/react-table" "8.9.3"
-    "@tanstack/react-virtual" "3.0.0-beta.54"
+    "@tanstack/react-table" "8.10.0"
+    "@tanstack/react-virtual" "3.0.0-beta.60"
 
 map-obj@^1.0.0:
   version "1.0.1"
@@ -14110,6 +14110,11 @@ react-inspector@^6.0.0:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/react-inspector/-/react-inspector-6.0.1.tgz#1a37f0165d9df81ee804d63259eaaeabe841287d"
   integrity sha512-cxKSeFTf7jpSSVddm66sKdolG90qURAX3g1roTeaN6x0YEbtWc8JpmFN9+yIqLNH2uEkYerWLtJZIXRIFuBKrg==
+
+react-inspector@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.npmjs.org/react-inspector/-/react-inspector-6.0.2.tgz#aa3028803550cb6dbd7344816d5c80bf39d07e9d"
+  integrity sha512-x+b7LxhmHXjHoU/VrFAzw5iutsILRoYyDq97EDYdFpPLcvqtEzk4ZSZSQjnFPbr5T57tLXnHcqFYoN1pI6u8uQ==
 
 react-interactive-component@^0.1.4:
   version "0.1.4"

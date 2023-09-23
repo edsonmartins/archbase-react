@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import "./ArchbaseFloatingWindow.css";
+import React, { useRef } from 'react';
+import './ArchbaseFloatingWindow.css';
 
 export interface ArchbaseFloatingWindowProps {
   id: string;
@@ -19,17 +19,18 @@ export interface ArchbaseFloatingWindowProps {
     };
   };
   style?: React.CSSProperties;
+  /** Referência para o container que envolve o componente filho */
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
 const nextZIndex: () => number = () => {
   let maxZ = 0;
-  const list = document.querySelectorAll<HTMLDivElement>(
-    ".archbase-window-container"
-  );
-  list.forEach((w)=>{
+  const list = document.querySelectorAll<HTMLDivElement>('.archbase-window-container');
+  list.forEach((w) => {
     let z = parseInt(w.style.zIndex);
     maxZ = Math.max(isNaN(z) ? 0 : z, maxZ);
-  })
+  });
+
   return maxZ + 1;
 };
 
@@ -45,22 +46,22 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
       resizable: false,
       titleBar: Object.assign(
         {
-          icon: " ",
-          title: "Untitled window",
+          icon: ' ',
+          title: 'Untitled window',
           buttons: Object.assign(
             {
               minimize: true,
               maximize: true,
               close: true,
             },
-            (props.titleBar && props.titleBar.buttons) || {}
+            (props.titleBar && props.titleBar.buttons) || {},
           ),
         },
-        props.titleBar
+        props.titleBar,
       ),
       style: {},
     },
-    props
+    props,
   );
 
   if (!properties.id) {
@@ -77,10 +78,10 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
   const [yOffset, setYOffset] = React.useState<number>(0);
   const [minimized, setMinimized] = React.useState<boolean>(false);
   const [maximized, setMaximized] = React.useState<boolean>(false);
-  const [minimizeIcon, setMinimizeIcon] = React.useState<string>("▁");
-  const [maximizeIcon, setMaximizeIcon] = React.useState<string>("□");
+  const [minimizeIcon, setMinimizeIcon] = React.useState<string>('▁');
+  const [maximizeIcon, setMaximizeIcon] = React.useState<string>('□');
   const [contentDisplay, setContentDisplay] = React.useState<boolean>(true);
-  const [windowTransition, setWindowTransition] = React.useState("");
+  const [windowTransition, setWindowTransition] = React.useState('');
   const [level, setLevel] = React.useState<number>(nextZIndex());
   const [visibility, setWindowVisibility] = React.useState<number>(1.0);
 
@@ -118,42 +119,33 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
       setTop(parent?.offsetTop || 0);
       setLeft(parent?.offsetLeft || 0);
       setMinimized(false);
-      setMinimizeIcon("▁");
+      setMinimizeIcon('▁');
       setMaximized(false);
     } else {
       setContentDisplay(false);
       effectiveHeight.current = 32;
       const parent = document.getElementById(properties.id)?.parentElement;
       effectiveWidth.current = width;
-      let topPosition =
-        (parent?.clientHeight || window.innerHeight) -
-        effectiveHeight.current -
-        4;
+      let topPosition = (parent?.clientHeight || window.innerHeight) - effectiveHeight.current - 4;
 
-      let leftPosition =
-        (parent?.clientWidth || window.innerWidth) - effectiveWidth.current - 4;
+      let leftPosition = (parent?.clientWidth || window.innerWidth) - effectiveWidth.current - 4;
 
       const minimizedWindow = document.elementFromPoint(
         leftPosition + effectiveWidth.current / 2,
-        topPosition + effectiveHeight.current / 2
+        topPosition + effectiveHeight.current / 2,
       ) as HTMLDivElement;
-      if (
-        minimizedWindow &&
-        ["archbase-window-container", "windowTitle"].includes(
-          minimizedWindow?.className || ""
-        )
-      ) {
+      if (minimizedWindow && ['archbase-window-container', 'windowTitle'].includes(minimizedWindow?.className || '')) {
         topPosition -= minimizedWindow?.clientHeight + 4;
       }
 
       setTop(topPosition);
       setLeft(leftPosition);
       setMinimized(true);
-      setMinimizeIcon("◰");
+      setMinimizeIcon('◰');
       setMaximized(false);
     }
     setLevel(nextZIndex());
-    setTimeout(setWindowTransition, animationDuration + 1, "");
+    setTimeout(setWindowTransition, animationDuration + 1, '');
   };
 
   const maximize = () => {
@@ -166,9 +158,9 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
       setTop(parent?.offsetTop || 0);
       setLeft(parent?.offsetLeft || 0);
       setMaximized(false);
-      setMaximizeIcon("□");
+      setMaximizeIcon('□');
       setMinimized(false);
-      setMinimizeIcon("▁");
+      setMinimizeIcon('▁');
     } else {
       setContentDisplay(true);
       effectiveHeight.current = parent?.clientHeight || window.innerHeight;
@@ -176,12 +168,12 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
       setTop(parent?.offsetTop || 0);
       setLeft(parent?.offsetLeft || 0);
       setMaximized(true);
-      setMaximizeIcon("❐");
+      setMaximizeIcon('❐');
       setMinimized(false);
-      setMinimizeIcon("▁");
+      setMinimizeIcon('▁');
     }
     setLevel(nextZIndex());
-    setTimeout(setWindowTransition, animationDuration + 1, "");
+    setTimeout(setWindowTransition, animationDuration + 1, '');
   };
 
   return (
@@ -193,7 +185,7 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
         width: effectiveWidth.current,
         top,
         left,
-        resize: properties.resizable ? "both" : "none",
+        resize: properties.resizable ? 'both' : 'none',
         transition: windowTransition,
         zIndex: level,
         opacity: visibility,
@@ -211,9 +203,7 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
             opacity: visibility,
           }}
         >
-          {properties.titleBar.icon && (
-            <span className="icon">{properties.titleBar.icon}</span>
-          )}
+          {properties.titleBar.icon && <span className="icon">{properties.titleBar.icon}</span>}
           <span
             className="windowTitle"
             draggable={true}
@@ -238,10 +228,7 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
                 </span>
               )}
               {!!properties.titleBar.buttons.close && (
-                <span
-                  className="windowButton"
-                  onClick={properties.titleBar.buttons.close}
-                >
+                <span className="windowButton" onClick={properties.titleBar.buttons.close}>
                   &#10799;
                 </span>
               )}
@@ -252,8 +239,9 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
       <div
         className="content"
         draggable="false"
+        ref={props.innerRef}
         style={{
-          height: contentDisplay ? "auto" : 0,
+          height: contentDisplay ? 'auto' : 0,
           opacity: visibility,
           ...properties.style,
         }}
@@ -263,4 +251,3 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
     </div>
   );
 };
-
