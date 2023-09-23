@@ -11,7 +11,7 @@ export function processErrorMessage(error: any) {
     if (error.response.data.apierror.subErrors) {
       msgErro = []
       error.response.data.apierror.subErrors.forEach((element: any) => {
-        msgErro.push(`${element.message} (${element.object})`)
+        msgErro.push(`(${element.field}) ${element.message}`)
       })
     }
   } else if (error.response && error.response.status && error.response.status === 404) {

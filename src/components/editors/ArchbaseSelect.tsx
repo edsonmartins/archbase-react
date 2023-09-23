@@ -240,6 +240,7 @@ export function ArchbaseSelect<T, ID, O>({
       }
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
         setInternalError(event.error)
+         setUpdateCounter((prevCounter) => prevCounter + 1);
       }
     }
   }, [])

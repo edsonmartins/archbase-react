@@ -8,6 +8,7 @@ export type UseArchbaseDataSourceProps<T, ID> = {
   initialData: any[]
   initialDataSource?: ArchbaseDataSource<T, ID> | undefined
   name: string
+  label?: string
   onLoadComplete?: (dataSource: ArchbaseDataSource<T, ID>) => void
   validator?: IDataSourceValidator
 }
@@ -19,7 +20,7 @@ export type UseArchbaseDataSourceReturnType<T, ID> = {
 export const useArchbaseDataSource = <T, ID>(
   props: UseArchbaseDataSourceProps<T, ID>
 ): UseArchbaseDataSourceReturnType<T, ID> => {
-  const { initialData, name, initialDataSource, onLoadComplete, store, validator } = props
+  const { initialData, name, label, initialDataSource, onLoadComplete, store, validator } = props
   const buildDataSource = () =>{
     if (store && store.existsValue(name)){
       return store.getValue(name);
@@ -34,7 +35,7 @@ export const useArchbaseDataSource = <T, ID>(
       totalPages: 0,
       pageSize: 0,
       validator
-    })
+    }, label)
   }
   const [dataSource, setDataSource] = useState<ArchbaseDataSource<T, ID>>(
     buildDataSource()

@@ -71,3 +71,4 @@ export { ArchbaseInputSearch } from './ArchbaseInputSearch'
 export { ArchbaseQueryBuilder } from './ArchbaseQueryBuilder'
 export { ArchbaseSaveFilter } from './ArchbaseSaveFilter'
 export { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter'
+export { ArchbaseGlobalFilter} from "./ArchbaseGlobalFilter"
