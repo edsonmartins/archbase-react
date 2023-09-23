@@ -34,9 +34,9 @@ import {
   px,
 } from '@mantine/core';
 import { useArchbaseAppContext } from '../core';
-import { ArchbaseObjectInspector } from '@components/views';
 import { useHotkeys, useUncontrolled } from '@mantine/hooks';
 import { ArchbaseDebugOptions } from './ArchbaseTemplateCommonTypes';
+import { ArchbaseDebugInspector } from '@components/views/objectinspector';
 
 interface ArchbaseBreakpointsColSpans {
   /** Col span em (min-width: theme.breakpoints.xs) */
@@ -405,7 +405,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
           </ArchbaseSpaceBottom>
         </ArchbaseSpaceFixed>
       </Paper>
-      <ArchbaseObjectInspector
+      <ArchbaseDebugInspector
         debugObjectInspectorHotKey={debugOptions && debugOptions.debugObjectInspectorHotKey}
         objectsToInspect={debugOptions && debugOptions.objectsToInspect}
       />

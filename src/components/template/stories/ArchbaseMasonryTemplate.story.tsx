@@ -252,7 +252,7 @@ const ArchbaseMasonryTemplateExample = () => {
         debugOptions={{
           debugLayoutHotKey: 'ctrl+shift+S',
           debugObjectInspectorHotKey: 'ctrl+shift+D',
-          objectsToInspect: [],
+          objectsToInspect: [{ name: 'Pessoa', object: dsPessoas }],
         }}
         clearError={clearError}
         width={'100%'}
