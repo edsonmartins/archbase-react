@@ -25,11 +25,11 @@ export function Contains(seed: string, validationOptions?: ValidationOptions): P
       validator: {
         validate: (value, args): boolean => contains(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain a $constraint1 string')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain a $constraint1 string')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

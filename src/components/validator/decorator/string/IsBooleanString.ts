@@ -23,12 +23,9 @@ export function IsBooleanString(validationOptions?: ValidationOptions): Property
       name: IS_BOOLEAN_STRING,
       validator: {
         validate: (value, args): boolean => isBooleanString(value),
-        defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a boolean string')}`,
-          validationOptions
-        ),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a boolean string')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

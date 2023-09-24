@@ -1,7 +1,9 @@
-import * as React from "react";
+import * as React from 'react';
 
 interface IProps {
-	children?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-export const ArchbaseSpaceCentered: React.FC<IProps> = (props) => <div className={`spaces-centered`}>{props.children}</div>;
+export const ArchbaseSpaceCentered: React.FC<IProps> = (props) => (
+  <div className={`spaces-centered`}>{props.children}</div>
+);

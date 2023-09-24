@@ -1,71 +1,62 @@
-import React, { useState, useEffect, ReactNode, useContext, useRef } from 'react'
-import { Avatar, Card, Grid, Group, Text, createStyles } from '@mantine/core'
-import { Pessoa, pessoasData } from '../../demo/index'
-import {
-  useArchbaseDataSource,
-  useArchbaseForceUpdate,
-  useArchbaseDataSourceListener
-} from '../hooks'
-import { DataSourceEvent, DataSourceEventNames } from '../datasource'
-import { Meta, StoryObj } from '@storybook/react'
-import { ArchbaseList, ArchbaseListCustomItemProps } from './ArchbaseList'
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
-import { ThemeIcon } from '@mantine/core'
-import { IconUser } from '@tabler/icons-react'
-import { IconPhoneCall, IconAt } from '@tabler/icons-react'
-import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context'
-const data = pessoasData
+import React, { useState, useEffect, ReactNode, useContext, useRef } from 'react';
+import { Avatar, Card, Grid, Group, Text, createStyles } from '@mantine/core';
+import { Pessoa, pessoasData } from '../../demo/index';
+import { useArchbaseDataSource, useArchbaseForceUpdate, useArchbaseDataSourceListener } from '../hooks';
+import { DataSourceEvent, DataSourceEventNames } from '../datasource';
+import { Meta, StoryObj } from '@storybook/react';
+import { ArchbaseList, ArchbaseListCustomItemProps } from './ArchbaseList';
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
+import { ThemeIcon } from '@mantine/core';
+import { IconUser } from '@tabler/icons-react';
+import { IconPhoneCall, IconAt } from '@tabler/icons-react';
+import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context';
+const data = pessoasData;
 
 interface ArchbaseListBasicExampleProps {
-  showIcon: boolean
-  showPhoto: boolean
-  justifyContent: 'flex-start' | 'center' | 'space-between' | 'space-around' | 'space-evenly'
-  spacing: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  showIcon: boolean;
+  showPhoto: boolean;
+  justifyContent: 'flex-start' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
+  spacing: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
-const ArchbaseListBasicExample = ({
-  showIcon,
-  showPhoto,
-  justifyContent,
-  spacing
-}: ArchbaseListBasicExampleProps) => {
-  const forceUpdate = useArchbaseForceUpdate()
-  const [icon, setIcon] = useState<ReactNode | undefined>()
-  const [photo, setPhoto] = useState<ReactNode | string | undefined>()
+const ArchbaseListBasicExample = ({ showIcon, showPhoto, justifyContent, spacing }: ArchbaseListBasicExampleProps) => {
+  const forceUpdate = useArchbaseForceUpdate();
+  const [icon, setIcon] = useState<ReactNode | undefined>();
+  const [photo, setPhoto] = useState<ReactNode | string | undefined>();
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
-  })
+    name: 'dsPessoas',
+  });
 
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
         case DataSourceEventNames.afterScroll: {
-          forceUpdate()
-          break
+          forceUpdate();
+          break;
         }
         default:
       }
-    }
-  })
+    },
+  });
 
   useEffect(() => {
     if (showIcon) {
       setIcon(
         <ThemeIcon color="blue" size={20} radius="xl">
           <IconUser size="1rem" />
-        </ThemeIcon>
-      )
+        </ThemeIcon>,
+      );
     } else {
-      setIcon(undefined)
+      setIcon(undefined);
     }
     if (showPhoto) {
-      setPhoto('foto')
+      setPhoto('foto');
     } else {
-      setPhoto(undefined)
+      setPhoto(undefined);
     }
-  }, [showIcon, showPhoto])
+  }, [showIcon, showPhoto]);
 
   return (
     <Grid>
@@ -111,50 +102,46 @@ const ArchbaseListBasicExample = ({
         </Card>
       </Grid.Col>
     </Grid>
-  )
-}
+  );
+};
 
 interface CustomItemProps extends ArchbaseListCustomItemProps<Pessoa, string> {}
 
 const useStyles = createStyles((theme) => ({
   icon: {
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[7]
+    color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[7],
   },
 
   name: {
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`
-  }
-}))
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+  },
+}));
 
 const CustomItem = (props: CustomItemProps) => {
-  const { classes } = useStyles()
-  const listContextValue = useArchbaseListContext<Pessoa, string>()
-  const itemRef = useRef<any>(null)
+  const { classes } = useStyles();
+  const listContextValue = useArchbaseListContext<Pessoa, string>();
+  const itemRef = useRef<any>(null);
 
   useEffect(() => {
     if (itemRef.current && props.active) {
-      itemRef.current.focus()
+      itemRef.current.focus();
     }
-  }, [props.active])
+  }, [props.active]);
 
   const handleClick = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (!props.disabled) {
       if (listContextValue.handleSelectItem) {
-        listContextValue.handleSelectItem(props.index, props.recordData!)
+        listContextValue.handleSelectItem(props.index, props.recordData!);
       }
     }
-  }
+  };
 
-  const backgroundColor = props.active ? listContextValue.activeBackgroundColor : ''
-  const color = props.active ? listContextValue.activeColor : ''
+  const backgroundColor = props.active ? listContextValue.activeBackgroundColor : '';
+  const color = props.active ? listContextValue.activeColor : '';
+
   return (
-    <div
-      onClick={handleClick}
-      style={{ padding: '8px', backgroundColor, color }}
-      ref={itemRef}
-      tabIndex={-1}
-    >
+    <div onClick={handleClick} style={{ padding: '8px', backgroundColor, color }} ref={itemRef} tabIndex={-1}>
       <Group noWrap>
         <Avatar src={props.recordData.foto} size={94} radius="md" />
         <div>
@@ -178,28 +165,28 @@ const CustomItem = (props: CustomItemProps) => {
         </div>
       </Group>
     </div>
-  )
-}
+  );
+};
 
 const ArchbaseListCustomItemExample = () => {
-  const forceUpdate = useArchbaseForceUpdate()
+  const forceUpdate = useArchbaseForceUpdate();
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
-  })
+    name: 'dsPessoas',
+  });
 
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
         case DataSourceEventNames.afterScroll: {
-          forceUpdate()
-          break
+          forceUpdate();
+          break;
         }
         default:
       }
-    }
-  })
+    },
+  });
 
   return (
     <Grid>
@@ -238,38 +225,38 @@ const ArchbaseListCustomItemExample = () => {
         </Card>
       </Grid.Col>
     </Grid>
-  )
-}
+  );
+};
 
 export default {
   title: 'List/List',
-  component: ArchbaseListBasicExample
-} as Meta
+  component: ArchbaseListBasicExample,
+} as Meta;
 
 export const Example: StoryObj<typeof ArchbaseListBasicExample> = {
   render: (args) => {
-    return <ArchbaseListBasicExample {...args} />
+    return <ArchbaseListBasicExample {...args} />;
   },
   args: {
     showIcon: false,
     showPhoto: false,
     justifyContent: 'flex-start',
-    spacing: 'md'
+    spacing: 'md',
   },
   argTypes: {
     justifyContent: {
       options: ['flex-start', 'center', 'space-between', 'space-around', 'space-evenly'],
-      control: { type: 'radio' }
+      control: { type: 'radio' },
     },
     spacing: {
       options: ['xs', 'sm', 'md', 'lg', 'xl'],
-      control: { type: 'select' }
-    }
-  }
-}
+      control: { type: 'select' },
+    },
+  },
+};
 
 export const Example2: StoryObj<typeof ArchbaseListCustomItemExample> = {
   render: (_args) => {
-    return <ArchbaseListCustomItemExample />
-  }
-}
+    return <ArchbaseListCustomItemExample />;
+  },
+};

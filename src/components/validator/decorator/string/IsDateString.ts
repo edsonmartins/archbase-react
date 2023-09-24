@@ -16,10 +16,7 @@ export function isDateString(value: unknown, options?: ValidatorJS.IsISO8601Opti
 /**
  * Alias for IsISO8601 validator
  */
-export function IsDateString(
-  options?: ValidatorJS.IsISO8601Options,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsDateString(options?: ValidatorJS.IsISO8601Options, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_DATE_STRING,
@@ -27,11 +24,11 @@ export function IsDateString(
       validator: {
         validate: (value): boolean => isDateString(value, options),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid ISO 8601 date string')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a valid ISO 8601 date string')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

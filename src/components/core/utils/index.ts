@@ -1,10 +1,10 @@
-import { Children } from 'react'
+import { Children } from 'react';
 
-import getElementName from './getElementName'
-import isBase64 from './isBase64'
-import { archbaseLogo, archbaseLogo2, archbaseLogo3 } from './archbaseLogo'
-import { convertImageToBase64 } from './convertImageToBase64'
-import filter from './filter'
+import getElementName from './getElementName';
+import isBase64 from './isBase64';
+import { archbaseLogo, archbaseLogo2, archbaseLogo3 } from './archbaseLogo';
+import { convertImageToBase64 } from './convertImageToBase64';
+import filter from './filter';
 
 import {
   removeNonWord,
@@ -42,8 +42,8 @@ import {
   convertISOStringToDate,
   formatStr,
   compressString,
-  decompressString
-} from './string-utils'
+  decompressString,
+} from './string-utils';
 
 export {
   getElementName,
@@ -86,10 +86,10 @@ export {
   convertISOStringToDate,
   formatStr,
   convertImageToBase64,
-  filter
-}
+  filter,
+};
 
 export default {
   ...Children,
-  getElementName
-}
+  getElementName,
+};

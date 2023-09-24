@@ -13,10 +13,11 @@ export function arrayUnique(array: unknown[], identifier?: ArrayUniqueIdentifier
   if (!Array.isArray(array)) return false;
 
   if (identifier) {
-    array = array.map(o => (o != null ? identifier(o) : o));
+    array = array.map((o) => (o != null ? identifier(o) : o));
   }
 
   const uniqueItems = array.filter((a, b, c) => c.indexOf(a) === b);
+
   return array.length === uniqueItems.length;
 }
 
@@ -26,7 +27,7 @@ export function arrayUnique(array: unknown[], identifier?: ArrayUniqueIdentifier
  */
 export function ArrayUnique<T = any>(
   identifierOrOptions?: ArrayUniqueIdentifier<T> | ValidationOptions,
-  validationOptions?: ValidationOptions
+  validationOptions?: ValidationOptions,
 ): PropertyDecorator {
   const identifier = typeof identifierOrOptions === 'function' ? identifierOrOptions : undefined;
   const options = typeof identifierOrOptions !== 'function' ? identifierOrOptions : validationOptions;
@@ -36,9 +37,9 @@ export function ArrayUnique<T = any>(
       name: ARRAY_UNIQUE,
       validator: {
         validate: (value, args): boolean => arrayUnique(value, identifier),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t("archbase:All $property's elements must be unique")}`, options),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t("archbase:All $property's elements must be unique")}`, options),
       },
     },
-    options
+    options,
   );
 }

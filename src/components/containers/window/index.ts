@@ -1,2 +1,2 @@
-export {ArchbaseFloatingWindow,} from './ArchbaseFloatingWindow'
-export type {ArchbaseFloatingWindowProps} from './ArchbaseFloatingWindow'
+export { ArchbaseFloatingWindow } from './ArchbaseFloatingWindow';
+export type { ArchbaseFloatingWindowProps } from './ArchbaseFloatingWindow';

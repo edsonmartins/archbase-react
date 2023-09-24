@@ -28,7 +28,7 @@ export class MetadataStorage {
    */
   addValidationSchema(schema: ValidationSchema): void {
     const validationMetadatas = new ValidationSchemaToMetadataTransformer().transform(schema);
-    validationMetadatas.forEach(validationMetadata => this.addValidationMetadata(validationMetadata));
+    validationMetadatas.forEach((validationMetadata) => this.addValidationMetadata(validationMetadata));
   }
 
   /**
@@ -62,10 +62,11 @@ export class MetadataStorage {
    */
   groupByPropertyName(metadata: ValidationMetadata[]): { [propertyName: string]: ValidationMetadata[] } {
     const grouped: { [propertyName: string]: ValidationMetadata[] } = {};
-    metadata.forEach(metadata => {
+    metadata.forEach((metadata) => {
       if (!grouped[metadata.propertyName]) grouped[metadata.propertyName] = [];
       grouped[metadata.propertyName].push(metadata);
     });
+
     return grouped;
   }
 
@@ -77,7 +78,7 @@ export class MetadataStorage {
     targetSchema: string,
     always: boolean,
     strictGroups: boolean,
-    groups?: string[]
+    groups?: string[],
   ): ValidationMetadata[] {
     const includeMetadataBecauseOfAlwaysOption = (metadata: ValidationMetadata): boolean => {
       // `metadata.always` overrides global default.
@@ -104,12 +105,11 @@ export class MetadataStorage {
 
     // get directly related to a target metadatas
     const filteredForOriginalMetadatasSearch = this.validationMetadatas.get(targetConstructor) || [];
-    const originalMetadatas = filteredForOriginalMetadatasSearch.filter(metadata => {
+    const originalMetadatas = filteredForOriginalMetadatasSearch.filter((metadata) => {
       if (metadata.target !== targetConstructor && metadata.target !== targetSchema) return false;
       if (includeMetadataBecauseOfAlwaysOption(metadata)) return true;
       if (excludeMetadataBecauseOfStrictGroupsOption(metadata)) return false;
-      if (groups && groups.length > 0)
-        return metadata.groups && !!metadata.groups.find(group => groups.indexOf(group) !== -1);
+      if (groups && groups.length > 0) return metadata.groups && !!metadata.groups.find((group) => groups.indexOf(group) !== -1);
 
       return true;
     });
@@ -121,27 +121,22 @@ export class MetadataStorage {
         filteredForInheritedMetadatasSearch.push(...value);
       }
     }
-    const inheritedMetadatas = filteredForInheritedMetadatasSearch.filter(metadata => {
+    const inheritedMetadatas = filteredForInheritedMetadatasSearch.filter((metadata) => {
       // if target is a string it's means we validate against a schema, and there is no inheritance support for schemas
       if (typeof metadata.target === 'string') return false;
       if (metadata.target === targetConstructor) return false;
-      if (metadata.target instanceof Function && !(targetConstructor.prototype instanceof metadata.target))
-        return false;
+      if (metadata.target instanceof Function && !(targetConstructor.prototype instanceof metadata.target)) return false;
       if (includeMetadataBecauseOfAlwaysOption(metadata)) return true;
       if (excludeMetadataBecauseOfStrictGroupsOption(metadata)) return false;
-      if (groups && groups.length > 0)
-        return metadata.groups && !!metadata.groups.find(group => groups.indexOf(group) !== -1);
+      if (groups && groups.length > 0) return metadata.groups && !!metadata.groups.find((group) => groups.indexOf(group) !== -1);
 
       return true;
     });
 
     // filter out duplicate metadatas, prefer original metadatas instead of inherited metadatas
-    const uniqueInheritedMetadatas = inheritedMetadatas.filter(inheritedMetadata => {
-      return !originalMetadatas.find(originalMetadata => {
-        return (
-          originalMetadata.propertyName === inheritedMetadata.propertyName &&
-          originalMetadata.type === inheritedMetadata.type
-        );
+    const uniqueInheritedMetadatas = inheritedMetadatas.filter((inheritedMetadata) => {
+      return !originalMetadatas.find((originalMetadata) => {
+        return originalMetadata.propertyName === inheritedMetadata.propertyName && originalMetadata.type === inheritedMetadata.type;
       });
     });
 

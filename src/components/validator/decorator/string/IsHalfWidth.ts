@@ -24,11 +24,11 @@ export function IsHalfWidth(validationOptions?: ValidationOptions): PropertyDeco
       validator: {
         validate: (value, args): boolean => isHalfWidth(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain a half-width characters')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain a half-width characters')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

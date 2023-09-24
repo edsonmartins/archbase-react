@@ -25,9 +25,9 @@ export function IsHSL(validationOptions?: ValidationOptions): PropertyDecorator 
       name: IS_HSL,
       validator: {
         validate: (value, args): boolean => isHSL(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a HSL color')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a HSL color')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

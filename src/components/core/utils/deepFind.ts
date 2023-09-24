@@ -1,31 +1,33 @@
-import type { ReactNode } from 'react'
-import { Children, isValidElement } from 'react'
+import type { ReactNode } from 'react';
+import { Children, isValidElement } from 'react';
 
-import hasComplexChildren from './hasComplexChildren'
+import hasComplexChildren from './hasComplexChildren';
 
 const deepFind = (
   children: ReactNode | ReactNode[],
-  deepFindFn: (child: ReactNode, index?: number, children?: ReactNode[]) => boolean
+  deepFindFn: (child: ReactNode, index?: number, children?: ReactNode[]) => boolean,
 ): ReactNode | undefined => {
   // eslint-disable-next-line @typescript-eslint/init-declarations
-  let found
+  let found;
 
   Children.toArray(children).find((child: ReactNode, index: number, findChildren: ReactNode[]) => {
     if (deepFindFn(child, index, findChildren)) {
-      found = child
-      return true
+      found = child;
+
+      return true;
     }
 
     if (isValidElement(child) && hasComplexChildren(child)) {
       // Find inside the child that has children
-      found = deepFind(child.props.children, deepFindFn)
-      return typeof found !== 'undefined'
+      found = deepFind(child.props.children, deepFindFn);
+
+      return typeof found !== 'undefined';
     }
 
-    return false
-  })
+    return false;
+  });
 
-  return found
-}
+  return found;
+};
 
-export default deepFind
+export default deepFind;

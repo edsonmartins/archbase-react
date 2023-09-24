@@ -1,35 +1,35 @@
-import React from 'react'
-import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
-import { Pessoa, pessoasData } from '../../demo/index'
-import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
-import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
-import { DataSourceEvent, DataSourceEventNames } from '../datasource'
-import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
-import { ArchbaseImageEdit } from './ArchbaseImageEdit'
+import React from 'react';
+import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
+import { Pessoa, pessoasData } from '../../demo/index';
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource';
+import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
+import { DataSourceEvent, DataSourceEventNames } from '../datasource';
+import { useArchbaseForceUpdate } from '../hooks';
+import { Meta, StoryObj } from '@storybook/react';
+import { ArchbaseImageEdit } from './ArchbaseImageEdit';
 
 const ArchbaseImageEditExample = () => {
-  const forceUpdate = useArchbaseForceUpdate()
+  const forceUpdate = useArchbaseForceUpdate();
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
-  })
+    name: 'dsPessoas',
+  });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit()
+    dataSource.edit();
   }
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
-          forceUpdate()
-          break
+          forceUpdate();
+          break;
         }
         default:
       }
-    }
-  })
+    },
+  });
 
   return (
     <Grid>
@@ -41,13 +41,7 @@ const ArchbaseImageEditExample = () => {
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({ height: 200 })}>
-            <ArchbaseImageEdit
-              width={140}
-              height={150}
-              label={'Foto'}
-              description="teste"
-              error="tessss"
-            />
+            <ArchbaseImageEdit width={140} height={150} label={'Foto'} description="teste" error="tessss" />
           </Box>
         </Card>
       </Grid.Col>
@@ -76,20 +70,20 @@ const ArchbaseImageEditExample = () => {
         </Card>
       </Grid.Col>
     </Grid>
-  )
-}
+  );
+};
 
 export default {
   title: 'Editors/Image Edit',
-  component: ArchbaseImageEditExample
-} as Meta
+  component: ArchbaseImageEditExample,
+} as Meta;
 
-const data = [pessoasData[0]]
+const data = [pessoasData[0]];
 
 export const Example: StoryObj<typeof ArchbaseImageEditExample> = {
   args: {
     render: () => {
-      ;<ArchbaseImageEditExample />
-    }
-  }
-}
+      <ArchbaseImageEditExample />;
+    },
+  },
+};

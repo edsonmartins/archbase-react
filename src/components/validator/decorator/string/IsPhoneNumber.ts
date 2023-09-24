@@ -50,11 +50,11 @@ export function IsPhoneNumber(region?: CountryCode, validationOptions?: Validati
       validator: {
         validate: (value, args): boolean => isPhoneNumber(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid phone number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a valid phone number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

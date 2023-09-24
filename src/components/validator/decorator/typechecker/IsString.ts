@@ -20,9 +20,9 @@ export function IsString(validationOptions?: ValidationOptions): PropertyDecorat
       name: IS_STRING,
       validator: {
         validate: (value, args): boolean => isString(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a string')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a string')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

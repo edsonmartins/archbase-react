@@ -24,11 +24,11 @@ export function ArrayMinSize(min: number, validationOptions?: ValidationOptions)
       validator: {
         validate: (value, args): boolean => arrayMinSize(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain at least $constraint1 elements')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain at least $constraint1 elements')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

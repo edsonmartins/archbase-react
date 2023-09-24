@@ -18,19 +18,16 @@ export function isPostalCode(value: unknown, locale: 'any' | ValidatorJS.PostalC
  * Check if the string is a postal code, in the specified locale.
  * If given value is not a string, then it returns false.
  */
-export function IsPostalCode(
-  locale?: 'any' | ValidatorJS.PostalCodeLocale,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsPostalCode(locale?: 'any' | ValidatorJS.PostalCodeLocale, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_POSTAL_CODE,
       constraints: [locale],
       validator: {
         validate: (value, args): boolean => isPostalCode(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a postal code')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a postal code')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

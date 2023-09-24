@@ -30,11 +30,7 @@ export function validate(object: object, validatorOptions?: ValidatorOptions): P
 /**
  * Valida determinado objeto por um determinado esquema de validação.
  */
-export function validate(
-  schemaName: string,
-  object: object,
-  validatorOptions?: ValidatorOptions
-): Promise<ValidationError[]>;
+export function validate(schemaName: string, object: object, validatorOptions?: ValidatorOptions): Promise<ValidationError[]>;
 
 /**
  * Valida determinado objeto pelos decoradores do objeto ou determinado esquema de validação.
@@ -42,14 +38,10 @@ export function validate(
 export function validate(
   schemaNameOrObject: object | string,
   objectOrValidationOptions?: object | ValidatorOptions,
-  maybeValidatorOptions?: ValidatorOptions
+  maybeValidatorOptions?: ValidatorOptions,
 ): Promise<ValidationError[]> {
   if (typeof schemaNameOrObject === 'string') {
-    return getFromContainer(Validator).validate(
-      schemaNameOrObject,
-      objectOrValidationOptions as object,
-      maybeValidatorOptions
-    );
+    return getFromContainer(Validator).validate(schemaNameOrObject, objectOrValidationOptions as object, maybeValidatorOptions);
   } else {
     return getFromContainer(Validator).validate(schemaNameOrObject, objectOrValidationOptions as ValidatorOptions);
   }
@@ -63,11 +55,7 @@ export function validateOrReject(object: object, validatorOptions?: ValidatorOpt
 /**
  * Valida determinado objeto por um determinado esquema de validação e rejeita em caso de erro.
  */
-export function validateOrReject(
-  schemaName: string,
-  object: object,
-  validatorOptions?: ValidatorOptions
-): Promise<void>;
+export function validateOrReject(schemaName: string, object: object, validatorOptions?: ValidatorOptions): Promise<void>;
 
 /**
  * Valida determinado objeto pelos decoradores do objeto ou determinado esquema de validação e rejeita em caso de erro.
@@ -75,19 +63,12 @@ export function validateOrReject(
 export function validateOrReject(
   schemaNameOrObject: object | string,
   objectOrValidationOptions?: object | ValidatorOptions,
-  maybeValidatorOptions?: ValidatorOptions
+  maybeValidatorOptions?: ValidatorOptions,
 ): Promise<void> {
   if (typeof schemaNameOrObject === 'string') {
-    return getFromContainer(Validator).validateOrReject(
-      schemaNameOrObject,
-      objectOrValidationOptions as object,
-      maybeValidatorOptions
-    );
+    return getFromContainer(Validator).validateOrReject(schemaNameOrObject, objectOrValidationOptions as object, maybeValidatorOptions);
   } else {
-    return getFromContainer(Validator).validateOrReject(
-      schemaNameOrObject,
-      objectOrValidationOptions as ValidatorOptions
-    );
+    return getFromContainer(Validator).validateOrReject(schemaNameOrObject, objectOrValidationOptions as ValidatorOptions);
   }
 }
 
@@ -103,11 +84,7 @@ export function validateSync(object: object, validatorOptions?: ValidatorOptions
  * Observe que este método ignora completamente as validações assíncronas.
  * Se você deseja realizar a validação corretamente, você precisa chamar o método activate.
  */
-export function validateSync(
-  schemaName: string,
-  object: object,
-  validatorOptions?: ValidatorOptions
-): ValidationError[];
+export function validateSync(schemaName: string, object: object, validatorOptions?: ValidatorOptions): ValidationError[];
 
 /**
  * Valida determinado objeto pelos decoradores do objeto ou determinado esquema de validação.
@@ -117,14 +94,10 @@ export function validateSync(
 export function validateSync(
   schemaNameOrObject: object | string,
   objectOrValidationOptions?: object | ValidatorOptions,
-  maybeValidatorOptions?: ValidatorOptions
+  maybeValidatorOptions?: ValidatorOptions,
 ): ValidationError[] {
   if (typeof schemaNameOrObject === 'string') {
-    return getFromContainer(Validator).validateSync(
-      schemaNameOrObject,
-      objectOrValidationOptions as object,
-      maybeValidatorOptions
-    );
+    return getFromContainer(Validator).validateSync(schemaNameOrObject, objectOrValidationOptions as object, maybeValidatorOptions);
   } else {
     return getFromContainer(Validator).validateSync(schemaNameOrObject, objectOrValidationOptions as ValidatorOptions);
   }

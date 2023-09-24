@@ -20,9 +20,9 @@ export function IsEmpty(validationOptions?: ValidationOptions): PropertyDecorato
       name: IS_EMPTY,
       validator: {
         validate: (value, args): boolean => isEmpty(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be empty')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be empty')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

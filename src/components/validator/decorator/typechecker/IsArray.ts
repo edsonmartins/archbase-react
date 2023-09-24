@@ -20,9 +20,9 @@ export function IsArray(validationOptions?: ValidationOptions): PropertyDecorato
       name: IS_ARRAY,
       validator: {
         validate: (value, args): boolean => isArray(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be an array')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be an array')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

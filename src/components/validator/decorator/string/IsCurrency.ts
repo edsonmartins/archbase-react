@@ -18,19 +18,16 @@ export function isCurrency(value: unknown, options?: ValidatorJS.IsCurrencyOptio
  * Checks if the string is a valid currency amount.
  * If given value is not a string, then it returns false.
  */
-export function IsCurrency(
-  options?: ValidatorJS.IsCurrencyOptions,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsCurrency(options?: ValidatorJS.IsCurrencyOptions, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_CURRENCY,
       constraints: [options],
       validator: {
         validate: (value, args): boolean => isCurrency(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a currency')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a currency')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

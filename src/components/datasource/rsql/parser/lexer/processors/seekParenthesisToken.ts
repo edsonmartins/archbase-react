@@ -1,14 +1,14 @@
-import { createParenthesisToken, ParenthesisToken } from '../Token'
-import { SeekProcessor } from '../LexerProcessor'
+import { createParenthesisToken, ParenthesisToken } from '../Token';
+import { SeekProcessor } from '../LexerProcessor';
 
 const seekParenthesisToken: SeekProcessor<ParenthesisToken> = (context) => {
   // we assume that parenthesis is a valid Parenthesis
-  const parenthesis = context.buffer.charAt(context.position) as '(' | ')'
+  const parenthesis = context.buffer.charAt(context.position) as '(' | ')';
 
-  const token = createParenthesisToken(parenthesis, context.position)
-  context.position += 1
+  const token = createParenthesisToken(parenthesis, context.position);
+  context.position += 1;
 
-  return token
-}
+  return token;
+};
 
-export default seekParenthesisToken
+export default seekParenthesisToken;

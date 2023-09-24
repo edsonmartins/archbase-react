@@ -24,11 +24,11 @@ export function IsMultibyte(validationOptions?: ValidationOptions): PropertyDeco
       validator: {
         validate: (value, args): boolean => isMultibyte(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain one or more multibyte chars')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain one or more multibyte chars')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

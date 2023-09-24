@@ -1,21 +1,21 @@
-import { VerboseLogicOperators } from '../../../ast'
-import { SeekProcessor } from '../LexerProcessor'
-import { createOperatorToken, OperatorToken } from '../Token'
-import { createScanNonReservedSymbol } from './scanNonReservedSymbol'
+import { VerboseLogicOperators } from '../../../ast';
+import { SeekProcessor } from '../LexerProcessor';
+import { createOperatorToken, OperatorToken } from '../Token';
+import { createScanNonReservedSymbol } from './scanNonReservedSymbol';
 
-const scanLogicVerboseOperator = createScanNonReservedSymbol(VerboseLogicOperators)
+const scanLogicVerboseOperator = createScanNonReservedSymbol(VerboseLogicOperators);
 
 const seekLogicVerboseOperatorToken: SeekProcessor<OperatorToken> = (context) => {
-  const operator = scanLogicVerboseOperator(context)
+  const operator = scanLogicVerboseOperator(context);
 
   if (operator) {
-    const token = createOperatorToken(operator, context.position)
-    context.position += operator.length
+    const token = createOperatorToken(operator, context.position);
+    context.position += operator.length;
 
-    return token
+    return token;
   }
 
-  return null
-}
+  return null;
+};
 
-export default seekLogicVerboseOperatorToken
+export default seekLogicVerboseOperatorToken;

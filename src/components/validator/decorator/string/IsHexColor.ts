@@ -24,11 +24,11 @@ export function IsHexColor(validationOptions?: ValidationOptions): PropertyDecor
       validator: {
         validate: (value, args): boolean => isHexColor(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a hexadecimal color')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a hexadecimal color')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

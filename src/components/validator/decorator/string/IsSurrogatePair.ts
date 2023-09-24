@@ -24,11 +24,11 @@ export function IsSurrogatePair(validationOptions?: ValidationOptions): Property
       validator: {
         validate: (value, args): boolean => isSurrogatePair(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain any surrogate pairs chars')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain any surrogate pairs chars')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -14,6 +14,7 @@ export const IS_IP = 'isIp';
 export function isIP(value: unknown, version?: IsIpVersion): boolean {
   /* eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion */
   const versionStr = version ? (`${version}` as '4' | '6') : undefined;
+
   return typeof value === 'string' && isIPValidator(value, versionStr);
 }
 
@@ -28,9 +29,9 @@ export function IsIP(version?: IsIpVersion, validationOptions?: ValidationOption
       constraints: [version],
       validator: {
         validate: (value, args): boolean => isIP(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be an ip address')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be an ip address')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

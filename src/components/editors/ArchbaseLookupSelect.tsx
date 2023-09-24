@@ -1,54 +1,42 @@
-import React, { useCallback, useState } from 'react'
-import { ArchbaseSelect, ArchbaseSelectProps } from './ArchbaseSelect'
-import {
-  ArchbaseDataSource,
-  DataSourceEvent,
-  DataSourceEventNames
-} from '../datasource'
-import { ArchbaseError } from '../core'
-import {
-  useArchbaseDidMount,
-  useArchbaseDidUpdate,
-  useArchbaseWillUnmount
-} from '../hooks'
-import { ArchbaseObjectHelper } from '../core/helper'
-import { SelectItem } from '@mantine/core'
+import React, { useCallback, useState } from 'react';
+import { ArchbaseSelect, ArchbaseSelectProps } from './ArchbaseSelect';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
+import { ArchbaseError } from '../core';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
+import { ArchbaseObjectHelper } from '../core/helper';
+import { SelectItem } from '@mantine/core';
 
 export interface ArchbaseLookupSelectProps<T, ID, O> extends ArchbaseSelectProps<T, ID, O> {
-  lookupDataSource: ArchbaseDataSource<O, ID> | undefined
-  lookupDataFieldText: string | ((record: any) => string)
-  lookupDataFieldId: string
-  simpleValue?: boolean
-  options?: Array<SelectItem> | undefined
+  lookupDataSource: ArchbaseDataSource<O, ID> | undefined;
+  lookupDataFieldText: string | ((record: any) => string);
+  lookupDataFieldId: string;
+  simpleValue?: boolean;
+  options?: Array<SelectItem> | undefined;
 }
 
 const getTextValue = (lookupDataFieldText: string | ((record: any) => string), record: any) => {
   if (typeof lookupDataFieldText === 'function') {
-    return lookupDataFieldText(record)
+    return lookupDataFieldText(record);
   } else {
-    return ArchbaseObjectHelper.getNestedProperty(record,lookupDataFieldText)
+    return ArchbaseObjectHelper.getNestedProperty(record, lookupDataFieldText);
   }
-}
+};
 
 function rebuildOptions<_T, ID, O>(
   lookupDataSource: ArchbaseDataSource<O, ID> | undefined,
   lookupDataFieldText: string | ((record: any) => string),
-  lookupDataFieldId: string
+  lookupDataFieldId: string,
 ): SelectItem[] | undefined {
-  let options: SelectItem[] = []
+  let options: SelectItem[] = [];
   if (lookupDataSource && lookupDataSource.getTotalRecords() > 0) {
     lookupDataSource.browseRecords().map((record: any) => {
-      if (lookupDataFieldId && !lookupDataFieldId.includes('.')){
+      if (lookupDataFieldId && !lookupDataFieldId.includes('.')) {
         if (!record.hasOwnProperty(lookupDataFieldId) || !record[lookupDataFieldId]) {
-          throw new ArchbaseError(
-            'Foi encontrado um registro sem ID no dataSource passado para o Select.'
-          )
+          throw new ArchbaseError('Foi encontrado um registro sem ID no dataSource passado para o Select.');
         }
         if (typeof lookupDataFieldText !== 'function') {
           if (!record.hasOwnProperty(lookupDataFieldText) || !record[lookupDataFieldText]) {
-            throw new ArchbaseError(
-              'Foi encontrado um registro sem o texto no dataSource passado para a Select.'
-            )
+            throw new ArchbaseError('Foi encontrado um registro sem o texto no dataSource passado para a Select.');
           }
         }
       }
@@ -56,13 +44,13 @@ function rebuildOptions<_T, ID, O>(
       options.push({
         label: record.label ? record.label : getTextValue(lookupDataFieldText, record),
         disabled: record.disabled,
-        value: ArchbaseObjectHelper.getNestedProperty(record,lookupDataFieldId),
-        origin: record
-      })
-    })
+        value: ArchbaseObjectHelper.getNestedProperty(record, lookupDataFieldId),
+        origin: record,
+      });
+    });
   }
 
-  return options
+  return options;
 }
 
 export function ArchbaseLookupSelect<T, ID, O>({
@@ -78,10 +66,9 @@ export function ArchbaseLookupSelect<T, ID, O>({
   ...otherProps
 }: ArchbaseLookupSelectProps<T, ID, O>) {
   const [currentOptions, setCurrentOptions] = useState<SelectItem[] | undefined>(() =>
-    rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId)
-  )
-  const [internalError, setInternalError] = useState<string|undefined>(error);
-
+    rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId),
+  );
+  const [internalError, setInternalError] = useState<string | undefined>(error);
 
   const lookupDataSourceEvent = (event: DataSourceEvent<O>) => {
     if (lookupDataSource) {
@@ -93,33 +80,32 @@ export function ArchbaseLookupSelect<T, ID, O>({
         event.type === DataSourceEventNames.afterCancel
       ) {
         if (lookupDataSource) {
-          setCurrentOptions(
-            rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId)
-          )
+          setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
         }
       }
-      if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
-        setInternalError(event.error)
+      if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
+        setInternalError(event.error);
       }
     }
-  }
+  };
 
   const getDataSourceFieldValue = () => {
-    let result = ''
+    let result = '';
     if (dataSource && dataField) {
-      result = dataSource.getFieldValue(dataField)
+      result = dataSource.getFieldValue(dataField);
       if (result && !simpleValue) {
         if (typeof lookupDataFieldText === 'function') {
-          result = lookupDataFieldText(dataSource.getCurrentRecord())
+          result = lookupDataFieldText(dataSource.getCurrentRecord());
         } else {
-          result = ArchbaseObjectHelper.getNestedProperty(result,lookupDataFieldId)
+          result = ArchbaseObjectHelper.getNestedProperty(result, lookupDataFieldId);
         }
       } else if (!result) {
-        result = ''
+        result = '';
       }
     }
-    return result
-  }
+
+    return result;
+  };
 
   const setDataSourceFieldValue = (value: any) => {
     if (value !== undefined && value !== '' && value !== null) {
@@ -127,40 +113,40 @@ export function ArchbaseLookupSelect<T, ID, O>({
         lookupDataSource &&
         lookupDataFieldId &&
         lookupDataSource.locate({
-          [lookupDataFieldId]: value
+          [lookupDataFieldId]: value,
         })
       ) {
         if (dataSource && dataField) {
           if (!simpleValue) {
-            dataSource.setFieldValue(dataField, lookupDataSource.getCurrentRecord())
+            dataSource.setFieldValue(dataField, lookupDataSource.getCurrentRecord());
           } else {
-            dataSource.setFieldValue(dataField, value)
+            dataSource.setFieldValue(dataField, value);
           }
         }
       }
     } else {
       if (dataSource && dataField) {
-        dataSource.setFieldValue(dataField, null)
+        dataSource.setFieldValue(dataField, null);
       }
     }
-  }
+  };
 
   useArchbaseDidMount(() => {
-    setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId))
+    setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
     if (lookupDataSource) {
-      lookupDataSource.addListener(lookupDataSourceEvent)
+      lookupDataSource.addListener(lookupDataSourceEvent);
     }
-  })
+  });
 
   useArchbaseDidUpdate(() => {
-    setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId))
-  }, [])
+    setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
+  }, []);
 
   useArchbaseWillUnmount(() => {
     if (lookupDataSource) {
-      lookupDataSource.removeListener(lookupDataSourceEvent)
+      lookupDataSource.removeListener(lookupDataSourceEvent);
     }
-  })
+  });
 
   return (
     <ArchbaseSelect
@@ -174,5 +160,5 @@ export function ArchbaseLookupSelect<T, ID, O>({
     >
       {children}
     </ArchbaseSelect>
-  )
+  );
 }

@@ -18,11 +18,7 @@ export const IS_MOBILE_PHONE = 'isMobilePhone';
  * 'zh-HK', 'zh-MO', 'zh-TW']
  * If given value is not a string, then it returns false.
  */
-export function isMobilePhone(
-  value: unknown,
-  locale?: ValidatorJS.MobilePhoneLocale,
-  options?: ValidatorJS.IsMobilePhoneOptions
-): boolean {
+export function isMobilePhone(value: unknown, locale?: ValidatorJS.MobilePhoneLocale, options?: ValidatorJS.IsMobilePhoneOptions): boolean {
   return typeof value === 'string' && isMobilePhoneValidator(value, locale, options);
 }
 
@@ -41,7 +37,7 @@ export function isMobilePhone(
 export function IsMobilePhone(
   locale?: ValidatorJS.MobilePhoneLocale,
   options?: ValidatorJS.IsMobilePhoneOptions,
-  validationOptions?: ValidationOptions
+  validationOptions?: ValidationOptions,
 ): PropertyDecorator {
   return ValidateBy(
     {
@@ -49,9 +45,9 @@ export function IsMobilePhone(
       constraints: [locale, options],
       validator: {
         validate: (value, args): boolean => isMobilePhone(value, args?.constraints[0], args?.constraints[1]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a phone number')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a phone number')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

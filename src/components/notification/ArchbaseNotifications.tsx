@@ -1,7 +1,7 @@
-import { Text } from '@mantine/core'
-import { notifications } from '@mantine/notifications'
-import { IconBug } from '@tabler/icons-react'
-import React from 'react'
+import { Text } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { IconBug } from '@tabler/icons-react';
+import React from 'react';
 
 export class ArchbaseNotifications {
   public static showError(title: string, error: string, autoClose: number = 5000): void {
@@ -16,7 +16,7 @@ export class ArchbaseNotifications {
       message: error,
       color: 'red',
       icon: <IconBug size="1.4rem" />,
-      loading: false
-    })
+      loading: false,
+    });
   }
 }

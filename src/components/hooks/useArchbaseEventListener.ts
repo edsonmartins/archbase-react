@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react';
 
 /*
 Example usage:
@@ -28,32 +28,32 @@ Example usage:
 
 export function useArchbaseEventListener(eventName, handler, element = window) {
   // Crie uma referência que armazene o manipulador
-  const savedHandler = useRef<any>()
+  const savedHandler = useRef<any>();
   // Atualiza o valor ref.current se o manipulador mudar.
   // Isso permite que nosso efeito abaixo sempre obtenha o manipulador mais recente ...
   // ... sem que precisemos passá-lo em efeito deps array ...
   // ... e potencialmente causar efeito para executar novamente cada renderização.
   useEffect(() => {
-    savedHandler.current = handler
-  }, [handler])
+    savedHandler.current = handler;
+  }, [handler]);
 
   useEffect(
     () => {
       // Certifique-se de que o elemento suporta addEventListener
       // on
-      const isSupported = element && element.addEventListener
-      if (!isSupported) return
+      const isSupported = element && element.addEventListener;
+      if (!isSupported) return;
       if (savedHandler.current) {
         // Cria um ouvinte de eventos que chama a função do manipulador armazenada em ref
-        const eventListener = (event) => savedHandler.current(event)
+        const eventListener = (event) => savedHandler.current(event);
         // Adicionar ouvinte de evento
-        element.addEventListener(eventName, eventListener)
+        element.addEventListener(eventName, eventListener);
         // Remove o ouvinte de evento na limpeza
         return () => {
-          element.removeEventListener(eventName, eventListener)
-        }
+          element.removeEventListener(eventName, eventListener);
+        };
       }
     },
-    [eventName, element] // Executa novamente se eventName ou elemento mudar
-  )
+    [eventName, element], // Executa novamente se eventName ou elemento mudar
+  );
 }

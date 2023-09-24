@@ -1,11 +1,11 @@
-import * as React from 'react'
-import ArchbaseJsonViewDataRender, { StyleProps } from './ArchbaseJsonViewDataRenderer'
-import styles from './styles.module.css'
+import * as React from 'react';
+import ArchbaseJsonViewDataRender, { StyleProps } from './ArchbaseJsonViewDataRenderer';
+import styles from './styles.module.css';
 
 export interface ArchbaseJsonViewProps {
-  data: Object | Array<any>
-  style?: StyleProps
-  shouldInitiallyExpand?: (level: number, value: any, field?: string) => boolean
+  data: Object | Array<any>;
+  style?: StyleProps;
+  shouldInitiallyExpand?: (level: number, value: any, field?: string) => boolean;
 }
 
 export const defaultStyles: StyleProps = {
@@ -20,8 +20,8 @@ export const defaultStyles: StyleProps = {
   otherValue: styles['value-other-light'],
   expander: styles['expander-light'],
   punctuation: styles['punctuation-light'],
-  pointer: styles.pointer
-}
+  pointer: styles.pointer,
+};
 
 export const darkStyles: StyleProps = {
   container: styles['container-dark'],
@@ -35,16 +35,16 @@ export const darkStyles: StyleProps = {
   otherValue: styles['value-other-dark'],
   expander: styles['expander-dark'],
   punctuation: styles['punctuation-dark'],
-  pointer: styles.pointer
-}
+  pointer: styles.pointer,
+};
 
-export const allExpanded = () => true
-export const collapseAllNested = (level: number) => level < 1
+export const allExpanded = () => true;
+export const collapseAllNested = (level: number) => level < 1;
 
 export const ArchbaseJsonView = ({
   data,
   style = defaultStyles,
-  shouldInitiallyExpand = allExpanded
+  shouldInitiallyExpand = allExpanded,
 }: ArchbaseJsonViewProps) => {
   return (
     <div className={style.container}>
@@ -56,5 +56,5 @@ export const ArchbaseJsonView = ({
         shouldInitiallyExpand={shouldInitiallyExpand}
       />
     </div>
-  )
-}
+  );
+};

@@ -24,11 +24,11 @@ export function IsAscii(validationOptions?: ValidationOptions): PropertyDecorato
       validator: {
         validate: (value, args): boolean => isAscii(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain only ASCII characters')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain only ASCII characters')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

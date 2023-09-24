@@ -24,11 +24,11 @@ export function IsSemVer(validationOptions?: ValidationOptions): PropertyDecorat
       validator: {
         validate: (value, args): boolean => isSemVer(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a Semantic Versioning Specification')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a Semantic Versioning Specification')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

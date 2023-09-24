@@ -32,6 +32,7 @@ export function Length(min: number, max?: number, validationOptions?: Validation
           } else if (isMaxLength && args.value.length > args?.constraints[1]) {
             return eachPrefix + t('archbase:$property must be shorter than or equal to $constraint2 characters');
           }
+
           return (
             eachPrefix +
             t('archbase:$property must be longer than or equal to $constraint1 and shorter than or equal to $constraint2 characters')
@@ -39,6 +40,6 @@ export function Length(min: number, max?: number, validationOptions?: Validation
         }, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -15,7 +15,7 @@ export function isNotEmptyObject(value: unknown, options?: { nullable?: boolean 
   }
 
   if (options?.nullable === false) {
-    return !Object.values(value).every(propertyValue => propertyValue === null || propertyValue === undefined);
+    return !Object.values(value).every((propertyValue) => propertyValue === null || propertyValue === undefined);
   }
 
   for (const key in value) {
@@ -31,10 +31,7 @@ export function isNotEmptyObject(value: unknown, options?: { nullable?: boolean 
  * Checks if the value is valid Object & not empty.
  * Returns false if the value is not an object or an empty valid object.
  */
-export function IsNotEmptyObject(
-  options?: { nullable?: boolean },
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsNotEmptyObject(options?: { nullable?: boolean }, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_NOT_EMPTY_OBJECT,
@@ -42,11 +39,11 @@ export function IsNotEmptyObject(
       validator: {
         validate: (value, args): boolean => isNotEmptyObject(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a non-empty object')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a non-empty object')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

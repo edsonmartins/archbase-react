@@ -18,7 +18,7 @@ export function constraintToString(constraint: unknown): string {
 export class ValidationUtils {
   static replaceMessageSpecialTokens(
     message: string | ((args: ValidationArguments) => string),
-    validationArguments: ValidationArguments
+    validationArguments: ValidationArguments,
   ): string {
     let messageString: string;
     if (message instanceof Function) {
@@ -29,10 +29,7 @@ export class ValidationUtils {
 
     if (messageString && Array.isArray(validationArguments.constraints)) {
       validationArguments.constraints.forEach((constraint, index) => {
-        messageString = messageString.replace(
-          new RegExp(`\\$constraint${index + 1}`, 'g'),
-          constraintToString(constraint)
-        );
+        messageString = messageString.replace(new RegExp(`\\$constraint${index + 1}`, 'g'), constraintToString(constraint));
       });
     }
 

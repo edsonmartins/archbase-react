@@ -1,59 +1,59 @@
-import React from 'react'
-import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
-import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
-import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
-import { DataSourceEvent, DataSourceEventNames } from '../datasource'
-import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
-import { ArchbaseAsyncSelect, OptionsResult } from './ArchbaseAsyncSelect'
-import { pedidosData, Pedido, Pessoa } from '../../demo/index'
-import { useArchbaseRemoteServiceApi } from '../hooks'
-import { API_TYPE } from '../../demo/ioc/DemoIOCTypes'
-import { FakePessoaService } from '../../demo/service/FakePessoaService'
-import { Page } from '../service'
-import { processErrorMessage } from '../core/exceptions'
+import React from 'react';
+import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource';
+import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
+import { DataSourceEvent, DataSourceEventNames } from '../datasource';
+import { useArchbaseForceUpdate } from '../hooks';
+import { Meta, StoryObj } from '@storybook/react';
+import { ArchbaseAsyncSelect, OptionsResult } from './ArchbaseAsyncSelect';
+import { pedidosData, Pedido, Pessoa } from '../../demo/index';
+import { useArchbaseRemoteServiceApi } from '../hooks';
+import { API_TYPE } from '../../demo/ioc/DemoIOCTypes';
+import { FakePessoaService } from '../../demo/service/FakePessoaService';
+import { Page } from '../service';
+import { processErrorMessage } from '../core/exceptions';
 
-const pedidosList: Pedido[] = pedidosData
-const PAGE_SIZE = 10
+const pedidosList: Pedido[] = pedidosData;
+const PAGE_SIZE = 10;
 
 const ArchbaseAsyncSelectExample = () => {
-  const forceUpdate = useArchbaseForceUpdate()
-  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa)
+  const forceUpdate = useArchbaseForceUpdate();
+  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   const { dataSource } = useArchbaseDataSource<Pedido, string>({
     initialData: pedidosList,
-    name: 'dsPedidos'
-  })
+    name: 'dsPedidos',
+  });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit()
+    dataSource.edit();
   }
   useArchbaseDataSourceListener<Pedido, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pedido>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
-          forceUpdate()
-          break
+          forceUpdate();
+          break;
         }
         default:
       }
-    }
-  })
+    },
+  });
 
   const loadRemotePessoas = async (page, value): Promise<OptionsResult<Pessoa>> => {
     return new Promise<OptionsResult<Pessoa>>(async (resolve, reject) => {
       try {
-        const result: Page<Pessoa> = await pessoaApi.findAllWithFilter(value, page, PAGE_SIZE)
+        const result: Page<Pessoa> = await pessoaApi.findAllWithFilter(value, page, PAGE_SIZE);
         resolve({
           options: result.content,
           page: result.pageable.pageNumber,
-          totalPages: result.totalPages
-        })
+          totalPages: result.totalPages,
+        });
       } catch (error) {
-        reject(processErrorMessage(error))
+        reject(processErrorMessage(error));
       }
-    })
-  }
+    });
+  };
 
   return (
     <Grid>
@@ -101,18 +101,18 @@ const ArchbaseAsyncSelectExample = () => {
         </Card>
       </Grid.Col>
     </Grid>
-  )
-}
+  );
+};
 
 export default {
   title: 'Editors/AsyncSelect',
-  component: ArchbaseAsyncSelectExample
-} as Meta
+  component: ArchbaseAsyncSelectExample,
+} as Meta;
 
 export const Example: StoryObj<typeof ArchbaseAsyncSelectExample> = {
   args: {
     render: () => {
-      ;<ArchbaseAsyncSelectExample />
-    }
-  }
-}
+      <ArchbaseAsyncSelectExample />;
+    },
+  },
+};

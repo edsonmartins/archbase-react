@@ -22,11 +22,11 @@ export function IsISO31661Alpha3(validationOptions?: ValidationOptions): Propert
       validator: {
         validate: (value, args): boolean => isISO31661Alpha3(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid ISO31661 Alpha3 code')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a valid ISO31661 Alpha3 code')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

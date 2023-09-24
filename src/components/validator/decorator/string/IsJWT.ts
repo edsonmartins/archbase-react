@@ -23,9 +23,9 @@ export function IsJWT(validationOptions?: ValidationOptions): PropertyDecorator 
       name: IS_JWT,
       validator: {
         validate: (value, args): boolean => isJWT(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a jwt string')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a jwt string')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

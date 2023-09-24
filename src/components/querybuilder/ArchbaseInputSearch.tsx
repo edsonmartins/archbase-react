@@ -1,17 +1,18 @@
-import React, { Component } from 'react'
-import { ActionIcon, Input, MantineTheme, Tooltip, Variants } from '@mantine/core'
-import { IconSearch } from '@tabler/icons-react'
+import React, { Component } from 'react';
+import { ActionIcon, Input, MantineTheme, Tooltip, Variants } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
 
 interface ArchbaseInputSearchProps {
-  placeholder?: string | undefined
-  theme: MantineTheme
-  onSearchClick?: () => void
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+  placeholder?: string | undefined;
+  theme: MantineTheme;
+  onSearchClick?: () => void;
+  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
 }
 
 export class ArchbaseInputSearch extends Component<ArchbaseInputSearchProps> {
   render = () => {
-    const { theme, onSearchClick, variant } = this.props
+    const { theme, onSearchClick, variant } = this.props;
+
     return (
       <Input
         placeholder={this.props.placeholder}
@@ -23,7 +24,7 @@ export class ArchbaseInputSearch extends Component<ArchbaseInputSearchProps> {
                 backgroundColor:
                   theme.colorScheme === 'dark'
                     ? theme.colors[theme.primaryColor][5]
-                    : theme.colors[theme.primaryColor][6]
+                    : theme.colors[theme.primaryColor][6],
               }}
               tabIndex={-1}
               variant={variant}
@@ -34,6 +35,6 @@ export class ArchbaseInputSearch extends Component<ArchbaseInputSearchProps> {
           </Tooltip>
         }
       ></Input>
-    )
-  }
+    );
+  };
 }

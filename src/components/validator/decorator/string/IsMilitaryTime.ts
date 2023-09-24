@@ -11,6 +11,7 @@ export const IS_MILITARY_TIME = 'isMilitaryTime';
  */
 export function isMilitaryTime(value: unknown): boolean {
   const militaryTimeRegex = /^([01]\d|2[0-3]):?([0-5]\d)$/;
+
   return typeof value === 'string' && matchesValidator(value, militaryTimeRegex);
 }
 
@@ -25,11 +26,11 @@ export function IsMilitaryTime(validationOptions?: ValidationOptions): PropertyD
       validator: {
         validate: (value, args): boolean => isMilitaryTime(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid representation of military time in the format HH:MM')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a valid representation of military time in the format HH:MM')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

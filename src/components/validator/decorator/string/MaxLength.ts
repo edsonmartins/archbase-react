@@ -25,11 +25,11 @@ export function MaxLength(max: number, validationOptions?: ValidationOptions): P
       validator: {
         validate: (value, args): boolean => maxLength(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be shorter than or equal to $constraint1 characters')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be shorter than or equal to $constraint1 characters')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

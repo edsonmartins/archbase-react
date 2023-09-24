@@ -23,9 +23,9 @@ export function IsIBAN(validationOptions?: ValidationOptions): PropertyDecorator
       name: IS_IBAN,
       validator: {
         validate: (value, args): boolean => isIBAN(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be an IBAN')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be an IBAN')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

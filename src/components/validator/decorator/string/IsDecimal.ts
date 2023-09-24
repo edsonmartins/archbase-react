@@ -18,10 +18,7 @@ export function isDecimal(value: unknown, options?: ValidatorJS.IsDecimalOptions
  * Checks if the string is a valid decimal.
  * If given value is not a string, then it returns false.
  */
-export function IsDecimal(
-  options?: ValidatorJS.IsDecimalOptions,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsDecimal(options?: ValidatorJS.IsDecimalOptions, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_DECIMAL,
@@ -29,11 +26,11 @@ export function IsDecimal(
       validator: {
         validate: (value, args): boolean => isDecimal(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property is not a valid decimal number.')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property is not a valid decimal number.')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

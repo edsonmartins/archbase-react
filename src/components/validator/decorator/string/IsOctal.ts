@@ -24,11 +24,11 @@ export function IsOctal(validationOptions?: ValidationOptions): PropertyDecorato
       validator: {
         validate: (value, args): boolean => isOctal(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be valid octal number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be valid octal number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

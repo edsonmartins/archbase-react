@@ -23,9 +23,9 @@ export function IsBtcAddress(validationOptions?: ValidationOptions): PropertyDec
       name: IS_BTC_ADDRESS,
       validator: {
         validate: (value, args): boolean => isBtcAddress(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a BTC address')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a BTC address')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

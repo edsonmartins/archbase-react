@@ -5,5 +5,5 @@ export type ArchbaseStateValues = {
   existsValue: (key: string) => boolean;
   clearValue: (key: string) => void;
   clearAllValues: () => void;
-  reset: () =>void;
-}
+  reset: () => void;
+};

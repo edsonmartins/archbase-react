@@ -1,9 +1,9 @@
 const isBase64 = (str) => {
   try {
-    return btoa(atob(str)) === str
+    return btoa(atob(str)) === str;
   } catch (err) {
-    return false
+    return false;
   }
-}
+};
 
-export default isBase64
+export default isBase64;

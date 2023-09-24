@@ -24,11 +24,11 @@ export function IsHexadecimal(validationOptions?: ValidationOptions): PropertyDe
       validator: {
         validate: (value, args): boolean => isHexadecimal(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a hexadecimal number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a hexadecimal number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -22,11 +22,11 @@ export function IsLatitude(validationOptions?: ValidationOptions): PropertyDecor
       validator: {
         validate: (value, args): boolean => isLatitude(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a latitude string or number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a latitude string or number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

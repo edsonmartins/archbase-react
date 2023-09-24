@@ -1,1 +1,1 @@
-export { withArchbaseMantineThemeHOC } from './withMantineThemeHOC'
+export { withArchbaseMantineThemeHOC } from './withMantineThemeHOC';

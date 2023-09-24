@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   DefaultProps,
   MantineColor,
   MantineNumberSize,
   Variants,
-  useComponentDefaultProps
-} from '@mantine/core'
+  useComponentDefaultProps,
+} from '@mantine/core';
 
 export interface ArchbaseAlertProps extends DefaultProps {
-  title?: React.ReactNode
-  variant?: Variants<'filled' | 'outline' | 'light'>
-  children: React.ReactNode
-  color?: MantineColor
-  titleColor?: MantineColor
-  icon?: React.ReactNode
-  withCloseButton?: boolean
-  onClose?: () => void
-  autoClose?: number
-  closeButtonLabel?: string
-  radius?: MantineNumberSize
-  withBorder?: boolean
-  backgroundColor?: MantineColor
+  title?: React.ReactNode;
+  variant?: Variants<'filled' | 'outline' | 'light'>;
+  children: React.ReactNode;
+  color?: MantineColor;
+  titleColor?: MantineColor;
+  icon?: React.ReactNode;
+  withCloseButton?: boolean;
+  onClose?: () => void;
+  autoClose?: number;
+  closeButtonLabel?: string;
+  radius?: MantineNumberSize;
+  withBorder?: boolean;
+  backgroundColor?: MantineColor;
 }
 
 const defaultProps: Partial<ArchbaseAlertProps> = {
-  variant: 'light'
-}
+  variant: 'light',
+};
 
 export function ArchbaseAlert(props: ArchbaseAlertProps) {
   const {
@@ -42,15 +42,15 @@ export function ArchbaseAlert(props: ArchbaseAlertProps) {
     unstyled,
     variant,
     titleColor,
-    autoClose = 0
-  } = useComponentDefaultProps('ArchbaseAlert', defaultProps, props)
-  const [started, ] = useState(false)
+    autoClose = 0,
+  } = useComponentDefaultProps('ArchbaseAlert', defaultProps, props);
+  const [started] = useState(false);
 
   useEffect(() => {
     if (autoClose > 0 && !started) {
-      setTimeout(() => (onClose ? onClose() : null), autoClose)
+      setTimeout(() => (onClose ? onClose() : null), autoClose);
     }
-  }, [autoClose])
+  }, [autoClose]);
 
   return (
     <Alert
@@ -58,12 +58,12 @@ export function ArchbaseAlert(props: ArchbaseAlertProps) {
       classNames={classNames}
       styles={(theme) => ({
         title: {
-          color: titleColor
+          color: titleColor,
         },
 
         leftIcon: {
-          marginRight: theme.spacing.md
-        }
+          marginRight: theme.spacing.md,
+        },
       })}
       unstyled={unstyled}
       icon={icon}
@@ -76,5 +76,5 @@ export function ArchbaseAlert(props: ArchbaseAlertProps) {
     >
       {children}
     </Alert>
-  )
+  );
 }

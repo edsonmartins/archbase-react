@@ -25,11 +25,11 @@ export function NotContains(seed: string, validationOptions?: ValidationOptions)
       validator: {
         validate: (value, args): boolean => notContains(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property should not contain a $constraint1 string')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property should not contain a $constraint1 string')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -22,11 +22,11 @@ export function MaxDate(date: Date | (() => Date), validationOptions?: Validatio
       validator: {
         validate: (value, args): boolean => maxDate(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => `${t('archbase:maximal allowed date for ')}${eachPrefix}${t('archbase:$property is $constraint1')}`,
-          validationOptions
+          (eachPrefix) => `${t('archbase:maximal allowed date for ')}${eachPrefix}${t('archbase:$property is $constraint1')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

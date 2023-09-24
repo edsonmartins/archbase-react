@@ -21,11 +21,11 @@ export function IsPositive(validationOptions?: ValidationOptions): PropertyDecor
       validator: {
         validate: (value, args): boolean => isPositive(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a positive number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a positive number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

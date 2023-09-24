@@ -1,21 +1,21 @@
-import { ComparisonOperators } from '../../../ast'
-import { createOperatorToken, OperatorToken } from '../Token'
-import { SeekProcessor } from '../LexerProcessor'
-import { createScanSymbol } from './scanSymbol'
+import { ComparisonOperators } from '../../../ast';
+import { createOperatorToken, OperatorToken } from '../Token';
+import { SeekProcessor } from '../LexerProcessor';
+import { createScanSymbol } from './scanSymbol';
 
-const scanAnyComparisonOperator = createScanSymbol(ComparisonOperators)
+const scanAnyComparisonOperator = createScanSymbol(ComparisonOperators);
 
 const seekComparisonOperatorToken: SeekProcessor<OperatorToken> = (context) => {
-  const operator = scanAnyComparisonOperator(context)
+  const operator = scanAnyComparisonOperator(context);
 
   if (operator) {
-    const token = createOperatorToken(operator, context.position)
-    context.position += operator.length
+    const token = createOperatorToken(operator, context.position);
+    context.position += operator.length;
 
-    return token
+    return token;
   }
 
-  return null
-}
+  return null;
+};
 
-export default seekComparisonOperatorToken
+export default seekComparisonOperatorToken;

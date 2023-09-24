@@ -23,9 +23,9 @@ export function IsUppercase(validationOptions?: ValidationOptions): PropertyDeco
       name: IS_UPPERCASE,
       validator: {
         validate: (value, args): boolean => isUppercase(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be uppercase')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be uppercase')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

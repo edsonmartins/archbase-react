@@ -11,7 +11,7 @@ export const ARRAY_NOT_CONTAINS = 'arrayNotContains';
 export function arrayNotContains(array: unknown, values: any[]): boolean {
   if (!Array.isArray(array)) return false;
 
-  return values.every(value => array.indexOf(value) === -1);
+  return values.every((value) => array.indexOf(value) === -1);
 }
 
 /**
@@ -26,11 +26,11 @@ export function ArrayNotContains(values: any[], validationOptions?: ValidationOp
       validator: {
         validate: (value, args): boolean => arrayNotContains(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property should not contain $constraint1 values')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property should not contain $constraint1 values')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

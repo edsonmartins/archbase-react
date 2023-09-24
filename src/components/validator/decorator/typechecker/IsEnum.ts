@@ -8,7 +8,8 @@ export const IS_ENUM = 'isEnum';
  * Checks if a given value is the member of the provided enum.
  */
 export function isEnum(value: unknown, entity: any): boolean {
-  const enumValues = Object.keys(entity).map(k => entity[k]);
+  const enumValues = Object.keys(entity).map((k) => entity[k]);
+
   return enumValues.includes(value);
 }
 
@@ -32,11 +33,11 @@ export function IsEnum(entity: object, validationOptions?: ValidationOptions): P
       validator: {
         validate: (value, args): boolean => isEnum(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be one of the following values: $constraint2')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be one of the following values: $constraint2')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

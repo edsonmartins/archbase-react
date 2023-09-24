@@ -1,16 +1,11 @@
-import React, { ChangeEventHandler } from 'react'
-import { Button, Flex, Paper, Text, TextInput } from '@mantine/core'
-import { modals } from '@mantine/modals'
-import i18next from 'i18next'
-import { IconBug, IconCircleFilled, IconTriangle } from '@tabler/icons-react'
+import React, { ChangeEventHandler } from 'react';
+import { Button, Flex, Paper, Text, TextInput } from '@mantine/core';
+import { modals } from '@mantine/modals';
+import i18next from 'i18next';
+import { IconBug, IconCircleFilled, IconTriangle } from '@tabler/icons-react';
 
 export class ArchbaseDialog {
-  static showConfirmDialogYesNo = (
-    title: string,
-    question: string,
-    onConfirm: () => void,
-    onCancel: () => void
-  ) => {
+  static showConfirmDialogYesNo = (title: string, question: string, onConfirm: () => void, onCancel: () => void) => {
     modals.openConfirmModal({
       title,
       centered: true,
@@ -19,9 +14,9 @@ export class ArchbaseDialog {
       confirmProps: { color: 'green' },
       cancelProps: { color: 'red' },
       onCancel,
-      onConfirm
-    })
-  }
+      onConfirm,
+    });
+  };
 
   static showInfo = (message: string, title?: string, onConfirm?: () => void) => {
     modals.open({
@@ -35,17 +30,17 @@ export class ArchbaseDialog {
           <Button
             fullWidth
             onClick={() => {
-              modals.closeAll()
-              onConfirm!()
+              modals.closeAll();
+              onConfirm!();
             }}
             mt="md"
           >
             Ok
           </Button>
         </Paper>
-      )
-    })
-  }
+      ),
+    });
+  };
 
   static showWarning = (message: string, title?: string, onConfirm?: () => void) => {
     modals.open({
@@ -59,17 +54,17 @@ export class ArchbaseDialog {
           <Button
             fullWidth
             onClick={() => {
-              modals.closeAll()
-              onConfirm!()
+              modals.closeAll();
+              onConfirm!();
             }}
             mt="md"
           >
             Ok
           </Button>
         </Paper>
-      )
-    })
-  }
+      ),
+    });
+  };
 
   static showError = (message: string, title?: string, onConfirm?: () => void) => {
     modals.open({
@@ -83,17 +78,17 @@ export class ArchbaseDialog {
           <Button
             fullWidth
             onClick={() => {
-              modals.closeAll()
-              onConfirm!()
+              modals.closeAll();
+              onConfirm!();
             }}
             mt="md"
           >
             Ok
           </Button>
         </Paper>
-      )
-    })
-  }
+      ),
+    });
+  };
 
   static showInputDialog = (
     label: string,
@@ -101,22 +96,17 @@ export class ArchbaseDialog {
     title?: string,
     onInputChange?: ChangeEventHandler<any> | undefined,
     onConfirm?: () => void,
-    onCancel?: () => void
+    onCancel?: () => void,
   ) => {
     modals.open({
       title: title || i18next.t('Informe'),
       children: (
         <Paper>
-          <TextInput
-            label={label}
-            placeholder={placeholder}
-            data-autofocus
-            onChange={onInputChange}
-          />
+          <TextInput label={label} placeholder={placeholder} data-autofocus onChange={onInputChange} />
           <Button
             onClick={() => {
-              modals.closeAll()
-              onConfirm!()
+              modals.closeAll();
+              onConfirm!();
             }}
             mt="md"
           >
@@ -124,15 +114,15 @@ export class ArchbaseDialog {
           </Button>
           <Button
             onClick={() => {
-              modals.closeAll()
-              onCancel!()
+              modals.closeAll();
+              onCancel!();
             }}
             mt="md"
           >
             Cancela
           </Button>
         </Paper>
-      )
-    })
-  }
+      ),
+    });
+  };
 }

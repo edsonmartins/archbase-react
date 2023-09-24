@@ -26,11 +26,11 @@ export function IsAlpha(locale?: ValidatorJS.AlphaLocale, validationOptions?: Va
       validator: {
         validate: (value, args): boolean => isAlpha(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain only letters (a-zA-Z)')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain only letters (a-zA-Z)')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

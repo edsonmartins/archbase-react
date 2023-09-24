@@ -1,11 +1,11 @@
-import type { ReactNode } from 'react'
-import { Children, cloneElement, isValidElement } from 'react'
+import type { ReactNode } from 'react';
+import { Children, cloneElement, isValidElement } from 'react';
 
-import hasComplexChildren from './hasComplexChildren'
+import hasComplexChildren from './hasComplexChildren';
 
 const deepMap = (
   children: ReactNode | ReactNode[],
-  deepMapFn: (child: ReactNode, index?: number, children?: ReactNode[]) => ReactNode
+  deepMapFn: (child: ReactNode, index?: number, children?: ReactNode[]) => ReactNode,
 ): ReactNode[] =>
   Children.toArray(children).map((child: ReactNode, index: number, mapChildren: ReactNode[]) => {
     if (isValidElement(child) && hasComplexChildren(child)) {
@@ -13,11 +13,12 @@ const deepMap = (
       return deepMapFn(
         cloneElement(child, {
           ...child.props,
-          children: deepMap(child.props.children, deepMapFn)
-        })
-      )
+          children: deepMap(child.props.children, deepMapFn),
+        }),
+      );
     }
-    return deepMapFn(child, index, mapChildren)
-  })
 
-export default deepMap
+    return deepMapFn(child, index, mapChildren);
+  });
+
+export default deepMap;

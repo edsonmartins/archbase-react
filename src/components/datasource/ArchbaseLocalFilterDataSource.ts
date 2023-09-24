@@ -1,42 +1,34 @@
-import { ArchbaseDataSource, DataSourceOptions } from './ArchbaseDataSource'
-import {
-  ArchbaseQueryFilterDelegator,
-  DelegatorCallback,
-  IQueryFilterEntity,
-  QueryFilterEntity
-} from '../querybuilder'
+import { ArchbaseDataSource, DataSourceOptions } from './ArchbaseDataSource';
+import { ArchbaseQueryFilterDelegator, DelegatorCallback, IQueryFilterEntity, QueryFilterEntity } from '../querybuilder';
 
 export class LocalFilter {
-  id?: any
+  id?: any;
 
-  companyId?: any
+  companyId?: any;
 
-  filter?: string
+  filter?: string;
 
-  name?: string
+  name?: string;
 
-  viewName?: string
+  viewName?: string;
 
-  componentName?: string
+  componentName?: string;
 
-  userName?: string
+  userName?: string;
 
-  shared?: boolean
+  shared?: boolean;
 
-  code?: string
+  code?: string;
 
   constructor(data: Partial<LocalFilter> = {}) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 }
 
-export class ArchbaseLocalFilterDataSource
-  extends ArchbaseDataSource<LocalFilter, number>
-  implements ArchbaseQueryFilterDelegator
-{
+export class ArchbaseLocalFilterDataSource extends ArchbaseDataSource<LocalFilter, number> implements ArchbaseQueryFilterDelegator {
   public getFilterById(id: any): IQueryFilterEntity | undefined {
     if (this.locate({ id })) {
-      return this.convertCurrentRecordToFilter()
+      return this.convertCurrentRecordToFilter();
     }
   }
 
@@ -50,8 +42,8 @@ export class ArchbaseLocalFilterDataSource
       componentName: this.getFieldValue('componentName'),
       userName: this.getFieldValue('userName'),
       shared: this.getFieldValue('shared'),
-      filter: atob(this.getFieldValue('filter'))
-    })
+      filter: atob(this.getFieldValue('filter')),
+    });
   }
 
   public async addNewFilter(filter: IQueryFilterEntity, onResult: DelegatorCallback) {
@@ -65,37 +57,38 @@ export class ArchbaseLocalFilterDataSource
         filter: btoa(JSON.stringify(filter.filter)),
         shared: filter.shared,
         viewName: filter.viewName,
-        userName: filter.userName
-      })
-    )
-    const result = await this.save()
-    onResult(null, result.id)
+        userName: filter.userName,
+      }),
+    );
+    const result = await this.save();
+    onResult(null, result.id);
   }
 
   public async saveFilter(filter: IQueryFilterEntity, onResult: DelegatorCallback) {
     if (this.locate({ id: filter.id })) {
-      this.edit()
-      this.setFieldValue('filter', btoa(JSON.stringify(filter.filter)))
-      const result = await this.save()
-      onResult(null, result.id)
+      this.edit();
+      this.setFieldValue('filter', btoa(JSON.stringify(filter.filter)));
+      const result = await this.save();
+      onResult(null, result.id);
     } else {
-      onResult('Filtro não encontrado.')
+      onResult('Filtro não encontrado.');
     }
   }
 
   public async removeFilterBy(filter: IQueryFilterEntity, onResult: DelegatorCallback) {
     if (this.locate({ id: filter.id })) {
-      await this.remove()
-      onResult(null, filter.id)
+      await this.remove();
+      onResult(null, filter.id);
     } else {
-      onResult('Filtro não encontrado.')
+      onResult('Filtro não encontrado.');
     }
   }
 
   public getFirstFilter(): IQueryFilterEntity | undefined {
     if (this.getTotalRecords() > 0) {
-      this.first()
-      return this.convertCurrentRecordToFilter()
+      this.first();
+
+      return this.convertCurrentRecordToFilter();
     }
   }
 
@@ -111,10 +104,11 @@ export class ArchbaseLocalFilterDataSource
           componentName: filter.componentName,
           userName: filter.userName,
           shared: filter.shared,
-          filter: atob(filter.filter || '')
-        })
-      )
+          filter: atob(filter.filter || ''),
+        }),
+      );
     }
-    return []
+
+    return [];
   }
 }

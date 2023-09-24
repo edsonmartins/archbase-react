@@ -23,11 +23,11 @@ export function IsDivisibleBy(num: number, validationOptions?: ValidationOptions
       validator: {
         validate: (value, args): boolean => isDivisibleBy(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be divisible by $constraint1')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be divisible by $constraint1')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

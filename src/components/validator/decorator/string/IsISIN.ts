@@ -24,11 +24,11 @@ export function IsISIN(validationOptions?: ValidationOptions): PropertyDecorator
       validator: {
         validate: (value, args): boolean => isISIN(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be an ISIN (stock/security identifier)')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be an ISIN (stock/security identifier)')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

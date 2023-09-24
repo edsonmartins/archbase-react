@@ -8,18 +8,13 @@ export const IS_INSTANCE = 'isInstance';
  * Checks if the value is an instance of the specified object.
  */
 export function isInstance(object: unknown, targetTypeConstructor: new (...args: any[]) => any): boolean {
-  return (
-    targetTypeConstructor && typeof targetTypeConstructor === 'function' && object instanceof targetTypeConstructor
-  );
+  return targetTypeConstructor && typeof targetTypeConstructor === 'function' && object instanceof targetTypeConstructor;
 }
 
 /**
  * Checks if the value is an instance of the specified object.
  */
-export function IsInstance(
-  targetType: new (...args: any[]) => any,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsInstance(targetType: new (...args: any[]) => any, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_INSTANCE,
@@ -35,6 +30,6 @@ export function IsInstance(
         }, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -24,11 +24,11 @@ export function IsVariableWidth(validationOptions?: ValidationOptions): Property
       validator: {
         validate: (value, args): boolean => isVariableWidth(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain a full-width and half-width characters')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain a full-width and half-width characters')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -24,11 +24,11 @@ export function IsMagnetURI(validationOptions?: ValidationOptions): PropertyDeco
       validator: {
         validate: (value, args): boolean => isMagnetURI(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be magnet uri format')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be magnet uri format')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

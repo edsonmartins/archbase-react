@@ -21,11 +21,11 @@ export function IsInt(validationOptions?: ValidationOptions): PropertyDecorator 
       validator: {
         validate: (value, args): boolean => isInt(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be an integer number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be an integer number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

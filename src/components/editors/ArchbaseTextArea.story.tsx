@@ -1,35 +1,35 @@
-import React from 'react'
-import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
-import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
-import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
-import { DataSourceEvent, DataSourceEventNames } from '../datasource'
-import { ArchbaseTextArea } from './ArchbaseTextArea'
-import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
-import { Pessoa, pessoasData } from '../../demo/index'
+import React from 'react';
+import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource';
+import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
+import { DataSourceEvent, DataSourceEventNames } from '../datasource';
+import { ArchbaseTextArea } from './ArchbaseTextArea';
+import { useArchbaseForceUpdate } from '../hooks';
+import { Meta, StoryObj } from '@storybook/react';
+import { Pessoa, pessoasData } from '../../demo/index';
 
 const ArchbaseEditExample = () => {
-  const forceUpdate = useArchbaseForceUpdate()
+  const forceUpdate = useArchbaseForceUpdate();
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
-  })
+    name: 'dsPessoas',
+  });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit()
+    dataSource.edit();
   }
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
-          forceUpdate()
-          break
+          forceUpdate();
+          break;
         }
         default:
       }
-    }
-  })
+    },
+  });
 
   return (
     <Grid>
@@ -75,20 +75,20 @@ const ArchbaseEditExample = () => {
         </Card>
       </Grid.Col>
     </Grid>
-  )
-}
+  );
+};
 
 export default {
   title: 'Editors/Textarea',
-  component: ArchbaseEditExample
-} as Meta
+  component: ArchbaseEditExample,
+} as Meta;
 
-const data = [pessoasData[0]]
+const data = [pessoasData[0]];
 
 export const Example: StoryObj<typeof ArchbaseEditExample> = {
   args: {
     render: () => {
-      ;<ArchbaseEditExample />
-    }
-  }
-}
+      <ArchbaseEditExample />;
+    },
+  },
+};

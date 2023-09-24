@@ -53,11 +53,11 @@ export function IsNumber(options: IsNumberOptions = {}, validationOptions?: Vali
       validator: {
         validate: (value, args): boolean => isNumber(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a number conforming to the specified constraints')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a number conforming to the specified constraints')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

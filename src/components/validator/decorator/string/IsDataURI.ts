@@ -24,11 +24,11 @@ export function IsDataURI(validationOptions?: ValidationOptions): PropertyDecora
       validator: {
         validate: (value, args): boolean => isDataURI(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a data uri format')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a data uri format')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -23,11 +23,11 @@ export function IsDefined(validationOptions?: ValidationOptions): PropertyDecora
       validator: {
         validate: (value): boolean => isDefined(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property should not be null or undefined')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property should not be null or undefined')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -25,19 +25,16 @@ export function isStrongPassword(value: unknown, options?: IsStrongPasswordOptio
  * Checks if the string is a strong password.
  * If given value is not a string, then it returns false.
  */
-export function IsStrongPassword(
-  options?: IsStrongPasswordOptions,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsStrongPassword(options?: IsStrongPasswordOptions, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_STRONG_PASSWORD,
       constraints: [options],
       validator: {
         validate: (value, args): boolean => isStrongPassword(value, args.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property is not strong enough')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property is not strong enough')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

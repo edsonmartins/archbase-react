@@ -4,4 +4,4 @@ export const API_TYPE = {
   Produto: Symbol.for('Produto'),
   Pessoa: Symbol.for('Pessoa'),
   Pedido: Symbol.for('Pedido'),
-}
+};

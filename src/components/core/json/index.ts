@@ -1,1 +1,1 @@
-export { ArchbaseJacksonParser } from './ArchbaseJacksonParser'
+export { ArchbaseJacksonParser } from './ArchbaseJacksonParser';

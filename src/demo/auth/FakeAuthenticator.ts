@@ -4,7 +4,6 @@ import { injectable } from 'inversify';
 
 @injectable()
 export class FakeAuthenticator implements ArchbaseAuthenticator {
-  
   login(username: string, password: string): Promise<ArchbaseAccessToken> {
     throw new Error('Method not implemented.');
   }

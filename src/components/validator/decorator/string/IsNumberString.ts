@@ -18,19 +18,16 @@ export function isNumberString(value: unknown, options?: ValidatorJS.IsNumericOp
  * Checks if the string is numeric.
  * If given value is not a string, then it returns false.
  */
-export function IsNumberString(
-  options?: ValidatorJS.IsNumericOptions,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsNumberString(options?: ValidatorJS.IsNumericOptions, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_NUMBER_STRING,
       constraints: [options],
       validator: {
         validate: (value, args): boolean => isNumberString(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a number string')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a number string')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

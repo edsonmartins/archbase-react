@@ -23,9 +23,9 @@ export function IsLocale(validationOptions?: ValidationOptions): PropertyDecorat
       name: IS_LOCALE,
       validator: {
         validate: (value, args): boolean => isLocale(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be locale')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be locale')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -25,9 +25,9 @@ export function IsISSN(options?: ValidatorJS.IsISSNOptions, validationOptions?: 
       constraints: [options],
       validator: {
         validate: (value, args): boolean => isISSN(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a ISSN')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a ISSN')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

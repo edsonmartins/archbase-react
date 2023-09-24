@@ -24,11 +24,11 @@ export function IsEthereumAddress(validationOptions?: ValidationOptions): Proper
       validator: {
         validate: (value, args): boolean => isEthereumAddress(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be an Ethereum address')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be an Ethereum address')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

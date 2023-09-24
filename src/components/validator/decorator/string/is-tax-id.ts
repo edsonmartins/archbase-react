@@ -33,11 +33,11 @@ export function IsTaxId(locale?: string, validationOptions?: ValidationOptions):
       validator: {
         validate: (value, args): boolean => isTaxId(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a Tax Identification Number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a Tax Identification Number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

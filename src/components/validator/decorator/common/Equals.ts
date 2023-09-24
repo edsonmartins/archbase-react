@@ -22,11 +22,11 @@ export function Equals(comparison: any, validationOptions?: ValidationOptions): 
       validator: {
         validate: (value, args): boolean => equals(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a latitude string or number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a latitude string or number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -26,11 +26,11 @@ export function IsFQDN(options?: ValidatorJS.IsFQDNOptions, validationOptions?: 
       validator: {
         validate: (value, args): boolean => isFQDN(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid domain name')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a valid domain name')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

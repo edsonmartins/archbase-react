@@ -1,5 +1,5 @@
-import React from 'react'
+import React from 'react';
 
 export function ArchbaseSearchTemplate() {
-  return <div>SEARCH TEMPLATE</div>
+  return <div>SEARCH TEMPLATE</div>;
 }

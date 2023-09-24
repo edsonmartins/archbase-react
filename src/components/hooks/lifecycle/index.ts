@@ -1,6 +1,6 @@
 // eslint-disable-next-line prettier/prettier
 import type { DependencyList, EffectCallback, FC } from 'react'
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react';
 // #######################################################################
 // ################################ Notes ################################
 // #######################################################################
@@ -20,8 +20,8 @@ import { memo, useEffect, useRef, useState } from 'react'
 // #######################################################################
 
 // eslint-disable-next-line no-undef
-type Props = Record<string, unknown>
-type ShouldComponentUpdateHandler = (props: Props, nextProps: Props) => boolean
+type Props = Record<string, unknown>;
+type ShouldComponentUpdateHandler = (props: Props, nextProps: Props) => boolean;
 
 // #######################################################################
 // ################################ Code #################################
@@ -35,9 +35,9 @@ type ShouldComponentUpdateHandler = (props: Props, nextProps: Props) => boolean
  * @param handler callback function only allowed to return void.
  */
 function useArchbaseWillMount(handler: EffectCallback): void {
-  const willMount = useRef<boolean>(true)
-  if (willMount.current) handler()
-  willMount.current = false
+  const willMount = useRef<boolean>(true);
+  if (willMount.current) handler();
+  willMount.current = false;
 }
 
 /**
@@ -47,7 +47,7 @@ function useArchbaseWillMount(handler: EffectCallback): void {
  * @param handler callback function only allowed to return void.
  */
 function useArchbaseDidMount(handler: EffectCallback): void {
-  useEffect(handler, [])
+  useEffect(handler, []);
 }
 
 /**
@@ -57,17 +57,18 @@ function useArchbaseDidMount(handler: EffectCallback): void {
  * @param handler callback function only allowed to return void.
  */
 function useArchbaseDidUpdate(handler: EffectCallback, deps?: DependencyList): void {
-  const hasMounted = useRef<boolean>(false)
+  const hasMounted = useRef<boolean>(false);
 
   useEffect(() => {
     if (!hasMounted.current) {
-      hasMounted.current = true
-      return
+      hasMounted.current = true;
+
+      return;
     }
 
-    handler()
+    handler();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps)
+  }, deps);
 }
 
 /**
@@ -77,29 +78,22 @@ function useArchbaseDidUpdate(handler: EffectCallback, deps?: DependencyList): v
  * @param shouldComponentUpdateHandler comparator like the shouldComponentUpdate lifecycle.
  * @returns [PureComponent]
  */
-function useShouldComponentUpdate(
-  Component: FC,
-  shouldComponentUpdateHandler?: ShouldComponentUpdateHandler
-) {
-  return [memo(Component, shouldComponentUpdateHandler)]
+function useShouldComponentUpdate(Component: FC, shouldComponentUpdateHandler?: ShouldComponentUpdateHandler) {
+  return [memo(Component, shouldComponentUpdateHandler)];
 }
 
 /**
  * @alias useShouldComponentUpdate
  */
-function usePureComponent(
-  Component: FC,
-  shouldComponentUpdateHandler?: ShouldComponentUpdateHandler
-) {
-  return [memo(Component, shouldComponentUpdateHandler)]
+function usePureComponent(Component: FC, shouldComponentUpdateHandler?: ShouldComponentUpdateHandler) {
+  return [memo(Component, shouldComponentUpdateHandler)];
 }
 
 /**
  * @alias useShouldComponentUpdate but with diffrent pattern (HOC)!
  */
 function withShouldComponentUpdate(Component: FC) {
-  return (shouldComponentUpdateHandler: ShouldComponentUpdateHandler) =>
-    memo(Component, shouldComponentUpdateHandler)
+  return (shouldComponentUpdateHandler: ShouldComponentUpdateHandler) => memo(Component, shouldComponentUpdateHandler);
 }
 
 /**
@@ -111,37 +105,39 @@ function withShouldComponentUpdate(Component: FC) {
  * @param handler callback function only allowed to return void.
  */
 function useArchbaseWillUnmount(handler: () => void): void {
-  useEffect(() => () => handler(), []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => () => handler(), []); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
 function useArchbasePrevious(value) {
   // O objeto ref é um contêiner genérico cuja propriedade atual é mutável ...
   // ... e pode conter qualquer valor, semelhante a uma propriedade de instância em uma classe
-  const ref = useRef()
+  const ref = useRef();
   // Armazena o valor atual na ref
   useEffect(() => {
-    ref.current = value
-  }, [value]) // Executa novamente apenas se o valor mudar
+    ref.current = value;
+  }, [value]); // Executa novamente apenas se o valor mudar
   // Retorna o valor anterior (acontece antes da atualização no useEffect acima)
-  return ref.current
+  return ref.current;
 }
 
 const useArchbaseIsMounted = () => {
-  const componentIsMounted = useRef(true)
+  const componentIsMounted = useRef(true);
   useEffect(() => {
-    componentIsMounted.current = true
+    componentIsMounted.current = true;
+
     return () => {
-      componentIsMounted.current = false
-    }
-  }, [])
-  return componentIsMounted.current
-}
+      componentIsMounted.current = false;
+    };
+  }, []);
+
+  return componentIsMounted.current;
+};
 
 const useArchbaseForceUpdate = () => {
-  const [, rerender] = useState(0)
+  const [, rerender] = useState(0);
 
-  return () => rerender((prev) => prev + 1)
-}
+  return () => rerender((prev) => prev + 1);
+};
 
 // ########################################################################
 // ################################ Export ################################
@@ -157,5 +153,5 @@ export {
   useArchbaseWillUnmount,
   usePureComponent,
   useShouldComponentUpdate,
-  withShouldComponentUpdate
-}
+  withShouldComponentUpdate,
+};

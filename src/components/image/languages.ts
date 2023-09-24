@@ -97,7 +97,7 @@ export const languages = {
       'Observe que a área de corte selecionada é menor do que o redimensionamento aplicado, o que pode causar diminuição da qualidade',
     actualSize: 'Tamanho atual (100%)',
     fitSize: 'Tamanho adequado',
-    addImageTitle: 'Selecione a imagem para adicionar...'
+    addImageTitle: 'Selecione a imagem para adicionar...',
   },
   en: {
     name: 'Name',
@@ -193,11 +193,10 @@ export const languages = {
     nameIsRequired: 'Name is required.',
     quality: 'Quality',
     imageDimensionsHoverTitle: 'Saved image size (width x height)',
-    cropSizeLowerThanResizedWarning:
-      'Note, the selected crop area is lower than the applied resize which might cause quality decrease',
+    cropSizeLowerThanResizedWarning: 'Note, the selected crop area is lower than the applied resize which might cause quality decrease',
     actualSize: 'Actual size (100%)',
     fitSize: 'Fit size',
-    addImageTitle: 'Select image to add...'
+    addImageTitle: 'Select image to add...',
   },
   es: {
     name: 'Nombre',
@@ -297,6 +296,6 @@ export const languages = {
       'Tenga en cuenta que el área de recorte seleccionada es menor que el cambio de tamaño aplicado, lo que podría causar una disminución de la calidad',
     actualSize: 'Tamaño real (100%)',
     fitSize: 'Tamaño de ajuste',
-    addImageTitle: 'Seleccionar imagen para agregar...'
-  }
-}
+    addImageTitle: 'Seleccionar imagen para agregar...',
+  },
+};

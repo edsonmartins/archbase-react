@@ -20,9 +20,9 @@ export function IsBoolean(validationOptions?: ValidationOptions): PropertyDecora
       name: IS_BOOLEAN,
       validator: {
         validate: (value, args): boolean => isBoolean(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a boolean value')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a boolean value')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

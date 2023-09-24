@@ -1,20 +1,20 @@
 export class ArchbaseError extends Error {
   constructor(message) {
-    super(message); 
-    this.name = "ArchbaseError"; 
+    super(message);
+    this.name = 'ArchbaseError';
   }
 }
 
 export class ArchbaseServiceError extends Error {
   constructor(message) {
-    super(message); 
-    this.name = "ArchbaseServiceError"; 
+    super(message);
+    this.name = 'ArchbaseServiceError';
   }
 }
 
 export class ArchbaseDataSourceError extends Error {
   constructor(message) {
-    super(message); 
-    this.name = "ArchbaseDataSourceError"; 
+    super(message);
+    this.name = 'ArchbaseDataSourceError';
   }
 }

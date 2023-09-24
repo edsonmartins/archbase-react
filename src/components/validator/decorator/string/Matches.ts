@@ -24,7 +24,7 @@ export function Matches(pattern: string, modifiers?: string, validationOptions?:
 export function Matches(
   pattern: RegExp | string,
   modifiersOrAnnotationOptions?: string | ValidationOptions,
-  validationOptions?: ValidationOptions
+  validationOptions?: ValidationOptions,
 ): PropertyDecorator {
   let modifiers: string;
   if (modifiersOrAnnotationOptions && modifiersOrAnnotationOptions instanceof Object && !validationOptions) {
@@ -41,10 +41,10 @@ export function Matches(
         validate: (value, args): boolean => matches(value, args?.constraints[0], args?.constraints[1]),
         defaultMessage: buildMessage(
           (eachPrefix, args) => eachPrefix + t('archbase:$property must match $constraint1 regular expression'),
-          validationOptions
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -18,10 +18,7 @@ export function isAlphanumeric(value: unknown, locale?: ValidatorJS.Alphanumeric
  * Checks if the string contains only letters and numbers.
  * If given value is not a string, then it returns false.
  */
-export function IsAlphanumeric(
-  locale?: ValidatorJS.AlphanumericLocale,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsAlphanumeric(locale?: ValidatorJS.AlphanumericLocale, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_ALPHANUMERIC,
@@ -29,11 +26,11 @@ export function IsAlphanumeric(
       validator: {
         validate: (value, args): boolean => isAlphanumeric(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain only letters and numbers')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain only letters and numbers')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -1,10 +1,10 @@
-import * as React from "react";
-import { IArchbaseSpacesOptions, OptionsContext } from "../core-react";
+import * as React from 'react';
+import { IArchbaseSpacesOptions, OptionsContext } from '../core-react';
 
 interface IProps extends IArchbaseSpacesOptions {
-	children?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const ArchbaseSpaceOptions: React.FC<IProps> = ({ children, ...opts }) => {
-	return <OptionsContext.Provider value={opts}>{children}</OptionsContext.Provider>;
+  return <OptionsContext.Provider value={opts}>{children}</OptionsContext.Provider>;
 };

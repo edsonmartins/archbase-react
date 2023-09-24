@@ -24,11 +24,11 @@ export function IsBIC(validationOptions?: ValidationOptions): PropertyDecorator 
       validator: {
         validate: (value, args): boolean => isBIC(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a BIC or SWIFT code')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a BIC or SWIFT code')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

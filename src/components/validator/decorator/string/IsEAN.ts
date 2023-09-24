@@ -24,11 +24,11 @@ export function IsEAN(validationOptions?: ValidationOptions): PropertyDecorator 
       validator: {
         validate: (value, args): boolean => isEAN(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be an EAN (European Article Number)')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be an EAN (European Article Number)')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

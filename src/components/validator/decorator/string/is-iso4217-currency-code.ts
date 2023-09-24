@@ -22,11 +22,11 @@ export function IsISO4217CurrencyCode(validationOptions?: ValidationOptions): Pr
       validator: {
         validate: (value, args): boolean => isISO4217CurrencyCode(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid ISO4217 currency code')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a valid ISO4217 currency code')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

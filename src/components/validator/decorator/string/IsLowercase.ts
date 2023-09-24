@@ -24,11 +24,11 @@ export function IsLowercase(validationOptions?: ValidationOptions): PropertyDeco
       validator: {
         validate: (value, args): boolean => isLowercase(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a lowercase string')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a lowercase string')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

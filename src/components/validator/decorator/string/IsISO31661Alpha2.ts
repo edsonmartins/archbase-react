@@ -22,11 +22,11 @@ export function IsISO31661Alpha2(validationOptions?: ValidationOptions): Propert
       validator: {
         validate: (value, args): boolean => isISO31661Alpha2(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid ISO31661 Alpha2 code')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a valid ISO31661 Alpha2 code')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

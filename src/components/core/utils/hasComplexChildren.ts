@@ -1,16 +1,14 @@
-import type { ReactElement, ReactNode } from 'react'
-import { Children, isValidElement } from 'react'
+import type { ReactElement, ReactNode } from 'react';
+import { Children, isValidElement } from 'react';
 
-import hasChildren from './hasChildren'
+import hasChildren from './hasChildren';
 
-const hasComplexChildren = (
-  element: ReactNode
-): element is ReactElement<{ children: ReactNode | ReactNode[] }> =>
+const hasComplexChildren = (element: ReactNode): element is ReactElement<{ children: ReactNode | ReactNode[] }> =>
   isValidElement(element) &&
   hasChildren(element) &&
   Children.toArray(element.props.children).reduce(
     (response: boolean, child: ReactNode): boolean => response || isValidElement(child),
-    false
-  )
+    false,
+  );
 
-export default hasComplexChildren
+export default hasComplexChildren;

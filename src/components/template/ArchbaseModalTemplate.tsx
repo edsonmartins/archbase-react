@@ -1,19 +1,19 @@
-import { Button, Flex, Group, MantineNumberSize, Modal, ModalProps } from '@mantine/core'
-import React, { ReactNode } from 'react'
-import { useArchbaseAppContext } from '../core'
-import { Bottom, Fill, Fixed } from 'react-spaces'
-import { useArchbaseTheme } from '../hooks'
-import { IconCheck } from '@tabler/icons-react'
-import { IconX } from '@tabler/icons-react'
-import { t } from 'i18next'
-import { ArchbaseDialog } from '../notification'
-import { ArchbaseForm, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '../containers'
+import { Button, Flex, Group, MantineNumberSize, Modal, ModalProps } from '@mantine/core';
+import React, { ReactNode } from 'react';
+import { useArchbaseAppContext } from '../core';
+import { Bottom, Fill, Fixed } from 'react-spaces';
+import { useArchbaseTheme } from '../hooks';
+import { IconCheck } from '@tabler/icons-react';
+import { IconX } from '@tabler/icons-react';
+import { t } from 'i18next';
+import { ArchbaseDialog } from '../notification';
+import { ArchbaseForm, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '../containers';
 
 export interface ArchbaseModalTemplateProps extends ModalProps {
-  height: MantineNumberSize
-  userActions?: ReactNode
-  onClickOk?: ()=>void
-  onClickCancel?: ()=>void
+  height: MantineNumberSize;
+  userActions?: ReactNode;
+  onClickOk?: () => void;
+  onClickCancel?: () => void;
 }
 
 export function ArchbaseModalTemplate({
@@ -33,28 +33,28 @@ export function ArchbaseModalTemplate({
   onClose,
   onClickOk,
   onClickCancel,
-  userActions
+  userActions,
 }: ArchbaseModalTemplateProps) {
-  const appContext = useArchbaseAppContext()
-  const theme = useArchbaseTheme()
+  const appContext = useArchbaseAppContext();
+  const theme = useArchbaseTheme();
 
   const handleSave = () => {
-    if (onClickOk){
-      onClickOk()
+    if (onClickOk) {
+      onClickOk();
     }
-    onClose()
-  }
+    onClose();
+  };
 
   const handleCancel = () => {
     if (onClickCancel) {
-      onClickCancel()
+      onClickCancel();
     }
-    onClose()
-  }
+    onClose();
+  };
 
   const handleClose = () => {
-      ArchbaseDialog.showWarning(t("Click on Ok or Cancel to close"))
-  }
+    ArchbaseDialog.showWarning(t('Click on Ok or Cancel to close'));
+  };
 
   return (
     <Modal
@@ -63,7 +63,7 @@ export function ArchbaseModalTemplate({
       overlayProps={
         overlayProps || {
           color: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[6],
-          opacity: 0.25
+          opacity: 0.25,
         }
       }
       withCloseButton={withCloseButton}
@@ -77,15 +77,11 @@ export function ArchbaseModalTemplate({
     >
       <ArchbaseSpaceFixed height={height}>
         <ArchbaseSpaceFill>
-          <ArchbaseForm>
-            {children}
-          </ArchbaseForm>
+          <ArchbaseForm>{children}</ArchbaseForm>
         </ArchbaseSpaceFill>
         <Bottom size="40px">
           <Flex justify="space-between" align="center">
-            <Group>
-                {userActions}
-            </Group>
+            <Group>{userActions}</Group>
             <Group spacing="md">
               <Button
                 leftIcon={<IconCheck />}
@@ -104,5 +100,5 @@ export function ArchbaseModalTemplate({
         </Bottom>
       </ArchbaseSpaceFixed>
     </Modal>
-  )
+  );
 }

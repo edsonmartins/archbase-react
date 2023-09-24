@@ -1,1 +1,1 @@
-export { ArchbaseForm } from './ArchbaseForm'
+export { ArchbaseForm } from './ArchbaseForm';

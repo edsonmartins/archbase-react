@@ -8,7 +8,7 @@ export const IS_IN = 'isIn';
  * Checks if given value is in a array of allowed values.
  */
 export function isIn(value: unknown, possibleValues: readonly unknown[]): boolean {
-  return Array.isArray(possibleValues) && possibleValues.some(possibleValue => possibleValue === value);
+  return Array.isArray(possibleValues) && possibleValues.some((possibleValue) => possibleValue === value);
 }
 
 /**
@@ -22,11 +22,11 @@ export function IsIn(values: readonly any[], validationOptions?: ValidationOptio
       validator: {
         validate: (value, args): boolean => isIn(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be one of the following values: $constraint1')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be one of the following values: $constraint1')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

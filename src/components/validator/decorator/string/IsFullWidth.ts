@@ -24,11 +24,11 @@ export function IsFullWidth(validationOptions?: ValidationOptions): PropertyDeco
       validator: {
         validate: (value, args): boolean => isFullWidth(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain a full-width characters')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain a full-width characters')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

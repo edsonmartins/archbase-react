@@ -13,10 +13,11 @@ export interface ValidateByOptions {
 
 export function buildMessage(
   impl: (eachPrefix: string, args?: ValidationArguments) => string,
-  validationOptions?: ValidationOptions
+  validationOptions?: ValidationOptions,
 ): (validationArguments?: ValidationArguments) => string {
   return (validationArguments?: ValidationArguments): string => {
     const eachPrefix = validationOptions && validationOptions.each ? `${t('archbase:each value in ')}` : '';
+
     return impl(eachPrefix, validationArguments);
   };
 }

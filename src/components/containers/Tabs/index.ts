@@ -1,6 +1,2 @@
-export { ArchbaseAdvancedTabs } from './ArchbaseAdvancedTabs'
-export type {
-  ArchbaseAdvancedTabItem,
-  ArchbaseAdvancedTabProps,
-  ArchbaseAdvancedTabsProps
-} from './ArchbaseAdvancedTabs'
+export { ArchbaseAdvancedTabs } from './ArchbaseAdvancedTabs';
+export type { ArchbaseAdvancedTabItem, ArchbaseAdvancedTabProps, ArchbaseAdvancedTabsProps } from './ArchbaseAdvancedTabs';

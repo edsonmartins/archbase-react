@@ -21,11 +21,11 @@ export function IsNegative(validationOptions?: ValidationOptions): PropertyDecor
       validator: {
         validate: (value, args): boolean => isNegative(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a negative number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a negative number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

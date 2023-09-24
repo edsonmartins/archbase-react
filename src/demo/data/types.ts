@@ -1,12 +1,12 @@
 export enum PessoaStatus {
   APROVADO,
   REJEITADO,
-  PENDENTE
+  PENDENTE,
 }
 
 export enum Sexo {
-  MASCULINO="Masculino",
-  FEMININO="Feminino"
+  MASCULINO = 'Masculino',
+  FEMININO = 'Feminino',
 }
 export interface Pessoa {
   id: number;
@@ -36,8 +36,8 @@ export interface Pessoa {
   cor?: string;
   foto?: string;
   status?: PessoaStatus;
-  observacao?:string;
-  codigoJson?:string;
+  observacao?: string;
+  codigoJson?: string;
   creditoOK?: boolean;
 }
 
@@ -52,7 +52,7 @@ export interface Produto {
 export enum PedidoStatus {
   PENDENTE = 0,
   FATURADO = 1,
-  CANCELADO= 2
+  CANCELADO = 2,
 }
 
 export interface PedidoItem {
@@ -64,9 +64,9 @@ export interface PedidoItem {
 export interface Pedido {
   codigo: number;
   cliente: Pessoa;
-  dtPedido : string;
+  dtPedido: string;
   dtFaturamento: string;
-  status : PedidoStatus;
-  vlTotal : number;
-  itens: PedidoItem[]
+  status: PedidoStatus;
+  vlTotal: number;
+  itens: PedidoItem[];
 }

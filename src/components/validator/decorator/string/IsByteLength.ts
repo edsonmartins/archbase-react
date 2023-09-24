@@ -25,11 +25,11 @@ export function IsByteLength(min: number, max?: number, validationOptions?: Vali
       validator: {
         validate: (value, args): boolean => isByteLength(value, args?.constraints[0], args?.constraints[1]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t("archbase:$property's byte length must fall into ($constraint1, $constraint2) range")}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t("archbase:$property's byte length must fall into ($constraint1, $constraint2) range")}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

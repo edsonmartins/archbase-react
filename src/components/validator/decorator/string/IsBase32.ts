@@ -23,9 +23,9 @@ export function IsBase32(validationOptions?: ValidationOptions): PropertyDecorat
       name: IS_BASE32,
       validator: {
         validate: (value, args): boolean => isBase32(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be base32 encoded')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be base32 encoded')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

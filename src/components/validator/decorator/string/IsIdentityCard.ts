@@ -22,10 +22,7 @@ export function isIdentityCard(value: unknown, locale: ValidatorJS.IdentityCardL
  * Defaults to 'any'.
  * If given value is not a string, then it returns false.
  */
-export function IsIdentityCard(
-  locale?: ValidatorJS.IdentityCardLocale,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsIdentityCard(locale?: ValidatorJS.IdentityCardLocale, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_IDENTITY_CARD,
@@ -33,11 +30,11 @@ export function IsIdentityCard(
       validator: {
         validate: (value, args): boolean => isIdentityCard(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a identity card number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a identity card number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

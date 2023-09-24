@@ -22,11 +22,11 @@ export function IsLongitude(validationOptions?: ValidationOptions): PropertyDeco
       validator: {
         validate: (value, args): boolean => isLongitude(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a longitude string or number')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a longitude string or number')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

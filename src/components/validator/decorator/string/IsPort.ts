@@ -21,9 +21,9 @@ export function IsPort(validationOptions?: ValidationOptions): PropertyDecorator
       name: IS_PORT,
       validator: {
         validate: (value, args): boolean => isPort(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a port')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a port')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

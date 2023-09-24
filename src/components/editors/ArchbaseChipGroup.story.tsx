@@ -1,21 +1,21 @@
-import React from 'react'
-import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
-import { pedidosData, Pedido, produtosData } from '../../demo/index'
-import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
-import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
-import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
-import { ArchbaseChipGroup } from './ArchbaseChipGroup'
-import { Produto } from '../../demo/data/types'
+import React from 'react';
+import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views';
+import { pedidosData, Pedido, produtosData } from '../../demo/index';
+import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource';
+import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
+import { useArchbaseForceUpdate } from '../hooks';
+import { Meta, StoryObj } from '@storybook/react';
+import { ArchbaseChipGroup } from './ArchbaseChipGroup';
+import { Produto } from '../../demo/data/types';
 
-const pedido: Pedido[] = [pedidosData[0]]
-const produtos: Produto[] = produtosData
+const pedido: Pedido[] = [pedidosData[0]];
+const produtos: Produto[] = produtosData;
 
 const getProdutosFromIds = (produtoIds: string[] | string) => {
   if (produtoIds === null) {
-    return []
+    return [];
   }
 
   return produtos
@@ -23,50 +23,50 @@ const getProdutosFromIds = (produtoIds: string[] | string) => {
     .map((produto) => ({
       produto: produto,
       quantidade: 1,
-      total: produto.preco
-    }))
-}
+      total: produto.preco,
+    }));
+};
 
 const getIdFromProduto = (produto: any) => {
-  return produto.produto.id
-}
+  return produto.produto.id;
+};
 
 const getValueFromProduto = (produto: any) => {
-  return produto.id
-}
+  return produto.id;
+};
 
 const getLabelFromProduto = (produto: any) => {
-  return produto.descricao
-}
+  return produto.descricao;
+};
 
 const updateTotalValue = (dataSource: ArchbaseDataSource<Pedido, string>, produtos: any) => {
   const total = produtos.reduce((acumulado, produto) => {
-    return acumulado + produto.total
-  }, 0)
-  dataSource?.setFieldValue('vlTotal', total)
-}
+    return acumulado + produto.total;
+  }, 0);
+  dataSource?.setFieldValue('vlTotal', total);
+};
 
 const ArchbaseChipGroupExample = () => {
-  const forceUpdate = useArchbaseForceUpdate()
+  const forceUpdate = useArchbaseForceUpdate();
   const { dataSource } = useArchbaseDataSource<Pedido, string>({
     initialData: pedido,
-    name: 'dsPedidos'
-  })
+    name: 'dsPedidos',
+  });
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit()
+    dataSource.edit();
   }
   useArchbaseDataSourceListener<Pedido, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pedido>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
-          forceUpdate()
-          break
+          forceUpdate();
+          break;
         }
         default:
       }
-    }
-  })
+    },
+  });
 
   return (
     <Grid>
@@ -115,18 +115,18 @@ const ArchbaseChipGroupExample = () => {
         </Card>
       </Grid.Col>
     </Grid>
-  )
-}
+  );
+};
 
 export default {
   title: 'Editors/Chip Group',
-  component: ArchbaseChipGroupExample
-} as Meta
+  component: ArchbaseChipGroupExample,
+} as Meta;
 
 export const Example: StoryObj<typeof ArchbaseChipGroupExample> = {
   args: {
     render: () => {
-      ;<ArchbaseChipGroupExample />
-    }
-  }
-}
+      <ArchbaseChipGroupExample />;
+    },
+  },
+};

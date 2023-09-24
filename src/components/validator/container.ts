@@ -20,7 +20,7 @@ export interface UseContainerOptions {
 const defaultContainer: { get<T>(someClass: { new (...args: any[]): T } | Function): T } = new (class {
   private instances: { type: Function; object: any }[] = [];
   get<T>(someClass: { new (...args: any[]): T }): T {
-    let instance = this.instances.find(instance => instance.type === someClass);
+    let instance = this.instances.find((instance) => instance.type === someClass);
     if (!instance) {
       instance = { type: someClass, object: new someClass() };
       this.instances.push(instance);
@@ -55,5 +55,6 @@ export function getFromContainer<T>(someClass: { new (...args: any[]): T } | Fun
       if (!userContainerOptions || !userContainerOptions.fallbackOnErrors) throw error;
     }
   }
+
   return defaultContainer.get<T>(someClass);
 }

@@ -7,10 +7,7 @@ import { getMetadataStorage } from '../../metadata/MetadataStorage';
 /**
  * Ignores the other validators on a property when the provided condition function returns false.
  */
-export function ValidateIf(
-  condition: (object: any, value: any) => boolean,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function ValidateIf(condition: (object: any, value: any) => boolean, validationOptions?: ValidationOptions): PropertyDecorator {
   // @ts-ignore
   return function (object: object, propertyName: string): void {
     const args: ValidationMetadataArgs = {

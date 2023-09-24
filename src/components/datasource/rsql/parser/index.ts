@@ -1,10 +1,6 @@
-import { ExpressionNode, isExpressionNode, isSelectorNode, isValueNode, Node } from '../ast'
-import {
-  createErrorForEmptyInput,
-  createErrorForUnclosedParenthesis,
-  createErrorForUnexpectedToken
-} from './Error'
-import lex from './lexer/lex'
+import { ExpressionNode, isExpressionNode, isSelectorNode, isValueNode, Node } from '../ast';
+import { createErrorForEmptyInput, createErrorForUnclosedParenthesis, createErrorForUnexpectedToken } from './Error';
+import lex from './lexer/lex';
 import Token, {
   AnyToken,
   isCloseParenthesisToken,
@@ -14,14 +10,9 @@ import Token, {
   isOrOperatorToken,
   isOpenParenthesisToken,
   isQuotedToken,
-  isUnquotedToken
-} from './lexer/Token'
-import ParserContext, {
-  createParserContext,
-  getParserContextHead,
-  getParserContextState,
-  getParserContextToken
-} from './ParserContext'
+  isUnquotedToken,
+} from './lexer/Token';
+import ParserContext, { createParserContext, getParserContextHead, getParserContextState, getParserContextToken } from './ParserContext';
 import {
   accept,
   goto,
@@ -37,8 +28,8 @@ import {
   ReduceOperation,
   shift,
   ShiftOperation,
-  TokenOperation
-} from './ParserOperation'
+  TokenOperation,
+} from './ParserOperation';
 import {
   comparisonExpressionProduction,
   groupExpressionProduction,
@@ -46,8 +37,8 @@ import {
   multiValueProduction,
   ParserProduction,
   selectorProduction,
-  singleValueProduction
-} from './ParserProduction'
+  singleValueProduction,
+} from './ParserProduction';
 
 const productions: ParserProduction[] = [
   /* 0 */ selectorProduction,
@@ -55,8 +46,8 @@ const productions: ParserProduction[] = [
   /* 2 */ multiValueProduction,
   /* 3 */ comparisonExpressionProduction,
   /* 4 */ logicalExpressionProduction,
-  /* 5 */ groupExpressionProduction
-]
+  /* 5 */ groupExpressionProduction,
+];
 
 const tokenMatchers = [
   /* 0 */ isOpenParenthesisToken, // O_PAREN
@@ -66,16 +57,16 @@ const tokenMatchers = [
   /* 4 */ isComparisonOperatorToken, // C_OP
   /* 5 */ isOrOperatorToken, // OR_OP
   /* 6 */ isAndOperatorToken, // AND_OP
-  /* 7 */ isEndToken // END
-]
+  /* 7 */ isEndToken, // END
+];
 
 const nodeMatchers = [
   /* 0 */ isSelectorNode, // SELECT
   /* 1 */ isValueNode, // VALUE
-  /* 2 */ isExpressionNode // EXPR
-]
+  /* 2 */ isExpressionNode, // EXPR
+];
 
-type ParserTable = [TokenOperation[], NodeOperation[]][]
+type ParserTable = [TokenOperation[], NodeOperation[]][];
 
 // prettier-ignore
 const table: ParserTable = [
@@ -99,33 +90,29 @@ const table: ParserTable = [
 ];
 
 function getParserTokenOperation(state: number, token: Token): TokenOperation {
-  return table[state][0][tokenMatchers.findIndex((matcher) => matcher(token))]
+  return table[state][0][tokenMatchers.findIndex((matcher) => matcher(token))];
 }
 
 function getParserNodeOperation(state: number, node: Node): NodeOperation {
-  return table[state][1][nodeMatchers.findIndex((matcher) => matcher(node))]
+  return table[state][1][nodeMatchers.findIndex((matcher) => matcher(node))];
 }
 
 function getMostMeaningfulInvalidToken(context: ParserContext): AnyToken {
-  if (
-    context.position > 0 &&
-    isCloseParenthesisToken(context.tokens[context.position - 1]) &&
-    context.parent === null
-  ) {
+  if (context.position > 0 && isCloseParenthesisToken(context.tokens[context.position - 1]) && context.parent === null) {
     // in this case we were not able to pop CLOSE_PARENTHESIS token, which was invalid in the first place
-    return context.tokens[context.position - 1]
+    return context.tokens[context.position - 1];
   }
 
-  return context.tokens[context.position]
+  return context.tokens[context.position];
 }
 
 function handleShift(context: ParserContext, shiftOperation: ShiftOperation): ParserContext {
   // we can perform side-effects on shift operation to reduce memory usage
-  context.stack.push(context.tokens[context.position])
-  context.state.push(shiftOperation.state)
-  context.position += 1
+  context.stack.push(context.tokens[context.position]);
+  context.state.push(shiftOperation.state);
+  context.position += 1;
 
-  return context
+  return context;
 }
 
 function handlePush(context: ParserContext, pushOperation: PushOperation): ParserContext {
@@ -134,136 +121,123 @@ function handlePush(context: ParserContext, pushOperation: PushOperation): Parse
     tokens: context.tokens,
     stack: [context.tokens[context.position]],
     state: [pushOperation.state],
-    parent: context
-  }
+    parent: context,
+  };
 }
 
 function handleGoTo(context: ParserContext, gotoOperation: GoToOperation): ParserContext {
   // we can perform side-effects on goto operation to reduce memory usage
-  context.state.push(gotoOperation.state)
-  return context
+  context.state.push(gotoOperation.state);
+
+  return context;
 }
 
-function handleReduce(
-  context: ParserContext,
-  reduceOperation: ReduceOperation,
-  input: string
-): ParserContext {
-  const { consumed, produced } = productions[reduceOperation.production](context.stack)
+function handleReduce(context: ParserContext, reduceOperation: ReduceOperation, input: string): ParserContext {
+  const { consumed, produced } = productions[reduceOperation.production](context.stack);
 
   // we can perform side-effects on reduce operation to reduce memory usage
   for (let i = 0; i < consumed; ++i) {
-    context.stack.pop()
-    context.state.pop()
+    context.stack.pop();
+    context.state.pop();
   }
-  context.stack.push(produced)
+  context.stack.push(produced);
 
-  const stateAfterReduce = getParserContextState(context)
-  const nodeAfterReduce = getParserContextHead(context) as Node
-  const gotoOperation = getParserNodeOperation(stateAfterReduce, nodeAfterReduce)
+  const stateAfterReduce = getParserContextState(context);
+  const nodeAfterReduce = getParserContextHead(context) as Node;
+  const gotoOperation = getParserNodeOperation(stateAfterReduce, nodeAfterReduce);
 
   if (gotoOperation) {
-    context = handleGoTo(context, gotoOperation)
+    context = handleGoTo(context, gotoOperation);
   } else {
-    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input)
+    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input);
   }
 
-  return context
+  return context;
 }
 
-function handlePop(
-  context: ParserContext,
-  popOperation: PopOperation,
-  input: string
-): ParserContext {
+function handlePop(context: ParserContext, popOperation: PopOperation, input: string): ParserContext {
   if (!context.parent) {
-    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input)
+    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input);
   }
 
-  const { produced } = productions[popOperation.production](context.stack)
+  const { produced } = productions[popOperation.production](context.stack);
 
   // we can perform side-effects on pop operation to reduce memory usage (as child context will not be used anymore)
-  context.parent.position = context.position
-  context.parent.stack.push(produced)
+  context.parent.position = context.position;
+  context.parent.stack.push(produced);
 
-  context = context.parent
+  context = context.parent;
 
-  const stateAfterPop = getParserContextState(context)
-  const nodeAfterPop = getParserContextHead(context) as Node
+  const stateAfterPop = getParserContextState(context);
+  const nodeAfterPop = getParserContextHead(context) as Node;
 
-  const gotoOperation = getParserNodeOperation(stateAfterPop, nodeAfterPop)
+  const gotoOperation = getParserNodeOperation(stateAfterPop, nodeAfterPop);
 
   if (gotoOperation) {
-    context = handleGoTo(context, gotoOperation)
+    context = handleGoTo(context, gotoOperation);
   } else {
-    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input)
+    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input);
   }
 
-  return context
+  return context;
 }
 
 function handleAccept(context: ParserContext, input: string): ExpressionNode {
   if (context.parent !== null) {
-    throw createErrorForUnclosedParenthesis(
-      getMostMeaningfulInvalidToken(context),
-      input,
-      context.parent.position
-    )
+    throw createErrorForUnclosedParenthesis(getMostMeaningfulInvalidToken(context), input, context.parent.position);
   }
 
-  return getParserContextHead(context) as ExpressionNode
+  return getParserContextHead(context) as ExpressionNode;
 }
 
 function parse(source: string): ExpressionNode {
   if (typeof source !== 'string') {
-    throw new TypeError(
-      `The argument passed to the "parse" function has to be a string, "${source}" passed.`
-    )
+    throw new TypeError(`The argument passed to the "parse" function has to be a string, "${source}" passed.`);
   }
 
-  const tokens = lex(source)
+  const tokens = lex(source);
 
   if (tokens.length === 1 && tokens[0].type === 'END') {
-    throw createErrorForEmptyInput(tokens[0], source)
+    throw createErrorForEmptyInput(tokens[0], source);
   }
 
-  let context = createParserContext(tokens)
+  let context = createParserContext(tokens);
 
   while (context.position < context.tokens.length) {
-    const state = getParserContextState(context)
-    const token = getParserContextToken(context)
-    const operation = getParserTokenOperation(state, token)
+    const state = getParserContextState(context);
+    const token = getParserContextToken(context);
+    const operation = getParserTokenOperation(state, token);
 
     if (!operation) {
-      throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), source)
+      throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), source);
     }
 
     switch (operation.type) {
       case OperationType.SHIFT:
-        context = handleShift(context, operation)
-        break
+        context = handleShift(context, operation);
+        break;
 
       case OperationType.PUSH:
-        context = handlePush(context, operation)
-        break
+        context = handlePush(context, operation);
+        break;
 
       case OperationType.REDUCE:
-        context = handleReduce(context, operation, source)
-        break
+        context = handleReduce(context, operation, source);
+        break;
 
       case OperationType.POP:
-        context = handlePop(context, operation, source)
-        break
+        context = handlePop(context, operation, source);
+        break;
 
       case OperationType.ACCEPT:
-        return handleAccept(context, source)
-        break
+        return handleAccept(context, source);
+        break;
 
       default:
     }
   }
 
-  throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), source)
+  throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), source);
 }
 
-export { parse }
+export { parse };

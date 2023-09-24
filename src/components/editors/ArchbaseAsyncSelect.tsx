@@ -1,13 +1,5 @@
-import {
-  Input,
-  Loader,
-  MantineNumberSize,
-  MantineSize,
-  ScrollArea,
-  ScrollAreaProps,
-  Select
-} from '@mantine/core'
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
+import { Input, Loader, MantineNumberSize, MantineSize, ScrollArea, ScrollAreaProps, Select } from '@mantine/core';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import React, {
   CSSProperties,
   FocusEventHandler,
@@ -17,114 +9,114 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState
-} from 'react'
-import { uniqueId } from 'lodash'
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks'
-import { useDebouncedState, useDebouncedValue } from '@mantine/hooks'
+  useState,
+} from 'react';
+import { uniqueId } from 'lodash';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
+import { useDebouncedState, useDebouncedValue } from '@mantine/hooks';
 import ArchbaseAsyncSelectContext, {
   ArchbaseAsyncSelectContextValue,
-  ArchbaseAsyncSelectProvider
-} from './ArchbaseAsyncSelect.context'
+  ArchbaseAsyncSelectProvider,
+} from './ArchbaseAsyncSelect.context';
 
 export type OptionsResult<O> = {
-  options: O[]
-  page: number
-  totalPages: number
-}
+  options: O[];
+  page: number;
+  totalPages: number;
+};
 
 export interface ArchbaseAsyncSelectProps<T, ID, O> {
   /** Permite ou não delecionar um item */
-  allowDeselect?: boolean
+  allowDeselect?: boolean;
   /** Indicador se permite limpar o select */
-  clearable?: boolean
+  clearable?: boolean;
   /** Fonte de dados onde será atribuido o item selecionado */
-  dataSource?: ArchbaseDataSource<T, ID>
+  dataSource?: ArchbaseDataSource<T, ID>;
   /** Campo onde deverá ser atribuido o item selecionado na fonte de dados */
-  dataField?: string
+  dataField?: string;
   /** Tempo de espero antes de realizar a busca */
-  debounceTime?: number
+  debounceTime?: number;
   /** Minimo caracteres para busca */
-  minCharsToSearch?: number
+  minCharsToSearch?: number;
   /** Indicador se o select está desabilitado */
-  disabled?: boolean
+  disabled?: boolean;
   /** Indicador se o select é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
-  readOnly?: boolean
+  readOnly?: boolean;
   /** Texto explicativo do select */
-  placeholder?: string
+  placeholder?: string;
   /** Título do select */
-  label?: string
+  label?: string;
   /** Descrição do select */
-  description?: string
+  description?: string;
   /** Último erro ocorrido no select */
-  error?: string
+  error?: string;
   /** Permite pesquisar no select */
-  searchable?: boolean
+  searchable?: boolean;
   /** Icon a esquerda do select */
-  icon?: ReactNode
+  icon?: ReactNode;
   /** Largura do icone a esquerda do select */
-  iconWidth?: MantineSize
+  iconWidth?: MantineSize;
   /** Valor de entrada controlado */
-  value?: any
+  value?: any;
   /** Valor padrão de entrada não controlado */
-  defaultValue?: any
+  defaultValue?: any;
   /** Função com base em quais itens no menu suspenso são filtrados */
-  filter?(value: string, item: any): boolean
+  filter?(value: string, item: any): boolean;
   /** Estilo do select */
-  style?: CSSProperties
+  style?: CSSProperties;
   /** Tamanho do campo */
-  size?: MantineSize
+  size?: MantineSize;
   /** Largura do select */
-  width?: MantineNumberSize
+  width?: MantineNumberSize;
   /** Estado aberto do menu suspenso inicial */
-  initiallyOpened?: boolean
+  initiallyOpened?: boolean;
   /** Alterar renderizador de item */
-  itemComponent?: React.FC<any>
+  itemComponent?: React.FC<any>;
   /** Chamado quando o menu suspenso é aberto */
-  onDropdownOpen?(): void
+  onDropdownOpen?(): void;
   /** Chamado quando o menu suspenso é aberto */
-  onDropdownClose?(): void
+  onDropdownClose?(): void;
   /** Limite a quantidade de itens exibidos por vez para seleção pesquisável */
-  limit?: number
+  limit?: number;
   /** Rótulo nada encontrado */
-  nothingFound?: React.ReactNode
+  nothingFound?: React.ReactNode;
   /** Índice z dropdown */
-  zIndex?: React.CSSProperties['zIndex']
+  zIndex?: React.CSSProperties['zIndex'];
   /** Comportamento de posicionamento dropdown */
-  dropdownPosition?: 'bottom' | 'top' | 'flip'
+  dropdownPosition?: 'bottom' | 'top' | 'flip';
   /** Evento quando um valor é selecionado */
-  onSelectValue?: (value: O) => void
+  onSelectValue?: (value: O) => void;
   /** Evento quando o foco sai do select */
-  onFocusExit?: FocusEventHandler<T> | undefined
+  onFocusExit?: FocusEventHandler<T> | undefined;
   /** Evento quando o select recebe o foco */
-  onFocusEnter?: FocusEventHandler<T> | undefined
+  onFocusEnter?: FocusEventHandler<T> | undefined;
   /** Opções de seleção iniciais */
-  initialOptions?: OptionsResult<O>
+  initialOptions?: OptionsResult<O>;
   /** Function que retorna o label de uma opção */
-  getOptionLabel: (option: O) => string
+  getOptionLabel: (option: O) => string;
   /** Function que retorna o valor de uma opção */
-  getOptionValue: (option: O) => any
+  getOptionValue: (option: O) => any;
   /** Function que retorna a imagem de uma opção */
-  getOptionImage?: (option: O) => any | undefined | null
+  getOptionImage?: (option: O) => any | undefined | null;
   /** Function responsável por retornar uma promessa contendo opções. Usado para buscar dados remotos. */
-  getOptions: (page: number, value: string) => Promise<OptionsResult<O>>
+  getOptions: (page: number, value: string) => Promise<OptionsResult<O>>;
   /** Evento quando ocorreu um erro carregando dados através da promessa fornecida por getOptions. */
-  onErrorLoadOptions?: (error: string) => void
+  onErrorLoadOptions?: (error: string) => void;
   /** Indica se o select tem o preenchimento obrigatório */
-  required?: boolean
+  required?: boolean;
   /** Referência para o componente interno */
-  innerRef?: React.RefObject<HTMLInputElement> | undefined
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
   /** Chamado sempre que o valor da pesquisa muda */
-  onSearchChange?(query: string): void
+  onSearchChange?(query: string): void;
 }
 function buildOptions<O>(
   initialOptions: O[],
   getOptionLabel: (option: O) => string,
   getOptionValue: (option: O) => any,
-  getOptionImage?: (option: O) => any | undefined | null
+  getOptionImage?: (option: O) => any | undefined | null,
 ): any {
   if (!initialOptions) {
-    return []
+    return [];
   }
   if (getOptionImage) {
     return initialOptions.map((item: O) => {
@@ -133,18 +125,19 @@ function buildOptions<O>(
         value: getOptionValue(item),
         image: getOptionImage(item),
         origin: item,
-        key: uniqueId('select')
-      }
-    })
+        key: uniqueId('select'),
+      };
+    });
   }
+
   return initialOptions.map((item: O) => {
     return {
       label: getOptionLabel(item),
       value: getOptionValue(item),
       origin: item,
-      key: uniqueId('select')
-    }
-  })
+      key: uniqueId('select'),
+    };
+  });
 }
 
 export function ArchbaseAsyncSelect<T, ID, O>({
@@ -188,37 +181,37 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   dropdownPosition,
   onErrorLoadOptions,
   innerRef,
-  onSearchChange
+  onSearchChange,
 }: ArchbaseAsyncSelectProps<T, ID, O>) {
   const [options, setOptions] = useState<any[]>(
-    buildOptions<O>(initialOptions.options, getOptionLabel, getOptionValue, getOptionImage)
-  )
-  const [selectedValue, setSelectedValue] = useState<any>(value)
+    buildOptions<O>(initialOptions.options, getOptionLabel, getOptionValue, getOptionImage),
+  );
+  const [selectedValue, setSelectedValue] = useState<any>(value);
   const [updateCounter, setUpdateCounter] = useState(0);
-  const [queryValue, setQueryValue] = useState<string>('')
-  const [debouncedQueryValue] = useDebouncedValue(queryValue, debounceTime)
-  const [loading, setLoading] = useState(false)
-  const [currentPage, setCurrentPage] = useState(initialOptions.page)
-  const [totalPages, setTotalPages] = useState(initialOptions.totalPages)
-  const [_isLastPage, setIsLastPage] = useState(currentPage === totalPages - 1)
-  const [originData, setOriginData] = useState(initialOptions.options)
-  const innerComponentRef = innerRef || useRef<any>()
-  const [internalError, setInternalError] = useState<string | undefined>(error)
+  const [queryValue, setQueryValue] = useState<string>('');
+  const [debouncedQueryValue] = useDebouncedValue(queryValue, debounceTime);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(initialOptions.page);
+  const [totalPages, setTotalPages] = useState(initialOptions.totalPages);
+  const [_isLastPage, setIsLastPage] = useState(currentPage === totalPages - 1);
+  const [originData, setOriginData] = useState(initialOptions.options);
+  const innerComponentRef = innerRef || useRef<any>();
+  const [internalError, setInternalError] = useState<string | undefined>(error);
 
   const loadDataSourceFieldValue = () => {
-    let initialValue: any = value
+    let initialValue: any = value;
 
     if (dataSource && dataField) {
-      initialValue = dataSource.getFieldValue(dataField)
+      initialValue = dataSource.getFieldValue(dataField);
       if (!initialValue) {
-        initialValue = ''
+        initialValue = '';
       }
     }
 
-    setSelectedValue(initialValue)
-  }
+    setSelectedValue(initialValue);
+  };
 
-  const fieldChangedListener = useCallback(() => {}, [])
+  const fieldChangedListener = useCallback(() => {}, []);
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
@@ -229,144 +222,131 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel
       ) {
-        loadDataSourceFieldValue()
+        loadDataSourceFieldValue();
       }
 
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
-        setInternalError(event.error)
+        setInternalError(event.error);
       }
     }
-  }, [])
+  }, []);
 
   useArchbaseDidMount(() => {
-    loadDataSourceFieldValue()
+    loadDataSourceFieldValue();
     if (dataSource && dataField) {
-      dataSource.addListener(dataSourceEvent)
-      dataSource.addFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.addListener(dataSourceEvent);
+      dataSource.addFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent)
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      dataSource.removeListener(dataSourceEvent);
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
     }
-  })
+  });
 
   useEffect(() => {
     if (onSearchChange) {
-      onSearchChange(debouncedQueryValue)
+      onSearchChange(debouncedQueryValue);
     }
     if (
       debouncedQueryValue &&
       debouncedQueryValue.length >= minCharsToSearch &&
       debouncedQueryValue != getOptionLabel(selectedValue)
     ) {
-      setLoading(true)
-      loadOptions(0, false)
+      setLoading(true);
+      loadOptions(0, false);
     }
-  }, [debouncedQueryValue])
+  }, [debouncedQueryValue]);
 
-  useEffect(() => {}, [currentPage, totalPages])
+  useEffect(() => {}, [currentPage, totalPages]);
 
   useArchbaseDidUpdate(() => {
-    loadDataSourceFieldValue()
-  }, [])
+    loadDataSourceFieldValue();
+  }, []);
 
   useEffect(() => {
-    setInternalError(undefined)
-  }, [value, selectedValue, debouncedQueryValue])
+    setInternalError(undefined);
+  }, [value, selectedValue, debouncedQueryValue]);
 
   const handleChange = (value) => {
-    setSelectedValue((_prev) => value)
+    setSelectedValue((_prev) => value);
 
-    if (
-      dataSource &&
-      !dataSource.isBrowsing() &&
-      dataField &&
-      dataSource.getFieldValue(dataField) !== value
-    ) {
-      dataSource.setFieldValue(dataField, value)
+    if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== value) {
+      dataSource.setFieldValue(dataField, value);
     }
 
     if (onSelectValue) {
-      onSelectValue(value)
+      onSelectValue(value);
     }
-  }
+  };
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {
-      onFocusExit(event)
+      onFocusExit(event);
     }
-  }
+  };
 
   const handleOnFocusEnter = (event) => {
     if (onFocusEnter) {
-      onFocusEnter(event)
+      onFocusEnter(event);
     }
-  }
+  };
 
   const handleDropdownScrollEnded = () => {
-    if (
-      debouncedQueryValue &&
-      debouncedQueryValue.length >= minCharsToSearch &&
-      currentPage < totalPages - 1
-    ) {
-      setLoading(true)
-      loadOptions(currentPage + 1, true)
+    if (debouncedQueryValue && debouncedQueryValue.length >= minCharsToSearch && currentPage < totalPages - 1) {
+      setLoading(true);
+      loadOptions(currentPage + 1, true);
     }
-  }
+  };
 
   const handleSearchChange = (query: string) => {
-    setQueryValue(query)
-  }
+    setQueryValue(query);
+  };
 
   const loadOptions = async (page: number, incremental: boolean = false) => {
-    let promise = getOptions(page, debouncedQueryValue)
+    let promise = getOptions(page, debouncedQueryValue);
     promise.then(
       (data: OptionsResult<O>) => {
-        setLoading(false)
+        setLoading(false);
         if (data === undefined || data == null) {
           if (onErrorLoadOptions) {
-            onErrorLoadOptions('Response incorreto.')
+            onErrorLoadOptions('Response incorreto.');
           }
         }
-        const options = incremental ? originData.concat(data.options) : data.options
-        setOriginData(options)
-        setOptions(buildOptions<O>(options, getOptionLabel, getOptionValue, getOptionImage))
-        setCurrentPage(data.page)
-        setTotalPages(data.totalPages)
-        setIsLastPage(data.page === data.totalPages - 1)
+        const options = incremental ? originData.concat(data.options) : data.options;
+        setOriginData(options);
+        setOptions(buildOptions<O>(options, getOptionLabel, getOptionValue, getOptionImage));
+        setCurrentPage(data.page);
+        setTotalPages(data.totalPages);
+        setIsLastPage(data.page === data.totalPages - 1);
         setUpdateCounter((prevCounter) => prevCounter + 1);
       },
       (err) => {
-        setLoading(false)
+        setLoading(false);
         if (onErrorLoadOptions) {
-          onErrorLoadOptions(err)
+          onErrorLoadOptions(err);
         }
-      }
-    )
-  }
+      },
+    );
+  };
   const isReadOnly = () => {
-    let _readOnly = readOnly
+    let _readOnly = readOnly;
     if (dataSource && !readOnly) {
-      _readOnly = dataSource.isBrowsing()
+      _readOnly = dataSource.isBrowsing();
     }
-    return _readOnly
-  }
+
+    return _readOnly;
+  };
 
   return (
     <ArchbaseAsyncSelectProvider
       value={{
-        handleDropdownScrollEnded: handleDropdownScrollEnded
+        handleDropdownScrollEnded: handleDropdownScrollEnded,
       }}
     >
-      <Input.Wrapper
-        label={label}
-        error={internalError}
-        description={description}
-        placeholder={placeholder}
-      >
+      <Input.Wrapper label={label} error={internalError} description={description} placeholder={placeholder}>
         <Select
           allowDeselect={allowDeselect}
           clearable={clearable}
@@ -379,7 +359,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
           size={size!}
           style={{
             width,
-            ...style
+            ...style,
           }}
           icon={icon}
           iconWidth={iconWidth}
@@ -407,22 +387,21 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         />
       </Input.Wrapper>
     </ArchbaseAsyncSelectProvider>
-  )
+  );
 }
 
 export const CustomSelectScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
   ({ style, ...others }: ScrollAreaProps, _ref) => {
-    const sRef = useRef<any>()
-    const selectContextValue = useContext<ArchbaseAsyncSelectContextValue>(
-      ArchbaseAsyncSelectContext
-    )
+    const sRef = useRef<any>();
+    const selectContextValue = useContext<ArchbaseAsyncSelectContextValue>(ArchbaseAsyncSelectContext);
     const handleScrollPositionChange = (_position: { x: number; y: number }): void => {
       if (sRef && sRef.current) {
         if (sRef.current.scrollTop === sRef.current.scrollHeight - sRef.current.offsetHeight) {
-          selectContextValue.handleDropdownScrollEnded!()
+          selectContextValue.handleDropdownScrollEnded!();
         }
       }
-    }
+    };
+
     return (
       <ScrollArea
         {...others}
@@ -433,8 +412,8 @@ export const CustomSelectScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps
       >
         {others.children}
       </ScrollArea>
-    )
-  }
-)
+    );
+  },
+);
 
-CustomSelectScrollArea.displayName = 'CustomSelectScrollArea'
+CustomSelectScrollArea.displayName = 'CustomSelectScrollArea';

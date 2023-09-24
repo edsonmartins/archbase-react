@@ -18,19 +18,16 @@ export function isBase64(value: unknown, options?: ValidatorJS.IsBase64Options):
  * Checks if a string is base64 encoded.
  * If given value is not a string, then it returns false.
  */
-export function IsBase64(
-  options?: ValidatorJS.IsBase64Options,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsBase64(options?: ValidatorJS.IsBase64Options, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_BASE64,
       constraints: [options],
       validator: {
         validate: (value, args): boolean => isBase64(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be base64 encoded')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be base64 encoded')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

@@ -1,2 +1,2 @@
-export { ArchbaseObjectHelper } from './ArchbaseObjectHelper'
-export { ArchbaseClickOutside} from './ArchbaseClickOutside'
+export { ArchbaseObjectHelper } from './ArchbaseObjectHelper';
+export { ArchbaseClickOutside } from './ArchbaseClickOutside';

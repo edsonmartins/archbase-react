@@ -27,7 +27,7 @@ export class Validator {
   validate(
     objectOrSchemaName: object | string,
     objectOrValidationOptions: object | ValidationOptions,
-    maybeValidatorOptions?: ValidatorOptions
+    maybeValidatorOptions?: ValidatorOptions,
   ): Promise<ValidationError[]> {
     return this.coreValidate(objectOrSchemaName, objectOrValidationOptions, maybeValidatorOptions);
   }
@@ -48,7 +48,7 @@ export class Validator {
   async validateOrReject(
     objectOrSchemaName: object | string,
     objectOrValidationOptions: object | ValidationOptions,
-    maybeValidatorOptions?: ValidatorOptions
+    maybeValidatorOptions?: ValidatorOptions,
   ): Promise<void> {
     const errors = await this.coreValidate(objectOrSchemaName, objectOrValidationOptions, maybeValidatorOptions);
     if (errors.length) return Promise.reject(errors);
@@ -71,17 +71,17 @@ export class Validator {
   validateSync(
     objectOrSchemaName: object | string,
     objectOrValidationOptions: object | ValidationOptions,
-    maybeValidatorOptions?: ValidatorOptions
+    maybeValidatorOptions?: ValidatorOptions,
   ): ValidationError[] {
     const object = typeof objectOrSchemaName === 'string' ? (objectOrValidationOptions as object) : objectOrSchemaName;
-    const options =
-      typeof objectOrSchemaName === 'string' ? maybeValidatorOptions : (objectOrValidationOptions as ValidationOptions);
+    const options = typeof objectOrSchemaName === 'string' ? maybeValidatorOptions : (objectOrValidationOptions as ValidationOptions);
     const schema = typeof objectOrSchemaName === 'string' ? objectOrSchemaName : undefined;
 
     const executor = new ValidationExecutor(this, options);
     executor.ignoreAsyncValidations = true;
     const validationErrors: ValidationError[] = [];
     executor.execute(object, schema, validationErrors);
+
     return executor.stripEmptyErrors(validationErrors);
   }
 
@@ -95,11 +95,10 @@ export class Validator {
   private coreValidate(
     objectOrSchemaName: object | string,
     objectOrValidationOptions: object | ValidationOptions,
-    maybeValidatorOptions?: ValidatorOptions
+    maybeValidatorOptions?: ValidatorOptions,
   ): Promise<ValidationError[]> {
     const object = typeof objectOrSchemaName === 'string' ? (objectOrValidationOptions as object) : objectOrSchemaName;
-    const options =
-      typeof objectOrSchemaName === 'string' ? maybeValidatorOptions : (objectOrValidationOptions as ValidationOptions);
+    const options = typeof objectOrSchemaName === 'string' ? maybeValidatorOptions : (objectOrValidationOptions as ValidationOptions);
     const schema = typeof objectOrSchemaName === 'string' ? objectOrSchemaName : undefined;
 
     const executor = new ValidationExecutor(this, options);

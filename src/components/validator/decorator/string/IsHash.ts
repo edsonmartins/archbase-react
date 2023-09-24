@@ -28,11 +28,11 @@ export function IsHash(algorithm: string, validationOptions?: ValidationOptions)
       validator: {
         validate: (value, args): boolean => isHash(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a hash of type $constraint1')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a hash of type $constraint1')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

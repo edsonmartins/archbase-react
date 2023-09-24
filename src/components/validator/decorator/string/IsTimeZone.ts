@@ -34,11 +34,11 @@ export function IsTimeZone(validationOptions?: ValidationOptions): PropertyDecor
       validator: {
         validate: (value, args): boolean => isTimeZone(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid IANA time-zone')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a valid IANA time-zone')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

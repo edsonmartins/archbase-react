@@ -10,6 +10,7 @@ export const IS_FIREBASE_PUSH_ID = 'IsFirebasePushId';
  */
 export function isFirebasePushId(value: unknown): boolean {
   const webSafeRegex = /^[a-zA-Z0-9_-]*$/;
+
   return typeof value === 'string' && value.length === 20 && webSafeRegex.test(value);
 }
 
@@ -24,11 +25,11 @@ export function IsFirebasePushId(validationOptions?: ValidationOptions): Propert
       validator: {
         validate: (value, args): boolean => isFirebasePushId(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a Firebase Push Id')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a Firebase Push Id')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

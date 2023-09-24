@@ -9,8 +9,8 @@ import { ValidationOptions } from '../decorator/ValidationOptions';
 export class ValidationSchemaToMetadataTransformer {
   transform(schema: ValidationSchema): ValidationMetadata[] {
     const metadatas: ValidationMetadata[] = [];
-    Object.keys(schema.properties).forEach(property => {
-      schema.properties[property].forEach(validation => {
+    Object.keys(schema.properties).forEach((property) => {
+      schema.properties[property].forEach((validation) => {
         const validationOptions: ValidationOptions = {
           message: validation.message,
           groups: validation.groups,
@@ -29,6 +29,7 @@ export class ValidationSchemaToMetadataTransformer {
         metadatas.push(new ValidationMetadata(args));
       });
     });
+
     return metadatas;
   }
 }

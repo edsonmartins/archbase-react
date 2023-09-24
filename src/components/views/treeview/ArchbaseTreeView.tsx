@@ -1,49 +1,48 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo, ReactNode } from 'react'
-import lodash from 'lodash'
-import { ArchbaseTreeNode } from './ArchbaseTreeView.types'
-import { ArchbaseTreeViewItem } from './ArchbaseTreeViewItem'
-import './treeviews.scss'
-import { rem } from '@mantine/styles'
-import { useArchbaseTheme } from 'components/hooks'
-
+import React, { useState, useEffect, useRef, useCallback, useMemo, ReactNode } from 'react';
+import lodash from 'lodash';
+import { ArchbaseTreeNode } from './ArchbaseTreeView.types';
+import { ArchbaseTreeViewItem } from './ArchbaseTreeViewItem';
+import './treeviews.scss';
+import { rem } from '@mantine/styles';
+import { useArchbaseTheme } from 'components/hooks';
 
 export interface ArchbaseTreeViewProps {
-  id: string
-  selectable?: boolean
-  color?: string
-  backgroundColor?: string
-  borderColor?: string
-  hoverColor?: string
-  hoverBackgroundColor?: string
-  focusedColor?: string
-  focusedBackgroundColor?: string
-  selectedColor?: string
-  selectedBackgroundColor?: string | 'auto'
-  iconColor?: string
-  iconBackgroundColor?: string
-  enableLinks?: boolean
-  highlightSelected?: boolean
-  withBorder?: boolean
-  showTags?: boolean
-  nodes?: ArchbaseTreeNode[]
-  onDoubleClick?: (dataSource: ArchbaseTreeNode[], node: ArchbaseTreeNode) => void
-  onClick?: () => void
-  onFocusedNode?: (node: ArchbaseTreeNode) => void
-  onLoosedFocusNode?: (focused: ArchbaseTreeNode) => void
-  onSelectedNode?: (dataSource: ArchbaseTreeNode[], selectedNodes: ArchbaseTreeNode[]) => void
-  onUnSelectedNode?: (dataSource: ArchbaseTreeNode[], selectedNodes: ArchbaseTreeNode[]) => void
-  onRemovedNode?: (dataSource: ArchbaseTreeNode[]) => void
-  onLoadDataSource?: (node: ArchbaseTreeNode) => Promise<ArchbaseTreeNode[]>
-  onAddedNode?: (node: ArchbaseTreeNode, dataSource: ArchbaseTreeNode[]) => void
-  onExpandedNode?: (dataSource: ArchbaseTreeNode[], expandedNodes: ArchbaseTreeNode[]) => void
-  onCollapsedNode?: (dataSource: ArchbaseTreeNode[], expandedNodes: ArchbaseTreeNode[]) => void
-  onChangedDataSource?: (dataSource: ArchbaseTreeNode[]) => void
-  dataSource: ArchbaseTreeNode[]
-  focusedNode?: ArchbaseTreeNode
-  style?: React.CSSProperties
-  height?: string
-  width?: string
-  customRenderText?: (node: ArchbaseTreeNode) => ReactNode
+  id: string;
+  selectable?: boolean;
+  color?: string;
+  backgroundColor?: string;
+  borderColor?: string;
+  hoverColor?: string;
+  hoverBackgroundColor?: string;
+  focusedColor?: string;
+  focusedBackgroundColor?: string;
+  selectedColor?: string;
+  selectedBackgroundColor?: string | 'auto';
+  iconColor?: string;
+  iconBackgroundColor?: string;
+  enableLinks?: boolean;
+  highlightSelected?: boolean;
+  withBorder?: boolean;
+  showTags?: boolean;
+  nodes?: ArchbaseTreeNode[];
+  onDoubleClick?: (dataSource: ArchbaseTreeNode[], node: ArchbaseTreeNode) => void;
+  onClick?: () => void;
+  onFocusedNode?: (node: ArchbaseTreeNode) => void;
+  onLoosedFocusNode?: (focused: ArchbaseTreeNode) => void;
+  onSelectedNode?: (dataSource: ArchbaseTreeNode[], selectedNodes: ArchbaseTreeNode[]) => void;
+  onUnSelectedNode?: (dataSource: ArchbaseTreeNode[], selectedNodes: ArchbaseTreeNode[]) => void;
+  onRemovedNode?: (dataSource: ArchbaseTreeNode[]) => void;
+  onLoadDataSource?: (node: ArchbaseTreeNode) => Promise<ArchbaseTreeNode[]>;
+  onAddedNode?: (node: ArchbaseTreeNode, dataSource: ArchbaseTreeNode[]) => void;
+  onExpandedNode?: (dataSource: ArchbaseTreeNode[], expandedNodes: ArchbaseTreeNode[]) => void;
+  onCollapsedNode?: (dataSource: ArchbaseTreeNode[], expandedNodes: ArchbaseTreeNode[]) => void;
+  onChangedDataSource?: (dataSource: ArchbaseTreeNode[]) => void;
+  dataSource: ArchbaseTreeNode[];
+  focusedNode?: ArchbaseTreeNode;
+  style?: React.CSSProperties;
+  height?: string;
+  width?: string;
+  customRenderText?: (node: ArchbaseTreeNode) => ReactNode;
 }
 
 export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
@@ -80,18 +79,19 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
   height,
   width,
   focusedNode,
-  customRenderText
+  customRenderText,
 }) => {
-  const theme = useArchbaseTheme()
-  const [internalDataSource, setDataSource] = useState<ArchbaseTreeNode[]>([])
-  const [focused, setFocused] = useState<ArchbaseTreeNode | undefined>(focusedNode)
-  const nodeList = useRef<string[]>([])
-  const nodesQuantity = useRef(0)
+  const theme = useArchbaseTheme();
+  const [internalDataSource, setDataSource] = useState<ArchbaseTreeNode[]>([]);
+  const [focused, setFocused] = useState<ArchbaseTreeNode | undefined>(focusedNode);
+  const nodeList = useRef<string[]>([]);
+  const nodesQuantity = useRef(0);
 
   const setNodeDetails = useCallback((node: any): ArchbaseTreeNode[] => {
-    if (!node.nodes) return []
+    if (!node.nodes) return [];
+
     return node.nodes.map((childNode) => {
-      nodeList.current.push(childNode.id)
+      nodeList.current.push(childNode.id);
       const newNode: ArchbaseTreeNode = {
         id: childNode.id,
         nodes: setNodeDetails(childNode),
@@ -100,262 +100,250 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
         state: {
           selected: childNode.state ? !!childNode.state.selected : false,
           expanded: childNode.state ? !!childNode.state.expanded : false,
-          loading: childNode.state ? !!childNode.state.loading : false
+          loading: childNode.state ? !!childNode.state.loading : false,
         },
         text: childNode.text,
         icon: childNode.icon,
         color: childNode.color,
         image: childNode.image,
         data: childNode.data,
-        type: childNode.type
-      }
-      return newNode
-    })
-  }, [])
+        type: childNode.type,
+      };
 
-  const findNodeById = useCallback(
-    (nodes: ArchbaseTreeNode[], id: string): ArchbaseTreeNode | undefined => {
-      let result
-      if (nodes)
-        nodes.forEach(function (node) {
-          if (node.id === id) result = node
-          else {
-            if (node.nodes) {
-              result = findNodeById(node.nodes, id) || result
-            }
+      return newNode;
+    });
+  }, []);
+
+  const findNodeById = useCallback((nodes: ArchbaseTreeNode[], id: string): ArchbaseTreeNode | undefined => {
+    let result;
+    if (nodes)
+      nodes.forEach(function (node) {
+        if (node.id === id) result = node;
+        else {
+          if (node.nodes) {
+            result = findNodeById(node.nodes, id) || result;
           }
-        })
-      return result
-    },
-    []
-  )
+        }
+      });
+
+    return result;
+  }, []);
 
   const findPreviousNodeById = useCallback(
     (id: string, visible: boolean): ArchbaseTreeNode | undefined => {
-      let foundId = false
+      let foundId = false;
       for (let i = nodeList.current.length - 1; i >= 0; i--) {
         if (foundId) {
-          let node = findNodeById(internalDataSource, nodeList.current[i])
+          let node = findNodeById(internalDataSource, nodeList.current[i]);
           if (
-            (visible &&
-              node &&
-              node.parentNode &&
-              node.parentNode.state &&
-              node.parentNode.state.expanded) ||
+            (visible && node && node.parentNode && node.parentNode.state && node.parentNode.state.expanded) ||
             (visible && node && node.state && node.state.expanded)
           )
-            return node
+            return node;
         }
         if (nodeList.current[i] === id) {
-          foundId = true
+          foundId = true;
         }
       }
     },
-    [internalDataSource]
-  )
+    [internalDataSource],
+  );
 
   const findNextNodeById = useCallback(
     (id: string, visible: boolean): ArchbaseTreeNode | undefined => {
-      let foundId = false
+      let foundId = false;
       for (var i = 0; i < nodeList.current.length; i++) {
         if (foundId) {
-          let node = findNodeById(internalDataSource, nodeList.current[i])
+          let node = findNodeById(internalDataSource, nodeList.current[i]);
           if (
             (visible && node && node.parentNode && node.parentNode.state.expanded) ||
             (visible && node && node.state && node.state.expanded)
           )
-            return node
+            return node;
         }
         if (nodeList.current[i] === id) {
-          foundId = true
+          foundId = true;
         }
       }
     },
-    [internalDataSource]
-  )
+    [internalDataSource],
+  );
 
   const deleteById = useCallback((obj: ArchbaseTreeNode[], id: string): ArchbaseTreeNode[] => {
-    if (!obj || obj.length <= 0) return []
-    let arr: ArchbaseTreeNode[] = []
+    if (!obj || obj.length <= 0) return [];
+    let arr: ArchbaseTreeNode[] = [];
     lodash.each(obj, (val) => {
-      if (val.nodes && val.nodes.length > 0) val.nodes = deleteById(val.nodes, id)
+      if (val.nodes && val.nodes.length > 0) val.nodes = deleteById(val.nodes, id);
 
       if (val.id !== id) {
-        arr.push(val)
+        arr.push(val);
       }
-    })
-    return arr
-  }, [])
+    });
 
-  const setChildrenState = useCallback(
-    (nodes: ArchbaseTreeNode[], state: boolean): ArchbaseTreeNode[] => {
-      let selectedNodes: ArchbaseTreeNode[] = []
-      if (nodes)
-        nodes.forEach(function (node) {
-          if (node && node.state) {
-            node.state.selected = state
-          }
-          selectedNodes.push(node)
-          selectedNodes.push(...setChildrenState(node.nodes || [], state))
-        })
-      return selectedNodes
-    },
-    []
-  )
+    return arr;
+  }, []);
+
+  const setChildrenState = useCallback((nodes: ArchbaseTreeNode[], state: boolean): ArchbaseTreeNode[] => {
+    let selectedNodes: ArchbaseTreeNode[] = [];
+    if (nodes)
+      nodes.forEach(function (node) {
+        if (node && node.state) {
+          node.state.selected = state;
+        }
+        selectedNodes.push(node);
+        selectedNodes.push(...setChildrenState(node.nodes || [], state));
+      });
+
+    return selectedNodes;
+  }, []);
 
   const getSelectedNodesInternal = useCallback((nodes: ArchbaseTreeNode[]): ArchbaseTreeNode[] => {
-    let selectedNodes: ArchbaseTreeNode[] = []
+    let selectedNodes: ArchbaseTreeNode[] = [];
     nodes.forEach((node) => {
       if (node && node.state && node.state.selected) {
-        selectedNodes.push(node)
+        selectedNodes.push(node);
       }
-      selectedNodes.push(...getSelectedNodesInternal(node.nodes || []))
-    })
-    return selectedNodes
-  }, [])
+      selectedNodes.push(...getSelectedNodesInternal(node.nodes || []));
+    });
+
+    return selectedNodes;
+  }, []);
 
   const setParentSelectable = useCallback((node: ArchbaseTreeNode) => {
-    if (!node.parentNode || !node.parentNode.state) return
-    node.parentNode.state.selected = true
-    setParentSelectable(node.parentNode)
-  }, [])
+    if (!node.parentNode || !node.parentNode.state) return;
+    node.parentNode.state.selected = true;
+    setParentSelectable(node.parentNode);
+  }, []);
 
   const nodeSelected = useCallback(
     (id: string, selected: boolean) => {
-      let selectedNodes: ArchbaseTreeNode[] = []
-      let newDataSource = [...internalDataSource]
-      let node = findNodeById(newDataSource, id)
+      let selectedNodes: ArchbaseTreeNode[] = [];
+      let newDataSource = [...internalDataSource];
+      let node = findNodeById(newDataSource, id);
       if (node && node.state) {
-        node.state.selected = selected
-        selectedNodes.push(node)
-        selectedNodes.push(...setChildrenState(node.nodes || [], selected))
-        setDataSource(newDataSource)
+        node.state.selected = selected;
+        selectedNodes.push(node);
+        selectedNodes.push(...setChildrenState(node.nodes || [], selected));
+        setDataSource(newDataSource);
 
         if (onChangedDataSource) {
-          onChangedDataSource(newDataSource)
+          onChangedDataSource(newDataSource);
         }
 
         if (selected === true) {
           if (onSelectedNode) {
-            onSelectedNode(newDataSource, selectedNodes)
+            onSelectedNode(newDataSource, selectedNodes);
           }
         } else {
           if (onUnSelectedNode) {
-            onUnSelectedNode(newDataSource, selectedNodes)
+            onUnSelectedNode(newDataSource, selectedNodes);
           }
         }
       }
     },
-    [internalDataSource, onChangedDataSource, onSelectedNode, onUnSelectedNode, setChildrenState]
-  )
+    [internalDataSource, onChangedDataSource, onSelectedNode, onUnSelectedNode, setChildrenState],
+  );
 
   const loadDataSource = useCallback(
     (id: string) => {
       if (onLoadDataSource) {
-        let newDataSource = [...internalDataSource]
-        let node = findNodeById(newDataSource, id)
+        let newDataSource = [...internalDataSource];
+        let node = findNodeById(newDataSource, id);
         if (node) {
-          const callbackPromise = onLoadDataSource(node)
+          const callbackPromise = onLoadDataSource(node);
           if (callbackPromise) {
             callbackPromise.then(
               (nodes) => {
                 if (node) {
-                  node.nodes = nodes
-                  node.state.loading = false
+                  node.nodes = nodes;
+                  node.state.loading = false;
                 }
-                setDataSource(newDataSource)
+                setDataSource(newDataSource);
                 if (onChangedDataSource) {
-                  onChangedDataSource(newDataSource)
+                  onChangedDataSource(newDataSource);
                 }
               },
               () => {
-                console.log('erro loaded')
-              }
-            )
+                console.log('erro loaded');
+              },
+            );
           }
         }
       }
     },
-    [internalDataSource, onChangedDataSource, onLoadDataSource]
-  )
+    [internalDataSource, onChangedDataSource, onLoadDataSource],
+  );
 
   const nodeExpandedCollapsed = useCallback(
     (id: string, expanded: boolean) => {
-      let newDataSource = [...internalDataSource]
-      let expandedNodes: ArchbaseTreeNode[] = []
-      let node = findNodeById(newDataSource, id)
+      let newDataSource = [...internalDataSource];
+      let expandedNodes: ArchbaseTreeNode[] = [];
+      let node = findNodeById(newDataSource, id);
       if (node && node.state) {
-        let loading = !node.nodes && !node.isleaf
+        let loading = !node.nodes && !node.isleaf;
         if (!onLoadDataSource && loading) {
-          loading = false
+          loading = false;
         }
-        node.state.expanded = expanded
-        node.state.loading = loading
-        expandedNodes.push(node)
-        setDataSource(newDataSource)
+        node.state.expanded = expanded;
+        node.state.loading = loading;
+        expandedNodes.push(node);
+        setDataSource(newDataSource);
 
         if (onChangedDataSource) {
-          onChangedDataSource(newDataSource)
+          onChangedDataSource(newDataSource);
         }
 
         if (expanded === true) {
           if (onExpandedNode) {
-            onExpandedNode(newDataSource, expandedNodes)
+            onExpandedNode(newDataSource, expandedNodes);
           }
         } else {
           if (onCollapsedNode) {
-            onCollapsedNode(newDataSource, expandedNodes)
+            onCollapsedNode(newDataSource, expandedNodes);
           }
         }
 
-        if (loading) loadDataSource(node.id)
+        if (loading) loadDataSource(node.id);
       }
     },
-    [
-      internalDataSource,
-      onChangedDataSource,
-      onLoadDataSource,
-      loadDataSource,
-      onExpandedNode,
-      onCollapsedNode
-    ]
-  )
+    [internalDataSource, onChangedDataSource, onLoadDataSource, loadDataSource, onExpandedNode, onCollapsedNode],
+  );
 
   const nodeFocused = useCallback(
     (id: string) => {
       if (onLoosedFocusNode && focused) {
-        onLoosedFocusNode(focused)
+        onLoosedFocusNode(focused);
       }
-      let node = findNodeById(internalDataSource, id)
+      let node = findNodeById(internalDataSource, id);
       if (node) {
-        setFocused(node)
+        setFocused(node);
         if (onFocusedNode) {
-          onFocusedNode(node)
+          onFocusedNode(node);
         }
       }
     },
-    [internalDataSource, focused, onFocusedNode, onLoosedFocusNode]
-  )
+    [internalDataSource, focused, onFocusedNode, onLoosedFocusNode],
+  );
 
   const getFocused = useCallback(() => {
-    return focused
-  }, [focused])
+    return focused;
+  }, [focused]);
 
   const nodeDoubleClicked = useCallback(
     (id: string, _selected: boolean) => {
       if (onDoubleClick) {
-        let node = findNodeById(internalDataSource, id)
+        let node = findNodeById(internalDataSource, id);
         if (node) {
-          onDoubleClick(internalDataSource, node)
+          onDoubleClick(internalDataSource, node);
         }
       }
     },
-    [internalDataSource, onDoubleClick]
-  )
+    [internalDataSource, onDoubleClick],
+  );
 
   const addNode = useCallback(
     (id: string, text: string) => {
-      let node = findNodeById(internalDataSource, id)
+      let node = findNodeById(internalDataSource, id);
 
       if (node) {
         let newNode: ArchbaseTreeNode = {
@@ -365,130 +353,130 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
           id: `${nodesQuantity.current++}`,
           icon: '',
           color: '',
-          image: ''
-        }
+          image: '',
+        };
         if (node.nodes) {
-          node.nodes.push(newNode)
+          node.nodes.push(newNode);
         } else {
-          node.nodes = [newNode]
+          node.nodes = [newNode];
         }
 
         if (onChangedDataSource) {
-          onChangedDataSource(internalDataSource)
+          onChangedDataSource(internalDataSource);
         }
 
         if (onAddedNode) {
-          onAddedNode(newNode, internalDataSource)
+          onAddedNode(newNode, internalDataSource);
         }
       }
     },
-    [internalDataSource, onChangedDataSource, onAddedNode]
-  )
+    [internalDataSource, onChangedDataSource, onAddedNode],
+  );
 
   const removeNode = useCallback(
     (id: string) => {
-      let newDataSource = deleteById([...internalDataSource], id)
-      if (newDataSource.length === 0) return false
-      setDataSource(newDataSource)
+      let newDataSource = deleteById([...internalDataSource], id);
+      if (newDataSource.length === 0) return false;
+      setDataSource(newDataSource);
 
       if (onChangedDataSource) {
-        onChangedDataSource(newDataSource)
+        onChangedDataSource(newDataSource);
       }
       if (onRemovedNode) {
-        onRemovedNode(newDataSource)
+        onRemovedNode(newDataSource);
       }
     },
-    [internalDataSource, deleteById, onChangedDataSource, onRemovedNode]
-  )
+    [internalDataSource, deleteById, onChangedDataSource, onRemovedNode],
+  );
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (focused) {
         if (event.keyCode === 38) {
-          event.preventDefault()
-          let previousNode = findPreviousNodeById(focused.id, true)
+          event.preventDefault();
+          let previousNode = findPreviousNodeById(focused.id, true);
           if (previousNode) {
-            nodeFocused(previousNode.id)
-            const element = document.getElementById(`${id}_${previousNode.id}`)
+            nodeFocused(previousNode.id);
+            const element = document.getElementById(`${id}_${previousNode.id}`);
             if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+              element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             }
           }
         } else if (event.keyCode === 40) {
-          event.preventDefault()
-          let nextNode = findNextNodeById(focused.id, true)
+          event.preventDefault();
+          let nextNode = findNextNodeById(focused.id, true);
           if (nextNode) {
-            nodeFocused(nextNode.id)
-            const element = document.getElementById(`${id}_${nextNode.id}`)
+            nodeFocused(nextNode.id);
+            const element = document.getElementById(`${id}_${nextNode.id}`);
             if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+              element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             }
           }
         } else if (event.keyCode === 33) {
-          event.preventDefault()
-          let count = 0
-          let previousNode = findPreviousNodeById(focused.id, true)
-          let node = previousNode
+          event.preventDefault();
+          let count = 0;
+          let previousNode = findPreviousNodeById(focused.id, true);
+          let node = previousNode;
           while (count < 5 && node) {
-            node = findPreviousNodeById(node.id, true)
+            node = findPreviousNodeById(node.id, true);
             if (node) {
-              previousNode = node
+              previousNode = node;
             }
-            count++
+            count++;
           }
           if (previousNode) {
-            nodeFocused(previousNode.id)
-            const element = document.getElementById(`${id}_${previousNode.id}`)
+            nodeFocused(previousNode.id);
+            const element = document.getElementById(`${id}_${previousNode.id}`);
             if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+              element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             }
           }
         } else if (event.keyCode === 34) {
-          event.preventDefault()
-          let nextNode = findNextNodeById(focused.id, true)
-          let node = nextNode
-          let count = 0
+          event.preventDefault();
+          let nextNode = findNextNodeById(focused.id, true);
+          let node = nextNode;
+          let count = 0;
           while (count < 5 && node) {
-            node = findNextNodeById(node.id, true)
+            node = findNextNodeById(node.id, true);
             if (node) {
-              nextNode = node
+              nextNode = node;
             }
-            count++
+            count++;
           }
           if (nextNode) {
-            nodeFocused(nextNode.id)
-            const element = document.getElementById(`${id}_${nextNode.id}`)
+            nodeFocused(nextNode.id);
+            const element = document.getElementById(`${id}_${nextNode.id}`);
             if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+              element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             }
           }
         } else if (event.keyCode === 32) {
-          event.preventDefault()
-          let node = findNodeById(internalDataSource, focused.id)
+          event.preventDefault();
+          let node = findNodeById(internalDataSource, focused.id);
           if (node) {
-            let selected = true
+            let selected = true;
             if (node.state.selected) {
-              selected = !node.state.selected
+              selected = !node.state.selected;
             }
-            nodeSelected(node.id, selected)
+            nodeSelected(node.id, selected);
           }
         } else if (event.keyCode === 107) {
-          event.preventDefault()
-          let node = findNodeById(internalDataSource, focused.id)
+          event.preventDefault();
+          let node = findNodeById(internalDataSource, focused.id);
           if (node) {
             if (!node.state.expanded) {
-              nodeExpandedCollapsed(node.id, true)
+              nodeExpandedCollapsed(node.id, true);
             }
           }
         } else if (event.keyCode === 109) {
-          event.preventDefault()
-          let node = findNodeById(internalDataSource, focused.id)
+          event.preventDefault();
+          let node = findNodeById(internalDataSource, focused.id);
           if (node) {
             if (node.state.expanded) {
-              nodeExpandedCollapsed(node.id, false)
+              nodeExpandedCollapsed(node.id, false);
             }
           }
-        } 
+        }
       }
     },
     [
@@ -498,14 +486,14 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
       findPreviousNodeById,
       findNextNodeById,
       nodeSelected,
-      nodeExpandedCollapsed
-    ]
-  )
+      nodeExpandedCollapsed,
+    ],
+  );
 
   useEffect(() => {
-    nodeList.current = []
-    setDataSource(setNodeDetails(lodash.clone({ nodes: dataSource })))
-  }, [dataSource, setNodeDetails])
+    nodeList.current = [];
+    setDataSource(setNodeDetails(lodash.clone({ nodes: dataSource })));
+  }, [dataSource, setNodeDetails]);
 
   const renderedStyle = useMemo(() => {
     return {
@@ -514,16 +502,14 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
         ? {
             border:
               borderColor &&
-              `${rem(1)} solid ${
-                theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
-              }`
+              `${rem(1)} solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
           }
         : { border: 'none' }),
       ...(height ? { height } : {}),
       ...(width ? { width } : {}),
-      marginLeft: '-20px'
-    }
-  }, [style, withBorder, borderColor, height, width])
+      marginLeft: '-20px',
+    };
+  }, [style, withBorder, borderColor, height, width]);
 
   const children = useMemo(() => {
     return internalDataSource.map((node) => {
@@ -545,12 +531,14 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
           options={{
             selectable,
             color,
-            backgroundColor:backgroundColor?backgroundColor:'transparent',
-            hoverColor:hoverColor?hoverColor:theme.black,
+            backgroundColor: backgroundColor ? backgroundColor : 'transparent',
+            hoverColor: hoverColor ? hoverColor : theme.black,
             hoverBackgroundColor,
-            focusedColor:focusedColor?focusedColor:theme.white,
-            focusedBackgroundColor:focusedBackgroundColor?focusedBackgroundColor:theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 5 : 5],
-            selectedColor:selectedColor?selectedColor:'orange',
+            focusedColor: focusedColor ? focusedColor : theme.white,
+            focusedBackgroundColor: focusedBackgroundColor
+              ? focusedBackgroundColor
+              : theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 5 : 5],
+            selectedColor: selectedColor ? selectedColor : 'orange',
             selectedBackgroundColor,
             iconColor,
             iconBackgroundColor,
@@ -558,16 +546,14 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
             highlightSelected,
             borderColor:
               borderColor ||
-              `${rem(1)} solid ${
-                theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
-              }`,
+              `${rem(1)} solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
             withBorder,
             showTags,
-            id
+            id,
           }}
         />
-      )
-    })
+      );
+    });
   }, [
     internalDataSource,
     selectable,
@@ -592,17 +578,12 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
     loadDataSource,
     getFocused,
     addNode,
-    removeNode
-  ])
+    removeNode,
+  ]);
 
   return (
-    <div
-      tabIndex={-1}
-      className="archbase-treeview"
-      onKeyDown={handleKeyDown}
-      style={renderedStyle}
-    >
+    <div tabIndex={-1} className="archbase-treeview" onKeyDown={handleKeyDown} style={renderedStyle}>
       <ul style={{ height: '100%', overflowY: 'auto' }}>{children}</ul>
     </div>
-  )
-}
+  );
+};

@@ -1,69 +1,68 @@
-import React, { Fragment, ReactNode, useRef, useState } from 'react'
-import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react'
-import { t } from 'i18next'
-import { MRT_Row } from 'mantine-react-table'
-import { Button, Flex, Paper, Variants } from '@mantine/core'
-import type { ArchbaseDataSource } from '../datasource'
+import React, { Fragment, ReactNode, useRef, useState } from 'react';
+import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
+import { t } from 'i18next';
+import { MRT_Row } from 'mantine-react-table';
+import { Button, Flex, Paper, Variants } from '@mantine/core';
+import type { ArchbaseDataSource } from '../datasource';
 import {
   ArchbaseQueryBuilder,
   ArchbaseQueryFilter,
   ArchbaseQueryFilterDelegator,
   ArchbaseQueryFilterState,
   FilterOptions,
-  getDefaultEmptyFilter
-} from '../querybuilder'
-import { ArchbaseAlert } from '../notification'
-import { ArchbaseDataTable, ToolBarActions } from '../datatable'
-import '../../styles/template.scss'
-import { useArchbaseElementSizeArea, useArchbaseTheme } from '../hooks'
-import { IconPlus } from '@tabler/icons-react'
-import { useArchbaseAppContext } from '../core'
-
+  getDefaultEmptyFilter,
+} from '../querybuilder';
+import { ArchbaseAlert } from '../notification';
+import { ArchbaseDataTable, ToolBarActions } from '../datatable';
+import '../../styles/template.scss';
+import { useArchbaseElementSizeArea, useArchbaseTheme } from '../hooks';
+import { IconPlus } from '@tabler/icons-react';
+import { useArchbaseAppContext } from '../core';
 
 export interface UserActionsOptions {
-  visible: boolean
-  labelAdd?: string
-  labelEdit?: string
-  labelRemove?: string
-  labelView?: string
-  allowRemove: boolean
-  onAddExecute?: () => void
-  onEditExecute?: () => void
-  onRemoveExecute?: () => void
-  onViewExecute?: () => void
+  visible: boolean;
+  labelAdd?: string;
+  labelEdit?: string;
+  labelRemove?: string;
+  labelView?: string;
+  allowRemove: boolean;
+  onAddExecute?: () => void;
+  onEditExecute?: () => void;
+  onRemoveExecute?: () => void;
+  onViewExecute?: () => void;
 }
 
 export interface UserRowActionsOptions<T extends Object> {
-  actions?: any
-  onAddRow?: (row: MRT_Row<T>) => void
-  onEditRow?: (row: MRT_Row<T>) => void
-  onRemoveRow?: (row: MRT_Row<T>) => void
-  onViewRow?: (row: MRT_Row<T>) => void
+  actions?: any;
+  onAddRow?: (row: MRT_Row<T>) => void;
+  onEditRow?: (row: MRT_Row<T>) => void;
+  onRemoveRow?: (row: MRT_Row<T>) => void;
+  onViewRow?: (row: MRT_Row<T>) => void;
 }
 
 export interface ArchbaseTableTemplateProps<T extends Object, ID> {
-  title: string
-  printTitle?: string
-  logoPrint?: string
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
-  dataSource: ArchbaseDataSource<T, ID>
-  dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined
-  filterType: 'none' | 'normal' | 'advanced'
-  filterOptions?: FilterOptions
-  filterPersistenceDelegator?: ArchbaseQueryFilterDelegator
-  pageSize?: number
-  columns: ReactNode
-  filterFields?: ReactNode | undefined
-  userActions?: UserActionsOptions
-  userRowActions?: UserRowActionsOptions<T>
-  innerRef?: React.RefObject<HTMLInputElement> | undefined
-  isLoading?: boolean
-  isError?: boolean
-  error?: string | undefined
-  clearError?: () => void
-  width?: number | string | undefined
-  height?: number | string | undefined
-  onSearchByFilter?: () => void
+  title: string;
+  printTitle?: string;
+  logoPrint?: string;
+  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
+  dataSource: ArchbaseDataSource<T, ID>;
+  dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined;
+  filterType: 'none' | 'normal' | 'advanced';
+  filterOptions?: FilterOptions;
+  filterPersistenceDelegator?: ArchbaseQueryFilterDelegator;
+  pageSize?: number;
+  columns: ReactNode;
+  filterFields?: ReactNode | undefined;
+  userActions?: UserActionsOptions;
+  userRowActions?: UserRowActionsOptions<T>;
+  innerRef?: React.RefObject<HTMLInputElement> | undefined;
+  isLoading?: boolean;
+  isError?: boolean;
+  error?: string | undefined;
+  clearError?: () => void;
+  width?: number | string | undefined;
+  height?: number | string | undefined;
+  onSearchByFilter?: () => void;
   withBorder?: boolean;
 }
 
@@ -87,50 +86,51 @@ export function ArchbaseTableTemplate<T extends object, ID>({
   width = '100%',
   height = '100%',
   onSearchByFilter = () => {},
-  withBorder=true,
+  withBorder = true,
   filterPersistenceDelegator,
-  variant
+  variant,
 }: ArchbaseTableTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
-  const filterRef = useRef<any>()
-  const theme = useArchbaseTheme()
-  const [innerComponentRef, { width: containerWidth, height: containerHeight }] = useArchbaseElementSizeArea()
+  const filterRef = useRef<any>();
+  const theme = useArchbaseTheme();
+  const [innerComponentRef, { width: containerWidth, height: containerHeight }] = useArchbaseElementSizeArea();
   const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
     activeFilterIndex: -1,
-    expandedFilter: false
-  })
+    expandedFilter: false,
+  });
 
   const buildRowActions = ({ row }): ReactNode | undefined => {
     if (!userRowActions && !userRowActions!.actions) {
-      return
+      return;
     }
-    const Comp: any = userRowActions!.actions
+    const Comp: any = userRowActions!.actions;
+
     return (
       <Comp
         onEditRow={userRowActions!.onEditRow}
         onRemoveRow={userRowActions!.onRemoveRow}
         onViewRow={userRowActions!.onViewRow}
         row={row}
-        variant={variant??appContext.variant}
+        variant={variant ?? appContext.variant}
       />
-    )
-  }
+    );
+  };
 
   const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
-    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex })
-  }
+    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
+  };
 
   const handleToggleExpandedFilter = (expanded: boolean) => {
-    setFilterState({ ...filterState, expandedFilter: expanded })
-  }
+    setFilterState({ ...filterState, expandedFilter: expanded });
+  };
 
   const handleSelectedFilter = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
-    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex })
-  }
+    setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
+  };
 
   const getColor = (color: string) => {
-    return theme.colors[color][theme.colorScheme === 'dark' ? 5 : 7]
-  }
+    return theme.colors[color][theme.colorScheme === 'dark' ? 5 : 7];
+  };
 
   const buildFilter = () => {
     return (
@@ -139,7 +139,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
         viewName={filterOptions?.viewName!}
         apiVersion={filterOptions?.apiVersion!}
         ref={filterRef}
-        variant={variant??appContext.variant}
+        variant={variant ?? appContext.variant}
         expandedFilter={filterState.expandedFilter}
         persistenceDelegator={filterPersistenceDelegator!}
         currentFilter={filterState.currentFilter}
@@ -153,11 +153,11 @@ export function ArchbaseTableTemplate<T extends object, ID>({
       >
         {filterFields}
       </ArchbaseQueryBuilder>
-    )
-  }
+    );
+  };
 
   return (
-    <Paper withBorder={withBorder} ref={innerRef||innerComponentRef} style={{ overflow: 'none', height: '100%' }}>
+    <Paper withBorder={withBorder} ref={innerRef || innerComponentRef} style={{ overflow: 'none', height: '100%' }}>
       {isError ? (
         <ArchbaseAlert
           autoClose={20000}
@@ -166,7 +166,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
           icon={<IconBug size="1.4rem" />}
           title={t('archbase:WARNING')}
           titleColor="rgb(250, 82, 82)"
-          variant={variant??appContext.variant}
+          variant={variant ?? appContext.variant}
           onClose={() => clearError && clearError()}
         >
           <span>{error}</span>
@@ -180,7 +180,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
         withBorder={withBorder}
         dataSource={dataSource}
         withColumnBorders={true}
-        variant={variant??appContext.variant}
+        variant={variant ?? appContext.variant}
         striped={true}
         isLoading={isLoading}
         pageSize={pageSize}
@@ -191,51 +191,53 @@ export function ArchbaseTableTemplate<T extends object, ID>({
         error={<span>{error}</span>}
       >
         {columns}
-        {userActions?.visible?<ToolBarActions>
-          <Fragment>
-            <h3 className="only-print">{printTitle || title}</h3>
-            <div className="no-print">
-              <Flex gap="8px" rowGap="8px">
-                <Button
-                  color={"green"}
-                  variant={variant??appContext.variant}
-                  leftIcon={<IconPlus />}
-                  onClick={() => userActions && userActions.onAddExecute && userActions!.onAddExecute()}
-                >
-                  {t('archbase:New')}
-                </Button>
-                <Button
-                  color="blue"
-                  leftIcon={<IconEdit/>}
-                  disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
-                  variant={variant??appContext.variant}
-                  onClick={() => userActions && userActions.onEditExecute && userActions!.onEditExecute()}
-                >
-                  {t('archbase:Edit')}
-                </Button>
-                <Button
-                  color="red"
-                  leftIcon={<IconTrash/>}
-                  disabled={!userActions?.allowRemove || !dataSource.isBrowsing() || dataSource.isEmpty()}
-                  variant={variant??appContext.variant}
-                  onClick={() => userActions && userActions.onRemoveExecute && userActions!.onRemoveExecute()}
-                >
-                  {t('archbase:Remove')}
-                </Button>
-                <Button
-                  color="silver"
-                  leftIcon={<IconEye/>}
-                  disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
-                  variant={variant??appContext.variant}
-                  onClick={() => userActions && userActions.onViewExecute && userActions!.onViewExecute()}
-                >
-                  {t('archbase:View')}
-                </Button>
-              </Flex>
-            </div>
-          </Fragment>
-        </ToolBarActions>:null}
+        {userActions?.visible ? (
+          <ToolBarActions>
+            <Fragment>
+              <h3 className="only-print">{printTitle || title}</h3>
+              <div className="no-print">
+                <Flex gap="8px" rowGap="8px">
+                  <Button
+                    color={'green'}
+                    variant={variant ?? appContext.variant}
+                    leftIcon={<IconPlus />}
+                    onClick={() => userActions && userActions.onAddExecute && userActions!.onAddExecute()}
+                  >
+                    {t('archbase:New')}
+                  </Button>
+                  <Button
+                    color="blue"
+                    leftIcon={<IconEdit />}
+                    disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
+                    variant={variant ?? appContext.variant}
+                    onClick={() => userActions && userActions.onEditExecute && userActions!.onEditExecute()}
+                  >
+                    {t('archbase:Edit')}
+                  </Button>
+                  <Button
+                    color="red"
+                    leftIcon={<IconTrash />}
+                    disabled={!userActions?.allowRemove || !dataSource.isBrowsing() || dataSource.isEmpty()}
+                    variant={variant ?? appContext.variant}
+                    onClick={() => userActions && userActions.onRemoveExecute && userActions!.onRemoveExecute()}
+                  >
+                    {t('archbase:Remove')}
+                  </Button>
+                  <Button
+                    color="silver"
+                    leftIcon={<IconEye />}
+                    disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
+                    variant={variant ?? appContext.variant}
+                    onClick={() => userActions && userActions.onViewExecute && userActions!.onViewExecute()}
+                  >
+                    {t('archbase:View')}
+                  </Button>
+                </Flex>
+              </div>
+            </Fragment>
+          </ToolBarActions>
+        ) : null}
       </ArchbaseDataTable>
     </Paper>
-  )
+  );
 }

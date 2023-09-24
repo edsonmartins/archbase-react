@@ -11,7 +11,7 @@ export const ARRAY_CONTAINS = 'arrayContains';
 export function arrayContains(array: unknown, values: any[]): boolean {
   if (!Array.isArray(array)) return false;
 
-  return values.every(value => array.indexOf(value) !== -1);
+  return values.every((value) => array.indexOf(value) !== -1);
 }
 
 /**
@@ -26,11 +26,11 @@ export function ArrayContains(values: any[], validationOptions?: ValidationOptio
       validator: {
         validate: (value, args): boolean => arrayContains(value, args?.constraints[0]),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must contain $constraint1 values')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must contain $constraint1 values')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

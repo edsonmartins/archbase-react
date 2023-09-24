@@ -1,24 +1,24 @@
-import { Node } from '../ast'
-import { AnyToken } from './lexer/Token'
+import { Node } from '../ast';
+import { AnyToken } from './lexer/Token';
 
 interface ParserContext {
-  position: number
-  readonly tokens: AnyToken[]
-  readonly stack: (AnyToken | Node)[]
-  readonly state: number[]
-  readonly parent: ParserContext | null
+  position: number;
+  readonly tokens: AnyToken[];
+  readonly stack: (AnyToken | Node)[];
+  readonly state: number[];
+  readonly parent: ParserContext | null;
 }
 
 function getParserContextState(context: ParserContext): number {
-  return context.state[context.state.length - 1]
+  return context.state[context.state.length - 1];
 }
 
 function getParserContextToken(context: ParserContext): AnyToken {
-  return context.tokens[context.position]
+  return context.tokens[context.position];
 }
 
 function getParserContextHead(context: ParserContext): AnyToken | Node {
-  return context.stack[context.stack.length - 1]
+  return context.stack[context.stack.length - 1];
 }
 
 function createParserContext(tokens: AnyToken[]): ParserContext {
@@ -27,9 +27,9 @@ function createParserContext(tokens: AnyToken[]): ParserContext {
     tokens,
     stack: [],
     state: [0],
-    parent: null
-  }
+    parent: null,
+  };
 }
 
-export default ParserContext
-export { getParserContextState, getParserContextToken, getParserContextHead, createParserContext }
+export default ParserContext;
+export { getParserContextState, getParserContextToken, getParserContextHead, createParserContext };

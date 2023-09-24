@@ -14,6 +14,7 @@ export const IS_ISBN = 'isIsbn';
 export function isISBN(value: unknown, version?: IsISBNVersion): boolean {
   /* eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion */
   const versionStr = version ? (`${version}` as '10' | '13') : undefined;
+
   return typeof value === 'string' && isIsbnValidator(value, versionStr);
 }
 
@@ -28,9 +29,9 @@ export function IsISBN(version?: IsISBNVersion, validationOptions?: ValidationOp
       constraints: [version],
       validator: {
         validate: (value, args): boolean => isISBN(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be an ISBN')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be an ISBN')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

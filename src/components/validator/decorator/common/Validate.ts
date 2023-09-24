@@ -28,15 +28,11 @@ export function ValidatorConstraint(options?: { name?: string; async?: boolean }
  * Validation class must be decorated with ValidatorConstraint decorator.
  */
 export function Validate(constraintClass: Function, validationOptions?: ValidationOptions): PropertyDecorator;
-export function Validate(
-  constraintClass: Function,
-  constraints?: any[],
-  validationOptions?: ValidationOptions
-): PropertyDecorator;
+export function Validate(constraintClass: Function, constraints?: any[], validationOptions?: ValidationOptions): PropertyDecorator;
 export function Validate(
   constraintClass: Function,
   constraintsOrValidationOptions?: any[] | ValidationOptions,
-  maybeValidationOptions?: ValidationOptions
+  maybeValidationOptions?: ValidationOptions,
 ): PropertyDecorator {
   // @ts-ignore
   return function (object: object, propertyName: string): void {
@@ -46,9 +42,7 @@ export function Validate(
       propertyName: propertyName,
       constraintCls: constraintClass,
       constraints: Array.isArray(constraintsOrValidationOptions) ? constraintsOrValidationOptions : undefined,
-      validationOptions: !Array.isArray(constraintsOrValidationOptions)
-        ? constraintsOrValidationOptions
-        : maybeValidationOptions,
+      validationOptions: !Array.isArray(constraintsOrValidationOptions) ? constraintsOrValidationOptions : maybeValidationOptions,
     };
     getMetadataStorage().addValidationMetadata(new ValidationMetadata(args));
   };

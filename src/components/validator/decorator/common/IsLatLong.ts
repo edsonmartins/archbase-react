@@ -22,11 +22,11 @@ export function IsLatLong(validationOptions?: ValidationOptions): PropertyDecora
       validator: {
         validate: (value, args): boolean => isLatLong(value),
         defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a latitude,longitude string')}`,
-          validationOptions
+          (eachPrefix) => eachPrefix + `${t('archbase:$property must be a latitude,longitude string')}`,
+          validationOptions,
         ),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

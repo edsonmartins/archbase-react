@@ -23,9 +23,9 @@ export function IsBase58(validationOptions?: ValidationOptions): PropertyDecorat
       name: IS_BASE58,
       validator: {
         validate: (value, args): boolean => isBase58(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be base58 encoded')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be base58 encoded')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

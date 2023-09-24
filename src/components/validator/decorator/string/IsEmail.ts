@@ -18,19 +18,16 @@ export function isEmail(value: unknown, options?: ValidatorJS.IsEmailOptions): b
  * Checks if the string is an email.
  * If given value is not a string, then it returns false.
  */
-export function IsEmail(
-  options?: ValidatorJS.IsEmailOptions,
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsEmail(options?: ValidatorJS.IsEmailOptions, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_EMAIL,
       constraints: [options],
       validator: {
         validate: (value, args): boolean => isEmail(value, args?.constraints[0]),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be an email')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be an email')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

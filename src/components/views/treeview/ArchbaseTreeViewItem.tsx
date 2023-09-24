@@ -16,7 +16,7 @@ interface ArchbaseTreeViewItemProps {
   onNodeDoubleClicked: (id: string, selected: boolean) => void;
   addNode: (id: string, text: string) => void;
   removeNode: (id: string) => void;
-  customRenderText?: (node: ArchbaseTreeNode) => ReactNode
+  customRenderText?: (node: ArchbaseTreeNode) => ReactNode;
 }
 
 export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
@@ -32,7 +32,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
   addNode,
   removeNode,
   id,
-  customRenderText
+  customRenderText,
 }: ArchbaseTreeViewItemProps) => {
   const [expanded, setExpanded] = useState(node.state && node.state.expanded);
   const [selected, setSelected] = useState(node.state && node.state.selected);
@@ -44,7 +44,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
       onExpandedCollapsedChanged(node.id, newExpanded);
       event.stopPropagation();
     },
-    [expanded, node.id, onExpandedCollapsedChanged]
+    [expanded, node.id, onExpandedCollapsedChanged],
   );
 
   const toggleSelected = useCallback(
@@ -54,7 +54,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
       onSelectedStatusChanged(node.id, newSelected);
       event.stopPropagation();
     },
-    [selected, node.id, onSelectedStatusChanged]
+    [selected, node.id, onSelectedStatusChanged],
   );
 
   const toggleFocused = useCallback(
@@ -62,7 +62,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
       onFocusedChanged(node.id);
       event.stopPropagation();
     },
-    [node.id, onFocusedChanged]
+    [node.id, onFocusedChanged],
   );
 
   const doubleClicked = useCallback(
@@ -70,7 +70,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
       onNodeDoubleClicked(node.id, selected);
       event.stopPropagation();
     },
-    [node.id, selected, onNodeDoubleClicked]
+    [node.id, selected, onNodeDoubleClicked],
   );
 
   const style = useMemo(() => {
@@ -82,15 +82,20 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
       itemStyle.color = node.color || options.color;
       itemStyle.backgroundColor = node.backgroundColor || options.backgroundColor;
     }
+
     return itemStyle;
   }, [selected, node, options]);
 
   const checkSelectedIcon = useMemo(() => {
     if (options.selectable) {
       return selected ? (
-        <ActionIcon onClick={toggleSelected} variant="transparent"><IconSquareCheck size="1.2rem" style={style}/></ActionIcon>
+        <ActionIcon onClick={toggleSelected} variant="transparent">
+          <IconSquareCheck size="1.2rem" style={style} />
+        </ActionIcon>
       ) : (
-        <ActionIcon onClick={toggleSelected} variant="transparent"><IconSquare size="1.2rem" style={style}/></ActionIcon>
+        <ActionIcon onClick={toggleSelected} variant="transparent">
+          <IconSquare size="1.2rem" style={style} />
+        </ActionIcon>
       );
     }
   }, [options.selectable, selected, style, toggleSelected]);
@@ -98,19 +103,18 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
   const expandCollapseIcon = useMemo(() => {
     if (!expanded) {
       return (
-        <ActionIcon onClick={toggleExpanded} variant="transparent"><IconChevronRight size="1.2rem" style={{ ...style }}/></ActionIcon>
+        <ActionIcon onClick={toggleExpanded} variant="transparent">
+          <IconChevronRight size="1.2rem" style={{ ...style }} />
+        </ActionIcon>
       );
     } else {
       if (node.state?.loading === true) {
-        return (
-          <i
-            style={{ ...style, width: '1rem' }}
-            className="svg-inline--fa fa-spinner fa-w-16 fa-spin fa-lg"
-          ></i>
-        );
+        return <i style={{ ...style, width: '1rem' }} className="svg-inline--fa fa-spinner fa-w-16 fa-spin fa-lg"></i>;
       } else {
         return (
-          <ActionIcon onClick={toggleExpanded} variant="transparent"><IconChevronDown size="1.2rem" style={{ ...style }}/></ActionIcon>
+          <ActionIcon onClick={toggleExpanded} variant="transparent">
+            <IconChevronDown size="1.2rem" style={{ ...style }} />
+          </ActionIcon>
         );
       }
     }
@@ -124,10 +128,9 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
         backgroundColor: options.focusedBackgroundColor,
       };
     }
+
     return {};
   }, [node.id, getFocused, options.focusedColor, options.focusedBackgroundColor]);
-
-  
 
   const children = useMemo(() => {
     let renderedChildren: JSX.Element[] = [];
@@ -149,10 +152,11 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
             options={options}
             onLoadDataSource={onLoadDataSource}
             customRenderText={customRenderText}
-          />
+          />,
         );
       });
     }
+
     return renderedChildren;
   }, [
     node.nodes,
@@ -170,29 +174,18 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
     options,
   ]);
 
-    return (
-      <li
-        style={style}
-        onDoubleClick={doubleClicked}
-        id={id}
-        key={`${options.id}_${node.id}`}
-      >
-        <div style={{display:'flex',}}>
-          {!node.isleaf?expandCollapseIcon:<Space w="md"/>}
-          {checkSelectedIcon}
-          <span
-            style={{...styleFocused, display:'flex'}}
-            className="archbase-treeview-item"
-            onClick={toggleFocused}
-          >
-            {node.icon}
-            {node.image ? <img alt="" style={{ padding: '0.2rem' }} src={node.image} /> : null}
-            {customRenderText? customRenderText(node):<Text truncate>{node.text}</Text>}
-          </span>
-        </div>
-        <ul>{children}</ul>
-      </li>
-    );
+  return (
+    <li style={style} onDoubleClick={doubleClicked} id={id} key={`${options.id}_${node.id}`}>
+      <div style={{ display: 'flex' }}>
+        {!node.isleaf ? expandCollapseIcon : <Space w="md" />}
+        {checkSelectedIcon}
+        <span style={{ ...styleFocused, display: 'flex' }} className="archbase-treeview-item" onClick={toggleFocused}>
+          {node.icon}
+          {node.image ? <img alt="" style={{ padding: '0.2rem' }} src={node.image} /> : null}
+          {customRenderText ? customRenderText(node) : <Text truncate>{node.text}</Text>}
+        </span>
+      </div>
+      <ul>{children}</ul>
+    </li>
+  );
 };
-
-

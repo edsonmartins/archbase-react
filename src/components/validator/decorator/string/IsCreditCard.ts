@@ -23,9 +23,9 @@ export function IsCreditCard(validationOptions?: ValidationOptions): PropertyDec
       name: IS_CREDIT_CARD,
       validator: {
         validate: (value, args): boolean => isCreditCard(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be a credit card')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property must be a credit card')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

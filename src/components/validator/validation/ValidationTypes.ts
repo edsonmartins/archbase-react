@@ -18,7 +18,7 @@ export class ValidationTypes {
       type !== 'isValid' &&
       type !== 'getMessage' &&
       Object.keys(this)
-        .map(key => (this as any)[key])
+        .map((key) => (this as any)[key])
         .indexOf(type) !== -1
     );
   }

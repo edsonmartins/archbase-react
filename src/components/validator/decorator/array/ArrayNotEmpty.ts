@@ -22,9 +22,9 @@ export function ArrayNotEmpty(validationOptions?: ValidationOptions): PropertyDe
       name: ARRAY_NOT_EMPTY,
       validator: {
         validate: (value, args): boolean => arrayNotEmpty(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property should not be empty')}`, validationOptions),
+        defaultMessage: buildMessage((eachPrefix) => eachPrefix + `${t('archbase:$property should not be empty')}`, validationOptions),
       },
     },
-    validationOptions
+    validationOptions,
   );
 }

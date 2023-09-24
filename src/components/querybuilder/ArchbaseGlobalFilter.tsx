@@ -24,9 +24,9 @@ export interface ArchbaseGlobalFilterProps {
       color?: string;
     };
     iconClearProps?: {
-        size?: string | number;
-        color?: string;
-      };
+      size?: string | number;
+      color?: string;
+    };
     spacing?: number | string;
   };
 }
@@ -46,11 +46,11 @@ export function ArchbaseGlobalFilter({
   minFilterValueLength,
   options,
 }: ArchbaseGlobalFilterProps) {
-  const [filterValue, setFilterValue] = useState<string>('');  
-  const [debouncedFilterValue, setDebouncedFilterValue] = useDebouncedValue(filterValue,500);
+  const [filterValue, setFilterValue] = useState<string>('');
+  const [debouncedFilterValue, setDebouncedFilterValue] = useDebouncedValue(filterValue, 500);
   const [lastBuildedSearch, setLastBuildedSearch] = useState('');
   const [lastValueSearch, setLastValueSearch] = useState('');
-  const theme = useArchbaseTheme()
+  const theme = useArchbaseTheme();
 
   const prevIsEmptySearchRef = useRef<boolean>(false);
   useEffect(() => {
@@ -65,9 +65,9 @@ export function ArchbaseGlobalFilter({
       const buildedSearch = buildSearchExpressionRSQL(searchableFields, debouncedFilterValue);
       setLastBuildedSearch(buildedSearch);
       prevIsEmptySearchRef.current = false;
-      setLastValueSearch(debouncedFilterValue)
-      setDebouncedFilterValue()
-      onFilter(buildedSearch);      
+      setLastValueSearch(debouncedFilterValue);
+      setDebouncedFilterValue();
+      onFilter(buildedSearch);
     }
   }, [debouncedFilterValue, minFilterValueLength, onFilter, searchableFields]);
 
@@ -75,11 +75,17 @@ export function ArchbaseGlobalFilter({
     onFilter(value);
   }
 
-  const inputProps = options && options.inputProps ? options.inputProps : {  miw: 240 };
-  const buttonRefreshProps = options && options.buttonRefreshProps ? options.buttonRefreshProps : { color: theme.primaryColor, variant: 'filled' };
-  const buttonClearProps = options && options.buttonClearProps ? options.buttonClearProps : { color: theme.primaryColor, variant: 'filled' };
-  const iconRefreshProps = options && options.iconRefreshProps ? options.iconRefreshProps : { size: '1.5rem', color: 'white' };
-  const iconClearProps = options && options.iconRefreshProps ? options.iconRefreshProps : { size: '1.5rem', color: 'white' };
+  const inputProps = options && options.inputProps ? options.inputProps : { miw: 240 };
+  const buttonRefreshProps =
+    options && options.buttonRefreshProps
+      ? options.buttonRefreshProps
+      : { color: theme.primaryColor, variant: 'filled' };
+  const buttonClearProps =
+    options && options.buttonClearProps ? options.buttonClearProps : { color: theme.primaryColor, variant: 'filled' };
+  const iconRefreshProps =
+    options && options.iconRefreshProps ? options.iconRefreshProps : { size: '1.5rem', color: 'white' };
+  const iconClearProps =
+    options && options.iconRefreshProps ? options.iconRefreshProps : { size: '1.5rem', color: 'white' };
   const spacing = options && options.spacing ? options.spacing : 5;
 
   return (
@@ -92,11 +98,21 @@ export function ArchbaseGlobalFilter({
         {...inputProps}
       />
       <Space w={spacing} />
-      <ActionIcon color="primary" onClick={() => handleRefresh(lastBuildedSearch)} style={{height:'36px', width:'36px'}} {...buttonRefreshProps}>
+      <ActionIcon
+        color="primary"
+        onClick={() => handleRefresh(lastBuildedSearch)}
+        style={{ height: '36px', width: '36px' }}
+        {...buttonRefreshProps}
+      >
         <IconRefresh {...iconRefreshProps} />
       </ActionIcon>
       <Space w={spacing} />
-      <ActionIcon color="primary" onClick={() => handleRefresh('')} style={{height:'36px', width:'36px'}} {...buttonClearProps} >
+      <ActionIcon
+        color="primary"
+        onClick={() => handleRefresh('')}
+        style={{ height: '36px', width: '36px' }}
+        {...buttonClearProps}
+      >
         <IconFilterX {...iconClearProps} />
       </ActionIcon>
     </Flex>
