@@ -26,12 +26,6 @@
   position: absolute;
   right: auto;
 }
-.archbase-treeview li:after {
-  content: '';
-  left: -16px;
-  position: absolute;
-  right: auto;
-}
 .archbase-treeview li:before {
   border-left: 1px dotted #999;
   bottom: 30px;
@@ -40,6 +34,10 @@
   width: 1px;
 }
 .archbase-treeview li:after {
+  content: '';
+  left: -16px;
+  position: absolute;
+  right: auto;
   border-top: 1px dotted #999;
   height: 20px;
   top: 15px;

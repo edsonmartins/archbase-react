@@ -36,7 +36,6 @@
     "ci": "yarn lint && yarn test --watchAll=false",
     "audit:fix": "npx yarn-audit-fix",
     "prepare": "yarn build",
-    "prerelease": "yarn lint:fix && yarn test:coverage",
     "release": "release-it",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
