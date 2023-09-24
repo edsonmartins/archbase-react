@@ -1,10 +1,10 @@
 {
   "git": {
-    "requireBranch": "main",
+    "requireBranch": "release",
     "commitMessage": "chore: release v${version}"
   },
   "hooks": {
-    "before:init": ["git pull"],
+    "before:init": ["git pull origin release"],
     "after:bump": "npx auto-changelog -p"
   },
   "github": {
