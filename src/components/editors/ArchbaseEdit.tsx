@@ -99,6 +99,13 @@ export function ArchbaseEdit<T, ID>({
     setInternalError(undefined)
   },[currentValue])
 
+  useEffect(()=>{
+    if (error !== internalError){
+      setInternalError(error)
+    }
+  },[error])
+
+
   const loadDataSourceFieldValue = () => {
     let initialValue: any = currentValue
 

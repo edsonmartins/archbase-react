@@ -790,13 +790,13 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       index: deletedIndex
     })
 
-    if (callback) {
-      callback()
-    }
-
     this.lastDataBrowsingOn = new Date()
     this.lastDataChangedAt = new Date()
 
+    if (callback) {
+      callback()
+    }
+    
     return deletedRecord
   }
 
@@ -896,6 +896,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.editing = false
     this.inserting = false
 
+    this.lastDataChangedAt = new Date()
+
     this.emitter.emit('afterSave', this.currentRecord, this.getCurrentIndex())
     this.emit({
       type: DataSourceEventNames.afterSave,
@@ -905,9 +907,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
     if (callback) {
       callback()
-    }
-
-    this.lastDataChangedAt = new Date()
+    }   
 
     return this.currentRecord
   }

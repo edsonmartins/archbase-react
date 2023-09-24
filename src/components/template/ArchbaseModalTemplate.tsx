@@ -12,6 +12,8 @@ import { ArchbaseForm, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '../containe
 export interface ArchbaseModalTemplateProps extends ModalProps {
   height: MantineNumberSize
   userActions?: ReactNode
+  onClickOk?: ()=>void
+  onClickCancel?: ()=>void
 }
 
 export function ArchbaseModalTemplate({
@@ -29,16 +31,24 @@ export function ArchbaseModalTemplate({
   size,
   height,
   onClose,
+  onClickOk,
+  onClickCancel,
   userActions
 }: ArchbaseModalTemplateProps) {
   const appContext = useArchbaseAppContext()
   const theme = useArchbaseTheme()
 
   const handleSave = () => {
+    if (onClickOk){
+      onClickOk()
+    }
     onClose()
   }
 
   const handleCancel = () => {
+    if (onClickCancel) {
+      onClickCancel()
+    }
     onClose()
   }
 

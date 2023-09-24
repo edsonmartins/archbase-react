@@ -82,7 +82,7 @@ export interface ArchbaseSelectProps<T, ID, O> {
   /** Comportamento de posicionamento dropdown */
   dropdownPosition?: 'bottom' | 'top' | 'flip'
   /** Evento quando um valor é selecionado */
-  onSelectValue?: (value: O) => void
+  onSelectValue?: (value: O, origin: any) => void
   /** Evento quando o foco sai do select */
   onFocusExit?: FocusEventHandler<T> | undefined
   /** Evento quando o select recebe o foco */
@@ -202,7 +202,7 @@ export function ArchbaseSelect<T, ID, O>({
   const [queryValue, setQueryValue] = useDebouncedState('', debounceTime)
   const [internalError, setInternalError] = useState<string|undefined>(error);
   const [updateCounter, setUpdateCounter] = useState(0);
-  const currentOptions = useMemo(()=>{
+  const currentOptions :any[] = useMemo(()=>{
     return buildOptions<O>(options, initialOptions, children, getOptionLabel, getOptionValue, optionsLabelField)}
     ,[updateCounter, options, initialOptions, children, getOptionLabel, getOptionValue, optionsLabelField])
 
@@ -299,7 +299,8 @@ export function ArchbaseSelect<T, ID, O>({
     }
 
     if (onSelectValue) {
-      onSelectValue(value)
+      const option = currentOptions.find((option)=> option.value === value)
+      onSelectValue(value,option?option.origin:undefined)
     }
   }
 
