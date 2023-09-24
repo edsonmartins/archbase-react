@@ -4,36 +4,38 @@ import useArchbasePassiveLayoutEffect from './useArchbasePassiveLayoutEffect'
 
 
 /**
- * A React hook for measuring the size of HTML elements including when they change
+ * Um hook React para medir o tamanho dos elementos HTML, incluindo quando eles mudam
  *
- * @param target A React ref created by `useRef()` or an HTML element
- * @param options Configures the initial width and initial height of the hook's state
+ * @param target Uma referência React criada por `useRef()` ou um elemento HTML
+ * @param options Configura a largura inicial e a altura inicial do estado do gancho
  */
 export const useArchbaseSize = <T extends HTMLElement>(
   target: React.RefObject<T> | T | null,
   options?: UseSizeOptions
 ): [number, number] => {
   const [size, setSize] = React.useState<[number, number]>(() => {
-    const targetEl = target && 'current' in target ? target.current : target
+    const targetEl = target && 'current' in target ? target.current : target;
     return targetEl
-      ? [targetEl.offsetWidth, targetEl.offsetHeight]
-      : [options?.initialWidth ?? 0, options?.initialHeight ?? 0]
-  })
+      ? [(targetEl as HTMLElement).offsetWidth, (targetEl as HTMLElement).offsetHeight]
+      : [options?.initialWidth ?? 0, options?.initialHeight ?? 0];
+  });
 
   useArchbasePassiveLayoutEffect(() => {
-    const targetEl = target && 'current' in target ? target.current : target
-    if (!targetEl) return
-    setSize([targetEl.offsetWidth, targetEl.offsetHeight])
-  }, [target])
+    const targetEl = target && 'current' in target ? target.current : target;
+    if (!targetEl) return;
+    setSize([(targetEl as HTMLElement).offsetWidth, (targetEl as HTMLElement).offsetHeight]);
+  }, [target]);
 
-  // Where the magic happens
+  // Onde a mágica acontece
   useArchbaseResizeObserver(target, (entry) => {
-    const target = entry.target as HTMLElement
-    setSize([target.offsetWidth, target.offsetHeight])
-  })
+    // Use asserção de tipo para informar ao TypeScript que o destino é um HTMLElement
+    const target = entry.target as HTMLElement;
+    setSize([target.offsetWidth, target.offsetHeight]);
+  });
 
-  return size
-}
+  return size;
+};
+
 
 export interface UseSizeOptions {
   // The initial width to set into state.

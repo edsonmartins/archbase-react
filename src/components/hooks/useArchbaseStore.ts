@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { ArchbaseStateValues } from '@/components/template/ArchbaseStateValues'
+import { ArchbaseStateValues } from '../template/ArchbaseStateValues'
 import { createTrackedSelector } from 'react-tracked';
 
 
