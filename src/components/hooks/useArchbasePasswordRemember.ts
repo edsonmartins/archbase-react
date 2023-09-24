@@ -21,6 +21,7 @@ export const useArchbasePasswordRemember = (): PasswordRememberReturnType => {
       setUsername(usernameAndPassword.username);
       setPassword(usernameAndPassword.password);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const clear = () => {

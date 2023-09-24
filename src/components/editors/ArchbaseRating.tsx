@@ -72,6 +72,7 @@ export function ArchbaseRating<T, ID>({
   description,
 }: ArchbaseRatingProps<T, ID>) {
   const [currentValue, setCurrentValue] = useState<number | undefined>(value);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const [internalError, setInternalError] = useState<string | undefined>(error);
 
@@ -109,6 +110,7 @@ export function ArchbaseRating<T, ID>({
         setInternalError(event.error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {

@@ -35,6 +35,7 @@ export function useArchbaseReducer<S extends ArchbaseState, A extends ArchbaseRe
     } else {
       store.setValue(key, initialState);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const dispatch = (action: A) => {

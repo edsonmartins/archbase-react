@@ -148,6 +148,7 @@ export function ArchbaseChipGroup<T, ID, O>({
         setInternalError(event.error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {

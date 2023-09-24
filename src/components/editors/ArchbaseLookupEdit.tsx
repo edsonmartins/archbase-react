@@ -92,6 +92,7 @@ export function ArchbaseLookupEdit<T, ID, O>({
 }: ArchbaseLookupEditProps<T, ID, O>) {
   const theme = useMantineTheme();
   const [value, setValue] = useState<any | undefined>('');
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const [internalError, setInternalError] = useState<string | undefined>(error);
   useEffect(() => {
@@ -129,6 +130,7 @@ export function ArchbaseLookupEdit<T, ID, O>({
         setInternalError(event.error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {
@@ -165,7 +167,7 @@ export function ArchbaseLookupEdit<T, ID, O>({
 
   const lookupValue = () => {
     if (dataSource && dataField && !dataSource.isBrowsing() && lookupField) {
-      if (value != dataSource.getFieldValue(lookupField)) {
+      if (value !== dataSource.getFieldValue(lookupField)) {
         if (!value || value == null) {
           dataSource.setFieldValue(dataField, null);
         } else {

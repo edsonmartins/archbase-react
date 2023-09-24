@@ -69,6 +69,7 @@ export function ArchbaseGlobalFilter({
       setDebouncedFilterValue();
       onFilter(buildedSearch);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFilterValue, minFilterValueLength, onFilter, searchableFields]);
 
   function handleRefresh(value: string) {

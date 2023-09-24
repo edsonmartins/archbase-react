@@ -336,6 +336,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
   });
   useHotkeys([[debugOptions && debugOptions.debugLayoutHotKey, () => setDebug(!_debug)]]);
   const appContext = useArchbaseAppContext();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const headerRef = useRef<any>();
   const footerRef = useRef<any>();

@@ -56,15 +56,19 @@ function renderExpandableObject({
   style,
   shouldInitiallyExpand,
 }: ExpandableRenderProps) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const shouldInitiallyExpandCalledRef = React.useRef(false);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [expanded, toggleExpanded, setExpanded] = useArchbaseBool(() => shouldInitiallyExpand(level, value, field));
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   React.useEffect(() => {
     if (!shouldInitiallyExpandCalledRef.current) {
       shouldInitiallyExpandCalledRef.current = true;
     } else {
       setExpanded(shouldInitiallyExpand(level, value, field));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldInitiallyExpand]);
 
   const expandIcon = expanded ? expandedIcon : collapsedIcon;

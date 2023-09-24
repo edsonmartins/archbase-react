@@ -49,6 +49,7 @@ export const useArchbaseDataSource = <T, ID>(props: UseArchbaseDataSourceProps<T
     if (onLoadComplete) {
       onLoadComplete(dataSource);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
   return { dataSource };

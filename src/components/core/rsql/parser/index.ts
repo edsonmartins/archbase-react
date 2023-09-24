@@ -231,8 +231,6 @@ function parse(source: string): ExpressionNode {
 
       case OperationType.ACCEPT:
         return handleAccept(context, source);
-        break;
-
       default:
     }
   }

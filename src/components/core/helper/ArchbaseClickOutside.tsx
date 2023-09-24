@@ -16,7 +16,7 @@ export function ArchbaseClickOutside({ children, exceptionRef, onClick, classNam
     return () => {
       document.removeEventListener('mousedown', handleClickListener);
     };
-  }, []);
+  });
 
   const handleClickListener = (event) => {
     let clickedInside;

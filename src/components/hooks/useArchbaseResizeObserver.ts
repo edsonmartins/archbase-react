@@ -61,6 +61,7 @@ function createResizeObserver() {
           if (triggered.has(allEntries[i].target)) continue;
           triggered.add(allEntries[i].target);
           const cbs = callbacks.get(allEntries[i].target);
+          // eslint-disable-next-line no-loop-func
           cbs?.forEach((cb) => cb(allEntries[i], obs));
         }
         allEntries = [];

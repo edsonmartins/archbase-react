@@ -195,6 +195,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
   const [totalPages, setTotalPages] = useState(initialOptions.totalPages);
   const [_isLastPage, setIsLastPage] = useState(currentPage === totalPages - 1);
   const [originData, setOriginData] = useState(initialOptions.options);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const [internalError, setInternalError] = useState<string | undefined>(error);
 
@@ -229,6 +230,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         setInternalError(event.error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {
@@ -253,11 +255,12 @@ export function ArchbaseAsyncSelect<T, ID, O>({
     if (
       debouncedQueryValue &&
       debouncedQueryValue.length >= minCharsToSearch &&
-      debouncedQueryValue != getOptionLabel(selectedValue)
+      debouncedQueryValue !== getOptionLabel(selectedValue)
     ) {
       setLoading(true);
       loadOptions(0, false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQueryValue]);
 
   useEffect(() => {}, [currentPage, totalPages]);

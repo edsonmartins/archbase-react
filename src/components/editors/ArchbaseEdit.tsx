@@ -99,7 +99,7 @@ export function ArchbaseEdit<T, ID>({
     if (error !== internalError) {
       setInternalError(error);
     }
-  }, [error]);
+  }, [error, internalError]);
 
   const loadDataSourceFieldValue = () => {
     let initialValue: any = currentValue;
@@ -132,6 +132,7 @@ export function ArchbaseEdit<T, ID>({
         setInternalError(event.error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {

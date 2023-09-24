@@ -54,7 +54,9 @@ export function registerDecorator(options: ValidationDecoratorOptions): void {
     constraintCls = options.validator;
     const constraintClasses = getFromContainer(MetadataStorage).getTargetValidatorConstraints(options.validator);
     if (constraintClasses.length > 1) {
-      throw `More than one implementation of ValidatorConstraintInterface found for validator on: ${options.target.name}:${options.propertyName}`;
+      throw new Error(
+        `More than one implementation of ValidatorConstraintInterface found for validator on: ${options.target.name}:${options.propertyName}`,
+      );
     }
   } else {
     const validator = options.validator;

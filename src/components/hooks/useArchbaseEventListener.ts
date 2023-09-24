@@ -49,6 +49,7 @@ export function useArchbaseEventListener(eventName, handler, element = window) {
         // Adicionar ouvinte de evento
         element.addEventListener(eventName, eventListener);
         // Remove o ouvinte de evento na limpeza
+
         return () => {
           element.removeEventListener(eventName, eventListener);
         };

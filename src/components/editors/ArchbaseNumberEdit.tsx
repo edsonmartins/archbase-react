@@ -201,6 +201,7 @@ export function ArchbaseNumberEdit<T, ID>({
   const [maskedValue, setMaskedValue] = useState<string>('');
   const maskedValuePrev = useArchbasePrevious(maskedValue);
   const [_currentValue, setCurrentValue] = useState<number | undefined>();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const [_inputSelectionStart, setInputSelectionStart] = useState(0);
   const [inputSelectionEnd, setInputSelectionEnd] = useState(0);

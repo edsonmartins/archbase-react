@@ -70,8 +70,8 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
 
   Object.freeze(properties);
 
-  const [height, setHeight] = React.useState(properties.height);
-  const [width, setWidth] = React.useState(properties.width);
+  const [height, _setHeight] = React.useState(properties.height);
+  const [width, _setWidth] = React.useState(properties.width);
   const [top, setTop] = React.useState<number>(properties.top || 0);
   const [left, setLeft] = React.useState<number>(properties.left || 0);
   const [xOffset, setXOffset] = React.useState<number>(0);

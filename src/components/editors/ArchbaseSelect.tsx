@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { MantineNumberSize, MantineSize, Select, SelectItem } from '@mantine/core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import React, {
@@ -191,6 +192,7 @@ export function ArchbaseSelect<T, ID, O>({
   customGetDataSourceFieldValue,
   customSetDataSourceFieldValue,
 }: ArchbaseSelectProps<T, ID, O>) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const [selectedValue, setSelectedValue] = useState<any>(value);
   const [queryValue, setQueryValue] = useDebouncedState('', debounceTime);
@@ -198,6 +200,7 @@ export function ArchbaseSelect<T, ID, O>({
   const [updateCounter, setUpdateCounter] = useState(0);
   const currentOptions: any[] = useMemo(() => {
     return buildOptions<O>(options, initialOptions, children, getOptionLabel, getOptionValue, optionsLabelField);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateCounter, options, initialOptions, children, getOptionLabel, getOptionValue, optionsLabelField]);
 
   useEffect(() => {

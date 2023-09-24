@@ -62,7 +62,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
     const selectedOptions = this.props.selectedOptions;
 
     if (selectedOptions) {
-      return selectedOptions.map((sl) => {
+      return selectedOptions.map((sl, index) => {
         let checked = false;
         this.state.selectedFields.forEach((element) => {
           if (sl.name === element.name) {
@@ -77,6 +77,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
             trueValue={true}
             falseValue={false}
             onChangeValue={(value: any, _event: any) => this.onCheckboxChange(value, value === true, sl)}
+            key={index}
           />
         );
       });

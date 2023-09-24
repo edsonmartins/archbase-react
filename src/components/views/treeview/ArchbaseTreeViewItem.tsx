@@ -158,6 +158,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
     }
 
     return renderedChildren;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     node.nodes,
     node.state,

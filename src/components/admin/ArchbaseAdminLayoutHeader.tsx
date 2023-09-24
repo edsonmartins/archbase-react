@@ -209,6 +209,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
             ...styleLogo,
           }}
           src={logo}
+          alt="Logo"
         />
       </Flex>
       <MediaQuery largerThan={sideBarHiddenBreakPoint ?? theme.breakpoints.md} styles={{ display: 'none' }}>

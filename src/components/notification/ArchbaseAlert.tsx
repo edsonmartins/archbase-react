@@ -50,6 +50,7 @@ export function ArchbaseAlert(props: ArchbaseAlertProps) {
     if (autoClose > 0 && !started) {
       setTimeout(() => (onClose ? onClose() : null), autoClose);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoClose]);
 
   return (

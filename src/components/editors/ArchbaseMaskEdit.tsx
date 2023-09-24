@@ -107,6 +107,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
     ...others
   } = useInputProps('ArchbaseMaskEdit', defaultProps, props);
   const id = useId();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const [value, setValue] = useState<string>('');
   const { dataSource, dataField, onChangeValue, onFocusEnter, onFocusExit, saveWithMask } = props;
@@ -143,6 +144,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
         loadDataSourceFieldValue();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {

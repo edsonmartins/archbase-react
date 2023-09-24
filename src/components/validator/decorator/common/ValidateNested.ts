@@ -13,6 +13,7 @@ export function ValidateNested(validationOptions?: ValidationOptions): PropertyD
   const eachPrefix = opts.each ? `${t('archbase:each value in ')}` : '';
   opts.message = opts.message || eachPrefix + `${t('archbase:nested property $property must be either object or array')}`;
   // @ts-ignore
+
   return function (object: object, propertyName: string): void {
     const args: ValidationMetadataArgs = {
       type: ValidationTypes.NESTED_VALIDATION,

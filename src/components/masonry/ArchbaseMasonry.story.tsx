@@ -27,7 +27,7 @@ const ArchbaseMasonryExample = () => {
           </Card.Section>
           <ArchbaseMasonry columnsCount={6} gutter="10px">
             {images.map((image, i) => (
-              <img key={i} src={image} style={{ width: '100%', display: 'block' }} />
+              <img key={i} src={image} style={{ width: '100%', display: 'block' }} alt="test" />
             ))}
           </ArchbaseMasonry>
         </Card>
@@ -42,7 +42,7 @@ const ArchbaseMasonryExample = () => {
           <ArchbaseMasonryResponsive columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4 }}>
             <ArchbaseMasonry columnsCount={4} gutter="10px">
               {images.map((image, i) => (
-                <img key={i} src={image} style={{ width: '100%', display: 'block' }} />
+                <img key={i} src={image} style={{ width: '100%', display: 'block' }} alt="test" />
               ))}
             </ArchbaseMasonry>
           </ArchbaseMasonryResponsive>

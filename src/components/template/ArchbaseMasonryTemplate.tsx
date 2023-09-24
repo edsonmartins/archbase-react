@@ -140,6 +140,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 }: ArchbaseMasonryTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
   const [idMasonry] = useState(id);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const filterRef = useRef<any>();
   const [activePage, setPage] = useState(dataSource.getCurrentPage());

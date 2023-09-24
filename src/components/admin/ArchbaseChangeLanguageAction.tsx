@@ -26,9 +26,13 @@ export const ArchbaseChangeLanguageAction = () => {
 
   const buildMenuItemLanguages = () => {
     if (context.languages) {
-      return context.languages.map((language) => {
+      return context.languages.map((language, index) => {
         return (
-          <Menu.Item onClick={() => handleChangeLanguage(language.lang)} icon={getIconByLanguage(language.lang)}>
+          <Menu.Item
+            onClick={() => handleChangeLanguage(language.lang)}
+            icon={getIconByLanguage(language.lang)}
+            key={index}
+          >
             {language.name}
           </Menu.Item>
         );

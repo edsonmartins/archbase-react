@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/jsx-pascal-case */
 /* eslint-disable import/no-duplicates */
 /* eslint-disable no-else-return */
 /* eslint-disable no-nested-ternary */
@@ -723,6 +725,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
       }
       props.onSelectedRowsChanged(result);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowSelection]);
 
   const getCellBackgroundColor = (cell, table): any => {
@@ -837,7 +840,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
               mantineFilterSelectProps: { data: col.props.enumValues },
               mantineFilterMultiSelectProps: { data: col.props.enumValues },
               Cell: render ? ({ cell }) => render(cell) : undefined,
-              Header: ({ column }) => (
+              Header: ({ column }: any) => (
                 <i
                   style={{
                     color: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 3 : 7],
@@ -860,7 +863,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
             ) {
               element = {
                 ...element,
-                Filter: ({ column, header, rangeFilterIndex, table }) => (
+                Filter: ({ column, header, rangeFilterIndex, table }: any) => (
                   <ArchbaseCustomFilterDatePicker
                     column={column}
                     table={table}

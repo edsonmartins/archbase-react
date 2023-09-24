@@ -20,7 +20,7 @@ export const ArchbaseNavigationContext = createContext<ArchbaseNavigationContext
   dispatch: (action: ArchbaseNavigationAction) => {},
 });
 
-export const ArchbaseNavigationProvider = ({ children }) => {
+export const ArchbaseNavigationProvider = ({ children }: any) => {
   const initialState: ArchbaseNavigationState = {
     userCloseLinkRequest: '',
     linkClosed: '',
@@ -63,6 +63,7 @@ export const useArchbaseNavigationListener = (id: string, onUserCloseRequest: ()
     if (state && state.userCloseLinkRequest && state.userCloseLinkRequest === id) {
       onUserCloseRequest();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
   const closeAllowed = () => {
     dispatch({ type: 'CLOSE_ALLOWED', link: id });

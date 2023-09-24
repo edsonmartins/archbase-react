@@ -107,7 +107,7 @@ function createAdjuster(resizeType: ResizeType, space: ISpaceDefinition, origina
         right1Adjuster(x, y);
       };
     default:
-      throw `Resize type ${resizeType} not supported`;
+      throw new Error(`Resize type ${resizeType} not supported`);
   }
 }
 

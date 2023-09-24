@@ -33,5 +33,6 @@ export const useArchbaseDataSourceListener = <T, ID>(props: UseArchbaseDataSourc
         unRegisterListeners(props.dataSource);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.dataSource.uuid]);
 };

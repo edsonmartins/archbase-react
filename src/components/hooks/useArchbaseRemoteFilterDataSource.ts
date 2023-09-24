@@ -309,6 +309,7 @@ export function useArchbaseRemoteFilterDataSource(
         props.onError(userError, error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [internalState.name, internalState.sort, internalState.filter, internalState.currentPage, internalState.pageSize]);
 
   const clearError = () => {

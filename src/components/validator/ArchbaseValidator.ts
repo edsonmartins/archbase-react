@@ -2,6 +2,7 @@ import { DataSourceValidationError, IDataSourceValidator } from '../datasource/A
 import { ValidatorOptions, ValidationError, validateSync, validate, validateOrReject } from './index';
 
 export class ArchbaseValidator implements IDataSourceValidator {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor() {}
   validateEntity<T>(value: T): DataSourceValidationError[] {
     const errors: ValidationError[] = validateSync(value as object);

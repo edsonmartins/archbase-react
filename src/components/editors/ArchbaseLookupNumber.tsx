@@ -125,6 +125,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
   const [currentValue, setCurrentValue] = useState<any | undefined>(
     getInitialValue<T, ID>(value, dataSource, lookupField),
   );
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const [internalError, setInternalError] = useState<string | undefined>(error);
   useEffect(() => {
@@ -154,6 +155,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
         setInternalError(event.error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {
@@ -186,7 +188,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
 
   const lookupValue = () => {
     if (dataSource && dataField && !dataSource.isBrowsing() && lookupField) {
-      if (currentValue != dataSource.getFieldValue(lookupField)) {
+      if (currentValue !== dataSource.getFieldValue(lookupField)) {
         if (!currentValue || currentValue == null) {
           dataSource.setFieldValue(dataField, null);
         } else {

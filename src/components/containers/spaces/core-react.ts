@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import { createStore } from './core';
 import {
@@ -49,7 +50,7 @@ export const useEffectOnce = (effect: () => void | (() => void)) => {
         destroyFunc.current();
       }
     };
-  }, []);
+  });
 };
 
 export const ParentContext = React.createContext<string | undefined>(undefined);
@@ -121,11 +122,12 @@ export function useForceUpdate() {
 export function useUniqueId() {
   if (SSR_SUPPORT_ENABLED) {
     if (React.version.startsWith('18')) {
-      return `s${React.useId().replace(/\:/g, '')}`;
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return `s${React.useId().replace(/:/g, '')}`;
     }
 
     if ((React as any).unstable_useOpaqueIdentifier) {
-      return `s${(React as any).unstable_useOpaqueIdentifier().replace(/\:/g, '')}`;
+      return `s${(React as any).unstable_useOpaqueIdentifier().replace(/:/g, '')}`;
     }
   }
 

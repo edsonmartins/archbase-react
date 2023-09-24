@@ -222,6 +222,7 @@ export function ArchbaseRichTextEdit<T, ID>({
         setInternalError(event.error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {

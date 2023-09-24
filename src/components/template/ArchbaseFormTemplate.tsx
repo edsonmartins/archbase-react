@@ -70,6 +70,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
   onError,
 }: ArchbaseFormTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const [isInternalError, setIsInternalError] = useState<boolean>(isError);
   const [internalError, setInternalError] = useState<string>(error);

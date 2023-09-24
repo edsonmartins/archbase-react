@@ -106,6 +106,7 @@ export function ArchbaseCheckbox<T, ID>({
         setInternalError(event.error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {

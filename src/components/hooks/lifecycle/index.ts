@@ -47,7 +47,7 @@ function useArchbaseWillMount(handler: EffectCallback): void {
  * @param handler callback function only allowed to return void.
  */
 function useArchbaseDidMount(handler: EffectCallback): void {
-  useEffect(handler, []);
+  useEffect(handler);
 }
 
 /**
@@ -117,6 +117,7 @@ function useArchbasePrevious(value) {
     ref.current = value;
   }, [value]); // Executa novamente apenas se o valor mudar
   // Retorna o valor anterior (acontece antes da atualização no useEffect acima)
+
   return ref.current;
 }
 

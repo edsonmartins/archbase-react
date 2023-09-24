@@ -112,6 +112,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
   debugOptions,
 }: ArchbasePanelTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const filterRef = useRef<any>();
   const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({

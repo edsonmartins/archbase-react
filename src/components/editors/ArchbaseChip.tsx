@@ -67,6 +67,7 @@ export function ArchbaseChip<T, ID>({
   innerRef,
 }: ArchbaseChipProps<T, ID>) {
   const [checked, setChecked] = useState<boolean>(isChecked ? true : false);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const [internalError, setInternalError] = useState<string | undefined>(error);
 
@@ -99,6 +100,7 @@ export function ArchbaseChip<T, ID>({
         setInternalError(event.error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {

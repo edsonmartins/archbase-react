@@ -41,8 +41,6 @@ import {
   convertDateToISOString,
   convertISOStringToDate,
   formatStr,
-  compressString,
-  decompressString,
 } from './string-utils';
 
 export {

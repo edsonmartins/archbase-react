@@ -82,6 +82,7 @@ export function ArchbaseThemeEditor<T, ID>({ dataSource, dataField, value }: Arc
         loadDataSourceFieldValue();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {

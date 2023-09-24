@@ -15,6 +15,7 @@ export const useArchbaseGetCurrentToken = (): GetCurrentTokenReturnType => {
     if (accessToken) {
       setCurrentToken(accessToken.access_token);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

@@ -184,7 +184,7 @@ export function styleDefinition(space: ISpaceDefinition) {
   const widthOrHeightSpecified = () =>
     space.type === Type.Positioned
       ? space.width.size && space.height.size
-      : space.orientation == Orientation.Horizontal
+      : space.orientation === Orientation.Horizontal
       ? space.width.size
       : space.height.size;
 

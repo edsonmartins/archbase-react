@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { ReactNode, useContext, useEffect, useRef, useState, useTransition } from 'react';
 import useComponentSize from '@rehooks/component-size';
 import { useLocation, useNavigate } from 'react-router';
@@ -81,6 +82,7 @@ export function ArchbaseAdminTabContainer({
     if (state?.linkClosed) {
       handleOnClose(state?.linkClosed);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state?.linkClosed]);
 
   const getNavigationItemByLink = (link: string): ResultItem => {
@@ -144,6 +146,7 @@ export function ArchbaseAdminTabContainer({
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLocation.pathname]);
 
   const handleOnActive = (id: string) => {

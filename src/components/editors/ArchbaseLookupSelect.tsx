@@ -29,7 +29,7 @@ function rebuildOptions<_T, ID, O>(
 ): SelectItem[] | undefined {
   let options: SelectItem[] = [];
   if (lookupDataSource && lookupDataSource.getTotalRecords() > 0) {
-    lookupDataSource.browseRecords().map((record: any) => {
+    lookupDataSource.browseRecords().forEach((record: any) => {
       if (lookupDataFieldId && !lookupDataFieldId.includes('.')) {
         if (!record.hasOwnProperty(lookupDataFieldId) || !record[lookupDataFieldId]) {
           throw new ArchbaseError('Foi encontrado um registro sem ID no dataSource passado para o Select.');

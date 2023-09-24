@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/anchor-has-content */
 import React, { Component } from 'react';
 import './ArchbaseJsonPathPicker.css';
 import { IconArrowBigRightFilled } from '@tabler/icons-react';
@@ -128,7 +130,7 @@ export class ArchbaseJsonPathPicker extends Component<ArchbaseJsonPathPickerProp
           </a>
         );
       } else {
-        return <span className="json-string">"{tmp}"</span>;
+        return <span className="json-string">{`"${tmp}"`}</span>;
       }
     } else if (typeof json === 'number') {
       return <span className="json-literal">{json}</span>;
@@ -168,10 +170,10 @@ export class ArchbaseJsonPathPicker extends Component<ArchbaseJsonPathPickerProp
                 <li key={key} data-key-type="object" data-key={key}>
                   {isCollapsable(json[key]) ? (
                     <a href="" className="json-toggle">
-                      {options.outputWithQuotes ? <span className="json-string">"{key}"</span> : key}
+                      {options.outputWithQuotes ? <span className="json-string">{`"${key}"`}</span> : key}
                     </a>
                   ) : options.outputWithQuotes ? (
-                    <span className="json-string">"{key}"</span>
+                    <span className="json-string">{`"${key}"`}</span>
                   ) : (
                     key
                   )}

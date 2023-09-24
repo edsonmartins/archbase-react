@@ -1,15 +1,16 @@
 /* Syntax highlighting for JSON objects */
-ul.json-dict, ol.json-array {
+ul.json-dict,
+ol.json-array {
   list-style-type: none;
   margin: 0 0 0 1px;
   border-left: 1px dotted #ccc;
   padding-left: 2em;
 }
 .json-string {
-  color: #0B7500;
+  color: #0b7500;
 }
 .json-literal {
-  color: #1A01CC;
+  color: #1a01cc;
   font-weight: bold;
 }
 

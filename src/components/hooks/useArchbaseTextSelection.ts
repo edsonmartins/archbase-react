@@ -17,11 +17,11 @@ function roundValues(_rect: ClientRect) {
 function shallowDiff(prev: any, next: any) {
   if (prev != null && next != null) {
     for (const key of Object.keys(next)) {
-      if (prev[key] != next[key]) {
+      if (prev[key] !== next[key]) {
         return true;
       }
     }
-  } else if (prev != next) {
+  } else if (prev !== next) {
     return true;
   }
 
@@ -96,6 +96,7 @@ export function useArchbaseTextSelection(target?: HTMLElement) {
     newState.isCollapsed = range.collapsed;
 
     setState(newState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target]);
 
   useLayoutEffect(() => {
@@ -110,6 +111,7 @@ export function useArchbaseTextSelection(target?: HTMLElement) {
       document.removeEventListener('keyup', handler);
       window.removeEventListener('resize', handler);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target]);
 
   return {

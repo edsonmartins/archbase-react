@@ -43,6 +43,7 @@ export const useArchbaseAuthenticationManager = ({
       setIsError(false);
       setAccessToken(token);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const clearError = () => {
@@ -91,6 +92,7 @@ export const useArchbaseAuthenticationManager = ({
     return () => {
       clearInterval(checkTokenExpirationInterval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
 
   const renovarToken = async () => {

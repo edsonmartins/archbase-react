@@ -199,7 +199,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
           setActiveIndex(-1);
         }
         if (onSelectListItem && !dataSource.isEmpty()) {
-          if (_activeIndex != dataSource.getCurrentIndex()) {
+          if (_activeIndex !== dataSource.getCurrentIndex()) {
             setActiveIndex(dataSource.getCurrentIndex());
             onSelectListItem(dataSource.getCurrentIndex(), dataSource.getCurrentRecord());
           }
@@ -236,6 +236,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_activeIndex]);
 
   const handleSelectItem = (index: number, data: T) => {
@@ -480,6 +481,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     } else {
       setRebuildedChildrens([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_activeIndex, dataSource, children, update, updateCounter]);
 
   return (

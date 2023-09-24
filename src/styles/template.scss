@@ -1,14 +1,13 @@
-
 @media print {
-    .no-print,
-    .no-print * {
-      display: none !important;
-    }
+  .no-print,
+  .no-print * {
+    display: none !important;
   }
-  
-  @media screen {
-    .only-print,
-    .only-print * {
-      display: none !important;
-    }
+}
+
+@media screen {
+  .only-print,
+  .only-print * {
+    display: none !important;
   }
+}

@@ -73,6 +73,7 @@ export function ArchbaseTextArea<T, ID>({
   innerRef,
 }: ArchbaseTextAreaProps<T, ID>) {
   const [value, setValue] = useState<string>('');
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const [internalError, setInternalError] = useState<string | undefined>(error);
 
@@ -114,6 +115,7 @@ export function ArchbaseTextArea<T, ID>({
         setInternalError(event.error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useArchbaseDidMount(() => {

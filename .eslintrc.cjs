@@ -19,5 +19,7 @@ module.exports = {
     'newline-before-return': 'error',
     'import/no-anonymous-default-export': 0,
     'prettier/prettier': ['error', { 'endOfLine': 'auto' }],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
   },
 };

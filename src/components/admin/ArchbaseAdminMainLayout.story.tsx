@@ -34,22 +34,22 @@ const ArchbaseAdminMainLayoutExample = () => {
 
   const headerActions = useMemo((): ReactNode => {
     return [
-      <Tooltip withinPortal withArrow label="Trocar empresa">
+      <Tooltip withinPortal withArrow label="Trocar empresa" key={1}>
         <ActionIcon variant="transparent">
           <IconSwitchHorizontal size="2rem" />
         </ActionIcon>
       </Tooltip>,
-      <Tooltip withinPortal withArrow label="Tela cheia">
+      <Tooltip withinPortal withArrow label="Tela cheia" key={2}>
         <ActionIcon variant="transparent">
           <IconArrowsMaximize size="2rem" />
         </ActionIcon>
       </Tooltip>,
-      <Tooltip withinPortal withArrow label="Notificações">
+      <Tooltip withinPortal withArrow label="Notificações" key={3}>
         <ActionIcon variant="transparent">
           <IconBell size="2rem" />
         </ActionIcon>
       </Tooltip>,
-      <Tooltip withinPortal withArrow label="Chat">
+      <Tooltip withinPortal withArrow label="Chat" key={4}>
         <ActionIcon variant="transparent">
           <IconMessageChatbot size="2rem" />
         </ActionIcon>

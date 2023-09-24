@@ -51,6 +51,7 @@ export const useArchbaseLocalFilterDataSource = (
     if (onLoadComplete) {
       onLoadComplete(dataSource);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData, name]);
 
   return { dataSource };

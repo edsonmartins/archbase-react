@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-node-access */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ArchbaseFloatingWindow } from './ArchbaseFloatingWindow';
@@ -18,6 +19,7 @@ test('Checking window properties', () => {
     </React.StrictMode>,
   );
   // screen.debug();
+  // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container
   const testWindow = container.querySelector<HTMLDivElement>('.archbase-window-container');
 
   expect(testWindow).not.toBeNull();
@@ -53,9 +55,11 @@ test('Checking window properties', () => {
 test('Autogeneratting window id', () => {
   let { container } = render(
     // @ts-ignore
+    // eslint-disable-next-line react/jsx-no-undef
     <Window />,
   );
 
+  // eslint-disable-next-line testing-library/no-container
   const testWindowAutoId = container.querySelector<HTMLDivElement>('.archbase-window-container');
 
   expect(testWindowAutoId).not.toBeNull();

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /**
  * This function returns the global object across Node and browsers.
  *

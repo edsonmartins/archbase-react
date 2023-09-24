@@ -287,6 +287,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
   } = useInputProps('ArchbaseDatePickerEdit', defaultProps, props);
 
   const { calendarProps, others } = pickCalendarProps(rest);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const innerComponentRef = innerRef || useRef<any>();
   const ctx = useDatesContext();
   const [_value, setValue, controlled] = useUncontrolled({

@@ -130,7 +130,9 @@ const SpaceInner: React.FC<IArchbaseSpaceInnerProps & { wrapperInstance: Archbas
 
   return (
     <>
-      {resizeHandles.mouseHandles.map((handleProps) => handleRender?.(handleProps) || <div {...handleProps} />)}
+      {resizeHandles.mouseHandles.map(
+        (handleProps, index) => handleRender?.(handleProps) || <div key={index} {...handleProps} />,
+      )}
       {SSR_SUPPORT_ENABLED && space.ssrStyle && initialRender && (
         <style id={`style_${space.id}_ssr`}>{space.ssrStyle}</style>
       )}

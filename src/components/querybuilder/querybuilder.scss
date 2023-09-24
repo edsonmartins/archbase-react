@@ -12,7 +12,6 @@
 }
 
 .rule-container {
-  display: -webkit-box;
   display: flex;
   -webkit-box-align: center;
   align-items: center;
@@ -26,7 +25,6 @@
 
 .rule-container .input-group-addon {
   width: 30px;
-  display: -webkit-box;
   display: flex;
   -webkit-box-align: center;
   align-items: center;
@@ -44,7 +42,6 @@
 }
 
 .query-builder .filter-header {
-  display: -webkit-inline-box;
   display: inline-flex;
   width: 100%;
 }
@@ -66,9 +63,8 @@
   display: flex;
 }
 
-
 .query-builder .rules-group-header {
-  margin-bottom: 0px;
+  margin-bottom: 0;
   display: flex;
 }
 
@@ -76,7 +72,6 @@
   background-color: white;
   height: 20%;
   border-bottom: 1px solid silver;
-  display: -webkit-box;
   display: flex;
   -webkit-box-align: center;
   align-items: center;
@@ -154,14 +149,14 @@
   display: inline-block !important;
 }
 
-.query-builder .dragging::after,
-.query-builder .dragging::before,
-.query-builder .rules-list > :last-child::after {
+.query-builder .dragging:after,
+.query-builder .dragging:before,
+.query-builder .rules-list > :last-child:after {
   display: none;
 }
 
-.query-builder .rules-list > ::after,
-.query-builder .rules-list > ::before {
+.query-builder .rules-list > :after,
+.query-builder .rules-list > :before {
   content: '';
   position: absolute;
   left: -10px;
@@ -171,31 +166,31 @@
   border-style: solid;
 }
 
-.query-builder .rules-list > ::before {
+.query-builder .rules-list > :before {
   top: -4px;
   border-width: 0 0 2px 2px;
 }
 
-.query-builder .rules-list > ::after {
+.query-builder .rules-list > :after {
   top: 50%;
   border-width: 0 0 0 2px;
 }
 
-.query-builder .rules-list > :first-child::before {
+.query-builder .rules-list > :first-child:before {
   top: -15px;
   height: calc(50% + 20px);
 }
 
-.query-builder .rules-list > :last-child::before {
+.query-builder .rules-list > :last-child:before {
   border-radius: 0 0 0 4px;
 }
 
-.query-builder.bt-checkbox-glyphicons .checkbox input[type='checkbox']:checked + label::after {
+.query-builder.bt-checkbox-glyphicons .checkbox input[type='checkbox']:checked + label:after {
   font-family: 'Glyphicons Halflings';
   content: '\e013';
 }
 
-.query-builder.bt-checkbox-glyphicons .checkbox label::after {
+.query-builder.bt-checkbox-glyphicons .checkbox label:after {
   padding-left: 4px;
   padding-top: 2px;
   font-size: 9px;
@@ -314,7 +309,7 @@
   position: absolute;
   top: 2px;
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAlCAQAAACn+wJeAAAB4UlEQVRIx+2XsWtTURTGrwouLQQDwYLFzT3yJBDoYoVvySQoKFShSHe7qAgqiMn9rcUibnVwEARBl0AgUIh/QXBxFIpKJHAhUBz0HQcf4U0xtZwu+r3l8t4758fHPe/jvhBcRIUuWbFuMKAWnEB9jEQWAk0SRt8LtMo+RmKdhDGiHrzEChOMHGPsiAkhBDbIMXKu+2KaJUfZwcsXD4RJrJFKKHaw6fVmRnmNT5ydC9TDSDRCIGOMMfh9u8pegRmzNKP8NUZvzu+oR6NY19mddqVVgG7MKL5SvHPrcJu3g/F2xvMqowKUOHMYUJXhrAa8Ku1j90/dVFFXxaypoYFqfzFR80h9mZKyENRUkskrgrSqfZmS1pVkGskvG7SiiUy5TGP5RpA2lMuUyzeC1Cw5yrwxSWtKrij1ZEpqhKBMY5kGXqCKeioiSHXtain817+k9gLLLD887ozhLl8xjGG86onZxuIe99jCsHjTCRMvYvF9+1QIIcTz8RuTzmkfP0+jdaYJHW9jXPYBvYj5/ZNlf06HxvgEYzoC8Tk5l1xAnXP8IHVam8faC3GTn3x5cMJr6q5h0fjI5+L4suU24PFCfMkHhvExHQyL20eQEfERhsVncdEfdYfvGK2jcPUOK/+A/QJb5yp50uoC6QAAAABJRU5ErkJggg==)
-    no-repeat 0px 2px;
+    no-repeat 0 2px;
 }
 
 .query-builder .chosen-container-single .chosen-single abbr {
@@ -462,11 +457,11 @@
 }
 
 .query-builder .quick-filter .chosen-choices {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .chosen-choices {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .simple-filter-enabled {

@@ -212,6 +212,7 @@ function ArchbaseAdminMainLayoutContainer({
     }),
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onMenuItemClick = (item: ArchbaseNavigationItem) => {
     if (item.link) {
       navigate(item.link!);
@@ -285,6 +286,7 @@ function ArchbaseAdminMainLayoutContainer({
         <Route key={`${item.link}_${index}`} path={item.link} element={item.component} />
       ),
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigationData, adminLayoutContextValue.collapsed]);
 
   const handleCollapseSidebar = useCallback(() => {
