@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-import type { ArchbaseRemoteDataSource } from 'components/datasource'
+import type { ArchbaseRemoteDataSource } from '@/components/datasource'
 import { ArchbaseTabItem } from '../admin/types'
 
 export interface AdminState {

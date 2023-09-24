@@ -6,7 +6,7 @@ interface ArchbaseNavigationState {
 }
 
 interface ArchbaseNavigationAction {
-  type: 'USER_CLOSE_REQUEST' | 'CLOSE_ALLOWED'
+  type: 'USER_CLOSE_REQUEST' | 'CLOSE_ALLOWED' | 'DONE'
   link: string
 }
 
@@ -31,7 +31,9 @@ export const ArchbaseNavigationProvider = ({ children }) => {
       case 'USER_CLOSE_REQUEST':
         return { ...state, userCloseLinkRequest: action.link }
       case 'CLOSE_ALLOWED':
-        return { ...state, linkClosed: action.link }
+        return { ...state, linkClosed: action.link, userCloseLinkRequest: '' }
+      case 'DONE':
+          return { ...state, linkClosed: action.link }  
       default:
         return state
     }

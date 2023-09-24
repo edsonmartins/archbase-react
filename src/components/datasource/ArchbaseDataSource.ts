@@ -1308,7 +1308,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
   public locateByFilter(filterFn: (record: T) => boolean): boolean {
     this.validateDataSourceActive('locate')
-    if (!this.inserting || !this.editing) {
+    if (this.inserting || this.editing) {
       const msg = i18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name })
       this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(

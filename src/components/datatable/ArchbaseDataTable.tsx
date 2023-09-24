@@ -68,6 +68,7 @@ import { ArchbaseObjectHelper } from '../core/helper'
 import { useArchbaseAppContext } from '../core'
 import { ArchbaseSwitch } from '../editors/ArchbaseSwitch'
 import { ArchbaseCheckbox } from '../editors'
+import { useForceUpdate } from '@mantine/hooks'
 
 interface JsPDFCustom extends JsPDF {
   autoTable: (options: UserOptions) => void
@@ -701,7 +702,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
   const appContext = useArchbaseAppContext()
   const divTable = useRef<HTMLDivElement>(null)
   const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({}); 
-  const [updateCounter, setUpdateCounter] = useState(0);
+  const [data, setData] = useState<any>(props.dataSource.browseRecords());
+  const [isLoadingInternal, setLoadingInternal] = useState<boolean>(false)
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: props.dataSource ? props.dataSource.getCurrentPage() : props.pageIndex,
     pageSize: props.dataSource ? props.dataSource.getPageSize() : props.pageSize
@@ -739,6 +741,12 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
       props.onSelectedRowsChanged(result)
     }
   },[rowSelection])
+
+  useEffect(()=>{
+    setData(props.dataSource.browseRecords())
+    setLoadingInternal(false)
+    setRowSelection({})
+  },[isLoadingInternal])
 
   const getCellBackgroundColor = (cell, table): any => {
     if (cell.row.index === currentCell.rowIndex && cell.column.id === currentCell.columnName) {
@@ -904,7 +912,6 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     getCellBackgroundColor,
     getCellColorFont,
     theme.colors[theme.primaryColor],
-    updateCounter,
     props.enableRowSelection,
     props.renderRowActions,
     props.enableRowActions,
@@ -1139,12 +1146,12 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
       showGlobalFilter: true
     },
     state: {
-      isLoading: props.isLoading,
+      isLoading: isLoadingInternal,
       columnFilters,
       sorting,
       globalFilter,
-      showProgressBars: props.isLoading,
-      showSkeletons: props.isLoading,
+      showProgressBars: isLoadingInternal,
+      showSkeletons: false,
       showAlertBanner: props.isError,
       pagination,
       rowSelection,
@@ -1172,7 +1179,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
     onRowSelectionChange: setRowSelection,
     renderTopToolbarCustomActions: (table) => getToolBarCustomActions(table, props),
     localization: languages[i18n.language],
-    data: props.dataSource.browseRecords(),
+    data: isLoadingInternal?[]:data,
     rowCount: props.dataSource.getGrandTotalRecords(),
     pageCount: props.dataSource.getTotalPages(),
     mantineTableBodyCellProps: ({ cell }) => ({
@@ -1193,8 +1200,13 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
   useArchbaseDataSourceListener<T, ID>({
     dataSource: props.dataSource,
     listener: (event: DataSourceEvent<T>): void => {
-      if (event.type === DataSourceEventNames.dataChanged){
-        setUpdateCounter((prevCounter) => prevCounter + 1);
+      if ((event.type === DataSourceEventNames.dataChanged) || 
+      (event.type === DataSourceEventNames.afterRemove) ||
+      (event.type === DataSourceEventNames.afterSave) ||
+      (event.type === DataSourceEventNames.afterAppend) ||
+      (event.type === DataSourceEventNames.afterCancel)
+      ){
+        setLoadingInternal(true)
       }
     }
   })
@@ -1233,7 +1245,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 
   return (
     <div ref={divTable}>
-      <MantineReactTable table={table} />
+      <MantineReactTable 
+      table={table} />
     </div>
   )
 }

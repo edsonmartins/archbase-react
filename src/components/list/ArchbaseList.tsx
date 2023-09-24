@@ -270,7 +270,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   const handleArrowUp = () => {
     let index = _activeIndex
     if (index - 1 >= 0) {
-      setActiveIndex(index - 1)
+      //setActiveIndex(index - 1)
       handleSelectItem(index - 1, getRecordDataFromChildren(index - 1))
     }
   }
@@ -282,7 +282,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   const handleArrowDown = () => {
     let index = _activeIndex
     if (index + 1 < rebuildedChildrens.length) {
-      setActiveIndex(index + 1)
+      // setActiveIndex(index + 1)
       handleSelectItem(index + 1, getRecordDataFromChildren(index + 1))
     }
   }
@@ -293,24 +293,24 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 
   const handlePageUp = () => {
     let index = Math.max(_activeIndex - 5, 0)
-    setActiveIndex(index)
+    // setActiveIndex(index)
     handleSelectItem(index, getRecordDataFromChildren(index))
   }
 
   const handlePageDown = () => {
     let index = Math.min(_activeIndex + 5, rebuildedChildrens.length - 1)
-    setActiveIndex(index)
+    // setActiveIndex(index)
     handleSelectItem(index, getRecordDataFromChildren(index))
   }
 
   const handleHome = () => {
-    setActiveIndex(0)
+    // setActiveIndex(0)
     handleSelectItem(0, getRecordDataFromChildren(0))
   }
 
   const handleEnd = () => {
     const index = rebuildedChildrens.length - 1
-    setActiveIndex(index)
+    // setActiveIndex(index)
     handleSelectItem(index, getRecordDataFromChildren(index))
   }
 
