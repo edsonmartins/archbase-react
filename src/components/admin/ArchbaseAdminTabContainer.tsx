@@ -76,6 +76,7 @@ export function ArchbaseAdminTabContainer({
       onChangeActiveTabId && onChangeActiveTabId(undefined);
       navigate(adminLayoutContextValue.navigationRootLink!);
     }
+    dispatch({ type: 'DONE', link: '' });
   };
 
   useEffect(() => {
