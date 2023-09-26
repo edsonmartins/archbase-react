@@ -1,32 +1,32 @@
-import React, { ReactNode, createContext, useContext } from 'react';
-import { MantineTheme, Variants } from '@mantine/styles';
-import '../../locales/config';
-import { Container } from 'inversify';
-import { useMantineTheme } from '@mantine/core';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { ProSidebarProvider } from 'react-pro-sidebar';
-import { QueryParamProvider } from 'use-query-params';
-import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
-import queryString from 'query-string';
-import { ModalsProvider } from '@mantine/modals';
-import { ArchbaseNavigationProvider } from '../../admin/ArchbaseNavigation.context';
+import React, { ReactNode, createContext, useContext } from 'react'
+import { MantineTheme, Variants } from '@mantine/styles'
+import '../../locales/config'
+import { Container } from 'inversify'
+import { useMantineTheme } from '@mantine/core'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { ProSidebarProvider } from 'react-pro-sidebar'
+import { QueryParamProvider } from 'use-query-params'
+import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6'
+import queryString from 'query-string'
+import { ModalsProvider } from '@mantine/modals'
+import { ArchbaseNavigationProvider } from '../../admin/ArchbaseNavigation.context'
 
 export type ArchbaseLanguage = {
-  lang: string;
-  name: string;
-};
+  lang: string
+  name: string
+}
 
 interface ArchbaseAppContextValues {
-  user: any | null;
-  owner: string | null;
-  selectedCompany: any | null;
-  theme: MantineTheme | null;
-  iocContainer: Container | null;
-  dateFormat: string;
-  dateTimeFormat: string;
-  timeFormat: string;
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
-  languages?: ArchbaseLanguage[];
+  user: any | null
+  owner: string | null
+  selectedCompany: any | null
+  theme: MantineTheme | null
+  iocContainer: Container | null
+  dateFormat: string
+  dateTimeFormat: string
+  timeFormat: string
+  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+  languages?: ArchbaseLanguage[]
 }
 
 const ArchbaseAppContext = createContext<ArchbaseAppContextValues>({
@@ -38,20 +38,20 @@ const ArchbaseAppContext = createContext<ArchbaseAppContextValues>({
   dateFormat: 'dd/MM/yyyy',
   dateTimeFormat: 'dd/MM/yyyy HH:mm:ss',
   timeFormat: 'HH:mm:ss',
-  variant: 'filled',
-});
+  variant: 'filled'
+})
 
 interface ArchbaseAppProviderProps {
-  children?: ReactNode | ReactNode[];
-  user: any | null;
-  owner: string | null;
-  selectedCompany: any | null;
-  iocContainer?: any;
-  dateFormat?: string;
-  dateTimeFormat?: string;
-  timeFormat?: string;
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
-  languages?: ArchbaseLanguage[];
+  children?: ReactNode | ReactNode[]
+  user: any | null
+  owner: string | null
+  selectedCompany: any | null
+  iocContainer?: any
+  dateFormat?: string
+  dateTimeFormat?: string
+  timeFormat?: string
+  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+  languages?: ArchbaseLanguage[]
 }
 
 const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
@@ -67,11 +67,10 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
   languages = [
     { lang: 'en', name: 'Inglês' },
     { lang: 'pt-BR', name: 'Português' },
-    { lang: 'es', name: 'Espanhol' },
-  ],
+    { lang: 'es', name: 'Espanhol' }
+  ]
 }) => {
-  const theme = useMantineTheme();
-
+  const theme = useMantineTheme()
   return (
     <ArchbaseAppContext.Provider
       value={{
@@ -84,15 +83,15 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
         dateTimeFormat,
         timeFormat,
         variant,
-        languages,
+        languages
       }}
     >
       <ModalsProvider
         modalProps={{
           overlayProps: {
             color: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[6],
-            opacity: 0.25,
-          },
+            opacity: 0.25
+          }
         }}
       >
         <ProSidebarProvider>
@@ -102,7 +101,7 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
                 adapter={ReactRouter6Adapter}
                 options={{
                   searchStringToObject: queryString.parse,
-                  objectToSearchString: queryString.stringify,
+                  objectToSearchString: queryString.stringify
                 }}
               >
                 {children}
@@ -112,17 +111,16 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
         </ProSidebarProvider>
       </ModalsProvider>
     </ArchbaseAppContext.Provider>
-  );
-};
+  )
+}
 
 const useArchbaseAppContext = () => {
-  const context = useContext(ArchbaseAppContext);
+  const context = useContext(ArchbaseAppContext)
   if (!context) {
-    throw new Error('useArchbaseAppContext deve ser usado dentro de um ArchbaseAppProvider');
+    throw new Error('useArchbaseAppContext deve ser usado dentro de um ArchbaseAppProvider')
   }
+  return context
+}
 
-  return context;
-};
-
-export { ArchbaseAppContext, ArchbaseAppProvider, useArchbaseAppContext };
-export type { ArchbaseAppContextValues };
+export { ArchbaseAppContext, ArchbaseAppProvider, useArchbaseAppContext }
+export type { ArchbaseAppContextValues }

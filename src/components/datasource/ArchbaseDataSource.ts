@@ -404,6 +404,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     if (options.filters) {
       this.filters = options.filters;
     }
+    this.currentRecord = undefined;
+    this.currentRecordIndex = -1;
     this.filteredRecords = this.applyFilters();
     if (this.filteredRecords.length > 0) {
       this.currentRecordIndex = 0;
