@@ -34,7 +34,8 @@ import {
   Field,
   SelectedSort,
   ArchbaseQueryFilter,
-  getSortString
+  getSortString,
+  Condition
 } from './ArchbaseFilterCommons'
 import { ltrim } from '../core/utils'
 import {
@@ -70,12 +71,7 @@ const rnd = (() => {
   return Object.assign((len: any, ...set: any[]) => [...iter(len, set.flat())].join(''), sets)
 })()
 
-export interface Condition {
-  name: string
-  label: string
-}
-
-export interface Schema {
+interface Schema {
   fields: Field[]
   conditions: Condition[]
   operators: Operator[]
