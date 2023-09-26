@@ -163,7 +163,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   } = props
   const [_activeIndex, setActiveIndex] = useUncontrolled({
     value: activeIndex,
-    defaultValue : defaultActiveIndex,
+    defaultValue : -1,
     finalValue: 0
   });
 
