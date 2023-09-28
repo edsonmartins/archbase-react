@@ -23,6 +23,4 @@ class ArchbaseIOCHelper {
   }
 }
 
-const iocHelperInstance = Object.freeze(new ArchbaseIOCHelper());
-
-export default iocHelperInstance;
+export const IOCContainer = Object.freeze(new ArchbaseIOCHelper());
