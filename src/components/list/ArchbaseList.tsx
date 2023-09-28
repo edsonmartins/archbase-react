@@ -67,9 +67,7 @@ export interface ArchbaseListProps<T, ID> {
   /** Propriedade do objeto de dados que representa o ID do item na lista para controle */
   dataFieldId?: string
   /** Indice do item ativo na lista */
-  activeIndex?: number
-  /** Indice default do item ativo na lista */
-  defaultActiveIndex?: number
+  activeIndex?: number|undefined
   /** Evento gerado quando o mouse está sobre um item */
   onItemEnter?: (event: React.MouseEvent, data: any) => void
   /** Evento gerado quando o mouse sai de um item */
@@ -135,8 +133,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     borderRadius,
     dataFieldText = 'text',
     dataFieldId = 'id',
-    activeIndex,
-    defaultActiveIndex,
+    activeIndex:controlledActiveIndex,
     onItemEnter,
     onItemLeave,
     style,
@@ -161,14 +158,8 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     onFocusEnter = ()=>{},
     onFocusExit = ()=>{}
   } = props
-  const [_activeIndex, setActiveIndex] = useUncontrolled({
-    value: activeIndex,
-    defaultValue : defaultActiveIndex,
-    finalValue: 0
-  });
-
-  const [updateCounter, setUpdateCounter] = useState(0);
-  const activeIndexRef = useRef<boolean>(false)
+   // Estado interno para o índice ativo (modo não controlado)
+  const [activeIndex, setActiveIndex] = useState(-1);
   const [rebuildedChildrens, setRebuildedChildrens] = useState<ReactNode[]>([]);
   const { classes } = useStyles({
     withPadding,
@@ -181,71 +172,72 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   const [currentFilter, setCurrentFilter] = useState(filter)
   const [idList] = useState(id)
 
-  useArchbaseDidMount(() => {
-    if (dataSource) {
-      dataSource.addListener(dataSourceEvent)
+  // Efeito para atualizar o índice ativo quando a propriedade controlledActiveIndex muda
+  useEffect(() => {
+    if (controlledActiveIndex !== undefined) {
+      setActiveIndex(controlledActiveIndex);
     }
-  })
+  }, [controlledActiveIndex]);
 
-  useArchbaseWillUnmount(() => {
-    if (dataSource) {
-      dataSource.removeListener(dataSourceEvent)
+  // Efeito para atualizar o índice ativo com base na fonte de dados
+  useEffect(() => {
+    const dataSourceListener = (event: DataSourceEvent<T>) => {
+      if (event.type === DataSourceEventNames.afterScroll ||
+        (event.type === DataSourceEventNames.fieldChanged) ||
+        (event.type === DataSourceEventNames.dataChanged) ||
+        (event.type === DataSourceEventNames.recordChanged)) {
+        // Obtenha o índice ativo do dataSource
+        const dataSourceActiveIndex = dataSource!.getCurrentIndex();
+
+        // Atualize o índice ativo do componente apenas se for diferente
+        if (activeIndex !== dataSourceActiveIndex) {
+          setActiveIndex(dataSourceActiveIndex);
+
+          // Chame a função de retorno de chamada (callback) se estiver definida (modo controlado)
+          if (onSelectListItem) {
+            onSelectListItem(dataSourceActiveIndex, dataSource?.getCurrentRecord());
+          }
+        }
+      }
+    };
+
+    // Adicione o ouvinte da fonte de dados no momento da montagem
+    if (dataSource){
+      dataSource!.addListener(dataSourceListener);
     }
-  })
+
+    // Retire o ouvinte da fonte de dados no momento da desmontagem
+    return () => {
+      if (dataSource){
+        dataSource.removeListener(dataSourceListener);
+      }
+    };
+  }, [dataSource, activeIndex, onSelectListItem]); 
 
   useEffect(() => {
     setCurrentFilter(filter)
   }, [filter])
 
-  const dataSourceEvent = (event: DataSourceEvent<T>) => {
-    if (dataSource) {
-      if (event.type === DataSourceEventNames.afterScroll) {
-        if (dataSource.isEmpty()){
-          setActiveIndex(-1)
-        }
-        if (onSelectListItem && !dataSource.isEmpty()) {
-          if (_activeIndex != dataSource.getCurrentIndex()){
-            setActiveIndex(dataSource.getCurrentIndex())
-            onSelectListItem(dataSource.getCurrentIndex(), dataSource.getCurrentRecord())
-          }
-        }
-        setUpdateCounter((prevCounter) => prevCounter + 1);
-      } 
-      
-      if ((event.type === DataSourceEventNames.fieldChanged) ||
-      (event.type === DataSourceEventNames.dataChanged) ||
-        (event.type === DataSourceEventNames.recordChanged)) {
-          if (dataSource.isEmpty()){
-            setActiveIndex(-1)
-          }
-          if (onSelectListItem && !dataSource.isEmpty()) {
-            if (_activeIndex!==dataSource.getCurrentIndex()){
-              setActiveIndex(dataSource.getCurrentIndex())            
-              onSelectListItem(dataSource.getCurrentIndex(), dataSource.getCurrentRecord())
-            } 
-          }
-          setUpdateCounter((prevCounter) => prevCounter + 1);
-      }
+
+  // Função para lidar com a seleção de um item
+  const handleSelectItem = (index: number, data: T) => {
+    // Atualize o índice ativo no estado interno (modo não controlado)
+    if (controlledActiveIndex === undefined) {
+      setActiveIndex(index);
     }
-  }
+
+    // Chame a função de retorno de chamada (callback) se estiver definida (modo controlado)
+    if (onSelectListItem) {
+      onSelectListItem(index, data);
+    }    
+  };
 
   useEffect(()=>{
-    if (activeIndexRef.current){
-      activeIndexRef.current = false
-      if (dataSource && !dataSource.isEmpty()) {
-        const record = dataSource.gotoRecord(_activeIndex)
-        if (onSelectListItem && record){
-          onSelectListItem(_activeIndex, record)
-        }
-      }   
-    }
-  },[_activeIndex])
-  
-
-  const handleSelectItem = (index: number, data: T) => {
-    activeIndexRef.current = true
-    setActiveIndex(index)    
-  }
+    // Atualize o índice da fonte de dados usando gotoRecord
+    if (dataSource && dataSource instanceof ArchbaseDataSource && activeIndex>=0){
+      dataSource.gotoRecord(activeIndex);
+    }  
+  },[activeIndex])
 
   const handleKeyDown = (event) => {
     const keyActions = {
@@ -258,7 +250,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
       36: () => handleHome(),
       35: () => handleEnd()
     }
-    if (_activeIndex >= 0 && rebuildedChildrens.length > 0) {
+    if (activeIndex >= 0 && rebuildedChildrens.length > 0) {
       const action = keyActions[event.keyCode]
       if (action) {
         event.preventDefault()
@@ -268,9 +260,8 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   }
 
   const handleArrowUp = () => {
-    let index = _activeIndex
+    let index = activeIndex
     if (index - 1 >= 0) {
-      //setActiveIndex(index - 1)
       handleSelectItem(index - 1, getRecordDataFromChildren(index - 1))
     }
   }
@@ -280,9 +271,8 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   }
 
   const handleArrowDown = () => {
-    let index = _activeIndex
+    let index = activeIndex
     if (index + 1 < rebuildedChildrens.length) {
-      // setActiveIndex(index + 1)
       handleSelectItem(index + 1, getRecordDataFromChildren(index + 1))
     }
   }
@@ -292,39 +282,30 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   }
 
   const handlePageUp = () => {
-    let index = Math.max(_activeIndex - 5, 0)
-    // setActiveIndex(index)
+    let index = Math.max(activeIndex - 5, 0)
     handleSelectItem(index, getRecordDataFromChildren(index))
   }
 
   const handlePageDown = () => {
-    let index = Math.min(_activeIndex + 5, rebuildedChildrens.length - 1)
-    // setActiveIndex(index)
+    let index = Math.min(activeIndex + 5, rebuildedChildrens.length - 1)
     handleSelectItem(index, getRecordDataFromChildren(index))
   }
 
   const handleHome = () => {
-    // setActiveIndex(0)
     handleSelectItem(0, getRecordDataFromChildren(0))
   }
 
   const handleEnd = () => {
     const index = rebuildedChildrens.length - 1
-    // setActiveIndex(index)
     handleSelectItem(index, getRecordDataFromChildren(index))
   }
 
   const buildChildrensFromDataSource = (dataSource: ArchbaseDataSource<T, ID>) => {
     let sourceData = dataSource.browseRecords()
-    if (sourceData.constructor !== Array) {
-      throw new ArchbaseError('O dataSource deve ser obrigatoriamente um array de dados.')
-    }
-
     return sourceData.map((record: any, index: number) => {
       if (!record) {
         return null
       }
-
       let itemIsValid = true
       if (currentFilter && dataFieldText) {
         if (ArchbaseObjectHelper.getNestedProperty(record, dataFieldText)) {
@@ -339,9 +320,9 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 
       if (itemIsValid) {
         let active = record.active === undefined ? false : record.active
-        if (_activeIndex >= 0) {
+        if (activeIndex >= 0) {
           active = false
-          if (_activeIndex === index) {
+          if (activeIndex === index) {
             active = true
           }
         }
@@ -439,9 +420,9 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
         throw new ArchbaseError('Todos os itens da lista devem conter um ID.')
       }
       let active: boolean = child.active
-      if (_activeIndex >= 0) {
+      if (activeIndex >= 0) {
         active = false
-        if (_activeIndex === index) {
+        if (activeIndex === index) {
           active = true
         }
       }
@@ -488,7 +469,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     } else {
       setRebuildedChildrens([]);
     }
-  }, [_activeIndex, dataSource, children, update, updateCounter]);
+  }, [activeIndex, dataSource?.lastDataChangedAt, dataSource?.lastDataBrowsingOn, children]);
 
   return (
     <Paper
