@@ -54,6 +54,7 @@
   "Active":"Active",
   "Inactive":"Inactive",
   "WARNING": "WARNING",
+  "Warning": "Warning",
   "Fields": "Fields",
   "Path": "Path",
   "New": "New",
@@ -70,10 +71,12 @@
   "Click on Ok or Cancel to close":"Click on Ok or Cancel to close",
   "Close":"Close",
   "Yes":"Yes",
-  "No":"Não",
+  "No":"No",
   "Pick path":"Click here to select the path",
   "Clique para criar um novo registro":"Click to create a new record",
   "Clique para editar o registro":"Click to edit record",
   "Clique para remover o registro":"Click to remove record",
-  "Clique para visualizar o registro":"Click to view record"
+  "Clique para visualizar o registro":"Click to view record",
+  "Deseja COPIAR a integração selecionada {{integrationName}} ?":"Do you want to COPY the specific integration {{integrationName}} ?",
+  "ClearFilter":"Clear filter"
 }

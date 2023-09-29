@@ -53,14 +53,10 @@ import { t } from 'i18next';
 import { type DataSourceEvent, type ArchbaseDataSource, DataSourceEventNames } from '../datasource';
 import { convertISOStringToDate, filter, isEmpty } from '../core/utils';
 import { useArchbaseDataSourceListener } from '../hooks';
-import builder from '../core/rsql/builder';
-import { emit } from '../core/rsql/emitter';
-import { ExpressionNode } from '../core/rsql/ast';
+import { emit, builder, ExpressionNode } from '../core';
 import { ArchbaseObjectHelper } from '../core/helper';
 import { useArchbaseAppContext } from '../core';
-import { ArchbaseSwitch } from '../editors/ArchbaseSwitch';
-import { ArchbaseCheckbox } from '../editors';
-import { useForceUpdate } from '@mantine/hooks';
+
 
 interface JsPDFCustom extends JsPDF {
   autoTable: (options: UserOptions) => void;
@@ -561,7 +557,7 @@ const buildFilterExpressionRSQL = (columnFilters, table, originColumns): string 
 const getToolBarCustomActions = (_table, props): ReactNode => {
   const actions: ReactNode[] = filter(
     props.children,
-    (item: ReactNode) => isValidElement(item) && item.type === ToolBarActions,
+    (child: ReactNode, index?: number, children?: ReactNode[]) => isValidElement(child) && child.type === ToolBarActions,
   );
   if (actions && actions.length === 0) {
     return <div style={{ display: 'flex', gap: '8px' }}></div>;

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Children, isValidElement } from 'react';
 
-import hasComplexChildren from './hasComplexChildren';
+import {hasComplexChildren} from './hasComplexChildren';
 
 export const deepForEach = (children: ReactNode | ReactNode[], deepForEachFn: (child: ReactNode, index?: number) => void): void => {
   Children.forEach(children, (child: ReactNode, index: number) => {

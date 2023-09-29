@@ -9,16 +9,17 @@ import { ArchbaseDataSource } from '../datasource'
 import { t } from 'i18next'
 import { ArchbaseDialog } from '../notification'
 import { ArchbaseForm } from '../containers'
-import { processErrorMessage } from '../core/exceptions'
+import { processDetailErrorMessage, processErrorMessage } from '../core/exceptions'
 
 export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Omit<ModalProps, "onClose"> {
   dataSource?: ArchbaseDataSource<T, ID>
   height: MantineNumberSize
   userActions?: ReactNode
-  onAfterSave?(record?: T): void;
-  onClickOk(record?: T, result?: any): void;
-  onClickCancel(record?: T): void;
-  onBeforeOk?(record? : T): Promise<any> | boolean | undefined;
+  onCustomSave?: (record?: T, callback?: Function)=> void; 
+  onAfterSave?: (record?: T)=> void;
+  onClickOk: (record?: T, result?: any)=> void;
+  onClickCancel: (record?: T)=> void;
+  onBeforeOk?: (record? : T)=> Promise<any> | boolean | undefined;
 }
 
 export function ArchbaseFormModalTemplate<T extends object, ID>({
@@ -40,7 +41,8 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
   onAfterSave,
   onClickOk,
   onClickCancel,
-  onBeforeOk
+  onBeforeOk,
+  onCustomSave
 }: ArchbaseFormModalTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext()
   const theme = useArchbaseTheme()
@@ -52,7 +54,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
           await dataSource.save()
           onAfterSave && onAfterSave(dataSource.getCurrentRecord())
         } catch (ex) {
-          ArchbaseDialog.showError(processErrorMessage(ex), "Atenção")
+          ArchbaseDialog.showErrorWithDetails(`${t('archbase:Warning')}`,processErrorMessage(ex), processDetailErrorMessage(ex))              
           return false
         }
       }
@@ -73,23 +75,30 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
   }
 
   const handleSave = async () => {
-    if (onBeforeOk) {
-      let result = onBeforeOk();
-      if (result instanceof Promise) {
-        result.then(async ()=>{
-          if (await save()) {
-            onClickOk && onClickOk()
-          }
-        }).catch((error)=>{
-          ArchbaseDialog.showError(processErrorMessage(error),"Atenção")
+    if (onCustomSave) {
+      if (dataSource){
+        onCustomSave(dataSource.getCurrentRecord(), ()=>{
+          onClickOk && onClickOk()
         })
       }
     } else {
-      if (await save()) {
-        onClickOk && onClickOk()
-      }
-    }  
-    
+      if (onBeforeOk) {
+        let result = onBeforeOk();
+        if (result instanceof Promise) {
+          result.then(async ()=>{
+            if (await save()) {
+              onClickOk && onClickOk()
+            }
+          }).catch((error)=>{
+            ArchbaseDialog.showErrorWithDetails(`${t('archbase:Warning')}`,processErrorMessage(error), processDetailErrorMessage(error))              
+          })
+        }
+      } else {
+        if (await save()) {
+          onClickOk && onClickOk()
+        }
+      }  
+    }    
   }
 
   const handleCancel = () => {

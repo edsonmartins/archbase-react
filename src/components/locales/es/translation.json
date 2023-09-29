@@ -54,6 +54,7 @@
   "Active":"Activo",
   "Inactive":"Inactivo",
   "WARNING": "ATENCIÓN",
+  "Warning": "Atención",
   "Fields": "Campos",
   "Path": "Camino",
   "New": "Nuevo",
@@ -76,5 +77,7 @@
   "Clique para criar um novo registro":"Haga clic para crear un nuevo registro",
   "Clique para editar o registro":"Haga clic para editar el registro",
   "Clique para remover o registro":"Haga clic para eliminar el registro",
-  "Clique para visualizar o registro":"Haga clic para ver el registro"
+  "Clique para visualizar o registro":"Haga clic para ver el registro",
+  "Deseja COPIAR a integração selecionada {{integrationName}} ?":"Quieres COPIAR la integración específica {{integrationName}} ?",
+  "ClearFilter":"Borrar filtro"
 }

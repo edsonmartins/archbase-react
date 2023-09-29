@@ -1,6 +1,5 @@
-import { ExpressionNode } from 'components/core';
+import { ExpressionNode,builder } from 'components/core';
 import { ArchbaseQueryFilter, Rule } from './ArchbaseFilterCommons';
-import builder from '@components/core/rsql/builder';
 import { formatISO } from 'date-fns';
 
 function buildFrom(filter: ArchbaseQueryFilter) {

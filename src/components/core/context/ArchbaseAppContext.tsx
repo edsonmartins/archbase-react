@@ -9,7 +9,8 @@ import { QueryParamProvider } from 'use-query-params'
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6'
 import queryString from 'query-string'
 import { ModalsProvider } from '@mantine/modals'
-import { ArchbaseNavigationProvider } from '../../admin/ArchbaseNavigation.context'
+import { ArchbaseNavigationProvider } from '../../admin'
+import { CustomShowErrorModal } from '../../notification'
 
 export type ArchbaseLanguage = {
   lang: string
@@ -87,7 +88,9 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
       }}
     >
       <ModalsProvider
+        modals={{archbaseShowError: CustomShowErrorModal}}
         modalProps={{
+          size:"lg",
           overlayProps: {
             color: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[6],
             opacity: 0.25

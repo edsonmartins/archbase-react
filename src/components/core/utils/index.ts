@@ -1,11 +1,11 @@
 export { Children } from 'react';
-export * as isBase64 from './isBase64';
-export * as getElementName from './getElementName';
+export { isBase64 } from './isBase64';
+export { getElementName } from './getElementName';
 export { archbaseLogo, archbaseLogo2, archbaseLogo3 } from './archbaseLogo';
 export { convertImageToBase64 } from './convertImageToBase64';
-export * as filter from './filter';
-export * as hasComplexChildren from './hasComplexChildren';
-export * as hasChildren from './hasChildren';
+export { filter } from './filter';
+export { hasComplexChildren } from './hasComplexChildren';
+export { hasChildren } from './hasChildren';
 export { getPropertyValue } from './propertyUtils';
 export { onlyValid } from './onlyValid';
 export { childToString, onlyText } from './onlyText';

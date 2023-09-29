@@ -93,5 +93,5 @@ const builder: Builder = {
   },
 };
 
-export default builder;
+export {builder};
 export type { Builder };

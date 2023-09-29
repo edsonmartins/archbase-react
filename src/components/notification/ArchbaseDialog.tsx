@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler } from 'react'
-import { Button, Flex, Paper, Text, TextInput } from '@mantine/core'
-import { modals } from '@mantine/modals'
+import { Accordion, Button, Flex, Paper, ScrollArea, Text, TextInput, rem } from '@mantine/core'
+import { ContextModalProps, modals } from '@mantine/modals'
 import i18next from 'i18next'
 import { IconBug, IconCircleFilled, IconTriangle } from '@tabler/icons-react'
 
@@ -15,17 +15,17 @@ export class ArchbaseDialog {
       title,
       centered: true,
       children: <Text size="sm">{question}</Text>,
-      labels: { confirm: i18next.t('Yes'), cancel: i18next.t('No') },
-      confirmProps: { color: 'green' },
-      cancelProps: { color: 'red' },
-      onCancel,
-      onConfirm
+      labels: { confirm: i18next.t('archbase:No'), cancel: i18next.t('archbase:Yes')},
+      confirmProps: { color: 'red' },
+      cancelProps: { color: 'green' },
+      onConfirm:onCancel,
+      onCancel:onConfirm,
     })
   }
 
   static showInfo = (message: string, title?: string, onConfirm?: () => void) => {
     modals.open({
-      title: title || i18next.t('Information'),
+      title: title || i18next.t('archbase:Information'),
       children: (
         <Paper>
           <Flex gap="md" direction="row" justify="flex-start" align="center">
@@ -36,7 +36,7 @@ export class ArchbaseDialog {
             fullWidth
             onClick={() => {
               modals.closeAll()
-              onConfirm!()
+              onConfirm && onConfirm!()
             }}
             mt="md"
           >
@@ -49,7 +49,7 @@ export class ArchbaseDialog {
 
   static showWarning = (message: string, title?: string, onConfirm?: () => void) => {
     modals.open({
-      title: title || i18next.t('Attention'),
+      title: title || i18next.t('archbase:Attention'),
       children: (
         <Paper>
           <Flex gap="md" direction="row" justify="flex-start" align="center">
@@ -60,7 +60,7 @@ export class ArchbaseDialog {
             fullWidth
             onClick={() => {
               modals.closeAll()
-              onConfirm!()
+              onConfirm && onConfirm!()
             }}
             mt="md"
           >
@@ -73,7 +73,8 @@ export class ArchbaseDialog {
 
   static showError = (message: string, title?: string, onConfirm?: () => void) => {
     modals.open({
-      title: title || i18next.t('Attention'),
+      title: title || i18next.t('archbase:Attention'),
+      size:'md',
       children: (
         <Paper>
           <Flex gap="md" direction="row" justify="flex-start" align="center">
@@ -84,7 +85,7 @@ export class ArchbaseDialog {
             fullWidth
             onClick={() => {
               modals.closeAll()
-              onConfirm!()
+              onConfirm && onConfirm!()
             }}
             mt="md"
           >
@@ -92,6 +93,16 @@ export class ArchbaseDialog {
           </Button>
         </Paper>
       )
+    })
+  }
+
+  static showErrorWithDetails = (title: string, message: string, detailMessage?: string, onConfirm?: () => void) => {
+    modals.openContextModal({
+      modal: 'archbaseShowError',
+      title: title,
+      innerProps: {
+        message, detailMessage, onConfirm
+      },
     })
   }
 
@@ -104,7 +115,7 @@ export class ArchbaseDialog {
     onCancel?: () => void
   ) => {
     modals.open({
-      title: title || i18next.t('Informe'),
+      title: title || i18next.t('archbase:Informe'),
       children: (
         <Paper>
           <TextInput
@@ -116,7 +127,7 @@ export class ArchbaseDialog {
           <Button
             onClick={() => {
               modals.closeAll()
-              onConfirm!()
+              onConfirm && onConfirm!()
             }}
             mt="md"
           >
@@ -125,14 +136,45 @@ export class ArchbaseDialog {
           <Button
             onClick={() => {
               modals.closeAll()
-              onCancel!()
+              onCancel && onCancel!()
             }}
             mt="md"
           >
-            Cancela
+            {i18next.t('archbase:Cancel')}
           </Button>
         </Paper>
       )
     })
   }
 }
+
+
+
+export const CustomShowErrorModal = ({ context, id, innerProps }: ContextModalProps<{ message: string, detailMessage?: string, onConfirm?: () => void  }>) => (
+    <Paper miw={"400px"}>
+      <Accordion variant="contained">
+        <Accordion.Item value="photos">
+          <Accordion.Control
+            icon={
+              <IconBug size="2.8rem"
+                style={{ color: 'red' }}
+              />
+            }
+          >
+            <ScrollArea h={"160px"} mah={"160px"}>{innerProps.message}</ScrollArea>
+          </Accordion.Control>
+          <Accordion.Panel>
+            <ScrollArea h={"200px"} mah={"200px"}>{innerProps.detailMessage}</ScrollArea>
+          </Accordion.Panel>
+        </Accordion.Item>
+        </Accordion>
+      <Button fullWidth mt="md" onClick={() => {
+        if (innerProps.onConfirm){
+          innerProps.onConfirm()
+        }
+        context.closeModal(id)}
+      }>
+        Ok
+      </Button>
+    </Paper>
+);

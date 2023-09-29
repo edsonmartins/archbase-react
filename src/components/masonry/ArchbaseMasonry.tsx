@@ -48,12 +48,7 @@ export interface ArchbaseMasonryCustomItemProps<T, _ID> {
 
 }
 
-export interface ComponentDefinition {
-  type: React.ElementType
-  props?: any
-}
-
-interface ArchbaseMasonryProps {
+export interface ArchbaseMasonryProps {
   children: ReactNode | ReactNode[]
   columnsCount?: number
   gutter?: string

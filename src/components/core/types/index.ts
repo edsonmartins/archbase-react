@@ -1,0 +1,1 @@
+export type {ComponentDefinition} from './types'

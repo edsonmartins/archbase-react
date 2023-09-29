@@ -1,9 +1,9 @@
 import type { ReactElement, ReactNode } from 'react'
 import { Children, isValidElement } from 'react'
 
-import hasChildren from './hasChildren'
+import {hasChildren} from './hasChildren'
 
-const hasComplexChildren = (
+export const hasComplexChildren = (
   element: ReactNode
 ): element is ReactElement<{ children: ReactNode | ReactNode[] }> =>
   isValidElement(element) &&
@@ -13,4 +13,3 @@ const hasComplexChildren = (
     false
   )
 
-export default hasComplexChildren

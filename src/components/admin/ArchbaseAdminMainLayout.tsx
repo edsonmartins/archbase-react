@@ -1,15 +1,17 @@
 import {
   ActionIcon,
   AppShell,
+  Box,
   Container,
   Drawer,
   MantineNumberSize,
   MantineTheme,
   ScrollArea,
+  Text,
   px,
   useMantineTheme,
 } from '@mantine/core';
-import React, { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { MenuItemStyles } from 'react-pro-sidebar';
 import { Menu as SidebarMenu, menuClasses, MenuItem, Sidebar, sidebarClasses, SubMenu } from 'react-pro-sidebar';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -40,6 +42,10 @@ export interface ArchbaseAdminMainLayoutProps {
   sideBarWidth?: string | number;
   sideBarCollapsedWidth?: string | number;
   sideBarHiddenBreakPoint?: string | number;
+  sideBarFooterHeight?: string | number;
+  sideBarFooterContent?: ReactNode;
+  onCollapsedSideBar?: (collapsed: boolean)=>void;
+  onHiddenSidebar?: (hidden: boolean)=>void;
 }
 
 const createThemedStyles = (_IDtheme: MantineTheme): any => {
@@ -90,7 +96,13 @@ function buildNavbar(
   menuItemStyles: MenuItemStyles,
   links: ReactNode,
   isHidden: boolean,
-) {
+  sideBarFooterHeight?: string | number,
+  sideBarFooterContent?: ReactNode
+) : ReactElement {
+  let menuHeight = `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`
+    if (sideBarFooterHeight){
+      menuHeight = `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)`
+    }
   return (
     <Sidebar
       ref={sidebarRef}
@@ -115,9 +127,12 @@ function buildNavbar(
       width={`${sideBarWidth}`}
       collapsedWidth={`${sideBarCollapsedWidth}`}
     >
-      <SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
-        {links}
-      </SidebarMenu>
+      <div style={{overflowY:'auto',overflowX:'hidden', height: menuHeight}}>
+        <SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
+          {links}
+        </SidebarMenu>
+      </div>
+      {sideBarFooterContent??sideBarFooterContent}
     </Sidebar>
   );
 }
@@ -161,6 +176,10 @@ function ArchbaseAdminMainLayoutContainer({
   sideBarWidth = '280px',
   sideBarCollapsedWidth = '74px',
   sideBarHiddenBreakPoint,
+  sideBarFooterHeight,
+  sideBarFooterContent,
+  onCollapsedSideBar,
+  onHiddenSidebar
 }: ArchbaseAdminMainLayoutProps) {
   const theme = useMantineTheme();
   const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -170,6 +189,7 @@ function ArchbaseAdminMainLayoutContainer({
   const themes = createThemedStyles(theme);
 
   const isHidden = useMediaQuery(`(max-width: ${sideBarHiddenBreakPoint ?? theme.breakpoints.md})`);
+
   const menuItemStyles: MenuItemStyles = {
     root: {
       fontSize: '14px',
@@ -289,10 +309,16 @@ function ArchbaseAdminMainLayoutContainer({
 
   const handleCollapseSidebar = useCallback(() => {
     adminLayoutContextValue.setCollapsed!(!adminLayoutContextValue.collapsed);
+    if (onCollapsedSideBar){
+      onCollapsedSideBar(!adminLayoutContextValue.collapsed)
+    }
   }, [adminLayoutContextValue.setCollapsed, adminLayoutContextValue.collapsed]);
 
   const handleHiddenSidebar = useCallback(() => {
     adminLayoutContextValue.setHidden!(!adminLayoutContextValue.hidden);
+    if (onHiddenSidebar){
+      onHiddenSidebar(!adminLayoutContextValue.hidden)
+    }
   }, [adminLayoutContextValue.setHidden, adminLayoutContextValue.hidden]);
 
   useEffect(() => {
@@ -322,7 +348,7 @@ function ArchbaseAdminMainLayoutContainer({
         },
       }}
       navbar={
-        !isHidden &&
+        !isHidden ?
         buildNavbar(
           sidebarRef,
           theme,
@@ -332,7 +358,9 @@ function ArchbaseAdminMainLayoutContainer({
           menuItemStyles,
           links,
           isHidden,
-        )
+          sideBarFooterHeight,
+          sideBarFooterContent
+        ):undefined
       }
       footer={footer}
       header={header}
@@ -363,7 +391,7 @@ function ArchbaseAdminMainLayoutContainer({
           <Routes>{routes}</Routes>
         </div>
       </div>
-      <Drawer opened={adminLayoutContextValue.hidden} onClose={handleHiddenSidebar} size={sideBarWidth} padding={0}>
+      <Drawer opened={adminLayoutContextValue.hidden||false} onClose={handleHiddenSidebar} size={sideBarWidth} padding={0}>
         {buildNavbar(
           sidebarRef,
           theme,
@@ -373,6 +401,8 @@ function ArchbaseAdminMainLayoutContainer({
           menuItemStyles,
           links,
           isHidden,
+          sideBarFooterHeight,
+          sideBarFooterContent
         )}
       </Drawer>
     </AppShell>
@@ -388,6 +418,13 @@ export function ArchbaseAdminMainLayout({
   footer,
   owner,
   company,
+  sideBarWidth,
+  sideBarCollapsedWidth,
+  sideBarHiddenBreakPoint,
+  sideBarFooterHeight,
+  sideBarFooterContent,
+  onCollapsedSideBar,
+  onHiddenSidebar
 }: ArchbaseAdminMainLayoutProps) {
   return (
     <ArchbaseAdminLayoutProvider
@@ -405,6 +442,13 @@ export function ArchbaseAdminMainLayout({
         footer={footer}
         owner={owner}
         company={company}
+        sideBarWidth={sideBarWidth}
+        sideBarCollapsedWidth={sideBarCollapsedWidth}
+        sideBarHiddenBreakPoint={sideBarHiddenBreakPoint}
+        sideBarFooterHeight={sideBarFooterHeight}
+        sideBarFooterContent={sideBarFooterContent}
+        onCollapsedSideBar={onCollapsedSideBar}
+        onHiddenSidebar={onHiddenSidebar}
       >
         {children}
       </ArchbaseAdminMainLayoutContainer>

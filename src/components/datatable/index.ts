@@ -3,5 +3,3 @@ export { ArchbaseDataTable, ArchbaseDataTableColumn, Columns, ToolBarActions } f
 export type { ArchbaseItemRenderType, ArchbaseItemRenderProps } from './ArchbaseItemRender';
 export { ArchbaseItemRender } from './ArchbaseItemRender';
 export { ArchbaseTableRowActions } from './ArchbaseDataTable';
-export { ArchbaseStatusRender } from './ArchbaseStatusRender';
-export type { ArchbaseStatusRenderProps, ArchbaseStatusType } from './ArchbaseStatusRender';

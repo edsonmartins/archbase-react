@@ -1,7 +1,7 @@
 import type { ComponentClass, FunctionComponent, ReactNode } from 'react';
 import { Children } from 'react';
 
-import getElementName from './getElementName';
+import {getElementName} from './getElementName';
 
 export const groupByType = (
   children: ReactNode | ReactNode[],

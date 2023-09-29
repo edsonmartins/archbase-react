@@ -4,9 +4,9 @@ import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
 import { t } from 'i18next';
 import { uniqueId } from 'lodash';
 import React, { CSSProperties, Fragment, ReactNode, useMemo, useRef, useState } from 'react';
-import { useArchbaseAppContext } from '../core';
+import { ComponentDefinition, useArchbaseAppContext } from '../core';
 import type { ArchbaseDataSource } from '../datasource';
-import { ArchbaseMasonry, ArchbaseMasonryProvider, ArchbaseMasonryResponsive, ComponentDefinition } from '../masonry';
+import { ArchbaseMasonry, ArchbaseMasonryProvider, ArchbaseMasonryResponsive } from '../masonry';
 import {
   ArchbaseQueryBuilder,
   ArchbaseQueryFilter,

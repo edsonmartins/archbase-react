@@ -28,12 +28,13 @@ import {
   ArchbaseQueryBuilderProps
 } from './ArchbaseFilterCommons'
 import { ArchbaseCompositeFilter } from './ArchbaseCompositeFilter'
-import { processErrorMessage } from '../core/exceptions'
+import { processDetailErrorMessage, processErrorMessage } from '../core/exceptions'
 import { ArchbaseDialog } from '../notification'
 import { ArchbaseEdit } from '../editors'
 import { ArchbaseFilterSelectFields } from './ArchbaseFilterSelectFields'
 import { ArchbaseFilterSelectRange } from './ArchbaseFilterSelectRange'
 import { ArchbaseAppContext } from '../core'
+import { t } from 'i18next'
 
 export interface ArchbaseQueryBuilderState {
   currentFilter: ArchbaseQueryFilter
@@ -318,7 +319,7 @@ export class ArchbaseQueryBuilder extends Component<
             filter.setFilter(btoa(JSON.stringify(currentFilter)))
             this.props.persistenceDelegator.saveFilter(filter, (error: any) => {
               if (error) {
-                ArchbaseDialog.showError(processErrorMessage(error))
+                ArchbaseDialog.showErrorWithDetails(`${t('archbase:Warning')}`,processErrorMessage(error), processDetailErrorMessage(error))              
               }
             })
           }
@@ -354,7 +355,7 @@ export class ArchbaseQueryBuilder extends Component<
 
           this.props.persistenceDelegator.saveFilter(newFilter, (error: any, id: any) => {
             if (error) {
-              ArchbaseDialog.showError(processErrorMessage(error))
+              ArchbaseDialog.showErrorWithDetails(`${t('archbase:Warning')}`,processErrorMessage(error), processDetailErrorMessage(error))              
             } else {
               currentFilter.id = id
               currentFilter.name = newFilter.name
@@ -436,7 +437,7 @@ export class ArchbaseQueryBuilder extends Component<
         if (filter) {
           this.props.persistenceDelegator.removeFilterBy(filter.id, (error: any) => {
             if (error && error !== null) {
-              ArchbaseDialog.showError(processErrorMessage(error))
+              ArchbaseDialog.showErrorWithDetails(`${t('archbase:Warning')}`,processErrorMessage(error), processDetailErrorMessage(error))              
             } else {
               const firstFilter = this.props.persistenceDelegator.getFirstFilter()
               if (firstFilter) {
