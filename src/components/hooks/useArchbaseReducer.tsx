@@ -7,26 +7,25 @@ const getCurrentTimeFormatted = () => {
   const minutes = currentTime.getMinutes();
   const seconds = currentTime.getSeconds();
   const milliseconds = currentTime.getMilliseconds();
+
   return `${hours}:${minutes}:${seconds}.${milliseconds}`;
-}
+};
 
-
-export interface ArchbaseState {
-
-}
+export interface ArchbaseState {}
 
 export type ArchbaseReducerAction<ArchbaseState> = {
-  type: string
-  payload: Partial<ArchbaseState>
-  info?: string
-}
+  type: string;
+  payload: Partial<ArchbaseState>;
+  info?: string;
+};
 
-export type ArchbaseReducer<S extends ArchbaseState,A extends ArchbaseReducerAction<S>> = (state: S, action: A) => S;
+export type ArchbaseReducer<S extends ArchbaseState, A extends ArchbaseReducerAction<S>> = (state: S, action: A) => S;
 
-export function useArchbaseReducer<S extends ArchbaseState,A extends ArchbaseReducerAction<S>>(
+export function useArchbaseReducer<S extends ArchbaseState, A extends ArchbaseReducerAction<S>>(
   key: string,
   store: ArchbaseStore,
-  initialState: S,  customReducer: ArchbaseReducer<S,A>  
+  initialState: S,
+  customReducer: ArchbaseReducer<S, A>,
 ) {
   // Certificando para inicializar o estado apenas uma vez, usando useEffect
   React.useEffect(() => {
@@ -43,17 +42,20 @@ export function useArchbaseReducer<S extends ArchbaseState,A extends ArchbaseRed
     const newState = customReducer(currentState, action);
     store.setValue(key, newState);
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-      console.group(`%cAction: %c${action.type} %cat ${getCurrentTimeFormatted()}`, "color: lightgreen; font-weight: bold;", "color: white; font-weight: bold;", "color: lightblue; font-weight: lighter;");
-      console.log("%cPrevious State:", "color: #9E9E9E; font-weight: 700;", currentState);
-      console.log("%cAction:", "color: #00A7F7; font-weight: 700;", action);
-      console.log("%cNext State:", "color: #47B04B; font-weight: 700;", newState);
+      console.group(
+        `%cAction: %c${action.type} %cat ${getCurrentTimeFormatted()}`,
+        'color: lightgreen; font-weight: bold;',
+        'color: white; font-weight: bold;',
+        'color: lightblue; font-weight: lighter;',
+      );
+      console.log('%cPrevious State:', 'color: #9E9E9E; font-weight: 700;', currentState);
+      console.log('%cAction:', 'color: #00A7F7; font-weight: 700;', action);
+      console.log('%cNext State:', 'color: #47B04B; font-weight: 700;', newState);
       console.groupEnd();
-    }    
+    }
   };
 
-  const state : S = store.getValue(key) || initialState;
+  const state: S = store.getValue(key) || initialState;
 
   return { dispatch, state };
-};
-
-
+}

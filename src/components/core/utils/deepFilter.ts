@@ -1,11 +1,11 @@
-import type { ReactNode } from 'react'
-import { Children, cloneElement, isValidElement } from 'react'
+import type { ReactNode } from 'react';
+import { Children, cloneElement, isValidElement } from 'react';
 
-import hasComplexChildren from './hasComplexChildren'
+import hasComplexChildren from './hasComplexChildren';
 
-const deepFilter = (
+export const deepFilter = (
   children: ReactNode | ReactNode[],
-  deepFilterFn: (child: ReactNode, index?: number, children?: ReactNode[]) => boolean
+  deepFilterFn: (child: ReactNode, index?: number, children?: ReactNode[]) => boolean,
 ): ReactNode[] =>
   Children.toArray(children)
     .filter(deepFilterFn)
@@ -14,10 +14,9 @@ const deepFilter = (
         // Clone the child that has children and filter them too
         return cloneElement(child, {
           ...child.props,
-          children: deepFilter(child.props.children, deepFilterFn)
-        })
+          children: deepFilter(child.props.children, deepFilterFn),
+        });
       }
-      return child
-    })
 
-export default deepFilter
+      return child;
+    });
