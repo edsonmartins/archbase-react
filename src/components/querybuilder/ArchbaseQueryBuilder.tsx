@@ -43,9 +43,6 @@ export interface ArchbaseQueryBuilderState {
   activeFilterIndex: number
   isOpenSelectRange: boolean
   isOpenSelectFields: boolean
-  detailsTop?: string | number | undefined
-  detailsLeft?: string | number | undefined
-  detailsHeight?: string | number | undefined
   selectRangeType?: RangeType | undefined
   detailsAlign?: "left"|"right"
   modalOperator?: string | undefined
@@ -131,9 +128,6 @@ export class ArchbaseQueryBuilder extends Component<
         expandedFilter: newExpandedFilter,
         isOpenSelectRange: false,
         isOpenSelectFields: false,
-        detailsTop: position.top,
-        detailsLeft: position.left,
-        detailsHeight: position.height
       },
       () => {
         if (!this.state.currentFilter || this.state.currentFilter.filter.filterType === QUICK) {
@@ -305,8 +299,8 @@ export class ArchbaseQueryBuilder extends Component<
       this.state.currentFilter.id > 0
     ) {
       ArchbaseDialog.showConfirmDialogYesNo(
-        'Confirme',
-        'Deseja salvar o Filtro ?',
+        `${t('archbase:Confirme')}`,
+        `${t('archbase:Deseja salvar o Filtro ?')}`,
         () => {
           const currentFilter = this.state.currentFilter
           currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(
@@ -332,9 +326,9 @@ export class ArchbaseQueryBuilder extends Component<
     ) {
       this.inputValue = ''
       ArchbaseDialog.showInputDialog(
-        'Salvar como...',
-        'Informe um nome para o fitro...',
-        'Confirme',
+        `${t('archbase:Salvar como...')}`,
+        `${t('archbase:Informe um nome para o fitro...')}`,
+        `${t('archbase:Confirme')}`,
         (value: any) => (this.inputValue = value),
         () => {
           const currentFilter = this.state.currentFilter
@@ -427,8 +421,8 @@ export class ArchbaseQueryBuilder extends Component<
 
   removeFilter = () => {
     ArchbaseDialog.showConfirmDialogYesNo(
-      'Confirme',
-      'Deseja remover o Filtro ?',
+      `${t('archbase:Confirme')}`,
+      `${t('archbase:Deseja remover o Filtro ?')}`,
       () => {
         const currentFilter = this.state.currentFilter
         const filter: IQueryFilterEntity | undefined = this.props.persistenceDelegator.getFilterById(
@@ -472,29 +466,32 @@ export class ArchbaseQueryBuilder extends Component<
   }
 
   getPosition = (type: PositionType, rangeType?: RangeType): Position => {
-    let width = this.props.detailsWidth!
-    if (type === 'range') {
-      if (rangeType === 'month') {
-        width = 260
-      } else {
-        width = 510
+    if (this.divMain){
+      let width = this.props.detailsWidth!
+      if (type === 'range') {
+        if (rangeType === 'month') {
+          width = 260
+        } else {
+          width = 510
+        }
+      } else if (type === 'fields') {
+        width = 480
       }
-    } else if (type === 'fields') {
-      width = 480
-    }
-    const bb = this.divMain.getBoundingClientRect()
-    const { innerHeight: height } = window
+      const bb = this.divMain.getBoundingClientRect()
+      const { innerHeight: height } = window
 
-    let left = bb.left
-    if ((this.state.detailsAlign === 'right' && type === 'filter') || (bb.left + width > window.innerWidth - 100)) {
-      left = bb.right - width
-    }
+      let left = bb.left
+      if ((this.state.detailsAlign === 'right' && type === 'filter') || (bb.left + width > window.innerWidth - 100)) {
+        left = bb.right - width
+      }
 
-    return {
-      left,
-      top: bb.bottom + 2,
-      height: this.props.detailsHeight ? this.props.detailsHeight : height - bb.bottom - 30
+      return {
+        left,
+        top: bb.bottom + 2,
+        height: this.props.detailsHeight ? this.props.detailsHeight : height - bb.bottom - 30
+      }
     }
+    return {left:0, top:0, height:0}
   }
 
   onResize = () => {
@@ -509,9 +506,6 @@ export class ArchbaseQueryBuilder extends Component<
     const position = this.getPosition(type, rangeType)
     this.setState({
       ...this.state,
-      detailsTop: position.top,
-      detailsLeft: position.left,
-      detailsHeight: position.height
     })
   }
 
@@ -522,9 +516,6 @@ export class ArchbaseQueryBuilder extends Component<
       const position = this.getPosition('range', rangeType)
       this.setState({
         ...this.state,
-        detailsTop: position.top,
-        detailsLeft: position.left,
-        detailsHeight: position.height,
         isOpenSelectRange: true,
         selectRangeType: rangeType,
         expandedFilter: false,
@@ -605,9 +596,6 @@ export class ArchbaseQueryBuilder extends Component<
       const position: Position = this.getPosition('fields')
       this.setState({
         ...this.state,
-        detailsTop: position.top,
-        detailsLeft: position.left,
-        detailsHeight: position.height,
         isOpenSelectFields: true,
         isOpenSelectRange: false,
         expandedFilter: false
@@ -771,7 +759,18 @@ export class ArchbaseQueryBuilder extends Component<
     return result
   }
 
+
   render = () => {
+    let positionType: PositionType = 'filter'
+    let rangeType: RangeType
+    if (this.state.isOpenSelectFields) {
+      positionType = 'fields'
+    } else if (this.state.isOpenSelectRange) {
+      positionType = 'range'
+      rangeType = this.state.selectRangeType
+    }
+    const position = this.getPosition(positionType, rangeType)
+
     let type = 'R'
     let backgroundColor = '#f0ad4e'
     if (this.state.currentFilter.filter.filterType === NORMAL) {
@@ -801,7 +800,8 @@ export class ArchbaseQueryBuilder extends Component<
           }`,
           borderRadius: 4,
           display: 'flex',
-          flexFlow: 'column nowrap'
+          flexFlow: 'column nowrap',
+          paddingRight:'8px'
         }}
       >
         <div
@@ -881,7 +881,7 @@ export class ArchbaseQueryBuilder extends Component<
           ) : null}
           <Menu shadow="md" width={200} trigger="hover" openDelay={100} closeDelay={200}>
             <Menu.Target>
-              <Tooltip withinPortal withArrow label="Selecionar período">
+              <Tooltip withinPortal withArrow label={`${t('archbase:Selecionar período')}`}>
                 <ActionIcon
                   variant={this.props.variant}
                   size="lg"
@@ -894,35 +894,35 @@ export class ArchbaseQueryBuilder extends Component<
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Label>Período</Menu.Label>
+              <Menu.Label>{`${t('archbase:Período')}`}</Menu.Label>
               <Menu.Item
                 onClick={() => this.onSelectRange('range')}
                 icon={<IconCalendarDue size={16} />}
               >
-                Intervalo
+                {`${t('archbase:Intervalo')}`}
               </Menu.Item>
               <Menu.Item
                 onClick={() => this.onSelectRange('month')}
                 icon={<IconCalendarDue size={16} />}
               >
-                Mês
+                {`${t('archbase:Mês')}`}
               </Menu.Item>
               <Menu.Item
                 onClick={() => this.onSelectRange('week')}
                 icon={<IconCalendarDue size={16} />}
               >
-                Semana
+                {`${t('archbase:Semana')}`}
               </Menu.Item>
               <Menu.Item
                 onClick={() => this.onSelectRange('day')}
                 icon={<IconCalendarDue size={16} />}
               >
-                Dia
+                {`${t('archbase:Dia')}`}
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
 
-          <Tooltip withinPortal withArrow label="Selecionar campos filtro rápido">
+          <Tooltip withinPortal withArrow label={`${t('archbase:Selecionar campos filtro rápido')}`}>
             <ActionIcon
               variant={this.props.variant}
               size="lg"
@@ -936,7 +936,7 @@ export class ArchbaseQueryBuilder extends Component<
             </ActionIcon>
           </Tooltip>
           {this.props.showToggleButton ? (
-            <Tooltip withinPortal withArrow label="Filtro avançado">
+            <Tooltip withinPortal withArrow label={`${t('archbase:Filtro avançado')}`} >
               <ActionIcon
                 ref={this.toggleFilterButtonRef}
                 variant={this.props.variant}
@@ -966,8 +966,8 @@ export class ArchbaseQueryBuilder extends Component<
           onChangeFilterType={this.onChangeFilterType}
           onChangeSelectedFilter={this.onChangeSelectedFilter}
           onSearchButtonClick={this.onSearchButtonClick}
-          left={this.state.detailsLeft}
-          top={this.state.detailsTop}
+          left={position.left}
+          top={position.top}
           width={this.props.detailsWidth}
           height={this.props.detailsHeight}
           toggleFilterButtonRef={this.toggleFilterButtonRef}
@@ -980,25 +980,25 @@ export class ArchbaseQueryBuilder extends Component<
           id={`filrsep${uniqueId()}`}
           key={`kfilrsep${uniqueId()}`}
           isOpen={this.state.isOpenSelectFields}
-          left={this.state.detailsLeft}
+          left={position.left}
           currentFilter={this.state.currentFilter}
           selectedOptions={getQuickFields(getFields(this.props))}
           fields={getFields(this.props)}
           onConfirmSelectFields={this.onConfirmSelectFields}
           onCancelSelectFields={this.onCancelSelectFields}
           width={this.props.width}
-          top={this.state.detailsTop}
+          top={position.top}
           variant={this.props.variant}
         />
 
         <ArchbaseFilterSelectRange
           selectRangeType={this.state.selectRangeType}
           isOpen={this.state.isOpenSelectRange}
-          left={this.state.detailsLeft}
+          left={position.left}
           onConfirmSelectRange={this.onConfirmSelectRange}
           onCancelSelectRange={this.onCancelSelectRange}
           width={this.props.width}
-          top={this.state.detailsTop}
+          top={position.top}
           variant={this.props.variant}
         />
         {this.buildSearchModals()}

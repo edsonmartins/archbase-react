@@ -39,6 +39,7 @@ import { ArchbaseDataSource } from '../datasource'
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '../editors'
 import { ArchbaseList, ArchbaseListContext } from '../list'
 import { ArchbaseDateTimePickerRange, ArchbaseDateTimePickerEdit, ArchbaseSwitch } from '../editors'
+import debounce from "lodash.debounce";
 
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
   id: string
@@ -1315,13 +1316,16 @@ interface ValueEditorProps {
 }
 
 export class ValueEditor extends Component<ValueEditorProps> {
+  private onInput: (value: any) => void
   constructor(props: ValueEditorProps) {
     super(props)
+    this.onInput = debounce(props.handleOnChange, 300);
   }
 
   static get componentName() {
     return 'ValueEditor'
   }
+
 
   onActionSearchExecute = () => {
     if (this.props.onSearchButtonClick) {
@@ -1377,7 +1381,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
               disabled={disabled}
               value={newValue}
               style={{ width: this.props.twoFields ? '128px' : '260px' }}
-              onChange={(value: DatesRangeValue) => handleOnChange(value)}
+              onChange={(value: DatesRangeValue) => this.onInput(value)}
             />
           )
         } else if (operator === 'notInList' || operator === 'inList') {
@@ -1387,7 +1391,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
               disabled={disabled}
               value={newValue}
               style={{ width: this.props.twoFields ? '128px' : '260px' }}
-              onChange={(value: DateValue[]) => handleOnChange(value)}
+              onChange={(value: DateValue[]) => this.onInput(value)}
             />
           )
         } else {
@@ -1396,7 +1400,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
               disabled={disabled}
               value={newValue}
               style={{ width: this.props.twoFields ? '128px' : '260px' }}
-              onChange={(value: DateValue) => handleOnChange(value)}
+              onChange={(value: DateValue) => this.onInput(value)}
             />
           )
         }
@@ -1410,7 +1414,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
               disabled={disabled}
               value={newValue}
               width={this.props.twoFields ? '128px' : '260px'}
-              onSelectDateRange={(value: DateValue[]) => handleOnChange(value)}
+              onSelectDateRange={(value: DateValue[]) => this.onInput(value)}
             />
           )
         } else {
@@ -1419,7 +1423,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
               disabled={disabled}
               value={newValue}
               width={this.props.twoFields ? '128px' : '260px'}
-              onChange={(value) => handleOnChange(value)}
+              onChange={(value) => this.onInput(value)}
             />
           )
         }
@@ -1432,14 +1436,14 @@ export class ValueEditor extends Component<ValueEditorProps> {
             disabled={disabled}
             width={this.props.twoFields ? '128px' : '260px'}
             value={newValue}
-            onChange={(value) => handleOnChange(value)}
+            onChange={(value) => this.onInput(value)}
           />
         )
       } else if (dataType === 'boolean') {
         return (
           <ArchbaseSwitch
             isChecked={newValue}
-            onChangeValue={(value, _event) => handleOnChange(value === true)}
+            onChangeValue={(value, _event) => this.onInput(value === true)}
           />
         )
       } else {
@@ -1454,7 +1458,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
             <ArchbaseSelect<any, any, any>
               disabled={disabled}
               width={this.props.twoFields ? '128px' : '260px'}
-              onSelectValue={(value) => handleOnChange(value)}
+              onSelectValue={(value) => this.onInput(value)}
               //VER AQUI DEPOIS multi={true}
               value={_value}
               getOptionLabel={(option: any) => option.label}
@@ -1480,7 +1484,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
               width={this.props.twoFields ? '128px' : '260px'}
               getOptionLabel={(option: any) => option.label}
               getOptionValue={(option: any) => option.value}
-              onSelectValue={(value) => handleOnChange(value)}
+              onSelectValue={(value) => this.onInput(value)}
             >
               {listValues.map((v: any) => {
                 return (
@@ -1502,7 +1506,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
               icon={<IconSearch size="1rem"/>}
               onActionSearchExecute={this.onActionSearchExecute}
               value={newValue}
-              onChangeValue={(value: any, _event: any) => handleOnChange(value)}
+              onChangeValue={(value: any, _event: any) => this.onInput(value)}
             />
           )
         }
@@ -1513,7 +1517,7 @@ export class ValueEditor extends Component<ValueEditorProps> {
           type="text"
           width={this.props.twoFields ? '128px' : '260px'}
           value={newValue}
-          onChange={(e) => handleOnChange(e.target.value)}
+          onChange={(e) => this.onInput(e.target.value)}
         />
       )
     }

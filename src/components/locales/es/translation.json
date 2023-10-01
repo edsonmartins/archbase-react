@@ -79,5 +79,18 @@
   "Clique para remover o registro":"Haga clic para eliminar el registro",
   "Clique para visualizar o registro":"Haga clic para ver el registro",
   "Deseja COPIAR a integração selecionada {{integrationName}} ?":"Quieres COPIAR la integración específica {{integrationName}} ?",
-  "ClearFilter":"Borrar filtro"
+  "ClearFilter":"Borrar filtro",
+  "Período":"Período",
+  "Intervalo":"Intervalo",
+  "Mês":"Mes",
+  "Semana":"Semana",
+  "Dia":"Día",
+  "Selecionar período":"Seleccionar periodo",
+  "Selecionar campos filtro rápido":"Seleccionar campos de filtro rápido",
+  "Filtro avançado":"Filtro avanzado",
+  "Confirme":"Confirmar",
+  "Deseja remover o Filtro ?":"Quieres eliminar el filtro ?",
+  "Salvar como...":"Guardar como...",
+  "Informe um nome para o fitro...":"Ingrese un nombre para el filtro...",
+  "Deseja salvar o Filtro ?":"Quieres guardar el filtro ?"
 }

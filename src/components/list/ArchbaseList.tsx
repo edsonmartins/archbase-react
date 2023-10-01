@@ -6,7 +6,7 @@ import {
   DataSourceEvent,
   DataSourceEventNames
 } from '../datasource'
-import { ArchbaseError, ComponentDefinition } from '../core'
+import { ArchbaseError } from '../core'
 import { useArchbaseDidMount, useArchbaseWillUnmount } from '../hooks'
 import { Box, MantineNumberSize, Paper, useMantineTheme } from '@mantine/core'
 import useStyles from './ArchbaseList.styles'
@@ -28,6 +28,11 @@ export interface ArchbaseListCustomItemProps<T, _ID> {
   recordData: T
   /** Indicador se item da lista está desabilitado */
   disabled: boolean
+}
+
+export interface ComponentDefinition {
+  type: React.ElementType
+  props?: any
 }
 
 export interface ArchbaseListProps<T, ID> {
@@ -492,7 +497,8 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
             type,
             onItemEnter,
             onItemLeave,
-            align
+            align,
+            disabled
           }}
         >
           {rebuildedChildrens}
