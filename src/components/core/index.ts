@@ -9,3 +9,4 @@ export * from './rsql/emitter';
 export * from './rsql/parser';
 export * from './utils';
 export * from './types';
+export * from './errorboundary';

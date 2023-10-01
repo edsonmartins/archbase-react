@@ -11,6 +11,7 @@ import '../src/styles/advancedtabs.scss';
 import '../src/styles/querybuilder.scss';
 import '../src/styles/template.scss';
 import '../src/styles/treeviews.scss';
+import '../src/styles/errorboundary.scss';
 
 
 function ThemeWrapper(props: { children: React.ReactNode }) {
