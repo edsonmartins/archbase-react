@@ -1,6 +1,6 @@
 import React from 'react';
 import { Paper, Text } from '@mantine/core';
-import { useArchbaseNavigationListener } from '@components/admin/ArchbaseNavigation.context';
+import { useArchbaseNavigationListener } from '../../components/admin/ArchbaseNavigation.context';
 
 export function PessoaView() {
   const { closeAllowed } = useArchbaseNavigationListener('/pessoa/consulta', () => {

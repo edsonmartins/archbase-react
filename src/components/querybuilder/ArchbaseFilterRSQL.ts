@@ -1,4 +1,4 @@
-import { ExpressionNode,builder } from 'components/core';
+import { ExpressionNode,builder } from '../core';
 import { ArchbaseQueryFilter, Rule } from './ArchbaseFilterCommons';
 import { formatISO } from 'date-fns';
 

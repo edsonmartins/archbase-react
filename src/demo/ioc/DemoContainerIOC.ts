@@ -4,7 +4,7 @@ import { FakePessoaService } from '../service/FakePessoaService';
 import { FakePedidoService } from '../service/FakePedidoService';
 import { FakeAuthenticator } from '../auth/FakeAuthenticator';
 import { FakeRemoteApiClient } from '../service/FakeRemoteApiClient';
-import { IOCContainer } from '@components/core/ioc';
+import { IOCContainer } from '../../components/core/ioc';
 
 export const demoContainerIOC = IOCContainer.getContainer();
 

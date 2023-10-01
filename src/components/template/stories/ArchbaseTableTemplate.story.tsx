@@ -6,6 +6,7 @@ import {
   useArchbaseForceUpdate,
   useArchbaseLocalFilterDataSource,
   useArchbaseRemoteDataSource,
+  useArchbaseStore,
 } from '@hooks/index';
 import { Meta, StoryObj } from '@storybook/react';
 import { Pessoa, pessoasData } from '@demo/index';
@@ -20,17 +21,17 @@ import { ArchbaseQueryFilterDelegator } from '@components/querybuilder';
 import { ArchbaseTableTemplate } from '../ArchbaseTableTemplate';
 import {
   ArchbaseDataTableColumn,
-  ArchbaseStatusRender,
-  ArchbaseStatusType,
+  ArchbaseItemRender,
+  ArchbaseItemRenderType,
   ArchbaseTableRowActions,
   Columns,
 } from '@components/datatable';
-import { PessoaStatus } from '@demo/data/types';
-import { usePessoaStore } from '@demo/store/usePessoaStore';
+import { PessoaStatus } from '../../../demo/data/types';
+
 
 const filters: LocalFilter[] = [];
 
-const StatusValues: ArchbaseStatusType[] = [
+const StatusValues: ArchbaseItemRenderType[] = [
   {
     value: PessoaStatus.APROVADO,
     label: 'Aprovado',
@@ -50,7 +51,7 @@ const StatusValues: ArchbaseStatusType[] = [
 
 export const ArchbaseTableTemplateExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
-  const pessoaStore = usePessoaStore();
+  const pessoaStore = useArchbaseStore('pessoaStore');
   const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   /**
    * Criando dataSource remoto
@@ -67,10 +68,9 @@ export const ArchbaseTableTemplateExample = () => {
     service: pessoaApi,
     pageSize: 10,
     loadOnStart: true,
-    initialDataSource: pessoaStore.dataSource,
-    currentPage: pessoaStore.dataSource ? pessoaStore.dataSource.getCurrentPage() : 0,
+    store: pessoaStore,
     onLoadComplete: (dataSource) => {
-      pessoaStore.setDataSource(dataSource);
+      
     },
     onDestroy: (_dataSource) => {
       //
@@ -254,7 +254,7 @@ export const ArchbaseTableTemplateExample = () => {
           enumValues={StatusValues}
           header={'Status'}
           render={(data): ReactNode => {
-            return <ArchbaseStatusRender currentValue={`${data.getValue()}`} values={StatusValues} />;
+            return <ArchbaseItemRender currentValue={`${data.getValue()}`} values={StatusValues} />;
           }}
         />
       </Columns>

@@ -42,6 +42,7 @@ module.exports = {
         allowDeclareFields: true,
       },
     ],
+    '@babel/plugin-transform-class-static-block',
     ['@babel/plugin-proposal-decorators', { 'legacy': true }],
     ['@babel/plugin-proposal-class-properties', { 'loose': true }],
     '@babel/plugin-syntax-dynamic-import',

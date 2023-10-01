@@ -1,3 +1,8 @@
+import './styles/advancedtabs.scss';
+import './styles/querybuilder.scss';
+import './styles/template.scss';
+import './styles/treeviews.scss'
+
 export * from './components/admin';
 export * from './components/auth';
 export * from './components/buttons';

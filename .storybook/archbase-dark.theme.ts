@@ -4,7 +4,7 @@ import ArchbaseGlobalStyles from './archbase-global.styles'
 
 export const ArchbaseDark: MantineThemeOverride = {
   colorScheme: 'dark',
-  fontFamily: 'Archbase, sans-serif',
+  fontFamily: 'Inter, sans-serif',
   colors: {
     archbase: [
       '#def3ff',

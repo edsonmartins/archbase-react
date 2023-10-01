@@ -1,4 +1,4 @@
-import { injectable } from 'inversify'
+import { injectable, decorate } from 'inversify'
 import { ArchbaseTokenManager } from './ArchbaseTokenManager'
 import { ArchbaseAccessToken } from './ArchbaseAccessToken'
 import CryptoJS from 'crypto-js'
@@ -10,7 +10,6 @@ export const ENCRYPTION_KEY = 'YngzI1guK3dGaElFcFY9MywqK3xgPzg/Ojg7eD8xRmg='
 export const TOKEN_COOKIE_NAME = 'c1ab58e7-c113-4225-a190-a9e59d1207fc'
 export const USER_NAME_AND_PASSWORD = '6faf6932-a0b5-457b-83b1-8d89ddbd91fd'
 
-@injectable()
 export class DefaultArchbaseTokenManager implements ArchbaseTokenManager {
   getUsernameAndPassword(): ArchbaseUsernameAndPassword|null {
     try {
@@ -87,3 +86,6 @@ export class DefaultArchbaseTokenManager implements ArchbaseTokenManager {
     }
   }
 }
+
+
+decorate(injectable(), DefaultArchbaseTokenManager);

@@ -11,11 +11,11 @@ import {
 } from '@tabler/icons-react';
 
 import { ArchbaseNavigationItem } from './types';
-import { PessoaForm } from '@demo/view/PessoaForm';
-import { PessoaView } from '@demo/view/PessoaView';
-import { PedidoView } from '@demo/view/PedidoView';
-import { PedidoForm } from '@demo/view/PedidoForm';
-import { HomeView } from '@demo/view/HomeView';
+import { PessoaForm } from '../../demo/view/PessoaForm';
+import { PessoaView } from '../../demo/view/PessoaView';
+import { PedidoView } from '../../demo/view/PedidoView';
+import { PedidoForm } from '../../demo/view/PedidoForm';
+import { HomeView } from '../../demo/view/HomeView';
 
 const dashBoardView: ArchbaseNavigationItem = {
   label: 'Dashboard',

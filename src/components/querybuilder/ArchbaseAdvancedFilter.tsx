@@ -39,7 +39,7 @@ import { ArchbaseDataSource } from '../datasource'
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbaseSelectItem } from '../editors'
 import { ArchbaseList, ArchbaseListContext } from '../list'
 import { ArchbaseDateTimePickerRange, ArchbaseDateTimePickerEdit, ArchbaseSwitch } from '../editors'
-import './querybuilder.scss'
+
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
   id: string
   currentFilter: ArchbaseQueryFilter

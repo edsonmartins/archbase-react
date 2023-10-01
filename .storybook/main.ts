@@ -1,6 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import path from 'path'
-import { mergeConfig } from 'vite';
+
 const config: StorybookConfig = {
   stories: [
     '../src/**/*.mdx',
@@ -21,10 +21,23 @@ const config: StorybookConfig = {
     'storybook-dark-mode',
     'storybook-react-i18next',
     {
-      name: '@storybook/addon-styling',
+      name: '@storybook/preset-scss',
       options: {
-        sass: {
-          implementation: require('sass'),
+        cssLoaderOptions: {
+          modules: true,
+          localIdentName: '[name]__[local]--[hash:base64:5]',
+        },
+      },
+    },
+    {
+      name: 'storybook-addon-sass-postcss',
+      options: {
+        loadSassAfterPostCSS: true,
+        postcssLoaderOptions: {
+          implementation: require('postcss'),
+        },
+        rule: {
+          test: /\.(scss|sass)$/i,
         },
       },
     },
@@ -34,7 +47,7 @@ const config: StorybookConfig = {
         configureJSX: true,
         babelOptions: {},
         sourceLoaderOptions: null,
-        transcludeMarkdown: true
+        transcludeMarkdown: true,
       }
     },
   ],
@@ -56,7 +69,7 @@ const config: StorybookConfig = {
   docs: {
     autodocs: true,
   },
-  core: {
+  core: { builder: "@storybook/builder-vite",
     disableTelemetry: true,
   },  
   refs: {

@@ -1,8 +1,8 @@
 /* eslint max-classes-per-file: "off" */
 import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
-import type { ArchbaseRemoteApiClient } from '@components/service';
-import type { ArchbaseAuthenticator } from '@components/auth';
+import type { ArchbaseRemoteApiClient } from '../../components/service';
+import type { ArchbaseAuthenticator } from '../../components/auth';
 import { API_TYPE } from '../ioc/DemoIOCTypes';
 
 @injectable()

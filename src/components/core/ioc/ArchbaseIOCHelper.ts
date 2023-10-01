@@ -1,7 +1,8 @@
-import { ArchbaseTokenManager } from '../../auth/ArchbaseTokenManager';
+import { ArchbaseTokenManager } from '../../auth';
 import { Container } from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from '.';
-import { DefaultArchbaseTokenManager } from '../../auth/DefaultArchbaseTokenManager';
+import { DefaultArchbaseTokenManager } from '../../auth';
+
 
 let instance: any;
 const container = new Container();

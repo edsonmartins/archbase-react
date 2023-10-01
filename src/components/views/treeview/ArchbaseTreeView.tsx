@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback, useMemo, ReactNode } f
 import lodash from 'lodash'
 import { ArchbaseTreeNode } from './ArchbaseTreeView.types'
 import { ArchbaseTreeViewItem } from './ArchbaseTreeViewItem'
-import './treeviews.scss'
 import { rem } from '@mantine/styles'
 import { useArchbaseTheme } from 'components/hooks'
 

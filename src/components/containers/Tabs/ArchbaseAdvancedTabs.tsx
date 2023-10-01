@@ -1,8 +1,6 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect, CSSProperties, ReactNode } from 'react';
 import { useWindowSize } from 'usehooks-ts'
-import './ArchbaseAdvancedTabs.scss';
-
 
 
 export interface ArchbaseAdvancedTabItem {

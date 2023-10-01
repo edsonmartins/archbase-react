@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useRef, useState, useTransition } from 'react';
+import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import useComponentSize from '@rehooks/component-size';
 import { useLocation, useNavigate } from 'react-router';
 import { useMantineTheme } from '@mantine/core';
@@ -31,7 +31,7 @@ export function ArchbaseAdminTabContainer({
   activeTabId: defaultActiveTabId,
   openedTabs: defaultOpenedTabs = [],
 }: ArchbaseAdminTabContainerProps) {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = React.useTransition();
   const navigate = useNavigate();
   const theme = useMantineTheme();
   const [openedTabs, setOpenedTabs] = useState<ArchbaseTabItem[]>(defaultOpenedTabs);

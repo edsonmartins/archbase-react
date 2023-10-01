@@ -14,7 +14,6 @@ import {
 } from '../querybuilder'
 import { ArchbaseAlert } from '../notification'
 import { ArchbaseDataTable, ToolBarActions } from '../datatable'
-import '../../styles/template.scss'
 import { useArchbaseElementSizeArea, useArchbaseTheme } from '../hooks'
 import { IconPlus } from '@tabler/icons-react'
 import { useArchbaseAppContext } from '../core'

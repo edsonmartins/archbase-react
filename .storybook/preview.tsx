@@ -7,6 +7,10 @@ import React, { useEffect } from 'react';
 import '../locales/config';
 import { demoContainerIOC } from '../src/demo/index';
 import { ArchbaseAppProvider, ArchbaseGlobalProvider } from '../src/components/core';
+import '../src/styles/advancedtabs.scss';
+import '../src/styles/querybuilder.scss';
+import '../src/styles/template.scss';
+import '../src/styles/treeviews.scss';
 
 
 function ThemeWrapper(props: { children: React.ReactNode }) {

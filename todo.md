@@ -9,3 +9,5 @@ OK - Criar um componente modal/dialog para apresentar melhor os erros com detalh
 OK - Adicionar footer no admin layout para versão
 - Terminar filtro avançado
 - Terminar componente Image e Image Editor
+- Corrigir evento fieldChange dos Editores
+- Adicionar opção para grupo de actions
