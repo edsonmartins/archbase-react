@@ -119,13 +119,14 @@ export function ArchbaseEdit<T, ID>({
     setCurrentValue(initialValue)
   }
 
-  const fieldChangedListener = useCallback(() => {}, [])
+  const fieldChangedListener = useCallback(() => {
+    loadDataSourceFieldValue()
+  }, [])
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
       if (
         event.type === DataSourceEventNames.dataChanged ||
-        event.type === DataSourceEventNames.fieldChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel

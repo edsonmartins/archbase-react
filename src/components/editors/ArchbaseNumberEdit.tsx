@@ -259,29 +259,34 @@ export function ArchbaseNumberEdit<T, ID>({
     }
   })
 
-  const fieldChangedListener = useCallback(() => {}, [])
+  const fieldChangedListener = useCallback(() => {
+    loadDataSourceFieldValue()
+  }, [])
+
+  const loadDataSourceFieldValue = () =>{
+    const value = dataSource.getFieldValue(dataField)
+    const result = formatNumber(
+      value,
+      precision,
+      decimalSeparator,
+      thousandSeparator,
+      allowNegative,
+      prefix,
+      suffix
+    )
+    setMaskedValue(result.maskedValue)
+    setCurrentValue(0)
+  }
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
       if (
         event.type === DataSourceEventNames.dataChanged ||
-        event.type === DataSourceEventNames.fieldChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel
       ) {
-        const value = dataSource.getFieldValue(dataField)
-        const result = formatNumber(
-          value,
-          precision,
-          decimalSeparator,
-          thousandSeparator,
-          allowNegative,
-          prefix,
-          suffix
-        )
-        setMaskedValue(result.maskedValue)
-        setCurrentValue(0)
+        loadDataSourceFieldValue()
       }
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
         setInternalError(event.error)

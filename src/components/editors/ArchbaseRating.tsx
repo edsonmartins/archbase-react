@@ -4,7 +4,7 @@ import {
   DataSourceEvent,
   DataSourceEventNames
 } from '../datasource'
-import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks'
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks'
 import React, { CSSProperties, FocusEventHandler, useCallback, useEffect, useRef, useState } from 'react'
 
 export interface ArchbaseRatingProps<T, ID> {
@@ -96,13 +96,14 @@ export function ArchbaseRating<T, ID>({
     setCurrentValue(initialValue)
   }
 
-  const fieldChangedListener = useCallback(() => {}, [])
+  const fieldChangedListener = useCallback(() => {
+    loadDataSourceFieldValue()
+  }, [])
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
       if (
         event.type === DataSourceEventNames.dataChanged ||
-        event.type === DataSourceEventNames.fieldChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel
@@ -120,6 +121,13 @@ export function ArchbaseRating<T, ID>({
     if (dataSource && dataField) {
       dataSource.addListener(dataSourceEvent)
       dataSource.addFieldChangeListener(dataField, fieldChangedListener)
+    }
+  })
+
+  useArchbaseWillUnmount(() => {
+    if (dataSource && dataField) {
+      dataSource.removeListener(dataSourceEvent)
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
     }
   })
 

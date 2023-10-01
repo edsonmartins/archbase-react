@@ -128,13 +128,14 @@ export function ArchbaseChipGroup<T, ID, O>({
     setSelectedValue(initialValue)
   }
 
-  const fieldChangedListener = useCallback(() => {}, [])
+  const fieldChangedListener = useCallback(() => {
+    loadDataSourceFieldValue()
+  }, [])
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
       switch (event.type) {
         case (DataSourceEventNames.dataChanged,
-        DataSourceEventNames.fieldChanged,
         DataSourceEventNames.recordChanged,
         DataSourceEventNames.afterScroll,
         DataSourceEventNames.afterCancel): {
