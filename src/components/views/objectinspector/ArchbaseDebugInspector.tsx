@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArchbaseFloatingWindow } from '@components/containers';
 import { Accordion, Flex } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
-import useComponentSize from '@rehooks/component-size';
+import { useArchbaseSize } from '@hooks/useArchbaseSize';
 import { ArchbaseObjectInspector } from './ArchbaseObjectInspector';
 
 export interface ArchbaseDebugInspectorProps {
@@ -20,6 +20,7 @@ export interface ArchbaseDebugInspectorProps {
   height?: number;
   /** Largura inicial do Object Inspector */
   width?: number;
+  onDebugInspectorChange?: () => void;
 }
 
 export interface ArchbaseObjectToInspect {
@@ -34,14 +35,35 @@ export function ArchbaseDebugInspector({
   icon,
   debugObjectInspectorHotKey,
   objectsToInspect,
-  visible = false,
+  visible: controlledOpen,
   height = 400,
   width = 500,
+  onDebugInspectorChange,
 }: ArchbaseDebugInspectorProps) {
-  const [open, setOpen] = useState<boolean>(visible);
-  useHotkeys([[debugObjectInspectorHotKey, () => setOpen(!open)]]);
+  const [open, setOpen] = useState<boolean>(false);
+  useHotkeys([
+    [
+      debugObjectInspectorHotKey,
+      () => {
+        if (controlledOpen === undefined) {
+          setOpen(!open);
+        }
+
+        if (onDebugInspectorChange) {
+          onDebugInspectorChange();
+        }
+      },
+    ],
+  ]);
+
   const innerComponentRef = useRef<any>();
-  let contentSize = useComponentSize(innerComponentRef);
+  let [contentWidth, contentHeight] = useArchbaseSize(innerComponentRef);
+
+  useEffect(() => {
+    if (controlledOpen !== undefined) {
+      setOpen(controlledOpen);
+    }
+  }, [controlledOpen]);
 
   return (
     open && (
@@ -58,7 +80,7 @@ export function ArchbaseDebugInspector({
         }}
         innerRef={innerComponentRef}
       >
-        <Flex w={contentSize.width} h={contentSize.height}>
+        <Flex w={contentWidth} h={contentHeight}>
           <Accordion w={'100%'}>
             {objectsToInspect.map((item, index) => (
               <Accordion.Item key={index} value={item.name}>

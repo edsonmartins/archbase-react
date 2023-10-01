@@ -71,6 +71,7 @@ export interface ArchbaseMasonryTemplateProps<T, ID> {
   innerRef?: React.RefObject<HTMLInputElement> | undefined;
   isLoading?: boolean;
   debug?: boolean;
+  debugInspector?: boolean;
   isError?: boolean;
   error?: string | undefined;
   clearError?: () => void;
@@ -111,6 +112,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
   innerRef,
   //isLoading = false,
   debug = false,
+  debugInspector = false,
   onlyGlobalFilter = true,
   isError = false,
   error = '',
@@ -374,7 +376,8 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
       error={error}
       clearError={clearError}
       title={title}
-      defaultDebug={debug}
+      debug={debug}
+      debugInspector={debugInspector}
       debugOptions={debugOptions}
       style={style}
       options={_spaceTemplateOptions}

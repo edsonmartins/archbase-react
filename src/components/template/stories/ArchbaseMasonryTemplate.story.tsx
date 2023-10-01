@@ -29,11 +29,13 @@ import {
   Button,
   Card,
   Center,
+  Flex,
   Grid,
   Group,
   Paper,
   Progress,
   RingProgress,
+  Space,
   Text,
   createStyles,
 } from '@mantine/core';
@@ -51,6 +53,7 @@ const filters: LocalFilter[] = [];
 const ArchbaseMasonryTemplateExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
   const [debug, setDebug] = useState<boolean>(true);
+  const [debugInspector, setDebugInspector] = useState<boolean>(true);
   const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   /**
    * Criando dataSource remoto
@@ -236,11 +239,19 @@ const ArchbaseMasonryTemplateExample = () => {
 
   return (
     <div style={{ width: '100%', height: 'calc(100vh - 30px)' }}>
-      <ArchbaseCheckbox
-        label="Debug"
-        isChecked={debug}
-        onChangeValue={(value: any, _event: any) => setDebug(value === true)}
-      ></ArchbaseCheckbox>
+      <Flex>
+        <ArchbaseCheckbox
+          label="Debug"
+          isChecked={debug}
+          onChangeValue={(value: any, _event: any) => setDebug(value === true)}
+        ></ArchbaseCheckbox>
+        <Space w="md" />
+        <ArchbaseCheckbox
+          label="Debug Inspector"
+          isChecked={debugInspector}
+          onChangeValue={(value: any, _event: any) => setDebugInspector(value === true)}
+        ></ArchbaseCheckbox>
+      </Flex>
       <ArchbaseMasonryTemplate
         title={'Pessoas'}
         dataSource={dsPessoas}
@@ -249,10 +260,13 @@ const ArchbaseMasonryTemplateExample = () => {
         error={error}
         isError={isError}
         debug={debug}
+        debugInspector={debugInspector}
         debugOptions={{
           debugLayoutHotKey: 'ctrl+shift+S',
           debugObjectInspectorHotKey: 'ctrl+shift+D',
           objectsToInspect: [{ name: 'Pessoa', object: dsPessoas }],
+          onDebugChange: () => setDebug(!debug),
+          onDebugInspectorChange: () => setDebugInspector(!debugInspector),
         }}
         clearError={clearError}
         width={'100%'}

@@ -4,4 +4,6 @@ export interface ArchbaseDebugOptions {
   debugLayoutHotKey?: string;
   debugObjectInspectorHotKey?: string;
   objectsToInspect?: ArchbaseObjectToInspect[];
+  onDebugChange?: () => void;
+  onDebugInspectorChange?: () => void;
 }

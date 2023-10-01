@@ -78,6 +78,7 @@ export interface ArchbasePanelTemplateProps<T, ID> {
   children?: React.ReactNode;
   radius?: MantineNumberSize;
   debug?: boolean;
+  debugInspector?: boolean;
   actionsButtonsOptions?: ArchbaseActionButtonsOptions;
   spaceOptions?: ArchbaseSpaceTemplateOptions;
   style?: CSSProperties;
@@ -105,6 +106,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
   radius,
   userActions,
   debug = false,
+  debugInspector = false,
   variant,
   actionsButtonsOptions,
   spaceOptions,
@@ -217,7 +219,8 @@ export function ArchbasePanelTemplate<T extends object, ID>({
       error={error}
       clearError={clearError}
       title={title}
-      defaultDebug={debug}
+      debug={debug}
+      debugInspector={debugInspector}
       debugOptions={debugOptions}
       style={style}
       options={_spaceTemplateOptions}

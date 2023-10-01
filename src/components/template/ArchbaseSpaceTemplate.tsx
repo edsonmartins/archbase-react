@@ -95,7 +95,7 @@ export interface ArchbaseSpaceTemplateProps<T, ID> {
   children?: React.ReactNode;
   radius?: MantineNumberSize;
   debug?: boolean;
-  defaultDebug?: boolean;
+  debugInspector?: boolean;
   isError?: boolean;
   error?: string | undefined;
   clearError?: () => void;
@@ -316,8 +316,8 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
   withBorder = true,
   children,
   radius,
-  debug,
-  defaultDebug,
+  debug: controlledDebug,
+  debugInspector,
   headerLeft,
   headerMiddle,
   headerRight,
@@ -329,12 +329,21 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
   style,
   debugOptions,
 }: ArchbaseSpaceTemplateProps<T, ID>) {
-  const [_debug, setDebug] = useUncontrolled({
-    value: debug,
-    defaultValue: defaultDebug,
-    finalValue: false,
-  });
-  useHotkeys([[debugOptions && debugOptions.debugLayoutHotKey, () => setDebug(!_debug)]]);
+  const [debug, setDebug] = useState(false);
+  useHotkeys([
+    [
+      debugOptions && debugOptions.debugLayoutHotKey,
+      () => {
+        if (controlledDebug === undefined) {
+          setDebug(!debug);
+        }
+
+        if (debugOptions && debugOptions.onDebugChange) {
+          debugOptions.onDebugChange();
+        }
+      },
+    ],
+  ]);
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>();
   const headerRef = useRef<any>();
@@ -347,14 +356,11 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
     width: innerComponentSize.width - headerSize.width - footerSize.width,
   };
 
-  const debugRef = useRef<boolean>(defaultDebug);
-
   useEffect(() => {
-    if (defaultDebug !== debugRef.current) {
-      setDebug(defaultDebug);
-      debugRef.current = defaultDebug;
+    if (controlledDebug !== undefined) {
+      setDebug(controlledDebug);
     }
-  }, [defaultDebug, setDebug]);
+  }, [controlledDebug]);
 
   return (
     <>
@@ -366,12 +372,12 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
       >
         <ArchbaseSpaceFixed height={'100%'}>
           <ArchbaseSpaceTop size={headerSize.height}>
-            <div ref={headerRef}>{buildHeader(options, headerLeft, headerRight, _debug)}</div>
+            <div ref={headerRef}>{buildHeader(options, headerLeft, headerRight, debug)}</div>
           </ArchbaseSpaceTop>
           <ArchbaseSpaceFill>
             <ScrollArea
               h={contentSize.height}
-              sx={{ border: _debug ? '1px dashed' : '', padding: 'calc(0.625rem / 2)' }}
+              sx={{ border: debug ? '1px dashed' : '', padding: 'calc(0.625rem / 2)' }}
             >
               {children ? (
                 <Fragment>
@@ -392,7 +398,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
                   {children}
                 </Fragment>
               ) : (
-                _debug && (
+                debug && (
                   <Flex h={contentSize.height + 80} justify="center" align="center" wrap="wrap">
                     <Text size="lg">INSIRA O CONTEÚDO DO PAINEL AQUI.</Text>
                   </Flex>
@@ -401,13 +407,15 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
             </ScrollArea>
           </ArchbaseSpaceFill>
           <ArchbaseSpaceBottom size={footerSize.height}>
-            <div ref={footerRef}>{buildFooter(options, footerLeft, footerRight, _debug)}</div>
+            <div ref={footerRef}>{buildFooter(options, footerLeft, footerRight, debug)}</div>
           </ArchbaseSpaceBottom>
         </ArchbaseSpaceFixed>
       </Paper>
       <ArchbaseDebugInspector
+        visible={debugInspector}
         debugObjectInspectorHotKey={debugOptions && debugOptions.debugObjectInspectorHotKey}
         objectsToInspect={debugOptions && debugOptions.objectsToInspect}
+        onDebugInspectorChange={debugOptions && debugOptions.onDebugInspectorChange}
       />
     </>
   );

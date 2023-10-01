@@ -25,11 +25,13 @@ import {
   QueryFields,
 } from '@components/querybuilder';
 import { ArchbasePanelTemplate } from '../ArchbasePanelTemplate';
+import { Flex, Space } from '@mantine/core';
 const filters: LocalFilter[] = [];
 
 const ArchbasePanelTemplateExample = () => {
   const forceUpdate = useArchbaseForceUpdate();
   const [debug, setDebug] = useState<boolean>(true);
+  const [debugInspector, setDebugInspector] = useState<boolean>(true);
   const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
   /**
    * Criando dataSource remoto
@@ -215,11 +217,19 @@ const ArchbasePanelTemplateExample = () => {
 
   return (
     <div style={{ width: '100%', height: 'calc(100vh - 50px)' }}>
-      <ArchbaseCheckbox
-        label="Debug"
-        isChecked={debug}
-        onChangeValue={(value: any, _event: any) => setDebug(value === true)}
-      ></ArchbaseCheckbox>
+      <Flex>
+        <ArchbaseCheckbox
+          label="Debug"
+          isChecked={debug}
+          onChangeValue={(value: any, _event: any) => setDebug(value === true)}
+        ></ArchbaseCheckbox>
+        <Space w="md" />
+        <ArchbaseCheckbox
+          label="Debug Inspector"
+          isChecked={debugInspector}
+          onChangeValue={(value: any, _event: any) => setDebugInspector(value === true)}
+        ></ArchbaseCheckbox>
+      </Flex>
       <ArchbasePanelTemplate
         title={'Pessoas'}
         dataSource={dsPessoas}
@@ -232,10 +242,13 @@ const ArchbasePanelTemplateExample = () => {
         width={'100%'}
         height={'100%'}
         debug={debug}
+        debugInspector={debugInspector}
         debugOptions={{
           debugLayoutHotKey: 'ctrl+shift+S',
           debugObjectInspectorHotKey: 'ctrl+shift+D',
           objectsToInspect: [{ name: 'Pessoa', object: dsPessoas }],
+          onDebugChange: () => setDebug(!debug),
+          onDebugInspectorChange: () => setDebugInspector(!debugInspector),
         }}
         filterOptions={{
           activeFilterIndex: 0,
