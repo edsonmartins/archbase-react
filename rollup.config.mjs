@@ -23,14 +23,14 @@ export default [
         sourcemap: false,
         exports: 'named',
         name: packageJson.name,
-        inlineDynamicImports: true
+        inlineDynamicImports: true,
       },
       {
         file: packageJson.module,
         format: 'es',
         exports: 'named',
         sourcemap: false,
-        inlineDynamicImports: true
+        inlineDynamicImports: true,
       },
     ],
     plugins: [
@@ -45,7 +45,6 @@ export default [
       typescript({
         tsconfig: './tsconfig.json',
         typescript: typescriptEngine,
-        declarationDir: 'dist',
         sourceMap: false,
         exclude: [
           'coverage',
