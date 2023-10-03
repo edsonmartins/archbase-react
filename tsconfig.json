@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
-    "sourceMap": true,
-    "declaration": true,
-    "declarationDir": "./dist",
-    "emitDeclarationOnly": true,
-    "declarationMap": true,
-    "target": "es5",
+    "target": "es2016",
     "module": "esnext",
+    "jsx": "react",
+    "sourceMap": true,
+    "outDir": "dist",
+    "strict": true,
     "moduleResolution": "node",
+    "esModuleInterop": true,
+    "declaration": true,
+    "declarationDir": "types",
+    "noEmit": false,
     "baseUrl": "./src",
-    "outDir": "dist/esm",
-    "lib": ["es5", "es2015", "es2016", "dom", "esnext"],
-    "types": ["node", "reflect-metadata","jest"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "paths": {
       "*": [
         "*",
@@ -25,10 +26,7 @@
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "noImplicitThis": true,
-    "jsx": "react",
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "strict": true,
     "strictNullChecks": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
@@ -39,13 +37,14 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "types": ["@testing-library/jest-dom","node", "reflect-metadata","jest"],
   },
   "exclude": [
-         "coverage",
-         "config",
-         "dist",
-         "node_modules/**"
+    "coverage",
+    "config",
+    "dist",
+    "node_modules/**"
   ],
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js"]
 }

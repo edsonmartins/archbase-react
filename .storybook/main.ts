@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import path from 'path'
+import "reflect-metadata";
 
 const config: StorybookConfig = {
   stories: [
@@ -69,8 +70,8 @@ const config: StorybookConfig = {
   docs: {
     autodocs: true,
   },
-  core: { builder: "@storybook/builder-vite",
-    disableTelemetry: true,
+  core: {
+    disableTelemetry: true
   },  
   refs: {
     'mantine': {
@@ -80,5 +81,7 @@ const config: StorybookConfig = {
     },
   },
 };
+
+
 
 export default config;

@@ -11,3 +11,5 @@ OK - Adicionar footer no admin layout para versão
 - Terminar componente Image e Image Editor
 OK - Corrigir evento fieldChange dos Editores
 - Adicionar opção para grupo de actions
+- Adicionar debounce nos editores para que as alterações sejam comitadas após parar de digitar gerando menos eventos;
+- Checar versão para atualização

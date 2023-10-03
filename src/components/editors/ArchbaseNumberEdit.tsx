@@ -264,18 +264,20 @@ export function ArchbaseNumberEdit<T, ID>({
   }, [])
 
   const loadDataSourceFieldValue = () =>{
-    const value = dataSource.getFieldValue(dataField)
-    const result = formatNumber(
-      value,
-      precision,
-      decimalSeparator,
-      thousandSeparator,
-      allowNegative,
-      prefix,
-      suffix
-    )
-    setMaskedValue(result.maskedValue)
-    setCurrentValue(0)
+    if (dataSource && dataField){
+      const value = dataSource.getFieldValue(dataField)
+      const result = formatNumber(
+        value,
+        precision,
+        decimalSeparator,
+        thousandSeparator,
+        allowNegative,
+        prefix,
+        suffix
+      )
+      setMaskedValue(result.maskedValue)
+      setCurrentValue(0)
+    }
   }
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {

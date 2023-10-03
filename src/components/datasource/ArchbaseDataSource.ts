@@ -256,6 +256,7 @@ export interface IDataSource<T> {
   clearFilters: () => this
   locate(values: any): boolean
   locateByFilter(filterFn: (record: T) => boolean): boolean
+  validate: () => boolean
 }
 
 export type DataSourceValidationError = {
@@ -379,9 +380,9 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
   public readonly uuid: string
 
-  public lastDataChangedAt: Date = new Date();
+  public lastDataChangedAt: number = new Date().getTime();
   
-  public lastDataBrowsingOn: Date = new Date();
+  public lastDataBrowsingOn: number = new Date().getTime();
 
   protected filter: string | undefined
 
@@ -477,8 +478,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
     this.emitter.emit('afterScroll')
     this.emit({ type: DataSourceEventNames.afterScroll })
-    this.lastDataBrowsingOn = new Date()
-    this.lastDataChangedAt = new Date()
+    this.lastDataBrowsingOn = new Date().getTime()
+    this.lastDataChangedAt = new Date().getTime()
   }
 
   public open(options: DataSourceOptions<T>): void {
@@ -499,8 +500,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
     this.emitter.emit('afterScroll')
     this.emit({ type: DataSourceEventNames.afterScroll })
-    this.lastDataBrowsingOn = new Date()
-    this.lastDataChangedAt = new Date()
+    this.lastDataBrowsingOn = new Date().getTime()
+    this.lastDataChangedAt = new Date().getTime()
   }
 
   public close(): void {
@@ -516,8 +517,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
     this.emitter.emit('afterScroll')
     this.emit({ type: DataSourceEventNames.afterScroll })
-    this.lastDataBrowsingOn = new Date()
-    this.lastDataChangedAt = new Date()
+    this.lastDataBrowsingOn = new Date().getTime()
+    this.lastDataChangedAt = new Date().getTime()
   }
 
   public setData(options: DataSourceOptions<T>): void {
@@ -527,7 +528,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
     this.emitter.emit('dataChanged', this.records)
     this.emit({ type: DataSourceEventNames.dataChanged, data: this.records })
-    this.lastDataChangedAt = new Date()
+    this.lastDataChangedAt = new Date().getTime()
   }
 
   public goToPage(_pageNumber: number): this {
@@ -549,7 +550,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.currentRecordIndex = recordIndex
       this.emitter.emit('afterScroll')
       this.emit({ type: DataSourceEventNames.afterScroll })
-      this.lastDataBrowsingOn = new Date()
+      this.lastDataBrowsingOn = new Date().getTime()
     }
 
     return undefined
@@ -638,8 +639,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.emitter.emit('afterScroll')
     this.emit({ type: DataSourceEventNames.afterScroll })
 
-    this.lastDataBrowsingOn = new Date()
-    this.lastDataChangedAt = new Date()
+    this.lastDataBrowsingOn = new Date().getTime()
+    this.lastDataChangedAt = new Date().getTime()
 
     return this.currentRecordIndex
   }
@@ -660,9 +661,9 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.oldRecordIndex = this.currentRecordIndex
 
     this.grandTotalRecords++
-    const nextRecord = this.getTotalRecords()
+    const nextRecordIndex = this.getTotalRecords()
     this.filteredRecords.push(record)
-    this.currentRecordIndex = nextRecord
+    this.currentRecordIndex = nextRecordIndex
     this.currentRecord = record
     this.inserting = true
 
@@ -675,8 +676,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
     this.emitter.emit('afterScroll')
     this.emit({ type: DataSourceEventNames.afterScroll })
-    this.lastDataBrowsingOn = new Date()
-    this.lastDataChangedAt = new Date()
+    this.lastDataBrowsingOn = new Date().getTime()
+    this.lastDataChangedAt = new Date().getTime()
 
     return this
   }
@@ -769,7 +770,9 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     if (index >= 0) {
       this.records.splice(index, 1)
     }
-    this.filteredRecords.splice(this.getCurrentIndex(), 1)
+    if (this.records !== this.filteredRecords) {
+      this.filteredRecords.splice(this.getCurrentIndex(), 1)
+    }
     this.grandTotalRecords--
     if (this.filteredRecords.length === 0) {
       this.currentRecord = undefined
@@ -792,8 +795,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       index: deletedIndex
     })
 
-    this.lastDataBrowsingOn = new Date()
-    this.lastDataChangedAt = new Date()
+    this.lastDataBrowsingOn = new Date().getTime()
+    this.lastDataChangedAt = new Date().getTime()
 
     if (callback) {
       callback()
@@ -847,6 +850,22 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     })
   }
 
+  public validate(): boolean {
+    if (this.validator && this.currentRecord) {
+      const errors = this.validator.validateEntity<T>(this.currentRecord);
+      if (errors && errors.length>0){
+        this.publishEventErrors(errors);
+        if (!errors[0].fieldName) {
+          throw new ArchbaseDataSourceError(errors[0].errorMessage)
+        } else {
+          const msg = i18next.t('archbase:errorSavingRecord', { dataSourceName: this.label })
+          throw new ArchbaseDataSourceError(msg)
+        }
+      }
+    }
+    return true
+  }
+
   public async save(callback?: Function): Promise<T> {
     this.validateDataSourceActive('save')
     if (!this.inserting && !this.editing) {
@@ -898,7 +917,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.editing = false
     this.inserting = false
 
-    this.lastDataChangedAt = new Date()
+    this.lastDataChangedAt = new Date().getTime()
 
     this.emitter.emit('afterSave', this.currentRecord, this.getCurrentIndex())
     this.emit({
@@ -938,7 +957,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.grandTotalRecords--
       this.emitter.emit('afterScroll')
       this.emit({ type: DataSourceEventNames.afterScroll })
-      this.lastDataBrowsingOn = new Date()
+      this.lastDataBrowsingOn = new Date().getTime()
     } else {
       this.currentRecord = this.filteredRecords[this.currentRecordIndex]
     }
@@ -951,7 +970,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       record: this.currentRecord,
       index: this.getCurrentIndex()
     })
-    this.lastDataChangedAt = new Date()
+    this.lastDataChangedAt = new Date().getTime()
 
     return this
   }
@@ -1040,6 +1059,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     } else {
       this.currentRecord[fieldName] = newValue
     }
+    this.lastDataChangedAt = new Date().getTime()
     this.emitFieldChangeEvent(fieldName, oldValue, newValue)
     this.emitter.emit('fieldChanged', this.currentRecord, this.getCurrentIndex(),fieldName, oldValue, newValue)
     this.emit({
@@ -1049,8 +1069,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       fieldName,
       oldValue,
       newValue
-    })
-    this.lastDataChangedAt = new Date()
+    })   
 
     return this
   }
@@ -1088,8 +1107,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.emitter.emit('refreshData', currentOptions)
       this.emit({ type: DataSourceEventNames.refreshData, options: currentOptions })
     }
-    this.lastDataBrowsingOn = new Date()
-    this.lastDataChangedAt = new Date()
+    this.lastDataBrowsingOn = new Date().getTime()
+    this.lastDataChangedAt = new Date().getTime()
   }
 
   public browseRecords(): T[] {
@@ -1141,7 +1160,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.currentRecord = this.filteredRecords[this.currentRecordIndex]
       this.emitter.emit('afterScroll')
       this.emit({ type: DataSourceEventNames.afterScroll })
-      this.lastDataBrowsingOn = new Date()
+      this.lastDataBrowsingOn = new Date().getTime()
     }
 
     return this
@@ -1164,7 +1183,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.currentRecord = this.filteredRecords[this.currentRecordIndex]
       this.emitter.emit('afterScroll')
       this.emit({ type: DataSourceEventNames.afterScroll })
-      this.lastDataBrowsingOn = new Date()
+      this.lastDataBrowsingOn = new Date().getTime()
     }
 
     return this
@@ -1187,7 +1206,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.currentRecord = this.filteredRecords[this.currentRecordIndex]
       this.emitter.emit('afterScroll')
       this.emit({ type: DataSourceEventNames.afterScroll })
-      this.lastDataBrowsingOn = new Date()
+      this.lastDataBrowsingOn = new Date().getTime()
     }
 
     return this
@@ -1210,7 +1229,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       this.currentRecord = this.filteredRecords[this.currentRecordIndex]
       this.emitter.emit('afterScroll')
       this.emit({ type: DataSourceEventNames.afterScroll })
-      this.lastDataBrowsingOn = new Date()
+      this.lastDataBrowsingOn = new Date().getTime()
     }
 
     return this
@@ -1237,7 +1256,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.currentRecord = this.filteredRecords[this.currentRecordIndex]
     this.emitter.emit('afterScroll')
     this.emit({ type: DataSourceEventNames.afterScroll })
-    this.lastDataBrowsingOn = new Date()   
+    this.lastDataBrowsingOn = new Date().getTime()   
 
     return this.currentRecord
   }
@@ -1258,7 +1277,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     if (this.currentRecord === record) {
       this.emitter.emit('afterScroll')
       this.emit({ type: DataSourceEventNames.afterScroll })
-      this.lastDataBrowsingOn = new Date()
+      this.lastDataBrowsingOn = new Date().getTime()
       return true
     }
 
@@ -1269,7 +1288,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
         this.currentRecord = r
         this.emitter.emit('afterScroll')
         this.emit({ type: DataSourceEventNames.afterScroll })
-        this.lastDataBrowsingOn = new Date()
+        this.lastDataBrowsingOn = new Date().getTime()
         found = true
       }
     })

@@ -1,10 +1,11 @@
+import "reflect-metadata";
 import { useDarkMode } from 'storybook-dark-mode';
 import { ColorScheme, useMantineTheme } from '@mantine/core';
 import { ArchbaseDark } from './archbase-dark.theme';
 import { ArchbaseLight } from './archbase-ligth.theme';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import React, { useEffect } from 'react';
-import '../locales/config';
+import '../src/components/locales/config';
 import { demoContainerIOC } from '../src/demo/index';
 import { ArchbaseAppProvider, ArchbaseGlobalProvider } from '../src/components/core';
 import '../src/styles/advancedtabs.scss';
@@ -27,6 +28,9 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
     setColorScheme(colorSchem);
     const body = window.document.body;
     body.style.backgroundColor = colorSchem==='dark'?'black':'white';
+
+    const storybookLinks = window.document.querySelectorAll('a[title="Storybook"]');
+    console.log(storybookLinks)
   }, [colorSchem]);
 
   const toggleColorScheme = (value?: ColorScheme) =>

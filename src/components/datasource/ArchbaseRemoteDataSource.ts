@@ -87,7 +87,7 @@ export class ArchbaseRemoteDataSource<T, ID>
       this.editing = false
       this.inserting = false
 
-      this.lastDataChangedAt = new Date()
+      this.lastDataChangedAt = new Date().getTime()
 
       this.emitter.emit('afterSave', this.currentRecord)
       this.emit({
@@ -200,8 +200,8 @@ export class ArchbaseRemoteDataSource<T, ID>
         index: deletedIndex
       })
 
-      this.lastDataBrowsingOn = new Date()
-      this.lastDataChangedAt = new Date()
+      this.lastDataBrowsingOn = new Date().getTime()
+      this.lastDataChangedAt = new Date().getTime()
 
       if (callback) {
         callback()
