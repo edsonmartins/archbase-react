@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArchbaseFloatingWindow } from '@components/containers';
 import { Accordion, Flex } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
@@ -14,12 +14,15 @@ export interface ArchbaseDebugInspectorProps {
   debugObjectInspectorHotKey?: string;
   /** Lista de objetos a serem inspecionados */
   objectsToInspect?: ArchbaseObjectToInspect[];
-  /** Indica se o Object Inspector será visível inicialmente ou não */
+  /** Variável para controle de visibilidade do Object Inspector externamente */
   visible?: boolean;
+  /** Indica se o Object Inspector será visível inicialmente ou não */
+  defaultVisible?: boolean;
   /** Altura inicial do Object Inspector */
   height?: number;
   /** Largura inicial do Object Inspector */
   width?: number;
+  /** Evento ocorre quando a visibilidade do Debug Inspector é alterada */
   onDebugInspectorChange?: () => void;
 }
 
@@ -34,13 +37,15 @@ export function ArchbaseDebugInspector({
   title,
   icon,
   debugObjectInspectorHotKey,
-  objectsToInspect,
+  objectsToInspect: controlledObjectsToInspect,
   visible: controlledOpen,
   height = 400,
   width = 500,
   onDebugInspectorChange,
+  defaultVisible = false,
 }: ArchbaseDebugInspectorProps) {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(defaultVisible);
+  const [objectsToInspect, setobjectsToInspect] = useState([]);
   useHotkeys([
     [
       debugObjectInspectorHotKey,
@@ -56,14 +61,17 @@ export function ArchbaseDebugInspector({
     ],
   ]);
 
-  const innerComponentRef = useRef<any>();
-  let [contentWidth, contentHeight] = useArchbaseSize(innerComponentRef);
-
   useEffect(() => {
     if (controlledOpen !== undefined) {
       setOpen(controlledOpen);
     }
   }, [controlledOpen]);
+
+  useEffect(() => {
+    if (controlledObjectsToInspect !== undefined) {
+      setobjectsToInspect(controlledObjectsToInspect);
+    }
+  }, [controlledObjectsToInspect]);
 
   return (
     open && (
@@ -78,20 +86,19 @@ export function ArchbaseDebugInspector({
           title: title,
           buttons: { minimize: true, maximize: true },
         }}
-        innerRef={innerComponentRef}
       >
-        <Flex w={contentWidth} h={contentHeight}>
-          <Accordion w={'100%'}>
-            {objectsToInspect.map((item, index) => (
-              <Accordion.Item key={index} value={item.name}>
-                <Accordion.Control>{item.name}</Accordion.Control>
-                <Accordion.Panel>
-                  <ArchbaseObjectInspector data={item.object} />
-                </Accordion.Panel>
-              </Accordion.Item>
-            ))}
-          </Accordion>
-        </Flex>
+        <Accordion w={'100%'}>
+          {objectsToInspect.length > 0
+            ? objectsToInspect.map((item, index) => (
+                <Accordion.Item key={index} value={item.name}>
+                  <Accordion.Control>{item.name}</Accordion.Control>
+                  <Accordion.Panel>
+                    <ArchbaseObjectInspector data={item.object} />
+                  </Accordion.Panel>
+                </Accordion.Item>
+              ))
+            : undefined}
+        </Accordion>
       </ArchbaseFloatingWindow>
     )
   );

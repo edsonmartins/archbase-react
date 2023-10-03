@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './ArchbaseFloatingWindow.css';
+import { useArchbaseSize } from '@components/hooks';
 
 export interface ArchbaseFloatingWindowProps {
   id: string;
@@ -19,8 +20,15 @@ export interface ArchbaseFloatingWindowProps {
     };
   };
   style?: React.CSSProperties;
-  /** Referência para o container que envolve o componente filho */
-  innerRef?: React.RefObject<HTMLInputElement> | undefined;
+}
+
+type ArchbaseResizeState = 'normal' | 'minimized' | 'maximized';
+
+interface ArchbaseWindowPosition {
+  top?: number;
+  left?: number;
+  width?: number;
+  height?: number;
 }
 
 const nextZIndex: () => number = () => {
@@ -84,11 +92,15 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
   const [windowTransition, setWindowTransition] = React.useState('');
   const [level, setLevel] = React.useState<number>(nextZIndex());
   const [visibility, setWindowVisibility] = React.useState<number>(1.0);
+  const [resize, setResize] = React.useState<ArchbaseResizeState>('normal');
+
+  const ARCHBASE_WINDOW_POSITION = `archbase-window-position-${props.id}`;
 
   const container = React.useRef<HTMLDivElement>(null);
   const windowTitle = React.useRef<HTMLSpanElement>(null);
   const effectiveHeight = useRef(height);
   const effectiveWidth = useRef(width);
+  const [containerWidth, containerHeight] = useArchbaseSize(container);
 
   const animationDuration = 500;
 
@@ -108,27 +120,54 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
     setLeft((e.clientX || e.screenX) - xOffset);
     setTop((e.clientY || e.screenY) - yOffset);
     setWindowVisibility(1.0);
+    if (props.id) {
+      const currentPosition: ArchbaseWindowPosition = {
+        top: (e.clientY || e.screenY) - yOffset,
+        left: (e.clientX || e.screenX) - xOffset,
+        width: effectiveWidth.current,
+        height: effectiveHeight.current,
+      };
+      try {
+        localStorage.setItem(ARCHBASE_WINDOW_POSITION, JSON.stringify(currentPosition));
+      } catch (ex) {}
+    }
   };
 
   const minimize = () => {
     setWindowTransition(`${animationDuration}ms ease-in-out`);
     const parent = document.getElementById(properties.id)?.parentElement;
+    const positionStr: string = localStorage.getItem(ARCHBASE_WINDOW_POSITION);
+    let heightTemp = height;
+    let widthTemp = width;
+    let topTemp = parent?.offsetTop;
+    let leftTemp = parent?.offsetLeft;
+    if (positionStr) {
+      try {
+        const position: ArchbaseWindowPosition = JSON.parse(positionStr);
+        heightTemp = position.height;
+        widthTemp = position.width;
+        topTemp = position.top;
+        leftTemp = position.left;
+      } catch (ex) {}
+    }
     if (minimized) {
+      setResize('normal');
       setContentDisplay(true);
       effectiveHeight.current = height;
-      setTop(parent?.offsetTop || 0);
-      setLeft(parent?.offsetLeft || 0);
+      setTop(topTemp || 0);
+      setLeft(leftTemp || 0);
       setMinimized(false);
       setMinimizeIcon('▁');
       setMaximized(false);
     } else {
+      setResize('minimized');
       setContentDisplay(false);
       effectiveHeight.current = 32;
-      const parent = document.getElementById(properties.id)?.parentElement;
-      effectiveWidth.current = width;
-      let topPosition = (parent?.clientHeight || window.innerHeight) - effectiveHeight.current - 4;
+      const element = document.getElementById(properties.id)?.parentElement;
+      effectiveWidth.current = widthTemp;
+      let topPosition = (element.parentElement?.clientHeight || window.innerHeight) - effectiveHeight.current - 4;
 
-      let leftPosition = (parent?.clientWidth || window.innerWidth) - effectiveWidth.current - 4;
+      let leftPosition = element.parentElement?.clientWidth - effectiveWidth.current - 4;
 
       const minimizedWindow = document.elementFromPoint(
         leftPosition + effectiveWidth.current / 2,
@@ -137,7 +176,6 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
       if (minimizedWindow && ['archbase-window-container', 'windowTitle'].includes(minimizedWindow?.className || '')) {
         topPosition -= minimizedWindow?.clientHeight + 4;
       }
-
       setTop(topPosition);
       setLeft(leftPosition);
       setMinimized(true);
@@ -148,20 +186,48 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
     setTimeout(setWindowTransition, animationDuration + 1, '');
   };
 
+  useEffect(() => {
+    if (resize === 'normal') {
+      const currentPosition: ArchbaseWindowPosition = {
+        top: (e.clientY || e.screenY) - yOffset,
+        left: (e.clientX || e.screenX) - xOffset,
+        width: effectiveWidth.current,
+        height: effectiveHeight.current,
+      };
+      localStorage.setItem(ARCHBASE_WINDOW_POSITION, currentPosition);
+    }
+  }, [resize, ARCHBASE_WINDOW_POSITION]);
+
   const maximize = () => {
     setWindowTransition(`${animationDuration}ms ease-in-out`);
     const parent = document.getElementById(properties.id)?.parentElement;
     if (maximized) {
+      const positionStr: string = localStorage.getItem(ARCHBASE_WINDOW_POSITION);
+      let heightTemp = height;
+      let widthTemp = width;
+      let topTemp = parent?.offsetTop;
+      let leftTemp = parent?.offsetLeft;
+      if (positionStr) {
+        try {
+          const position: ArchbaseWindowPosition = JSON.parse(positionStr);
+          heightTemp = position.height;
+          widthTemp = position.width;
+          topTemp = position.top;
+          leftTemp = position.left;
+        } catch (ex) {}
+      }
+      setResize('normal');
       setContentDisplay(true);
-      effectiveHeight.current = height;
-      effectiveWidth.current = width;
-      setTop(parent?.offsetTop || 0);
-      setLeft(parent?.offsetLeft || 0);
+      effectiveHeight.current = heightTemp;
+      effectiveWidth.current = widthTemp;
+      setTop(topTemp || 0);
+      setLeft(leftTemp || 0);
       setMaximized(false);
       setMaximizeIcon('□');
       setMinimized(false);
       setMinimizeIcon('▁');
     } else {
+      setResize('maximized');
       setContentDisplay(true);
       effectiveHeight.current = parent?.clientHeight || window.innerHeight;
       effectiveWidth.current = parent?.clientWidth || window.innerWidth;
@@ -239,9 +305,8 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
       <div
         className="content"
         draggable="false"
-        ref={props.innerRef}
         style={{
-          height: contentDisplay ? 'auto' : 0,
+          height: contentDisplay ? '100%' : 0,
           opacity: visibility,
           ...properties.style,
         }}
