@@ -513,11 +513,12 @@ const getQuickFields = (fields: Field[]) => {
           searchField: undefined
         })
       }
-    }, this)
+    })
   }
 
   return result
 }
+
 
 const getQuickFieldsSort = (fields: Field[]): SortField[] => {
   let result: SortField[] = []
@@ -532,7 +533,7 @@ const getQuickFieldsSort = (fields: Field[]): SortField[] => {
           asc_desc: 'asc'
         })
       }
-    }, this)
+    })
   }
 
   return result
@@ -615,7 +616,7 @@ const getQuickFilterFields = (currentFilter: ArchbaseQueryFilter | null, fields:
           result += item.name
         }
         appendDelimiter = true
-      }, this)
+      })
     } else {
       currentFilter.filter.selectedFields.forEach((item: any) => {
         if (appendDelimiter) {
@@ -623,7 +624,7 @@ const getQuickFilterFields = (currentFilter: ArchbaseQueryFilter | null, fields:
         }
         result += item.name
         appendDelimiter = true
-      }, this)
+      })
     }
   }
 

@@ -286,6 +286,7 @@ function ArchbaseAdminMainLayoutContainer({
             }}
             key={index}
             id={item.label}
+            disabled={item.disabled}
             onClick={() => onMenuItemClick(item)}
             icon={item.icon}
           >

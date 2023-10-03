@@ -9,13 +9,12 @@ import {
 import { Meta, StoryObj } from '@storybook/react';
 import { Pessoa, pessoasData } from '@demo/index';
 import { t } from 'i18next';
-import { LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
+import { LocalFilter, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { FakePessoaService } from '@demo/service/FakePessoaService';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
 import { ArchbaseNotifications } from '@components/notification';
 import { ArchbaseCheckbox, MaskPattern } from '@components/editors';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import {
   ArchbaseQueryFilterDelegator,
   OP_CONTAINS,

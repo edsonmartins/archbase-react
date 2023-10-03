@@ -34,12 +34,12 @@ export default [
       },
     ],
     plugins: [
+      external({ includeDependencies: true }),
       postcss({
         plugins: [],
         minimize: true,
         extract: true,
       }),
-      external({ includeDependencies: true }),
       resolve({ preferBuiltins: false, mainFields: ['browser'] }),
       commonjs(),
       typescript({

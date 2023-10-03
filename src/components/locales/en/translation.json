@@ -24,6 +24,7 @@
   "insertRecordIsNotAllowed": "Record is already being inserted or edited. Data source: {{dataSourceName}} cannot insert a new.",
   "editRecordIsNotAllowed": "Record is already being inserted or edited. Data source: {{dataSourceName}} cannot edit record.",
   "removingRecordIsNotAllowed": "Record is being inserted or edited. Data source: {{dataSourceName}} cannot remove record.",
+  "updateRecordIsNotAllowed": "Record is not being entered or edited. Data source: {{dataSourceName}} cannot update the record.",
   "noBrowsingRecordsAllowed": "Record is being inserted or edited. Data source: {{dataSourceName}} cannot navigate records.",
   "notAllowCancelRecord":"Record is not being entered or edited. Data source:  {{dataSourceName}} editing is not possible.",
   "noRecordsToEdit": "There are no records to edit. Data source: {{dataSourceName}}",
@@ -93,5 +94,7 @@
   "Informe um nome para o fitro...":"Enter a name for the filter...",
   "Deseja salvar o Filtro ?":"Do you want to save the Filter ?",
   "Sentimos muito, ocorreu um erro inesperado.":"We're sorry, an unexpected error occurred.",
-  "Voltar":"Back"
+  "Voltar":"Back",
+  "Localizar...":"Find...",
+  "Comandos ⌘M":"Commands ⌘M"
 }

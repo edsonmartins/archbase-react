@@ -22,13 +22,13 @@ import {
   QueryFields,
   getDefaultEmptyFilter,
 } from '../ArchbaseFilterCommons';
-import { LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
+import { LocalFilter, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { FakePessoaService } from '@demo/service/FakePessoaService';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
 import { ArchbaseNotifications } from '@components/notification';
 import { MaskPattern } from '@components/editors';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+
 
 const filters: LocalFilter[] = [];
 

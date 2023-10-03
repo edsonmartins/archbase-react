@@ -1,13 +1,16 @@
-import { addons } from '@storybook/addons';
-import ArchbaseStoryBookTheme from "./archbase-storybook-theme";
+import { addons } from '@storybook/manager-api';
+import { create } from '@storybook/theming/create';
+import {archbaseLogo} from '../src/components/core'
 
 addons.setConfig({
   // Config
   panelPosition: 'bottom',
   // Base theme
-  theme: ArchbaseStoryBookTheme
+  theme: create({
+    base: 'light',
+    brandTitle: 'Archbase React Storybook',
+    brandUrl: '/',
+    brandImage: archbaseLogo,
+})
 });
 
-
-const storybookLinks = window.document.querySelectorAll('a[title="Storybook"]');
-console.log(storybookLinks)

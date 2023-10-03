@@ -24,6 +24,7 @@
   "insertRecordIsNotAllowed": "Registro já está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível inserir um novo.",
   "editRecordIsNotAllowed": "Registro já está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível editar o registro.",
   "removingRecordIsNotAllowed": "Registro está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível remover o registro.",
+  "updateRecordIsNotAllowed": "Registro não está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível atualizar o registro.",
   "noBrowsingRecordsAllowed": "Registro está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível navegar nos registros.",
   "notAllowCancelRecord":"Registro não está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível cancelar a edição.",
   "noRecordsToEdit": "Não há registros para edição. Fonte de dados: {{dataSourceName}}",
@@ -93,6 +94,8 @@
   "Salvar como...":"Salvar como...",
   "Informe um nome para o fitro...":"Informe um nome para o fitro...",
   "Deseja salvar o Filtro ?":"Deseja salvar o Filtro ?",
-  "Sentimos muito, ocorreu um erro inesperado.":"We're sorry, an unexpected error occurred.",
-  "Voltar":"Back"
+  "Sentimos muito, ocorreu um erro inesperado.":"Sentimos muito, ocorreu um erro inesperado.",
+  "Voltar":"Voltar",
+  "Localizar...":"Localizar...",
+  "Comandos ⌘M":"Comandos ⌘M"
 }

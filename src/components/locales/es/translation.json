@@ -24,6 +24,7 @@
   "insertRecordIsNotAllowed": "El registro ya se está insertando o editando. Fuente de datos: {{dataSourceName}} no puede insertar uno nuevo.",
   "editRecordIsNotAllowed": "El registro ya se está insertando o editando. Fuente de datos: {{dataSourceName}} no puede editar el registro.",
   "removingRecordIsNotAllowed": "El registro se está insertando o editando. Fuente de datos: {{dataSourceName}} no puede eliminar el registro.",
+  "updateRecordIsNotAllowed": "El registro no se está ingresando o editando. Fuente de datos: {{dataSourceName}} no puedo editar el registro.",
   "noBrowsingRecordsAllowed": "Record is being inserted or edited. Fuente de datos: {{dataSourceName}} no puede navegar por los registros.",
   "operationNotAllowed": "Operación no permitida cuando la fuente de datos está cerrada. Fuente de datos: {{dataSourceName}}, operación {{operation}}",
   "operationNotAllowedOnOpened": "Operación no permitida cuando la fuente de datos está abierta. Fuente de datos: {{dataSourceName}}, operación {{operation}}",
@@ -94,5 +95,7 @@
   "Informe um nome para o fitro...":"Ingrese un nombre para el filtro...",
   "Deseja salvar o Filtro ?":"Quieres guardar el filtro ?",
   "Sentimos muito, ocorreu um erro inesperado.":"Lo sentimos, ocurrió un error inesperado.",
-  "Voltar":"Atras"
+  "Voltar":"Atras",
+  "Localizar...":"Buscar...",
+  "Comandos ⌘M":"Comandos ⌘M"
 }

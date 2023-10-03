@@ -73,17 +73,18 @@ const ArchbaseEditExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Edit',
-  component: ArchbaseEditExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseEditExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseEditExample />
-    }
-  }
-}
+
+const meta: Meta<typeof ArchbaseEdit> = {
+  title: 'Editors/Edit',
+  component: ArchbaseEdit,
+};
+
+export default meta;
+type Story = StoryObj<typeof ArchbaseEdit>;
+
+
+export const Primary: Story = {
+  render: () => <ArchbaseEditExample />,
+};
