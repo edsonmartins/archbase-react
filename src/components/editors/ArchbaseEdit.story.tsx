@@ -86,5 +86,6 @@ type Story = StoryObj<typeof ArchbaseEdit>;
 
 
 export const Primary: Story = {
+  name: 'Exemplo simples',
   render: () => <ArchbaseEditExample />,
 };
