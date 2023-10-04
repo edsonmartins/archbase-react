@@ -113,6 +113,10 @@ module.exports = {
           'error',
           { ignoreVoid: true },
         ],
+        'prettier/prettier': [
+          'error', 
+          { 'endOfLine': 'auto' },
+        ],
       },
     },
     {
