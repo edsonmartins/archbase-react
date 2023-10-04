@@ -626,9 +626,16 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.records.push(record)
     this.filteredRecords = this.applyFilters()
     this.grandTotalRecords++
-    if (!this.gotoRecordByData(record)) {
-      this.currentRecordIndex = -1
-    }
+    let found = false
+    this.filteredRecords.forEach((r, index) => {
+      if (record === r) {
+        this.currentRecordIndex = index
+        this.emitter.emit('afterScroll')
+        this.emit({ type: DataSourceEventNames.afterScroll })
+        this.lastDataBrowsingOn = new Date().getTime()
+        found = true
+      }
+    })
 
     this.emitter.emit('afterAppend', record, this.currentRecordIndex)
     this.emit({

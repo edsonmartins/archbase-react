@@ -1338,7 +1338,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Tooltip withinPortal withArrow position="left" label={t('Edit')}>
+      {onEditRow?<Tooltip withinPortal withArrow position="left" label={t('Edit')}>
         <ActionIcon
           variant={variant === 'filled' ? 'white' : variant}
           color="green"
@@ -1346,8 +1346,8 @@ export function ArchbaseTableRowActions<T extends Object>({
         >
           <IconEdit color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
         </ActionIcon>
-      </Tooltip>
-      <Tooltip withinPortal withArrow position="right" label={t('Remove')}>
+      </Tooltip>:null}
+      {onRemoveRow?<Tooltip withinPortal withArrow position="right" label={t('Remove')}>
         <ActionIcon
           variant={variant === 'filled' ? 'white' : variant}
           color="red"
@@ -1355,8 +1355,8 @@ export function ArchbaseTableRowActions<T extends Object>({
         >
           <IconTrash color={theme.colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
         </ActionIcon>
-      </Tooltip>
-      <Tooltip withinPortal withArrow position="right" label={t('View')}>
+      </Tooltip>:null}
+      {onViewRow?<Tooltip withinPortal withArrow position="right" label={t('View')}>
         <ActionIcon
           variant={variant === 'filled' ? 'white' : variant}
           color="black"
@@ -1364,7 +1364,7 @@ export function ArchbaseTableRowActions<T extends Object>({
         >
           <IconEye color={theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]} />
         </ActionIcon>
-      </Tooltip>
+      </Tooltip>:null}
     </Box>
   );
 }
