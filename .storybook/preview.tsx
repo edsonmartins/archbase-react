@@ -4,16 +4,22 @@ import { ColorScheme, useMantineTheme } from '@mantine/core';
 import { ArchbaseDark } from './archbase-dark.theme';
 import { ArchbaseLight } from './archbase-ligth.theme';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
+import { addons } from '@storybook/preview-api';
+import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import React, { useEffect } from 'react';
 import '../src/components/locales/config';
 import { demoContainerIOC } from '../src/demo/index';
 import { ArchbaseAppProvider, ArchbaseGlobalProvider } from '../src/components/core';
+import translation_en from '../src/demo/locales/en/translation.json';
+import translation_ptbr from '../src/demo/locales/pt-BR/translation.json';
+import translation_es from '../src/demo/locales/es/translation.json';
 import '../src/styles/advancedtabs.scss';
 import '../src/styles/querybuilder.scss';
 import '../src/styles/template.scss';
 import '../src/styles/treeviews.scss';
 import '../src/styles/errorboundary.scss';
 
+const channel = addons.getChannel();
 
 function ThemeWrapper(props: { children: React.ReactNode }) {
   const colorSchem = useDarkMode() ? 'dark' : 'light';
@@ -24,13 +30,18 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
     getInitialValueInEffect: true,
   });  
 
+  const handleColorScheme = (value: boolean) => setColorScheme(value ? 'dark' : 'light');
+
+
+  useEffect(() => {
+    channel.on(DARK_MODE_EVENT_NAME, handleColorScheme);
+    return () => channel.off(DARK_MODE_EVENT_NAME, handleColorScheme);
+  }, [channel]);
+
   useEffect(() => {
     setColorScheme(colorSchem);
     const body = window.document.body;
     body.style.backgroundColor = colorSchem==='dark'?'black':'white';
-
-    const storybookLinks = window.document.querySelectorAll('a[title="Storybook"]');
-    console.log(storybookLinks)
   }, [colorSchem]);
 
   const toggleColorScheme = (value?: ColorScheme) =>
@@ -45,6 +56,8 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
       themeDark={ArchbaseDark}
       themeLight={ArchbaseLight}
       toggleColorScheme={toggleColorScheme}
+      translationName="demo"
+      translationResource={{ en: translation_en, 'pt-BR': translation_ptbr, es: translation_es }}
     >
       <ArchbaseAppProvider user={null} owner={null} selectedCompany={undefined}>
         {props.children}

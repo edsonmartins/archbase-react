@@ -97,5 +97,19 @@
   "Sentimos muito, ocorreu um erro inesperado.":"Lo sentimos, ocurrió un error inesperado.",
   "Voltar":"Atras",
   "Localizar...":"Buscar...",
-  "Comandos ⌘M":"Comandos ⌘M"
+  "Comandos ⌘M":"Comandos ⌘M",
+  "Remover":"Remove",
+  "Filter":"Filtro",
+  "Remover filtro":"Quitar filtro",
+  "Novo filtro":"Nuevo filtro",
+  "Filtros salvos":"Filtros guardados",
+  "Fechar filtro":"Cerrar filtro",
+  "Aplicar":"Aplicar",
+  "Selecione o tipo do filtro":"Seleccione el tipo de filtro",
+  "Simples":"Sencillo",
+  "Avançado":"Avanzado",
+  "Salvar filtro":"Guardar filtro",
+  "Aplicar filtro":"Aplicar filtro",
+  "Invalid Date":"Fecha invalida",
+  "Invalid Datetime":"Fecha y hora no válida"
 }

@@ -7,7 +7,6 @@ import dayjs from 'dayjs'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 import { DatesProvider } from '@mantine/dates'
-import { ModalsProvider } from '@mantine/modals'
 import { Notifications } from '@mantine/notifications'
 import {
   ColorScheme,

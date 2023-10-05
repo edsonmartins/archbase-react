@@ -772,7 +772,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 
       return <span>{format(parsedDateValue, appContext.dateFormat)}</span>;
     } catch (error) {
-      return <span>Invalid Date</span>;
+      return <span>{`${t('archbase:Invalid Date')}`}</span>;
     }
   };
 
@@ -785,7 +785,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 
       return <span>{format(parsedDateValue, appContext.dateTimeFormat)}</span>;
     } catch (error) {
-      return <span>Invalid Datetime</span>;
+      return <span>{`${t('archbase:Invalid Datetime')}`}</span>;
     }
   };
 
