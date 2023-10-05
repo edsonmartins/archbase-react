@@ -1,11 +1,12 @@
 import React from 'react'
 import { Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { pedidosData, Pedido, Pessoa, pessoasData } from '../../demo/index'
 import { ArchbaseEdit } from './ArchbaseEdit'
 import { ArchbaseLookupSelect } from './ArchbaseLookupSelect'
@@ -16,11 +17,11 @@ const ArchbaseLookupSelectExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource: dsPessoas } = useArchbaseDataSource<Pessoa, string>({
     initialData: pessoasData,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   const { dataSource } = useArchbaseDataSource<Pedido, string>({
     initialData: pedidosList,
-    name: 'dsPedidos'
+    name: 'dsPedidos',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -35,7 +36,7 @@ const ArchbaseLookupSelectExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -54,20 +55,14 @@ const ArchbaseLookupSelectExample = () => {
                 dataSource={dataSource}
                 dataField="cliente"
                 lookupDataSource={dsPessoas}
-                lookupDataFieldText={'nome'}
-                lookupDataFieldId={'id'}
+                lookupDataFieldText="nome"
+                lookupDataFieldId="id"
                 required={true}
                 width={150}
                 getOptionLabel={(option: Pessoa) => option.nome}
                 getOptionValue={(option: Pessoa) => option}
               />
-              <ArchbaseEdit
-                label="Nome"
-                dataSource={dataSource}
-                dataField="cliente.nome"
-                disabled
-                width={500}
-              />
+              <ArchbaseEdit label="Nome" dataSource={dataSource} dataField="cliente.nome" disabled width={500} />
             </Flex>
           </Box>
         </Card>
@@ -100,15 +95,15 @@ const ArchbaseLookupSelectExample = () => {
   )
 }
 
-export default {
+const meta: Meta<typeof ArchbaseLookupSelect> = {
   title: 'Editors/Lookup Select',
-  component: ArchbaseLookupSelectExample
-} as Meta
+  component: ArchbaseLookupSelect,
+}
 
-export const Example: StoryObj<typeof ArchbaseLookupSelectExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseLookupSelectExample />
-    }
-  }
+export default meta
+type Story = StoryObj<typeof ArchbaseLookupSelect>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseLookupSelectExample />,
 }

@@ -1,23 +1,23 @@
-import { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
-import { pessoasData } from '@demo/index';
-import { ArchbaseObjectInspector } from './ArchbaseObjectInspector';
+import { Meta, StoryObj } from '@storybook/react'
+import React from 'react'
+import { pessoasData } from '@demo/index'
+
+import { ArchbaseObjectInspector } from './ArchbaseObjectInspector'
+const pessoaData = [pessoasData[0]]
 
 const ArchbaseObjectInspectorExample = () => {
-  return <ArchbaseObjectInspector data={pessoaData} />;
-};
+  return <ArchbaseObjectInspector data={pessoaData} />
+}
 
-export default {
+const meta: Meta<typeof ArchbaseObjectInspector> = {
   title: 'Views/Object Inspector',
-  component: ArchbaseObjectInspectorExample,
-} as Meta;
+  component: ArchbaseObjectInspector,
+}
 
-const pessoaData = [pessoasData[0]];
+export default meta
+type Story = StoryObj<typeof ArchbaseObjectInspector>
 
-export const Example: StoryObj<typeof ArchbaseObjectInspectorExample> = {
-  args: {
-    render: () => {
-      <ArchbaseObjectInspectorExample />;
-    },
-  },
-};
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseObjectInspectorExample />,
+}

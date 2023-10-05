@@ -1,12 +1,13 @@
 import React, { useRef } from 'react'
 import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { Pessoa, pessoasData } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { ArchbaseNumberEdit } from './ArchbaseNumberEdit'
 
 const ArchbaseNumberEditExample = () => {
@@ -14,7 +15,7 @@ const ArchbaseNumberEditExample = () => {
   const inputRef = useRef<HTMLInputElement>(null)
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -29,7 +30,7 @@ const ArchbaseNumberEditExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -79,17 +80,17 @@ const ArchbaseNumberEditExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Number Edit',
-  component: ArchbaseNumberEditExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseNumberEditExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseNumberEditExample />
-    }
-  }
+const meta: Meta<typeof ArchbaseNumberEdit> = {
+  title: 'Editors/Number Edit',
+  component: ArchbaseNumberEdit,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseNumberEdit>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseNumberEditExample />,
 }

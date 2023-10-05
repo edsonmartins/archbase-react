@@ -1,19 +1,20 @@
 import React from 'react'
 import { Card, Grid, Group, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { Pessoa, pessoasData } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { ArchbasePasswordEdit } from './ArchbasePasswordEdit'
 
 const ArchbasePasswordEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -28,7 +29,7 @@ const ArchbasePasswordEditExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -67,17 +68,17 @@ const ArchbasePasswordEditExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Password Edit',
-  component: ArchbasePasswordEditExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbasePasswordEditExample> = {
-  args: {
-    render: () => {
-      ;<ArchbasePasswordEditExample />
-    }
-  }
+const meta: Meta<typeof ArchbasePasswordEdit> = {
+  title: 'Editors/Password Edit',
+  component: ArchbasePasswordEdit,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbasePasswordEdit>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbasePasswordEditExample />,
 }

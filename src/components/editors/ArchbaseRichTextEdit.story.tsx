@@ -1,19 +1,20 @@
 import React from 'react'
 import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { Pessoa, pessoasData } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { ArchbaseRichTextEdit } from './ArchbaseRichTextEdit'
 
 const ArchbaseRichTextEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -28,7 +29,7 @@ const ArchbaseRichTextEditExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -40,12 +41,7 @@ const ArchbaseRichTextEditExample = () => {
               <Text weight={500}>RichTextEdit Component</Text>
             </Group>
           </Card.Section>
-          <ArchbaseRichTextEdit
-            label="Observação"
-            height="300px"
-            dataSource={dataSource}
-            dataField="observacao"
-          />
+          <ArchbaseRichTextEdit label="Observação" height="300px" dataSource={dataSource} dataField="observacao" />
         </Card>
       </Grid.Col>
       <Grid.Col span={6}>
@@ -76,17 +72,17 @@ const ArchbaseRichTextEditExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/RichText Edit',
-  component: ArchbaseRichTextEditExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseRichTextEditExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseRichTextEditExample />
-    }
-  }
+const meta: Meta<typeof ArchbaseRichTextEdit> = {
+  title: 'Editors/RichText Edit',
+  component: ArchbaseRichTextEdit,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseRichTextEdit>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseRichTextEditExample />,
 }

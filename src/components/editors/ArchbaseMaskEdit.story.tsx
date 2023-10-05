@@ -1,11 +1,12 @@
 import React from 'react'
 import { Card, Grid, Group, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { ArchbaseMaskEdit, MaskPattern } from './ArchbaseMaskEdit'
 import { Pessoa, pessoasData } from '../../demo/index'
 
@@ -13,7 +14,7 @@ const ArchbaseEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -28,7 +29,7 @@ const ArchbaseEditExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -40,12 +41,7 @@ const ArchbaseEditExample = () => {
               <Text weight={500}>Mask Edit Component</Text>
             </Group>
           </Card.Section>
-          <ArchbaseMaskEdit
-            label="CPF"
-            dataSource={dataSource}
-            dataField="cpf"
-            mask={MaskPattern.CPF}
-          />
+          <ArchbaseMaskEdit label="CPF" dataSource={dataSource} dataField="cpf" mask={MaskPattern.CPF} />
         </Card>
       </Grid.Col>
       <Grid.Col span={4}>
@@ -72,17 +68,17 @@ const ArchbaseEditExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Mask Edit',
-  component: ArchbaseEditExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseEditExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseEditExample />
-    }
-  }
+const meta: Meta<typeof ArchbaseMaskEdit> = {
+  title: 'Editors/Mask Edit',
+  component: ArchbaseMaskEdit,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseMaskEdit>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseEditExample />,
 }

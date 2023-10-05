@@ -1,12 +1,13 @@
 import React from 'react'
 import { Card, Grid, Group, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { pedidosData, Pedido } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { ArchbaseRadioGroup } from './ArchbaseRadioGroup'
 import { PedidoStatus } from '../../demo/data/types'
 
@@ -15,7 +16,7 @@ const pedido: Pedido[] = [pedidosData[0]]
 const enumToOptionsArray = (enumObject, reverse = false) => {
   const bothDirectionsArray = Object.keys(enumObject).map((key) => ({
     label: enumObject[key],
-    value: key
+    value: key,
   }))
   if (reverse) {
     return bothDirectionsArray.slice(bothDirectionsArray.length / 2)
@@ -30,7 +31,7 @@ const ArchbaseRadioGroupExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pedido, string>({
     initialData: pedido,
-    name: 'dsPedidos'
+    name: 'dsPedidos',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -45,7 +46,7 @@ const ArchbaseRadioGroupExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -90,15 +91,15 @@ const ArchbaseRadioGroupExample = () => {
   )
 }
 
-export default {
+const meta: Meta<typeof ArchbaseRadioGroup> = {
   title: 'Editors/RadioGroup',
-  component: ArchbaseRadioGroupExample
-} as Meta
+  component: ArchbaseRadioGroup,
+}
 
-export const Example: StoryObj<typeof ArchbaseRadioGroupExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseRadioGroupExample />
-    }
-  }
+export default meta
+type Story = StoryObj<typeof ArchbaseRadioGroup>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseRadioGroupExample />,
 }
