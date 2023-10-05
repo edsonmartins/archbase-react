@@ -1,14 +1,15 @@
-import { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
-import { pessoasData, pedidosData, produtosData } from '@demo/index';
-import { ArchbaseDebugInspector } from './ArchbaseDebugInspector';
+import { Meta, StoryObj } from '@storybook/react'
+import React from 'react'
+import { pessoasData, pedidosData, produtosData } from '@demo/index'
+
+import { ArchbaseDebugInspector } from './ArchbaseDebugInspector'
 
 const ArchbaseDebugInspectorExample = () => {
   return (
     <ArchbaseDebugInspector
       debugObjectInspectorHotKey="ctrl+shift+D"
       title="Object Inspector"
-      icon={'⚛'}
+      icon="⚛"
       visible={true}
       objectsToInspect={[
         { name: 'Pessoa', object: pessoaData },
@@ -16,22 +17,22 @@ const ArchbaseDebugInspectorExample = () => {
         { name: 'Produto', object: produtoData },
       ]}
     />
-  );
-};
+  )
+}
 
-export default {
+const pessoaData = [pessoasData[0]]
+const pedidoData = [pedidosData[0]]
+const produtoData = [produtosData[0]]
+
+const meta: Meta<typeof ArchbaseDebugInspector> = {
   title: 'Views/Debug Inspector',
-  component: ArchbaseDebugInspectorExample,
-} as Meta;
+  component: ArchbaseDebugInspector,
+}
 
-const pessoaData = [pessoasData[0]];
-const pedidoData = [pedidosData[0]];
-const produtoData = [produtosData[0]];
+export default meta
+type Story = StoryObj<typeof ArchbaseDebugInspector>
 
-export const Example: StoryObj<typeof ArchbaseDebugInspectorExample> = {
-  args: {
-    render: () => {
-      <ArchbaseDebugInspectorExample />;
-    },
-  },
-};
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseDebugInspectorExample />,
+}

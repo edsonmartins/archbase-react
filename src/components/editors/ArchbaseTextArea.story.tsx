@@ -1,19 +1,20 @@
 import React from 'react'
 import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { ArchbaseTextArea } from './ArchbaseTextArea'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { Pessoa, pessoasData } from '../../demo/index'
 
 const ArchbaseEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -28,7 +29,7 @@ const ArchbaseEditExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -78,17 +79,17 @@ const ArchbaseEditExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Textarea',
-  component: ArchbaseEditExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseEditExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseEditExample />
-    }
-  }
+const meta: Meta<typeof ArchbaseTextArea> = {
+  title: 'Editors/Textarea',
+  component: ArchbaseTextArea,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseTextArea>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseEditExample />,
 }

@@ -1,21 +1,22 @@
 import React, { useState } from 'react'
 import { Box, Card, Grid, Group, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+import { DateValue } from '@mantine/dates'
+import { formatISO } from 'date-fns'
+
 import { Pessoa, pessoasData } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
-import { Meta, StoryObj } from '@storybook/react'
 import { useArchbaseForceUpdate } from '../hooks'
 import { ArchbaseDatePickerRange } from './ArchbaseDatePickerRange'
-import { DateValue } from '@mantine/dates'
-import { formatISO } from 'date-fns'
 
 const ArchbaseDatePickerRangeExample = () => {
   const [selectedRange, setSelectedRange] = useState<DateValue[]>()
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -30,8 +31,9 @@ const ArchbaseDatePickerRangeExample = () => {
         }
         default:
       }
-    }
+    },
   })
+
   return (
     <Grid>
       <Grid.Col span={12}>
@@ -42,13 +44,9 @@ const ArchbaseDatePickerRangeExample = () => {
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({ height: 500 })}>
-            <ArchbaseDatePickerRange
-              onSelectDateRange={setSelectedRange}
-              label="Informe o período"
-            />
-            <Text size={'1rem'}>
-              {selectedRange &&
-                formatISO(selectedRange![0]!) + ' -> ' + formatISO(selectedRange![1]!)}
+            <ArchbaseDatePickerRange onSelectDateRange={setSelectedRange} label="Informe o período" />
+            <Text size="1rem">
+              {selectedRange && formatISO(selectedRange[0]!) + ' -> ' + formatISO(selectedRange[1]!)}
             </Text>
           </Box>
         </Card>
@@ -57,17 +55,17 @@ const ArchbaseDatePickerRangeExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/DatePicker Range',
-  component: ArchbaseDatePickerRangeExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseDatePickerRangeExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseDatePickerRangeExample />
-    }
-  }
+const meta: Meta<typeof ArchbaseDatePickerRange> = {
+  title: 'Editors/DatePicker Range',
+  component: ArchbaseDatePickerRange,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseDatePickerRange>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseDatePickerRangeExample />,
 }

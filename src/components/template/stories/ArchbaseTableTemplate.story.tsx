@@ -1,5 +1,5 @@
-import React, { ReactNode, useMemo } from 'react';
-import { Grid } from '@mantine/core';
+import React, { ReactNode, useMemo } from 'react'
+import { Grid } from '@mantine/core'
 import {
   useArchbaseDataSource,
   useArchbaseDataSourceListener,
@@ -7,28 +7,28 @@ import {
   useArchbaseLocalFilterDataSource,
   useArchbaseRemoteDataSource,
   useArchbaseStore,
-} from '@hooks/index';
-import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '@demo/index';
-import { t } from 'i18next';
-import { LocalFilter, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
-import { FakePessoaService } from '@demo/service/FakePessoaService';
-import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
-import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
-import { ArchbaseNotifications } from '@components/notification';
-import { ArchbaseQueryFilterDelegator } from '@components/querybuilder';
-import { ArchbaseTableTemplate } from '../ArchbaseTableTemplate';
+} from '@hooks/index'
+import { Meta, StoryObj } from '@storybook/react'
+import { Pessoa, pessoasData } from '@demo/index'
+import { t } from 'i18next'
+import { LocalFilter, DataSourceEvent, DataSourceEventNames } from '@components/datasource'
+import { FakePessoaService } from '@demo/service/FakePessoaService'
+import { API_TYPE } from '@demo/ioc/DemoIOCTypes'
+import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi'
+import { ArchbaseNotifications } from '@components/notification'
+import { ArchbaseQueryFilterDelegator } from '@components/querybuilder'
 import {
   ArchbaseDataTableColumn,
   ArchbaseItemRender,
   ArchbaseItemRenderType,
   ArchbaseTableRowActions,
   Columns,
-} from '@components/datatable';
-import { PessoaStatus } from '../../../demo/data/types';
+} from '@components/datatable'
 
+import { ArchbaseTableTemplate } from '../ArchbaseTableTemplate'
+import { PessoaStatus } from '../../../demo/data/types'
 
-const filters: LocalFilter[] = [];
+const filters: LocalFilter[] = []
 
 const StatusValues: ArchbaseItemRenderType[] = [
   {
@@ -46,12 +46,12 @@ const StatusValues: ArchbaseItemRenderType[] = [
     label: 'Pendente',
     color: 'orange',
   },
-];
+]
 
 export const ArchbaseTableTemplateExample = () => {
-  const forceUpdate = useArchbaseForceUpdate();
-  const pessoaStore = useArchbaseStore('pessoaStore');
-  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
+  const forceUpdate = useArchbaseForceUpdate()
+  const pessoaStore = useArchbaseStore('pessoaStore')
+  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa)
   /**
    * Criando dataSource remoto
    * @param dataSource Fonte de dados
@@ -69,45 +69,45 @@ export const ArchbaseTableTemplateExample = () => {
     loadOnStart: true,
     store: pessoaStore,
     onLoadComplete: (dataSource) => {
-      
+      console.log(dataSource)
     },
     onDestroy: (_dataSource) => {
       //
     },
     onError: (error, origin) => {
-      ArchbaseNotifications.showError(t('WARNING'), error, origin);
+      ArchbaseNotifications.showError(t('WARNING'), error, origin)
     },
-  });
+  })
 
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource: dsPessoas,
     listener: (_event: DataSourceEvent<Pessoa>): void => {
       //
     },
-  });
+  })
 
   // const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
   //   currentFilter: getDefaultEmptyFilter(),
   //   activeFilterIndex: -1,
   //   expandedFilter: false,
   // });
-  const { dataSource: dsFilters } = useArchbaseLocalFilterDataSource({ initialData: filters, name: 'dsFilters' });
-  const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
+  const { dataSource: dsFilters } = useArchbaseLocalFilterDataSource({ initialData: filters, name: 'dsFilters' })
+  const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit();
+    dataSource.edit()
   }
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
-          forceUpdate();
-          break;
+          forceUpdate()
+          break
         }
         default:
       }
     },
-  });
+  })
 
   // const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
   //   setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
@@ -237,8 +237,8 @@ export const ArchbaseTableTemplateExample = () => {
   const columns: ReactNode = useMemo(() => {
     return (
       <Columns>
-        <ArchbaseDataTableColumn<Pessoa> dataField="id" dataType="uuid" header={'Id'} enableClickToCopy={true} />
-        <ArchbaseDataTableColumn<Pessoa> dataField="nome" dataType="text" header={'Nome da pessoa'} />
+        <ArchbaseDataTableColumn<Pessoa> dataField="id" dataType="uuid" header="Id" enableClickToCopy={true} />
+        <ArchbaseDataTableColumn<Pessoa> dataField="nome" dataType="text" header="Nome da pessoa" />
         <ArchbaseDataTableColumn<Pessoa>
           dataField="data_nasc"
           dataType="date"
@@ -251,20 +251,20 @@ export const ArchbaseTableTemplateExample = () => {
           dataType="enum"
           inputFilterType="select"
           enumValues={StatusValues}
-          header={'Status'}
+          header="Status"
           render={(data): ReactNode => {
-            return <ArchbaseItemRender currentValue={`${data.getValue()}`} values={StatusValues} />;
+            return <ArchbaseItemRender currentValue={`${data.getValue()}`} values={StatusValues} />
           }}
         />
       </Columns>
-    );
-  }, []);
+    )
+  }, [])
 
   return (
     <Grid>
       <Grid.Col span={12}>
         <ArchbaseTableTemplate
-          title={'Pessoas'}
+          title="Pessoas"
           dataSource={dsPessoas}
           pageSize={10}
           isLoading={isLoading}
@@ -282,25 +282,25 @@ export const ArchbaseTableTemplateExample = () => {
           userRowActions={{
             actions: ArchbaseTableRowActions<Pessoa>,
           }}
-          filterType={'advanced'}
+          filterType="advanced"
           filterPersistenceDelegator={dsFilters as ArchbaseQueryFilterDelegator}
         />
       </Grid.Col>
     </Grid>
-  );
-};
+  )
+}
 
-export default {
+const data = [pessoasData[0]]
+
+const meta: Meta<typeof ArchbaseTableTemplate> = {
   title: 'Templates/Table template',
-  component: ArchbaseTableTemplateExample,
-} as Meta;
+  component: ArchbaseTableTemplate,
+}
 
-const data = [pessoasData[0]];
+export default meta
+type Story = StoryObj<typeof ArchbaseTableTemplate>
 
-export const Example: StoryObj<typeof ArchbaseTableTemplateExample> = {
-  args: {
-    render: () => {
-      <ArchbaseTableTemplateExample />;
-    },
-  },
-};
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseTableTemplateExample />,
+}
