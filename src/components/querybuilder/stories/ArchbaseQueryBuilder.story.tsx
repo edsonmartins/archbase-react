@@ -253,17 +253,18 @@ const ArchbaseQueryBuilderExample = () => {
   );
 };
 
-export default {
-  title: 'Editores/Query Builder',
-  component: ArchbaseQueryBuilderExample,
-} as Meta;
-
 const data = [pessoasData[0]];
 
-export const Example: StoryObj<typeof ArchbaseQueryBuilderExample> = {
-  args: {
-    render: () => {
-      <ArchbaseQueryBuilderExample />;
-    },
-  },
-};
+const meta: Meta<typeof ArchbaseQueryBuilder> = {
+  title: 'Filtros/Query builder',
+  component: ArchbaseQueryBuilder,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseQueryBuilder>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseQueryBuilderExample />,
+}
+

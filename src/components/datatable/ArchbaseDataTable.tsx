@@ -84,6 +84,8 @@ const convertHexToRGBA = (hexCode, opacity = 1) => {
   return `rgba(${r},${g},${b},${newOpacity})`;
 };
 
+export type Positions<T> = T | (string & {});
+
 export interface ArchbaseDataTableProps<T extends object, ID> {
   enableColumnResizing?: boolean;
   enableColumnOrdering?: boolean;
@@ -119,7 +121,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
   height?: number | string | undefined;
   width?: number | string | undefined;
   pageSize: number;
-  pageIndex: 0;
+  pageIndex: number;
   printTitle: string;
   logoPrint?: string;
   csvOptions?: Options;
@@ -1101,7 +1103,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
       sx: { borderBottom: 'unset', marginTop: '8px' },
       variant: 'filled',
     },
-    positionActionsColumn: props.positionActionsColumn,
+    positionActionsColumn: props.positionActionsColumn||'first',
     renderRowActions: props.renderRowActions,
     renderRowActionMenuItems: props.renderRowActionMenuItems,
     renderToolbarInternalActions: props.renderToolbarInternalActions
@@ -1224,7 +1226,6 @@ ArchbaseDataTable.defaultProps = {
   enableRowSelection: true,
   enableRowActions: true,
   variant: 'filled',
-  positionActionsColumn: 'first',
   enableColumnFilterModes: true,
   enableGlobalFilter: true,
   enableGrouping: false,

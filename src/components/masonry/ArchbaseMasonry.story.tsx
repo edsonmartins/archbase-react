@@ -54,7 +54,7 @@ const ArchbaseMasonryExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseMasonry> = {
-  title: 'Masonry/Masonry',
+  title: 'Listas e tabelas/Masonry',
   component: ArchbaseMasonry,
 }
 

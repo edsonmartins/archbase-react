@@ -3,7 +3,7 @@ import lodash from 'lodash'
 import { ArchbaseTreeNode } from './ArchbaseTreeView.types'
 import { ArchbaseTreeViewItem } from './ArchbaseTreeViewItem'
 import { rem } from '@mantine/styles'
-import { useArchbaseTheme } from 'components/hooks'
+import { useArchbaseTheme } from '../../hooks'
 
 
 export interface ArchbaseTreeViewProps {
