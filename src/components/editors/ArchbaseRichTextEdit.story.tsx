@@ -75,7 +75,7 @@ const ArchbaseRichTextEditExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseRichTextEdit> = {
-  title: 'Editors/RichText Edit',
+  title: 'Editores/RichText Edit',
   component: ArchbaseRichTextEdit,
 }
 

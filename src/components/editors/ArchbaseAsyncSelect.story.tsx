@@ -93,7 +93,7 @@ const ArchbaseAsyncSelectExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseAsyncSelect> = {
-  title: 'Editors/AsyncSelect',
+  title: 'Editores/AsyncSelect',
   component: ArchbaseAsyncSelect,
 };
 

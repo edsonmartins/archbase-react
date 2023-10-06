@@ -77,7 +77,7 @@ const ArchbaseThemeEditorExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseThemeEditor> = {
-  title: 'Editors/ThemeEditor',
+  title: 'Editores/ThemeEditor',
   component: ArchbaseThemeEditor,
 }
 

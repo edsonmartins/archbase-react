@@ -122,7 +122,7 @@ const ArchbaseLookupNumberExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseLookupNumber> = {
-  title: 'Editors/Lookup Number',
+  title: 'Editores/Lookup Number',
   component: ArchbaseLookupNumber,
 }
 

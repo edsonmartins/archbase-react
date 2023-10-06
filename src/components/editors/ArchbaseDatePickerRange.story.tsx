@@ -58,7 +58,7 @@ const ArchbaseDatePickerRangeExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseDatePickerRange> = {
-  title: 'Editors/DatePicker Range',
+  title: 'Editores/DatePicker Range',
   component: ArchbaseDatePickerRange,
 }
 

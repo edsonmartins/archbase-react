@@ -83,7 +83,7 @@ const ArchbaseJsonEditExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseJsonEdit> = {
-  title: 'Editors/Json Edit',
+  title: 'Editores/Json Edit',
   component: ArchbaseJsonEdit,
 }
 

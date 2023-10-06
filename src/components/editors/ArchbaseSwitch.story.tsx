@@ -81,7 +81,7 @@ const ArchbaseSwitchExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseSwitch> = {
-  title: 'Editors/Switch',
+  title: 'Editores/Switch',
   component: ArchbaseSwitch,
 }
 

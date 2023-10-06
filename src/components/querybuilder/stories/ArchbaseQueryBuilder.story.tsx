@@ -254,7 +254,7 @@ const ArchbaseQueryBuilderExample = () => {
 };
 
 export default {
-  title: 'Editors/Query Builder',
+  title: 'Editores/Query Builder',
   component: ArchbaseQueryBuilderExample,
 } as Meta;
 

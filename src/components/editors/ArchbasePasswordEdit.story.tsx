@@ -71,7 +71,7 @@ const ArchbasePasswordEditExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbasePasswordEdit> = {
-  title: 'Editors/Password Edit',
+  title: 'Editores/Password Edit',
   component: ArchbasePasswordEdit,
 }
 

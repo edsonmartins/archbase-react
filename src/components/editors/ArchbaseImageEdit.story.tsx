@@ -77,7 +77,7 @@ const ArchbaseImageEditExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseImageEdit> = {
-  title: 'Editors/Image Edit',
+  title: 'Editores/Image Edit',
   component: ArchbaseImageEdit,
 }
 

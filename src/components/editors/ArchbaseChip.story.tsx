@@ -68,7 +68,7 @@ const ArchbaseChipExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseChip> = {
-  title: 'Editors/Chip',
+  title: 'Editores/Chip',
   component: ArchbaseChip,
 };
 

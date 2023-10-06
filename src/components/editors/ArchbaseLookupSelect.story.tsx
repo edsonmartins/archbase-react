@@ -96,7 +96,7 @@ const ArchbaseLookupSelectExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseLookupSelect> = {
-  title: 'Editors/Lookup Select',
+  title: 'Editores/Lookup Select',
   component: ArchbaseLookupSelect,
 }
 

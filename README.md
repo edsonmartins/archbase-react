@@ -1,132 +1,167 @@
-# Getting started
+# Archbase React
 
-There are two methods for getting started with this repo.
+## Introdução
 
-#### Familiar with Git?
+O **Archbase React** é uma biblioteca de componentes para React com TypeScript projetada para aumentar a produtividade dos desenvolvedores FrontEnd na criação de aplicações comerciais e industriais. Esta biblioteca oferece uma ampla gama de recursos e funcionalidades para acelerar o desenvolvimento de interfaces web, manter a padronização e fornecer uma experiência consistente para os usuários.
 
-```
-git clone git@github.com:KaiHotz/react-rollup-boilerplate.git
-cd react-rollup-boilerplate
+### Objetivo da Library
+
+O Archbase React foi concebido com a ideia de fornecer aos desenvolvedores de FrontEnd a mesma produtividade e padronização que os desenvolvedores de aplicações desktop têm desfrutado por anos. Sua principal missão é simplificar e acelerar o processo de criação de interfaces web para aplicações comerciais e industriais (SASS em geral). A biblioteca começou como um projeto privado, mas agora é open source, permitindo compartilhar esses benefícios com a comunidade.
+
+### Principais Recursos
+
+O Archbase React oferece uma série de recursos essenciais, incluindo:
+
+- **Templates Prontos:** Componentes pré-construídos que aceleram a criação de interfaces web.
+- **Fonte de Dados:** Gerenciamento centralizado de dados e vinculação bidirecional para componentes visuais.
+- **Componentes Especializados:** Criação rápida de interfaces de administrador com poucas linhas de código.
+- **Controle de Ações:** Rastreamento e controle de ações do usuário com integração de segurança.
+
+Esses recursos beneficiam os desenvolvedores FrontEnd, permitindo:
+
+- Iniciar rapidamente novos projetos com uma ampla variedade de componentes e modelos.
+- Aumentar a produtividade na construção de interfaces web, desde CRUDs simples até telas complexas.
+- Padronizar interfaces, incluindo temas e cores, economizando tempo em adaptações.
+- Utilizar uma variedade de componentes especializados para aplicações comerciais ou industriais (SASS).
+
+### Público-Alvo
+
+O Archbase React é voltado para desenvolvedores FrontEnd que trabalham com React e TypeScript, independentemente do nível de experiência. Pode ser aplicado em uma ampla gama de aplicações comerciais e industriais.
+
+### Tecnologias Utilizadas
+
+A biblioteca é baseada no Mantine.dev e utiliza as seguintes tecnologias:
+
+- React com TypeScript usando hooks.
+- Documentação em StoryBook.
+
+## Instalação e Uso Básico
+
+Para começar a usar o Archbase React em um projeto React, siga os passos abaixo:
+
+1. Crie um novo aplicativo React TypeScript (usando Vite como exemplo):
+
+```bash
+npm init vite@latest minhaAplicacao -- --template react-ts
+cd minhaAplicacao
 yarn install
 ```
 
-#### Not Familiar with Git?
+2. Instale o Archbase React:
 
-Click [here](https://github.com/KaiHotz/react-rollup-boilerplate/archive/master.zip) to download the .zip file.  Extract the contents of the zip file, then open your terminal, change to the project directory, and:
-
-```
-yarn install
+```bash
+yarn add archbase-react
 ```
 
-## Developing
+3. Execute o aplicativo:
 
-To start the developing run :
-
-```
-yarn start
+```bash
+yarn run dev
 ```
 
-This will build a version of your library, run the watcher and also run Storybook.
-To open Storybook manually open your Browser and navigate to [http://localhost:6060](http://localhost:6060).
-Start developing your components in `src/components` folder and update the `src/index.js` file accordingly.
-Always provide an `YourComponent.story.tsx` file, so your component will show up in Storybook.
+Agora você pode começar a integrar os componentes do Archbase React em seu projeto.
 
-You can refer to example `Button` component, but I think you'll get the idea.
+Aqui está um exemplo simples de código que demonstra como criar uma interface de administrador com menu e abas:
 
-## Styling your components
+```tsx
+    
+    // Este é parte de um código mais amplo para criação de um admin inicial para
+    // uma aplicação, mais detalhes e código estão na documentação do produto:
 
-`SCSS` and `CSS` are supported out of the box, just import your styles into your component like you normally would do.
-For the use of  `CSS Modules` refer to [rollup-plugin-postcss](https://github.com/egoist/rollup-plugin-postcss)
+    // Importe os componentes necessários e configure-os conforme necessário
+    const ArchbaseAdminMainLayoutExample = () => {
+        const adminStore = useArchbaseAdminStore()
 
-## Linting and Code formating for Styles
-Linting `SCSS` and `CSS` is suported out of the box following BEM by using [stylelint](https://stylelint.io/)
+        const headerActions = useMemo((): ReactNode => {
+        return [
+            <Tooltip withinPortal withArrow label="Trocar empresa">
+            <ActionIcon variant="transparent">
+                <IconSwitchHorizontal size="2rem" />
+            </ActionIcon>
+            </Tooltip>,
+            <Tooltip withinPortal withArrow label="Tela cheia">
+            <ActionIcon variant="transparent">
+                <IconArrowsMaximize size="2rem" />
+            </ActionIcon>
+            </Tooltip>,
+            <Tooltip withinPortal withArrow label="Notificações">
+            <ActionIcon variant="transparent">
+                <IconBell size="2rem" />
+            </ActionIcon>
+            </Tooltip>,
+            <Tooltip withinPortal withArrow label="Chat">
+            <ActionIcon variant="transparent">
+                <IconMessageChatbot size="2rem" />
+            </ActionIcon>
+            </Tooltip>,
+        ]
+        }, [])
 
+        return (
+        <div style={{ width: '100%', height: 'calc(100vh - 50px)' }}>
+            <ArchbaseAdminMainLayout
+            navigationData={navigationDataSample}
+            navigationRootLink="/"
+            footer={<ArchbaseAdminLayoutFooter />}
+            header={
+                <ArchbaseAdminLayoutHeader
+                user={fakeUser}
+                headerActions={headerActions}
+                navigationData={navigationDataSample}
+                userMenuItems={
+                    <Fragment>
+                    <Menu.Label>Usuário</Menu.Label>
+                    <Menu.Item icon={<IconUserCircle size={14} />}>Meu perfil</Menu.Item>
+                    <Menu.Item icon={<IconSettings size={14} />}>Configurações</Menu.Item>
+                    <Menu.Divider />
+                    <Menu.Label>Conta</Menu.Label>
+                    <Menu.Item icon={<IconBrandMessenger size={14} />}>Suporte</Menu.Item>
+                    <Menu.Item
+                        color="red"
+                        icon={<IconLogout size={14} />}
+                        onClick={() => {
+                        //
+                        }}
+                    >
+                        Sair
+                    </Menu.Item>
+                    </Fragment>
+                }
+                logo={archbaseLogo3}
+                />
+            }
+            >
+            <ArchbaseAdminTabContainer
+                onChangeActiveTabId={(activeTabId: any) => adminStore.setActiveTabId(activeTabId)}
+                onChangeOpenedTabs={(openedTabs: ArchbaseTabItem[]) => {
+                adminStore.setOpenedTabs(openedTabs)
+                }}
+                openedTabs={adminStore.openedTabs}
+                activeTabId={adminStore.activeTabId}
+                navigationData={navigationDataSample}
+            />
+            </ArchbaseAdminMainLayout>
+        </div>
+        )
+    }
 
-## Linting and Code formating for Typescript
-
-Linting and code formating is done via [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/) using [eslint-plugin-react](https://www.npmjs.com/package/eslint-plugin-react) and
-[eslint-config-prettier](https://github.com/prettier/eslint-config-prettier).
-You can modify linting rules by overriding them in the `.eslintrc.cjs` file.
-
+export default ArchbaseAdminMainLayoutExample;
 ```
-yarn lint
-```
-or (if automatic fixing is possible)
-```
-yarn lint:fix
-```
 
+## Documentação Completa
 
-## Testing
+A documentação completa do Archbase React está disponível no formato Storybook no seguinte endereço: [https://react.archbase.com.br](https://react.archbase.com.br).
 
-Testing is done with [Vitest](https://vitest.dev/) and [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/)
-You can refer to `Button.test.js` as an example.
-```
-yarn test
-```
+## Comunidade e Suporte
 
-## Publishing your library to NPM
+Para obter suporte, participar da comunidade de desenvolvedores e relatar problemas ou sugestões, visite a página do GitHub do projeto: [https://github.com/edsonmartins/archbase-react](https://github.com/edsonmartins/archbase-react).
 
-To release your library to NPM or your private Registry, make sure you have an active account at [NPM](https://www.npmjs.com/), your `.npmrc` file is correctly setup and the registry url at publishConfig in `package.json` file is set to your repository url, then:
+O projeto está em constante evolução, e você pode encontrar informações sobre releases, correções e o roadmap no GitHub.
 
-```
-yarn release
-```
+## Licenciamento
 
-## Storybook
+O Archbase React é uma biblioteca open source e é distribuído sob a licença Apache License 2.0.
 
-For custom layouts, styling and more information about Storybook, please refer to [Storybook](https://storybook.js.org/basics/writing-stories/) documentation.
+## Exemplos de Uso
 
-#### Deploy Storybook to GitHub Pages
-
-Make sure the homepage url in `package.json` file is set to your githup pages url, then:
-
-```
-yarn deploy
-```
-
-## Scripts
-
-- `yarn start` : Only serves Storybook.
-- `yarn build` : Builds your library (build can be found in `dist` folder).
-- `yarn storybook:build` : Builds the static Storybook in case you want to deploy it.
-- `yarn test` : Runs the tests.
-- `yarn test:coverage`: Runs the test and shows the coverage.
-- `yarn lint` : Runs the linter, Typescript typecheck and stylelint.
-- `yarn lint:fix` : Runs the linter, Typescript typecheck and stylelint and fixes automatic fixable issues.
-- `yarn eslint`: Runs only the JavaScript linter.
-- `yarn eslint:fix`: Runs only the JavaScript linter and fixes automatic fixable issues.
-- `yarn stylelint`: Runs only the style linter.
-- `yarn stylelint:fix`: Runs only the style linter and fixes automatic fixable issues.
-- `yarn check-types`: Runs typescript type checker.
-- `yarn ci`: Runs Linting, tests and type checker all together.
-- `yarn release` : Publishes your Library on NPM or your private Registry (depending on your config in your `.npmrc` file).
-- `yarn storybook`: Same as yarn start, to serve storybook.
-- `yarn storybook:build`: Generates the build for storybook in `storybook-static` folder, that can be deployed wherever you need.
-- `yarn storybook:deploy`: Builds and deploys Storybook to GitHub Pages.
-
-## Resources
-
-### Bundler
-- [Rollup.js](https://rollupjs.org/guide/en)
-
-### Code Formatter
-- [Prettier](https://prettier.io/)
-
-### Storybook
-- [Storybook](https://storybook.js.org/)
-
-### Testing
-- [Vitest](https://vitest.dev/)
-- [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/)
-- [@testing-library/jest-dom](https://github.com/testing-library/jest-dom)
-
-### Linting
-- [ESLint](https://eslint.org/)
-- [eslint-plugin-react](https://www.npmjs.com/package/eslint-plugin-react)
-- [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier)
-- [stylelint-prettier](https://github.com/prettier/stylelint-prettier)
-- [stylelint-scss](https://github.com/kristerkari/stylelint-scss)
-
-### Compiler
-- [Typescript](https://www.typescriptlang.org/)
+Exemplos de uso detalhados podem ser encontrados na documentação do produto, que está disponível no formato stories do Storybook, acessível em [https://react.archbase.com.br](https://react.archbase.com.br).

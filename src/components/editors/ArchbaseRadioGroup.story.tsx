@@ -92,7 +92,7 @@ const ArchbaseRadioGroupExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseRadioGroup> = {
-  title: 'Editors/RadioGroup',
+  title: 'Editores/RadioGroup',
   component: ArchbaseRadioGroup,
 }
 

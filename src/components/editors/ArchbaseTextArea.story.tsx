@@ -82,7 +82,7 @@ const ArchbaseEditExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseTextArea> = {
-  title: 'Editors/Textarea',
+  title: 'Editores/Textarea',
   component: ArchbaseTextArea,
 }
 

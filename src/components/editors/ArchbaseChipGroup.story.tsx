@@ -182,7 +182,7 @@ const ArchbaseChipGroupSingleExample = () => {
 
 
 const meta: Meta<typeof ArchbaseChipGroup> = {
-  title: 'Editors/Chip Group',
+  title: 'Editores/Chip Group',
   component: ArchbaseChipGroup,
 };
 

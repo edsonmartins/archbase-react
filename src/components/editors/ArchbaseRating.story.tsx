@@ -75,7 +75,7 @@ const ArchbaseRatingExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseRating> = {
-  title: 'Editors/Rating',
+  title: 'Editores/Rating',
   component: ArchbaseRating,
 }
 

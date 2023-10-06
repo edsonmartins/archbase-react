@@ -99,7 +99,7 @@ const ArchbaseSelectExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseSelect> = {
-  title: 'Editors/Select',
+  title: 'Editores/Select',
   component: ArchbaseSelect,
 }
 

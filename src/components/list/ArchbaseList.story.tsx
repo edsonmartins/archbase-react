@@ -66,7 +66,7 @@ const ArchbaseListBasicExample = ({ showIcon, showPhoto, justifyContent, spacing
 
   return (
     <Grid>
-      <Grid.Col span="content">
+      <Grid.Col offset={1} span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -87,17 +87,7 @@ const ArchbaseListBasicExample = ({ showIcon, showPhoto, justifyContent, spacing
           />
         </Card>
       </Grid.Col>
-      <Grid.Col span={3}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
-            </Group>
-          </Card.Section>
-          <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={3}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -196,7 +186,7 @@ const ArchbaseListCustomItemExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span="content">
+      <Grid.Col offset={1} span={7}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -210,17 +200,7 @@ const ArchbaseListCustomItemExample = () => {
           />
         </Card>
       </Grid.Col>
-      <Grid.Col span={3}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
-            </Group>
-          </Card.Section>
-          <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={3}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -234,16 +214,19 @@ const ArchbaseListCustomItemExample = () => {
   )
 }
 
+
+
 const meta: Meta<typeof ArchbaseList> = {
-  title: 'List/List',
-  component: ArchbaseList,
-}
+  title: 'Listas e tabelas/List',
+  component: ArchbaseList,  
+};
 
-export default meta
-type Story = StoryObj<typeof ArchbaseList>
+export default meta;
+type Story = StoryObj<typeof ArchbaseList>;
 
-export const Primary: Story = {
-  name: 'Exemplo simples',
+
+export const Primary: StoryObj<typeof ArchbaseListBasicExample> = {
+  name: 'Exemplo lista simples',
   render: (args) => {
     return <ArchbaseListBasicExample {...args} />
   },
@@ -266,7 +249,8 @@ export const Primary: Story = {
 }
 
 export const Example2: StoryObj<typeof ArchbaseList> = {
-  render: (_args) => {
+  name: 'Exemplo com render item customizado',
+  render: (args) => {
     return <ArchbaseListCustomItemExample />
   },
 }

@@ -83,7 +83,7 @@ const ArchbaseNumberEditExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseNumberEdit> = {
-  title: 'Editors/Number Edit',
+  title: 'Editores/Number Edit',
   component: ArchbaseNumberEdit,
 }
 

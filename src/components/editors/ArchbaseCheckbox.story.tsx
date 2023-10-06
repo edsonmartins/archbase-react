@@ -69,7 +69,7 @@ const ArchbaseCheckboxExample = () => {
 
 
 const meta: Meta<typeof ArchbaseCheckbox> = {
-  title: 'Editors/Checkbox',
+  title: 'Editores/Checkbox',
   component: ArchbaseCheckbox,
 };
 

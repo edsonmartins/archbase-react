@@ -121,7 +121,7 @@ const ArchbaseLookupEditExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseLookupEdit> = {
-  title: 'Editors/Lookup Edit',
+  title: 'Editores/Lookup Edit',
   component: ArchbaseLookupEdit,
 }
 

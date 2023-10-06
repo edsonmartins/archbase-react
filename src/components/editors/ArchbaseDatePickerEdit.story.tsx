@@ -77,7 +77,7 @@ const ArchbaseDatePickerEditExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseDatePickerEdit> = {
-  title: 'Editors/DatePicker Edit',
+  title: 'Editores/DatePicker Edit',
   component: ArchbaseDatePickerEdit,
 }
 

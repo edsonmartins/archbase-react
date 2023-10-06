@@ -71,7 +71,7 @@ const ArchbaseEditExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseMaskEdit> = {
-  title: 'Editors/Mask Edit',
+  title: 'Editores/Mask Edit',
   component: ArchbaseMaskEdit,
 }
 

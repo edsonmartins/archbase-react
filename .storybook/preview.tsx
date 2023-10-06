@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { useDarkMode } from 'storybook-dark-mode';
+import { Preview } from '@storybook/react';
 import { ColorScheme, useMantineTheme } from '@mantine/core';
 import { ArchbaseDark } from './archbase-dark.theme';
 import { ArchbaseLight } from './archbase-ligth.theme';
@@ -66,4 +67,18 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
   );
 }
 
-export const decorators = [(renderStory: Function) => <ThemeWrapper>{renderStory()}</ThemeWrapper>];
+
+const preview: Preview = {
+  decorators : [(renderStory: Function) => <ThemeWrapper>{renderStory()}</ThemeWrapper>],
+  parameters : {
+    options: {
+      storySort: {
+        method: 'alphabetical',
+        order: ['Introdução','Autenticação','*'],
+        locales: '',
+      },
+    },
+  }
+}
+
+export default preview;

@@ -30,7 +30,7 @@ const ArchbaseActionButtonsExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseActionButtons> = {
-  title: 'Buttons/ActionButtons',
+  title: 'Botões/ActionButtons',
   component: ArchbaseActionButtons,
 }
 

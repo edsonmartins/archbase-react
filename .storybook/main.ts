@@ -82,7 +82,7 @@ const config: StorybookConfig = {
   refs: {
     'mantine': {
       title: 'Mantine',
-      url: 'https://spigelli.github.io/mantine-storybook/',
+      url: 'https://spigelli.github.io/mantine-storybook',
       expanded: false, // Optional, true by default
     },
   },

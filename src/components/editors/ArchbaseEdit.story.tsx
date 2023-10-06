@@ -65,7 +65,7 @@ const data = [pessoasData[0]]
 
 
 const meta: Meta<typeof ArchbaseEdit> = {
-  title: 'Editors/Edit',
+  title: 'Editores/Edit',
   component: ArchbaseEdit,
 };
 
