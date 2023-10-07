@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../debug'
 import { pedidosData, Pedido, produtosData } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'

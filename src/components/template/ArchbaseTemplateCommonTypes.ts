@@ -1,4 +1,4 @@
-import { ArchbaseObjectToInspect } from '@components/views';
+import { ArchbaseObjectToInspect } from '@components/debug';
 
 export interface ArchbaseDebugOptions {
   debugLayoutHotKey?: string;

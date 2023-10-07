@@ -3,7 +3,7 @@ import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
 import { Meta, StoryObj } from '@storybook/react'
 
 import { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit'
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../debug'
 import { Pessoa, pessoasData } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'

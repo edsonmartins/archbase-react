@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Grid, Group, Text } from '@mantine/core'
 import { Meta, StoryObj } from '@storybook/react'
 
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../debug'
 import { pedidosData, Pedido } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'

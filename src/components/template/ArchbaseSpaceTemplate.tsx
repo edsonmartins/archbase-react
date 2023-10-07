@@ -36,7 +36,7 @@ import {
 import { useArchbaseAppContext } from '../core';
 import { useHotkeys, useUncontrolled } from '@mantine/hooks';
 import { ArchbaseDebugOptions } from './ArchbaseTemplateCommonTypes';
-import { ArchbaseDebugInspector } from '@components/views/objectinspector';
+import { ArchbaseDebugInspector } from '@components/debug/objectinspector';
 
 interface ArchbaseBreakpointsColSpans {
   /** Col span em (min-width: theme.breakpoints.xs) */

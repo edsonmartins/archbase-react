@@ -10,7 +10,7 @@ const ArchbaseObjectInspectorExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseObjectInspector> = {
-  title: 'Views/Object Inspector',
+  title: 'Depuração/Object Inspector',
   component: ArchbaseObjectInspector,
 }
 

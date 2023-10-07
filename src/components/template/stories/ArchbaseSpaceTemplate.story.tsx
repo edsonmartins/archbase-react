@@ -48,7 +48,7 @@ export const ArchbaseSpaceTemplateExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseSpaceTemplate> = {
-  title: 'Templates/Space template',
+  title: 'Modelos/Space template',
   component: ArchbaseSpaceTemplate,
 }
 

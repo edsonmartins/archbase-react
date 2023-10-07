@@ -14,7 +14,7 @@ import {
 } from '../hooks'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { ArchbaseList, ArchbaseListCustomItemProps } from './ArchbaseList'
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../debug'
 import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context'
 const data = pessoasData
 

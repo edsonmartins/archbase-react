@@ -255,7 +255,7 @@ const ArchbasePanelTemplateExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbasePanelTemplate> = {
-  title: 'Templates/Panel template',
+  title: 'Modelos/Panel template',
   component: ArchbasePanelTemplate,
 }
 

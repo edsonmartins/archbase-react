@@ -87,7 +87,7 @@ const ArchbaseFormTemplateExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseFormTemplate> = {
-  title: 'Templates/Form template',
+  title: 'Modelos/Form template',
   component: ArchbaseFormTemplate,
 }
 

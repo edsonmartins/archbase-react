@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
 import { Meta, StoryObj } from '@storybook/react'
 
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../debug'
 import { Pessoa, pessoasData } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'

@@ -25,7 +25,7 @@ const pedidoData = [pedidosData[0]]
 const produtoData = [produtosData[0]]
 
 const meta: Meta<typeof ArchbaseDebugInspector> = {
-  title: 'Views/Debug Inspector',
+  title: 'Depuração/Debug Inspector',
   component: ArchbaseDebugInspector,
 }
 

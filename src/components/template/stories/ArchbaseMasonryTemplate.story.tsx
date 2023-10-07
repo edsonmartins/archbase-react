@@ -415,7 +415,7 @@ const CustomItem = (props: CustomItemProps) => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseMasonryTemplate> = {
-  title: 'Templates/Masonry template',
+  title: 'Modelos/Masonry template',
   component: ArchbaseMasonryTemplate,
 }
 

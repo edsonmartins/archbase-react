@@ -82,8 +82,8 @@ export type { ArchbaseSelectItemProps } from './ArchbaseSelectItem';
 export { ArchbaseSwitch } from './ArchbaseSwitch';
 export type { ArchbaseSwitchProps } from './ArchbaseSwitch';
 
-export { ArchbaseThemeEditor } from './ArchbaseThemeEditor';
-export type { ArchbaseThemeEditorProps } from './ArchbaseThemeEditor';
+export { ArchbaseThemeEditor } from '../themes/ArchbaseThemeEditor';
+export type { ArchbaseThemeEditorProps } from '../themes/ArchbaseThemeEditor';
 
 export { ArchbaseTextArea } from './ArchbaseTextArea';
 export type { ArchbaseTextAreaProps } from './ArchbaseTextArea';

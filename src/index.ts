@@ -23,5 +23,5 @@ export * from './components/querybuilder';
 export * from './components/service';
 export * from './components/template';
 export * from './components/validator';
-export * from './components/views';
+export * from './components/debug';
 export { contains, isEmpty, isBase64 } from './components/validator';

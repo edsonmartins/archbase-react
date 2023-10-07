@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ArchbaseJsonView, defaultStyles, darkStyles, allExpanded, collapseAllNested } from '../index';
 
 export default {
-  title: 'Views/Json View',
+  title: 'Depuração/Json View',
   component: ArchbaseJsonView,
   argTypes: {
     data: {

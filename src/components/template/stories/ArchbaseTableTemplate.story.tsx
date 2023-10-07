@@ -293,7 +293,7 @@ export const ArchbaseTableTemplateExample = () => {
 const data = [pessoasData[0]]
 
 const meta: Meta<typeof ArchbaseTableTemplate> = {
-  title: 'Templates/Table template',
+  title: 'Modelos/Table template',
   component: ArchbaseTableTemplate,
 }
 
