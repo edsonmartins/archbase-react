@@ -14,6 +14,7 @@ import {
 } from '../querybuilder'
 import { ArchbaseAlert } from '../notification'
 import { ArchbaseDataTable, ToolBarActions } from '../datatable'
+import '../../styles/template.scss'
 import { useArchbaseElementSizeArea, useArchbaseTheme } from '../hooks'
 import { IconPlus } from '@tabler/icons-react'
 import { useArchbaseAppContext } from '../core'
@@ -64,6 +65,7 @@ export interface ArchbaseTableTemplateProps<T extends Object, ID> {
   height?: number | string | undefined
   onSearchByFilter?: () => void
   withBorder?: boolean;
+  enableTopToolbar?: boolean
 }
 
 export function ArchbaseTableTemplate<T extends object, ID>({
@@ -80,6 +82,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
   innerRef,
   isLoading = false,
   isError = false,
+  enableTopToolbar= true,
   error = '',
   clearError = () => {},
   filterType = 'normal',
@@ -182,6 +185,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
         variant={variant??appContext.variant}
         striped={true}
         isLoading={isLoading}
+        enableTopToolbar={enableTopToolbar}
         pageSize={pageSize}
         isError={isError}
         enableGlobalFilter={filterType === 'normal'}
@@ -195,15 +199,15 @@ export function ArchbaseTableTemplate<T extends object, ID>({
             <h3 className="only-print">{printTitle || title}</h3>
             <div className="no-print">
               <Flex gap="8px" rowGap="8px">
-                <Button
+                {userActions.onAddExecute?<Button
                   color={"green"}
                   variant={variant??appContext.variant}
                   leftIcon={<IconPlus />}
                   onClick={() => userActions && userActions.onAddExecute && userActions!.onAddExecute()}
                 >
                   {t('archbase:New')}
-                </Button>
-                <Button
+                </Button>:null}
+                {userActions.onEditExecute?<Button
                   color="blue"
                   leftIcon={<IconEdit/>}
                   disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -211,8 +215,8 @@ export function ArchbaseTableTemplate<T extends object, ID>({
                   onClick={() => userActions && userActions.onEditExecute && userActions!.onEditExecute()}
                 >
                   {t('archbase:Edit')}
-                </Button>
-                <Button
+                </Button>:null}
+                {userActions.onRemoveExecute?<Button
                   color="red"
                   leftIcon={<IconTrash/>}
                   disabled={!userActions?.allowRemove || !dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -220,8 +224,8 @@ export function ArchbaseTableTemplate<T extends object, ID>({
                   onClick={() => userActions && userActions.onRemoveExecute && userActions!.onRemoveExecute()}
                 >
                   {t('archbase:Remove')}
-                </Button>
-                <Button
+                </Button>:null}
+                {userActions.onViewExecute?<Button
                   color="silver"
                   leftIcon={<IconEye/>}
                   disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -229,7 +233,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
                   onClick={() => userActions && userActions.onViewExecute && userActions!.onViewExecute()}
                 >
                   {t('archbase:View')}
-                </Button>
+                </Button>:null}
               </Flex>
             </div>
           </Fragment>

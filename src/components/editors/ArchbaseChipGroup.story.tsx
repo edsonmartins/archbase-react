@@ -8,10 +8,12 @@ import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../da
 import { useArchbaseForceUpdate } from '../hooks'
 import { Meta, StoryObj } from '@storybook/react'
 import { ArchbaseChipGroup } from './ArchbaseChipGroup'
-import { Produto } from '../../demo/data/types'
+import { PedidoStatus, Produto } from '../../demo/data/types'
+
 
 const pedido: Pedido[] = [pedidosData[0]]
 const produtos: Produto[] = produtosData
+
 
 const getProdutosFromIds = (produtoIds: string[] | string) => {
   if (produtoIds === null) {
@@ -70,11 +72,11 @@ const ArchbaseChipGroupExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={12}>
+      <Grid.Col offset={1} span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>Chip Group Component</Text>
+              <Text weight={500}>Chip Group Edit</Text>
             </Group>
           </Card.Section>
           <ArchbaseChipGroup<Pedido, string, Produto>
@@ -88,18 +90,6 @@ const ArchbaseChipGroupExample = () => {
             onSelectValue={() => updateTotalValue(dataSource!, dataSource?.getFieldValue('itens'))}
             multiple={true}
           />
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={6}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
-            </Group>
-          </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}>
-            <ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
-          </ScrollArea>
         </Card>
       </Grid.Col>
       <Grid.Col span={4}>
@@ -118,15 +108,94 @@ const ArchbaseChipGroupExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Chip Group',
-  component: ArchbaseChipGroupExample
-} as Meta
 
-export const Example: StoryObj<typeof ArchbaseChipGroupExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseChipGroupExample />
-    }
+
+
+const enumToOptionsArray = (enumObject, reverse = false) => {
+  const bothDirectionsArray = Object.keys(enumObject).map((key) => ({
+    label: enumObject[key],
+    value: key
+  }))
+  if (reverse) {
+    return bothDirectionsArray.slice(bothDirectionsArray.length / 2)
   }
+
+  return bothDirectionsArray.slice(0, bothDirectionsArray.length / 2)
 }
+
+const statusArray = enumToOptionsArray(PedidoStatus)
+
+const ArchbaseChipGroupSingleExample = () => {
+  const forceUpdate = useArchbaseForceUpdate()
+  const { dataSource } = useArchbaseDataSource<Pedido, string>({
+    initialData: pedido,
+    name: 'dsPedidos'
+  })
+  if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
+    dataSource.edit()
+  }
+  useArchbaseDataSourceListener<Pedido, string>({
+    dataSource,
+    listener: (event: DataSourceEvent<Pedido>): void => {
+      switch (event.type) {
+        case DataSourceEventNames.fieldChanged: {
+          forceUpdate()
+          break
+        }
+        default:
+      }
+    }
+  })
+
+  return (
+    <Grid>
+      <Grid.Col offset={1} span={4}>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section withBorder inheritPadding py="xs">
+            <Group position="apart">
+              <Text weight={500}>Chip Group Edit (multiple = false)</Text>
+            </Group>
+          </Card.Section>
+          <ArchbaseChipGroup<Pedido, string, PedidoStatus>
+            initialOptions={statusArray}
+            dataSource={dataSource}
+            dataField="status"
+            convertFromValue={(selected) => Number(selected)}
+            multiple={false}
+          />
+        </Card>
+      </Grid.Col>
+      <Grid.Col span={4}>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section withBorder inheritPadding py="xs">
+            <Group position="apart">
+              <Text weight={500}>DataSource dsPessoas</Text>
+            </Group>
+          </Card.Section>
+          <ArchbaseObjectInspector data={dataSource} />
+        </Card>
+      </Grid.Col>
+    </Grid>
+  )
+}
+
+
+
+const meta: Meta<typeof ArchbaseChipGroup> = {
+  title: 'Editores/Chip Group',
+  component: ArchbaseChipGroup,
+};
+
+export default meta;
+type Story = StoryObj<typeof ArchbaseChipGroup>;
+
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseChipGroupExample />,
+};
+
+export const GroupSingle: Story = {
+  name: 'Com um único valor selecionado',
+  render: () => <ArchbaseChipGroupSingleExample />,
+};

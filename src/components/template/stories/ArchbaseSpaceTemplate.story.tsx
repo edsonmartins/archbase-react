@@ -1,16 +1,17 @@
-import { Card } from '@mantine/core';
-import { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
-import { ArchbaseSpaceTemplate } from '../ArchbaseSpaceTemplate';
-import { ArchbaseActionButtons } from '@components/buttons/ArchbaseActionButtons';
-import { Actions } from '@components/buttons/ArchbaseActionButtons.story';
-import { ArchbaseGlobalFilter } from '@components/querybuilder/ArchbaseGlobalFilter';
+import { Card } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+import React from 'react'
+import { ArchbaseActionButtons } from '@components/buttons/ArchbaseActionButtons'
+import { ArchbaseGlobalFilter } from '@components/querybuilder/ArchbaseGlobalFilter'
+
+import { ArchbaseSpaceTemplate } from '../ArchbaseSpaceTemplate'
+import { ActionsDemo } from '../../buttons/ActionsDemo'
 
 export const ArchbaseSpaceTemplateExample = () => {
   return (
     <div style={{ width: '100%', height: 'calc(100vh - 50px)' }}>
       <ArchbaseSpaceTemplate
-        title={'Pessoas'}
+        title="Pessoas"
         options={{
           headerFlexGrow: 'right',
         }}
@@ -25,7 +26,7 @@ export const ArchbaseSpaceTemplateExample = () => {
         }
         headerRight={
           <ArchbaseActionButtons
-            actions={Actions}
+            actions={ActionsDemo}
             options={{
               largerBreakPoint: '800px',
               smallerBreakPoint: '400px',
@@ -43,18 +44,18 @@ export const ArchbaseSpaceTemplateExample = () => {
         }
       />
     </div>
-  );
-};
+  )
+}
 
-export default {
+const meta: Meta<typeof ArchbaseSpaceTemplate> = {
   title: 'Templates/Space template',
-  component: ArchbaseSpaceTemplateExample,
-} as Meta;
+  component: ArchbaseSpaceTemplate,
+}
 
-export const Example: StoryObj<typeof ArchbaseSpaceTemplateExample> = {
-  args: {
-    render: () => {
-      <ArchbaseSpaceTemplateExample />;
-    },
-  },
-};
+export default meta
+type Story = StoryObj<typeof ArchbaseSpaceTemplate>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseSpaceTemplateExample />,
+}

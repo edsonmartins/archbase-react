@@ -2,7 +2,7 @@ import { MantineSize, Radio } from '@mantine/core'
 import type { CSSProperties, FocusEventHandler } from 'react'
 import React, { useState, useCallback, ReactNode, useEffect } from 'react'
 import { uniqueId } from 'lodash'
-import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks/lifecycle'
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle'
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
 import { DataSourceEventNames } from '../datasource'
 
@@ -127,13 +127,14 @@ export function ArchbaseRadioGroup<T, ID, O>({
     setSelectedValue(initialValue)
   }
 
-  const fieldChangedListener = useCallback(() => {}, [])
+  const fieldChangedListener = useCallback(() => {
+    loadDataSourceFieldValue()
+  }, [])
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
       switch (event.type) {
         case (DataSourceEventNames.dataChanged,
-        DataSourceEventNames.fieldChanged,
         DataSourceEventNames.recordChanged,
         DataSourceEventNames.afterScroll,
         DataSourceEventNames.afterCancel): {
@@ -153,6 +154,13 @@ export function ArchbaseRadioGroup<T, ID, O>({
     if (dataSource && dataField) {
       dataSource.addListener(dataSourceEvent)
       dataSource.addFieldChangeListener(dataField, fieldChangedListener)
+    }
+  })
+
+  useArchbaseWillUnmount(() => {
+    if (dataSource && dataField) {
+      dataSource.removeListener(dataSourceEvent)
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
     }
   })
 

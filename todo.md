@@ -9,5 +9,7 @@ OK - Criar um componente modal/dialog para apresentar melhor os erros com detalh
 OK - Adicionar footer no admin layout para versão
 - Terminar filtro avançado
 - Terminar componente Image e Image Editor
-- Corrigir evento fieldChange dos Editores
+OK - Corrigir evento fieldChange dos Editores
 - Adicionar opção para grupo de actions
+- Adicionar debounce nos editores para que as alterações sejam comitadas após parar de digitar gerando menos eventos;
+- Checar versão para atualização

@@ -1,5 +1,7 @@
+import "reflect-metadata";
 import type { StorybookConfig } from '@storybook/react-vite';
 import path from 'path'
+
 
 const config: StorybookConfig = {
   stories: [
@@ -10,9 +12,11 @@ const config: StorybookConfig = {
     '../src/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/**/*.story.@(js|jsx|ts|tsx)'
   ],
+  staticDirs: ['./assets'],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
+    "@storybook/addon-onboarding",
     '@storybook/addon-interactions',
     '@storybook/addon-actions',
     'storybook-addon-measure-viewport',
@@ -20,6 +24,9 @@ const config: StorybookConfig = {
     'storybook-addon-mantine',
     'storybook-dark-mode',
     'storybook-react-i18next',
+    'storybook-addon-measure-viewport',
+    '@storybook/addon-measure',
+    '@storybook/addon-styling',
     {
       name: '@storybook/preset-scss',
       options: {
@@ -69,16 +76,20 @@ const config: StorybookConfig = {
   docs: {
     autodocs: true,
   },
-  core: { builder: "@storybook/builder-vite",
-    disableTelemetry: true,
+  core: {
+    disableTelemetry: true
   },  
   refs: {
     'mantine': {
       title: 'Mantine',
-      url: 'https://spigelli.github.io/mantine-storybook/',
+      url: 'https://spigelli.github.io/mantine-storybook',
       expanded: false, // Optional, true by default
     },
   },
 };
 
+
+
 export default config;
+
+

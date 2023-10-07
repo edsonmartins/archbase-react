@@ -212,13 +212,14 @@ export function ArchbaseAsyncSelect<T, ID, O>({
     setSelectedValue(initialValue);
   };
 
-  const fieldChangedListener = useCallback(() => {}, []);
+  const fieldChangedListener = useCallback(() => {
+    loadDataSourceFieldValue();
+  }, []);
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
       if (
         event.type === DataSourceEventNames.dataChanged ||
-        event.type === DataSourceEventNames.fieldChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel

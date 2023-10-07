@@ -1,5 +1,7 @@
 import React from 'react'
 import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { Pessoa, pessoasData } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
@@ -7,13 +9,12 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { ArchbaseThemeEditor } from './ArchbaseThemeEditor'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 
 const ArchbaseThemeEditorExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -28,7 +29,7 @@ const ArchbaseThemeEditorExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -73,17 +74,17 @@ const ArchbaseThemeEditorExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/ThemeEditor',
-  component: ArchbaseThemeEditorExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseThemeEditorExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseThemeEditorExample />
-    }
-  }
+const meta: Meta<typeof ArchbaseThemeEditor> = {
+  title: 'Editores/ThemeEditor',
+  component: ArchbaseThemeEditor,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseThemeEditor>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseThemeEditorExample />,
 }

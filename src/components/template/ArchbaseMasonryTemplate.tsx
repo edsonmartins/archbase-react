@@ -3,7 +3,7 @@ import useComponentSize from '@rehooks/component-size';
 import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
 import { t } from 'i18next';
 import { uniqueId } from 'lodash';
-import React, { CSSProperties, Fragment, ReactNode, useMemo, useRef, useState } from 'react';
+import React, { CSSProperties, Fragment, ReactNode, useMemo, useRef, useState, Profiler } from 'react';
 import { ComponentDefinition, useArchbaseAppContext } from '../core';
 import type { ArchbaseDataSource } from '../datasource';
 import { ArchbaseMasonry, ArchbaseMasonryProvider, ArchbaseMasonryResponsive } from '../masonry';
@@ -99,6 +99,18 @@ export interface ArchbaseMasonryTemplateProps<T, ID> {
   actionsButtonsOptions?: ArchbaseActionButtonsOptions;
   spaceOptions?: ArchbaseSpaceTemplateOptions;
   debugOptions?: ArchbaseDebugOptions;
+}
+
+function onRenderCallback(
+  id, // ID exclusivo da medição
+  phase, // 'mount' (montagem) ou 'update' (atualização)
+  actualDuration, // Tempo em milissegundos gasto na renderização
+  baseDuration, // Tempo em milissegundos estimado para renderização sem memoização
+  startTime, // Timestamp quando a renderização começou
+  commitTime, // Timestamp quando a renderização foi confirmada
+  interactions // Conjunto de interações do usuário relacionadas a esta renderização
+) {
+  console.log(`Render de "${id}" na fase "${phase}": ${actualDuration}ms`);
 }
 
 export function ArchbaseMasonryTemplate<T extends object, ID>({
@@ -207,7 +219,6 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
       defaultActions.push({
         id: 'actView',
         icon: <IconEye />,
-        color: 'green',
         label: userActionsEnd.labelView ? userActionsEnd.labelView : t('archbase:View'),
         executeAction: () => {
           if (userActionsEnd && userActionsEnd.onViewExecute) {
@@ -288,19 +299,6 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
     }
   };
 
-  // const getGlobalFilters = () : string[] => {
-  //   const fields : Field[] = getFields(<Fragment>{filterFields}</Fragment>);
-  //   const result : string[] = []
-  //   if (fields) {
-  //     fields.forEach((f)=>{
-  //       if (f.quickFilter){
-  //         result.push(f.name)
-  //       }
-  //     })
-  //   }
-  //   return result
-  // }
-
   const handleGlobalFilter = (buildedQuery: string) => {
     if (dataSource) {
       const options = dataSource.getOptions();
@@ -330,6 +328,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
     }
 
     return (
+      <Profiler id={`profile_${filterOptions.componentName}`} onRender={onRenderCallback}>
       <ArchbaseQueryBuilder
         id={filterOptions.componentName}
         viewName={filterOptions.viewName}
@@ -349,6 +348,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
       >
         {filterFields}
       </ArchbaseQueryBuilder>
+      </Profiler>
     );
   };
 

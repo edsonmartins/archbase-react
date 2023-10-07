@@ -1,11 +1,12 @@
 import React from 'react'
 import { Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate, useArchbaseRemoteServiceApi } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { pedidosData, Pedido, Pessoa } from '../../demo/index'
 import { ArchbaseEdit } from './ArchbaseEdit'
 import { ArchbaseNotifications } from '../notification'
@@ -21,7 +22,7 @@ const ArchbaseLookupNumberExample = () => {
   const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa)
   const { dataSource } = useArchbaseDataSource<Pedido, string>({
     initialData: pedidosList,
-    name: 'dsPedidos'
+    name: 'dsPedidos',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -36,7 +37,7 @@ const ArchbaseLookupNumberExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   const lookupValueDelegator = (value: any): Promise<Pessoa> => {
@@ -87,13 +88,7 @@ const ArchbaseLookupNumberExample = () => {
                 validateMessage="Pessoa {0} não encontrada."
                 width={150}
               />
-              <ArchbaseEdit
-                label="Nome"
-                dataSource={dataSource}
-                dataField="cliente.nome"
-                disabled
-                width={500}
-              />
+              <ArchbaseEdit label="Nome" dataSource={dataSource} dataField="cliente.nome" disabled width={500} />
             </Flex>
           </Box>
         </Card>
@@ -126,15 +121,15 @@ const ArchbaseLookupNumberExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Lookup Number',
-  component: ArchbaseLookupNumberExample
-} as Meta
+const meta: Meta<typeof ArchbaseLookupNumber> = {
+  title: 'Editores/Lookup Number',
+  component: ArchbaseLookupNumber,
+}
 
-export const Example: StoryObj<typeof ArchbaseLookupNumberExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseLookupNumberExample />
-    }
-  }
+export default meta
+type Story = StoryObj<typeof ArchbaseLookupNumber>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseLookupNumberExample />,
 }

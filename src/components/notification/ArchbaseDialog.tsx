@@ -2,7 +2,7 @@ import React, { ChangeEventHandler } from 'react'
 import { Accordion, Button, Flex, Paper, ScrollArea, Text, TextInput, rem } from '@mantine/core'
 import { ContextModalProps, modals } from '@mantine/modals'
 import i18next from 'i18next'
-import { IconBug, IconCircleFilled, IconTriangle } from '@tabler/icons-react'
+import { IconAlertTriangleFilled, IconBug, IconCircleCheckFilled, IconCircleFilled, IconInfoCircle, IconInfoCircleFilled, IconTriangle } from '@tabler/icons-react'
 
 export class ArchbaseDialog {
   static showConfirmDialogYesNo = (
@@ -29,7 +29,7 @@ export class ArchbaseDialog {
       children: (
         <Paper>
           <Flex gap="md" direction="row" justify="flex-start" align="center">
-            <IconCircleFilled color="blue" />
+            <IconInfoCircleFilled size="2rem" style={{color:"#099CFF"}}/>
             <Text size="md">{message}</Text>
           </Flex>
           <Button
@@ -53,7 +53,31 @@ export class ArchbaseDialog {
       children: (
         <Paper>
           <Flex gap="md" direction="row" justify="flex-start" align="center">
-            <IconTriangle color="blue" />
+            <IconAlertTriangleFilled size="2rem" style={{color:"orange"}} />
+            <Text size="md">{message}</Text>
+          </Flex>
+          <Button
+            fullWidth
+            onClick={() => {
+              modals.closeAll()
+              onConfirm && onConfirm!()
+            }}
+            mt="md"
+          >
+            Ok
+          </Button>
+        </Paper>
+      )
+    })
+  }
+
+  static showSuccess = (message: string, title?: string, onConfirm?: () => void) => {
+    modals.open({
+      title: title || i18next.t('archbase:Attention'),
+      children: (
+        <Paper>
+          <Flex gap="md" direction="row" justify="flex-start" align="center">
+            <IconCircleCheckFilled size="2rem" style={{color:"#1AC455"}} />
             <Text size="md">{message}</Text>
           </Flex>
           <Button
@@ -78,7 +102,7 @@ export class ArchbaseDialog {
       children: (
         <Paper>
           <Flex gap="md" direction="row" justify="flex-start" align="center">
-            <IconBug color="red" />
+            <IconBug size="2rem" style={{color:"red"}}  />
             <Text size="md">{message}</Text>
           </Flex>
           <Button

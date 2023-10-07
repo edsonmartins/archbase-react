@@ -33,11 +33,11 @@ const ArchbaseCheckboxExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={12}>
+      <Grid.Col offset={1} span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs" mb="1rem">
             <Group position="apart">
-              <Text weight={500}>Checkbox Component</Text>
+              <Text weight={500}>Checkbox Edit</Text>
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({ height: 100 })}>
@@ -51,19 +51,7 @@ const ArchbaseCheckboxExample = () => {
           </Box>
         </Card>
       </Grid.Col>
-      <Grid.Col span={6}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
-            </Group>
-          </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}>
-            <ArchbaseJsonView data={data} />
-          </ScrollArea>
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -79,17 +67,18 @@ const ArchbaseCheckboxExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Checkbox',
-  component: ArchbaseCheckboxExample
-} as Meta
+
+const meta: Meta<typeof ArchbaseCheckbox> = {
+  title: 'Editores/Checkbox',
+  component: ArchbaseCheckbox,
+};
+
+export default meta;
+type Story = StoryObj<typeof ArchbaseCheckbox>;
 
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseCheckboxExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseCheckboxExample />
-    }
-  }
-}
+export const Primary: Story = {
+  name: 'Exemplo básico',
+  render: () => <ArchbaseCheckboxExample />,
+};

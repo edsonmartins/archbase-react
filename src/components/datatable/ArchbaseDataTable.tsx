@@ -84,6 +84,8 @@ const convertHexToRGBA = (hexCode, opacity = 1) => {
   return `rgba(${r},${g},${b},${newOpacity})`;
 };
 
+export type Positions<T> = T | (string & {});
+
 export interface ArchbaseDataTableProps<T extends object, ID> {
   enableColumnResizing?: boolean;
   enableColumnOrdering?: boolean;
@@ -119,7 +121,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
   height?: number | string | undefined;
   width?: number | string | undefined;
   pageSize: number;
-  pageIndex: 0;
+  pageIndex: number;
   printTitle: string;
   logoPrint?: string;
   csvOptions?: Options;
@@ -772,7 +774,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 
       return <span>{format(parsedDateValue, appContext.dateFormat)}</span>;
     } catch (error) {
-      return <span>Invalid Date</span>;
+      return <span>{`${t('archbase:Invalid Date')}`}</span>;
     }
   };
 
@@ -785,7 +787,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 
       return <span>{format(parsedDateValue, appContext.dateTimeFormat)}</span>;
     } catch (error) {
-      return <span>Invalid Datetime</span>;
+      return <span>{`${t('archbase:Invalid Datetime')}`}</span>;
     }
   };
 
@@ -1101,7 +1103,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
       sx: { borderBottom: 'unset', marginTop: '8px' },
       variant: 'filled',
     },
-    positionActionsColumn: props.positionActionsColumn,
+    positionActionsColumn: props.positionActionsColumn||'first',
     renderRowActions: props.renderRowActions,
     renderRowActionMenuItems: props.renderRowActionMenuItems,
     renderToolbarInternalActions: props.renderToolbarInternalActions
@@ -1224,7 +1226,6 @@ ArchbaseDataTable.defaultProps = {
   enableRowSelection: true,
   enableRowActions: true,
   variant: 'filled',
-  positionActionsColumn: 'first',
   enableColumnFilterModes: true,
   enableGlobalFilter: true,
   enableGrouping: false,
@@ -1338,7 +1339,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Tooltip withinPortal withArrow position="left" label={t('Edit')}>
+      {onEditRow?<Tooltip withinPortal withArrow position="left" label={t('Edit')}>
         <ActionIcon
           variant={variant === 'filled' ? 'white' : variant}
           color="green"
@@ -1346,8 +1347,8 @@ export function ArchbaseTableRowActions<T extends Object>({
         >
           <IconEdit color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
         </ActionIcon>
-      </Tooltip>
-      <Tooltip withinPortal withArrow position="right" label={t('Remove')}>
+      </Tooltip>:null}
+      {onRemoveRow?<Tooltip withinPortal withArrow position="right" label={t('Remove')}>
         <ActionIcon
           variant={variant === 'filled' ? 'white' : variant}
           color="red"
@@ -1355,8 +1356,8 @@ export function ArchbaseTableRowActions<T extends Object>({
         >
           <IconTrash color={theme.colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
         </ActionIcon>
-      </Tooltip>
-      <Tooltip withinPortal withArrow position="right" label={t('View')}>
+      </Tooltip>:null}
+      {onViewRow?<Tooltip withinPortal withArrow position="right" label={t('View')}>
         <ActionIcon
           variant={variant === 'filled' ? 'white' : variant}
           color="black"
@@ -1364,7 +1365,7 @@ export function ArchbaseTableRowActions<T extends Object>({
         >
           <IconEye color={theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]} />
         </ActionIcon>
-      </Tooltip>
+      </Tooltip>:null}
     </Box>
   );
 }

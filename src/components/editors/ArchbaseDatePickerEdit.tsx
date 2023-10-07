@@ -319,13 +319,14 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
   const _dateParser = dateParser || defaultDateParser
   const _allowDeselect = clearable || allowDeselect
 
-  const fieldChangedListener = useCallback(() => {}, [])
+  const fieldChangedListener = useCallback(() => {
+    loadDataSourceFieldValue()
+  }, [])
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<any>) => {
     if (dataSource && dataField) {
       if (
         event.type === DataSourceEventNames.dataChanged ||
-        event.type === DataSourceEventNames.fieldChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel

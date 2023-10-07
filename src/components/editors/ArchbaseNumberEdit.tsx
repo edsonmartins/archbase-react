@@ -14,7 +14,7 @@ import {
   TextInput,
   CloseButton,
   MantineNumberSize,
-  MantineSize
+  MantineSize,
 } from '@mantine/core'
 import type { CSSProperties, FocusEventHandler } from 'react'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -24,9 +24,8 @@ import {
   useArchbaseDidMount,
   useArchbaseDidUpdate,
   useArchbasePrevious,
-  useArchbaseWillUnmount
+  useArchbaseWillUnmount,
 } from '../hooks/lifecycle'
-
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
 import { DataSourceEventNames } from '../datasource'
 
@@ -37,7 +36,7 @@ function formatNumber(
   thousandSeparator = ',',
   allowNegative = false,
   prefix = '',
-  suffix = ''
+  suffix = '',
 ) {
   if (precision < 0) {
     precision = 0
@@ -48,14 +47,14 @@ function formatNumber(
   if (value === null || value === undefined) {
     return {
       value: 0,
-      maskedValue: ''
+      maskedValue: '',
     }
   }
   value = String(value)
   if (value.length === 0) {
     return {
       value: 0,
-      maskedValue: ''
+      maskedValue: '',
     }
   }
   let digits = value.match(/\d/g) || ['0']
@@ -104,7 +103,7 @@ function formatNumber(
 
   return {
     value: raw,
-    maskedValue: digits.join('').trim()
+    maskedValue: digits.join('').trim(),
   }
 }
 
@@ -145,7 +144,7 @@ export interface ArchbaseNumberEditProps<T, ID>
   /** Evento quando o valor do edit é alterado */
   onChangeValue: (maskValue: any, value: number, event: any) => void
   /** Valor inicial do campo */
-  value: number
+  value: number | string
   /** Caracter separador decimal */
   decimalSeparator: string
   /** Caracter separador de milhar */
@@ -204,11 +203,11 @@ export function ArchbaseNumberEdit<T, ID>({
   const innerComponentRef = innerRef || useRef<any>()
   const [_inputSelectionStart, setInputSelectionStart] = useState(0)
   const [inputSelectionEnd, setInputSelectionEnd] = useState(0)
-  const [internalError, setInternalError] = useState<string|undefined>(error);
+  const [internalError, setInternalError] = useState<string | undefined>(error)
 
-  useEffect(()=>{
+  useEffect(() => {
     setInternalError(undefined)
-  },[maskedValue, _currentValue])
+  }, [maskedValue, _currentValue])
 
   const prepareProps = () => {
     let initialValue: any = value
@@ -236,7 +235,7 @@ export function ArchbaseNumberEdit<T, ID>({
       initialValue = Number(initialValue).toLocaleString(undefined, {
         style: 'decimal',
         minimumFractionDigits: precision,
-        maximumFractionDigits: precision
+        maximumFractionDigits: precision,
       })
     }
     const result = formatNumber(
@@ -246,7 +245,7 @@ export function ArchbaseNumberEdit<T, ID>({
       thousandSeparator,
       allowNegative,
       prefix,
-      suffix
+      suffix,
     )
 
     return { maskedValue: result.maskedValue, value: result.value }
@@ -259,31 +258,30 @@ export function ArchbaseNumberEdit<T, ID>({
     }
   })
 
-  const fieldChangedListener = useCallback(() => {}, [])
+  const fieldChangedListener = useCallback(() => {
+    loadDataSourceFieldValue()
+  }, [])
+
+  const loadDataSourceFieldValue = () => {
+    if (dataSource && dataField) {
+      const value = dataSource.getFieldValue(dataField)
+      const result = formatNumber(value, precision, decimalSeparator, thousandSeparator, allowNegative, prefix, suffix)
+      setMaskedValue(result.maskedValue)
+      setCurrentValue(0)
+    }
+  }
 
   const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
       if (
         event.type === DataSourceEventNames.dataChanged ||
-        event.type === DataSourceEventNames.fieldChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel
       ) {
-        const value = dataSource.getFieldValue(dataField)
-        const result = formatNumber(
-          value,
-          precision,
-          decimalSeparator,
-          thousandSeparator,
-          allowNegative,
-          prefix,
-          suffix
-        )
-        setMaskedValue(result.maskedValue)
-        setCurrentValue(0)
+        loadDataSourceFieldValue()
       }
-      if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
+      if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
         setInternalError(event.error)
       }
     }
@@ -300,7 +298,7 @@ export function ArchbaseNumberEdit<T, ID>({
     const input = ReactDOM.findDOMNode(innerComponentRef.current) as HTMLInputElement
     const selectionEnd = Math.min(
       input.selectionEnd ? input.selectionEnd : 0,
-      input.value ? input.value.length - suffix.length : 0
+      input.value ? input.value.length - suffix.length : 0,
     )
     const selectionStart = Math.min(input.selectionStart ? input.selectionStart : 0, selectionEnd)
     input.setSelectionRange(selectionStart, selectionEnd)
@@ -315,11 +313,8 @@ export function ArchbaseNumberEdit<T, ID>({
     let selectionStart = Math.max(minPos, Math.min(inputSelectionEnd, selectionEnd))
     const regexEscapeRegex = /[-[\]{}()*+?.,\\^$|#\s]/g
     const separatorsRegex = new RegExp(
-      `${decimalSeparator.replace(regexEscapeRegex, '\\$&')}|${thousandSeparator.replace(
-        regexEscapeRegex,
-        '\\$&'
-      )}`,
-      'g'
+      `${decimalSeparator.replace(regexEscapeRegex, '\\$&')}|${thousandSeparator.replace(regexEscapeRegex, '\\$&')}`,
+      'g',
     )
     if (maskedValue) {
       const prevValue = `${maskedValuePrev}`
@@ -330,8 +325,7 @@ export function ArchbaseNumberEdit<T, ID>({
       selectionEnd += adjustment
       selectionStart += adjustment
 
-      const baselength =
-        suffix.length + prefix.length + decimalSeparator.length + Number(precision) + 1
+      const baselength = suffix.length + prefix.length + decimalSeparator.length + Number(precision) + 1
 
       if (maskedValue.length === baselength) {
         selectionEnd = value.length - suffix.length
@@ -366,7 +360,7 @@ export function ArchbaseNumberEdit<T, ID>({
       thousandSeparator,
       allowNegative,
       prefix,
-      suffix
+      suffix,
     )
 
     if (dataSource && !dataSource.isBrowsing() && dataField) {
@@ -419,13 +413,14 @@ export function ArchbaseNumberEdit<T, ID>({
       />
     ) : null)
 
-    const isReadOnly = () => {
-      let tmpRreadOnly = readOnly
-      if (dataSource && !readOnly) {
-        tmpRreadOnly = dataSource.isBrowsing()
-      }
-      return tmpRreadOnly
+  const isReadOnly = () => {
+    let tmpRreadOnly = readOnly
+    if (dataSource && !readOnly) {
+      tmpRreadOnly = dataSource.isBrowsing()
     }
+
+    return tmpRreadOnly
+  }
 
   return (
     <TextInput
@@ -433,14 +428,14 @@ export function ArchbaseNumberEdit<T, ID>({
       {...others}
       className={className}
       ref={innerComponentRef}
-      type={'text'}
+      type="text"
       value={maskedValue}
       rightSection={_rightSection}
       size={size}
       error={internalError}
       style={{
         width,
-        ...style
+        ...style,
       }}
       readOnly={isReadOnly()}
       onChange={handleChange}
@@ -449,8 +444,8 @@ export function ArchbaseNumberEdit<T, ID>({
       onMouseUp={handleOnFocusExit}
       styles={{
         input: {
-          textAlign: 'right'
-        }
+          textAlign: 'right',
+        },
       }}
     />
   )
@@ -470,7 +465,7 @@ ArchbaseNumberEdit.defaultProps = {
   disabled: false,
   onFocusExit: () => {},
   onFocusEnter: () => {},
-  allowEmpty: true
+  allowEmpty: true,
 }
 
 ArchbaseNumberEdit.displayName = 'ArchbaseNumberEdit'

@@ -1,11 +1,12 @@
 import React from 'react'
 import { Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { ArchbaseSwitch } from './ArchbaseSwitch'
 import { Pessoa, pessoasData } from '../../demo/index'
 
@@ -13,7 +14,7 @@ const ArchbaseSwitchExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -28,7 +29,7 @@ const ArchbaseSwitchExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -44,8 +45,8 @@ const ArchbaseSwitchExample = () => {
             label="Masculino"
             dataSource={dataSource}
             dataField="sexo"
-            trueValue={'Masculino'}
-            falseValue={'Feminino'}
+            trueValue="Masculino"
+            falseValue="Feminino"
           />
         </Card>
       </Grid.Col>
@@ -77,17 +78,17 @@ const ArchbaseSwitchExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Switch',
-  component: ArchbaseSwitchExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseSwitchExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseSwitchExample />
-    }
-  }
+const meta: Meta<typeof ArchbaseSwitch> = {
+  title: 'Editores/Switch',
+  component: ArchbaseSwitch,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseSwitch>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseSwitchExample />,
 }

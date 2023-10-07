@@ -1,19 +1,20 @@
 import React from 'react'
 import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { Pessoa, pessoasData } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { ArchbaseImageEdit } from './ArchbaseImageEdit'
 
 const ArchbaseImageEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -28,7 +29,7 @@ const ArchbaseImageEditExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -41,13 +42,7 @@ const ArchbaseImageEditExample = () => {
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({ height: 200 })}>
-            <ArchbaseImageEdit
-              width={140}
-              height={150}
-              label={'Foto'}
-              description="teste"
-              error="tessss"
-            />
+            <ArchbaseImageEdit width={140} height={150} label="Foto" description="teste" error="tessss" />
           </Box>
         </Card>
       </Grid.Col>
@@ -79,17 +74,17 @@ const ArchbaseImageEditExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Image Edit',
-  component: ArchbaseImageEditExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseImageEditExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseImageEditExample />
-    }
-  }
+const meta: Meta<typeof ArchbaseImageEdit> = {
+  title: 'Editores/Image Edit',
+  component: ArchbaseImageEdit,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseImageEdit>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseImageEditExample />,
 }

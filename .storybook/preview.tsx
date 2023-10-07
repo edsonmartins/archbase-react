@@ -1,17 +1,26 @@
+import "reflect-metadata";
 import { useDarkMode } from 'storybook-dark-mode';
+import { Preview } from '@storybook/react';
 import { ColorScheme, useMantineTheme } from '@mantine/core';
 import { ArchbaseDark } from './archbase-dark.theme';
 import { ArchbaseLight } from './archbase-ligth.theme';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
+import { addons } from '@storybook/preview-api';
+import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import React, { useEffect } from 'react';
-import '../locales/config';
+import '../src/components/locales/config';
 import { demoContainerIOC } from '../src/demo/index';
 import { ArchbaseAppProvider, ArchbaseGlobalProvider } from '../src/components/core';
+import translation_en from '../src/demo/locales/en/translation.json';
+import translation_ptbr from '../src/demo/locales/pt-BR/translation.json';
+import translation_es from '../src/demo/locales/es/translation.json';
 import '../src/styles/advancedtabs.scss';
 import '../src/styles/querybuilder.scss';
 import '../src/styles/template.scss';
 import '../src/styles/treeviews.scss';
+import '../src/styles/errorboundary.scss';
 
+const channel = addons.getChannel();
 
 function ThemeWrapper(props: { children: React.ReactNode }) {
   const colorSchem = useDarkMode() ? 'dark' : 'light';
@@ -21,6 +30,14 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
     defaultValue: 'light',
     getInitialValueInEffect: true,
   });  
+
+  const handleColorScheme = (value: boolean) => setColorScheme(value ? 'dark' : 'light');
+
+
+  useEffect(() => {
+    channel.on(DARK_MODE_EVENT_NAME, handleColorScheme);
+    return () => channel.off(DARK_MODE_EVENT_NAME, handleColorScheme);
+  }, [channel]);
 
   useEffect(() => {
     setColorScheme(colorSchem);
@@ -40,6 +57,8 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
       themeDark={ArchbaseDark}
       themeLight={ArchbaseLight}
       toggleColorScheme={toggleColorScheme}
+      translationName="demo"
+      translationResource={{ en: translation_en, 'pt-BR': translation_ptbr, es: translation_es }}
     >
       <ArchbaseAppProvider user={null} owner={null} selectedCompany={undefined}>
         {props.children}
@@ -48,4 +67,18 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
   );
 }
 
-export const decorators = [(renderStory: Function) => <ThemeWrapper>{renderStory()}</ThemeWrapper>];
+
+const preview: Preview = {
+  decorators : [(renderStory: Function) => <ThemeWrapper>{renderStory()}</ThemeWrapper>],
+  parameters : {
+    options: {
+      storySort: {
+        method: 'alphabetical',
+        order: ['Introdução','Autenticação','*'],
+        locales: '',
+      },
+    },
+  }
+}
+
+export default preview;

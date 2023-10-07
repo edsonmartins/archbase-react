@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, Grid, Group, Text } from '@mantine/core'
 import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseMasonry, ArchbaseMasonryResponsive } from './ArchbaseMasonry'
 
 const images = [
@@ -12,7 +13,7 @@ const images = [
   'https://picsum.photos/400/500?image=955',
   'https://picsum.photos/200/300?image=916',
   'https://picsum.photos/300/300?image=110',
-  'https://picsum.photos/300/300?image=206'
+  'https://picsum.photos/300/300?image=206',
 ]
 
 const ArchbaseMasonryExample = () => {
@@ -52,14 +53,15 @@ const ArchbaseMasonryExample = () => {
   )
 }
 
-export default {
-  title: 'Masonry/Masonry',
-  component: ArchbaseMasonryExample
-} as Meta
+const meta: Meta<typeof ArchbaseMasonry> = {
+  title: 'Listas e tabelas/Masonry',
+  component: ArchbaseMasonry,
+}
 
-export const Example: StoryObj<typeof ArchbaseMasonryExample> = {
-  render: () => {
-    return <ArchbaseMasonryExample />
-  },
-  args: {}
+export default meta
+type Story = StoryObj<typeof ArchbaseMasonry>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseMasonryExample />,
 }

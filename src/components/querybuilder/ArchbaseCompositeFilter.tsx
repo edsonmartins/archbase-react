@@ -1,12 +1,6 @@
 /* eslint-disable */
 import React, { CSSProperties, Component, ReactNode } from 'react'
-import {
-  IconDeviceFloppy,
-  IconDoorExit,
-  IconFilter,
-  IconPlus,
-  IconTrash
-} from '@tabler/icons-react'
+import { IconDeviceFloppy, IconDoorExit, IconFilter, IconPlus, IconTrash } from '@tabler/icons-react'
 import Modal from 'react-modal'
 import { uniqueId } from 'lodash'
 import { Accordion, Badge, Button, Group, Menu, Radio, Text, Tooltip, Variants, rem } from '@mantine/core'
@@ -24,17 +18,16 @@ import {
   ArchbaseQueryFilter,
   Field,
   FilterType,
-  ArchbaseQueryFilterDelegator
+  ArchbaseQueryFilterDelegator,
 } from './ArchbaseFilterCommons'
 import { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter'
 import shallowCompare from 'react-addons-shallow-compare'
 import { ArchbaseDataSource } from '../datasource'
 import { ArchbaseList } from '../list'
 import { ArchbaseAppContext } from '../core'
-import { IconFilters } from '@tabler/icons-react'
 import { IconFilterSearch } from '@tabler/icons-react'
 import { IconRefresh } from '@tabler/icons-react'
-import { ArchbaseClickOutside } from '../core/helper'
+import { t } from 'i18next'
 
 interface ArchbaseCompositeFilterProps {
   isOpen: boolean
@@ -52,15 +45,9 @@ interface ArchbaseCompositeFilterProps {
   onChangeFilterType?: (index: number) => void
   onChangeSelectedFilter?: (filter: ArchbaseQueryFilter, index: number) => void
   onFilterChanged: (currentFilter: ArchbaseQueryFilter, activeFilterIndex: number) => void
-  onSearchButtonClick?: (
-    field: string,
-    event?: any,
-    handleOnChange?: any,
-    operator?: any,
-    searchField?: any
-  ) => void
+  onSearchButtonClick?: (field: string, event?: any, handleOnChange?: any, operator?: any, searchField?: any) => void
   onActionClick?: (action: string) => void
-  toggleFilterButtonRef? : any;
+  toggleFilterButtonRef?: any
 }
 
 interface ArchbaseCompositeFilterState {
@@ -71,10 +58,7 @@ interface ArchbaseCompositeFilterState {
   expandedFilter: boolean
 }
 
-class ArchbaseCompositeFilter extends Component<
-  ArchbaseCompositeFilterProps,
-  ArchbaseCompositeFilterState
-> {
+class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, ArchbaseCompositeFilterState> {
   declare context: React.ContextType<typeof ArchbaseAppContext>
   constructor(props: ArchbaseCompositeFilterProps) {
     super(props)
@@ -83,14 +67,11 @@ class ArchbaseCompositeFilter extends Component<
       activeFilterIndex: props.activeFilterIndex,
       fields: getFields(props),
       showEditor: false,
-      expandedFilter: false
+      expandedFilter: false,
     }
   }
 
-  shouldComponentUpdate = (
-    nextProps: ArchbaseCompositeFilterProps,
-    nextState: ArchbaseCompositeFilterState
-  ) => {
+  shouldComponentUpdate = (nextProps: ArchbaseCompositeFilterProps, nextState: ArchbaseCompositeFilterState) => {
     return shallowCompare(this, nextProps, nextState)
   }
 
@@ -98,7 +79,7 @@ class ArchbaseCompositeFilter extends Component<
     this.setState({
       ...this.state,
       fields: getFields(nextProps),
-      activeFilterIndex: nextProps.activeFilterIndex
+      activeFilterIndex: nextProps.activeFilterIndex,
     })
   }
 
@@ -134,7 +115,6 @@ class ArchbaseCompositeFilter extends Component<
       <Modal
         isOpen={this.props.isOpen}
         ariaHideApp={false}
-        // shouldCloseOnOverlayClick={true}
         onRequestClose={() => this.props.onActionClick && this.props.onActionClick('close')}
         style={{
           overlay: {
@@ -143,11 +123,11 @@ class ArchbaseCompositeFilter extends Component<
             top: this.props.top,
             width: this.props.width,
             height: this.props.height,
-            zIndex: 600,
+            zIndex: 200,
             backgroundColor:
               this.context.theme!.colorScheme === 'dark'
                 ? this.context.theme!.colors.dark[7]
-                : this.context.theme!.colors.gray[0]
+                : this.context.theme!.colors.gray[0],
           },
           content: {
             inset: 0,
@@ -160,176 +140,158 @@ class ArchbaseCompositeFilter extends Component<
                 : this.context.theme!.colors[this.context.theme!.primaryColor][1]
             }`,
             borderRadius: '4px',
-            outline: 'none'
-          }
+            outline: 'none',
+          },
         }}
         centered={true}
       >
-        {/* <ArchbaseClickOutside
-          exceptionRef={this.props.toggleFilterButtonRef}
-          onClick={(event: MouseEvent) => {
-            event.stopPropagation();
-            this.props.onActionClick && this.props.onActionClick('close')
-            }} > */}
-          <div style={{ padding: '10px' }}>
-            <Accordion variant="contained">
-              <Accordion.Item value="photos">
-                <Accordion.Control
-                  icon={<IconFilterSearch size={rem(20)} color={this.getColor('red')} />}
+        <div style={{ padding: '10px' }}>
+          <Accordion variant="contained">
+            <Accordion.Item value="photos">
+              <Accordion.Control icon={<IconFilterSearch size={rem(20)} color={this.getColor('red')} />}>
+                <Text style={{ fontWeight: 'bold' }}>{`${t('archbase:Filtros salvos')}`}</Text>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <ArchbaseList
+                  height="105px"
+                  activeIndex={this.state.activeFilterIndex}
+                  dataSource={
+                    new ArchbaseDataSource('dsSortFields', {
+                      records: this.props.persistenceDelegator.getFilters(),
+                      grandTotalRecords: this.props.persistenceDelegator.getFilters().length,
+                      currentPage: 0,
+                      totalPages: 0,
+                      pageSize: 999999,
+                    })
+                  }
+                  onSelectListItem={this.onSelectItem}
+                  style={{ borderRadius: '6px', marginBottom: '4px' }}
+                  component={{ type: FilterItem, props: {} }}
+                />
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+          <div className="filter-apply">
+            <Group spacing="xs">
+              <Tooltip withinPortal withArrow label={`${t('archbase:Novo filtro')}`}>
+                <Button
+                  id="btnNew"
+                  variant={this.props.variant}
+                  leftIcon={<IconPlus />}
+                  onClick={(event) => this.props.onActionClick && this.props.onActionClick('new')}
                 >
-                  <Text style={{ fontWeight: 'bold' }}>{'Filtros salvos'}</Text>
-                </Accordion.Control>
-                <Accordion.Panel>
-                  <ArchbaseList
-                    height="105px"
-                    activeIndex={this.state.activeFilterIndex}
-                    dataSource={
-                      new ArchbaseDataSource('dsSortFields', {
-                        records: this.props.persistenceDelegator.getFilters(),
-                        grandTotalRecords: this.props.persistenceDelegator.getFilters().length,
-                        currentPage: 0,
-                        totalPages: 0,
-                        pageSize: 999999
-                      })
-                    }
-                    onSelectListItem={this.onSelectItem}
-                    style={{ borderRadius: '6px', marginBottom: '4px' }}
-                    component={{ type: FilterItem, props: {} }}
-                  />
-                </Accordion.Panel>
-              </Accordion.Item>
-            </Accordion>
-            <div className="filter-apply">
-              <Group spacing="xs">
-                <Tooltip withinPortal withArrow label="Novo filtro">
-                  <Button
-                    id="btnNew"
-                    variant={this.props.variant}
-                    leftIcon={<IconPlus />}
-                    onClick={(event) => this.props.onActionClick && this.props.onActionClick('new')}
-                  >
-                    Novo
-                  </Button>
-                </Tooltip>
-                <Tooltip withinPortal withArrow label="Remover filtro">
-                  <Button
-                    id="btnRemove"
-                    color="red"
-                    variant={this.props.variant}
-                    disabled={
-                      this.props.currentFilter &&
-                      (!this.props.currentFilter.id || this.props.currentFilter.id <= 0)
-                    }
-                    leftIcon={<IconTrash />}
-                    onClick={(event) =>
-                      this.props.onActionClick && this.props.onActionClick('remove')
-                    }
-                  >
-                    Remover
-                  </Button>
-                </Tooltip>
-              </Group>
-              <Group spacing="xs">
-                <Menu
-                  shadow="md"
-                  width={200}
-                  disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
+                  {t('archbase:New')}
+                </Button>
+              </Tooltip>
+              <Tooltip withinPortal withArrow label={`${t('archbase:Remover filtro')}`}>
+                <Button
+                  id="btnRemove"
+                  color="red"
+                  variant={this.props.variant}
+                  disabled={
+                    this.props.currentFilter && (!this.props.currentFilter.id || this.props.currentFilter.id <= 0)
+                  }
+                  leftIcon={<IconTrash />}
+                  onClick={(event) => this.props.onActionClick && this.props.onActionClick('remove')}
                 >
-                  <Menu.Target>
-                    <Button variant={this.props.variant} leftIcon={<IconDeviceFloppy/>}>Salvar</Button>
-                  </Menu.Target>
+                  {t('archbase:Remover')}
+                </Button>
+              </Tooltip>
+            </Group>
+            <Group spacing="xs">
+              <Menu shadow="md" width={200} disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}>
+                <Menu.Target>
+                  <Button variant={this.props.variant} leftIcon={<IconDeviceFloppy />}>
+                    {`${t('archbase:Save')}`}
+                  </Button>
+                </Menu.Target>
 
-                  <Menu.Dropdown>
-                    <Menu.Label>Filtro</Menu.Label>
-                    <Menu.Item
-                      onClick={() => this.onSelectMenuItem('mnuItemSalvar')}
-                      disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
-                      icon={<IconDeviceFloppy size={14} />}
-                    >
-                      Salvar
-                    </Menu.Item>
-                    <Menu.Item
-                      onClick={() => this.onSelectMenuItem('mnuItemSalvarComo')}
-                      disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
-                      icon={<IconDeviceFloppy size={14} />}
-                    >
-                      Salvar como...
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-
-                <Tooltip withinPortal withArrow label="Aplicar filtro">
-                  <Button
-                    id="btnApply"
-                    variant={this.props.variant}
-                    leftIcon={<IconRefresh />}
+                <Menu.Dropdown>
+                  <Menu.Label>{`${t('archbase:Filter')}`}</Menu.Label>
+                  <Menu.Item
+                    onClick={() => this.onSelectMenuItem('mnuItemSalvar')}
                     disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
-                    onClick={(event) =>
-                      this.props.onActionClick && this.props.onActionClick('apply')
-                    }
+                    icon={<IconDeviceFloppy size={14} />}
                   >
-                    {'Aplicar'}
-                  </Button>
-                </Tooltip>
-                <Tooltip withinPortal withArrow label="Fechar filtro">
-                  <Button
-                    id="btnClose"
-                    variant={this.props.variant}
-                    color="red"
-                    leftIcon={<IconDoorExit />}
-                    onClick={(event) =>
-                      this.props.onActionClick && this.props.onActionClick('close')
-                    }
+                    {`${t('archbase:Save')}`}
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => this.onSelectMenuItem('mnuItemSalvarComo')}
+                    disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
+                    icon={<IconDeviceFloppy size={14} />}
                   >
-                    {'Fechar'}
-                  </Button>
-                </Tooltip>
-              </Group>
-            </div>
-            {this.props.activeFilterIndex === NEW_FILTER_INDEX ? (
-              <Radio.Group
-                value={this.props.currentFilter.filter.filterType}
-                name="filterType"
-                label="Selecione o tipo do filtro"
-                withAsterisk
-                onChange={(value: string) => this.onChangeFilterType(value === 'normal' ? 0 : 1)}
-              >
-                <Group mt="xs">
-                  <Radio value="normal" label="Simples" />
-                  <Radio value="advanced" label="Avançado" />
-                </Group>
-              </Radio.Group>
-            ) : null}
-            {filterType === NORMAL ? (
-              <ArchbaseSimpleFilter
-                allowSort={true}
-                update={this.props.update}
-                operators={defaultOperators()}
-                currentFilter={this.props.currentFilter}
-                activeFilterIndex={this.props.activeFilterIndex}
-                onFilterChanged={this.props.onFilterChanged}
-                onSearchButtonClick={this.props.onSearchButtonClick}
-                fields={this.state.fields}
-                theme={this.context.theme}
-              />
-            ) : null}
-            {filterType === ADVANCED ? (
-              <ArchbaseDetailedFilter
-                isOpen={this.state.expandedFilter}
-                update={this.props.update}
-                width={'auto'}
-                height={'100%'}
-                selectedOptions={getQuickFields(this.state.fields)}
-                onFilterChanged={this.props.onFilterChanged}
-                onSearchButtonClick={this.props.onSearchButtonClick}
-                currentFilter={this.props.currentFilter}
-                activeFilterIndex={this.props.activeFilterIndex}
-              >
-                {convertQueryFields(this.props.children)}
-              </ArchbaseDetailedFilter>
-            ) : null}
+                    {`${t('archbase:Salvar como...')}`}
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+
+              <Tooltip withinPortal withArrow label={`${t('archbase:Aplicar filtro')}`}>
+                <Button
+                  id="btnApply"
+                  variant={this.props.variant}
+                  leftIcon={<IconRefresh />}
+                  disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
+                  onClick={(event) => this.props.onActionClick && this.props.onActionClick('apply')}
+                >
+                  {`${t('archbase:Aplicar')}`}
+                </Button>
+              </Tooltip>
+              <Tooltip withinPortal withArrow label={`${t('archbase:Fechar filtro')}`}>
+                <Button
+                  id="btnClose"
+                  variant={this.props.variant}
+                  color="red"
+                  leftIcon={<IconDoorExit />}
+                  onClick={(event) => this.props.onActionClick && this.props.onActionClick('close')}
+                >
+                  {`${t('archbase:Close')}`}
+                </Button>
+              </Tooltip>
+            </Group>
           </div>
-        {/* </ArchbaseClickOutside> */}
+          {this.props.activeFilterIndex === NEW_FILTER_INDEX ? (
+            <Radio.Group
+              value={this.props.currentFilter.filter.filterType}
+              name="filterType"
+              label={`${t('archbase:Selecione o tipo do filtro')}`}
+              withAsterisk
+              onChange={(value: string) => this.onChangeFilterType(value === 'normal' ? 0 : 1)}
+            >
+              <Group mt="xs">
+                <Radio value="normal" label={`${t('archbase:Simples')}`} />
+                <Radio value="advanced" label={`${t('archbase:Avançado')}`} />
+              </Group>
+            </Radio.Group>
+          ) : null}
+          {filterType === NORMAL ? (
+            <ArchbaseSimpleFilter
+              allowSort={true}
+              update={this.props.update}
+              operators={defaultOperators()}
+              currentFilter={this.props.currentFilter}
+              activeFilterIndex={this.props.activeFilterIndex}
+              onFilterChanged={this.props.onFilterChanged}
+              onSearchButtonClick={this.props.onSearchButtonClick}
+              fields={this.state.fields}
+              theme={this.context.theme}
+            />
+          ) : null}
+          {filterType === ADVANCED ? (
+            <ArchbaseDetailedFilter
+              isOpen={this.state.expandedFilter}
+              update={this.props.update}
+              width={'auto'}
+              height={'100%'}
+              selectedOptions={getQuickFields(this.state.fields)}
+              onFilterChanged={this.props.onFilterChanged}
+              onSearchButtonClick={this.props.onSearchButtonClick}
+              currentFilter={this.props.currentFilter}
+              activeFilterIndex={this.props.activeFilterIndex}
+            >
+              {convertQueryFields(this.props.children)}
+            </ArchbaseDetailedFilter>
+          ) : null}
+        </div>
       </Modal>
     )
   }
@@ -360,12 +322,9 @@ interface ArchbaseAdvancedFilterState {
   update: number
 }
 
-class ArchbaseDetailedFilter extends Component<
-  ArchbaseDetailedFilterProps,
-  ArchbaseAdvancedFilterState
-> {
+class ArchbaseDetailedFilter extends Component<ArchbaseDetailedFilterProps, ArchbaseAdvancedFilterState> {
   static defaultProps = {
-    isOpen: false
+    isOpen: false,
   }
   constructor(props: ArchbaseDetailedFilterProps) {
     super(props)
@@ -403,7 +362,7 @@ class ArchbaseDetailedFilter extends Component<
         </ArchbaseAdvancedFilter>
         <ArchbaseSaveFilter
           id="modalSaveFilter"
-          title="Salvar filtro"
+          title={`${t('archbase:Salvar filtro')}`}
           modalOpen={this.state.modalOpen}
           variant={this.props.variant}
         />
@@ -424,7 +383,7 @@ interface FilterItemProps {
 class FilterItem extends Component<FilterItemProps> {
   static defaultProps = {
     disabled: false,
-    active: true
+    active: true,
   }
   constructor(props: FilterItemProps) {
     super(props)
@@ -447,21 +406,19 @@ class FilterItem extends Component<FilterItemProps> {
 
   render = () => {
     let color = '#28C76F'
-    // let backgroundColor = '#E7F8EE';
-    let newData = 'Simples'
+    let newData = `${t('archbase:Simples')}`
     if (this.props.recordData.filter) {
       let filter = JSON.parse(atob(this.props.recordData.filter))
       if (filter.filter.filterType === 'advanced') {
-        //backgroundColor = '#d3dae6';
         color = '#437de0'
-        newData = 'Avançado'
+        newData = `${t('archbase:Avançado')}`
       }
     }
     let className = 'list-group-item list-group-item-action'
     let style: CSSProperties = {
       maxHeight: '24px',
       padding: '2px 2px 2px 8px',
-      display: 'flex'
+      display: 'flex',
     }
     if (this.props.active) {
       className += ' active'
@@ -473,11 +430,7 @@ class FilterItem extends Component<FilterItemProps> {
     return (
       <div className={className} style={style} onClick={this.onClick}>
         <Text>{this.props.recordData.filterName}</Text>
-        <Badge
-          style={{ maxWidth: '60px', fontWeight: 'bold' }}
-          color={color}
-          // VER DEPOIS         backgroundColor={backgroundColor}
-        >
+        <Badge style={{ maxWidth: '60px', fontWeight: 'bold' }} color={color}>
           {newData}
         </Badge>
       </div>

@@ -3,6 +3,8 @@
 
 # dependencies
 node_modules
+.yarn/cache
+.yarn/install-state.gz
 
 # builds
 build
@@ -17,6 +19,7 @@ dist
 .env.development.local
 .env.test.local
 .env.production.local
+.tgz
 
 npm-debug.log*
 yarn-debug.log*

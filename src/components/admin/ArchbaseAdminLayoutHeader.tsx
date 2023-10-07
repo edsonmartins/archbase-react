@@ -27,7 +27,7 @@ import { ArchbaseNavigationItem, ArchbaseOwner, ArchbaseCompany } from './types'
 import { ArchbaseHeaderNavAction } from './ArchbaseHeaderNavAction';
 import { ArchbaseColorSchemeAction } from './ArchbaseColorSchemeAction';
 import { ArchbaseAdminLayoutContext, ArchbaseAdminLayoutContextValue } from './ArchbaseAdminLayout.context';
-import i18next from 'i18next';
+import i18next, { t } from 'i18next';
 import { ArchbaseChangeLanguageAction } from './ArchbaseChangeLanguageAction';
 
 export const defaultAvatar =
@@ -91,12 +91,13 @@ interface CommandPaletteButtonProps {
 
 interface CommandPaletteButtonState {
   commandOpen: boolean;
+  query: string;
 }
 
 class CommandPaletteButton extends Component<CommandPaletteButtonProps, CommandPaletteButtonState> {
   constructor(props: CommandPaletteButtonProps) {
     super(props);
-    this.state = { commandOpen: false };
+    this.state = { commandOpen: false, query: '' };
   }
 
   onButtonClick = (_event) => {
@@ -112,16 +113,30 @@ class CommandPaletteButton extends Component<CommandPaletteButtonProps, CommandP
   };
 
   render() {
+    let filteredCommands = this.props.commands
+    if (this.state.query != ''){
+      filteredCommands = []
+      this.props.commands.forEach((item)=>{
+        const sItem = `${t(item.title)}` 
+        if (sItem && sItem.toLowerCase().includes(this.state.query.toLowerCase())){
+          filteredCommands.push(item)
+        }
+      })
+    }
+
     return (
       <SpotlightProvider
         shortcut={['mod + M', '/']}
-        limit={12}
-        searchPlaceholder="Localizar..."
+        searchPlaceholder={`${t('archbase:Localizar...')}`}
         searchIcon={<IconSearch size="1.2rem" />}
-        actions={this.props.commands}
+        onQueryChange={(query: string)=>{
+          this.setState({...this.state, query})
+        }}
+        actions={filteredCommands}
         actionComponent={CustomCommand}
+        query={this.state.query}
       >
-        <Tooltip withinPortal withArrow label="Comandos ⌘M">
+        <Tooltip withinPortal withArrow label={`${t('archbase:Comandos ⌘M')}`}>
           <Button leftIcon={<IconTerminal size="24px" />} onClick={() => spotlight.open()}></Button>
         </Tooltip>
       </SpotlightProvider>
@@ -164,26 +179,30 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
       navigationItems.forEach((item) => {
         if (item.links) {
           item.links.forEach((subItem) => {
-            result.push({
-              category: subItem.category ? subItem.category!.toUpperCase() : '',
-              color: { backgroundColor: subItem.color, color: 'white' },
-              title: subItem.label,
-              link: subItem.link,
-              onTrigger: () => {
-                return navigate(subItem.link!);
-              },
-            });
+            if (!subItem.disabled && subItem.showInSidebar){
+              result.push({
+                category: subItem.category ? subItem.category!.toUpperCase() : '',
+                color: { backgroundColor: subItem.color, color: 'white' },
+                title: subItem.label,
+                link: subItem.link,
+                onTrigger: () => {
+                  return navigate(subItem.link!);
+                },
+              });
+            }
           });
         } else {
-          result.push({
-            onTrigger: () => {
-              return navigate(item.link!);
-            },
-            category: item.category ? item.category!.toUpperCase() : '',
-            color: { backgroundColor: item.color, color: 'white' },
-            title: item.label,
-            link: item.link,
-          });
+          if (!item.disabled && item.showInSidebar) {
+            result.push({
+              onTrigger: () => {
+                return navigate(item.link!);
+              },
+              category: item.category ? item.category!.toUpperCase() : '',
+              color: { backgroundColor: item.color, color: 'white' },
+              title: item.label,
+              link: item.link,
+            });
+          }
         }
       });
     }

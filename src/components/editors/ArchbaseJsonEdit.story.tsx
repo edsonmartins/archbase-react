@@ -1,19 +1,20 @@
 import React from 'react'
 import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { Meta, StoryObj } from '@storybook/react'
+
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../views'
 import { Pessoa, pessoasData } from '../../demo/index'
 import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
 import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks'
-import { Meta, StoryObj } from '@storybook/react'
 import { ArchbaseJsonEdit } from './ArchbaseJsonEdit'
 
 const ArchbaseJsonEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas'
+    name: 'dsPessoas',
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -28,7 +29,7 @@ const ArchbaseJsonEditExample = () => {
         }
         default:
       }
-    }
+    },
   })
 
   return (
@@ -79,17 +80,17 @@ const ArchbaseJsonEditExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Json Edit',
-  component: ArchbaseJsonEditExample
-} as Meta
-
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseJsonEditExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseJsonEditExample />
-    }
-  }
+const meta: Meta<typeof ArchbaseJsonEdit> = {
+  title: 'Editores/Json Edit',
+  component: ArchbaseJsonEdit,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseJsonEdit>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseJsonEditExample />,
 }

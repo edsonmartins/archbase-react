@@ -33,7 +33,7 @@ const ArchbaseChipExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={12}>
+      <Grid.Col offset={1} span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs" mb="1rem">
             <Group position="apart">
@@ -51,19 +51,7 @@ const ArchbaseChipExample = () => {
           </Box>
         </Card>
       </Grid.Col>
-      <Grid.Col span={6}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
-            </Group>
-          </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}>
-            <ArchbaseJsonView data={data} />
-          </ScrollArea>
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -79,17 +67,17 @@ const ArchbaseChipExample = () => {
   )
 }
 
-export default {
-  title: 'Editors/Chip',
-  component: ArchbaseChipExample
-} as Meta
+const meta: Meta<typeof ArchbaseChip> = {
+  title: 'Editores/Chip',
+  component: ArchbaseChip,
+};
+
+export default meta;
+type Story = StoryObj<typeof ArchbaseChip>;
 
 const data = [pessoasData[0]]
 
-export const Example: StoryObj<typeof ArchbaseChipExample> = {
-  args: {
-    render: () => {
-      ;<ArchbaseChipExample />
-    }
-  }
-}
+export const Primary: Story = {
+  name: 'Exemplo básico',
+  render: () => <ArchbaseChipExample />,
+};

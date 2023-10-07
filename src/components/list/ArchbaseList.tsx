@@ -6,7 +6,7 @@ import {
   DataSourceEvent,
   DataSourceEventNames
 } from '../datasource'
-import { ArchbaseError, ComponentDefinition } from '../core'
+import { ArchbaseError } from '../core'
 import { useArchbaseDidMount, useArchbaseWillUnmount } from '../hooks'
 import { Box, MantineNumberSize, Paper, useMantineTheme } from '@mantine/core'
 import useStyles from './ArchbaseList.styles'
@@ -28,6 +28,11 @@ export interface ArchbaseListCustomItemProps<T, _ID> {
   recordData: T
   /** Indicador se item da lista está desabilitado */
   disabled: boolean
+}
+
+export interface ComponentDefinition {
+  type: React.ElementType
+  props?: any
 }
 
 export interface ArchbaseListProps<T, ID> {
@@ -111,6 +116,93 @@ export interface ArchbaseListProps<T, ID> {
   onFocusExit?: FocusEventHandler<HTMLDivElement> | undefined;
 
 }
+
+/**
+ ```tsx
+ interface ArchbaseListBasicExampleProps {
+    showIcon: boolean
+    showPhoto: boolean
+    justifyContent: 'flex-start' | 'center' | 'space-between' | 'space-around' | 'space-evenly'
+    spacing: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  }
+
+  const ArchbaseListBasicExample = ({ showIcon, showPhoto, justifyContent, spacing }: ArchbaseListBasicExampleProps) => {
+    const forceUpdate = useArchbaseForceUpdate()
+    const [icon, setIcon] = useState<ReactNode | undefined>()
+    const [photo, setPhoto] = useState<ReactNode | string | undefined>()
+    const { dataSource } = useArchbaseDataSource<Pessoa, string>({
+      initialData: data,
+      name: 'dsPessoas',
+    })
+
+    useArchbaseDataSourceListener<Pessoa, string>({
+      dataSource,
+      listener: (event: DataSourceEvent<Pessoa>): void => {
+        switch (event.type) {
+          case DataSourceEventNames.afterScroll: {
+            forceUpdate()
+            break
+          }
+          default:
+        }
+      },
+    })
+
+    useEffect(() => {
+      if (showIcon) {
+        setIcon(
+          <ThemeIcon color="blue" size={20} radius="xl">
+            <IconUser size="1rem" />
+          </ThemeIcon>,
+        )
+      } else {
+        setIcon(undefined)
+      }
+      if (showPhoto) {
+        setPhoto('foto')
+      } else {
+        setPhoto(undefined)
+      }
+    }, [showIcon, showPhoto])
+
+    return (
+      <Grid>
+        <Grid.Col offset={1} span={4}>
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Card.Section withBorder inheritPadding py="xs">
+              <Group position="apart">
+                <Text weight={500}>Lista de Pessoas</Text>
+              </Group>
+            </Card.Section>
+            <ArchbaseList<Pessoa, string>
+              dataSource={dataSource}
+              dataFieldId="id"
+              dataFieldText="nome"
+              icon={icon}
+              image={photo}
+              imageRadius={50}
+              imageWidth={24}
+              imageHeight={24}
+              justify={justifyContent}
+              spacing={spacing}
+            />
+          </Card>
+        </Grid.Col>
+        <Grid.Col span={4}>
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Card.Section withBorder inheritPadding py="xs">
+              <Group position="apart">
+                <Text weight={500}>DataSource dsPessoas</Text>
+              </Group>
+            </Card.Section>
+            <ArchbaseObjectInspector data={dataSource} />
+          </Card>
+        </Grid.Col>
+      </Grid>
+    )
+  }
+  ```
+ */
 
 export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
   const theme = useMantineTheme()
@@ -492,7 +584,8 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
             type,
             onItemEnter,
             onItemLeave,
-            align
+            align,
+            disabled
           }}
         >
           {rebuildedChildrens}

@@ -1,21 +1,20 @@
-import React, { ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import {
   useArchbaseDataSource,
   useArchbaseDataSourceListener,
   useArchbaseForceUpdate,
   useArchbaseLocalFilterDataSource,
   useArchbaseRemoteDataSource,
-} from '@hooks/index';
-import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa, pessoasData } from '@demo/index';
-import { t } from 'i18next';
-import { LocalFilter } from '@components/datasource/ArchbaseLocalFilterDataSource';
-import { FakePessoaService } from '@demo/service/FakePessoaService';
-import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
-import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
-import { ArchbaseNotifications } from '@components/notification';
-import { ArchbaseCheckbox, MaskPattern } from '@components/editors';
-import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
+} from '@hooks/index'
+import { Meta, StoryObj } from '@storybook/react'
+import { Pessoa, pessoasData } from '@demo/index'
+import { t } from 'i18next'
+import { LocalFilter, DataSourceEvent, DataSourceEventNames } from '@components/datasource'
+import { FakePessoaService } from '@demo/service/FakePessoaService'
+import { API_TYPE } from '@demo/ioc/DemoIOCTypes'
+import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi'
+import { ArchbaseNotifications } from '@components/notification'
+import { ArchbaseCheckbox, MaskPattern } from '@components/editors'
 import {
   ArchbaseQueryFilterDelegator,
   OP_CONTAINS,
@@ -23,7 +22,7 @@ import {
   QueryField,
   QueryFieldValue,
   QueryFields,
-} from '@components/querybuilder';
+} from '@components/querybuilder'
 import {
   Avatar,
   Button,
@@ -38,23 +37,23 @@ import {
   Space,
   Text,
   createStyles,
-} from '@mantine/core';
-import { ArchbaseMasonryTemplate } from '../ArchbaseMasonryTemplate';
+} from '@mantine/core'
 import {
   ArchbaseMasonryContext,
   ArchbaseMasonryContextValue,
   ArchbaseMasonryCustomItemProps,
-} from '@components/masonry/index';
-import { IconAt, IconPhoneCall } from '@tabler/icons-react';
-import { IconArrowDownRight } from '@tabler/icons-react';
-import { IconArrowForwardUp } from '@tabler/icons-react';
-const filters: LocalFilter[] = [];
+} from '@components/masonry/index'
+import { IconAt, IconPhoneCall } from '@tabler/icons-react'
+import { IconArrowDownRight } from '@tabler/icons-react'
+import { IconArrowForwardUp } from '@tabler/icons-react'
+
+import { ArchbaseMasonryTemplate } from '../ArchbaseMasonryTemplate'
+const filters: LocalFilter[] = []
 
 const ArchbaseMasonryTemplateExample = () => {
-  const forceUpdate = useArchbaseForceUpdate();
-  const [debug, setDebug] = useState<boolean>(true);
-  const [debugInspector, setDebugInspector] = useState<boolean>(true);
-  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
+  const forceUpdate = useArchbaseForceUpdate()
+  const [debug, setDebug] = useState<boolean>(true)
+  const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa)
   /**
    * Criando dataSource remoto
    * @param dataSource Fonte de dados
@@ -72,45 +71,45 @@ const ArchbaseMasonryTemplateExample = () => {
     loadOnStart: true,
     currentPage: 0,
     onLoadComplete: (dataSource) => {
-      console.log(dataSource);
+      console.log(dataSource)
     },
     onDestroy: (_dataSource) => {
       //
     },
     onError: (error, origin) => {
-      ArchbaseNotifications.showError(t('WARNING'), error, origin);
+      ArchbaseNotifications.showError(t('WARNING'), error, origin)
     },
-  });
+  })
 
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource: dsPessoas,
     listener: (_event: DataSourceEvent<Pessoa>): void => {
       //
     },
-  });
+  })
 
   // const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
   //   currentFilter: getDefaultEmptyFilter(),
   //   activeFilterIndex: -1,
   //   expandedFilter: false,
   // });
-  const { dataSource: dsFilters } = useArchbaseLocalFilterDataSource({ initialData: filters, name: 'dsFilters' });
-  const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' });
+  const { dataSource: dsFilters } = useArchbaseLocalFilterDataSource({ initialData: filters, name: 'dsFilters' })
+  const { dataSource } = useArchbaseDataSource<Pessoa, string>({ initialData: data, name: 'dsPessoas' })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit();
+    dataSource.edit()
   }
   useArchbaseDataSourceListener<Pessoa, string>({
     dataSource,
     listener: (event: DataSourceEvent<Pessoa>): void => {
       switch (event.type) {
         case DataSourceEventNames.fieldChanged: {
-          forceUpdate();
-          break;
+          forceUpdate()
+          break
         }
         default:
       }
     },
-  });
+  })
 
   // const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
   //   setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
@@ -234,26 +233,18 @@ const ArchbaseMasonryTemplateExample = () => {
           <QueryFieldValue label="PENDENTE" value="2" />
         </QueryField>
       </QueryFields>
-    );
-  }, []);
+    )
+  }, [])
 
   return (
     <div style={{ width: '100%', height: 'calc(100vh - 30px)' }}>
-      <Flex>
-        <ArchbaseCheckbox
-          label="Debug"
-          isChecked={debug}
-          onChangeValue={(value: any, _event: any) => setDebug(value === true)}
-        ></ArchbaseCheckbox>
-        <Space w="md" />
-        <ArchbaseCheckbox
-          label="Debug Inspector"
-          isChecked={debugInspector}
-          onChangeValue={(value: any, _event: any) => setDebugInspector(value === true)}
-        ></ArchbaseCheckbox>
-      </Flex>
+      <ArchbaseCheckbox
+        label="Debug"
+        isChecked={debug}
+        onChangeValue={(value: any, _event: any) => setDebug(value === true)}
+      />
       <ArchbaseMasonryTemplate
-        title={'Pessoas'}
+        title="Pessoas"
         dataSource={dsPessoas}
         pageSize={10}
         isLoading={isLoading}
@@ -269,8 +260,8 @@ const ArchbaseMasonryTemplateExample = () => {
           onDebugInspectorChange: () => setDebugInspector(!debugInspector),
         }}
         clearError={clearError}
-        width={'100%'}
-        height={'100%'}
+        width="100%"
+        height="100%"
         filterOptions={{
           activeFilterIndex: 0,
           enabledAdvancedFilter: false,
@@ -298,25 +289,10 @@ const ArchbaseMasonryTemplateExample = () => {
         gutter="10px"
         columnsCountBreakPoints={{ 320: 1, 640: 2, 960: 3, 1280: 4, 1600: 5 }}
         component={{ type: CustomItem }}
-      ></ArchbaseMasonryTemplate>
+      />
     </div>
-  );
-};
-
-export default {
-  title: 'Templates/Masonry template',
-  component: ArchbaseMasonryTemplateExample,
-} as Meta;
-
-const data = [pessoasData[0]];
-
-export const Example: StoryObj<typeof ArchbaseMasonryTemplateExample> = {
-  args: {
-    render: () => {
-      <ArchbaseMasonryTemplateExample />;
-    },
-  },
-};
+  )
+}
 
 const useStyles = createStyles((theme) => ({
   icon: {
@@ -345,32 +321,32 @@ const useStyles = createStyles((theme) => ({
   progressTrack: {
     backgroundColor: theme.fn.rgba(theme.white, 0.4),
   },
-}));
+}))
 
 interface CustomItemProps extends ArchbaseMasonryCustomItemProps<Pessoa, string> {}
 
 const CustomItem = (props: CustomItemProps) => {
-  const { classes } = useStyles();
-  const masonryContextValue = useContext<ArchbaseMasonryContextValue<Pessoa, string>>(ArchbaseMasonryContext);
-  const itemRef = useRef<any>(null);
+  const { classes } = useStyles()
+  const masonryContextValue = useContext<ArchbaseMasonryContextValue<Pessoa, string>>(ArchbaseMasonryContext)
+  const itemRef = useRef<any>(null)
 
   useEffect(() => {
     if (itemRef.current && props.active) {
-      itemRef.current.focus();
+      itemRef.current.focus()
     }
-  }, [props.active]);
+  }, [props.active])
 
   const handleClick = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     if (!props.disabled) {
       if (masonryContextValue.handleSelectItem) {
-        masonryContextValue.handleSelectItem(props.index, props.recordData!);
+        masonryContextValue.handleSelectItem(props.index, props.recordData)
       }
     }
-  };
+  }
 
-  const backgroundColor = props.active ? masonryContextValue.activeBackgroundColor : '';
-  const color = props.active ? masonryContextValue.activeColor : '';
+  const backgroundColor = props.active ? masonryContextValue.activeBackgroundColor : ''
+  const color = props.active ? masonryContextValue.activeColor : ''
 
   return (
     <Paper
@@ -438,5 +414,20 @@ const CustomItem = (props: CustomItemProps) => {
         />
       </Card>
     </Paper>
-  );
-};
+  )
+}
+
+const data = [pessoasData[0]]
+
+const meta: Meta<typeof ArchbaseMasonryTemplate> = {
+  title: 'Templates/Masonry template',
+  component: ArchbaseMasonryTemplate,
+}
+
+export default meta
+type Story = StoryObj<typeof ArchbaseMasonryTemplate>
+
+export const Primary: Story = {
+  name: 'Exemplo simples',
+  render: () => <ArchbaseMasonryTemplateExample />,
+}
