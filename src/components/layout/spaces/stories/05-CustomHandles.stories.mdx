@@ -1,0 +1,41 @@
+import { Meta, Story } from "@storybook/addon-docs";
+import { withKnobs } from "@storybook/addon-knobs";
+import { action } from '@storybook/addon-actions';
+import { ArchbaseSpaceViewPort, ArchbaseSpaceFill } from "../../";
+import { description } from "../utils";
+import { PropsTable, StandardProps, AnchoredProps, ResizableProps } from "../utils";
+
+
+<Meta title="Layouts/Spaces/Redimensionamento personalizado" />
+
+## Redimensionamento personalizado
+
+Você pode passar componentes personalizados para serem usados ​​como pontos de redimensionamento usando a propriedade `handleRender`.
+Esta é uma alternativa para substituir as classes CSS padrão e lhe dará mais controle.
+
+#### Aplica-se a
+
+`<ArchbaseSpaceLeftResizable />` `<ArchbaseSpaceTopResizable />` `<ArchbaseSpaceRightResizable />` `<ArchbaseSpaceBottomResizable />`
+
+#### Exemplo
+
+Passe uma função para a propriedade `handleRender` que será chamada para cada identificador de redimensionamento nesse componente.
+
+```tsx
+<ArchbaseSpaceBottomResizable 
+    size="50%" 
+    handleRender={(props: IResizeHandleProps) => <div {...props}></div>}>
+</ArchbaseSpaceBottomResizable>
+```
+
+Você pode determinar qual tipo de identificador está sendo renderizado acessando a propriedade `props.key`. Ele vai
+contém valores `left`, `top`, `right` ou `bottom`. Por exemplo, você pode renderizar diferentes identificadores para diferentes
+alças de redimensionamento posicionadas.
+
+Também é importante que você passe os seguintes adereços para o elemento de **nível superior** do seu componente personalizado, se
+você não redimensionar não funcionará ao arrastar o mouse:
+
+```tsx
+onMouseDown: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+onTouchStart: (e: React.TouchEvent<HTMLElement>) => void;
+```

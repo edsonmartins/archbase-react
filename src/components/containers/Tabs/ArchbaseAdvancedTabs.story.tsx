@@ -72,7 +72,7 @@ const ArchbaseAdvancedTabsExample = () => {
 }
 
 const meta: Meta<typeof ArchbaseAdvancedTabs> = {
-  title: 'Containers/Advanced Tabs',
+  title: 'Contêiner/Advanced Tabs',
   component: ArchbaseAdvancedTabs,
 }
 

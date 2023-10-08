@@ -19,6 +19,9 @@ import '../src/styles/querybuilder.scss';
 import '../src/styles/template.scss';
 import '../src/styles/treeviews.scss';
 import '../src/styles/errorboundary.scss';
+import '../src/styles/utils.scss';
+import '../src/styles/spaces.css';
+
 
 const channel = addons.getChannel();
 
@@ -73,8 +76,7 @@ const preview: Preview = {
   parameters : {
     options: {
       storySort: {
-        method: 'alphabetical',
-        order: ['Introdução','Autenticação','*'],
+        order: ['Introdução','Temas e cores','Admin','Autenticação','Fontes de dados','Filtros','Layouts','Modelos','Serviços','*'],
         locales: '',
       },
     },

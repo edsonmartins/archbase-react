@@ -13,7 +13,7 @@ import {
   ArchbaseSpaceFill,
   ArchbaseSpaceBottom,
   ArchbaseSpaceFixed,
-} from '@components/containers/spaces';
+} from '@components/layout/spaces';
 import { ArchbaseAlert } from '../notification';
 import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
 import { t } from 'i18next';

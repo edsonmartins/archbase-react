@@ -1,0 +1,216 @@
+import React from 'react'
+import { Meta, Story, Canvas } from "@storybook/addon-docs";
+import { DemoUI } from "../utils";
+import { CenterType, ArchbaseSpaceViewPort, ArchbaseSpaceFixed, ArchbaseSpaceTop, ArchbaseSpaceRight, 
+ArchbaseSpaceLeftResizable, ArchbaseSpaceBottomResizable, ArchbaseSpaceFill, ArchbaseSpaceOptions } from "../";
+
+
+<Meta title="Layouts/Spaces/Começando" />
+
+## Começando
+
+
+### Um exemplo muito básico
+
+O uso de espaços sempre começa com um espaço `<ArchbaseSpaceViewPort />` ou `<ArchbaseSpaceFixed />` no nível superior. 
+*Nota: estes não precisa estar no topo da sua árvore de componentes, logo acima de qualquer uso de outros espaços.*
+
+Um espaço `<ArchbaseSpaceViewPort />` ocupará toda a janela de visualização da janela do navegador e é ideal para visualização completa
+aplicativos de página única.
+
+Um `<ArchbaseSpaceFixed />` criará um espaço na página com altura fixa e largura opcional. Isso é útil
+para utilizar espaços dentro de um contêiner em um aplicativo existente.
+
+Importe os componentes e use-os diretamente em seu aplicativo React. Por exemplo:
+
+```tsx
+import { ArchbaseSpaceViewPort, ArchbaseSpaceLeftResizable, ArchbaseSpaceFill } from "archbase-react";
+
+const App = () => (
+	<ArchbaseSpaceViewPort>
+		<ArchbaseSpaceLeftResizable size={200}>
+		  ...
+		</ArchbaseSpaceLeftResizable>
+		<ArchbaseSpaceFill>
+		  ...
+		</ArchbaseSpaceFill>
+	</ArchbaseSpaceViewPort>
+);
+```
+
+Isso produzirá um layout muito simples com uma barra lateral esquerda e uma área principal como abaixo. *Nota: fronteiras,
+linhas e alinhamento de texto foram adicionados especificamente para este exemplo. Na prática, os espaços não
+tem qualquer elemento visual, preenchimento ou margens, cabendo a você preenchê-los ou estilizá-los de qualquer maneira
+você queira.*
+
+<React.StrictMode>
+	<ArchbaseSpaceFixed style={{ border: '1px solid black' }} className="container" height={400}>
+		<ArchbaseSpaceLeftResizable style={{ borderRight: '1px dashed black' }} size="25%" centerContent={CenterType.HorizontalVertical}>
+			Barra lateral
+		</ArchbaseSpaceLeftResizable>
+		<ArchbaseSpaceFill centerContent={CenterType.HorizontalVertical}>
+			Conteúdo principal
+		</ArchbaseSpaceFill>
+	</ArchbaseSpaceFixed>
+</React.StrictMode>
+
+Observe como o espaço de preenchimento ajusta automaticamente seu tamanho quando o espaço redimensionável esquerdo é redimensionado com
+o rato.
+
+### Espaços aninhados
+
+Ao aninhar espaços, podemos facilmente adicionar outra área redimensionável inferior.
+
+```tsx
+import { ArchbaseSpaceViewPort, ArchbaseSpaceLeftResizable, ArchbaseSpaceFill } from "archbase-react";
+
+const App = () => (
+	<ArchbaseSpaceViewPort>
+		<ArchbaseSpaceLeftResizable size={200}>
+		  ...
+		</ArchbaseSpaceLeftResizable>
+		<ArchbaseSpaceFill>
+			<ArchbaseSpaceFill>
+			  ...
+			</ArchbaseSpaceFill>
+			<ArchbaseSpaceBottomResizable size={100}>
+			  ...
+			</ArchbaseSpaceBottomResizable>
+		</ArchbaseSpaceFill>
+	</ArchbaseSpaceViewPort>
+);
+```
+
+Aqui adicionamos espaços aninhados adicionais dentro do espaço `<Fill />` original para conseguir isso:
+
+<React.StrictMode>
+	<ArchbaseSpaceFixed style={{ border: '1px solid black' }} className="container" height={400}>
+		<ArchbaseSpaceLeftResizable style={{ borderRight: '1px dashed black' }} size="25%" centerContent={CenterType.HorizontalVertical}>
+			Barra lateral
+		</ArchbaseSpaceLeftResizable>
+		<ArchbaseSpaceFill>
+			<ArchbaseSpaceFill centerContent={CenterType.HorizontalVertical}>
+				Conteúdo principal
+			</ArchbaseSpaceFill>
+			<ArchbaseSpaceBottomResizable style={{ borderTop: '1px dashed black' }} size={100} centerContent={CenterType.HorizontalVertical}>
+				Rodapé
+			</ArchbaseSpaceBottomResizable>
+		</ArchbaseSpaceFill>
+	</ArchbaseSpaceFixed>
+</React.StrictMode>
+
+Podemos adicionar mais espaços aninhados para adicionar elementos como barras de título em diferentes áreas.
+
+```tsx
+import { ArchbaseSpaceViewPort, ArchbaseSpaceLeftResizable, ArchbaseSpaceFill } from "archbase-react";
+
+const App = () => (
+	<ArchbaseSpaceViewPort>
+		<ArchbaseSpaceTop size={25} order={1} centerContent={CenterType.Vertical}>
+		  ...
+		</ArchbaseSpaceTop>
+		<ArchbaseSpaceTop size={25} order={2} centerContent={CenterType.Vertical}>
+		  ...
+		</ArchbaseSpaceTop>
+		<ArchbaseSpaceFill>
+			<ArchbaseSpaceLeftResizable size={200}>
+				<ArchbaseSpaceTop size={25} centerContent={CenterType.Vertical}>
+				  ...
+				</ArchbaseSpaceTop>
+				<ArchbaseSpaceFill>
+				  ...
+				</ArchbaseSpaceFill>
+			</ArchbaseSpaceLeftResizable>
+			<ArchbaseSpaceFill>
+				<ArchbaseSpaceFill>
+				  ...
+				</ArchbaseSpaceFill>
+				<ArchbaseSpaceBottomResizable size={100}>
+				  ...
+				</ArchbaseSpaceBottomResizable>
+			</ArchbaseSpaceFill>
+		</ArchbaseSpaceFill>
+	</ArchbaseSpaceViewPort>
+);
+```
+
+Agora temos algo como abaixo:
+
+<React.StrictMode>
+	<ArchbaseSpaceFixed style={{ border: '1px solid black' }} className="container" height={400}>
+		<ArchbaseSpaceTop style={{ borderBottom: '1px dashed black', padding: 5 }} order={1} size={25} centerContent={CenterType.Vertical}>Título</ArchbaseSpaceTop>
+		<ArchbaseSpaceTop style={{ borderBottom: '1px dashed black', padding: 5 }} order={2} size={25} centerContent={CenterType.Vertical}>Menu</ArchbaseSpaceTop>
+		<ArchbaseSpaceFill>
+			<ArchbaseSpaceLeftResizable style={{ borderRight: '1px dashed black' }} size="25%">
+				<ArchbaseSpaceTop style={{ borderBottom: '1px dashed black', padding: 5 }} size={25} centerContent={CenterType.Vertical}>Título barra lateral</ArchbaseSpaceTop>
+				<ArchbaseSpaceFill centerContent={CenterType.HorizontalVertical}>Barra lateral</ArchbaseSpaceFill>
+			</ArchbaseSpaceLeftResizable>
+			<ArchbaseSpaceFill>
+				<ArchbaseSpaceFill centerContent={CenterType.HorizontalVertical}>
+					Conteúdo principal
+				</ArchbaseSpaceFill>
+				<ArchbaseSpaceBottomResizable style={{ borderTop: '1px dashed black' }} size={100} centerContent={CenterType.HorizontalVertical}>
+					Rodapé
+				</ArchbaseSpaceBottomResizable>
+			</ArchbaseSpaceFill>
+		</ArchbaseSpaceFill>
+	</ArchbaseSpaceFixed>
+</React.StrictMode>
+
+### Apresentando interatividade simples
+
+Podemos adicionar alguns estados muito simples para manipular o espaço que representa a barra lateral.
+
+Aqui adicionamos um widget no título da barra lateral que usaremos para realizar uma ação na barra lateral. Isso é apenas
+outro espaço `<ArchbaseSpaceRight />` aninhado com um ícone.
+
+```tsx
+...
+<ArchbaseSpaceLeftResizable size={200}>
+	<ArchbaseSpaceTop size={25}>
+		<ArchbaseSpaceFill centerContent={CenterType.Vertical}>
+		  Título barra lateral ...
+		</ArchbaseSpaceFill>
+		<ArchbaseSpaceRight size={25} centerContent={CenterType.HorizontalVertical}>
+			<i class="fa fa-arrow-right" />
+		</ArchbaseSpaceRight>
+	</ArchbaseSpaceTop>
+	<ArchbaseSpaceFill>
+	  ...
+	</ArchbaseSpaceFill>
+</ArchbaseSpaceLeftResizable>
+...
+```
+
+A seguir podemos introduzir algum estado para representar se a barra lateral está expandida ou não.
+
+```tsx
+const [ sidebarExpanded, setSidebarExpanded ] = useState(true);
+```
+
+Vamos aplicar isso ao espaço da barra lateral para definir dinamicamente o tamanho e também mostrar o ícone correto com base
+no estado. Também adicionaremos um manipulador de cliques ao espaço para alterar o estado.
+
+```tsx
+...
+<ArchbaseSpaceLeftResizable size={sidebarExpanded ? 200 : 25}>
+	<ArchbaseSpaceTop size={25}>
+		...
+		<ArchbaseSpaceRight 
+			size={25} 
+			centerContent={CenterType.HorizontalVertical} 
+			onClick={() => setSidebarExpanded(prev => !prev)}>
+
+			<i className={"fa fa-arrow-" + (sidebarExpanded ? "left" : "right")} />
+
+		</ArchbaseSpaceRight>
+	</ArchbaseSpaceTop>
+	...
+</ArchbaseSpaceLeftResizable>
+...
+```
+
+O resultado é uma barra lateral que pode ser expandida ou contraida.
+
+<DemoUI />
+

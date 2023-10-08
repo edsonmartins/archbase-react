@@ -104,13 +104,13 @@ export const ArchbaseSpaceRight: React.FC<IArchbaseAnchorProps> = ({ size, child
 
 ArchbaseSpaceRight.propTypes = anchoredProps;
 
-export const BottomResizable: React.FC<IArchbaseResizableProps> = ({ children, size, ...props }) => (
+export const ArchbaseSpaceBottomResizable: React.FC<IArchbaseResizableProps> = ({ children, size, ...props }) => (
 	<ArchbaseSpace {...props} type={Type.Anchored} anchor={AnchorType.Bottom} position={{ bottom: 0, left: 0, right: 0, topResizable: true, height: size }}>
 		{children}
 	</ArchbaseSpace>
 );
 
-BottomResizable.propTypes = resizableProps;
+ArchbaseSpaceBottomResizable.propTypes = resizableProps;
 
 export const ArchbaseSpaceBottom: React.FC<IArchbaseAnchorProps> = ({ size, children, resizable, ...commonProps }) => (
 	<ArchbaseSpace

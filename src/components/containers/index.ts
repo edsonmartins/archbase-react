@@ -1,4 +1,4 @@
 export * from './form';
-export * from './spaces';
+export * from '../layout/spaces';
 export * from './tabs';
 export * from './window';

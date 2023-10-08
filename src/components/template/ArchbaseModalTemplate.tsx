@@ -1,13 +1,12 @@
 import { Button, Flex, Group, MantineNumberSize, Modal, ModalProps } from '@mantine/core'
 import React, { ReactNode } from 'react'
 import { useArchbaseAppContext } from '../core'
-import { Bottom, Fill, Fixed } from 'react-spaces'
 import { useArchbaseTheme } from '../hooks'
 import { IconCheck } from '@tabler/icons-react'
 import { IconX } from '@tabler/icons-react'
 import { t } from 'i18next'
 import { ArchbaseDialog } from '../notification'
-import { ArchbaseForm, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '../containers'
+import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '../containers'
 
 export interface ArchbaseModalTemplateProps extends ModalProps {
   height: MantineNumberSize
@@ -81,7 +80,7 @@ export function ArchbaseModalTemplate({
             {children}
           </ArchbaseForm>
         </ArchbaseSpaceFill>
-        <Bottom size="40px">
+        <ArchbaseSpaceBottom size="40px">
           <Flex justify="space-between" align="center">
             <Group>
                 {userActions}
@@ -101,7 +100,7 @@ export function ArchbaseModalTemplate({
               >{`${t('Cancel')}`}</Button>
             </Group>
           </Flex>
-        </Bottom>
+        </ArchbaseSpaceBottom>
       </ArchbaseSpaceFixed>
     </Modal>
   )

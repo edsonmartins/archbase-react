@@ -6506,7 +6506,6 @@ __metadata:
     react-pro-sidebar: ^1.1.0-alpha.1
     react-router: ^6.15.0
     react-router-dom: ^6.15.0
-    react-spaces: ^0.4.1
     react-tracked: ^1.7.11
     reflect-metadata: ^0.1.13
     regenerator-runtime: ^0.14.0
@@ -8022,7 +8021,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-element-queries@npm:^1.2.1, css-element-queries@npm:^1.2.3":
+"css-element-queries@npm:^1.2.3":
   version: 1.2.3
   resolution: "css-element-queries@npm:1.2.3"
   checksum: 77a054706c0dd0294bdacfc97fa13d9baf995760296d021fccf63b1cf44a53b48ccd8eab692a221cb91fc55a2d907f7587a5f880a585c6a269a3ccd2e6cc110a
@@ -15701,19 +15700,6 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
   checksum: b31c187e3fdcdf7294ffdad6ff834e14d012840c94d8ee8c7fbe451062a8fcb6e31e8bc7827fb1ff45445dd40fad2b8c96a7e98f0ac1c3eb1d716c257a0821c9
-  languageName: node
-  linkType: hard
-
-"react-spaces@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "react-spaces@npm:0.4.1"
-  dependencies:
-    css-element-queries: ^1.2.1
-    prop-types: ^15.7.2
-  peerDependencies:
-    react: ^16.8.0 || ^17 || ^18
-    react-dom: ^16.8.0 || ^17 || ^18
-  checksum: 400d695a8475ea89fa2295133cebceab0ba87b801bc85ff07dbfc019f0bcc099f761130f54c40473a25b14f99eee1f21c68e2cfb3c63cee6ba991d7904ff57c4
   languageName: node
   linkType: hard
 

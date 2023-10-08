@@ -450,6 +450,10 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     return this.name
   }
 
+  /**
+   * Limpa os dados do DataSource. Ao usar este método os seguintes eventos serão gerados:
+   * beforeClose, afterOpen, dataChanged, afterScroll
+   */
   public clear(): void {
     if (!this.isActive()) {
       const msg = i18next.t('archbase:operationNotAllowed', { dataSourceName: this.name, operation: 'clear' })

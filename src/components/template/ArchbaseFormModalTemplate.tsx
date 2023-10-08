@@ -1,14 +1,13 @@
 import { Button, Flex, Group, MantineNumberSize, Modal, ModalProps } from '@mantine/core'
 import React, { ReactNode } from 'react'
 import { useArchbaseAppContext } from '../core'
-import { Bottom, Fill, Fixed, Left } from 'react-spaces'
 import { useArchbaseTheme } from '../hooks'
-import { IconCheck, IconDeviceFloppy } from '@tabler/icons-react'
+import { IconCheck } from '@tabler/icons-react'
 import { IconX } from '@tabler/icons-react'
 import { ArchbaseDataSource } from '../datasource'
 import { t } from 'i18next'
 import { ArchbaseDialog } from '../notification'
-import { ArchbaseForm } from '../containers'
+import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '../containers'
 import { processDetailErrorMessage, processErrorMessage } from '../core/exceptions'
 
 export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Omit<ModalProps, "onClose"> {
@@ -129,9 +128,9 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
       closeOnEscape={closeOnEscape}
       size={size}
     >
-      <Fixed height={height}>
-        <Fill><ArchbaseForm>{children}</ArchbaseForm></Fill>
-        <Bottom size="40px">
+      <ArchbaseSpaceFixed height={height}>
+        <ArchbaseSpaceFill><ArchbaseForm>{children}</ArchbaseForm></ArchbaseSpaceFill>
+        <ArchbaseSpaceBottom size="40px">
           <Flex justify="space-between" align="center">
             <Group>
                 {userActions}
@@ -159,8 +158,8 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
               >{`${t('Close')}`}</Button>
             </Group>}
           </Flex>
-        </Bottom>
-      </Fixed>
+        </ArchbaseSpaceBottom>
+      </ArchbaseSpaceFixed>
     </Modal>
   )
 }

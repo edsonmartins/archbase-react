@@ -3,6 +3,8 @@ import './styles/querybuilder.scss';
 import './styles/template.scss';
 import './styles/treeviews.scss';
 import './styles/errorboundary.scss';
+import './styles/utils.scss';
+import './styles/spaces.css';
 
 export * from './components/admin';
 export * from './components/auth';
