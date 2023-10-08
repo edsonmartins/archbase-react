@@ -1,9 +1,10 @@
 import { Meta, Markdown } from '@storybook/blocks';
+import {ArchbaseDataSource} from './'
 
 
-<Meta title="Fontes de dados/Introdução" />
+<Meta title="Fontes de dados/Introdução"/>
 
-# Introdução ao DataSource 
+# Introdução ao DataSource
 
 O **DataSource** é uma funcionalidade fundamental no núcleo da nossa biblioteca React, desempenhando um papel crucial na gestão de dados e interações dentro de uma aplicação. O DataSource é uma abstração poderosa que permite aos desenvolvedores controlar e gerenciar conjuntos de dados de forma eficiente e dinâmica.
 
@@ -21,12 +22,18 @@ Nossos principais componentes visuais foram projetados para serem compatíveis c
 
 Os componentes visuais da biblioteca facilitam a exibição e a edição de dados do **DataSource** em interfaces de usuário elegantes e interativas. Combinados com as extensões do **DataSource**, como o **DataSource Remote**, você pode criar aplicativos React que se comunicam de forma eficiente com serviços externos e apresentam dados de maneira amigável para o usuário.
 
-## Trabalhando com Coleções de Objetos Complexos com Listas Filhas
+<img src="/datasource_bind.png"/>
 
-O **DataSource** foi projetado para trabalhar com coleções de objetos, inclusive aqueles que são mais complexos e possuem listas de objetos filhos aninhados. Para isso, você pode criar novos DataSources para cada lista de filhos, de forma que todas as alterações feitas nesses DataSources afetarão automaticamente o objeto pai de origem.
+## Gerenciamento de Hierarquias de Dados com DataSource
+
+O **DataSource** é uma ferramenta poderosa para o gerenciamento de hierarquias de dados complexas. Quando seus objetos de dados formam uma árvore ou uma hierarquia com listas filhas, é possível criar DataSources para cada coleção principal e suas coleções filhas associadas. Isso permite que você mantenha a integridade dos dados e atualizações consistentes em toda a estrutura complexa do objeto.
 
 Neste tópico, exploraremos como lidar com esses cenários complexos, onde objetos podem conter listas de objetos filhos aninhados. Mostraremos como criar e gerenciar DataSources para essas listas filhas, permitindo que você mantenha a integridade dos dados e atualizações consistentes em toda a estrutura complexa do objeto.
 
-Se você está procurando uma maneira eficiente e poderosa de gerenciar dados em suas aplicações React, o **DataSource** é uma ferramenta que você definitivamente deseja conhecer. Vamos mergulhar fundo nesta funcionalidade essencial e descobrir como ela pode tornar o desenvolvimento de aplicações mais eficiente e produtivo.
+Se você está procurando uma maneira eficiente e poderosa de gerenciar hierarquias de dados em suas aplicações React, o **DataSource** é a ferramenta que você precisa conhecer. Vamos mergulhar fundo nesta funcionalidade essencial e descobrir como ela pode tornar o desenvolvimento de aplicações mais eficiente e produtivo.
 
 Continue lendo para explorar todas as nuances do **DataSource** e aproveitar ao máximo essa poderosa ferramenta em nossa biblioteca React.
+
+
+<img src="/datasource_hierarquia.png"/>
+

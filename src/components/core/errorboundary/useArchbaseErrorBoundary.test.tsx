@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 
-import { createRoot } from "react-dom/client";
+import React, { createRoot } from "react-dom/client";
 import { act } from "react-dom/test-utils";
 import { ArchbaseErrorBoundary } from "./ArchbaseErrorBoundary";
-import { UseArchbaseErrorBoundaryApi, useErrorBoundary as useArchbaseErrorBoundary } from "./useArchbaseErrorBoundary";
+import { UseArchbaseErrorBoundaryApi, useArchbaseErrorBoundary } from "./useArchbaseErrorBoundary";
 
 describe("useArchbaseErrorBoundary", () => {
   let container: HTMLDivElement;

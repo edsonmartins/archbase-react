@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { Component, createRef, PropsWithChildren } from "react";
+import React, { Component, createRef, PropsWithChildren } from "react";
 import { createRoot } from "react-dom/client";
 import { act } from "react-dom/test-utils";
 import { withArchbaseErrorBoundary } from "./withArchbaseErrorBoundary";
