@@ -17,7 +17,7 @@ jobs:
         run: yarn install  
 
       - name: Build Storybook
-        run: yarn run build-storybook  
+        run: yarn run storybook:build  
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.2
