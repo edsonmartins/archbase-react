@@ -2,3 +2,1215 @@ import { Meta, Markdown } from '@storybook/blocks';
 
 
 <Meta title="Validação/Introdução" />
+
+
+
+# ArchbaseValidator
+
+## Como usar
+
+Crie sua classe e coloque alguns decoradores de validação nas propriedades que deseja validar:
+
+```typescript
+import {
+  validate,
+  validateOrReject,
+  Contains,
+  IsInt,
+  Length,
+  IsEmail,
+  IsFQDN,
+  IsDate,
+  Min,
+  Max,
+} from 'archbase-react';
+
+export class Post {
+  @Length(10, 20)
+  title: string;
+
+  @Contains('Olá')
+  text: string;
+
+  @IsInt()
+  @Min(0)
+  @Max(10)
+  rating: number;
+
+  @IsEmail()
+  email: string;
+
+  @IsFQDN()
+  site: string;
+
+  @IsDate()
+  createDate: Date;
+}
+
+let post = new Post();
+post.title = 'Olá'; //não deveria passar
+post.text = 'este é um ótimo post sobre o mundo infernal'; //não deveria passar
+post.rating = 11; //não deveria passar
+post.email = 'google.com'; //não deveria passar
+post.site = 'googlecom'; //não deveria passar
+
+validate(post).then(errors => {
+  // erros é uma matriz de erros de validação
+  if (errors.length > 0) {
+    console.log('falha na validação. erros: ', errors);
+  } else {
+    console.log('validação bem sucedida');
+  }
+});
+
+validateOrReject(post).catch(errors => {
+  console.log('Promessa rejeitada (falha na validação). Erros: ', errors);
+});
+// or
+async function validateOrRejectExample(input) {
+  try {
+    await validateOrReject(input);
+  } catch (errors) {
+    console.log('Caught promise rejection (falha na validação). Erros: ', errors);
+  }
+}
+```
+
+### Passando opções para o validador
+
+A função `validate` espera opcionalmente um `ValidatorOptions` objeto como segundo parâmetro:
+
+```ts
+export interface ValidatorOptions {
+  skipMissingProperties?: boolean;
+  whitelist?: boolean;
+  forbidNonWhitelisted?: boolean;
+  groups?: string[];
+  dismissDefaultMessages?: boolean;
+  validationError?: {
+    target?: boolean;
+    value?: boolean;
+  };
+
+  forbidUnknownValues?: boolean;
+  stopAtFirstError?: boolean;
+}
+```
+
+> **IMPORTANTE**
+> O `forbidUnknownValues` o valor é definido como `true` por padrão e **é altamente recomendável manter o padrão**.
+> Definir como `false` fará com que objetos desconhecidos passem na validação!
+
+## Erros de validação
+
+O método `validate` retorna um array de objetos `ValidationError`. Cada `ValidationError` é:
+
+```typescript
+{
+    target: Object; // Objeto que foi validado.
+    property: string; // Propriedade do objeto que não passou na validação.
+    value: any; // Valor que não passou na validação.
+    constraints?: { // Restrições que falharam na validação com mensagens de erro.
+        [type: string]: string;
+    };
+    children?: ValidationError[]; // Contém todos os erros de validação aninhados da propriedade
+}
+```
+No nosso caso, quando validamos um objeto Post, temos um array de objetos `ValidationError`:
+
+```typescript
+[{
+    target: /* post object */,
+    property: "title",
+    value: "Olá",
+    constraints: {
+        length: "$property deve ser maior ou igual a 10 caracteres"
+    }
+}, {
+    target: /* post object */,
+    property: "text",
+    value: "este é um ótimo post sobre o mundo infernal",
+    constraints: {
+        contains: "o texto deve conter uma string de olá"
+    }
+},
+// e outros erros
+]
+```
+
+Se você não deseja que um `alvo` seja exposto em erros de validação, existe uma opção especial ao usar o validador:
+
+```typescript
+validator.validate(post, { validationError: { target: false } });
+```
+
+Isso é especialmente útil quando você envia erros de volta por http e provavelmente não deseja expor
+todo o objeto alvo.
+
+## Mensagens de validação
+
+Você pode especificar a mensagem de validação nas opções do decorador e essa mensagem será retornada em `ValidationError`
+retornado pelo método `validate` (caso a validação deste campo falhe).
+
+```typescript
+import { MinLength, MaxLength } from 'archbase-react';
+
+export class Post {
+  @MinLength(10, {
+    message: 'O título é muito curto',
+  })
+  @MaxLength(50, {
+    message: 'O título é muito longo',
+  })
+  title: string;
+}
+```
+
+Existem alguns tokens especiais que você pode usar em suas mensagens:
+
+- `$value` - o valor que está sendo validado
+- `$property` - nome da propriedade do objeto que está sendo validada
+- `$target` - nome da classe do objeto que está sendo validado
+- `$constraint1`, `$constraint2`, ... `$constraintN` - restrições definidas por tipo de validação específico
+
+Exemplo de uso:
+
+```typescript
+import { MinLength, MaxLength } from 'archbase-react';
+
+export class Post {
+  @MinLength(10, {
+    //aqui, $constraint1 será substituído por "10" e $value pelo valor real fornecido
+    message: 'O título é muito curto. O comprimento mínimo é de $constraint1 caracteres, mas o real é de $value',
+  })
+  @MaxLength(50, {
+    // aqui, $constraint1 será substituído por "50" e $value pelo valor real fornecido
+    message: 'O título é muito longo. O comprimento máximo é de $constraint1 caracteres, mas o real é $value',
+  })
+  title: string;
+}
+```
+
+Além disso, você pode fornecer uma função que retorne uma mensagem. Isso permite que você crie mensagens mais granulares:
+
+```typescript
+import { MinLength, MaxLength, ValidationArguments } from 'archbase-react';
+
+export class Post {
+  @MinLength(10, {
+    message: (args: ValidationArguments) => {
+      if (args.value.length === 1) {
+        return 'Muito curto, o comprimento mínimo é de 1 caractere';
+      } else {
+        return 'Muito curto, o comprimento mínimo é ' + args.constraints[0] + ' caracteres';
+      }
+    },
+  })
+  title: string;
+}
+```
+
+A função de mensagem aceita `ValidationArguments` que contém as seguintes informações:
+
+- `value` - o valor que está sendo validado
+- `constraints` - matriz de restrições definidas por tipo de validação específico
+- `targetName` - nome da classe do objeto que está sendo validado
+- `object` - objeto que está sendo validado
+- `property` - nome da propriedade do objeto que está sendo validada
+
+## Validando arrays
+
+Se o seu campo for um array e você quiser realizar a validação de cada item do array você deve especificar um
+opção especial de decorador `each: true`:
+
+```typescript
+import { MinLength, MaxLength } from 'archbase-react';
+
+export class Post {
+  @MaxLength(20, {
+    each: true,
+  })
+  tags: string[];
+}
+```
+
+Isso validará cada item no array `post.tags`.
+
+## Validando sets
+
+Se o seu campo for um conjunto e você quiser realizar a validação de cada item do conjunto você deve especificar um
+opção especial de decorador `each: true`:
+
+```typescript
+import { MinLength, MaxLength } from 'archbase-react';
+
+export class Post {
+  @MaxLength(20, {
+    each: true,
+  })
+  tags: Set<string>;
+}
+```
+
+Isso validará cada item do conjunto `post.tags`.
+
+## Validando maps
+
+Se o seu campo for um mapa e você quiser realizar a validação de cada item do mapa você deve especificar um
+opção especial de decorador `each: true`:
+
+```typescript
+import { MinLength, MaxLength } from 'archbase-react';
+
+export class Post {
+  @MaxLength(20, {
+    each: true,
+  })
+  tags: Map<string, string>;
+}
+```
+
+Isso validará cada item no mapa `post.tags`.
+
+## Validando objetos aninhados
+
+Se o seu objeto contém objetos aninhados e você deseja que o validador execute sua validação também, então você precisa
+use o decorador `@ValidateNested()`:
+
+```typescript
+import { ValidateNested } from 'archbase-react';
+
+export class Post {
+  @ValidateNested()
+  user: User;
+}
+```
+
+Observe que o objeto aninhado _deve_ ser uma instância de uma classe, caso contrário `@ValidateNested` não saberá qual classe é alvo de validação. Verifique também [Validando objetos simples](#validating-plain-objects).
+
+Também funciona com array multidimensional, como:
+
+```typescript
+import { ValidateNested } from 'archbase-react';
+
+export class Plan2D {
+  @ValidateNested()
+  matrix: Point[][];
+}
+```
+
+## Validando promises
+
+Se o seu objeto contém uma propriedade com valor retornado por `Promise` que deve ser validado, então você precisa usar o decorador `@ValidatePromise()`:
+
+```typescript
+import { ValidatePromise, Min } from 'archbase-react';
+
+export class Post {
+  @Min(0)
+  @ValidatePromise()
+  userId: Promise<number>;
+}
+```
+
+Também funciona muito bem com o decorador `@ValidateNested`:
+
+```typescript
+import { ValidateNested, ValidatePromise } from 'archbase-react';
+
+export class Post {
+  @ValidateNested()
+  @ValidatePromise()
+  user: Promise<User>;
+}
+```
+
+## Herdando decoradores de validação
+
+Quando você define uma subclasse que se estende de outra, a subclasse herdará automaticamente os decoradores do pai. Se uma propriedade for redefinida no descendente, os decoradores de classe serão aplicados a ela tanto de sua própria classe quanto da classe base.
+
+```typescript
+import { validate } from 'archbase-react';
+
+class BaseContent {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  password: string;
+}
+
+class User extends BaseContent {
+  @MinLength(10)
+  @MaxLength(20)
+  name: string;
+
+  @Contains('Olá')
+  welcome: string;
+
+  @MinLength(20)
+  password: string;
+}
+
+let user = new User();
+
+user.email = 'invalid email'; // propriedade herdada
+user.password = 'muito curto'; // a senha será validada não apenas em IsString, mas também em MinLength
+user.name = 'not valid';
+user.welcome = 'ola';
+
+validate(user).then(errors => {
+  // ...
+}); // retornará erros para propriedades de e-mail, título e texto
+```
+
+## Validação condicional
+
+O decorador de validação condicional (`@ValidateIf`) pode ser usado para ignorar os validadores em uma propriedade quando a função de condição fornecida retorna falso. A função de condição pega o objeto que está sendo validado e deve retornar um `booleano`.
+
+```typescript
+import { ValidateIf, IsNotEmpty } from 'archbase-react';
+
+export class Post {
+  otherProperty: string;
+
+  @ValidateIf(o => o.otherProperty === 'value')
+  @IsNotEmpty()
+  example: string;
+}
+```
+
+No exemplo acima, as regras de validação aplicadas a `example` não serão executadas a menos que `otherProperty` do objeto seja `"value"`.
+
+Observe que quando a condição é falsa, todos os decoradores de validação são ignorados, incluindo `isDefined`.
+
+## Lista de permissões
+
+Mesmo que seu objeto seja uma instância de uma classe de validação, ele poderá conter propriedades adicionais que não estão definidas.
+Se você não deseja ter tais propriedades em seu objeto, passe um sinalizador especial para o método `validate`:
+
+```typescript
+import { validate } from 'archbase-react';
+// ...
+validate(post, { whitelist: true });
+```
+
+Isso removerá todas as propriedades que não possuem decoradores. Se nenhum outro decorador for adequado para sua propriedade,
+você pode usar o decorador @Allow:
+
+```typescript
+import {validate, Allow, Min} from "class-validator";
+
+export class Post {
+
+    @Allow()
+    title: string;
+
+    @Min(0)
+    views: number;
+
+    nonWhitelistedProperty: number;
+}
+
+let post = new Post();
+post.title = 'Olá mundo!';
+post.views = 420;
+
+post.nonWhitelistedProperty = 69;
+(post as any).anotherNonWhitelistedProperty = "something";
+
+validate(post).then(errors => {
+  // post.nonWhitelistedProperty não está definido
+  // (post as any).anotherNonWhitelistedProperty não está definido
+  ...
+});
+```
+
+Se você preferir que um erro seja gerado quando alguma propriedade não incluída na lista de permissões estiver presente, passe outro sinalizador para
+Método `validar`:
+
+```typescript
+import { validate } from 'archbase-react';
+// ...
+validate(post, { whitelist: true, forbidNonWhitelisted: true });
+```
+
+## Passando contexto para decoradores
+
+É possível passar um objeto customizado para decoradores que estará acessível na instância `ValidationError` da propriedade caso haja falha na validação.
+```ts
+import { validate } from 'archbase-react';
+
+class MyClass {
+  @MinLength(32, {
+    message: 'EIC o código deve ter pelo menos 32 caracteres',
+    context: {
+      errorCode: 1003,
+      developerNote: 'A string validada deve conter 32 ou mais caracteres.',
+    },
+  })
+  eicCode: string;
+}
+
+const model = new MyClass();
+
+validate(model).then(errors => {
+  //errors[0].contexts['minLength'].errorCode === 1003
+});
+```
+
+## Ignorando propriedades ausentes
+
+Às vezes você pode querer pular a validação das propriedades que não existem no objeto de validação. Isso é
+geralmente desejável quando você deseja atualizar algumas partes do objeto e deseja validar apenas as partes atualizadas,
+mas pule todo o resto, por ex. pule as propriedades ausentes.
+Em tais situações você precisará passar um sinalizador especial para o método `validate`:
+
+```typescript
+import { validate } from 'archbase-react';
+// ...
+validate(post, { skipMissingProperties: true });
+```
+
+Ao pular propriedades ausentes, às vezes você não deseja pular todas as propriedades ausentes, algumas delas podem ser necessárias
+para você, mesmo que skipMissingProperties esteja definido como verdadeiro. Para tais casos você deve usar o decorador `@IsDefined()`.
+`@IsDefined()` é o único decorador que ignora a opção `skipMissingProperties`.
+
+## Grupos de validação
+
+Em diferentes situações você pode querer usar diferentes esquemas de validação do mesmo objeto.
+Nesses casos você pode usar grupos de validação.
+
+> **IMPORTANTE**
+> Chamar uma validação com uma combinação de grupo que não resultaria em validação (ex: nome de grupo inexistente)
+> resultará em um erro de valor desconhecido. Ao validar com grupos, a combinação de grupos fornecida deve corresponder a pelo menos um decorador.
+
+```typescript
+import { validate, Min, Length } from 'archbase-react';
+
+export class User {
+  @Min(12, {
+    groups: ['registro'],
+  })
+  age: number;
+
+  @Length(2, 20, {
+    groups: ['registro', 'admin'],
+  })
+  name: string;
+}
+
+let user = new User();
+user.age = 10;
+user.name = 'Alex';
+
+validate(user, {
+  groups: ['registro'],
+}); // isso não passará na validação
+
+validate(user, {
+  groups: ['admin'],
+}); // this will pass validation
+
+validate(user, {
+  groups: ['registration', 'admin'],
+}); // isso não passará na validação
+
+validate(user, {
+  groups: undefined, // o padrão
+}); // isso não passará na validação, pois todas as propriedades são validadas independentemente de seus grupos
+
+validate(user, {
+  groups: [],
+}); // isso não passará na validação (equivalente a 'groups: indefinidos', veja acima)
+```
+
+Há também um sinalizador especial `always: true` nas opções de validação que você pode usar. Este sinalizador diz que esta validação
+deve ser aplicado sempre, independentemente do grupo usado.
+
+## Classes de validação personalizadas
+
+Se você tiver uma lógica de validação personalizada, poderá criar uma _classe de restrição_:
+
+1. Primeiro crie um arquivo, digamos `CustomTextLength.ts`, e defina uma nova classe:
+
+   ```typescript
+   import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'archbase-react';
+
+   @ValidatorConstraint({ name: 'customText', async: false })
+   export class CustomTextLength implements ValidatorConstraintInterface {
+     validate(text: string, args: ValidationArguments) {
+       return text.length > 1 && text.length < 10; // para validações assíncronas você deve retornar um Promise<boolean> aqui
+     }
+
+     defaultMessage(args: ValidationArguments) {
+       // aqui você pode fornecer mensagem de erro padrão se falha na validação
+       return 'O texto ($value) é muito curto ou muito longo!';
+     }
+   }
+   ```
+
+   Marcamos nossa classe com o decorador `@ValidatorConstraint`.
+   Você também pode fornecer um nome de restrição de validação - esse nome será usado como "tipo de erro" em ValidationError.
+   Se você não fornecer um nome de restrição, ele será gerado automaticamente.
+
+   Nossa classe deve implementar a interface `ValidatorConstraintInterface` e seu método `validate`,
+   que define a lógica de validação. Se a validação for bem-sucedida, o método retornará verdadeiro, caso contrário, falso.
+   O validador personalizado pode ser assíncrono, se você quiser realizar a validação após alguma assíncrona
+   operações, simplesmente retorne uma promessa com booleano dentro do método `validate`.
+
+   Também definimos o método opcional `defaultMessage` que define uma mensagem de erro padrão,
+   caso a implementação do decorador não defina uma mensagem de erro.
+
+2. Então você pode usar sua nova restrição de validação em sua classe:
+
+   ```typescript
+   import { Validate } from 'archbase-react';
+   import { CustomTextLength } from './CustomTextLength';
+
+   export class Post {
+     @Validate(CustomTextLength, {
+       message: 'O título é muito curto ou longo!',
+     })
+     title: string;
+   }
+   ```
+
+   Aqui definimos nossa restrição de validação `CustomTextLength` recém-criada para `Post.title`.
+
+3. And use validator as usual:
+
+   ```typescript
+   import { validate } from 'archbase-react';
+
+   validate(post).then(errors => {
+     // ...
+   });
+   ```
+
+Você também pode passar restrições para o seu validador, assim:
+
+```typescript
+import { Validate } from 'archbase-react';
+import { CustomTextLength } from './CustomTextLength';
+
+export class Post {
+  @Validate(CustomTextLength, [3, 20], {
+    message: 'Wrong post title',
+  })
+  title: string;
+}
+```
+
+E use-os no objeto `validationArguments`:
+
+```typescript
+import { ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from 'archbase-react';
+
+@ValidatorConstraint()
+export class CustomTextLength implements ValidatorConstraintInterface {
+  validate(text: string, validationArguments: ValidationArguments) {
+    return text.length > validationArguments.constraints[0] && text.length < validationArguments.constraints[1];
+  }
+}
+```
+
+## Decoradores de validação personalizados
+
+Você também pode criar decoradores personalizados. É a maneira mais elegante de usar validações personalizadas.
+Vamos criar um decorador chamado `@IsLongerThan`:
+
+1. Crie você mesmo um decorador:
+
+   ```typescript
+   import { registerDecorator, ValidationOptions, ValidationArguments } from 'archbase-react';
+
+   export function IsLongerThan(property: string, validationOptions?: ValidationOptions) {
+     return function (object: Object, propertyName: string) {
+       registerDecorator({
+         name: 'isLongerThan',
+         target: object.constructor,
+         propertyName: propertyName,
+         constraints: [property],
+         options: validationOptions,
+         validator: {
+           validate(value: any, args: ValidationArguments) {
+             const [relatedPropertyName] = args.constraints;
+             const relatedValue = (args.object as any)[relatedPropertyName];
+             return typeof value === 'string' && typeof relatedValue === 'string' && value.length > relatedValue.length; // você pode retornar um Promise<boolean> aqui também, se quiser fazer uma validação assíncrona
+           },
+         },
+       });
+     };
+   }
+   ```
+
+2. Coloque-o em uso:
+
+   ```typescript
+   import { IsLongerThan } from './IsLongerThan';
+
+   export class Post {
+     title: string;
+
+     @IsLongerThan('title', {
+       /* você também pode usar opções de validação adicionais, como "grupos" em seus decoradores de validação personalizados. "each" não é suportado */
+       message: 'O texto deve ser maior que o título',
+     })
+     text: string;
+   }
+   ```
+
+Em seus decoradores personalizados você também pode usar `ValidationConstraint`.
+Vamos criar outro decorador de validação personalizado chamado `IsUserAlreadyExist`:
+
+1. Crie um ValidationConstraint e um decorador:
+
+   ```typescript
+   import {
+     registerDecorator,
+     ValidationOptions,
+     ValidatorConstraint,
+     ValidatorConstraintInterface,
+     ValidationArguments,
+   } from 'archbase-react';
+
+   @ValidatorConstraint({ async: true })
+   export class IsUserAlreadyExistConstraint implements ValidatorConstraintInterface {
+     validate(userName: any, args: ValidationArguments) {
+       return UserRepository.findOneByName(userName).then(user => {
+         if (user) return false;
+         return true;
+       });
+     }
+   }
+
+   export function IsUserAlreadyExist(validationOptions?: ValidationOptions) {
+     return function (object: Object, propertyName: string) {
+       registerDecorator({
+         target: object.constructor,
+         propertyName: propertyName,
+         options: validationOptions,
+         constraints: [],
+         validator: IsUserAlreadyExistConstraint,
+       });
+     };
+   }
+   ```
+
+  Observe que marcamos nossa restrição de que será assíncrono adicionando `{ async: true }` nas opções de validação.
+
+2. E coloque-o em uso:
+
+   ```typescript
+   import { IsUserAlreadyExist } from './IsUserAlreadyExist';
+
+   export class User {
+     @IsUserAlreadyExist({
+       message: 'O usuário $value já existe. Escolha outro nome.',
+     })
+     name: string;
+   }
+   ```
+
+## Validação síncrona
+
+Se você deseja realizar uma validação simples não assíncrona, você pode usar o método `validateSync` em vez do `validate` regular
+método. Tem os mesmos argumentos do método `validate`. Mas observe que este método **ignora** todas as validações assíncronas
+você tem.
+
+## Validação manual
+
+Existem vários métodos no Validador que permitem realizar validação não baseada em decorador:
+
+```typescript
+import { isEmpty, isBoolean } from 'archbase-react';
+
+isEmpty(value);
+isBoolean(value);
+```
+
+## Decoradores de validação
+
+
+
+<table>
+    <tr>
+        <th>Decorador</th>
+        <td>Descrição</td>
+    </tr>
+    <tr>
+        <th>**Decoradores de validação comuns**</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th>`@IsDefined(value: any)`</th>
+        <td>Verifica se o valor está definido (!== undefined, !== null). Este é o único decorador que ignora a opção skipMissingProperties.</td>
+    </tr>
+    <tr>
+        <th>`@IsOptional()`</th>
+        <td>Verifica se o valor fornecido está vazio (=== null, === undefined) e se sim, ignora todos os validadores na propriedade.</td>
+    </tr>
+    <tr>
+        <th>`@Equals(comparison: any)`</th>
+        <td>Verifica se o valor é igual (&quot;===&quot;) comparação.</td>
+    </tr>
+    <tr>
+        <th>`@NotEquals(comparison: any)`</th>
+        <td>Verifica se o valor não é igual (&quot;!==&quot;) comparação.</td>
+    </tr>
+    <tr>
+        <th>`@IsEmpty()`</th>
+        <td>Verifica se o valor fornecido está vazio (=== &#39;&#39;, === null, === undefined).</td>
+    </tr>
+    <tr>
+        <th>`@IsNotEmpty()`</th>
+        <td>Verifica se o valor fornecido não está vazio (!== &#39;&#39;, !== null, !== undefined).</td>
+    </tr>
+    <tr>
+        <th>`@IsIn(values: any[])`</th>
+        <td>Verifica se o valor está em uma matriz de valores permitidos.</td>
+    </tr>
+    <tr>
+        <th>`@IsNotIn(values: any[])`</th>
+        <td>Verifica se o valor não está em uma matriz de valores não permitidos.</td>
+    </tr>
+    <tr>
+        <th>**Decoradores de validação de tipo**</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th>`@IsBoolean()`</th>
+        <td>Verifica se um valor é booleano.</td>
+    </tr>
+    <tr>
+        <th>`@IsDate()`</th>
+        <td>Verifica se o valor é uma data.</td>
+    </tr>
+    <tr>
+        <th>`@IsString()`</th>
+        <td>Verifica se o valor é uma string.</td>
+    </tr>
+    <tr>
+        <th>`@IsNumber(options: IsNumberOptions)`</th>
+        <td>Verifica se o valor é um número.</td>
+    </tr>
+    <tr>
+        <th>`@IsInt()`</th>
+        <td>Verifica se o valor é um número inteiro.</td>
+    </tr>
+    <tr>
+        <th>`@IsArray()`</th>
+        <td>Verifica se o valor é um array.</td>
+    </tr>
+    <tr>
+        <th>`@IsEnum(entity: object)`</th>
+        <td>Verifica se o valor é um enum válido.</td>
+    </tr>
+    <tr>
+        <th>**Decoradores de validação de número**</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th>`@IsDivisibleBy(num: number)`</th>
+        <td>Verifica se o valor é um número divisível por outro.</td>
+    </tr>
+    <tr>
+        <th>`@IsPositive()`</th>
+        <td>Verifica se o valor é um número positivo maior que zero.</td>
+    </tr>
+    <tr>
+        <th>`@IsNegative()`</th>
+        <td>Verifica se o valor é um número negativo menor que zero.</td>
+    </tr>
+    <tr>
+        <th>`@Min(min: number)`</th>
+        <td>Verifica se o número fornecido é maior ou igual ao número fornecido.</td>
+    </tr>
+    <tr>
+        <th>`@Max(max: number)`</th>
+        <td>Verifica se o número fornecido é menor ou igual ao número fornecido.</td>
+    </tr>
+    <tr>
+        <th>**Decoradores de validação de data**</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th>`@MinDate(date: Date \| (() =&gt; Date))`</th>
+        <td>Verifica se o valor é uma data posterior à data especificada.</td>
+    </tr>
+    <tr>
+        <th>`@MaxDate(date: Date \| (() =&gt; Date))`</th>
+        <td>Verifica se o valor é uma data anterior à data especificada.</td>
+    </tr>
+    <tr>
+        <th>**Decoradores de validação do tipo string**</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th>`@IsBooleanString()`</th>
+        <td>Verifica se uma string é booleana (por exemplo, é &quot;true&quot; ou &quot;false&quot; ou &quot;1&quot;, &quot;0&quot;).</td>
+    </tr>
+    <tr>
+        <th>`@IsDateString()`</th>
+        <td>Alias ​​para `@IsISO8601()`.</td>
+    </tr>
+    <tr>
+        <th>`@IsNumberString(options?: IsNumericOptions)`</th>
+        <td>Verifica se uma string é um número.</td>
+    </tr>
+    <tr>
+        <th>**Decoradores de validação de string**</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th>`@Contains(seed: string)`</th>
+        <td>Verifica se a string contém a semente.</td>
+    </tr>
+    <tr>
+        <th>`@NotContains(seed: string)`</th>
+        <td>Verifica se a string não contém a semente.</td>
+    </tr>
+    <tr>
+        <th>`@IsAlpha()`</th>
+        <td>Verifica se a string contém apenas letras (a-zA-Z).</td>
+    </tr>
+    <tr>
+        <th>`@IsAlphanumeric()`</th>
+        <td>Verifica se a string contém apenas letras e números.</td>
+    </tr>
+    <tr>
+        <th>`@IsDecimal(options?: IsDecimalOptions)`</th>
+        <td>Verifica se a string é um valor decimal válido. As IsDecimalOptions padrão são `force_decimal=False`, `decimal_digits: &#39;1,&#39;`, `locale: &#39;en-US&#39;`</td>
+    </tr>
+    <tr>
+        <th>`@IsAscii()`</th>
+        <td>Verifica se a string contém apenas caracteres ASCII.</td>
+    </tr>
+    <tr>
+        <th>`@IsBase32()`</th>
+        <td>Verifica se uma string é codificada em base32.</td>
+    </tr>
+    <tr>
+        <th>`@IsBase58()`</th>
+        <td>Verifica se uma string está codificada em base58.</td>
+    </tr>
+    <tr>
+        <th>`@IsBase64(options?: IsBase64Options)`</th>
+        <td>Verifica se uma string é codificada em base64.</td>
+    </tr>
+    <tr>
+        <th>`@IsIBAN()`</th>
+        <td>Verifica se uma string é um IBAN (Número Internacional de Conta Bancária).</td>
+    </tr>
+    <tr>
+        <th>`@IsBIC()`</th>
+        <td>Verifica se uma string é um código BIC (Código de Identificação Bancária) ou SWIFT.</td>
+    </tr>
+    <tr>
+        <th>`@IsByteLength(min: number, max?: number)`</th>
+        <td>Verifica se o comprimento da string (em bytes) está dentro de um intervalo.</td>
+    </tr>
+    <tr>
+        <th>`@IsCreditCard()`</th>
+        <td>Verifica se a string é um cartão de crédito.</td>
+    </tr>
+    <tr>
+        <th>`@IsCurrency(options?: IsCurrencyOptions)`</th>
+        <td>Verifica se a string é um valor monetário válido.</td>
+    </tr>
+    <tr>
+        <th>`@IsISO4217CurrencyCode()`</th>
+        <td>Verifica se a string é um código de moeda ISO 4217.</td>
+    </tr>
+    <tr>
+        <th>`@IsEthereumAddress()`</th>
+        <td>Verifica se a string é um endereço Ethereum usando regex básico. Não valida somas de verificação de endereço.</td>
+    </tr>
+    <tr>
+        <th>`@IsBtcAddress()`</th>
+        <td>Verifica se a string é um endereço BTC válido.</td>
+    </tr>
+    <tr>
+        <th>`@IsDataURI()`</th>
+        <td>Verifica se a string é um formato uri de dados.</td>
+    </tr>
+    <tr>
+        <th>`@IsEmail(options?: IsEmailOptions)`</th>
+        <td>Verifica se a string é um email.</td>
+    </tr>
+    <tr>
+        <th>`@IsFQDN(options?: IsFQDNOptions)`</th>
+        <td>Verifica se a string é um nome de domínio totalmente qualificado (por exemplo, domínio.com).</td>
+    </tr>
+    <tr>
+        <th>`@IsFullWidth()`</th>
+        <td>Verifica se a string contém caracteres de largura total.</td>
+    </tr>
+    <tr>
+        <th>`@IsHalfWidth()`</th>
+        <td>Verifica se a string contém caracteres de meia largura.</td>
+    </tr>
+    <tr>
+        <th>`@IsVariableWidth()`</th>
+        <td>Verifica se a string contém uma mistura de caracteres completos e de meia largura.</td>
+    </tr>
+    <tr>
+        <th>`@IsHexColor()`</th>
+        <td>Verifica se a string tem uma cor hexadecimal.</td>
+    </tr>
+    <tr>
+        <th>`@IsHSL()`</th>
+        <td>Verifica se a string é uma cor HSL com base na [especificação de cores CSS nível 4](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value).</td>
+    </tr>
+    <tr>
+        <th>`@IsRgbColor(options?: IsRgbOptions)`</th>
+        <td>Verifica se a string é de cor rgb ou rgba.</td>
+    </tr>
+    <tr>
+        <th>`@IsIdentityCard(locale?: string)`</th>
+        <td>Verifica se a string é um código de carteira de identidade válido.</td>
+    </tr>
+    <tr>
+        <th>`@IsPassportNumber(countryCode?: string)`</th>
+        <td>Verifica se a string é um número de passaporte válido relativo a um código de país específico.</td>
+    </tr>
+    <tr>
+        <th>`@IsPostalCode(locale?: string)`</th>
+        <td>Verifica se a string é um código postal.</td>
+    </tr>
+    <tr>
+        <th>`@IsHexadecimal()`</th>
+        <td>Verifica se a string é um número hexadecimal.</td>
+    </tr>
+    <tr>
+        <th>`@IsOctal()`</th>
+        <td>Verifica se a string é um número octal.</td>
+    </tr>
+    <tr>
+        <th>`@IsMACAddress(options?: IsMACAddressOptions)`</th>
+        <td>Verifica se a string é um endereço MAC.</td>
+    </tr>
+    <tr>
+        <th>`@IsIP(version?: &quot;4&quot;\|&quot;6&quot;)`</th>
+        <td>Verifica se a string é um IP (versão 4 ou 6).</td>
+    </tr>
+    <tr>
+        <th>`@IsPort()`</th>
+        <td>Verifica se a string é um número de porta válido.</td>
+    </tr>
+    <tr>
+        <th>`@IsISBN(version?: &quot;10&quot;\|&quot;13&quot;)`</th>
+        <td>Verifica se a string é um ISBN (versão 10 ou 13).</td>
+    </tr>
+    <tr>
+        <th>`@IsEAN()`</th>
+        <td>Verifica se a string é um EAN (número de artigo europeu).</td>
+    </tr>
+    <tr>
+        <th>`@IsISIN()`</th>
+        <td>Verifica se a string é um ISIN (identificador de estoque/título).</td>
+    </tr>
+    <tr>
+        <th>`@IsISO8601(options?: IsISO8601Options)`</th>
+        <td>Verifica se a string é um formato de data ISO 8601 válido. Use a opção strict = true para verificações adicionais de uma data válida.</td>
+    </tr>
+    <tr>
+        <th>`@IsJSON()`</th>
+        <td>Verifica se a string é JSON válida.</td>
+    </tr>
+    <tr>
+        <th>`@IsJWT()`</th>
+        <td>Verifica se a string é JWT válida.</td>
+    </tr>
+    <tr>
+        <th>`@IsObject()`</th>
+        <td>Verifica se o objeto é válido (nulo, funções, arrays retornarão falso).</td>
+    </tr>
+    <tr>
+        <th>`@IsNotEmptyObject()`</th>
+        <td>Verifica se o objeto não está vazio.</td>
+    </tr>
+    <tr>
+        <th>`@IsLowercase()`</th>
+        <td>Verifica se a string está em minúsculas.</td>
+    </tr>
+    <tr>
+        <th>`@IsLatLong()`</th>
+        <td>Verifica se a string é uma coordenada de latitude-longitude válida no formato lat, long.</td>
+    </tr>
+    <tr>
+        <th>`@IsLatitude()`</th>
+        <td>Verifica se a string ou número é uma coordenada de latitude válida.</td>
+    </tr>
+    <tr>
+        <th>`@IsLongitude()`</th>
+        <td>Verifica se a string ou número é uma coordenada de longitude válida.</td>
+    </tr>
+    <tr>
+        <th>`@IsMobilePhone(locale: string)`</th>
+        <td>Verifica se a string é um número de celular.</td>
+    </tr>
+    <tr>
+        <th>`@IsISO31661Alpha2()`</th>
+        <td>Verifica se a string é um código de país válido ISO 3166-1 alfa-2 oficialmente atribuído.</td>
+    </tr>
+    <tr>
+        <th>`@IsISO31661Alpha3()`</th>
+        <td>Verifica se a string é um código de país válido ISO 3166-1 alfa-3 oficialmente atribuído.</td>
+    </tr>
+    <tr>
+        <th>`@IsLocale()`</th>
+        <td>Verifica se a string é uma localidade.</td>
+    </tr>
+    <tr>
+        <th>`@IsPhoneNumber(region: string)`</th>
+        <td>Verifica se a string é um número de telefone válido usando libphonenumber-js.</td>
+    </tr>
+    <tr>
+        <th>`@IsMongoId()`</th>
+        <td>Verifica se a string é uma representação codificada em hexadecimal válida de um ObjectId do MongoDB.</td>
+    </tr>
+    <tr>
+        <th>`@IsMultibyte()`</th>
+        <td>Verifica se a string contém um ou mais caracteres multibyte.</td>
+    </tr>
+    <tr>
+        <th>`@IsNumberString(options?: IsNumericOptions)`</th>
+        <td>Verifica se a string é numérica.</td>
+    </tr>
+    <tr>
+        <th>`@IsSurrogatePair()`</th>
+        <td>Verifica se a string contém quaisquer caracteres de pares substitutos.</td>
+    </tr>
+    <tr>
+        <th>`@IsTaxId()`</th>
+        <td>Verifica se a string é um ID fiscal válido. A localidade padrão é `en-US`.</td>
+    </tr>
+    <tr>
+        <th>`@IsUrl(options?: IsURLOptions)`</th>
+        <td>Verifica se a string é uma URL.</td>
+    </tr>
+    <tr>
+        <th>`@IsMagnetURI()`</th>
+        <td>Verifica se a string é um [formato de uri magnético](https://en.wikipedia.org/wiki/Magnet_URI_scheme).</td>
+    </tr>
+    <tr>
+        <th>`@IsUUID(version?: UUIDVersion)`</th>
+        <td>Verifica se a string é um UUID (versão 3, 4, 5 ou todas).</td>
+    </tr>
+    <tr>
+        <th>`@IsFirebasePushId()`</th>
+        <td>Verifica se a string é um [Firebase Push ID](https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html)</td>
+    </tr>
+    <tr>
+        <th>`@IsUppercase()`</th>
+        <td>Verifica se a string está em maiúscula.</td>
+    </tr>
+    <tr>
+        <th>`@Length(min: number, max?: number)`</th>
+        <td>Verifica se o comprimento da string está dentro de um intervalo.</td>
+    </tr>
+    <tr>
+        <th>`@MinLength(min: number)`</th>
+        <td>Verifica se o comprimento da string não é menor que o número fornecido.</td>
+    </tr>
+    <tr>
+        <th>`@MaxLength(max: number)`</th>
+        <td>Verifica se o comprimento da string não é maior que o número fornecido.</td>
+    </tr>
+    <tr>
+        <th>`@Matches(pattern: RegExp, modifiers?: string)`</th>
+        <td>Verifica se a string corresponde ao padrão. Corresponde(&#39;foo&#39;, /foo/i) ou corresponde(&#39;foo&#39;, &#39;foo&#39;, &#39;i&#39;).</td>
+    </tr>
+    <tr>
+        <th>`@IsMilitaryTime()`</th>
+        <td>Verifica se a string é uma representação válida do horário militar no formato HH:MM.</td>
+    </tr>
+    <tr>
+        <th>`@IsTimeZone()`</th>
+        <td>Verifica se a string representa um fuso horário IANA válido.</td>
+    </tr>
+    <tr>
+        <th>`@IsHash(algorithm: string)`</th>
+        <td>Verifica se a string é um hash Os seguintes tipos são suportados:`md4`, `md5`, `sha1`, `sha256`, `sha384`, `sha512`, `ripemd128`, `ripemd160`, `tiger128`, `tiger160`, `tiger192`, `crc32`, `crc32b`.</td>
+    </tr>
+    <tr>
+        <th>`@IsMimeType()`</th>
+        <td>Verifica se a string corresponde a um [tipo MIME] formato válido(https://en.wikipedia.org/wiki/Media_type)</td>
+    </tr>
+    <tr>
+        <th>`@IsSemVer()`</th>
+        <td>Verifica se a string é uma especificação de versionamento semântico (SemVer).</td>
+    </tr>
+    <tr>
+        <th>`@IsISSN(options?: IsISSNOptions)`</th>
+        <td>Verifica se a string é um ISSN.</td>
+    </tr>
+    <tr>
+        <th>`@IsISRC()`</th>
+        <td>Verifica se a string é um [ISRC](https://en.wikipedia.org/wiki/International_Standard_Recording_Code).</td>
+    </tr>
+    <tr>
+        <th>`@IsRFC3339()`</th>
+        <td>Verifica se a string é uma data válida [RFC 3339](https://tools.ietf.org/html/rfc3339).</td>
+    </tr>
+    <tr>
+        <th>`@IsStrongPassword(options?: IsStrongPasswordOptions)`</th>
+        <td>Verifica se a string é uma senha forte.</td>
+    </tr>
+    <tr>
+        <th>**Decoradores de validação de array**</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th>`@ArrayContains(values: any[])`</th>
+        <td>Verifica se a matriz contém todos os valores da matriz de valores fornecida.</td>
+    </tr>
+    <tr>
+        <th>`@ArrayNotContains(values: any[])`</th>
+        <td>Verifica se o array não contém nenhum dos valores fornecidos.</td>
+    </tr>
+    <tr>
+        <th>`@ArrayNotEmpty()`</th>
+        <td>Verifica se determinado array não está vazio.</td>
+    </tr>
+    <tr>
+        <th>`@ArrayMinSize(min: number)`</th>
+        <td>Verifica se o comprimento do array é maior ou igual ao número especificado.</td>
+    </tr>
+    <tr>
+        <th>`@ArrayMaxSize(max: number)`</th>
+        <td>Verifica se o comprimento do array é menor ou igual ao número especificado.</td>
+    </tr>
+    <tr>
+        <th>`@ArrayUnique(identifier?: (o) =&gt; any)`</th>
+        <td>Verifica se todos os valores do array são únicos. A comparação de objetos é baseada em referência. A função opcional pode ser especificada qual valor de retorno será usado para a comparação.</td>
+    </tr>
+    <tr>
+        <th>**Decoradores de validação de objeto**</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th>`@IsInstance(value: any)`</th>
+        <td>Verifica se a propriedade é uma instância do valor passado.</td>
+    </tr>
+    <tr>
+        <th>**Outros decoradores**</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th>`@Allow()`</th>
+        <td>Evite a remoção da propriedade quando nenhuma outra restrição for especificada para ela.</td>
+    </tr>
+    <tr>
+        <th></th>
+        <td></td>
+    </tr>
+</table>
+
+## Validando objetos simples
+
+Devido à natureza dos decoradores, o objeto validado deve ser instanciado usando a sintaxe `new Class()`. 
+Se você tem sua classe definida usando decoradores validadores de classe e deseja validar um objeto JS simples (objeto literal ou retornado por JSON.parse), 
+você precisa transformá-lo na instância da classe usando [class-transformer](https:/ /github.com/pleerock/class-transformer)).
