@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { injectable, decorate } from 'inversify'
 import { ArchbaseTokenManager } from './ArchbaseTokenManager'
 import { ArchbaseAccessToken } from './ArchbaseAccessToken'

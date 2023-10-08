@@ -3,6 +3,7 @@
     "entryPoints": ["src/index.ts"],
     "readme": "README.md",
     "includeVersion": true,
-    "jsDocCompatibility": true
+    "jsDocCompatibility": true,
+    "out":"./docs"
   }
   

@@ -34,7 +34,7 @@ const ArchbaseEditExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={4}>
+      <Grid.Col offset={1} span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -42,16 +42,6 @@ const ArchbaseEditExample = () => {
             </Group>
           </Card.Section>
           <ArchbaseMaskEdit label="CPF" dataSource={dataSource} dataField="cpf" mask={MaskPattern.CPF} />
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={4}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
-            </Group>
-          </Card.Section>
-          <ArchbaseJsonView data={data} />
         </Card>
       </Grid.Col>
       <Grid.Col span={4}>

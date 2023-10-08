@@ -34,7 +34,7 @@ const ArchbaseSwitchExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={12}>
+      <Grid.Col offset={1} span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs" mb="1rem">
             <Group position="apart">
@@ -50,19 +50,7 @@ const ArchbaseSwitchExample = () => {
           />
         </Card>
       </Grid.Col>
-      <Grid.Col span={6}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
-            </Group>
-          </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}>
-            <ArchbaseJsonView data={data} />
-          </ScrollArea>
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">

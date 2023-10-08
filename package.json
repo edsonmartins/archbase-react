@@ -66,6 +66,8 @@
     "@storybook/addon-interactions": "^7.4.6",
     "@storybook/addon-links": "^7.4.6",
     "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/addon-measure": "^7.4.6",
+    "@storybook/addon-styling": "^1.3.7",
     "@storybook/blocks": "^7.4.6",
     "@storybook/manager-api": "^7.4.6",
     "@storybook/preset-scss": "^1.0.3",
@@ -192,8 +194,6 @@
   },
   "packageManager": "yarn@3.6.3",
   "dependencies": {
-    "@storybook/addon-measure": "^7.4.6",
-    "@storybook/addon-styling": "^1.3.7",
     "events": "^3.3.0"
   }
 }

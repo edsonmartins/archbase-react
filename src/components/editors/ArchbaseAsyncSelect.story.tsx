@@ -57,7 +57,7 @@ const ArchbaseAsyncSelectExample = () => {
 
   return (
     <Grid>
-      <Grid.Col offset={1} span={4}>
+      <Grid.Col offset={1} span={6}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">

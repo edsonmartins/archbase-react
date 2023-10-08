@@ -1,15 +1,17 @@
 /* eslint class-methods-use-this: "off" */
-import { inject, injectable } from 'inversify';
+import "reflect-metadata";
+import { decorate, inject, injectable } from 'inversify';
 import type { ArchbaseRemoteApiClient, Page } from '../../components/service';
 import { ArchbaseRemoteApiService, DefaultPage } from '../../components/service';
 import { Pessoa } from '../data/types';
 import { API_TYPE } from '../ioc/DemoIOCTypes';
 import { pessoasData } from '../data/pessoasData';
+import { IOCContainer } from '@components/core';
 
-@injectable()
+
 export class FakePessoaService extends ArchbaseRemoteApiService<Pessoa, number> {
   constructor(@inject(API_TYPE.ApiClient) client: ArchbaseRemoteApiClient) {
-    super(client);
+    super(client || IOCContainer.getContainer().get<ArchbaseRemoteApiClient>(API_TYPE.ApiClient));
   }
 
   protected getEndpoint(): string {
@@ -68,3 +70,6 @@ export class FakePessoaService extends ArchbaseRemoteApiService<Pessoa, number> 
     });
   }
 }
+
+
+decorate(injectable(), FakePessoaService)

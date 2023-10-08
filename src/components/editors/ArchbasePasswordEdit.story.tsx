@@ -34,7 +34,7 @@ const ArchbasePasswordEditExample = () => {
 
   return (
     <Grid>
-      <Grid.Col span={4}>
+      <Grid.Col offset={1} span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
@@ -42,16 +42,6 @@ const ArchbasePasswordEditExample = () => {
             </Group>
           </Card.Section>
           <ArchbasePasswordEdit label="Senha" dataSource={dataSource} dataField="senha" />
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={4}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>Objeto Pessoa</Text>
-            </Group>
-          </Card.Section>
-          <ArchbaseJsonView data={data} />
         </Card>
       </Grid.Col>
       <Grid.Col span={4}>
