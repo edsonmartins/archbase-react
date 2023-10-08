@@ -43,7 +43,8 @@ export function ArchbaseDebugInspector({
   useHotkeys([[debugObjectInspectorHotKey, () => setOpen(!open)]])
   const innerComponentRef = useRef<any>()
   const contentSize = useComponentSize(innerComponentRef)
-  const display = open ? { display: 'none' } : {}
+
+  const display = open ? {} : { display: 'none' }
 
   return (
     <div style={display}>
