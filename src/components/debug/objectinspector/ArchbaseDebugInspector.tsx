@@ -1,32 +1,33 @@
-import React, { useRef, useState } from 'react';
-import { ArchbaseFloatingWindow } from '@components/containers';
-import { Accordion, Flex } from '@mantine/core';
-import { useHotkeys } from '@mantine/hooks';
-import useComponentSize from '@rehooks/component-size';
-import { ArchbaseObjectInspector } from './ArchbaseObjectInspector';
+import React, { useRef, useState } from 'react'
+import { ArchbaseFloatingWindow } from '@components/containers'
+import { Accordion, Flex } from '@mantine/core'
+import { useHotkeys } from '@mantine/hooks'
+import useComponentSize from '@rehooks/component-size'
+
+import { ArchbaseObjectInspector } from './ArchbaseObjectInspector'
 
 export interface ArchbaseDebugInspectorProps {
   /** Título a ser exibido */
-  title?: string;
+  title?: string
   /** Título a ser exibido*/
-  icon?: string | HTMLImageElement;
+  icon?: string | HTMLImageElement
   /** Comando para abrir e fechar o Object Inspector */
-  debugObjectInspectorHotKey?: string;
+  debugObjectInspectorHotKey?: string
   /** Lista de objetos a serem inspecionados */
-  objectsToInspect?: ArchbaseObjectToInspect[];
+  objectsToInspect?: ArchbaseObjectToInspect[]
   /** Indica se o Object Inspector será visível inicialmente ou não */
-  visible?: boolean;
+  visible?: boolean
   /** Altura inicial do Object Inspector */
-  height?: number;
+  height?: number
   /** Largura inicial do Object Inspector */
-  width?: number;
+  width?: number
 }
 
 export interface ArchbaseObjectToInspect {
   /**Nome do objeto a ser inspecionado*/
-  name: string;
+  name: string
   /**Objeto a ser inspecionado*/
-  object: Object;
+  object: Object
 }
 
 export function ArchbaseDebugInspector({
@@ -38,13 +39,15 @@ export function ArchbaseDebugInspector({
   height = 400,
   width = 500,
 }: ArchbaseDebugInspectorProps) {
-  const [open, setOpen] = useState<boolean>(visible);
-  useHotkeys([[debugObjectInspectorHotKey, () => setOpen(!open)]]);
-  const innerComponentRef = useRef<any>();
-  let contentSize = useComponentSize(innerComponentRef);
+  const [open, setOpen] = useState<boolean>(visible)
+  useHotkeys([[debugObjectInspectorHotKey, () => setOpen(!open)]])
+  const innerComponentRef = useRef<any>()
+  const contentSize = useComponentSize(innerComponentRef)
+
+  const display = open ? {} : { display: 'none' }
 
   return (
-    open && (
+    <div style={display}>
       <ArchbaseFloatingWindow
         id="debug-rules"
         height={height}
@@ -52,14 +55,14 @@ export function ArchbaseDebugInspector({
         resizable={true}
         style={{ opacity: 1 }}
         titleBar={{
-          icon: icon,
-          title: title,
+          icon,
+          title,
           buttons: { minimize: true, maximize: true },
         }}
         innerRef={innerComponentRef}
       >
-        <Flex w={contentSize.width} h={contentSize.height}>
-          <Accordion w={'100%'}>
+        <Flex h={contentSize.height}>
+          <Accordion w="100%">
             {objectsToInspect.map((item, index) => (
               <Accordion.Item key={index} value={item.name}>
                 <Accordion.Control>{item.name}</Accordion.Control>
@@ -71,6 +74,6 @@ export function ArchbaseDebugInspector({
           </Accordion>
         </Flex>
       </ArchbaseFloatingWindow>
-    )
-  );
+    </div>
+  )
 }
