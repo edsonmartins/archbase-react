@@ -124,8 +124,10 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
       setMaximized(false)
     } else {
       effectiveHeight.current = 32
-      lastLeft.current = left
-      lastTop.current = top
+      if (!maximized) {
+        lastLeft.current = left
+        lastTop.current = top
+      }
       const parent = document.getElementById(properties.id)?.parentElement
       effectiveWidth.current = width
       let topPosition = (parent?.clientHeight || window.innerHeight) - effectiveHeight.current - 4
@@ -165,8 +167,10 @@ export const ArchbaseFloatingWindow: React.FC<ArchbaseFloatingWindowProps> = (pr
     } else {
       effectiveHeight.current = parent?.clientHeight || window.innerHeight
       effectiveWidth.current = parent?.clientWidth || window.innerWidth
-      lastLeft.current = left
-      lastTop.current = top
+      if (!minimized) {
+        lastLeft.current = left
+        lastTop.current = top
+      }
       setTop(parent?.offsetTop || 0)
       setLeft(parent?.offsetLeft || 0)
       setMaximized(true)
