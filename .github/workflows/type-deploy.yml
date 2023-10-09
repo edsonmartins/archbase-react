@@ -1,4 +1,4 @@
-  name: Deploy Storybook to GitHub Pages
+  name: Deploy TypeDoc to GitHub Pages
 
   on:
     push:
@@ -26,14 +26,14 @@
         - name: Install dependencies
           run: yarn install  
 
-        - name: Build Storybook 
+        - name: Build TypeDoc 
           run: |
             export NODE_OPTIONS=--max_old_space_size=4096
-            yarn run storybook:build          
-
+            yarn run docs         
+            
         - name: Deploy to GitHub Pages
           uses: JamesIves/github-pages-deploy-action@v4
           with:
             token: ${{ secrets.TOKEN_STORYBOOK  }}
-            branch: storybook  # branch onde o GitHub Pages está configurado
-            folder: storybook-static  # diretório onde o Storybook foi construído
+            branch: typedoc  # branch onde o GitHub Pages está configurado
+            folder: docs  # diretório onde o Storybook foi construído
