@@ -32,6 +32,6 @@
         - name: Deploy to GitHub Pages
           uses: JamesIves/github-pages-deploy-action@v4
           with:
-            ACCESS_TOKEN: ${{ secrets.TOKEN_GH_ACTIONS  }}
-            BRANCH: gh-pages  # branch onde o GitHub Pages está configurado
-            FOLDER: storybook-static  # diretório onde o Storybook foi construído
+            token: ${{ secrets.TOKEN_GH_ACTIONS  }}
+            branch: gh-pages  # branch onde o GitHub Pages está configurado
+            folder: storybook-static  # diretório onde o Storybook foi construído
