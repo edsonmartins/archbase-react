@@ -17,7 +17,7 @@ jobs:
         run: yarn install  
 
       - name: Build Storybook
-        run: NODE_OPTIONS="--max-old-space-size=4096" && yarn run storybook:build  
+        run: NODE_OPTIONS="--max-old-space-size=8192" yarn run storybook:build  
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.2
