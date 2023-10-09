@@ -8,18 +8,11 @@
   jobs:
     build-and-deploy:
       runs-on: ubuntu-latest
-      
+
       steps:
         - name: Checkout repository
           uses: actions/checkout@v2
 
-        - name: Install dependencies
-          run: yarn install  
-
-        - name: Build Storybook 
-          run: |
-            export NODE_OPTIONS=--max_old_space_size=4096
-            yarn run storybook:build  
         - name: Check Commit Message for Keyword
           run: |
             commit_message=$(git log -1 --pretty=%B)
@@ -29,9 +22,17 @@
               echo "Keyword not found in commit message, skipping the workflow."
               exit 0  # Encerre o fluxo de trabalho sem executar mais etapas
             fi
+
+        - name: Install dependencies
+          run: yarn install  
+
+        - name: Build Storybook 
+          run: |
+            export NODE_OPTIONS=--max_old_space_size=4096
+            yarn run storybook:build          
         - name: Deploy to GitHub Pages
           uses: JamesIves/github-pages-deploy-action@v4
           with:
-            token: ${{ secrets.TOKEN_GH_ACTIONS  }}
+            token: ${{ secrets.TOKEN_STORYBOOK  }}
             branch: gh-pages  # branch onde o GitHub Pages está configurado
             folder: storybook-static  # diretório onde o Storybook foi construído
