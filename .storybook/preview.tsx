@@ -1,13 +1,13 @@
 import "reflect-metadata";
 import { useDarkMode } from 'storybook-dark-mode';
 import { Preview } from '@storybook/react';
-import { ColorScheme, useMantineTheme } from '@mantine/core';
+import { ColorScheme, MantineThemeOverride, useMantineTheme } from '@mantine/core';
 import { ArchbaseDark } from './archbase-dark.theme';
 import { ArchbaseLight } from './archbase-ligth.theme';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import { addons } from '@storybook/preview-api';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../src/components/locales/config';
 import { demoContainerIOC } from '../src/demo/index';
 import { ArchbaseAppProvider, ArchbaseGlobalProvider } from '../src/components/core';
@@ -26,6 +26,8 @@ import '../src/styles/spaces.css';
 const channel = addons.getChannel();
 
 function ThemeWrapper(props: { children: React.ReactNode }) {
+  const [dark, setThemeDark] = useState<MantineThemeOverride>(ArchbaseDark)
+  const [light, setThemeLight] = useState<MantineThemeOverride>(ArchbaseLight)
   const colorSchem = useDarkMode() ? 'dark' : 'light';
   const theme = useMantineTheme();
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -48,6 +50,11 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
     body.style.backgroundColor = colorSchem==='dark'?'black':'white';
   }, [colorSchem]);
 
+  const handleChangeCustomTheme = (dark: MantineThemeOverride, light: MantineThemeOverride) => {
+      setThemeDark(dark)
+      setThemeLight(light)
+  }
+
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
@@ -57,13 +64,13 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
     <ArchbaseGlobalProvider
       colorScheme={colorSchem}
       containerIOC={demoContainerIOC}
-      themeDark={ArchbaseDark}
-      themeLight={ArchbaseLight}
+      themeDark={dark}
+      themeLight={light}
       toggleColorScheme={toggleColorScheme}
       translationName="demo"
       translationResource={{ en: translation_en, 'pt-BR': translation_ptbr, es: translation_es }}
     >
-      <ArchbaseAppProvider user={null} owner={null} selectedCompany={undefined}>
+      <ArchbaseAppProvider user={null} owner={null} selectedCompany={undefined} setCustomTheme={handleChangeCustomTheme}>
         {props.children}
       </ArchbaseAppProvider>
     </ArchbaseGlobalProvider>

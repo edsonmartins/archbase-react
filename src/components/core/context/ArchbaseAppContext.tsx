@@ -1,5 +1,5 @@
 import React, { ReactNode, createContext, useContext } from 'react'
-import { MantineTheme, Variants } from '@mantine/styles'
+import { MantineTheme, MantineThemeOverride, Variants } from '@mantine/styles'
 import '../../locales/config'
 import { Container } from 'inversify'
 import { useMantineTheme } from '@mantine/core'
@@ -27,7 +27,8 @@ interface ArchbaseAppContextValues {
   dateTimeFormat: string
   timeFormat: string
   variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
-  languages?: ArchbaseLanguage[]
+  languages?: ArchbaseLanguage[],
+  setCustomTheme?: (dark: MantineThemeOverride, light: MantineThemeOverride)=>void
 }
 
 const ArchbaseAppContext = createContext<ArchbaseAppContextValues>({
@@ -39,7 +40,8 @@ const ArchbaseAppContext = createContext<ArchbaseAppContextValues>({
   dateFormat: 'dd/MM/yyyy',
   dateTimeFormat: 'dd/MM/yyyy HH:mm:ss',
   timeFormat: 'HH:mm:ss',
-  variant: 'filled'
+  variant: 'filled',
+  setCustomTheme: undefined
 })
 
 interface ArchbaseAppProviderProps {
@@ -53,6 +55,7 @@ interface ArchbaseAppProviderProps {
   timeFormat?: string
   variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
   languages?: ArchbaseLanguage[]
+  setCustomTheme?: (dark: MantineThemeOverride, light: MantineThemeOverride) => void
 }
 
 const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
@@ -69,9 +72,11 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
     { lang: 'en', name: 'Inglês' },
     { lang: 'pt-BR', name: 'Português' },
     { lang: 'es', name: 'Espanhol' }
-  ]
+  ],
+  setCustomTheme
 }) => {
   const theme = useMantineTheme()
+
   return (
     <ArchbaseAppContext.Provider
       value={{
@@ -84,7 +89,8 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
         dateTimeFormat,
         timeFormat,
         variant,
-        languages
+        languages,
+        setCustomTheme
       }}
     >
       <ModalsProvider
