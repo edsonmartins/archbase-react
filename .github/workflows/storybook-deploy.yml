@@ -20,9 +20,17 @@
           run: |
             export NODE_OPTIONS=--max_old_space_size=4096
             yarn run storybook:build  
-
+        - name: Check Commit Message for Keyword
+          run: |
+            commit_message=$(git log -1 --pretty=%B)
+            if [[ $commit_message == *"[release:doc]"* ]]; then
+              echo "Keyword found in commit message, proceeding with the workflow."
+            else
+              echo "Keyword not found in commit message, skipping the workflow."
+              exit 0  # Encerre o fluxo de trabalho sem executar mais etapas
+            fi
         - name: Deploy to GitHub Pages
-          uses: JamesIves/github-pages-deploy-action@4.1.2
+          uses: JamesIves/github-pages-deploy-action@v4
           with:
             ACCESS_TOKEN: ${{ secrets.TOKEN_GH_ACTIONS  }}
             BRANCH: gh-pages  # branch onde o GitHub Pages está configurado
