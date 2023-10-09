@@ -1,29 +1,29 @@
-name: Deploy Storybook to GitHub Pages
+  name: Deploy Storybook to GitHub Pages
 
-on:
-  push:
-    branches:
-      - main  
+  on:
+    push:
+      branches:
+        - main  
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  jobs:
+    build-and-deploy:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: yarn install  
+        - name: Install dependencies
+          run: yarn install  
 
-      - name: Build Storybook 
-        run: |
-          export NODE_OPTIONS=--max_old_space_size=4096
-          yarn run storybook:build  
+        - name: Build Storybook 
+          run: |
+            export NODE_OPTIONS=--max_old_space_size=4096
+            yarn run storybook:build  
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.2
-        with:
-          ACCESS_TOKEN: ${{ secrets.PUBLISH_DOC }}
-          BRANCH: gh-pages  # branch onde o GitHub Pages está configurado
-          FOLDER: storybook-static  # diretório onde o Storybook foi construído
+        - name: Deploy to GitHub Pages
+          uses: JamesIves/github-pages-deploy-action@4.1.2
+          with:
+            ACCESS_TOKEN: ${{ secrets.TOKEN_GH_ACTIONS  }}
+            BRANCH: gh-pages  # branch onde o GitHub Pages está configurado
+            FOLDER: storybook-static  # diretório onde o Storybook foi construído
