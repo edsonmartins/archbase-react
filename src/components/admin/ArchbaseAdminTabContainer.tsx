@@ -2,7 +2,7 @@ import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react
 import useComponentSize from '@rehooks/component-size';
 import { useLocation, useNavigate } from 'react-router';
 import { useMantineTheme } from '@mantine/core';
-import { ArchbaseAdvancedTabItem, ArchbaseAdvancedTabs } from '../containers/tabs';
+import { ArchbaseAdvancedTabItem, ArchbaseAdvancedTabs } from '@components/containers';
 import { ArchbaseNavigationItem, ArchbaseTabItem } from './types';
 import { ArchbaseAdminLayoutContext, ArchbaseAdminLayoutContextValue } from './ArchbaseAdminLayout.context';
 import { matchPath } from 'react-router';
