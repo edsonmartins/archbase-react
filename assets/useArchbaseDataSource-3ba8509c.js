@@ -1,0 +1,2 @@
+import{r as u}from"./index-402471b7.js";import{a as f}from"./ArchbaseGlobalFilter-aa9cced9.js";const m=c=>{const{initialData:r,name:e,label:i,initialDataSource:o,onLoadComplete:s,store:a,validator:n}=c,l=()=>a&&a.existsValue(e)?a.getValue(e):o||new f(e,{records:r,grandTotalRecords:r.length,currentPage:0,totalPages:0,pageSize:0,validator:n},i),[t,S]=u.useState(l());return u.useEffect(()=>{a&&a.setValue(e,t),s&&s(t)},[e]),{dataSource:t}};export{m as u};
+//# sourceMappingURL=useArchbaseDataSource-3ba8509c.js.map
