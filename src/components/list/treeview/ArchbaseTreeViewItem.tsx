@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useMemo, ReactNode } from 'react';
+import React, { useState, useCallback, useMemo, ReactNode, useEffect } from 'react';
 import { ArchbaseTreeNode, ArchbaseTreeViewOptions } from './ArchbaseTreeView.types';
 import { ActionIcon, Space, Text } from '@mantine/core';
 import { IconChevronDown, IconChevronRight, IconSquare, IconSquareCheck } from '@tabler/icons-react';
+import { useForceUpdate } from '@mantine/hooks';
 
 interface ArchbaseTreeViewItemProps {
   id: string;
@@ -16,7 +17,8 @@ interface ArchbaseTreeViewItemProps {
   onNodeDoubleClicked: (id: string, selected: boolean) => void;
   addNode: (id: string, text: string) => void;
   removeNode: (id: string) => void;
-  customRenderText?: (node: ArchbaseTreeNode) => ReactNode
+  customRenderText?: (node: ArchbaseTreeNode) => ReactNode,
+  update: number;
 }
 
 export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
@@ -32,10 +34,12 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
   addNode,
   removeNode,
   id,
-  customRenderText
+  customRenderText,
+  update
 }: ArchbaseTreeViewItemProps) => {
-  const [expanded, setExpanded] = useState(node.state && node.state.expanded);
-  const [selected, setSelected] = useState(node.state && node.state.selected);
+  const [expanded, setExpanded] = useState(false);
+  const [selected, setSelected] = useState(false);
+  const forceUpdate = useForceUpdate()
 
   const toggleExpanded = useCallback(
     (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -44,8 +48,17 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
       onExpandedCollapsedChanged(node.id, newExpanded);
       event.stopPropagation();
     },
-    [expanded, node.id, onExpandedCollapsedChanged]
+    [expanded, node.id, onExpandedCollapsedChanged, node.state.expanded]
   );
+
+  useEffect(()=>{
+    if (node.state){
+      setExpanded(node.state.expanded)
+    }
+    if (node.state){
+      setSelected(node.state.selected)
+    }
+  },[node.state.expanded, node.state.selected])
 
   const toggleSelected = useCallback(
     (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -53,13 +66,15 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
       setSelected(newSelected);
       onSelectedStatusChanged(node.id, newSelected);
       event.stopPropagation();
+      forceUpdate()
     },
-    [selected, node.id, onSelectedStatusChanged]
+    [selected, node.id, onSelectedStatusChanged, node.state.selected]
   );
 
   const toggleFocused = useCallback(
     (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
       onFocusedChanged(node.id);
+      forceUpdate()
       event.stopPropagation();
     },
     [node.id, onFocusedChanged]
@@ -114,7 +129,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
         );
       }
     }
-  }, [expanded, node, style, toggleExpanded]);
+  }, [expanded, selected, node, style, toggleExpanded, toggleSelected]);
 
   const styleFocused = useMemo(() => {
     const focusedNode = getFocused();
@@ -125,7 +140,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
       };
     }
     return {};
-  }, [node.id, getFocused, options.focusedColor, options.focusedBackgroundColor]);
+  }, [node.id, getFocused, options.focusedColor, options.focusedBackgroundColor, expanded, selected]);
 
   
 
@@ -149,6 +164,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
             options={options}
             onLoadDataSource={onLoadDataSource}
             customRenderText={customRenderText}
+            update={update}
           />
         );
       });
@@ -159,6 +175,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
     node.state,
     node,
     expanded,
+    selected,
     level,
     onSelectedStatusChanged,
     onExpandedCollapsedChanged,
@@ -168,6 +185,7 @@ export const ArchbaseTreeViewItem: React.FC<ArchbaseTreeViewItemProps> = ({
     addNode,
     removeNode,
     options,
+    update
   ]);
 
     return (

@@ -102,7 +102,7 @@ export class ArchbaseDialog {
       children: (
         <Paper>
           <Flex gap="md" direction="row" justify="flex-start" align="center">
-            <IconBug size="2rem" style={{color:"red"}}  />
+            <IconBug size="96px" style={{color:"red"}}  />
             <Text size="md">{message}</Text>
           </Flex>
           <Button

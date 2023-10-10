@@ -34,7 +34,7 @@
     "release": "yarn ci && yarn build && npm publish",
     "docs": "npx typedoc --options typedoc.json",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build",
+    "storybook:build": "storybook build && touch ./storybook-static/.nojekyll",
     "storybook:upgrade": "npx sb@latest upgrade",
     "storybook:deploy": "yarn storybook:build && touch ./storybook-static/.nojekyll && gh-pages -d ./storybook-static -t true"
   },

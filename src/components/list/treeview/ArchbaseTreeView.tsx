@@ -3,7 +3,8 @@ import lodash from 'lodash'
 import { ArchbaseTreeNode } from './ArchbaseTreeView.types'
 import { ArchbaseTreeViewItem } from './ArchbaseTreeViewItem'
 import { rem } from '@mantine/styles'
-import { useArchbaseTheme } from '../../hooks'
+import { useArchbaseTheme } from '@components/hooks'
+import { useForceUpdate } from '@mantine/hooks'
 
 
 export interface ArchbaseTreeViewProps {
@@ -29,8 +30,8 @@ export interface ArchbaseTreeViewProps {
   onClick?: () => void
   onFocusedNode?: (node: ArchbaseTreeNode) => void
   onLoosedFocusNode?: (focused: ArchbaseTreeNode) => void
-  onSelectedNode?: (dataSource: ArchbaseTreeNode[], selectedNodes: ArchbaseTreeNode[]) => void
-  onUnSelectedNode?: (dataSource: ArchbaseTreeNode[], selectedNodes: ArchbaseTreeNode[]) => void
+  onSelectedNode?: (dataSource: ArchbaseTreeNode[], node: ArchbaseTreeNode, selectedNodes: ArchbaseTreeNode[]) => void
+  onUnSelectedNode?: (dataSource: ArchbaseTreeNode[], node: ArchbaseTreeNode, selectedNodes: ArchbaseTreeNode[]) => void
   onRemovedNode?: (dataSource: ArchbaseTreeNode[]) => void
   onLoadDataSource?: (node: ArchbaseTreeNode) => Promise<ArchbaseTreeNode[]>
   onAddedNode?: (node: ArchbaseTreeNode, dataSource: ArchbaseTreeNode[]) => void
@@ -42,7 +43,8 @@ export interface ArchbaseTreeViewProps {
   style?: React.CSSProperties
   height?: string
   width?: string
-  customRenderText?: (node: ArchbaseTreeNode) => ReactNode
+  customRenderText?: (node: ArchbaseTreeNode) => ReactNode,
+  update?: number
 }
 
 export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
@@ -79,13 +81,16 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
   height,
   width,
   focusedNode,
-  customRenderText
+  customRenderText,
+  update = Math.random()
 }) => {
   const theme = useArchbaseTheme()
   const [internalDataSource, setDataSource] = useState<ArchbaseTreeNode[]>([])
   const [focused, setFocused] = useState<ArchbaseTreeNode | undefined>(focusedNode)
   const nodeList = useRef<string[]>([])
   const nodesQuantity = useRef(0)
+  const [updateCounter, setUpdateCounter] = useState(0);
+  const forceUpdate = useForceUpdate()
 
   const setNodeDetails = useCallback((node: any): ArchbaseTreeNode[] => {
     if (!node.nodes) return []
@@ -219,6 +224,23 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
     setParentSelectable(node.parentNode)
   }, [])
 
+  const filterSelecteds = (list: ArchbaseTreeNode[]): ArchbaseTreeNode[] => {
+    const selectedItems: ArchbaseTreeNode[] = [];  
+    for (const item of list) {
+      if (item.state.selected) {
+        selectedItems.push(item);
+      }  
+      if (item.nodes && item.nodes.length > 0) {
+        const selectedChildren = filterSelecteds(
+          item.nodes,
+        );
+        selectedItems.push(...selectedChildren);
+      }
+    }  
+    return selectedItems;
+  }
+  
+
   const nodeSelected = useCallback(
     (id: string, selected: boolean) => {
       let selectedNodes: ArchbaseTreeNode[] = []
@@ -229,24 +251,28 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
         selectedNodes.push(node)
         selectedNodes.push(...setChildrenState(node.nodes || [], selected))
         setDataSource(newDataSource)
-
         if (onChangedDataSource) {
           onChangedDataSource(newDataSource)
         }
-
+        
         if (selected === true) {
           if (onSelectedNode) {
-            onSelectedNode(newDataSource, selectedNodes)
+            onSelectedNode(newDataSource,node, filterSelecteds(newDataSource))
           }
         } else {
           if (onUnSelectedNode) {
-            onUnSelectedNode(newDataSource, selectedNodes)
+            onUnSelectedNode(newDataSource,node, filterSelecteds(newDataSource))
           }
-        }
+        }       
       }
     },
     [internalDataSource, onChangedDataSource, onSelectedNode, onUnSelectedNode, setChildrenState]
   )
+
+  useEffect(()=>{
+    setUpdateCounter((prev) => prev + 1)
+    forceUpdate()
+  },[internalDataSource])
 
   const loadDataSource = useCallback(
     (id: string) => {
@@ -497,7 +523,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
       findPreviousNodeById,
       findNextNodeById,
       nodeSelected,
-      nodeExpandedCollapsed
+      nodeExpandedCollapsed,
     ]
   )
 
@@ -541,6 +567,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
           addNode={addNode}
           removeNode={removeNode}
           customRenderText={customRenderText}
+          update={updateCounter}
           options={{
             selectable,
             color,
@@ -591,7 +618,8 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
     loadDataSource,
     getFocused,
     addNode,
-    removeNode
+    removeNode,
+    updateCounter
   ])
 
   return (
