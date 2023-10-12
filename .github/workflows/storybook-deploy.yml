@@ -6,8 +6,8 @@
         - main  
 
   jobs:
-    build-and-deploy:
-      if: ${{ contains(github.event.head_commit.message, 'release:doc') }},
+    build-and-deploy:      
+      if: ${{ contains(github.event.head_commit.message, 'release:doc') }}
       runs-on: ubuntu-latest
 
       steps:
