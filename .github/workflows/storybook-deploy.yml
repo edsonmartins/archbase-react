@@ -13,30 +13,17 @@
         - name: Checkout repository
           uses: actions/checkout@v2
 
-        - name: Check Commit Message for Keyword
-          run: |
-            commit_message=$(git log -1 --pretty=%B)
-            if [[ $commit_message == *"[release:doc]"* ]]; then
-              echo "Keyword found in commit message, proceeding with the workflow."
-            else
-              echo "Keyword not found in commit message, skipping the workflow."
-              exit 78  # Encerre o fluxo de trabalho sem executar mais etapas
-            fi
-
         - name: Install dependencies
-          if: success()  # Executar esta etapa apenas se a etapa anterior for bem-sucedida
           run: |
             yarn install  
 
         - name: Build Storybook 
-          if: success()  # Executar esta etapa apenas se a etapa anterior for bem-sucedida
           run: |
             export NODE_OPTIONS=--max_old_space_size=4096
             yarn run storybook:build      
             yarn run docs    
 
         - name: Deploy to GitHub Pages
-          if: success()
           uses: JamesIves/github-pages-deploy-action@v4
           with:
             token: ${{ secrets.TOKEN_STORYBOOK  }}
