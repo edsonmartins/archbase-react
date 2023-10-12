@@ -9,9 +9,6 @@
     "url": "git@github.com:edsonmartins/archbase-react.git"
   },
   "homepage": "https://react.archbase.com.br",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/edsonmartins"
-  },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
@@ -31,7 +28,7 @@
     "check-types": "tsc --noEmit true",
     "ci": "yarn lint && yarn test --watch=false",
     "test": "vitest --config ./vitest.config.ts",
-    "release": "yarn ci && yarn build && npm publish",
+    "release": "yarn build && npm publish",
     "docs": "npx typedoc --options typedoc.json",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build && touch ./storybook-static/.nojekyll",
@@ -89,6 +86,7 @@
     "@types/node": "^20.8.0",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
+    "@types/reflect-metadata": "^0.1.0",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "axios": "^1.4.0",
