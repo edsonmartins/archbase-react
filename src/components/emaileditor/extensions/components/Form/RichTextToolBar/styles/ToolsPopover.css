@@ -1,0 +1,13 @@
+.archbase-email-extensions-tools-popover .arco-popover-content {
+  padding: 0;
+}
+.archbase-email-extensions-tools-popover .arco-popover-content-inner *::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 5px;
+}
+.archbase-email-extensions-tools-popover .arco-popover-content-inner *::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}

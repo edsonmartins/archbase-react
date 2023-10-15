@@ -22,12 +22,17 @@
       "@components/*": ["components/*"],
       "@hooks/*": ["components/hooks/*"],
       "@demo/*": ["demo/*"],
+      "@emaileditor/core/*": ["components/emaileditor/core/*"],
+      "@emaileditor/editor/*": ["components/emaileditor/editor/*"],
+      "@emaileditor/extensions/*": ["components/emaileditor/extensions/*"],
     },
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
     "allowJs": true,
     "isolatedModules": true,
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "noImplicitThis": true,
+    "importHelpers": true,
     "resolveJsonModule": true,
     "strictNullChecks": false,
     "noUnusedLocals": false,
@@ -40,7 +45,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
-    "types": ["@testing-library/jest-dom","node", "reflect-metadata","jest"],
+    "types": ["@testing-library/jest-dom","node", "reflect-metadata","jest", "vite/client"],
   },
   "exclude": [
     "coverage",
@@ -48,5 +53,5 @@
     "dist",
     "node_modules/**"
   ],
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "declaration.d.ts"]
 }

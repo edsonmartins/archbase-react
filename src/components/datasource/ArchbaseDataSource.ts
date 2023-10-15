@@ -177,27 +177,148 @@ export type DataSourceEvent<T> =
 
 export type DataSourceListener<T> = (event: DataSourceEvent<T>) => void
 
+/**
+ * Eventos gerados pelo DataSource
+ */
 export interface DataSourceEvents<T> {
+  /**
+   * Evento gerado pelo DataSource quando os dados são alterados.
+   * @param data Dados alterados
+   * @param options Opções usadas
+   * @returns 
+   */
   dataChanged: (data: T[], options: DataSourceOptions<T>) => void
+  /**
+   * Evento gerado pelo DataSource quando um registro é alterado
+   * @param record Registro alterado
+   * @param index Indice do registro dentro da coleção de dados
+   * @returns 
+   */
   recordChanged: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource quando um campo é alterado. Comumente usado
+   * para fazer bind bidirecional e atualizar componentes visuais.
+   * @param record Registro alterado
+   * @param index  Indice do registro alterado
+   * @param fieldName Nome do campo alterado
+   * @param oldValue Valor antigo
+   * @param newValue Novo Valor
+   * @returns 
+   */
   fieldChanged: (record: T, index: number, fieldName: string, oldValue: any, newValue: any) => void
+  /**
+   * Evento gerado pelo DataSource antes dele ser fechado.
+   */
   beforeClose: () => void
+  /**
+   * Evento gerado pelo DataSource após ele ser fechado.
+   */
   afterClose: () => void
+  /**
+   * Evento gerado pelo DataSource antes de ser aberto.
+   */
   beforeOpen: () => void
+  /**
+   * Evento gerado pelo DataSource após ele ser aberto.
+   */
   afterOpen: () => void
+  /**
+   * Evento gerado pelo DataSource antes de um registro ser adicionado a coleção de dados.
+   * @param record Registro adicionado
+   * @returns 
+   */
   beforeAppend: (record: T) => void
+  /**
+   * Evento gerado pelo DataSource após o registro ser adicionado a coleção de dados.
+   * @param record Registro adicionado
+   * @param index Posição onde o registro foi adicionado
+   * @returns 
+   */
   afterAppend: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource antes de um registro ser removido
+   * @param record Registro sendo removido
+   * @param index Indice do registro sendo removido
+   * @returns 
+   */
   beforeRemove: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource após o registro ser removido
+   * @param record Registro removido
+   * @param index Indice do registro removido
+   * @returns 
+   */
   afterRemove: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource antes de um novo registro ser inserido para edição.
+   * @returns 
+   */
   beforeInsert: () => void
+  /**
+   * Evento gerado pelo DataSource após um registro ser inserido para edição.
+   * @param record Registro inserido
+   * @param index Indice do registro inserido
+   * @returns 
+   */
   afterInsert: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource antes de um registro entrar no modo de edição.
+   * Ouvindo este evento é possível por exemplo atribuir valores padrões ao registro
+   * que não serão preenchidos pelo usuário.
+   * 
+   * @param record Registro a ser editado
+   * @param index Indice do registro que vai ser editado
+   * @returns 
+   */
   beforeEdit: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource após o registro entrar no modo de edição.
+   * @param record 
+   * @param index 
+   * @returns 
+   */
   afterEdit: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource que ocorre antes de salvar o registro sendo editado ou inserido.
+   * Poderia ser usado para fazer validações ou logs caso necessário.
+   * @param record Registro sendo salvo
+   * @param index Indice do registro sendo salvo
+   * @returns 
+   */
   beforeSave: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource após um registro ser salvo.
+   * @param record Registro salvo
+   * @param index Indice do registro salvo
+   * @returns 
+   */
   afterSave: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource antes de ser cancelada a edição ou inserção de um registro.
+   * @param record Registro sendo cancelado
+   * @param index Indice do registro sendo cancelado
+   * @returns 
+   */
   beforeCancel: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource após ser cancelada a edição/inserção do registro.
+   * @param record 
+   * @param index 
+   * @returns 
+   */
   afterCancel: (record: T, index: number) => void
+  /**
+   * Evento gerado pelo DataSource quando o indice da posição atual é alterada, 
+   * ou seja quando é posicionando em um novo registro.
+   * @returns 
+   */
   afterScroll: () => void
+  /**
+   * Evento gerado pelo DataSource quando ocorre algum erro em alguma das operações.
+   * @param error Erro ocorrido já processado para apresentação.
+   * @param originalError Erro original
+   * @returns 
+   */
   onError: (error: any, originalError: any) => void
 }
 

@@ -69,6 +69,7 @@ const config: StorybookConfig = {
         '@hooks': path.resolve(__dirname, '../src/components/hooks'),
         '@components': path.resolve(__dirname, '../src/components'),
         '@demo': path.resolve(__dirname, '../src/demo'),
+        '@emaileditor': path.resolve(__dirname, '../src/components/emaileditor'),
       };
     }
     return config;
