@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-export function useRefState<T>(state: T) {
+export function useArchbaseEmailRefState<T>(state: T) {
   const ref = useRef(state);
 
   ref.current = state;

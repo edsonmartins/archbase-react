@@ -10,6 +10,7 @@ import { Border } from '@emaileditor/extensions/AttributePanel/components/attrib
 import { ClassName } from '../../attributes/ClassName';
 import { CollapseWrapper } from '../../attributes/CollapseWrapper';
 import { BackgroundColor } from '../../attributes';
+import { t } from 'i18next';
 
 export function Column() {
   return (
@@ -17,7 +18,7 @@ export function Column() {
       <CollapseWrapper defaultActiveKey={['0', '1', '2']}>
         <Collapse.Item
           name='0'
-          header={t('Dimension')}
+          header={t('archbase:Dimension')}
         >
           <Space direction='vertical'>
             <Grid.Row>
@@ -37,19 +38,19 @@ export function Column() {
         </Collapse.Item>
         <Collapse.Item
           name='1'
-          header={t('Background')}
+          header={t('archbase:Background')}
         >
           <BackgroundColor />
         </Collapse.Item>
         <Collapse.Item
           name='2'
-          header={t('Border')}
+          header={t('archbase:Border')}
         >
           <Border />
         </Collapse.Item>
         <Collapse.Item
           name='4'
-          header={t('Extra')}
+          header={t('archbase:Extra')}
         >
           <Grid.Col span={24}>
             <ClassName />

@@ -15,8 +15,9 @@ import styles from './index.module.scss';
 import { Uploader, UploaderServer } from '@emaileditor/extensions/AttributePanel/utils/Uploader';
 import { classnames } from '@emaileditor/extensions/AttributePanel/utils/classnames';
 import { previewLoadImage } from '@emaileditor/extensions/AttributePanel/utils/previewLoadImage';
-import { IconFont, useEditorProps } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont, useArchbaseEmailEditorProps } from '@emaileditor/editor/index';
 import { MergeTags } from '@emaileditor/extensions/AttributePanel';
+import { t } from 'i18next';
 
 export interface ImageUploaderProps {
   onChange: (val: string) => void;
@@ -27,7 +28,7 @@ export interface ImageUploaderProps {
 }
 
 export function ImageUploader(props: ImageUploaderProps) {
-  const { mergeTags } = useEditorProps();
+  const { mergeTags } = useArchbaseEmailEditorProps();
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState(false);
   const uploadHandlerRef = useRef<UploaderServer | null | undefined>(
@@ -38,7 +39,7 @@ export function ImageUploader(props: ImageUploaderProps) {
 
   const onUpload = useCallback(() => {
     if (isUploading) {
-      return Message.warning(t('Uploading...'));
+      return Message.warning(t('archbase:Uploading...'));
     }
     if (!uploadHandlerRef.current) return;
 
@@ -82,7 +83,7 @@ export function ImageUploader(props: ImageUploaderProps) {
             props.onChange(picture);
             setIsUploading(false);
           } catch (error: any) {
-            Message.error(error?.message || error || t('Upload failed'));
+            Message.error(error?.message || error || t('archbase:Upload failed'));
             setIsUploading(false);
           }
         }
@@ -121,10 +122,10 @@ export function ImageUploader(props: ImageUploaderProps) {
         <div className={classnames(styles['info'])}>
           <img src={props.value} />
           <div className={styles['btn-wrap']}>
-            <a title={t('Preview')} onClick={() => setPreview(true)}>
+            <a title={t('archbase:Preview')} onClick={() => setPreview(true)}>
               <IconEye />
             </a>
-            <a title={t('Remove')} onClick={() => onRemove()}>
+            <a title={t('archbase:Remove')} onClick={() => onRemove()}>
               <IconDelete />
             </a>
           </div>
@@ -147,7 +148,7 @@ export function ImageUploader(props: ImageUploaderProps) {
               trigger='click'
               content={<MergeTags value={props.value} onChange={onChange} />}
             >
-              <ArcoButton icon={<IconFont iconName='icon-merge-tags' />} />
+              <ArcoButton icon={<ArchbaseEmailIconFont iconName='icon-merge-tags' />} />
             </Popover>
           )}
           <Input
@@ -185,7 +186,7 @@ export function ImageUploader(props: ImageUploaderProps) {
         </Grid.Row>
       </div>
       <Modal visible={preview} footer={null} onCancel={() => setPreview(false)}>
-        <img alt={t('Preview')} style={{ width: '100%' }} src={props.value} />
+        <img alt={t('archbase:Preview')} style={{ width: '100%' }} src={props.value} />
       </Modal>
     </div>
   );

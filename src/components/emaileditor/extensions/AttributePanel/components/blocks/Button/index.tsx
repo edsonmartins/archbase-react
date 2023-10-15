@@ -16,33 +16,34 @@ import { LineHeight } from '../../attributes/LineHeight';
 import { LetterSpacing } from '../../attributes/LetterSpacing';
 import { Collapse, Grid, Popover, Space, Button as ArcoButton } from '@arco-design/web-react';
 import { TextField } from '../../../../components/Form';
-import { IconFont, useEditorProps, useFocusIdx } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont, useArchbaseEmailEditorProps, useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { AttributesPanelWrapper } from '../../attributes/AttributesPanelWrapper';
 import { MergeTags } from '../../attributes';
 import { useField } from 'react-final-form';
 import { ClassName } from '../../attributes/ClassName';
 import { CollapseWrapper } from '../../attributes/CollapseWrapper';
+import { t } from 'i18next';
 
 export function Button() {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
   const { input } = useField(`${focusIdx}.data.value.content`, {
     parse: v => v,
   });
 
-  const { mergeTags } = useEditorProps();
+  const { mergeTags } = useArchbaseEmailEditorProps();
 
   return (
     <AttributesPanelWrapper>
       <CollapseWrapper defaultActiveKey={['-1', '0', '1', '2', '3']}>
         <Collapse.Item
           name='-1'
-          header={t('Setting')}
+          header={t('archbase:Setting')}
         >
           <Space direction='vertical'>
             <TextField
               label={(
                 <Space>
-                  <span>{t('Content')}</span>
+                  <span>{t('archbase:Content')}</span>
                   {mergeTags && (
                     <Popover
                       trigger='click'
@@ -55,7 +56,7 @@ export function Button() {
                     >
                       <ArcoButton
                         type='text'
-                        icon={<IconFont iconName='icon-merge-tags' />}
+                        icon={<ArchbaseEmailIconFont iconName='icon-merge-tags' />}
                       />
                     </Popover>
                   )}
@@ -69,7 +70,7 @@ export function Button() {
 
         <Collapse.Item
           name='0'
-          header={t('Dimension')}
+          header={t('archbase:Dimension')}
         >
           <Space direction='vertical'>
             <Grid.Row>
@@ -85,12 +86,12 @@ export function Button() {
             </Grid.Row>
 
             <Padding
-              title={t('Padding')}
+              title={t('archbase:Padding')}
               attributeName='padding'
               showResetAll
             />
             <Padding
-              title={t('Inner padding')}
+              title={t('archbase:Inner padding')}
               attributeName='inner-padding'
             />
           </Space>
@@ -98,21 +99,21 @@ export function Button() {
 
         <Collapse.Item
           name='1'
-          header={t('Color')}
+          header={t('archbase:Color')}
         >
           <Space direction='vertical'>
             <Grid.Row>
               <Grid.Col span={11}>
-                <Color title={t('Text color')} />
+                <Color title={t('archbase:Text color')} />
               </Grid.Col>
               <Grid.Col
                 offset={1}
                 span={11}
               >
-                <BackgroundColor title={t('Button color')} />
+                <BackgroundColor title={t('archbase:Button color')} />
               </Grid.Col>
               <Grid.Col span={11}>
-                <ContainerBackgroundColor title={t('Background color')} />
+                <ContainerBackgroundColor title={t('archbase:Background color')} />
               </Grid.Col>
             </Grid.Row>
           </Space>
@@ -120,7 +121,7 @@ export function Button() {
 
         <Collapse.Item
           name='2'
-          header={t('Typography')}
+          header={t('archbase:Typography')}
         >
           <Space direction='vertical'>
             <Grid.Row>
@@ -166,13 +167,13 @@ export function Button() {
 
         <Collapse.Item
           name='3'
-          header={t('Border')}
+          header={t('archbase:Border')}
         >
           <Border />
         </Collapse.Item>
         <Collapse.Item
           name='4'
-          header={t('Extra')}
+          header={t('archbase:Extra')}
         >
           <Grid.Col span={24}>
             <ClassName />

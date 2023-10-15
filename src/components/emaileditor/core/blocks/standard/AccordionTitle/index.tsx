@@ -19,7 +19,7 @@ export type IAccordionTitle = IBlockData<
 
 export const AccordionTitle: IBlock = createBlock({
   get name() {
-    return t('Accordion title');
+    return t('archbase:Accordion title');
   },
   type: BasicType.ACCORDION_TITLE,
   create: (payload) => {

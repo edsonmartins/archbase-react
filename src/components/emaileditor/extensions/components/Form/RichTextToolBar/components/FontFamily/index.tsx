@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-
+import { t } from 'i18next'
 import { Menu, Popover } from '@arco-design/web-react';
 import { ToolItem } from '../ToolItem';
-import { IconFont } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont } from '@emaileditor/editor/index';
 import { useFontFamily } from '@emaileditor/extensions/hooks/useFontFamily';
 import '../../styles/ToolsPopover.css';
 
@@ -67,8 +67,8 @@ export function FontFamily(props: FontFamilyProps) {
       getPopupContainer={props.getPopupContainer}
     >
       <ToolItem
-        title={t('Font family')}
-        icon={<IconFont iconName='icon-font-family' />}
+        title={t('archbase:Font family')}
+        icon={<ArchbaseEmailIconFont iconName='icon-font-family' />}
       />
     </Popover>
   );

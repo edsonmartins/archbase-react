@@ -15,7 +15,7 @@ export type IGroup = IBlockData<{
 
 export const Group: IBlock<IGroup> = createBlock({
   get name() {
-    return t('Group');
+    return t('archbase:Group');
   },
   type: BasicType.GROUP,
   create: (payload) => {

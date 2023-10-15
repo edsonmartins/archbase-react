@@ -6,40 +6,41 @@ import { Height } from '@emaileditor/extensions/AttributePanel/components/attrib
 import { VerticalAlign } from '@emaileditor/extensions/AttributePanel/components/attributes/VerticalAlign';
 import { Padding } from '@emaileditor/extensions/AttributePanel/components/attributes/Padding';
 import { Collapse, Grid, Space } from '@arco-design/web-react';
-import { useEditorProps, useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailEditorProps, useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { AttributesPanelWrapper } from '@emaileditor/extensions/AttributePanel/components/attributes/AttributesPanelWrapper';
 import { ClassName } from '../../attributes/ClassName';
 import { CollapseWrapper } from '../../attributes/CollapseWrapper';
+import { t } from 'i18next';
 
 const options = [
   {
     value: 'fluid-height',
     get label() {
-      return t('Fluid height');
+      return t('archbase:Fluid height');
     },
   },
   {
     value: 'fixed-height',
     get label() {
-      return t('Fixed height');
+      return t('archbase:Fixed height');
     },
   },
 ];
 
 export function Hero() {
-  const { focusIdx } = useFocusIdx();
-  const { onUploadImage } = useEditorProps();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
+  const { onUploadImage } = useArchbaseEmailEditorProps();
 
   return (
     <AttributesPanelWrapper>
       <CollapseWrapper defaultActiveKey={['0', '1', '2']}>
         <Collapse.Item
           name='0'
-          header={t('Dimension')}
+          header={t('archbase:Dimension')}
         >
           <Space direction='vertical'>
             <RadioGroupField
-              label={t('Mode')}
+              label={t('archbase:Mode')}
               name={`${focusIdx}.attributes.mode`}
               options={options}
             />
@@ -61,11 +62,11 @@ export function Hero() {
         </Collapse.Item>
         <Collapse.Item
           name='1'
-          header={t('Background')}
+          header={t('archbase:Background')}
         >
           <Space direction='vertical'>
             <ImageUploaderField
-              label={t('src')}
+              label={t('archbase:src')}
               name={`${focusIdx}.attributes.background-url`}
               helpText={t(
                 'The image suffix should be .jpg, jpeg, png, gif, etc. Otherwise, the picture may not be displayed normally.',
@@ -76,7 +77,7 @@ export function Hero() {
             <Grid.Row>
               <Grid.Col span={11}>
                 <InputWithUnitField
-                  label={t('Background width')}
+                  label={t('archbase:Background width')}
                   name={`${focusIdx}.attributes.background-width`}
                 />
               </Grid.Col>
@@ -85,7 +86,7 @@ export function Hero() {
                 span={11}
               >
                 <InputWithUnitField
-                  label={t('Background height')}
+                  label={t('archbase:Background height')}
                   name={`${focusIdx}.attributes.background-height`}
                 />
               </Grid.Col>
@@ -94,7 +95,7 @@ export function Hero() {
             <Grid.Row>
               <Grid.Col span={11}>
                 <TextField
-                  label={t('Background position')}
+                  label={t('archbase:Background position')}
                   name={`${focusIdx}.attributes.background-position`}
                 />
               </Grid.Col>
@@ -103,7 +104,7 @@ export function Hero() {
                 span={11}
               >
                 <InputWithUnitField
-                  label={t('Border radius')}
+                  label={t('archbase:Border radius')}
                   name={`${focusIdx}.attributes.border-radius`}
                   unitOptions='percent'
                 />
@@ -116,7 +117,7 @@ export function Hero() {
         </Collapse.Item>
         <Collapse.Item
           name='4'
-          header={t('Extra')}
+          header={t('archbase:Extra')}
         >
           <Grid.Col span={24}>
             <ClassName />

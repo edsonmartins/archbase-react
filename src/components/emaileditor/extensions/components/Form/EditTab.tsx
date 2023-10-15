@@ -1,6 +1,7 @@
 import { Tabs, TabsProps } from '@arco-design/web-react';
 import { classnames } from '@emaileditor/extensions/utils/classnames';
 import React, { useState } from 'react';
+import { t } from 'i18next'
 import styles from './index.module.scss';
 
 const { TabPane } = Tabs;
@@ -48,7 +49,7 @@ export function EditTab<T extends any = any>(props: EditTabProps<T>) {
       {(Array.isArray(value) ? value : []).map((item, index) => (
         <TabPane
           style={{ paddingLeft: 12 }}
-          title={`${props.label || t('Tab')} ${index + 1}`}
+          title={`${props.label || t('archbase:Tab')} ${index + 1}`}
           key={index}
         >
           {props.renderItem(item, index)}

@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-
 import { getNodeTypeFromClassName, BlockManager } from '@emaileditor/core/index';
 import { createPortal } from 'react-dom';
-import { getEditorRoot, useEditorContext, useFocusIdx, useHoverIdx, useLazyState } from '@emaileditor/editor/index';
+import { getEditorRoot, useArchbaseEmailEditorContext, useArchbaseEmailFocusIdx, useArchbaseEmailHoverIdx, useArchbaseEmailLazyState } from '@emaileditor/editor/index';
 import { awaitForElement } from '@emaileditor/extensions/utils/awaitForElement';
+import { t } from 'i18next';
 
 export function HoverTooltip() {
-  const { hoverIdx, direction, isDragging } = useHoverIdx();
-  const lazyHoverIdx = useLazyState(hoverIdx, 60);
-  const { focusIdx } = useFocusIdx();
+  const { hoverIdx, direction, isDragging } = useArchbaseEmailHoverIdx();
+  const lazyHoverIdx = useArchbaseEmailLazyState(hoverIdx, 60);
+  const { focusIdx } = useArchbaseEmailFocusIdx();
   const [isTop, setIsTop] = useState(false);
-  const { initialized } = useEditorContext();
+  const { initialized } = useArchbaseEmailEditorContext();
 
   const [blockNode, setBlockNode] = useState<HTMLDivElement | null>(null);
   const rootRef = useRef<DOMRect | null>(null);
@@ -94,13 +94,13 @@ function TipNode(props: TipNodeProps) {
   const { direction, title, lineWidth, type } = props;
   const dragTitle = useMemo(() => {
     if (direction === 'top' || direction === 'noEnoughTop') {
-      return `${t('Insert before')} ${title}`;
+      return `${t('archbase:Insert before')} ${title}`;
     } else if (direction === 'bottom') {
-      return `${t('Insert after')} ${title}`;
+      return `${t('archbase:Insert after')} ${title}`;
     } else if (direction === 'right' || direction === 'left') {
-      return t('Drag here');
+      return t('archbase:Drag here');
     }    
-    return `${t('Drag to')} ${title}`;
+    return `${t('archbase:Drag to')} ${title}`;
   }, [direction, title]);
 
   const color = useMemo(() => {

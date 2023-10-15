@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import { NumberField, TextField } from '../../../components/Form';
-import { useFocusIdx, Stack, TextStyle } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx, Stack, TextStyle } from '@emaileditor/editor/index';
+import { t } from 'i18next';
 
 export function Decoration() {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return useMemo(() => {
     return (
@@ -19,17 +20,17 @@ export function Decoration() {
           Decoration
         </TextStyle>
         <TextField
-          label={t('Border radius')}
+          label={t('archbase:Border radius')}
           name={`${focusIdx}.attributes.borderRadius`}
           inline
         />
         <TextField
-          label={t('Border')}
+          label={t('archbase:Border')}
           name={`${focusIdx}.attributes.border`}
           inline
         />
         <NumberField
-          label={t('Opacity')}
+          label={t('archbase:Opacity')}
           max={1}
           min={0}
           step={0.1}

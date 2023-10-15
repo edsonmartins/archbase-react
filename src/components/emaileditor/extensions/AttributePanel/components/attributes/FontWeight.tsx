@@ -1,18 +1,19 @@
 import React, { useMemo } from 'react';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { SelectField } from '../../../components/Form';
+import { t } from 'i18next';
 
 const options = [
   {
     value: 'normal',
     get label() {
-      return t('Normal');
+      return t('archbase:Normal');
     },
   },
   {
     value: 'bold',
     get label() {
-      return t('Bold');
+      return t('archbase:Bold');
     },
   },
   {
@@ -54,12 +55,12 @@ const options = [
 ];
 
 export function FontWeight({ name }: { name?: string }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return useMemo(() => {
     return (
       <SelectField
-        label={t('Font weight')}
+        label={t('archbase:Font weight')}
         name={name || `${focusIdx}.attributes.font-weight`}
         options={options}
       />

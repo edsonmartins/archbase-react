@@ -1,8 +1,9 @@
 import { Button, Drawer } from '@arco-design/web-react';
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { BasicType, IText } from '@emaileditor/core/index';
-import { Stack, TextStyle, useBlock, useEditorContext, useFocusIdx } from '@emaileditor/editor/index';
+import { Stack, TextStyle, useArchbaseEmailBlock, useArchbaseEmailEditorContext, useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { ShadowDom } from '@emaileditor/extensions/components/ShadowDom';
+import { t } from 'i18next';
 
 const CodeMirrorEditorPromise = import(
   '../../../components/Form/CodemirrorEditor'
@@ -15,9 +16,9 @@ export const HtmlEditor: React.FC<{
 }> = (props) => {
   const { visible, setVisible } = props;
 
-  const { focusBlock, setValueByIdx } = useBlock();
-  const { pageData } = useEditorContext();
-  const { focusIdx } = useFocusIdx();
+  const { focusBlock, setValueByIdx } = useArchbaseEmailBlock();
+  const { pageData } = useArchbaseEmailEditorContext();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
   const [content, setContent] = useState(focusBlock?.data.value.content);
 
   const isTable = focusBlock?.type === BasicType.TABLE;
@@ -60,11 +61,11 @@ export const HtmlEditor: React.FC<{
       title={(
         <Stack distribution='equalSpacing'>
           <TextStyle variation='strong' size='large'>
-            {t('Html')}
+            {t('archbase:Html')}
           </TextStyle>
           <Stack>
             <Button type='primary' onClick={onSave}>
-              {t('Save')}
+              {t('archbase:Save')}
             </Button>
           </Stack>
         </Stack>
@@ -92,7 +93,7 @@ export const HtmlEditor: React.FC<{
                   color: '#fff',
                 }}
               >
-                {t('Editor Loading...')}
+                {t('archbase:Editor Loading...')}
               </div>
             )}
           >

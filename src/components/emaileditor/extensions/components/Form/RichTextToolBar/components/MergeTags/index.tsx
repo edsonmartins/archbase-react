@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
-
+import { t } from 'i18next'
 import { MergeTags as MergeTagsOptions } from '@emaileditor/extensions/AttributePanel';
 import { Popover } from '@arco-design/web-react';
 import { ToolItem } from '../ToolItem';
-import { IconFont } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont } from '@emaileditor/editor/index';
 
 export interface MergeTagsProps {
   execCommand: (cmd: string, value: any) => void;
@@ -50,8 +50,8 @@ export function MergeTags(props: MergeTagsProps) {
       getPopupContainer={props.getPopupContainer}
     >
       <ToolItem
-        title={t('Merge tag')}
-        icon={<IconFont iconName='icon-merge-tags' />}
+        title={t('archbase:Merge tag')}
+        icon={<ArchbaseEmailIconFont iconName='icon-merge-tags' />}
       />
     </Popover>
   );

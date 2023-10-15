@@ -26,7 +26,7 @@ export type IHero = IBlockData<
 
 export const Hero = createBlock<IHero>({
   get name() {
-    return t('Hero');
+    return t('archbase:Hero');
   },
   type: BasicType.HERO,
   create: (payload) => {

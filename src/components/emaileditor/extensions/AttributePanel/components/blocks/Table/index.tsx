@@ -1,6 +1,6 @@
 import { AttributesPanelWrapper } from '@emaileditor/extensions/AttributePanel';
 import { Collapse, Tooltip, Button } from '@arco-design/web-react';
-import { IconFont, Stack } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont, Stack } from '@emaileditor/editor/index';
 import React, { useState } from 'react';
 import { Border } from '../../attributes/Border';
 import { Color } from '../../attributes/Color';
@@ -13,6 +13,7 @@ import { TextAlign } from '../../attributes/TextAlign';
 import { Width } from '../../attributes/Width';
 import { HtmlEditor } from '../../UI/HtmlEditor';
 import { CollapseWrapper } from '../../attributes/CollapseWrapper';
+import { t } from 'i18next';
 
 export function Table() {
   const [visible, setVisible] = useState(false);
@@ -20,16 +21,16 @@ export function Table() {
   return (
     <AttributesPanelWrapper
       extra={(
-        <Tooltip content={t('Edit')}>
+        <Tooltip content={t('archbase:Edit')}>
           <Button
             onClick={() => setVisible(true)}
-            icon={<IconFont iconName='icon-html' />}
+            icon={<ArchbaseEmailIconFont iconName='icon-html' />}
           />
         </Tooltip>
       )}
     >
       <CollapseWrapper defaultActiveKey={['-1', '0', '1', '2', '3']}>
-        <Collapse.Item name='1' header={t('Dimension')}>
+        <Collapse.Item name='1' header={t('archbase:Dimension')}>
           <Stack>
             <Width />
             <Stack.Item />
@@ -39,13 +40,13 @@ export function Table() {
           </Stack>
         </Collapse.Item>
 
-        <Collapse.Item name='2' header={t('Decoration')}>
+        <Collapse.Item name='2' header={t('archbase:Decoration')}>
           <Color />
           <ContainerBackgroundColor />
           <Border />
         </Collapse.Item>
 
-        <Collapse.Item name='2' header={t('Typography')}>
+        <Collapse.Item name='2' header={t('archbase:Typography')}>
           <Stack>
             <FontFamily />
             <FontSize />

@@ -1,16 +1,17 @@
 import { Stack } from '@emaileditor/editor/components/UI/Stack';
 import React from 'react';
-import { useBlock } from '@emaileditor/editor/hooks/useBlock';
-import { IconFont } from '@emaileditor/editor/components/IconFont';
+import { useArchbaseEmailBlock } from '@emaileditor/editor/hooks/useArchbaseEmailBlock';
+import { ArchbaseEmailIconFont } from '@emaileditor/editor/components/IconFont';
 import { Button } from '@emaileditor/editor/components/UI/Button';
+import { t } from 'i18next'
 
 export function ToolsPanel() {
-  const { redo, undo, redoable, undoable } = useBlock();
+  const { redo, undo, redoable, undoable } = useArchbaseEmailBlock();
 
   return (
     <Stack>
-      <Button title={t('undo')} disabled={!undoable} onClick={undo}>
-        <IconFont
+      <Button title={t('archbase:undo')} disabled={!undoable} onClick={undo}>
+        <ArchbaseEmailIconFont
           iconName='icon-undo'
           style={{
             cursor: 'inherit',
@@ -19,8 +20,8 @@ export function ToolsPanel() {
         />
       </Button>
 
-      <Button title={t('redo')} disabled={!redoable} onClick={redo}>
-        <IconFont
+      <Button title={t('archbase:redo')} disabled={!redoable} onClick={redo}>
+        <ArchbaseEmailIconFont
           iconName='icon-redo'
           style={{
             cursor: 'inherit',

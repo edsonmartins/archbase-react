@@ -1,32 +1,31 @@
-import { IEmailTemplate } from '@emaileditor/editor/typings';
+import { IArchbaseEmailTemplate } from '@emaileditor/editor/typings';
 import { Form, useForm, useFormState, useField } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import React, { useMemo, useEffect, useState } from 'react';
-import { BlocksProvider } from '..//BlocksProvider';
-import { HoverIdxProvider } from '../HoverIdxProvider';
-import { PropsProvider, PropsProviderProps } from '../PropsProvider';
-import { RecordProvider } from '../RecordProvider';
-import { ScrollProvider } from '../ScrollProvider';
+import { ArchbaseEmailBlocksProvider } from '..//BlocksProvider';
+import { ArchbaseEmailHoverIdxProvider } from '../HoverIdxProvider';
+import { ArchbaseEmailPropsProvider, ArchbaseEmailPropsProviderProps } from '../PropsProvider';
+import { ArchbaseEmailRecordProvider } from '../RecordProvider';
+import { ArchbaseEmailScrollProvider } from '../ScrollProvider';
 import { Config, FormApi, FormState } from 'final-form';
 import setFieldTouched from 'final-form-set-field-touched';
-import { FocusBlockLayoutProvider } from '../FocusBlockLayoutProvider';
-import { PreviewEmailProvider } from '../PreviewEmailProvider';
-import { LanguageProvider } from '../LanguageProvider';
+import { ArchbaseEmailFocusBlockLayoutProvider } from '../FocusBlockLayoutProvider';
+import { ArchbaseEmailPreviewEmailProvider } from '../PreviewEmailProvider';
 import { overrideErrorLog, restoreErrorLog } from '@emaileditor/editor/utils/logger';
 
-export interface EmailEditorProviderProps<T extends IEmailTemplate = any>
-  extends Omit<PropsProviderProps, 'children'> {
+export interface ArchbaseEmailEditorProviderProps<T extends IArchbaseEmailTemplate = any>
+  extends Omit<ArchbaseEmailPropsProviderProps, 'children'> {
   data: T;
   children: (
     props: FormState<T>,
-    helper: FormApi<IEmailTemplate, Partial<IEmailTemplate>>,
+    helper: FormApi<IArchbaseEmailTemplate, Partial<IArchbaseEmailTemplate>>,
   ) => React.ReactNode;
-  onSubmit?: Config<IEmailTemplate, Partial<IEmailTemplate>>['onSubmit'];
-  validationSchema?: Config<IEmailTemplate, Partial<IEmailTemplate>>['validate'];
+  onSubmit?: Config<IArchbaseEmailTemplate, Partial<IArchbaseEmailTemplate>>['onSubmit'];
+  validationSchema?: Config<IArchbaseEmailTemplate, Partial<IArchbaseEmailTemplate>>['validate'];
 }
 
-export const EmailEditorProvider = <T extends any>(
-  props: EmailEditorProviderProps & T,
+export const ArchbaseEmailEditorProvider = <T extends any>(
+  props: ArchbaseEmailEditorProviderProps & T,
 ) => {
   const { data, children, onSubmit = () => {}, validationSchema } = props;
 
@@ -48,7 +47,7 @@ export const EmailEditorProvider = <T extends any>(
   if (!initialValues.content) return null;
 
   return (
-    <Form<IEmailTemplate>
+    <Form<IArchbaseEmailTemplate>
       initialValues={initialValues}
       onSubmit={onSubmit}
       enableReinitialize
@@ -58,23 +57,21 @@ export const EmailEditorProvider = <T extends any>(
     >
       {() => (
         <>
-          <PropsProvider {...props}>
-            <LanguageProvider locale={props.locale}>
-              <PreviewEmailProvider>
-                <RecordProvider>
-                  <BlocksProvider>
-                    <HoverIdxProvider>
-                      <ScrollProvider>
-                        <FocusBlockLayoutProvider>
-                          <FormWrapper children={children} />
-                        </FocusBlockLayoutProvider>
-                      </ScrollProvider>
-                    </HoverIdxProvider>
-                  </BlocksProvider>
-                </RecordProvider>
-              </PreviewEmailProvider>
-            </LanguageProvider>
-          </PropsProvider>
+          <ArchbaseEmailPropsProvider {...props}>
+              <ArchbaseEmailPreviewEmailProvider>
+                <ArchbaseEmailRecordProvider>
+                  <ArchbaseEmailBlocksProvider>
+                    <ArchbaseEmailHoverIdxProvider>
+                      <ArchbaseEmailScrollProvider>
+                        <ArchbaseEmailFocusBlockLayoutProvider>
+                          <ArchbaseEmailFormWrapper children={children} />
+                        </ArchbaseEmailFocusBlockLayoutProvider>
+                      </ArchbaseEmailScrollProvider>
+                    </ArchbaseEmailHoverIdxProvider>
+                  </ArchbaseEmailBlocksProvider>
+                </ArchbaseEmailRecordProvider>
+              </ArchbaseEmailPreviewEmailProvider>
+          </ArchbaseEmailPropsProvider>
           <RegisterFields />
         </>
       )}
@@ -82,16 +79,16 @@ export const EmailEditorProvider = <T extends any>(
   );
 };
 
-function FormWrapper({ children }: { children: EmailEditorProviderProps['children'] }) {
-  const data = useFormState<IEmailTemplate>();
-  const helper = useForm<IEmailTemplate>();
+function ArchbaseEmailFormWrapper({ children }: { children: ArchbaseEmailEditorProviderProps['children'] }) {
+  const data = useFormState<IArchbaseEmailTemplate>();
+  const helper = useForm<IArchbaseEmailTemplate>();
   return <>{children(data, helper)}</>;
 }
 
 // final-form bug https://github.com/final-form/final-form/issues/169
 
 const RegisterFields = React.memo(() => {
-  const { touched } = useFormState<IEmailTemplate>();
+  const { touched } = useFormState<IArchbaseEmailTemplate>();
   const [touchedMap, setTouchedMap] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {

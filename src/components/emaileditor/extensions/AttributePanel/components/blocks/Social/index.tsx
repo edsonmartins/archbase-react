@@ -20,29 +20,30 @@ import { AttributesPanelWrapper } from '@emaileditor/extensions/AttributePanel/c
 import { Collapse, Grid, Space } from '@arco-design/web-react';
 import { TextDecoration } from '@emaileditor/extensions/AttributePanel/components/attributes/TextDecoration';
 import { LineHeight } from '@emaileditor/extensions/AttributePanel/components/attributes/LineHeight';
-import { useBlock, useEditorProps, useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailBlock, useArchbaseEmailEditorProps, useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { ISocial } from '@emaileditor/core/index';
 import { ClassName } from '../../attributes/ClassName';
 import { CollapseWrapper } from '../../attributes/CollapseWrapper';
+import { t } from 'i18next';
 
 const options = [
   {
     value: 'vertical',
     get label() {
-      return t('vertical');
+      return t('archbase:vertical');
     },
   },
   {
     value: 'horizontal',
     get label() {
-      return t('horizontal');
+      return t('archbase:horizontal');
     },
   },
 ];
 
 export function Social() {
-  const { focusIdx } = useFocusIdx();
-  const { focusBlock } = useBlock();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
+  const { focusBlock } = useArchbaseEmailBlock();
   const value = focusBlock?.data.value as ISocial['data']['value'];
   if (!value) return null;
 
@@ -51,11 +52,11 @@ export function Social() {
       <CollapseWrapper defaultActiveKey={['0', '1', '2', '3']}>
         <Collapse.Item
           name='1'
-          header={t('Setting')}
+          header={t('archbase:Setting')}
         >
           <Space direction='vertical'>
             <RadioGroupField
-              label={t('Mode')}
+              label={t('archbase:Mode')}
               name={`${focusIdx}.attributes.mode`}
               options={options}
             />
@@ -66,7 +67,7 @@ export function Social() {
 
         <Collapse.Item
           name='3'
-          header={t('Typography')}
+          header={t('archbase:Typography')}
         >
           <Space direction='vertical'>
             <Grid.Row>
@@ -99,7 +100,7 @@ export function Social() {
                 offset={1}
                 span={11}
               >
-                <ContainerBackgroundColor title={t('Background color')} />
+                <ContainerBackgroundColor title={t('archbase:Background color')} />
               </Grid.Col>
             </Grid.Row>
             <Grid.Row>
@@ -118,7 +119,7 @@ export function Social() {
 
         <Collapse.Item
           name='2'
-          header={t('Social item')}
+          header={t('archbase:Social item')}
           contentStyle={{ padding: 10 }}
         >
           <EditGridTabField
@@ -137,7 +138,7 @@ export function Social() {
 
         <Collapse.Item
           name='0'
-          header={t('Dimension')}
+          header={t('archbase:Dimension')}
         >
           <Space
             direction='vertical'
@@ -146,7 +147,7 @@ export function Social() {
             <Grid.Row>
               <Grid.Col span={11}>
                 <InputWithUnitField
-                  label={t('Icon width')}
+                  label={t('archbase:Icon width')}
                   name={`${focusIdx}.attributes.icon-size`}
                 />
               </Grid.Col>
@@ -155,7 +156,7 @@ export function Social() {
                 span={11}
               >
                 <TextField
-                  label={t('Border radius')}
+                  label={t('archbase:Border radius')}
                   name={`${focusIdx}.attributes.border-radius`}
                 />
               </Grid.Col>
@@ -164,17 +165,17 @@ export function Social() {
             <Padding />
             <Padding
               attributeName='inner-padding'
-              title={t('Icon padding')}
+              title={t('archbase:Icon padding')}
             />
             <Padding
               attributeName='text-padding'
-              title={t('Text padding')}
+              title={t('archbase:Text padding')}
             />
           </Space>
         </Collapse.Item>
         <Collapse.Item
           name='4'
-          header={t('Extra')}
+          header={t('archbase:Extra')}
         >
           <Grid.Col span={24}>
             <ClassName />
@@ -191,8 +192,8 @@ function SocialElement({
   item: ISocial['data']['value']['elements'][0];
   index: number;
 }) {
-  const { focusIdx } = useFocusIdx();
-  const { onUploadImage, socialIcons } = useEditorProps();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
+  const { onUploadImage, socialIcons } = useArchbaseEmailEditorProps();
 
   const autoCompleteOptions = useMemo(() => {
     if (!socialIcons) return undefined;
@@ -207,18 +208,18 @@ function SocialElement({
   return (
     <Space direction='vertical'>
       <ImageUploaderField
-        label={t('Image')}
+        label={t('archbase:Image')}
         autoCompleteOptions={autoCompleteOptions}
         labelHidden
         name={`${focusIdx}.data.value.elements.[${index}].src`}
-        //helpText={t('The image suffix should be .jpg, jpeg, png, gif, etc. Otherwise, the picture may not be displayed normally.')}
+        //helpText={t('archbase:The image suffix should be .jpg, jpeg, png, gif, etc. Otherwise, the picture may not be displayed normally.')}
         uploadHandler={onUploadImage}
       />
 
       <Grid.Row>
         <Grid.Col span={11}>
           <TextField
-            label={t('Content')}
+            label={t('archbase:Content')}
             name={`${focusIdx}.data.value.elements.[${index}].content`}
             quickchange
           />
@@ -229,7 +230,7 @@ function SocialElement({
         >
           <TextField
             prefix={<IconLink />}
-            label={t('Link')}
+            label={t('archbase:Link')}
             name={`${focusIdx}.data.value.elements.[${index}].href`}
           />
         </Grid.Col>
@@ -237,13 +238,13 @@ function SocialElement({
       {/* <Grid.Row>
         <Grid.Col span={11}>
           <InputWithUnitField
-            label={t('Icon width')}
+            label={t('archbase:Icon width')}
             name={`${focusIdx}.data.value.elements.[${index}].icon-size`}
           />
         </Grid.Col>
         <Grid.Col offset={1} span={11}>
           <InputWithUnitField
-            label={t('Icon height')}
+            label={t('archbase:Icon height')}
             name={`${focusIdx}.data.value.elements.[${index}].icon-height`}
           />
         </Grid.Col>

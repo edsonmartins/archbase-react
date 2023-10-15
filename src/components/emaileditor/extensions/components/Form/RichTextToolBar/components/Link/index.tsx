@@ -1,7 +1,8 @@
 import { Grid, PopoverProps, Space, Tooltip } from '@arco-design/web-react';
 import React, { useCallback, useMemo } from 'react';
 import { Form } from 'react-final-form';
-import { IconFont, Stack, TextStyle } from '@emaileditor/editor/index';
+import { t } from 'i18next'
+import {ArchbaseEmailIconFont, Stack, TextStyle } from '@emaileditor/editor/index';
 import { SearchField, SwitchField } from '@emaileditor/extensions/components/Form';
 import { ToolItem } from '../ToolItem';
 import { EMAIL_BLOCK_CLASS_NAME } from '@emaileditor/core/index';
@@ -86,38 +87,38 @@ export function Link(props: LinkProps) {
                   <SearchField
                     size='small'
                     name='link'
-                    label={t('Link')}
+                    label={t('archbase:Link')}
                     labelHidden
-                    searchButton={t('Apply')}
-                    placeholder={t('https://www.example.com')}
+                    searchButton={t('archbase:Apply')}
+                    placeholder={t('archbase:https://www.example.com')}
                     onSearch={() => handleSubmit()}
                   />
                 </Stack>
                 <Grid.Row>
                   <Grid.Col span={12}>
                     <Space align='center' size='mini'>
-                      <TextStyle size='smallest'>{t('Target')}</TextStyle>
+                      <TextStyle size='smallest'>{t('archbase:Target')}</TextStyle>
                       <SwitchField
                         size='small'
-                        label={t('Target')}
+                        label={t('archbase:Target')}
                         labelHidden
                         name='blank'
-                        checkedText={t('blank')}
-                        uncheckedText={t('self')}
+                        checkedText={t('archbase:blank')}
+                        uncheckedText={t('archbase:self')}
                         inline
                       />
                     </Space>
                   </Grid.Col>
                   <Grid.Col span={12}>
                     <Space align='center' size='mini'>
-                      <TextStyle size='smallest'>{t('Underline')}</TextStyle>
+                      <TextStyle size='smallest'>{t('archbase:Underline')}</TextStyle>
                       <SwitchField
                         size='small'
-                        label={t('Underline')}
+                        label={t('archbase:Underline')}
                         labelHidden
                         name='underline'
-                        checkedText={t('off')}
-                        uncheckedText={t('on')}
+                        checkedText={t('archbase:off')}
+                        uncheckedText={t('archbase:on')}
                         inline
                       />
                     </Space>
@@ -126,7 +127,7 @@ export function Link(props: LinkProps) {
               </div>
             )}
           >
-            <ToolItem isActive={Boolean(initialValues.link)} title={t('Link')} icon={<IconFont iconName='icon-link' />} />
+            <ToolItem isActive={Boolean(initialValues.link)} title={t('archbase:Link')} icon={<ArchbaseEmailIconFont iconName='icon-link' />} />
           </Tooltip>
         );
       }}

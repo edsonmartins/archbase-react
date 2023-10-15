@@ -1,6 +1,6 @@
 import { Collapse, Grid, Space, Typography } from '@arco-design/web-react';
 import { AdvancedType, BlockManager, IBlockData } from '@emaileditor/core/index';
-import { BlockAvatarWrapper, IconFont } from '@emaileditor/editor/index';
+import { BlockAvatarWrapper,ArchbaseEmailIconFont } from '@emaileditor/editor/index';
 import React, { useMemo, useState } from 'react';
 import { IconCaretRight, IconCaretUp } from '@arco-design/web-react/icon';
 import { getIconNameByBlockType } from '@emaileditor/extensions/utils/getIconNameByBlockType';
@@ -100,7 +100,7 @@ function BlockItem({
     <div className={styles.blockItem}>
       <BlockAvatarWrapper type={type} payload={payload}>
         <div className={styles.blockItemContainer}>
-          <IconFont
+          <ArchbaseEmailIconFont
             style={{ fontSize: 20 }}
             iconName={getIconNameByBlockType(type)}
           />

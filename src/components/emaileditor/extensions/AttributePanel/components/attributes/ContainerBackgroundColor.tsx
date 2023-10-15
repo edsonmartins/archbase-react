@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react';
 import { ColorPickerField } from '../../../components/Form';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
+import { t } from 'i18next';
 
 export function ContainerBackgroundColor({
-  title = t('Container background color'),
+  title = t('archbase:Container background color'),
 }: {
   title?: string;
 }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return useMemo(() => {
     return (

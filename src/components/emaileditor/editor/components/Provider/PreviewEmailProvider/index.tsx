@@ -1,6 +1,6 @@
-import { useEditorContext } from '@emaileditor/editor/hooks/useEditorContext';
-import { useEditorProps } from '@emaileditor/editor/hooks/useEditorProps';
-import { useLazyState } from '@emaileditor/editor/hooks/useLazyState';
+import { useArchbaseEmailEditorContext } from '@emaileditor/editor/hooks/useArchbaseEmailEditorContext';
+import { useArchbaseEmailEditorProps } from '@emaileditor/editor/hooks/useArchbaseEmailEditorProps';
+import { useArchbaseEmailLazyState } from '@emaileditor/editor/hooks/useArchbaseEmailLazyState';
 import { HtmlStringToPreviewReactNodes } from '@emaileditor/editor/utils/HtmlStringToPreviewReactNodes';
 import { JsonToMjml } from '@emaileditor/core/index';
 import { cloneDeep, isString } from 'lodash';
@@ -9,7 +9,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 export const MOBILE_WIDTH = 320;
 
-export const PreviewEmailContext = React.createContext<{
+export const ArchbaseEmailPreviewEmailContext = React.createContext<{
   html: string;
   reactNode: React.ReactNode | null;
   errMsg: React.ReactNode;
@@ -21,17 +21,17 @@ export const PreviewEmailContext = React.createContext<{
   mobileWidth: 320,
 });
 
-export const PreviewEmailProvider: React.FC<{ children?: React.ReactNode }> = props => {
+export const ArchbaseEmailPreviewEmailProvider: React.FC<{ children?: React.ReactNode }> = props => {
   const { current: iframe } = useRef(document.createElement('iframe'));
   const contentWindowRef = useRef<Window | null>(null);
 
   const [mobileWidth, setMobileWidth] = useState(MOBILE_WIDTH);
 
-  const { pageData } = useEditorContext();
-  const { onBeforePreview, mergeTags, previewInjectData } = useEditorProps();
+  const { pageData } = useArchbaseEmailEditorContext();
+  const { onBeforePreview, mergeTags, previewInjectData } = useArchbaseEmailEditorProps();
   const [errMsg, setErrMsg] = useState<React.ReactNode>('');
   const [html, setHtml] = useState('');
-  const lazyPageData = useLazyState(pageData, 0);
+  const lazyPageData = useArchbaseEmailLazyState(pageData, 0);
 
   const injectData = useMemo(() => {
     if (previewInjectData) {
@@ -135,8 +135,8 @@ export const PreviewEmailProvider: React.FC<{ children?: React.ReactNode }> = pr
   }, [errMsg, html, htmlNode, mobileWidth]);
 
   return (
-    <PreviewEmailContext.Provider value={value}>
+    <ArchbaseEmailPreviewEmailContext.Provider value={value}>
       {props.children}
-    </PreviewEmailContext.Provider>
+    </ArchbaseEmailPreviewEmailContext.Provider>
   );
 };

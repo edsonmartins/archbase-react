@@ -1,23 +1,23 @@
-import { useFocusIdx } from '@emaileditor/editor/hooks/useFocusIdx';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/hooks/useArchbaseEmailFocusIdx';
 import React, { useEffect, useMemo, useState } from 'react';
 import { getBlockNodeByIdx, getShadowRoot } from '@emaileditor/editor/utils';
 import { DATA_RENDER_COUNT } from '@emaileditor/editor/constants';
-import { useEditorContext } from '@emaileditor/editor/hooks/useEditorContext';
-import { useRefState } from '@emaileditor/editor/hooks/useRefState';
+import { useArchbaseEmailEditorContext } from '@emaileditor/editor/hooks/useArchbaseEmailEditorContext';
+import { useArchbaseEmailRefState } from '@emaileditor/editor/hooks/useArchbaseEmailRefState';
 
-export const FocusBlockLayoutContext = React.createContext<{
+export const ArchbaseEmailFocusBlockLayoutContext = React.createContext<{
   focusBlockNode: HTMLElement | null;
 }>({
   focusBlockNode: null,
 });
 
-export const FocusBlockLayoutProvider: React.FC<{
+export const ArchbaseEmailFocusBlockLayoutProvider: React.FC<{
   children?: React.ReactNode;
 }> = props => {
   const [focusBlockNode, setFocusBlockNode] = useState<HTMLElement | null>(null);
-  const { initialized } = useEditorContext();
-  const { focusIdx } = useFocusIdx();
-  const focusIdxRef = useRefState(focusIdx);
+  const { initialized } = useArchbaseEmailEditorContext();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
+  const focusIdxRef = useArchbaseEmailRefState(focusIdx);
 
   const root = useMemo(() => {
     return initialized ? getShadowRoot()?.querySelector(`[${DATA_RENDER_COUNT}]`) : null;
@@ -60,8 +60,8 @@ export const FocusBlockLayoutProvider: React.FC<{
   }, [focusBlockNode]);
 
   return (
-    <FocusBlockLayoutContext.Provider value={value}>
+    <ArchbaseEmailFocusBlockLayoutContext.Provider value={value}>
       {props.children}
-    </FocusBlockLayoutContext.Provider>
+    </ArchbaseEmailFocusBlockLayoutContext.Provider>
   );
 };

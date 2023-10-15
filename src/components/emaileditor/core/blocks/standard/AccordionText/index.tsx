@@ -22,7 +22,7 @@ export type IAccordionText = IBlockData<
 
 export const AccordionText: IBlock = createBlock({
   get name() {
-    return t('Accordion text');
+    return t('archbase:Accordion text');
   },
   type: BasicType.ACCORDION_TEXT,
   create: (payload) => {

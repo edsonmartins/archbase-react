@@ -21,7 +21,7 @@ export type IWrapper = IBlockData<
 
 export const Wrapper = createBlock<IWrapper>({
   get name() {
-    return t('Wrapper');
+    return t('archbase:Wrapper');
   },
   type: BasicType.WRAPPER,
   create: (payload) => {

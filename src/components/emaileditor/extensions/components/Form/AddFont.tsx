@@ -2,14 +2,15 @@ import { FieldArray } from 'react-final-form-arrays';
 import React from 'react';
 import { IconDelete, IconPlus } from '@arco-design/web-react/icon';
 import { TextField } from '.';
+import { t } from 'i18next'
 import { Button } from '@arco-design/web-react';
-import { Stack, TextStyle, useBlock, useFocusIdx } from '@emaileditor/editor/index';
+import { Stack, TextStyle, useArchbaseEmailBlock, useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { Help } from '@emaileditor/extensions/AttributePanel/components/UI/Help';
 import { IPage } from '@emaileditor/core/index';
 
 export function AddFont() {
-  const { focusBlock } = useBlock();
-  const { focusIdx } = useFocusIdx();
+  const { focusBlock } = useArchbaseEmailBlock();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
   const value: IPage['data']['value'] = focusBlock?.data.value;
   return (
     <FieldArray
@@ -23,7 +24,7 @@ export function AddFont() {
             >
               <Stack distribution='equalSpacing'>
                 <TextStyle variation='strong'>
-                  {t('Import font')} <Help title={t('Points to a hosted css file')} />
+                  {t('archbase:Import font')} <Help title={t('archbase:Points to a hosted css file')} />
                 </TextStyle>
                 <Stack>
                   <Button
@@ -48,13 +49,13 @@ export function AddFont() {
                         <Stack.Item fill>
                           <TextField
                             name={`${focusIdx}.data.value.fonts.${index}.name`}
-                            label={t('Name')}
+                            label={t('archbase:Name')}
                           />
                         </Stack.Item>
                         <Stack.Item fill>
                           <TextField
                             name={`${focusIdx}.data.value.fonts.${index}.href`}
-                            label={t('Href')}
+                            label={t('archbase:Href')}
                           />
                         </Stack.Item>
                         <Stack

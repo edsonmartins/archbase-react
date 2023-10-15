@@ -1,12 +1,13 @@
-import { useBlock, useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailBlock, useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { Collapse, Grid, Switch } from '@arco-design/web-react';
 import { AdvancedBlock, AdvancedType } from '@emaileditor/core/index';
 import { TextField } from '@emaileditor/extensions/components/Form';
 import React, { useCallback } from 'react';
+import { t } from 'i18next';
 
 export function Iteration() {
-  const { focusIdx } = useFocusIdx();
-  const { focusBlock, change } = useBlock();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
+  const { focusBlock, change } = useArchbaseEmailBlock();
   const iteration = focusBlock?.data.value?.iteration as
     | undefined
     | AdvancedBlock['data']['value']['iteration'];
@@ -43,7 +44,7 @@ export function Iteration() {
       className='iteration'
       destroyOnHide
       name='Iteration'
-      header={t('Iteration')}
+      header={t('archbase:Iteration')}
       extra={(
         <div style={{ marginRight: 10 }}>
           <Switch checked={iteration?.enabled} onChange={onIterationToggle} />
@@ -56,13 +57,13 @@ export function Iteration() {
             <Grid.Row>
               <Grid.Col span={11}>
                 <TextField
-                  label={t('Data source')}
+                  label={t('archbase:Data source')}
                   name={`${focusIdx}.data.value.iteration.dataSource`}
                 />
               </Grid.Col>
               <Grid.Col offset={1} span={11}>
                 <TextField
-                  label={t('Item name')}
+                  label={t('archbase:Item name')}
                   name={`${focusIdx}.data.value.iteration.itemName`}
                 />
               </Grid.Col>
@@ -70,7 +71,7 @@ export function Iteration() {
             <Grid.Row>
               <Grid.Col span={11}>
                 <TextField
-                  label={t('Limit')}
+                  label={t('archbase:Limit')}
                   name={`${focusIdx}.data.value.iteration.limit`}
                   quickchange
                   type='number'
@@ -79,7 +80,7 @@ export function Iteration() {
               </Grid.Col>
               <Grid.Col offset={1} span={11}>
                 <TextField
-                  label={t('Mock quantity')}
+                  label={t('archbase:Mock quantity')}
                   max={iteration?.limit}
                   name={`${focusIdx}.data.value.iteration.mockQuantity`}
                   type='number'

@@ -1,6 +1,6 @@
-import { useDomScrollHeight } from '@emaileditor/editor/hooks/useDomScrollHeight';
+import { useArchbaseEmailDomScrollHeight } from '@emaileditor/editor/hooks/useArchbaseEmailDomScrollHeight';
 import { SYNC_SCROLL_ELEMENT_CLASS_NAME } from '@emaileditor/editor/constants';
-import { useActiveTab } from '@emaileditor/editor/hooks/useActiveTab';
+import { useArchbaseEmailActiveTab } from '@emaileditor/editor/hooks/useArchbaseEmailActiveTab';
 import { debounce } from 'lodash';
 import React, { useState, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
@@ -11,8 +11,8 @@ const offsetTop = 50;
 export const SyncScrollShadowDom: React.FC<React.HTMLProps<HTMLElement> & { isActive: boolean; }> = (props) => {
   const [root, setRoot] = useState<null | ShadowRoot>(null);
   const [ref, setRef] = useState<null | HTMLDivElement>(null);
-  const { viewElementRef } = useDomScrollHeight();
-  const { activeTab } = useActiveTab();
+  const { viewElementRef } = useArchbaseEmailDomScrollHeight();
+  const { activeTab } = useArchbaseEmailActiveTab();
   const { isActive, ...rest } = props;
 
   const setFirstVisibleEle = useCallback(debounce((root: HTMLElement) => {

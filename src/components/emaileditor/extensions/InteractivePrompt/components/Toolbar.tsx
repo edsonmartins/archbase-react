@@ -1,15 +1,15 @@
 import React from 'react';
 import { BasicType, getParentIdx, getSiblingIdx } from '@emaileditor/core/index';
-import { useBlock, useFocusIdx, useEditorProps, isTextBlock } from '@emaileditor/editor/index';
+import { useArchbaseEmailBlock, useArchbaseEmailFocusIdx, useArchbaseEmailEditorProps, isTextBlock } from '@emaileditor/editor/index';
 import { classnames } from '@emaileditor/extensions/utils/classnames';
 import { useAddToCollection } from '@emaileditor/extensions/hooks/useAddToCollection';
 import { getBlockTitle } from '@emaileditor/extensions/utils/getBlockTitle';
 
 export function Toolbar() {
-  const { moveBlock, copyBlock, removeBlock, focusBlock } = useBlock();
-  const { focusIdx, setFocusIdx } = useFocusIdx();
+  const { moveBlock, copyBlock, removeBlock, focusBlock } = useArchbaseEmailBlock();
+  const { focusIdx, setFocusIdx } = useArchbaseEmailFocusIdx();
   const { modal, setModalVisible } = useAddToCollection();
-  const props = useEditorProps();
+  const props = useArchbaseEmailEditorProps();
 
   const isPage = focusBlock?.type === BasicType.PAGE;
   const isText = isTextBlock(focusBlock?.type);

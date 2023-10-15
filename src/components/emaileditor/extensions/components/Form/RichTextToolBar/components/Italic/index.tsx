@@ -1,6 +1,7 @@
 import { PopoverProps, Tooltip } from '@arco-design/web-react';
 import React, { useCallback, useMemo } from 'react';
-import { IconFont } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont } from '@emaileditor/editor/index';
+import { t } from 'i18next'
 import { ToolItem } from '../ToolItem';
 import { EMAIL_BLOCK_CLASS_NAME } from '@emaileditor/core/index';
 import { useSelectionRange } from '@emaileditor/extensions/AttributePanel/hooks/useSelectionRange';
@@ -38,9 +39,9 @@ export function Italic(props: LinkProps) {
     <Tooltip
       color='#fff'
       position='tl'
-      content={t('Italic')}
+      content={t('archbase:Italic')}
     >
-      <ToolItem title={t('Italic')} isActive={Boolean(node)} icon={<IconFont iconName='icon-italic' />} onClick={onClick} />
+      <ToolItem title={t('archbase:Italic')} isActive={Boolean(node)} icon={<ArchbaseEmailIconFont iconName='icon-italic' />} onClick={onClick} />
     </Tooltip>
   );
 }

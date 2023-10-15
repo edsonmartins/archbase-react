@@ -14,7 +14,7 @@ export interface BlockGroup {
   blocks: Array<CollectedBlock>;
 }
 
-export interface PropsProviderProps {
+export interface ArchbaseEmailPropsProviderProps {
   children?: React.ReactNode;
   height: string;
   fontList?: { value: string; label: string }[];
@@ -43,17 +43,16 @@ export interface PropsProviderProps {
   previewInjectData?: Record<string, any>;
   onBeforePreview?: (
     html: string,
-    mergeTags: PropsProviderProps['previewInjectData'] | PropsProviderProps['mergeTags'],
+    mergeTags: ArchbaseEmailPropsProviderProps['previewInjectData'] | ArchbaseEmailPropsProviderProps['mergeTags'],
   ) => string | Promise<string>;
   enabledLogic?: boolean;
-  locale?: Record<string, string>;
 }
 
 const defaultMergeTagGenerate = (m: string) => `{{${m}}}`;
 
-export const EditorPropsContext = React.createContext<
-  PropsProviderProps & {
-    mergeTagGenerate: Required<PropsProviderProps['mergeTagGenerate']>;
+export const ArchbaseEmailEditorPropsContext = React.createContext<
+  ArchbaseEmailPropsProviderProps & {
+    mergeTagGenerate: Required<ArchbaseEmailPropsProviderProps['mergeTagGenerate']>;
   }
 >({
   children: null,
@@ -68,7 +67,7 @@ export const EditorPropsContext = React.createContext<
   enabledLogic: false,
 });
 
-export const PropsProvider: React.FC<PropsProviderProps> = props => {
+export const ArchbaseEmailPropsProvider: React.FC<ArchbaseEmailPropsProviderProps> = props => {
   const { dashed = true, mergeTagGenerate = defaultMergeTagGenerate } = props;
   const formatProps = useMemo(() => {
     return {
@@ -79,8 +78,8 @@ export const PropsProvider: React.FC<PropsProviderProps> = props => {
   }, [mergeTagGenerate, props, dashed]);
 
   return (
-    <EditorPropsContext.Provider value={formatProps}>
+    <ArchbaseEmailEditorPropsContext.Provider value={formatProps}>
       {props.children}
-    </EditorPropsContext.Provider>
+    </ArchbaseEmailEditorPropsContext.Provider>
   );
 };

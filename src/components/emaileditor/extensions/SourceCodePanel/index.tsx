@@ -8,23 +8,24 @@ import {
   JsonToMjml,
 } from '@emaileditor/core/index';
 import {
-  useBlock,
-  useFocusIdx,
-  useEditorContext,
-  useEditorProps,
+  useArchbaseEmailBlock,
+  useArchbaseEmailFocusIdx,
+  useArchbaseEmailEditorContext,
+  useArchbaseEmailEditorProps,
 } from '@emaileditor/editor/index';
 import { cloneDeep } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { MjmlToJson } from '@emaileditor/extensions/utils/MjmlToJson';
 import styles from './index.module.scss';
+import { t } from 'i18next';
 
 export function SourceCodePanel({ jsonReadOnly, mjmlReadOnly }: { jsonReadOnly: boolean; mjmlReadOnly: boolean }) {
-  const { setValueByIdx, focusBlock, values } = useBlock();
-  const { focusIdx } = useFocusIdx();
+  const { setValueByIdx, focusBlock, values } = useArchbaseEmailBlock();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   const [mjmlText, setMjmlText] = useState('');
-  const { pageData } = useEditorContext();
-  const { mergeTags } = useEditorProps();
+  const { pageData } = useArchbaseEmailEditorContext();
+  const { mergeTags } = useArchbaseEmailEditorProps();
 
   const code = useMemo(() => {
     if (!focusBlock) return '';
@@ -41,7 +42,7 @@ export function SourceCodePanel({ jsonReadOnly, mjmlReadOnly }: { jsonReadOnly: 
 
           const block = BlockManager.getBlockByType(parseValue.type);
           if (!block) {
-            throw new Error(t('Invalid content'));
+            throw new Error(t('archbase:Invalid content'));
           }
           if (
             !parseValue.data ||
@@ -49,7 +50,7 @@ export function SourceCodePanel({ jsonReadOnly, mjmlReadOnly }: { jsonReadOnly: 
             !parseValue.attributes ||
             !Array.isArray(parseValue.children)
           ) {
-            throw new Error(t('Invalid content'));
+            throw new Error(t('archbase:Invalid content'));
           }
           setValueByIdx(focusIdx, parseValue);
         } catch (error: any) {
@@ -70,15 +71,15 @@ export function SourceCodePanel({ jsonReadOnly, mjmlReadOnly }: { jsonReadOnly: 
             const parseBlock = BlockManager.getBlockByType(parseValue.type);
 
             if (!parseBlock?.validParentType.includes(parentBlock?.type)) {
-              throw new Error(t('Invalid content'));
+              throw new Error(t('archbase:Invalid content'));
             }
           } else if (focusIdx !== getPageIdx()) {
-            throw new Error(t('Invalid content'));
+            throw new Error(t('archbase:Invalid content'));
           }
 
           setValueByIdx(focusIdx, parseValue);
         } catch (error) {
-          Message.error(t('Invalid content'));
+          Message.error(t('archbase:Invalid content'));
         }
       }
     },
@@ -108,7 +109,7 @@ export function SourceCodePanel({ jsonReadOnly, mjmlReadOnly }: { jsonReadOnly: 
     <Collapse>
       <Collapse.Item
         name='json'
-        header={t('Json source')}
+        header={t('archbase:Json source')}
         contentStyle={{ padding: '8px 13px' }}
       >
         <Input.TextArea
@@ -122,7 +123,7 @@ export function SourceCodePanel({ jsonReadOnly, mjmlReadOnly }: { jsonReadOnly: 
       </Collapse.Item>
       <Collapse.Item
         name='mjml'
-        header={t('MJML source')}
+        header={t('archbase:MJML source')}
         contentStyle={{ padding: '8px 13px' }}
       >
         <Input.TextArea

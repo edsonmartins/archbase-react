@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
-import { IconFont, TextStyle, scrollBlockEleIntoView, useBlock, useEditorProps } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont, TextStyle, scrollBlockEleIntoView, useArchbaseEmailBlock, useArchbaseEmailEditorProps } from '@emaileditor/editor/index';
 import { getIndexByIdx, getSiblingIdx } from '@emaileditor/core/index';
 import styles from './index.module.scss';
 import { IBlockDataWithId } from '../../../BlockLayer';
 import { useAddToCollection } from '@emaileditor/extensions/hooks/useAddToCollection';
+import { t } from 'i18next';
 
 export function ContextMenu({
   moveBlock,
@@ -13,9 +14,9 @@ export function ContextMenu({
   onClose,
 }: {
   onClose: (ev?: React.MouseEvent) => void;
-  moveBlock: ReturnType<typeof useBlock>['moveBlock'];
-  copyBlock: ReturnType<typeof useBlock>['copyBlock'];
-  removeBlock: ReturnType<typeof useBlock>['removeBlock'];
+  moveBlock: ReturnType<typeof useArchbaseEmailBlock>['moveBlock'];
+  copyBlock: ReturnType<typeof useArchbaseEmailBlock>['copyBlock'];
+  removeBlock: ReturnType<typeof useArchbaseEmailBlock>['removeBlock'];
   contextMenuData: {
     blockData: IBlockDataWithId;
     left: number;
@@ -25,7 +26,7 @@ export function ContextMenu({
   const { blockData, left, top } = contextMenuData;
   const idx = blockData.id;
   const { modal, modalVisible, setModalVisible } = useAddToCollection();
-  const props = useEditorProps();
+  const props = useArchbaseEmailEditorProps();
   const ref = useRef<HTMLDivElement>(null);
 
   const handleMoveUp = () => {
@@ -75,27 +76,27 @@ export function ContextMenu({
       >
         {!isFirst && (
           <div className={styles.listItem} onClick={handleMoveUp}>
-            <IconFont iconName='icon-top' style={{ marginRight: 10 }} />{' '}
-            <TextStyle>{t('Move up')}</TextStyle>
+            <ArchbaseEmailIconFont iconName='icon-top' style={{ marginRight: 10 }} />{' '}
+            <TextStyle>{t('archbase:Move up')}</TextStyle>
           </div>
         )}
         <div className={styles.listItem} onClick={handleMoveDown}>
-          <IconFont iconName='icon-bottom' style={{ marginRight: 10 }} />{' '}
-          <TextStyle>{t('Move down')}</TextStyle>
+          <ArchbaseEmailIconFont iconName='icon-bottom' style={{ marginRight: 10 }} />{' '}
+          <TextStyle>{t('archbase:Move down')}</TextStyle>
         </div>
         <div className={styles.listItem} onClick={handleCopy}>
-          <IconFont iconName='icon-copy' style={{ marginRight: 10 }} />{' '}
-          <TextStyle>{t('Copy')}</TextStyle>
+          <ArchbaseEmailIconFont iconName='icon-copy' style={{ marginRight: 10 }} />{' '}
+          <TextStyle>{t('archbase:Copy')}</TextStyle>
         </div>
         {props.onAddCollection && (
             <div className={styles.listItem} onClick={handleAddToCollection}>
-              <IconFont iconName='icon-start' style={{ marginRight: 10 }} />{' '}
+              <ArchbaseEmailIconFont iconName='icon-start' style={{ marginRight: 10 }} />{' '}
               <TextStyle>Add to collection</TextStyle>
             </div>
         )}
         <div className={styles.listItem} onClick={handleDelete}>
-          <IconFont iconName='icon-delete' style={{ marginRight: 10 }} />{' '}
-          <TextStyle>{t('Delete')}</TextStyle>
+          <ArchbaseEmailIconFont iconName='icon-delete' style={{ marginRight: 10 }} />{' '}
+          <TextStyle>{t('archbase:Delete')}</TextStyle>
         </div>
       </div>
       <div

@@ -1,13 +1,14 @@
 import React from 'react';
 import { InputWithUnitField } from '../../../components/Form';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
+import { t } from 'i18next';
 
 export function LineHeight({ name }: { name?: string; }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return (
     <InputWithUnitField
-      label={t('Line height')}
+      label={t('archbase:Line height')}
       unitOptions='percent'
       name={name || `${focusIdx}.attributes.line-height`}
     />

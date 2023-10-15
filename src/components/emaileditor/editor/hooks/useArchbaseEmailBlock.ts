@@ -12,26 +12,26 @@ import {
 import { cloneDeep, debounce, get } from 'lodash';
 import { useCallback, useContext } from 'react';
 
-import { useEditorContext } from './useEditorContext';
-import { RecordContext } from '@emaileditor/editor/components/Provider/RecordProvider';
-import { useFocusIdx } from './useFocusIdx';
-import { IEmailTemplate } from '@emaileditor/editor/typings';
-import { useEditorProps } from './useEditorProps';
+import { useArchbaseEmailEditorContext } from './useArchbaseEmailEditorContext';
+import { ArchbaseEmailRecordContext } from '@emaileditor/editor/components/Provider/RecordProvider';
+import { useArchbaseEmailFocusIdx } from './useArchbaseEmailFocusIdx';
+import { IArchbaseEmailTemplate } from '@emaileditor/editor/typings';
+import { useArchbaseEmailEditorProps } from './useArchbaseEmailEditorProps';
 import { scrollBlockEleIntoView } from '@emaileditor/editor/utils';
 
-export function useBlock() {
+export function useArchbaseEmailBlock() {
   const {
     formState: { values },
     formHelpers: { getState, change },
-  } = useEditorContext();
+  } = useArchbaseEmailEditorContext();
 
-  const { focusIdx, setFocusIdx } = useFocusIdx();
+  const { focusIdx, setFocusIdx } = useArchbaseEmailFocusIdx();
 
-  const { autoComplete } = useEditorProps();
+  const { autoComplete } = useArchbaseEmailEditorProps();
 
   const focusBlock = get(values, focusIdx) as IBlockData | null;
 
-  const { redo, undo, redoable, undoable, reset } = useContext(RecordContext);
+  const { redo, undo, redoable, undoable, reset } = useContext(ArchbaseEmailRecordContext);
 
   const addBlock = useCallback(
     (params: {
@@ -45,7 +45,7 @@ export function useBlock() {
 
       let { type, parentIdx, positionIndex, payload } = params;
       let nextFocusIdx: string;
-      const values = cloneDeep(getState().values) as IEmailTemplate;
+      const values = cloneDeep(getState().values) as IArchbaseEmailTemplate;
       const parent = get(values, parentIdx) as IBlockData | null;
       if (!parent) {
         console.error(`Invalid ${type} block`);
@@ -119,7 +119,7 @@ export function useBlock() {
 
       let nextFocusIdx: string;
 
-      const values = cloneDeep(getState().values) as IEmailTemplate;
+      const values = cloneDeep(getState().values) as IArchbaseEmailTemplate;
       const source = getValueByIdx(values, sourceIdx)!;
       const sourceParentIdx = getParentIdx(sourceIdx);
       const destinationParentIdx = getParentIdx(destinationIdx);
@@ -176,7 +176,7 @@ export function useBlock() {
   const copyBlock = useCallback(
     (idx: string) => {
       let nextFocusIdx: string;
-      const values = cloneDeep(getState().values) as IEmailTemplate;
+      const values = cloneDeep(getState().values) as IArchbaseEmailTemplate;
 
       const parentIdx = getParentIdx(idx);
       if (!parentIdx) return;
@@ -200,7 +200,7 @@ export function useBlock() {
   const removeBlock = useCallback(
     (idx: string) => {
       let nextFocusIdx: string;
-      const values = cloneDeep(getState().values) as IEmailTemplate;
+      const values = cloneDeep(getState().values) as IArchbaseEmailTemplate;
 
       const block = getValueByIdx(values, idx);
       if (!block) {

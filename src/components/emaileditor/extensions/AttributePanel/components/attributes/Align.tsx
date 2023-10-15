@@ -1,34 +1,35 @@
 import React from 'react';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { RadioGroupField } from '../../../components/Form';
+import { t } from 'i18next';
 
 const options = [
   {
     value: 'left',
     get label() {
-      return t('left');
+      return t('archbase:left');
     },
   },
   {
     value: 'center',
     get label() {
-      return t('center');
+      return t('archbase:center');
     },
   },
   {
     value: 'right',
     get label() {
-      return t('right');
+      return t('archbase:right');
     },
   },
 ];
 
 export function Align({ inline }: { inline?: boolean }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return (
     <RadioGroupField
-      label={t('Align')}
+      label={t('archbase:Align')}
       name={`${focusIdx}.attributes.align`}
       options={options}
     />

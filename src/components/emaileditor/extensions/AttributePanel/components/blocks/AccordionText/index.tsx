@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 
 import { Padding } from '../../attributes/Padding';
 import { BackgroundColor } from '../../attributes/BackgroundColor';
@@ -11,17 +11,18 @@ import { FontFamily } from '../../attributes/FontFamily';
 import { LineHeight } from '../../attributes/LineHeight';
 import { AttributesPanelWrapper } from '../../attributes/AttributesPanelWrapper';
 import { Collapse, Grid, Space } from '@arco-design/web-react';
+import { t } from 'i18next';
 
 export function AccordionText() {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return (
     <AttributesPanelWrapper>
       <Collapse defaultActiveKey={['0', '1', '2']}>
-        <Collapse.Item name='0' header={t('Setting')}>
+        <Collapse.Item name='0' header={t('archbase:Setting')}>
           <Space direction='vertical'>
             <TextAreaField
-              label={t('Content')}
+              label={t('archbase:Content')}
               name={`${focusIdx}.data.value.content`}
               autoSize={{ minRows: 5 }}
             />
@@ -50,7 +51,7 @@ export function AccordionText() {
               </Grid.Col>
             </Grid.Row>
 
-            <Padding title={t('Padding')} attributeName='padding' />
+            <Padding title={t('archbase:Padding')} attributeName='padding' />
           </Space>
         </Collapse.Item>
       </Collapse>

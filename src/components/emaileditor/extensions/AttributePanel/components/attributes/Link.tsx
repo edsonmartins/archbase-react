@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { IconLink } from '@arco-design/web-react/icon';
 import { SelectField, TextField } from '../../../components/Form';
 import { Grid } from '@arco-design/web-react';
+import { t } from 'i18next';
 
 export function Link() {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return useMemo(() => {
     return (
@@ -13,22 +14,22 @@ export function Link() {
         <Grid.Col span={11}>
           <TextField
             prefix={<IconLink />}
-            label={<span>{t('Href')}&nbsp;&nbsp;&nbsp;</span>}
+            label={<span>{t('archbase:Href')}&nbsp;&nbsp;&nbsp;</span>}
             name={`${focusIdx}.attributes.href`}
           />
         </Grid.Col>
         <Grid.Col offset={1} span={11}>
           <SelectField
-            label={t('Target')}
+            label={t('archbase:Target')}
             name={`${focusIdx}.attributes.target`}
             options={[
               {
                 value: '',
-                label: t('_self'),
+                label: t('archbase:_self'),
               },
               {
                 value: '_blank',
-                label: t('_blank'),
+                label: t('archbase:_blank'),
               },
             ]}
           />

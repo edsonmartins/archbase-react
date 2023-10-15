@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useLocalStorage } from 'react-use';
 import { debounce } from 'lodash';
-import { useRefState } from '@emaileditor/editor/index';
+import { useArchbaseEmailRefState } from '@emaileditor/editor/index';
 
 const defaultPresetColor: string[] = [
   '#000000',
@@ -32,7 +32,7 @@ export const PresetColorsProvider: React.FC<{
     CURRENT_COLORS_KEY,
     defaultPresetColor,
   );
-  const currentColorsRef = useRefState(currentColors);
+  const currentColorsRef = useArchbaseEmailRefState(currentColors);
 
   const colorDivRef = useRef(document.createElement('div'));
 

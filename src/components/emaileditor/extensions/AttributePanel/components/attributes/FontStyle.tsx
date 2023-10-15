@@ -1,28 +1,29 @@
 import React from 'react';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { RadioGroupField } from '../../../components/Form';
+import { t } from 'i18next';
 
 const options = [
   {
     value: 'normal',
     get label() {
-      return t('Normal');
+      return t('archbase:Normal');
     },
   },
   {
     value: 'italic',
     get label() {
-      return t('Italic');
+      return t('archbase:Italic');
     },
   },
 ];
 
 export function FontStyle({ name }: { name?: string }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return (
     <RadioGroupField
-      label={t('Font style')}
+      label={t('archbase:Font style')}
       name={name || `${focusIdx}.attributes.font-style`}
       options={options}
     />

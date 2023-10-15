@@ -7,15 +7,15 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks/'
 import { Meta, StoryObj } from '@storybook/react'
-import { EmailEditor, EmailEditorProvider } from './editor'
+import { ArchbaseEmailEditor, ArchbaseEmailEditorProvider } from './editor'
 import { useWindowSize } from 'react-use'
-import { BasicType, BlockManager } from './core'
-import { StandardLayout } from './extensions'
+import { AdvancedType, BasicType, BlockManager } from './core'
+import { ExtensionProps, StandardLayout } from './extensions'
 import '../../styles/arco.css'
 
 const initialValues = {
-  subject: 'Welcome to Easy-email',
-  subTitle: 'Nice to meet you!',
+  subject: 'Bem vindo ao Archbase-Email',
+  subTitle: 'Prazer em conhecê-lo!',
   content: BlockManager.getBlockByType(BasicType.PAGE)!.create({}),
 };
 
@@ -24,8 +24,9 @@ const ArchbaseEmailEditorExample = () => {
 
   const smallScene = width < 1400;
 
+
   return (
-    <EmailEditorProvider
+    <ArchbaseEmailEditorProvider
       data={initialValues}
       height={'calc(100vh - 72px)'}
       autoComplete
@@ -35,23 +36,23 @@ const ArchbaseEmailEditorExample = () => {
         return (
           <StandardLayout
                 compact={!smallScene}
-                showSourceCode={true} categories={[]}          >
-            <EmailEditor />
+                showSourceCode={true} >
+            <ArchbaseEmailEditor />
           </StandardLayout>
         );
       }}
-    </EmailEditorProvider>
+    </ArchbaseEmailEditorProvider>
   );
 }
 
 
-const meta: Meta<typeof EmailEditor> = {
+const meta: Meta<typeof ArchbaseEmailEditor> = {
   title: 'Editores/Email Editor',
-  component: EmailEditor,
+  component: ArchbaseEmailEditor,
 };
 
 export default meta;
-type Story = StoryObj<typeof EmailEditor>;
+type Story = StoryObj<typeof ArchbaseEmailEditor>;
 
 
 export const Primary: Story = {

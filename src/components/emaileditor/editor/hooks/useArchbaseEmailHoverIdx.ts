@@ -1,8 +1,8 @@
 import { useCallback, useContext } from 'react';
-import { HoverIdxContext } from '@emaileditor/editor/components/Provider/HoverIdxProvider';
+import { ArchbaseEmailHoverIdxContext } from '@emaileditor/editor/components/Provider/HoverIdxProvider';
 import { debounce } from 'lodash';
 
-export function useHoverIdx() {
+export function useArchbaseEmailHoverIdx() {
   const {
     hoverIdx,
     setHoverIdx,
@@ -10,7 +10,7 @@ export function useHoverIdx() {
     isDragging,
     setDirection,
     direction,
-  } = useContext(HoverIdxContext);
+  } = useContext(ArchbaseEmailHoverIdxContext);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const setHoverIdxDebounce = useCallback(debounce(setHoverIdx), [setHoverIdx]);

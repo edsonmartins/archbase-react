@@ -9,7 +9,7 @@ export enum ActiveTabKeys {
   PC = 'PC',
 }
 
-export const BlocksContext = React.createContext<{
+export const ArchbaseEmailBlocksContext = React.createContext<{
   initialized: boolean;
   setInitialized: React.Dispatch<React.SetStateAction<boolean>>;
   focusIdx: string;
@@ -33,7 +33,7 @@ export const BlocksContext = React.createContext<{
   setActiveTab: () => {},
 });
 
-export const BlocksProvider: React.FC<{ children?: React.ReactNode }> = props => {
+export const ArchbaseEmailBlocksProvider: React.FC<{ children?: React.ReactNode }> = props => {
   const [focusIdx, setFocusIdx] = useState(getPageIdx());
   const [dragEnabled, setDragEnabled] = useState(false);
   const [initialized, setInitialized] = useState(false);
@@ -67,7 +67,7 @@ export const BlocksProvider: React.FC<{ children?: React.ReactNode }> = props =>
   );
 
   return (
-    <BlocksContext.Provider
+    <ArchbaseEmailBlocksContext.Provider
       value={{
         initialized,
         setInitialized,
@@ -82,6 +82,6 @@ export const BlocksProvider: React.FC<{ children?: React.ReactNode }> = props =>
       }}
     >
       {props.children}
-    </BlocksContext.Provider>
+    </ArchbaseEmailBlocksContext.Provider>
   );
 };

@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { TextField } from '../../../components/Form';
-import { useFocusIdx, Stack } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx, Stack } from '@emaileditor/editor/index';
 import { UseFieldConfig } from 'react-final-form';
+import { t } from 'i18next';
 
 export function Height({
   inline,
@@ -10,14 +11,14 @@ export function Height({
   inline?: boolean;
   config?: UseFieldConfig<any>;
 }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return useMemo(() => {
     return (
       <Stack wrap={false}>
         <Stack.Item fill>
           <TextField
-            label={t('Height')}
+            label={t('archbase:Height')}
             name={`${focusIdx}.attributes.height`}
             quickchange
             inline={inline}

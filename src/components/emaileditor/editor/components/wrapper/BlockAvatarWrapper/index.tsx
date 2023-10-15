@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { BlockType, getChildIdx } from '@emaileditor/core/index';
-import { useHoverIdx } from '@emaileditor/editor/hooks/useHoverIdx';
-import { useDataTransfer } from '@emaileditor/editor/hooks/useDataTransfer';
+import { useArchbaseEmailHoverIdx } from '@emaileditor/editor/hooks/useArchbaseEmailHoverIdx';
+import { useArchbaseEmailDataTransfer } from '@emaileditor/editor/hooks/useArchbaseEmailDataTransfer';
 import { isUndefined } from 'lodash';
-import { useBlock } from '@emaileditor/editor/hooks/useBlock';
+import { useArchbaseEmailBlock } from '@emaileditor/editor/hooks/useArchbaseEmailBlock';
 
 export type BlockAvatarWrapperProps = {
   children?: React.ReactNode;
@@ -16,9 +16,9 @@ export type BlockAvatarWrapperProps = {
 
 export const BlockAvatarWrapper: React.FC<BlockAvatarWrapperProps> = props => {
   const { type, children, payload, action = 'add', idx } = props;
-  const { addBlock, moveBlock, values } = useBlock();
-  const { setIsDragging, setHoverIdx } = useHoverIdx();
-  const { setDataTransfer, dataTransfer } = useDataTransfer();
+  const { addBlock, moveBlock, values } = useArchbaseEmailBlock();
+  const { setIsDragging, setHoverIdx } = useArchbaseEmailHoverIdx();
+  const { setDataTransfer, dataTransfer } = useArchbaseEmailDataTransfer();
   const ref = useRef<HTMLDivElement>(null);
 
   const onDragStart = useCallback(

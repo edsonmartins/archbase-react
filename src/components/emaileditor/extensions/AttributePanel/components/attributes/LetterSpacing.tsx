@@ -1,13 +1,14 @@
 import React from 'react';
 import { InputWithUnitField } from '../../../components/Form';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
+import { t } from 'i18next';
 
 export function LetterSpacing({ name }: { name?: string; }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return (
     <InputWithUnitField
-      label={t('Letter spacing')}
+      label={t('archbase:Letter spacing')}
       name={name || `${focusIdx}.attributes.letter-spacing`}
     />
   );

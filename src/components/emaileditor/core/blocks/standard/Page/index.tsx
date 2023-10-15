@@ -4,11 +4,10 @@ import { BasicType } from '@emaileditor/core/constants';
 import { createBlock } from '@emaileditor/core/utils/createBlock';
 import { Wrapper } from '../Wrapper';
 import { merge } from 'lodash';
-
+import { t } from 'i18next'
 import { generaMjmlMetaData } from '@emaileditor/core/utils/generaMjmlMetaData';
 import { BlockRenderer } from '@emaileditor/core/components/BlockRenderer';
 import { getAdapterAttributesString, getChildIdx, getPageIdx } from '@emaileditor/core/utils';
-import { t } from '@emaileditor/core/utils/I18nManager';
 
 export type IPage = IBlockData<
   {
@@ -40,7 +39,7 @@ export type IPage = IBlockData<
 
 export const Page = createBlock<IPage>({
   get name() {
-    return t('Page');
+    return t('archbase:Page');
   },
   type: BasicType.PAGE,
   create: payload => {

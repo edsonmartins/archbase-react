@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Collapse, Space } from '@arco-design/web-react';
-import { useBlock, useEditorProps } from '@emaileditor/editor/index';
+import { useArchbaseEmailBlock, useArchbaseEmailEditorProps } from '@emaileditor/editor/index';
 import { isAdvancedBlock } from '@emaileditor/core/index';
 import { Iteration } from '../Iteration';
 import { EmailCondition } from '../EmailCondition';
@@ -11,10 +11,10 @@ export interface CollapseWrapperProps {
 }
 
 export const CollapseWrapper: React.FC<CollapseWrapperProps> = props => {
-  const { enabledLogic } = useEditorProps();
+  const { enabledLogic } = useArchbaseEmailEditorProps();
   const [activeKeys, setActiveKeys] = useState<string[]>(props.defaultActiveKey);
 
-  const { focusBlock } = useBlock();
+  const { focusBlock } = useArchbaseEmailBlock();
   const value = focusBlock?.data.value;
 
   const isAdvancedBlockType = isAdvancedBlock(focusBlock?.type);

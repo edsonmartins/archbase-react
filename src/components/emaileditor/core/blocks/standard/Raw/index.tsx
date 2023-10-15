@@ -10,7 +10,7 @@ export type IRaw = IBlockData<{}, { content: string }>;
 
 export const Raw = createBlock<IRaw>({
   get name() {
-    return t('Raw');
+    return t('archbase:Raw');
   },
   type: BasicType.RAW,
   create: payload => {

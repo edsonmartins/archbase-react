@@ -1,15 +1,15 @@
-import { IEmailTemplate } from '@emaileditor/editor/typings';
+import { IArchbaseEmailTemplate } from '@emaileditor/editor/typings';
 import { useForm, useFormState } from 'react-final-form';
 import { cloneDeep, isEqual } from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useRefState } from '@emaileditor/editor/hooks/useRefState';
+import { useArchbaseEmailRefState } from '@emaileditor/editor/hooks/useArchbaseEmailRefState';
 
 const MAX_RECORD_SIZE = 50;
 
 export type RecordStatus = 'add' | 'redo' | 'undo' | undefined;
 
-export const RecordContext = React.createContext<{
-  records: Array<IEmailTemplate>;
+export const ArchbaseEmailRecordContext = React.createContext<{
+  records: Array<IArchbaseEmailTemplate>;
   redo: () => void;
   undo: () => void;
   reset: () => void;
@@ -24,14 +24,14 @@ export const RecordContext = React.createContext<{
   undoable: false,
 });
 
-export const RecordProvider: React.FC<{ children?: React.ReactNode }> = props => {
-  const formState = useFormState<IEmailTemplate>();
-  const [data, setData] = useState<Array<IEmailTemplate>>([]);
+export const ArchbaseEmailRecordProvider: React.FC<{ children?: React.ReactNode }> = props => {
+  const formState = useFormState<IArchbaseEmailTemplate>();
+  const [data, setData] = useState<Array<IArchbaseEmailTemplate>>([]);
   const [index, setIndex] = useState(-1);
-  const indexRef = useRefState(index);
+  const indexRef = useArchbaseEmailRefState(index);
 
   const statusRef = useRef<RecordStatus>(undefined);
-  const currentData = useRef<IEmailTemplate>();
+  const currentData = useRef<IArchbaseEmailTemplate>();
 
   if (index >= 0 && data.length > 0) {
     currentData.current = data[index];
@@ -90,5 +90,5 @@ export const RecordProvider: React.FC<{ children?: React.ReactNode }> = props =>
     }
   }, [formState, indexRef]);
 
-  return <RecordContext.Provider value={value}>{props.children}</RecordContext.Provider>;
+  return <ArchbaseEmailRecordContext.Provider value={value}>{props.children}</ArchbaseEmailRecordContext.Provider>;
 };

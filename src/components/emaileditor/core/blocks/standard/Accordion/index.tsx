@@ -31,7 +31,7 @@ export type IAccordion = IBlockData<
 
 export const Accordion = createBlock<IAccordion>({
   get name() {
-    return t('Accordion');
+    return t('archbase:Accordion');
   },
   type: BasicType.ACCORDION,
   validParentType: [BasicType.COLUMN],

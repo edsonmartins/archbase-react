@@ -1,22 +1,22 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { MjmlDomRender } from '../EditEmailPreview/components/MjmlDomRender';
-import { useDropBlock } from '@emaileditor/editor/hooks/useDropBlock';
-import { useHotKeys } from '@emaileditor/editor/hooks/useHotKeys';
+import { useArchbaseEmailDropBlock } from '@emaileditor/editor/hooks/useArchbaseEmailDropBlock';
+import { useHotKeys } from '@emaileditor/editor/hooks/useArchbaseEmailHotKeys';
 import { SyncScrollShadowDom } from '@emaileditor/editor/components/UI/SyncScrollShadowDom';
 import { ShadowStyle } from './components/ShadowStyle';
-import { useEditorContext } from '@emaileditor/editor/hooks/useEditorContext';
+import { useArchbaseEmailEditorContext } from '@emaileditor/editor/hooks/useArchbaseEmailEditorContext';
 import { DATA_ATTRIBUTE_DROP_CONTAINER, SYNC_SCROLL_ELEMENT_CLASS_NAME } from '@emaileditor/editor/constants';
 import { classnames } from '@emaileditor/editor/utils/classnames';
 import { ActiveTabKeys } from '@emaileditor/editor/components/Provider/BlocksProvider';
-import { useActiveTab } from '@emaileditor/editor/hooks/useActiveTab';
+import { useArchbaseEmailActiveTab } from '@emaileditor/editor/hooks/useArchbaseEmailActiveTab';
 
 export function EditEmailPreview() {
   useHotKeys();
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
-  const { setRef } = useDropBlock();
-  const { activeTab } = useActiveTab();
+  const { setRef } = useArchbaseEmailDropBlock();
+  const { activeTab } = useArchbaseEmailActiveTab();
 
-  const { setInitialized } = useEditorContext();
+  const { setInitialized } = useArchbaseEmailEditorContext();
 
   useEffect(() => {
     setRef(containerRef);

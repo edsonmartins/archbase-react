@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-
+import { t } from 'i18next'
 import { Menu, Popover } from '@arco-design/web-react';
 import { ToolItem } from '../ToolItem';
-import { IconFont } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont } from '@emaileditor/editor/index';
 import '../../styles/ToolsPopover.css';
 
 const list = [
@@ -96,8 +96,8 @@ export function FontSize(props: FontSizeProps) {
       getPopupContainer={props.getPopupContainer}
     >
       <ToolItem
-        title={t('Font size')}
-        icon={<IconFont iconName='icon-font-color' />}
+        title={t('archbase:Font size')}
+        icon={<ArchbaseEmailIconFont iconName='icon-font-color' />}
       />
     </Popover>
   );

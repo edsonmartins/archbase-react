@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import {
   DATA_ATTRIBUTE_DROP_CONTAINER,
-  IconFont,
+ ArchbaseEmailIconFont,
   scrollBlockEleIntoView,
   TextStyle,
-  useBlock,
-  useEditorContext,
-  useFocusIdx,
-  useHoverIdx,
-  useRefState,
+  useArchbaseEmailBlock,
+  useArchbaseEmailEditorContext,
+  useArchbaseEmailFocusIdx,
+  useArchbaseEmailHoverIdx,
+  useArchbaseEmailRefState,
 } from '@emaileditor/editor/index';
 import {
   BasicType,
@@ -43,16 +43,16 @@ export interface BlockLayerProps {
 }
 
 export function BlockLayer(props: BlockLayerProps) {
-  const { pageData } = useEditorContext();
+  const { pageData } = useArchbaseEmailEditorContext();
   const { renderTitle: propsRenderTitle } = props;
-  const { focusIdx, setFocusIdx } = useFocusIdx();
-  const { setHoverIdx, setIsDragging, setDirection } = useHoverIdx();
-  const { moveBlock, setValueByIdx, copyBlock, removeBlock, values } = useBlock();
+  const { focusIdx, setFocusIdx } = useArchbaseEmailFocusIdx();
+  const { setHoverIdx, setIsDragging, setDirection } = useArchbaseEmailHoverIdx();
+  const { moveBlock, setValueByIdx, copyBlock, removeBlock, values } = useArchbaseEmailBlock();
 
   const { setBlockLayerRef, allowDrop, removeHightLightClassName } =
     useAvatarWrapperDrop();
 
-  const valueRef = useRefState(values);
+  const valueRef = useArchbaseEmailRefState(values);
 
   const [contextMenuData, setContextMenuData] = useState<{
     blockData: IBlockDataWithId;
@@ -90,7 +90,7 @@ export function BlockLayer(props: BlockLayerProps) {
             align='center'
             size='mini'
           >
-            <IconFont
+            <ArchbaseEmailIconFont
               iconName={getIconNameByBlockType(data.type)}
               style={{ fontSize: 12, color: '#999' }}
             />

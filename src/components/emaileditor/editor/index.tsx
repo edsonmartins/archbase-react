@@ -3,7 +3,7 @@ export * from './components/Provider/EmailEditorProvider';
 
 export { BlockAvatarWrapper } from './components/wrapper';
 
-export { EmailEditor } from './components/EmailEditor';
+export { ArchbaseEmailEditor } from './components/EmailEditor';
 
 // exposing more granular components
 export { EditEmailPreview } from './components/EmailEditor/components/EditEmailPreview';
@@ -15,29 +15,29 @@ export { ToolsPanel } from './components/EmailEditor/components/ToolsPanel';
 export * from './utils/index';
 
 // export hooks
-export { useActiveTab } from './hooks/useActiveTab';
-export { useEditorProps } from './hooks/useEditorProps';
-export { useBlock } from './hooks/useBlock';
-export { useEditorContext } from './hooks/useEditorContext';
-export { useDomScrollHeight } from './hooks/useDomScrollHeight';
-export { useRefState } from './hooks/useRefState';
-export { useLazyState } from './hooks/useLazyState';
-export { useFocusBlockLayout } from './hooks/useFocusBlockLayout';
-export * from './hooks/useDataTransfer';
-export * from './hooks/useFocusIdx';
-export * from './hooks/useHoverIdx';
+export { useArchbaseEmailActiveTab } from './hooks/useArchbaseEmailActiveTab';
+export { useArchbaseEmailEditorProps } from './hooks/useArchbaseEmailEditorProps';
+export { useArchbaseEmailBlock } from './hooks/useArchbaseEmailBlock';
+export { useArchbaseEmailEditorContext } from './hooks/useArchbaseEmailEditorContext';
+export { useArchbaseEmailDomScrollHeight } from './hooks/useArchbaseEmailDomScrollHeight';
+export { useArchbaseEmailRefState } from './hooks/useArchbaseEmailRefState';
+export { useArchbaseEmailLazyState } from './hooks/useArchbaseEmailLazyState';
+export { useArchbaseEmailFocusBlockLayout } from './hooks/useArchbaseEmailFocusBlockLayout';
+export * from './hooks/useArchbaseEmailDataTransfer';
+export * from './hooks/useArchbaseEmailFocusIdx';
+export * from './hooks/useArchbaseEmailHoverIdx';
 
 export { ActiveTabKeys } from './components/Provider/BlocksProvider';
 
 // UI
-export { IconFont } from './components/IconFont';
+export { ArchbaseEmailIconFont } from './components/IconFont';
 export { TextStyle } from './components/UI/TextStyle';
 export { Stack } from './components/UI/Stack';
 export { Tabs, TabPane } from './components/UI/Tabs';
 
 export * from './typings';
 export type { StackProps } from './components/UI/Stack';
-export type { PropsProviderProps } from './components/Provider/PropsProvider';
+export type { ArchbaseEmailPropsProviderProps } from './components/Provider/PropsProvider';
 export type { BlockAvatarWrapperProps } from './components/wrapper';
 export type { BlockGroup, CollectedBlock } from './components/Provider/PropsProvider';
 

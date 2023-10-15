@@ -1,5 +1,5 @@
 import {
-  useEditorProps,
+  useArchbaseEmailEditorProps,
   MergeTagBadge,
   getEditorRoot,
   getShadowRoot,
@@ -98,7 +98,7 @@ function FieldWrapper(
   }
 ) {
   const { input, contentEditableType, ...rest } = props;
-  const { mergeTagGenerate, enabledMergeTagsBadge } = useEditorProps();
+  const { mergeTagGenerate, enabledMergeTagsBadge } = useArchbaseEmailEditorProps();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceCallbackChange = useCallback(

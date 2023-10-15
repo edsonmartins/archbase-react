@@ -6,6 +6,7 @@ import styles from '../index.module.scss';
 import Color from 'color';
 
 import { PresetColorsContext } from '@emaileditor/extensions/AttributePanel/components/provider/PresetColorsProvider';
+import { t } from 'i18next';
 
 export interface ColorPickerContentProps {
   onChange: (val: string) => void;
@@ -86,7 +87,7 @@ export function ColorPickerContent(props: ColorPickerContentProps) {
             position: 'relative',
           }}
         >
-          <span>{t('Picker...')}</span>
+          <span>{t('archbase:Picker...')}</span>
           <input
             style={{
               position: 'absolute',

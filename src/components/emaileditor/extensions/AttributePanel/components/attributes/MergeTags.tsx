@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Tree, TreeSelect } from '@arco-design/web-react';
 import { get, isObject } from 'lodash';
-import { useBlock, useEditorProps, useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailBlock, useArchbaseEmailEditorProps, useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { getContextMergeTags } from '@emaileditor/extensions/utils/getContextMergeTags';
+import { t } from 'i18next';
 
 export const MergeTags: React.FC<{
   onChange: (v: string) => void;
@@ -10,13 +11,13 @@ export const MergeTags: React.FC<{
   isSelect?: boolean;
 }> = React.memo((props) => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
   const {
     mergeTags = {},
     mergeTagGenerate,
     renderMergeTagContent,
-  } = useEditorProps();
-  const { values } = useBlock();
+  } = useArchbaseEmailEditorProps();
+  const { values } = useArchbaseEmailBlock();
 
   const contextMergeTags = useMemo(
     () => getContextMergeTags(mergeTags, values, focusIdx),
@@ -101,7 +102,7 @@ export const MergeTags: React.FC<{
           value={props.value}
           size='small'
           dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
-          placeholder={t('Please select')}
+          placeholder={t('archbase:Please select')}
           treeData={treeOptions}
           onChange={(val) => onSelect(val)}
         />

@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import isHotkey from 'is-hotkey';
-import { useBlock } from './useBlock';
+import { useArchbaseEmailBlock } from './useArchbaseEmailBlock';
 import { getEditorRoot, getShadowRoot } from '@emaileditor/editor/utils';
-import { useFocusIdx } from './useFocusIdx';
-import { useEditorContext } from './useEditorContext';
+import { useArchbaseEmailFocusIdx } from './useArchbaseEmailFocusIdx';
+import { useArchbaseEmailEditorContext } from './useArchbaseEmailEditorContext';
 import { getNodeIdxFromClassName } from '@emaileditor/core/index';
 import { getBlockNodeByChildEle } from '@emaileditor/editor/utils/getBlockNodeByChildEle';
 
-function isContentEditFocus() {
+function isArchbaseEmailContentEditFocus() {
   const isShadowRootFocus = document.activeElement === getEditorRoot();
   if (isShadowRootFocus) {
     if (
@@ -31,17 +31,17 @@ function isContentEditFocus() {
 }
 
 export function useHotKeys() {
-  const { redo, undo, removeBlock } = useBlock();
-  const { focusIdx, setFocusIdx } = useFocusIdx();
+  const { redo, undo, removeBlock } = useArchbaseEmailBlock();
+  const { focusIdx, setFocusIdx } = useArchbaseEmailFocusIdx();
   const {
     formState: { values },
-  } = useEditorContext();
+  } = useArchbaseEmailEditorContext();
 
   const root = getShadowRoot();
   // redo/undo
   useEffect(() => {
     const onKeyDown = (ev: KeyboardEvent) => {
-      if (isContentEditFocus()) return;
+      if (isArchbaseEmailContentEditFocus()) return;
       if (isHotkey('mod+z', ev)) {
         ev.preventDefault();
         undo();
@@ -64,7 +64,7 @@ export function useHotKeys() {
       const isShadowRootFocus = document.activeElement === getEditorRoot();
 
       if (!isShadowRootFocus) return;
-      if (isContentEditFocus()) return;
+      if (isArchbaseEmailContentEditFocus()) return;
       // if (isHotkey('delete', ev) || isHotkey('backspace', ev)) {
       //   removeBlock(focusIdx);
       // }

@@ -37,7 +37,7 @@ export type ICarousel = IBlockData<
 
 export const Carousel = createBlock<ICarousel>({
   get name() {
-    return t('Carousel');
+    return t('archbase:Carousel');
   },
   type: BasicType.CAROUSEL,
   create: (payload) => {

@@ -1,5 +1,5 @@
 import { SYNC_SCROLL_ELEMENT_CLASS_NAME } from '@emaileditor/editor/constants';
-import { useDomScrollHeight } from '@emaileditor/editor/hooks/useDomScrollHeight';
+import { useArchbaseEmailDomScrollHeight } from '@emaileditor/editor/hooks/useArchbaseEmailDomScrollHeight';
 import { debounce } from 'lodash';
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
@@ -21,7 +21,7 @@ export const SyncScrollIframeComponent = ({
 }: Props) => {
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
   const [contentWindow, setContentWindow] = useState<Window | null>(null);
-  const { viewElementRef } = useDomScrollHeight();
+  const { viewElementRef } = useArchbaseEmailDomScrollHeight();
   const [ref, setRef] = useState<null | HTMLDivElement>(null);
 
   const setFirstVisibleEle = useCallback(

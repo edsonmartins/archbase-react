@@ -17,7 +17,7 @@ export interface DataTransfer {
   sourceIdx?: string;
 }
 
-export const HoverIdxContext = React.createContext<{
+export const ArchbaseEmailHoverIdxContext = React.createContext<{
   hoverIdx: string;
   isDragging: boolean;
   setHoverIdx: React.Dispatch<React.SetStateAction<string>>;
@@ -37,14 +37,14 @@ export const HoverIdxContext = React.createContext<{
   setDataTransfer: () => {},
 });
 
-export const HoverIdxProvider: React.FC<{ children?: React.ReactNode }> = props => {
+export const ArchbaseEmailHoverIdxProvider: React.FC<{ children?: React.ReactNode }> = props => {
   const [hoverIdx, setHoverIdx] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [dataTransfer, setDataTransfer] = useState<DataTransfer | null>(null);
   const [direction, setDirection] = useState<string>('');
 
   return (
-    <HoverIdxContext.Provider
+    <ArchbaseEmailHoverIdxContext.Provider
       value={{
         dataTransfer,
         setDataTransfer,
@@ -57,6 +57,6 @@ export const HoverIdxProvider: React.FC<{ children?: React.ReactNode }> = props 
       }}
     >
       {props.children}
-    </HoverIdxContext.Provider>
+    </ArchbaseEmailHoverIdxContext.Provider>
   );
 };

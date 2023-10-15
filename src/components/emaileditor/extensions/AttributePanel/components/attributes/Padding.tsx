@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { InputWithUnitField } from '../../../components/Form';
-import { useFocusIdx, Stack, useBlock, TextStyle, IconFont } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx, Stack, useArchbaseEmailBlock, TextStyle,ArchbaseEmailIconFont } from '@emaileditor/editor/index';
 import { createBlockDataByType } from '@emaileditor/core/index';
 import { Form, useFormState } from 'react-final-form';
 import { Button, Grid, Space, Tooltip } from '@arco-design/web-react';
 import { get } from 'lodash';
 import { pixelAdapter } from '../adapter';
+import { t } from 'i18next';
 
 export interface PaddingProps {
   title?: string;
@@ -14,9 +15,9 @@ export interface PaddingProps {
   showResetAll?: boolean;
 }
 export function Padding(props: PaddingProps = {}) {
-  const { title = t('Padding'), attributeName = 'padding', name, showResetAll } = props;
-  const { focusBlock, change, values } = useBlock();
-  const { focusIdx } = useFocusIdx();
+  const { title = t('archbase:Padding'), attributeName = 'padding', name, showResetAll } = props;
+  const { focusBlock, change, values } = useArchbaseEmailBlock();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   const type = focusBlock && focusBlock.type;
 
@@ -40,8 +41,8 @@ export function Padding(props: PaddingProps = {}) {
   }, [attributeName, defaultConfig?.attributes, name]);
 
   const paddingFormValues = useMemo(() => {
-    const paddingList = paddingValue?.split(' ');
-    const defaultPaddingList = defaultPaddingValue?.split(' ');
+    const paddingList = paddingValue?.split('archbase: ');
+    const defaultPaddingList = defaultPaddingValue?.split('archbase: ');
 
     const top = paddingList ? paddingList[0] : defaultPaddingList?.[0] || '';
     const right = paddingList ? paddingList[1] : defaultPaddingList?.[1] || '';
@@ -96,7 +97,7 @@ export function Padding(props: PaddingProps = {}) {
                       onClick={onResetPadding}
                       size='mini'
                       icon={(
-                        <IconFont
+                        <ArchbaseEmailIconFont
                           iconName='icon-remove'
                           size={12}
                         />
@@ -109,7 +110,7 @@ export function Padding(props: PaddingProps = {}) {
               <Grid.Row>
                 <Grid.Col span={11}>
                   <InputWithUnitField
-                    label={t('Top (px)')}
+                    label={t('archbase:Top (px)')}
                     name='top'
                     autoComplete='off'
                     config={pixelAdapter}
@@ -120,7 +121,7 @@ export function Padding(props: PaddingProps = {}) {
                   span={11}
                 >
                   <InputWithUnitField
-                    label={t('Left (px)')}
+                    label={t('archbase:Left (px)')}
                     name='left'
                     autoComplete='off'
                     config={pixelAdapter}
@@ -131,7 +132,7 @@ export function Padding(props: PaddingProps = {}) {
               <Grid.Row>
                 <Grid.Col span={11}>
                   <InputWithUnitField
-                    label={t('Bottom (px)')}
+                    label={t('archbase:Bottom (px)')}
                     name='bottom'
                     config={pixelAdapter}
                     autoComplete='off'
@@ -142,7 +143,7 @@ export function Padding(props: PaddingProps = {}) {
                   span={11}
                 >
                   <InputWithUnitField
-                    label={t('Right (px)')}
+                    label={t('archbase:Right (px)')}
                     name='right'
                     autoComplete='off'
                     config={pixelAdapter}

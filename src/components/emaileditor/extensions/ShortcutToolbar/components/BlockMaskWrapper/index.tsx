@@ -1,4 +1,4 @@
-import { IconFont, BlockAvatarWrapper } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont, BlockAvatarWrapper } from '@emaileditor/editor/index';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { BlockType } from '@emaileditor/core/index';
 import styles from './index.module.scss';
@@ -69,7 +69,7 @@ export const BlockMaskWrapper: React.FC<{
               }}
               onMouseDown={onMouseDown}
             >
-              <IconFont
+              <ArchbaseEmailIconFont
                 iconName='icon-drag'
                 style={{ fontSize: 25, lineHeight: '25px', cursor: 'grab' }}
               />

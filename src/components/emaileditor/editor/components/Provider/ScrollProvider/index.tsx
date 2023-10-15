@@ -4,7 +4,7 @@ export interface HoverIdxState {
   hoverIdx: string;
 }
 
-export const ScrollContext = React.createContext<{
+export const ArchbaseEmailScrollContext = React.createContext<{
   scrollHeight: React.MutableRefObject<number>;
   viewElementRef: React.MutableRefObject<null | { selector: string; top: number }>;
 }>({
@@ -12,18 +12,18 @@ export const ScrollContext = React.createContext<{
   viewElementRef: { current: null },
 });
 
-export const ScrollProvider: React.FC<{ children?: React.ReactNode }> = props => {
+export const ArchbaseEmailScrollProvider: React.FC<{ children?: React.ReactNode }> = props => {
   const scrollHeight = useRef(0);
   const viewElementRef = useRef<null | { selector: string; top: number }>(null);
 
   return (
-    <ScrollContext.Provider
+    <ArchbaseEmailScrollContext.Provider
       value={{
         scrollHeight,
         viewElementRef,
       }}
     >
       {props.children}
-    </ScrollContext.Provider>
+    </ArchbaseEmailScrollContext.Provider>
   );
 };

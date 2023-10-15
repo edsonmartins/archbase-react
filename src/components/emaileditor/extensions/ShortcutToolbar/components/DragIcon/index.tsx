@@ -1,4 +1,4 @@
-import { IconFont, BlockAvatarWrapper } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont, BlockAvatarWrapper } from '@emaileditor/editor/index';
 import { Button } from '@arco-design/web-react';
 import React from 'react';
 import { BlockManager, IBlockData, RecursivePartial } from '@emaileditor/core/index';
@@ -18,7 +18,7 @@ export function DragIcon<T extends IBlockData = any>(props: DragIconProps<T>) {
         type='text'
         title={block?.name}
         icon={(
-          <IconFont
+          <ArchbaseEmailIconFont
             iconName={getIconNameByBlockType(props.type)}
             style={{
               fontSize: 16,

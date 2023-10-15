@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { TextField } from '../../../components/Form';
+import { t } from 'i18next';
 
 export function BorderWidth() {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return useMemo(() => {
     return (
       <TextField
-        label={t('Width')}
+        label={t('archbase:Width')}
         quickchange
         name={`${focusIdx}.attributes.border-width`}
       />

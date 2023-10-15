@@ -21,7 +21,7 @@ export type IDivider = IBlockData<
 
 export const Divider = createBlock<IDivider>({
   get name() {
-    return t('Divider');
+    return t('archbase:Divider');
   },
   type: BasicType.DIVIDER,
   create: (payload) => {

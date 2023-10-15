@@ -24,7 +24,7 @@ export type IImage = IBlockData<{
 
 export const Image: IBlock<IImage> = createBlock({
   get name() {
-    return t('Image');
+    return t('archbase:Image');
   },
   type: BasicType.IMAGE,
   create: payload => {

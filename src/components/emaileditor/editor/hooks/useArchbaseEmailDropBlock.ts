@@ -2,20 +2,20 @@ import { useEffect, useMemo, useState, useRef } from 'react';
 
 import { getNodeIdxFromClassName } from '@emaileditor/core/index';
 import { getBlockNodeByChildEle } from '@emaileditor/editor/utils/getBlockNodeByChildEle';
-import { useBlock } from '@emaileditor/editor/hooks/useBlock';
+import { useArchbaseEmailBlock } from '@emaileditor/editor/hooks/useArchbaseEmailBlock';
 import { getDirectionPosition } from '@emaileditor/editor/utils/getDirectionPosition';
-import { useFocusIdx } from './useFocusIdx';
-import { useDataTransfer } from './useDataTransfer';
-import { useHoverIdx } from './useHoverIdx';
+import { useArchbaseEmailFocusIdx } from './useArchbaseEmailFocusIdx';
+import { useArchbaseEmailDataTransfer } from './useArchbaseEmailDataTransfer';
+import { useArchbaseEmailHoverIdx } from './useArchbaseEmailHoverIdx';
 import { getInsertPosition } from '@emaileditor/editor/utils/getInsertPosition';
-import { useEditorProps } from './useEditorProps';
+import { useArchbaseEmailEditorProps } from './useArchbaseEmailEditorProps';
 import { DATA_ATTRIBUTE_DROP_CONTAINER } from '@emaileditor/editor/constants';
 
-export function useDropBlock() {
+export function useArchbaseEmailDropBlock() {
   const [ref, setRef] = useState<HTMLElement | null>(null);
-  const { values } = useBlock();
-  const { autoComplete } = useEditorProps();
-  const { dataTransfer, setDataTransfer } = useDataTransfer();
+  const { values } = useArchbaseEmailBlock();
+  const { autoComplete } = useArchbaseEmailEditorProps();
+  const { dataTransfer, setDataTransfer } = useArchbaseEmailDataTransfer();
   const cacheValues = useRef(values);
   const cacheDataTransfer = useRef(dataTransfer);
 
@@ -26,9 +26,9 @@ export function useDropBlock() {
   useEffect(() => {
     cacheDataTransfer.current = dataTransfer;
   }, [dataTransfer]);
-  const { setFocusIdx, focusIdx } = useFocusIdx();
+  const { setFocusIdx, focusIdx } = useArchbaseEmailFocusIdx();
   const { setHoverIdx, setDirection, isDragging, hoverIdx, direction } =
-    useHoverIdx();
+    useArchbaseEmailHoverIdx();
 
   useEffect(() => {
     if (ref) {

@@ -2,6 +2,7 @@ import { Card, Space, TabsProps, Typography } from '@arco-design/web-react';
 import { IconClose, IconPlus } from '@arco-design/web-react/icon';
 import { cloneDeep } from 'lodash';
 import React from 'react';
+import { t } from 'i18next'
 
 export interface EditGridTabProps<T extends any = any>
   extends Omit<TabsProps, 'onChange'> {
@@ -32,7 +33,7 @@ export function EditGridTab<T extends any = any>(props: EditGridTabProps<T>) {
           <Card title={(
             <Space>
               <Typography.Text>
-                {t('Item')} {index + 1}
+                {t('archbase:Item')} {index + 1}
               </Typography.Text>
 
             </Space>

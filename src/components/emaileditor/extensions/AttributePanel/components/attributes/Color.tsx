@@ -1,9 +1,10 @@
 import React from 'react';
 import { ColorPickerField } from '../../../components/Form';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
+import { t } from 'i18next';
 
-export function Color({ title = t('Color') }: { title?: string; inline?: boolean }) {
-  const { focusIdx } = useFocusIdx();
+export function Color({ title = t('archbase:Color') }: { title?: string; inline?: boolean }) {
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return (
     <ColorPickerField

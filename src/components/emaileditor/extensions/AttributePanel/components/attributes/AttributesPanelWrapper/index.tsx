@@ -1,7 +1,8 @@
 import { IconEye, IconEyeInvisible } from '@arco-design/web-react/icon';
 import React, { useCallback } from 'react';
-import { Stack, TextStyle, useBlock } from '@emaileditor/editor/index';
+import { Stack, TextStyle, useArchbaseEmailBlock } from '@emaileditor/editor/index';
 import { BasicType, BlockManager } from '@emaileditor/core/index';
+import { t } from 'i18next';
 
 export interface AttributesPanelWrapper {
   style?: React.CSSProperties;
@@ -9,7 +10,7 @@ export interface AttributesPanelWrapper {
   children: React.ReactNode | React.ReactElement;
 }
 export const AttributesPanelWrapper: React.FC<AttributesPanelWrapper> = props => {
-  const { focusBlock, setFocusBlock } = useBlock();
+  const { focusBlock, setFocusBlock } = useArchbaseEmailBlock();
   const block = focusBlock && BlockManager.getBlockByType(focusBlock.type);
 
   const onChangeHidden = useCallback(
@@ -48,7 +49,7 @@ export const AttributesPanelWrapper: React.FC<AttributesPanelWrapper> = props =>
                   variation='strong'
                   size='large'
                 >
-                  {`${block.name} `} {t('attributes')}
+                  {`${block.name} `} {t('archbase:attributes')}
                 </TextStyle>
               </Stack>
               <Stack.Item>{props.extra}</Stack.Item>
@@ -63,7 +64,7 @@ export const AttributesPanelWrapper: React.FC<AttributesPanelWrapper> = props =>
 };
 
 function EyeIcon() {
-  const { setFocusBlock, focusBlock } = useBlock();
+  const { setFocusBlock, focusBlock } = useArchbaseEmailBlock();
 
   const onToggleVisible = useCallback(
     (e: React.MouseEvent) => {

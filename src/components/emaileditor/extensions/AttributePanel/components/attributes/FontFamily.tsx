@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { AutoCompleteField } from '../../../components/Form';
 import { useFontFamily } from '@emaileditor/extensions/hooks/useFontFamily';
+import { t } from 'i18next';
 
 export function FontFamily({ name }: { name?: string }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
   const { fontList } = useFontFamily();
 
   return useMemo(() => {
@@ -12,7 +13,7 @@ export function FontFamily({ name }: { name?: string }) {
       <AutoCompleteField
         style={{ minWidth: 100, flex: 1 }}
         showSearch
-        label={t('Font family')}
+        label={t('archbase:Font family')}
         name={name || `${focusIdx}.attributes.font-family`}
         options={fontList}
       />

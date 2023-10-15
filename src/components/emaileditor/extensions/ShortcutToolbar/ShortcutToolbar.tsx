@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-wrap-multilines */
 
 import { AdvancedType, IButton, IImage } from '@emaileditor/core/index';
-import { IconFont, Stack } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont, Stack } from '@emaileditor/editor/index';
 import React, { useRef } from 'react';
 import { BlocksPanel } from './components/BlocksPanel';
 import { DragIcon } from './components/DragIcon';
@@ -54,7 +54,7 @@ export function ShortcutToolbar() {
         type={AdvancedType.SECTION}
       />
 
-      <IconFont
+      <ArchbaseEmailIconFont
         onClick={() => blocksPanelRef.current?.click()}
         iconName='icon-more'
         style={{

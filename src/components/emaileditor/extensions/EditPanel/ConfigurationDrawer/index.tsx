@@ -1,4 +1,4 @@
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { Drawer } from '@arco-design/web-react';
 import { ConfigurationPanel } from '@emaileditor/extensions/ConfigurationPanel';
 import React, { useCallback, useMemo, useRef } from 'react';
@@ -17,7 +17,7 @@ export function ConfigurationDrawer({
   mjmlReadOnly: boolean;
 }) {
   const refWrapper = useRef(null);
-  const { focusIdx, setFocusIdx } = useFocusIdx();
+  const { focusIdx, setFocusIdx } = useArchbaseEmailFocusIdx();
 
   const onClose = useCallback(() => {
     setFocusIdx('');

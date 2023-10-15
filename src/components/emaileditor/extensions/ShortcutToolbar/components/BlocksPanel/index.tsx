@@ -2,17 +2,18 @@ import { Card, Tabs } from '@arco-design/web-react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './index.module.scss';
 import { createPortal } from 'react-dom';
-import { IconFont, Stack, useHoverIdx } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont, Stack, useArchbaseEmailHoverIdx } from '@emaileditor/editor/index';
 import { BlockMarketCategory, BlockMarketManager } from '../../utils/BlockMarketManager';
 import { defaultCategories } from './presetTemplate';
 import { Help } from '@emaileditor/extensions/AttributePanel/components/UI/Help';
+import { t } from 'i18next';
 
 BlockMarketManager.addCategories(defaultCategories);
 
 export const BlocksPanel: React.FC<{
   children: React.ReactNode | React.ReactElement;
 }> = props => {
-  const { isDragging } = useHoverIdx();
+  const { isDragging } = useArchbaseEmailHoverIdx();
   const [visible, setVisible] = useState(false);
   const [ele, setEle] = useState<HTMLElement | null>(null);
   const [categories, setCategories] = useState<BlockMarketCategory[]>(
@@ -76,7 +77,7 @@ export const BlocksPanel: React.FC<{
                   title='Drag block'
                   extra={
                     <div className={styles.closeBtn}>
-                      <IconFont
+                      <ArchbaseEmailIconFont
                         iconName='icon-close'
                         onClick={toggleVisible}
                       />
@@ -94,7 +95,7 @@ export const BlocksPanel: React.FC<{
                           overflow: 'auto',
                           height: 500,
                         }}
-                        key={category.title}
+                        key={`${t(category.title)}`}
                         title={
                           <div
                             style={{
@@ -102,7 +103,7 @@ export const BlocksPanel: React.FC<{
                               paddingBottom: 10,
                             }}
                           >
-                            {category.title}
+                            {`${t(category.title)}`}
                           </div>
                         }
                       >
@@ -130,13 +131,13 @@ const BlockPanelItem: React.FC<{
         return (
           <Tabs.TabPane
             style={{ padding: 0, height: 500 }}
-            key={block.title}
+            key={`${t(block.title)}`}
             title={
               <Stack
                 alignment='center'
                 spacing='extraTight'
               >
-                <div className={styles.blockItem}>{block.title}</div>
+                <div className={styles.blockItem}>{`${t(block.title)}`}</div>
                 {block.description && <Help title={block.description} />}
               </Stack>
             }

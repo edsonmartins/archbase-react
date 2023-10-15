@@ -1,6 +1,6 @@
 import { ShortcutToolbar } from '../ShortcutToolbar';
 import { Button, Card, ConfigProvider, Layout, Tabs } from '@arco-design/web-react';
-import { useEditorProps } from '@emaileditor/editor/index';
+import { useArchbaseEmailEditorProps } from '@emaileditor/editor/index';
 import React, { useState } from 'react';
 import { SourceCodePanel } from '../SourceCodePanel';
 import { AttributePanel } from '../AttributePanel';
@@ -10,6 +10,7 @@ import styles from './index.module.scss';
 import enUS from '@arco-design/web-react/es/locale/en-US';
 import { MergeTagBadgePrompt } from '@emaileditor/extensions/MergeTagBadgePrompt';
 import { IconLeft, IconRight } from '@arco-design/web-react/icon';
+import { t } from 'i18next';
 
 export const SimpleLayout: React.FC<
   {
@@ -20,7 +21,7 @@ export const SimpleLayout: React.FC<
     children: React.ReactNode | React.ReactElement;
   } & BlockLayerProps
 > = props => {
-  const { height: containerHeight } = useEditorProps();
+  const { height: containerHeight } = useArchbaseEmailEditorProps();
   const { showSourceCode = true, defaultShowLayer = true, jsonReadOnly = false, mjmlReadOnly = true } = props;
   const [collapsed, setCollapsed] = useState(!defaultShowLayer);
   return (
@@ -72,7 +73,7 @@ export const SimpleLayout: React.FC<
               }}
             >
               <Card
-                title={t('Layout')}
+                title={t('archbase:Layout')}
                 style={{ border: 'none' }}
                 headerStyle={{ height: 50 }}
               >
@@ -108,7 +109,7 @@ export const SimpleLayout: React.FC<
               <Tabs.TabPane
                 title={
                   <div style={{ height: 31, lineHeight: '31px' }}>
-                    {t('Configuration')}
+                    {t('archbase:Configuration')}
                   </div>
                 }
               >
@@ -120,7 +121,7 @@ export const SimpleLayout: React.FC<
                   key='Source code'
                   title={
                     <div style={{ height: 31, lineHeight: '31px' }}>
-                      {t('Source code')}
+                      {t('archbase:Source code')}
                     </div>
                   }
                 >

@@ -58,7 +58,7 @@ export type ISocial = IBlockData<
 
 export const Social: IBlock<ISocial> = createBlock({
   get name() {
-    return t('Social');
+    return t('archbase:Social');
   },
   type: BasicType.SOCIAL,
   create: (payload) => {

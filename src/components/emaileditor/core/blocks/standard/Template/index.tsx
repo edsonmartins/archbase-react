@@ -15,7 +15,7 @@ export type ITemplate = IBlockData<
 
 export const Template = createBlock<ITemplate>({
   get name() {
-    return t('Template');
+    return t('archbase:Template');
   },
   type: BasicType.TEMPLATE,
   create: (payload) => {

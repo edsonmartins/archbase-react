@@ -1,7 +1,7 @@
 import React from 'react';
 import iconfontText from '@emaileditor/editor/assets/font/iconfont.css?inline';
 import styles from '@emaileditor/editor/styles/block-shadowDom-interactive.css?inline';
-import { useEditorProps } from '@emaileditor/editor/hooks/useEditorProps';
+import { useArchbaseEmailEditorProps } from '@emaileditor/editor/hooks/useArchbaseEmailEditorProps';
 
 export function ShadowStyle() {
   const {
@@ -9,7 +9,7 @@ export function ShadowStyle() {
       hoverColor = 'rgb(var(--primary-4, #1890ff))',
       selectedColor = 'rgb(var(--primary-6, #1890ff))',
     } = {},
-  } = useEditorProps();
+  } = useArchbaseEmailEditorProps();
 
   return (
     <>

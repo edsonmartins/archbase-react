@@ -1,9 +1,9 @@
-import { useEditorContext, useEditorProps } from '@emaileditor/editor/index';
+import { useArchbaseEmailEditorContext, useArchbaseEmailEditorProps } from '@emaileditor/editor/index';
 import React, { useMemo } from 'react';
 
 export function useFontFamily() {
-  const { fontList: defaultFontList } = useEditorProps();
-  const { pageData } = useEditorContext();
+  const { fontList: defaultFontList } = useArchbaseEmailEditorProps();
+  const { pageData } = useArchbaseEmailEditorContext();
 
   const addFonts = pageData.data.value.fonts;
 

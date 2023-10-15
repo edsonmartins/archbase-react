@@ -1,9 +1,10 @@
 import { ColorPicker } from '@emaileditor/extensions/components/Form/ColorPicker';
-import { IconFont } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont } from '@emaileditor/editor/index';
 import React, { useMemo } from 'react';
+import { t } from 'i18next'
 import { ToolItem } from '../../ToolItem';
 
-export function IconFontColor({ selectionRange, execCommand, getPopoverMountNode }: { selectionRange: Range | null; execCommand: (cmd: string, val?: any) => void; getPopoverMountNode: () => HTMLElement; }) {
+export function ArchbaseEmailIconFontColor({ selectionRange, execCommand, getPopoverMountNode }: { selectionRange: Range | null; execCommand: (cmd: string, val?: any) => void; getPopoverMountNode: () => HTMLElement; }) {
 
   const color = useMemo(() => {
     if (!selectionRange) return undefined;
@@ -31,11 +32,11 @@ export function IconFontColor({ selectionRange, execCommand, getPopoverMountNode
             position: 'relative'
           }}
           >
-            <IconFont size={12} iconName='icon-font-color' style={{ position: 'relative', top: '-1px' }} />
+            <ArchbaseEmailIconFont size={12} iconName='icon-font-color' style={{ position: 'relative', top: '-1px' }} />
             <div style={{ borderBottom: `2px solid ${color}`, position: 'absolute', width: '130%', left: '-15%', top: 16 }} />
           </div>
         )}
-        title={t('Text color')}
+        title={t('archbase:Text color')}
       />
     </ColorPicker>
 

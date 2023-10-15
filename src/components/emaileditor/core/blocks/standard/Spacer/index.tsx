@@ -14,7 +14,7 @@ export type ISpacer = IBlockData<{
 
 export const Spacer: IBlock<ISpacer> = createBlock({
   get name() {
-    return t('Spacer');
+    return t('archbase:Spacer');
   },
   type: BasicType.SPACER,
   create: (payload) => {

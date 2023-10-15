@@ -1,7 +1,7 @@
 import { classnames } from '@emaileditor/editor/utils/classnames';
 import React from 'react';
 
-export function IconFont(props: {
+export function ArchbaseEmailIconFont(props: {
   iconName: string;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onClickCapture?: React.MouseEventHandler<HTMLDivElement>;

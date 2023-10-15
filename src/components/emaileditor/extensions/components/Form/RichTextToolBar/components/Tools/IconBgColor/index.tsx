@@ -1,5 +1,6 @@
 import { ColorPicker } from '@emaileditor/extensions/components/Form/ColorPicker';
-import { IconFont } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont } from '@emaileditor/editor/index';
+import { t } from 'i18next'
 import React, { useMemo } from 'react';
 import { ToolItem } from '../../ToolItem';
 
@@ -31,11 +32,11 @@ export function IconBgColor({ selectionRange, execCommand, getPopoverMountNode }
             position: 'relative'
           }}
           >
-            <IconFont size={12} iconName='icon-bg-color' style={{ position: 'relative', top: '-1px' }} />
+            <ArchbaseEmailIconFont size={12} iconName='icon-bg-color' style={{ position: 'relative', top: '-1px' }} />
             <div style={{ borderBottom: `2px solid ${color}`, position: 'absolute', width: '130%', left: '-15%', top: 16 }} />
           </div>
         )}
-        title={t('Background color')}
+        title={t('archbase:Background color')}
       />
     </ColorPicker>
 

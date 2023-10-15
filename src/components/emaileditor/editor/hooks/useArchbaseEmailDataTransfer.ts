@@ -1,9 +1,9 @@
 import { useCallback, useContext, useMemo } from 'react';
-import { HoverIdxContext } from '@emaileditor/editor/components/Provider/HoverIdxProvider';
+import { ArchbaseEmailHoverIdxContext } from '@emaileditor/editor/components/Provider/HoverIdxProvider';
 import { debounce } from 'lodash';
 
-export function useDataTransfer() {
-  const { dataTransfer, setDataTransfer } = useContext(HoverIdxContext);
+export function useArchbaseEmailDataTransfer() {
+  const { dataTransfer, setDataTransfer } = useContext(ArchbaseEmailHoverIdxContext);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const setDataTransferDebounce = useCallback(debounce(setDataTransfer), [

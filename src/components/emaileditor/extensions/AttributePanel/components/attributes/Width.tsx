@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
 import { InputWithUnitField } from '../../../components/Form';
-import { useFocusIdx, useBlock } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx, useArchbaseEmailBlock } from '@emaileditor/editor/index';
 import { BasicType, getParentByIdx } from '@emaileditor/core/index';
 import { InputWithUnitProps } from '@emaileditor/extensions/components/Form/InputWithUnit';
 import { UseFieldConfig } from 'react-final-form';
+import { t } from 'i18next';
 
 export function Width({
   inline = false,
@@ -14,8 +15,8 @@ export function Width({
   unitOptions?: InputWithUnitProps['unitOptions'];
   config?: UseFieldConfig<any>;
 }) {
-  const { focusIdx } = useFocusIdx();
-  const { focusBlock, values } = useBlock();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
+  const { focusBlock, values } = useArchbaseEmailBlock();
   const parentType = getParentByIdx(values, focusIdx)?.type;
 
   const validate = useCallback(
@@ -23,7 +24,7 @@ export function Width({
       if (focusBlock?.type === BasicType.COLUMN && parentType === BasicType.GROUP) {
         return /(\d)*%/.test(val)
           ? undefined
-          : t('Column inside a group must have a width in percentage, not in pixel');
+          : t('archbase:Column inside a group must have a width in percentage, not in pixel');
       }
       return undefined;
     },
@@ -33,7 +34,7 @@ export function Width({
   return (
     <InputWithUnitField
       validate={validate}
-      label={t('Width')}
+      label={t('archbase:Width')}
       inline={inline}
       name={`${focusIdx}.attributes.width`}
       unitOptions={unitOptions}

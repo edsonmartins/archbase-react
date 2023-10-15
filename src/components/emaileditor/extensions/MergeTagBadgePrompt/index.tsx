@@ -1,16 +1,17 @@
 import {
-  useEditorContext,
-  useEditorProps,
+  useArchbaseEmailEditorContext,
+  useArchbaseEmailEditorProps,
   getShadowRoot,
   getBlockNodeByChildEle,
-  IconFont,
-  useRefState,
+ ArchbaseEmailIconFont,
+  useArchbaseEmailRefState,
   getEditorRoot,
 } from '@emaileditor/editor/index';
 import { get } from 'lodash';
+import { t } from 'i18next'
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import stylesText from './MergeTagBadge.scss?inline';
+import stylesText from './MergeTagBadge.scss';
 import { classnames } from '@emaileditor/extensions/utils/classnames';
 import { useSelectionRange } from '@emaileditor/extensions/AttributePanel/hooks/useSelectionRange';
 
@@ -29,15 +30,15 @@ const removeAllActiveBadge = () => {
 };
 
 export function MergeTagBadgePrompt() {
-  const { initialized } = useEditorContext();
+  const { initialized } = useArchbaseEmailEditorContext();
   const popoverRef = useRef<HTMLDivElement | null>(null);
-  const { onChangeMergeTag, mergeTags } = useEditorProps();
+  const { onChangeMergeTag, mergeTags } = useArchbaseEmailEditorProps();
   const [text, setText] = useState('');
   const { setRangeByElement } = useSelectionRange();
 
   const root = initialized && getShadowRoot();
   const [target, setTarget] = React.useState<HTMLElement | null>(null);
-  const targetRef = useRefState(target);
+  const targetRef = useArchbaseEmailRefState(target);
 
   const textContainer = getBlockNodeByChildEle(target);
 
@@ -140,12 +141,12 @@ export function MergeTagBadgePrompt() {
         <div ref={popoverRef} onClick={onClick} className={classnames('archbase-email-merge-tag-popover')}>
           <div className='archbase-email-merge-tag-popover-container'>
             <h3>
-              <span>{t('Default value')}</span>
-              <IconFont style={{ color: 'rgb(92, 95, 98)' }} iconName='icon-close' onClick={onClose} />
+              <span>{t('archbase:Default value')}</span>
+              <ArchbaseEmailIconFont style={{ color: 'rgb(92, 95, 98)' }} iconName='icon-close' onClick={onClose} />
             </h3>
             <div className={'archbase-email-merge-tag-popover-desc'}>
               <p>
-                {t('If a personalized text value isn\"t available, then a default value is shown.')}
+                {t('archbase:If a personalized text value isn\"t available, then a default value is shown.')}
               </p>
               <div className='archbase-email-merge-tag-popover-desc-label'>
                 <input autoFocus value={text} onChange={onChange} type="text" autoComplete='off' maxLength={40} />
@@ -154,7 +155,7 @@ export function MergeTagBadgePrompt() {
                 </div>
               </div>
               <div className='archbase-email-merge-tag-popover-desc-label-button'>
-                <button onClick={onSave}>{t('Save')}</button>
+                <button onClick={onSave}>{t('archbase:Save')}</button>
               </div>
             </div>
           </div>

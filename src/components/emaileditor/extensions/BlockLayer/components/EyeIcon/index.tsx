@@ -1,4 +1,4 @@
-import { IconFont } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont } from '@emaileditor/editor/index';
 import { BasicType } from '@emaileditor/core/index';
 import React from 'react';
 import { IBlockDataWithId } from '../..';
@@ -15,18 +15,18 @@ export function EyeIcon({
   if (hidden)
     return (
       <div style={{ visibility: 'hidden' }}>
-        <IconFont iconName='icon-eye' />
+        <ArchbaseEmailIconFont iconName='icon-eye' />
       </div>
     );
   if (blockData.type === BasicType.PAGE) return null;
 
   return blockData.data.hidden ? (
-    <IconFont
+    <ArchbaseEmailIconFont
       onClick={(ev) => onToggleVisible(blockData, ev)}
       iconName='icon-eye-invisible'
     />
   ) : (
-    <IconFont
+    <ArchbaseEmailIconFont
       onClick={(ev) => onToggleVisible(blockData, ev)}
       iconName='icon-eye'
     />

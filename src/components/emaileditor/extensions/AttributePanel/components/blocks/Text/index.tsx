@@ -14,10 +14,11 @@ import { LetterSpacing } from '@emaileditor/extensions/AttributePanel/components
 
 import { AttributesPanelWrapper } from '@emaileditor/extensions/AttributePanel/components/attributes/AttributesPanelWrapper';
 import { Collapse, Grid, Space, Tooltip, Button } from '@arco-design/web-react';
-import { IconFont } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont } from '@emaileditor/editor/index';
 import { HtmlEditor } from '../../UI/HtmlEditor';
 import { ClassName } from '../../attributes/ClassName';
 import { CollapseWrapper } from '../../attributes/CollapseWrapper';
+import { t } from 'i18next';
 
 export function Text() {
   const [visible, setVisible] = useState(false);
@@ -25,10 +26,10 @@ export function Text() {
   return (
     <AttributesPanelWrapper
       extra={(
-        <Tooltip content={t('Html mode')}>
+        <Tooltip content={t('archbase:Html mode')}>
           <Button
             onClick={() => setVisible(true)}
-            icon={<IconFont iconName='icon-html' />}
+            icon={<ArchbaseEmailIconFont iconName='icon-html' />}
           />
         </Tooltip>
       )}
@@ -36,7 +37,7 @@ export function Text() {
       <CollapseWrapper defaultActiveKey={['0', '1', '2']}>
         <Collapse.Item
           name='0'
-          header={t('Dimension')}
+          header={t('archbase:Dimension')}
         >
           <Space direction='vertical'>
             <Height />
@@ -45,7 +46,7 @@ export function Text() {
         </Collapse.Item>
         <Collapse.Item
           name='1'
-          header={t('Color')}
+          header={t('archbase:Color')}
         >
           <Grid.Row>
             <Grid.Col span={11}>
@@ -55,13 +56,13 @@ export function Text() {
               offset={1}
               span={11}
             >
-              <ContainerBackgroundColor title={t('Background color')} />
+              <ContainerBackgroundColor title={t('archbase:Background color')} />
             </Grid.Col>
           </Grid.Row>
         </Collapse.Item>
         <Collapse.Item
           name='2'
-          header={t('Typography')}
+          header={t('archbase:Typography')}
         >
           <Space direction='vertical'>
             <Grid.Row>
@@ -115,7 +116,7 @@ export function Text() {
         </Collapse.Item>
         <Collapse.Item
           name='4'
-          header={t('Extra')}
+          header={t('archbase:Extra')}
         >
           <Grid.Col span={24}>
             <ClassName />

@@ -1,39 +1,40 @@
 import React, { useMemo } from 'react';
 import { ImageUploaderField, SelectField, TextField } from '../../../components/Form';
-import { useFocusIdx, useEditorProps } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx, useArchbaseEmailEditorProps } from '@emaileditor/editor/index';
 import { BackgroundColor } from './BackgroundColor';
 import { Grid, Space } from '@arco-design/web-react';
+import { t } from 'i18next';
 
 const backgroundRepeatOptions = [
   {
     value: 'no-repeat',
     get label() {
-      return t('No repeat');
+      return t('archbase:No repeat');
     },
   },
   {
     value: 'repeat',
     get label() {
-      return t('Repeat');
+      return t('archbase:Repeat');
     },
   },
   {
     value: 'repeat-x',
     get label() {
-      return t('Repeat X');
+      return t('archbase:Repeat X');
     },
   },
   {
     value: 'repeat-y',
     get label() {
-      return t('Repeat Y');
+      return t('archbase:Repeat Y');
     },
   },
 ];
 
 export function Background() {
-  const { focusIdx } = useFocusIdx();
-  const { onUploadImage } = useEditorProps();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
+  const { onUploadImage } = useArchbaseEmailEditorProps();
   return useMemo(() => {
     return (
       <Space
@@ -41,7 +42,7 @@ export function Background() {
         direction='vertical'
       >
         <ImageUploaderField
-          label={t('Background image')}
+          label={t('archbase:Background image')}
           name={`${focusIdx}.attributes.background-url`}
           helpText={t(
             'The image suffix should be .jpg, jpeg, png, gif, etc. Otherwise, the picture may not be displayed normally.',
@@ -58,14 +59,14 @@ export function Background() {
             span={11}
           >
             <SelectField
-              label={t('Background repeat')}
+              label={t('archbase:Background repeat')}
               name={`${focusIdx}.attributes.background-repeat`}
               options={backgroundRepeatOptions}
             />
           </Grid.Col>
         </Grid.Row>
         <TextField
-          label={t('Background size')}
+          label={t('archbase:Background size')}
           name={`${focusIdx}.attributes.background-size`}
         />
       </Space>

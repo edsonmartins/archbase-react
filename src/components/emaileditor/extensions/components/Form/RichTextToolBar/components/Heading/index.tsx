@@ -1,5 +1,6 @@
 import { Menu } from '@arco-design/web-react';
 import React from 'react';
+import { t } from 'i18next'
 
 export function Heading(props: { onChange: (val: string) => void }) {
   const list = [
@@ -29,7 +30,7 @@ export function Heading(props: { onChange: (val: string) => void }) {
     },
     {
       value: 'P',
-      label: t('Paragraph'),
+      label: t('archbase:Paragraph'),
     },
   ];
   return (

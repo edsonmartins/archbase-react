@@ -1,6 +1,7 @@
 import { PopoverProps, Tooltip } from '@arco-design/web-react';
 import React, { useCallback, useMemo } from 'react';
-import { IconFont } from '@emaileditor/editor/index';
+import { t } from 'i18next'
+import {ArchbaseEmailIconFont } from '@emaileditor/editor/index';
 import { ToolItem } from '../ToolItem';
 import { EMAIL_BLOCK_CLASS_NAME } from '@emaileditor/core/index';
 
@@ -55,9 +56,9 @@ export function Unlink(props: LinkProps) {
     <Tooltip
       color='#fff'
       position='tl'
-      content={t('Unlink')}
+      content={t('archbase:Unlink')}
     >
-      <ToolItem title={t('Unlink')} icon={<IconFont iconName='icon-unlink' />} onClick={onUnlink} />
+      <ToolItem title={t('archbase:Unlink')} icon={<ArchbaseEmailIconFont iconName='icon-unlink' />} onClick={onUnlink} />
     </Tooltip>
   );
 }

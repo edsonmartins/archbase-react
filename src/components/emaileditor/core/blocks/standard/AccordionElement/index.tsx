@@ -26,7 +26,7 @@ export type IAccordionElement = IBlockData<
 
 export const AccordionElement = createBlock<IAccordionElement>({
   get name() {
-    return t('Accordion element');
+    return t('archbase:Accordion element');
   },
   type: BasicType.ACCORDION_ELEMENT,
   create: (payload) => {

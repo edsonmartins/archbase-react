@@ -1,6 +1,6 @@
 import { Field, UseFieldConfig } from 'react-final-form';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRefState } from '@emaileditor/editor/index';
+import { useArchbaseEmailRefState } from '@emaileditor/editor/index';
 import { debounce } from 'lodash';
 import { Form, FormItemProps } from '@arco-design/web-react';
 
@@ -57,7 +57,7 @@ export default function enhancer<P extends { onChange?: (...rest: any) => any }>
     }, [props.config, validate]);
 
     const [currentValue, setCurrentValue] = useState('');
-    const currentValueRef = useRefState(currentValue);
+    const currentValueRef = useArchbaseEmailRefState(currentValue);
 
     const layoutStyle = useMemo((): FormItemProps => {
       if (equalSpacing) {

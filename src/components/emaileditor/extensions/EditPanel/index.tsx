@@ -1,6 +1,7 @@
 import { Layout, Tabs } from '@arco-design/web-react';
-import { useEditorProps } from '@emaileditor/editor/index';
+import { useArchbaseEmailEditorProps } from '@emaileditor/editor/index';
 import React from 'react';
+import { t } from 'i18next'
 import { Blocks } from './Blocks';
 import { BlockLayer } from '@emaileditor/extensions/BlockLayer';
 import { FullHeightOverlayScrollbars } from '@emaileditor/extensions/components/FullHeightOverlayScrollbars';
@@ -19,7 +20,7 @@ export function EditPanel({
   jsonReadOnly: boolean;
   mjmlReadOnly: boolean;
 }) {
-  const { height } = useEditorProps();
+  const { height } = useArchbaseEmailEditorProps();
   const { compact = true } = useExtensionProps();
 
   return (
@@ -44,7 +45,7 @@ export function EditPanel({
       >
         <TabPane
           key='2'
-          title={t('Block')}
+          title={t('archbase:Block')}
         >
           <FullHeightOverlayScrollbars height={`calc(${height} - 60px)`}>
             <Blocks />
@@ -53,7 +54,7 @@ export function EditPanel({
 
         <TabPane
           key='1'
-          title={t('Layer')}
+          title={t('archbase:Layer')}
         >
           <FullHeightOverlayScrollbars height={`calc(${height} - 60px)`}>
             <div style={{ padding: 20 }}>

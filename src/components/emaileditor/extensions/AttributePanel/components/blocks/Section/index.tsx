@@ -4,13 +4,14 @@ import { Background } from '@emaileditor/extensions/AttributePanel/components/at
 import { Border } from '@emaileditor/extensions/AttributePanel/components/attributes/Border';
 import { AttributesPanelWrapper } from '@emaileditor/extensions/AttributePanel/components/attributes/AttributesPanelWrapper';
 import { Collapse, Grid, Space, Switch } from '@arco-design/web-react';
-import { Stack, useBlock } from '@emaileditor/editor/index';
+import { Stack, useArchbaseEmailBlock } from '@emaileditor/editor/index';
 import { BasicType, BlockManager } from '@emaileditor/core/index';
 import { ClassName } from '../../attributes/ClassName';
 import { CollapseWrapper } from '../../attributes/CollapseWrapper';
+import { t } from 'i18next';
 
 export function Section() {
-  const { focusBlock, setFocusBlock } = useBlock();
+  const { focusBlock, setFocusBlock } = useArchbaseEmailBlock();
 
   const noWrap = focusBlock?.data.value.noWrap;
 
@@ -45,17 +46,17 @@ export function Section() {
   return (
     <AttributesPanelWrapper style={{ padding: 0 }}>
       <CollapseWrapper defaultActiveKey={['0', '1', '2']}>
-        <Collapse.Item name='0' header={t('Dimension')}>
+        <Collapse.Item name='0' header={t('archbase:Dimension')}>
           <Space direction='vertical'>
             <Grid.Row>
               <Grid.Col span={12}>
                 <label style={{ width: '100%', display: 'flex' }}>
-                  <div style={{ flex: 1 }}>{t('Group')}</div>
+                  <div style={{ flex: 1 }}>{t('archbase:Group')}</div>
                 </label>
                 <Switch
                   checked={noWrap}
-                  checkedText={t('True')}
-                  uncheckedText={t('False')}
+                  checkedText={t('archbase:True')}
+                  uncheckedText={t('archbase:False')}
                   onChange={onChange}
                 />
               </Grid.Col>
@@ -65,15 +66,15 @@ export function Section() {
             <Padding />
           </Space>
         </Collapse.Item>
-        <Collapse.Item name='1' header={t('Background')}>
+        <Collapse.Item name='1' header={t('archbase:Background')}>
           <Stack vertical spacing='tight'>
             <Background />
           </Stack>
         </Collapse.Item>
-        <Collapse.Item name='2' header={t('Border')}>
+        <Collapse.Item name='2' header={t('archbase:Border')}>
           <Border />
         </Collapse.Item>
-        <Collapse.Item name='4' header={t('Extra')}>
+        <Collapse.Item name='4' header={t('archbase:Extra')}>
           <Grid.Col span={24}>
             <ClassName />
           </Grid.Col>

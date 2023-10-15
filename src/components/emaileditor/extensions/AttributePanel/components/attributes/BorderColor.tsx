@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react';
 import { ColorPickerField } from '../../../components/Form';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
+import { t } from 'i18next';
 
 export function BorderColor() {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return useMemo(() => {
     return (
       <ColorPickerField
-        label={t('Color')}
+        label={t('archbase:Color')}
         name={`${focusIdx}.attributes.border-color`}
       />
     );

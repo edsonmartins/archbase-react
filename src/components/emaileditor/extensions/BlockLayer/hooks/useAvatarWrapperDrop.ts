@@ -3,10 +3,10 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   getBlockNodeByChildEle,
   getDirectionPosition,
-  useEditorContext,
-  useDataTransfer,
-  useHoverIdx,
-  useRefState,
+  useArchbaseEmailEditorContext,
+  useArchbaseEmailDataTransfer,
+  useArchbaseEmailHoverIdx,
+  useArchbaseEmailRefState,
 } from '@emaileditor/editor/index';
 import { debounce, get } from 'lodash';
 import { IBlockDataWithId } from '..';
@@ -15,14 +15,14 @@ import { BlockTreeProps } from '../components/BlockTree';
 export function useAvatarWrapperDrop() {
   const [blockLayerRef, setBlockLayerRef] = useState<HTMLElement | null>(null);
 
-  const { setHoverIdx, setDirection } = useHoverIdx();
-  const { dataTransfer, setDataTransfer } = useDataTransfer();
+  const { setHoverIdx, setDirection } = useArchbaseEmailHoverIdx();
+  const { dataTransfer, setDataTransfer } = useArchbaseEmailDataTransfer();
   const {
     formState: { values },
-  } = useEditorContext();
+  } = useArchbaseEmailEditorContext();
 
-  const valuesRef = useRefState(values);
-  const dataTransferRef = useRefState(dataTransfer);
+  const valuesRef = useArchbaseEmailRefState(values);
+  const dataTransferRef = useArchbaseEmailRefState(dataTransfer);
 
   function isKeyObject(o: any): o is {
     key: string;

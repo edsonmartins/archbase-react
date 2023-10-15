@@ -38,7 +38,7 @@ export type IButton = IBlockData<
 
 export const Button = createBlock<IButton>({
   get name() {
-    return t('Button');
+    return t('archbase:Button');
   },
   type: BasicType.BUTTON,
   create: payload => {

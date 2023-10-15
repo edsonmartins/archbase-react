@@ -1,7 +1,7 @@
 import React from 'react';
 import { AdvancedType } from '@emaileditor/core/index';
 import { Stack, TextStyle } from '@emaileditor/editor/index';
-
+import { t } from 'i18next';
 import { TextBlockItem } from './TextBlockItem';
 import { ImageBlockItem } from './ImageBlockItem';
 import { SpacerBlockItem } from './SpacerBlockItem';
@@ -20,24 +20,24 @@ import { ColumnBlockItem } from './ColumnBlockItem';
 export const defaultCategories = [
   {
     get title() {
-      return t('Content');
+      return t('archbase:Content');
     },
     name: 'CONTENT',
     blocks: [
       {
         type: AdvancedType.TEXT,
         get title() {
-          return t('Text');
+          return t('archbase:Text');
         },
         get description() {
-          return t('This block allows you to display text in your email');
+          return t('archbase:This block allows you to display text in your email');
         },
         component: TextBlockItem,
       },
       {
         type: AdvancedType.IMAGE,
         get title() {
-          return t('Image');
+          return t('archbase:Image');
         },
         get description() {
           return (
@@ -58,17 +58,17 @@ export const defaultCategories = [
       {
         type: AdvancedType.BUTTON,
         get title() {
-          return t('Button');
+          return t('archbase:Button');
         },
         get description() {
-          return t('Displays a customizable button.');
+          return t('archbase:Displays a customizable button.');
         },
         component: ButtonBlockItem,
       },
       {
         type: AdvancedType.HERO,
         get title() {
-          return t('Hero');
+          return t('archbase:Hero');
         },
         get description() {
           return t(
@@ -80,7 +80,7 @@ export const defaultCategories = [
       {
         type: AdvancedType.NAVBAR,
         get title() {
-          return t('Navbar');
+          return t('archbase:Navbar');
         },
         get description() {
           return t(
@@ -92,17 +92,17 @@ export const defaultCategories = [
       {
         type: AdvancedType.SPACER,
         get title() {
-          return t('Spacer');
+          return t('archbase:Spacer');
         },
         get description() {
-          return t('Displays a blank space.');
+          return t('archbase:Displays a blank space.');
         },
         component: SpacerBlockItem,
       },
       {
         type: AdvancedType.DIVIDER,
         get title() {
-          return t('Divider');
+          return t('archbase:Divider');
         },
         get description() {
           return t(
@@ -114,7 +114,7 @@ export const defaultCategories = [
       {
         type: AdvancedType.ACCORDION,
         get title() {
-          return t('Accordion');
+          return t('archbase:Accordion');
         },
         get description() {
           return t(
@@ -126,7 +126,7 @@ export const defaultCategories = [
       {
         type: AdvancedType.CAROUSEL,
         get title() {
-          return t('Carousel');
+          return t('archbase:Carousel');
         },
         get description() {
           return t(
@@ -138,7 +138,7 @@ export const defaultCategories = [
       {
         type: AdvancedType.SOCIAL,
         get title() {
-          return t('Social');
+          return t('archbase:Social');
         },
         get description() {
           return t(
@@ -151,14 +151,14 @@ export const defaultCategories = [
   },
   {
     get title() {
-      return t('Layout');
+      return t('archbase:Layout');
     },
     name: 'LAYOUT',
     blocks: [
       {
         type: AdvancedType.WRAPPER,
         get title() {
-          return t('Wrapper');
+          return t('archbase:Wrapper');
         },
         get description() {
           return t(
@@ -170,7 +170,7 @@ export const defaultCategories = [
       {
         type: AdvancedType.SECTION,
         get title() {
-          return t('Section');
+          return t('archbase:Section');
         },
         get description() {
           return (
@@ -196,7 +196,7 @@ export const defaultCategories = [
       {
         type: AdvancedType.GROUP,
         get title() {
-          return t('Group');
+          return t('archbase:Group');
         },
         get description() {
           return t(
@@ -208,7 +208,7 @@ export const defaultCategories = [
       {
         type: AdvancedType.COLUMN,
         get title() {
-          return t('Column');
+          return t('archbase:Column');
         },
         get description() {
           return (

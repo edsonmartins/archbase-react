@@ -3,19 +3,19 @@ import React from 'react';
 import iphoneFrame from '@emaileditor/editor/assets/images/iphone.png';
 import { ActiveTabKeys } from '@emaileditor/editor/components/Provider/BlocksProvider';
 import { SYNC_SCROLL_ELEMENT_CLASS_NAME } from '@emaileditor/editor/constants';
-import { usePreviewEmail } from '@emaileditor/editor/hooks/usePreviewEmail';
+import { useArchbaseEmailPreviewEmail } from '@emaileditor/editor/hooks/useArchbaseEmailPreviewEmail';
 import { SyncScrollIframeComponent } from '@emaileditor/editor/components/UI/SyncScrollIframeComponent';
 import { classnames } from '@emaileditor/editor/utils/classnames';
-import { useActiveTab } from '@emaileditor/editor/hooks/useActiveTab';
+import { useArchbaseEmailActiveTab } from '@emaileditor/editor/hooks/useArchbaseEmailActiveTab';
 
 const MOBILE_WIDTH = 320;
 const MOBILE_Height = 640;
 
 export function MobileEmailPreview() {
-  const { mobileWidth } = usePreviewEmail();
-  const { activeTab } = useActiveTab();
+  const { mobileWidth } = useArchbaseEmailPreviewEmail();
+  const { activeTab } = useArchbaseEmailActiveTab();
 
-  const { errMsg, reactNode } = usePreviewEmail();
+  const { errMsg, reactNode } = useArchbaseEmailPreviewEmail();
 
   const isActive = activeTab === ActiveTabKeys.MOBILE;
 

@@ -23,7 +23,7 @@ export type IColumn = IBlockData<
 
 export const Column = createBlock<IColumn>({
   get name() {
-    return t('Column');
+    return t('archbase:Column');
   },
   type: BasicType.COLUMN,
   create: payload => {

@@ -2,13 +2,13 @@ import React from 'react';
 
 import { BasicType } from '@emaileditor/core/index';
 import { createPortal } from 'react-dom';
-import { IconFont, useBlock, useFocusIdx, BlockAvatarWrapper, useFocusBlockLayout } from '@emaileditor/editor/index';
+import {ArchbaseEmailIconFont, useArchbaseEmailBlock, useArchbaseEmailFocusIdx, BlockAvatarWrapper, useArchbaseEmailFocusBlockLayout } from '@emaileditor/editor/index';
 import { Toolbar } from './Toolbar';
 
 export function FocusTooltip() {
-  const { focusBlock } = useBlock();
-  const { focusIdx } = useFocusIdx();
-  const { focusBlockNode } = useFocusBlockLayout();
+  const { focusBlock } = useArchbaseEmailBlock();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
+  const { focusBlockNode } = useArchbaseEmailFocusBlockLayout();
   const isPage = focusBlock?.type === BasicType.PAGE;
 
   if (!focusBlockNode || !focusBlock) return null;
@@ -69,7 +69,7 @@ export function FocusTooltip() {
                   } as any
                 }
               >
-                <IconFont
+                <ArchbaseEmailIconFont
                   iconName='icon-move'
                   style={{ color: '#fff', cursor: 'grab' }}
                 />

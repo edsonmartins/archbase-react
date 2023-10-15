@@ -1,19 +1,20 @@
 import React, { useCallback } from 'react';
+import { t } from 'i18next'
 import { ToolItem } from '../ToolItem';
 import { Link, LinkParams } from '../Link';
 import {
   FIXED_CONTAINER_ID,
   getShadowRoot,
-  IconFont,
-  useEditorProps,
-  useFocusBlockLayout,
+  ArchbaseEmailIconFont,
+  useArchbaseEmailEditorProps,
+  useArchbaseEmailFocusBlockLayout,
   MergeTagBadge,
 } from '@emaileditor/editor/index';
 import { FontFamily } from '../FontFamily';
 import { MergeTags } from '../MergeTags';
 import { useSelectionRange } from '@emaileditor/extensions/AttributePanel/hooks/useSelectionRange';
 import { IconBgColor } from './IconBgColor';
-import { IconFontColor } from './IconFontColor';
+import {ArchbaseEmailIconFontColor } from './IconFontColor';
 import { BasicTools } from '../BasicTools';
 import { Unlink } from '../Unlink';
 import { StrikeThrough } from '../StrikeThrough';
@@ -28,18 +29,18 @@ export interface ToolsProps {
 }
 
 export function Tools(props: ToolsProps) {
-  const { mergeTags, enabledMergeTagsBadge } = useEditorProps();
-  const { focusBlockNode } = useFocusBlockLayout();
+  const { mergeTags, enabledMergeTagsBadge } = useArchbaseEmailEditorProps();
+  const { focusBlockNode } = useArchbaseEmailFocusBlockLayout();
   const { selectionRange, restoreRange, setRangeByElement } = useSelectionRange();
 
   const execCommand = useCallback(
     (cmd: string, val?: any) => {
       if (!selectionRange) {
-        console.error(t('No selectionRange'));
+        console.error(t('archbase:No selectionRange'));
         return;
       }
       if (!focusBlockNode?.contains(selectionRange?.commonAncestorContainer)) {
-        console.error(t('Not commonAncestorContainer'));
+        console.error(t('archbase:Not commonAncestorContainer'));
         return;
       }
 
@@ -160,7 +161,7 @@ export function Tools(props: ToolsProps) {
           onChange={() => execCommandWithRange('underline')}
         />
         <div className='archbase-email-extensions-divider' />
-        <IconFontColor
+        <ArchbaseEmailIconFontColor
           selectionRange={selectionRange}
           execCommand={execCommand}
           getPopoverMountNode={getPopoverMountNode}
@@ -187,42 +188,42 @@ export function Tools(props: ToolsProps) {
 
         <ToolItem
           onClick={() => execCommand('justifyLeft')}
-          icon={<IconFont iconName='icon-align-left' />}
-          title={t('Align left')}
+          icon={<ArchbaseEmailIconFont iconName='icon-align-left' />}
+          title={t('archbase:Align left')}
         />
         <ToolItem
           onClick={() => execCommand('justifyCenter')}
-          icon={<IconFont iconName='icon-align-center' />}
-          title={t('Align center')}
+          icon={<ArchbaseEmailIconFont iconName='icon-align-center' />}
+          title={t('archbase:Align center')}
         />
         <ToolItem
           onClick={() => execCommand('justifyRight')}
-          icon={<IconFont iconName='icon-align-right' />}
-          title={t('Align right')}
+          icon={<ArchbaseEmailIconFont iconName='icon-align-right' />}
+          title={t('archbase:Align right')}
         />
         <div className='archbase-email-extensions-divider' />
         <ToolItem
           onClick={() => execCommand('insertOrderedList')}
-          icon={<IconFont iconName='icon-list-ol' />}
-          title={t('Orderlist')}
+          icon={<ArchbaseEmailIconFont iconName='icon-list-ol' />}
+          title={t('archbase:Orderlist')}
         />
         <ToolItem
           onClick={() => execCommand('insertUnorderedList')}
-          icon={<IconFont iconName='icon-list-ul' />}
-          title={t('Unorderlist')}
+          icon={<ArchbaseEmailIconFont iconName='icon-list-ul' />}
+          title={t('archbase:Unorderlist')}
         />
         <div className='archbase-email-extensions-divider' />
 
         <ToolItem
           onClick={() => execCommand('insertHorizontalRule')}
-          icon={<IconFont iconName='icon-line' />}
-          title={t('Line')}
+          icon={<ArchbaseEmailIconFont iconName='icon-line' />}
+          title={t('archbase:Line')}
         />
         <div className='archbase-email-extensions-divider' />
         <ToolItem
           onClick={() => execCommand('removeFormat')}
-          icon={<IconFont iconName='icon-close' />}
-          title={t('Remove format')}
+          icon={<ArchbaseEmailIconFont iconName='icon-close' />}
+          title={t('archbase:Remove format')}
         />
         <div className='archbase-email-extensions-divider' />
       </div>

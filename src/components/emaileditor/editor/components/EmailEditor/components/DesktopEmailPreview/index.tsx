@@ -1,18 +1,18 @@
 import React, { useMemo } from 'react';
-import { useActiveTab } from '@emaileditor/editor/hooks/useActiveTab';
+import { useArchbaseEmailActiveTab } from '@emaileditor/editor/hooks/useArchbaseEmailActiveTab';
 import { ActiveTabKeys } from '@emaileditor/editor/components/Provider/BlocksProvider';
-import { usePreviewEmail } from '@emaileditor/editor/hooks/usePreviewEmail';
-import { useEditorContext } from '@emaileditor/editor/hooks/useEditorContext';
+import { useArchbaseEmailPreviewEmail } from '@emaileditor/editor/hooks/useArchbaseEmailPreviewEmail';
+import { useArchbaseEmailEditorContext } from '@emaileditor/editor/hooks/useArchbaseEmailEditorContext';
 import { SyncScrollShadowDom } from '@emaileditor/editor/components/UI/SyncScrollShadowDom';
 import { classnames } from '@emaileditor/editor/utils/classnames';
 import { SYNC_SCROLL_ELEMENT_CLASS_NAME } from '@emaileditor/editor/constants';
 import { createPortal } from 'react-dom';
 
 export function DesktopEmailPreview() {
-  const { activeTab } = useActiveTab();
-  const { errMsg, reactNode } = usePreviewEmail();
+  const { activeTab } = useArchbaseEmailActiveTab();
+  const { errMsg, reactNode } = useArchbaseEmailPreviewEmail();
 
-  const { pageData } = useEditorContext();
+  const { pageData } = useArchbaseEmailEditorContext();
 
   const fonts = useMemo(() => {
     return pageData.data.value.fonts || [];

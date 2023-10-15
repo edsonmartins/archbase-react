@@ -2,19 +2,19 @@ import React, { useEffect, useMemo, useState } from 'react';
 import mjml from 'mjml-browser';
 import { getPageIdx, IPage, JsonToMjml } from '@emaileditor/core/index';
 import { cloneDeep, isEqual } from 'lodash';
-import { useEditorContext } from '@emaileditor/editor/hooks/useEditorContext';
+import { useArchbaseEmailEditorContext } from '@emaileditor/editor/hooks/useArchbaseEmailEditorContext';
 import { HtmlStringToReactNodes } from '@emaileditor/editor/utils/HtmlStringToReactNodes';
 import { createPortal } from 'react-dom';
-import { useEditorProps } from '@emaileditor/editor/hooks/useEditorProps';
+import { useArchbaseEmailEditorProps } from '@emaileditor/editor/hooks/useArchbaseEmailEditorProps';
 import { getEditorRoot, getShadowRoot } from '@emaileditor/editor/utils';
 import { DATA_RENDER_COUNT, FIXED_CONTAINER_ID } from '@emaileditor/editor/constants';
 
 let count = 0;
 export function MjmlDomRender() {
-  const { pageData: content } = useEditorContext();
+  const { pageData: content } = useArchbaseEmailEditorContext();
   const [pageData, setPageData] = useState<IPage | null>(null);
   const [ref, setRef] = useState<HTMLDivElement | null>(null);
-  const { dashed, mergeTags, enabledMergeTagsBadge } = useEditorProps();
+  const { dashed, mergeTags, enabledMergeTagsBadge } = useArchbaseEmailEditorProps();
   const [isTextFocus, setIsTextFocus] = useState(false);
 
   const isTextFocusing =

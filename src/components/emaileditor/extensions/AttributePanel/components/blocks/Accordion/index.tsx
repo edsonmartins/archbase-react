@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEditorProps, useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailEditorProps, useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { AttributesPanelWrapper } from '@emaileditor/extensions/AttributePanel/components/attributes/AttributesPanelWrapper';
 import { BackgroundColor } from '@emaileditor/extensions/AttributePanel/components/attributes/BackgroundColor';
 import { FontFamily } from '@emaileditor/extensions/AttributePanel/components/attributes/FontFamily';
@@ -14,18 +14,19 @@ import {
 import { Collapse, Grid, Space } from '@arco-design/web-react';
 import { ClassName } from '../../attributes/ClassName';
 import { CollapseWrapper } from '../../attributes/CollapseWrapper';
+import { t } from 'i18next';
 
 const positionOptions = [
   {
     value: 'left',
     get label() {
-      return t('Left');
+      return t('archbase:Left');
     },
   },
   {
     value: 'right',
     get label() {
-      return t('Right');
+      return t('archbase:Right');
     },
   },
 ];
@@ -34,33 +35,33 @@ const alignOptions = [
   {
     value: 'top',
     get label() {
-      return t('top');
+      return t('archbase:top');
     },
   },
   {
     value: 'middle',
     get label() {
-      return t('middle');
+      return t('archbase:middle');
     },
   },
   {
     value: 'bottom',
     get label() {
-      return t('bottom');
+      return t('archbase:bottom');
     },
   },
 ];
 
 export function Accordion() {
-  const { focusIdx } = useFocusIdx();
-  const { onUploadImage } = useEditorProps();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
+  const { onUploadImage } = useArchbaseEmailEditorProps();
 
   return (
     <AttributesPanelWrapper>
       <CollapseWrapper defaultActiveKey={['0', '1', '2']}>
         <Collapse.Item
           name='0'
-          header={t('Setting')}
+          header={t('archbase:Setting')}
         >
           <Space direction='vertical'>
             <Grid.Row>
@@ -80,7 +81,7 @@ export function Accordion() {
             <Grid.Row>
               <Grid.Col span={11}>
                 <InputWithUnitField
-                  label={t('Icon width')}
+                  label={t('archbase:Icon width')}
                   name={`${focusIdx}.attributes.icon-width`}
                 />
               </Grid.Col>
@@ -89,7 +90,7 @@ export function Accordion() {
                 span={11}
               >
                 <InputWithUnitField
-                  label={t('Icon height')}
+                  label={t('archbase:Icon height')}
                   name={`${focusIdx}.attributes.icon-height`}
                 />
               </Grid.Col>
@@ -98,9 +99,9 @@ export function Accordion() {
             <Grid.Row>
               <Grid.Col span={11}>
                 <ImageUploaderField
-                  label={t('Unwrapped icon')}
+                  label={t('archbase:Unwrapped icon')}
                   name={`${focusIdx}.attributes.icon-unwrapped-url`}
-                  //helpText={t('The image suffix should be .jpg, jpeg, png, gif, etc. Otherwise, the picture may not be displayed normally.')}
+                  //helpText={t('archbase:The image suffix should be .jpg, jpeg, png, gif, etc. Otherwise, the picture may not be displayed normally.')}
                   uploadHandler={onUploadImage}
                 />
               </Grid.Col>
@@ -109,7 +110,7 @@ export function Accordion() {
                 span={11}
               >
                 <ImageUploaderField
-                  label={t('Wrapped icon')}
+                  label={t('archbase:Wrapped icon')}
                   name={`${focusIdx}.attributes.icon-wrapped-url`}
                   uploadHandler={onUploadImage}
                 />
@@ -119,7 +120,7 @@ export function Accordion() {
             <Grid.Row>
               <Grid.Col span={11}>
                 <RadioGroupField
-                  label={t('Icon position')}
+                  label={t('archbase:Icon position')}
                   name={`${focusIdx}.attributes.icon-position`}
                   options={positionOptions}
                 />
@@ -130,7 +131,7 @@ export function Accordion() {
               >
                 <SelectField
                   style={{ width: 120 }}
-                  label={t('Icon align')}
+                  label={t('archbase:Icon align')}
                   name={`${focusIdx}.attributes.icon-align`}
                   options={alignOptions}
                 />
@@ -138,14 +139,14 @@ export function Accordion() {
             </Grid.Row>
 
             <TextField
-              label={t('Border')}
+              label={t('archbase:Border')}
               name={`${focusIdx}.attributes.border`}
             />
           </Space>
         </Collapse.Item>
         <Collapse.Item
           name='4'
-          header={t('Extra')}
+          header={t('archbase:Extra')}
         >
           <Grid.Col span={24}>
             <ClassName />

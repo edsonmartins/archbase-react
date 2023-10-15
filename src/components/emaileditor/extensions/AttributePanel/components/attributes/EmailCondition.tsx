@@ -1,4 +1,4 @@
-import { useBlock, useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailBlock, useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { AdvancedBlock, EmailOperatorSymbol as OperatorSymbol, AdvancedType, EmailOperator as Operator, ICondition, IConditionGroup } from '@emaileditor/core/index';
 import { Collapse, Grid, Switch, Button, Space, List, Message } from '@arco-design/web-react';
 import { SelectField, TextField } from '@emaileditor/extensions/components/Form';
@@ -6,10 +6,11 @@ import React, { useCallback } from 'react';
 import { cloneDeep, get, upperFirst } from 'lodash';
 import { IconDelete, IconPlus } from '@arco-design/web-react/icon';
 import { useField } from 'react-final-form';
+import { t } from 'i18next';
 
 export function EmailCondition() {
-  const { focusIdx } = useFocusIdx();
-  const { focusBlock, change, values } = useBlock();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
+  const { focusBlock, change, values } = useArchbaseEmailBlock();
   const condition = focusBlock?.data.value?.condition as
     | undefined
     | AdvancedBlock['data']['value']['condition'];
@@ -81,7 +82,7 @@ export function EmailCondition() {
     subGroups.splice(ggIndex, 1);
     if (subGroups.length === 0) {
       if (groups.length === 1) {
-        Message.warning(t('At least one condition'));
+        Message.warning(t('archbase:At least one condition'));
         return;
       }
       // remove empty array
@@ -110,7 +111,7 @@ export function EmailCondition() {
       className='condition'
       destroyOnHide
       name='Condition'
-      header={t('Condition')}
+      header={t('archbase:Condition')}
       extra={(
         <div style={{ marginRight: 10 }}>
           <Switch checked={condition?.enabled} onChange={onConditionToggle} />
@@ -127,14 +128,14 @@ export function EmailCondition() {
                 <Grid.Col span={16}>
                   {condition.groups.length > 1 && (
                     <SelectField inline name={`${focusIdx}.data.value.condition.symbol`}
-                      label={t('Symbol')}
+                      label={t('archbase:Symbol')}
                       options={[
                         {
-                          label: t('And'),
+                          label: t('archbase:And'),
                           value: OperatorSymbol.AND
                         },
                         {
-                          label: t('Or'),
+                          label: t('archbase:Or'),
                           value: OperatorSymbol.OR
                         },
                       ]}
@@ -155,14 +156,14 @@ export function EmailCondition() {
                           {
                             group.groups.length > 1 && (
                               <SelectField inline name={`${focusIdx}.data.value.condition.symbol`}
-                                label={t('Symbol')}
+                                label={t('archbase:Symbol')}
                                 options={[
                                   {
-                                    label: t('And'),
+                                    label: t('archbase:And'),
                                     value: OperatorSymbol.AND
                                   },
                                   {
-                                    label: t('Or'),
+                                    label: t('archbase:Or'),
                                     value: OperatorSymbol.OR
                                   },
                                 ]}
@@ -208,8 +209,8 @@ function ConditionItem({ path, onDelete, gIndex, ggIndex }: { path: string; gInd
 
   return (
     <Grid.Row align='end'>
-      <Grid.Col span={7}> <TextField label={t('Variable path')} name={`${name}.left`} /></Grid.Col>
-      <Grid.Col span={7}> <SelectField label={t('Operator')} name={`${name}.operator`} options={options} /></Grid.Col>
+      <Grid.Col span={7}> <TextField label={t('archbase:Variable path')} name={`${name}.left`} /></Grid.Col>
+      <Grid.Col span={7}> <SelectField label={t('archbase:Operator')} name={`${name}.operator`} options={options} /></Grid.Col>
       <Grid.Col span={7}> {!hideRight && <TextField label="Right" name={`${name}.right`} />}</Grid.Col>
       <Grid.Col span={3}>
         <Button onClick={() => onDelete(path, gIndex, ggIndex)} icon={<IconDelete />} />

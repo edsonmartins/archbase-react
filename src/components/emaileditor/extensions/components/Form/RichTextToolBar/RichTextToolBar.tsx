@@ -1,11 +1,11 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { getPluginElement, RICH_TEXT_BAR_ID, useEditorContext } from '@emaileditor/editor/index';
+import { getPluginElement, RICH_TEXT_BAR_ID, useArchbaseEmailEditorContext } from '@emaileditor/editor/index';
 import { Tools } from './components/Tools';
-import styleText from './shadow-dom.scss?inline';
+import styleText from './shadow-dom.scss';
 
 export function RichTextToolBar(props: { onChange: (s: string) => void; }) {
-  const { initialized } = useEditorContext();
+  const { initialized } = useArchbaseEmailEditorContext();
   const root = initialized && getPluginElement();
 
   if (!root) return null;

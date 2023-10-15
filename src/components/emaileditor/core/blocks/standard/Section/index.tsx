@@ -28,7 +28,7 @@ export type ISection = IBlockData<
 
 export const Section = createBlock<ISection>({
   get name() {
-    return t('Section');
+    return t('archbase:Section');
   },
   type: BasicType.SECTION,
   create: payload => {

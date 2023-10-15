@@ -5,7 +5,7 @@ import { AttributesPanelWrapper } from '@emaileditor/extensions/AttributePanel/c
 import { Collapse, Grid, Space } from '@arco-design/web-react';
 import { IconLink } from '@arco-design/web-react/icon';
 import { NavbarLinkPadding } from '@emaileditor/extensions/AttributePanel/components/attributes/NavbarLinkPadding';
-import { useFocusIdx, Stack } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx, Stack } from '@emaileditor/editor/index';
 import { INavbar } from '@emaileditor/core/index';
 import { ClassName } from '../../attributes/ClassName';
 import { CollapseWrapper } from '../../attributes/CollapseWrapper';
@@ -19,15 +19,16 @@ import {
   TextTransform,
 } from '../../attributes';
 import { pixelAdapter } from '../../adapter';
+import { t } from 'i18next';
 
 export function Navbar() {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
   return (
     <AttributesPanelWrapper style={{ padding: 0 }}>
       <CollapseWrapper defaultActiveKey={['0', '1', '2']}>
         <Collapse.Item
           name='0'
-          header={t('Layout')}
+          header={t('archbase:Layout')}
         >
           <Stack
             vertical
@@ -40,7 +41,7 @@ export function Navbar() {
         <Collapse.Item
           contentStyle={{ padding: 0 }}
           name='1'
-          header={t('Navbar links')}
+          header={t('archbase:Navbar links')}
         >
           <Space
             direction='vertical'
@@ -49,7 +50,7 @@ export function Navbar() {
             <EditTabField
               tabPosition='top'
               name={`${focusIdx}.data.value.links`}
-              label={t('Links')}
+              label={t('archbase:Links')}
               labelHidden
               renderItem={(item, index) => (
                 <NavbarLink
@@ -70,7 +71,7 @@ export function Navbar() {
         </Collapse.Item>
         <Collapse.Item
           name='4'
-          header={t('Extra')}
+          header={t('archbase:Extra')}
         >
           <Grid.Col span={24}>
             <ClassName />
@@ -88,7 +89,7 @@ function NavbarLink({
   item: INavbar['data']['value']['links'];
   index: number;
 }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
   return (
     <div className='NavbarLink'>
       <Space
@@ -98,7 +99,7 @@ function NavbarLink({
         <Grid.Row>
           <Grid.Col span={11}>
             <TextField
-              label={t('Content')}
+              label={t('archbase:Content')}
               name={`${focusIdx}.data.value.links.[${index}].content`}
             />
           </Grid.Col>
@@ -107,7 +108,7 @@ function NavbarLink({
             span={11}
           >
             <ColorPickerField
-              label={t('Color')}
+              label={t('archbase:Color')}
               name={`${focusIdx}.data.value.links.[${index}].color`}
             />
           </Grid.Col>
@@ -122,7 +123,7 @@ function NavbarLink({
             span={11}
           >
             <TextField
-              label={t('Font size (px)')}
+              label={t('archbase:Font size (px)')}
               name={`${focusIdx}.data.value.links.[${index}].font-size`}
               config={pixelAdapter}
               autoComplete='off'
@@ -174,7 +175,7 @@ function NavbarLink({
           <Grid.Col span={11}>
             <TextField
               prefix={<IconLink />}
-              label={<span>{t('Url')}</span>}
+              label={<span>{t('archbase:Url')}</span>}
               name={`${focusIdx}.data.value.links.[${index}].href`}
             />
           </Grid.Col>
@@ -184,16 +185,16 @@ function NavbarLink({
           >
             <SelectField
               style={{ minWidth: 65 }}
-              label={t('Target')}
+              label={t('archbase:Target')}
               name={`${focusIdx}.data.value.links.[${index}].target`}
               options={[
                 {
                   value: '_blank',
-                  label: t('_blank'),
+                  label: t('archbase:_blank'),
                 },
                 {
                   value: '_self',
-                  label: t('_self'),
+                  label: t('archbase:_self'),
                 },
               ]}
             />

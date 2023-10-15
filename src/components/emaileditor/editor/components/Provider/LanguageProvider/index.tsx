@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { I18nManager, t } from '@emaileditor/core/index';
 
-export const LanguageProvider: React.FC<{
+export const ArchbaseEmailLanguageProvider: React.FC<{
   children?: React.ReactNode;
   locale?: Record<string, string>;
 }> = props => {

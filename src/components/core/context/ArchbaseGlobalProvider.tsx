@@ -17,7 +17,8 @@ import {
 } from '@mantine/styles'
 import '../../locales/config'
 import { archbaseTranslationResources } from '../../locales/config'
-import { Resource } from 'i18next'
+import { Resource, t } from 'i18next'
+
 
 interface ArchbaseThemeOverride extends MantineThemeOverride {}
 
@@ -63,7 +64,7 @@ const buildResources = (resource: Resource, translationName? : string, translati
     }    
 }
 
-const ArchbaseGlobalProvider: React.FC<ArchbaseAppProviderProps> = ({
+function ArchbaseGlobalProvider({
   children,
   colorScheme = 'light',
   containerIOC,
@@ -78,7 +79,7 @@ const ArchbaseGlobalProvider: React.FC<ArchbaseAppProviderProps> = ({
   translationName,
   translationResource,
   toggleColorScheme
-}) => {
+} : ArchbaseAppProviderProps) {
   useLayoutEffect(()=>{
     i18next.use(initReactI18next).use(LanguageDetector).init({
       debug: false,
@@ -100,7 +101,7 @@ const ArchbaseGlobalProvider: React.FC<ArchbaseAppProviderProps> = ({
         dayjs.locale('pt-BR')
       }
     }) 
-  })
+  },[])
   return (
     <IOCProvider container={containerIOC}>
       <DatesProvider settings={{ locale: i18next.language }}>

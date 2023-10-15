@@ -30,7 +30,7 @@ export type IText = IBlockData<
 
 export const Text = createBlock<IText>({
   get name() {
-    return t('Text');
+    return t('archbase:Text');
   },
   type: BasicType.TEXT,
   create: payload => {
@@ -38,7 +38,7 @@ export const Text = createBlock<IText>({
       type: BasicType.TEXT,
       data: {
         value: {
-          content: t('Make it easy for everyone to compose emails!'),
+          content: t('archbase:Make it easy for everyone to compose emails!'),
         },
       },
       attributes: {

@@ -1,53 +1,54 @@
 import React, { useMemo } from 'react';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { SelectField } from '../../../components/Form';
+import { t } from 'i18next';
 
 const options = [
   {
     value: '',
     get label() {
-      return t('None');
+      return t('archbase:None');
     },
   },
   {
     value: 'underline',
     get label() {
-      return t('Underline');
+      return t('archbase:Underline');
     },
   },
   {
     value: 'overline',
     get label() {
-      return t('Overline');
+      return t('archbase:Overline');
     },
   },
   {
     value: 'line-through',
     get label() {
-      return t('Line through');
+      return t('archbase:Line through');
     },
   },
   {
     value: 'blink',
     get label() {
-      return t('Blink');
+      return t('archbase:Blink');
     },
   },
   {
     value: 'inherit',
     get label() {
-      return t('Inherit');
+      return t('archbase:Inherit');
     },
   },
 ];
 
 export function TextDecoration({ name }: { name?: string }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return useMemo(() => {
     return (
       <SelectField
-        label={t('Text decoration')}
+        label={t('archbase:Text decoration')}
         name={name || `${focusIdx}.attributes.text-decoration`}
         options={options}
       />

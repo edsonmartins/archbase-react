@@ -1,41 +1,41 @@
 import React, { useMemo } from 'react';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { SelectField } from '../../../components/Form';
 
 const options = [
   {
     value: 'initial',
     get label() {
-      return t('None');
+      return t('archbase:None');
     },
   },
   {
     value: 'uppercase',
     get label() {
-      return t('uppercase');
+      return t('archbase:uppercase');
     },
   },
   {
     value: 'lowercase',
     get label() {
-      return t('lowercase');
+      return t('archbase:lowercase');
     },
   },
   {
     value: 'capitalize',
     get label() {
-      return t('capitalize');
+      return t('archbase:capitalize');
     },
   },
 ];
 
 export function TextTransform({ name }: { name?: string }) {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return useMemo(() => {
     return (
       <SelectField
-        label={t('Text transform')}
+        label={t('archbase:Text transform')}
         name={name || `${focusIdx}.attributes.text-transform`}
         options={options}
       />

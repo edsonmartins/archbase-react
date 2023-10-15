@@ -1,65 +1,66 @@
 import React, { useMemo } from 'react';
-import { useFocusIdx } from '@emaileditor/editor/index';
+import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { SelectField } from '../../../components/Form';
+import { t } from 'i18next';
 
 export const borderStyleOptions = [
   {
     value: 'dashed',
     get label() {
-      return t('Dashed');
+      return t('archbase:Dashed');
     },
   },
   {
     value: 'dotted',
     get label() {
-      return t('Dotted');
+      return t('archbase:Dotted');
     },
   },
   {
     value: 'solid',
     get label() {
-      return t('Solid');
+      return t('archbase:Solid');
     },
   },
   {
     value: 'double',
     get label() {
-      return t('double');
+      return t('archbase:double');
     },
   },
   {
     value: 'ridge',
     get label() {
-      return t('ridge');
+      return t('archbase:ridge');
     },
   },
   {
     value: 'groove',
     get label() {
-      return t('groove');
+      return t('archbase:groove');
     },
   },
   {
     value: 'inset',
     get label() {
-      return t('inset');
+      return t('archbase:inset');
     },
   },
   {
     value: 'outset',
     get label() {
-      return t('outset');
+      return t('archbase:outset');
     },
   },
 ];
 
 export function BorderStyle() {
-  const { focusIdx } = useFocusIdx();
+  const { focusIdx } = useArchbaseEmailFocusIdx();
 
   return useMemo(() => {
     return (
       <SelectField
-        label={t('Style')}
+        label={t('archbase:Style')}
         name={`${focusIdx}.attributes.border-style`}
         options={borderStyleOptions}
       />
