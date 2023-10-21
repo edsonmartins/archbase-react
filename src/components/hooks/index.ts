@@ -53,3 +53,4 @@ export type { GetCurrentTokenReturnType } from './useArchbaseGetCurrentToken';
 export type { UseArchbaseDataSourceListenerProps } from './useArchbaseDataSourceListener';
 export type { UseArchbaseDataSourceProps, UseArchbaseDataSourceReturnType } from './useArchbaseDataSource';
 export type { AuthenticationManagerReturnType, ArchbaseAuthenticationManagerProps } from './useArchbaseAuthenticationManager';
+export {useArchbaseGetLoggedUser} from "./useArchbaseGetLoggedUser"

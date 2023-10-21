@@ -11,6 +11,7 @@ import queryString from 'query-string'
 import { ModalsProvider } from '@mantine/modals'
 import { ArchbaseNavigationProvider } from '../../admin'
 import { CustomShowErrorModal } from '../../notification'
+import { ArchbaseUser } from 'components/auth'
 
 export type ArchbaseLanguage = {
   lang: string
@@ -18,7 +19,7 @@ export type ArchbaseLanguage = {
 }
 
 interface ArchbaseAppContextValues {
-  user: any | null
+  user: ArchbaseUser | null
   owner: string | null
   selectedCompany: any | null
   theme: MantineTheme | null

@@ -167,7 +167,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
   const userActionsBuilded: ArchbaseAction[] = useMemo(() => {
     const userActionsEnd = { ...defaultUserActions, ...userActions };
     const defaultActions: ArchbaseAction[] = [];
-    if (userActionsEnd.allowAdd) {
+    if (userActionsEnd.allowAdd && userActionsEnd.onAddExecute) {
       defaultActions.push({
         id: 'actAdd',
         icon: <IconPlus />,
@@ -182,7 +182,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         hint: `${t('archbase:Clique para criar um novo registro')}`,
       });
     }
-    if (userActionsEnd.allowEdit) {
+    if (userActionsEnd.allowEdit && userActionsEnd.onEditExecute) {
       defaultActions.push({
         id: 'actEdit',
         icon: <IconEdit />,
@@ -197,7 +197,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
         hint: `${t('archbase:Clique para editar o registro')}`,
       });
     }
-    if (userActionsEnd.allowRemove) {
+    if (userActionsEnd.allowRemove && userActionsEnd.onRemoveExecute) {
       defaultActions.push({
         id: 'actRemove',
         icon: <IconTrash />,
@@ -213,7 +213,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
       });
     }
 
-    if (userActionsEnd.allowView) {
+    if (userActionsEnd.allowView && userActionsEnd.onViewExecute) {
       defaultActions.push({
         id: 'actView',
         icon: <IconEye />,

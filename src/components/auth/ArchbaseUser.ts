@@ -3,12 +3,14 @@ export class ArchbaseUser {
   displayName: string
   email: string
   photo: string
+  isAdmin: boolean
 
   constructor(data: any) {
     this.id = data.id
     this.displayName = data.displayName
     this.email = data.email
     this.photo = data.photo
+    this.isAdmin = data.isAdmin
   }
 
   static newInstance(

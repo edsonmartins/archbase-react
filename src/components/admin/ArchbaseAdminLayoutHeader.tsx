@@ -251,12 +251,34 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
         {showLanguageSelector ? <ArchbaseChangeLanguageAction /> : null}
         <Menu shadow="md" width={200} position="bottom-end">
           <Menu.Target>
-            <Avatar
-              style={{ cursor: 'pointer' }}
-              radius="xl"
-              src={user ? user.photo : defaultAvatar}
-              alt={user ? user.displayName : ''}
-            />
+          <div>
+              <Avatar
+                style={{ cursor: 'pointer' }}
+                radius="xl"
+                src={user ? user.photo : defaultAvatar}
+                alt={user ? user.displayName : ''}
+              />
+              {user && user.isAdmin?<div
+                style={{
+                  width: '16px',
+                  display: 'flex',
+                  border: '1px solid yellow',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '16px',
+                  bottom: 5,
+                  right: 5,
+                  position: 'absolute',
+                  zIndex: 400,
+                  borderRadius: 50,
+                  backgroundColor: 'green'
+                }}
+              >
+                <Text size="xs" color="white">
+                  A
+                </Text>
+              </div>:null}
+            </div>
           </Menu.Target>
 
           <Menu.Dropdown>{userMenuItems}</Menu.Dropdown>

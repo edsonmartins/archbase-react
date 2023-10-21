@@ -1,5 +1,13 @@
 import { ReactNode } from 'react'
 
+export type ArchbaseNavigationGroup = {
+  label: string;
+  icon: any;
+  name: string;
+  hint: string;
+  indexOrder: number;
+}
+
 export type ArchbaseNavigationItem = {
   label: string
   icon: any
@@ -12,6 +20,7 @@ export type ArchbaseNavigationItem = {
   showInSidebar: boolean
   disabled?: boolean;
   redirect?: string;
+  group?: ArchbaseNavigationGroup
 }
 
 export type ArchbaseCommandColor = {

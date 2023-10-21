@@ -1,21 +1,17 @@
 import {
-  ActionIcon,
   AppShell,
   Box,
   Container,
   Drawer,
   MantineNumberSize,
-  MantineTheme,
   ScrollArea,
   Text,
   px,
   useMantineTheme,
 } from '@mantine/core';
-import React, { Fragment, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import type { MenuItemStyles } from 'react-pro-sidebar';
-import { Menu as SidebarMenu, menuClasses, MenuItem, Sidebar, sidebarClasses, SubMenu } from 'react-pro-sidebar';
+import React, { Fragment, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
 import { ArchbaseUser } from '../auth/ArchbaseUser';
 import {
@@ -26,6 +22,9 @@ import {
 import { useArchbaseVisible } from '../hooks/useArchbaseVisible';
 import i18next from 'i18next';
 import { useMediaQuery } from 'usehooks-ts';
+import { buildNavbar } from './buildNavbar';
+import { buildSetCollapsedButton } from './buildSetCollapsedButton';
+import { buildMenuItemStyles } from './buildMenuItemStyles';
 
 export interface ArchbaseAdminMainLayoutProps {
   navigationData: ArchbaseNavigationItem[];
@@ -48,132 +47,12 @@ export interface ArchbaseAdminMainLayoutProps {
   onHiddenSidebar?: (hidden: boolean)=>void;
 }
 
-const createThemedStyles = (_IDtheme: MantineTheme): any => {
-  return {
-    light: {
-      sidebar: {
-        backgroundColor: '#ffffff',
-        color: '#607489',
-      },
-      menu: {
-        menuContent: '#fbfcfd',
-        icon: '#0098e5',
-        hover: {
-          backgroundColor: '#c5e4ff',
-          color: '#44596e',
-        },
-        disabled: {
-          color: '#9fb6cf',
-        },
-      },
-    },
-    dark: {
-      sidebar: {
-        backgroundColor: '#0b2948',
-        color: '#8ba1b7',
-      },
-      menu: {
-        menuContent: '#082440',
-        icon: '#59d0ff',
-        hover: {
-          backgroundColor: '#00458b',
-          color: '#b6c8d9',
-        },
-        disabled: {
-          color: '#3e5e7e',
-        },
-      },
-    },
-  };
-};
-
-function buildNavbar(
-  sidebarRef: React.Ref<HTMLHtmlElement>,
-  theme: MantineTheme,
-  adminLayoutContextValue: ArchbaseAdminLayoutContextValue,
-  sideBarWidth: string | number,
-  sideBarCollapsedWidth: string | number,
-  menuItemStyles: MenuItemStyles,
-  links: ReactNode,
-  isHidden: boolean,
-  sideBarFooterHeight?: string | number,
-  sideBarFooterContent?: ReactNode
-) : ReactElement {
-  let menuHeight = `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`
-    if (sideBarFooterHeight){
-      menuHeight = `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)`
-    }
-  return (
-    <Sidebar
-      ref={sidebarRef}
-      rootStyles={{
-        [`.${sidebarClasses.container}`]: {
-          position: 'absolute',
-          background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-          overflowX: 'hidden',
-          bottom: 70,
-          left: 0,
-          right: 0,
-          top: isHidden ? 0 : 60,
-          height: 'calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))',
-          paddingTop: '10px',
-          paddingBottom: '20px',
-        },
-        [`.${sidebarClasses.root}`]: {
-          borderColor: 'red',
-        },
-      }}
-      collapsed={adminLayoutContextValue.collapsed}
-      width={`${sideBarWidth}`}
-      collapsedWidth={`${sideBarCollapsedWidth}`}
-    >
-      <div style={{overflowY:'auto',overflowX:'hidden', height: menuHeight}}>
-        <SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
-          {links}
-        </SidebarMenu>
-      </div>
-      {sideBarFooterContent??sideBarFooterContent}
-    </Sidebar>
-  );
-}
-
-function buildSetCollapsedButton(
-  theme: MantineTheme,
-  adminLayoutContextValue: ArchbaseAdminLayoutContextValue,
-  sideBarWidth: string | number,
-  sideBarCollapsedWidth: string | number,
-  handleCollapseSidebar: () => void,
-) {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        left: adminLayoutContextValue.collapsed
-          ? `calc(${sideBarCollapsedWidth} - 14px)`
-          : `calc(${sideBarWidth} - 14px)`,
-        top: 'calc(100vh / 2)',
-        zIndex: '9999',
-      }}
-    >
-      <ActionIcon
-        bg={theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][4] : theme.colors[theme.primaryColor][4]}
-        color={theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][6] : theme.colors[theme.primaryColor][6]}
-        variant="filled"
-        radius="xl"
-        onClick={handleCollapseSidebar}
-      >
-        {adminLayoutContextValue.collapsed ? <IconChevronRight /> : <IconChevronLeft />}
-      </ActionIcon>
-    </div>
-  );
-}
-
 function ArchbaseAdminMainLayoutContainer({
   navigationData,
   children,
   header,
   footer,
-  sideBarWidth = '280px',
+  sideBarWidth = '360px',
   sideBarCollapsedWidth = '74px',
   sideBarHiddenBreakPoint,
   sideBarFooterHeight,
@@ -183,54 +62,11 @@ function ArchbaseAdminMainLayoutContainer({
 }: ArchbaseAdminMainLayoutProps) {
   const theme = useMantineTheme();
   const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
-
   const navigate = useNavigate();
   const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>();
-  const themes = createThemedStyles(theme);
-
   const isHidden = useMediaQuery(`(max-width: ${sideBarHiddenBreakPoint ?? theme.breakpoints.md})`);
 
-  const menuItemStyles: MenuItemStyles = {
-    root: {
-      fontSize: '14px',
-      fontWeight: 400,
-      background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
-      color: theme.white,
-    },
-    icon: {
-      background:
-        theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][8] : theme.colors[theme.primaryColor][0],
-      color: theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][0] : theme.colors[theme.primaryColor][7],
-      [`&.${menuClasses.disabled}`]: {
-        color: themes[theme.colorScheme].menu.disabled.color,
-      },
-    },
-    SubMenuExpandIcon: {
-      color: '#b6b7b9',
-    },
-    subMenuContent: () => ({
-      width: '280px',
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors[theme.primaryColor][0],
-    }),
-    button: {
-      [`&.${menuClasses.disabled}`]: {
-        color: themes[theme.colorScheme].menu.disabled.color,
-      },
-      '&:hover': {
-        backgroundColor:
-          theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][6] : theme.colors[theme.primaryColor][6],
-        color: theme.white,
-      },
-    },
-
-    label: ({ open }) => ({
-      fontWeight: open ? 600 : undefined,
-      color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-      '&:hover': {
-        color: theme.white,
-      },
-    }),
-  };
+  const menuItemStyles = buildMenuItemStyles(theme)
 
   const onMenuItemClick = (item: ArchbaseNavigationItem) => {
     if (item.link) {
@@ -359,8 +195,9 @@ function ArchbaseAdminMainLayoutContainer({
           menuItemStyles,
           links,
           isHidden,
+          sideBarFooterHeight ? `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)` : `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`,
           sideBarFooterHeight,
-          sideBarFooterContent
+          sideBarFooterContent,
         ):undefined
       }
       footer={footer}
@@ -402,6 +239,7 @@ function ArchbaseAdminMainLayoutContainer({
           menuItemStyles,
           links,
           isHidden,
+          sideBarFooterHeight ? `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)` : `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`,
           sideBarFooterHeight,
           sideBarFooterContent
         )}

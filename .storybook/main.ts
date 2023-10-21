@@ -57,6 +57,7 @@ const config: StorybookConfig = {
         transcludeMarkdown: true,
       }
     },
+    '@storybook/addon-mdx-gfm'
   ],
   framework: {
     name: '@storybook/react-vite',
