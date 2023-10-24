@@ -1,43 +1,26 @@
-import React, { Fragment, ReactNode, useMemo } from 'react'
+import { useArchbaseAdminStore, useArchbaseTheme } from '@components/hooks'
 import { Meta, StoryObj } from '@storybook/react'
-import { ActionIcon, Menu, Tooltip } from '@mantine/core'
-import {
-  IconArrowsMaximize,
-  IconBell,
-  IconMessageChatbot,
-  IconSwitchHorizontal,
-  IconUserCircle,
-} from '@tabler/icons-react'
-import { IconSettings } from '@tabler/icons-react'
-import { IconLogout } from '@tabler/icons-react'
-import { IconBrandMessenger } from '@tabler/icons-react'
-import { useArchbaseAdminStore } from '@components/hooks'
+import React from 'react'
 
-import { ArchbaseAdminMainLayout } from './ArchbaseAdminMainLayout'
-import { ArchbaseAdminLayoutFooter } from './ArchbaseAdminLayoutFooter'
-import { ArchbaseAdminLayoutHeader } from './ArchbaseAdminLayoutHeader'
-import { ArchbaseUser } from '../auth/ArchbaseUser'
-import { ArchbaseAdminTabContainer } from './ArchbaseAdminTabContainer'
-import { navigationDataSample } from './navigationData'
-import { archbaseLogo3 } from '../core'
-import { ArchbaseTabItem } from './types'
-import { navigationDataSampleWithGroup } from './navigationDataWithGroup'
 import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar'
+import { navigationDataSampleWithGroup } from './navigationDataWithGroup'
 
 const ArchbaseAdvancedSidebarExample = () => {
   const adminStore = useArchbaseAdminStore()
+  const theme = useArchbaseTheme()
 
   return (
     <div style={{ width: '100%', height: '800px' }}>
       <ArchbaseAdvancedSidebar
         navigationData={navigationDataSampleWithGroup}
-        sidebarHeight={'800px'}
-        sidebarGroupWidth={'90px'}
+        sidebarHeight="800px"
+        sidebarGroupWidth="90px"
         selectedGroupColor="#132441"
-        groupColor='white'
-        backgroundGroupColor='#132441'
-        groupLabelDarkColor='white'
-        groupLabelLightColor='white'
+        groupColor="white"
+        backgroundGroupColor="#132441"
+        groupLabelDarkColor="white"
+        groupLabelLightColor="white"
+        theme={theme}
       />
     </div>
   )
@@ -45,19 +28,21 @@ const ArchbaseAdvancedSidebarExample = () => {
 
 const ArchbaseAdvancedSidebarWithouLabelExample = () => {
   const adminStore = useArchbaseAdminStore()
+  const theme = useArchbaseTheme()
 
   return (
     <div style={{ width: '100%', height: '800px' }}>
       <ArchbaseAdvancedSidebar
         navigationData={navigationDataSampleWithGroup}
-        sidebarHeight={'800px'}
-        sidebarGroupWidth={'60px'}
+        sidebarHeight="800px"
+        sidebarGroupWidth="60px"
         selectedGroupColor="#132441"
-        groupColor='white'
-        backgroundGroupColor='#132441'
-        groupLabelDarkColor='white'
-        groupLabelLightColor='white'
+        groupColor="white"
+        backgroundGroupColor="#132441"
+        groupLabelDarkColor="white"
+        groupLabelLightColor="white"
         showGroupLabels={false}
+        theme={theme}
       />
     </div>
   )
