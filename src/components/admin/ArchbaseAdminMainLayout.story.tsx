@@ -21,6 +21,7 @@ import { ArchbaseAdminTabContainer } from './ArchbaseAdminTabContainer'
 import { navigationDataSample } from './navigationData'
 import { archbaseLogo3 } from '../core'
 import { ArchbaseTabItem } from './types'
+import { navigationDataSampleWithGroup } from './navigationDataWithGroup'
 
 const fakeUser: ArchbaseUser = {
   id: '1',
@@ -62,14 +63,14 @@ const ArchbaseAdminMainLayoutExample = () => {
   return (
     <div style={{ width: '100%', height: 'calc(100vh - 50px)' }}>
       <ArchbaseAdminMainLayout
-        navigationData={navigationDataSample}
+        navigationData={navigationDataSampleWithGroup}
         navigationRootLink="/"
         footer={<ArchbaseAdminLayoutFooter />}
         header={
           <ArchbaseAdminLayoutHeader
             user={fakeUser}
             headerActions={headerActions}
-            navigationData={navigationDataSample}
+            navigationData={navigationDataSampleWithGroup}
             userMenuItems={
               <Fragment>
                 <Menu.Label>Usuário</Menu.Label>
@@ -100,7 +101,7 @@ const ArchbaseAdminMainLayoutExample = () => {
           }}
           openedTabs={adminStore.openedTabs}
           activeTabId={adminStore.activeTabId}
-          navigationData={navigationDataSample}
+          navigationData={navigationDataSampleWithGroup}
         />
       </ArchbaseAdminMainLayout>
     </div>
