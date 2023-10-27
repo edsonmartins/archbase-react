@@ -1,21 +1,20 @@
-import { MantineTheme } from '@mantine/core';
-import React, { ReactElement, ReactNode } from 'react';
-import type { MenuItemStyles } from 'react-pro-sidebar';
-import { Menu as SidebarMenu, Sidebar, sidebarClasses } from 'react-pro-sidebar';
-import { ArchbaseAdminLayoutContextValue } from './ArchbaseAdminLayout.context';
+import { MantineTheme, px } from '@mantine/core'
+import React, { ReactElement, ReactNode } from 'react'
+import type { MenuItemStyles } from 'react-pro-sidebar'
+import { Menu as SidebarMenu, Sidebar, sidebarClasses } from 'react-pro-sidebar'
 
 export function buildNavbar(
   sidebarRef: React.Ref<HTMLHtmlElement>,
   theme: MantineTheme,
-  adminLayoutContextValue: ArchbaseAdminLayoutContextValue,
-  sideBarWidth: string | number,
-  sideBarCollapsedWidth: string | number,
+  collapsed: boolean,
+  sidebarWidth: string | number,
+  sidebarCollapsedWidth: string | number,
   menuItemStyles: MenuItemStyles,
   links: ReactNode,
   isHidden: boolean,
   menuHeight: string | number,
   sideBarFooterHeight?: string | number,
-  sideBarFooterContent?: ReactNode
+  sideBarFooterContent?: ReactNode,
 ): ReactElement {
   return (
     <Sidebar
@@ -25,10 +24,10 @@ export function buildNavbar(
           position: 'absolute',
           background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
           overflowX: 'hidden',
-          bottom: 70,
+          overflowY: 'hidden',
           left: 0,
           right: 0,
-          top: isHidden ? 0 : 60,
+          top: isHidden ? 0 : 'var(--mantine-header-height, 0rem)',
           height: 'calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))',
           paddingTop: '10px',
           paddingBottom: '20px',
@@ -37,9 +36,9 @@ export function buildNavbar(
           borderColor: 'red',
         },
       }}
-      collapsed={adminLayoutContextValue.collapsed}
-      width={`${sideBarWidth}`}
-      collapsedWidth={`${sideBarCollapsedWidth}`}
+      collapsed={collapsed}
+      width={`${px(sidebarWidth)}px`}
+      collapsedWidth={`${px(sidebarCollapsedWidth)}px`}
     >
       <div style={{ overflowY: 'auto', overflowX: 'hidden', height: menuHeight }}>
         <SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
@@ -48,5 +47,5 @@ export function buildNavbar(
       </div>
       {sideBarFooterContent ?? sideBarFooterContent}
     </Sidebar>
-  );
+  )
 }

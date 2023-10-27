@@ -1,18 +1,20 @@
-import React, { ReactNode, useMemo, useState } from 'react'
-import { ActionIcon, Box, MantineTheme, Paper, Stack, Text, Tooltip } from '@mantine/core'
-import { ArchbaseNavigationGroup, ArchbaseNavigationItem } from './types'
-import { Menu as SidebarMenu, MenuItem, Sidebar, SubMenu, menuClasses, sidebarClasses } from 'react-pro-sidebar'
-import i18next from 'i18next'
-import { buildMenuItemStyles } from './buildMenuItemStyles'
+import { ActionIcon, Box, MantineTheme, Paper, Stack, Text, Tooltip, px } from '@mantine/core'
 import { IconDots } from '@tabler/icons-react'
+import i18next from 'i18next'
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { MenuItem, Sidebar, Menu as SidebarMenu, SubMenu, menuClasses, sidebarClasses } from 'react-pro-sidebar'
+import { buildMenuItemStyles } from './buildMenuItemStyles'
+import { buildNavbar } from './buildNavbar'
+import { ArchbaseNavigationItem } from './types'
 
 export interface ArchbaseAdvancedSidebarProps {
   navigationData: ArchbaseNavigationItem[]
-  sidebarWidth?: string | undefined
-  sidebarHeight?: string | undefined
-  sidebarGroupWidth?: string | undefined
+  sidebarWidth?: string | number
+  sidebarHeight?: string | number
+  sidebarCollapsedWidth?: string | number
+  sidebarGroupWidth?: string | number
   onMenuItemClick?: (item: ArchbaseNavigationItem) => void
-  onSelectGroup?: () => void
+  onClickActionIcon?: (previousActiveGroupName: string, currentActiveGroupName: string) => void
   selectedGroupColor?: string
   groupColor?: string
   groupLabelDarkColor?: string
@@ -27,6 +29,8 @@ export interface ArchbaseAdvancedSidebarProps {
   margin?: string
   theme: MantineTheme
   sidebarRef?: React.Ref<HTMLHtmlElement> | undefined
+  defaultGroupIcon?: ReactNode
+  selectedGroupName?: string
 }
 
 type GroupItemSidebar = {
@@ -41,6 +45,7 @@ export function ArchbaseAdvancedSidebar({
   sidebarGroupWidth = '80px',
   sidebarWidth = '360px',
   sidebarHeight = '100%',
+  sidebarCollapsedWidth,
   selectedGroupColor,
   groupColor,
   backgroundGroupColor,
@@ -51,15 +56,16 @@ export function ArchbaseAdvancedSidebar({
   groupLabelLightColor,
   collapsed,
   onMenuItemClick,
-  onSelectGroup,
+  onClickActionIcon,
   withBorder = true,
   showGroupLabels = true,
   margin,
   theme,
   sidebarRef,
+  defaultGroupIcon,
+  selectedGroupName,
 }: ArchbaseAdvancedSidebarProps) {
   const [activeGroupName, setActiveGroupName] = useState<string>('')
-
   const color = selectedGroupColor
     ? selectedGroupColor
     : theme.colorScheme === 'dark'
@@ -73,7 +79,7 @@ export function ArchbaseAdvancedSidebar({
         let found = false
         if (!item.group) {
           item.group = {
-            icon: <IconDots size="2.2rem" color="#63B1FB" stroke={1} />,
+            icon: defaultGroupIcon ? defaultGroupIcon : <IconDots size="2.2rem" color="#63B1FB" stroke={1} />,
             label: 'Default',
             name: 'Default',
             hint: 'Default',
@@ -90,7 +96,12 @@ export function ArchbaseAdvancedSidebar({
             name: item.group.name,
             indexOrder: item.group.indexOrder,
             component: (
-              <Tooltip key={item.group.name} content={item.group.hint} label={item.group.label}>
+              <Tooltip
+                key={item.group.name}
+                content={item.group.hint}
+                label={item.group.label}
+                disabled={showGroupLabels}
+              >
                 <Stack
                   spacing="2px"
                   style={{
@@ -106,16 +117,16 @@ export function ArchbaseAdvancedSidebar({
                     color={item.group.name === activeGroupName ? color : groupColor}
                     onClick={() => {
                       setActiveGroupName((prev) => {
-                        if (item.group.name === prev) {
+                        if (onClickActionIcon) {
+                          onClickActionIcon(prev, item.group.name)
+                        }
+
+                        if (item.group.name === prev && !collapsed) {
                           return ''
                         }
 
                         return item.group.name
                       })
-
-                      if (onSelectGroup && !collapsed) {
-                        onSelectGroup()
-                      }
                     }}
                   >
                     {item.group.icon}
@@ -208,7 +219,7 @@ export function ArchbaseAdvancedSidebar({
     return grps
   }, [navigationData, activeGroupName, theme.colorScheme])
 
-  const menuItemStyles = buildMenuItemStyles(theme)
+  const menuItemStyles = buildMenuItemStyles(theme, collapsed, 35, px(sidebarCollapsedWidth))
 
   const sidebarWidthCalculated =
     collapsed || activeGroupName === '' ? '0px' : `calc(${sidebarWidth} - ${sidebarGroupWidth}`
@@ -219,51 +230,96 @@ export function ArchbaseAdvancedSidebar({
     ? theme.colors[theme.primaryColor][6]
     : theme.colors[theme.primaryColor][7]
 
+  const setDefaultActiveGroupName = useCallback(() => {
+    if (selectedGroupName && groups.map((group) => group.name).includes(selectedGroupName)) {
+      setActiveGroupName(selectedGroupName)
+    } else {
+      if (groups.length > 1) {
+        setActiveGroupName('Default')
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    setDefaultActiveGroupName()
+  }, [])
+
+  useEffect(() => {
+    if (collapsed) {
+      setActiveGroupName('')
+    }
+
+    if (!collapsed && activeGroupName == '') {
+      setDefaultActiveGroupName()
+    }
+  }, [collapsed, setDefaultActiveGroupName, activeGroupName])
+
   return (
-    <Paper withBorder={withBorder} style={{ display: 'flex', height: sidebarHeight, width: sidebarWidth, margin }}>
-      <Stack
-        spacing="4px"
-        style={{
-          height: sidebarHeight,
-          width: sidebarGroupWidth,
-          padding: '4px',
-          backgroundColor: calcBackgroundGroupColor,
-        }}
-      >
-        {groups.map((item) => item.component)}
-      </Stack>
-      <Box style={{ height: sidebarHeight, width: sidebarWidthCalculated }}>
-        {activeGroupName !== '' ? (
-          <Sidebar
-            ref={sidebarRef}
-            rootStyles={{
-              [`.${sidebarClasses.container}`]: {
-                background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-                overflowX: 'hidden',
-                left: 0,
-                height: '100%',
-              },
-              [`.${sidebarClasses.root}`]: {
-                borderColor: 'red',
-              },
+    <>
+      {groups.length == 1 ? (
+        buildNavbar(
+          sidebarRef,
+          theme,
+          collapsed,
+          sidebarWidth,
+          sidebarCollapsedWidth,
+          menuItemStyles,
+          groups[0].links,
+          isHidden,
+          sideBarFooterHeight
+            ? `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)`
+            : `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`,
+          sideBarFooterHeight,
+          sideBarFooterContent,
+        )
+      ) : (
+        <Paper withBorder={withBorder} style={{ display: 'flex', height: sidebarHeight, width: sidebarWidth, margin }}>
+          <Stack
+            spacing="4px"
+            style={{
+              height: sidebarHeight,
+              width: sidebarGroupWidth,
+              padding: '4px',
+              backgroundColor: calcBackgroundGroupColor,
             }}
-            collapsed={collapsed}
-            width="100%"
-            collapsedWidth="0px"
           >
-            <div id="alooo" style={{ overflowY: 'auto', overflowX: 'hidden', height: '100%' }}>
-              <SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
-                {groups.map((item) => {
-                  if (item.name === activeGroupName) {
-                    return item.links
-                  }
-                })}
-              </SidebarMenu>
-            </div>
-            {sideBarFooterContent ?? sideBarFooterContent}
-          </Sidebar>
-        ) : null}
-      </Box>
-    </Paper>
+            {groups.map((item) => item.component)}
+          </Stack>
+          <Box style={{ height: sidebarHeight, width: sidebarWidthCalculated }}>
+            {activeGroupName !== '' ? (
+              <Sidebar
+                ref={sidebarRef}
+                rootStyles={{
+                  [`.${sidebarClasses.container}`]: {
+                    background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+                    overflowX: 'hidden',
+                    overflowY: 'hidden',
+                    left: 0,
+                    height: '100%',
+                  },
+                  [`.${sidebarClasses.root}`]: {
+                    borderColor: 'red',
+                  },
+                }}
+                collapsed={collapsed}
+                width="100%"
+                collapsedWidth="0px"
+              >
+                <div style={{ overflowY: 'auto', overflowX: 'hidden', height: '100%' }}>
+                  <SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
+                    {groups.map((item) => {
+                      if (item.name === activeGroupName) {
+                        return item.links
+                      }
+                    })}
+                  </SidebarMenu>
+                </div>
+                {sideBarFooterContent ?? sideBarFooterContent}
+              </Sidebar>
+            ) : null}
+          </Box>
+        </Paper>
+      )}
+    </>
   )
 }

@@ -1,31 +1,17 @@
-import {
-  AppShell,
-  Box,
-  Container,
-  Drawer,
-  MantineNumberSize,
-  ScrollArea,
-  Text,
-  px,
-  useMantineTheme,
-} from '@mantine/core'
-import React, { Fragment, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar'
+import { AppShell, Drawer, useMantineTheme } from '@mantine/core'
+import React, { ReactNode, useCallback, useContext, useEffect, useMemo } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types'
+import { useMediaQuery } from 'usehooks-ts'
 import { ArchbaseUser } from '../auth/ArchbaseUser'
+import { useArchbaseVisible } from '../hooks/useArchbaseVisible'
 import {
   ArchbaseAdminLayoutContext,
   ArchbaseAdminLayoutContextValue,
   ArchbaseAdminLayoutProvider,
 } from './ArchbaseAdminLayout.context'
-import { useArchbaseVisible } from '../hooks/useArchbaseVisible'
-import i18next from 'i18next'
-import { useMediaQuery } from 'usehooks-ts'
-import { buildNavbar } from './buildNavbar'
-import { buildSetCollapsedButton } from './buildSetCollapsedButton'
-import { buildMenuItemStyles } from './buildMenuItemStyles'
 import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar'
+import { buildSetCollapsedButton } from './buildSetCollapsedButton'
+import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types'
 
 export interface ArchbaseAdminMainLayoutProps {
   navigationData: ArchbaseNavigationItem[]
@@ -39,13 +25,15 @@ export interface ArchbaseAdminMainLayoutProps {
   header?: React.ReactElement
   /** <Footer /> component */
   footer?: React.ReactElement
-  sideBarWidth?: string | number
+  sideBarWidth?: string
   sideBarCollapsedWidth?: string | number
   sideBarHiddenBreakPoint?: string | number
   sideBarFooterHeight?: string | number
   sideBarFooterContent?: ReactNode
   onCollapsedSideBar?: (collapsed: boolean) => void
   onHiddenSidebar?: (hidden: boolean) => void
+  sidebarDefaultGroupIcon?: ReactNode
+  sidebarSelectedGroupName?: string
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -60,6 +48,8 @@ function ArchbaseAdminMainLayoutContainer({
   sideBarFooterContent,
   onCollapsedSideBar,
   onHiddenSidebar,
+  sidebarSelectedGroupName,
+  sidebarDefaultGroupIcon,
 }: ArchbaseAdminMainLayoutProps) {
   const theme = useMantineTheme()
   const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext)
@@ -67,71 +57,18 @@ function ArchbaseAdminMainLayoutContainer({
   const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>()
   const isHidden = useMediaQuery(`(max-width: ${sideBarHiddenBreakPoint ?? theme.breakpoints.md})`)
 
-  const menuItemStyles = buildMenuItemStyles(theme)
-
   const onMenuItemClick = (item: ArchbaseNavigationItem) => {
     if (item.link) {
       navigate(item.link)
     }
   }
-  const links = useMemo(() => {
-    return navigationData
-      .filter((itm) => itm.showInSidebar === true)
-      .map((item, index) =>
-        item.links ? (
-          <SubMenu
-            rootStyles={{
-              fontSize: '16px',
-            }}
-            key={index}
-            id={item.label}
-            icon={item.icon}
-            label={`${i18next.t(item.label)}`}
-            disabled={item.disabled}
-          >
-            {item.links &&
-              item.links
-                .filter((itm) => itm.showInSidebar === true)
-                .map((subItem, subIndex) => (
-                  <MenuItem
-                    onClick={() => onMenuItemClick(subItem)}
-                    rootStyles={{
-                      [`.${menuClasses.icon}`]: {
-                        background:
-                          theme.colorScheme === 'dark'
-                            ? theme.colors[theme.primaryColor][8]
-                            : theme.colors[theme.primaryColor][7],
-                        color:
-                          theme.colorScheme === 'dark'
-                            ? theme.colors[theme.primaryColor][0]
-                            : theme.colors[theme.primaryColor][0],
-                      },
-                    }}
-                    key={subIndex}
-                    id={subItem.label}
-                    icon={subItem.icon}
-                    disabled={subItem.disabled}
-                  >
-                    {`${i18next.t(subItem.label)}`}
-                  </MenuItem>
-                ))}
-          </SubMenu>
-        ) : (
-          <MenuItem
-            rootStyles={{
-              fontSize: '16px',
-            }}
-            key={index}
-            id={item.label}
-            disabled={item.disabled}
-            onClick={() => onMenuItemClick(item)}
-            icon={item.icon}
-          >
-            {`${i18next.t(item.label)}`}
-          </MenuItem>
-        ),
-      )
-  }, [navigationData, onMenuItemClick, theme.colorScheme, theme.colors, theme.primaryColor])
+
+  const onClickActionIcon = (previousActiveGroupName: string, currentActiveGroupName: string) => {
+    if (previousActiveGroupName == currentActiveGroupName && adminLayoutContextValue.collapsed) {
+      adminLayoutContextValue.setCollapsed(false)
+    }
+    adminLayoutContextValue.setCollapsed(previousActiveGroupName == currentActiveGroupName)
+  }
 
   const routes = useMemo(() => {
     return navigationData.map((item, index) =>
@@ -194,7 +131,8 @@ function ArchbaseAdminMainLayoutContainer({
                 ? `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)`
                 : `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`
             }
-            sidebarGroupWidth="60px"
+            sidebarGroupWidth={sideBarCollapsedWidth}
+            sidebarCollapsedWidth={sideBarCollapsedWidth}
             selectedGroupColor="#132441"
             groupColor="white"
             backgroundGroupColor="#132441"
@@ -202,16 +140,17 @@ function ArchbaseAdminMainLayoutContainer({
             groupLabelLightColor="white"
             showGroupLabels={false}
             collapsed={adminLayoutContextValue.collapsed}
+            sidebarWidth={sideBarWidth}
             isHidden={isHidden}
             onMenuItemClick={onMenuItemClick}
+            onClickActionIcon={onClickActionIcon}
             sideBarFooterHeight={sideBarFooterHeight}
             sideBarFooterContent={sideBarFooterContent}
             theme={theme}
             sidebarRef={sidebarRef}
-            margin="calc(var(--mantine-header-height, 0rem)) 0 0 0"
-            onSelectGroup={() => {
-              adminLayoutContextValue.setCollapsed(false)
-            }}
+            margin="calc(var(--mantine-header-height, 0rem) - 1px) 0 0 0"
+            defaultGroupIcon={sidebarDefaultGroupIcon}
+            selectedGroupName={sidebarSelectedGroupName}
           />
         ) : undefined
       }
@@ -252,8 +191,10 @@ function ArchbaseAdminMainLayoutContainer({
       >
         <ArchbaseAdvancedSidebar
           navigationData={navigationData}
+          sidebarWidth={sideBarWidth}
           sidebarHeight="calc(100vh - 26px)"
-          sidebarGroupWidth="60px"
+          sidebarCollapsedWidth={sideBarCollapsedWidth}
+          sidebarGroupWidth={sideBarCollapsedWidth}
           selectedGroupColor="#132441"
           groupColor="white"
           backgroundGroupColor="#132441"
@@ -263,11 +204,11 @@ function ArchbaseAdminMainLayoutContainer({
           collapsed={adminLayoutContextValue.collapsed}
           isHidden={isHidden}
           onMenuItemClick={onMenuItemClick}
+          onClickActionIcon={onClickActionIcon}
           theme={theme}
           sidebarRef={sidebarRef}
-          onSelectGroup={() => {
-            adminLayoutContextValue.setCollapsed(false)
-          }}
+          defaultGroupIcon={sidebarDefaultGroupIcon}
+          selectedGroupName={sidebarSelectedGroupName}
         />
       </Drawer>
     </AppShell>
@@ -290,6 +231,8 @@ export function ArchbaseAdminMainLayout({
   sideBarFooterContent,
   onCollapsedSideBar,
   onHiddenSidebar,
+  sidebarDefaultGroupIcon,
+  sidebarSelectedGroupName,
 }: ArchbaseAdminMainLayoutProps) {
   return (
     <ArchbaseAdminLayoutProvider
@@ -314,6 +257,8 @@ export function ArchbaseAdminMainLayout({
         sideBarFooterContent={sideBarFooterContent}
         onCollapsedSideBar={onCollapsedSideBar}
         onHiddenSidebar={onHiddenSidebar}
+        sidebarDefaultGroupIcon={sidebarDefaultGroupIcon}
+        sidebarSelectedGroupName={sidebarSelectedGroupName}
       >
         {children}
       </ArchbaseAdminMainLayoutContainer>
