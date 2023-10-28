@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useArchbaseEmailFocusIdx } from '@emaileditor/editor/index';
 import { SelectField } from '../../../components/Form';
+import { t } from 'i18next';
 
 const options = [
   {

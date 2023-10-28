@@ -9,6 +9,7 @@ import { processErrorMessage } from '../core/exceptions'
 export interface AuthenticationManagerReturnType {
   login: (username: string, password: string, rememberMe: boolean) => void
   logout: ()=>void
+  username: string
   isAuthenticating: boolean
   isAuthenticated: boolean
   isError: boolean
@@ -37,8 +38,13 @@ export const useArchbaseAuthenticationManager = ({
   const [isAuthenticated, setAuthenticated] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
+  const [username, setUsername] = useState<string>('')
 
   useEffect(() => {
+    const savedUsername = tokenManager.getUsername();
+    if (savedUsername && savedUsername != '') {
+      setUsername(savedUsername)
+    }
     const token = tokenManager.getToken()
     if (token) {
       setAuthenticating(false)
@@ -59,6 +65,7 @@ export const useArchbaseAuthenticationManager = ({
     setAuthenticated(false)
     tokenManager.clearToken()
     tokenManager.clearUsernameAndPassword()
+    setUsername('')
     setError('')
     setIsError(false)
   }
@@ -72,6 +79,7 @@ export const useArchbaseAuthenticationManager = ({
       if (rememberMe){
         tokenManager.saveUsernameAndPassword(username, password)
       }
+      tokenManager.saveUsername(username)
       setAccessToken(access_token)
       setAuthenticating(false)
       setAuthenticated(true)
@@ -113,6 +121,7 @@ export const useArchbaseAuthenticationManager = ({
   return {
     login,
     logout,
+    username,
     isAuthenticated,
     isAuthenticating,
     isError,

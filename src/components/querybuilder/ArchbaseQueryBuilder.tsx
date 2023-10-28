@@ -71,7 +71,7 @@ export class ArchbaseQueryBuilder extends Component<
   private refEdit: RefObject<HTMLInputElement>
   private toggleFilterButtonRef: RefObject<any>
   private inputValue: any
-  declare context: React.ContextType<typeof ArchbaseAppContext>
+  context: React.ContextType<typeof ArchbaseAppContext>
   constructor(props: ArchbaseQueryBuilderProps) {
     super(props)
     this.refEdit = React.createRef()

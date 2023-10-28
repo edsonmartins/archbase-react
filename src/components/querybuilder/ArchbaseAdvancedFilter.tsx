@@ -738,9 +738,7 @@ export class CustomSortItem<T, ID> extends Component<
     active: true,
     selected: false
   }
-
-  declare context: React.ContextType<typeof ArchbaseListContext>
-
+  context: React.ContextType<typeof ArchbaseListContext>
   constructor(props: CustomSortItemProps<T, ID>) {
     super(props)
     this.state = { update: Math.random(), selected: props.recordData.selected }
@@ -864,7 +862,7 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
     schema: {}
   }
   static contextType = ArchbaseAppContext
-  declare context: React.ContextType<typeof ArchbaseAppContext>
+  context: React.ContextType<typeof ArchbaseAppContext>
 
   constructor(props) {
     super(props)
@@ -1049,7 +1047,7 @@ class RuleItem extends Component<RuleItemProps> {
     disabled: false
   }
   static contextType = ArchbaseAppContext
-  declare context: React.ContextType<typeof ArchbaseAppContext>
+  context: React.ContextType<typeof ArchbaseAppContext>
   constructor(props: RuleItemProps) {
     super(props)
   }

@@ -5,6 +5,8 @@ import { ArchbaseUsernameAndPassword } from './ArchbaseUser'
 export interface ArchbaseTokenManager {
   saveUsernameAndPassword(username: string, password: string): void
   getUsernameAndPassword(): ArchbaseUsernameAndPassword|null
+  saveUsername(username: string): void
+  getUsername(): string|null
   saveToken(accessToken?: ArchbaseAccessToken): void
   clearToken(): void
   clearUsernameAndPassword(): void

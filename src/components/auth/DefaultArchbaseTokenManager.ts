@@ -10,6 +10,7 @@ import { ArchbaseUsernameAndPassword } from './ArchbaseUser'
 export const ENCRYPTION_KEY = 'YngzI1guK3dGaElFcFY9MywqK3xgPzg/Ojg7eD8xRmg='
 export const TOKEN_COOKIE_NAME = 'c1ab58e7-c113-4225-a190-a9e59d1207fc'
 export const USER_NAME_AND_PASSWORD = '6faf6932-a0b5-457b-83b1-8d89ddbd91fd'
+export const USER_NAME = '602b05c5-ec46-451e-aba6-187e463bc245'
 
 export class DefaultArchbaseTokenManager implements ArchbaseTokenManager {
   getUsernameAndPassword(): ArchbaseUsernameAndPassword|null {
@@ -31,6 +32,25 @@ export class DefaultArchbaseTokenManager implements ArchbaseTokenManager {
     const usernameAndPassword = btoa(`${username}:${password}`)
     const encryptedPassword = CryptoJS.AES.encrypt(usernameAndPassword, ENCRYPTION_KEY).toString()    
     localStorage.setItem(USER_NAME_AND_PASSWORD, encryptedPassword)
+  }
+
+  getUsername(): string|null {
+    try {
+      const encryptedUsername = localStorage.getItem(USER_NAME)
+      if (encryptedUsername){
+        const decrypted = CryptoJS.AES.decrypt(encryptedUsername, ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8);
+        return atob(decrypted)
+      } else {
+        return null
+      }
+    } catch (ex) {
+        return null
+    }
+  }
+  saveUsername(username: string): void {
+    const usernameBase64 = btoa(username)
+    const encryptedPassword = CryptoJS.AES.encrypt(usernameBase64, ENCRYPTION_KEY).toString()    
+    localStorage.setItem(USER_NAME, encryptedPassword)
   }
 
   isTokenExpired(token?: ArchbaseAccessToken, expirationThreshold: number = 300 ): boolean {
@@ -67,6 +87,7 @@ export class DefaultArchbaseTokenManager implements ArchbaseTokenManager {
 
   clearUsernameAndPassword(): void {
     localStorage.removeItem(USER_NAME_AND_PASSWORD)
+    localStorage.removeItem(USER_NAME)
   }
 
   clearToken() {

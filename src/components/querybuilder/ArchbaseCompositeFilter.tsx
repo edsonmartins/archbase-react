@@ -59,7 +59,7 @@ interface ArchbaseCompositeFilterState {
 }
 
 class ArchbaseCompositeFilter extends Component<ArchbaseCompositeFilterProps, ArchbaseCompositeFilterState> {
-  declare context: React.ContextType<typeof ArchbaseAppContext>
+  context: React.ContextType<typeof ArchbaseAppContext>
   constructor(props: ArchbaseCompositeFilterProps) {
     super(props)
     this.state = {
