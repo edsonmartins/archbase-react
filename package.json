@@ -188,6 +188,7 @@
     "rollup-plugin-dts": "^6.0.2",
     "rollup-plugin-inline-postcss": "^3.0.1",
     "rollup-plugin-inline-source": "^1.0.2",
+    "rollup-plugin-node-externals": "^6.1.2",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-terser": "^7.0.2",
