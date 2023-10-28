@@ -18,10 +18,10 @@ import { ArchbaseAdminLayoutFooter } from './ArchbaseAdminLayoutFooter'
 import { ArchbaseAdminLayoutHeader } from './ArchbaseAdminLayoutHeader'
 import { ArchbaseUser } from '../auth/ArchbaseUser'
 import { ArchbaseAdminTabContainer } from './ArchbaseAdminTabContainer'
-import { navigationDataSample } from './navigationData'
 import { archbaseLogo3 } from '../core'
 import { ArchbaseTabItem } from './types'
 import { navigationDataSampleWithGroup } from './navigationDataWithGroup'
+import { IconCirclePlus } from '@tabler/icons-react'
 
 const fakeUser: ArchbaseUser = {
   id: '1',
@@ -65,6 +65,9 @@ const ArchbaseAdminMainLayoutExample = () => {
       <ArchbaseAdminMainLayout
         navigationData={navigationDataSampleWithGroup}
         navigationRootLink="/"
+        // sidebarDefaultGroupIcon={<IconCirclePlus size="2.2rem" color="#63B1FB" stroke={1} />}
+        sidebarSelectedGroupName="grpPessoas"
+        sideBarCollapsedWidth="60px"
         footer={<ArchbaseAdminLayoutFooter />}
         header={
           <ArchbaseAdminLayoutHeader
