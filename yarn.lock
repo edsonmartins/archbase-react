@@ -6740,6 +6740,7 @@ __metadata:
     rollup-plugin-dts: ^6.0.2
     rollup-plugin-inline-postcss: ^3.0.1
     rollup-plugin-inline-source: ^1.0.2
+    rollup-plugin-node-externals: ^6.1.2
     rollup-plugin-peer-deps-external: ^2.2.4
     rollup-plugin-postcss: ^4.0.2
     rollup-plugin-terser: ^7.0.2
@@ -18519,6 +18520,15 @@ __metadata:
     inline-source: ~4.0.1
     rollup-pluginutils: ^2.0.1
   checksum: 0ebd5e5ca25a61b1cd69b03fda92fc3d55dddcb1f65300a393d08b8795ab6f12b98694bd507c053eb16e6953d80295943ab7257f268924313a7df8ad3fa75cf5
+  languageName: node
+  linkType: hard
+
+"rollup-plugin-node-externals@npm:^6.1.2":
+  version: 6.1.2
+  resolution: "rollup-plugin-node-externals@npm:6.1.2"
+  peerDependencies:
+    rollup: ^3.0.0 || ^4.0.0
+  checksum: fd139d95dd46b04cc5d337322724455b6d30971d99b9a303fef61d54c1b6a9f2be5b4d22e98c16670fd216e2d275db8fc842d7f395ddd78e0535b699fbbe1155
   languageName: node
   linkType: hard
 

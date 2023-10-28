@@ -4,7 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import url from '@rollup/plugin-url';
 import svgr from '@svgr/rollup';
-import external from 'rollup-plugin-peer-deps-external';
+import { nodeExternals } from 'rollup-plugin-node-externals'
 import postcss from 'rollup-plugin-postcss';
 import dts from 'rollup-plugin-dts';
 import { terser } from 'rollup-plugin-terser';
@@ -34,7 +34,7 @@ export default [
       },
     ],
     plugins: [
-      external({ includeDependencies: true }),
+      nodeExternals({devDeps:true, exclude:'@emotion/react'}),
       postcss({
         plugins: [],
         minimize: true,

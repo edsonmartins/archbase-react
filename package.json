@@ -1,6 +1,6 @@
 {
   "name": "archbase-react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Biblioteca de compontentes React TypeScript focada em produtividade no desenvolvimento web.",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
