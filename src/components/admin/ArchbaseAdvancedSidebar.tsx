@@ -204,13 +204,13 @@ export function ArchbaseAdvancedSidebar({
     })
 
     const grps = [...result].sort((a, b) => a.indexOrder - b.indexOrder)
-
+    setActiveGroupName(grps[1].name)
     return grps
   }, [navigationData, activeGroupName, theme.colorScheme])
 
   const menuItemStyles = buildMenuItemStyles(theme)
 
-  const sidebarWidthCalculated =
+  let sidebarWidthCalculated =
     collapsed || activeGroupName === '' ? '0px' : `calc(${sidebarWidth} - ${sidebarGroupWidth}`
 
   const calcBackgroundGroupColor = backgroundGroupColor
@@ -219,8 +219,45 @@ export function ArchbaseAdvancedSidebar({
     ? theme.colors[theme.primaryColor][6]
     : theme.colors[theme.primaryColor][7]
 
+  if (groups && groups.length==1){
+    let sidebarWidthCalculated =
+    collapsed || activeGroupName === '' ? sidebarGroupWidth : `calc(${sidebarWidth})`
+    return <Paper withBorder={withBorder} style={{ display: 'flex', height: sidebarHeight, width: sidebarWidthCalculated, margin }}>
+    {/* <Box style={{ height: sidebarHeight, width: sidebarWidthCalculated }}> */}
+        <Sidebar
+          ref={sidebarRef}
+          rootStyles={{
+            [`.${sidebarClasses.container}`]: {
+              background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+              overflowX: 'hidden',
+              left: 0,
+              height: '100%',
+            },
+            [`.${sidebarClasses.root}`]: {
+              borderColor: 'red',
+            },
+          }}
+          collapsed={collapsed}
+          width="100%"
+          collapsedWidth={sidebarGroupWidth}
+        >
+          <div id="alooo" style={{ overflowY: 'auto', overflowX: 'hidden', height: '100%' }}>
+            <SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
+              {groups.map((item) => {
+                if (item.name === activeGroupName) {
+                  return item.links
+                }
+              })}
+            </SidebarMenu>
+          </div>
+          {sideBarFooterContent ?? sideBarFooterContent}
+        </Sidebar>
+    {/* </Box> */}
+  </Paper>
+  }
+
   return (
-    <Paper withBorder={withBorder} style={{ display: 'flex', height: sidebarHeight, width: sidebarWidth, margin }}>
+    <Paper withBorder={false} style={{ display: 'flex', height: sidebarHeight, width: sidebarWidth, margin }}>
       <Stack
         spacing="4px"
         style={{
@@ -234,7 +271,7 @@ export function ArchbaseAdvancedSidebar({
       </Stack>
       <Box style={{ height: sidebarHeight, width: sidebarWidthCalculated }}>
         {activeGroupName !== '' ? (
-          <Sidebar
+          <Sidebar  
             ref={sidebarRef}
             rootStyles={{
               [`.${sidebarClasses.container}`]: {

@@ -8,44 +8,43 @@ import {
   Text,
   px,
   useMantineTheme,
-} from '@mantine/core'
-import React, { Fragment, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar'
-import { Route, Routes, useNavigate } from 'react-router-dom'
-import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types'
-import { ArchbaseUser } from '../auth/ArchbaseUser'
+} from '@mantine/core';
+import React, { Fragment, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
+import { ArchbaseUser } from '../auth/ArchbaseUser';
 import {
   ArchbaseAdminLayoutContext,
   ArchbaseAdminLayoutContextValue,
   ArchbaseAdminLayoutProvider,
-} from './ArchbaseAdminLayout.context'
-import { useArchbaseVisible } from '../hooks/useArchbaseVisible'
-import i18next from 'i18next'
-import { useMediaQuery } from 'usehooks-ts'
-import { buildNavbar } from './buildNavbar'
-import { buildSetCollapsedButton } from './buildSetCollapsedButton'
-import { buildMenuItemStyles } from './buildMenuItemStyles'
-import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar'
+} from './ArchbaseAdminLayout.context';
+import { useArchbaseVisible } from '../hooks/useArchbaseVisible';
+import i18next from 'i18next';
+import { useMediaQuery } from 'usehooks-ts';
+import { buildNavbar } from './buildNavbar';
+import { buildSetCollapsedButton } from './buildSetCollapsedButton';
+import { buildMenuItemStyles } from './buildMenuItemStyles';
 
 export interface ArchbaseAdminMainLayoutProps {
-  navigationData: ArchbaseNavigationItem[]
-  user?: ArchbaseUser
-  owner?: ArchbaseOwner
-  company?: ArchbaseCompany
-  navigationRootLink: string
-  userMenuItems?: ReactNode | ReactNode[]
-  children?: ReactNode
+  navigationData: ArchbaseNavigationItem[];
+  user?: ArchbaseUser;
+  owner?: ArchbaseOwner;
+  company?: ArchbaseCompany;
+  navigationRootLink: string;
+  userMenuItems?: ReactNode | ReactNode[];
+  children?: ReactNode;
   /** <Header /> component */
-  header?: React.ReactElement
+  header?: React.ReactElement;
   /** <Footer /> component */
-  footer?: React.ReactElement
-  sideBarWidth?: string | number
-  sideBarCollapsedWidth?: string | number
-  sideBarHiddenBreakPoint?: string | number
-  sideBarFooterHeight?: string | number
-  sideBarFooterContent?: ReactNode
-  onCollapsedSideBar?: (collapsed: boolean) => void
-  onHiddenSidebar?: (hidden: boolean) => void
+  footer?: React.ReactElement;
+  sideBarWidth?: string | number;
+  sideBarCollapsedWidth?: string | number;
+  sideBarHiddenBreakPoint?: string | number;
+  sideBarFooterHeight?: string | number;
+  sideBarFooterContent?: ReactNode;
+  onCollapsedSideBar?: (collapsed: boolean)=>void;
+  onHiddenSidebar?: (hidden: boolean)=>void;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -53,27 +52,27 @@ function ArchbaseAdminMainLayoutContainer({
   children,
   header,
   footer,
-  sideBarWidth = '360px',
+  sideBarWidth = '280px',
   sideBarCollapsedWidth = '74px',
   sideBarHiddenBreakPoint,
   sideBarFooterHeight,
   sideBarFooterContent,
   onCollapsedSideBar,
-  onHiddenSidebar,
+  onHiddenSidebar
 }: ArchbaseAdminMainLayoutProps) {
-  const theme = useMantineTheme()
-  const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext)
-  const navigate = useNavigate()
-  const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>()
-  const isHidden = useMediaQuery(`(max-width: ${sideBarHiddenBreakPoint ?? theme.breakpoints.md})`)
+  const theme = useMantineTheme();
+  const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
+  const navigate = useNavigate();
+  const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>();
+  const isHidden = useMediaQuery(`(max-width: ${sideBarHiddenBreakPoint ?? theme.breakpoints.md})`);
 
   const menuItemStyles = buildMenuItemStyles(theme)
 
   const onMenuItemClick = (item: ArchbaseNavigationItem) => {
     if (item.link) {
-      navigate(item.link)
+      navigate(item.link!);
     }
-  }
+  };
   const links = useMemo(() => {
     return navigationData
       .filter((itm) => itm.showInSidebar === true)
@@ -130,8 +129,8 @@ function ArchbaseAdminMainLayoutContainer({
             {`${i18next.t(item.label)}`}
           </MenuItem>
         ),
-      )
-  }, [navigationData, onMenuItemClick, theme.colorScheme, theme.colors, theme.primaryColor])
+      );
+  }, [navigationData, onMenuItemClick, theme.colorScheme, theme.colors, theme.primaryColor]);
 
   const routes = useMemo(() => {
     return navigationData.map((item, index) =>
@@ -142,34 +141,34 @@ function ArchbaseAdminMainLayoutContainer({
       ) : (
         <Route key={`${item.link}_${index}`} path={item.link} element={item.component} />
       ),
-    )
-  }, [navigationData, adminLayoutContextValue.collapsed])
+    );
+  }, [navigationData, adminLayoutContextValue.collapsed]);
 
   const handleCollapseSidebar = useCallback(() => {
-    adminLayoutContextValue.setCollapsed(!adminLayoutContextValue.collapsed)
-    if (onCollapsedSideBar) {
+    adminLayoutContextValue.setCollapsed!(!adminLayoutContextValue.collapsed);
+    if (onCollapsedSideBar){
       onCollapsedSideBar(!adminLayoutContextValue.collapsed)
     }
-  }, [adminLayoutContextValue.setCollapsed, adminLayoutContextValue.collapsed])
+  }, [adminLayoutContextValue.setCollapsed, adminLayoutContextValue.collapsed]);
 
   const handleHiddenSidebar = useCallback(() => {
-    adminLayoutContextValue.setHidden(!adminLayoutContextValue.hidden)
-    if (onHiddenSidebar) {
+    adminLayoutContextValue.setHidden!(!adminLayoutContextValue.hidden);
+    if (onHiddenSidebar){
       onHiddenSidebar(!adminLayoutContextValue.hidden)
     }
-  }, [adminLayoutContextValue.setHidden, adminLayoutContextValue.hidden])
+  }, [adminLayoutContextValue.setHidden, adminLayoutContextValue.hidden]);
 
   useEffect(() => {
     if (adminLayoutContextValue.hidden && !isHidden) {
-      handleHiddenSidebar()
+      handleHiddenSidebar();
     }
-  }, [adminLayoutContextValue.hidden, isHidden, handleHiddenSidebar])
+  }, [adminLayoutContextValue.hidden, isHidden, handleHiddenSidebar]);
 
   useEffect(() => {
     if (adminLayoutContextValue.collapsed && isHidden) {
-      handleCollapseSidebar()
+      handleCollapseSidebar();
     }
-  }, [adminLayoutContextValue.collapsed, isHidden, handleCollapseSidebar])
+  }, [adminLayoutContextValue.collapsed, isHidden, handleCollapseSidebar]);
 
   return (
     <AppShell
@@ -186,34 +185,20 @@ function ArchbaseAdminMainLayoutContainer({
         },
       }}
       navbar={
-        !isHidden ? (
-          <ArchbaseAdvancedSidebar
-            navigationData={navigationData}
-            sidebarHeight={
-              sideBarFooterHeight
-                ? `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)`
-                : `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`
-            }
-            sidebarGroupWidth="60px"
-            selectedGroupColor="#132441"
-            groupColor="white"
-            backgroundGroupColor="#132441"
-            groupLabelDarkColor="white"
-            groupLabelLightColor="white"
-            showGroupLabels={false}
-            collapsed={adminLayoutContextValue.collapsed}
-            isHidden={isHidden}
-            onMenuItemClick={onMenuItemClick}
-            sideBarFooterHeight={sideBarFooterHeight}
-            sideBarFooterContent={sideBarFooterContent}
-            theme={theme}
-            sidebarRef={sidebarRef}
-            margin="calc(var(--mantine-header-height, 0rem)) 0 0 0"
-            onSelectGroup={() => {
-              adminLayoutContextValue.setCollapsed(false)
-            }}
-          />
-        ) : undefined
+        !isHidden ?
+        buildNavbar(
+          sidebarRef,
+          theme,
+          adminLayoutContextValue,
+          sideBarWidth,
+          sideBarCollapsedWidth,
+          menuItemStyles,
+          links,
+          isHidden,
+          sideBarFooterHeight ? `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)` : `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`,
+          sideBarFooterHeight,
+          sideBarFooterContent,
+        ):undefined
       }
       footer={footer}
       header={header}
@@ -244,34 +229,23 @@ function ArchbaseAdminMainLayoutContainer({
           <Routes>{routes}</Routes>
         </div>
       </div>
-      <Drawer
-        opened={adminLayoutContextValue.hidden || false}
-        onClose={handleHiddenSidebar}
-        size={sideBarWidth}
-        padding={0}
-      >
-        <ArchbaseAdvancedSidebar
-          navigationData={navigationData}
-          sidebarHeight="calc(100vh - 26px)"
-          sidebarGroupWidth="60px"
-          selectedGroupColor="#132441"
-          groupColor="white"
-          backgroundGroupColor="#132441"
-          groupLabelDarkColor="white"
-          groupLabelLightColor="white"
-          showGroupLabels={false}
-          collapsed={adminLayoutContextValue.collapsed}
-          isHidden={isHidden}
-          onMenuItemClick={onMenuItemClick}
-          theme={theme}
-          sidebarRef={sidebarRef}
-          onSelectGroup={() => {
-            adminLayoutContextValue.setCollapsed(false)
-          }}
-        />
+      <Drawer opened={adminLayoutContextValue.hidden||false} onClose={handleHiddenSidebar} size={sideBarWidth} padding={0}>
+        {buildNavbar(
+          sidebarRef,
+          theme,
+          adminLayoutContextValue,
+          sideBarWidth,
+          sideBarCollapsedWidth,
+          menuItemStyles,
+          links,
+          isHidden,
+          sideBarFooterHeight ? `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)` : `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`,
+          sideBarFooterHeight,
+          sideBarFooterContent
+        )}
       </Drawer>
     </AppShell>
-  )
+  );
 }
 
 export function ArchbaseAdminMainLayout({
@@ -289,7 +263,7 @@ export function ArchbaseAdminMainLayout({
   sideBarFooterHeight,
   sideBarFooterContent,
   onCollapsedSideBar,
-  onHiddenSidebar,
+  onHiddenSidebar
 }: ArchbaseAdminMainLayoutProps) {
   return (
     <ArchbaseAdminLayoutProvider
@@ -318,5 +292,5 @@ export function ArchbaseAdminMainLayout({
         {children}
       </ArchbaseAdminMainLayoutContainer>
     </ArchbaseAdminLayoutProvider>
-  )
+  );
 }

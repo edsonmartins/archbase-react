@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from 'react'
 import { Provider as IOCProvider } from 'inversify-react'
-import i18next, { ResourceLanguage } from 'i18next'
+import i18next, { ResourceLanguage, i18n } from 'i18next'
 import setDefaultOptions from 'date-fns/setDefaultOptions'
 import { enUS, es, ptBR } from 'date-fns/locale'
 import dayjs from 'dayjs'
@@ -64,6 +64,33 @@ const buildResources = (resource: Resource, translationName? : string, translati
     }    
 }
 
+
+export const initArchbaseTranslation = (translationName,
+  translationResource) : any => {
+  i18next.use(initReactI18next).use(LanguageDetector).init({
+    debug: true,
+    resources: buildResources(archbaseTranslationResources, translationName, translationResource),
+    keySeparator: ".",
+    ns: translationName?["archbase",translationName]:["archbase"],
+    defaultNS: "archbase"
+  })
+  
+  i18next.on('languageChanged', (lng: string) => {
+    if (lng === 'en') {
+      setDefaultOptions({ locale: enUS })
+      dayjs.locale('en')
+    } else if (lng === 'es') {
+      setDefaultOptions({ locale: es })
+      dayjs.locale('es')
+    } else if (lng === 'pt-BR') {
+      setDefaultOptions({ locale: ptBR })
+      dayjs.locale('pt-BR')
+    }
+  }) 
+  return i18next
+}
+
+
 function ArchbaseGlobalProvider({
   children,
   colorScheme = 'light',
@@ -81,44 +108,25 @@ function ArchbaseGlobalProvider({
   toggleColorScheme
 } : ArchbaseAppProviderProps) {
   useLayoutEffect(()=>{
-    i18next.use(initReactI18next).use(LanguageDetector).init({
-      debug: false,
-      resources: buildResources(archbaseTranslationResources, translationName, translationResource),
-      keySeparator: ".",
-      ns: translationName?["archbase",translationName]:["archbase"],
-      defaultNS: "archbase",
-    })
-    
-    i18next.on('languageChanged', (lng: string) => {
-      if (lng === 'en') {
-        setDefaultOptions({ locale: enUS })
-        dayjs.locale('en')
-      } else if (lng === 'es') {
-        setDefaultOptions({ locale: es })
-        dayjs.locale('es')
-      } else if (lng === 'pt-BR') {
-        setDefaultOptions({ locale: ptBR })
-        dayjs.locale('pt-BR')
-      }
-    }) 
+    initArchbaseTranslation(translationName,translationResource) 
   },[])
   return (
-    <IOCProvider container={containerIOC}>
-      <DatesProvider settings={{ locale: i18next.language }}>
-        <MantineProvider
-          theme={colorScheme === 'dark' ? themeDark : themeLight}
-          emotionCache={emotionCache}
-          withGlobalStyles={withGlobalStyles}
-          withNormalizeCSS={withNormalizeCSS}
-          withCSSVariables={withCSSVariables}
-        >
-            <Notifications autoClose={notificationAutoClose} position={notificationPosition} />
-            <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-              {children}
-            </ColorSchemeProvider>
-        </MantineProvider>
-      </DatesProvider>
-    </IOCProvider>
+      <IOCProvider container={containerIOC}>
+        <DatesProvider settings={{ locale: i18next.language }}>
+          <MantineProvider
+            theme={colorScheme === 'dark' ? themeDark : themeLight}
+            emotionCache={emotionCache}
+            withGlobalStyles={withGlobalStyles}
+            withNormalizeCSS={withNormalizeCSS}
+            withCSSVariables={withCSSVariables}
+          >
+              <Notifications autoClose={notificationAutoClose} position={notificationPosition} />
+              <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+                {children}
+              </ColorSchemeProvider>
+          </MantineProvider>
+        </DatesProvider>
+      </IOCProvider>
   )
 }
 
