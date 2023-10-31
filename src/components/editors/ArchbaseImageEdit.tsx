@@ -1,10 +1,9 @@
-import { ActionIcon, Image, ImageProps, Input, MantineNumberSize, Modal, Paper, useMantineTheme } from '@mantine/core'
-import { IconEdit } from '@tabler/icons-react'
+import { ImageProps, Input, MantineNumberSize } from '@mantine/core'
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
-import { archbaseLogo, isBase64 } from '../core'
-import { ArchbaseImagePickerEditor } from '@components/image'
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks'
+import { isBase64 } from '../core'
+import { ArchbaseImagePickerEditor } from '../image'
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks'
 
 export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
   /** Fonte de dados onde será atribuido o valor do rich edit*/
@@ -76,7 +75,7 @@ export function ArchbaseImageEdit<T, ID>({
   innerRef,
   ...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
-  const [value, setValue] = useState<string>('')
+  const [value, setValue] = useState<string|undefined>(undefined)
   const innerComponentRef = useRef<any>()
   const [internalError, setInternalError] = useState<string|undefined>(error)
 

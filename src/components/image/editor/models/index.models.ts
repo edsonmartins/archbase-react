@@ -10,7 +10,7 @@ export interface ArchbaseImagePickerConf {
   hideEditBtn?: boolean;
   hideAddBtn?: boolean;
   showImageSize?: boolean;
-  onChangeImage?: (image: string) => void;
+  onChangeImage?: (image: string|undefined) => void;
 }
 
 export interface IState {

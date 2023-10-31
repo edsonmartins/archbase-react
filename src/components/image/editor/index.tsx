@@ -6,7 +6,8 @@ import { convertImageUsingCanvas } from "./functions/image-processing";
 import ArchbaseEditImage from "./components/EditImage/ArchbaseEditImage";
 import i18next from "i18next";
 import { IconCloudDownload, IconCloudUpload, IconPhotoDown, IconPhotoEdit, IconPhotoUp, IconPhotoX, IconTrash } from "@tabler/icons-react";
-import { ActionIcon, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Text, Tooltip, rem } from "@mantine/core";
+import { useArchbaseTheme } from "../../hooks";
 export * from './models/index.models';
 
 const initialConfig: ArchbaseImagePickerConf = {
@@ -34,6 +35,7 @@ const initialState: IState = {
 export const ArchbaseImagePickerEditor = memo(({ config = {}, imageSrcProp = '', color = '#1e88e5', imageChanged = () => { } }:
   { config: ArchbaseImagePickerConf, imageSrcProp?: string, color?: string; imageChanged?: Function; }) => {
 
+  const theme = useArchbaseTheme() 
   const [state, setState] = useState<IState>({
     ...initialState,
   })
@@ -263,6 +265,11 @@ export const ArchbaseImagePickerEditor = memo(({ config = {}, imageSrcProp = '',
             height: configuration.height,
             borderRadius: configuration.borderRadius,
             aspectRatio: configuration.aspectRatio + '',
+            background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+            border:
+              `${rem(1)} solid ${
+                theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
+              }`
           }}
         >
           <Tooltip withinPortal withArrow label={`${i18next.t('archbase:Upload a image')}`}>
@@ -287,6 +294,11 @@ export const ArchbaseImagePickerEditor = memo(({ config = {}, imageSrcProp = '',
             height: configuration.height,
             borderRadius: configuration.borderRadius,
             aspectRatio: configuration.aspectRatio + '',
+            background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+            border:
+              `${rem(1)} solid ${
+                theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
+              }`
           }}
         >
           <img
@@ -294,7 +306,8 @@ export const ArchbaseImagePickerEditor = memo(({ config = {}, imageSrcProp = '',
             alt="image-loaded"
             style={{
               borderRadius: configuration.borderRadius,
-              objectFit: configuration.objectFit
+              objectFit: configuration.objectFit,
+              background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
             }}
           />
           {!configuration.hideEditBtn && 
