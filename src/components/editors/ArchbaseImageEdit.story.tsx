@@ -9,6 +9,7 @@ import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceLis
 import { DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseForceUpdate } from '../hooks'
 import { ArchbaseImageEdit } from './ArchbaseImageEdit'
+import { archbaseLogo } from '../core'
 
 const ArchbaseImageEditExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
@@ -38,11 +39,11 @@ const ArchbaseImageEditExample = () => {
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section withBorder inheritPadding py="xs">
             <Group position="apart">
-              <Text weight={500}>Json Edit Component</Text>
+              <Text weight={500}>Image Editor Component</Text>
             </Group>
           </Card.Section>
-          <Box sx={(_theme) => ({ height: 200 })}>
-            <ArchbaseImageEdit width={140} height={150} label="Foto" description="teste" error="tessss" />
+          <Box sx={(_theme) => ({ height: 400 })}>
+            <ArchbaseImageEdit dataSource={dataSource} dataField="foto" width={140} height={150} label="Foto" description="teste" error="tessss" />
           </Box>
         </Card>
       </Grid.Col>

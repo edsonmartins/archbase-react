@@ -1,17 +1,10 @@
-import {
-  ActionIcon,
-  Image,
-  ImageProps,
-  Input,
-  MantineNumberSize,
-  Modal,
-  Paper
-} from '@mantine/core'
+import { ActionIcon, Image, ImageProps, Input, MantineNumberSize, Modal, Paper, useMantineTheme } from '@mantine/core'
 import { IconEdit } from '@tabler/icons-react'
-import { ArchbaseDataSource } from '../datasource'
-import React, { CSSProperties, useState } from 'react'
-import { archbaseLogo } from '../core'
-import { ArchbaseImageEditor } from '../image/ArchbaseImageEditor'
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
+import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
+import { archbaseLogo, isBase64 } from '../core'
+import { ArchbaseImagePickerEditor } from '@components/image'
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks'
 
 export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
   /** Fonte de dados onde será atribuido o valor do rich edit*/
@@ -39,8 +32,6 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
   src?: string | null
   /** Texto alternativo da imagem, usado como título para espaço reservado se a imagem não foi carregada */
   alt?: string
-  /** Propriedade de ajuste do objeto da imagem */
-  fit?: React.CSSProperties['objectFit']
   /** Largura da imagem, padrão de 100%, não pode exceder 100% */
   width?: number | string
   /** Altura da imagem, o padrão é a altura da imagem original ajustada para determinada largura */
@@ -49,12 +40,18 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
   radius?: MantineNumberSize
   /** Ativar espaço reservado quando a imagem está carregando e quando a imagem falha ao carregar */
   withPlaceholder?: boolean
-  /** Os adereços se espalham para o elemento img */
-  imageProps?: React.ComponentPropsWithoutRef<'img'>
   /** Obter ref do elemento de imagem */
   imageRef?: React.ForwardedRef<HTMLImageElement>
   /** Legenda da imagem, exibida abaixo da imagem */
   caption?: React.ReactNode
+  aspectRatio?: number | null
+  objectFit?: "cover" | "contain" | "fill" | "revert" | "scale-down"
+  compressInitial?: number | undefined | null
+  onChangeImage?: (image : any) => void
+  /** Desabilita conversão do conteúdo em base64 antes de salvar na fonte de dados */
+  disabledBase64Convertion?: boolean
+  /** Referência para o componente interno */
+  innerRef?: React.RefObject<HTMLInputElement> | undefined
 }
 
 export function ArchbaseImageEdit<T, ID>({
@@ -69,11 +66,113 @@ export function ArchbaseImageEdit<T, ID>({
   label,
   description,
   error,
-  radius = 'md',
+  src,
+  radius = '4px',
+  aspectRatio,
+  objectFit= "contain",
+  compressInitial=80,
+  onChangeImage,
+  disabledBase64Convertion,
+  innerRef,
   ...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
-  const [isEditing, setIsEditing] = useState(false)
-  const [internalError, setInternalError] = useState<string|undefined>(error);
+  const [value, setValue] = useState<string>('')
+  const innerComponentRef = useRef<any>()
+  const [internalError, setInternalError] = useState<string|undefined>(error)
+
+  useEffect(()=>{
+    setInternalError(undefined)
+  },[value])
+
+  const loadDataSourceFieldValue = () => {
+    let initialValue: any = value
+
+    if (dataSource && dataField) {
+      initialValue = dataSource.getFieldValue(dataField)
+      if (!initialValue) {
+        initialValue = ''
+      }
+    }
+
+    if (isBase64(initialValue) && !disabledBase64Convertion) {
+      initialValue = atob(initialValue)
+    }
+
+    setValue(initialValue)
+  }
+
+  const fieldChangedListener = useCallback(() => {
+    loadDataSourceFieldValue()
+  }, [])
+
+  const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
+    if (dataSource && dataField) {
+      if (
+        event.type === DataSourceEventNames.dataChanged ||
+        event.type === DataSourceEventNames.recordChanged ||
+        event.type === DataSourceEventNames.afterScroll ||
+        event.type === DataSourceEventNames.afterCancel
+      ) {
+        loadDataSourceFieldValue()
+      }
+      if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
+        setInternalError(event.error)
+      }
+    }
+  }, [])
+
+  useArchbaseDidMount(() => {
+    loadDataSourceFieldValue()
+    if (dataSource && dataField) {
+      dataSource.addListener(dataSourceEvent)
+      dataSource.addFieldChangeListener(dataField, fieldChangedListener)
+    }
+  })
+
+  useArchbaseDidUpdate(() => {
+    loadDataSourceFieldValue()
+  }, [])
+
+  useArchbaseWillUnmount(() => {
+    if (dataSource && dataField) {
+      dataSource.removeListener(dataSourceEvent)
+      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+    }
+  })
+
+  const handleChangeImage = (image : string | undefined) => {
+    const changedValue = image
+    setValue((_prev) => changedValue)
+
+    if (
+      dataSource &&
+      !dataSource.isBrowsing() &&
+      dataField &&
+      dataSource.getFieldValue(dataField) !== changedValue
+    ) {
+      if (!changedValue) {
+        dataSource.setFieldValue(
+          dataField,undefined
+        )
+      } else {
+        dataSource.setFieldValue(
+          dataField,
+          disabledBase64Convertion ? changedValue : btoa(changedValue)
+        )
+      }
+    }
+    if (onChangeImage){
+      onChangeImage(image)
+    }
+  }
+
+  const isReadOnly = () => {
+    let tmpRreadOnly = readOnly
+    if (dataSource && !readOnly) {
+      tmpRreadOnly = dataSource.isBrowsing()
+    }
+    return tmpRreadOnly
+  }
 
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -83,30 +182,26 @@ export function ArchbaseImageEdit<T, ID>({
         placeholder={placeholder}
         description={description}
         error={internalError}
+        ref={innerRef || innerComponentRef}
       >
-        <Image src={archbaseLogo} width={width} height={height} radius={radius} {...otherProps} />
+        <ArchbaseImagePickerEditor
+          imageSrcProp={value}
+          config={{ 
+              borderRadius: radius, 
+              width, 
+              height, 
+              objectFit, 
+              compressInitial, 
+              showImageSize: !isReadOnly(),
+              hideDeleteBtn: isReadOnly(),
+              hideDownloadBtn: isReadOnly(),
+              hideEditBtn: isReadOnly(),
+              hideAddBtn: isReadOnly(), 
+              onChangeImage: handleChangeImage
+            }
+          }
+        />
       </Input.Wrapper>
-      <ActionIcon
-        size="xl"
-        color="blue"
-        style={{ position: 'absolute', top: 40, right: 8 }}
-        onClick={() => setIsEditing(true)}
-      >
-        <IconEdit />
-      </ActionIcon>
-      {isEditing && (
-        <Modal
-          opened={isEditing}
-          onClose={() => setIsEditing(false)}
-          size="80%"
-          padding="md"
-          title="Editar Imagem"
-        >
-          <Paper>
-            <ArchbaseImageEditor src={archbaseLogo} />
-          </Paper>
-        </Modal>
-      )}
     </div>
   )
 }

@@ -27,7 +27,7 @@ export const pessoasData : Pessoa[] = [
 		"avaliacao": 4,
 		"tipo_sanguineo": "AB+",
 		"cor": "preto",
-		"foto": "https://randomuser.me/api/portraits/men/57.jpg",
+		"foto": "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compr",
 		"status":PessoaStatus.APROVADO,
 		"observacao":"Reprehenderit anim tempor veniam pariatur exercitation nulla officia nulla commodo labore nulla adipisicing. Ad ex minim est consequat irure occaecat eu quis esse quis dolor Lorem duis. Magna fugiat eu duis nostrud nostrud Lorem. Et Lorem aliqua eu eu laboris et minim voluptate nostrud et pariatur magna incididunt nulla.",
 		"creditoOK": true

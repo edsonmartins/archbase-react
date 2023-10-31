@@ -77,7 +77,7 @@ export function ArchbaseTextArea<T, ID>({
   innerRef
 }: ArchbaseTextAreaProps<T, ID>) {
   const [value, setValue] = useState<string>('')
-  const innerComponentRef = innerRef || useRef<any>()
+  const innerComponentRef = useRef<any>()
   const [internalError, setInternalError] = useState<string|undefined>(error)
 
   useEffect(()=>{
@@ -182,7 +182,7 @@ export function ArchbaseTextArea<T, ID>({
       readOnly={readOnly}
       style={style}
       value={value}
-      ref={innerComponentRef}
+      ref={innerRef || innerComponentRef}
       onChange={handleChange}
       onBlur={handleOnFocusExit}
       onFocus={handleOnFocusEnter}

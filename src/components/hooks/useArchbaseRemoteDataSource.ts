@@ -315,6 +315,10 @@ export function useArchbaseRemoteDataSource<T, ID>(
             props.onError(userError, err)
           }
         })
+      } else {
+        if (onLoadComplete) {
+          onLoadComplete(internalState.dataSource)
+        }
       }
       return () => {
         if (onDestroy) {

@@ -20,7 +20,7 @@ export default [
       {
         file: packageJson.main,
         format: 'cjs',
-        sourcemap: false,
+        sourcemap: true,
         exports: 'named',
         name: packageJson.name,
         inlineDynamicImports: true,
@@ -29,12 +29,12 @@ export default [
         file: packageJson.module,
         format: 'es',
         exports: 'named',
-        sourcemap: false,
+        sourcemap: true,
         inlineDynamicImports: true,
       },
     ],
     plugins: [
-      nodeExternals({devDeps:true, exclude:'@emotion/react'}),
+      nodeExternals({exclude:'@emotion/react'}),
       postcss({
         plugins: [],
         minimize: true,
