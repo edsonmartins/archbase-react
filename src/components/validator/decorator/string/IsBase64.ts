@@ -1,8 +1,7 @@
-import { ValidationOptions } from '../ValidationOptions';
-import { buildMessage, ValidateBy } from '../common/ValidateBy';
-import isBase64Validator from 'validator/lib/isBase64';
-import type ValidatorJS from 'validator';
 import { t } from 'i18next';
+import isBase64Validator from 'validator/lib/isBase64';
+import { buildMessage, ValidateBy } from '../common/ValidateBy';
+import { ValidationOptions } from '../ValidationOptions';
 
 export const IS_BASE64 = 'isBase64';
 
@@ -10,8 +9,8 @@ export const IS_BASE64 = 'isBase64';
  * Checks if a string is base64 encoded.
  * If given value is not a string, then it returns false.
  */
-export function isBase64(value: unknown, options?: ValidatorJS.IsBase64Options): boolean {
-  return typeof value === 'string' && isBase64Validator(value, options);
+export function isBase64(value: unknown, options?: any): boolean {
+	return typeof value === 'string' && isBase64Validator(value, options);
 }
 
 /**
@@ -19,18 +18,22 @@ export function isBase64(value: unknown, options?: ValidatorJS.IsBase64Options):
  * If given value is not a string, then it returns false.
  */
 export function IsBase64(
-  options?: ValidatorJS.IsBase64Options,
-  validationOptions?: ValidationOptions
+	options?: any,
+	validationOptions?: ValidationOptions,
 ): PropertyDecorator {
-  return ValidateBy(
-    {
-      name: IS_BASE64,
-      constraints: [options],
-      validator: {
-        validate: (value, args): boolean => isBase64(value),
-        defaultMessage: buildMessage(eachPrefix => eachPrefix + `${t('archbase:$property must be base64 encoded')}`, validationOptions),
-      },
-    },
-    validationOptions
-  );
+	return ValidateBy(
+		{
+			name: IS_BASE64,
+			constraints: [options],
+			validator: {
+				validate: (value, args): boolean => isBase64(value),
+				defaultMessage: buildMessage(
+					(eachPrefix) =>
+						eachPrefix + `${t('archbase:$property must be base64 encoded')}`,
+					validationOptions,
+				),
+			},
+		},
+		validationOptions,
+	);
 }
