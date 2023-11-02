@@ -1,7 +1,8 @@
 import { t } from 'i18next';
-import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
-import { parsePhoneNumber, CountryCode } from 'libphonenumber-js/max';
+import { ValidationOptions } from '../ValidationOptions';
+
+// import { parsePhoneNumber, CountryCode } from 'libphonenumber-js/max';
 
 export const IS_PHONE_NUMBER = 'isPhoneNumber';
 
@@ -13,26 +14,27 @@ export const IS_PHONE_NUMBER = 'isPhoneNumber';
  * @param region 2 characters uppercase country code (e.g. DE, US, CH) for country specific validation.
  * If text doesn't start with the international calling code (e.g. +41), then you must set this parameter.
  */
-export function isPhoneNumber(value: string, region?: CountryCode): boolean {
-  if (typeof value !== 'string' || value.trim() !== value) {
-    return false;
-  }
+export function isPhoneNumber(value: string, region?: any): boolean {
+	// if (typeof value !== 'string' || value.trim() !== value) {
+	//   return false;
+	// }
 
-  try {
-    const phoneNumber = parsePhoneNumber(value, region);
+	// try {
+	//   const phoneNumber = parsePhoneNumber(value, region);
 
-    /**
-     * We fail the validation if the user provided a region code
-     * and it doesn't match with the country code of the parsed number.
-     **/
-    if (region && phoneNumber.country !== region) {
-      return false;
-    }
+	//   /**
+	//    * We fail the validation if the user provided a region code
+	//    * and it doesn't match with the country code of the parsed number.
+	//    **/
+	//   if (region && phoneNumber.country !== region) {
+	//     return false;
+	//   }
 
-    return phoneNumber.isValid();
-  } catch (error) {
-    return false;
-  }
+	//   return phoneNumber.isValid();
+	// } catch (error) {
+	//   return false;
+	// }
+	return true;
 }
 
 /**
@@ -42,19 +44,25 @@ export function isPhoneNumber(value: string, region?: CountryCode): boolean {
  * @param region 2 characters uppercase country code (e.g. DE, US, CH) for country specific validation.
  * If text doesn't start with the international calling code (e.g. +41), then you must set this parameter.
  */
-export function IsPhoneNumber(region?: CountryCode, validationOptions?: ValidationOptions): PropertyDecorator {
-  return ValidateBy(
-    {
-      name: IS_PHONE_NUMBER,
-      constraints: [region],
-      validator: {
-        validate: (value, args): boolean => isPhoneNumber(value, args?.constraints[0]),
-        defaultMessage: buildMessage(
-          eachPrefix => eachPrefix + `${t('archbase:$property must be a valid phone number')}`,
-          validationOptions
-        ),
-      },
-    },
-    validationOptions
-  );
+export function IsPhoneNumber(
+	region?: any,
+	validationOptions?: ValidationOptions,
+): PropertyDecorator {
+	return ValidateBy(
+		{
+			name: IS_PHONE_NUMBER,
+			constraints: [region],
+			validator: {
+				validate: (value, args): boolean =>
+					isPhoneNumber(value, args?.constraints[0]),
+				defaultMessage: buildMessage(
+					(eachPrefix) =>
+						eachPrefix +
+						`${t('archbase:$property must be a valid phone number')}`,
+					validationOptions,
+				),
+			},
+		},
+		validationOptions,
+	);
 }

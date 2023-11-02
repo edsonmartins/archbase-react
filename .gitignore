@@ -6,10 +6,10 @@ node_modules
 .yarn/cache
 .yarn/install-state.gz
 docs/
+storybook-static
 
 # builds
 build
-coverage
 dist
 .rpt2_cache
 
@@ -21,9 +21,12 @@ dist
 .env.test.local
 .env.production.local
 .tgz
+.turbo
 
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 coverage
 storybook-static
+.pnpm-debug.log*
