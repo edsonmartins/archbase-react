@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Grid, Group, Text } from '@mantine/core'
 import { Meta, StoryObj } from '@storybook/react'
 
-import { ArchbaseMasonry, ArchbaseMasonryResponsive } from './ArchbaseMasonry'
+import { ArchbaseMasonry, ArchbaseMasonryResponsive } from '../ArchbaseMasonry'
 
 const images = [
   'https://picsum.photos/200/300?image=1050',

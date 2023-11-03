@@ -2,8 +2,8 @@ import { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 import { Box } from '@mantine/core'
 
-import { ArchbaseActionButtons } from './ArchbaseActionButtons'
-import { ActionsDemo } from './ActionsDemo'
+import { ArchbaseActionButtons } from '../ArchbaseActionButtons'
+import { ActionsDemo } from '../ActionsDemo'
 
 const ArchbaseActionButtonsExample = () => {
   return (

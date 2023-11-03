@@ -1,20 +1,19 @@
 import React from 'react'
 import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
+import { ArchbaseJsonView, ArchbaseObjectInspector } from '../../debug'
+import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource'
+import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener'
+import { DataSourceEvent, DataSourceEventNames } from '../../datasource'
+import { useArchbaseForceUpdate } from '../../hooks'
 import { Meta, StoryObj } from '@storybook/react'
+import { Pessoa, pessoasData } from '../../../demo/index'
+import { ArchbaseChip } from '../ArchbaseChip'
 
-import { ArchbaseJsonView, ArchbaseObjectInspector } from '../debug'
-import { Pessoa, pessoasData } from '../../demo/index'
-import { useArchbaseDataSource } from '../hooks/useArchbaseDataSource'
-import { useArchbaseDataSourceListener } from '../hooks/useArchbaseDataSourceListener'
-import { DataSourceEvent, DataSourceEventNames } from '../datasource'
-import { ArchbaseThemeEditor } from './ArchbaseThemeEditor'
-import { useArchbaseForceUpdate } from '../hooks'
-
-const ArchbaseThemeEditorExample = () => {
+const ArchbaseChipExample = () => {
   const forceUpdate = useArchbaseForceUpdate()
   const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: data,
-    name: 'dsPessoas',
+    name: 'dsPessoas'
   })
   if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
     dataSource.edit()
@@ -29,20 +28,26 @@ const ArchbaseThemeEditorExample = () => {
         }
         default:
       }
-    },
+    }
   })
 
   return (
     <Grid>
       <Grid.Col offset={1} span={4}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
+          <Card.Section withBorder inheritPadding py="xs" mb="1rem">
             <Group position="apart">
-              <Text weight={500}>Edit Component</Text>
+              <Text weight={500}>Chip Component</Text>
             </Group>
           </Card.Section>
           <Box sx={(_theme) => ({ height: 100 })}>
-            <ArchbaseThemeEditor label="Nome" dataSource={dataSource} dataField="nome" />
+            <ArchbaseChip
+              label="Masculino"
+              dataSource={dataSource}
+              dataField="sexo"
+              trueValue={'Masculino'}
+              falseValue={'Feminino'}
+            />
           </Box>
         </Card>
       </Grid.Col>
@@ -62,17 +67,17 @@ const ArchbaseThemeEditorExample = () => {
   )
 }
 
+const meta: Meta<typeof ArchbaseChip> = {
+  title: 'Editores/Chip',
+  component: ArchbaseChip,
+};
+
+export default meta;
+type Story = StoryObj<typeof ArchbaseChip>;
+
 const data = [pessoasData[0]]
 
-const meta: Meta<typeof ArchbaseThemeEditor> = {
-  title: 'Temas e cores/Theme Editor',
-  component: ArchbaseThemeEditor,
-}
-
-export default meta
-type Story = StoryObj<typeof ArchbaseThemeEditor>
-
 export const Primary: Story = {
-  name: 'Exemplo simples',
-  render: () => <ArchbaseThemeEditorExample />,
-}
+  name: 'Exemplo básico',
+  render: () => <ArchbaseChipExample />,
+};

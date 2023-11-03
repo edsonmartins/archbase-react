@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Grid, Group, Text } from '@mantine/core'
 import { Meta, StoryObj } from '@storybook/react'
 import { Pessoa } from 'demo'
-import { ArchbaseTreeView } from './ArchbaseTreeView'
+import { ArchbaseTreeView } from '../ArchbaseTreeView'
 
 const ArchbaseTreeViewExample = () => {
   return (

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Grid, Group, Text } from '@mantine/core'
 import { Meta, StoryObj } from '@storybook/react'
-import { ArchbaseDataTable } from './ArchbaseDataTable'
+import { ArchbaseDataTable } from '../ArchbaseDataTable'
 import { Pessoa } from 'demo'
 
 const ArchbaseDataTableExample = () => {
