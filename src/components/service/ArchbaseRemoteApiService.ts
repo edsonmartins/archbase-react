@@ -108,7 +108,7 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
       }
     }
 
-    const response = await axios.put(url, JSON.stringify(data), {
+    const response = await axios.put(url, ArchbaseJacksonParser.convertObjectToJson(data), {
       headers: headersTemp
     })
     return ArchbaseJacksonParser.convertJsonToObject(response.data)

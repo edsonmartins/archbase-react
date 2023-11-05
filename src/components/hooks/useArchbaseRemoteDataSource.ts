@@ -219,10 +219,13 @@ export function useArchbaseRemoteDataSource<T, ID>(
     if (store) {
       store.setValue(name, internalState.dataSource)
     }
-    if (onLoadComplete) {
-      onLoadComplete(internalState.dataSource)
-    }
   }
+
+  useEffect(()=>{
+    if (onLoadComplete && internalState.loadDataCount >0) {
+      onLoadComplete(internalState.dataSource);
+    }
+  },[internalState.loadDataCount])
 
   /**
    * Registrando listeners
