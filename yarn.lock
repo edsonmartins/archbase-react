@@ -5264,7 +5264,7 @@ __metadata:
 "@tabler/icons@npm:2.40.0":
   version: 2.40.0
   resolution: "@tabler/icons@npm:2.40.0"
-  checksum: ecc7a78ece82b85883f6a314ce5d89ecc54396944ac70e1e6726769485cb81e95d743d1e811d8b2bed72a4422f52840f1ee2b7b31406c47acd1162f5b8c109d8
+  checksum: a59adf9b071fb3b54f507c3a7c8adaeb74ccb5af5834c92d312829f7564f1e4255086091fe43dbfeae256510d073bce8476f2171655b337050b08b7521786400
   languageName: node
   linkType: hard
 

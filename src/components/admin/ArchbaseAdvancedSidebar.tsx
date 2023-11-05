@@ -219,7 +219,7 @@ export function ArchbaseAdvancedSidebar({
     return grps
   }, [navigationData, activeGroupName, theme.colorScheme])
 
-  const menuItemStyles = buildMenuItemStyles(theme, collapsed, 35, px(sidebarCollapsedWidth))
+  const menuItemStyles = buildMenuItemStyles(theme, collapsed, 35, px(sidebarCollapsedWidth), groups.length > 1)
 
   const sidebarWidthCalculated =
     collapsed || activeGroupName === '' ? '0px' : `calc(${sidebarWidth} - ${sidebarGroupWidth}`
