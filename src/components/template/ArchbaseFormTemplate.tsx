@@ -8,6 +8,7 @@ import { useArchbaseAppContext } from '../core'
 import { useArchbaseDataSourceListener } from '../hooks'
 import { IconX } from '@tabler/icons-react'
 import { processErrorMessage } from '../core/exceptions'
+import { useForceUpdate } from '@mantine/hooks'
 
 export interface ArchbaseFormTemplateProps<T, ID> {
   title: string
@@ -62,14 +63,19 @@ export function ArchbaseFormTemplate<T extends object, ID>({
   const appContext = useArchbaseAppContext();
   const innerComponentRef = innerRef || useRef<any>()
   const [isInternalError, setIsInternalError] = useState<boolean>(isError)
-  const [internalError, setInternalError] = useState<string>(error);
+  const [internalError, setInternalError] = useState<string>(error)
+  const forceUpdate = useForceUpdate()
 
   useArchbaseDataSourceListener<T, ID>({
     dataSource,
     listener: (event: DataSourceEvent<T>): void => {
       if (event.type === DataSourceEventNames.onError) {
-        setIsInternalError(true);
-        setInternalError(event.error);
+        setIsInternalError(true)
+        setInternalError(event.error)
+      }
+      if ((event.type === DataSourceEventNames.afterEdit) ||
+          (event.type === DataSourceEventNames.afterInsert)) {
+        forceUpdate()
       }
     }
   })
@@ -77,7 +83,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
   const handleSave = async (entity) =>{
     try {
       if (onSave){
-          onSave(entity);
+          onSave(entity)
       } else {
         onBeforeSave && onBeforeSave(entity)
         if (!dataSource.isBrowsing()){
