@@ -393,7 +393,11 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 	variant,
 	options = {},
 	style,
-	debugOptions,
+	debugOptions = {
+		debugLayoutHotKey: 'ctrl+shift+S',
+		debugObjectInspectorHotKey: 'ctrl+shift+D',
+		objectsToInspect: [],
+	  },
 }: ArchbaseSpaceTemplateProps<T, ID>) {
 	const [_debug, setDebug] = useUncontrolled({
 		value: debug,

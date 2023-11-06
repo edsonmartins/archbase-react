@@ -108,7 +108,7 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
       }
     }
 
-    const response = await axios.put(url, JSON.stringify(data), {
+    const response = await axios.put(url, ArchbaseJacksonParser.convertObjectToJson(data), {
       headers: headersTemp
     })
     return ArchbaseJacksonParser.convertJsonToObject(response.data)
@@ -147,7 +147,27 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
 
   protected abstract getEndpoint(): string
 
+  protected abstract transform(entity : T): T
+
   public abstract getId(entity: T): ID
+
+  protected transformPage(page : Page<T>) {
+    if (page.content && page.content.length>0){
+      for (let index = 0; index < page.content.length; index++) {
+        const element = page.content[index];
+        page.content[index] = this.transform(element);
+      }
+    }
+  }
+
+  protected transformList(list : T[]) {
+    if (list && list.length>0){
+      for (let index = 0; index < list.length; index++) {
+        const element = list[index];
+        list[index] = this.transform(element);
+      }
+    }
+  }
 
   async validate(entity: T): Promise<void> {
     return this.client.post<T, void>(`${this.getEndpoint()}/validate`, entity, {},false)
@@ -163,25 +183,33 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
   }
 
   async findAll(page: number, size: number): Promise<Page<T>> {
-    return this.client.get<Page<T>>(`${this.getEndpoint()}/findAll?page=${page}&size=${size}`,{},false)
+    const result =  await this.client.get<Page<T>>(`${this.getEndpoint()}/findAll?page=${page}&size=${size}`,{},false)
+    this.transformPage(result);
+    return result;
   }
 
   async findAllWithSort(page: number, size: number, sort: string[]): Promise<Page<T>> {
-    return this.client.get<Page<T>>(
+    const result = await this.client.get<Page<T>>(
       `${this.getEndpoint()}/findAll?page=${page}&size=${size}&sort=${sort}`,{},false
     )
+    this.transformPage(result);
+    return result;
   }
 
   async findAllByIds(ids: ID[]): Promise<T[]> {
-    return this.client.get<T[]>(`${this.getEndpoint()}/findAll?ids=${ids}`,{},false)
+    const result = await this.client.get<T[]>(`${this.getEndpoint()}/findAll?ids=${ids}`,{},false)
+    this.transformList(result);
+    return result;
   }
 
   async findAllWithFilter(filter: string, page: number, size: number): Promise<Page<T>> {
-    return this.client.get<Page<T>>(
+    const result = await this.client.get<Page<T>>(
       `${this.getEndpoint()}/findWithFilter?page=${page}&size=${size}&filter=${encodeURIComponent(
         filter
       )}`
     ,{},false)
+    this.transformPage(result);
+    return result;
   }
 
   async findAllMultipleFields(
@@ -191,11 +219,13 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
     size: number,
     sort: string
   ): Promise<Page<T>> {
-    return this.client.get<Page<T>>(
+    const result = await this.client.get<Page<T>>(
       `${this.getEndpoint()}/findMultipleFields?page=${page}&size=${size}&fields=${encodeURIComponent(
         fields
       )}&filter=${encodeURIComponent(value)}&sort=${encodeURIComponent(sort)}`
     ,{},false)
+    this.transformPage(result);
+    return result;
   }
 
   async findAllWithFilterAndSort(
@@ -204,15 +234,18 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
     size: number,
     sort: string[]
   ): Promise<Page<T>> {
-    return this.client.get<Page<T>>(
+    const result = await this.client.get<Page<T>>(
       `${this.getEndpoint()}/findWithFilterAndSort?page=${page}&size=${size}&filter=${encodeURIComponent(
         filter
       )}&sort=${sort}`
     ,{},false)
+    this.transformPage(result);
+    return result;
   }
 
   async findOne(id: ID): Promise<T> {
-    return this.client.get<T>(`${this.getEndpoint()}/${id}`,{},false)
+    const result = await this.client.get<T>(`${this.getEndpoint()}/${id}`,{},false)
+    return this.transform(result);
   }
 
   async findByComplexId<R>(id: T): Promise<R> {

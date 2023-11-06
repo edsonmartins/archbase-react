@@ -12,6 +12,7 @@ storybook-static
 build
 dist
 .rpt2_cache
+.tgz
 
 # misc
 .DS_Store
