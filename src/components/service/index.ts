@@ -1,4 +1,4 @@
-export type { ArchbaseRemoteApiClient, Page } from './ArchbaseRemoteApiService'
+export type { ArchbaseRemoteApiClient, Page, ArchbaseEntityTransformer } from './ArchbaseRemoteApiService'
 export {
   ArchbaseRemoteApiService,
   ArchbaseAxiosRemoteApiClient,

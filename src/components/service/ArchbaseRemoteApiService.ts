@@ -138,6 +138,10 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
 
 inversify.decorate(inversify.injectable(), ArchbaseAxiosRemoteApiClient)
 
+export interface ArchbaseEntityTransformer<T> {
+  transform(entity : T): T
+}
+
 export abstract class ArchbaseRemoteApiService<T, ID> {
   protected readonly client: ArchbaseRemoteApiClient
 
@@ -145,29 +149,36 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
     this.client = client
   }
 
-  protected abstract getEndpoint(): string
-
-  protected abstract transform(entity : T): T
+  protected abstract getEndpoint(): string  
 
   public abstract getId(entity: T): ID
 
-  protected transformPage(page : Page<T>) {
-    if (page.content && page.content.length>0){
+  protected transformPage(page: Page<T>) {
+    if (page.content && page.content.length > 0) {
       for (let index = 0; index < page.content.length; index++) {
         const element = page.content[index];
-        page.content[index] = this.transform(element);
+        if (this.isTransformable()) {
+          page.content[index] = this['transform'](element);
+        }
       }
     }
   }
 
-  protected transformList(list : T[]) {
-    if (list && list.length>0){
+  protected transformList(list: T[]) {
+    if (list && list.length > 0) {
       for (let index = 0; index < list.length; index++) {
         const element = list[index];
-        list[index] = this.transform(element);
+        if (this.isTransformable()) {
+          list[index] = this['transform'](element);
+        }
       }
     }
   }
+
+  private isTransformable(): boolean {
+    return typeof this['transform'] === 'function'
+  }
+
 
   async validate(entity: T): Promise<void> {
     return this.client.post<T, void>(`${this.getEndpoint()}/validate`, entity, {},false)
@@ -245,7 +256,10 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
 
   async findOne(id: ID): Promise<T> {
     const result = await this.client.get<T>(`${this.getEndpoint()}/${id}`,{},false)
-    return this.transform(result);
+    if (this.isTransformable()){
+      return this['transform'](result);
+    }
+    return result;
   }
 
   async findByComplexId<R>(id: T): Promise<R> {

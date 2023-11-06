@@ -61,7 +61,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
   onError
 }: ArchbaseFormTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext();
-  const innerComponentRef = innerRef || useRef<any>()
+  const innerComponentRef = useRef<any>()
   const [isInternalError, setIsInternalError] = useState<boolean>(isError)
   const [internalError, setInternalError] = useState<string>(error)
   const forceUpdate = useForceUpdate()
@@ -129,7 +129,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 
   return (
     <Paper
-      ref={innerComponentRef}
+      ref={innerRef || innerComponentRef}
       withBorder={withBorder}
       radius={radius}
       style={{ width: width, height: height, padding: 20 }}

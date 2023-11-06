@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { isDate, parse } from 'date-fns'
+import { isDate, parse, parseISO } from 'date-fns'
 import { EventEmitter } from 'events'
 import i18next from 'i18next'
 import { cloneDeep, uniqueId } from 'lodash'
@@ -7,10 +7,6 @@ import { cloneDeep, uniqueId } from 'lodash'
 import { ArchbaseDataSourceError } from '../core/exceptions'
 import { ArchbaseObjectHelper } from '../core/helper'
 
-const dataSourceDatetimeFormat = 'YYYY-MM-DDTHH:mm:ss.SSS'
-// this._displayDatetimeFormat = "DD/MM/YYYY HH:mm:ss";
-// this._displayDateFormat = "DD/MM/YYYY";
-// this._displayTimeFormat = "HH:mm:ss";
 
 export enum DataSourceEventNames {
   dataChanged,
@@ -1161,7 +1157,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
       return undefined
     }
     if (isDate(value)) {
-      return parse(value, dataSourceDatetimeFormat, new Date())
+      return parseISO(value)
     }
 
     return value
@@ -1183,7 +1179,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     let newValue: any = value
     const oldValue: any = ArchbaseObjectHelper.getNestedProperty(this.currentRecord, fieldName)
     if (isDate(value)) {
-      newValue = parse(value, dataSourceDatetimeFormat, new Date())
+      newValue = parseISO(value)
     }
     const split = fieldName.split('.')
     if (split.length > 1) {
@@ -1210,7 +1206,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     this.validateDataSourceActive('isEmptyField')
 
     return (
-      this.getFieldValue(fieldName, '') === undefined || this.getFieldValue(fieldName, '') === ''
+      this.getFieldValue(fieldName) === undefined || this.getFieldValue(fieldName, '') === ''
     )
   }
 
