@@ -8,8 +8,10 @@ export const buildMenuItemStyles = (
   collapsed: boolean,
   menuIconWidth: number,
   sidebarCollapsedWidth: number,
+  hasMultipleGroups: boolean,
 ): MenuItemStyles => {
   const themes = createThemedStyles(theme)
+  const padding = hasMultipleGroups ? {} : {padding: collapsed ? `0 ${(sidebarCollapsedWidth - menuIconWidth) / 2}px` : '0 20px'}
 
   return {
     root: {
@@ -34,7 +36,6 @@ export const buildMenuItemStyles = (
       backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors[theme.primaryColor][0],
     }),
     button: {
-      //padding: collapsed ? `0 ${(sidebarCollapsedWidth - menuIconWidth) / 2}px` : '0 20px',
       [`&.${menuClasses.disabled}`]: {
         color: themes[theme.colorScheme].menu.disabled.color,
       },
@@ -43,6 +44,7 @@ export const buildMenuItemStyles = (
           theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][6] : theme.colors[theme.primaryColor][6],
         color: theme.white,
       },
+      ...padding
     },
 
     label: ({ open }) => ({

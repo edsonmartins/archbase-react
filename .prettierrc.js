@@ -1,11 +1,12 @@
 module.exports = {
 	bracketSameLine: false,
-	printWidth: 80,
+	printWidth: 120,
 	semi: true,
 	singleQuote: true,
 	tabWidth: 2,
 	trailingComma: 'all',
 	useTabs: true,
+	endOfLine: 'auto',
 	/**
 	 * A workaround for pnpm. If you are using yarn or npm, you can remove this line.
 	 */
