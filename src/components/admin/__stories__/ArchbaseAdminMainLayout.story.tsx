@@ -63,7 +63,7 @@ const ArchbaseAdminMainLayoutExample = () => {
 	return (
 		<div style={{ width: '100%', height: 'calc(100vh - 50px)' }}>
 			<ArchbaseAdminMainLayout
-				navigationData={navigationDataSample}
+				navigationData={navigationDataSampleWithGroup}
 				navigationRootLink="/"
 				// sidebarDefaultGroupIcon={<IconCirclePlus size="2.2rem" color="#63B1FB" stroke={1} />}
 				sidebarSelectedGroupName="grpPessoas"
@@ -73,7 +73,7 @@ const ArchbaseAdminMainLayoutExample = () => {
 					<ArchbaseAdminLayoutHeader
 						user={fakeUser}
 						headerActions={headerActions}
-						navigationData={navigationDataSample}
+						navigationData={navigationDataSampleWithGroup}
 						userMenuItems={
 							<Fragment>
 								<Menu.Label>Usuário</Menu.Label>

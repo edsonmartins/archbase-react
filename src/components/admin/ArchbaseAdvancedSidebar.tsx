@@ -58,7 +58,7 @@ export function ArchbaseAdvancedSidebar({
 	collapsed,
 	onMenuItemClick,
 	onClickActionIcon,
-	withBorder = true,
+	withBorder = false,
 	showGroupLabels = true,
 	margin,
 	theme,
