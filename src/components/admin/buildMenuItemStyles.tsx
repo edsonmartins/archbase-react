@@ -11,8 +11,9 @@ export const buildMenuItemStyles = (
   hasMultipleGroups: boolean,
 ): MenuItemStyles => {
   const themes = createThemedStyles(theme)
-  const padding = hasMultipleGroups ? {} : {padding: collapsed ? `0 ${(sidebarCollapsedWidth - menuIconWidth) / 2}px` : '0 20px'}
-
+  const buttonPadding = hasMultipleGroups ? {} : {padding: collapsed ? `0 ${(sidebarCollapsedWidth - menuIconWidth) / 2}px` : '0 20px'}
+  const submenuContentPaddingLeft = hasMultipleGroups || collapsed ? {} : {paddingLeft: '20px'}
+  const subMenuIconDisplay = hasMultipleGroups ? {} : {display: 'none'}
   return {
     root: {
       fontSize: '14px',
@@ -30,10 +31,12 @@ export const buildMenuItemStyles = (
     },
     SubMenuExpandIcon: {
       color: '#b6b7b9',
+      ...subMenuIconDisplay
     },
     subMenuContent: () => ({
       width: '280px',
       backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors[theme.primaryColor][0],
+      ...submenuContentPaddingLeft
     }),
     button: {
       [`&.${menuClasses.disabled}`]: {
@@ -44,7 +47,10 @@ export const buildMenuItemStyles = (
           theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][6] : theme.colors[theme.primaryColor][6],
         color: theme.white,
       },
-      ...padding
+      [`&.${menuClasses.active}`]: {
+        backgroundColor: 'red',
+      },
+      ...buttonPadding
     },
 
     label: ({ open }) => ({

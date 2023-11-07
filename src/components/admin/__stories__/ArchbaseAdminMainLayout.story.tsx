@@ -21,6 +21,7 @@ import { ArchbaseAdminMainLayout } from '../ArchbaseAdminMainLayout';
 import { ArchbaseAdminTabContainer } from '../ArchbaseAdminTabContainer';
 import { navigationDataSampleWithGroup } from '../navigationDataWithGroup';
 import { ArchbaseTabItem } from '../types';
+import { navigationDataSample } from '../navigationData';
 
 const fakeUser: ArchbaseUser = {
 	id: '1',

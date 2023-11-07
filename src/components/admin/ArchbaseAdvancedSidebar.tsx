@@ -6,6 +6,7 @@ import { menuClasses, MenuItem, Sidebar, sidebarClasses, Menu as SidebarMenu, Su
 import { buildMenuItemStyles } from './buildMenuItemStyles';
 import { buildNavbar } from './buildNavbar';
 import { ArchbaseNavigationItem } from './types';
+import { buildMenuItem } from './buildMenuItem';
 
 export interface ArchbaseAdvancedSidebarProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -37,7 +38,7 @@ type GroupItemSidebar = {
 	name: string;
 	indexOrder: number;
 	component: ReactNode;
-	links?: ReactNode | undefined;
+	links?: ReactNode[] | undefined;
 };
 
 export function ArchbaseAdvancedSidebar({
@@ -57,7 +58,7 @@ export function ArchbaseAdvancedSidebar({
 	collapsed,
 	onMenuItemClick,
 	onClickActionIcon,
-	withBorder = true,
+	withBorder = false,
 	showGroupLabels = true,
 	margin,
 	theme,
@@ -157,67 +158,13 @@ export function ArchbaseAdvancedSidebar({
 		result.forEach((group) => {
 			group.links = navigationData
 				.filter((itm) => itm.showInSidebar === true && itm.group && itm.group.name === group.name)
-				.map((item, index) =>
-					item.links ? (
-						<SubMenu
-							rootStyles={{
-								fontSize: '16px',
-							}}
-							key={index}
-							id={item.label}
-							icon={item.icon}
-							defaultOpen={true}
-							label={`${i18next.t(item.label)}`}
-							disabled={item.disabled}
-						>
-							{item.links &&
-								item.links
-									.filter((itm) => itm.showInSidebar === true)
-									.map((subItem, subIndex) => (
-										<MenuItem
-											onClick={() => onMenuItemClick(subItem)}
-											rootStyles={{
-												[`.${menuClasses.icon}`]: {
-													background:
-														theme.colorScheme === 'dark'
-															? theme.colors[theme.primaryColor][8]
-															: theme.colors[theme.primaryColor][7],
-													color:
-														theme.colorScheme === 'dark'
-															? theme.colors[theme.primaryColor][0]
-															: theme.colors[theme.primaryColor][0],
-												},
-											}}
-											key={subIndex}
-											id={subItem.label}
-											icon={subItem.icon}
-											disabled={subItem.disabled}
-										>
-											{`${i18next.t(subItem.label)}`}
-										</MenuItem>
-									))}
-						</SubMenu>
-					) : (
-						<MenuItem
-							rootStyles={{
-								fontSize: '16px',
-							}}
-							key={index}
-							id={item.label}
-							disabled={item.disabled}
-							onClick={() => onMenuItemClick(item)}
-							icon={item.icon}
-						>
-							{`${i18next.t(item.label)}`}
-						</MenuItem>
-					),
-				);
+				.map((item, index) => buildMenuItem(collapsed, onMenuItemClick, item, index));
 		});
 
 		const grps = [...result].sort((a, b) => a.indexOrder - b.indexOrder);
 
 		return grps;
-	}, [navigationData, activeGroupName, theme.colorScheme]);
+	}, [navigationData, activeGroupName, theme.colorScheme, collapsed]);
 
 	const menuItemStyles = buildMenuItemStyles(theme, collapsed, 35, px(sidebarCollapsedWidth), groups.length > 1);
 
@@ -253,7 +200,6 @@ export function ArchbaseAdvancedSidebar({
 			setDefaultActiveGroupName();
 		}
 	}, [collapsed, setDefaultActiveGroupName, activeGroupName]);
-	console.log(`calc(${sidebarWidth} - ${sidebarGroupWidth}`);
 	return (
 		<>
 			{groups.length == 1 ? (
@@ -264,7 +210,7 @@ export function ArchbaseAdvancedSidebar({
 					sidebarWidth,
 					sidebarCollapsedWidth,
 					menuItemStyles,
-					groups[0].links,
+					navigationData.map((item, index) => buildMenuItem(collapsed, onMenuItemClick, item, index)),
 					isHidden,
 					sideBarFooterHeight
 						? `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)`
