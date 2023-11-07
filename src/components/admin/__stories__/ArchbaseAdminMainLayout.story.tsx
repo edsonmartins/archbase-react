@@ -21,6 +21,7 @@ import { ArchbaseAdminMainLayout } from '../ArchbaseAdminMainLayout';
 import { ArchbaseAdminTabContainer } from '../ArchbaseAdminTabContainer';
 import { navigationDataSampleWithGroup } from '../navigationDataWithGroup';
 import { ArchbaseTabItem } from '../types';
+import { navigationDataSample } from '../navigationData';
 
 const fakeUser: ArchbaseUser = {
 	id: '1',
@@ -62,7 +63,7 @@ const ArchbaseAdminMainLayoutExample = () => {
 	return (
 		<div style={{ width: '100%', height: 'calc(100vh - 50px)' }}>
 			<ArchbaseAdminMainLayout
-				navigationData={navigationDataSampleWithGroup}
+				navigationData={navigationDataSample}
 				navigationRootLink="/"
 				// sidebarDefaultGroupIcon={<IconCirclePlus size="2.2rem" color="#63B1FB" stroke={1} />}
 				sidebarSelectedGroupName="grpPessoas"
@@ -72,7 +73,7 @@ const ArchbaseAdminMainLayoutExample = () => {
 					<ArchbaseAdminLayoutHeader
 						user={fakeUser}
 						headerActions={headerActions}
-						navigationData={navigationDataSampleWithGroup}
+						navigationData={navigationDataSample}
 						userMenuItems={
 							<Fragment>
 								<Menu.Label>Usuário</Menu.Label>
