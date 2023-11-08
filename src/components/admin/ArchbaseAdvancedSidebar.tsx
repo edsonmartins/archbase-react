@@ -1,12 +1,11 @@
 import { ActionIcon, MantineTheme, Paper, px, ScrollArea, Stack, Text, Tooltip } from '@mantine/core';
 import { IconDots } from '@tabler/icons-react';
-import i18next from 'i18next';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { menuClasses, MenuItem, Sidebar, sidebarClasses, Menu as SidebarMenu, SubMenu } from 'react-pro-sidebar';
+import { Sidebar, sidebarClasses, Menu as SidebarMenu } from 'react-pro-sidebar';
+import { buildMenuItem } from './buildMenuItem';
 import { buildMenuItemStyles } from './buildMenuItemStyles';
 import { buildNavbar } from './buildNavbar';
 import { ArchbaseNavigationItem } from './types';
-import { buildMenuItem } from './buildMenuItem';
 
 export interface ArchbaseAdvancedSidebarProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -249,9 +248,6 @@ export function ArchbaseAdvancedSidebar({
 									overflowY: 'hidden',
 									left: 0,
 									height: `${px(sidebarHeight)}px`,
-								},
-								[`.${sidebarClasses.root}`]: {
-									borderColor: 'red',
 								},
 							}}
 							collapsed={collapsed}
