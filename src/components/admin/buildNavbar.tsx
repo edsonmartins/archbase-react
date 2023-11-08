@@ -29,8 +29,6 @@ export function buildNavbar(
 					right: 0,
 					top: isHidden ? 0 : 'var(--mantine-header-height, 0rem)',
 					height: 'calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))',
-					paddingTop: '10px',
-					paddingBottom: '20px',
 				},
 				[`.${sidebarClasses.root}`]: {
 					borderColor: 'red',
