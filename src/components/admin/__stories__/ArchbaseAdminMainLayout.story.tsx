@@ -1,5 +1,5 @@
 import { useArchbaseAdminStore } from '@components/hooks';
-import { ActionIcon, Menu, Tooltip } from '@mantine/core';
+import { ActionIcon, Flex, Menu, Space, Text, Tooltip, useMantineTheme } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
 import {
 	IconArrowsMaximize,
@@ -12,16 +12,16 @@ import { IconSettings } from '@tabler/icons-react';
 import { IconLogout } from '@tabler/icons-react';
 import { IconBrandMessenger } from '@tabler/icons-react';
 import { IconCirclePlus } from '@tabler/icons-react';
-import React, { Fragment, ReactNode, useMemo } from 'react';
+import React, { Fragment, ReactNode, useMemo, useState } from 'react';
 import { ArchbaseUser } from '../../auth/ArchbaseUser';
 import { archbaseLogo3 } from '../../core';
 import { ArchbaseAdminLayoutFooter } from '../ArchbaseAdminLayoutFooter';
 import { ArchbaseAdminLayoutHeader } from '../ArchbaseAdminLayoutHeader';
 import { ArchbaseAdminMainLayout } from '../ArchbaseAdminMainLayout';
 import { ArchbaseAdminTabContainer } from '../ArchbaseAdminTabContainer';
+import { navigationDataSample } from '../navigationData';
 import { navigationDataSampleWithGroup } from '../navigationDataWithGroup';
 import { ArchbaseTabItem } from '../types';
-import { navigationDataSample } from '../navigationData';
 
 const fakeUser: ArchbaseUser = {
 	id: '1',
@@ -34,6 +34,8 @@ const fakeUser: ArchbaseUser = {
 
 const ArchbaseAdminMainLayoutExample = () => {
 	const adminStore = useArchbaseAdminStore();
+	const [collapsed, setCollapsed] = useState(false);
+	const theme = useMantineTheme();
 
 	const headerActions = useMemo((): ReactNode => {
 		return [
@@ -68,6 +70,35 @@ const ArchbaseAdminMainLayoutExample = () => {
 				// sidebarDefaultGroupIcon={<IconCirclePlus size="2.2rem" color="#63B1FB" stroke={1} />}
 				sidebarSelectedGroupName="grpPessoas"
 				sideBarCollapsedWidth="60px"
+				sideBarHeaderContent={
+					<Flex h="40px" align="center" justify={'center'} bg={theme.colors.archbase[8]} style={{ color: 'white' }}>
+						{collapsed ? (
+							<IconUserCircle size="2.7rem" color="#63B1FB" stroke={1} />
+						) : (
+							<>
+								<Space w={5} />
+								<Text>Olá, Archbase dev!</Text>
+							</>
+						)}
+					</Flex>
+				}
+				sideBarFooterContent={
+					<Flex
+						h="40px"
+						align="center"
+						justify={collapsed ? 'center' : 'end'}
+						bg={theme.colors.archbase[8]}
+						pr={collapsed ? '0px' : '20px'}
+						style={{ color: 'white' }}
+					>
+						{collapsed ? 'v1.0.0' : 'Versão 1.0.0'}
+					</Flex>
+				}
+				sideBarHeaderHeight="40px"
+				sideBarFooterHeight="40px"
+				onCollapsedSideBar={(collapsed) => {
+					setCollapsed(collapsed);
+				}}
 				footer={<ArchbaseAdminLayoutFooter />}
 				header={
 					<ArchbaseAdminLayoutHeader
@@ -77,17 +108,11 @@ const ArchbaseAdminMainLayoutExample = () => {
 						userMenuItems={
 							<Fragment>
 								<Menu.Label>Usuário</Menu.Label>
-								<Menu.Item icon={<IconUserCircle size={14} />}>
-									Meu perfil
-								</Menu.Item>
-								<Menu.Item icon={<IconSettings size={14} />}>
-									Configurações
-								</Menu.Item>
+								<Menu.Item icon={<IconUserCircle size={14} />}>Meu perfil</Menu.Item>
+								<Menu.Item icon={<IconSettings size={14} />}>Configurações</Menu.Item>
 								<Menu.Divider />
 								<Menu.Label>Conta</Menu.Label>
-								<Menu.Item icon={<IconBrandMessenger size={14} />}>
-									Suporte
-								</Menu.Item>
+								<Menu.Item icon={<IconBrandMessenger size={14} />}>Suporte</Menu.Item>
 								<Menu.Item
 									color="red"
 									icon={<IconLogout size={14} />}
@@ -104,9 +129,7 @@ const ArchbaseAdminMainLayoutExample = () => {
 				}
 			>
 				<ArchbaseAdminTabContainer
-					onChangeActiveTabId={(activeTabId: any) =>
-						adminStore.setActiveTabId(activeTabId)
-					}
+					onChangeActiveTabId={(activeTabId: any) => adminStore.setActiveTabId(activeTabId)}
 					onChangeOpenedTabs={(openedTabs: ArchbaseTabItem[]) => {
 						adminStore.setOpenedTabs(openedTabs);
 					}}

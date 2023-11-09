@@ -13,8 +13,8 @@ export function buildNavbar(
 	links: ReactNode,
 	isHidden: boolean,
 	menuHeight: string | number,
-	sideBarFooterHeight?: string | number,
-	sideBarFooterContent?: ReactNode,
+	sideBarHeaderContent?: ReactNode | undefined,
+	sideBarFooterContent?: ReactNode | undefined,
 ): ReactElement {
 	return (
 		<Sidebar
@@ -30,20 +30,18 @@ export function buildNavbar(
 					top: isHidden ? 0 : 'var(--mantine-header-height, 0rem)',
 					height: 'calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))',
 				},
-				[`.${sidebarClasses.root}`]: {
-					borderColor: 'red',
-				},
 			}}
 			collapsed={collapsed}
 			width={`${px(sidebarWidth)}px`}
 			collapsedWidth={`${px(sidebarCollapsedWidth)}px`}
 		>
+			{sideBarHeaderContent}
 			<ScrollArea style={{ overflowY: 'auto', overflowX: 'hidden', height: menuHeight }}>
 				<SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
 					{links}
 				</SidebarMenu>
 			</ScrollArea>
-			{sideBarFooterContent ?? sideBarFooterContent}
+			{sideBarFooterContent}
 		</Sidebar>
 	);
 }

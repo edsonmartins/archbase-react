@@ -35,6 +35,9 @@ export function buildMenuItem(collapsed, onMenuItemClick, item, index) {
 												? theme.colors[theme.primaryColor][0]
 												: theme.colors[theme.primaryColor][0],
 									},
+									[`.${menuClasses.button}`]: {
+										paddingLeft: '40px !important',
+									},
 								}}
 								key={subIndex}
 								id={subItem.label}
