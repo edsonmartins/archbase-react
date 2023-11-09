@@ -1,4 +1,4 @@
-import { ActionIcon, MantineTheme, Paper, px, ScrollArea, Stack, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Flex, MantineTheme, Paper, px, ScrollArea, Stack, Text, Tooltip } from '@mantine/core';
 import { IconDots } from '@tabler/icons-react';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Sidebar, sidebarClasses, Menu as SidebarMenu } from 'react-pro-sidebar';
@@ -31,6 +31,7 @@ export interface ArchbaseAdvancedSidebarProps {
 	sidebarRef?: React.Ref<HTMLHtmlElement> | undefined;
 	defaultGroupIcon?: ReactNode;
 	selectedGroupName?: string;
+	sideBarHeaderContent?: ReactNode | undefined;
 }
 
 type GroupItemSidebar = {
@@ -44,7 +45,7 @@ export function ArchbaseAdvancedSidebar({
 	navigationData,
 	sidebarGroupWidth = '80px',
 	sidebarWidth = '360px',
-	sidebarHeight = '100%',
+	sidebarHeight = `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`,
 	sidebarCollapsedWidth,
 	selectedGroupColor,
 	groupColor,
@@ -64,6 +65,7 @@ export function ArchbaseAdvancedSidebar({
 	sidebarRef,
 	defaultGroupIcon,
 	selectedGroupName,
+	sideBarHeaderContent,
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
 	const color = selectedGroupColor
@@ -211,69 +213,69 @@ export function ArchbaseAdvancedSidebar({
 					menuItemStyles,
 					navigationData.map((item, index) => buildMenuItem(collapsed, onMenuItemClick, item, index)),
 					isHidden,
-					sideBarFooterHeight
-						? `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${sideBarFooterHeight}px)`
-						: `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`,
-					sideBarFooterHeight,
+					sidebarHeight,
+					sideBarHeaderContent,
 					sideBarFooterContent,
 				)
 			) : (
-				<Paper
-					withBorder={withBorder}
-					style={{
-						display: 'flex',
-						height: sidebarHeight,
-						width: sidebarWidth,
-						margin,
-					}}
-				>
-					<Stack
-						spacing="4px"
+				<Flex direction="column" w={collapsed ? sidebarCollapsedWidth : sidebarWidth}>
+					<div style={{ height: 'auto', width: '100%', margin }}>{sideBarHeaderContent}</div>
+					<Paper
+						withBorder={withBorder}
 						style={{
+							display: 'flex',
 							height: sidebarHeight,
-							width: sidebarGroupWidth,
-							padding: '4px',
-							backgroundColor: calcBackgroundGroupColor,
+							width: sidebarWidth,
 						}}
 					>
-						{groups.map((item) => item.component)}
-					</Stack>
-					{activeGroupName !== '' ? (
-						<Sidebar
-							ref={sidebarRef}
-							rootStyles={{
-								[`.${sidebarClasses.container}`]: {
-									background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-									overflowX: 'hidden',
-									overflowY: 'hidden',
-									left: 0,
-									height: `${px(sidebarHeight)}px`,
-								},
+						<Stack
+							spacing="4px"
+							style={{
+								height: sidebarHeight,
+								width: sidebarGroupWidth,
+								padding: '4px',
+								backgroundColor: calcBackgroundGroupColor,
 							}}
-							collapsed={collapsed}
-							width={`${px(sidebarWidthCalculated)}px`}
-							collapsedWidth="0px"
 						>
-							<ScrollArea
-								style={{
-									overflowY: 'auto',
-									overflowX: 'hidden',
-									height: '100%',
-									width: sidebarWidthCalculated,
+							{groups.map((item) => item.component)}
+						</Stack>
+						{activeGroupName !== '' ? (
+							<Sidebar
+								ref={sidebarRef}
+								rootStyles={{
+									[`.${sidebarClasses.container}`]: {
+										background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+										overflowX: 'hidden',
+										overflowY: 'hidden',
+										left: 0,
+										height: `${px(sidebarHeight)}px`,
+									},
 								}}
+								collapsed={collapsed}
+								width={`${px(sidebarWidthCalculated)}px`}
+								collapsedWidth="0px"
 							>
-								<SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
-									{groups.map((item) => {
-										if (item.name === activeGroupName) {
-											return item.links;
-										}
-									})}
-								</SidebarMenu>
-							</ScrollArea>
-							{sideBarFooterContent ?? sideBarFooterContent}
-						</Sidebar>
-					) : null}
-				</Paper>
+								<ScrollArea
+									style={{
+										overflowY: 'auto',
+										overflowX: 'hidden',
+										height: '100%',
+										width: sidebarWidthCalculated,
+									}}
+								>
+									<SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
+										{groups.map((item) => {
+											if (item.name === activeGroupName) {
+												return item.links;
+											}
+										})}
+									</SidebarMenu>
+								</ScrollArea>
+							</Sidebar>
+						) : null}
+					</Paper>
+					<div style={{ height: 'auto', width: '100%' }}>{sideBarFooterContent}</div>
+				</Flex>
 			)}
 		</>
 	);
