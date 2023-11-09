@@ -326,7 +326,7 @@ export const ArchbaseImagePickerEditor = memo(({ config = {}, imageSrcProp = '',
           </Fragment>}
         </div>
         {sizeImage && configuration.showImageSize &&
-          <p
+          <div
             className="caption image-caption"
             style={{
               color: sizeImage > 120 ? '#f44336' : 'unset',
@@ -335,7 +335,7 @@ export const ArchbaseImagePickerEditor = memo(({ config = {}, imageSrcProp = '',
             }}
           >
             <Text>{`${i18next.t('archbase:size')}: ${sizeImage}Kb ${state.format}`}</Text>
-          </p>}
+          </div>}
 
         <div
           style={{

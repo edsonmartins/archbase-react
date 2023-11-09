@@ -199,7 +199,9 @@ export function ArchbaseEdit<T, ID>({
     }
     return tmpRreadOnly
   }
-
+  console.log("RENDER DO EDIT")
+  console.log("Datasource editing ",dataSource.isEditing())
+  console.log("DataField ",dataField)
   return (
     <TextInput
       disabled={disabled}
