@@ -102,9 +102,6 @@ function ArchbaseAdminMainLayoutContainer({
 
 	const handleCollapseSidebar = useCallback(() => {
 		adminLayoutContextValue.setCollapsed(!adminLayoutContextValue.collapsed);
-		if (onCollapsedSideBar) {
-			onCollapsedSideBar(!adminLayoutContextValue.collapsed);
-		}
 	}, [adminLayoutContextValue.setCollapsed, adminLayoutContextValue.collapsed]);
 
 	const handleHiddenSidebar = useCallback(() => {
@@ -121,10 +118,10 @@ function ArchbaseAdminMainLayoutContainer({
 	}, [adminLayoutContextValue.hidden, isHidden, handleHiddenSidebar]);
 
 	useEffect(() => {
-		if (adminLayoutContextValue.collapsed && isHidden) {
-			handleCollapseSidebar();
+		if (onCollapsedSideBar) {
+			onCollapsedSideBar(adminLayoutContextValue.collapsed);
 		}
-	}, [adminLayoutContextValue.collapsed, isHidden, handleCollapseSidebar]);
+	}, [adminLayoutContextValue.collapsed, onCollapsedSideBar]);
 
 	return (
 		<AppShell

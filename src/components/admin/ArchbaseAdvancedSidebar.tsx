@@ -148,7 +148,7 @@ export function ArchbaseAdvancedSidebar({
 										>
 											{item.group.label}
 										</Text>
-									) : null}
+									) : false}
 								</Stack>
 							</Tooltip>
 						),
@@ -193,14 +193,17 @@ export function ArchbaseAdvancedSidebar({
 	}, []);
 
 	useEffect(() => {
+		console.log(activeGroupName)
+		console.log(collapsed)
 		if (collapsed) {
-			setActiveGroupName('');
+			if (activeGroupName === '') {
+				setDefaultActiveGroupName();
+			} else {
+				setActiveGroupName('');
+			}
 		}
+	}, [collapsed]);
 
-		if (!collapsed && activeGroupName == '') {
-			setDefaultActiveGroupName();
-		}
-	}, [collapsed, setDefaultActiveGroupName, activeGroupName]);
 	return (
 		<>
 			{groups.length == 1 ? (
@@ -227,7 +230,8 @@ export function ArchbaseAdvancedSidebar({
 							height: sidebarHeight,
 							width: sidebarWidth,
 						}}
-					>
+					> 
+					{groups.length === 0 ? false :
 						<Stack
 							spacing="4px"
 							style={{
@@ -239,6 +243,7 @@ export function ArchbaseAdvancedSidebar({
 						>
 							{groups.map((item) => item.component)}
 						</Stack>
+					}
 						{activeGroupName !== '' ? (
 							<Sidebar
 								ref={sidebarRef}
@@ -272,7 +277,7 @@ export function ArchbaseAdvancedSidebar({
 									</SidebarMenu>
 								</ScrollArea>
 							</Sidebar>
-						) : null}
+						) : false}
 					</Paper>
 					<div style={{ height: 'auto', width: '100%' }}>{sideBarFooterContent}</div>
 				</Flex>
