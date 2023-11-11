@@ -177,7 +177,9 @@ export class ArchbaseRemoteDataSource<T, ID>
       if (index >= 0) {
         this.records.splice(index, 1)
       }
-      this.filteredRecords.splice(this.getCurrentIndex(), 1)
+      if (this.records !== this.filteredRecords) {
+        this.filteredRecords.splice(this.getCurrentIndex(), 1)
+      }
       this.grandTotalRecords--
       if (this.filteredRecords.length === 0) {
         this.currentRecord = undefined
