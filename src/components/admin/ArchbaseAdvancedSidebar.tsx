@@ -123,7 +123,7 @@ export function ArchbaseAdvancedSidebar({
 													onClickActionIcon(prev, item.group.name);
 												}
 
-												if (item.group.name === prev && !collapsed) {
+												if (item.group.name === prev) {
 													return '';
 												}
 
@@ -148,7 +148,9 @@ export function ArchbaseAdvancedSidebar({
 										>
 											{item.group.label}
 										</Text>
-									) : null}
+									) : (
+										false
+									)}
 								</Stack>
 							</Tooltip>
 						),
@@ -159,7 +161,7 @@ export function ArchbaseAdvancedSidebar({
 		result.forEach((group) => {
 			group.links = navigationData
 				.filter((itm) => itm.showInSidebar === true && itm.group && itm.group.name === group.name)
-				.map((item, index) => buildMenuItem(collapsed, onMenuItemClick, item, index));
+				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index));
 		});
 
 		const grps = [...result].sort((a, b) => a.indexOrder - b.indexOrder);
@@ -193,14 +195,15 @@ export function ArchbaseAdvancedSidebar({
 	}, []);
 
 	useEffect(() => {
-		if (collapsed) {
+		if (!collapsed) {
+			if (activeGroupName === '') {
+				setDefaultActiveGroupName();
+			}
+		} else {
 			setActiveGroupName('');
 		}
+	}, [collapsed]);
 
-		if (!collapsed && activeGroupName == '') {
-			setDefaultActiveGroupName();
-		}
-	}, [collapsed, setDefaultActiveGroupName, activeGroupName]);
 	return (
 		<>
 			{groups.length == 1 ? (
@@ -211,7 +214,7 @@ export function ArchbaseAdvancedSidebar({
 					sidebarWidth,
 					sidebarCollapsedWidth,
 					menuItemStyles,
-					navigationData.map((item, index) => buildMenuItem(collapsed, onMenuItemClick, item, index)),
+					navigationData.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index)),
 					isHidden,
 					sidebarHeight,
 					sideBarHeaderContent,
@@ -228,17 +231,21 @@ export function ArchbaseAdvancedSidebar({
 							width: sidebarWidth,
 						}}
 					>
-						<Stack
-							spacing="4px"
-							style={{
-								height: sidebarHeight,
-								width: sidebarGroupWidth,
-								padding: '4px',
-								backgroundColor: calcBackgroundGroupColor,
-							}}
-						>
-							{groups.map((item) => item.component)}
-						</Stack>
+						{groups.length === 0 ? (
+							false
+						) : (
+							<Stack
+								spacing="4px"
+								style={{
+									height: sidebarHeight,
+									width: sidebarGroupWidth,
+									padding: '4px',
+									backgroundColor: calcBackgroundGroupColor,
+								}}
+							>
+								{groups.map((item) => item.component)}
+							</Stack>
+						)}
 						{activeGroupName !== '' ? (
 							<Sidebar
 								ref={sidebarRef}
@@ -272,7 +279,9 @@ export function ArchbaseAdvancedSidebar({
 									</SidebarMenu>
 								</ScrollArea>
 							</Sidebar>
-						) : null}
+						) : (
+							false
+						)}
 					</Paper>
 					<div style={{ height: 'auto', width: '100%' }}>{sideBarFooterContent}</div>
 				</Flex>
