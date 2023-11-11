@@ -99,6 +99,9 @@ const ArchbaseAdminMainLayoutExample = () => {
 				onCollapsedSideBar={(collapsed) => {
 					setCollapsed(collapsed);
 				}}
+				onHiddenSidebar={(hidden) => {
+					console.log(hidden);
+				}}
 				footer={<ArchbaseAdminLayoutFooter />}
 				header={
 					<ArchbaseAdminLayoutHeader

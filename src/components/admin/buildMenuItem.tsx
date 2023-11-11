@@ -1,10 +1,8 @@
-import { useMantineTheme } from '@mantine/styles';
 import i18next from 'i18next';
 import React from 'react';
 import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar';
 
-export function buildMenuItem(collapsed, onMenuItemClick, item, index) {
-	const theme = useMantineTheme();
+export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index) {
 	if (item.links) {
 		return (
 			<SubMenu
