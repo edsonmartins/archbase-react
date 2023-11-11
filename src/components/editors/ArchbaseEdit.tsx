@@ -18,6 +18,7 @@ import {
 
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
 import { DataSourceEventNames } from '../datasource'
+import { useForceUpdate } from '@mantine/hooks'
 
 export interface ArchbaseEditProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do edit */
@@ -94,6 +95,7 @@ export function ArchbaseEdit<T, ID>({
   const innerComponentRef = useRef<any>()
   const theme = useMantineTheme()
   const [internalError, setInternalError] = useState<string|undefined>(error);
+  const forceUpdate = useForceUpdate()
 
   useEffect(()=>{
     setInternalError(undefined)
@@ -129,9 +131,11 @@ export function ArchbaseEdit<T, ID>({
         event.type === DataSourceEventNames.dataChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
-        event.type === DataSourceEventNames.afterCancel
+        event.type === DataSourceEventNames.afterCancel ||
+        event.type === DataSourceEventNames.afterEdit
       ) {
         loadDataSourceFieldValue()
+        forceUpdate()
       }
 
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
@@ -193,15 +197,12 @@ export function ArchbaseEdit<T, ID>({
   }
 
   const isReadOnly = () => {
-    let tmpRreadOnly = readOnly
+    let tmpReadOnly = readOnly
     if (dataSource && !readOnly) {
-      tmpRreadOnly = dataSource.isBrowsing()
+      tmpReadOnly = dataSource.isBrowsing()
     }
-    return tmpRreadOnly
+    return tmpReadOnly
   }
-  console.log("RENDER DO EDIT")
-  console.log("Datasource editing ",dataSource.isEditing())
-  console.log("DataField ",dataField)
   return (
     <TextInput
       disabled={disabled}

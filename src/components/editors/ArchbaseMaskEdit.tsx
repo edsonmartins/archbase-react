@@ -9,7 +9,7 @@ import {
   MantineSize,
   MantineNumberSize
 } from '@mantine/core'
-import { useId } from '@mantine/hooks'
+import { useForceUpdate, useId } from '@mantine/hooks'
 import { IMaskInput } from 'react-imask'
 
 import type { CSSProperties, FocusEventHandler } from 'react'
@@ -113,6 +113,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
   const id = useId()
   const innerComponentRef = innerRef || useRef<any>()
   const [value, setValue] = useState<string>('')
+  const forceUpdate = useForceUpdate()
   const { dataSource, dataField, onChangeValue, onFocusEnter, onFocusExit, saveWithMask } = props
   const [internalError, setInternalError] = useState<string|undefined>(props.error);
 
@@ -143,9 +144,11 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
         event.type === DataSourceEventNames.dataChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
-        event.type === DataSourceEventNames.afterCancel
-      ) {
-        loadDataSourceFieldValue()
+        event.type === DataSourceEventNames.afterCancel ||
+        event.type === DataSourceEventNames.afterEdit
+        ) {
+          loadDataSourceFieldValue()
+          forceUpdate()
       }
     }
   }, [])

@@ -5,6 +5,7 @@ import { uniqueId } from 'lodash'
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle'
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
 import { DataSourceEventNames } from '../datasource'
+import { useForceUpdate } from '@mantine/hooks'
 
 export interface ArchbaseRadioGroupProps<T, ID, O> {
   /** Fonte de dados onde será atribuido o valor do RadioGroup*/
@@ -107,6 +108,7 @@ export function ArchbaseRadioGroup<T, ID, O>({
   )
   const [selectedValue, setSelectedValue] = useState<any>(value)
   const [internalError, setInternalError] = useState<string|undefined>(error);
+  const forceUpdate = useForceUpdate()
 
   useEffect(()=>{
     setInternalError(undefined)
@@ -137,8 +139,10 @@ export function ArchbaseRadioGroup<T, ID, O>({
         case (DataSourceEventNames.dataChanged,
         DataSourceEventNames.recordChanged,
         DataSourceEventNames.afterScroll,
+        DataSourceEventNames.afterEdit,
         DataSourceEventNames.afterCancel): {
           loadDataSourceFieldValue()
+          useForceUpdate()
           break
         }
         default:

@@ -10,6 +10,7 @@ import {
 
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
 import { DataSourceEventNames } from '../datasource'
+import { useForceUpdate } from '@mantine/hooks'
 
 export interface ArchbaseChipProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do chip */
@@ -73,7 +74,7 @@ export function ArchbaseChip<T, ID>({
   const [checked, setChecked] = useState<boolean>(isChecked ? true : false)
   const innerComponentRef = innerRef || useRef<any>()
   const [internalError, setInternalError] = useState<string|undefined>(error);
-
+  const forceUpdate = useForceUpdate()
 
   const loadDataSourceFieldValue = () => {
     let currentChecked = checked
@@ -97,9 +98,11 @@ export function ArchbaseChip<T, ID>({
         event.type === DataSourceEventNames.dataChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
-        event.type === DataSourceEventNames.afterCancel
-      ) {
-        loadDataSourceFieldValue()
+        event.type === DataSourceEventNames.afterCancel ||
+        event.type === DataSourceEventNames.afterEdit
+        ) {
+          loadDataSourceFieldValue()
+          forceUpdate()
       }
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
         setInternalError(event.error)

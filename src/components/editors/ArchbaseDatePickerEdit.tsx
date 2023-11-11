@@ -31,7 +31,7 @@ import {
   pickCalendarProps,
   useDatesContext
 } from '@mantine/dates'
-import { useDidUpdate, useUncontrolled } from '@mantine/hooks'
+import { useDidUpdate, useForceUpdate, useUncontrolled } from '@mantine/hooks'
 import dayjs from 'dayjs'
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 import { IMaskInput } from 'react-imask'
@@ -291,6 +291,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
     onChange
   })
   const [internalError, setInternalError] = useState<string|undefined>(props.error);
+  const forceUpdate = useForceUpdate()
 
   const [_date, setDate] = useUncontrolled({
     value: date,
@@ -329,9 +330,11 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
         event.type === DataSourceEventNames.dataChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
-        event.type === DataSourceEventNames.afterCancel
-      ) {
-        loadDataSourceFieldValue()
+        event.type === DataSourceEventNames.afterCancel ||
+        event.type === DataSourceEventNames.afterEdit
+        ) {
+          loadDataSourceFieldValue()
+          forceUpdate()
       }
 
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){

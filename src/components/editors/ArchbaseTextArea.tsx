@@ -12,6 +12,7 @@ import {
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
 import { DataSourceEventNames } from '../datasource'
 import { isBase64 } from '../core/utils'
+import { useForceUpdate } from '@mantine/hooks'
 
 export interface ArchbaseTextAreaProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do textarea */
@@ -79,6 +80,7 @@ export function ArchbaseTextArea<T, ID>({
   const [value, setValue] = useState<string>('')
   const innerComponentRef = useRef<any>()
   const [internalError, setInternalError] = useState<string|undefined>(error)
+  const forceUpdate = useForceUpdate()
 
   useEffect(()=>{
     setInternalError(undefined)
@@ -111,9 +113,11 @@ export function ArchbaseTextArea<T, ID>({
         event.type === DataSourceEventNames.dataChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
-        event.type === DataSourceEventNames.afterCancel
-      ) {
-        loadDataSourceFieldValue()
+        event.type === DataSourceEventNames.afterCancel ||
+        event.type === DataSourceEventNames.afterEdit
+        ) {
+          loadDataSourceFieldValue()
+          forceUpdate()
       }
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
         setInternalError(event.error)

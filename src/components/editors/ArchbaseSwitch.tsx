@@ -6,6 +6,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react'
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
 import { DataSourceEventNames } from '../datasource'
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks'
+import { useForceUpdate } from '@mantine/hooks'
 
 export interface ArchbaseSwitchProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do switch */
@@ -83,6 +84,7 @@ export function ArchbaseSwitch<T, ID>({
   const [checked, setChecked] = useState<boolean|undefined>(isChecked)
   const innerComponentRef = useRef<any>()
   const [internalError, setInternalError] = useState<string|undefined>(error);
+  const forceUpdate = useForceUpdate()
 
   useEffect(()=>{
     setInternalError(undefined)
@@ -110,9 +112,11 @@ export function ArchbaseSwitch<T, ID>({
         event.type === DataSourceEventNames.dataChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
-        event.type === DataSourceEventNames.afterCancel
-      ) {
-        loadDataSourceFieldValue()
+        event.type === DataSourceEventNames.afterCancel ||
+        event.type === DataSourceEventNames.afterEdit
+        ) {
+          loadDataSourceFieldValue()
+          forceUpdate()
       }
 
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){

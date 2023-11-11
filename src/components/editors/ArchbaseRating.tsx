@@ -6,6 +6,7 @@ import {
 } from '../datasource'
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks'
 import React, { CSSProperties, FocusEventHandler, useCallback, useEffect, useRef, useState } from 'react'
+import { useForceUpdate } from '@mantine/hooks'
 
 export interface ArchbaseRatingProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor do rating*/
@@ -78,6 +79,7 @@ export function ArchbaseRating<T, ID>({
   const [currentValue, setCurrentValue] = useState<number | undefined>(value)
   const innerComponentRef = innerRef || useRef<any>()
   const [internalError, setInternalError] = useState<string|undefined>(error);
+  const forceUpdate = useForceUpdate()
 
   useEffect(()=>{
     setInternalError(undefined)
@@ -106,9 +108,11 @@ export function ArchbaseRating<T, ID>({
         event.type === DataSourceEventNames.dataChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
-        event.type === DataSourceEventNames.afterCancel
-      ) {
-        loadDataSourceFieldValue()
+        event.type === DataSourceEventNames.afterCancel ||
+        event.type === DataSourceEventNames.afterEdit
+        ) {
+          loadDataSourceFieldValue()
+          forceUpdate()
       }
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName===dataField){
         setInternalError(event.error)

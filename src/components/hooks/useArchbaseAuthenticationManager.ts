@@ -80,6 +80,7 @@ export const useArchbaseAuthenticationManager = ({
         tokenManager.saveUsernameAndPassword(username, password)
       }
       tokenManager.saveUsername(username)
+      setUsername(username)
       setAccessToken(access_token)
       setAuthenticating(false)
       setAuthenticated(true)

@@ -28,6 +28,7 @@ import {
 } from '../hooks/lifecycle'
 import type { DataSourceEvent, ArchbaseDataSource } from '../datasource'
 import { DataSourceEventNames } from '../datasource'
+import { useForceUpdate } from '@mantine/hooks'
 
 function formatNumber(
   value,
@@ -204,6 +205,7 @@ export function ArchbaseNumberEdit<T, ID>({
   const [_inputSelectionStart, setInputSelectionStart] = useState(0)
   const [inputSelectionEnd, setInputSelectionEnd] = useState(0)
   const [internalError, setInternalError] = useState<string | undefined>(error)
+  const forceUpdate = useForceUpdate()
 
   useEffect(() => {
     setInternalError(undefined)
@@ -277,9 +279,11 @@ export function ArchbaseNumberEdit<T, ID>({
         event.type === DataSourceEventNames.dataChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
-        event.type === DataSourceEventNames.afterCancel
-      ) {
-        loadDataSourceFieldValue()
+        event.type === DataSourceEventNames.afterCancel ||
+        event.type === DataSourceEventNames.afterEdit
+        ) {
+          loadDataSourceFieldValue()
+          forceUpdate()
       }
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
         setInternalError(event.error)
