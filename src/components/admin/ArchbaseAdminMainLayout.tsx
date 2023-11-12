@@ -12,6 +12,7 @@ import {
 import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
+import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAliveAbleRoutes';
 
 export interface ArchbaseAdminMainLayoutProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -91,11 +92,15 @@ function ArchbaseAdminMainLayoutContainer({
 	const routes = useMemo(() => {
 		return navigationData.map((item, index) =>
 			item.links ? (
-				item.links.map((item2, indexSub) => (
-					<Route path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component} />
-				))
+				item.links.map((item2, indexSub) => {
+					if (item2.keepAlive){
+						return <ArchbaseKeepAliveRoute path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component} />
+					} else {
+						return <Route path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component} />
+					}
+				})
 			) : (
-				<Route key={`${item.link}_${index}`} path={item.link} element={item.component} />
+				item.keepAlive?<ArchbaseKeepAliveRoute key={`${item.link}_${index}`} path={item.link} element={item.component} />:<Route key={`${item.link}_${index}`} path={item.link} element={item.component} />
 			),
 		);
 	}, [navigationData, adminLayoutContextValue.collapsed]);
@@ -189,7 +194,7 @@ function ArchbaseAdminMainLayoutContainer({
 			>
 				{children}
 				<div style={{ width: '100%', height: 'calc(100% - 48px)' }}>
-					<Routes>{routes}</Routes>
+					<ArchbaseAliveAbleRoutes>{routes}</ArchbaseAliveAbleRoutes>
 				</div>
 			</div>
 			<Drawer

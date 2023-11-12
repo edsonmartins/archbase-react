@@ -20,6 +20,7 @@ export type ArchbaseNavigationItem = {
   showInSidebar: boolean
   disabled?: boolean;
   redirect?: string;
+  keepAlive?: boolean;
   group?: ArchbaseNavigationGroup
 }
 

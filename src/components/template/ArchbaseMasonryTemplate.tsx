@@ -5,7 +5,7 @@ import { t } from 'i18next';
 import { uniqueId } from 'lodash';
 import React, { CSSProperties, Fragment, ReactNode, useMemo, useRef, useState, Profiler } from 'react';
 import { ComponentDefinition, useArchbaseAppContext } from '../core';
-import type { ArchbaseDataSource } from '../datasource';
+import { DataSourceEventNames, type ArchbaseDataSource, type DataSourceEvent } from '../datasource';
 import { ArchbaseMasonry, ArchbaseMasonryProvider, ArchbaseMasonryResponsive } from '../masonry';
 import {
   ArchbaseQueryBuilder,
@@ -19,6 +19,7 @@ import { ArchbaseSpaceTemplate, ArchbaseSpaceTemplateOptions } from './ArchbaseS
 import { ArchbaseAction, ArchbaseActionButtons, ArchbaseActionButtonsOptions } from '../buttons';
 import { ArchbaseGlobalFilter, Field } from '../querybuilder';
 import { ArchbaseDebugOptions } from './ArchbaseTemplateCommonTypes';
+import { useArchbaseDataSourceListener } from 'components/hooks';
 
 export interface UserActionsOptions {
   visible?: boolean;
@@ -163,6 +164,17 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
     activeFilterIndex: -1,
     expandedFilter: false,
   });
+  const [updateCounter,setUpdateCounter] = useState<number>(0)
+
+  useArchbaseDataSourceListener<T, ID>({
+    dataSource,
+    listener: (event: DataSourceEvent<T>): void => {
+      if ((event.type === DataSourceEventNames.afterRemove) ||          
+          (event.type === DataSourceEventNames.refreshData)) {
+        setUpdateCounter((prev)=>prev +1)
+      }
+    }
+  })
 
   const userActionsBuilded: ArchbaseAction[] = useMemo(() => {
     const userActionsEnd = { ...defaultUserActions, ...userActions };
@@ -274,7 +286,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
     }
 
     return [];
-  }, [activeIndexValue, component, idMasonry, dataSource]);
+  }, [activeIndexValue, component, idMasonry, dataSource, updateCounter]);
 
   const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
     setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });

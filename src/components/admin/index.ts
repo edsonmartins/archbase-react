@@ -33,3 +33,4 @@ export type {
   ArchbaseTabItem,
   LocationDataItem,
 } from './types';
+export {ArchbaseKeepAliveRoute, ArchbaseAliveAbleRoutes} from './ArchbaseAliveAbleRoutes'
