@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { memo, ReactNode, useEffect, useState } from "react"
-import './styles.scss'
+import './TabsStyles.scss'
 import { useRef } from 'react';
 
 export interface TabContainerProp {

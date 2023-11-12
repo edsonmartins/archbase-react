@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, memo, useEffect, useMemo, useRef, useState } from "react"
 import { ArchbaseImagePickerConf as ArchbaseImagePickerConf, IState } from "./models/index.models";
-import './styles.scss'
+import './image_editor_styles.scss'
 import { convertImageUsingCanvas } from "./functions/image-processing";
 import ArchbaseEditImage from "./components/EditImage/ArchbaseEditImage";
 import i18next from "i18next";
@@ -305,12 +305,13 @@ export const ArchbaseImagePickerEditor = memo(({ config = {}, imageSrcProp = '',
             src={imageSrc as string}
             alt="image-loaded"
             style={{
+              height: configuration.height,
               borderRadius: configuration.borderRadius,
               objectFit: configuration.objectFit,
               background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
             }}
           />
-          {!configuration.hideEditBtn && 
+          {!configuration.hideEditBtn &&
           <Fragment>
             <div className="curtain" onClick={onUpload}>
               <Tooltip withinPortal withArrow label={`${i18next.t('archbase:Upload a image')}`}>
