@@ -123,7 +123,7 @@ export function ArchbaseAdvancedSidebar({
 													onClickActionIcon(prev, item.group.name);
 												}
 
-												if (item.group.name === prev) {
+												if (item.group.name === prev && !isHidden) {
 													return '';
 												}
 

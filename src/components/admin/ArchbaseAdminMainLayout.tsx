@@ -10,9 +10,9 @@ import {
 	ArchbaseAdminLayoutProvider,
 } from './ArchbaseAdminLayout.context';
 import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
+import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAliveAbleRoutes';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
-import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAliveAbleRoutes';
 
 export interface ArchbaseAdminMainLayoutProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -93,14 +93,18 @@ function ArchbaseAdminMainLayoutContainer({
 		return navigationData.map((item, index) =>
 			item.links ? (
 				item.links.map((item2, indexSub) => {
-					if (item2.keepAlive){
-						return <ArchbaseKeepAliveRoute path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component} />
+					if (item2.keepAlive) {
+						return (
+							<ArchbaseKeepAliveRoute path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component} />
+						);
 					} else {
-						return <Route path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component} />
+						return <Route path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component} />;
 					}
 				})
+			) : item.keepAlive ? (
+				<ArchbaseKeepAliveRoute key={`${item.link}_${index}`} path={item.link} element={item.component} />
 			) : (
-				item.keepAlive?<ArchbaseKeepAliveRoute key={`${item.link}_${index}`} path={item.link} element={item.component} />:<Route key={`${item.link}_${index}`} path={item.link} element={item.component} />
+				<Route key={`${item.link}_${index}`} path={item.link} element={item.component} />
 			),
 		);
 	}, [navigationData, adminLayoutContextValue.collapsed]);
@@ -215,7 +219,6 @@ function ArchbaseAdminMainLayoutContainer({
 					groupLabelDarkColor="white"
 					groupLabelLightColor="white"
 					showGroupLabels={false}
-					collapsed={adminLayoutContextValue.collapsed}
 					isHidden={isHidden}
 					onMenuItemClick={onMenuItemClick}
 					onClickActionIcon={onClickActionIcon}
