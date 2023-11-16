@@ -8,7 +8,7 @@ import {
 	IconButton,
 	Tooltip,
 } from "@chakra-ui/react";
-import { useState, State } from "@hookstate/core";
+import { useHookstate, State } from "@hookstate/core";
 import { JSONSchema7, JSONSchema7TypeName } from "../../JsonSchemaEditor.types";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { getDefaultSchema, DataType, random, handleTypeChange } from "../utils";
@@ -20,8 +20,8 @@ export interface SchemaArrayProps extends FlexProps {
 export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = (
 	props: React.PropsWithChildren<SchemaArrayProps>
 ) => {
-	const state = useState(props.schemaState);
-	const isReadOnlyState = useState(props.isReadOnly);
+	const state = useHookstate(props.schemaState);
+	const isReadOnlyState = useHookstate(props.isReadOnly);
 
 	return (
 		<>

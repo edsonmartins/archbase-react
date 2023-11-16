@@ -17,7 +17,7 @@ import {
 	AdvancedItemStateProps,
 	JSONSchema7,
 } from "../../JsonSchemaEditor.types";
-import { none, useState } from "@hookstate/core";
+import { none, useHookstate } from "@hookstate/core";
 import { StringFormat } from "../utils";
 
 export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
@@ -34,7 +34,7 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 		return array;
 	};
 
-	const itemState = useState(itemStateProp);
+	const itemState = useHookstate(itemStateProp);
 
 	const isEnumChecked = (itemState.value as JSONSchema7).enum !== undefined;
 	const enumData = (itemState.value as JSONSchema7).enum

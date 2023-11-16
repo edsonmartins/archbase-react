@@ -1,6 +1,6 @@
 import { JSONSchema7, JSONSchema7TypeName } from "../JsonSchemaEditor.types";
 import * as React from "react";
-import { useState } from "@hookstate/core";
+import { useHookstate } from "@hookstate/core";
 import * as R from "ramda";
 
 const schemaDraft = "http://json-schema.org/draft-07/schema#";
@@ -13,7 +13,7 @@ export enum PropertyType {
 }
 
 export function useDebounce<T>(value: T, delay?: number): T {
-	const debouncedValue = useState<T>(value);
+	const debouncedValue = useHookstate<T>(value);
 
 	React.useEffect(() => {
 		const timer = setTimeout(() => debouncedValue.set(value), delay || 500);

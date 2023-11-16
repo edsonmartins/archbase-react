@@ -13,7 +13,7 @@ import { FiSettings } from "react-icons/fi";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { AiOutlineDelete } from "react-icons/ai";
 import { DropPlus } from "../drop-plus";
-import { useState, State, none } from "@hookstate/core";
+import { useHookstate, State, none } from "@hookstate/core";
 import {
 	JSONSchema7,
 	JSONSchema7Definition,
@@ -53,7 +53,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = (
 	} = props;
 
 	// const itemState = useState(itemStateProp);
-	const parentState = useState(parentStateProp);
+	const parentState = useHookstate(parentStateProp);
 	const parentStateOrNull: State<JSONSchema7> | undefined = parentState.ornull;
 	const propertiesOrNull:
 		| State<{
@@ -61,10 +61,10 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = (
 		  }>
 		| undefined = parentStateOrNull.properties.ornull;
 
-	const nameState = useState(name);
-	const isReadOnlyState = useState(isReadOnly);
+	const nameState = useHookstate(name);
+	const isReadOnlyState = useHookstate(isReadOnly);
 
-	const itemState = useState(
+	const itemState = useHookstate(
 		(parentStateProp.properties as State<{
 			[key: string]: JSONSchema7;
 		}>).nested(nameState.value)

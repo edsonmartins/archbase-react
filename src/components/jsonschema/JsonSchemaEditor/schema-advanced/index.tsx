@@ -4,7 +4,7 @@ import { AdvancedString } from "../advanced-string";
 import { AdvancedNumber } from "../advanced-number";
 import { AdvancedBoolean } from "../advanced-boolean";
 import { JSONSchema7 } from "../../JsonSchemaEditor.types";
-import { State, useState } from "@hookstate/core";
+import { State, useHookstate } from "@hookstate/core";
 
 export interface AdvancedSettingsProps {
 	itemStateProp: State<JSONSchema7>;
@@ -13,7 +13,7 @@ export interface AdvancedSettingsProps {
 export const AdvancedSettings: React.FunctionComponent<AdvancedSettingsProps> = (
 	props: React.PropsWithChildren<AdvancedSettingsProps>
 ) => {
-	const itemState = useState(props.itemStateProp);
+	const itemState = useHookstate(props.itemStateProp);
 
 	const getAdvancedView = (
 		item: State<JSONSchema7>

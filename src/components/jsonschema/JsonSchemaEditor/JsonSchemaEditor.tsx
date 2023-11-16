@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "@hookstate/core";
+import { useHookstate } from "@hookstate/core";
 import { useSchemaState, defaultSchema } from "./state";
 import { SchemaEditorProps } from "../JsonSchemaEditor.types";
 import { Flex, ChakraProvider, theme } from "@chakra-ui/react";
@@ -20,7 +20,7 @@ export const JsonSchemaEditor = (props: SchemaEditorProps) => {
 		fieldId: 0,
 	});
 
-	const jsonSchemaState = useState(schemaState.jsonSchema);
+	const jsonSchemaState = useHookstate(schemaState.jsonSchema);
 
 	return (
 		<ChakraProvider theme={theme}>

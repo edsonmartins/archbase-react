@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { DataType, getDefaultSchema } from "../utils";
-import { State, useState } from "@hookstate/core";
+import { State, useHookstate } from "@hookstate/core";
 import {
 	JSONSchema7,
 	JSONSchema7Definition,
@@ -24,8 +24,8 @@ export interface DropPlusProps extends FlexProps {
 export const DropPlus: React.FunctionComponent<DropPlusProps> = (
 	props: React.PropsWithChildren<DropPlusProps>
 ) => {
-	const itemState = useState(props.itemStateProp);
-	const parentState = useState(props.parentStateProp);
+	const itemState = useHookstate(props.itemStateProp);
+	const parentState = useHookstate(props.parentStateProp);
 	const parentStateOrNull: State<JSONSchema7> | undefined = parentState.ornull;
 	const propertiesOrNull:
 		| State<{

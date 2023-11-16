@@ -15,7 +15,7 @@ import {
 	ModalFooter,
 	Button,
 } from "@chakra-ui/react";
-import { useState, State } from "@hookstate/core";
+import { useHookstate, State } from "@hookstate/core";
 import { JSONSchema7, JSONSchema7TypeName } from "../../JsonSchemaEditor.types";
 import { FiSettings } from "react-icons/fi";
 import { IoIosAddCircleOutline } from "react-icons/io";
@@ -38,8 +38,8 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = (
 ) => {
 	const { schemaState, isReadOnly } = props;
 
-	const state = useState(schemaState.items as JSONSchema7);
-	const isReadOnlyState = useState(isReadOnly);
+	const state = useHookstate(schemaState.items as JSONSchema7);
+	const isReadOnlyState = useHookstate(isReadOnly);
 
 	const { length } = state.path.filter((name) => name !== "properties");
 	const tagPaddingLeftStyle = {
@@ -56,7 +56,7 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = (
 
 	const focusRef = React.createRef<HTMLElement>();
 
-	const localState = useState({
+	const localState = useHookstate({
 		isAdvancedOpen: false,
 	});
 

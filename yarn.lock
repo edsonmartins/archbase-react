@@ -2517,6 +2517,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookstate/core@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@hookstate/core@npm:4.0.1"
+  peerDependencies:
+    react: ^16.8.6 || ^17.0.0 || ^18.0.0
+  checksum: a435ee56cadc56b4828ff079b11d8ded2df3b1529261c2008196d12deba146f4e34d8900655ef16498f09076097ab4a86ba3586c902bfc41453a299cd4f6e23b
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.8":
   version: 0.11.13
   resolution: "@humanwhocodes/config-array@npm:0.11.13"
@@ -6813,6 +6822,7 @@ __metadata:
     "@emotion/babel-plugin": "npm:^11.10.5"
     "@emotion/react": "npm:^11.10.5"
     "@emotion/styled": "npm:^11.10.5"
+    "@hookstate/core": "npm:^4.0.1"
     "@juggle/resize-observer": "npm:^3.4.0"
     "@mantine/core": "npm:^6.0.21"
     "@mantine/dates": "npm:^6.0.21"

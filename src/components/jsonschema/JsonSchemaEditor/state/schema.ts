@@ -1,4 +1,4 @@
-import { createState, State } from "@hookstate/core";
+import { hookstate, State } from "@hookstate/core";
 import { JSONSchema7 } from "../../JsonSchemaEditor.types";
 import Ajv from "ajv";
 import { Schema2 } from "../../JsonSchemaEditor.types";
@@ -26,5 +26,5 @@ export const useSchemaState = (initialState: Schema2): State<Schema2> => {
 	}
 
 	initialState.isValidSchema = isValidSchema(initialState.jsonSchema);
-	return createState<Schema2>(initialState);
+	return hookstate<Schema2>(initialState);
 };
