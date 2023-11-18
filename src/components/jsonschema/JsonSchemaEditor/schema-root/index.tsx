@@ -1,24 +1,17 @@
-import * as React from "react";
-import {
-	Flex,
-	Input,
-	Checkbox,
-	FlexProps,
-	Select,
-	IconButton,
-	Tooltip,
-} from "@chakra-ui/react";
-import { useHookstate, State } from "@hookstate/core";
-import { JSONSchema7, JSONSchema7TypeName } from "../../JsonSchemaEditor.types";
-import { IoIosAddCircleOutline } from "react-icons/io";
-import { getDefaultSchema, DataType, random, handleTypeChange } from "../utils";
+import { State, useHookstate } from '@hookstate/core';
+import { ActionIcon, Checkbox, Flex, FlexProps, Input, Select, Tooltip } from '@mantine/core';
+import { IconCirclePlus } from '@tabler/icons-react';
+import * as React from 'react';
+import { JSONSchema7, JSONSchema7TypeName } from '../../JsonSchemaEditor.types';
+import { DataType, getDefaultSchema, handleTypeChange, random } from '../utils';
+
 export interface SchemaArrayProps extends FlexProps {
 	schemaState: State<JSONSchema7>;
 	onSchemaChange: (results: string) => void;
 	isReadOnly: State<boolean>;
 }
 export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = (
-	props: React.PropsWithChildren<SchemaArrayProps>
+	props: React.PropsWithChildren<SchemaArrayProps>,
 ) => {
 	const state = useHookstate(props.schemaState);
 	const isReadOnlyState = useHookstate(props.isReadOnly);
@@ -26,56 +19,33 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = (
 	return (
 		<>
 			{props.onSchemaChange(JSON.stringify(state.value))}
-			<Flex
-				data-testid="jsonschema-editor"
-				direction="row"
-				wrap="nowrap"
-				size="sm"
-				mt={2}
-				mr={5}
-			>
-				<Input isDisabled placeholder="root" margin={2} variant="outline" />
-				<Tooltip
-					hasArrow
-					aria-label="All Required"
-					label="All Required"
-					placement="top"
-				>
-					<Checkbox
-						isDisabled={isReadOnlyState.value}
-						margin={2}
-						width={20}
-						colorScheme="blue"
-					/>
+			<Flex data-testid="jsonschema-editor" direction="row" wrap="nowrap" mt={2} mr={5}>
+				<Input disabled placeholder="root" m={2} variant="outline" />
+				<Tooltip aria-label="All Required" label="All Required" position="top">
+					<Checkbox disabled={isReadOnlyState.value} m={2} width={20} color="blue" />
 				</Tooltip>
 
 				<Select
 					variant="outline"
-					isDisabled={isReadOnlyState.value}
-					value={state.type.value ?? ""}
+					disabled={isReadOnlyState.value}
+					value={state.type.value.toString() ?? ''}
 					size="sm"
-					margin={2}
+					m={2}
 					placeholder="Choose root data type"
-					onChange={(evt: React.ChangeEvent<HTMLSelectElement>) => {
-						const newSchema = handleTypeChange(
-							evt.target.value as JSONSchema7TypeName,
-							false
-						);
+					onChange={(value: string) => {
+						const newSchema = handleTypeChange(value as JSONSchema7TypeName, false);
 						state.set(newSchema as JSONSchema7);
 					}}
-				>
-					<option key="object" value="object">
-						object
-					</option>
-					<option key="array" value="array">
-						array
-					</option>
-				</Select>
+					data={[
+						{ key: 'object', value: 'object' },
+						{ key: 'array', value: 'array' },
+					]}
+				/>
 				<Input
-					value={state.value?.title ?? ""}
-					isDisabled={isReadOnlyState.value}
+					value={state.value?.title ?? ''}
+					disabled={isReadOnlyState.value}
 					size="sm"
-					margin={2}
+					m={2}
 					variant="outline"
 					placeholder="Add Title"
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,10 +53,10 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = (
 					}}
 				/>
 				<Input
-					value={state.value?.description ?? ""}
-					isDisabled={isReadOnlyState.value}
+					value={state.value?.description ?? ''}
+					disabled={isReadOnlyState.value}
 					size="sm"
-					margin={2}
+					m={2}
 					variant="outline"
 					placeholder="Add Description"
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,33 +64,29 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = (
 					}}
 				/>
 
-				{state.value?.type === "object" && (
+				{state.value?.type === 'object' && (
 					<>
-						<Tooltip
-							hasArrow
-							aria-label="Add Child Node"
-							label="Add Child Node"
-							placement="top"
-						>
-							<IconButton
-								isRound
-								isDisabled={isReadOnlyState.value}
+						<Tooltip aria-label="Add Child Node" label="Add Child Node" position="top">
+							<ActionIcon
+								disabled={isReadOnlyState.value}
 								size="sm"
 								mt={2}
 								mb={2}
 								mr={2}
 								variant="link"
-								colorScheme="green"
-								fontSize="16px"
-								icon={<IoIosAddCircleOutline />}
+								color="green"
 								aria-label="Add Child Node"
 								onClick={() => {
 									const fieldName = `field_${random()}`;
-									(state.properties as State<{
-										[key: string]: JSONSchema7;
-									}>)[fieldName].set(getDefaultSchema(DataType.string));
+									(
+										state.properties as State<{
+											[key: string]: JSONSchema7;
+										}>
+									)[fieldName].set(getDefaultSchema(DataType.string));
 								}}
-							/>
+							>
+								<IconCirclePlus />
+							</ActionIcon>
 						</Tooltip>
 					</>
 				)}

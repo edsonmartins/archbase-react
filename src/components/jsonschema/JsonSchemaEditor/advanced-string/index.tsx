@@ -1,32 +1,16 @@
-import * as React from "react";
-import {
-	Flex,
-	Input,
-	FormLabel,
-	Stack,
-	NumberInput,
-	NumberInputField,
-	NumberInputStepper,
-	NumberIncrementStepper,
-	NumberDecrementStepper,
-	Checkbox,
-	Textarea,
-	Select,
-} from "@chakra-ui/react";
-import {
-	AdvancedItemStateProps,
-	JSONSchema7,
-} from "../../JsonSchemaEditor.types";
-import { none, useHookstate } from "@hookstate/core";
-import { StringFormat } from "../utils";
+import { none, useHookstate } from '@hookstate/core';
+import { Checkbox, Flex, Input, NumberInput, Select, Stack, Text, Textarea } from '@mantine/core';
+import * as React from 'react';
+import { AdvancedItemStateProps, JSONSchema7 } from '../../JsonSchemaEditor.types';
+import { StringFormat } from '../utils';
 
 export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
-	props: React.PropsWithChildren<AdvancedItemStateProps>
+	props: React.PropsWithChildren<AdvancedItemStateProps>,
 ) => {
 	const { itemStateProp } = props;
 
 	const changeEnumOtherValue = (value: string): string[] | null => {
-		const array = value.split("\n");
+		const array = value.split('\n');
 		if (array.length === 0 || (array.length === 1 && !array[0])) {
 			return null;
 		}
@@ -37,97 +21,59 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 	const itemState = useHookstate(itemStateProp);
 
 	const isEnumChecked = (itemState.value as JSONSchema7).enum !== undefined;
-	const enumData = (itemState.value as JSONSchema7).enum
-		? (itemState.enum.value as string[])
-		: [];
-	const enumValue = enumData?.join("\n");
+	const enumData = (itemState.value as JSONSchema7).enum ? (itemState.enum.value as string[]) : [];
+	const enumValue = enumData?.join('\n');
 
 	return (
 		<Flex direction="column" wrap="nowrap">
-			<Stack
-				isInline
-				alignItems="center"
-				justifyContent="center"
-				alignContent="center"
-				m={1}
-			>
-				<FormLabel mr={2}>Default: </FormLabel>
+			<Stack align="center" justify="center" m={1}>
+				<Text>Default:</Text>
 				<Input
 					id="default"
 					placeholder="Default value"
-					value={(itemState.default.value as string) ?? ""}
+					value={(itemState.default.value as string) ?? ''}
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						itemState.default.set(evt.target.value);
 					}}
 				/>
 			</Stack>
 
-			<Stack
-				isInline
-				alignItems="center"
-				justifyContent="center"
-				alignContent="center"
-				m={1}
-			>
-				<FormLabel mr={2}>Min Length: </FormLabel>
+			<Stack align="center" justify="center" m={1}>
 				<NumberInput
+					label="Min Length: "
 					size="sm"
 					defaultValue={Number(itemState.minLength.value)}
+					value={Number(itemState.minLength.value)}
 					onChange={(value: number | string) => {
 						itemState.minLength.set(Number(value));
 					}}
-				>
-					<NumberInputField value={Number(itemState.minLength.value)} />
-					<NumberInputStepper>
-						<NumberIncrementStepper />
-						<NumberDecrementStepper />
-					</NumberInputStepper>
-				</NumberInput>
-				<FormLabel mr={2}>Max Length: </FormLabel>
+				/>
 				<NumberInput
+					label="Max Length: "
 					size="sm"
 					defaultValue={Number(itemState.maxLength.value)}
+					value={Number(itemState.maxLength.value)}
 					onChange={(value: number | string) => {
 						itemState.maxLength.set(Number(value));
 					}}
-				>
-					<NumberInputField value={Number(itemState.maxLength.value)} />
-					<NumberInputStepper>
-						<NumberIncrementStepper />
-						<NumberDecrementStepper />
-					</NumberInputStepper>
-				</NumberInput>
+				/>
 			</Stack>
-			<Stack
-				isInline
-				alignItems="center"
-				justifyContent="center"
-				alignContent="center"
-				m={1}
-			>
-				<FormLabel mr={2} htmlFor="pattern">
-					Pattern:{" "}
-				</FormLabel>
+			<Stack align="center" justify="center" m={1}>
+				<Text>Pattern: </Text>
 				<Input
 					id="pattern"
 					placeholder="MUST be a valid regular expression."
-					value={itemState.pattern.value ?? ""}
+					value={itemState.pattern.value ?? ''}
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						itemState.pattern.set(evt.target.value);
 					}}
 				/>
 			</Stack>
 
-			<Stack
-				isInline
-				alignItems="center"
-				justifyContent="center"
-				alignContent="center"
-				m={1}
-			>
-				<FormLabel mr={2}>Enum: </FormLabel>
+			<Stack align="center" justify="center" m={1}>
 				<Checkbox
-					isChecked={isEnumChecked}
+					label="Enum: "
+					checked={isEnumChecked}
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						if (!evt.target.checked) {
 							itemState.enum.set(none);
@@ -137,8 +83,8 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 					}}
 				/>
 				<Textarea
-					value={enumValue || ""}
-					isDisabled={!isEnumChecked}
+					value={enumValue || ''}
+					disabled={!isEnumChecked}
 					placeholder="ENUM Values - One Entry Per Line"
 					onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
 						const update = changeEnumOtherValue(evt.target.value);
@@ -150,38 +96,23 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 					}}
 				/>
 			</Stack>
-			<Stack
-				isInline
-				alignItems="center"
-				justifyContent="center"
-				alignContent="center"
-				m={1}
-			>
-				<FormLabel mr={2} htmlFor="format">
-					Format:{" "}
-				</FormLabel>
+			<Stack align="center" justify="center" m={1}>
 				<Select
+					label="Format:{' '}"
 					variant="outline"
-					value={itemState.format.value ?? ""}
+					value={itemState.format.value ?? ''}
 					size="sm"
-					margin={2}
+					m={2}
 					placeholder="Choose data type"
-					onChange={(evt: React.ChangeEvent<HTMLSelectElement>) => {
-						if (evt.target.value === "") {
+					onChange={(value: string) => {
+						if (value === '') {
 							itemState.format.set(none);
 						} else {
-							itemState.format.set(evt.target.value);
+							itemState.format.set(value);
 						}
 					}}
-				>
-					{StringFormat.map((item, index) => {
-						return (
-							<option key={String(index)} value={item.name}>
-								{item.name}
-							</option>
-						);
-					})}
-				</Select>
+					data={StringFormat.map((item, index) => ({ key: String(index), value: item.name }))}
+				/>
 			</Stack>
 		</Flex>
 	);

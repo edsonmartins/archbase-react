@@ -1,27 +1,17 @@
-import * as React from "react";
-import { SchemaItem } from "../schema-item";
-import {
-	JSONSchema7,
-	JSONSchema7Definition,
-} from "../../JsonSchemaEditor.types";
-import { useHookstate, State } from "@hookstate/core";
-import {
-	Button,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	ModalOverlay,
-} from "@chakra-ui/react";
-import { AdvancedSettings } from "../schema-advanced";
+import { State, useHookstate } from '@hookstate/core';
+import { Button, Modal } from '@mantine/core';
+import React, { useRef } from 'react';
+import { JSONSchema7, JSONSchema7Definition } from '../../JsonSchemaEditor.types';
+import { AdvancedSettings } from '../schema-advanced';
+import { SchemaItem } from '../schema-item';
+
 export interface SchemaObjectProps {
 	schemaState: State<JSONSchema7>;
 	isReadOnly: State<boolean>;
 }
 
 export const SchemaObject: React.FunctionComponent<SchemaObjectProps> = (
-	props: React.PropsWithChildren<SchemaObjectProps>
+	props: React.PropsWithChildren<SchemaObjectProps>,
 ) => {
 	const { schemaState, isReadOnly } = props;
 	const schema = useHookstate(schemaState);
@@ -44,11 +34,11 @@ export const SchemaObject: React.FunctionComponent<SchemaObjectProps> = (
 		localState.item.set(item);
 	};
 
-	const focusRef = React.createRef<HTMLElement>();
+	const focusRef = useRef(null);
 
 	const localState = useHookstate({
 		isAdvancedOpen: false,
-		item: "",
+		item: '',
 	});
 
 	if (!propertiesOrNull) {
@@ -60,9 +50,7 @@ export const SchemaObject: React.FunctionComponent<SchemaObjectProps> = (
 					return (
 						<SchemaItem
 							key={String(name)}
-							itemStateProp={
-								propertiesOrNull.nested(name as string) as State<JSONSchema7>
-							}
+							itemStateProp={propertiesOrNull.nested(name as string) as State<JSONSchema7>}
 							parentStateProp={schema}
 							name={name as string}
 							showadvanced={showadvanced}
@@ -71,40 +59,22 @@ export const SchemaObject: React.FunctionComponent<SchemaObjectProps> = (
 						/>
 					);
 				})}
-				<Modal
-					isOpen={localState.isAdvancedOpen.get()}
-					finalFocusRef={focusRef}
-					size="lg"
-					onClose={onCloseAdvanced}
-				>
-					<ModalOverlay />
-					<ModalContent>
-						<ModalHeader textAlign="center">
-							Advanced Schema Settings
-						</ModalHeader>
+				<div ref={focusRef}>
+					<Modal
+						opened={localState.isAdvancedOpen.get()}
+						size="lg"
+						onClose={onCloseAdvanced}
+						title="Advanced Schema Settings"
+					>
+						<AdvancedSettings
+							itemStateProp={propertiesOrNull.nested(localState.item.value as string) as State<JSONSchema7>}
+						/>
 
-						<ModalBody>
-							<AdvancedSettings
-								itemStateProp={
-									propertiesOrNull.nested(
-										localState.item.value as string
-									) as State<JSONSchema7>
-								}
-							/>
-						</ModalBody>
-
-						<ModalFooter>
-							<Button
-								colorScheme="blue"
-								variant="ghost"
-								mr={3}
-								onClick={onCloseAdvanced}
-							>
-								Close
-							</Button>
-						</ModalFooter>
-					</ModalContent>
-				</Modal>
+						<Button color="blue" variant="ghost" mr={3} onClick={onCloseAdvanced}>
+							Close
+						</Button>
+					</Modal>
+				</div>
 			</div>
 		);
 	}

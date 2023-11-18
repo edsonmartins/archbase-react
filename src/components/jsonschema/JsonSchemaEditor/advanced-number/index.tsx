@@ -1,19 +1,15 @@
-import * as React from "react";
-import {Flex, Stack, NumberInput, Checkbox, Textarea} from '@mantine/core'
-
-import {
-	AdvancedItemStateProps,
-	JSONSchema7,
-} from "../../JsonSchemaEditor.types";
-import { none, useHookstate } from "@hookstate/core";
+import { none, useHookstate } from '@hookstate/core';
+import { Checkbox, Flex, NumberInput, Stack, Textarea } from '@mantine/core';
+import * as React from 'react';
+import { AdvancedItemStateProps, JSONSchema7 } from '../../JsonSchemaEditor.types';
 
 export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
-	props: React.PropsWithChildren<AdvancedItemStateProps>
+	props: React.PropsWithChildren<AdvancedItemStateProps>,
 ) => {
 	const { itemStateProp } = props;
 
 	const changeEnumOtherValue = (value: string): string[] | null => {
-		const array = value.split("\n");
+		const array = value.split('\n');
 		if (array.length === 0 || (array.length === 1 && !array[0])) {
 			return null;
 		}
@@ -24,18 +20,12 @@ export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
 	const itemState = useHookstate(itemStateProp);
 
 	const isEnumChecked = (itemState.value as JSONSchema7).enum !== undefined;
-	const enumData = (itemState.value as JSONSchema7).enum
-		? (itemState.enum.value as string[])
-		: [];
-	const enumValue = enumData?.join("\n");
+	const enumData = (itemState.value as JSONSchema7).enum ? (itemState.enum.value as string[]) : [];
+	const enumValue = enumData?.join('\n');
 
 	return (
 		<Flex direction="column" wrap="nowrap">
-			<Stack
-				align="center"
-				justify="center"
-				m={1}
-			>
+			<Stack align="center" justify="center" m={1}>
 				<NumberInput
 					label="Default: "
 					size="sm"
@@ -48,11 +38,7 @@ export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
 				/>
 			</Stack>
 
-			<Stack
-				align="center"
-				justify="center"
-				m={1}
-			>
+			<Stack align="center" justify="center" m={1}>
 				<NumberInput
 					label="Min Value: "
 					size="sm"
@@ -72,11 +58,7 @@ export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
 					}}
 				/>
 			</Stack>
-			<Stack
-				align="center"
-				justify="center"
-				m={1}
-			>
+			<Stack align="center" justify="center" m={1}>
 				<Checkbox
 					label="Enum: "
 					checked={isEnumChecked}
@@ -95,7 +77,7 @@ export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
 					datatype="number"
 					onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
 						const re = /^[0-9\n]+$/;
-						if (evt.target.value === "" || re.test(evt.target.value)) {
+						if (evt.target.value === '' || re.test(evt.target.value)) {
 							const update = changeEnumOtherValue(evt.target.value);
 							if (update === null) {
 								itemState.enum.set(none);

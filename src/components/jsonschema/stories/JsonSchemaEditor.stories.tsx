@@ -1,31 +1,30 @@
-import React from "react";
+import { Meta, StoryObj } from '@storybook/react';
+import JsonSchemaEditor from '..';
+import { printIt, readOnlyData } from './helper';
 
-import { Story, Meta } from "@storybook/react";
-
-import JsonSchemaEditor from "..";
-import { SchemaEditorProps } from "../JsonSchemaEditor.types";
-import { readOnlyData, printIt } from "./helper";
-
-export default {
-	title: "Example/SchemaEditor",
+const meta: Meta<typeof JsonSchemaEditor> = {
+	title: 'Editores/SchemaEditor',
 	component: JsonSchemaEditor,
-} as Meta;
+};
 
-const Template: Story<SchemaEditorProps> = (args) => (
-	<JsonSchemaEditor {...args} />
-);
+export default meta;
+type Story = StoryObj<typeof JsonSchemaEditor>;
 
-export const NewJsonSchema = Template.bind({});
-NewJsonSchema.args = {
-	onSchemaChange: (r) => {
-		console.log(r);
+export const NewJsonSchema: Story = {
+	name: 'Novo JsonSchema',
+	args: {
+		onSchemaChange: (r) => {
+			console.log(r);
+		},
 	},
 };
 
-export const WithData = Template.bind({});
-WithData.args = {
-	data: readOnlyData,
-	onSchemaChange: (r) => {
-		printIt(r);
+export const WithData: Story = {
+	name: 'JsonSchema com dados',
+	args: {
+		data: readOnlyData,
+		onSchemaChange: (r) => {
+			printIt(r);
+		},
 	},
 };

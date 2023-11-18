@@ -1,15 +1,16 @@
-import { hookstate, State } from "@hookstate/core";
-import { JSONSchema7 } from "../../JsonSchemaEditor.types";
-import Ajv from "ajv";
-import { Schema2 } from "../../JsonSchemaEditor.types";
+import { hookstate, State } from '@hookstate/core';
+import Ajv from 'ajv';
+import { JSONSchema7 } from '../../JsonSchemaEditor.types';
+import { Schema2 } from '../../JsonSchemaEditor.types';
+
 const ajv = new Ajv();
 
 export const defaultSchema = (): JSONSchema7 => {
 	return {
-		$schema: "http://json-schema.org/draft-07/schema#",
-		type: "object",
-		title: "title",
-		description: "",
+		$schema: 'http://json-schema.org/draft-07/schema#',
+		type: 'object',
+		title: 'title',
+		description: '',
 		properties: {},
 		required: [],
 	};

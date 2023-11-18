@@ -1,29 +1,17 @@
-import * as React from "react";
-import {
-	Popover,
-	PopoverTrigger,
-	PopoverContent,
-	Stack,
-	FlexProps,
-	IconButton,
-	Button,
-} from "@chakra-ui/react";
-import { IoIosAddCircleOutline } from "react-icons/io";
-import { DataType, getDefaultSchema } from "../utils";
-import { State, useHookstate } from "@hookstate/core";
-import {
-	JSONSchema7,
-	JSONSchema7Definition,
-} from "../../JsonSchemaEditor.types";
-import { random } from "../utils";
+import { State, useHookstate } from '@hookstate/core';
+import { ActionIcon, Button, FlexProps, Popover, Stack } from '@mantine/core';
+import { IconCirclePlus } from '@tabler/icons-react';
+import * as React from 'react';
+import { JSONSchema7, JSONSchema7Definition } from '../../JsonSchemaEditor.types';
+import { DataType, getDefaultSchema } from '../utils';
+import { random } from '../utils';
+
 export interface DropPlusProps extends FlexProps {
 	itemStateProp: State<JSONSchema7>;
 	parentStateProp: State<JSONSchema7>;
 	isDisabled: boolean;
 }
-export const DropPlus: React.FunctionComponent<DropPlusProps> = (
-	props: React.PropsWithChildren<DropPlusProps>
-) => {
+export const DropPlus: React.FunctionComponent<DropPlusProps> = (props: React.PropsWithChildren<DropPlusProps>) => {
 	const itemState = useHookstate(props.itemStateProp);
 	const parentState = useHookstate(props.parentStateProp);
 	const parentStateOrNull: State<JSONSchema7> | undefined = parentState.ornull;
@@ -48,54 +36,41 @@ export const DropPlus: React.FunctionComponent<DropPlusProps> = (
 	}
 
 	return (
-		<Popover trigger="hover">
-			<PopoverTrigger>
-				<IconButton
-					isRound
-					size="sm"
-					mt={2}
-					mb={2}
-					mr={2}
-					variant="link"
-					colorScheme="green"
-					fontSize="16px"
-					icon={<IoIosAddCircleOutline />}
-					aria-label="Add Child Node"
-				/>
-			</PopoverTrigger>
+		<Popover position="bottom" withArrow shadow="md" withinPortal={true}>
+			<Popover.Target>
+				<ActionIcon size="sm" mt={2} mb={2} mr={2} variant="subtle" color="green" aria-label="Add Child Node">
+					<IconCirclePlus />
+				</ActionIcon>
+			</Popover.Target>
 
-			<PopoverContent border="0" zIndex={4} width="100px" color="white">
+			<Popover.Dropdown w="100px" color="white">
 				<Stack>
 					<Button
-						colorScheme="blue"
+						color="blue"
 						variant="outline"
 						size="xs"
 						onClick={() => {
 							const fieldName = `field_${random()}`;
-							propertiesOrNull
-								?.nested(fieldName)
-								.set(getDefaultSchema(DataType.string) as JSONSchema7);
+							propertiesOrNull?.nested(fieldName).set(getDefaultSchema(DataType.string) as JSONSchema7);
 						}}
 					>
 						Sibling Node
 					</Button>
 					<Button
 						size="xs"
-						colorScheme="orange"
+						color="orange"
 						variant="outline"
 						onClick={() => {
 							if (itemState.properties) {
 								const fieldName = `field_${random()}`;
-								itemPropertiesOrNull
-									?.nested(fieldName)
-									.set(getDefaultSchema(DataType.string) as JSONSchema7);
+								itemPropertiesOrNull?.nested(fieldName).set(getDefaultSchema(DataType.string) as JSONSchema7);
 							}
 						}}
 					>
 						Child Node
 					</Button>
 				</Stack>
-			</PopoverContent>
+			</Popover.Dropdown>
 		</Popover>
 	);
 };
