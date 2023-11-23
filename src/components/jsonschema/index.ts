@@ -1,1 +1,1 @@
-export { JsonSchemaEditor as default } from './JsonSchemaEditor/JsonSchemaEditor';
+export { JsonSchemaEditor as default } from './JsonSchemaEditor/ArchbaseJsonSchemaEditor';

@@ -1,32 +1,22 @@
-import { Immutable, useHookstate } from '@hookstate/core';
+import Ajv from 'ajv';
 import * as R from 'ramda';
-import * as React from 'react';
-import { JSONSchema7, JSONSchema7TypeName } from '../JsonSchemaEditor.types';
+import { JSONSchema7, JSONSchema7TypeName } from '../ArchbaseJsonSchemaEditor.types';
 
 const schemaDraft = 'http://json-schema.org/draft-07/schema#';
 
 export const JSONPATH_JOIN_CHAR = '.';
 
+const ajv = new Ajv();
+
+export const isValidSchemaValidator = (schema: JSONSchema7): boolean => {
+	const isValid = ajv.validateSchema(schema);
+	return isValid;
+};
+
 export enum PropertyType {
 	SIBLING,
 	CHILD,
 }
-
-export function useDebounce<T>(value: T, delay?: number): Immutable<T> {
-	const debouncedValue = useHookstate<T>(value);
-
-	React.useEffect(() => {
-		const timer = setTimeout(() => debouncedValue.set(value), delay || 500);
-
-		return () => {
-			clearTimeout(timer);
-		};
-	}, [value, delay]);
-
-	return debouncedValue.value;
-}
-
-export default useDebounce;
 
 export const StringFormat = [
 	{ name: 'date-time' },

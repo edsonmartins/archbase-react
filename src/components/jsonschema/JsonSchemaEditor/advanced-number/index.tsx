@@ -1,12 +1,13 @@
-import { none, useHookstate } from '@hookstate/core';
 import { Checkbox, Flex, NumberInput, Stack, Textarea } from '@mantine/core';
-import * as React from 'react';
-import { AdvancedItemStateProps, JSONSchema7 } from '../../JsonSchemaEditor.types';
+import React, { useContext } from 'react';
+import { AdvancedItemStateProps } from '../../ArchbaseJsonSchemaEditor.types';
+import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
 
-export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
-	props: React.PropsWithChildren<AdvancedItemStateProps>,
-) => {
-	const { itemStateProp } = props;
+export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = ({
+	path,
+	item,
+}: React.PropsWithChildren<AdvancedItemStateProps>) => {
+	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 
 	const changeEnumOtherValue = (value: string): string[] | null => {
 		const array = value.split('\n');
@@ -17,10 +18,8 @@ export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
 		return array;
 	};
 
-	const itemState = useHookstate(itemStateProp);
-
-	const isEnumChecked = (itemState.value as JSONSchema7).enum !== undefined;
-	const enumData = (itemState.value as JSONSchema7).enum ? (itemState.enum.value as string[]) : [];
+	const isEnumChecked = item.enum !== undefined;
+	const enumData = item.enum ? (item.enum as string[]) : [];
 	const enumValue = enumData?.join('\n');
 
 	return (
@@ -29,11 +28,11 @@ export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
 				<NumberInput
 					label="Default: "
 					size="sm"
-					defaultValue={Number(itemState.default.value)}
-					value={Number(itemState.default.value)}
+					defaultValue={Number(item.default)}
+					value={Number(item.default)}
 					placeholder="Default value"
 					onChange={(value: number | string) => {
-						itemState.default.set(Number(value));
+						handleChange(`${path}.default`, Number(value), 'ASSIGN_VALUE');
 					}}
 				/>
 			</Stack>
@@ -42,19 +41,19 @@ export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
 				<NumberInput
 					label="Min Value: "
 					size="sm"
-					defaultValue={Number(itemState.minimum.value)}
-					value={Number(itemState.minimum.value)}
+					defaultValue={Number(item.minimum)}
+					value={Number(item.minimum)}
 					onChange={(value: number | string) => {
-						itemState.minimum.set(Number(value));
+						handleChange(`${path}.minimum`, Number(value), 'ASSIGN_VALUE');
 					}}
 				/>
 				<NumberInput
 					label="Max Value: "
 					size="sm"
-					defaultValue={Number(itemState.maximum.value)}
-					value={Number(itemState.maximum.value)}
+					defaultValue={Number(item.maximum)}
+					value={Number(item.maximum)}
 					onChange={(value: number | string) => {
-						itemState.maximum.set(Number(value));
+						handleChange(`${path}.maximum`, Number(value), 'ASSIGN_VALUE');
 					}}
 				/>
 			</Stack>
@@ -64,9 +63,9 @@ export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
 					checked={isEnumChecked}
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						if (!evt.target.checked) {
-							itemState.enum.set(none);
+							handleChange(`${path}.enum`, null, 'REMOVE');
 						} else {
-							itemState.enum.set(Array<string>());
+							handleChange(`${path}.enum`, Array<string>(), 'ASSIGN_VALUE');
 						}
 					}}
 				/>
@@ -80,9 +79,9 @@ export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
 						if (evt.target.value === '' || re.test(evt.target.value)) {
 							const update = changeEnumOtherValue(evt.target.value);
 							if (update === null) {
-								itemState.enum.set(none);
+								handleChange(`${path}.enum`, null, 'REMOVE');
 							} else {
-								itemState.enum.set(update as string[]);
+								handleChange(`${path}.enum`, update as string[], 'ASSIGN_VALUE');
 							}
 						}
 					}}

@@ -1,42 +1,40 @@
-import { State, useHookstate } from '@hookstate/core';
 import { ActionIcon, Button, Checkbox, Flex, FlexProps, Input, Modal, Select, Tooltip } from '@mantine/core';
 import { IconCirclePlus, IconSettings } from '@tabler/icons-react';
-import React, { useRef } from 'react';
-import { JSONSchema7, JSONSchema7TypeName } from '../../JsonSchemaEditor.types';
+import React, { useContext, useRef, useState } from 'react';
+import { JSONSchema7, JSONSchema7TypeName } from '../../ArchbaseJsonSchemaEditor.types';
+import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
 import { AdvancedSettings } from '../schema-advanced';
 import { SchemaObject } from '../schema-object';
 import { DataType, getDefaultSchema, handleTypeChange, random, SchemaTypes } from '../utils';
 
 export interface SchemaArrayProps extends FlexProps {
-	schemaState: State<JSONSchema7>;
-	isReadOnly: State<boolean>;
+	path: string;
+	jsonSchema: JSONSchema7;
+	isReadOnly: boolean;
 }
-export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = (
-	props: React.PropsWithChildren<SchemaArrayProps>,
-) => {
-	const { schemaState, isReadOnly } = props;
+export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
+	path,
+	jsonSchema,
+	isReadOnly,
+}: React.PropsWithChildren<SchemaArrayProps>) => {
+	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
+	const [open, setOpen] = useState(false);
 
-	const state = useHookstate(schemaState.items as JSONSchema7);
-	const isReadOnlyState = useHookstate(isReadOnly);
-
-	const { length } = state.path.filter((name) => name !== 'properties');
+	const items = jsonSchema.items as JSONSchema7;
+	const length = path.split('.').length;
 	const tagPaddingLeftStyle = {
 		paddingLeft: `${20 * (length + 1)}px`,
 	};
 
 	const onCloseAdvanced = (): void => {
-		localState.isAdvancedOpen.set(false);
+		setOpen(false);
 	};
 
 	const showadvanced = (): void => {
-		localState.isAdvancedOpen.set(true);
+		setOpen(true);
 	};
 
 	const focusRef = useRef(null);
-
-	const localState = useHookstate({
-		isAdvancedOpen: false,
-	});
 
 	return (
 		<>
@@ -45,42 +43,42 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = (
 				<Checkbox disabled m={2} color="blue" />
 				<Select
 					variant="outline"
-					disabled={isReadOnlyState.value}
-					value={state.type.value as JSONSchema7TypeName}
+					disabled={isReadOnly}
+					value={items.type as JSONSchema7TypeName}
 					size="sm"
 					m={2}
 					placeholder="Choose data type"
 					onChange={(value: string) => {
 						const newSchema = handleTypeChange(value as JSONSchema7TypeName, false);
-						state.set(newSchema as JSONSchema7);
+						handleChange(`${path}.items`, newSchema, 'ASSIGN_VALUE');
 					}}
 					data={SchemaTypes.map((item, index) => ({ key: String(index), value: item }))}
 				/>
 				<Input
-					value={state.title.value}
-					disabled={isReadOnlyState.value}
+					value={items.title}
+					disabled={isReadOnly}
 					size="sm"
 					m={2}
 					variant="outline"
 					placeholder="Add Title"
-					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-						state.title.set(evt.target.value);
+					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+						handleChange(`${path}.items.title`, event.target.value, 'ASSIGN_VALUE');
 					}}
 				/>
 				<Input
-					value={state.description.value}
-					disabled={isReadOnlyState.value}
+					value={items.description}
+					disabled={isReadOnly}
 					size="sm"
 					m={2}
 					variant="outline"
 					placeholder="Add Description"
-					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-						state.description.set(evt.target.value);
+					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+						handleChange(`${path}.items.description`, event.target.value, 'ASSIGN_VALUE');
 					}}
 				/>
 				<Tooltip aria-label="Advanced Settings" label="Advanced Settings" position="top">
 					<ActionIcon
-						disabled={isReadOnlyState.value}
+						disabled={isReadOnly}
 						size="sm"
 						mt={2}
 						mb={2}
@@ -96,10 +94,10 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = (
 					</ActionIcon>
 				</Tooltip>
 
-				{state.type.value === 'object' && (
+				{items.type === 'object' && (
 					<Tooltip aria-label="Add Child Node" label="Add Child Node" position="top">
 						<ActionIcon
-							disabled={isReadOnlyState.value}
+							disabled={isReadOnly}
 							size="sm"
 							mt={2}
 							mb={2}
@@ -109,11 +107,11 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = (
 							aria-label="Add Child Node"
 							onClick={() => {
 								const fieldName = `field_${random()}`;
-								(
-									state.properties as State<{
-										[key: string]: JSONSchema7;
-									}>
-								)[fieldName].set(getDefaultSchema(DataType.string));
+								handleChange(
+									`${path}.items.properties.${fieldName}`,
+									getDefaultSchema(DataType.string),
+									'ASSIGN_VALUE',
+								);
 							}}
 						>
 							<IconCirclePlus />
@@ -121,16 +119,11 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = (
 					</Tooltip>
 				)}
 			</Flex>
-			{state.type?.value === 'object' && <SchemaObject isReadOnly={isReadOnlyState.get()} schemaState={state} />}
-			{state.type?.value === 'array' && <SchemaArray isReadOnly={isReadOnlyState.get()} schemaState={state} />}
+			{items.type === 'object' && <SchemaObject path={`${path}.items`} jsonSchema={items} isReadOnly={isReadOnly} />}
+			{items.type === 'array' && <SchemaArray path={`${path}.items`} jsonSchema={items} isReadOnly={isReadOnly} />}
 			<div ref={focusRef}>
-				<Modal
-					opened={localState.isAdvancedOpen.get()}
-					size="lg"
-					onClose={onCloseAdvanced}
-					title="Advanced Schema Settings"
-				>
-					<AdvancedSettings itemStateProp={state} />
+				<Modal opened={open} size="lg" onClose={onCloseAdvanced} title="Advanced Schema Settings">
+					<AdvancedSettings path={`${path}.items`} item={items} />
 
 					<Button color="blue" variant="ghost" mr={3} onClick={onCloseAdvanced}>
 						Close

@@ -1,33 +1,32 @@
-import { State, useHookstate } from '@hookstate/core';
 import { Flex } from '@mantine/core';
 import * as React from 'react';
-import { JSONSchema7 } from '../../JsonSchemaEditor.types';
+import { JSONSchema7 } from '../../ArchbaseJsonSchemaEditor.types';
 import { AdvancedBoolean } from '../advanced-boolean';
 import { AdvancedNumber } from '../advanced-number';
 import { AdvancedString } from '../advanced-string';
 
 export interface AdvancedSettingsProps {
-	itemStateProp: State<JSONSchema7>;
+	path: string;
+	item: JSONSchema7;
 }
 
-export const AdvancedSettings: React.FunctionComponent<AdvancedSettingsProps> = (
-	props: React.PropsWithChildren<AdvancedSettingsProps>,
-) => {
-	const itemState = useHookstate(props.itemStateProp);
-
-	const getAdvancedView = (item: State<JSONSchema7>): JSX.Element | undefined => {
-		switch (itemState.type.value) {
+export const AdvancedSettings: React.FunctionComponent<AdvancedSettingsProps> = ({
+	path,
+	item,
+}: React.PropsWithChildren<AdvancedSettingsProps>) => {
+	const getAdvancedView = (path: string): JSX.Element | undefined => {
+		switch (item.type) {
 			case 'string':
-				return <AdvancedString itemStateProp={item} />;
+				return <AdvancedString path={path} item={item} />;
 			case 'number':
 			case 'integer':
-				return <AdvancedNumber itemStateProp={item} />;
+				return <AdvancedNumber path={path} item={item} />;
 			case 'boolean':
-				return <AdvancedBoolean itemStateProp={item} />;
+				return <AdvancedBoolean path={path} item={item} />;
 			default:
 				return undefined;
 		}
 	};
 
-	return <Flex>{getAdvancedView(itemState)}</Flex>;
+	return <Flex>{getAdvancedView(path)}</Flex>;
 };

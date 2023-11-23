@@ -1,4 +1,4 @@
-import { JSONSchema7 } from '../JsonSchemaEditor/JsonSchemaEditor';
+import { JSONSchema7 } from '../JsonSchemaEditor/ArchbaseJsonSchemaEditor';
 
 export const bad = {
 	type: 'notvalid',
@@ -98,8 +98,4 @@ export const readOnlyData: JSONSchema7 = {
 			},
 		},
 	},
-};
-
-export const printIt = (schema: string) => {
-	console.log(schema);
 };

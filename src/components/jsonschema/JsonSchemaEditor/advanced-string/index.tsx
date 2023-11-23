@@ -1,13 +1,14 @@
-import { none, useHookstate } from '@hookstate/core';
 import { Checkbox, Flex, Input, NumberInput, Select, Stack, Text, Textarea } from '@mantine/core';
-import * as React from 'react';
-import { AdvancedItemStateProps, JSONSchema7 } from '../../JsonSchemaEditor.types';
+import React, { useContext } from 'react';
+import { AdvancedItemStateProps } from '../../ArchbaseJsonSchemaEditor.types';
+import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
 import { StringFormat } from '../utils';
 
-export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
-	props: React.PropsWithChildren<AdvancedItemStateProps>,
-) => {
-	const { itemStateProp } = props;
+export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = ({
+	path,
+	item,
+}: React.PropsWithChildren<AdvancedItemStateProps>) => {
+	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 
 	const changeEnumOtherValue = (value: string): string[] | null => {
 		const array = value.split('\n');
@@ -18,10 +19,8 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 		return array;
 	};
 
-	const itemState = useHookstate(itemStateProp);
-
-	const isEnumChecked = (itemState.value as JSONSchema7).enum !== undefined;
-	const enumData = (itemState.value as JSONSchema7).enum ? (itemState.enum.value as string[]) : [];
+	const isEnumChecked = item.enum !== undefined;
+	const enumData = item.enum ? (item.enum as string[]) : [];
 	const enumValue = enumData?.join('\n');
 
 	return (
@@ -31,9 +30,9 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 				<Input
 					id="default"
 					placeholder="Default value"
-					value={(itemState.default.value as string) ?? ''}
-					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-						itemState.default.set(evt.target.value);
+					value={(item.default as string) ?? ''}
+					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+						handleChange(`${path}.default`, event.target.value, 'ASSIGN_VALUE');
 					}}
 				/>
 			</Stack>
@@ -42,19 +41,19 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 				<NumberInput
 					label="Min Length: "
 					size="sm"
-					defaultValue={Number(itemState.minLength.value)}
-					value={Number(itemState.minLength.value)}
+					defaultValue={Number(item.minLength)}
+					value={Number(item.minLength)}
 					onChange={(value: number | string) => {
-						itemState.minLength.set(Number(value));
+						handleChange(`${path}.minLength`, Number(value), 'ASSIGN_VALUE');
 					}}
 				/>
 				<NumberInput
 					label="Max Length: "
 					size="sm"
-					defaultValue={Number(itemState.maxLength.value)}
-					value={Number(itemState.maxLength.value)}
+					defaultValue={Number(item.maxLength)}
+					value={Number(item.maxLength)}
 					onChange={(value: number | string) => {
-						itemState.maxLength.set(Number(value));
+						handleChange(`${path}.maxLength`, Number(value), 'ASSIGN_VALUE');
 					}}
 				/>
 			</Stack>
@@ -63,9 +62,9 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 				<Input
 					id="pattern"
 					placeholder="MUST be a valid regular expression."
-					value={itemState.pattern.value ?? ''}
-					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-						itemState.pattern.set(evt.target.value);
+					value={item.pattern ?? ''}
+					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+						handleChange(`${path}.pattern`, event.target.value, 'ASSIGN_VALUE');
 					}}
 				/>
 			</Stack>
@@ -74,11 +73,11 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 				<Checkbox
 					label="Enum: "
 					checked={isEnumChecked}
-					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-						if (!evt.target.checked) {
-							itemState.enum.set(none);
+					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+						if (!event.target.checked) {
+							handleChange(`${path}.enum`, null, 'REMOVE');
 						} else {
-							itemState.enum.set(Array<string>());
+							handleChange(`${path}.enum`, Array<string>(), 'ASSIGN_VALUE');
 						}
 					}}
 				/>
@@ -86,12 +85,12 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 					value={enumValue || ''}
 					disabled={!isEnumChecked}
 					placeholder="ENUM Values - One Entry Per Line"
-					onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-						const update = changeEnumOtherValue(evt.target.value);
+					onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+						const update = changeEnumOtherValue(event.target.value);
 						if (update === null) {
-							itemState.enum.set(none);
+							handleChange(`${path}.enum`, null, 'REMOVE');
 						} else {
-							itemState.enum.set(update as string[]);
+							handleChange(`${path}.enum`, update as string[], 'ASSIGN_VALUE');
 						}
 					}}
 				/>
@@ -100,15 +99,15 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 				<Select
 					label="Format:{' '}"
 					variant="outline"
-					value={itemState.format.value ?? ''}
+					value={item.format ?? ''}
 					size="sm"
 					m={2}
 					placeholder="Choose data type"
 					onChange={(value: string) => {
 						if (value === '') {
-							itemState.format.set(none);
+							handleChange(`${path}.format`, null, 'REMOVE');
 						} else {
-							itemState.format.set(value);
+							handleChange(`${path}.format`, value, 'ASSIGN_VALUE');
 						}
 					}}
 					data={StringFormat.map((item, index) => ({ key: String(index), value: item.name }))}

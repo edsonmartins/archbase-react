@@ -1,74 +1,54 @@
-import { State, useHookstate } from '@hookstate/core';
 import { Button, Modal } from '@mantine/core';
-import React, { useRef } from 'react';
-import { JSONSchema7, JSONSchema7Definition } from '../../JsonSchemaEditor.types';
+import React, { useRef, useState } from 'react';
+import { JSONSchema7 } from '../ArchbaseJsonSchemaEditor';
 import { AdvancedSettings } from '../schema-advanced';
 import { SchemaItem } from '../schema-item';
 
 export interface SchemaObjectProps {
-	schemaState: State<JSONSchema7>;
-	isReadOnly: State<boolean>;
+	path: string;
+	jsonSchema: JSONSchema7;
+	isReadOnly: boolean;
 }
 
-export const SchemaObject: React.FunctionComponent<SchemaObjectProps> = (
-	props: React.PropsWithChildren<SchemaObjectProps>,
-) => {
-	const { schemaState, isReadOnly } = props;
-	const schema = useHookstate(schemaState);
-	const properties = useHookstate(schema.properties);
-
-	const propertiesOrNull:
-		| State<{
-				[key: string]: JSONSchema7Definition;
-		  }>
-		| undefined = properties.ornull;
-
-	const isReadOnlyState = useHookstate(isReadOnly);
+export const SchemaObject: React.FunctionComponent<SchemaObjectProps> = ({
+	path,
+	jsonSchema,
+	isReadOnly,
+}: React.PropsWithChildren<SchemaObjectProps>) => {
+	const [open, setOpen] = useState(false);
+	const [item, setItem] = useState('');
 
 	const onCloseAdvanced = (): void => {
-		localState.isAdvancedOpen.set(false);
+		setOpen(false);
 	};
 
 	const showadvanced = (item: string): void => {
-		localState.isAdvancedOpen.set(true);
-		localState.item.set(item);
+		setOpen(true);
+		setItem(item);
 	};
 
 	const focusRef = useRef(null);
-
-	const localState = useHookstate({
-		isAdvancedOpen: false,
-		item: '',
-	});
-
-	if (!propertiesOrNull) {
+	if (!jsonSchema.properties) {
 		return <></>;
 	} else {
 		return (
 			<div className="object-style">
-				{propertiesOrNull?.keys?.map((name) => {
+				{Object.keys(jsonSchema.properties).map((name) => {
 					return (
 						<SchemaItem
 							key={String(name)}
-							itemStateProp={propertiesOrNull.nested(name as string) as State<JSONSchema7>}
-							parentStateProp={schema}
+							parentPath={path}
+							itemPath={`${path}.properties.${name}`}
 							name={name as string}
 							showadvanced={showadvanced}
-							required={schema.required.value as string[]}
-							isReadOnly={isReadOnlyState}
+							jsonSchema={jsonSchema}
+							isReadOnly={isReadOnly}
 						/>
 					);
 				})}
 				<div ref={focusRef}>
-					<Modal
-						opened={localState.isAdvancedOpen.get()}
-						size="lg"
-						onClose={onCloseAdvanced}
-						title="Advanced Schema Settings"
-					>
-						<AdvancedSettings
-							itemStateProp={propertiesOrNull.nested(localState.item.value as string) as State<JSONSchema7>}
-						/>
+					<Modal opened={open} size="lg" onClose={onCloseAdvanced} title="Advanced Schema Settings">
+						<AdvancedSettings path={`${path}.properties`} item={jsonSchema.properties[item] as JSONSchema7} />
 
 						<Button color="blue" variant="ghost" mr={3} onClick={onCloseAdvanced}>
 							Close

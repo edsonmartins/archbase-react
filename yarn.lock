@@ -2517,15 +2517,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hookstate/core@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "@hookstate/core@npm:4.0.1"
-  peerDependencies:
-    react: ^16.8.6 || ^17.0.0 || ^18.0.0
-  checksum: a435ee56cadc56b4828ff079b11d8ded2df3b1529261c2008196d12deba146f4e34d8900655ef16498f09076097ab4a86ba3586c902bfc41453a299cd4f6e23b
-  languageName: node
-  linkType: hard
-
 "@humanwhocodes/config-array@npm:^0.11.8":
   version: 0.11.13
   resolution: "@humanwhocodes/config-array@npm:0.11.13"
@@ -6822,7 +6813,6 @@ __metadata:
     "@emotion/babel-plugin": "npm:^11.10.5"
     "@emotion/react": "npm:^11.10.5"
     "@emotion/styled": "npm:^11.10.5"
-    "@hookstate/core": "npm:^4.0.1"
     "@juggle/resize-observer": "npm:^3.4.0"
     "@mantine/core": "npm:^6.0.21"
     "@mantine/dates": "npm:^6.0.21"
@@ -6883,6 +6873,7 @@ __metadata:
     css-element-queries: "npm:^1.2.3"
     date-fns: "npm:^2.30.0"
     dayjs: "npm:^1.11.9"
+    dot-prop: "npm:^8.0.2"
     element-resize-detector: "npm:^1.2.4"
     eslint: "npm:8.31.0"
     eslint-config-prettier: "npm:^8.6.0"
@@ -6903,6 +6894,7 @@ __metadata:
     i18next: "npm:^23.3.0"
     i18next-browser-languagedetector: "npm:^7.1.0"
     i18next-http-backend: "npm:^2.2.1"
+    immer: "npm:^10.0.3"
     inversify: "npm:^6.0.1"
     inversify-react: "npm:^1.1.0"
     is-hotkey: "npm:^0.2.0"
@@ -6965,6 +6957,7 @@ __metadata:
     rollup-plugin-postcss: "npm:^4.0.2"
     rollup-plugin-typescript2: "npm:^0.34.1"
     sass: "npm:^1.67.0"
+    set-value: "npm:^4.1.0"
     storybook: "npm:^7.5.2"
     storybook-dark-mode: "npm:^3.0.1"
     suneditor: "npm:^2.45.1"
@@ -9380,6 +9373,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dot-prop@npm:^8.0.2":
+  version: 8.0.2
+  resolution: "dot-prop@npm:8.0.2"
+  dependencies:
+    type-fest: "npm:^3.8.0"
+  checksum: 422b4a65aad880fc4a21d09615ae97bf6c66767e7b29522fbafa34d2dd0489adff745f79dd1126ac463730f2b43eada75a02e5114065491c6148953f29551f27
+  languageName: node
+  linkType: hard
+
 "dotenv-expand@npm:^10.0.0":
   version: 10.0.0
   resolution: "dotenv-expand@npm:10.0.0"
@@ -11629,6 +11631,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"immer@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "immer@npm:10.0.3"
+  checksum: 282a4f8479a40f7d12b2b3243c095e3e892bf99058e2ffcdd6b8e9fd143e6a90f2717ab9b6c8b97c927ffb8054465c8f647056f41660dbfd672e240cf1063503
+  languageName: node
+  linkType: hard
+
 "immutable@npm:^4.0.0":
   version: 4.3.4
   resolution: "immutable@npm:4.3.4"
@@ -12121,6 +12130,13 @@ __metadata:
   version: 1.0.1
   resolution: "is-potential-custom-element-name@npm:1.0.1"
   checksum: b73e2f22bc863b0939941d369486d308b43d7aef1f9439705e3582bfccaa4516406865e32c968a35f97a99396dac84e2624e67b0a16b0a15086a785e16ce7db9
+  languageName: node
+  linkType: hard
+
+"is-primitive@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "is-primitive@npm:3.0.1"
+  checksum: 2e3b6f029fabbdda467ea51ea4fdd00e6552434108b863a08f296638072c506a7c195089e3e31f83e7fc14bebbd1c5c9f872fe127c9284a7665c8227b47ffdd6
   languageName: node
   linkType: hard
 
@@ -17984,6 +18000,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"set-value@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "set-value@npm:4.1.0"
+  dependencies:
+    is-plain-object: "npm:^2.0.4"
+    is-primitive: "npm:^3.0.1"
+  checksum: dc186676b6cc0cfcf1656b8acdfe7a68591f0645dd2872250100817fb53e5e9298dc1727a95605ac03f82110e9b3820c90a0a02d84e0fb89f210922b08b37e02
+  languageName: node
+  linkType: hard
+
 "setprototypeof@npm:1.2.0":
   version: 1.2.0
   resolution: "setprototypeof@npm:1.2.0"
@@ -19442,6 +19468,13 @@ __metadata:
   version: 2.19.0
   resolution: "type-fest@npm:2.19.0"
   checksum: a5a7ecf2e654251613218c215c7493574594951c08e52ab9881c9df6a6da0aeca7528c213c622bc374b4e0cb5c443aa3ab758da4e3c959783ce884c3194e12cb
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^3.8.0":
+  version: 3.13.1
+  resolution: "type-fest@npm:3.13.1"
+  checksum: 547d22186f73a8c04590b70dcf63baff390078c75ea8acd366bbd510fd0646e348bd1970e47ecf795b7cff0b41d26e9c475c1fedd6ef5c45c82075fbf916b629
   languageName: node
   linkType: hard
 

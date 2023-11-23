@@ -1,37 +1,31 @@
-import { State, useHookstate } from '@hookstate/core';
 import { ActionIcon, Button, FlexProps, Popover, Stack } from '@mantine/core';
 import { IconCirclePlus } from '@tabler/icons-react';
-import * as React from 'react';
-import { JSONSchema7, JSONSchema7Definition } from '../../JsonSchemaEditor.types';
+import React, { useContext } from 'react';
+import { JSONSchema7 } from '../../ArchbaseJsonSchemaEditor.types';
+import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
 import { DataType, getDefaultSchema } from '../utils';
 import { random } from '../utils';
 
 export interface DropPlusProps extends FlexProps {
-	itemStateProp: State<JSONSchema7>;
-	parentStateProp: State<JSONSchema7>;
-	isDisabled: boolean;
+	itemPath: string;
+	parentPath: string;
+	parent: JSONSchema7;
+	item: JSONSchema7;
+	isReadOnly: boolean;
 }
-export const DropPlus: React.FunctionComponent<DropPlusProps> = (props: React.PropsWithChildren<DropPlusProps>) => {
-	const itemState = useHookstate(props.itemStateProp);
-	const parentState = useHookstate(props.parentStateProp);
-	const parentStateOrNull: State<JSONSchema7> | undefined = parentState.ornull;
-	const propertiesOrNull:
-		| State<{
-				[key: string]: JSONSchema7Definition;
-		  }>
-		| undefined = parentStateOrNull.properties.ornull;
-
-	const itemPropertiesOrNull:
-		| State<{
-				[key: string]: JSONSchema7Definition;
-		  }>
-		| undefined = itemState.properties.ornull;
-
-	if (props.isDisabled) {
+export const DropPlus: React.FunctionComponent<DropPlusProps> = ({
+	itemPath,
+	parentPath,
+	parent,
+	item,
+	isReadOnly,
+}: React.PropsWithChildren<DropPlusProps>) => {
+	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
+	if (isReadOnly) {
 		return <div />;
 	}
 
-	if (!parentStateOrNull) {
+	if (!parent) {
 		return <></>;
 	}
 
@@ -51,7 +45,7 @@ export const DropPlus: React.FunctionComponent<DropPlusProps> = (props: React.Pr
 						size="xs"
 						onClick={() => {
 							const fieldName = `field_${random()}`;
-							propertiesOrNull?.nested(fieldName).set(getDefaultSchema(DataType.string) as JSONSchema7);
+							handleChange(`${parentPath}.properties.${fieldName}`, getDefaultSchema(DataType.string), 'ASSIGN_VALUE');
 						}}
 					>
 						Sibling Node
@@ -61,9 +55,9 @@ export const DropPlus: React.FunctionComponent<DropPlusProps> = (props: React.Pr
 						color="orange"
 						variant="outline"
 						onClick={() => {
-							if (itemState.properties) {
+							if (item.properties) {
 								const fieldName = `field_${random()}`;
-								itemPropertiesOrNull?.nested(fieldName).set(getDefaultSchema(DataType.string) as JSONSchema7);
+								handleChange(`${itemPath}.properties.${fieldName}`, getDefaultSchema(DataType.string), 'ASSIGN_VALUE');
 							}
 						}}
 					>

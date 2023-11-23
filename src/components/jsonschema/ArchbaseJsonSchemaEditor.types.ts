@@ -1,14 +1,3 @@
-import { State } from '@hookstate/core';
-
-export interface SchemaEditorProps {
-	/**
-	 * Text component
-	 */
-	data?: JSONSchema7 | undefined;
-	onSchemaChange: (results: string) => void;
-	readOnly?: boolean;
-}
-
 export type Schema2 = {
 	jsonSchema: JSONSchema7;
 	isValidSchema?: boolean;
@@ -16,8 +5,10 @@ export type Schema2 = {
 	isReadOnly: boolean;
 	fieldId: number;
 };
+
 export interface AdvancedItemStateProps {
-	itemStateProp: State<JSONSchema7>;
+	path: string;
+	item: JSONSchema7;
 }
 
 //==================================================================================================
