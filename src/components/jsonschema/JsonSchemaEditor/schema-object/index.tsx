@@ -1,4 +1,4 @@
-import { Button, Modal } from '@mantine/core';
+import { Button, Flex, Modal } from '@mantine/core';
 import React, { useRef, useState } from 'react';
 import { JSONSchema7 } from '../ArchbaseJsonSchemaEditor';
 import { AdvancedSettings } from '../schema-advanced';
@@ -26,7 +26,6 @@ export const SchemaObject: React.FunctionComponent<SchemaObjectProps> = ({
 		setOpen(true);
 		setItem(item);
 	};
-
 	const focusRef = useRef(null);
 	if (!jsonSchema.properties) {
 		return <></>;
@@ -48,11 +47,12 @@ export const SchemaObject: React.FunctionComponent<SchemaObjectProps> = ({
 				})}
 				<div ref={focusRef}>
 					<Modal opened={open} size="lg" onClose={onCloseAdvanced} title="Advanced Schema Settings">
-						<AdvancedSettings path={`${path}.properties`} item={jsonSchema.properties[item] as JSONSchema7} />
-
-						<Button color="blue" variant="ghost" mr={3} onClick={onCloseAdvanced}>
-							Close
-						</Button>
+						<AdvancedSettings path={`${path}.properties.${item}`} item={jsonSchema.properties[item] as JSONSchema7} />
+						<Flex justify="flex-end">
+							<Button mr={3} onClick={onCloseAdvanced}>
+								Close
+							</Button>
+						</Flex>
 					</Modal>
 				</div>
 			</div>

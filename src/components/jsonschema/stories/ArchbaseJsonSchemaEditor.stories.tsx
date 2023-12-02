@@ -22,7 +22,7 @@ export const NewJsonSchema: Story = {
 	name: 'Novo JsonSchema',
 	args: {
 		onRootSchemaChange: (r) => {
-			console.log(r);
+			// console.log(r);
 		},
 	},
 };
@@ -32,7 +32,7 @@ export const WithData: Story = {
 	args: {
 		defaultRootSchema: initialSchemaWithData,
 		onRootSchemaChange: (r) => {
-			console.log(r);
+			// console.log(r);
 		},
 	},
 };

@@ -1,4 +1,4 @@
-import { Checkbox, Flex, NumberInput, Stack, Textarea } from '@mantine/core';
+import { Checkbox, Flex, NumberInput, Stack, Text, Textarea } from '@mantine/core';
 import React, { useContext } from 'react';
 import { AdvancedItemStateProps } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
@@ -23,69 +23,86 @@ export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = (
 	const enumValue = enumData?.join('\n');
 
 	return (
-		<Flex direction="column" wrap="nowrap">
-			<Stack align="center" justify="center" m={1}>
+		<Flex direction="column" w="100%" wrap="nowrap">
+			<Stack align="stretch" justify="center" m={1}>
 				<NumberInput
 					label="Default: "
 					size="sm"
-					defaultValue={Number(item.default)}
-					value={Number(item.default)}
+					defaultValue={item.default !== undefined ? Number(item.default) : ''}
+					value={item.default !== undefined ? Number(item.default) : ''}
 					placeholder="Default value"
 					onChange={(value: number | string) => {
-						handleChange(`${path}.default`, Number(value), 'ASSIGN_VALUE');
+						if (value !== '') {
+							handleChange(`${path}.default`, Number(value), 'ASSIGN_VALUE');
+						} else {
+							handleChange(`${path}.default`, null, 'REMOVE');
+						}
 					}}
 				/>
 			</Stack>
 
-			<Stack align="center" justify="center" m={1}>
-				<NumberInput
-					label="Min Value: "
-					size="sm"
-					defaultValue={Number(item.minimum)}
-					value={Number(item.minimum)}
-					onChange={(value: number | string) => {
-						handleChange(`${path}.minimum`, Number(value), 'ASSIGN_VALUE');
-					}}
-				/>
-				<NumberInput
-					label="Max Value: "
-					size="sm"
-					defaultValue={Number(item.maximum)}
-					value={Number(item.maximum)}
-					onChange={(value: number | string) => {
-						handleChange(`${path}.maximum`, Number(value), 'ASSIGN_VALUE');
-					}}
-				/>
+			<Stack align="stretch" justify="center" m={1}>
+				<Flex justify="space-between">
+					<NumberInput
+						label="Min Value: "
+						size="sm"
+						defaultValue={item.minimum !== undefined ? Number(item.minimum) : ''}
+						value={item.minimum !== undefined ? Number(item.minimum) : ''}
+						onChange={(value: number | string) => {
+							if (value !== '') {
+								handleChange(`${path}.minimum`, Number(value), 'ASSIGN_VALUE');
+							} else {
+								handleChange(`${path}.minimum`, null, 'REMOVE');
+							}
+						}}
+					/>
+					<NumberInput
+						label="Max Value: "
+						size="sm"
+						defaultValue={item.maximum !== undefined ? Number(item.maximum) : ''}
+						value={item.maximum !== undefined ? Number(item.maximum) : ''}
+						onChange={(value: number | string) => {
+							if (value !== '') {
+								handleChange(`${path}.maximum`, Number(value), 'ASSIGN_VALUE');
+							} else {
+								handleChange(`${path}.maximum`, null, 'REMOVE');
+							}
+						}}
+					/>
+				</Flex>
 			</Stack>
-			<Stack align="center" justify="center" m={1}>
-				<Checkbox
-					label="Enum: "
-					checked={isEnumChecked}
-					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-						if (!evt.target.checked) {
-							handleChange(`${path}.enum`, null, 'REMOVE');
-						} else {
-							handleChange(`${path}.enum`, Array<string>(), 'ASSIGN_VALUE');
-						}
-					}}
-				/>
-				<Textarea
-					value={enumValue}
-					disabled={!isEnumChecked}
-					placeholder="ENUM Values - One Entry Per Line"
-					datatype="number"
-					onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-						const re = /^[0-9\n]+$/;
-						if (evt.target.value === '' || re.test(evt.target.value)) {
-							const update = changeEnumOtherValue(evt.target.value);
-							if (update === null) {
+			<Stack align="stretch" justify="center" mt={8}>
+				<Flex align="center" justify="space-between">
+					<Text>Enum: </Text>
+					<Checkbox
+						checked={isEnumChecked}
+						onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
+							if (!evt.target.checked) {
 								handleChange(`${path}.enum`, null, 'REMOVE');
 							} else {
-								handleChange(`${path}.enum`, update as string[], 'ASSIGN_VALUE');
+								handleChange(`${path}.enum`, [''], 'ASSIGN_VALUE');
 							}
-						}
-					}}
-				/>
+						}}
+					/>
+					<Textarea
+						w="85%"
+						value={enumValue}
+						disabled={!isEnumChecked}
+						placeholder="ENUM Values - One Entry Per Line"
+						datatype="number"
+						onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+							const re = /^[0-9\n]+$/;
+							if (evt.target.value === '' || re.test(evt.target.value)) {
+								const update = changeEnumOtherValue(evt.target.value);
+								if (update === null) {
+									handleChange(`${path}.enum`, null, 'REMOVE');
+								} else {
+									handleChange(`${path}.enum`, update as string[], 'ASSIGN_VALUE');
+								}
+							}
+						}}
+					/>
+				</Flex>
 			</Stack>
 		</Flex>
 	);

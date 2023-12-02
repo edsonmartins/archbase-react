@@ -24,7 +24,6 @@ export interface SchemaItemProps extends FlexProps {
 }
 
 const itemTypes = SchemaTypes.map((item) => ({ value: item, label: item }));
-
 export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 	name,
 	showadvanced,
@@ -39,7 +38,8 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 
 	const colorScheme = useColorScheme();
 
-	const length = getPathDepthLevel(parentPath) - parentPath.match(/(properties)/g).length;
+	const length =
+		getPathDepthLevel(parentPath) - (parentPath.match(/(properties)/g) ? parentPath.match(/(properties)/g).length : 0);
 	const tagPaddingLeftStyle = {
 		paddingLeft: `${20 * (length + 1)}px`,
 	};
@@ -68,11 +68,9 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 		// delay in ms
 		1000,
 	);
-
 	if (!item) {
 		return <></>;
 	}
-	console.log('renderizou');
 	return (
 		<div>
 			<Flex align="space-evenly" direction="row" wrap="nowrap" className="schema-item" style={tagPaddingLeftStyle}>
@@ -81,7 +79,6 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 					defaultValue={name}
 					size="sm"
 					m={2}
-					variant="outline"
 					placeholder="Enter property name"
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						debounced(evt.target.value);
@@ -102,11 +99,10 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 				/>
 				<Select
 					disabled={false}
-					variant="outline"
-					value={item.type}
+					value={item.type.toString()}
 					size="sm"
 					m={2}
-					placeholder="Choose data type"
+					placeholder="Choose data typee"
 					onChange={(value: string) => {
 						const newSchema = handleTypeChange(value as JSONSchema7TypeName, false);
 						handleChange(`${itemPath}`, newSchema, 'ASSIGN_VALUE');
@@ -118,7 +114,6 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 					value={item.title || ''}
 					size="sm"
 					m={2}
-					variant="outline"
 					placeholder="Add Title"
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${itemPath}.title`, evt.target.value, 'ASSIGN_VALUE');
@@ -129,7 +124,6 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 					value={item.description || ''}
 					size="sm"
 					m={2}
-					variant="outline"
 					placeholder="Add Description"
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${itemPath}.description`, evt.target.value, 'ASSIGN_VALUE');
@@ -144,8 +138,6 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 							mt={2}
 							mb={2}
 							ml={1}
-							variant="link"
-							color="blue"
 							aria-label="Advanced Settings"
 							onClick={() => {
 								showadvanced(name);
@@ -163,12 +155,11 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 						mt={2}
 						mb={2}
 						ml={1}
-						variant="link"
 						color="red"
 						aria-label="Remove Node"
 						onClick={() => {
 							const updatedState = deleteKey(name, JSON.parse(JSON.stringify(jsonSchema.properties)));
-							handleChange(`${itemPath}.properties`, updatedState, 'ASSIGN_VALUE');
+							handleChange(`${parentPath}.properties`, updatedState, 'ASSIGN_VALUE');
 						}}
 					>
 						<IconTrash />
@@ -198,7 +189,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 								if (jsonSchema.properties) {
 									const fieldName = `field_${random()}`;
 									handleChange(
-										`${itemPath}.properties.${fieldName}`,
+										`${parentPath}.properties.${fieldName}`,
 										getDefaultSchema(DataType.string),
 										'ASSIGN_VALUE',
 									);

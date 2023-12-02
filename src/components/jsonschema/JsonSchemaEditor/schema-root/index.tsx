@@ -19,13 +19,12 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 	return (
 		<>
 			<Flex data-testid="jsonschema-editor" direction="row" wrap="nowrap" mt={2} mr={5}>
-				<Input disabled placeholder="root" m={2} variant="outline" />
+				<Input disabled placeholder="root" m={2} />
 				<Tooltip aria-label="All Required" label="All Required" position="top">
 					<Checkbox disabled={isReadOnly} m={2} width={20} color="blue" />
 				</Tooltip>
 
 				<Select
-					variant="outline"
 					disabled={isReadOnly}
 					value={jsonSchema.type.toString()}
 					size="sm"
@@ -45,7 +44,6 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 					disabled={isReadOnly}
 					size="sm"
 					m={2}
-					variant="outline"
 					placeholder="Add Title"
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.title`, event.currentTarget.value, 'ASSIGN_VALUE');
@@ -56,7 +54,6 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 					disabled={isReadOnly}
 					size="sm"
 					m={2}
-					variant="outline"
 					placeholder="Add Description"
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.description`, event.currentTarget.value, 'ASSIGN_VALUE');
@@ -72,7 +69,6 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 								mt={2}
 								mb={2}
 								mr={2}
-								variant="link"
 								color="green"
 								aria-label="Add Child Node"
 								onClick={() => {

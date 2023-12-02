@@ -63,7 +63,7 @@ export const ArchbaseJsonSchemaEditor = ({
 			setInternalRootSchema(rootSchema);
 		}
 	}, [rootSchema]);
-
+	console.log(internalRootSchema.jsonSchema);
 	return (
 		<ArchbaseJsonSchemaEditorProvider value={{ handleChange }}>
 			{isValidSchemaValidator(internalRootSchema.jsonSchema) && internalRootSchema.jsonSchema ? (

@@ -1,3 +1,4 @@
+import { getPathDepthLevel } from '@components/core';
 import { ActionIcon, Button, Checkbox, Flex, FlexProps, Input, Modal, Select, Tooltip } from '@mantine/core';
 import { IconCirclePlus, IconSettings } from '@tabler/icons-react';
 import React, { useContext, useRef, useState } from 'react';
@@ -12,6 +13,7 @@ export interface SchemaArrayProps extends FlexProps {
 	jsonSchema: JSONSchema7;
 	isReadOnly: boolean;
 }
+const itemTypes = SchemaTypes.map((item) => ({ value: item, label: item }));
 export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 	path,
 	jsonSchema,
@@ -21,7 +23,8 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 	const [open, setOpen] = useState(false);
 
 	const items = jsonSchema.items as JSONSchema7;
-	const length = path.split('.').length;
+	const length = getPathDepthLevel(path) - (path.match(/(properties)/g) ? path.match(/(properties)/g).length : 0);
+
 	const tagPaddingLeftStyle = {
 		paddingLeft: `${20 * (length + 1)}px`,
 	};
@@ -35,7 +38,6 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 	};
 
 	const focusRef = useRef(null);
-
 	return (
 		<>
 			<Flex direction="row" wrap="nowrap" className="array-item" mt={2} mr={5} style={tagPaddingLeftStyle}>
@@ -52,7 +54,7 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 						const newSchema = handleTypeChange(value as JSONSchema7TypeName, false);
 						handleChange(`${path}.items`, newSchema, 'ASSIGN_VALUE');
 					}}
-					data={SchemaTypes.map((item, index) => ({ key: String(index), value: item }))}
+					data={itemTypes}
 				/>
 				<Input
 					value={items.title}

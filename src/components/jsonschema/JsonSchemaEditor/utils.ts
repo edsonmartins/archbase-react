@@ -9,7 +9,12 @@ export const JSONPATH_JOIN_CHAR = '.';
 const ajv = new Ajv();
 
 export const isValidSchemaValidator = (schema: JSONSchema7): boolean => {
-	const isValid = ajv.validateSchema(schema);
+	let isValid;
+	try {
+		isValid = ajv.validateSchema(schema, true);
+	} catch (e) {
+		console.log(e);
+	}
 	return isValid;
 };
 

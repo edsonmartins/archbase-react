@@ -37,7 +37,7 @@ const getNestedObjectValue = (object: any, path: string) => {
 };
 
 const getPathDepthLevel = (path: string) => {
-	return path.match(/[.([)]/g).length - path.match(/(\.\[)/g).length;
+	return path.match(/[.([)]/g) ? path.match(/[.([)]/g).length : 0;
 };
 export { setNestedObjectValue, getNestedObjectValue, getPathDepthLevel };
 export type { SetNestedObjectValueOperation };

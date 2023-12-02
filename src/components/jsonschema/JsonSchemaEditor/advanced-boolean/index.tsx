@@ -9,14 +9,14 @@ export const AdvancedBoolean: React.FunctionComponent<AdvancedItemStateProps> = 
 }: React.PropsWithChildren<AdvancedItemStateProps>) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 	return (
-		<Flex direction="column" wrap="nowrap">
-			<Stack align="center" justify="center" m={1}>
+		<Flex direction="column" w="100%" wrap="nowrap">
+			<Stack align="stretch" justify="center" m={1}>
 				<Select
-					label='Default:{" "}'
-					variant="outline"
+					label="Default:"
 					value={(item.default as string) ?? ''}
 					size="sm"
 					m={2}
+					withinPortal
 					placeholder="Choose data type"
 					onChange={(value: string) => {
 						handleChange(`${path}.default`, value, 'ASSIGN_VALUE');
