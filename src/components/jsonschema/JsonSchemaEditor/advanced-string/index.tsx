@@ -1,5 +1,6 @@
-import { Checkbox, Flex, NumberInput, Select, Stack, Text, Textarea, TextInput } from '@mantine/core';
-import React, { useContext } from 'react';
+import { Checkbox, Flex, Input, NumberInput, Select, Stack, Text, Textarea, TextInput } from '@mantine/core';
+import i18next from 'i18next';
+import React, { useContext, useState } from 'react';
 import { AdvancedItemStateProps } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
 import { StringFormat } from '../utils';
@@ -9,8 +10,13 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 	item,
 }: React.PropsWithChildren<AdvancedItemStateProps>) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
+	const [error, setError] = useState<string | undefined>();
 
 	const changeEnumOtherValue = (value: string): string[] | null => {
+		if (!value) {
+			return null;
+		}
+		value = value.trim();
 		const array = value.split('\n');
 		if (array.length === 0 || (array.length === 1 && !array[0])) {
 			return null;
@@ -19,10 +25,22 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 		return array;
 	};
 
+	const isValidEnum = (value) => {
+		if (!value) {
+			return true;
+		}
+		if (value.length === new Set(value).size) {
+			return true;
+		}
+		return false;
+	};
+
 	const isEnumChecked = item.enum !== undefined;
 	const enumData = item.enum ? (item.enum as string[]) : [];
-	const enumValue = enumData?.join('\n');
-
+	let enumValue = enumData?.join('\n');
+	if (enumValue.length > 0) {
+		enumValue = enumValue.concat('\n');
+	}
 	return (
 		<Flex direction="column" w="100%" wrap="nowrap">
 			<Stack align="stretch" justify="center" m={1}>
@@ -40,7 +58,7 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 			<Stack align="stretch" justify="center" m={1}>
 				<Flex justify="space-between">
 					<NumberInput
-						label="Min Length: "
+						label={`${i18next.t('archbase:Min Length')}`}
 						size="sm"
 						defaultValue={item.minLength !== undefined ? Number(item.minLength) : ''}
 						value={item.minLength !== undefined ? Number(item.minLength) : ''}
@@ -92,20 +110,26 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 							}
 						}}
 					/>
-					<Textarea
-						w="85%"
-						value={enumValue || ''}
-						disabled={!isEnumChecked}
-						placeholder="ENUM Values - One Entry Per Line"
-						onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
-							const update = changeEnumOtherValue(event.target.value);
-							if (update === null) {
-								handleChange(`${path}.enum`, null, 'REMOVE');
-							} else {
-								handleChange(`${path}.enum`, update as string[], 'ASSIGN_VALUE');
-							}
-						}}
-					/>
+					<Input.Wrapper w="85%" error={error}>
+						<Textarea
+							value={enumValue || ''}
+							disabled={!isEnumChecked}
+							placeholder="ENUM Values - One Entry Per Line"
+							onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+								const update = changeEnumOtherValue(event.target.value);
+								if (isValidEnum(update)) {
+									setError('');
+									if (update === null) {
+										handleChange(`${path}.enum`, null, 'REMOVE');
+									} else {
+										handleChange(`${path}.enum`, update as string[], 'ASSIGN_VALUE');
+									}
+								} else {
+									setError(`Enumeração não podem ter valores duplicados`);
+								}
+							}}
+						/>
+					</Input.Wrapper>
 				</Flex>
 			</Stack>
 			<Stack align="stretch" justify="center" m={1}>

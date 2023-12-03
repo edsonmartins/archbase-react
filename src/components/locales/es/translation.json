@@ -383,5 +383,6 @@
   "Undo": "Deshacer",
   "size":"tamaño",
   "Basic":"Básico",
-  "Filters":"Filtros"
+  "Filters":"Filtros",
+  "Min Length": "Tamanho Mínimo"
 }

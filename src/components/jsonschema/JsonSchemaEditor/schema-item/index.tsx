@@ -1,8 +1,9 @@
 import { getPathDepthLevel } from '@components/core';
 import { ActionIcon, Checkbox, Flex, FlexProps, Input, Select, Tooltip } from '@mantine/core';
+import { InputWrapper } from '@mantine/core/lib/Input/InputWrapper/InputWrapper';
 import { useColorScheme } from '@mantine/hooks';
 import { IconCirclePlus, IconSettings, IconTrash } from '@tabler/icons-react';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDebouncedCallback } from 'use-debounce';
@@ -33,6 +34,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 	isReadOnly,
 }: React.PropsWithChildren<SchemaItemProps>) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
+	const [error, setError] = useState<string | undefined>();
 	const required = jsonSchema.required as string[];
 	const item: JSONSchema7 = jsonSchema.properties[name] as JSONSchema7;
 
@@ -45,24 +47,18 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 	};
 
 	const isRequired = required ? required.length > 0 && required.includes(name) : false;
-	const warnDuplicatedProperties = (propertyName: string) =>
-		toast(`Propriedades Duplicadas, a propriedade ${propertyName} já existe.`, {
-			position: 'top-right',
-			type: 'warning',
-			autoClose: 1000,
-			theme: colorScheme,
-		});
 
 	const debounced = useDebouncedCallback(
 		(newValue: string) => {
 			if (jsonSchema.properties && jsonSchema.properties[newValue]) {
-				warnDuplicatedProperties(newValue);
+				setError(`Propriedades Duplicadas, a propriedade ${newValue} já existe.`);
 			} else {
 				const oldName = name;
 				const proptoupdate = newValue;
 
 				const newobj = renameKeys({ [oldName]: proptoupdate }, jsonSchema.properties);
 				handleChange(`${parentPath}.properties`, JSON.parse(JSON.stringify(newobj)), 'ASSIGN_VALUE');
+				setError('');
 			}
 		},
 		// delay in ms
@@ -74,16 +70,19 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 	return (
 		<div>
 			<Flex align="space-evenly" direction="row" wrap="nowrap" className="schema-item" style={tagPaddingLeftStyle}>
-				<Input
-					disabled={isReadOnly}
-					defaultValue={name}
-					size="sm"
-					m={2}
-					placeholder="Enter property name"
-					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-						debounced(evt.target.value);
-					}}
-				/>
+				<Input.Wrapper error={error}>
+					<Input
+						disabled={isReadOnly}
+						defaultValue={name}
+						size="sm"
+						m={2}
+						placeholder="Enter property name"
+						onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
+							debounced(evt.target.value);
+						}}
+					/>
+				</Input.Wrapper>
+
 				<Checkbox
 					disabled={isReadOnly}
 					checked={isRequired}

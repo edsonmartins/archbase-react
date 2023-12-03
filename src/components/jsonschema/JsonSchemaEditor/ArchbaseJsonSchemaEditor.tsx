@@ -9,14 +9,13 @@ import { SchemaArray } from './schema-array';
 import { SchemaObject } from './schema-object';
 import { SchemaRoot } from './schema-root';
 import { isValidSchemaValidator } from './utils';
-import { Whoops } from './whoops';
 
 export * from '../ArchbaseJsonSchemaEditor.types';
 
 export interface ArchbaseJsonSchemaEditorProps {
 	rootSchema?: Schema2 | undefined;
 	defaultRootSchema?: Schema2 | undefined;
-	onRootSchemaChange?: (schema: Schema2) => void;
+	onRootSchemaChange?: (schema: Schema2, isValid: boolean) => void;
 }
 
 const initialSchema: Schema2 = {
@@ -40,9 +39,9 @@ export const ArchbaseJsonSchemaEditor = ({
 }: ArchbaseJsonSchemaEditorProps) => {
 	const [internalRootSchema, setInternalRootSchema] = useUncontrolled({
 		value: rootSchema,
-		defaultValue: defaultRootSchema,
+		defaultValue: defaultRootSchema.jsonSchema ? defaultRootSchema : initialSchema,
 		finalValue: initialSchema as Schema2,
-		onChange: onRootSchemaChange,
+		onChange: (value) => onRootSchemaChange(value, isValidSchemaValidator(value.jsonSchema)),
 	});
 
 	const handleChange = (path: string, value: string, operation: SetNestedObjectValueOperation) => {
@@ -54,47 +53,47 @@ export const ArchbaseJsonSchemaEditor = ({
 		}
 
 		if (onRootSchemaChange) {
-			onRootSchemaChange(newState());
+			onRootSchemaChange(newState(), isValidSchemaValidator(internalRootSchema.jsonSchema));
 		}
 	};
+
+	useEffect(() => {
+		if (rootSchema === undefined) {
+			setInternalRootSchema(initialSchema);
+		}
+	}, []);
 
 	useEffect(() => {
 		if (internalRootSchema !== undefined && rootSchema !== internalRootSchema && rootSchema != undefined) {
 			setInternalRootSchema(rootSchema);
 		}
 	}, [rootSchema]);
-	console.log(internalRootSchema.jsonSchema);
+
 	return (
 		<ArchbaseJsonSchemaEditorProvider value={{ handleChange }}>
-			{isValidSchemaValidator(internalRootSchema.jsonSchema) && internalRootSchema.jsonSchema ? (
-				<Flex m={2} direction="column">
-					<SchemaRoot
+			<Flex m={2} direction="column">
+				<SchemaRoot
+					path="jsonSchema"
+					jsonSchema={internalRootSchema.jsonSchema}
+					isReadOnly={internalRootSchema.isReadOnly}
+				/>
+
+				{internalRootSchema?.jsonSchema?.type === 'object' && (
+					<SchemaObject
 						path="jsonSchema"
 						jsonSchema={internalRootSchema.jsonSchema}
 						isReadOnly={internalRootSchema.isReadOnly}
 					/>
+				)}
 
-					{internalRootSchema.jsonSchema.type === 'object' && (
-						<SchemaObject
-							path="jsonSchema"
-							jsonSchema={internalRootSchema.jsonSchema}
-							isReadOnly={internalRootSchema.isReadOnly}
-						/>
-					)}
-
-					{internalRootSchema.jsonSchema.type === 'array' && (
-						<SchemaArray
-							path="jsonSchema"
-							jsonSchema={internalRootSchema.jsonSchema}
-							isReadOnly={internalRootSchema.isReadOnly}
-						/>
-					)}
-				</Flex>
-			) : (
-				<Flex align="center" justify="center">
-					<Whoops />
-				</Flex>
-			)}
+				{internalRootSchema?.jsonSchema?.type === 'array' && (
+					<SchemaArray
+						path="jsonSchema"
+						jsonSchema={internalRootSchema.jsonSchema}
+						isReadOnly={internalRootSchema.isReadOnly}
+					/>
+				)}
+			</Flex>
 		</ArchbaseJsonSchemaEditorProvider>
 	);
 };

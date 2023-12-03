@@ -383,5 +383,6 @@
   "Undo": "Undo",
   "size":"size",
   "Basic":"Basic",
-  "Filters":"Filters"
+  "Filters":"Filters",
+  "Min Length": "Min Length"
 }
