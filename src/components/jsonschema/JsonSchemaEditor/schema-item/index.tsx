@@ -1,11 +1,8 @@
 import { getPathDepthLevel } from '@components/core';
 import { ActionIcon, Checkbox, Flex, FlexProps, Input, Select, Tooltip } from '@mantine/core';
-import { InputWrapper } from '@mantine/core/lib/Input/InputWrapper/InputWrapper';
-import { useColorScheme } from '@mantine/hooks';
 import { IconCirclePlus, IconSettings, IconTrash } from '@tabler/icons-react';
+import i18next from 'i18next';
 import React, { useContext, useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useDebouncedCallback } from 'use-debounce';
 import { JSONSchema7, JSONSchema7TypeName } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
@@ -38,20 +35,16 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 	const required = jsonSchema.required as string[];
 	const item: JSONSchema7 = jsonSchema.properties[name] as JSONSchema7;
 
-	const colorScheme = useColorScheme();
-
 	const length =
 		getPathDepthLevel(parentPath) - (parentPath.match(/(properties)/g) ? parentPath.match(/(properties)/g).length : 0);
 	const tagPaddingLeftStyle = {
 		paddingLeft: `${20 * (length + 1)}px`,
 	};
 
-	const isRequired = required ? required.length > 0 && required.includes(name) : false;
-
 	const debounced = useDebouncedCallback(
 		(newValue: string) => {
 			if (jsonSchema.properties && jsonSchema.properties[newValue]) {
-				setError(`Propriedades Duplicadas, a propriedade ${newValue} já existe.`);
+				setError(`${i18next.t('archbase:Duplicate Properties, the property already exists')}`);
 			} else {
 				const oldName = name;
 				const proptoupdate = newValue;
@@ -69,14 +62,14 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 	}
 	return (
 		<div>
-			<Flex align="space-evenly" direction="row" wrap="nowrap" className="schema-item" style={tagPaddingLeftStyle}>
+			<Flex align="center" direction="row" wrap="nowrap" className="schema-item" style={tagPaddingLeftStyle}>
 				<Input.Wrapper error={error}>
 					<Input
 						disabled={isReadOnly}
 						defaultValue={name}
 						size="sm"
 						m={2}
-						placeholder="Enter property name"
+						placeholder={`${i18next.t('archbase:Enter property name')}`}
 						onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 							debounced(evt.target.value);
 						}}
@@ -85,12 +78,12 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 
 				<Checkbox
 					disabled={isReadOnly}
-					checked={isRequired}
+					checked={required ? required.length > 0 && required.includes(name) : false}
 					m={2}
 					color="blue"
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-						if (!evt.target.checked && required.includes(name)) {
-							handleChange(`${parentPath}.required.${required.indexOf(name)}`, null, 'REMOVE');
+						if (!evt.target.checked) {
+							handleChange(`${parentPath}.required`, name, 'REMOVE_ITEM_FROM_ARRAY');
 						} else {
 							handleChange(`${parentPath}.required`, name, 'PUSH_ITEM_TO_ARRAY');
 						}
@@ -101,7 +94,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 					value={item.type.toString()}
 					size="sm"
 					m={2}
-					placeholder="Choose data typee"
+					placeholder={`${i18next.t('archbase:Choose data type')}`}
 					onChange={(value: string) => {
 						const newSchema = handleTypeChange(value as JSONSchema7TypeName, false);
 						handleChange(`${itemPath}`, newSchema, 'ASSIGN_VALUE');
@@ -113,7 +106,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 					value={item.title || ''}
 					size="sm"
 					m={2}
-					placeholder="Add Title"
+					placeholder={`${i18next.t('archbase:Add Title')}`}
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${itemPath}.title`, evt.target.value, 'ASSIGN_VALUE');
 					}}
@@ -123,21 +116,25 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 					value={item.description || ''}
 					size="sm"
 					m={2}
-					placeholder="Add Description"
+					placeholder={`${i18next.t('archbase:Add Description')}`}
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${itemPath}.description`, evt.target.value, 'ASSIGN_VALUE');
 					}}
 				/>
 
 				{item.type !== 'object' && item.type !== 'array' && (
-					<Tooltip aria-label="Advanced Settings" label="Advanced Settings" position="top">
+					<Tooltip
+						aria-label={`${i18next.t('archbase:Advanced Settings')}`}
+						label={`${i18next.t('archbase:Advanced Settings')}`}
+						position="top"
+					>
 						<ActionIcon
 							disabled={isReadOnly}
 							size="sm"
 							mt={2}
 							mb={2}
 							ml={1}
-							aria-label="Advanced Settings"
+							aria-label={`${i18next.t('archbase:Advanced Settings')}`}
 							onClick={() => {
 								showadvanced(name);
 							}}
@@ -147,7 +144,11 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 					</Tooltip>
 				)}
 
-				<Tooltip aria-label="Remove Node" label="Remove Node" position="top">
+				<Tooltip
+					aria-label={`${i18next.t('archbase:Remove Node')}`}
+					label={`${i18next.t('archbase:Remove Node')}`}
+					position="top"
+				>
 					<ActionIcon
 						disabled={isReadOnly}
 						size="sm"
@@ -155,7 +156,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 						mb={2}
 						ml={1}
 						color="red"
-						aria-label="Remove Node"
+						aria-label={`${i18next.t('archbase:Remove Node')}`}
 						onClick={() => {
 							const updatedState = deleteKey(name, JSON.parse(JSON.stringify(jsonSchema.properties)));
 							handleChange(`${parentPath}.properties`, updatedState, 'ASSIGN_VALUE');
@@ -174,7 +175,11 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 						isReadOnly={isReadOnly}
 					/>
 				) : (
-					<Tooltip aria-label="Add Sibling Node" label="Add Sibling Node" position="top">
+					<Tooltip
+						aria-label={`${i18next.t('archbase:Add Sibling Node')}`}
+						label={`${i18next.t('archbase:Add Sibling Node')}`}
+						position="top"
+					>
 						<ActionIcon
 							disabled={isReadOnly}
 							size="sm"
@@ -183,7 +188,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 							mr={2}
 							variant="subtle"
 							color="green"
-							aria-label="Add Sibling Node"
+							aria-label={`${i18next.t('archbase:Add Sibling Node')}`}
 							onClick={() => {
 								if (jsonSchema.properties) {
 									const fieldName = `field_${random()}`;
@@ -202,7 +207,6 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 			</Flex>
 			{item.type === 'object' && <SchemaObject path={itemPath} jsonSchema={item} isReadOnly={isReadOnly} />}
 			{item.type === 'array' && <SchemaArray path={itemPath} jsonSchema={item} isReadOnly={isReadOnly} />}
-			<ToastContainer />
 		</div>
 	);
 };

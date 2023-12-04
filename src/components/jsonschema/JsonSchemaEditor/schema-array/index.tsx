@@ -1,6 +1,7 @@
 import { getPathDepthLevel } from '@components/core';
 import { ActionIcon, Button, Checkbox, Flex, FlexProps, Input, Modal, Select, Tooltip } from '@mantine/core';
 import { IconCirclePlus, IconSettings } from '@tabler/icons-react';
+import i18next from 'i18next';
 import React, { useContext, useRef, useState } from 'react';
 import { JSONSchema7, JSONSchema7TypeName } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
@@ -40,16 +41,31 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 	const focusRef = useRef(null);
 	return (
 		<>
-			<Flex direction="row" wrap="nowrap" className="array-item" mt={2} mr={5} style={tagPaddingLeftStyle}>
-				<Input key="Items" style={{ flexShrink: 1 }} disabled value="Items" size="sm" m={2} variant="outline" />
+			<Flex
+				direction="row"
+				align="center"
+				wrap="nowrap"
+				className="array-item"
+				mt={2}
+				mr={5}
+				style={tagPaddingLeftStyle}
+			>
+				<Input
+					key="Items"
+					style={{ flexShrink: 1 }}
+					disabled
+					value={`${i18next.t('archbase:Items')}`}
+					size="sm"
+					m={2}
+					variant="outline"
+				/>
 				<Checkbox disabled m={2} color="blue" />
 				<Select
-					variant="outline"
 					disabled={isReadOnly}
 					value={items.type as JSONSchema7TypeName}
 					size="sm"
 					m={2}
-					placeholder="Choose data type"
+					placeholder={`${i18next.t('archbase:Choose data type')}`}
 					onChange={(value: string) => {
 						const newSchema = handleTypeChange(value as JSONSchema7TypeName, false);
 						handleChange(`${path}.items`, newSchema, 'ASSIGN_VALUE');
@@ -61,8 +77,7 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 					disabled={isReadOnly}
 					size="sm"
 					m={2}
-					variant="outline"
-					placeholder="Add Title"
+					placeholder={`${i18next.t('archbase:Add Title')}`}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.items.title`, event.target.value, 'ASSIGN_VALUE');
 					}}
@@ -72,22 +87,24 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 					disabled={isReadOnly}
 					size="sm"
 					m={2}
-					variant="outline"
-					placeholder="Add Description"
+					placeholder={`${i18next.t('archbase:Add Description')}`}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.items.description`, event.target.value, 'ASSIGN_VALUE');
 					}}
 				/>
-				<Tooltip aria-label="Advanced Settings" label="Advanced Settings" position="top">
+				<Tooltip
+					aria-label={`${i18next.t('archbase:Advanced Settings')}`}
+					label={`${i18next.t('archbase:Advanced Settings')}`}
+					position="top"
+				>
 					<ActionIcon
 						disabled={isReadOnly}
 						size="sm"
 						mt={2}
 						mb={2}
 						ml={1}
-						variant="link"
 						color="blue"
-						aria-label="Advanced Settings"
+						aria-label={`${i18next.t('archbase:Advanced Settings')}`}
 						onClick={() => {
 							showadvanced();
 						}}
@@ -97,16 +114,19 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 				</Tooltip>
 
 				{items.type === 'object' && (
-					<Tooltip aria-label="Add Child Node" label="Add Child Node" position="top">
+					<Tooltip
+						aria-label={`${i18next.t('archbase:Add Child Node')}`}
+						label={`${i18next.t('archbase:Add Child Node')}`}
+						position="top"
+					>
 						<ActionIcon
 							disabled={isReadOnly}
 							size="sm"
 							mt={2}
 							mb={2}
 							mr={2}
-							variant="subtle"
 							color="green"
-							aria-label="Add Child Node"
+							aria-label={`${i18next.t('archbase:Add Child Node')}`}
 							onClick={() => {
 								const fieldName = `field_${random()}`;
 								handleChange(
@@ -124,12 +144,18 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 			{items.type === 'object' && <SchemaObject path={`${path}.items`} jsonSchema={items} isReadOnly={isReadOnly} />}
 			{items.type === 'array' && <SchemaArray path={`${path}.items`} jsonSchema={items} isReadOnly={isReadOnly} />}
 			<div ref={focusRef}>
-				<Modal opened={open} size="lg" onClose={onCloseAdvanced} title="Advanced Schema Settings">
+				<Modal
+					opened={open}
+					size="lg"
+					onClose={onCloseAdvanced}
+					title={`${i18next.t('archbase:Advanced Schema Settings')}`}
+				>
 					<AdvancedSettings path={`${path}.items`} item={items} />
-
-					<Button color="blue" variant="ghost" mr={3} onClick={onCloseAdvanced}>
-						Close
-					</Button>
+					<Flex justify="flex-end">
+						<Button mr={3} onClick={onCloseAdvanced}>
+							{`${i18next.t('archbase:Close')}`}
+						</Button>
+					</Flex>
 				</Modal>
 			</div>
 		</>

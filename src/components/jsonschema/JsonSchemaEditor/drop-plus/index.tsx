@@ -1,5 +1,6 @@
 import { ActionIcon, Button, FlexProps, Popover, Stack } from '@mantine/core';
 import { IconCirclePlus } from '@tabler/icons-react';
+import i18next from 'i18next';
 import React, { useContext } from 'react';
 import { JSONSchema7 } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
@@ -32,7 +33,15 @@ export const DropPlus: React.FunctionComponent<DropPlusProps> = ({
 	return (
 		<Popover position="bottom" withArrow shadow="md" withinPortal={true}>
 			<Popover.Target>
-				<ActionIcon size="sm" mt={2} mb={2} mr={2} variant="subtle" color="green" aria-label="Add Child Node">
+				<ActionIcon
+					size="sm"
+					mt={2}
+					mb={2}
+					mr={2}
+					variant="subtle"
+					color="green"
+					aria-label={`${i18next.t('archbase:Add Child Node')}`}
+				>
 					<IconCirclePlus />
 				</ActionIcon>
 			</Popover.Target>
@@ -48,7 +57,7 @@ export const DropPlus: React.FunctionComponent<DropPlusProps> = ({
 							handleChange(`${parentPath}.properties.${fieldName}`, getDefaultSchema(DataType.string), 'ASSIGN_VALUE');
 						}}
 					>
-						Sibling Node
+						{`${i18next.t('archbase:Sibling Node')}`}
 					</Button>
 					<Button
 						size="xs"
@@ -61,7 +70,7 @@ export const DropPlus: React.FunctionComponent<DropPlusProps> = ({
 							}
 						}}
 					>
-						Child Node
+						{`${i18next.t('archbase:Child Node')}`}
 					</Button>
 				</Stack>
 			</Popover.Dropdown>

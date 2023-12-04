@@ -183,3 +183,13 @@ export const deleteKey = (key: string, object: any) => {
 	delete object[key];
 	return object;
 };
+
+export const isValidEnum = (value) => {
+	if (!value) {
+		return true;
+	}
+	if (value.length === new Set(value).size) {
+		return true;
+	}
+	return false;
+};

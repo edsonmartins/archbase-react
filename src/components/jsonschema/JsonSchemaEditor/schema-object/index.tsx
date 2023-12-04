@@ -1,4 +1,5 @@
 import { Button, Flex, Modal } from '@mantine/core';
+import i18next from 'i18next';
 import React, { useRef, useState } from 'react';
 import { JSONSchema7 } from '../ArchbaseJsonSchemaEditor';
 import { AdvancedSettings } from '../schema-advanced';
@@ -46,11 +47,16 @@ export const SchemaObject: React.FunctionComponent<SchemaObjectProps> = ({
 					);
 				})}
 				<div ref={focusRef}>
-					<Modal opened={open} size="lg" onClose={onCloseAdvanced} title="Advanced Schema Settings">
+					<Modal
+						opened={open}
+						size="lg"
+						onClose={onCloseAdvanced}
+						title={`${i18next.t('archbase:Advanced Schema Settings')}`}
+					>
 						<AdvancedSettings path={`${path}.properties.${item}`} item={jsonSchema.properties[item] as JSONSchema7} />
 						<Flex justify="flex-end">
 							<Button mr={3} onClick={onCloseAdvanced}>
-								Close
+								{`${i18next.t('archbase:Close')}`}
 							</Button>
 						</Flex>
 					</Modal>

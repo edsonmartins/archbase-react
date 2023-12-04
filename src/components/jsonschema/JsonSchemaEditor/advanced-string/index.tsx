@@ -3,7 +3,7 @@ import i18next from 'i18next';
 import React, { useContext, useState } from 'react';
 import { AdvancedItemStateProps } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
-import { StringFormat } from '../utils';
+import { isValidEnum, StringFormat } from '../utils';
 
 export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = ({
 	path,
@@ -25,16 +25,6 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 		return array;
 	};
 
-	const isValidEnum = (value) => {
-		if (!value) {
-			return true;
-		}
-		if (value.length === new Set(value).size) {
-			return true;
-		}
-		return false;
-	};
-
 	const isEnumChecked = item.enum !== undefined;
 	const enumData = item.enum ? (item.enum as string[]) : [];
 	let enumValue = enumData?.join('\n');
@@ -46,8 +36,8 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 			<Stack align="stretch" justify="center" m={1}>
 				<TextInput
 					id="default"
-					label="Default: "
-					placeholder="Default value"
+					label={`${i18next.t('archbase:Default value')}`}
+					placeholder={`${i18next.t('archbase:Default value')}`}
 					value={(item.default as string) ?? ''}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.default`, event.target.value, 'ASSIGN_VALUE');
@@ -71,7 +61,7 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 						}}
 					/>
 					<NumberInput
-						label="Max Length: "
+						label={`${i18next.t('archbase:Max Length')}`}
 						size="sm"
 						defaultValue={item.maxLength !== undefined ? Number(item.maxLength) : ''}
 						value={item.maxLength !== undefined ? Number(item.maxLength) : ''}
@@ -88,8 +78,8 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 			<Stack align="stretch" justify="center" m={1}>
 				<TextInput
 					id="pattern"
-					label="Pattern:"
-					placeholder="MUST be a valid regular expression."
+					label={`${i18next.t('archbase:Pattern')}`}
+					placeholder={`${i18next.t('archbase:Must be a valid regular expression')}`}
 					value={item.pattern ?? ''}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.pattern`, event.target.value, 'ASSIGN_VALUE');
@@ -99,8 +89,9 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 
 			<Stack align="stretch" justify="center" mt={8}>
 				<Flex align="center" justify="space-between">
-					<Text>Enum: </Text>
+					<Text>{`${i18next.t('archbase:Enum')}`}</Text>
 					<Checkbox
+						mx={16}
 						checked={isEnumChecked}
 						onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 							if (!event.target.checked) {
@@ -110,11 +101,11 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 							}
 						}}
 					/>
-					<Input.Wrapper w="85%" error={error}>
+					<Input.Wrapper w="100%" error={error}>
 						<Textarea
 							value={enumValue || ''}
 							disabled={!isEnumChecked}
-							placeholder="ENUM Values - One Entry Per Line"
+							placeholder={`${i18next.t('archbase:ENUM Values - One Entry Per Line')}`}
 							onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
 								const update = changeEnumOtherValue(event.target.value);
 								if (isValidEnum(update)) {
@@ -125,7 +116,7 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 										handleChange(`${path}.enum`, update as string[], 'ASSIGN_VALUE');
 									}
 								} else {
-									setError(`Enumeração não podem ter valores duplicados`);
+									setError(`${i18next.t('archbase:Enum must not have duplicate values')}`);
 								}
 							}}
 						/>
@@ -134,12 +125,12 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 			</Stack>
 			<Stack align="stretch" justify="center" m={1}>
 				<Select
-					label="Format: "
+					label={`${i18next.t('archbase:Format1')}`}
 					value={item.format ?? ''}
 					size="sm"
 					m={2}
 					withinPortal
-					placeholder="Choose data type"
+					placeholder={`${i18next.t('archbase:Choose data type')}`}
 					onChange={(value: string) => {
 						if (value === '') {
 							handleChange(`${path}.format`, null, 'REMOVE');

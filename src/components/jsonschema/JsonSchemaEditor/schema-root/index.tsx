@@ -1,5 +1,6 @@
 import { ActionIcon, Checkbox, Flex, FlexProps, Input, Select, TextInput, Tooltip } from '@mantine/core';
 import { IconCirclePlus } from '@tabler/icons-react';
+import i18next from 'i18next';
 import React, { useContext } from 'react';
 import { JSONSchema7, JSONSchema7TypeName } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
@@ -18,10 +19,20 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 	return (
 		<>
-			<Flex data-testid="jsonschema-editor" direction="row" wrap="nowrap" mt={2} mr={5}>
-				<Input disabled placeholder="root" m={2} />
-				<Tooltip aria-label="All Required" label="All Required" position="top">
-					<Checkbox disabled={isReadOnly} m={2} width={20} color="blue" />
+			<Flex data-testid="jsonschema-editor" direction="row" align="center" wrap="nowrap" mt={2} mr={5}>
+				<Input disabled placeholder={`${i18next.t('archbase:root')}`} m={2} />
+				<Tooltip
+					aria-label={`${i18next.t('archbase:All Required')}`}
+					label={`${i18next.t('archbase:All Required')}`}
+					position="top"
+				>
+					<Checkbox
+						disabled={isReadOnly}
+						m={2}
+						width={20}
+						color="blue"
+						// onChange={(event) => handleChange('isReadOnly', event.currentTarget.checked, 'ASSIGN_VALUE')}
+					/>
 				</Tooltip>
 
 				<Select
@@ -29,7 +40,7 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 					value={jsonSchema.type.toString()}
 					size="sm"
 					m={2}
-					placeholder="Choose root data type"
+					placeholder={`${i18next.t('archbase:Choose root data type')}`}
 					onChange={(value: string) => {
 						const newSchema = handleTypeChange(value as JSONSchema7TypeName, false);
 						handleChange(`${path}`, newSchema, 'ASSIGN_VALUE');
@@ -44,7 +55,7 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 					disabled={isReadOnly}
 					size="sm"
 					m={2}
-					placeholder="Add Title"
+					placeholder={`${i18next.t('archbase:Add Title')}`}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.title`, event.currentTarget.value, 'ASSIGN_VALUE');
 					}}
@@ -54,7 +65,7 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 					disabled={isReadOnly}
 					size="sm"
 					m={2}
-					placeholder="Add Description"
+					placeholder={`${i18next.t('archbase:Add Description')}`}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.description`, event.currentTarget.value, 'ASSIGN_VALUE');
 					}}
@@ -62,7 +73,11 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 
 				{jsonSchema.type === 'object' && (
 					<>
-						<Tooltip aria-label="Add Child Node" label="Add Child Node" position="top">
+						<Tooltip
+							aria-label={`${i18next.t('archbase:Add Child Node')}`}
+							label={`${i18next.t('archbase:Add Child Node')}`}
+							position="top"
+						>
 							<ActionIcon
 								disabled={isReadOnly}
 								size="sm"
@@ -70,7 +85,7 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 								mb={2}
 								mr={2}
 								color="green"
-								aria-label="Add Child Node"
+								aria-label={`${i18next.t('archbase:Add Child Node')}`}
 								onClick={() => {
 									const fieldName = `field_${random()}`;
 									handleChange(`${path}.properties.${fieldName}`, getDefaultSchema(DataType.string), 'ASSIGN_VALUE');
