@@ -10,7 +10,7 @@ export interface ArchbaseGlobalFilterProps {
   /** Lista dos nomes dos campos a serem efetuados a pesquisa filtrada */
   searchableFields: string[];
   /** Evento ocorre quando é efetuado a pesquisa filtrada */
-  onFilter: (buildedQuery: string) => void;
+  onFilter: (buildedQuery: string, value: string) => void;
   /** Quantidade minima de carácteres do valor do filtro para que seja disparada a pesquisa filtrada */
   minFilterValueLength: number;
   /** Opções para personalização */
@@ -54,7 +54,7 @@ export function ArchbaseGlobalFilter({
   const prevIsEmptySearchRef = useRef<boolean>(false);
   useEffect(() => {
     if (debouncedFilterValue.length < minFilterValueLength && !prevIsEmptySearchRef.current) {
-      onFilter('');
+      onFilter('','');
       setLastBuildedSearch('');
       setLastValueSearch('');
       prevIsEmptySearchRef.current = true;
@@ -66,12 +66,12 @@ export function ArchbaseGlobalFilter({
       prevIsEmptySearchRef.current = false;
       setLastValueSearch(debouncedFilterValue)
       setDebouncedFilterValue()
-      onFilter(buildedSearch);      
+      onFilter(buildedSearch, debouncedFilterValue);      
     }
   }, [debouncedFilterValue, minFilterValueLength, onFilter, searchableFields]);
 
-  function handleRefresh(value: string) {
-    onFilter(value);
+  function handleRefresh(buildedQuery : string, value: string) {
+    onFilter(buildedQuery, value);
   }
 
   const inputProps = options && options.inputProps ? options.inputProps : {  miw: 240 };
@@ -92,13 +92,13 @@ export function ArchbaseGlobalFilter({
       />
       <Space w={spacing} />
       <Tooltip withinPortal withArrow label={`${t('archbase:Refresh')}`}>
-        <ActionIcon color="primary" onClick={() => handleRefresh(lastBuildedSearch)} style={{height:'36px', width:'36px'}} {...buttonRefreshProps}>
+        <ActionIcon color="primary" onClick={() => handleRefresh(lastBuildedSearch, lastValueSearch)} style={{height:'36px', width:'36px'}} {...buttonRefreshProps}>
           <IconRefresh {...iconRefreshProps} />
         </ActionIcon>
       </Tooltip>
       <Space w={spacing} />
       <Tooltip withinPortal withArrow label={`${t('archbase:ClearFilter')}`}>
-        <ActionIcon color="primary" onClick={() => handleRefresh('')} style={{height:'36px', width:'36px'}} {...buttonClearProps} >
+        <ActionIcon color="primary" onClick={() => handleRefresh('','')} style={{height:'36px', width:'36px'}} {...buttonClearProps} >
           <IconFilterX {...iconClearProps} />
         </ActionIcon>
       </Tooltip>

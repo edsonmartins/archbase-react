@@ -38,10 +38,11 @@ export interface Sort {
 }
 
 export interface ArchbaseRemoteApiClient {
-  get<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean): Promise<T>
-  post<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean): Promise<R>
-  put<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean): Promise<R>
-  delete<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean): Promise<T>
+  get<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<T>
+  post<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R>
+  put<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R>
+  binaryPut<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R>
+  delete<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<T>
 }
 
 export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
@@ -51,27 +52,42 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
     this.tokenManager = IOCContainer.getContainer().get(ARCHBASE_IOC_API_TYPE.TokenManager)
   }
 
-  async get<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean): Promise<T> {
+  async get<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<T> {
     let headersTemp = headers
     if (!withoutToken) {
       const token = this.tokenManager.getToken()
       if (token){
         headersTemp = { ...headers, Authorization: `Bearer ${token.access_token}` }
+      } else {
+        headersTemp = {
+          'Content-Type': 'application/octet-stream',
+          ...headers,
+        }
+      }
+    } else {
+      headersTemp = {
+        'Content-Type': 'application/octet-stream',
+        ...headers,
       }
     }
-    const response = await axios.get(url, { headers: headersTemp })
+    const response = await axios.get(url, { headers: headersTemp, ...options })
     return ArchbaseJacksonParser.convertJsonToObject(response.data)
   }
 
-  async post<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean): Promise<R> {
+  async post<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
     let headersTemp = headers
     if (!withoutToken) {
       const token = this.tokenManager.getToken()
       if (token){
         headersTemp = {
-          ...headers,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token.access_token}`
+          Authorization: `Bearer ${token.access_token}`,
+          ...headers
+        }
+      } else {
+        headersTemp = {
+          'Content-Type': 'application/json',
+          ...headers,
         }
       }
     } else {
@@ -84,54 +100,93 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
       url,
       ArchbaseJacksonParser.convertObjectToJson(data),
       {
-        headers: headersTemp
+        headers: headersTemp,
+        ...options
       }
     )
     return ArchbaseJacksonParser.convertJsonToObject(response.data)
   }
 
-  async put<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean): Promise<R> {
-    let headersTemp = headers
+  async put<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
+    let headersTemp = headers || {}
     if (!withoutToken) {
       const token = this.tokenManager.getToken()
       if (token){
         headersTemp = {
-          ...headers,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token.access_token}`
+          Authorization: `Bearer ${token.access_token}`,
+          ...headers
+        }
+      } else {
+        headersTemp = {
+          'Content-Type': 'application/json',
+          ...headers,
         }
       }
     } else {
       headersTemp = {
-        ...headers,
         'Content-Type': 'application/json',
+        ...headers,
       }
     }
 
     const response = await axios.put(url, ArchbaseJacksonParser.convertObjectToJson(data), {
-      headers: headersTemp
+      headers: headersTemp,
+      ...options
     })
     return ArchbaseJacksonParser.convertJsonToObject(response.data)
   }
 
-  async delete<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean): Promise<T> {
+  async binaryPut<T, R>(url: string, data: T, headers: Record<string, string>={}, withoutToken?: boolean, options?: any): Promise<R> {
+    let headersTemp = headers || {}
+    if (!withoutToken) {
+      const token = this.tokenManager.getToken()
+      if (token){
+        headersTemp = {
+          'Content-Type': 'application/octet-stream',
+          Authorization: `Bearer ${token.access_token}`,
+          ...headers
+        }
+      } else {
+        headersTemp = {
+          'Content-Type': 'application/octet-stream',
+          ...headers,
+        }
+      }
+    } else {
+      headersTemp = {
+        'Content-Type': 'application/octet-stream',
+        ...headers,
+      }
+    }
+
+    options = options || {}
+
+    const response = await axios.put(url, data, {
+      headers: headersTemp,
+      ...options
+    })
+    return response.data
+  }
+
+  async delete<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<T> {
     let headersTemp = headers
     if (!withoutToken) {
       const token = this.tokenManager.getToken()
       if (token){
         headersTemp = {
-          ...headers,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token.access_token}`
+          Authorization: `Bearer ${token.access_token}`,
+          ...headers
         }
       }
     } else {
       headersTemp = {
-        ...headers,
         'Content-Type': 'application/json',
+        ...headers,
       }
     }
-    const response = await axios.delete(url, { headers: headersTemp })
+    const response = await axios.delete(url, { headers: headersTemp, ...options })
     return ArchbaseJacksonParser.convertJsonToObject(response.data)
   }
 }

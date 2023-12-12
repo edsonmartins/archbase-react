@@ -4,7 +4,7 @@ import { ActionIcon, Space, Text } from '@mantine/core';
 import { IconChevronDown, IconChevronRight, IconSquare, IconSquareCheck } from '@tabler/icons-react';
 import { useForceUpdate } from '@mantine/hooks';
 
-interface ArchbaseTreeViewItemProps {
+export interface ArchbaseTreeViewItemProps {
   id: string;
   node: ArchbaseTreeNode;
   options: ArchbaseTreeViewOptions;
