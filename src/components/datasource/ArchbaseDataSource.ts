@@ -327,7 +327,7 @@ export interface IDataSource<T> {
   insert: (record: T) => this
   edit: () => this
   remove: (callback?: Function) => Promise<T | undefined>
-  save: (callback?: Function, record?: T) => Promise<T | undefined>
+  save: (callback?: Function) => Promise<T | undefined>
   cancel: () => this
   getName: () => string
   getOptions: () => DataSourceOptions<T>
@@ -996,15 +996,12 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     return true
   }
 
-  public async save(callback?: Function, record?: T): Promise<T> {
+  public async save(callback?: Function): Promise<T> {
     this.validateDataSourceActive('save')
     if (!this.inserting && !this.editing) {
       const msg = i18next.t('archbase:saveRecordIsNotAllowed', { dataSourceName: this.name })
       this.publishEventError(msg,{})
       throw new ArchbaseDataSourceError(msg)
-    }
-    if (record){
-      this.currentRecord = record;
     }
     if (!this.currentRecord) {
       const msg = i18next.t('archbase:noRecordToSave', { dataSourceName: this.name })
