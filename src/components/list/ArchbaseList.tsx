@@ -199,7 +199,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
           if (onSelectListItem) {
             onSelectListItem(dataSourceActiveIndex, dataSource?.getCurrentRecord());
           }
-        } else if (event.type === DataSourceEventNames.fieldChanged){
+        } else {
           setUpdateCounter((prev)=> prev + 1)
         } 
       }

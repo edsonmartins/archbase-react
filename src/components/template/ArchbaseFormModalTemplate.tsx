@@ -1,14 +1,16 @@
 import { Button, Flex, Group, MantineNumberSize, Modal, ModalProps } from '@mantine/core'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { useArchbaseAppContext } from '../core'
-import { useArchbaseTheme } from '../hooks'
+import { useArchbaseDataSourceListener, useArchbaseTheme } from '../hooks'
 import { IconCheck } from '@tabler/icons-react'
 import { IconX } from '@tabler/icons-react'
-import { ArchbaseDataSource } from '../datasource'
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { t } from 'i18next'
-import { ArchbaseDialog } from '../notification'
+import { ArchbaseAlert, ArchbaseDialog } from '../notification'
 import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '../containers'
 import { processDetailErrorMessage, processErrorMessage } from '../core/exceptions'
+import { useForceUpdate } from '@mantine/hooks'
+import { IconBug } from '@tabler/icons-react'
 
 export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Omit<ModalProps, "onClose"> {
   dataSource?: ArchbaseDataSource<T, ID>
@@ -19,6 +21,10 @@ export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Om
   onClickOk: (record?: T, result?: any)=> void;
   onClickCancel: (record?: T)=> void;
   onBeforeOk?: (record? : T)=> Promise<any> | boolean | undefined;
+  isError?: boolean
+  error?: string | undefined
+  clearError?: () => void
+  autoCloseAlertError?: number
 }
 
 export function ArchbaseFormModalTemplate<T extends object, ID>({
@@ -41,10 +47,31 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
   onClickOk,
   onClickCancel,
   onBeforeOk,
-  onCustomSave
+  onCustomSave,
+  isError,
+  error = '',
+  clearError = () => {},
+  autoCloseAlertError = 15000,
 }: ArchbaseFormModalTemplateProps<T, ID>) {
   const appContext = useArchbaseAppContext()
   const theme = useArchbaseTheme()
+  const [isInternalError, setIsInternalError] = useState<boolean>(isError)
+  const [internalError, setInternalError] = useState<string>(error)
+  const forceUpdate = useForceUpdate()
+
+  useArchbaseDataSourceListener<T, ID>({
+    dataSource,
+    listener: (event: DataSourceEvent<T>): void => {
+      if (event.type === DataSourceEventNames.onError) {
+        setIsInternalError(true)
+        setInternalError(event.error)
+      }
+      if ((event.type === DataSourceEventNames.afterEdit) ||
+          (event.type === DataSourceEventNames.afterInsert)) {
+        forceUpdate()
+      }
+    }
+  })
 
   const save = async () : Promise<boolean> => {
     if (dataSource) {
@@ -109,6 +136,12 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
       ArchbaseDialog.showWarning(t("archbase:Click on Ok or Cancel to close"))
   }
 
+  const handleCloseAlert = () => {
+    clearError && clearError()
+    setIsInternalError(false)
+    setInternalError("")
+  }
+
   return (
     <Modal
       title={title}
@@ -129,6 +162,20 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
       size={size}
     >
       <ArchbaseSpaceFixed height={height}>
+      {isInternalError ? (
+        <ArchbaseAlert
+          autoClose={autoCloseAlertError}
+          withCloseButton={true}
+          withBorder={true}
+          icon={<IconBug size="1.4rem" />}
+          title={t('WARNING')}
+          titleColor="rgb(250, 82, 82)"
+          variant={variant??appContext.variant}
+          onClose={handleCloseAlert}
+        >
+          <span>{internalError}</span>
+        </ArchbaseAlert>
+      ) : null}
         <ArchbaseSpaceFill><ArchbaseForm>{children}</ArchbaseForm></ArchbaseSpaceFill>
         <ArchbaseSpaceBottom size="40px">
           <Flex justify="space-between" align="center">

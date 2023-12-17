@@ -595,7 +595,6 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 
 	const renderedStyle = useMemo(() => {
 		return {
-			...style,
 			...(withBorder
 				? {
 						border:
@@ -610,6 +609,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 			...(height ? { height } : {}),
 			...(width ? { width } : {}),
 			marginLeft: '-20px',
+			...style
 		};
 	}, [style, withBorder, borderColor, height, width]);
 

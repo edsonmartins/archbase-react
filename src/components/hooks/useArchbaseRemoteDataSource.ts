@@ -241,7 +241,8 @@ export function useArchbaseRemoteDataSource<T, ID>(
             isLoading: true,
             filter: options.filter,
             sort: options.sort,
-            currentPage: options.currentPage
+            currentPage: options.currentPage,
+            id: options.id
           }
         })
         queryFn(
@@ -250,7 +251,7 @@ export function useArchbaseRemoteDataSource<T, ID>(
           options.pageSize,
           options.filter,
           options.sort,
-          internalState.id,
+          options.id,
           options.originFilter,
           options.originSort,
           options.originGlobalFilter
