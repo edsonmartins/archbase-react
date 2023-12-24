@@ -68,7 +68,7 @@ const buildResources = (resource: Resource, translationName? : string, translati
 export const initArchbaseTranslation = (translationName,
   translationResource) : any => {
   i18next.use(initReactI18next).use(LanguageDetector).init({
-    debug: true,
+    debug: false,
     resources: buildResources(archbaseTranslationResources, translationName, translationResource),
     keySeparator: ".",
     ns: translationName?["archbase",translationName]:["archbase"],

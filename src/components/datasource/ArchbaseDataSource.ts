@@ -581,7 +581,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
     this.emitter.emit('beforeClose')
     this.emit({ type: DataSourceEventNames.beforeClose })
-
+    
     this.loadOptions({
       records: [],
       totalPages: 0,
@@ -591,6 +591,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
     })
 
     this.active = true
+    this.editing = false
+    this.inserting = false
 
     this.emitter.emit('afterOpen')
     this.emit({ type: DataSourceEventNames.afterOpen })

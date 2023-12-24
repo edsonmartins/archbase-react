@@ -226,6 +226,9 @@ export function ArchbaseAsyncSelect<T, ID, O>({
       ) {
         loadDataSourceFieldValue();
       }
+      if (event.type === DataSourceEventNames.beforeClose) {
+        setOptions([])
+      }
 
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
         setInternalError(event.error);
