@@ -11,6 +11,7 @@ import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixe
 export interface ArchbaseModalTemplateProps extends ModalProps {
   height: MantineNumberSize
   userActions?: ReactNode
+  onlyOkButton?: boolean
   onClickOk?: ()=>void
   onClickCancel?: ()=>void
 }
@@ -29,6 +30,7 @@ export function ArchbaseModalTemplate({
   closeOnEscape = true,
   size,
   height,
+  onlyOkButton = false,
   onClose,
   onClickOk,
   onClickCancel,
@@ -92,12 +94,12 @@ export function ArchbaseModalTemplate({
                 variant={variant ?? appContext.variant}
                 color="green"
               >{`${t('Ok')}`}</Button>
-              <Button
+              {!onlyOkButton?<Button
                 leftIcon={<IconX />}
                 onClick={handleCancel}
                 variant={variant ?? appContext.variant}
                 color="red"
-              >{`${t('Cancel')}`}</Button>
+              >{onClickCancel?`${t('Cancel')}`:`${t('Close')}`}</Button>:null}
             </Group>
           </Flex>
         </ArchbaseSpaceBottom>
