@@ -12,6 +12,18 @@ export class FakeRemoteApiClient implements ArchbaseRemoteApiClient {
   constructor(@inject(API_TYPE.Authenticator) authenticator: ArchbaseAuthenticator) {
     this.authenticator = authenticator||IOCContainer.getContainer().get<ArchbaseAuthenticator>(API_TYPE.Authenticator);
   }
+  
+  async postNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
+    throw new Error('Esta api não deve ser usada diretamente');
+  }
+
+  async putNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
+    throw new Error('Esta api não deve ser usada diretamente');
+  }
+
+  async binaryPut<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
+    throw new Error('Esta api não deve ser usada diretamente');
+  }
 
   async get<T>(_url: string, _headers?: Record<string, string>): Promise<T> {
     throw new Error('Esta api não deve ser usada diretamente');
