@@ -525,6 +525,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
           trapFocus={false}
           position="bottom-start"
           disabled={isReadOnly()}
+          withinPortal={true}
           withRoles={false}
           {...popoverProps}
         >

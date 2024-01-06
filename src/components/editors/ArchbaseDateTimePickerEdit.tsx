@@ -517,6 +517,7 @@ export const ArchbaseDateTimePickerEdit = forwardRef<
           position="bottom-start"
           disabled={readOnly}
           withRoles={false}
+          withinPortal={true}
           {...popoverProps}
         >
           <Popover.Target>
