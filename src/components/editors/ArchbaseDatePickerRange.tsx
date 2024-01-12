@@ -73,7 +73,7 @@ export function ArchbaseDatePickerRange({
   const handleSelectRange = (sDt?: DateValue, eDt?: DateValue) => {
     setStartDate(sDt)
     setEndDate(eDt)
-    if (onSelectDateRange && sDt && eDt) {
+    if (onSelectDateRange) {
       onSelectDateRange([sDt, eDt])
     }
   }

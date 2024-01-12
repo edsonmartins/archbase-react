@@ -37,6 +37,11 @@ export interface ArchbaseAdminMainLayoutProps {
 	sidebarSelectedGroupName?: string;
 	sideBarHeaderHeight?: string | number;
 	sideBarHeaderContent?: ReactNode | undefined;
+	selectedGroupColor?: string | undefined;
+	groupColor?: string | undefined;
+	backgroundGroupColor?: string | undefined;
+	groupLabelDarkColor?: string | undefined;
+	groupLabelLightColor?: string | undefined;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -55,6 +60,11 @@ function ArchbaseAdminMainLayoutContainer({
 	sidebarDefaultGroupIcon,
 	sideBarHeaderHeight,
 	sideBarHeaderContent,
+	selectedGroupColor="#132441",
+	groupColor="white",
+	backgroundGroupColor="#132441",
+	groupLabelDarkColor="white",
+	groupLabelLightColor="white",
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -150,11 +160,11 @@ function ArchbaseAdminMainLayoutContainer({
 						sidebarHeight={getSideBarHeight()}
 						sidebarGroupWidth={sideBarCollapsedWidth}
 						sidebarCollapsedWidth={sideBarCollapsedWidth}
-						selectedGroupColor="#132441"
-						groupColor="white"
-						backgroundGroupColor="#132441"
-						groupLabelDarkColor="white"
-						groupLabelLightColor="white"
+						selectedGroupColor={selectedGroupColor}
+						groupColor={groupColor}
+						backgroundGroupColor={backgroundGroupColor}
+						groupLabelDarkColor={groupLabelDarkColor}
+						groupLabelLightColor={groupLabelLightColor}
 						showGroupLabels={false}
 						collapsed={adminLayoutContextValue.collapsed}
 						sidebarWidth={sideBarWidth}
@@ -213,11 +223,11 @@ function ArchbaseAdminMainLayoutContainer({
 					sidebarHeight="calc(100vh - 26px)"
 					sidebarCollapsedWidth={sideBarCollapsedWidth}
 					sidebarGroupWidth={sideBarCollapsedWidth}
-					selectedGroupColor="#132441"
-					groupColor="white"
-					backgroundGroupColor="#132441"
-					groupLabelDarkColor="white"
-					groupLabelLightColor="white"
+					selectedGroupColor={selectedGroupColor}
+					groupColor={groupColor}
+					backgroundGroupColor={backgroundGroupColor}
+					groupLabelDarkColor={groupLabelDarkColor}
+					groupLabelLightColor={groupLabelLightColor}
 					showGroupLabels={false}
 					isHidden={isHidden}
 					onMenuItemClick={onMenuItemClick}
@@ -252,6 +262,11 @@ export function ArchbaseAdminMainLayout({
 	sidebarSelectedGroupName,
 	sideBarHeaderHeight,
 	sideBarHeaderContent,
+	selectedGroupColor="#132441",
+	groupColor="white",
+	backgroundGroupColor="#132441",
+	groupLabelDarkColor="white",
+	groupLabelLightColor="white",
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -276,6 +291,11 @@ export function ArchbaseAdminMainLayout({
 				sideBarHeaderContent={sideBarHeaderContent}
 				sideBarFooterHeight={sideBarFooterHeight}
 				sideBarFooterContent={sideBarFooterContent}
+				selectedGroupColor={selectedGroupColor}
+				groupColor={groupColor}
+				backgroundGroupColor={backgroundGroupColor}
+				groupLabelDarkColor={groupLabelDarkColor}
+				groupLabelLightColor={groupLabelLightColor}
 				onCollapsedSideBar={onCollapsedSideBar}
 				onHiddenSidebar={onHiddenSidebar}
 				sidebarDefaultGroupIcon={sidebarDefaultGroupIcon}

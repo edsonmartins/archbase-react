@@ -156,6 +156,10 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
 	renderToolbarInternalActions?: (props: {
 		table: MRT_TableInstance<T>;
 	}) => ReactNode | null;
+	renderDetailPanel?: (props: {
+        row: MRT_Row<T>;
+        table: MRT_TableInstance<T>;
+    }) => ReactNode;
 	positionActionsColumn?: 'first' | 'last';
 }
 
@@ -829,6 +833,14 @@ export function ArchbaseDataTable<T extends object, ID>(
 
 	useEffect(() => {
 		setData(props.dataSource.browseRecords());
+		setPagination({
+			pageIndex: props.dataSource
+				? props.dataSource.getCurrentPage()
+				: props.pageIndex,
+			pageSize: props.dataSource
+				? props.dataSource.getPageSize()
+				: props.pageSize,
+		})
 		setLoadingInternal(false);
 		setRowSelection({});
 	}, [isLoadingInternal]);
@@ -1259,6 +1271,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 		columns: originColumns,
 		enableDensityToggle: false,
 		positionToolbarAlertBanner: 'bottom',
+		renderDetailPanel: props.renderDetailPanel,
 		mantinePaperProps: {
 			withBorder: props.withBorder,
 			shadow: props.withBorder ? 'xs' : '',
@@ -1357,6 +1370,14 @@ export function ArchbaseDataTable<T extends object, ID>(
 				event.type === DataSourceEventNames.afterCancel
 			) {
 				setLoadingInternal(true);
+				setPagination({
+					pageIndex: props.dataSource
+						? props.dataSource.getCurrentPage()
+						: props.pageIndex,
+					pageSize: props.dataSource
+						? props.dataSource.getPageSize()
+						: props.pageSize,
+				})
 			}
 		},
 	});
