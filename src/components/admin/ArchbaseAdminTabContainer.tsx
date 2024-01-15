@@ -125,7 +125,7 @@ export function ArchbaseAdminTabContainer({
 			} else if (item.link && !result.item) {
 				const found = matchPath({ path: item.link }, location.pathname);
 				if (found) {
-					if (found.params) {
+					if (found.params && Object.keys(found.params).length>0) {
 						result.title = `${found.params[Object.keys(found.params)[0]]}`;
 					} else {
 						result.title = `${i18next.t(item.label)}`;

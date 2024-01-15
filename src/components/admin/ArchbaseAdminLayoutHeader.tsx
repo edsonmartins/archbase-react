@@ -153,6 +153,7 @@ export type ArchbaseAdminLayoutHeaderProps = {
   company?: ArchbaseCompany
   navigationData: ArchbaseNavigationItem[] | undefined
   headerActions?: ReactNode | ReactNode[]
+  headerLeftContent?: ReactNode | ReactNode[]
   color?: string
   showLanguageSelector?: boolean
   sideBarHiddenBreakPoint?: string | number
@@ -168,6 +169,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
   styleLogo,
   showLanguageSelector = false,
   sideBarHiddenBreakPoint,
+  headerLeftContent
 }) => {
   const theme = useMantineTheme()
   const navigate = useNavigate()
@@ -245,7 +247,9 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
           <CommandPaletteButton commands={commands} theme={theme.colorScheme} />
         ) : null}
       </div>
-      <Box sx={{ flex: 1 }} />
+      <Box sx={{ flex: 1 }}>
+        {headerLeftContent}
+      </Box>
       <ArchbaseHeaderNavAction>
         {headerActions}
         <ArchbaseColorSchemeAction />
