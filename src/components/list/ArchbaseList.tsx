@@ -168,7 +168,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
     center,
     spacing,
     horizontal,
-    style: { width: width, height: height, overflowY: 'auto', ...style }
+    style: { width: '100%', height: height, overflowY: 'auto', ...style }
   })
   const [currentFilter, setCurrentFilter] = useState(filter)
   const [idList] = useState(id)
@@ -486,7 +486,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
       onKeyDown={handleKeyDown}
       onFocus={onFocusEnter}
       onBlur={onFocusExit}
-
+      w={width}
     >
       <Box<any>
         component={type === 'unordered' ? 'ul' : type === 'ordered' ? 'ol' : 'div'}

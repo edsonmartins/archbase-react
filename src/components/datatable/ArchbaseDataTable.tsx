@@ -946,6 +946,34 @@ export function ArchbaseDataTable<T extends object, ID>(
 		}
 	};
 
+	const getAlignByDataType = (dataType: FieldDataType, align?: AlignType) => {
+		if (align){
+			if (align === 'left') {
+			  return "flex-start"
+			} else if (align === 'center') {
+				return "center"
+			} else {
+				return "flex-end"
+			}
+		}
+		switch (dataType) {
+			case 'integer':
+				return "flex-end";
+			case 'currency':
+				return "flex-end";
+			case 'boolean':
+				return "center";
+			case 'date':
+				return "center";
+			case 'datetime':
+				return "center";
+			case 'time':
+				return "flex-start";
+			default:
+				return "flex-start";
+		}
+	};
+
 	const originColumns = useMemo(() => {
 		const result: any[] = [];
 
@@ -959,6 +987,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 							col.props.dataType,
 							col.props.render,
 						);
+						const alignContent = getAlignByDataType(col.props.dataType, col.props.align)
 						let element: any = {
 							id: col.props.dataField,
 							accessorKey: col.props.dataField,
@@ -981,7 +1010,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 							filterVariant: col.props.inputFilterType,
 							mantineFilterSelectProps: { data: col.props.enumValues },
 							mantineFilterMultiSelectProps: { data: col.props.enumValues },
-							Cell: render ? ({ cell }) => render(cell) : undefined,
+							Cell: render ? ({ cell }) => <div style={{width:'100%', display:'flex', justifyContent:alignContent, alignContent:'center'}}>{render(cell)}</div> : undefined,
 							Header: ({ column }) => (
 								<i
 									style={{
