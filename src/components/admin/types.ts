@@ -18,7 +18,7 @@ export type ArchbaseNavigationItem = {
   color: any | undefined
   component?: ReactNode
   showInSidebar: boolean
-  disabled?: boolean;
+  disabled?: boolean | Function;
   redirect?: string;
   keepAlive?: boolean;
   group?: ArchbaseNavigationGroup

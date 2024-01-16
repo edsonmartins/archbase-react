@@ -14,6 +14,10 @@ export class FakePessoaService extends ArchbaseRemoteApiService<Pessoa, number> 
     super(client || IOCContainer.getContainer().get<ArchbaseRemoteApiClient>(API_TYPE.ApiClient));
   }
 
+  protected configureHeaders(): Record<string, string> {
+    throw new Error("Method not implemented.");
+  }
+
   protected getEndpoint(): string {
     return 'api/pessoas';
   }

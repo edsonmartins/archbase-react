@@ -6,6 +6,8 @@ import { buildMenuItem } from './buildMenuItem';
 import { buildMenuItemStyles } from './buildMenuItemStyles';
 import { buildNavbar } from './buildNavbar';
 import { ArchbaseNavigationItem } from './types';
+import { useArchbaseAppContext } from 'components/core';
+import { useForceUpdate } from '@mantine/hooks';
 
 export interface ArchbaseAdvancedSidebarProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -68,6 +70,8 @@ export function ArchbaseAdvancedSidebar({
 	sideBarHeaderContent,
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
+	const appContext = useArchbaseAppContext()
+	const forceUpdate = useForceUpdate()
 	const color = selectedGroupColor
 		? selectedGroupColor
 		: theme.colorScheme === 'dark'
@@ -167,7 +171,7 @@ export function ArchbaseAdvancedSidebar({
 		const grps = [...result].sort((a, b) => a.indexOrder - b.indexOrder);
 
 		return grps;
-	}, [navigationData, activeGroupName, theme.colorScheme, collapsed]);
+	}, [navigationData, activeGroupName, theme.colorScheme, collapsed, appContext.selectedCompany]);
 
 	const menuItemStyles = buildMenuItemStyles(theme, collapsed, 35, px(sidebarCollapsedWidth), groups.length > 1);
 
