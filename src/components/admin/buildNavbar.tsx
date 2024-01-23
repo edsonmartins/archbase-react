@@ -5,6 +5,7 @@ import { Sidebar, sidebarClasses, Menu as SidebarMenu } from 'react-pro-sidebar'
 
 export function buildNavbar(
 	sidebarRef: React.Ref<HTMLHtmlElement>,
+	colorScheme: 'dark' | 'light',
 	theme: MantineTheme,
 	collapsed: boolean,
 	sidebarWidth: string | number,
@@ -22,7 +23,7 @@ export function buildNavbar(
 			rootStyles={{
 				[`.${sidebarClasses.container}`]: {
 					position: 'absolute',
-					background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+					background: colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
 					overflowX: 'hidden',
 					overflowY: 'hidden',
 					left: 0,

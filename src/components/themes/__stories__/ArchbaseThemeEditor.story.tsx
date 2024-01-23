@@ -1,78 +1,77 @@
-import React from 'react'
-import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core'
-import { Meta, StoryObj } from '@storybook/react'
-
-import { ArchbaseObjectInspector } from '../../debug'
-import { Pessoa, pessoasData } from '../../../demo/index'
-import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource'
-import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener'
-import { DataSourceEvent, DataSourceEventNames } from '../../datasource'
-import { ArchbaseThemeEditor } from '../ArchbaseThemeEditor'
-import { useArchbaseForceUpdate } from '../../hooks'
+import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
+import { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+import { Pessoa, pessoasData } from '../../../demo/index';
+import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
+import { ArchbaseObjectInspector } from '../../debug';
+import { useArchbaseForceUpdate } from '../../hooks';
+import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource';
+import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener';
+import { ArchbaseThemeEditor } from '../ArchbaseThemeEditor';
 
 const ArchbaseThemeEditorExample = () => {
-  const forceUpdate = useArchbaseForceUpdate()
-  const { dataSource } = useArchbaseDataSource<Pessoa, string>({
-    initialData: data,
-    name: 'dsPessoas',
-  })
-  if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
-    dataSource.edit()
-  }
-  useArchbaseDataSourceListener<Pessoa, string>({
-    dataSource,
-    listener: (event: DataSourceEvent<Pessoa>): void => {
-      switch (event.type) {
-        case DataSourceEventNames.fieldChanged: {
-          forceUpdate()
-          break
-        }
-        default:
-      }
-    },
-  })
+	const forceUpdate = useArchbaseForceUpdate();
+	const { dataSource } = useArchbaseDataSource<Pessoa, string>({
+		initialData: data,
+		name: 'dsPessoas',
+	});
+	if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
+		dataSource.edit();
+	}
+	useArchbaseDataSourceListener<Pessoa, string>({
+		dataSource,
+		listener: (event: DataSourceEvent<Pessoa>): void => {
+			switch (event.type) {
+				case DataSourceEventNames.fieldChanged: {
+					forceUpdate();
+					break;
+				}
+				default:
+			}
+		},
+	});
 
-  return (
-    <Grid>
-      <Grid.Col offset={1} span={4}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>Edit Component</Text>
-            </Group>
-          </Card.Section>
-          <Box sx={(_theme) => ({ height: 100 })}>
-            <ArchbaseThemeEditor label="Nome" dataSource={dataSource} dataField="nome" />
-          </Box>
-        </Card>
-      </Grid.Col>
-      <Grid.Col span={4}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Group position="apart">
-              <Text weight={500}>DataSource dsPessoas</Text>
-            </Group>
-          </Card.Section>
-          <ScrollArea sx={(_theme) => ({ height: 500 })}>
-            <ArchbaseObjectInspector data={dataSource} />
-          </ScrollArea>
-        </Card>
-      </Grid.Col>
-    </Grid>
-  )
-}
+	return (
+		<Grid>
+			<Grid.Col offset={1} span={4}>
+				<Card shadow="sm" padding="lg" radius="md" withBorder>
+					<Card.Section withBorder inheritPadding py="xs">
+						<Group justify="space-between">
+							<Text fw={500}>Edit Component</Text>
+						</Group>
+					</Card.Section>
+					<Box sx={(_theme) => ({ height: 100 })}>
+						<ArchbaseThemeEditor label="Nome" dataSource={dataSource} dataField="nome" />
+					</Box>
+				</Card>
+			</Grid.Col>
+			<Grid.Col span={4}>
+				<Card shadow="sm" padding="lg" radius="md" withBorder>
+					<Card.Section withBorder inheritPadding py="xs">
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
+						</Group>
+					</Card.Section>
+					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+						<ArchbaseObjectInspector data={dataSource} />
+					</ScrollArea>
+				</Card>
+			</Grid.Col>
+		</Grid>
+	);
+};
 
-const data = [pessoasData[0]]
+const data = [pessoasData[0]];
 
 const meta: Meta<typeof ArchbaseThemeEditor> = {
-  title: 'Temas e cores/Theme Editor',
-  component: ArchbaseThemeEditor,
-}
+	title: 'Temas e cores/Theme Editor',
+	component: ArchbaseThemeEditor,
+};
 
-export default meta
-type Story = StoryObj<typeof ArchbaseThemeEditor>
+export default meta;
+type Story = StoryObj<typeof ArchbaseThemeEditor>;
 
 export const Primary: Story = {
-  name: 'Exemplo simples',
-  render: () => <ArchbaseThemeEditorExample />,
-}
+	name: 'Exemplo simples',
+	render: () => <ArchbaseThemeEditorExample />,
+};

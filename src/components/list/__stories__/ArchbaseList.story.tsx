@@ -3,13 +3,7 @@ import { ThemeIcon } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
 import { IconUser } from '@tabler/icons-react';
 import { IconAt, IconPhoneCall } from '@tabler/icons-react';
-import React, {
-	ReactNode,
-	useContext,
-	useEffect,
-	useRef,
-	useState,
-} from 'react';
+import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Pessoa, pessoasData } from '../../../demo/index';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../../debug';
@@ -20,30 +14,18 @@ import {
 	useArchbaseListContext,
 } from '../../hooks';
 import { ArchbaseList, ArchbaseListCustomItemProps } from '../ArchbaseList';
-import ArchbaseListContext, {
-	ArchbaseListContextValue,
-} from '../ArchbaseList.context';
+import ArchbaseListContext, { ArchbaseListContextValue } from '../ArchbaseList.context';
 
 const data = pessoasData;
 
 interface ArchbaseListBasicExampleProps {
 	showIcon: boolean;
 	showPhoto: boolean;
-	justifyContent:
-		| 'flex-start'
-		| 'center'
-		| 'space-between'
-		| 'space-around'
-		| 'space-evenly';
+	justifyContent: 'flex-start' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
 	spacing: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
-const ArchbaseListBasicExample = ({
-	showIcon,
-	showPhoto,
-	justifyContent,
-	spacing,
-}: ArchbaseListBasicExampleProps) => {
+const ArchbaseListBasicExample = ({ showIcon, showPhoto, justifyContent, spacing }: ArchbaseListBasicExampleProps) => {
 	const forceUpdate = useArchbaseForceUpdate();
 	const [icon, setIcon] = useState<ReactNode | undefined>();
 	const [photo, setPhoto] = useState<ReactNode | string | undefined>();
@@ -87,8 +69,8 @@ const ArchbaseListBasicExample = ({
 			<Grid.Col offset={1} span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Lista de Pessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Lista de Pessoas</Text>
 						</Group>
 					</Card.Section>
 					<ArchbaseList<Pessoa, string>
@@ -108,8 +90,8 @@ const ArchbaseListBasicExample = ({
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
 					<ArchbaseObjectInspector data={dataSource} />
@@ -119,14 +101,11 @@ const ArchbaseListBasicExample = ({
 	);
 };
 
-interface CustomItemProps extends ArchbaseListCustomItemProps<Pessoa, string> {}
+type CustomItemProps = ArchbaseListCustomItemProps<Pessoa, string>;
 
 const useStyles = createStyles((theme) => ({
 	icon: {
-		color:
-			theme.colorScheme === 'dark'
-				? theme.colors.dark[3]
-				: theme.colors.gray[7],
+		color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[7],
 	},
 
 	name: {
@@ -154,18 +133,11 @@ const CustomItem = (props: CustomItemProps) => {
 		}
 	};
 
-	const backgroundColor = props.active
-		? listContextValue.activeBackgroundColor
-		: '';
+	const backgroundColor = props.active ? listContextValue.activeBackgroundColor : '';
 	const color = props.active ? listContextValue.activeColor : '';
 
 	return (
-		<div
-			onClick={handleClick}
-			style={{ padding: '8px', backgroundColor, color }}
-			ref={itemRef}
-			tabIndex={-1}
-		>
+		<div onClick={handleClick} style={{ padding: '8px', backgroundColor, color }} ref={itemRef} tabIndex={-1}>
 			<Group noWrap>
 				<Avatar src={props.recordData.foto} size={94} radius="md" />
 				<div>
@@ -217,8 +189,8 @@ const ArchbaseListCustomItemExample = () => {
 			<Grid.Col offset={1} span={7}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Lista de Pessoas customizada</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Lista de Pessoas customizada</Text>
 						</Group>
 					</Card.Section>
 					<ArchbaseList<Pessoa, string>
@@ -234,8 +206,8 @@ const ArchbaseListCustomItemExample = () => {
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
 					<ArchbaseObjectInspector data={dataSource} />
@@ -266,13 +238,7 @@ export const Primary: StoryObj<typeof ArchbaseListBasicExample> = {
 	},
 	argTypes: {
 		justifyContent: {
-			options: [
-				'flex-start',
-				'center',
-				'space-between',
-				'space-around',
-				'space-evenly',
-			],
+			options: ['flex-start', 'center', 'space-between', 'space-around', 'space-evenly'],
 			control: { type: 'radio' },
 		},
 		spacing: {

@@ -36,23 +36,18 @@ const ArchbaseRichTextEditExample = () => {
 			<Grid.Col offset={1} span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>RichTextEdit Component</Text>
+						<Group justify="space-between">
+							<Text fw={500}>RichTextEdit Component</Text>
 						</Group>
 					</Card.Section>
-					<ArchbaseRichTextEdit
-						label="Observação"
-						height="300px"
-						dataSource={dataSource}
-						dataField="observacao"
-					/>
+					<ArchbaseRichTextEdit label="Observação" height="300px" dataSource={dataSource} dataField="observacao" />
 				</Card>
 			</Grid.Col>
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
 					<ScrollArea sx={(_theme) => ({ height: 250 })}>

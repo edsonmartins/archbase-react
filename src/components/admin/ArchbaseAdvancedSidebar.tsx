@@ -1,13 +1,13 @@
 import { ActionIcon, Flex, MantineTheme, Paper, px, ScrollArea, Stack, Text, Tooltip } from '@mantine/core';
+import { useColorScheme, useForceUpdate } from '@mantine/hooks';
 import { IconDots } from '@tabler/icons-react';
+import { useArchbaseAppContext } from 'components/core';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Sidebar, sidebarClasses, Menu as SidebarMenu } from 'react-pro-sidebar';
 import { buildMenuItem } from './buildMenuItem';
 import { buildMenuItemStyles } from './buildMenuItemStyles';
 import { buildNavbar } from './buildNavbar';
 import { ArchbaseNavigationItem } from './types';
-import { useArchbaseAppContext } from 'components/core';
-import { useForceUpdate } from '@mantine/hooks';
 
 export interface ArchbaseAdvancedSidebarProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -70,11 +70,12 @@ export function ArchbaseAdvancedSidebar({
 	sideBarHeaderContent,
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
-	const appContext = useArchbaseAppContext()
-	const forceUpdate = useForceUpdate()
+	const appContext = useArchbaseAppContext();
+	const forceUpdate = useForceUpdate();
+	const colorScheme = useColorScheme();
 	const color = selectedGroupColor
 		? selectedGroupColor
-		: theme.colorScheme === 'dark'
+		: colorScheme === 'dark'
 		? theme.colors[theme.primaryColor][8]
 		: theme.colors[theme.primaryColor][0];
 
@@ -109,7 +110,7 @@ export function ArchbaseAdvancedSidebar({
 								disabled={showGroupLabels}
 							>
 								<Stack
-									spacing="2px"
+									gap={'2px'}
 									style={{
 										alignItems: 'center',
 										alignContent: 'center',
@@ -140,8 +141,8 @@ export function ArchbaseAdvancedSidebar({
 									{showGroupLabels ? (
 										<Text
 											size="xs"
-											color={
-												theme.colorScheme === 'dark'
+											c={
+												colorScheme === 'dark'
 													? groupLabelDarkColor
 														? groupLabelDarkColor
 														: theme.colors[theme.primaryColor][2]
@@ -171,16 +172,23 @@ export function ArchbaseAdvancedSidebar({
 		const grps = [...result].sort((a, b) => a.indexOrder - b.indexOrder);
 
 		return grps;
-	}, [navigationData, activeGroupName, theme.colorScheme, collapsed, appContext.selectedCompany]);
+	}, [navigationData, activeGroupName, colorScheme, collapsed, appContext.selectedCompany]);
 
-	const menuItemStyles = buildMenuItemStyles(theme, collapsed, 35, px(sidebarCollapsedWidth), groups.length > 1);
+	const menuItemStyles = buildMenuItemStyles(
+		colorScheme,
+		theme,
+		collapsed,
+		35,
+		Number(px(sidebarCollapsedWidth)),
+		groups.length > 1,
+	);
 
 	const sidebarWidthCalculated =
 		collapsed || activeGroupName === '' ? '0px' : `calc(${sidebarWidth} - ${sidebarGroupWidth})`;
 
 	const calcBackgroundGroupColor = backgroundGroupColor
 		? backgroundGroupColor
-		: theme.colorScheme === 'dark'
+		: colorScheme === 'dark'
 		? theme.colors[theme.primaryColor][6]
 		: theme.colors[theme.primaryColor][7];
 
@@ -213,6 +221,7 @@ export function ArchbaseAdvancedSidebar({
 			{groups.length == 1 ? (
 				buildNavbar(
 					sidebarRef,
+					colorScheme,
 					theme,
 					collapsed,
 					sidebarWidth,
@@ -239,7 +248,7 @@ export function ArchbaseAdvancedSidebar({
 							false
 						) : (
 							<Stack
-								spacing="4px"
+								gap="4px"
 								style={{
 									height: sidebarHeight,
 									width: sidebarGroupWidth,
@@ -255,7 +264,7 @@ export function ArchbaseAdvancedSidebar({
 								ref={sidebarRef}
 								rootStyles={{
 									[`.${sidebarClasses.container}`]: {
-										background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+										background: colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
 										overflowX: 'hidden',
 										overflowY: 'hidden',
 										left: 0,

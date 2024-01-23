@@ -1,10 +1,10 @@
-import React,{ ReactNode } from 'react'
-import { Group } from '@mantine/core'
+import { Group } from '@mantine/core';
+import React, { ReactNode } from 'react';
 
 export interface ArchbaseHeaderNavActionProps {
-  children: ReactNode[]
+	children: ReactNode[];
 }
 
 export const ArchbaseHeaderNavAction = (props: ArchbaseHeaderNavActionProps) => {
-  return <Group spacing="sm">{props.children}</Group>
-}
+	return <Group gap="sm">{props.children}</Group>;
+};

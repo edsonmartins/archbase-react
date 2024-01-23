@@ -36,8 +36,8 @@ const ArchbaseCheckboxExample = () => {
 			<Grid.Col offset={1} span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs" mb="1rem">
-						<Group position="apart">
-							<Text weight={500}>Checkbox Edit</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Checkbox Edit</Text>
 						</Group>
 					</Card.Section>
 					<Box sx={(_theme) => ({ height: 100 })}>
@@ -54,8 +54,8 @@ const ArchbaseCheckboxExample = () => {
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
 					<ScrollArea sx={(_theme) => ({ height: 500 })}>

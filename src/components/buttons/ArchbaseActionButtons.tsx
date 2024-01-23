@@ -1,23 +1,7 @@
-import {
-	ActionIcon,
-	Button,
-	Menu,
-	px,
-	Space,
-	Text,
-	Tooltip,
-	useMantineTheme,
-	Variants,
-} from '@mantine/core';
+import { ActionIcon, Button, Menu, px, Space, Text, Tooltip, useMantineTheme } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMenu2 } from '@tabler/icons-react';
-import React, {
-	ReactNode,
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-} from 'react';
+import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { isLastElementOfArray } from '../core/utils/array';
 import { applyFontFamily, createElementFromHTML } from '../core/utils/dom';
@@ -59,21 +43,13 @@ export interface ArchbaseActionButtonsOptions {
 	/** Espaçamento do botão menor */
 	smallerSpacing?: string;
 	/** Variação do botão maior */
-	largerButtonVariant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	largerButtonVariant?: string;
 	/** Variação do botão menor */
-	smallerButtonVariant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	smallerButtonVariant?: string;
 	/** Variação do item do menu */
-	menuItemVariant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	menuItemVariant?: string;
 	/** Variação do botão do menu */
-	menuButtonVariant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	menuButtonVariant?: string;
 	/** Cor do botão do menu */
 	menuButtonColor?: string;
 	/** Posição do dropdown do menu */
@@ -99,9 +75,7 @@ export interface ArchbaseActionButtonsProps {
 	/** Lista de ações */
 	actions: ArchbaseAction[];
 	/**  Variação padrão para todo o componente, que será sobrescrito pela variação mais específica de options */
-	variant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	variant?: string;
 	/** Opções de personalização */
 	options?: ArchbaseActionButtonsOptions;
 	/** Definição dos componentes personalizados */
@@ -112,9 +86,7 @@ interface ArchbaseActionButtonProps {
 	/** Ação */
 	action: ArchbaseAction;
 	/**  Variação padrão */
-	variant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	variant?: string;
 	/** Opções de personalização */
 	options?: ArchbaseActionButtonsOptions;
 	/** Definição dos componentes personalizados */
@@ -130,9 +102,7 @@ function buildLargeActionButton({
 	handleExecuteAction,
 	customComponents,
 }: ArchbaseActionButtonProps) {
-	const LargeActionButton = customComponents
-		? customComponents.largeButtonType
-		: null;
+	const LargeActionButton = customComponents ? customComponents.largeButtonType : null;
 	if (LargeActionButton) {
 		let largeButtonProps = {};
 		if (customComponents && customComponents.largeButtonProps) {
@@ -142,11 +112,7 @@ function buildLargeActionButton({
 		return (
 			<LargeActionButton
 				action={action}
-				variant={
-					options && options.largerButtonVariant
-						? options.largerButtonVariant
-						: variant
-				}
+				variant={options && options.largerButtonVariant ? options.largerButtonVariant : variant}
 				key={action.id}
 				disabled={!action.enabled}
 				onClick={() => handleExecuteAction(action)}
@@ -157,11 +123,7 @@ function buildLargeActionButton({
 		return (
 			<Button
 				color={action.color}
-				variant={
-					options && options.largerButtonVariant
-						? options.largerButtonVariant
-						: variant
-				}
+				variant={options && options.largerButtonVariant ? options.largerButtonVariant : variant}
 				key={action.id}
 				disabled={!action.enabled}
 				onClick={() => handleExecuteAction(action)}
@@ -180,9 +142,7 @@ function buildMediumActionButton({
 	handleExecuteAction,
 	customComponents,
 }: ArchbaseActionButtonProps) {
-	const MediumActionButton = customComponents
-		? customComponents.mediumButtonType
-		: null;
+	const MediumActionButton = customComponents ? customComponents.mediumButtonType : null;
 	if (MediumActionButton) {
 		let mediumButtonProps = {};
 		if (customComponents && customComponents.mediumButtonProps) {
@@ -192,11 +152,7 @@ function buildMediumActionButton({
 		return (
 			<MediumActionButton
 				action={action}
-				variant={
-					options && options.smallerButtonVariant
-						? options.smallerButtonVariant
-						: variant
-				}
+				variant={options && options.smallerButtonVariant ? options.smallerButtonVariant : variant}
 				key={action.id}
 				disabled={!action.enabled}
 				onClick={() => handleExecuteAction(action)}
@@ -207,11 +163,7 @@ function buildMediumActionButton({
 		return (
 			<ActionIcon
 				color={action.color}
-				variant={
-					options && options.smallerButtonVariant
-						? options.smallerButtonVariant
-						: variant
-				}
+				variant={options && options.smallerButtonVariant ? options.smallerButtonVariant : variant}
 				key={action.id}
 				disabled={!action.enabled}
 				onClick={() => handleExecuteAction(action)}
@@ -229,57 +181,33 @@ function buildHiddenActionButton({
 	handleExecuteAction,
 	customComponents,
 }: ArchbaseActionButtonProps) {
-	const SmallActionButton = customComponents
-		? customComponents.smallButtonType
-		: null;
+	const SmallActionButton = customComponents ? customComponents.smallButtonType : null;
 
 	return (
 		<Menu.Item
-			icon={action.icon}
+			leftSection={action.icon}
 			key={action.id}
 			disabled={!action.enabled}
-			color={
-				options && options.menuItemApplyActionColor ? action.color : undefined
-			}
+			color={options && options.menuItemApplyActionColor ? action.color : undefined}
 			onClick={() => handleExecuteAction(action)}
 		>
-			<Tooltip
-				withinPortal
-				withArrow
-				disabled={!action.hint}
-				label={action.hint}
-			>
+			<Tooltip withinPortal withArrow disabled={!action.hint} label={action.hint}>
 				{SmallActionButton ? (
 					<div>
 						<SmallActionButton
 							action={action}
-							variant={
-								options && options.menuItemVariant
-									? options.menuItemVariant
-									: variant
-							}
+							variant={options && options.menuItemVariant ? options.menuItemVariant : variant}
 						/>
 					</div>
 				) : (
-					<Text
-						variant={
-							options && options.menuItemVariant
-								? options.menuItemVariant
-								: variant
-						}
-					>
-						{action.label}
-					</Text>
+					<Text variant={options && options.menuItemVariant ? options.menuItemVariant : variant}>{action.label}</Text>
 				)}
 			</Tooltip>
 		</Menu.Item>
 	);
 }
 
-function buildVisibleActionButton(
-	props: ArchbaseActionButtonProps,
-	isLarge: boolean,
-) {
+function buildVisibleActionButton(props: ArchbaseActionButtonProps, isLarge: boolean) {
 	if (isLarge) {
 		return buildLargeActionButton(props);
 	} else {
@@ -287,42 +215,25 @@ function buildVisibleActionButton(
 	}
 }
 
-export function ArchbaseActionButtons({
-	actions,
-	variant,
-	customComponents,
-	options,
-}: ArchbaseActionButtonsProps) {
+export function ArchbaseActionButtons({ actions, variant, customComponents, options }: ArchbaseActionButtonsProps) {
 	const containerRef = useRef<HTMLInputElement>(null);
-	const [visibleActions, setVisibleActions] =
-		useState<ArchbaseAction[]>(actions);
+	const [visibleActions, setVisibleActions] = useState<ArchbaseAction[]>(actions);
 	const [hiddenActions, setHiddenActions] = useState<ArchbaseAction[]>([]);
 	const [containerWidth, _containerHeight] = useArchbaseSize(containerRef);
 	const [opened, setOpened] = useState(false);
 
 	const theme = useMantineTheme();
-	const _largerBreakPoint =
-		options && options.largerBreakPoint
-			? options.largerBreakPoint
-			: theme.breakpoints.md;
-	const _smallerBreakPoint =
-		options && options.smallerBreakPoint
-			? options.smallerBreakPoint
-			: theme.breakpoints.sm;
+	const _largerBreakPoint = options && options.largerBreakPoint ? options.largerBreakPoint : theme.breakpoints.md;
+	const _smallerBreakPoint = options && options.smallerBreakPoint ? options.smallerBreakPoint : theme.breakpoints.sm;
 
 	const isLarge = useMediaQuery(`(min-width: ${_largerBreakPoint})`);
 	const isSmall = useMediaQuery(`(max-width: ${_smallerBreakPoint})`);
 
-	const largerSpacingPx =
-		options && options.largerSpacing ? px(options.largerSpacing) : px('1rem');
-	const smallerSpacingPx =
-		options && options.smallerSpacing
-			? px(options.smallerSpacing)
-			: px('0.25rem');
+	const largerSpacingPx = options && options.largerSpacing ? px(options.largerSpacing) : px('1rem');
+	const smallerSpacingPx = options && options.smallerSpacing ? px(options.smallerSpacing) : px('0.25rem');
 	const spacingPx = isLarge ? largerSpacingPx : smallerSpacingPx;
 
-	const _menuPosition =
-		options && options.menuPosition ? options.menuPosition : 'right';
+	const _menuPosition = options && options.menuPosition ? options.menuPosition : 'right';
 
 	const calculateVisibleActions = useCallback(() => {
 		const container = containerRef.current;
@@ -341,8 +252,7 @@ export function ArchbaseActionButtons({
 				</ActionIcon>
 			);
 
-			const menuButtonHtmlString =
-				ReactDOMServer.renderToStaticMarkup(menuButton);
+			const menuButtonHtmlString = ReactDOMServer.renderToStaticMarkup(menuButton);
 			const menuButtonHtml = createElementFromHTML(menuButtonHtmlString);
 			theme.fontFamily && applyFontFamily(menuButtonHtml, theme.fontFamily);
 			container.appendChild(menuButtonHtml);
@@ -359,12 +269,10 @@ export function ArchbaseActionButtons({
 				const buttonHtml = createElementFromHTML(buttonHtmlString);
 				theme.fontFamily && applyFontFamily(buttonHtml, theme.fontFamily);
 				container.appendChild(buttonHtml);
-				totalWidth +=
-					buttonHtml.offsetWidth +
-					(isLastElementOfArray(actions, index) ? 0 : spacingPx);
+				totalWidth += buttonHtml.offsetWidth + (isLastElementOfArray(actions, index) ? 0 : spacingPx);
 				container.removeChild(buttonHtml);
 
-				if (totalWidth <= containerWidth - (menuWidth + spacingPx)) {
+				if (totalWidth <= containerWidth - (menuWidth + Number(spacingPx))) {
 					maxVisibleActions++;
 				}
 			});
@@ -377,16 +285,7 @@ export function ArchbaseActionButtons({
 				setHiddenActions(actions.slice(maxVisibleActions));
 			}
 		}
-	}, [
-		actions,
-		isSmall,
-		spacingPx,
-		theme.fontFamily,
-		customComponents,
-		variant,
-		isLarge,
-		options,
-	]);
+	}, [actions, isSmall, spacingPx, theme.fontFamily, customComponents, variant, isLarge, options]);
 
 	useEffect(() => {
 		calculateVisibleActions();
@@ -402,9 +301,7 @@ export function ArchbaseActionButtons({
 		return (
 			hiddenActions.length > 0 && (
 				<>
-					{visibleActions.length !== 0 && _menuPosition === 'right' ? (
-						<Space w={spacingPx} />
-					) : undefined}
+					{visibleActions.length !== 0 && _menuPosition === 'right' ? <Space w={spacingPx} /> : undefined}
 					<Menu
 						opened={opened}
 						onChange={setOpened}
@@ -420,32 +317,16 @@ export function ArchbaseActionButtons({
 						<Menu.Target>
 							{isLarge ? (
 								<Button
-									color={
-										options && options.menuButtonColor
-											? options.menuButtonColor
-											: 'blue.5'
-									}
-									variant={
-										options && options.menuButtonVariant
-											? options.menuButtonVariant
-											: variant
-									}
+									color={options && options.menuButtonColor ? options.menuButtonColor : 'blue.5'}
+									variant={options && options.menuButtonVariant ? options.menuButtonVariant : variant}
 									px={'10px'}
 								>
 									<IconMenu2 />
 								</Button>
 							) : (
 								<ActionIcon
-									color={
-										options && options.menuButtonColor
-											? options.menuButtonColor
-											: 'blue.5'
-									}
-									variant={
-										options && options.menuButtonVariant
-											? options.menuButtonVariant
-											: variant
-									}
+									color={options && options.menuButtonColor ? options.menuButtonColor : 'blue.5'}
+									variant={options && options.menuButtonVariant ? options.menuButtonVariant : variant}
 								>
 									<IconMenu2 />
 								</ActionIcon>
@@ -463,9 +344,7 @@ export function ArchbaseActionButtons({
 							)}
 						</Menu.Dropdown>
 					</Menu>
-					{visibleActions.length !== 0 && _menuPosition === 'left' ? (
-						<Space w={spacingPx} />
-					) : undefined}
+					{visibleActions.length !== 0 && _menuPosition === 'left' ? <Space w={spacingPx} /> : undefined}
 				</>
 			)
 		);
@@ -484,12 +363,7 @@ export function ArchbaseActionButtons({
 			{visibleActions.map((action, index) => {
 				return (
 					<>
-						<Tooltip
-							withArrow
-							withinPortal={true}
-							disabled={!action.hint}
-							label={action.hint}
-						>
+						<Tooltip withArrow withinPortal={true} disabled={!action.hint} label={action.hint}>
 							<div>
 								{buildVisibleActionButton(
 									{
@@ -503,9 +377,7 @@ export function ArchbaseActionButtons({
 								)}
 							</div>
 						</Tooltip>
-						{isLastElementOfArray(visibleActions, index) ? undefined : (
-							<Space w={spacingPx} key={index} />
-						)}
+						{isLastElementOfArray(visibleActions, index) ? undefined : <Space w={spacingPx} key={index} />}
 					</>
 				);
 			})}
