@@ -1,4 +1,4 @@
-import { Avatar, Card, createStyles, Grid, Group, Text } from '@mantine/core';
+import { Avatar, Card, Grid, Group, Text } from '@mantine/core';
 import { ThemeIcon } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
 import { IconUser } from '@tabler/icons-react';
@@ -103,18 +103,17 @@ const ArchbaseListBasicExample = ({ showIcon, showPhoto, justifyContent, spacing
 
 type CustomItemProps = ArchbaseListCustomItemProps<Pessoa, string>;
 
-const useStyles = createStyles((theme) => ({
+const classes = {
 	icon: {
-		color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[7],
+		color: 'light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-3))',
 	},
 
 	name: {
-		fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+		fontFamily: `Greycliff CF, var(--mantine-font-family)`,
 	},
-}));
+};
 
 const CustomItem = (props: CustomItemProps) => {
-	const { classes } = useStyles();
 	const listContextValue = useArchbaseListContext<Pessoa, string>();
 	const itemRef = useRef<any>(null);
 
@@ -138,23 +137,23 @@ const CustomItem = (props: CustomItemProps) => {
 
 	return (
 		<div onClick={handleClick} style={{ padding: '8px', backgroundColor, color }} ref={itemRef} tabIndex={-1}>
-			<Group noWrap>
+			<Group wrap="nowrap">
 				<Avatar src={props.recordData.foto} size={94} radius="md" />
 				<div>
-					<Text fz="lg" fw={500} className={classes.name}>
+					<Text fz="lg" fw={500} style={classes.name}>
 						{props.recordData.nome}
 					</Text>
 
-					<Group noWrap spacing={10} mt={3}>
-						<IconAt stroke={1.5} size="1rem" className={classes.icon} />
-						<Text fz="xs" c="dimmed" className={classes.name}>
+					<Group wrap="nowrap" gap={10} mt={3}>
+						<IconAt stroke={1.5} size="1rem" style={classes.icon} />
+						<Text fz="xs" c="dimmed" style={classes.name}>
 							{props.recordData.email}
 						</Text>
 					</Group>
 
-					<Group noWrap spacing={10} mt={5}>
-						<IconPhoneCall stroke={1.5} size="1rem" className={classes.icon} />
-						<Text fz="xs" c="dimmed" className={classes.name}>
+					<Group wrap="nowrap" gap={10} mt={5}>
+						<IconPhoneCall stroke={1.5} size="1rem" style={classes.icon} />
+						<Text fz="xs" c="dimmed" style={classes.name}>
 							{props.recordData.celular}
 						</Text>
 					</Group>

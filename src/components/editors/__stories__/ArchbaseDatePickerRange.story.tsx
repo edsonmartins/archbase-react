@@ -42,7 +42,7 @@ const ArchbaseDatePickerRangeExample = () => {
 							<Text fw={500}>Date Picker Range Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 500 })}>
+					<Box style={{ height: 500 }}>
 						<ArchbaseDatePickerRange onSelectDateRange={setSelectedRange} label="Informe o período" />
 						<Text size="1rem">
 							{selectedRange && formatISO(selectedRange[0]!) + ' -> ' + formatISO(selectedRange[1]!)}

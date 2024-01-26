@@ -40,7 +40,7 @@ const ArchbaseJsonEditExample = () => {
 							<Text fw={500}>Json Edit Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
+					<Box style={{ height: 100 }}>
 						<ArchbaseJsonEdit<Pessoa, string>
 							maxRows={100}
 							maxLength={1000}
@@ -58,7 +58,7 @@ const ArchbaseJsonEditExample = () => {
 							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

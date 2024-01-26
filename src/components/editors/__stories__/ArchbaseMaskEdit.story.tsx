@@ -40,7 +40,7 @@ const ArchbaseEditExample = () => {
 							<Text fw={500}>Mask Edit Component</Text>
 						</Group>
 					</Card.Section>
-					<ArchbaseMaskEdit label="CPF" dataSource={dataSource} dataField="cpf" mask={MaskPattern.CPF} />
+					<ArchbaseMaskEdit title="CPF" dataSource={dataSource} dataField="cpf" mask={MaskPattern.CPF} />
 				</Card>
 			</Grid.Col>
 			<Grid.Col span={4}>

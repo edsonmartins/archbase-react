@@ -40,7 +40,7 @@ const ArchbaseCheckboxExample = () => {
 							<Text fw={500}>Checkbox Edit</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
+					<Box style={{ height: 100 }}>
 						<ArchbaseCheckbox
 							label="Masculino"
 							dataSource={dataSource}
@@ -58,7 +58,7 @@ const ArchbaseCheckboxExample = () => {
 							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

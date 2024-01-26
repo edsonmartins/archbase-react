@@ -64,7 +64,7 @@ const ArchbaseAsyncSelectExample = () => {
 							<Text fw={500}>AsyncSelect Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
+					<Box style={{ height: 100 }}>
 						<ArchbaseAsyncSelect<Pedido, string, Pessoa>
 							label="Nome"
 							dataSource={dataSource}
@@ -83,7 +83,7 @@ const ArchbaseAsyncSelectExample = () => {
 							<Text fw={500}>DataSource dsPedidos</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

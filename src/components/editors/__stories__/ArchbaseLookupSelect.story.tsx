@@ -47,7 +47,7 @@ const ArchbaseLookupSelectExample = () => {
 							<Text fw={500}>Lookup Edit Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
+					<Box style={{ height: 100 }}>
 						<Flex justify="flex-start" align="center" direction="row" wrap="nowrap" gap="xs">
 							<ArchbaseLookupSelect<Pedido, string, Pessoa>
 								label="Código"
@@ -73,7 +73,7 @@ const ArchbaseLookupSelectExample = () => {
 							<Text fw={500}>DataSource dsPedidos</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

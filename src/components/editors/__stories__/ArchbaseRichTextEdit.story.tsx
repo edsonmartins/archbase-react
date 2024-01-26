@@ -50,7 +50,7 @@ const ArchbaseRichTextEditExample = () => {
 							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 250 })}>
+					<ScrollArea style={{ height: 250 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

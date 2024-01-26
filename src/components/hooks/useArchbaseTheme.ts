@@ -1,7 +1,6 @@
-import { useMantineTheme } from '@mantine/styles'
-
+import { useMantineTheme } from '@mantine/core';
 
 export function useArchbaseTheme() {
-  const theme = useMantineTheme()
-  return theme
+	const theme = useMantineTheme();
+	return theme;
 }

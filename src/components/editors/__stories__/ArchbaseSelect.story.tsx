@@ -45,7 +45,7 @@ const ArchbaseSelectExample = () => {
 							<Text fw={500}>Select Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 150 })}>
+					<Box style={{ height: 150 }}>
 						<ArchbaseSelect<Pedido, string, Pessoa>
 							label="Nome"
 							dataSource={dataSource}
@@ -76,7 +76,7 @@ const ArchbaseSelectExample = () => {
 							<Text fw={500}>Objeto Pedido</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
 					</ScrollArea>
 				</Card>
@@ -88,7 +88,7 @@ const ArchbaseSelectExample = () => {
 							<Text fw={500}>DataSource dsPedidos</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

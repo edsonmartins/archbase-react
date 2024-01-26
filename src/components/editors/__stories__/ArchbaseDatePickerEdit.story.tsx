@@ -40,8 +40,8 @@ const ArchbaseDatePickerEditExample = () => {
 							<Text fw={500}>Date Picker Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
-						<ArchbaseDatePickerEdit width={200} label="Data nascimento" dataSource={dataSource} dataField="data_nasc" />
+					<Box style={{ height: 100 }}>
+						<ArchbaseDatePickerEdit width={200} title="Data nascimento" dataSource={dataSource} dataField="data_nasc" />
 					</Box>
 				</Card>
 			</Grid.Col>
@@ -52,7 +52,7 @@ const ArchbaseDatePickerEditExample = () => {
 							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

@@ -40,7 +40,7 @@ const ArchbaseThemeEditorExample = () => {
 							<Text fw={500}>Edit Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
+					<Box style={{ height: 100 }}>
 						<ArchbaseThemeEditor label="Nome" dataSource={dataSource} dataField="nome" />
 					</Box>
 				</Card>
@@ -52,7 +52,7 @@ const ArchbaseThemeEditorExample = () => {
 							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

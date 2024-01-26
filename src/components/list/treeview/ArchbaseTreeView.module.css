@@ -1,0 +1,66 @@
+.treeview {
+  min-height: 100px;
+  padding: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  height: 100%;
+};
+.treeviewUl {
+  padding-left: 28px;
+  margin: 0 0 0 0;
+};
+.treeviewLi {
+  list-style: none;
+  margin: 0px;
+  position: relative;
+  line-height: 16px;
+  &::before {
+    content: "";
+    left: -16px;
+    position: absolute;
+    right: auto;
+    border-left: 1px dotted #999;
+    bottom: 30px;
+    height: 100%;
+    top: -2px;
+    width: 1px;
+  };
+  &::after {
+    content: "";
+    left: -16px;
+    position: absolute;
+    right: auto;
+    border-top: 1px dotted #999;
+    height: 20px;
+    top: 15px;
+    width: 22px;
+  };
+};
+.treeviewSpan {
+  border-radius: 2px;
+  display: inline-block;
+  padding: 2px;
+  text-decoration: none;
+};
+.treeviewImg {
+  vertical-align: middle;
+  height: auto;
+  max-width: 100%;
+};
+.treeviewParentLiSpan {
+  cursor: pointer;
+};
+.treeviewLastChildBefore {
+  height: 18px;
+};
+.treeviewItem {
+  background: auto;
+  color: black;
+  margin: 1px 1px 1px 2px;
+  &:hover {
+    background: #e7f4f9;
+    color: black;
+    margin: 1px 1px 1px 2px;
+  };
+}
