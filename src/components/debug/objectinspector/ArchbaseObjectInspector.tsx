@@ -1,6 +1,6 @@
+import { useColorScheme } from '@mantine/hooks';
 import React from 'react';
 import { ObjectInspector } from 'react-inspector';
-import { useArchbaseTheme } from '../../hooks';
 
 export interface ArchbaseObjectInspectorProps {
 	/** Objeto a ser exibido */
@@ -9,11 +9,11 @@ export interface ArchbaseObjectInspectorProps {
 }
 
 export function ArchbaseObjectInspector({ data, expandLevel }: ArchbaseObjectInspectorProps) {
-	const theme = useArchbaseTheme();
+	const colorScheme = useColorScheme();
 
 	return (
 		<ObjectInspector
-			theme={theme.colorScheme === 'dark' ? 'chromeDark' : 'chromeLight'}
+			theme={colorScheme === 'dark' ? 'chromeDark' : 'chromeLight'}
 			data={data}
 			expandLevel={expandLevel}
 		/>

@@ -39,22 +39,22 @@ const ArchbaseAdminMainLayoutExample = () => {
 
 	const headerActions = useMemo((): ReactNode => {
 		return [
-			<Tooltip withinPortal withArrow label="Trocar empresa">
+			<Tooltip key="Trocar empresa" withinPortal withArrow label="Trocar empresa">
 				<ActionIcon variant="transparent">
 					<IconSwitchHorizontal size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
-			<Tooltip withinPortal withArrow label="Tela cheia">
+			<Tooltip key="Tela cheia" withinPortal withArrow label="Tela cheia">
 				<ActionIcon variant="transparent">
 					<IconArrowsMaximize size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
-			<Tooltip withinPortal withArrow label="Notificações">
+			<Tooltip key="Notificações" withinPortal withArrow label="Notificações">
 				<ActionIcon variant="transparent">
 					<IconBell size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
-			<Tooltip withinPortal withArrow label="Chat">
+			<Tooltip key="Chat" withinPortal withArrow label="Chat">
 				<ActionIcon variant="transparent">
 					<IconMessageChatbot size="2rem" />
 				</ActionIcon>
@@ -103,6 +103,7 @@ const ArchbaseAdminMainLayoutExample = () => {
 					console.log(hidden);
 				}}
 				footer={<ArchbaseAdminLayoutFooter />}
+				footerHeight={40}
 				header={
 					<ArchbaseAdminLayoutHeader
 						user={fakeUser}
@@ -111,14 +112,14 @@ const ArchbaseAdminMainLayoutExample = () => {
 						userMenuItems={
 							<Fragment>
 								<Menu.Label>Usuário</Menu.Label>
-								<Menu.Item icon={<IconUserCircle size={14} />}>Meu perfil</Menu.Item>
-								<Menu.Item icon={<IconSettings size={14} />}>Configurações</Menu.Item>
+								<Menu.Item leftSection={<IconUserCircle size={14} />}>Meu perfil</Menu.Item>
+								<Menu.Item leftSection={<IconSettings size={14} />}>Configurações</Menu.Item>
 								<Menu.Divider />
 								<Menu.Label>Conta</Menu.Label>
-								<Menu.Item icon={<IconBrandMessenger size={14} />}>Suporte</Menu.Item>
+								<Menu.Item leftSection={<IconBrandMessenger size={14} />}>Suporte</Menu.Item>
 								<Menu.Item
 									color="red"
-									icon={<IconLogout size={14} />}
+									leftSection={<IconLogout size={14} />}
 									onClick={() => {
 										//
 									}}

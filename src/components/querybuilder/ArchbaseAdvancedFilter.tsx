@@ -2,6 +2,7 @@
 import {
 	ActionIcon,
 	Button,
+	ButtonVariant,
 	Card,
 	Checkbox,
 	Chip,
@@ -11,7 +12,6 @@ import {
 	Switch,
 	Text,
 	Tooltip,
-	Variants,
 } from '@mantine/core';
 import {
 	DatePickerInput,
@@ -59,6 +59,7 @@ import {
 	SelectedSort,
 	SortField,
 } from './ArchbaseFilterCommons';
+import { useColorScheme } from '@mantine/hooks';
 
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
 	id: string;
@@ -81,9 +82,7 @@ interface ArchbaseAdvancedFilterProps<_T, _ID> {
 	disabled?: boolean;
 	onSearchButtonClick?: () => void;
 	border?: string;
-	variant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	variant?: ButtonVariant;
 }
 
 interface ArchbaseAdvancedFilterState {
@@ -916,9 +915,7 @@ interface RuleGroupItemProps {
 	schema: Schema;
 	height?: string;
 	onSearchButtonClick?: () => void;
-	variant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	variant?: ButtonVariant
 }
 
 class RuleGroupItem extends Component<RuleGroupItemProps> {
@@ -1185,7 +1182,7 @@ class RuleItem extends Component<RuleItemProps> {
 			dt !== 'time';
 		var level = getLevel(this.props.id);
 		let listValues = this.getFieldValues(field, fields);
-
+		const colorScheme = useColorScheme();
 		return (
 			<li className={'rule-container'}>
 				<ArchbaseCheckbox
@@ -1200,8 +1197,7 @@ class RuleItem extends Component<RuleItemProps> {
 					value={field!}
 					className="custom-select-field"
 					style={{
-						color:
-							this.context.theme!.colorScheme === 'dark' ? 'white' : 'black',
+						color: colorScheme === 'dark' ? 'white' : 'black',
 					}}
 					disabled={disabled}
 					handleOnChange={this.onFieldChanged}
@@ -1213,8 +1209,7 @@ class RuleItem extends Component<RuleItemProps> {
 					options={getOperators(field)}
 					value={operator!}
 					style={{
-						color:
-							this.context.theme!.colorScheme === 'dark' ? 'white' : 'black',
+						color: colorScheme === 'dark' ? 'white' : 'black',
 					}}
 					className="custom-select-operator"
 					disabled={disabled}
@@ -1367,9 +1362,7 @@ interface ActionElementProps {
 	handleOnClick: (event: React.MouseEvent) => void;
 	rules?: Rule[];
 	color?: string;
-	variant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	variant?: ButtonVariant;
 }
 
 class ActionElement extends Component<ActionElementProps> {

@@ -48,9 +48,9 @@ import {
 	MRT_ToggleGlobalFilterButton,
 	useMantineReactTable,
 } from 'mantine-react-table';
-import { MRT_Localization_EN } from 'mantine-react-table/locales/en';
-import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
-import { MRT_Localization_PT_BR } from 'mantine-react-table/locales/pt-BR';
+// import { MRT_Localization_EN } from 'mantine-react-table/locales/en';
+// import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
+// import { MRT_Localization_PT_BR } from 'mantine-react-table/locales/pt-BR';
 import React, { Fragment, isValidElement, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { builder, emit, ExpressionNode } from '../core';
@@ -65,11 +65,11 @@ interface JsPDFCustom extends JsPDF {
 	autoTable: (options: UserOptions) => void;
 }
 
-const languages = {
-	en: MRT_Localization_EN,
-	es: MRT_Localization_ES,
-	'pt-BR': MRT_Localization_PT_BR,
-};
+// const languages = {
+// 	en: MRT_Localization_EN,
+// 	es: MRT_Localization_ES,
+// 	'pt-BR': MRT_Localization_PT_BR,
+// };
 
 const convertHexToRGBA = (hexCode, opacity = 1) => {
 	let hex = hexCode.replace('#', '');
@@ -1195,7 +1195,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 		},
 		onRowSelectionChange: setRowSelection,
 		renderTopToolbarCustomActions: (table) => getToolBarCustomActions(table, props),
-		localization: languages[i18n.language],
+		// localization: languages[i18n.language],
 		data: isLoadingInternal ? [] : data,
 		rowCount: props.dataSource.getGrandTotalRecords(),
 		pageCount: props.dataSource.getTotalPages(),

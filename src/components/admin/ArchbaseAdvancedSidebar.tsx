@@ -1,7 +1,7 @@
+import { useArchbaseAppContext } from '@components/core';
 import { ActionIcon, Flex, MantineTheme, Paper, px, ScrollArea, Stack, Text, Tooltip } from '@mantine/core';
 import { useColorScheme, useForceUpdate } from '@mantine/hooks';
 import { IconDots } from '@tabler/icons-react';
-import { useArchbaseAppContext } from 'components/core';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Sidebar, sidebarClasses, Menu as SidebarMenu } from 'react-pro-sidebar';
 import { buildMenuItem } from './buildMenuItem';
@@ -28,7 +28,6 @@ export interface ArchbaseAdvancedSidebarProps {
 	collapsed?: boolean;
 	withBorder?: boolean;
 	showGroupLabels?: boolean;
-	margin?: string;
 	theme: MantineTheme;
 	sidebarRef?: React.Ref<HTMLHtmlElement> | undefined;
 	defaultGroupIcon?: ReactNode;
@@ -47,8 +46,8 @@ export function ArchbaseAdvancedSidebar({
 	navigationData,
 	sidebarGroupWidth = '80px',
 	sidebarWidth = '360px',
-	sidebarHeight = `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`,
-	sidebarCollapsedWidth,
+	sidebarHeight = `calc(100vh - var(--app-shell-header-offset, 0px))`,
+	sidebarCollapsedWidth = '60px',
 	selectedGroupColor,
 	groupColor,
 	backgroundGroupColor,
@@ -62,7 +61,6 @@ export function ArchbaseAdvancedSidebar({
 	onClickActionIcon,
 	withBorder = false,
 	showGroupLabels = true,
-	margin,
 	theme,
 	sidebarRef,
 	defaultGroupIcon,
@@ -235,15 +233,8 @@ export function ArchbaseAdvancedSidebar({
 				)
 			) : (
 				<Flex direction="column" w={collapsed ? sidebarCollapsedWidth : sidebarWidth}>
-					<div style={{ height: 'auto', width: '100%', margin }}>{sideBarHeaderContent}</div>
-					<Paper
-						withBorder={withBorder}
-						style={{
-							display: 'flex',
-							height: sidebarHeight,
-							width: sidebarWidth,
-						}}
-					>
+					<div style={{ height: 'auto', width: '100%' }}>{sideBarHeaderContent}</div>
+					<Paper withBorder={withBorder} h={sidebarHeight} w={'100%'} display={'flex'}>
 						{groups.length === 0 ? (
 							false
 						) : (

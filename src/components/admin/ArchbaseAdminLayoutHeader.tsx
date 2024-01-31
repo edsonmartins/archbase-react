@@ -1,5 +1,4 @@
 import {
-	AppShell,
 	Avatar,
 	Badge,
 	Box,
@@ -133,7 +132,6 @@ export type ArchbaseAdminLayoutHeaderProps = {
 	navigationData: ArchbaseNavigationItem[] | undefined;
 	headerActions?: ReactNode | ReactNode[];
 	headerLeftContent?: ReactNode | ReactNode[];
-	color?: string;
 	showLanguageSelector?: boolean;
 	sideBarHiddenBreakPoint?: string | number;
 };
@@ -143,7 +141,6 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	user,
 	navigationData: navigationItems,
 	logo,
-	color,
 	headerActions,
 	styleLogo,
 	showLanguageSelector = false,
@@ -199,17 +196,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	}, [navigationItems, navigate]);
 
 	return (
-		<AppShell.Header
-			p="xs"
-			color={color}
-			display="flex"
-			style={{
-				backgroundColor: 'var(--mantine-primary-color-8)',
-				alignItems: 'center',
-				borderBottom: 'none',
-				height: 60,
-			}}
-		>
+		<>
 			<Flex style={{ width: 300, height: 50 }} align="center">
 				<img
 					style={{
@@ -273,6 +260,6 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 					<Menu.Dropdown>{userMenuItems}</Menu.Dropdown>
 				</Menu>
 			</ArchbaseHeaderNavAction>
-		</AppShell.Header>
+		</>
 	);
 };

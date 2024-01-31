@@ -28,8 +28,8 @@ export function buildNavbar(
 					overflowY: 'hidden',
 					left: 0,
 					right: 0,
-					top: isHidden ? 0 : 'var(--mantine-header-height, 0rem)',
-					height: 'calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))',
+					top: isHidden ? 0 : 'var(--app-shell-header-offset, 0px)',
+					height: 'calc(100vh - 500px)',
 				},
 			}}
 			collapsed={collapsed}

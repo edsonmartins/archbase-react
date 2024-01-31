@@ -6,5 +6,4 @@ export { ArchbaseListItem } from './ArchbaseListItem';
 export type { ArchbaseListItemProps } from './ArchbaseListItem';
 export type { ArchbaseListContextValue } from './ArchbaseList.context';
 export { ArchbaseListContext };
-export * as createStyles from './ArchbaseList.styles';
 export * from './treeview';

@@ -2,7 +2,6 @@
 import React, { Component, ReactNode } from 'react'
 import { ArchbaseError } from '../core'
 import { MaskPattern } from '../editors'
-import { Variants } from '@mantine/styles'
 
 const QUICK_FILTER_INDEX = -2
 const NEW_FILTER_INDEX = -1
@@ -337,7 +336,7 @@ interface ArchbaseQueryBuilderProps {
   showClearButton?: boolean
   showToggleButton?: boolean
   onClearFilter?: (self: any) => {}
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+  variant?: string
   viewName: string
   id: string
   apiVersion: string
