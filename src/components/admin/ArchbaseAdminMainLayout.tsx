@@ -76,7 +76,9 @@ function ArchbaseAdminMainLayoutContainer({
 	const colorScheme = useColorScheme();
 	const navigate = useNavigate();
 	const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>();
-	const isHidden = useMediaQuery(`(max-width: ${sideBarHiddenBreakPoint ?? theme.breakpoints.md})`);
+	const isHidden = useMediaQuery(
+		`(max-width: ${sideBarHiddenBreakPoint ? px(sideBarHiddenBreakPoint) : theme.breakpoints.md})`,
+	);
 
 	const onMenuItemClick = (item: ArchbaseNavigationItem) => {
 		if (item.link) {
@@ -209,9 +211,9 @@ function ArchbaseAdminMainLayoutContainer({
 						height: `calc(100vh - var(--app-shell-header-offset, 0px) - ${px(
 							footerHeight,
 						)}px - var(--app-shell-padding) - 1rem)`,
-						width: `calc(100vw - var(--app-shell-padding) - calc(${currentSidebarWidth} + 1rem))`,
+						width: `calc(100vw - var(--app-shell-padding) - calc(${isHidden ? '0px' : currentSidebarWidth} + 1rem))`,
 						marginTop: '0.5rem',
-						marginLeft: `calc(${currentSidebarWidth} + 0.5rem)`,
+						marginLeft: `calc(${isHidden ? '0px' : currentSidebarWidth} + 0.5rem)`,
 						border: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors[theme.primaryColor][1]}`,
 						borderRadius: '6px',
 						overflow: 'none',

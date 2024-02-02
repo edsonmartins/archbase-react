@@ -152,7 +152,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	const navigate = useNavigate();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
 	const isSideBarHiddenBreakPoint = useMediaQuery(
-		`(max-width: ${px(sideBarHiddenBreakPoint) ?? theme.breakpoints.md})`,
+		`(max-width: ${sideBarHiddenBreakPoint ? px(sideBarHiddenBreakPoint) : theme.breakpoints.md})`,
 	);
 	const commands = useMemo(() => {
 		const result = new Array<ArchbaseSpotlightActionData>();
@@ -213,7 +213,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 				size="sm"
 				color={theme.colors.gray[7]}
 				mx="xl"
-				display={isSideBarHiddenBreakPoint ? {} : { display: 'none' }}
+				display={isSideBarHiddenBreakPoint ? '' : 'none'}
 			/>
 			<div>
 				{commands && commands.length > 0 ? <CommandPaletteButton commands={commands} theme={colorScheme} /> : null}
