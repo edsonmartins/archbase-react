@@ -229,11 +229,14 @@ function ArchbaseAdminMainLayoutContainer({
 					onClose={handleHiddenSidebar}
 					size={sideBarWidth}
 					padding={0}
+					styles={{
+						header: { minHeight: '10px' },
+					}}
 				>
 					<ArchbaseAdvancedSidebar
 						navigationData={navigationData}
 						sidebarWidth={sideBarWidth}
-						sidebarHeight="calc(100vh - 26px)"
+						sidebarHeight="calc(100vh - 28px)"
 						sidebarCollapsedWidth={sideBarCollapsedWidth}
 						sidebarGroupWidth={sideBarCollapsedWidth}
 						selectedGroupColor={selectedGroupColor}
