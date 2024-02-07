@@ -414,8 +414,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 	useEffect(() => {
 		setInputValue(formatValue(_value));
-	}, [ctx.getLocale(locale)]);
-
+	}, [ctx.locale]);
+	console.log(ctx);
 	const [dropdownOpened, setDropdownOpened] = useState(false);
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -74,7 +74,7 @@
     "crypto-js": "^4.1.1",
     "css-element-queries": "^1.2.3",
     "date-fns": "^2.30.0",
-    "dayjs": "^1.11.9",
+    "dayjs": "^1.11.10",
     "element-resize-detector": "^1.2.4",
     "events": "^3.3.0",
     "export-to-csv": "^0.2.1",
@@ -149,9 +149,6 @@
     "@changesets/cli": "^2.26.0",
     "@commitlint/cli": "^17.4.1",
     "@commitlint/config-conventional": "^17.4.0",
-    "@emotion/babel-plugin": "^11.10.5",
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
     "@mdx-js/react": "^1.6.22",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.0.0",
@@ -233,10 +230,13 @@
     "webpack-cli": "^5.0.1"
   },
   "peerDependencies": {
-    "@emotion/react": "^11.0.0",
-    "@emotion/styled": "^11.0.0",
     "react": "^16.8.0 || ^17 || ^18",
     "react-dom": "^16.8.0 || ^17 || ^18"
+  },
+  "resolutions": {
+    "dayjs": "1.11.10",
+    "react-i18next": "13.4.1",
+    "i18next": "23.7.6"
   },
   "engines": {
     "node": ">=16"

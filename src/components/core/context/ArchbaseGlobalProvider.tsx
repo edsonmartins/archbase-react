@@ -1,6 +1,7 @@
 import { localStorageColorSchemeManager, MantineProvider, MantineThemeOverride } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { DatesProvider } from '@mantine/dates';
+import '@mantine/dates/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
 import '@mantine/spotlight/styles.css';
@@ -79,6 +80,8 @@ export const initArchbaseTranslation = (translationName, translationResource): a
 			dayjs.locale('pt-BR');
 		}
 	});
+	console.log('global', i18next.language);
+	console.log('carregou linguas', new Date().getMilliseconds());
 	return i18next;
 };
 
@@ -101,7 +104,8 @@ function ArchbaseGlobalProvider({
 	useLayoutEffect(() => {
 		initArchbaseTranslation(translationName, translationResource);
 	}, []);
-
+	console.log('renderizou', new Date().getMilliseconds());
+	console.log(i18next.language);
 	return (
 		<IOCProvider container={containerIOC}>
 			<DatesProvider settings={{ locale: i18next.language }}>
