@@ -12,7 +12,7 @@ import i18next, { i18n, ResourceLanguage } from 'i18next';
 import { Resource, t } from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { Provider as IOCProvider } from 'inversify-react';
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { initReactI18next } from 'react-i18next';
 import '../../locales/config';
 import { archbaseTranslationResources } from '../../locales/config';
@@ -80,8 +80,6 @@ export const initArchbaseTranslation = (translationName, translationResource): a
 			dayjs.locale('pt-BR');
 		}
 	});
-	console.log('global', i18next.language);
-	console.log('carregou linguas', new Date().getMilliseconds());
 	return i18next;
 };
 
@@ -101,14 +99,14 @@ function ArchbaseGlobalProvider({
 	translationName,
 	translationResource,
 }: ArchbaseAppProviderProps) {
+	const [language, setLanguage] = useState('pt-BR');
 	useLayoutEffect(() => {
-		initArchbaseTranslation(translationName, translationResource);
+		setLanguage(initArchbaseTranslation(translationName, translationResource).language);
 	}, []);
-	console.log('renderizou', new Date().getMilliseconds());
-	console.log(i18next.language);
+
 	return (
 		<IOCProvider container={containerIOC}>
-			<DatesProvider settings={{ locale: i18next.language }}>
+			<DatesProvider settings={{ locale: language }}>
 				<MantineProvider
 					theme={colorScheme === 'dark' ? themeDark : themeLight}
 					withCssVariables={withCssVariables}
