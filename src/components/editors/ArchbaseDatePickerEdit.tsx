@@ -293,6 +293,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	const { calendarProps, others } = pickCalendarProps(rest);
 	const innerComponentRef = innerRef || useRef<any>();
 	const ctx = useDatesContext();
+	const [currentLocale, setCurrentLocale] = useState(locale); 
 	const [_value, setValue, controlled] = useUncontrolled({
 		value,
 		defaultValue,
@@ -413,9 +414,11 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	}, [controlled, value]);
 
 	useEffect(() => {
+		setCurrentLocale(ctx.locale);
 		setInputValue(formatValue(_value));
+		console.log('atualizou locale')
+		console.log(ctx);
 	}, [ctx.locale]);
-	console.log(ctx);
 	const [dropdownOpened, setDropdownOpened] = useState(false);
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -585,7 +588,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 							__preventFocus
 							minDate={minDate}
 							maxDate={maxDate}
-							locale={locale}
+							locale={currentLocale}
 							getDayProps={_getDayProps}
 							size={inputProps.size as MantineSize}
 							date={_date ? _date : undefined}
