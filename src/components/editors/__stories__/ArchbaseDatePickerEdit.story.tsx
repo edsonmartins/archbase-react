@@ -41,7 +41,13 @@ const ArchbaseDatePickerEditExample = () => {
 						</Group>
 					</Card.Section>
 					<Box style={{ height: 100 }}>
-						<ArchbaseDatePickerEdit width={200} title="Data nascimento" dataSource={dataSource} dataField="data_nasc" />
+						<ArchbaseDatePickerEdit
+							width={200}
+							title="Data nascimento"
+							dataSource={dataSource}
+							defaultValue={new Date()}
+							dataField="data_nasc"
+						/>
 					</Box>
 				</Card>
 			</Grid.Col>
