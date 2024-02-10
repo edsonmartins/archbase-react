@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Menu, px, Space, Text, Tooltip, useMantineTheme } from '@mantine/core';
+import { ActionIcon, Button, Menu, px, Space, Text, Tooltip } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMenu2 } from '@tabler/icons-react';
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
@@ -222,73 +222,78 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 	const [containerWidth, _containerHeight] = useArchbaseSize(containerRef);
 	const [opened, setOpened] = useState(false);
 
-	const theme = useMantineTheme();
-	const _largerBreakPoint = options && options.largerBreakPoint ? options.largerBreakPoint : theme.breakpoints.md;
-	const _smallerBreakPoint = options && options.smallerBreakPoint ? options.smallerBreakPoint : theme.breakpoints.sm;
+	const _largerBreakPoint = options && options.largerBreakPoint ? options.largerBreakPoint : '62em';
+	const _smallerBreakPoint = options && options.smallerBreakPoint ? options.smallerBreakPoint : '48em';
 
-	const isLarge = useMediaQuery(`(min-width: ${_largerBreakPoint})`);
-	const isSmall = useMediaQuery(`(max-width: ${_smallerBreakPoint})`);
+	// const isLarge = useMediaQuery(`(min-width: ${_largerBreakPoint})`);
+	// const isSmall = useMediaQuery(`(max-width: ${_smallerBreakPoint})`);
+	const isLarge = true;
+	const isSmall = false;
 
-	const largerSpacingPx = options && options.largerSpacing ? px(options.largerSpacing) : px('1rem');
-	const smallerSpacingPx = options && options.smallerSpacing ? px(options.smallerSpacing) : px('0.25rem');
-	const spacingPx = isLarge ? largerSpacingPx : smallerSpacingPx;
+	// const largerSpacingPx = options && options.largerSpacing ? px(options.largerSpacing) : px('1rem');
+	// const smallerSpacingPx = options && options.smallerSpacing ? px(options.smallerSpacing) : px('0.25rem');
+	// const spacingPx = isLarge ? largerSpacingPx : smallerSpacingPx;
+	const spacingPx = isLarge ? '10px' : '5px';
 
 	const _menuPosition = options && options.menuPosition ? options.menuPosition : 'right';
 
-	const calculateVisibleActions = useCallback(() => {
-		const container = containerRef.current;
-		if (container) {
-			const containerWidth = container.clientWidth;
-			let totalWidth = 0;
-			let menuWidth = 0;
-			let maxVisibleActions = 0;
-			const menuButton = isLarge ? (
-				<Button px={'10px'}>
-					<IconMenu2 />
-				</Button>
-			) : (
-				<ActionIcon>
-					<IconMenu2 />
-				</ActionIcon>
-			);
-
-			const menuButtonHtmlString = ReactDOMServer.renderToStaticMarkup(menuButton);
-			const menuButtonHtml = createElementFromHTML(menuButtonHtmlString);
-			theme.fontFamily && applyFontFamily(menuButtonHtml, theme.fontFamily);
-			container.appendChild(menuButtonHtml);
-			menuWidth += menuButtonHtml.offsetWidth;
-			container.removeChild(menuButtonHtml);
-
-			actions.forEach((action, index) => {
-				const button = buildVisibleActionButton(
-					{ action, options, variant, handleExecuteAction, customComponents },
-					isLarge,
+	const calculateVisibleActions = useCallback(
+		(fontFamily: string) => {
+			const container = containerRef.current;
+			if (container) {
+				const containerWidth = container.clientWidth;
+				let totalWidth = 0;
+				let menuWidth = 0;
+				let maxVisibleActions = 0;
+				const menuButton = isLarge ? (
+					<Button px={'10px'}>
+						<IconMenu2 />
+					</Button>
+				) : (
+					<ActionIcon>
+						<IconMenu2 />
+					</ActionIcon>
 				);
 
-				const buttonHtmlString = ReactDOMServer.renderToStaticMarkup(button);
-				const buttonHtml = createElementFromHTML(buttonHtmlString);
-				theme.fontFamily && applyFontFamily(buttonHtml, theme.fontFamily);
-				container.appendChild(buttonHtml);
-				totalWidth += buttonHtml.offsetWidth + (isLastElementOfArray(actions, index) ? 0 : spacingPx);
-				container.removeChild(buttonHtml);
+				const menuButtonHtmlString = ReactDOMServer.renderToStaticMarkup(menuButton);
+				const menuButtonHtml = createElementFromHTML(menuButtonHtmlString);
+				fontFamily && applyFontFamily(menuButtonHtml, fontFamily);
+				container.appendChild(menuButtonHtml);
+				menuWidth += menuButtonHtml.offsetWidth;
+				container.removeChild(menuButtonHtml);
 
-				if (totalWidth <= containerWidth - (menuWidth + Number(spacingPx))) {
-					maxVisibleActions++;
+				actions.forEach((action, index) => {
+					const button = buildVisibleActionButton(
+						{ action, options, variant, handleExecuteAction, customComponents },
+						isLarge,
+					);
+
+					const buttonHtmlString = ReactDOMServer.renderToStaticMarkup(button);
+					const buttonHtml = createElementFromHTML(buttonHtmlString);
+					fontFamily && applyFontFamily(buttonHtml, fontFamily);
+					container.appendChild(buttonHtml);
+					totalWidth += buttonHtml.offsetWidth + (isLastElementOfArray(actions, index) ? 0 : spacingPx);
+					container.removeChild(buttonHtml);
+
+					if (totalWidth <= containerWidth - (menuWidth + Number(spacingPx))) {
+						maxVisibleActions++;
+					}
+				});
+
+				if (isSmall) {
+					setVisibleActions([]);
+					setHiddenActions(actions);
+				} else {
+					setVisibleActions(actions.slice(0, maxVisibleActions));
+					setHiddenActions(actions.slice(maxVisibleActions));
 				}
-			});
-
-			if (isSmall) {
-				setVisibleActions([]);
-				setHiddenActions(actions);
-			} else {
-				setVisibleActions(actions.slice(0, maxVisibleActions));
-				setHiddenActions(actions.slice(maxVisibleActions));
 			}
-		}
-	}, [actions, isSmall, spacingPx, theme.fontFamily, customComponents, variant, isLarge, options]);
+		},
+		[actions, isSmall, spacingPx, customComponents, variant, isLarge, options],
+	);
 
 	useEffect(() => {
-		calculateVisibleActions();
+		calculateVisibleActions('Inter, sans-serif');
 	}, [actions, containerWidth, calculateVisibleActions]);
 
 	function handleExecuteAction(action: ArchbaseAction) {
