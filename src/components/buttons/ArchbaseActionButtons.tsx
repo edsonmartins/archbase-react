@@ -1,7 +1,7 @@
 import { ActionIcon, Button, Menu, px, Space, Text, Tooltip, useMantineTheme } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMenu2 } from '@tabler/icons-react';
-import React, { MutableRefObject, ReactNode, Ref, useCallback, useEffect, useRef, useState } from 'react';
+import React, { MutableRefObject, ReactNode, Ref, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { isLastElementOfArray } from '../core/utils/array';
 import { useArchbaseSize } from '../hooks/useArchbaseSize';
 
@@ -215,7 +215,8 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 	const containerRef = useRef<HTMLInputElement>(null);
 	const buttonRefsRef = useRef<MutableRefObject<any>[]>([]);
 	const buttonMenuRef = useRef<any>(null);
-	const [visibleActions, setVisibleActions] = useState<ArchbaseAction[]>(actions);
+	const buttonWidthRef = useRef<any>([]);
+	const [visibleActionsLength, setVisibleActionsLength] = useState(actions.length);
 	const [hiddenActions, setHiddenActions] = useState<ArchbaseAction[]>([]);
 	const [containerWidth, _containerHeight] = useArchbaseSize(containerRef);
 	const [opened, setOpened] = useState(false);
@@ -242,9 +243,15 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 			let maxVisibleActions = 0;
 
 			menuWidth += buttonMenuRef.current ? buttonMenuRef.current.offsetWidth : 50;
+			if (buttonRefsRef.current.filter((value) => value.current).length === actions.length) {
+				buttonWidthRef.current = [];
+				buttonRefsRef.current.forEach((buttonRef) => {
+					buttonWidthRef.current = [...buttonWidthRef.current, buttonRef.current.offsetWidth];
+				});
+			}
 
-			buttonRefsRef.current.forEach((buttonRef, index) => {
-				totalWidth += buttonRef.current.offsetWidth + (isLastElementOfArray(actions, index) ? 0 : spacingPx);
+			buttonWidthRef.current.forEach((buttonWidth, index) => {
+				totalWidth += buttonWidth + (isLastElementOfArray(actions, index) ? 0 : spacingPx);
 
 				if (totalWidth <= containerWidth - (menuWidth + Number(spacingPx))) {
 					maxVisibleActions++;
@@ -252,16 +259,16 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 			});
 
 			if (isSmall) {
-				setVisibleActions([]);
 				setHiddenActions(actions);
+				setVisibleActionsLength(0);
 			} else {
-				setVisibleActions(actions.slice(0, maxVisibleActions));
 				setHiddenActions(actions.slice(maxVisibleActions));
+				setVisibleActionsLength(maxVisibleActions - 1);
 			}
 		}
-	}, [actions, isSmall, spacingPx, variant, options]);
+	}, [actions, isSmall, spacingPx]);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		calculateVisibleActions();
 	}, [actions, containerWidth, calculateVisibleActions]);
 
@@ -276,9 +283,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 		return (
 			hiddenActions.length > 0 && (
 				<>
-					{visibleActions.length !== 0 && _menuPosition === 'right' ? (
-						<Space id="espacoTeste" w={spacingPx} />
-					) : undefined}
+					{visibleActionsLength !== 0 && _menuPosition === 'right' ? <Space w={spacingPx} /> : undefined}
 					<div ref={buttonMenuRef}>
 						<Menu
 							opened={opened}
@@ -323,7 +328,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 							</Menu.Dropdown>
 						</Menu>
 					</div>
-					{visibleActions.length !== 0 && _menuPosition === 'left' ? <Space w={spacingPx} /> : undefined}
+					{visibleActionsLength !== 0 && _menuPosition === 'left' ? <Space w={spacingPx} /> : undefined}
 				</>
 			)
 		);
@@ -339,9 +344,12 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 			ref={containerRef}
 		>
 			{_menuPosition === 'left' ? buildMenu() : undefined}
-			{visibleActions.map((action, index) => {
+			{actions.map((action, index) => {
 				const buttonRef = React.createRef();
 				buttonRefsRef.current = [...buttonRefsRef.current, buttonRef];
+				if (index > visibleActionsLength) {
+					return undefined;
+				}
 				return (
 					<>
 						<Tooltip withArrow withinPortal={true} disabled={!action.hint} label={action.hint}>
@@ -359,7 +367,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 								)}
 							</div>
 						</Tooltip>
-						{isLastElementOfArray(visibleActions, index) ? undefined : <Space w={spacingPx} key={index} />}
+						{visibleActionsLength === index ? undefined : <Space w={spacingPx} key={index} />}
 					</>
 				);
 			})}
