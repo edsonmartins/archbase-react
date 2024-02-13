@@ -1,10 +1,8 @@
-import { ActionIcon, Button, Menu, px, Space, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Menu, px, Space, Text, Tooltip, useMantineTheme } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMenu2 } from '@tabler/icons-react';
-import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import ReactDOMServer from 'react-dom/server';
+import React, { MutableRefObject, ReactNode, Ref, useCallback, useEffect, useRef, useState } from 'react';
 import { isLastElementOfArray } from '../core/utils/array';
-import { applyFontFamily, createElementFromHTML } from '../core/utils/dom';
 import { useArchbaseSize } from '../hooks/useArchbaseSize';
 
 export interface ActionButtonsCustomComponentsDefinition {
@@ -95,13 +93,10 @@ interface ArchbaseActionButtonProps {
 	handleExecuteAction: (action: ArchbaseAction) => void;
 }
 
-function buildLargeActionButton({
-	action,
-	options,
-	variant,
-	handleExecuteAction,
-	customComponents,
-}: ArchbaseActionButtonProps) {
+function buildLargeActionButton(
+	{ action, options, variant, handleExecuteAction, customComponents }: ArchbaseActionButtonProps,
+	buttonRef: Ref<any>,
+) {
 	const LargeActionButton = customComponents ? customComponents.largeButtonType : null;
 	if (LargeActionButton) {
 		let largeButtonProps = {};
@@ -111,6 +106,7 @@ function buildLargeActionButton({
 
 		return (
 			<LargeActionButton
+				ref={buttonRef}
 				action={action}
 				variant={options && options.largerButtonVariant ? options.largerButtonVariant : variant}
 				key={action.id}
@@ -122,6 +118,7 @@ function buildLargeActionButton({
 	} else {
 		return (
 			<Button
+				ref={buttonRef}
 				color={action.color}
 				variant={options && options.largerButtonVariant ? options.largerButtonVariant : variant}
 				key={action.id}
@@ -135,13 +132,10 @@ function buildLargeActionButton({
 	}
 }
 
-function buildMediumActionButton({
-	action,
-	options,
-	variant,
-	handleExecuteAction,
-	customComponents,
-}: ArchbaseActionButtonProps) {
+function buildMediumActionButton(
+	{ action, options, variant, handleExecuteAction, customComponents }: ArchbaseActionButtonProps,
+	buttonRef: Ref<any>,
+) {
 	const MediumActionButton = customComponents ? customComponents.mediumButtonType : null;
 	if (MediumActionButton) {
 		let mediumButtonProps = {};
@@ -151,6 +145,7 @@ function buildMediumActionButton({
 
 		return (
 			<MediumActionButton
+				ref={buttonRef}
 				action={action}
 				variant={options && options.smallerButtonVariant ? options.smallerButtonVariant : variant}
 				key={action.id}
@@ -162,6 +157,7 @@ function buildMediumActionButton({
 	} else {
 		return (
 			<ActionIcon
+				ref={buttonRef}
 				color={action.color}
 				variant={options && options.smallerButtonVariant ? options.smallerButtonVariant : variant}
 				key={action.id}
@@ -207,93 +203,66 @@ function buildHiddenActionButton({
 	);
 }
 
-function buildVisibleActionButton(props: ArchbaseActionButtonProps, isLarge: boolean) {
+function buildVisibleActionButton(props: ArchbaseActionButtonProps, isLarge: boolean, buttonRef: Ref<any>) {
 	if (isLarge) {
-		return buildLargeActionButton(props);
+		return buildLargeActionButton(props, buttonRef);
 	} else {
-		return buildMediumActionButton(props);
+		return buildMediumActionButton(props, buttonRef);
 	}
 }
 
 export function ArchbaseActionButtons({ actions, variant, customComponents, options }: ArchbaseActionButtonsProps) {
 	const containerRef = useRef<HTMLInputElement>(null);
+	const buttonRefsRef = useRef<MutableRefObject<any>[]>([]);
+	const buttonMenuRef = useRef<any>(null);
 	const [visibleActions, setVisibleActions] = useState<ArchbaseAction[]>(actions);
 	const [hiddenActions, setHiddenActions] = useState<ArchbaseAction[]>([]);
 	const [containerWidth, _containerHeight] = useArchbaseSize(containerRef);
 	const [opened, setOpened] = useState(false);
 
-	const _largerBreakPoint = options && options.largerBreakPoint ? options.largerBreakPoint : '62em';
-	const _smallerBreakPoint = options && options.smallerBreakPoint ? options.smallerBreakPoint : '48em';
+	const theme = useMantineTheme();
+	const _largerBreakPoint = options && options.largerBreakPoint ? options.largerBreakPoint : theme.breakpoints.md;
+	const _smallerBreakPoint = options && options.smallerBreakPoint ? options.smallerBreakPoint : theme.breakpoints.sm;
 
-	// const isLarge = useMediaQuery(`(min-width: ${_largerBreakPoint})`);
-	// const isSmall = useMediaQuery(`(max-width: ${_smallerBreakPoint})`);
-	const isLarge = true;
-	const isSmall = false;
+	const isLarge = useMediaQuery(`(min-width: ${_largerBreakPoint})`);
+	const isSmall = useMediaQuery(`(max-width: ${_smallerBreakPoint})`);
 
-	// const largerSpacingPx = options && options.largerSpacing ? px(options.largerSpacing) : px('1rem');
-	// const smallerSpacingPx = options && options.smallerSpacing ? px(options.smallerSpacing) : px('0.25rem');
-	// const spacingPx = isLarge ? largerSpacingPx : smallerSpacingPx;
-	const spacingPx = isLarge ? '10px' : '5px';
+	const largerSpacingPx = options && options.largerSpacing ? px(options.largerSpacing) : px('1rem');
+	const smallerSpacingPx = options && options.smallerSpacing ? px(options.smallerSpacing) : px('0.25rem');
+	const spacingPx = isLarge ? largerSpacingPx : smallerSpacingPx;
 
 	const _menuPosition = options && options.menuPosition ? options.menuPosition : 'right';
 
-	const calculateVisibleActions = useCallback(
-		(fontFamily: string) => {
-			const container = containerRef.current;
-			if (container) {
-				const containerWidth = container.clientWidth;
-				let totalWidth = 0;
-				let menuWidth = 0;
-				let maxVisibleActions = 0;
-				const menuButton = isLarge ? (
-					<Button px={'10px'}>
-						<IconMenu2 />
-					</Button>
-				) : (
-					<ActionIcon>
-						<IconMenu2 />
-					</ActionIcon>
-				);
+	const calculateVisibleActions = useCallback(() => {
+		const container = containerRef.current;
+		if (container) {
+			const containerWidth = container.clientWidth;
+			let totalWidth = 0;
+			let menuWidth = 0;
+			let maxVisibleActions = 0;
 
-				const menuButtonHtmlString = ReactDOMServer.renderToStaticMarkup(menuButton);
-				const menuButtonHtml = createElementFromHTML(menuButtonHtmlString);
-				fontFamily && applyFontFamily(menuButtonHtml, fontFamily);
-				container.appendChild(menuButtonHtml);
-				menuWidth += menuButtonHtml.offsetWidth;
-				container.removeChild(menuButtonHtml);
+			menuWidth += buttonMenuRef.current ? buttonMenuRef.current.offsetWidth : 50;
 
-				actions.forEach((action, index) => {
-					const button = buildVisibleActionButton(
-						{ action, options, variant, handleExecuteAction, customComponents },
-						isLarge,
-					);
+			buttonRefsRef.current.forEach((buttonRef, index) => {
+				totalWidth += buttonRef.current.offsetWidth + (isLastElementOfArray(actions, index) ? 0 : spacingPx);
 
-					const buttonHtmlString = ReactDOMServer.renderToStaticMarkup(button);
-					const buttonHtml = createElementFromHTML(buttonHtmlString);
-					fontFamily && applyFontFamily(buttonHtml, fontFamily);
-					container.appendChild(buttonHtml);
-					totalWidth += buttonHtml.offsetWidth + (isLastElementOfArray(actions, index) ? 0 : spacingPx);
-					container.removeChild(buttonHtml);
-
-					if (totalWidth <= containerWidth - (menuWidth + Number(spacingPx))) {
-						maxVisibleActions++;
-					}
-				});
-
-				if (isSmall) {
-					setVisibleActions([]);
-					setHiddenActions(actions);
-				} else {
-					setVisibleActions(actions.slice(0, maxVisibleActions));
-					setHiddenActions(actions.slice(maxVisibleActions));
+				if (totalWidth <= containerWidth - (menuWidth + Number(spacingPx))) {
+					maxVisibleActions++;
 				}
+			});
+
+			if (isSmall) {
+				setVisibleActions([]);
+				setHiddenActions(actions);
+			} else {
+				setVisibleActions(actions.slice(0, maxVisibleActions));
+				setHiddenActions(actions.slice(maxVisibleActions));
 			}
-		},
-		[actions, isSmall, spacingPx, customComponents, variant, isLarge, options],
-	);
+		}
+	}, [actions, isSmall, spacingPx, variant, options]);
 
 	useEffect(() => {
-		calculateVisibleActions('Inter, sans-serif');
+		calculateVisibleActions();
 	}, [actions, containerWidth, calculateVisibleActions]);
 
 	function handleExecuteAction(action: ArchbaseAction) {
@@ -303,9 +272,10 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 	}
 
 	function buildMenu() {
+		buttonMenuRef.current = null;
 		return (
 			hiddenActions.length > 0 && (
-				<>
+				<div ref={buttonMenuRef}>
 					{visibleActions.length !== 0 && _menuPosition === 'right' ? <Space w={spacingPx} /> : undefined}
 					<Menu
 						opened={opened}
@@ -350,11 +320,11 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 						</Menu.Dropdown>
 					</Menu>
 					{visibleActions.length !== 0 && _menuPosition === 'left' ? <Space w={spacingPx} /> : undefined}
-				</>
+				</div>
 			)
 		);
 	}
-
+	buttonRefsRef.current = [];
 	return (
 		<div
 			style={{
@@ -366,6 +336,8 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 		>
 			{_menuPosition === 'left' ? buildMenu() : undefined}
 			{visibleActions.map((action, index) => {
+				const buttonRef = React.createRef();
+				buttonRefsRef.current = [...buttonRefsRef.current, buttonRef];
 				return (
 					<>
 						<Tooltip withArrow withinPortal={true} disabled={!action.hint} label={action.hint}>
@@ -379,6 +351,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 										customComponents,
 									},
 									isLarge,
+									buttonRef,
 								)}
 							</div>
 						</Tooltip>

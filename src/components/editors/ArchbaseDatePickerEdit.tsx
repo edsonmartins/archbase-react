@@ -466,7 +466,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 	const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
 		onBlur?.(event);
-		// setDropdownOpened(false);
+		setDropdownOpened(false);
 		if (!isReadOnly()) {
 			fixOnBlur && setInputValue(formatValue(_value));
 		}
