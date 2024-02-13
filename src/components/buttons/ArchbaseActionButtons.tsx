@@ -275,52 +275,56 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 		buttonMenuRef.current = null;
 		return (
 			hiddenActions.length > 0 && (
-				<div ref={buttonMenuRef}>
-					{visibleActions.length !== 0 && _menuPosition === 'right' ? <Space w={spacingPx} /> : undefined}
-					<Menu
-						opened={opened}
-						onChange={setOpened}
-						withinPortal={true}
-						position={
-							options && options.menuDropdownPosition
-								? options.menuDropdownPosition
-								: _menuPosition === 'right'
-								? 'bottom-end'
-								: 'bottom-start'
-						}
-					>
-						<Menu.Target>
-							{isLarge ? (
-								<Button
-									color={options && options.menuButtonColor ? options.menuButtonColor : 'blue.5'}
-									variant={options && options.menuButtonVariant ? options.menuButtonVariant : variant}
-									px={'10px'}
-								>
-									<IconMenu2 />
-								</Button>
-							) : (
-								<ActionIcon
-									color={options && options.menuButtonColor ? options.menuButtonColor : 'blue.5'}
-									variant={options && options.menuButtonVariant ? options.menuButtonVariant : variant}
-								>
-									<IconMenu2 />
-								</ActionIcon>
-							)}
-						</Menu.Target>
-						<Menu.Dropdown>
-							{hiddenActions.map((action) =>
-								buildHiddenActionButton({
-									action,
-									options,
-									variant,
-									handleExecuteAction,
-									customComponents,
-								}),
-							)}
-						</Menu.Dropdown>
-					</Menu>
+				<>
+					{visibleActions.length !== 0 && _menuPosition === 'right' ? (
+						<Space id="espacoTeste" w={spacingPx} />
+					) : undefined}
+					<div ref={buttonMenuRef}>
+						<Menu
+							opened={opened}
+							onChange={setOpened}
+							withinPortal={true}
+							position={
+								options && options.menuDropdownPosition
+									? options.menuDropdownPosition
+									: _menuPosition === 'right'
+									? 'bottom-end'
+									: 'bottom-start'
+							}
+						>
+							<Menu.Target>
+								{isLarge ? (
+									<Button
+										color={options && options.menuButtonColor ? options.menuButtonColor : 'blue.5'}
+										variant={options && options.menuButtonVariant ? options.menuButtonVariant : variant}
+										px={'10px'}
+									>
+										<IconMenu2 />
+									</Button>
+								) : (
+									<ActionIcon
+										color={options && options.menuButtonColor ? options.menuButtonColor : 'blue.5'}
+										variant={options && options.menuButtonVariant ? options.menuButtonVariant : variant}
+									>
+										<IconMenu2 />
+									</ActionIcon>
+								)}
+							</Menu.Target>
+							<Menu.Dropdown>
+								{hiddenActions.map((action) =>
+									buildHiddenActionButton({
+										action,
+										options,
+										variant,
+										handleExecuteAction,
+										customComponents,
+									}),
+								)}
+							</Menu.Dropdown>
+						</Menu>
+					</div>
 					{visibleActions.length !== 0 && _menuPosition === 'left' ? <Space w={spacingPx} /> : undefined}
-				</div>
+				</>
 			)
 		);
 	}

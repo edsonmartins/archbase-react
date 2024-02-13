@@ -13,7 +13,7 @@ const ArchbaseActionButtonsExample = () => {
 					largerBreakPoint: '600px',
 					smallerBreakPoint: '400px',
 					largerSpacing: '1rem',
-					smallerSpacing: '5rem',
+					smallerSpacing: '1rem',
 					largerButtonVariant: 'filled',
 					smallerButtonVariant: 'filled',
 					menuItemVariant: 'filled',
