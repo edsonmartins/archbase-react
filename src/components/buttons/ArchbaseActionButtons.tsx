@@ -215,7 +215,8 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 	const containerRef = useRef<HTMLInputElement>(null);
 	const buttonRefsRef = useRef<MutableRefObject<any>[]>([]);
 	const buttonMenuRef = useRef<any>(null);
-	const buttonWidthRef = useRef<any>([]);
+	const largerButtonWidthRef = useRef<any>([]);
+	const smallerButtonWidthRef = useRef<any>([]);
 	const [visibleActionsLength, setVisibleActionsLength] = useState(actions.length);
 	const [hiddenActions, setHiddenActions] = useState<ArchbaseAction[]>([]);
 	const [containerWidth, _containerHeight] = useArchbaseSize(containerRef);
@@ -234,6 +235,8 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 
 	const _menuPosition = options && options.menuPosition ? options.menuPosition : 'right';
 
+	const currentButtonWidthRef = isLarge ? largerButtonWidthRef : smallerButtonWidthRef;
+
 	const calculateVisibleActions = useCallback(() => {
 		const container = containerRef.current;
 		if (container) {
@@ -243,14 +246,17 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 			let maxVisibleActions = 0;
 
 			menuWidth += buttonMenuRef.current ? buttonMenuRef.current.offsetWidth : 50;
-			if (buttonRefsRef.current.filter((value) => value.current).length === actions.length) {
-				buttonWidthRef.current = [];
+			if (
+				buttonRefsRef.current.filter((value) => value.current).length === actions.length &&
+				currentButtonWidthRef.current.length === 0
+			) {
+				currentButtonWidthRef.current = [];
 				buttonRefsRef.current.forEach((buttonRef) => {
-					buttonWidthRef.current = [...buttonWidthRef.current, buttonRef.current.offsetWidth];
+					currentButtonWidthRef.current = [...currentButtonWidthRef.current, buttonRef.current.offsetWidth];
 				});
 			}
 
-			buttonWidthRef.current.forEach((buttonWidth, index) => {
+			currentButtonWidthRef.current.forEach((buttonWidth, index) => {
 				totalWidth += buttonWidth + (isLastElementOfArray(actions, index) ? 0 : spacingPx);
 
 				if (totalWidth <= containerWidth - (menuWidth + Number(spacingPx))) {
@@ -263,10 +269,10 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 				setVisibleActionsLength(0);
 			} else {
 				setHiddenActions(actions.slice(maxVisibleActions));
-				setVisibleActionsLength(maxVisibleActions - 1);
+				setVisibleActionsLength(maxVisibleActions);
 			}
 		}
-	}, [actions, isSmall, spacingPx]);
+	}, [actions, isSmall, currentButtonWidthRef, spacingPx]);
 
 	useLayoutEffect(() => {
 		calculateVisibleActions();
@@ -347,7 +353,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 			{actions.map((action, index) => {
 				const buttonRef = React.createRef();
 				buttonRefsRef.current = [...buttonRefsRef.current, buttonRef];
-				if (index > visibleActionsLength) {
+				if (index >= visibleActionsLength) {
 					return undefined;
 				}
 				return (
@@ -367,7 +373,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 								)}
 							</div>
 						</Tooltip>
-						{visibleActionsLength === index ? undefined : <Space w={spacingPx} key={index} />}
+						{visibleActionsLength === index + 1 ? undefined : <Space w={spacingPx} key={index} />}
 					</>
 				);
 			})}
