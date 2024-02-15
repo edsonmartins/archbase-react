@@ -1,5 +1,6 @@
 import { useArchbaseAdminStore } from '@components/hooks';
 import { ActionIcon, Flex, Menu, Space, Text, Tooltip, useMantineTheme } from '@mantine/core';
+import { addons } from '@storybook/preview-api';
 import { Meta, StoryObj } from '@storybook/react';
 import {
 	IconArrowsMaximize,
@@ -13,6 +14,7 @@ import { IconLogout } from '@tabler/icons-react';
 import { IconBrandMessenger } from '@tabler/icons-react';
 import { IconCirclePlus } from '@tabler/icons-react';
 import React, { Fragment, ReactNode, useMemo, useState } from 'react';
+import { UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { ArchbaseUser } from '../../auth/ArchbaseUser';
 import { archbaseLogo3 } from '../../core';
 import { ArchbaseAdminLayoutFooter } from '../ArchbaseAdminLayoutFooter';
@@ -36,6 +38,7 @@ const ArchbaseAdminMainLayoutExample = () => {
 	const adminStore = useArchbaseAdminStore();
 	const [collapsed, setCollapsed] = useState(false);
 	const theme = useMantineTheme();
+	const channel = addons.getChannel();
 
 	const headerActions = useMemo((): ReactNode => {
 		return [
@@ -129,6 +132,7 @@ const ArchbaseAdminMainLayoutExample = () => {
 							</Fragment>
 						}
 						logo={archbaseLogo3}
+						toggleColorScheme={() => channel.emit(UPDATE_DARK_MODE_EVENT_NAME)}
 					/>
 				}
 			>

@@ -40,18 +40,6 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
     setColorScheme(value ? 'dark' : 'light')
   };
 
-
-  useEffect(() => {
-    channel.on(DARK_MODE_EVENT_NAME, handleColorScheme);
-    return () => channel.off(DARK_MODE_EVENT_NAME, handleColorScheme);
-  }, [channel]);
-
-  useEffect(() => {
-    setColorScheme(colorSchem);
-    const body = window.document.body;
-    body.style.backgroundColor = colorSchem==='dark'?'black':'white';
-  }, [colorSchem]);
-
   const handleChangeCustomTheme = (dark: MantineThemeOverride, light: MantineThemeOverride) => {
       setThemeDark(dark)
       setThemeLight(light)
@@ -61,6 +49,11 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
   useHotkeys([['mod+J', () => toggleColorScheme()]]);
+
+  useEffect(() => {
+    channel.on(DARK_MODE_EVENT_NAME, handleColorScheme);
+    return () => channel.off(DARK_MODE_EVENT_NAME, handleColorScheme);
+  }, [channel]);
 
   return (
     <ArchbaseGlobalProvider

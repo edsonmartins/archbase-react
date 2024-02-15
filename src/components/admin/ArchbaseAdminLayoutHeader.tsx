@@ -134,6 +134,7 @@ export type ArchbaseAdminLayoutHeaderProps = {
 	headerLeftContent?: ReactNode | ReactNode[];
 	showLanguageSelector?: boolean;
 	sideBarHiddenBreakPoint?: string | number;
+	toggleColorScheme?: () => void;
 };
 
 export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps> = ({
@@ -146,6 +147,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	showLanguageSelector = false,
 	sideBarHiddenBreakPoint,
 	headerLeftContent,
+	toggleColorScheme,
 }) => {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
@@ -221,7 +223,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 			<Box style={{ flex: 1 }}>{headerLeftContent}</Box>
 			<ArchbaseHeaderNavAction>
 				{headerActions}
-				<ArchbaseColorSchemeAction />
+				<ArchbaseColorSchemeAction toggleColorScheme={toggleColorScheme} />
 				{showLanguageSelector ? <ArchbaseChangeLanguageAction /> : null}
 				<Menu shadow="md" width={200} position="bottom-end">
 					<Menu.Target>

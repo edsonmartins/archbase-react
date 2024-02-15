@@ -3,7 +3,7 @@ import { useLocalStorage } from '@mantine/hooks';
 import { ModalsProvider } from '@mantine/modals';
 import { Container } from 'inversify';
 import queryString from 'query-string';
-import React, { createContext, ReactNode, useContext, useEffect } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
@@ -77,6 +77,7 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 	setCustomTheme,
 }) => {
 	const theme = useMantineTheme();
+	const currentColorScheme = useRef('');
 	const { colorScheme, setColorScheme } = useMantineColorScheme();
 	const [colorSchemeLocalStorage, setColorSchemeLocalStorage] = useLocalStorage<'dark' | 'light'>({
 		key: 'mantine-color-scheme',
@@ -85,7 +86,10 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 	});
 
 	useEffect(() => {
-		setColorScheme(colorSchemeLocalStorage);
+		if (currentColorScheme.current !== colorSchemeLocalStorage) {
+			setColorScheme(colorSchemeLocalStorage);
+			currentColorScheme.current = colorSchemeLocalStorage;
+		}
 	}, [colorSchemeLocalStorage, setColorScheme]);
 
 	return (

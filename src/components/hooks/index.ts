@@ -37,7 +37,6 @@ export { useArchbaseForceRerender } from './useArchbaseForceRenderer';
 export { useArchbaseEventListener } from './useArchbaseEventListener';
 export { useArchbaseBool } from './useArchbaseBool';
 export { useArchbaseAsyncFunction } from './useArchbaseAsyncFunction';
-export { useArchbaseColorScheme } from './useArchbaseColorScheme';
 
 export type { ArchbaseStore } from './useArchbaseStore';
 export type { AdminState } from './useArchbaseAdminStore';
