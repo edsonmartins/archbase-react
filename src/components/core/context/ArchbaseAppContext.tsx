@@ -1,9 +1,9 @@
-import { MantineTheme, MantineThemeOverride, useMantineTheme } from '@mantine/core';
-import { useColorScheme } from '@mantine/hooks';
+import { MantineTheme, MantineThemeOverride, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { useLocalStorage } from '@mantine/hooks';
 import { ModalsProvider } from '@mantine/modals';
 import { Container } from 'inversify';
 import queryString from 'query-string';
-import React, { createContext, ReactNode, useContext } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect } from 'react';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
@@ -77,7 +77,16 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 	setCustomTheme,
 }) => {
 	const theme = useMantineTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme, setColorScheme } = useMantineColorScheme();
+	const [colorSchemeLocalStorage, setColorSchemeLocalStorage] = useLocalStorage<'dark' | 'light'>({
+		key: 'mantine-color-scheme',
+		defaultValue: 'light',
+		getInitialValueInEffect: true,
+	});
+
+	useEffect(() => {
+		setColorScheme(colorSchemeLocalStorage);
+	}, [colorSchemeLocalStorage, setColorScheme]);
 
 	return (
 		<ArchbaseAppContext.Provider

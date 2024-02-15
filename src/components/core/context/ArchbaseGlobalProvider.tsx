@@ -84,7 +84,7 @@ export const initArchbaseTranslation = (translationName, translationResource): a
 };
 
 const colorSchemeManager = localStorageColorSchemeManager({
-	key: 'my-color-scheme',
+	key: 'mantine-color-scheme',
 });
 
 function ArchbaseGlobalProvider({
