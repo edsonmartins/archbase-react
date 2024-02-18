@@ -82,7 +82,7 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 	const [colorSchemeLocalStorage, setColorSchemeLocalStorage] = useLocalStorage<'dark' | 'light'>({
 		key: 'mantine-color-scheme',
 		defaultValue: 'light',
-		getInitialValueInEffect: true,
+		getInitialValueInEffect: false,
 	});
 
 	useEffect(() => {
