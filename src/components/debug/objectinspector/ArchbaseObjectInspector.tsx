@@ -1,4 +1,4 @@
-import { useColorScheme } from '@mantine/hooks';
+import { useMantineColorScheme } from '@mantine/core';
 import React from 'react';
 import { ObjectInspector } from 'react-inspector';
 
@@ -9,7 +9,7 @@ export interface ArchbaseObjectInspectorProps {
 }
 
 export function ArchbaseObjectInspector({ data, expandLevel }: ArchbaseObjectInspectorProps) {
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 
 	return (
 		<ObjectInspector

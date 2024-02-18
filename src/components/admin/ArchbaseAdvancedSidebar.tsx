@@ -1,6 +1,16 @@
 import { useArchbaseAppContext } from '@components/core';
-import { ActionIcon, Flex, MantineTheme, Paper, px, ScrollArea, Stack, Text, Tooltip } from '@mantine/core';
-import { useColorScheme, useForceUpdate } from '@mantine/hooks';
+import {
+	ActionIcon,
+	Flex,
+	MantineTheme,
+	Paper,
+	px,
+	ScrollArea,
+	Stack,
+	Text,
+	Tooltip,
+	useMantineColorScheme,
+} from '@mantine/core';
 import { IconDots } from '@tabler/icons-react';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Sidebar, sidebarClasses, Menu as SidebarMenu } from 'react-pro-sidebar';
@@ -69,8 +79,7 @@ export function ArchbaseAdvancedSidebar({
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
 	const appContext = useArchbaseAppContext();
-	const forceUpdate = useForceUpdate();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const color = selectedGroupColor
 		? selectedGroupColor
 		: colorScheme === 'dark'
@@ -262,8 +271,9 @@ export function ArchbaseAdvancedSidebar({
 										height: `${px(sidebarHeight)}px`,
 									},
 								}}
+								style={{ borderColor: colorScheme === 'dark' ? '#000' : '#efefef' }}
 								collapsed={collapsed}
-								width={`${px(sidebarWidthCalculated)}px`}
+								width={`${px(sidebarWidthCalculated)}`}
 								collapsedWidth="0px"
 							>
 								<ScrollArea

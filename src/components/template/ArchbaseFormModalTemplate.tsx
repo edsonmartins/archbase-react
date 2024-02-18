@@ -1,5 +1,5 @@
-import { Button, Flex, Group, Modal, ModalProps } from '@mantine/core';
-import { useColorScheme, useForceUpdate } from '@mantine/hooks';
+import { Button, Flex, Group, Modal, ModalProps, useMantineColorScheme } from '@mantine/core';
+import { useForceUpdate } from '@mantine/hooks';
 import { IconCheck } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
 import { IconBug } from '@tabler/icons-react';
@@ -55,7 +55,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 }: ArchbaseFormModalTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const theme = useArchbaseTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const [isInternalError, setIsInternalError] = useState<boolean>(isError);
 	const [internalError, setInternalError] = useState<string>(error);
 	const forceUpdate = useForceUpdate();

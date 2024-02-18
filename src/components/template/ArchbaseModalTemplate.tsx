@@ -1,5 +1,4 @@
-import { Button, Flex, Group, Modal, ModalProps } from '@mantine/core';
-import { useColorScheme } from '@mantine/hooks';
+import { Button, Flex, Group, Modal, ModalProps, useMantineColorScheme } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
 import { t } from 'i18next';
@@ -39,7 +38,7 @@ export function ArchbaseModalTemplate({
 }: ArchbaseModalTemplateProps) {
 	const appContext = useArchbaseAppContext();
 	const theme = useArchbaseTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 
 	const handleSave = () => {
 		if (onClickOk) {

@@ -12,6 +12,7 @@ import {
 	Switch,
 	Text,
 	Tooltip,
+	useMantineColorScheme,
 } from '@mantine/core';
 import {
 	DatePickerInput,
@@ -59,7 +60,7 @@ import {
 	SelectedSort,
 	SortField,
 } from './ArchbaseFilterCommons';
-import { useColorScheme } from '@mantine/hooks';
+
 
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
 	id: string;
@@ -1182,7 +1183,7 @@ class RuleItem extends Component<RuleItemProps> {
 			dt !== 'time';
 		var level = getLevel(this.props.id);
 		let listValues = this.getFieldValues(field, fields);
-		const colorScheme = useColorScheme();
+		const { colorScheme } = useMantineColorScheme();;
 		return (
 			<li className={'rule-container'}>
 				<ArchbaseCheckbox

@@ -1,5 +1,4 @@
-import { ActionIcon, MantineSize, TextInput, Tooltip, useMantineTheme } from '@mantine/core';
-import { useColorScheme } from '@mantine/hooks';
+import { ActionIcon, MantineSize, TextInput, Tooltip, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -90,7 +89,7 @@ export function ArchbaseLookupEdit<T, ID, O>({
 	innerRef,
 }: ArchbaseLookupEditProps<T, ID, O>) {
 	const theme = useMantineTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const [value, setValue] = useState<any | undefined>('');
 	const innerComponentRef = innerRef || useRef<any>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);

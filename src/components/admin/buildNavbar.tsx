@@ -1,11 +1,11 @@
-import { MantineTheme, px, ScrollArea } from '@mantine/core';
+import { MantineColorScheme, MantineTheme, px, ScrollArea } from '@mantine/core';
 import React, { ReactElement, ReactNode } from 'react';
 import type { MenuItemStyles } from 'react-pro-sidebar';
 import { Sidebar, sidebarClasses, Menu as SidebarMenu } from 'react-pro-sidebar';
 
 export function buildNavbar(
 	sidebarRef: React.Ref<HTMLHtmlElement>,
-	colorScheme: 'dark' | 'light',
+	colorScheme: MantineColorScheme,
 	theme: MantineTheme,
 	collapsed: boolean,
 	sidebarWidth: string | number,

@@ -1,5 +1,4 @@
-import { ActionIcon, MantineSize, Tooltip, useMantineTheme } from '@mantine/core';
-import { useColorScheme } from '@mantine/hooks';
+import { ActionIcon, MantineSize, Tooltip, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -120,7 +119,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
 	allowEmpty = true,
 }: ArchbaseLookupNumberProps<T, ID, O>) {
 	const theme = useMantineTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const [currentValue, setCurrentValue] = useState<any | undefined>(
 		getInitialValue<T, ID>(value, dataSource, lookupField),
 	);

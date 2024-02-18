@@ -95,7 +95,7 @@
     "jwt-decode": "^3.1.2",
     "libphonenumber-js": "^1.10.44",
     "mantine-flagpack": "^4.0.0",
-    "mantine-react-table": "^2.0.0-alpha.11",
+    "mantine-react-table": "^2.0.0-alpha.17",
     "mjml-browser": "^4.14.1",
     "outlayer": "^2.1.1",
     "overlayscrollbars": "^2.3.2",

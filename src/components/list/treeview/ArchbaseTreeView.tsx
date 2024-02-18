@@ -1,4 +1,4 @@
-import { rem } from '@mantine/core';
+import { rem, useMantineColorScheme } from '@mantine/core';
 import { useColorScheme, useForceUpdate } from '@mantine/hooks';
 import lodash from 'lodash';
 import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -88,7 +88,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 	update = Math.random(),
 }) => {
 	const theme = useArchbaseTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const [internalDataSource, setDataSource] = useState<ArchbaseTreeNode[]>([]);
 	const [focused, setFocused] = useState<ArchbaseTreeNode | undefined>(focusedNode);
 	const nodeList = useRef<string[]>([]);

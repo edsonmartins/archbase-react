@@ -12,6 +12,7 @@ import i18next, { i18n, ResourceLanguage } from 'i18next';
 import { Resource, t } from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { Provider as IOCProvider } from 'inversify-react';
+import 'mantine-react-table/styles.css';
 import React, { useLayoutEffect, useState } from 'react';
 import { initReactI18next } from 'react-i18next';
 import '../../locales/config';

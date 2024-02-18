@@ -332,7 +332,7 @@ const CustomItem = (props: CustomItemProps) => {
 					</Group>
 				</div>
 			</Group>
-			<Card withBorder radius="md" p="xl" className={classes.card}>
+			<Card withBorder radius="md" p="sm" className={classes.card}>
 				<Grid>
 					<Grid.Col span={8}>
 						<Text fz="xs" tt="uppercase" fw={700} className={classes.title}>

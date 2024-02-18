@@ -1,5 +1,4 @@
-import { Box, Paper, useMantineTheme } from '@mantine/core';
-import { useColorScheme, useUncontrolled } from '@mantine/hooks';
+import { Box, Paper, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { uniqueId } from 'lodash';
 import React, { FocusEventHandler, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { ArchbaseError } from '../core';
@@ -113,7 +112,7 @@ export interface ArchbaseListProps<T, ID> {
 
 export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 	const theme = useMantineTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const {
 		activeBackgroundColor = theme.colors[theme.primaryColor][colorScheme === 'dark' ? 5 : 5],
 		activeColor = 'white',

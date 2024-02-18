@@ -220,14 +220,7 @@ function buildFooter(
 			: { xs: 'content', sm: 'content', md: 'content', lg: 'content' };
 
 		return (
-			<Grid
-				m={0}
-				// sx={{ height: 60, position: 'relative', bottom: 6, left: 0, right: 0 }}
-				gutter="xs"
-				justify="center"
-				align="center"
-				grow
-			>
+			<Grid m={0} gutter="xs" justify="center" align="center" grow>
 				<Grid.Col
 					span={{
 						xs: footerGridColumnsLeft.xs,

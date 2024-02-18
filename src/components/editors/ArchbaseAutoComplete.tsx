@@ -1,4 +1,12 @@
-import { ActionIcon, Autocomplete, MantineSize, TextInput, Tooltip, useMantineTheme } from '@mantine/core';
+import {
+	ActionIcon,
+	Autocomplete,
+	MantineSize,
+	TextInput,
+	Tooltip,
+	useMantineColorScheme,
+	useMantineTheme,
+} from '@mantine/core';
 import { Autocomplete as MantineAutocomplete } from '@mantine/core';
 import type { ComboboxStringData, AutocompleteProps as MantineAutocompleteProps, OptionsFilter } from '@mantine/core';
 import { useColorScheme, useForceUpdate } from '@mantine/hooks';
@@ -110,7 +118,7 @@ export function ArchbaseAutoComplete<T, ID>({
 	const [currentValue, setCurrentValue] = useState<string>(value || '');
 	const innerComponentRef = useRef<any>();
 	const theme = useMantineTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 

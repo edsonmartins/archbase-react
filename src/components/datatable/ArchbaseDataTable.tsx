@@ -17,10 +17,10 @@ import {
 	MantineColorScheme,
 	Menu,
 	Tooltip,
+	useMantineColorScheme,
 	useMantineTheme,
 } from '@mantine/core';
 import { DatePickerInput, DatesRangeValue, DateValue } from '@mantine/dates';
-import { useColorScheme } from '@mantine/hooks';
 import { IconDownload, IconPrinter, IconRefresh } from '@tabler/icons-react';
 import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { format, formatISO, parse as parseDate } from 'date-fns';
@@ -682,9 +682,9 @@ export const CustomShowHideColumnsButton = <TData extends Record<string, any> = 
 };
 
 export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTableProps<T, ID>) {
-	const { i18n } = useTranslation();
+	// const { i18n } = useTranslation();
 	const theme = useMantineTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const appContext = useArchbaseAppContext();
 	const divTable = useRef<HTMLDivElement>(null);
 	const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
@@ -1383,7 +1383,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 	variant = 'filled',
 }: ArchbaseTableRowActionsProps<T>) {
 	const theme = useMantineTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 
 	return (
 		<Box style={{ display: 'flex' }}>

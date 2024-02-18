@@ -1,5 +1,4 @@
-import { AppShell, Drawer, px, useMantineTheme } from '@mantine/core';
-import { useColorScheme, useElementSize } from '@mantine/hooks';
+import { AppShell, Drawer, px, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import React, { ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
 import { Route, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'usehooks-ts';
@@ -73,7 +72,7 @@ function ArchbaseAdminMainLayoutContainer({
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const navigate = useNavigate();
 	const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>();
 	const isHidden = useMediaQuery(

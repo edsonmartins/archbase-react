@@ -1,4 +1,4 @@
-import { useColorScheme } from '@mantine/hooks';
+import { useMantineColorScheme } from '@mantine/core';
 import useComponentSize from '@rehooks/component-size';
 import i18next from 'i18next';
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
@@ -33,7 +33,7 @@ export function ArchbaseAdminTabContainer({
 }: ArchbaseAdminTabContainerProps) {
 	const [isPending, startTransition] = React.useTransition();
 	const navigate = useNavigate();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const [openedTabs, setOpenedTabs] = useState<ArchbaseTabItem[]>(defaultOpenedTabs);
 	const [activeTabId, setActiveTabId] = useState<any>(defaultActiveTabId);
 	const currentLocation = useLocation();
@@ -183,7 +183,6 @@ export function ArchbaseAdminTabContainer({
 			return result;
 		});
 	};
-
 	return (
 		<div ref={tabsRef}>
 			<ArchbaseAdvancedTabs

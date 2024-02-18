@@ -1,4 +1,12 @@
-import { ActionIcon, ActionIconVariant, MantineSize, TextInput, Tooltip, useMantineTheme } from '@mantine/core';
+import {
+	ActionIcon,
+	ActionIconVariant,
+	MantineSize,
+	TextInput,
+	Tooltip,
+	useMantineColorScheme,
+	useMantineTheme,
+} from '@mantine/core';
 import { useColorScheme, useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -80,7 +88,7 @@ export function ArchbaseEdit<T, ID>({
 	const [currentValue, setCurrentValue] = useState<string>(value || '');
 	const innerComponentRef = useRef<any>();
 	const theme = useMantineTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 

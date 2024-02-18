@@ -31,17 +31,17 @@ const filters: LocalFilter[] = [];
 
 const StatusValues: ArchbaseItemRenderType[] = [
 	{
-		value: PessoaStatus.APROVADO,
+		value: PessoaStatus.APROVADO.toString(),
 		label: 'Aprovado',
 		color: 'green',
 	},
 	{
-		value: PessoaStatus.REJEITADO,
+		value: PessoaStatus.REJEITADO.toString(),
 		label: 'Rejeitado',
 		color: 'red',
 	},
 	{
-		value: PessoaStatus.PENDENTE,
+		value: PessoaStatus.PENDENTE.toString(),
 		label: 'Pendente',
 		color: 'orange',
 	},
@@ -261,7 +261,7 @@ export const ArchbaseTableTemplateExample = () => {
 
 	return (
 		<Grid>
-			<Grid.Col span={12}>
+			<Grid.Col span={12} h={'100vh'}>
 				<ArchbaseTableTemplate
 					title="Pessoas"
 					dataSource={dsPessoas}

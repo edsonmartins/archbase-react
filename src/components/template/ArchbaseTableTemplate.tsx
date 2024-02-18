@@ -1,5 +1,4 @@
-import { AlertVariant, Button, ButtonVariant, Flex, Paper } from '@mantine/core';
-import { useColorScheme } from '@mantine/hooks';
+import { AlertVariant, Button, ButtonVariant, Flex, Paper, useMantineColorScheme } from '@mantine/core';
 import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { IconPlus } from '@tabler/icons-react';
 import { t } from 'i18next';
@@ -96,7 +95,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	const appContext = useArchbaseAppContext();
 	const filterRef = useRef<any>();
 	const theme = useArchbaseTheme();
-	const colorScheme = useColorScheme();
+	const { colorScheme } = useMantineColorScheme();
 	const [innerComponentRef, { width: containerWidth, height: containerHeight }] = useArchbaseElementSizeArea();
 	const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
 		activeFilterIndex: -1,
