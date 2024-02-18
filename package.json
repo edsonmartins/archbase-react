@@ -82,7 +82,7 @@
     "final-form-arrays": "^3.1.0",
     "final-form-set-field-touched": "^1.0.1",
     "get-size": "^3.0.0",
-    "i18next": "^23.7.6",
+    "i18next": "23.7.6",
     "i18next-browser-languagedetector": "^7.2.0",
     "inversify": "^6.0.1",
     "inversify-react": "^1.1.0",

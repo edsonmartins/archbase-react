@@ -13,8 +13,8 @@ import { Resource, t } from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { Provider as IOCProvider } from 'inversify-react';
 import 'mantine-react-table/styles.css';
-import React, { useLayoutEffect, useState } from 'react';
-import { initReactI18next } from 'react-i18next';
+import React, { Suspense, useLayoutEffect, useState } from 'react';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
 import '../../locales/config';
 import { archbaseTranslationResources } from '../../locales/config';
 
@@ -106,18 +106,20 @@ function ArchbaseGlobalProvider({
 	}, []);
 
 	return (
-		<IOCProvider container={containerIOC}>
-			<DatesProvider settings={{ locale: language }}>
-				<MantineProvider
-					theme={colorScheme === 'dark' ? themeDark : themeLight}
-					withCssVariables={withCssVariables}
-					colorSchemeManager={colorSchemeManager}
-				>
-					<Notifications autoClose={notificationAutoClose} position={notificationPosition} />
-					{children}
-				</MantineProvider>
-			</DatesProvider>
-		</IOCProvider>
+		<I18nextProvider i18n={i18next} defaultNS={translationName}>
+			<IOCProvider container={containerIOC}>
+				<DatesProvider settings={{ locale: language }}>
+					<MantineProvider
+						theme={colorScheme === 'dark' ? themeDark : themeLight}
+						withCssVariables={withCssVariables}
+						colorSchemeManager={colorSchemeManager}
+					>
+						<Notifications autoClose={notificationAutoClose} position={notificationPosition} />
+						<Suspense>{children}</Suspense>
+					</MantineProvider>
+				</DatesProvider>
+			</IOCProvider>
+		</I18nextProvider>
 	);
 }
 
