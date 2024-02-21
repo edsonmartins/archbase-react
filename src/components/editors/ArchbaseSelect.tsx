@@ -112,13 +112,13 @@ function buildOptions<O>(
 	if (options && options instanceof ArchbaseDataSource && getOptionLabel && getOptionValue && optionsLabelField) {
 		const ds = options as ArchbaseDataSource<any, any>;
 		ds.first();
-		const result: Array<string | ComboboxItem | ComboboxItemGroup> = [];
+		const result: Array<any> = [];
 		while (!ds.isEOF()) {
 			result.push({
 				label: ds.getFieldValue(optionsLabelField),
 				value: ds.getCurrentRecord(),
-				// origin: ds.getCurrentRecord(),
-				// key: uniqueId('select'),
+				origin: ds.getCurrentRecord(),
+				key: uniqueId('select'),
 			});
 			ds.next();
 		}
@@ -249,6 +249,17 @@ export function ArchbaseSelect<T, ID, O>({
 		}
 	}, []);
 
+	const currentOption = useCallback(() => {
+		if (!currentOptions) {
+			return {};
+		}
+		const option = currentOptions.find((option) => option.value === selectedValue)
+		if (!option) {
+			return {};
+		}
+		return option;
+	},[selectedValue, currentOptions])
+
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
 		if (dataSource && dataField) {
@@ -334,6 +345,7 @@ export function ArchbaseSelect<T, ID, O>({
 			>
 				<ComboboxTarget>
 				<InputBase
+					label={label}
 					component="button"
 					type="button"
 					pointer
@@ -343,14 +355,13 @@ export function ArchbaseSelect<T, ID, O>({
 					multiline
 				>
 					{selectedValue ? (
-						itemComponent ? 
-						React.cloneElement(itemComponent ,{...selectedValue}) :
-						selectedValue.value
-						// <Combobox.Option value={selectedValue.value} key={selectedValue.value}>
-						// 	{selectedValue.label}
-						// </Combobox.Option>
+							itemComponent ? 
+							React.cloneElement(itemComponent ,{...currentOption()}) :
+							<Combobox.Option value={currentOption().value} key={currentOption().key}>
+								{currentOption().label}
+							</Combobox.Option>
 					) : (
-						<Input.Placeholder>Pick value</Input.Placeholder>
+						<Input.Placeholder>{placeholder}</Input.Placeholder>
 					)}
 				</InputBase>
 				</ComboboxTarget>
@@ -365,7 +376,7 @@ export function ArchbaseSelect<T, ID, O>({
 						}) 
 						: currentOptions.map(option => {
 							return (
-								<Combobox.Option value={option.value} key={option.value}>
+								<Combobox.Option value={option.value} key={option.key}>
 									{option.label}
 								</Combobox.Option>
 							)
