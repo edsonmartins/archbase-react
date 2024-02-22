@@ -409,7 +409,7 @@ export const CustomSelectScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps
 		};
 
 		return (
-			<ScrollArea
+			<ScrollArea.Autosize
 				{...others}
 				style={{ width: '100%', ...style }}
 				viewportProps={{ tabIndex: -1 }}
@@ -417,7 +417,7 @@ export const CustomSelectScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps
 				onScrollPositionChange={handleScrollPositionChange}
 			>
 				{others.children}
-			</ScrollArea>
+			</ScrollArea.Autosize>
 		);
 	},
 );

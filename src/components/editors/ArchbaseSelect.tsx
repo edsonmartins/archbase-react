@@ -1,4 +1,4 @@
-import { Combobox, ComboboxDropdown, ComboboxItem, ComboboxItemGroup, ComboboxTarget, Input, InputBase, MantineSize, OptionsFilter, ScrollArea, Select, useCombobox } from '@mantine/core';
+import { Combobox, ComboboxDropdown, ComboboxItem, ComboboxItemGroup, ComboboxTarget, FloatingPosition, Input, InputBase, MantineSize, OptionsFilter, ScrollArea, Select, useCombobox } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
 import { uniqueId } from 'lodash';
 import React, {
@@ -73,7 +73,7 @@ export interface ArchbaseSelectProps<T, ID, O> {
 	/** Índice z dropdown */
 	zIndex?: React.CSSProperties['zIndex'];
 	/** Comportamento de posicionamento dropdown */
-	dropdownPosition?: 'bottom' | 'top' | 'flip';
+	dropdownPosition?: FloatingPosition;
 	/** Evento quando um valor é selecionado */
 	onSelectValue?: (value: O, origin: any) => void;
 	/** Evento quando o foco sai do select */
@@ -336,8 +336,12 @@ export function ArchbaseSelect<T, ID, O>({
 			}}
 		>
 			<Combobox
+				disabled={disabled}
+				readOnly={isReadOnly()}
 				store={combobox}
 				withinPortal={true}
+				position={dropdownPosition}
+				zIndex={zIndex}
 				onOptionSubmit={(val) => {
 					handleChange(val);
 					combobox.closeDropdown();
@@ -345,7 +349,14 @@ export function ArchbaseSelect<T, ID, O>({
 			>
 				<ComboboxTarget>
 				<InputBase
+					required={required}
+					leftSection={icon}
+					leftSectionWidth={iconWidth}
 					label={label}
+					description={description}
+					error={error}
+					onBlur={handleOnFocusExit}
+					onFocus={handleOnFocusEnter}
 					component="button"
 					type="button"
 					pointer
@@ -367,7 +378,7 @@ export function ArchbaseSelect<T, ID, O>({
 				</ComboboxTarget>
 				<ComboboxDropdown>
 				<Combobox.Options>
-					<ScrollArea.Autosize type="scroll" mah={280}>
+					<CustomSelectScrollArea mah={280}>
 						{itemComponent 
 						? currentOptions.map(option => {
 							return (
@@ -381,7 +392,7 @@ export function ArchbaseSelect<T, ID, O>({
 								</Combobox.Option>
 							)
 						})}
-					</ScrollArea.Autosize>
+					</CustomSelectScrollArea>
 				</Combobox.Options>
 				</ComboboxDropdown>
 			</Combobox>
