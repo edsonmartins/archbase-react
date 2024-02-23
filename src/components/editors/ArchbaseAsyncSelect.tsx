@@ -1,10 +1,23 @@
-import { Input, Loader, MantineSize, OptionsFilter, ScrollArea, ScrollAreaProps, Select } from '@mantine/core';
+import {
+	Combobox,
+	ComboboxDropdown,
+	ComboboxTarget,
+	FloatingPosition,
+	Input,
+	InputBase,
+	MantineSize,
+	OptionsFilter,
+	ScrollArea,
+	ScrollAreaProps,
+	useCombobox,
+} from '@mantine/core';
 import { useDebouncedState, useDebouncedValue } from '@mantine/hooks';
 import { uniqueId } from 'lodash';
 import React, {
 	CSSProperties,
 	FocusEventHandler,
 	forwardRef,
+	ReactElement,
 	ReactNode,
 	useCallback,
 	useContext,
@@ -72,7 +85,7 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
 	/** Estado aberto do menu suspenso inicial */
 	initiallyOpened?: boolean;
 	/** Alterar renderizador de item */
-	itemComponent?: React.FC<any>;
+	itemComponent?: ReactElement;
 	/** Chamado quando o menu suspenso é aberto */
 	onDropdownOpen?(): void;
 	/** Chamado quando o menu suspenso é aberto */
@@ -84,7 +97,7 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
 	/** Índice z dropdown */
 	zIndex?: React.CSSProperties['zIndex'];
 	/** Comportamento de posicionamento dropdown */
-	dropdownPosition?: 'bottom' | 'top' | 'flip';
+	dropdownPosition?: FloatingPosition;
 	/** Evento quando um valor é selecionado */
 	onSelectValue?: (value: O) => void;
 	/** Evento quando o foco sai do select */
@@ -184,6 +197,9 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	innerRef,
 	onSearchChange,
 }: ArchbaseAsyncSelectProps<T, ID, O>) {
+	const combobox = useCombobox({
+		onDropdownClose: () => combobox.resetSelectedOption(),
+	});
 	const [options, setOptions] = useState<any[]>(
 		buildOptions<O>(initialOptions.options, getOptionLabel, getOptionValue, getOptionImage),
 	);
@@ -211,6 +227,17 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 
 		setSelectedValue(initialValue);
 	};
+
+	const currentOption = useCallback(() => {
+		if (!options) {
+			return {};
+		}
+		const option = options.find((option) => option.value === selectedValue);
+		if (!option) {
+			return {};
+		}
+		return option;
+	}, [selectedValue, options]);
 
 	const fieldChangedListener = useCallback(() => {
 		loadDataSourceFieldValue();
@@ -344,54 +371,73 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 
 		return _readOnly;
 	};
-
 	return (
 		<ArchbaseAsyncSelectProvider
 			value={{
 				handleDropdownScrollEnded: handleDropdownScrollEnded,
 			}}
 		>
-			<Input.Wrapper label={label} error={internalError} description={description} placeholder={placeholder}>
-				{/* TODO trocar por combobox? */}
-				{/* <Select
-					allowDeselect={allowDeselect}
-					clearable={clearable}
-					disabled={disabled}
-					searchable={searchable}
-					maxDropdownHeight={280}
-					dropdownComponent={CustomSelectScrollArea}
-					ref={innerComponentRef}
-					data={options}
-					size={size!}
-					style={{
-						width,
-						...style,
-					}}
-					icon={icon}
-					iconWidth={iconWidth}
-					readOnly={isReadOnly()}
-					onChange={handleChange}
-					onBlur={handleOnFocusExit}
-					onFocus={handleOnFocusEnter}
-					value={selectedValue}
-					onSearchChange={handleSearchChange}
-					defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
-					searchValue={selectedValue ? getOptionLabel(selectedValue) : queryValue}
-					required={required}
-					filter={filter}
-					initiallyOpened={initiallyOpened}
-					itemComponent={itemComponent}
-					onDropdownOpen={onDropdownOpen}
-					onDropdownClose={onDropdownClose}
-					limit={limit}
-					nothingFound={nothingFound}
-					zIndex={zIndex}
-					dropdownPosition={dropdownPosition}
-					rightSection={loading ? <Loader size="xs" /> : null}
-					rightSectionWidth={30}
-					withinPortal
-				/> */}
-			</Input.Wrapper>
+			<Combobox
+				disabled={disabled}
+				readOnly={isReadOnly()}
+				store={combobox}
+				withinPortal={true}
+				position={dropdownPosition}
+				zIndex={zIndex}
+				onOptionSubmit={(val) => {
+					handleChange(val);
+					combobox.closeDropdown();
+				}}
+			>
+				<ComboboxTarget>
+					<InputBase
+						required={required}
+						leftSection={icon}
+						leftSectionWidth={iconWidth}
+						label={label}
+						description={description}
+						error={error}
+						onBlur={handleOnFocusExit}
+						onFocus={handleOnFocusEnter}
+						component="button"
+						type="button"
+						pointer
+						rightSection={<Combobox.Chevron />}
+						onClick={() => combobox.toggleDropdown()}
+						rightSectionPointerEvents="none"
+						multiline
+					>
+						{selectedValue ? (
+							itemComponent ? (
+								React.cloneElement(itemComponent, { ...currentOption() })
+							) : (
+								<Combobox.Option value={currentOption().value} key={currentOption().key}>
+									{currentOption().label}
+								</Combobox.Option>
+							)
+						) : (
+							<Input.Placeholder>{placeholder}</Input.Placeholder>
+						)}
+					</InputBase>
+				</ComboboxTarget>
+				<ComboboxDropdown>
+					<Combobox.Options>
+						<CustomSelectScrollArea mah={280}>
+							{itemComponent
+								? options.map((option) => {
+										return React.cloneElement(itemComponent, { ...option });
+								  })
+								: options.map((option) => {
+										return (
+											<Combobox.Option value={option.value} key={option.key}>
+												{option.label}
+											</Combobox.Option>
+										);
+								  })}
+						</CustomSelectScrollArea>
+					</Combobox.Options>
+				</ComboboxDropdown>
+			</Combobox>
 		</ArchbaseAsyncSelectProvider>
 	);
 }

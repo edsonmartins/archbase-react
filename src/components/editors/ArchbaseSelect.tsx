@@ -1,4 +1,16 @@
-import { Combobox, ComboboxDropdown, ComboboxItem, ComboboxItemGroup, ComboboxTarget, FloatingPosition, Input, InputBase, MantineSize, OptionsFilter, ScrollArea, Select, useCombobox } from '@mantine/core';
+import {
+	Combobox,
+	ComboboxDropdown,
+	ComboboxItem,
+	ComboboxItemGroup,
+	ComboboxTarget,
+	FloatingPosition,
+	Input,
+	InputBase,
+	MantineSize,
+	OptionsFilter,
+	useCombobox,
+} from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
 import { uniqueId } from 'lodash';
 import React, {
@@ -192,7 +204,7 @@ export function ArchbaseSelect<T, ID, O>({
 }: ArchbaseSelectProps<T, ID, O>) {
 	const combobox = useCombobox({
 		onDropdownClose: () => combobox.resetSelectedOption(),
-	  });
+	});
 	const innerComponentRef = innerRef || useRef<any>();
 	const [selectedValue, setSelectedValue] = useState<any>(value);
 	const [queryValue, setQueryValue] = useDebouncedState('', debounceTime);
@@ -253,12 +265,12 @@ export function ArchbaseSelect<T, ID, O>({
 		if (!currentOptions) {
 			return {};
 		}
-		const option = currentOptions.find((option) => option.value === selectedValue)
+		const option = currentOptions.find((option) => option.value === selectedValue);
 		if (!option) {
 			return {};
 		}
 		return option;
-	},[selectedValue, currentOptions])
+	}, [selectedValue, currentOptions]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -348,52 +360,52 @@ export function ArchbaseSelect<T, ID, O>({
 				}}
 			>
 				<ComboboxTarget>
-				<InputBase
-					required={required}
-					leftSection={icon}
-					leftSectionWidth={iconWidth}
-					label={label}
-					description={description}
-					error={error}
-					onBlur={handleOnFocusExit}
-					onFocus={handleOnFocusEnter}
-					component="button"
-					type="button"
-					pointer
-					rightSection={<Combobox.Chevron />}
-					onClick={() => combobox.toggleDropdown()}
-					rightSectionPointerEvents="none"
-					multiline
-				>
-					{selectedValue ? (
-							itemComponent ? 
-							React.cloneElement(itemComponent ,{...currentOption()}) :
-							<Combobox.Option value={currentOption().value} key={currentOption().key}>
-								{currentOption().label}
-							</Combobox.Option>
-					) : (
-						<Input.Placeholder>{placeholder}</Input.Placeholder>
-					)}
-				</InputBase>
-				</ComboboxTarget>
-				<ComboboxDropdown>
-				<Combobox.Options>
-					<CustomSelectScrollArea mah={280}>
-						{itemComponent 
-						? currentOptions.map(option => {
-							return (
-								React.cloneElement(itemComponent ,{...option})
-							)
-						}) 
-						: currentOptions.map(option => {
-							return (
-								<Combobox.Option value={option.value} key={option.key}>
-									{option.label}
+					<InputBase
+						required={required}
+						leftSection={icon}
+						leftSectionWidth={iconWidth}
+						label={label}
+						description={description}
+						error={error}
+						onBlur={handleOnFocusExit}
+						onFocus={handleOnFocusEnter}
+						component="button"
+						type="button"
+						pointer
+						rightSection={<Combobox.Chevron />}
+						onClick={() => combobox.toggleDropdown()}
+						rightSectionPointerEvents="none"
+						multiline
+					>
+						{selectedValue ? (
+							itemComponent ? (
+								React.cloneElement(itemComponent, { ...currentOption() })
+							) : (
+								<Combobox.Option value={currentOption().value} key={currentOption().key}>
+									{currentOption().label}
 								</Combobox.Option>
 							)
-						})}
-					</CustomSelectScrollArea>
-				</Combobox.Options>
+						) : (
+							<Input.Placeholder>{placeholder}</Input.Placeholder>
+						)}
+					</InputBase>
+				</ComboboxTarget>
+				<ComboboxDropdown>
+					<Combobox.Options>
+						<CustomSelectScrollArea mah={280}>
+							{itemComponent
+								? currentOptions.map((option) => {
+										return React.cloneElement(itemComponent, { ...option });
+								  })
+								: currentOptions.map((option) => {
+										return (
+											<Combobox.Option value={option.value} key={option.key}>
+												{option.label}
+											</Combobox.Option>
+										);
+								  })}
+						</CustomSelectScrollArea>
+					</Combobox.Options>
 				</ComboboxDropdown>
 			</Combobox>
 		</ArchbaseSelectProvider>
