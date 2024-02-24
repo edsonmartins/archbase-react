@@ -386,6 +386,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 				zIndex={zIndex}
 				onOptionSubmit={(val) => {
 					handleChange(val);
+					setQueryValue(val);
 					combobox.closeDropdown();
 				}}
 			>
@@ -397,28 +398,22 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 						label={label}
 						description={description}
 						error={error}
-						onBlur={handleOnFocusExit}
-						onFocus={handleOnFocusEnter}
-						component="button"
-						type="button"
-						pointer
+						value={queryValue}
+						onChange={(event) => {
+							combobox.openDropdown();
+							combobox.updateSelectedOptionIndex();
+							setQueryValue(event.currentTarget.value);
+						  }}
+						onBlur={(event) => {
+							handleOnFocusExit(event);
+							setQueryValue(selectedValue || '');
+						}}
+						onFocus={(event) => handleOnFocusEnter(event)}
 						rightSection={<Combobox.Chevron />}
-						onClick={() => combobox.toggleDropdown()}
+						onClick={() => combobox.openDropdown()}
 						rightSectionPointerEvents="none"
-						multiline
-					>
-						{selectedValue ? (
-							itemComponent ? (
-								React.cloneElement(itemComponent, { ...currentOption() })
-							) : (
-								<Combobox.Option value={currentOption().value} key={currentOption().key}>
-									{currentOption().label}
-								</Combobox.Option>
-							)
-						) : (
-							<Input.Placeholder>{placeholder}</Input.Placeholder>
-						)}
-					</InputBase>
+						placeholder={placeholder}
+					/>
 				</ComboboxTarget>
 				<ComboboxDropdown>
 					<Combobox.Options>
