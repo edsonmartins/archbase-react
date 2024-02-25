@@ -68,17 +68,16 @@ export class ArchbaseRemoteDataSource<T, ID>
     }
 
     try {
-      this.currentRecord = await this.service.save<T>(this.currentRecord)
-      if (this.editing) {
-        this.filteredRecords[this.getCurrentIndex()] = this.currentRecord!
-      }
-
       let index = -1
       this.records.forEach((item, idx) => {
         if (item === this.currentRecord) {
           index = idx
         }
       })
+      this.currentRecord = await this.service.save<T>(this.currentRecord)
+      if (this.editing) {
+        this.filteredRecords[this.getCurrentIndex()] = this.currentRecord!
+      }      
       if (index >= 0) {
         this.records[index] = this.currentRecord!
       } else {
@@ -290,3 +289,4 @@ export class ArchbaseRemoteDataSource<T, ID>
     return this.defaultSortFields
   }
 }
+

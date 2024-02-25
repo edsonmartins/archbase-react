@@ -55,7 +55,7 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   }
 
   protected prepareHeaders(headers: Record<string, string> = {}, withoutToken: boolean = false): Record<string, string> {
-    let finalHeaders = { 'Content-Type': 'application/json', ...headers };
+    let finalHeaders = { 'Content-Type': 'application/json; charset=utf-8', ...headers };
   
     if (!withoutToken) {
       const token = this.tokenManager.getToken();

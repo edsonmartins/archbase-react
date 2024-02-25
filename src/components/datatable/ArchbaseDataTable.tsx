@@ -63,7 +63,7 @@ import React, {
 	useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { builder, emit, ExpressionNode } from '../core';
+import { ArchbaseMasker, builder, emit, ExpressionNode, MaskOptions } from '../core';
 import { useArchbaseAppContext } from '../core';
 import { ArchbaseObjectHelper } from '../core/helper';
 import { convertISOStringToDate, filter, isEmpty } from '../core/utils';
@@ -161,6 +161,9 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
         table: MRT_TableInstance<T>;
     }) => ReactNode;
 	positionActionsColumn?: 'first' | 'last';
+	tableRef? : any;
+	onExport?: (exportFunc: () => void) => void;
+    onPrint?: (printFunc: () => void) => void;
 }
 
 export interface ToolBarActionsProps {
@@ -878,21 +881,32 @@ export function ArchbaseDataTable<T extends object, ID>(
 		return undefined;
 	};
 
-	const renderInteger = (data: any): ReactNode => {
+	const renderText = (data: any, maskOptions?: MaskOptions): ReactNode => {
+		let dataValue = data.getValue();
+		if (!dataValue){
+			return <span></span>
+		}
+		if (maskOptions){
+			dataValue = ArchbaseMasker.toPattern(dataValue,maskOptions);
+		}
+		return <span>{dataValue}</span>;
+	};
+
+	const renderInteger = (data: any, maskOptions?: MaskOptions): ReactNode => {
 		return <span>{data.getValue()}</span>;
 	};
 
-	const renderCurrency = (data: any): ReactNode => {
+	const renderCurrency = (data: any, maskOptions?: MaskOptions): ReactNode => {
 		return <span>{data.getValue()}</span>;
 	};
 
-	const renderBoolean = (data: any): ReactNode => {
+	const renderBoolean = (data: any, maskOptions?: MaskOptions): ReactNode => {
 		const checked = data.getValue();
 
 		return <Checkbox readOnly={true} checked={checked} />;
 	};
 
-	const renderDate = (data: any): ReactNode => {
+	const renderDate = (data: any, maskOptions?: MaskOptions): ReactNode => {
 		try {
 			if (!data.getValue() || data.getValue() === '') {
 				return <span></span>;
@@ -905,7 +919,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 		}
 	};
 
-	const renderDateTime = (data: any): ReactNode => {
+	const renderDateTime = (data: any, maskOptions?: MaskOptions): ReactNode => {
 		try {
 			if (!data.getValue() || data.getValue() === '') {
 				return <span></span>;
@@ -918,9 +932,26 @@ export function ArchbaseDataTable<T extends object, ID>(
 		}
 	};
 
-	const renderTime = (data: any): ReactNode => {
+	const renderTime = (data: any, maskOptions?: MaskOptions): ReactNode => {
 		return <span>{data.getValue()}</span>;
 	};
+
+	const print = () => {
+		handlePrint(table)
+	}
+
+	const exportData = () => {
+		handleExportRows(table.getRowModel().rows, originColumns)
+	}
+
+	React.useEffect(() => {
+		if (props.onExport) {
+			props.onExport(exportData);
+		}
+		if (props.onPrint) {
+			props.onPrint(print);
+		}
+	  }, [props.onExport, props.onPrint]);
 
 	const getRenderByDataType = (
 		dataType: FieldDataType,
@@ -942,6 +973,8 @@ export function ArchbaseDataTable<T extends object, ID>(
 				return renderDateTime;
 			case 'time':
 				return renderTime;
+			case 'text':
+				return renderText;	
 			default:
 		}
 	};
@@ -1010,7 +1043,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 							filterVariant: col.props.inputFilterType,
 							mantineFilterSelectProps: { data: col.props.enumValues },
 							mantineFilterMultiSelectProps: { data: col.props.enumValues },
-							Cell: render ? ({ cell }) => <div style={{width:'100%', display:'flex', justifyContent:alignContent, alignContent:'center'}}>{render(cell)}</div> : undefined,
+							Cell: render ? ({ cell }) => <div style={{width:'100%', display:'flex', justifyContent:alignContent, alignContent:'center'}}>{render(cell, col.props.maskOptions)}</div> : undefined,
 							Header: ({ column }) => (
 								<i
 									style={{
@@ -1412,31 +1445,37 @@ export function ArchbaseDataTable<T extends object, ID>(
 	});
 
 	useEffect(() => {
-		const sortResult = buildSortRSQL(sorting);
-		const filterResult = buildFilterExpressionRSQL(
-			columnFilters,
-			table,
-			originColumns,
-		);
-		const globalFilterResult = buildGlobalFilterExpressionRSQL(
-			table,
-			originColumns,
-			globalFilter,
-			props.globalDateFormat,
-		);
-		const options = props.dataSource.getOptions();
-		const newFilter = filterResult || globalFilterResult;
-		const needRefresh =
-			props.dataSource.getCurrentPage() !== pagination.pageIndex ||
-			(options && options.filter !== newFilter) ||
-			(options && options.sort !== sortResult);
-		options.filter = filterResult || globalFilterResult;
-		options.currentPage = pagination.pageIndex;
-		options.sort = sortResult;
-		options.originFilter = columnFilters;
-		options.originSort = sorting;
-		options.originGlobalFilter = globalFilter;
-		if (needRefresh) {
+		if (props.enableGlobalFilter) {
+			const sortResult = buildSortRSQL(sorting);
+			const filterResult = buildFilterExpressionRSQL(
+				columnFilters,
+				table,
+				originColumns,
+			);
+			const globalFilterResult = buildGlobalFilterExpressionRSQL(
+				table,
+				originColumns,
+				globalFilter,
+				props.globalDateFormat,
+			);
+			const options = props.dataSource.getOptions();
+			const newFilter = filterResult || globalFilterResult;
+			const needRefresh =
+				props.dataSource.getCurrentPage() !== pagination.pageIndex ||
+				(options && options.filter !== newFilter) ||
+				(options && options.sort !== sortResult);
+			options.filter = filterResult || globalFilterResult;
+			options.currentPage = pagination.pageIndex;
+			options.sort = sortResult;
+			options.originFilter = columnFilters;
+			options.originSort = sorting;
+			options.originGlobalFilter = globalFilter;
+			if (needRefresh) {
+				props.dataSource.refreshData(options);
+			}
+		} else {
+			const options = props.dataSource.getOptions();
+			options.currentPage = pagination.pageIndex;
 			props.dataSource.refreshData(options);
 		}
 	}, [
@@ -1447,8 +1486,9 @@ export function ArchbaseDataTable<T extends object, ID>(
 		sorting,
 	]);
 
+	
 	return (
-		<div ref={divTable}>
+		<div ref={props.tableRef || divTable}>
 			<MantineReactTable table={table} />
 		</div>
 	);
@@ -1526,6 +1566,7 @@ export interface ArchbaseDataTableColumnProps<T> {
 	enableGlobalFilter?: boolean;
 	dataFieldAcessorFn?: (originalRow: T) => any;
 	dataType?: FieldDataType;
+	maskOptions?: MaskOptions;
 	inputFilterType?: InputFieldType;
 	enumValues?: EnumValuesColumnFilter[];
 	minSize?: number;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import Modal from 'react-modal'
 import { cloneDeep } from 'lodash'
-import { ActionIcon, Box, Button, Grid, Paper, Text, Tooltip, Variants } from '@mantine/core'
+import { ActionIcon, Box, Button, Grid, Paper, Text, Tooltip, Variants, Input, Checkbox, Space } from '@mantine/core'
 import { IconArrowDown, IconArrowUp } from '@tabler/icons-react'
 import { CustomSortItem } from './ArchbaseAdvancedFilter'
 import {
@@ -11,21 +10,20 @@ import {
   Field,
   SortField
 } from './ArchbaseFilterCommons'
-import { ArchbaseCheckbox } from '../editors'
-import { ArchbaseDataSource } from '../datasource'
-import { ArchbaseList } from '../list'
-import { ArchbaseForm } from '../containers/form'
+import { t } from 'i18next'
+import { ArchbaseForm } from 'components/containers'
+import { ArchbaseList } from 'components/list'
+import { ArchbaseDataSource } from 'components/datasource'
+
 
 interface ArchbaseFilterSelectFieldsProps {
   variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
   currentFilter: ArchbaseQueryFilter
   fields: Field[]
-  selectedOptions?: any
+  selectedOptions: Field[]
+  sort: SortField[]
   id: string
   key: string
-  isOpen: boolean
-  left?: string | number | undefined
-  top?: string | number | undefined
   width?: string | number | undefined
   sortFocused?: boolean
   onConfirmSelectFields?: (
@@ -53,9 +51,9 @@ class ArchbaseFilterSelectFields extends Component<
     const quickFields = cloneDeep(getQuickFields(props.fields))
     const sortFields = cloneDeep(getQuickFieldsSort(props.fields))
     this.state = {
-      selectedFields: [...quickFields],
-      sortFields: [...sortFields],
-      allChecked: true,
+      selectedFields: [...props.selectedOptions],
+      sortFields: [...props.sort],
+      allChecked: false,
       activeIndex: props.currentFilter.sort.activeIndex,
       update: Math.random()
     }
@@ -64,18 +62,16 @@ class ArchbaseFilterSelectFields extends Component<
   onCheckboxChange = (_value, _checked: boolean, item) => {
     let selectedFields = [...this.state.selectedFields]
     if (_checked) {
-      selectedFields.push(item.props.option)
+      selectedFields.push(item)
     } else {
-      selectedFields = this.state.selectedFields.filter((it) => it.name !== item.props.option.name)
+      selectedFields = this.state.selectedFields.filter((it) => it.name !== item.name)
     }
     this.setState({ ...this.state, selectedFields })
   }
 
   renderCheckboxFields = () => {
-    const selectedOptions = this.props.selectedOptions
-
-    if (selectedOptions) {
-      return selectedOptions.map((sl) => {
+    if (this.props.fields) {
+      return this.props.fields.map((sl) => {
         let checked = false
         this.state.selectedFields.forEach((element) => {
           if (sl.name === element.name) {
@@ -84,15 +80,12 @@ class ArchbaseFilterSelectFields extends Component<
         })
 
         return (
-          <ArchbaseCheckbox
-            label={sl.label}
-            isChecked={checked}
-            trueValue={true}
-            falseValue={false}
-            onChangeValue={(value: any, _event: any) =>
-              this.onCheckboxChange(value, value === true, sl)
-            }
-          />
+            <Checkbox
+              label={sl.label}
+              checked={checked}
+              style={{paddingBottom:'8px', cursor:'pointer'}}
+              onChange={(event) => this.onCheckboxChange(event.currentTarget.checked, event.currentTarget.checked, sl)}
+            />
         )
       })
     }
@@ -209,31 +202,10 @@ class ArchbaseFilterSelectFields extends Component<
 
   render = () => {
     return (
-      <Modal
+      <div
         id={this.props.id}
         key={this.props.key}
-        isOpen={this.props.isOpen}
-        style={{
-          overlay: {
-            position: 'fixed',
-            left: this.props.left,
-            top: this.props.top,
-            width: this.props.width,
-            height: '570px',
-            zIndex: 600,
-            backgroundColor: 'rgba(255, 255, 255, 0.75)'
-          },
-          content: {
-            inset: 0,
-            padding: '16px',
-            position: 'absolute',
-            border: '1px solid silver',
-            background: 'rgb(255, 255, 255)',
-            borderRadius: '4px',
-            outline: 'none'
-          }
-        }}
-        centered={true}
+        style={{width:this.props.width, display:'grid', justifyContent:'center', height:'460px'}}
       >
         <ArchbaseForm>
           <Grid
@@ -250,15 +222,12 @@ class ArchbaseFilterSelectFields extends Component<
                 width: '100%'
               }}
             >
-              <Text style={{ fontWeight: '700' }}>{'Selecione os campos p/ o filtro rápido:'}</Text>
-              <ArchbaseCheckbox
-                isChecked={this.state.allChecked}
-                trueValue={true}
-                falseValue={false}
-                onChangeValue={(value: any, _event: any) => {
-                  this.selectAllFields(value === true)
-                }}
-                label="Selecionar todos ?"
+              <Text style={{ fontWeight: '700' }}>{t('archbase:Selecione os campos p/ o filtro rápido:')}</Text>
+              <Checkbox
+                checked={this.state.allChecked}
+                style={{cursor:'pointer'}}
+                onChange={(event) => this.selectAllFields(event.currentTarget.checked)}
+                label={t("archbase:Selecionar todos ?")}
               />
             </Paper>
             <Grid.Col
@@ -280,7 +249,7 @@ class ArchbaseFilterSelectFields extends Component<
                 }}
               >
                 <div className="sort-header">
-                  <div>
+                  <div style={{display:'flex'}}>
                     <Tooltip withinPortal withArrow label="Para baixo">
                       <ActionIcon id="btnFilterSortDown" onClick={this.onSortDown}>
                         <IconArrowDown />
@@ -292,7 +261,7 @@ class ArchbaseFilterSelectFields extends Component<
                       </ActionIcon>
                     </Tooltip>
                   </div>
-                  <Text>Ordenação</Text>
+                  <Text>{t("archbase:Ordenação")}</Text>
                 </div>
                 <div className="sort-body">
                   <ArchbaseList<any, any>
@@ -307,6 +276,7 @@ class ArchbaseFilterSelectFields extends Component<
                         pageSize: 999999
                       })
                     }
+                    withBorder={false}
                     dataFieldId="name"
                     dataFieldText="name"
                     activeIndex={this.state.activeIndex}
@@ -345,11 +315,12 @@ class ArchbaseFilterSelectFields extends Component<
           >
             Aplicar
           </Button>
+          <Space w={"sm"}></Space>
           <Button variant={this.props.variant} color="red" onClick={this.props.onCancelSelectFields}>
             Cancela
           </Button>
         </Paper>
-      </Modal>
+      </div>
     )
   }
 }

@@ -174,7 +174,7 @@ export function ArchbaseEdit<T, ID>({
     }
 
     if (onChangeValue) {
-      onChangeValue(event, changedValue)
+      onChangeValue(changedValue,event)
     }
   }
 

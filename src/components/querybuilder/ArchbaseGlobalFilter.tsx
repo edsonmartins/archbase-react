@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDebouncedState, useDebouncedValue } from '@mantine/hooks';
 import { ActionIcon, ActionIconProps, Flex, Space, TextInput, TextInputProps, Tooltip } from '@mantine/core';
 import { IconFilterX, IconRefresh, IconSearch } from '@tabler/icons-react';
-import { emit, builder, ExpressionNode } from '../core';
-import { useArchbaseTheme } from '../hooks';
 import { t } from 'i18next';
+import { useArchbaseTheme } from 'components/hooks';
+import { ExpressionNode, builder, emit } from 'components/core';
 
 export interface ArchbaseGlobalFilterProps {
   /** Lista dos nomes dos campos a serem efetuados a pesquisa filtrada */

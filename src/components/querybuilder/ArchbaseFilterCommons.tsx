@@ -1,8 +1,8 @@
 /* eslint-disable */
 import React, { Component, ReactNode } from 'react'
-import { ArchbaseError } from '../core'
-import { MaskPattern } from '../editors'
 import { Variants } from '@mantine/styles'
+import { ArchbaseError } from 'components/core'
+import { MaskPattern } from 'components/editors'
 
 const QUICK_FILTER_INDEX = -2
 const NEW_FILTER_INDEX = -1
@@ -84,7 +84,7 @@ interface ArchbaseQueryFilter {
   sort: Sort
   name?: string
   viewName?: string
-  type?: FilterType
+  // type?: FilterType
   apiVersion?: string
   selectedFields?: Field[]
 }
@@ -138,22 +138,24 @@ interface Condition {
 interface IQueryFilterEntity {
   id?: any
   companyId?: any
-  filter?: string
+  filter?: any
   name?: string
   viewName?: string
   componentName?: string
   userName?: string
   shared?: boolean
   code?: string
+  isNewFilter?: boolean;
   setId: (id: any) => void
   setCompanyId: (companyId: any) => void
-  setFilter: (filter: string) => void
+  setFilter: (filter: any) => void
   setName: (name: string) => void
   setViewName: (viewName: string) => void
   setComponentName: (componentName: string) => void
   setUserName: (userName: string) => void
   setShared: (shared: boolean) => void
   setCode: (code: string) => void
+  setIsNewFilter: (value: boolean) => void
 }
 
 class QueryFilterEntity implements IQueryFilterEntity {
@@ -166,6 +168,7 @@ class QueryFilterEntity implements IQueryFilterEntity {
   private _userName?: string
   private _shared?: boolean
   private _code?: string
+  private _isNewFilter?: boolean
 
   constructor() {
     // Construtor vazio ou com inicializações adicionais
@@ -180,7 +183,7 @@ class QueryFilterEntity implements IQueryFilterEntity {
     return this._companyId
   }
 
-  get filter(): string | undefined {
+  get filter(): any | undefined {
     return this._filter
   }
 
@@ -208,6 +211,10 @@ class QueryFilterEntity implements IQueryFilterEntity {
     return this._code
   }
 
+  get isNewFilter(): boolean | undefined {
+    return this._isNewFilter
+  }
+
   setId(id: any): void {
     this._id = id
   }
@@ -216,7 +223,7 @@ class QueryFilterEntity implements IQueryFilterEntity {
     this._companyId = companyId
   }
 
-  setFilter(filter: string): void {
+  setFilter(filter: any): void {
     this._filter = filter
   }
 
@@ -244,6 +251,10 @@ class QueryFilterEntity implements IQueryFilterEntity {
     this._code = code
   }
 
+  setIsNewFilter(value: boolean): void {
+    this._isNewFilter = value;
+  }
+
   static createInstance(): QueryFilterEntity {
     return new QueryFilterEntity()
   }
@@ -257,7 +268,7 @@ class QueryFilterEntity implements IQueryFilterEntity {
     if (values.companyId !== undefined) {
       instance.setCompanyId(values.companyId)
     }
-    if (typeof values.filter === 'string') {
+    if (values.filter) {
       instance.setFilter(values.filter)
     }
     if (typeof values.name === 'string') {
@@ -277,6 +288,9 @@ class QueryFilterEntity implements IQueryFilterEntity {
     }
     if (typeof values.code === 'string') {
       instance.setCode(values.code)
+    }
+    if (typeof values.isNewFilter === 'boolean') {
+      instance.setIsNewFilter(values.isNewFilter)
     }
 
     return instance
@@ -336,6 +350,8 @@ interface ArchbaseQueryBuilderProps {
   persistenceDelegator: ArchbaseQueryFilterDelegator
   showClearButton?: boolean
   showToggleButton?: boolean
+  showPrintButton?: boolean
+  showExportButton?: boolean
   onClearFilter?: (self: any) => {}
   variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
   viewName: string
@@ -359,6 +375,8 @@ interface ArchbaseQueryBuilderProps {
   onSelectedFilter?: (filter: ArchbaseQueryFilter, index: number) => void
   userName?: any
   children?: ReactNode | ReactNode[]
+  onPrint?: ()=>void
+  onExport?: ()=>void
 }
 
 interface FilterFieldValueProps {
@@ -745,7 +763,7 @@ const defaultConditions = (): Condition[] => {
 const getDefaultFilter = (props: Readonly<ArchbaseQueryBuilderProps>, type: FilterType): ArchbaseQueryFilter => {
   let fields = getFields(props)
   let result: ArchbaseQueryFilter = {
-    id: 0,
+    id: -1,
     name: '',
     viewName: '',
     apiVersion: '',

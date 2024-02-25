@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Button, Group, Modal, Variants } from '@mantine/core'
-import { ArchbaseForm } from '../containers/form'
-import { ArchbaseCheckbox, ArchbaseEdit } from '../editors'
-import { ArchbaseDialog } from '../notification'
+import { Button, Checkbox, Group, Modal, Variants } from '@mantine/core'
+import { t } from 'i18next'
+import { ArchbaseDialog } from 'components/notification'
+import { ArchbaseForm } from 'components/containers'
+import { ArchbaseEdit } from 'components/editors'
 
 interface ArchbaseSaveFilterProps {
   title: string
@@ -62,11 +63,9 @@ export const ArchbaseSaveFilter: React.FC<ArchbaseSaveFilterProps> = ({
           style={{ width: '100%' }}
           onChangeValue={(value: any) => setFilterName(value)}
         />
-        <ArchbaseCheckbox
-          trueValue={true}
-          falseValue={false}
-          onChangeValue={(value: any) => setShared(value === true)}
-          label="Filtro compartilhado ?"
+        <Checkbox
+          onChange={(event: any) => setShared(event.currentTarget.checked)}
+          label={t("archbase:Filtro compartilhado ?")}
         />
       </ArchbaseForm>
     </Modal>

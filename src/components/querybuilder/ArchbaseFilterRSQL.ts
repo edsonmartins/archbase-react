@@ -1,4 +1,4 @@
-import { ExpressionNode,builder } from '../core';
+import { ExpressionNode, builder } from 'components/core';
 import { ArchbaseQueryFilter, Rule } from './ArchbaseFilterCommons';
 import { formatISO } from 'date-fns';
 
@@ -9,7 +9,7 @@ function buildFrom(filter: ArchbaseQueryFilter) {
     if (filter.sort && filter.sort.sortFields) {
       filter.sort.sortFields.forEach((field) => {
         if (field.selected) {
-          sortStrings.push(field.name + ' ' + field.asc_desc);
+          sortStrings.push(field.name + ':' + field.asc_desc);
         }
       });
     }
@@ -29,101 +29,104 @@ function processRules(condition, rules: Rule[]) {
     CONDITION = builder.or;
   }
 
-  return CONDITION(
-    // eslint-disable-next-line array-callback-return
-    ...rules.map((rule) => {
-      if (rule.field && !rule.disabled) {
-        let newValue = rule.value;
-        let newValue2 = rule.value2;
-        if (
-          newValue &&
-          newValue !== '' &&
-          (typeof newValue === 'number' || newValue instanceof Date) &&
-          (rule.dataType === 'date' || rule.dataType === 'date_time')
-        ) {
-          newValue = convertToIsoDate(rule, newValue);
-        }
+  // eslint-disable-next-line array-callback-return
+  const exps :ExpressionNode[] = []
+  rules.forEach((rule) => {
+    if (rule.field && !rule.disabled) {
+      let newValue = rule.value;
+      let newValue2 = rule.value2;
+      if (
+        newValue &&
+        newValue !== '' &&
+        (typeof newValue === 'number' || newValue instanceof Date) &&
+        (rule.dataType === 'date' || rule.dataType === 'date_time')
+      ) {
+        newValue = convertToIsoDate(rule, newValue);
+      }
 
-        if (
-          newValue2 &&
-          newValue2 !== '' &&
-          (typeof newValue2 === 'number' || newValue2 instanceof Date) &&
-          (rule.dataType === 'date' || rule.dataType === 'date_time')
-        ) {
-          newValue2 = convertToIsoDate(rule, newValue2);
-        }
-        if (rule.operator === 'null') {
-          return builder.eq(rule.field, `null`);
-        } else if (rule.operator === 'notNull') {
-          return builder.neq(rule.field, `null`);
-        } else if (rule.operator === 'contains' && newValue && newValue !== '') {
-          return builder.eq(rule.field, `^*${newValue}*`);
-        } else if (rule.operator === 'startsWith' && newValue && newValue !== '') {
-          return builder.eq(rule.field, `^${newValue}*`);
-        } else if (
-          rule.operator === 'endsWith' &&
-          newValue &&
-          newValue !== '' &&
-          (typeof newValue === 'string' || typeof newValue === 'number')
-        ) {
-          return builder.eq(rule.field, `^*${newValue}`);
-        } else if (rule.operator === '=' && newValue && newValue !== '' && (typeof newValue === 'string' || typeof newValue === 'number')) {
-          return builder.eq(rule.field, newValue);
-        } else if (
-          rule.operator === '!=' &&
-          newValue &&
-          newValue !== '' &&
-          (typeof newValue === 'string' || typeof newValue === 'number')
-        ) {
-          return builder.neq(rule.field, newValue);
-        } else if (rule.operator === '<' && newValue && newValue !== '' && (typeof newValue === 'string' || typeof newValue === 'number')) {
-          return builder.lt(rule.field, newValue);
-        } else if (rule.operator === '>' && newValue && newValue !== '' && (typeof newValue === 'string' || typeof newValue === 'number')) {
-          return builder.gt(rule.field, newValue);
-        } else if (
-          rule.operator === '<=' &&
-          newValue &&
-          newValue !== '' &&
-          (typeof newValue === 'string' || typeof newValue === 'number')
-        ) {
-          return builder.le(rule.field, newValue);
-        } else if (
-          rule.operator === '>=' &&
-          newValue &&
-          newValue !== '' &&
-          (typeof newValue === 'string' || typeof newValue === 'number')
-        ) {
-          return builder.ge(rule.field, newValue);
-        } else if (
-          rule.operator === 'between' &&
-          newValue &&
-          newValue !== '' &&
-          newValue2 &&
-          newValue2 !== '' &&
-          (typeof newValue === 'string' || typeof newValue === 'number') &&
-          (typeof newValue2 === 'string' || typeof newValue2 === 'number')
-        ) {
-          return builder.bt(rule.field, newValue, newValue2);
-        } else if (
-          rule.operator === 'notBetween' &&
-          newValue &&
-          newValue !== '' &&
-          newValue2 &&
-          newValue2 !== '' &&
-          (typeof newValue === 'string' || typeof newValue === 'number') &&
-          (typeof newValue2 === 'string' || typeof newValue2 === 'number')
-        ) {
-          return builder.nb(rule.field, newValue, newValue2);
-        } else if (rule.operator === 'inList' && newValue && newValue !== '' && Array.isArray(newValue)) {
-          return builder.in(rule.field, newValue);
-        } else if (rule.operator === 'notInList' && newValue && newValue !== '' && Array.isArray(newValue)) {
-          return builder.out(rule.field, newValue);
-        }
+      if (
+        newValue2 &&
+        newValue2 !== '' &&
+        (typeof newValue2 === 'number' || newValue2 instanceof Date) &&
+        (rule.dataType === 'date' || rule.dataType === 'date_time')
+      ) {
+        newValue2 = convertToIsoDate(rule, newValue2);
       }
-      if (rule.rules && !rule.disabled) {
-        return processRules(rule.condition, rule.rules);
+      if (rule.operator === 'null') {
+        exps.push(builder.eq(rule.field, `null`));
+      } else if (rule.operator === 'notNull') {
+        exps.push(builder.neq(rule.field, `null`));
+      } else if (rule.operator === 'contains' && newValue && newValue !== '') {
+        exps.push(builder.eq(rule.field, `^*${newValue}*`));
+      } else if (rule.operator === 'startsWith' && newValue && newValue !== '') {
+        exps.push(builder.eq(rule.field, `^${newValue}*`));
+      } else if (
+        rule.operator === 'endsWith' &&
+        newValue &&
+        newValue !== '' &&
+        (typeof newValue === 'string' || typeof newValue === 'number')
+      ) {
+        exps.push(builder.eq(rule.field, `^*${newValue}`));
+      } else if (rule.operator === '=' && newValue && newValue !== '' && (typeof newValue === 'string' || typeof newValue === 'number')) {
+        exps.push(builder.eq(rule.field, newValue));
+      } else if (
+        rule.operator === '!=' &&
+        newValue &&
+        newValue !== '' &&
+        (typeof newValue === 'string' || typeof newValue === 'number')
+      ) {
+        exps.push(builder.neq(rule.field, newValue));
+      } else if (rule.operator === '<' && newValue && newValue !== '' && (typeof newValue === 'string' || typeof newValue === 'number')) {
+        exps.push(builder.lt(rule.field, newValue));
+      } else if (rule.operator === '>' && newValue && newValue !== '' && (typeof newValue === 'string' || typeof newValue === 'number')) {
+        exps.push(builder.gt(rule.field, newValue));
+      } else if (
+        rule.operator === '<=' &&
+        newValue &&
+        newValue !== '' &&
+        (typeof newValue === 'string' || typeof newValue === 'number')
+      ) {
+        exps.push(builder.le(rule.field, newValue));
+      } else if (
+        rule.operator === '>=' &&
+        newValue &&
+        newValue !== '' &&
+        (typeof newValue === 'string' || typeof newValue === 'number')
+      ) {
+        exps.push(builder.ge(rule.field, newValue));
+      } else if (
+        rule.operator === 'between' &&
+        newValue &&
+        newValue !== '' &&
+        newValue2 &&
+        newValue2 !== '' &&
+        (typeof newValue === 'string' || typeof newValue === 'number') &&
+        (typeof newValue2 === 'string' || typeof newValue2 === 'number')
+      ) {
+        exps.push(builder.bt(rule.field, newValue, newValue2));
+      } else if (
+        rule.operator === 'notBetween' &&
+        newValue &&
+        newValue !== '' &&
+        newValue2 &&
+        newValue2 !== '' &&
+        (typeof newValue === 'string' || typeof newValue === 'number') &&
+        (typeof newValue2 === 'string' || typeof newValue2 === 'number')
+      ) {
+        exps.push(builder.nb(rule.field, newValue, newValue2));
+      } else if (rule.operator === 'inList' && newValue && newValue !== '' && Array.isArray(newValue)) {
+        exps.push(builder.in(rule.field, newValue));
+      } else if (rule.operator === 'notInList' && newValue && newValue !== '' && Array.isArray(newValue)) {
+        exps.push(builder.out(rule.field, newValue));
       }
-    }),
+    }
+    if (rule.rules && !rule.disabled) {
+      exps.push(processRules(rule.condition, rule.rules));
+    }
+  })
+
+  return CONDITION(
+    ...exps    
   );
 }
 
