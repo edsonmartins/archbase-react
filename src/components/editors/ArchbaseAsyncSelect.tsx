@@ -1,10 +1,12 @@
 import {
+	CloseButton,
 	Combobox,
 	ComboboxDropdown,
 	ComboboxTarget,
 	FloatingPosition,
 	Input,
 	InputBase,
+	Loader,
 	MantineSize,
 	OptionsFilter,
 	ScrollArea,
@@ -221,23 +223,13 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 		if (dataSource && dataField) {
 			initialValue = dataSource.getFieldValue(dataField);
 			if (!initialValue) {
-				initialValue = '';
+				initialValue = null;
 			}
 		}
 
 		setSelectedValue(initialValue);
+		setQueryValue(getOptionLabel(initialValue) || '');
 	};
-
-	const currentOption = useCallback(() => {
-		if (!options) {
-			return {};
-		}
-		const option = options.find((option) => option.value === selectedValue);
-		if (!option) {
-			return {};
-		}
-		return option;
-	}, [selectedValue, options]);
 
 	const fieldChangedListener = useCallback(() => {
 		loadDataSourceFieldValue();
@@ -334,7 +326,9 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	};
 
 	const handleSearchChange = (query: string) => {
-		setQueryValue(query);
+		if (!selectedValue) {
+			setQueryValue(query);
+		}
 	};
 
 	const loadOptions = async (page: number, incremental = false) => {
@@ -371,6 +365,13 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 
 		return _readOnly;
 	};
+	const shouldFilterOptions = options.every((item) => item !== queryValue);
+	const filteredOptions = shouldFilterOptions
+		? options.filter((item) => {
+				return item.label.toLowerCase().includes(queryValue.toLowerCase().trim());
+		  })
+		: options;
+
 	return (
 		<ArchbaseAsyncSelectProvider
 			value={{
@@ -386,7 +387,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 				zIndex={zIndex}
 				onOptionSubmit={(val) => {
 					handleChange(val);
-					setQueryValue(val);
+					handleSearchChange(getOptionLabel(val));
 					combobox.closeDropdown();
 				}}
 			>
@@ -400,18 +401,40 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 						error={error}
 						value={queryValue}
 						onChange={(event) => {
-							combobox.openDropdown();
+							if (filteredOptions.length > 0) {
+								combobox.openDropdown();
+							}
 							combobox.updateSelectedOptionIndex();
-							setQueryValue(event.currentTarget.value);
-						  }}
+							handleSearchChange(event.currentTarget.value);
+						}}
 						onBlur={(event) => {
 							handleOnFocusExit(event);
-							setQueryValue(selectedValue || '');
+							handleSearchChange(getOptionLabel(selectedValue) || '');
 						}}
 						onFocus={(event) => handleOnFocusEnter(event)}
-						rightSection={<Combobox.Chevron />}
-						onClick={() => combobox.openDropdown()}
-						rightSectionPointerEvents="none"
+						rightSection={
+							loading ? (
+								<Loader size="xs" />
+							) : selectedValue !== null ? (
+								<CloseButton
+									size="sm"
+									onMouseDown={(event) => event.preventDefault()}
+									onClick={() => {
+										setQueryValue('');
+										setSelectedValue(null);
+									}}
+									aria-label="Clear value"
+								/>
+							) : (
+								<Combobox.Chevron />
+							)
+						}
+						onClick={() => {
+							if (filteredOptions.length > 0) {
+								combobox.openDropdown();
+							}
+						}}
+						rightSectionPointerEvents={selectedValue === null ? 'none' : 'all'}
 						placeholder={placeholder}
 					/>
 				</ComboboxTarget>
@@ -419,10 +442,10 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 					<Combobox.Options>
 						<CustomSelectScrollArea mah={280}>
 							{itemComponent
-								? options.map((option) => {
+								? filteredOptions.slice(0, limit ? limit : filteredOptions.length).map((option) => {
 										return React.cloneElement(itemComponent, { ...option });
 								  })
-								: options.map((option) => {
+								: filteredOptions.slice(0, limit ? limit : filteredOptions.length).map((option) => {
 										return (
 											<Combobox.Option value={option.value} key={option.key}>
 												{option.label}
