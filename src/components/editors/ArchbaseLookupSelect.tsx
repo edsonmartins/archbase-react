@@ -1,4 +1,3 @@
-// import { SelectItem } from '@mantine/core';
 import React, { useCallback, useState } from 'react';
 import { ArchbaseError } from '../core';
 import { ArchbaseObjectHelper } from '../core/helper';
@@ -11,7 +10,6 @@ export interface ArchbaseLookupSelectProps<T, ID, O> extends ArchbaseSelectProps
 	lookupDataFieldText: string | ((record: any) => string);
 	lookupDataFieldId: string;
 	simpleValue?: boolean;
-	// options?: Array<SelectItem> | undefined;
 }
 
 const getTextValue = (lookupDataFieldText: string | ((record: any) => string), record: any) => {
@@ -22,36 +20,36 @@ const getTextValue = (lookupDataFieldText: string | ((record: any) => string), r
 	}
 };
 
-// function rebuildOptions<_T, ID, O>(
-// 	lookupDataSource: ArchbaseDataSource<O, ID> | undefined,
-// 	lookupDataFieldText: string | ((record: any) => string),
-// 	lookupDataFieldId: string,
-// ): SelectItem[] | undefined {
-// 	const options: SelectItem[] = [];
-// 	if (lookupDataSource && lookupDataSource.getTotalRecords() > 0) {
-// 		lookupDataSource.browseRecords().map((record: any) => {
-// 			if (lookupDataFieldId && !lookupDataFieldId.includes('.')) {
-// 				if (!record.hasOwnProperty(lookupDataFieldId) || !record[lookupDataFieldId]) {
-// 					throw new ArchbaseError('Foi encontrado um registro sem ID no dataSource passado para o Select.');
-// 				}
-// 				if (typeof lookupDataFieldText !== 'function') {
-// 					if (!record.hasOwnProperty(lookupDataFieldText) || !record[lookupDataFieldText]) {
-// 						throw new ArchbaseError('Foi encontrado um registro sem o texto no dataSource passado para a Select.');
-// 					}
-// 				}
-// 			}
+function rebuildOptions<_T, ID, O>(
+	lookupDataSource: ArchbaseDataSource<O, ID> | undefined,
+	lookupDataFieldText: string | ((record: any) => string),
+	lookupDataFieldId: string,
+): any[] | undefined {
+	const options: any[] = [];
+	if (lookupDataSource && lookupDataSource.getTotalRecords() > 0) {
+		lookupDataSource.browseRecords().map((record: any) => {
+			if (lookupDataFieldId && !lookupDataFieldId.includes('.')) {
+				if (!record.hasOwnProperty(lookupDataFieldId) || !record[lookupDataFieldId]) {
+					throw new ArchbaseError('Foi encontrado um registro sem ID no dataSource passado para o Select.');
+				}
+				if (typeof lookupDataFieldText !== 'function') {
+					if (!record.hasOwnProperty(lookupDataFieldText) || !record[lookupDataFieldText]) {
+						throw new ArchbaseError('Foi encontrado um registro sem o texto no dataSource passado para a Select.');
+					}
+				}
+			}
 
-// 			options.push({
-// 				label: record.label ? record.label : getTextValue(lookupDataFieldText, record),
-// 				disabled: record.disabled,
-// 				value: ArchbaseObjectHelper.getNestedProperty(record, lookupDataFieldId),
-// 				origin: record,
-// 			});
-// 		});
-// 	}
+			options.push({
+				label: record.label ? record.label : getTextValue(lookupDataFieldText, record),
+				disabled: record.disabled,
+				value: ArchbaseObjectHelper.getNestedProperty(record, lookupDataFieldId),
+				origin: record,
+			});
+		});
+	}
 
-// 	return options;
-// }
+	return options;
+}
 
 export function ArchbaseLookupSelect<T, ID, O>({
 	lookupDataSource,
@@ -65,29 +63,29 @@ export function ArchbaseLookupSelect<T, ID, O>({
 	error,
 	...otherProps
 }: ArchbaseLookupSelectProps<T, ID, O>) {
-	// const [currentOptions, setCurrentOptions] = useState<SelectItem[] | undefined>(() =>
-	// 	rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId),
-	// );
-	// const [internalError, setInternalError] = useState<string | undefined>(error);
+	const [currentOptions, setCurrentOptions] = useState<any[] | undefined>(() =>
+		rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId),
+	);
+	const [internalError, setInternalError] = useState<string | undefined>(error);
 
-	// const lookupDataSourceEvent = (event: DataSourceEvent<O>) => {
-	// 	if (lookupDataSource) {
-	// 		if (
-	// 			event.type === DataSourceEventNames.dataChanged ||
-	// 			event.type === DataSourceEventNames.fieldChanged ||
-	// 			event.type === DataSourceEventNames.recordChanged ||
-	// 			event.type === DataSourceEventNames.afterScroll ||
-	// 			event.type === DataSourceEventNames.afterCancel
-	// 		) {
-	// 			if (lookupDataSource) {
-	// 				setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
-	// 			}
-	// 		}
-	// 		if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
-	// 			setInternalError(event.error);
-	// 		}
-	// 	}
-	// };
+	const lookupDataSourceEvent = (event: DataSourceEvent<O>) => {
+		if (lookupDataSource) {
+			if (
+				event.type === DataSourceEventNames.dataChanged ||
+				event.type === DataSourceEventNames.fieldChanged ||
+				event.type === DataSourceEventNames.recordChanged ||
+				event.type === DataSourceEventNames.afterScroll ||
+				event.type === DataSourceEventNames.afterCancel
+			) {
+				if (lookupDataSource) {
+					setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
+				}
+			}
+			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
+				setInternalError(event.error);
+			}
+		}
+	};
 
 	const getDataSourceFieldValue = () => {
 		let result = '';
@@ -130,22 +128,22 @@ export function ArchbaseLookupSelect<T, ID, O>({
 		}
 	};
 
-	// useArchbaseDidMount(() => {
-	// 	setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
-	// 	if (lookupDataSource) {
-	// 		lookupDataSource.addListener(lookupDataSourceEvent);
-	// 	}
-	// });
+	useArchbaseDidMount(() => {
+		setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
+		if (lookupDataSource) {
+			lookupDataSource.addListener(lookupDataSourceEvent);
+		}
+	});
 
-	// useArchbaseDidUpdate(() => {
-	// 	setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
-	// }, []);
+	useArchbaseDidUpdate(() => {
+		setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
+	}, []);
 
-	// useArchbaseWillUnmount(() => {
-	// 	if (lookupDataSource) {
-	// 		lookupDataSource.removeListener(lookupDataSourceEvent);
-	// 	}
-	// });
+	useArchbaseWillUnmount(() => {
+		if (lookupDataSource) {
+			lookupDataSource.removeListener(lookupDataSourceEvent);
+		}
+	});
 
 	return (
 		<ArchbaseSelect
@@ -154,8 +152,8 @@ export function ArchbaseLookupSelect<T, ID, O>({
 			dataField={dataField}
 			customGetDataSourceFieldValue={getDataSourceFieldValue}
 			customSetDataSourceFieldValue={setDataSourceFieldValue}
-			// options={currentOptions}
-			// error={internalError}
+			options={currentOptions}
+			error={internalError}
 		>
 			{children}
 		</ArchbaseSelect>

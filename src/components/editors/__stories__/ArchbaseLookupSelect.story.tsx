@@ -57,7 +57,7 @@ const ArchbaseLookupSelectExample = () => {
 								lookupDataFieldText="nome"
 								lookupDataFieldId="id"
 								required={true}
-								width={150}
+								width={300}
 								getOptionLabel={(option: Pessoa) => option.nome}
 								getOptionValue={(option: Pessoa) => option}
 							/>

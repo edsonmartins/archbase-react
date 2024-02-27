@@ -361,6 +361,7 @@ export function ArchbaseSelect<T, ID, O>({
 			>
 				<ComboboxTarget>
 					<InputBase
+						w={width}
 						required={required}
 						leftSection={icon}
 						leftSectionWidth={iconWidth}
