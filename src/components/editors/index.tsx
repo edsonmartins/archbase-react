@@ -90,6 +90,3 @@ export type { ArchbaseTextAreaProps } from './ArchbaseTextArea';
 
 export { ArchbaseSelectContext, ArchbaseSelectProvider } from './ArchbaseSelect.context';
 export type { ArchbaseSelectContextValue } from './ArchbaseSelect.context';
-
-export { ArchbaseAutoComplete } from './ArchbaseAutoComplete';
-export type { ArchbaseAutoCompleteProps } from './ArchbaseAutoComplete';
