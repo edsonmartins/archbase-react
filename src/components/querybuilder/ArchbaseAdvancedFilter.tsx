@@ -895,7 +895,7 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
   }
 
   getColor = (color: string) => {
-    return this.context.theme!.colors[color][this.context.theme!.colorScheme === 'dark' ? 5 : 7]
+    return this.context.theme!.colors[color][this.context.colorScheme === 'dark' ? 5 : 7]
   }
 
   render = () => {
@@ -1125,7 +1125,7 @@ class RuleItem extends Component<RuleItemProps> {
           value={field!}
           className="custom-select-field"
           style={{
-            color: this.context.theme!.colorScheme === 'dark' ? 'white' : 'black'
+            color: this.context.colorScheme === 'dark' ? 'white' : 'black'
           }}
           disabled={disabled}
           handleOnChange={this.onFieldChanged}
@@ -1137,7 +1137,7 @@ class RuleItem extends Component<RuleItemProps> {
           options={getOperators(field)}
           value={operator!}
           style={{
-            color: this.context.theme!.colorScheme === 'dark' ? 'white' : 'black'
+            color: this.context.colorScheme === 'dark' ? 'white' : 'black'
           }}
           className="custom-select-operator"
           disabled={disabled}
