@@ -1,4 +1,10 @@
-import { MantineTheme, MantineThemeOverride, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import {
+	MantineColorScheme,
+	MantineTheme,
+	MantineThemeOverride,
+	useMantineColorScheme,
+	useMantineTheme,
+} from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { ModalsProvider } from '@mantine/modals';
 import { Container } from 'inversify';
@@ -23,6 +29,7 @@ interface ArchbaseAppContextValues {
 	owner: string | null;
 	selectedCompany: any | null;
 	theme: MantineTheme | null;
+	colorScheme: MantineColorScheme | null;
 	iocContainer: Container | null;
 	dateFormat: string;
 	dateTimeFormat: string;
@@ -37,6 +44,7 @@ const ArchbaseAppContext = createContext<ArchbaseAppContextValues>({
 	owner: null,
 	selectedCompany: null,
 	theme: null,
+	colorScheme: null,
 	iocContainer: null,
 	dateFormat: 'dd/MM/yyyy',
 	dateTimeFormat: 'dd/MM/yyyy HH:mm:ss',
@@ -99,6 +107,7 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 				owner,
 				selectedCompany,
 				theme,
+				colorScheme,
 				iocContainer,
 				dateFormat,
 				dateTimeFormat,

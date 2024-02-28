@@ -10,6 +10,7 @@ import {
 	Grid,
 	Input,
 	Paper,
+	ScrollArea,
 	Space,
 	Text,
 	Tooltip,
@@ -79,6 +80,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
 
 				return (
 					<Checkbox
+						key={sl.label}
 						label={sl.label}
 						checked={checked}
 						style={{ paddingBottom: '8px', cursor: 'pointer' }}
@@ -228,14 +230,10 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
 								label={t('archbase:Selecionar todos ?')}
 							/>
 						</Paper>
-						<Grid.Col
-							style={{
-								height: '128px',
-								overflowY: 'auto',
-								overflowX: 'hidden',
-							}}
-						>
-							<Box>{this.renderCheckboxFields()}</Box>
+						<Grid.Col>
+							<ScrollArea h={'128px'}>
+								<Box>{this.renderCheckboxFields()}</Box>
+							</ScrollArea>
 						</Grid.Col>
 					</Grid>
 					<Grid>
@@ -261,7 +259,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
 									</div>
 									<Text>{t('archbase:Ordenação')}</Text>
 								</div>
-								<div className="sort-body">
+								<ScrollArea className="sort-body">
 									<ArchbaseList<any, any>
 										height="100%"
 										width="100%"
@@ -287,7 +285,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
 											},
 										}}
 									/>
-								</div>
+								</ScrollArea>
 							</div>
 						</Grid.Col>
 					</Grid>

@@ -1,7 +1,7 @@
 import { ArchbaseAppContext, processDetailErrorMessage, processErrorMessage } from '@components/core';
 import { useArchbaseTheme } from '@components/hooks';
 import { ArchbaseDialog } from '@components/notification';
-import { ActionIcon, Menu, Popover, TextInput, Tooltip } from '@mantine/core';
+import { ActionIcon, Menu, Popover, TextInput, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import {
 	IconCalendar,
@@ -84,7 +84,7 @@ export const DebouncedTextInput = ({
 	const [debouncedValue] = useDebouncedValue(value, 500);
 	const isUserAction = useRef(false);
 	const theme = useArchbaseTheme();
-
+	const { colorScheme } = useMantineColorScheme();
 	useEffect(() => {
 		setValue(initialValue);
 	}, [initialValue]);
@@ -114,10 +114,10 @@ export const DebouncedTextInput = ({
 				onActionSearchExecute ? (
 					<Tooltip withinPortal withArrow label={tooltipIconSearch}>
 						<ActionIcon
-							sx={{
+							style={{
 								backgroundColor:
 									variant === 'filled'
-										? theme.colorScheme === 'dark'
+										? colorScheme === 'dark'
 											? theme.colors[theme.primaryColor][5]
 											: theme.colors[theme.primaryColor][6]
 										: undefined,
@@ -843,12 +843,12 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 					maxWidth: this.props.width,
 					height: '50px',
 					backgroundColor:
-						this.context.theme!.colorScheme === 'dark'
+						this.context.colorScheme === 'dark'
 							? this.context.theme!.colors.dark[7]
 							: this.context.theme!.colors.gray[0],
 					position: 'relative',
 					border: `1px solid ${
-						this.context.theme!.colorScheme === 'dark'
+						this.context.colorScheme === 'dark'
 							? this.context.theme!.colors.gray[7]
 							: this.context.theme!.colors.gray[2]
 					}`,
@@ -916,7 +916,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 							variant={this.props.variant}
 							size="lg"
 							color="primary"
-							sx={{ width: '36px', height: '36px', marginRight: 2 }}
+							style={{ width: '36px', height: '36px', marginRight: 2 }}
 							onClick={() => {
 								this.onSearchClick();
 							}}
@@ -930,7 +930,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 								variant={this.props.variant}
 								size="lg"
 								color="primary"
-								sx={{ width: '36px', height: '36px', marginRight: 2 }}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
 								onClick={() => {
 									this.clearFilter();
 								}}
@@ -955,7 +955,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 									size="lg"
 									color="primary"
 									onClick={() => this.setState({ ...this.state, modalOpen: 'selectDate' })}
-									sx={{ width: '36px', height: '36px', marginRight: 2 }}
+									style={{ width: '36px', height: '36px', marginRight: 2 }}
 								>
 									<IconCalendar size="1.4rem" />
 								</ActionIcon>
@@ -989,7 +989,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 									onClick={() => {
 										this.selectFields();
 									}}
-									sx={{ width: '36px', height: '36px', marginRight: 2 }}
+									style={{ width: '36px', height: '36px', marginRight: 2 }}
 								>
 									<IconSubtask size="1.4rem" />
 								</ActionIcon>
@@ -1030,7 +1030,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 										onClick={() => {
 											this.toggleExpandedFilter();
 										}}
-										sx={{ width: '36px', height: '36px', marginRight: 2 }}
+										style={{ width: '36px', height: '36px', marginRight: 2 }}
 									>
 										<IconFilter size="1.4rem" />
 									</ActionIcon>
@@ -1066,7 +1066,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 								variant={this.props.variant}
 								size="lg"
 								color="primary"
-								sx={{ width: '36px', height: '36px', marginRight: 2 }}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
 								onClick={() => {
 									if (this.props.onExport) {
 										this.props.onExport();
@@ -1083,7 +1083,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 								variant={this.props.variant}
 								size="lg"
 								color="primary"
-								sx={{ width: '36px', height: '36px', marginRight: 2 }}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
 								onClick={() => {
 									if (this.props.onPrint) {
 										this.props.onPrint();

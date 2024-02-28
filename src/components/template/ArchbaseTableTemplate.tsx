@@ -1,11 +1,11 @@
+import { emit, useArchbaseAppContext } from '@components/core';
+import { ArchbaseDataSource } from '@components/datasource';
+import { ArchbaseDataTable, ToolBarActions } from '@components/datatable';
+import { useArchbaseElementSizeArea, useArchbaseTheme } from '@components/hooks';
+import { ArchbaseAlert } from '@components/notification';
 import { AlertVariant, Button, ButtonVariant, Flex, Paper, useMantineColorScheme } from '@mantine/core';
 import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { IconPlus } from '@tabler/icons-react';
-import { emit, useArchbaseAppContext } from 'components/core';
-import { ArchbaseDataSource } from 'components/datasource';
-import { ArchbaseDataTable, ToolBarActions } from 'components/datatable';
-import { useArchbaseElementSizeArea, useArchbaseTheme } from 'components/hooks';
-import { ArchbaseAlert } from 'components/notification';
 import { t } from 'i18next';
 import { MRT_Row } from 'mantine-react-table';
 import React, { Fragment, ReactNode, useEffect, useRef, useState } from 'react';
@@ -48,7 +48,7 @@ export interface ArchbaseTableTemplateProps<T extends Object, ID> {
 	title: string;
 	printTitle?: string;
 	logoPrint?: string;
-	variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
+	variant?: AlertVariant | ButtonVariant;
 	dataSource: ArchbaseDataSource<T, ID>;
 	dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined;
 	store?: ArchbaseStateValues | undefined;
@@ -227,7 +227,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	};
 
 	const getColor = (color: string) => {
-		return theme.colors[color][theme.colorScheme === 'dark' ? 5 : 7];
+		return theme.colors[color][colorScheme === 'dark' ? 5 : 7];
 	};
 	const handleExport = () => {
 		if (exportFunc) {
@@ -247,7 +247,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 				viewName={filterOptions?.viewName!}
 				apiVersion={filterOptions?.apiVersion!}
 				ref={filterRef}
-				variant={variant ?? appContext.variant}
+				variant={variant ?? (appContext.variant as ButtonVariant)}
 				expandedFilter={filterState.expandedFilter}
 				persistenceDelegator={filterPersistenceDelegator!}
 				currentFilter={filterState.currentFilter}
@@ -320,7 +320,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 										<Button
 											color={'green'}
 											variant={variant ?? appContext.variant}
-											leftIcon={<IconPlus />}
+											leftSection={<IconPlus />}
 											onClick={() => userActions && userActions.onAddExecute && userActions!.onAddExecute()}
 										>
 											{t('archbase:New')}
@@ -329,7 +329,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 									{userActions.onEditExecute ? (
 										<Button
 											color="blue"
-											leftIcon={<IconEdit />}
+											leftSection={<IconEdit />}
 											disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
 											variant={variant ?? appContext.variant}
 											onClick={() => userActions && userActions.onEditExecute && userActions!.onEditExecute()}
@@ -340,7 +340,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 									{userActions.onRemoveExecute ? (
 										<Button
 											color="red"
-											leftIcon={<IconTrash />}
+											leftSection={<IconTrash />}
 											disabled={!userActions?.allowRemove || !dataSource.isBrowsing() || dataSource.isEmpty()}
 											variant={variant ?? appContext.variant}
 											onClick={() => userActions && userActions.onRemoveExecute && userActions!.onRemoveExecute()}
@@ -351,7 +351,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 									{userActions.onViewExecute ? (
 										<Button
 											color="silver"
-											leftIcon={<IconEye />}
+											leftSection={<IconEye />}
 											disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
 											variant={variant ?? appContext.variant}
 											onClick={() => userActions && userActions.onViewExecute && userActions!.onViewExecute()}

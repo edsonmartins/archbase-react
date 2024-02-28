@@ -5,6 +5,7 @@ import {
   Checkbox,
   Grid,
   Group,
+  MantineColorScheme,
   MantineTheme,
   MultiSelect,
   rem,
@@ -95,6 +96,7 @@ export interface ArchbaseSimpleFilterProps {
   ) => void
   update?: number
   theme?: MantineTheme | null
+  colorScheme?: MantineColorScheme | null
 }
 
 export interface ArchbaseSimpleFilterState {
@@ -490,7 +492,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
   }
 
   getColor = (color: string) => {
-    return this.props.theme!.colors[color][this.props.theme!.colorScheme === 'dark' ? 5 : 7]
+    return this.props.theme!.colors[color][this.props.colorScheme === 'dark' ? 5 : 7]
   }
 
   createFilterFields = (props, schema: Schema, currentFilter: ArchbaseQueryFilter): ReactNode[] => {
@@ -548,7 +550,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                   }
                 />
                 <Space w={'sm'}></Space>
-                <Text color={this.props.theme!.colorScheme === 'dark' ? 'white' : 'black'}>
+                <Text c={this.props.colorScheme === 'dark' ? 'white' : 'black'}>
                   {t(child.label)}
                 </Text>
                 <SimpleValueSelector
@@ -564,7 +566,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                   handleOnChange={(value) => this.onOperatorChanged(rule, value)}
                   level={0}
                 />
-                <Text style={{ fontSize: '12px' }} color="blue">
+                <Text style={{ fontSize: '12px' }} c="blue">
                   {textValue}
                 </Text>
               </div>
@@ -586,7 +588,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 value={rule.operator}
                 className="custom-select-operator"
                 style={{
-                  color: this.props.theme!.colorScheme === 'dark' ? 'white' : 'black'
+                  color: this.props.colorScheme === 'dark' ? 'white' : 'black'
                 }}
                 disabled={child.disabled}
                 handleOnChange={(value) => this.onOperatorChanged(rule, value)}
@@ -659,14 +661,14 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                   padding: '4px'
                 }}
               >
-                <IconFilterSearch size={rem(20)} color={this.getColor('green')} />
+                <IconFilterSearch size={30} color={this.getColor('green')} />
                 <Space w="md" />
                 {'Ordenação'}
                 <Space w="md" />
                 <Text
                   key={'txto_' + 9999}
                   truncate
-                  color="blue"
+                  c="blue"
                   style={{
                     wordBreak: 'break-word',
                     display: 'block',
