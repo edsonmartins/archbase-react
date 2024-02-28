@@ -1,9 +1,9 @@
-import { useMantineTheme } from '@mantine/core';
+import { MantineTheme, MantineThemeOverride, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { useLocalStorage } from '@mantine/hooks';
 import { ModalsProvider } from '@mantine/modals';
-import { MantineTheme, MantineThemeOverride, Variants } from '@mantine/styles';
 import { Container } from 'inversify';
 import queryString from 'query-string';
-import React, { createContext, ReactNode, useContext } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
@@ -27,14 +27,9 @@ interface ArchbaseAppContextValues {
 	dateFormat: string;
 	dateTimeFormat: string;
 	timeFormat: string;
-	variant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	variant?: string;
 	languages?: ArchbaseLanguage[];
-	setCustomTheme?: (
-		dark: MantineThemeOverride,
-		light: MantineThemeOverride,
-	) => void;
+	setCustomTheme?: (dark: MantineThemeOverride, light: MantineThemeOverride) => void;
 }
 
 const ArchbaseAppContext = createContext<ArchbaseAppContextValues>({
@@ -59,14 +54,9 @@ interface ArchbaseAppProviderProps {
 	dateFormat?: string;
 	dateTimeFormat?: string;
 	timeFormat?: string;
-	variant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	variant?: string;
 	languages?: ArchbaseLanguage[];
-	setCustomTheme?: (
-		dark: MantineThemeOverride,
-		light: MantineThemeOverride,
-	) => void;
+	setCustomTheme?: (dark: MantineThemeOverride, light: MantineThemeOverride) => void;
 }
 
 const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
@@ -87,6 +77,20 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 	setCustomTheme,
 }) => {
 	const theme = useMantineTheme();
+	const currentColorScheme = useRef('');
+	const { colorScheme, setColorScheme } = useMantineColorScheme();
+	const [colorSchemeLocalStorage, setColorSchemeLocalStorage] = useLocalStorage<'dark' | 'light'>({
+		key: 'mantine-color-scheme',
+		defaultValue: 'light',
+		getInitialValueInEffect: false,
+	});
+
+	useEffect(() => {
+		if (currentColorScheme.current !== colorSchemeLocalStorage) {
+			setColorScheme(colorSchemeLocalStorage);
+			currentColorScheme.current = colorSchemeLocalStorage;
+		}
+	}, [colorSchemeLocalStorage, setColorScheme]);
 
 	return (
 		<ArchbaseAppContext.Provider
@@ -109,10 +113,7 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 				modalProps={{
 					size: 'lg',
 					overlayProps: {
-						color:
-							theme.colorScheme === 'dark'
-								? theme.colors.dark[7]
-								: theme.colors.gray[6],
+						color: colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[6],
 						opacity: 0.25,
 					},
 				}}
@@ -140,9 +141,7 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 const useArchbaseAppContext = () => {
 	const context = useContext(ArchbaseAppContext);
 	if (!context) {
-		throw new Error(
-			'useArchbaseAppContext deve ser usado dentro de um ArchbaseAppProvider',
-		);
+		throw new Error('useArchbaseAppContext deve ser usado dentro de um ArchbaseAppProvider');
 	}
 	return context;
 };

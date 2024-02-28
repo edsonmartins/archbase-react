@@ -42,10 +42,10 @@ import {
 } from './ArchbaseFilterCommons'
 import { t } from 'i18next'
 import { DebouncedTextInput } from './ArchbaseQueryBuilder'
-import { ArchbaseAppContext, ltrim } from 'components/core'
-import { ArchbaseList } from 'components/list'
-import { ArchbaseDataSource } from 'components/datasource'
-import { ArchbaseDateTimePickerEdit, ArchbaseDateTimePickerRange, ArchbaseSelect, ArchbaseSelectItem } from 'components/editors'
+import { ArchbaseAppContext, ltrim } from '@components/core'
+import { ArchbaseList } from '@components/list'
+import { ArchbaseDataSource } from '@components/datasource'
+import { ArchbaseDateTimePickerEdit, ArchbaseDateTimePickerRange, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors'
 
 const rnd = (() => {
   const gen = (min: number, max: number) =>

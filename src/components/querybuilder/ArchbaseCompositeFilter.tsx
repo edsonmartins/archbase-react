@@ -43,9 +43,9 @@ import {
 } from './ArchbaseFilterCommons'
 import { ArchbaseSaveFilter } from './ArchbaseSaveFilter'
 import { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter'
-import { ArchbaseDataSource } from 'components/datasource'
-import { ArchbaseAppContext } from 'components/core'
-import { ArchbaseList } from 'components/list'
+import { ArchbaseDataSource } from '@components/datasource'
+import { ArchbaseAppContext } from '@components/core'
+import { ArchbaseList } from '@components/list'
 
 interface ArchbaseCompositeFilterProps {
   variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>

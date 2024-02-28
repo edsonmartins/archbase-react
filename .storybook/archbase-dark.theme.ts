@@ -1,9 +1,6 @@
 import type { MantineThemeOverride } from '@mantine/core'
 
-import ArchbaseGlobalStyles from './archbase-global.styles'
-
 export const ArchbaseDark: MantineThemeOverride = {
-  colorScheme: 'dark',
   fontFamily: 'Inter, sans-serif',
   colors: {
     archbase: [
@@ -20,5 +17,4 @@ export const ArchbaseDark: MantineThemeOverride = {
     ]
   },
   primaryColor: 'archbase',
-  globalStyles: ArchbaseGlobalStyles
 }

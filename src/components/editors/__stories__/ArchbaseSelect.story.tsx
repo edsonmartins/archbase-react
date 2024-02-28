@@ -41,11 +41,11 @@ const ArchbaseSelectExample = () => {
 			<Grid.Col span={12}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Select Component</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Select Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 150 })}>
+					<Box style={{ height: 150 }}>
 						<ArchbaseSelect<Pedido, string, Pessoa>
 							label="Nome"
 							dataSource={dataSource}
@@ -62,21 +62,9 @@ const ArchbaseSelectExample = () => {
 							getOptionLabel={(option: PedidoStatus) => option.toString()}
 							getOptionValue={(option: PedidoStatus) => option}
 						>
-							<ArchbaseSelectItem
-								disabled={false}
-								label="Pendente"
-								value={PedidoStatus.PENDENTE}
-							/>
-							<ArchbaseSelectItem
-								disabled={false}
-								label="Faturado"
-								value={PedidoStatus.FATURADO}
-							/>
-							<ArchbaseSelectItem
-								disabled={false}
-								label="Cancelado"
-								value={PedidoStatus.CANCELADO}
-							/>
+							<ArchbaseSelectItem disabled={false} label="Pendente" value={PedidoStatus.PENDENTE} />
+							<ArchbaseSelectItem disabled={false} label="Faturado" value={PedidoStatus.FATURADO} />
+							<ArchbaseSelectItem disabled={false} label="Cancelado" value={PedidoStatus.CANCELADO} />
 						</ArchbaseSelect>
 					</Box>
 				</Card>
@@ -84,11 +72,11 @@ const ArchbaseSelectExample = () => {
 			<Grid.Col span={6}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Objeto Pedido</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Objeto Pedido</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseJsonView data={dataSource?.getCurrentRecord()!} />
 					</ScrollArea>
 				</Card>
@@ -96,11 +84,11 @@ const ArchbaseSelectExample = () => {
 			<Grid.Col span={6}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPedidos</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPedidos</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

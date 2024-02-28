@@ -53,8 +53,8 @@ const ArchbaseRadioGroupExample = () => {
 			<Grid.Col offset={1} span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>RadioGroup Component</Text>
+						<Group justify="space-between">
+							<Text fw={500}>RadioGroup Component</Text>
 						</Group>
 					</Card.Section>
 					<ArchbaseRadioGroup<Pedido, string, PedidoStatus>
@@ -69,8 +69,8 @@ const ArchbaseRadioGroupExample = () => {
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
 					<ArchbaseObjectInspector data={dataSource} />

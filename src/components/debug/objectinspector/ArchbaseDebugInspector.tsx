@@ -26,7 +26,7 @@ export interface ArchbaseObjectToInspect {
 	/**Nome do objeto a ser inspecionado*/
 	name: string;
 	/**Objeto a ser inspecionado*/
-	object: Object;
+	object: NonNullable<unknown>;
 }
 
 export function ArchbaseDebugInspector({

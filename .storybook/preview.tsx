@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { useDarkMode } from 'storybook-dark-mode';
 import { Preview } from '@storybook/react';
-import { ColorScheme, MantineThemeOverride, useMantineTheme } from '@mantine/core';
+import { MantineThemeOverride } from '@mantine/core';
 import { ArchbaseDark } from './archbase-dark.theme';
 import { ArchbaseLight } from './archbase-ligth.theme';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
@@ -21,6 +21,7 @@ import '../src/styles/treeviews.scss';
 import '../src/styles/errorboundary.scss';
 import '../src/styles/utils.scss';
 import '../src/styles/spaces.css';
+import '../.storybook/archbase-global.css'
 
 
 const channel = addons.getChannel();
@@ -29,36 +30,30 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
   const [dark, setThemeDark] = useState<MantineThemeOverride>(ArchbaseDark)
   const [light, setThemeLight] = useState<MantineThemeOverride>(ArchbaseLight)
   const colorSchem = useDarkMode() ? 'dark' : 'light';
-  const theme = useMantineTheme();
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+  const [colorScheme, setColorScheme] = useLocalStorage<'dark' | 'light'>({
     key: 'mantine-color-scheme',
     defaultValue: 'light',
     getInitialValueInEffect: true,
   });  
 
-  const handleColorScheme = (value: boolean) => setColorScheme(value ? 'dark' : 'light');
-
-
-  useEffect(() => {
-    channel.on(DARK_MODE_EVENT_NAME, handleColorScheme);
-    return () => channel.off(DARK_MODE_EVENT_NAME, handleColorScheme);
-  }, [channel]);
-
-  useEffect(() => {
-    setColorScheme(colorSchem);
-    const body = window.document.body;
-    body.style.backgroundColor = colorSchem==='dark'?'black':'white';
-  }, [colorSchem]);
+  const handleColorScheme = (value: boolean) => {
+    setColorScheme(value ? 'dark' : 'light')
+  };
 
   const handleChangeCustomTheme = (dark: MantineThemeOverride, light: MantineThemeOverride) => {
       setThemeDark(dark)
       setThemeLight(light)
   }
 
-  const toggleColorScheme = (value?: ColorScheme) =>
+  const toggleColorScheme = (value?: 'dark' | 'light') =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
   useHotkeys([['mod+J', () => toggleColorScheme()]]);
+
+  useEffect(() => {
+    channel.on(DARK_MODE_EVENT_NAME, handleColorScheme);
+    return () => channel.off(DARK_MODE_EVENT_NAME, handleColorScheme);
+  }, [channel]);
 
   return (
     <ArchbaseGlobalProvider
@@ -66,7 +61,6 @@ function ThemeWrapper(props: { children: React.ReactNode }) {
       containerIOC={demoContainerIOC}
       themeDark={dark}
       themeLight={light}
-      toggleColorScheme={toggleColorScheme}
       translationName="demo"
       translationResource={{ en: translation_en, 'pt-BR': translation_ptbr, es: translation_es }}
     >

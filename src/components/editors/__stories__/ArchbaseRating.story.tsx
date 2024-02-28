@@ -36,26 +36,21 @@ const ArchbaseRatingExample = () => {
 			<Grid.Col offset={1} span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Rating Component</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Rating Component</Text>
 						</Group>
 					</Card.Section>
-					<ArchbaseRating<Pessoa, string>
-						label="Avaliação"
-						dataSource={dataSource}
-						dataField="avaliacao"
-						count={5}
-					/>
+					<ArchbaseRating<Pessoa, string> label="Avaliação" dataSource={dataSource} dataField="avaliacao" count={5} />
 				</Card>
 			</Grid.Col>
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>
