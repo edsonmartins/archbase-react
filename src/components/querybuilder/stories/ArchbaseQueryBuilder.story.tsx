@@ -226,7 +226,7 @@ const ArchbaseQueryBuilderExample = () => {
 							<Text fw={500}>QueryBuilder Filter Component</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 800 })}>
+					<ScrollArea style={{ height: 800 }}>
 						<ArchbaseQueryBuilder
 							id={'this.props.filterName'}
 							viewName={'ViewPessoa'}
