@@ -18,7 +18,7 @@ export function buildSetCollapsedButton(
           ? `calc(${sideBarCollapsedWidth} - 14px)`
           : `calc(${sideBarWidth} - 14px)`,
         top: 'calc(100vh / 2)',
-        zIndex: '9999',
+        zIndex: '99',
       }}
     >
       <ActionIcon
