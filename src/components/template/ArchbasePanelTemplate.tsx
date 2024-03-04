@@ -3,7 +3,7 @@ import {
 	ArchbaseActionButtons,
 	ArchbaseActionButtonsOptions,
 } from '@components/buttons/ArchbaseActionButtons';
-import { Pagination } from '@mantine/core';
+import { ButtonVariant, Pagination } from '@mantine/core';
 import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
 import { t } from 'i18next';
 import React, { CSSProperties, ReactNode, useMemo, useRef, useState } from 'react';
@@ -52,14 +52,14 @@ export interface UserRowActionsOptions<T> {
 	onEditRow?: (row: T) => void;
 	onRemoveRow?: (row: T) => void;
 	onViewRow?: (row: T) => void;
-	variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
+	variant?: string;
 }
 
 export interface ArchbasePanelTemplateProps<T, ID> {
 	title: string;
 	dataSource: ArchbaseDataSource<T, ID>;
 	dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined;
-	variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
+	variant?: string;
 	filterOptions: FilterOptions;
 	pageSize?: number;
 	filterFields: ReactNode | undefined;
@@ -76,7 +76,7 @@ export interface ArchbasePanelTemplateProps<T, ID> {
 	withBorder?: boolean;
 	withPagination?: boolean;
 	children?: React.ReactNode;
-	radius?: MantineNumberSize;
+	radius?: number | string | undefined;
 	debug?: boolean;
 	actionsButtonsOptions?: ArchbaseActionButtonsOptions;
 	spaceOptions?: ArchbaseSpaceTemplateOptions;
@@ -228,7 +228,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 					viewName={filterOptions.viewName}
 					apiVersion={filterOptions.apiVersion}
 					ref={filterRef}
-					variant={variant ?? appContext.variant}
+					variant={variant ? (variant as ButtonVariant) : (appContext.variant as ButtonVariant)}
 					expandedFilter={filterState.expandedFilter}
 					persistenceDelegator={filterPersistenceDelegator}
 					currentFilter={filterState.currentFilter}

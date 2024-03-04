@@ -12,6 +12,7 @@
 import {
 	__InputProps,
 	CloseButton,
+	CloseButtonProps,
 	Input,
 	InputStylesNames,
 	InputVariant,
@@ -238,7 +239,7 @@ export interface ArchbaseDateTimePickerEditProps
 	clearable?: boolean;
 
 	/** Adereços adicionados ao botão limpar */
-	clearButtonProps?: React.ComponentPropsWithoutRef<'button'>;
+	clearButtonProps?: CloseButtonProps;
 
 	/** Determina se o valor de entrada deve ser revertido para o último valor válido conhecido no desfoque, verdadeiro por padrão */
 	fixOnBlur?: boolean;

@@ -1,5 +1,5 @@
 import { useArchbaseDataSourceListener } from '@components/hooks';
-import { Pagination } from '@mantine/core';
+import { ButtonVariant, Pagination } from '@mantine/core';
 import useComponentSize from '@rehooks/component-size';
 import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
 import { t } from 'i18next';
@@ -343,7 +343,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 					viewName={filterOptions.viewName}
 					apiVersion={filterOptions.apiVersion}
 					ref={filterRef}
-					variant={variant ?? appContext.variant}
+					variant={variant ? (variant as ButtonVariant) : (appContext.variant as ButtonVariant)}
 					expandedFilter={filterState.expandedFilter}
 					persistenceDelegator={filterPersistenceDelegator}
 					currentFilter={filterState.currentFilter}

@@ -35,8 +35,6 @@ export interface ArchbaseRatingProps<T, ID> {
 	highlightSelectedOnly?: boolean;
 	/** Estilo do rating */
 	style?: CSSProperties;
-	/** Texto sugestão do rating */
-	placeholder?: string;
 	/** Título do rating */
 	label?: string;
 	/** Descrição do rating */
@@ -60,7 +58,6 @@ export function ArchbaseRating<T, ID>({
 	dataField,
 	readOnly = false,
 	style,
-	placeholder,
 	size,
 	innerRef,
 	value,
@@ -168,7 +165,7 @@ export function ArchbaseRating<T, ID>({
 	};
 
 	return (
-		<Input.Wrapper label={label} error={internalError} placeholder={placeholder} description={description}>
+		<Input.Wrapper label={label} error={internalError} description={description}>
 			<Rating
 				readOnly={isReadOnly()}
 				size={size!}
@@ -179,7 +176,6 @@ export function ArchbaseRating<T, ID>({
 				onChange={handleChange}
 				onBlur={handleOnFocusExit}
 				onFocus={handleOnFocusEnter}
-				placeholder={placeholder}
 			/>
 		</Input.Wrapper>
 	);

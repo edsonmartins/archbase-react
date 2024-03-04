@@ -90,7 +90,7 @@ export function ArchbaseGlobalFilter({
 	return (
 		<Flex justify={'space-between'} align={'center'}>
 			<TextInput
-				icon={<IconSearch />}
+				rightSection={<IconSearch />}
 				variant="filled"
 				defaultValue={filterValue}
 				onChange={(event) => setFilterValue(event.currentTarget.value)}

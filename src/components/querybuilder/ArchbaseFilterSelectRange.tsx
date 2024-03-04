@@ -82,7 +82,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 								size="lg"
 								color="primary"
 								onClick={() => this.setState({ ...this.state, selectRangeType: 'range' })}
-								sx={{ width: '36px', height: '36px', marginRight: 2 }}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
 							>
 								<IconCalendarEvent size="1.4rem" />
 							</ActionIcon>
@@ -93,7 +93,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 								size="lg"
 								color="primary"
 								onClick={() => this.setState({ ...this.state, selectRangeType: 'month' })}
-								sx={{ width: '36px', height: '36px', marginRight: 2 }}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
 							>
 								<IconCalendarMonth size="1.4rem" />
 							</ActionIcon>
@@ -104,7 +104,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 								size="lg"
 								color="primary"
 								onClick={() => this.setState({ ...this.state, selectRangeType: 'week' })}
-								sx={{ width: '36px', height: '36px', marginRight: 2 }}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
 							>
 								<IconCalendarWeek size="1.4rem" />
 							</ActionIcon>
@@ -115,7 +115,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 								size="lg"
 								color="primary"
 								onClick={() => this.setState({ ...this.state, selectRangeType: 'day' })}
-								sx={{ width: '36px', height: '36px', marginRight: 2 }}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
 							>
 								<IconCalendar size="1.4rem" />
 							</ActionIcon>

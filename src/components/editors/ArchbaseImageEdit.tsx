@@ -19,8 +19,6 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
 	required?: boolean;
 	/** Estilo do checkbox */
 	style?: CSSProperties;
-	/** Texto sugestão do rich edit */
-	placeholder?: string;
 	/** Título do rich edit */
 	label?: string;
 	/** Descrição do rich edit */
@@ -38,8 +36,6 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
 	height?: number | string;
 	/** Chave de theme.radius ou qualquer valor CSS válido para definir border-radius, 0 por padrão */
 	radius?: string | number | undefined;
-	/** Ativar espaço reservado quando a imagem está carregando e quando a imagem falha ao carregar */
-	withPlaceholder?: boolean;
 	/** Obter ref do elemento de imagem */
 	imageRef?: React.ForwardedRef<HTMLImageElement>;
 	/** Legenda da imagem, exibida abaixo da imagem */
@@ -62,7 +58,6 @@ export function ArchbaseImageEdit<T, ID>({
 	disabled,
 	readOnly,
 	required,
-	placeholder,
 	label,
 	description,
 	error,
@@ -172,7 +167,6 @@ export function ArchbaseImageEdit<T, ID>({
 			<Input.Wrapper
 				withAsterisk={required}
 				label={label}
-				placeholder={placeholder}
 				description={description}
 				error={internalError}
 				ref={innerRef || innerComponentRef}

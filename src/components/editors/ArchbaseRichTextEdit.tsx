@@ -46,8 +46,6 @@ export interface ArchbaseRichTextEditProps<T, ID> {
 	required?: boolean;
 	/** Estilo do checkbox */
 	style?: CSSProperties;
-	/** Texto sugestão do rich edit */
-	placeholder?: string;
 	/** Largura do edit */
 	width?: string | undefined;
 	/** Altura do edit */
@@ -138,7 +136,6 @@ export function ArchbaseRichTextEdit<T, ID>({
 	disabled,
 	readOnly,
 	required,
-	placeholder,
 	label,
 	description,
 	error,
@@ -273,13 +270,7 @@ export function ArchbaseRichTextEdit<T, ID>({
 	};
 
 	return (
-		<Input.Wrapper
-			withAsterisk={required}
-			label={label}
-			placeholder={placeholder}
-			description={description}
-			error={internalError}
-		>
+		<Input.Wrapper withAsterisk={required} label={label} description={description} error={internalError}>
 			<SunEditor
 				autoFocus={autoFocus}
 				disable={disabled}

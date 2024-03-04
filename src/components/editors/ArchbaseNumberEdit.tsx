@@ -11,7 +11,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
 /* eslint-disable no-nested-ternary */
-import { __InputProps, CloseButton, MantineSize, TextInput, TextInputProps } from '@mantine/core';
+import { __InputProps, CloseButton, CloseButtonProps, MantineSize, TextInput, TextInputProps } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -110,7 +110,7 @@ export interface ArchbaseNumberEditProps<T, ID>
 	/** Determina se o valor de entrada pode ser limpo, adiciona o botão limpar à seção direita, falso por padrão */
 	clearable?: boolean;
 	/** Adereços adicionados ao botão limpar */
-	clearButtonProps?: React.ComponentPropsWithoutRef<'button'>;
+	clearButtonProps?: CloseButtonProps;
 	/** Fonte de dados onde será atribuido o valor do number edit */
 	dataSource?: ArchbaseDataSource<T, ID>;
 	/** Campo onde deverá ser atribuido o valor do number edit na fonte de dados */

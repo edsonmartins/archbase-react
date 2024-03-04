@@ -38,8 +38,6 @@ export interface ArchbaseChipGroupProps<T, ID, O> {
 	style?: CSSProperties;
 	/** Último erro ocorrido no chip */
 	error?: string;
-	/** Texto sugestão do edit */
-	placeholder?: string;
 	/** Título do edit */
 	label?: string;
 	/** Descrição do edit */
@@ -100,7 +98,6 @@ export function ArchbaseChipGroup<T, ID, O>({
 	style,
 	label,
 	description,
-	placeholder,
 }: ArchbaseChipGroupProps<T, ID, O>) {
 	const [options, _setOptions] = useState<ChipItemProps[]>(
 		buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
@@ -180,7 +177,7 @@ export function ArchbaseChipGroup<T, ID, O>({
 	};
 
 	return (
-		<Input.Wrapper label={label} error={internalError} placeholder={placeholder} description={description}>
+		<Input.Wrapper label={label} error={internalError} description={description}>
 			<Chip.Group
 				defaultValue={selectedValue ? getOptionValue(selectedValue) : defaultValue}
 				value={selectedValue}

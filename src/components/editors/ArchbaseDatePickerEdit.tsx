@@ -12,6 +12,7 @@
 import {
 	__InputProps,
 	CloseButton,
+	CloseButtonProps,
 	Input,
 	InputStylesNames,
 	InputVariant,
@@ -181,7 +182,7 @@ export interface ArchbaseDatePickerEditProps<T, ID>
 	/** Determina se o valor de entrada pode ser limpo, adiciona o botão limpar à seção direita, falso por padrão */
 	clearable?: boolean;
 	/** Adereços adicionados ao botão limpar */
-	clearButtonProps?: React.ComponentPropsWithoutRef<'button'>;
+	clearButtonProps?: CloseButtonProps;
 	/** Determina se o valor de entrada deve ser revertido para o último valor válido conhecido no desfoque, verdadeiro por padrão */
 	fixOnBlur?: boolean;
 	/** Determina se o valor pode ser desmarcado quando o usuário clica na data selecionada no calendário ou apaga o conteúdo da entrada, verdadeiro se prop limpável estiver definido, falso por padrão */
@@ -229,7 +230,7 @@ export interface ArchbaseDatePickerEditProps<T, ID>
 }
 
 export type ArchbaseDatePickerEditFactory = PolymorphicFactory<{
-	props: ArchbaseDatePickerEditProps<T, ID>;
+	props: ArchbaseDatePickerEditProps<any, any>;
 	defaultRef: HTMLInputElement;
 	defaultComponent: 'input';
 	stylesNames: ArchbaseDatePickerEditStylesNames;

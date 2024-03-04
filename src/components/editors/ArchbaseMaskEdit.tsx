@@ -76,7 +76,7 @@ export interface ArchbaseMaskEditProps<T, ID>
 }
 
 export type ArchbaseMaskEditFactory = PolymorphicFactory<{
-	props: ArchbaseMaskEditProps<T, ID>;
+	props: ArchbaseMaskEditProps<any, any>;
 	defaultRef: HTMLInputElement;
 	defaultComponent: 'input';
 	stylesNames: ArchbaseMaskEditStylesNames;

@@ -387,7 +387,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 				zIndex={zIndex}
 				onOptionSubmit={(val) => {
 					handleChange(val);
-					handleSearchChange(getOptionLabel(val));
+					handleSearchChange(getOptionLabel(val as O));
 					combobox.closeDropdown();
 				}}
 			>
