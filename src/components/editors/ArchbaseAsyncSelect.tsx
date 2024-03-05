@@ -351,7 +351,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
         handleDropdownScrollEnded: handleDropdownScrollEnded,
       }}
     >
-      <Input.Wrapper label={label} error={internalError} description={description} placeholder={placeholder}>
+      <Input.Wrapper style={{width}} label={label} error={internalError} description={description} placeholder={placeholder}>
         <Select
           allowDeselect={allowDeselect}
           clearable={clearable}
