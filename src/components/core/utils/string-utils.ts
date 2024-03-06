@@ -402,6 +402,9 @@ export function abbreviate(str) {
 }
 
 export function convertISOStringToDate(isoString: string): Date {
+  if (!isoString || isoString === ''){
+    return undefined
+  }
   const hasTimeInfo = isoString.includes('T')
   if (!hasTimeInfo) {
     isoString += 'T00:00:00' // Adiciona hora padrão '00:00:00' se não houver informação de hora
@@ -410,6 +413,9 @@ export function convertISOStringToDate(isoString: string): Date {
 }
 
 export function convertDateToISOString(date: Date): string {
+  if (!date){
+    return ''
+  }
   return format(date, "yyyy-MM-dd'T'HH:mm:ss")
 }
 

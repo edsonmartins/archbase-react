@@ -393,12 +393,13 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 			>
 				<ComboboxTarget>
 					<InputBase
+						width={width}
 						required={required}
 						leftSection={icon}
 						leftSectionWidth={iconWidth}
 						label={label}
 						description={description}
-						error={error}
+						error={internalError}
 						value={queryValue}
 						onChange={(event) => {
 							if (filteredOptions.length > 0) {

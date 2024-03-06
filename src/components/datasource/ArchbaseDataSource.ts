@@ -1510,9 +1510,23 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 	}
 
 	private emitFieldChangeEvent(fieldName: string, oldValue: any, newValue: any) {
-		const listeners = this.fieldEventListeners[`field:${String(fieldName)}`];
-		if (listeners) {
-			listeners.forEach((listener) => listener(fieldName, oldValue, newValue));
+		// Divida o fieldName em partes baseado no '.' para verificar subcampos
+		const fieldParts = fieldName.split('.');
+
+		// Assegure-se de que partialFieldName é inicializada corretamente antes do uso
+		let partialFieldName = '';
+
+		// Itere sobre as partes para emitir eventos para todos os níveis de campo relevantes
+		for (const part of fieldParts) {
+			// Construa o nome do campo parcial para os níveis relevantes
+			partialFieldName = partialFieldName ? `${partialFieldName}.${part}` : part;
+
+			// Recupere os ouvintes para o nome de campo atual
+			const listeners = this.fieldEventListeners[`field:${partialFieldName}`];
+			if (listeners) {
+				// Se existem ouvintes, notifique-os da mudança
+				listeners.forEach((listener) => listener(partialFieldName, oldValue, newValue));
+			}
 		}
 	}
 }

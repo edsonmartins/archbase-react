@@ -148,7 +148,7 @@ export const ArchbaseImagePickerEditor = memo(
 					...newState,
 					quality: Math.min(configuration.compressInitial || 92, 100),
 					maintainAspectRatio: true,
-					format: 'jpeg',
+					format: newState.format ? newState.format : 'png',
 				};
 				const result = await convertImageUsingCanvas(newState.originImageSrc as string, false, newState, {
 					getDimFromImage: true,
@@ -195,13 +195,27 @@ export const ArchbaseImagePickerEditor = memo(
 
 		function parseToBase64(imageUrl: string): Promise<{ imageUri: string; state: IState }> {
 			let newState = { ...state };
-			const types = imageUrl.split('.');
-			let type = types[types.length - 1];
-			if (type && (type == 'png' || type == 'jpeg' || type == 'webp')) {
-				type = type;
+			let type: string;
+
+			// Verifica se a URL é base64
+			if (imageUrl.startsWith('data:image/')) {
+				// Extrai o tipo do formato 'data:image/png;base64,'
+				const matches = imageUrl.match(/data:image\/([a-zA-Z]+);base64,/);
+				if (matches && matches[1]) {
+					type = matches[1];
+				} else {
+					// Se não houver correspondência, define um tipo padrão
+					type = 'png'; // ou qualquer tipo padrão que você preferir
+				}
 			} else {
-				type = 'jpeg';
+				// Trata a URL como um caminho de arquivo
+				const types = imageUrl.split('.');
+				type = types[types.length - 1];
+				if (!['png', 'jpeg', 'webp'].includes(type)) {
+					type = 'png'; // ou qualquer tipo padrão que você preferir
+				}
 			}
+
 			newState.format = type;
 			if (config.compressInitial != null) {
 				let quality = 1;

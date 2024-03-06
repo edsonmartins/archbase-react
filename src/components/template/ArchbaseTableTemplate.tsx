@@ -29,6 +29,8 @@ export interface UserActionsOptions {
 	labelRemove?: string;
 	labelView?: string;
 	allowRemove: boolean;
+	customUserActions?: ReactNode;
+	customUserActionsPosition?: 'left' | 'right';
 	onAddExecute?: () => void;
 	onEditExecute?: () => void;
 	onRemoveExecute?: () => void;
@@ -316,6 +318,9 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 							<h3 className="only-print">{printTitle || title}</h3>
 							<div className="no-print">
 								<Flex gap="8px" rowGap="8px">
+									{userActions.customUserActions && userActions.customUserActionsPosition === 'left'
+										? userActions.customUserActions
+										: null}
 									{userActions.onAddExecute ? (
 										<Button
 											color={'green'}
@@ -359,6 +364,9 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 											{t('archbase:View')}
 										</Button>
 									) : null}
+									{userActions.customUserActions && userActions.customUserActionsPosition === 'right'
+										? userActions.customUserActions
+										: null}
 								</Flex>
 							</div>
 						</Fragment>
