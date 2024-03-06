@@ -84,7 +84,7 @@
     "get-size": "^3.0.0",
     "i18next": "23.7.6",
     "i18next-browser-languagedetector": "^7.2.0",
-    "inversify": "^6.0.1",
+    "inversify": "6.0.1",
     "inversify-react": "^1.1.0",
     "is-hotkey": "^0.2.0",
     "js-beautify": "^1.14.9",
@@ -236,7 +236,8 @@
   "resolutions": {
     "dayjs": "1.11.10",
     "react-i18next": "13.4.1",
-    "i18next": "23.7.6"
+    "i18next": "23.7.6",
+    "inversify": "6.0.1"
   },
   "engines": {
     "node": ">=16"
