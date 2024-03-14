@@ -1,6 +1,6 @@
-import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
+import { Badge, Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { PedidoStatus } from '../../../demo/data/types';
 import { Pedido, pedidosData, Pessoa, pessoasData } from '../../../demo/index';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
@@ -13,6 +13,47 @@ import { ArchbaseSelectItem } from '../ArchbaseSelectItem';
 
 const pessoasList: Pessoa[] = pessoasData;
 const pedidosList: Pedido[] = pedidosData;
+
+interface RenderStatusPedidoSelectItemProps extends React.ComponentPropsWithoutRef<'div'> {
+	image: string;
+	label: string;
+	description: string;
+	origin: PedidoStatus;
+}
+
+export const RenderStatusPedidoSelectItem = forwardRef<HTMLDivElement, RenderStatusPedidoSelectItemProps>(
+	({ image, label, description, origin, ...others }: RenderStatusPedidoSelectItemProps, ref) => (
+		<div ref={ref} {...others}>
+			<Flex>{buildStatusPlaformaType(origin)}</Flex>
+		</div>
+	),
+);
+
+const buildStatusPlaformaType = (data?: PedidoStatus) => {
+	if (data != undefined) {
+		if (data === 1) {
+			return (
+				<Badge color="green" variant="light">
+					<Text size={'0.8rem'}>{'FATURADO'}</Text>
+				</Badge>
+			);
+		}
+		if (data === 2) {
+			return (
+				<Badge color="red" variant="light">
+					<Text size={'0.8rem'}>{'CANCELADO'}</Text>
+				</Badge>
+			);
+		}
+		if (data === 0) {
+			return (
+				<Badge color="black" variant="light">
+					<Text size={'0.8rem'}>{'PENDENTE'}</Text>
+				</Badge>
+			);
+		}
+	}
+};
 
 const ArchbaseSelectExample = () => {
 	const forceUpdate = useArchbaseForceUpdate();
@@ -58,6 +99,7 @@ const ArchbaseSelectExample = () => {
 							label="Status"
 							dataSource={dataSource}
 							dataField="status"
+							itemComponent={RenderStatusPedidoSelectItem}
 							searchable={false}
 							getOptionLabel={(option: PedidoStatus) => option.toString()}
 							getOptionValue={(option: PedidoStatus) => option}

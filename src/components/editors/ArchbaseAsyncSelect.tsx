@@ -87,7 +87,7 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
 	/** Estado aberto do menu suspenso inicial */
 	initiallyOpened?: boolean;
 	/** Alterar renderizador de item */
-	itemComponent?: ReactElement;
+	itemComponent?: React.FC<any>;
 	/** Chamado quando o menu suspenso é aberto */
 	onDropdownOpen?(): void;
 	/** Chamado quando o menu suspenso é aberto */
@@ -188,7 +188,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	style,
 	width,
 	initiallyOpened,
-	itemComponent,
+	itemComponent: ItemComponent,
 	onDropdownOpen,
 	onDropdownClose,
 	limit,
@@ -442,17 +442,11 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 				<ComboboxDropdown>
 					<Combobox.Options>
 						<CustomSelectScrollArea mah={280}>
-							{itemComponent
-								? filteredOptions.slice(0, limit ? limit : filteredOptions.length).map((option) => {
-										return React.cloneElement(itemComponent, { ...option });
-								  })
-								: filteredOptions.slice(0, limit ? limit : filteredOptions.length).map((option) => {
-										return (
-											<Combobox.Option value={option.value} key={option.key}>
-												{option.label}
-											</Combobox.Option>
-										);
-								  })}
+							{filteredOptions.slice(0, limit ? limit : filteredOptions.length).map((option) => (
+								<Combobox.Option value={option.value} key={option.key}>
+									{ItemComponent ? <ItemComponent {...option} /> : option.label}
+								</Combobox.Option>
+							))}
 						</CustomSelectScrollArea>
 					</Combobox.Options>
 				</ComboboxDropdown>

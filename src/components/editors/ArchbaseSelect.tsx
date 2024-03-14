@@ -1,8 +1,6 @@
 import {
 	Combobox,
 	ComboboxDropdown,
-	ComboboxItem,
-	ComboboxItemGroup,
 	ComboboxTarget,
 	FloatingPosition,
 	Input,
@@ -13,21 +11,12 @@ import {
 } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
 import { uniqueId } from 'lodash';
-import React, {
-	CSSProperties,
-	FocusEventHandler,
-	ReactElement,
-	ReactNode,
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from 'react';
+import React, { CSSProperties, FocusEventHandler, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
 import { CustomSelectScrollArea } from './ArchbaseAsyncSelect';
 import { ArchbaseSelectProvider } from './ArchbaseSelect.context';
+import { ArchbaseSelectItemProps } from './ArchbaseSelectItem';
 
 export interface ArchbaseSelectProps<T, ID, O> {
 	/** Permite ou não delecionar um item */
@@ -71,7 +60,7 @@ export interface ArchbaseSelectProps<T, ID, O> {
 	/** Estado aberto do menu suspenso inicial */
 	initiallyOpened?: boolean;
 	/** Alterar renderizador de item */
-	itemComponent?: ReactElement;
+	itemComponent?: React.FC<any>;
 	/** Largura do select */
 	width?: number | string | undefined;
 	/** Chamado quando o menu suspenso é aberto */
@@ -105,13 +94,13 @@ export interface ArchbaseSelectProps<T, ID, O> {
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	/** Selecione os dados usados ​​para renderizar itens no menu suspenso */
-	options?: Array<string | ComboboxItem | ComboboxItemGroup> | ArchbaseDataSource<any, any>;
+	options?: O[] | ArchbaseSelectItemProps<O>[] | ArchbaseDataSource<any, any>;
 	optionsLabelField?: string;
 	customGetDataSourceFieldValue?: () => any;
 	customSetDataSourceFieldValue?: (value: any) => void;
 }
 function buildOptions<O>(
-	options?: Array<string | ComboboxItem | ComboboxItemGroup> | ArchbaseDataSource<any, any>,
+	options?: O[] | ArchbaseSelectItemProps<O>[] | ArchbaseDataSource<any, any>,
 	initialOptions?: O[],
 	children?: ReactNode | ReactNode[] | undefined,
 	getOptionLabel?: (option: O) => ReactNode,
@@ -137,8 +126,15 @@ function buildOptions<O>(
 		ds.first();
 		return result;
 	}
-	if (options) {
-		return options;
+	if (options && !(options instanceof ArchbaseDataSource)) {
+		return options.map((item) => {
+			return {
+				label: item.label ? item.label : getOptionLabel!(item),
+				value: item.value ? item.value : getOptionValue!(item),
+				origin: item.origin ? item.origin : item,
+				key: uniqueId('select'),
+			};
+		});
 	}
 	if (children) {
 		return React.Children.toArray(children).map((item: any) => {
@@ -189,7 +185,7 @@ export function ArchbaseSelect<T, ID, O>({
 	filter,
 	size,
 	initiallyOpened,
-	itemComponent,
+	itemComponent: ItemComponent,
 	onDropdownOpen,
 	onDropdownClose,
 	limit,
@@ -205,7 +201,6 @@ export function ArchbaseSelect<T, ID, O>({
 	const combobox = useCombobox({
 		onDropdownClose: () => combobox.resetSelectedOption(),
 	});
-	const innerComponentRef = innerRef || useRef<any>();
 	const [selectedValue, setSelectedValue] = useState<any>(value);
 	const [queryValue, setQueryValue] = useDebouncedState('', debounceTime);
 	const [internalError, setInternalError] = useState<string | undefined>(error);
@@ -379,13 +374,9 @@ export function ArchbaseSelect<T, ID, O>({
 						multiline
 					>
 						{selectedValue ? (
-							itemComponent ? (
-								React.cloneElement(itemComponent, { ...currentOption() })
-							) : (
-								<Combobox.Option value={currentOption().value} key={currentOption().key}>
-									{currentOption().label}
-								</Combobox.Option>
-							)
+							<Combobox.Option value={currentOption().value} key={currentOption().key}>
+								{ItemComponent ? <ItemComponent {...currentOption()} /> : currentOption().label}
+							</Combobox.Option>
 						) : (
 							<Input.Placeholder>{placeholder}</Input.Placeholder>
 						)}
@@ -394,17 +385,13 @@ export function ArchbaseSelect<T, ID, O>({
 				<ComboboxDropdown>
 					<Combobox.Options>
 						<CustomSelectScrollArea mah={280}>
-							{itemComponent
-								? currentOptions.map((option) => {
-										return React.cloneElement(itemComponent, { ...option });
-								  })
-								: currentOptions.map((option) => {
-										return (
-											<Combobox.Option value={option.value} key={option.key}>
-												{option.label}
-											</Combobox.Option>
-										);
-								  })}
+							{currentOptions.map((option) => {
+								return (
+									<Combobox.Option value={option.value} key={option.key}>
+										{ItemComponent ? <ItemComponent {...option} /> : option.label}
+									</Combobox.Option>
+								);
+							})}
 						</CustomSelectScrollArea>
 					</Combobox.Options>
 				</ComboboxDropdown>
