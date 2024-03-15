@@ -1,4 +1,9 @@
 import "reflect-metadata";
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
+import '@mantine/spotlight/styles.css';
+import 'mantine-react-table/styles.css';
 import { useDarkMode } from 'storybook-dark-mode';
 import { Preview } from '@storybook/react';
 import { MantineThemeOverride } from '@mantine/core';

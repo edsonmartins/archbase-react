@@ -1,10 +1,6 @@
 import { localStorageColorSchemeManager, MantineProvider, MantineThemeOverride } from '@mantine/core';
-import '@mantine/core/styles.css';
 import { DatesProvider } from '@mantine/dates';
-import '@mantine/dates/styles.css';
 import { Notifications } from '@mantine/notifications';
-import '@mantine/notifications/styles.css';
-import '@mantine/spotlight/styles.css';
 import { enUS, es, ptBR } from 'date-fns/locale';
 import setDefaultOptions from 'date-fns/setDefaultOptions';
 import dayjs from 'dayjs';
@@ -12,7 +8,6 @@ import i18next, { i18n, ResourceLanguage } from 'i18next';
 import { Resource, t } from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { Provider as IOCProvider } from 'inversify-react';
-import 'mantine-react-table/styles.css';
 import React, { Suspense, useLayoutEffect, useState } from 'react';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import '../../locales/config';
