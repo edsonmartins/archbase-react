@@ -1,7 +1,7 @@
 import { emit, useArchbaseAppContext } from '@components/core';
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseDataTable, ToolBarActions } from '@components/datatable';
-import { useArchbaseElementSizeArea, useArchbaseTheme } from '@components/hooks';
+import { useArchbaseTheme } from '@components/hooks';
 import { ArchbaseAlert } from '@components/notification';
 import { AlertVariant, Button, ButtonVariant, Flex, Paper, useMantineColorScheme } from '@mantine/core';
 import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
@@ -128,7 +128,6 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	const table = useRef<any>();
 	const theme = useArchbaseTheme();
 	const { colorScheme } = useMantineColorScheme();
-	const [innerComponentRef, { width: containerWidth, height: containerHeight }] = useArchbaseElementSizeArea();
 	const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
 		activeFilterIndex: -1,
 		currentFilter: undefined,
@@ -271,11 +270,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	};
 
 	return (
-		<Paper
-			withBorder={withBorder}
-			ref={innerRef || innerComponentRef}
-			style={{ overflow: 'none', height: 'calc(100% - 4px)' }}
-		>
+		<Paper withBorder={withBorder} ref={innerRef} style={{ overflow: 'none', height: 'calc(100% - 4px)' }}>
 			{isError ? (
 				<ArchbaseAlert
 					autoClose={20000}
@@ -293,8 +288,8 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 			<ArchbaseDataTable<T, ID>
 				printTitle={printTitle || title}
 				logoPrint={logoPrint}
-				width={containerWidth + ''}
-				height={containerHeight + ''}
+				width={width}
+				height={height}
 				withBorder={withBorder}
 				dataSource={dataSource}
 				withColumnBorders={true}
