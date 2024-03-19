@@ -28,8 +28,7 @@ export function buildNavbar(
 					overflowY: 'hidden',
 					left: 0,
 					right: 0,
-					top: isHidden ? 0 : 'var(--app-shell-header-offset, 0px)',
-					height: 'calc(100vh - 500px)',
+					height: isHidden ? menuHeight : `${px(menuHeight)}px`,
 				},
 			}}
 			collapsed={collapsed}
