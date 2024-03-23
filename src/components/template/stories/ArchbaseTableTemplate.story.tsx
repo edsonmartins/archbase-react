@@ -280,6 +280,10 @@ export const ArchbaseTableTemplateExample = () => {
 					columns={columns}
 					userRowActions={{
 						actions: ArchbaseTableRowActions<Pessoa>,
+						onAddRow: () => {},
+						onEditRow: () => {},
+						onRemoveRow: () => {},
+						onViewRow: () => {},
 					}}
 					filterType="advanced"
 					filterPersistenceDelegator={dsFilters as ArchbaseQueryFilterDelegator}

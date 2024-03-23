@@ -1424,13 +1424,13 @@ export function ArchbaseTableRowActions<T extends Object>({
 }: ArchbaseTableRowActionsProps<T>) {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
-
+	console.log(variant);
 	return (
 		<Box style={{ display: 'flex' }}>
 			{onEditRow ? (
 				<Tooltip withinPortal withArrow position="left" label={t('Edit')}>
 					<ActionIcon
-						variant={variant === 'filled' ? 'white' : variant}
+						variant={variant === 'filled' ? 'transparent' : variant}
 						color="green"
 						onClick={() => onEditRow && onEditRow(row)}
 					>
@@ -1441,7 +1441,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 			{onRemoveRow ? (
 				<Tooltip withinPortal withArrow position="right" label={t('Remove')}>
 					<ActionIcon
-						variant={variant === 'filled' ? 'white' : variant}
+						variant={variant === 'filled' ? 'transparent' : variant}
 						color="red"
 						onClick={() => onRemoveRow && onRemoveRow(row)}
 					>
@@ -1452,7 +1452,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 			{onViewRow ? (
 				<Tooltip withinPortal withArrow position="right" label={t('View')}>
 					<ActionIcon
-						variant={variant === 'filled' ? 'white' : variant}
+						variant={variant === 'filled' ? 'transparent' : variant}
 						color="black"
 						onClick={() => onViewRow && onViewRow(row)}
 					>
