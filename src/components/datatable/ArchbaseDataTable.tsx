@@ -600,7 +600,7 @@ export const CustomToggleGlobalFilterButton = <TData extends Record<string, any>
 			<ActionIcon
 				variant={variant}
 				size="lg"
-				color="primary"
+				color="var(--mantine-primary-color-filled)"
 				style={{ width: '36px', height: '36px', marginRight: 2 }}
 				aria-label={rest?.title ?? localization.showHideSearch}
 				disabled={!!globalFilter}
@@ -638,7 +638,7 @@ export const CustomToggleFiltersButton = <TData extends Record<string, any> = {}
 			<ActionIcon
 				variant={variant}
 				size="lg"
-				color="primary"
+				color="var(--mantine-primary-color-filled)"
 				style={{ width: '36px', height: '36px', marginRight: 2 }}
 				onClick={handleToggleShowFilters}
 				{...rest}
@@ -668,7 +668,7 @@ export const CustomShowHideColumnsButton = <TData extends Record<string, any> = 
 				<Menu.Target>
 					<ActionIcon
 						variant={variant}
-						color="primary"
+						color="var(--mantine-primary-color-filled)"
 						style={{ width: '36px', height: '36px', marginRight: 2 }}
 						aria-label={localization.showHideColumns}
 						size="lg"
@@ -1088,7 +1088,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 					<ActionIcon
 						variant={props.variant}
 						size="lg"
-						color="primary"
+						color="var(--mantine-primary-color-filled)"
 						style={{ width: '36px', height: '36px', marginRight: 2 }}
 						onClick={handleRefresh}
 					>
@@ -1103,7 +1103,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 							<ActionIcon
 								variant={props.variant}
 								size="lg"
-								color="primary"
+								color="var(--mantine-primary-color-filled)"
 								style={{ width: '36px', height: '36px', marginRight: 2 }}
 							>
 								<IconDownload size="1.4rem" />
@@ -1129,7 +1129,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 					<ActionIcon
 						variant={props.variant}
 						size="lg"
-						color="primary"
+						color="var(--mantine-primary-color-filled)"
 						style={{ width: '36px', height: '36px', marginRight: 2 }}
 						onClick={(event) => handlePrint(table)}
 					>

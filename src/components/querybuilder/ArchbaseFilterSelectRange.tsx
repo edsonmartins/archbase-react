@@ -80,7 +80,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 							<ActionIcon
 								variant={this.props.variant}
 								size="lg"
-								color="primary"
+								color="var(--mantine-primary-color-filled)"
 								onClick={() => this.setState({ ...this.state, selectRangeType: 'range' })}
 								style={{ width: '36px', height: '36px', marginRight: 2 }}
 							>
@@ -91,7 +91,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 							<ActionIcon
 								variant={this.props.variant}
 								size="lg"
-								color="primary"
+								color="var(--mantine-primary-color-filled)"
 								onClick={() => this.setState({ ...this.state, selectRangeType: 'month' })}
 								style={{ width: '36px', height: '36px', marginRight: 2 }}
 							>
@@ -102,7 +102,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 							<ActionIcon
 								variant={this.props.variant}
 								size="lg"
-								color="primary"
+								color="var(--mantine-primary-color-filled)"
 								onClick={() => this.setState({ ...this.state, selectRangeType: 'week' })}
 								style={{ width: '36px', height: '36px', marginRight: 2 }}
 							>
@@ -113,7 +113,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 							<ActionIcon
 								variant={this.props.variant}
 								size="lg"
-								color="primary"
+								color="var(--mantine-primary-color-filled)"
 								onClick={() => this.setState({ ...this.state, selectRangeType: 'day' })}
 								style={{ width: '36px', height: '36px', marginRight: 2 }}
 							>

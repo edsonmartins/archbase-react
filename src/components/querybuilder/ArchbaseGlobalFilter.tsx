@@ -99,7 +99,7 @@ export function ArchbaseGlobalFilter({
 			<Space w={spacing} />
 			<Tooltip withinPortal withArrow label={`${t('archbase:Refresh')}`}>
 				<ActionIcon
-					color="primary"
+					color="var(--mantine-primary-color-filled)"
 					onClick={() => handleRefresh(lastBuildedSearch, lastValueSearch)}
 					style={{ height: '36px', width: '36px' }}
 					{...buttonRefreshProps}
@@ -110,7 +110,7 @@ export function ArchbaseGlobalFilter({
 			<Space w={spacing} />
 			<Tooltip withinPortal withArrow label={`${t('archbase:ClearFilter')}`}>
 				<ActionIcon
-					color="primary"
+					color="var(--mantine-primary-color-filled)"
 					onClick={() => handleRefresh('', '')}
 					style={{ height: '36px', width: '36px' }}
 					{...buttonClearProps}
