@@ -108,7 +108,6 @@ function onRenderCallback(
 	baseDuration, // Tempo em milissegundos estimado para renderização sem memoização
 	startTime, // Timestamp quando a renderização começou
 	commitTime, // Timestamp quando a renderização foi confirmada
-	interactions, // Conjunto de interações do usuário relacionadas a esta renderização
 ) {
 	console.log(`Render de "${id}" na fase "${phase}": ${actualDuration}ms`);
 }
