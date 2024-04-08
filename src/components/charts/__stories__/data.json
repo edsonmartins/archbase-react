@@ -1,0 +1,1812 @@
+[
+    {
+        "task": "agendamentoClienteRoute",
+        "startTime": "2024-04-01T20:05:15.485Z",
+        "endTime": "2024-04-01T20:05:16.539Z"
+    },
+    {
+        "task": "agendamentoClienteRoute",
+        "startTime": "2024-04-01T20:06:15.485Z",
+        "endTime": "2024-04-01T20:06:16.552Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:01.842Z",
+        "endTime": "2024-04-01T20:05:02.545Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:07.712Z",
+        "endTime": "2024-04-01T20:05:08.454Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:13.653Z",
+        "endTime": "2024-04-01T20:05:14.413Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:19.585Z",
+        "endTime": "2024-04-01T20:05:20.245Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:25.408Z",
+        "endTime": "2024-04-01T20:05:26.091Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:30.890Z",
+        "endTime": "2024-04-01T20:05:31.530Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:36.516Z",
+        "endTime": "2024-04-01T20:05:37.216Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:42.194Z",
+        "endTime": "2024-04-01T20:05:42.753Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:47.497Z",
+        "endTime": "2024-04-01T20:05:48.155Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:53.363Z",
+        "endTime": "2024-04-01T20:05:54.083Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:05:59.111Z",
+        "endTime": "2024-04-01T20:05:59.736Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:06:05.010Z",
+        "endTime": "2024-04-01T20:06:05.648Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:06:10.276Z",
+        "endTime": "2024-04-01T20:06:10.936Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:06:15.643Z",
+        "endTime": "2024-04-01T20:06:16.625Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:06:21.502Z",
+        "endTime": "2024-04-01T20:06:22.227Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:06:27.355Z",
+        "endTime": "2024-04-01T20:06:27.942Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:06:33.311Z",
+        "endTime": "2024-04-01T20:06:34.051Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:06:39.087Z",
+        "endTime": "2024-04-01T20:06:39.724Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:06:44.857Z",
+        "endTime": "2024-04-01T20:06:45.484Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:06:50.481Z",
+        "endTime": "2024-04-01T20:06:51.115Z"
+    },
+    {
+        "task": "buscarNotaFiscal1",
+        "startTime": "2024-04-01T20:06:56.665Z",
+        "endTime": "2024-04-01T20:06:57.273Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:02.208Z",
+        "endTime": "2024-04-01T20:05:02.813Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:07.975Z",
+        "endTime": "2024-04-01T20:05:08.753Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:13.840Z",
+        "endTime": "2024-04-01T20:05:14.506Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:19.675Z",
+        "endTime": "2024-04-01T20:05:20.396Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:25.368Z",
+        "endTime": "2024-04-01T20:05:26.059Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:31.212Z",
+        "endTime": "2024-04-01T20:05:31.824Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:36.712Z",
+        "endTime": "2024-04-01T20:05:37.461Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:42.072Z",
+        "endTime": "2024-04-01T20:05:42.793Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:47.576Z",
+        "endTime": "2024-04-01T20:05:48.312Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:53.476Z",
+        "endTime": "2024-04-01T20:05:54.160Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:05:59.333Z",
+        "endTime": "2024-04-01T20:05:59.965Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:06:05.231Z",
+        "endTime": "2024-04-01T20:06:05.947Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:06:10.761Z",
+        "endTime": "2024-04-01T20:06:11.431Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:06:16.221Z",
+        "endTime": "2024-04-01T20:06:16.974Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:06:21.699Z",
+        "endTime": "2024-04-01T20:06:22.419Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:06:27.137Z",
+        "endTime": "2024-04-01T20:06:27.870Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:06:33.025Z",
+        "endTime": "2024-04-01T20:06:33.738Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:06:38.948Z",
+        "endTime": "2024-04-01T20:06:39.688Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:06:44.525Z",
+        "endTime": "2024-04-01T20:06:45.170Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:06:50.646Z",
+        "endTime": "2024-04-01T20:06:51.406Z"
+    },
+    {
+        "task": "buscarNotaFiscal2",
+        "startTime": "2024-04-01T20:06:56.685Z",
+        "endTime": "2024-04-01T20:06:57.281Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:05:03.753Z",
+        "endTime": "2024-04-01T20:05:04.347Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:05:09.547Z",
+        "endTime": "2024-04-01T20:05:10.189Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:05:15.322Z",
+        "endTime": "2024-04-01T20:05:16.034Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:05:20.962Z",
+        "endTime": "2024-04-01T20:05:21.702Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:05:26.815Z",
+        "endTime": "2024-04-01T20:05:27.393Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:05:32.254Z",
+        "endTime": "2024-04-01T20:05:32.969Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:05:37.999Z",
+        "endTime": "2024-04-01T20:05:38.731Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:05:43.379Z",
+        "endTime": "2024-04-01T20:05:43.929Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:05:49.042Z",
+        "endTime": "2024-04-01T20:05:49.682Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:05:55.035Z",
+        "endTime": "2024-04-01T20:05:55.770Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:01.026Z",
+        "endTime": "2024-04-01T20:06:01.791Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:06.955Z",
+        "endTime": "2024-04-01T20:06:07.620Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:12.254Z",
+        "endTime": "2024-04-01T20:06:12.834Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:17.638Z",
+        "endTime": "2024-04-01T20:06:18.283Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:23.202Z",
+        "endTime": "2024-04-01T20:06:23.825Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:28.906Z",
+        "endTime": "2024-04-01T20:06:29.661Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:34.534Z",
+        "endTime": "2024-04-01T20:06:35.211Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:40.165Z",
+        "endTime": "2024-04-01T20:06:40.852Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:45.489Z",
+        "endTime": "2024-04-01T20:06:46.085Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:51.162Z",
+        "endTime": "2024-04-01T20:06:51.882Z"
+    },
+    {
+        "task": "buscarNotaFiscal3",
+        "startTime": "2024-04-01T20:06:57.096Z",
+        "endTime": "2024-04-01T20:06:57.763Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:05:04.481Z",
+        "endTime": "2024-04-01T20:05:05.206Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:05:10.495Z",
+        "endTime": "2024-04-01T20:05:11.153Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:05:15.997Z",
+        "endTime": "2024-04-01T20:05:16.683Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:05:21.659Z",
+        "endTime": "2024-04-01T20:05:22.456Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:05:27.541Z",
+        "endTime": "2024-04-01T20:05:28.236Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:05:33.264Z",
+        "endTime": "2024-04-01T20:05:33.942Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:05:38.739Z",
+        "endTime": "2024-04-01T20:05:39.293Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:05:43.983Z",
+        "endTime": "2024-04-01T20:05:44.697Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:05:50.041Z",
+        "endTime": "2024-04-01T20:05:50.756Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:05:56.147Z",
+        "endTime": "2024-04-01T20:05:56.839Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:06:02.036Z",
+        "endTime": "2024-04-01T20:06:02.747Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:06:07.845Z",
+        "endTime": "2024-04-01T20:06:08.421Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:06:13.049Z",
+        "endTime": "2024-04-01T20:06:13.688Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:06:18.925Z",
+        "endTime": "2024-04-01T20:06:19.528Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:06:24.561Z",
+        "endTime": "2024-04-01T20:06:25.311Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:06:30.581Z",
+        "endTime": "2024-04-01T20:06:31.219Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:06:36.534Z",
+        "endTime": "2024-04-01T20:06:37.330Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:06:42.473Z",
+        "endTime": "2024-04-01T20:06:43.118Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:06:47.964Z",
+        "endTime": "2024-04-01T20:06:48.645Z"
+    },
+    {
+        "task": "buscarNotaFiscal4",
+        "startTime": "2024-04-01T20:06:54.152Z",
+        "endTime": "2024-04-01T20:06:54.866Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:00.407Z",
+        "endTime": "2024-04-01T20:05:01.143Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:06.361Z",
+        "endTime": "2024-04-01T20:05:07.106Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:12.288Z",
+        "endTime": "2024-04-01T20:05:12.983Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:18.402Z",
+        "endTime": "2024-04-01T20:05:18.980Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:24.079Z",
+        "endTime": "2024-04-01T20:05:24.820Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:29.574Z",
+        "endTime": "2024-04-01T20:05:30.176Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:35.140Z",
+        "endTime": "2024-04-01T20:05:35.899Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:40.938Z",
+        "endTime": "2024-04-01T20:05:41.599Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:46.124Z",
+        "endTime": "2024-04-01T20:05:46.776Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:51.899Z",
+        "endTime": "2024-04-01T20:05:52.743Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:05:57.824Z",
+        "endTime": "2024-04-01T20:05:58.520Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:06:03.631Z",
+        "endTime": "2024-04-01T20:06:04.362Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:06:08.977Z",
+        "endTime": "2024-04-01T20:06:09.651Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:06:14.444Z",
+        "endTime": "2024-04-01T20:06:15.041Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:06:20.278Z",
+        "endTime": "2024-04-01T20:06:20.863Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:06:25.958Z",
+        "endTime": "2024-04-01T20:06:26.664Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:06:31.895Z",
+        "endTime": "2024-04-01T20:06:32.569Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:06:37.732Z",
+        "endTime": "2024-04-01T20:06:38.419Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:06:43.490Z",
+        "endTime": "2024-04-01T20:06:44.222Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:06:49.082Z",
+        "endTime": "2024-04-01T20:06:49.785Z"
+    },
+    {
+        "task": "consumidorNotaFiscal1",
+        "startTime": "2024-04-01T20:06:54.882Z",
+        "endTime": "2024-04-01T20:06:55.612Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:00.886Z",
+        "endTime": "2024-04-01T20:05:01.587Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:06.527Z",
+        "endTime": "2024-04-01T20:05:07.201Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:12.506Z",
+        "endTime": "2024-04-01T20:05:13.136Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:18.246Z",
+        "endTime": "2024-04-01T20:05:18.895Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:24.062Z",
+        "endTime": "2024-04-01T20:05:24.759Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:29.760Z",
+        "endTime": "2024-04-01T20:05:30.484Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:35.455Z",
+        "endTime": "2024-04-01T20:05:36.018Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:40.845Z",
+        "endTime": "2024-04-01T20:05:41.437Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:46.320Z",
+        "endTime": "2024-04-01T20:05:46.993Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:51.829Z",
+        "endTime": "2024-04-01T20:05:52.744Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:05:57.893Z",
+        "endTime": "2024-04-01T20:05:58.598Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:06:03.878Z",
+        "endTime": "2024-04-01T20:06:04.578Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:06:09.427Z",
+        "endTime": "2024-04-01T20:06:10.154Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:06:14.598Z",
+        "endTime": "2024-04-01T20:06:15.255Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:06:20.472Z",
+        "endTime": "2024-04-01T20:06:21.043Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:06:25.617Z",
+        "endTime": "2024-04-01T20:06:26.313Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:06:31.717Z",
+        "endTime": "2024-04-01T20:06:32.295Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:06:37.476Z",
+        "endTime": "2024-04-01T20:06:38.206Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:06:43.347Z",
+        "endTime": "2024-04-01T20:06:43.943Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:06:49.260Z",
+        "endTime": "2024-04-01T20:06:49.993Z"
+    },
+    {
+        "task": "consumidorNotaFiscal2",
+        "startTime": "2024-04-01T20:06:55.175Z",
+        "endTime": "2024-04-01T20:06:55.930Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:02.334Z",
+        "endTime": "2024-04-01T20:05:03.058Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:07.970Z",
+        "endTime": "2024-04-01T20:05:08.733Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:13.986Z",
+        "endTime": "2024-04-01T20:05:14.704Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:19.675Z",
+        "endTime": "2024-04-01T20:05:20.312Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:25.425Z",
+        "endTime": "2024-04-01T20:05:26.167Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:31.001Z",
+        "endTime": "2024-04-01T20:05:31.656Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:36.593Z",
+        "endTime": "2024-04-01T20:05:37.258Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:41.980Z",
+        "endTime": "2024-04-01T20:05:42.683Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:47.607Z",
+        "endTime": "2024-04-01T20:05:48.337Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:53.662Z",
+        "endTime": "2024-04-01T20:05:54.287Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:05:59.525Z",
+        "endTime": "2024-04-01T20:06:00.249Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:06:05.485Z",
+        "endTime": "2024-04-01T20:06:06.233Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:06:11.061Z",
+        "endTime": "2024-04-01T20:06:11.666Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:06:16.217Z",
+        "endTime": "2024-04-01T20:06:16.946Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:06:21.773Z",
+        "endTime": "2024-04-01T20:06:22.496Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:06:27.395Z",
+        "endTime": "2024-04-01T20:06:28.156Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:06:33.047Z",
+        "endTime": "2024-04-01T20:06:33.804Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:06:38.777Z",
+        "endTime": "2024-04-01T20:06:39.506Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:06:44.260Z",
+        "endTime": "2024-04-01T20:06:44.894Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:06:49.857Z",
+        "endTime": "2024-04-01T20:06:50.524Z"
+    },
+    {
+        "task": "consumidorNotaFiscal3",
+        "startTime": "2024-04-01T20:06:55.553Z",
+        "endTime": "2024-04-01T20:06:56.413Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:05:03.006Z",
+        "endTime": "2024-04-01T20:05:03.734Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:05:08.954Z",
+        "endTime": "2024-04-01T20:05:09.735Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:05:14.686Z",
+        "endTime": "2024-04-01T20:05:15.280Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:05:20.334Z",
+        "endTime": "2024-04-01T20:05:21.061Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:05:26.078Z",
+        "endTime": "2024-04-01T20:05:26.778Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:05:31.895Z",
+        "endTime": "2024-04-01T20:05:32.587Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:05:37.417Z",
+        "endTime": "2024-04-01T20:05:38.132Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:05:42.501Z",
+        "endTime": "2024-04-01T20:05:43.234Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:05:48.556Z",
+        "endTime": "2024-04-01T20:05:49.298Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:05:54.714Z",
+        "endTime": "2024-04-01T20:05:55.410Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:00.435Z",
+        "endTime": "2024-04-01T20:06:01.240Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:06.431Z",
+        "endTime": "2024-04-01T20:06:07.172Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:11.695Z",
+        "endTime": "2024-04-01T20:06:12.414Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:17.505Z",
+        "endTime": "2024-04-01T20:06:18.283Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:23.277Z",
+        "endTime": "2024-04-01T20:06:23.958Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:29.131Z",
+        "endTime": "2024-04-01T20:06:29.881Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:35.077Z",
+        "endTime": "2024-04-01T20:06:35.793Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:41.048Z",
+        "endTime": "2024-04-01T20:06:41.748Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:46.451Z",
+        "endTime": "2024-04-01T20:06:47.199Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:52.343Z",
+        "endTime": "2024-04-01T20:06:53.091Z"
+    },
+    {
+        "task": "consumidorNotaFiscal4",
+        "startTime": "2024-04-01T20:06:58.649Z",
+        "endTime": "2024-04-01T20:06:59.363Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:00.656Z",
+        "endTime": "2024-04-01T20:05:01.379Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:02.164Z",
+        "endTime": "2024-04-01T20:05:02.892Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:03.619Z",
+        "endTime": "2024-04-01T20:05:04.346Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:05.057Z",
+        "endTime": "2024-04-01T20:05:05.757Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:06.427Z",
+        "endTime": "2024-04-01T20:05:07.161Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:07.922Z",
+        "endTime": "2024-04-01T20:05:08.697Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:53.661Z",
+        "endTime": "2024-04-01T20:05:54.409Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:55.133Z",
+        "endTime": "2024-04-01T20:05:55.899Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:56.585Z",
+        "endTime": "2024-04-01T20:05:57.261Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:58.004Z",
+        "endTime": "2024-04-01T20:05:58.738Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:05:59.324Z",
+        "endTime": "2024-04-01T20:05:59.905Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:06:00.604Z",
+        "endTime": "2024-04-01T20:06:01.411Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:06:02.217Z",
+        "endTime": "2024-04-01T20:06:02.943Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:06:03.736Z",
+        "endTime": "2024-04-01T20:06:04.413Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:06:05.153Z",
+        "endTime": "2024-04-01T20:06:05.785Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:06:06.592Z",
+        "endTime": "2024-04-01T20:06:07.311Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:06:07.979Z",
+        "endTime": "2024-04-01T20:06:08.604Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:06:55.179Z",
+        "endTime": "2024-04-01T20:06:55.931Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:06:56.712Z",
+        "endTime": "2024-04-01T20:06:57.449Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:06:58.166Z",
+        "endTime": "2024-04-01T20:06:58.795Z"
+    },
+    {
+        "task": "consumidorNotaFiscal5",
+        "startTime": "2024-04-01T20:06:59.531Z",
+        "endTime": "2024-04-01T20:07:00.121Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:05:04.800Z",
+        "endTime": "2024-04-01T20:05:05.588Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:05:10.786Z",
+        "endTime": "2024-04-01T20:05:11.634Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:05:16.730Z",
+        "endTime": "2024-04-01T20:05:17.694Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:05:22.450Z",
+        "endTime": "2024-04-01T20:05:23.318Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:05:28.165Z",
+        "endTime": "2024-04-01T20:05:28.928Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:05:33.647Z",
+        "endTime": "2024-04-01T20:05:34.458Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:05:39.410Z",
+        "endTime": "2024-04-01T20:05:40.262Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:05:44.656Z",
+        "endTime": "2024-04-01T20:05:45.540Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:05:50.214Z",
+        "endTime": "2024-04-01T20:05:51.188Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:05:56.392Z",
+        "endTime": "2024-04-01T20:05:57.133Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:02.005Z",
+        "endTime": "2024-04-01T20:06:02.882Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:07.560Z",
+        "endTime": "2024-04-01T20:06:08.340Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:12.978Z",
+        "endTime": "2024-04-01T20:06:13.731Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:18.742Z",
+        "endTime": "2024-04-01T20:06:19.572Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:24.448Z",
+        "endTime": "2024-04-01T20:06:25.188Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:30.262Z",
+        "endTime": "2024-04-01T20:06:31.128Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:36.094Z",
+        "endTime": "2024-04-01T20:06:36.971Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:41.795Z",
+        "endTime": "2024-04-01T20:06:42.744Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:47.485Z",
+        "endTime": "2024-04-01T20:06:48.436Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:53.175Z",
+        "endTime": "2024-04-01T20:06:54.284Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox1",
+        "startTime": "2024-04-01T20:06:59.437Z",
+        "endTime": "2024-04-01T20:07:00.293Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:05:04.993Z",
+        "endTime": "2024-04-01T20:05:05.742Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:05:11.037Z",
+        "endTime": "2024-04-01T20:05:11.866Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:05:16.714Z",
+        "endTime": "2024-04-01T20:05:17.650Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:05:22.305Z",
+        "endTime": "2024-04-01T20:05:23.262Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:05:28.238Z",
+        "endTime": "2024-04-01T20:05:29.006Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:05:33.978Z",
+        "endTime": "2024-04-01T20:05:34.731Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:05:39.456Z",
+        "endTime": "2024-04-01T20:05:40.171Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:05:44.740Z",
+        "endTime": "2024-04-01T20:05:45.595Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:05:50.252Z",
+        "endTime": "2024-04-01T20:05:51.108Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:05:56.328Z",
+        "endTime": "2024-04-01T20:05:57.164Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:02.314Z",
+        "endTime": "2024-04-01T20:06:03.124Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:07.966Z",
+        "endTime": "2024-04-01T20:06:08.788Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:13.296Z",
+        "endTime": "2024-04-01T20:06:14.005Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:19.064Z",
+        "endTime": "2024-04-01T20:06:19.783Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:24.299Z",
+        "endTime": "2024-04-01T20:06:25.002Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:30.102Z",
+        "endTime": "2024-04-01T20:06:30.981Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:35.891Z",
+        "endTime": "2024-04-01T20:06:36.836Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:41.901Z",
+        "endTime": "2024-04-01T20:06:42.695Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:47.378Z",
+        "endTime": "2024-04-01T20:06:48.492Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:53.481Z",
+        "endTime": "2024-04-01T20:06:54.437Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox2",
+        "startTime": "2024-04-01T20:06:59.284Z",
+        "endTime": "2024-04-01T20:07:00.119Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:00.872Z",
+        "endTime": "2024-04-01T20:05:01.628Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:06.448Z",
+        "endTime": "2024-04-01T20:05:07.325Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:12.438Z",
+        "endTime": "2024-04-01T20:05:13.244Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:18.165Z",
+        "endTime": "2024-04-01T20:05:18.922Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:23.708Z",
+        "endTime": "2024-04-01T20:05:24.629Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:29.468Z",
+        "endTime": "2024-04-01T20:05:30.253Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:35.150Z",
+        "endTime": "2024-04-01T20:05:35.985Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:40.569Z",
+        "endTime": "2024-04-01T20:05:41.321Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:45.987Z",
+        "endTime": "2024-04-01T20:05:46.876Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:51.727Z",
+        "endTime": "2024-04-01T20:05:52.860Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:05:57.971Z",
+        "endTime": "2024-04-01T20:05:58.836Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:04.031Z",
+        "endTime": "2024-04-01T20:06:04.786Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:09.618Z",
+        "endTime": "2024-04-01T20:06:10.443Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:14.567Z",
+        "endTime": "2024-04-01T20:06:15.343Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:20.234Z",
+        "endTime": "2024-04-01T20:06:21.013Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:25.832Z",
+        "endTime": "2024-04-01T20:06:26.650Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:31.458Z",
+        "endTime": "2024-04-01T20:06:32.303Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:37.237Z",
+        "endTime": "2024-04-01T20:06:38.003Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:42.914Z",
+        "endTime": "2024-04-01T20:06:43.647Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:48.228Z",
+        "endTime": "2024-04-01T20:06:49.118Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:54.144Z",
+        "endTime": "2024-04-01T20:06:54.913Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox3",
+        "startTime": "2024-04-01T20:06:59.903Z",
+        "endTime": "2024-04-01T20:07:00.768Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:01.450Z",
+        "endTime": "2024-04-01T20:05:02.240Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:07.392Z",
+        "endTime": "2024-04-01T20:05:08.220Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:13.199Z",
+        "endTime": "2024-04-01T20:05:13.991Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:18.742Z",
+        "endTime": "2024-04-01T20:05:19.553Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:24.435Z",
+        "endTime": "2024-04-01T20:05:25.315Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:30.282Z",
+        "endTime": "2024-04-01T20:05:31.137Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:35.866Z",
+        "endTime": "2024-04-01T20:05:36.699Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:41.110Z",
+        "endTime": "2024-04-01T20:05:41.870Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:46.978Z",
+        "endTime": "2024-04-01T20:05:47.790Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:52.944Z",
+        "endTime": "2024-04-01T20:05:53.869Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:05:58.809Z",
+        "endTime": "2024-04-01T20:05:59.657Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:06:04.806Z",
+        "endTime": "2024-04-01T20:06:05.636Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:06:10.293Z",
+        "endTime": "2024-04-01T20:06:11.108Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:06:15.628Z",
+        "endTime": "2024-04-01T20:06:16.752Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:06:21.669Z",
+        "endTime": "2024-04-01T20:06:22.561Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:06:27.499Z",
+        "endTime": "2024-04-01T20:06:28.370Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:06:33.462Z",
+        "endTime": "2024-04-01T20:06:34.344Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:06:39.478Z",
+        "endTime": "2024-04-01T20:06:40.384Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:06:45.135Z",
+        "endTime": "2024-04-01T20:06:45.854Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:06:50.654Z",
+        "endTime": "2024-04-01T20:06:51.569Z"
+    },
+    {
+        "task": "enviarNotaFiscalZoombox4",
+        "startTime": "2024-04-01T20:06:57.129Z",
+        "endTime": "2024-04-01T20:06:57.936Z"
+    },
+    {
+        "task": "filaNotaFiscal",
+        "startTime": "2024-04-01T20:05:52.861Z",
+        "endTime": "2024-04-01T20:05:53.674Z"
+    },
+    {
+        "task": "filaNotaFiscal",
+        "startTime": "2024-04-01T20:06:54.371Z",
+        "endTime": "2024-04-01T20:06:55.206Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:05:03.313Z",
+        "endTime": "2024-04-01T20:05:04.090Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:05:09.250Z",
+        "endTime": "2024-04-01T20:05:10.066Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:05:15.101Z",
+        "endTime": "2024-04-01T20:05:15.980Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:05:20.994Z",
+        "endTime": "2024-04-01T20:05:21.663Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:05:26.866Z",
+        "endTime": "2024-04-01T20:05:27.595Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:05:32.253Z",
+        "endTime": "2024-04-01T20:05:32.985Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:05:37.951Z",
+        "endTime": "2024-04-01T20:05:38.680Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:05:43.350Z",
+        "endTime": "2024-04-01T20:05:44.021Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:05:48.892Z",
+        "endTime": "2024-04-01T20:05:49.633Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:05:54.858Z",
+        "endTime": "2024-04-01T20:05:55.600Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:00.459Z",
+        "endTime": "2024-04-01T20:06:01.165Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:06.417Z",
+        "endTime": "2024-04-01T20:06:06.989Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:11.617Z",
+        "endTime": "2024-04-01T20:06:12.324Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:17.417Z",
+        "endTime": "2024-04-01T20:06:18.111Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:22.955Z",
+        "endTime": "2024-04-01T20:06:23.703Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:28.752Z",
+        "endTime": "2024-04-01T20:06:29.505Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:34.722Z",
+        "endTime": "2024-04-01T20:06:35.410Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:40.295Z",
+        "endTime": "2024-04-01T20:06:41.042Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:46.079Z",
+        "endTime": "2024-04-01T20:06:46.821Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:51.747Z",
+        "endTime": "2024-04-01T20:06:52.422Z"
+    },
+    {
+        "task": "processaNotaFiscal1",
+        "startTime": "2024-04-01T20:06:58.005Z",
+        "endTime": "2024-04-01T20:06:58.738Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:05:03.546Z",
+        "endTime": "2024-04-01T20:05:04.287Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:05:09.558Z",
+        "endTime": "2024-04-01T20:05:10.310Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:05:15.154Z",
+        "endTime": "2024-04-01T20:05:15.979Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:05:20.988Z",
+        "endTime": "2024-04-01T20:05:21.603Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:05:26.855Z",
+        "endTime": "2024-04-01T20:05:27.500Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:05:32.546Z",
+        "endTime": "2024-04-01T20:05:33.272Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:05:38.223Z",
+        "endTime": "2024-04-01T20:05:38.859Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:05:43.430Z",
+        "endTime": "2024-04-01T20:05:44.090Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:05:48.960Z",
+        "endTime": "2024-04-01T20:05:49.577Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:05:54.920Z",
+        "endTime": "2024-04-01T20:05:55.615Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:00.758Z",
+        "endTime": "2024-04-01T20:06:01.600Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:06.715Z",
+        "endTime": "2024-04-01T20:06:07.334Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:12.042Z",
+        "endTime": "2024-04-01T20:06:12.687Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:17.776Z",
+        "endTime": "2024-04-01T20:06:18.470Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:23.156Z",
+        "endTime": "2024-04-01T20:06:23.725Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:28.599Z",
+        "endTime": "2024-04-01T20:06:29.370Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:34.384Z",
+        "endTime": "2024-04-01T20:06:35.150Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:40.434Z",
+        "endTime": "2024-04-01T20:06:41.155Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:45.915Z",
+        "endTime": "2024-04-01T20:06:46.616Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:52.122Z",
+        "endTime": "2024-04-01T20:06:52.831Z"
+    },
+    {
+        "task": "processaNotaFiscal2",
+        "startTime": "2024-04-01T20:06:57.977Z",
+        "endTime": "2024-04-01T20:06:58.701Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:05:05.080Z",
+        "endTime": "2024-04-01T20:05:05.787Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:05:11.036Z",
+        "endTime": "2024-04-01T20:05:11.744Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:05:16.825Z",
+        "endTime": "2024-04-01T20:05:17.576Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:05:22.482Z",
+        "endTime": "2024-04-01T20:05:23.108Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:05:28.052Z",
+        "endTime": "2024-04-01T20:05:28.767Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:05:33.655Z",
+        "endTime": "2024-04-01T20:05:34.367Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:05:39.298Z",
+        "endTime": "2024-04-01T20:05:39.883Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:05:44.571Z",
+        "endTime": "2024-04-01T20:05:45.278Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:05:50.402Z",
+        "endTime": "2024-04-01T20:05:51.001Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:05:56.512Z",
+        "endTime": "2024-04-01T20:05:57.230Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:02.584Z",
+        "endTime": "2024-04-01T20:06:03.269Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:08.290Z",
+        "endTime": "2024-04-01T20:06:08.969Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:13.400Z",
+        "endTime": "2024-04-01T20:06:13.991Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:18.928Z",
+        "endTime": "2024-04-01T20:06:19.621Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:24.413Z",
+        "endTime": "2024-04-01T20:06:25.098Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:30.260Z",
+        "endTime": "2024-04-01T20:06:30.831Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:35.891Z",
+        "endTime": "2024-04-01T20:06:36.521Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:41.605Z",
+        "endTime": "2024-04-01T20:06:42.312Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:46.828Z",
+        "endTime": "2024-04-01T20:06:47.568Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:52.585Z",
+        "endTime": "2024-04-01T20:06:53.291Z"
+    },
+    {
+        "task": "processaNotaFiscal3",
+        "startTime": "2024-04-01T20:06:58.504Z",
+        "endTime": "2024-04-01T20:06:59.119Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:05:05.936Z",
+        "endTime": "2024-04-01T20:05:06.641Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:05:11.847Z",
+        "endTime": "2024-04-01T20:05:12.566Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:05:17.401Z",
+        "endTime": "2024-04-01T20:05:18.059Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:05:23.071Z",
+        "endTime": "2024-04-01T20:05:23.744Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:05:28.922Z",
+        "endTime": "2024-04-01T20:05:29.624Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:05:34.619Z",
+        "endTime": "2024-04-01T20:05:35.206Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:05:39.862Z",
+        "endTime": "2024-04-01T20:05:40.539Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:05:45.464Z",
+        "endTime": "2024-04-01T20:05:46.213Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:05:51.424Z",
+        "endTime": "2024-04-01T20:05:52.193Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:05:57.509Z",
+        "endTime": "2024-04-01T20:05:58.154Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:06:03.400Z",
+        "endTime": "2024-04-01T20:06:04.122Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:06:09.087Z",
+        "endTime": "2024-04-01T20:06:09.712Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:06:14.354Z",
+        "endTime": "2024-04-01T20:06:14.977Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:06:20.147Z",
+        "endTime": "2024-04-01T20:06:20.887Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:06:26.073Z",
+        "endTime": "2024-04-01T20:06:26.806Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:06:31.997Z",
+        "endTime": "2024-04-01T20:06:32.739Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:06:38.016Z",
+        "endTime": "2024-04-01T20:06:38.754Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:06:43.840Z",
+        "endTime": "2024-04-01T20:06:44.551Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:06:49.326Z",
+        "endTime": "2024-04-01T20:06:49.901Z"
+    },
+    {
+        "task": "processaNotaFiscal4",
+        "startTime": "2024-04-01T20:06:55.587Z",
+        "endTime": "2024-04-01T20:06:56.351Z"
+    },
+    {
+        "task": "sincronizarNotaFiscalDremio",
+        "startTime": "2024-04-01T20:05:16.711Z",
+        "endTime": "2024-04-01T20:05:51.861Z"
+    },
+    {
+        "task": "sincronizarNotaFiscalDremio",
+        "startTime": "2024-04-01T20:06:16.894Z",
+        "endTime": "2024-04-01T20:06:53.234Z"
+    }
+]
