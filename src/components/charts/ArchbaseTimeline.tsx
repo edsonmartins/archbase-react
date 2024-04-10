@@ -1,4 +1,4 @@
-import { px, ScrollArea } from '@mantine/core';
+import { px, ScrollArea, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import * as d3 from 'd3';
 import dayjs from 'dayjs';
 import { uniqueId } from 'lodash';
@@ -19,6 +19,9 @@ export interface ArchbaseTimelineProps {
 	decimalPlaces?: 0 | 1 | 2 | 3;
 	startTime?: Date;
 	endTime?: Date;
+	tickRate?: number;
+	itemHeight?: number;
+	withGridline?: boolean;
 }
 
 export function ArchbaseTimeline({
@@ -30,7 +33,12 @@ export function ArchbaseTimeline({
 	decimalPlaces = 2,
 	startTime,
 	endTime,
+	tickRate = 1,
+	itemHeight = 36,
+	withGridline = false,
 }: ArchbaseTimelineProps) {
+	const { colorScheme } = useMantineColorScheme();
+	const theme = useMantineTheme();
 	const [colorMap, setColorMap] = useState({});
 	const [typesQuantity, setTypesQuantity] = useState(0);
 	const [yAxisLabelWidth, setYAxisLabelWidth] = useState(0);
@@ -57,6 +65,10 @@ export function ArchbaseTimeline({
 			setColorMap(colorMap);
 		}
 		return colorMap[typeName];
+	}
+
+	function getContentHeight() {
+		return typesQuantity * itemHeight;
 	}
 
 	// Função para desenhar o gráfico de Gantt
@@ -89,6 +101,19 @@ export function ArchbaseTimeline({
 
 		const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
+		// Eixo X e Y
+		g.append('g')
+			.attr('class', 'axis axis--x')
+			.call(
+				d3
+					.axisTop(x)
+					.tickFormat(formatXAxisTickLabel)
+					.ticks(((maxTime.getTime() - minTime.getTime()) / 1000) * tickRate)
+					.tickSizeInner(withGridline ? -(typesQuantity + 3) * y.bandwidth() : 6),
+			);
+
+		g.append('g').attr('class', 'axis axis--y').call(d3.axisLeft(y));
+
 		// Barras do gráfico com tooltip
 		g.selectAll('.bar')
 			.data(data)
@@ -100,6 +125,7 @@ export function ArchbaseTimeline({
 			.attr('width', (d) => x(d.endTime) - x(d.startTime))
 			.attr('height', y.bandwidth())
 			.style('fill', (d) => getColorForType(d.type))
+			.style('z-index', 800)
 			.on('mouseover', function (event, d) {
 				d3.select(`#tooltip-${internalRef.current}`)
 					.style('visibility', 'visible')
@@ -148,18 +174,6 @@ export function ArchbaseTimeline({
 			.text((d) => `${((d.endTime.getTime() - d.startTime.getTime()) / 1000).toFixed(decimalPlaces)}s`)
 			.style('fill', '#000')
 			.style('font-size', '12px'); // Certifique-se de que o tamanho da fonte se ajuste dentro do retângulo
-
-		// Eixo X e Y
-		g.append('g')
-			.attr('class', 'axis axis--x')
-			.call(
-				d3
-					.axisTop(x)
-					.tickFormat(formatXAxisTickLabel)
-					.ticks(((maxTime.getTime() - minTime.getTime()) / 100000) * 10 ** decimalPlaces),
-			);
-
-		g.append('g').attr('class', 'axis axis--y').call(d3.axisLeft(y));
 
 		// Obtenha a caixa delimitadora (bounding box) da legenda do eixo X
 		const xAxis = svg.select('.axis--x');
@@ -235,14 +249,15 @@ export function ArchbaseTimeline({
 			<svg
 				id={`timeline-chart-${internalRef.current}`}
 				width={yAxisLabelWidth + ((maxTime.getTime() - minTime.getTime()) / 1000) * 10 ** decimalPlaces * customScale}
-				height={xAxisLabelHeight + typesQuantity * 36}
+				height={xAxisLabelHeight + getContentHeight()}
 			></svg>
 			<div
 				id={`tooltip-${internalRef.current}`}
 				style={{
 					position: 'absolute',
 					visibility: 'hidden',
-					backgroundColor: 'lightgrey',
+					backgroundColor: colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors.dark[4],
+					color: colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[4],
 					padding: '8px',
 					borderRadius: '6px',
 					fontSize: '14px',

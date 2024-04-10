@@ -17,8 +17,10 @@ const ArchbaseTimelineExample = () => {
 					<ArchbaseTimeline
 						data={data}
 						height={500}
-						scale={0.5}
+						scale={0.2}
 						decimalPlaces={2}
+						tickRate={0.2}
+						withGridline={true}
 						formatData={(value) => {
 							return {
 								startTime: new Date(value.startTime),
@@ -26,8 +28,8 @@ const ArchbaseTimelineExample = () => {
 								type: value.task,
 							};
 						}}
-						startTime={new Date('2024-04-01 17:06:14')}
-						endTime={new Date('2024-04-01 17:06:26')}
+						// startTime={new Date('2024-04-01 17:06:14')}
+						// endTime={new Date('2024-04-01 17:06:26')}
 					/>
 				</Card>
 			</Grid.Col>
