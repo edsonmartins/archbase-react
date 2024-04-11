@@ -1,4 +1,5 @@
 import { px, ScrollArea, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { useElementSize } from '@mantine/hooks';
 import * as d3 from 'd3';
 import dayjs from 'dayjs';
 import { uniqueId } from 'lodash';
@@ -22,6 +23,11 @@ export interface ArchbaseTimelineProps {
 	tickRate?: number;
 	itemHeight?: number;
 	withGridline?: boolean;
+	withOnHoverVerticalLine?: boolean;
+	tickLabelAngle?: number;
+	verticalLineColor?: string;
+	verticalLineStrokeWidth?: number;
+	verticalLineStrokeOpacity?: number;
 }
 
 export function ArchbaseTimeline({
@@ -36,6 +42,11 @@ export function ArchbaseTimeline({
 	tickRate = 1,
 	itemHeight = 36,
 	withGridline = false,
+	withOnHoverVerticalLine = false,
+	tickLabelAngle = 0,
+	verticalLineColor = 'red',
+	verticalLineStrokeWidth = 2,
+	verticalLineStrokeOpacity = 1,
 }: ArchbaseTimelineProps) {
 	const { colorScheme } = useMantineColorScheme();
 	const theme = useMantineTheme();
@@ -45,8 +56,9 @@ export function ArchbaseTimeline({
 	const [xAxisLabelHeight, setXAxisLabelHeight] = useState(0);
 	const [minTime, setMinTime] = useState<Date>(new Date());
 	const [maxTime, setMaxTime] = useState<Date>(new Date());
-	const internalRef = useRef(null);
-	// Objeto para armazenar o mapeamento de tarefa para cor
+	const [id, setId] = useState('');
+	const margin = { top: 20, right: 20, bottom: 30, left: 150 }; // Ajustado para melhor acomodação do texto
+	const { ref: contentRef, width: contentWidth, height: contentHeight } = useElementSize();
 
 	// Função para gerar uma cor hexadecimal aleatória
 	function getRandomColor() {
@@ -73,8 +85,7 @@ export function ArchbaseTimeline({
 
 	// Função para desenhar o gráfico de Gantt
 	function drawTimeline(data: ArchbaseTimelineItem[]) {
-		const svg = d3.select(`#timeline-chart-${internalRef.current}`),
-			margin = { top: 20, right: 20, bottom: 30, left: 150 }, // Ajustado para melhor acomodação do texto
+		const svg = d3.select(`#timeline-chart-${id}`),
 			width = +px(svg.attr('width')) - margin.left - margin.right,
 			height = +px(svg.attr('height')) - margin.top - margin.bottom;
 
@@ -101,16 +112,19 @@ export function ArchbaseTimeline({
 
 		const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
+		const tickQuantity = ((maxTime.getTime() - minTime.getTime()) / 1000) * tickRate;
 		// Eixo X e Y
 		g.append('g')
 			.attr('class', 'axis axis--x')
-			.call(
-				d3
-					.axisTop(x)
-					.tickFormat(formatXAxisTickLabel)
-					.ticks(((maxTime.getTime() - minTime.getTime()) / 1000) * tickRate)
-					.tickSizeInner(withGridline ? -(typesQuantity + 3) * y.bandwidth() : 6),
-			);
+			.call(d3.axisTop(x).tickFormat(formatXAxisTickLabel).ticks(tickQuantity))
+			.selectAll('text')
+			.attr('transform', function (d) {
+				return `rotate(${tickLabelAngle})`;
+			});
+
+		if (withGridline) {
+			addGridLine(g, x, height, tickQuantity);
+		}
 
 		g.append('g').attr('class', 'axis axis--y').call(d3.axisLeft(y));
 
@@ -127,19 +141,17 @@ export function ArchbaseTimeline({
 			.style('fill', (d) => getColorForType(d.type))
 			.style('z-index', 800)
 			.on('mouseover', function (event, d) {
-				d3.select(`#tooltip-${internalRef.current}`)
+				d3.select(`#tooltip-${id}`)
 					.style('visibility', 'visible')
-					.html(`Item: ${d.type}<br>Início: ${formatTime(d.startTime)}<br>Fim: ${formatTime(d.endTime)}`)
-					.style('top', event.pageY - 10 + 'px')
-					.style('left', event.pageX + 10 + 'px');
+					.html(`Item: ${d.type}<br>Início: ${formatTime(d.startTime)}<br>Fim: ${formatTime(d.endTime)}`);
 			})
 			.on('mousemove', function (event) {
-				d3.select(`#tooltip-${internalRef.current}`)
-					.style('top', event.pageY - 10 + 'px')
-					.style('left', event.pageX + 10 + 'px');
+				d3.select(`#tooltip-${id}`)
+					.style('top', event.pageY < contentHeight / 2 ? event.pageY - 10 + 'px' : event.pageY - 150 + 'px')
+					.style('left', event.pageX < contentWidth / 2 ? event.pageX + 10 + 'px' : event.pageX - 240 + 'px');
 			})
 			.on('mouseout', function () {
-				d3.select(`#tooltip-${internalRef.current}`).style('visibility', 'hidden');
+				d3.select(`#tooltip-${id}`).style('visibility', 'hidden');
 			});
 
 		// Fundo para o texto
@@ -184,7 +196,52 @@ export function ArchbaseTimeline({
 		const yAxis = svg.select('.axis--y');
 		const yAxisLabelBoundBox = yAxis.node().getBBox();
 		setYAxisLabelWidth(yAxisLabelBoundBox.width);
+
+		if (withOnHoverVerticalLine) {
+			addOnHoverVerticalLine(svg, g, height);
+		}
 	}
+
+	const addGridLine = (
+		g: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
+		x: d3.ScaleTime<number, number, never>,
+		height: number,
+		tickQuantity: number,
+	) => {
+		g.append('g')
+			.attr('class', 'axis axis--x-grid')
+			.call(
+				d3
+					.axisTop(x)
+					.tickFormat(() => '')
+					.ticks(tickQuantity)
+					.tickSizeInner(-(height + margin.top)),
+			);
+	};
+
+	const addOnHoverVerticalLine = (
+		svg: d3.Selection<d3.BaseType, unknown, HTMLElement, any>,
+		g: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
+		height: number,
+	) => {
+		const verticalLine = g
+			.append('line')
+			.attr('class', 'vertical-line')
+			.attr('stroke', verticalLineColor)
+			.attr('stroke-width', verticalLineStrokeWidth)
+			.attr('stroke-opacity', verticalLineStrokeOpacity)
+			.attr('y1', 0)
+			.attr('y2', height + margin.top);
+
+		svg.on('mousemove', function (event) {
+			const mouseX = d3.pointer(event)[0];
+			const resultMouseX = mouseX - yAxisLabelWidth - 10;
+			verticalLine
+				.attr('x1', resultMouseX > verticalLineStrokeWidth / 2 ? resultMouseX : verticalLineStrokeWidth / 2)
+				.attr('x2', resultMouseX > verticalLineStrokeWidth / 2 ? resultMouseX : verticalLineStrokeWidth / 2)
+				.style('display', 'block'); // Exibe a linha vertical
+		});
+	};
 
 	const formatXAxisTickLabel = (date) => {
 		let format;
@@ -214,8 +271,8 @@ export function ArchbaseTimeline({
 	}
 
 	useEffect(() => {
-		if (!internalRef) {
-			internalRef.current = uniqueId();
+		if (!id) {
+			setId(uniqueId('timeline'));
 		}
 	}, []);
 
@@ -245,14 +302,14 @@ export function ArchbaseTimeline({
 	}, [data, yAxisLabelWidth]);
 
 	return (
-		<ScrollArea w={width ? width : '100%'} h={height ? height : '100%'}>
+		<ScrollArea ref={contentRef} w={width ? width : '100%'} h={height ? height : '100%'}>
 			<svg
-				id={`timeline-chart-${internalRef.current}`}
+				id={`timeline-chart-${id}`}
 				width={yAxisLabelWidth + ((maxTime.getTime() - minTime.getTime()) / 1000) * 10 ** decimalPlaces * customScale}
 				height={xAxisLabelHeight + getContentHeight()}
 			></svg>
 			<div
-				id={`tooltip-${internalRef.current}`}
+				id={`tooltip-${id}`}
 				style={{
 					position: 'absolute',
 					visibility: 'hidden',

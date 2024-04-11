@@ -1,10 +1,17 @@
 import { Card, Grid, Group, Text } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { ArchbaseTimeline } from '../ArchbaseTimeline';
+import { ArchbaseTimeline, ArchbaseTimelineProps } from '../ArchbaseTimeline';
 import data from './data.json';
 
-const ArchbaseTimelineExample = () => {
+const ArchbaseTimelineExample = ({
+	withGridline,
+	withOnHoverVerticalLine,
+	verticalLineStrokeWidth,
+	verticalLineStrokeOpacity,
+	verticalLineColor,
+	tickLabelAngle,
+}: ArchbaseTimelineProps) => {
 	return (
 		<Grid>
 			<Grid.Col span={12}>
@@ -20,7 +27,12 @@ const ArchbaseTimelineExample = () => {
 						scale={0.2}
 						decimalPlaces={2}
 						tickRate={0.2}
-						withGridline={true}
+						withGridline={withGridline}
+						withOnHoverVerticalLine={withOnHoverVerticalLine}
+						verticalLineStrokeWidth={verticalLineStrokeWidth}
+						verticalLineStrokeOpacity={verticalLineStrokeOpacity}
+						verticalLineColor={verticalLineColor}
+						tickLabelAngle={tickLabelAngle}
 						formatData={(value) => {
 							return {
 								startTime: new Date(value.startTime),
@@ -47,5 +59,31 @@ type Story = StoryObj<typeof ArchbaseTimeline>;
 
 export const Primary: Story = {
 	name: 'Exemplo simples',
-	render: () => <ArchbaseTimelineExample />,
+	args: {},
+	render: (args) => <ArchbaseTimelineExample {...args} />,
+};
+
+export const withGrid: Story = {
+	name: 'Exemplo com grid',
+	args: {
+		withGridline: true,
+		withOnHoverVerticalLine: true,
+		verticalLineStrokeWidth: 2,
+		verticalLineColor: 'red',
+		tickLabelAngle: -30,
+	},
+	render: (args) => <ArchbaseTimelineExample {...args} />,
+};
+
+export const Custom: Story = {
+	name: 'Exemplo com marcador em área',
+	args: {
+		withGridline: true,
+		withOnHoverVerticalLine: true,
+		verticalLineStrokeWidth: 200,
+		verticalLineStrokeOpacity: 0.3,
+		verticalLineColor: 'green',
+		tickLabelAngle: -30,
+	},
+	render: (args) => <ArchbaseTimelineExample {...args} />,
 };
