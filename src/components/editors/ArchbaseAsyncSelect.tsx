@@ -232,7 +232,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 				initialValue = null;
 			}
 		}
-		if (getConvertedOption && converter) {
+		if (getConvertedOption && converter && initialValue) {
 			initialValue = await getConvertedOption(initialValue)
 		}
 		setSelectedValue(initialValue);
@@ -303,7 +303,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	}, [value, selectedValue, debouncedQueryValue]);
 
 	const handleConverter = (value) => {
-		if (converter) {
+		if (converter && value) {
 			return converter(value)
 		}
 		return value
