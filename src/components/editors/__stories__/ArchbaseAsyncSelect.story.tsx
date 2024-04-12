@@ -72,6 +72,7 @@ const ArchbaseAsyncSelectExample = () => {
 							getOptionLabel={(option: Pessoa) => option && option.nome}
 							getOptionValue={(option: Pessoa) => option}
 							getOptions={loadRemotePessoas}
+						// converter={value => value.altura}
 						/>
 					</Box>
 				</Card>

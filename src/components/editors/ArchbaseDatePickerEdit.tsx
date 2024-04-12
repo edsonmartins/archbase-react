@@ -163,12 +163,12 @@ export type ArchbaseDatePickerEditStylesNames = CalendarStylesNames | InputStyle
 
 export interface ArchbaseDatePickerEditProps<T, ID>
 	extends StylesApiProps<ArchbaseDatePickerEditFactory>,
-		__InputProps,
-		CalendarBaseProps,
-		DecadeLevelSettings,
-		YearLevelSettings,
-		MonthLevelSettings,
-		Omit<React.ComponentPropsWithoutRef<'input'>, 'size' | 'value' | 'defaultValue' | 'onChange'> {
+	__InputProps,
+	CalendarBaseProps,
+	DecadeLevelSettings,
+	YearLevelSettings,
+	MonthLevelSettings,
+	Omit<React.ComponentPropsWithoutRef<'input'>, 'size' | 'value' | 'defaultValue' | 'onChange'> {
 	/** Analisa a entrada do usuário para convertê-la em um objeto Date */
 	dateParser?: (value: string) => DateValue;
 	/** Valor do componente controlado */
@@ -227,6 +227,8 @@ export interface ArchbaseDatePickerEditProps<T, ID>
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	/** Último erro ocorrido no datepicker */
 	error?: string;
+	/** Título do edit */
+	title?: string;
 }
 
 export type ArchbaseDatePickerEditFactory = PolymorphicFactory<{
@@ -288,6 +290,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		dataField,
 		width,
 		innerRef,
+		title,
 		...rest
 	} = useInputProps('ArchbaseDatePickerEdit', defaultProps, props);
 
@@ -525,7 +528,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 	return (
 		<>
-			<Input.Wrapper {...wrapperProps} error={internalError}>
+			<Input.Wrapper {...wrapperProps} error={internalError} label={title}>
 				<Popover
 					opened={dropdownOpened}
 					trapFocus={false}

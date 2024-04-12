@@ -124,6 +124,10 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	/** Chamado sempre que o valor da pesquisa muda */
 	onSearchChange?(query: string): void;
+	/** Converte o valor antes de atribuir ao field do registro atual no datasource */
+	converter?: (value: O) => any;
+	/** Function que busca o valor original antes de converter pelo valor de retorno do converter */
+	getConvertedOption?: (value: any) => Promise<O>;
 }
 function buildOptions<O>(
 	initialOptions: O[],
@@ -198,6 +202,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	onErrorLoadOptions,
 	innerRef,
 	onSearchChange,
+	converter,
+	getConvertedOption
 }: ArchbaseAsyncSelectProps<T, ID, O>) {
 	const combobox = useCombobox({
 		onDropdownClose: () => combobox.resetSelectedOption(),
@@ -205,7 +211,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	const [options, setOptions] = useState<any[]>(
 		buildOptions<O>(initialOptions.options, getOptionLabel, getOptionValue, getOptionImage),
 	);
-	const [selectedValue, setSelectedValue] = useState<any>(value);
+	const [selectedValue, setSelectedValue] = useState<any>();
 	const [updateCounter, setUpdateCounter] = useState(0);
 	const [queryValue, setQueryValue] = useState<string>('');
 	const [debouncedQueryValue] = useDebouncedValue(queryValue, debounceTime);
@@ -217,7 +223,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	const innerComponentRef = innerRef || useRef<any>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 
-	const loadDataSourceFieldValue = () => {
+	const loadDataSourceFieldValue = async () => {
 		let initialValue: any = value;
 
 		if (dataSource && dataField) {
@@ -226,7 +232,9 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 				initialValue = null;
 			}
 		}
-
+		if (getConvertedOption && converter) {
+			initialValue = await getConvertedOption(initialValue)
+		}
 		setSelectedValue(initialValue);
 		setQueryValue(getOptionLabel(initialValue) || '');
 	};
@@ -284,7 +292,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 		}
 	}, [debouncedQueryValue]);
 
-	useEffect(() => {}, [currentPage, totalPages]);
+	useEffect(() => { }, [currentPage, totalPages]);
 
 	useArchbaseDidUpdate(() => {
 		loadDataSourceFieldValue();
@@ -294,11 +302,18 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 		setInternalError(undefined);
 	}, [value, selectedValue, debouncedQueryValue]);
 
+	const handleConverter = (value) => {
+		if (converter) {
+			return converter(value)
+		}
+		return value
+	}
+
 	const handleChange = (value) => {
 		setSelectedValue((_prev) => value);
 
-		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== value) {
-			dataSource.setFieldValue(dataField, value);
+		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== handleConverter(value)) {
+			dataSource.setFieldValue(dataField, handleConverter(value));
 		}
 
 		if (onSelectValue) {
@@ -368,8 +383,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	const shouldFilterOptions = options.every((item) => item !== queryValue);
 	const filteredOptions = shouldFilterOptions
 		? options.filter((item) => {
-				return item.label.toLowerCase().includes(queryValue.toLowerCase().trim());
-		  })
+			return item.label.toLowerCase().includes(queryValue.toLowerCase().trim());
+		})
 		: options;
 
 	return (
