@@ -367,6 +367,10 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 					setDate(resultDate);
 					setValue(resultDate);
 				}
+			} else {
+				setInputValue("");
+				setDate(null);
+				setValue(null);
 			}
 		}
 	}, []);
