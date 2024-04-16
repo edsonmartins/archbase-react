@@ -3,6 +3,7 @@ import {
   Accordion,
   Badge,
   Button,
+  ButtonVariant,
   Group,
   Menu,
   Radio,
@@ -10,7 +11,6 @@ import {
   ScrollArea,
   Text,
   Tooltip,
-  Variants
 } from '@mantine/core'
 import {
   IconDeviceFloppy,
@@ -43,12 +43,12 @@ import {
 } from './ArchbaseFilterCommons'
 import { ArchbaseSaveFilter } from './ArchbaseSaveFilter'
 import { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter'
-import { ArchbaseDataSource } from 'components/datasource'
-import { ArchbaseAppContext } from 'components/core'
-import { ArchbaseList } from 'components/list'
+import { ArchbaseDataSource } from '@components/datasource'
+import { ArchbaseAppContext } from '@components/core'
+import { ArchbaseList } from '@components/list'
 
 interface ArchbaseCompositeFilterProps {
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+  variant?: ButtonVariant
   activeFilterIndex: number
   currentFilter: ArchbaseQueryFilter
   width?: string | number | undefined
@@ -141,7 +141,7 @@ class ArchbaseCompositeFilter extends Component<
   }
 
   getColor = (color: string) => {
-    return this.context.theme!.colors[color][this.context.theme!.colorScheme === 'dark' ? 5 : 7]
+    return this.context.theme!.colors[color][this.context.colorScheme === 'dark' ? 5 : 7]
   }
 
   render = () => {
@@ -156,7 +156,7 @@ class ArchbaseCompositeFilter extends Component<
         <Accordion variant="contained" multiple={false} defaultValue={'filters'}>
           <Accordion.Item value="filters">
             <Accordion.Control
-              icon={<IconFilterSearch size={rem(20)} color={this.getColor('red')} />}
+              icon={<IconFilterSearch size={24} color={this.getColor('red')} />}
             >
               <Text style={{ fontWeight: 'bold' }}>{`${t('archbase:Filtros salvos')}`}</Text>
             </Accordion.Control>
@@ -173,12 +173,12 @@ class ArchbaseCompositeFilter extends Component<
           </Accordion.Item>
         </Accordion>
         <div className="filter-apply">
-          <Group spacing="xs">
+          <Group gap="xs">
             <Tooltip withinPortal withArrow label={`${t('archbase:Novo filtro')}`}>
               <Button
                 id="btnNew"
                 variant={this.props.variant}
-                leftIcon={<IconPlus />}
+                leftSection={<IconPlus />}
                 onClick={(event) => this.props.onActionClick && this.props.onActionClick('new')}
               >
                 {t('archbase:New')}
@@ -193,14 +193,14 @@ class ArchbaseCompositeFilter extends Component<
                   this.props.currentFilter &&
                   (!this.props.currentFilter.id || this.props.currentFilter.id <= 0)
                 }
-                leftIcon={<IconTrash />}
+                leftSection={<IconTrash />}
                 onClick={(event) => this.props.onActionClick && this.props.onActionClick('remove')}
               >
                 {t('archbase:Remover')}
               </Button>
             </Tooltip>
           </Group>
-          <Group spacing="xs">
+          <Group gap="xs">
             <Menu
               shadow="md"
               width={200}
@@ -208,7 +208,7 @@ class ArchbaseCompositeFilter extends Component<
               disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
             >
               <Menu.Target>
-                <Button variant={this.props.variant} leftIcon={<IconDeviceFloppy />}>
+                <Button variant={this.props.variant} leftSection={<IconDeviceFloppy />}>
                   {`${t('archbase:Save')}`}
                 </Button>
               </Menu.Target>
@@ -218,14 +218,14 @@ class ArchbaseCompositeFilter extends Component<
                 <Menu.Item
                   onClick={() => this.onSelectMenuItem('mnuItemSalvar')}
                   disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
-                  icon={<IconDeviceFloppy size={14} />}
+                  leftSection={<IconDeviceFloppy size={14} />}
                 >
                   {`${t('archbase:Save')}`}
                 </Menu.Item>
                 <Menu.Item
                   onClick={() => this.onSelectMenuItem('mnuItemSalvarComo')}
                   disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
-                  icon={<IconDeviceFloppy size={14} />}
+                  leftSection={<IconDeviceFloppy size={14} />}
                 >
                   {`${t('archbase:Salvar como...')}`}
                 </Menu.Item>
@@ -236,7 +236,7 @@ class ArchbaseCompositeFilter extends Component<
               <Button
                 id="btnApply"
                 variant={this.props.variant}
-                leftIcon={<IconRefresh />}
+                leftSection={<IconRefresh />}
                 disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
                 onClick={(event) => {
                   console.log(this.props.activeFilterIndex) 
@@ -252,7 +252,7 @@ class ArchbaseCompositeFilter extends Component<
                 id="btnClose"
                 variant={this.props.variant}
                 color="green"
-                leftIcon={<IconDoorExit />}
+                leftSection={<IconDoorExit />}
                 onClick={(event) => this.props.onActionClick && this.props.onActionClick('close')}
               >
                 {`${t('archbase:Close')}`}
@@ -285,6 +285,7 @@ class ArchbaseCompositeFilter extends Component<
             onSearchButtonClick={this.props.onSearchButtonClick}
             fields={this.state.fields}
             theme={this.context.theme}
+            colorScheme={this.context.colorScheme}
           />
         ) : null}
         {filterType === ADVANCED ? (
@@ -325,7 +326,7 @@ interface ArchbaseDetailedFilterProps {
   isOpen?: boolean
   update?: number
   selectedOptions?: Field[]
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+  variant?: ButtonVariant
 }
 
 interface ArchbaseAdvancedFilterState {

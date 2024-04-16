@@ -1,5 +1,3 @@
-/* eslint-disable import/no-duplicates */
-
 /* eslint-disable no-else-return */
 
 /* eslint-disable no-nested-ternary */
@@ -16,11 +14,11 @@ import {
 	Checkbox,
 	Chip,
 	Flex,
-	MantineTheme,
+	MantineColorScheme,
 	Menu,
 	Tooltip,
+	useMantineColorScheme,
 	useMantineTheme,
-	Variants,
 } from '@mantine/core';
 import { DatePickerInput, DatesRangeValue, DateValue } from '@mantine/dates';
 import { IconDownload, IconPrinter, IconRefresh } from '@tabler/icons-react';
@@ -50,29 +48,18 @@ import {
 	MRT_ToggleGlobalFilterButton,
 	useMantineReactTable,
 } from 'mantine-react-table';
-import { MRT_Localization_EN } from 'mantine-react-table/locales/en';
-import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
-import { MRT_Localization_PT_BR } from 'mantine-react-table/locales/pt-BR';
-import React, {
-	Fragment,
-	isValidElement,
-	ReactNode,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from 'react';
+import { MRT_Localization_EN } from 'mantine-react-table/locales/en/index.cjs';
+import { MRT_Localization_ES } from 'mantine-react-table/locales/es/index.cjs';
+import { MRT_Localization_PT_BR } from 'mantine-react-table/locales/pt-BR/index.cjs';
+import React, { Fragment, isValidElement, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArchbaseMasker, builder, emit, ExpressionNode, MaskOptions } from '../core';
 import { useArchbaseAppContext } from '../core';
 import { ArchbaseObjectHelper } from '../core/helper';
 import { convertISOStringToDate, filter, isEmpty } from '../core/utils';
-import {
-	type ArchbaseDataSource,
-	type DataSourceEvent,
-	DataSourceEventNames,
-} from '../datasource';
+import { type ArchbaseDataSource, type DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDataSourceListener } from '../hooks';
+import classes from './ArchbaseDataTable.module.css';
 
 interface JsPDFCustom extends JsPDF {
 	autoTable: (options: UserOptions) => void;
@@ -116,9 +103,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
 	manualFiltering?: boolean;
 	manualPagination?: boolean;
 	manualSorting?: boolean;
-	variant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	variant?: string;
 	getRowId?: (originalRow: T, index: number) => string;
 	onCellDoubleClick?: (event) => void;
 	onSelectedRowsChanged?: (rows: T[]) => void;
@@ -144,26 +129,14 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
 	logoPrint?: string;
 	csvOptions?: Options;
 	globalDateFormat?: string;
-	renderRowActionMenuItems?: (props: {
-		row: MRT_Row<T>;
-		table: MRT_TableInstance<T>;
-	}) => ReactNode;
-	renderRowActions?: (props: {
-		cell: MRT_Cell<T>;
-		row: MRT_Row<T>;
-		table: MRT_TableInstance<T>;
-	}) => ReactNode;
-	renderToolbarInternalActions?: (props: {
-		table: MRT_TableInstance<T>;
-	}) => ReactNode | null;
-	renderDetailPanel?: (props: {
-        row: MRT_Row<T>;
-        table: MRT_TableInstance<T>;
-    }) => ReactNode;
+	renderRowActionMenuItems?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
+	renderRowActions?: (props: { cell: MRT_Cell<T>; row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
+	renderToolbarInternalActions?: (props: { table: MRT_TableInstance<T> }) => ReactNode | null;
+	renderDetailPanel?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
 	positionActionsColumn?: 'first' | 'last';
-	tableRef? : any;
+	tableRef?: any;
 	onExport?: (exportFunc: () => void) => void;
-    onPrint?: (printFunc: () => void) => void;
+	onPrint?: (printFunc: () => void) => void;
 }
 
 export interface ToolBarActionsProps {
@@ -207,10 +180,7 @@ function isBoolean(value: string) {
 	return false;
 }
 
-const formatGlobalValueRSQL = (
-	value: string,
-	globalDateFormat,
-): GlobalFilterValue => {
+const formatGlobalValueRSQL = (value: string, globalDateFormat): GlobalFilterValue => {
 	const parsedDateValue = parseDate(value, globalDateFormat, 0);
 	if (!Number.isNaN(parsedDateValue.getTime())) {
 		return { value: formatISO(parsedDateValue), type: 'date' };
@@ -260,8 +230,7 @@ const LESS_THAN = 'lessThan';
 const LESS_THAN_OR_EQUAL_TO = 'lessThanOrEqualTo';
 
 function checkIfValidUUID(str) {
-	const regexExp =
-		/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+	const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
 
 	return regexExp.test(str);
 }
@@ -294,15 +263,7 @@ const getFilterFnByDataType = (dataType: string): string => {
 const getFilterModeByDataType = (dataType: FieldDataType): string[] => {
 	switch (dataType) {
 		case 'text':
-			return [
-				CONTAINS,
-				STARTS_WITH,
-				ENDS_WITH,
-				EQUALS,
-				EMPTY,
-				NOT_EMPTY,
-				NOT_EQUALS,
-			];
+			return [CONTAINS, STARTS_WITH, ENDS_WITH, EQUALS, EMPTY, NOT_EMPTY, NOT_EQUALS];
 		case 'integer':
 			return [
 				BETWEEN,
@@ -386,6 +347,7 @@ export interface FilterDatePickerProps {
 	value: DatesRangeValue | DateValue | undefined;
 	header: MRT_Header<any>;
 	table: MRT_TableInstance<any>;
+	colorScheme: MantineColorScheme;
 }
 export function ArchbaseCustomFilterDatePicker(props: FilterDatePickerProps) {
 	const {
@@ -398,26 +360,17 @@ export function ArchbaseCustomFilterDatePicker(props: FilterDatePickerProps) {
 	} = props.table;
 
 	const { rangeFilterIndex, column, value, header } = props;
-	const columnFilterValues = column.getFilterValue() as [
-		Date | null,
-		Date | null,
-	];
+	const columnFilterValues = column.getFilterValue() as [Date | null, Date | null];
 
 	const currentValue = useMemo<[Date | null, Date | null]>(() => {
 		return [columnFilterValues?.[0] || null, columnFilterValues?.[1] || null];
 	}, [columnFilterValues]);
 
 	const currentFilterOption = column.columnDef._filterFn;
-	const allowedColumnFilterOptions =
-		column.columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
+	const allowedColumnFilterOptions = column.columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
 	const filterChipLabel = ['empty', 'notEmpty'].includes(currentFilterOption)
 		? // @ts-ignore
-		  localization[
-				`filter${
-					currentFilterOption?.charAt?.(0)?.toUpperCase() +
-					currentFilterOption?.slice(1)
-				}`
-		  ]
+		  localization[`filter${currentFilterOption?.charAt?.(0)?.toUpperCase() + currentFilterOption?.slice(1)}`]
 		: '';
 	const isRangeFilter =
 		column.columnDef.filterVariant === 'range' ||
@@ -425,18 +378,7 @@ export function ArchbaseCustomFilterDatePicker(props: FilterDatePickerProps) {
 		rangeFilterIndex !== undefined;
 
 	const commonProps = {
-		disabled: !!filterChipLabel,
-		sx: (theme: MantineTheme) => ({
-			borderBottom: `2px solid ${
-				theme.colors.gray[theme.colorScheme === 'dark' ? 7 : 3]
-			}`,
-			minWidth: isRangeFilter ? '80px' : !filterChipLabel ? '100px' : 'auto',
-			width: '100%',
-			'& .mantine-TextInput-input': {
-				overflow: 'hidden',
-				textOverflow: 'ellipsis',
-			},
-		}),
+		minWidth: isRangeFilter ? '80px' : !filterChipLabel ? '100px' : 'auto',
 	} as const;
 
 	const handleClearEmptyFilterChip = () => {
@@ -450,20 +392,17 @@ export function ArchbaseCustomFilterDatePicker(props: FilterDatePickerProps) {
 	const rangeIndex = rangeFilterIndex || 0;
 	if (isRangeFilter) {
 		return filterChipLabel ? (
-			<Box sx={commonProps.sx}>
-				<Chip onClick={handleClearEmptyFilterChip} sx={{ margin: '4px' }}>
-					{filterChipLabel}{' '}
-					<IconX size="12pt" style={{ transform: 'translate(6px, 3px)' }} />
+			<Box className={classes.chipBox} style={commonProps}>
+				<Chip onClick={handleClearEmptyFilterChip} style={{ margin: '4px' }}>
+					{filterChipLabel} <IconX size="12pt" style={{ transform: 'translate(6px, 3px)' }} />
 				</Chip>
 			</Box>
 		) : (
 			<Box>
 				<DatePickerInput
 					variant="filled"
-					sx={{ marginTop: '8px' }}
-					placeholder={`${i18next.t('date')} ${
-						rangeIndex === 0 ? 'inicio' : 'final'
-					}`}
+					style={{ marginTop: '8px' }}
+					placeholder={`${i18next.t('date')} ${rangeIndex === 0 ? 'inicio' : 'final'}`}
 					value={value ? value[rangeIndex] : null}
 					onChange={(newValue: Date) => {
 						const newArray = [currentValue[0], currentValue[1]];
@@ -476,17 +415,16 @@ export function ArchbaseCustomFilterDatePicker(props: FilterDatePickerProps) {
 	}
 
 	return filterChipLabel ? (
-		<Box sx={commonProps.sx}>
-			<Chip onClick={handleClearEmptyFilterChip} sx={{ margin: '4px' }}>
-				{filterChipLabel}{' '}
-				<IconX size="12pt" style={{ transform: 'translate(6px, 3px)' }} />
+		<Box className={classes.chipBox} style={commonProps}>
+			<Chip onClick={handleClearEmptyFilterChip} style={{ margin: '4px' }}>
+				{filterChipLabel} <IconX size="12pt" style={{ transform: 'translate(6px, 3px)' }} />
 			</Chip>
 		</Box>
 	) : (
 		<Box>
 			<DatePickerInput
 				variant="filled"
-				sx={{ marginTop: '8px' }}
+				style={{ marginTop: '8px' }}
 				placeholder={`${i18next.t('date')}`}
 				value={value as DateValue}
 				onChange={(newValue: Date) => {
@@ -505,10 +443,7 @@ const buildGlobalFilterExpressionRSQL = (
 ): string | undefined => {
 	if (originColumns && originColumns.length > 0) {
 		const nodes: ExpressionNode[] = [];
-		const globalValue = formatGlobalValueRSQL(
-			globalFilterValue,
-			globalDateFormat,
-		);
+		const globalValue = formatGlobalValueRSQL(globalFilterValue, globalDateFormat);
 		if (globalValue.value) {
 			originColumns.forEach((column) => {
 				if (column.enableGlobalFilter) {
@@ -598,19 +533,14 @@ const buildSortRSQL = (sorting: any[] | undefined): string[] | undefined => {
 	}
 };
 
-const buildFilterExpressionRSQL = (
-	columnFilters,
-	table,
-	originColumns,
-): string | undefined => {
+const buildFilterExpressionRSQL = (columnFilters, table, originColumns): string | undefined => {
 	if (columnFilters && columnFilters.length > 0) {
 		const nodes: ExpressionNode[] = [];
 		columnFilters.forEach((filter) => {
 			const id = filter.id;
 			const index = table.getAllColumns().findIndex((col) => col.id === id);
 			if (index && index >= 0) {
-				const column: MRT_Column<any> | undefined =
-					table.getAllColumns()[index];
+				const column: MRT_Column<any> | undefined = table.getAllColumns()[index];
 				const originColumn = originColumns.find((col) => col.id === id);
 				const formatedValue = formatValueRSQL(column?.getFilterValue());
 				const node = buildExpressionNode(column, originColumn, formatedValue);
@@ -639,15 +569,11 @@ const getToolBarCustomActions = (_table, props): ReactNode => {
 };
 
 //@ts-ignore
-interface Props<TData extends Record<string, any> = {}>
-	extends ActionIconProps,
-		HTMLPropsRef<HTMLButtonElement> {
+interface Props<TData extends Record<string, any> = {}> extends ActionIconProps, HTMLPropsRef<HTMLButtonElement> {
 	table: MRT_TableInstance<TData>;
 }
 
-export const CustomToggleGlobalFilterButton = <
-	TData extends Record<string, any> = {},
->({
+export const CustomToggleGlobalFilterButton = <TData extends Record<string, any> = {}>({
 	table,
 	variant,
 	...rest
@@ -670,35 +596,25 @@ export const CustomToggleGlobalFilterButton = <
 	};
 
 	return (
-		<Tooltip
-			withinPortal
-			withArrow
-			label={rest?.title ?? localization.showHideSearch}
-		>
+		<Tooltip withinPortal withArrow label={rest?.title ?? localization.showHideSearch}>
 			<ActionIcon
 				variant={variant}
 				size="lg"
-				color="primary"
-				sx={{ width: '36px', height: '36px', marginRight: 2 }}
+				color="var(--mantine-primary-color-filled)"
+				style={{ width: '36px', height: '36px', marginRight: 2 }}
 				aria-label={rest?.title ?? localization.showHideSearch}
 				disabled={!!globalFilter}
 				onClick={handleToggleSearch}
 				{...rest}
 				title={undefined}
 			>
-				{showGlobalFilter ? (
-					<IconSearchOff size="1.4rem" />
-				) : (
-					<IconSearch size="1.4rem" />
-				)}
+				{showGlobalFilter ? <IconSearchOff size="1.4rem" /> : <IconSearch size="1.4rem" />}
 			</ActionIcon>
 		</Tooltip>
 	);
 };
 
-export const CustomToggleFiltersButton = <
-	TData extends Record<string, any> = {},
->({
+export const CustomToggleFiltersButton = <TData extends Record<string, any> = {}>({
 	table,
 	variant,
 	...rest
@@ -718,33 +634,23 @@ export const CustomToggleFiltersButton = <
 	};
 
 	return (
-		<Tooltip
-			withinPortal
-			withArrow
-			label={rest?.title ?? localization.showHideFilters}
-		>
+		<Tooltip withinPortal withArrow label={rest?.title ?? localization.showHideFilters}>
 			<ActionIcon
 				variant={variant}
 				size="lg"
-				color="primary"
-				sx={{ width: '36px', height: '36px', marginRight: 2 }}
+				color="var(--mantine-primary-color-filled)"
+				style={{ width: '36px', height: '36px', marginRight: 2 }}
 				onClick={handleToggleShowFilters}
 				{...rest}
 				title={undefined}
 			>
-				{showColumnFilters ? (
-					<IconFilterOff size="1.4rem" />
-				) : (
-					<IconFilter size="1.4rem" />
-				)}
+				{showColumnFilters ? <IconFilterOff size="1.4rem" /> : <IconFilter size="1.4rem" />}
 			</ActionIcon>
 		</Tooltip>
 	);
 };
 
-export const CustomShowHideColumnsButton = <
-	TData extends Record<string, any> = {},
->({
+export const CustomShowHideColumnsButton = <TData extends Record<string, any> = {}>({
 	table,
 	variant,
 	...rest
@@ -758,16 +664,12 @@ export const CustomShowHideColumnsButton = <
 
 	return (
 		<Menu closeOnItemClick={false} withinPortal>
-			<Tooltip
-				withinPortal
-				withArrow
-				label={rest?.title ?? localization.showHideColumns}
-			>
+			<Tooltip withinPortal withArrow label={rest?.title ?? localization.showHideColumns}>
 				<Menu.Target>
 					<ActionIcon
 						variant={variant}
-						color="primary"
-						sx={{ width: '36px', height: '36px', marginRight: 2 }}
+						color="var(--mantine-primary-color-filled)"
+						style={{ width: '36px', height: '36px', marginRight: 2 }}
 						aria-label={localization.showHideColumns}
 						size="lg"
 						{...rest}
@@ -782,28 +684,21 @@ export const CustomShowHideColumnsButton = <
 	);
 };
 
-export function ArchbaseDataTable<T extends object, ID>(
-	props: ArchbaseDataTableProps<T, ID>,
-) {
+export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTableProps<T, ID>) {
 	const { i18n } = useTranslation();
 	const theme = useMantineTheme();
+	const { colorScheme } = useMantineColorScheme();
 	const appContext = useArchbaseAppContext();
 	const divTable = useRef<HTMLDivElement>(null);
 	const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
 	const [data, setData] = useState<any>(props.dataSource.browseRecords());
 	const [isLoadingInternal, setLoadingInternal] = useState<boolean>(false);
 	const [pagination, setPagination] = useState<MRT_PaginationState>({
-		pageIndex: props.dataSource
-			? props.dataSource.getCurrentPage()
-			: props.pageIndex,
-		pageSize: props.dataSource
-			? props.dataSource.getPageSize()
-			: props.pageSize,
+		pageIndex: props.dataSource ? props.dataSource.getCurrentPage() : props.pageIndex,
+		pageSize: props.dataSource ? props.dataSource.getPageSize() : props.pageSize,
 	});
 	const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
-		props.dataSource && props.dataSource.getOptions().originFilter
-			? props.dataSource.getOptions().originFilter
-			: [],
+		props.dataSource && props.dataSource.getOptions().originFilter ? props.dataSource.getOptions().originFilter : [],
 	);
 	const [globalFilter, setGlobalFilter] = useState(
 		props.dataSource && props.dataSource.getOptions().originGlobalFilter
@@ -812,9 +707,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 	);
 	const [stickyEnable, setStickyEnable] = useState(true);
 	const [sorting, setSorting] = useState<MRT_SortingState>(
-		props.dataSource && props.dataSource.getOptions().originSort
-			? props.dataSource.getOptions().originSort
-			: [],
+		props.dataSource && props.dataSource.getOptions().originSort ? props.dataSource.getOptions().originSort : [],
 	);
 	const [currentCell, setCurrentCell] = useState<ArchbaseDataTableCurrentCell>({
 		rowIndex: 0,
@@ -837,44 +730,27 @@ export function ArchbaseDataTable<T extends object, ID>(
 	useEffect(() => {
 		setData(props.dataSource.browseRecords());
 		setPagination({
-			pageIndex: props.dataSource
-				? props.dataSource.getCurrentPage()
-				: props.pageIndex,
-			pageSize: props.dataSource
-				? props.dataSource.getPageSize()
-				: props.pageSize,
-		})
+			pageIndex: props.dataSource ? props.dataSource.getCurrentPage() : props.pageIndex,
+			pageSize: props.dataSource ? props.dataSource.getPageSize() : props.pageSize,
+		});
 		setLoadingInternal(false);
 		setRowSelection({});
 	}, [isLoadingInternal]);
 
 	const getCellBackgroundColor = (cell, table): any => {
-		if (
-			cell.row.index === currentCell.rowIndex &&
-			cell.column.id === currentCell.columnName
-		) {
-			return theme.colors[theme.primaryColor][
-				theme.colorScheme === 'dark' ? 5 : 5
-			];
+		if (cell.row.index === currentCell.rowIndex && cell.column.id === currentCell.columnName) {
+			return theme.colors[theme.primaryColor][colorScheme === 'dark' ? 5 : 5];
 		}
-		const result = table
-			.getSelectedRowModel()
-			.flatRows.filter((row) => row.index === cell.row.index);
+		const result = table.getSelectedRowModel().flatRows.filter((row) => row.index === cell.row.index);
 		if (result && result.length > 0) {
-			return convertHexToRGBA(
-				theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 8 : 4],
-				0.1,
-			);
+			return convertHexToRGBA(theme.colors[theme.primaryColor][colorScheme === 'dark' ? 8 : 4], 0.1);
 		}
 
 		return undefined;
 	};
 
 	const getCellColorFont = (cell: any): any => {
-		if (
-			cell.row.index === currentCell.rowIndex &&
-			cell.column.id === currentCell.columnName
-		) {
+		if (cell.row.index === currentCell.rowIndex && cell.column.id === currentCell.columnName) {
 			return 'white';
 		}
 
@@ -883,11 +759,11 @@ export function ArchbaseDataTable<T extends object, ID>(
 
 	const renderText = (data: any, maskOptions?: MaskOptions): ReactNode => {
 		let dataValue = data.getValue();
-		if (!dataValue){
-			return <span></span>
+		if (!dataValue) {
+			return <span></span>;
 		}
-		if (maskOptions){
-			dataValue = ArchbaseMasker.toPattern(dataValue,maskOptions);
+		if (maskOptions) {
+			dataValue = ArchbaseMasker.toPattern(dataValue, maskOptions);
 		}
 		return <span>{dataValue}</span>;
 	};
@@ -937,12 +813,12 @@ export function ArchbaseDataTable<T extends object, ID>(
 	};
 
 	const print = () => {
-		handlePrint(table)
-	}
+		handlePrint(table);
+	};
 
 	const exportData = () => {
-		handleExportRows(table.getRowModel().rows, originColumns)
-	}
+		handleExportRows(table.getRowModel().rows, originColumns);
+	};
 
 	React.useEffect(() => {
 		if (props.onExport) {
@@ -951,12 +827,9 @@ export function ArchbaseDataTable<T extends object, ID>(
 		if (props.onPrint) {
 			props.onPrint(print);
 		}
-	  }, [props.onExport, props.onPrint]);
+	}, [props.onExport, props.onPrint]);
 
-	const getRenderByDataType = (
-		dataType: FieldDataType,
-		render: (data: any) => ReactNode,
-	): any | undefined => {
+	const getRenderByDataType = (dataType: FieldDataType, render: (data: any) => ReactNode): any | undefined => {
 		if (render) {
 			return render;
 		}
@@ -974,36 +847,36 @@ export function ArchbaseDataTable<T extends object, ID>(
 			case 'time':
 				return renderTime;
 			case 'text':
-				return renderText;	
+				return renderText;
 			default:
 		}
 	};
 
 	const getAlignByDataType = (dataType: FieldDataType, align?: AlignType) => {
-		if (align){
+		if (align) {
 			if (align === 'left') {
-			  return "flex-start"
+				return 'flex-start';
 			} else if (align === 'center') {
-				return "center"
+				return 'center';
 			} else {
-				return "flex-end"
+				return 'flex-end';
 			}
 		}
 		switch (dataType) {
 			case 'integer':
-				return "flex-end";
+				return 'flex-end';
 			case 'currency':
-				return "flex-end";
+				return 'flex-end';
 			case 'boolean':
-				return "center";
+				return 'center';
 			case 'date':
-				return "center";
+				return 'center';
 			case 'datetime':
-				return "center";
+				return 'center';
 			case 'time':
-				return "flex-start";
+				return 'flex-start';
 			default:
-				return "flex-start";
+				return 'flex-start';
 		}
 	};
 
@@ -1016,19 +889,12 @@ export function ArchbaseDataTable<T extends object, ID>(
 				const childrenWithProps = React.Children.toArray(child.props.children);
 				childrenWithProps.forEach((col) => {
 					if (isValidElement(col) && col.props.visible) {
-						const render = getRenderByDataType(
-							col.props.dataType,
-							col.props.render,
-						);
-						const alignContent = getAlignByDataType(col.props.dataType, col.props.align)
+						const render = getRenderByDataType(col.props.dataType, col.props.render);
+						const alignContent = getAlignByDataType(col.props.dataType, col.props.align);
 						let element: any = {
 							id: col.props.dataField,
 							accessorKey: col.props.dataField,
-							accessorFn: (originalRow) =>
-								ArchbaseObjectHelper.getNestedProperty(
-									originalRow,
-									col.props.dataField,
-								),
+							accessorFn: (originalRow) => ArchbaseObjectHelper.getNestedProperty(originalRow, col.props.dataField),
 							header: col.props.header,
 							dataType: col.props.dataType,
 							enableColumnFilter: col.props.enableColumnFilter,
@@ -1037,31 +903,31 @@ export function ArchbaseDataTable<T extends object, ID>(
 							enableSorting: col.props.enableSorting,
 							filterFunctionName: getFilterFnByDataType(col.props.dataType),
 							filterFn: getFilterFnByDataType(col.props.dataType),
-							columnFilterModeOptions: getFilterModeByDataType(
-								col.props.dataType,
-							),
+							columnFilterModeOptions: getFilterModeByDataType(col.props.dataType),
 							filterVariant: col.props.inputFilterType,
 							mantineFilterSelectProps: { data: col.props.enumValues },
 							mantineFilterMultiSelectProps: { data: col.props.enumValues },
-							Cell: render ? ({ cell }) => <div style={{width:'100%', display:'flex', justifyContent:alignContent, alignContent:'center'}}>{render(cell, col.props.maskOptions)}</div> : undefined,
+							Cell: render
+								? ({ cell }) => (
+										<div
+											style={{ width: '100%', display: 'flex', justifyContent: alignContent, alignContent: 'center' }}
+										>
+											{render(cell, col.props.maskOptions)}
+										</div>
+								  )
+								: undefined,
 							Header: ({ column }) => (
 								<i
 									style={{
-										color:
-											theme.colors[theme.primaryColor][
-												theme.colorScheme === 'dark' ? 3 : 7
-											],
+										color: theme.colors[theme.primaryColor][colorScheme === 'dark' ? 3 : 7],
 									}}
 								>
 									{column.columnDef.header}
 								</i>
 							),
 							mantineTableBodyCellProps: ({ cell, table }) => ({
-								sx: {
-									backgroundColor: `${getCellBackgroundColor(
-										cell,
-										table,
-									)}!important`,
+								style: {
+									backgroundColor: `${getCellBackgroundColor(cell, table)}!important`,
 									color: `${getCellColorFont(cell)}!important`,
 								},
 							}),
@@ -1081,6 +947,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 										rangeFilterIndex={rangeFilterIndex}
 										value={column.getFilterValue()}
 										variant={column.columnDef.filterVariant}
+										colorScheme={colorScheme}
 									/>
 								),
 							};
@@ -1095,7 +962,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 		return result;
 	}, [
 		props.children,
-		theme.colorScheme,
+		colorScheme,
 		getCellBackgroundColor,
 		getCellColorFont,
 		theme.colors[theme.primaryColor],
@@ -1116,10 +983,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 	const handlePrint = (table) => {
 		const doc = new JsPDF('l', 'mm', [297, 210]) as JsPDFCustom;
 		if (table) {
-			const collection =
-				table.refs.tableContainerRef.current.getElementsByClassName(
-					'mantine-Table-root',
-				);
+			const collection = table.refs.tableContainerRef.current.getElementsByClassName('mantine-Table-root');
 			if (collection && collection.length > 0) {
 				const tableColumns: any = [];
 				const bodyValues: any = [];
@@ -1129,11 +993,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 				table.getRowModel().rows.forEach((row) => {
 					const rowBody: any = [];
 					row.getAllCells().forEach((cell) => {
-						if (
-							tableColumns.findIndex(
-								(coll) => coll === cell.column.columnDef.header,
-							) >= 0
-						) {
+						if (tableColumns.findIndex((coll) => coll === cell.column.columnDef.header) >= 0) {
 							rowBody.push(cell.renderValue());
 						}
 					});
@@ -1154,14 +1014,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 						doc.setFontSize(20);
 						doc.setTextColor(40);
 						if (props.logoPrint) {
-							doc.addImage(
-								props.logoPrint,
-								'PNG',
-								data.settings.margin.left,
-								15,
-								10,
-								10,
-							);
+							doc.addImage(props.logoPrint, 'PNG', data.settings.margin.left, 15, 10, 10);
 							doc.text(props.printTitle, data.settings.margin.left + 15, 22);
 						} else {
 							doc.text(props.printTitle, data.settings.margin.left, 22);
@@ -1174,9 +1027,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 						}
 						doc.setFontSize(10);
 						const pageSize = doc.internal.pageSize;
-						const pageHeight = pageSize.height
-							? pageSize.height
-							: pageSize.getHeight();
+						const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
 						doc.text(str, data.settings.margin.left, pageHeight - 10);
 					},
 					margin: { top: 30 },
@@ -1213,11 +1064,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 		setStickyEnable((_prev) => true);
 	};
 
-	const handleCurrentCell = (selectedCell: {
-		rowIndex: number;
-		columnName: string;
-		rowData: T;
-	}) => {
+	const handleCurrentCell = (selectedCell: { rowIndex: number; columnName: string; rowData: T }) => {
 		setCurrentCell(selectedCell);
 		if (props.dataSource) {
 			props.dataSource.gotoRecordByData(selectedCell.rowData);
@@ -1235,40 +1082,29 @@ export function ArchbaseDataTable<T extends object, ID>(
 		}
 
 		return (
-			<Flex
-				style={{ gap: 0, paddingLeft: 10 }}
-				align="center"
-				className="no-print"
-			>
+			<Flex style={{ gap: 0, paddingLeft: 10 }} align="center" className="no-print">
 				<CustomToggleGlobalFilterButton variant={props.variant} table={table} />
 				<Tooltip withinPortal withArrow label={i18next.t('Refresh')}>
 					<ActionIcon
 						variant={props.variant}
 						size="lg"
-						color="primary"
-						sx={{ width: '36px', height: '36px', marginRight: 2 }}
+						color="var(--mantine-primary-color-filled)"
+						style={{ width: '36px', height: '36px', marginRight: 2 }}
 						onClick={handleRefresh}
 					>
 						<IconRefresh size="1.4rem" />
 					</ActionIcon>
 				</Tooltip>
-				{props.allowColumnFilters ? (
-					<CustomToggleFiltersButton variant={props.variant} table={table} />
-				) : null}
+				{props.allowColumnFilters ? <CustomToggleFiltersButton variant={props.variant} table={table} /> : null}
 				<CustomShowHideColumnsButton variant={props.variant} table={table} />
-				<Menu
-					position="top-start"
-					width={200}
-					onOpen={handleOpenMenu}
-					onClose={handleCloseMenu}
-				>
+				<Menu position="top-start" width={200} onOpen={handleOpenMenu} onClose={handleCloseMenu}>
 					<Menu.Target>
 						<Tooltip withinPortal withArrow label={i18next.t('Export')}>
 							<ActionIcon
 								variant={props.variant}
 								size="lg"
-								color="primary"
-								sx={{ width: '36px', height: '36px', marginRight: 2 }}
+								color="var(--mantine-primary-color-filled)"
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
 							>
 								<IconDownload size="1.4rem" />
 							</ActionIcon>
@@ -1277,20 +1113,13 @@ export function ArchbaseDataTable<T extends object, ID>(
 					<Menu.Dropdown>
 						<Menu.Item
 							disabled={table.getRowModel().rows.length === 0}
-							onClick={() =>
-								handleExportRows(table.getRowModel().rows, originColumns)
-							}
+							onClick={() => handleExportRows(table.getRowModel().rows, originColumns)}
 						>
 							{`${i18next.t('AllRows')}`}
 						</Menu.Item>
 						<Menu.Item
 							disabled={table.getSelectedRowModel().rows.length === 0}
-							onClick={() =>
-								handleExportRows(
-									table.getSelectedRowModel().rows,
-									originColumns,
-								)
-							}
+							onClick={() => handleExportRows(table.getSelectedRowModel().rows, originColumns)}
 						>
 							{`${i18next.t('OnlySelectedRows')}`}
 						</Menu.Item>
@@ -1300,8 +1129,8 @@ export function ArchbaseDataTable<T extends object, ID>(
 					<ActionIcon
 						variant={props.variant}
 						size="lg"
-						color="primary"
-						sx={{ width: '36px', height: '36px', marginRight: 2 }}
+						color="var(--mantine-primary-color-filled)"
+						style={{ width: '36px', height: '36px', marginRight: 2 }}
 						onClick={(event) => handlePrint(table)}
 					>
 						<IconPrinter size="1.4rem" />
@@ -1337,16 +1166,16 @@ export function ArchbaseDataTable<T extends object, ID>(
 		mantinePaperProps: {
 			withBorder: props.withBorder,
 			shadow: props.withBorder ? 'xs' : '',
-			sx: {
+			style: {
 				width: props.width,
 			},
 		},
 		mantineFilterTextInputProps: {
-			sx: { borderBottom: 'unset', marginTop: '8px' },
+			style: { borderBottom: 'unset', marginTop: '8px' },
 			variant: 'filled',
 		},
 		mantineFilterSelectProps: {
-			sx: { borderBottom: 'unset', marginTop: '8px' },
+			style: { borderBottom: 'unset', marginTop: '8px' },
 			variant: 'filled',
 		},
 		positionActionsColumn: props.positionActionsColumn || 'first',
@@ -1375,33 +1204,30 @@ export function ArchbaseDataTable<T extends object, ID>(
 			showAlertBanner: props.isError,
 			pagination,
 			rowSelection,
-			showGlobalFilter:
-				(!globalFilter || globalFilter !== '') && props.enableGlobalFilter,
+			showGlobalFilter: (!globalFilter || globalFilter !== '') && props.enableGlobalFilter,
 		},
 		mantineProgressProps: {
 			striped: false,
-			animate: true,
+			animated: true,
+			value: 0,
 		},
 		mantineTableContainerProps: {
-			sx: { maxHeight },
+			style: { maxHeight },
 		},
 		mantineSelectCheckboxProps: {},
 		mantineTableProps: {
 			withColumnBorders: props.withColumnBorders,
 			highlightOnHover: props.highlightOnHover,
-			fontSize: props.fontSize,
-			sx: {
-				borderTop: `1px solid ${
-					theme.colors.gray[theme.colorScheme === 'dark' ? 8 : 3]
-				}`,
+			fz: props.fontSize,
+			style: {
+				borderTop: `1px solid ${theme.colors.gray[colorScheme === 'dark' ? 8 : 3]}`,
 			},
 		},
 		mantinePaginationProps: {
 			showRowsPerPage: false,
 		},
 		onRowSelectionChange: setRowSelection,
-		renderTopToolbarCustomActions: (table) =>
-			getToolBarCustomActions(table, props),
+		renderTopToolbarCustomActions: (table) => getToolBarCustomActions(table, props),
 		localization: languages[i18n.language],
 		data: isLoadingInternal ? [] : data,
 		rowCount: props.dataSource.getGrandTotalRecords(),
@@ -1433,13 +1259,9 @@ export function ArchbaseDataTable<T extends object, ID>(
 			) {
 				setLoadingInternal(true);
 				setPagination({
-					pageIndex: props.dataSource
-						? props.dataSource.getCurrentPage()
-						: props.pageIndex,
-					pageSize: props.dataSource
-						? props.dataSource.getPageSize()
-						: props.pageSize,
-				})
+					pageIndex: props.dataSource ? props.dataSource.getCurrentPage() : props.pageIndex,
+					pageSize: props.dataSource ? props.dataSource.getPageSize() : props.pageSize,
+				});
 			}
 		},
 	});
@@ -1447,11 +1269,7 @@ export function ArchbaseDataTable<T extends object, ID>(
 	useEffect(() => {
 		if (props.enableGlobalFilter) {
 			const sortResult = buildSortRSQL(sorting);
-			const filterResult = buildFilterExpressionRSQL(
-				columnFilters,
-				table,
-				originColumns,
-			);
+			const filterResult = buildFilterExpressionRSQL(columnFilters, table, originColumns);
 			const globalFilterResult = buildGlobalFilterExpressionRSQL(
 				table,
 				originColumns,
@@ -1478,15 +1296,8 @@ export function ArchbaseDataTable<T extends object, ID>(
 			options.currentPage = pagination.pageIndex;
 			props.dataSource.refreshData(options);
 		}
-	}, [
-		pagination.pageIndex,
-		pagination.pageSize,
-		JSON.stringify(columnFilters),
-		globalFilter,
-		sorting,
-	]);
+	}, [pagination.pageIndex, pagination.pageSize, JSON.stringify(columnFilters), globalFilter, sorting]);
 
-	
 	return (
 		<div ref={props.tableRef || divTable}>
 			<MantineReactTable table={table} />
@@ -1547,14 +1358,7 @@ export type FieldDataType =
 	| 'image'
 	| 'uuid';
 
-export type InputFieldType =
-	| 'text'
-	| 'select'
-	| 'multi-select'
-	| 'range'
-	| 'checkbox'
-	| 'date'
-	| 'date-range';
+export type InputFieldType = 'text' | 'select' | 'multi-select' | 'range' | 'checkbox' | 'date' | 'date-range';
 
 type AlignType = 'left' | 'center' | 'right';
 
@@ -1581,9 +1385,7 @@ export interface ArchbaseDataTableColumnProps<T> {
 	footerAlign?: AlignType;
 }
 
-export function ArchbaseDataTableColumn<T>(
-	_props: ArchbaseDataTableColumnProps<T>,
-) {
+export function ArchbaseDataTableColumn<T>(_props: ArchbaseDataTableColumnProps<T>) {
 	return null;
 }
 
@@ -1610,9 +1412,7 @@ export interface ArchbaseTableRowActionsProps<T extends Object> {
 	onRemoveRow: (row: MRT_Row<T>) => void;
 	onViewRow: (row: MRT_Row<T>) => void;
 	row: MRT_Row<T>;
-	variant?: Variants<
-		'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'
-	>;
+	variant?: string;
 }
 
 export function ArchbaseTableRowActions<T extends Object>({
@@ -1623,57 +1423,40 @@ export function ArchbaseTableRowActions<T extends Object>({
 	variant = 'filled',
 }: ArchbaseTableRowActionsProps<T>) {
 	const theme = useMantineTheme();
-
+	const { colorScheme } = useMantineColorScheme();
+	console.log(variant);
 	return (
-		<Box sx={{ display: 'flex' }}>
+		<Box style={{ display: 'flex' }}>
 			{onEditRow ? (
 				<Tooltip withinPortal withArrow position="left" label={t('Edit')}>
 					<ActionIcon
-						variant={variant === 'filled' ? 'white' : variant}
+						variant={variant === 'filled' ? 'transparent' : variant}
 						color="green"
 						onClick={() => onEditRow && onEditRow(row)}
 					>
-						<IconEdit
-							color={
-								theme.colorScheme === 'dark'
-									? theme.colors.blue[8]
-									: theme.colors.blue[4]
-							}
-						/>
+						<IconEdit color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 					</ActionIcon>
 				</Tooltip>
 			) : null}
 			{onRemoveRow ? (
 				<Tooltip withinPortal withArrow position="right" label={t('Remove')}>
 					<ActionIcon
-						variant={variant === 'filled' ? 'white' : variant}
+						variant={variant === 'filled' ? 'transparent' : variant}
 						color="red"
 						onClick={() => onRemoveRow && onRemoveRow(row)}
 					>
-						<IconTrash
-							color={
-								theme.colorScheme === 'dark'
-									? theme.colors.red[8]
-									: theme.colors.red[4]
-							}
-						/>
+						<IconTrash color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
 					</ActionIcon>
 				</Tooltip>
 			) : null}
 			{onViewRow ? (
 				<Tooltip withinPortal withArrow position="right" label={t('View')}>
 					<ActionIcon
-						variant={variant === 'filled' ? 'white' : variant}
+						variant={variant === 'filled' ? 'transparent' : variant}
 						color="black"
 						onClick={() => onViewRow && onViewRow(row)}
 					>
-						<IconEye
-							color={
-								theme.colorScheme === 'dark'
-									? theme.colors.dark[2]
-									: theme.colors.dark[4]
-							}
-						/>
+						<IconEye color={colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]} />
 					</ActionIcon>
 				</Tooltip>
 			) : null}

@@ -1,20 +1,14 @@
-import { Flex, Footer, MantineNumberSize } from '@mantine/core'
-import React, { ReactNode } from 'react'
+import { Flex } from '@mantine/core';
+import React, { ReactNode } from 'react';
 
 export interface ArchbaseAdminLayoutFooterProps {
-  children?: ReactNode | ReactNode[]
-  height?: MantineNumberSize
+	children?: ReactNode | ReactNode[];
 }
 
-export const ArchbaseAdminLayoutFooter = ({
-  children,
-  height = 60
-}: ArchbaseAdminLayoutFooterProps) => {
-  return (
-    <Footer height={height} p="md">
-      <Flex align="center" direction="row" wrap="wrap">
-        {children}
-      </Flex>
-    </Footer>
-  )
-}
+export const ArchbaseAdminLayoutFooter = ({ children }: ArchbaseAdminLayoutFooterProps) => {
+	return (
+		<Flex align="center" direction="row" wrap="wrap" h={'100%'}>
+			{children}
+		</Flex>
+	);
+};

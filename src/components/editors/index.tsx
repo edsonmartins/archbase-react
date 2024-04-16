@@ -29,8 +29,8 @@ export type { ArchbaseDatePickerRangeProps } from './ArchbaseDatePickerRange';
 export { ArchbaseDatePickerRange } from './ArchbaseDatePickerRange';
 
 export type {
-  ArchbaseDateTimePickerEditProps,
-  ArchbaseDateTimePickerEditStylesNames,
+	ArchbaseDateTimePickerEditProps,
+	ArchbaseDateTimePickerEditStylesNames,
 } from './ArchbaseDateTimePickerEdit';
 export { ArchbaseDateTimePickerEdit, assignTime } from './ArchbaseDateTimePickerEdit';
 
@@ -56,7 +56,7 @@ export { ArchbaseMaskEdit, MaskPattern } from './ArchbaseMaskEdit';
 export type { ArchbaseMaskEditProps, ArchbaseMaskEditStylesNames } from './ArchbaseMaskEdit';
 
 export { ArchbaseNumberEdit } from './ArchbaseNumberEdit';
-export type { ArchbaseNumberEditProps, ArchbaseNumberEditStylesNames } from './ArchbaseNumberEdit';
+export type { ArchbaseNumberEditProps } from './ArchbaseNumberEdit';
 
 export { ArchbasePasswordEdit } from './ArchbasePasswordEdit';
 export type { ArchbasePasswordEditProps } from './ArchbasePasswordEdit';
@@ -90,6 +90,3 @@ export type { ArchbaseTextAreaProps } from './ArchbaseTextArea';
 
 export { ArchbaseSelectContext, ArchbaseSelectProvider } from './ArchbaseSelect.context';
 export type { ArchbaseSelectContextValue } from './ArchbaseSelect.context';
-
-export { ArchbaseAutoComplete } from './ArchbaseAutoComplete';
-export type { ArchbaseAutoCompleteProps } from './ArchbaseAutoComplete';

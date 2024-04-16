@@ -2,6 +2,7 @@
 import {
   ActionIcon,
   Button,
+	ButtonVariant,
   Card,
   Checkbox,
   Chip,
@@ -11,7 +12,7 @@ import {
   Switch,
   Text,
   Tooltip,
-  Variants
+  useMantineColorScheme
 } from '@mantine/core'
 import { DatePickerInput, DatesRangeValue, DateValue, TimeInput } from '@mantine/dates'
 import {
@@ -44,10 +45,11 @@ import {
 import { IconSortDescendingLetters } from '@tabler/icons-react'
 import { t } from 'i18next'
 import { DebouncedTextInput } from './ArchbaseQueryBuilder'
-import { ArchbaseAppContext, ArchbaseError, ltrim } from 'components/core'
-import { ArchbaseList, ArchbaseListContext } from 'components/list'
-import { ArchbaseDataSource } from 'components/datasource'
-import { ArchbaseDateTimePickerEdit, ArchbaseDateTimePickerRange, ArchbaseSelect, ArchbaseSelectItem, ArchbaseSwitch } from 'components/editors'
+import { ArchbaseAppContext, ArchbaseError, ltrim } from '@components/core'
+import { ArchbaseList, ArchbaseListContext } from '@components/list'
+import { ArchbaseDataSource } from '@components/datasource'
+import { ArchbaseDateTimePickerEdit, ArchbaseDateTimePickerRange, ArchbaseSelect, ArchbaseSelectItem, ArchbaseSwitch } from '@components/editors'
+
 
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
   id: string
@@ -67,7 +69,7 @@ interface ArchbaseAdvancedFilterProps<_T, _ID> {
   disabled?: boolean
   onSearchButtonClick?: () => void
   border?: string
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+  variant?: ButtonVariant
 }
 
 interface ArchbaseAdvancedFilterState {
@@ -864,7 +866,7 @@ interface RuleGroupItemProps {
   schema: Schema
   height?: string
   onSearchButtonClick?: () => void
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+  variant?: ButtonVariant
 }
 
 class RuleGroupItem extends Component<RuleGroupItemProps> {
@@ -893,7 +895,7 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
   }
 
   getColor = (color: string) => {
-    return this.context.theme!.colors[color][this.context.theme!.colorScheme === 'dark' ? 5 : 7]
+    return this.context.theme!.colors[color][this.context.colorScheme === 'dark' ? 5 : 7]
   }
 
   render = () => {
@@ -1109,7 +1111,7 @@ class RuleItem extends Component<RuleItemProps> {
     let twoFields = operator === 'between' && dt !== 'date' && dt !== 'date_time' && dt !== 'time'
     var level = getLevel(this.props.id)
     let listValues = this.getFieldValues(field, fields)
-
+    const { colorScheme } = useMantineColorScheme();
     return (
       <li className={'rule-container'}>
         <Checkbox
@@ -1123,7 +1125,7 @@ class RuleItem extends Component<RuleItemProps> {
           value={field!}
           className="custom-select-field"
           style={{
-            color: this.context.theme!.colorScheme === 'dark' ? 'white' : 'black'
+            color: this.context.colorScheme === 'dark' ? 'white' : 'black'
           }}
           disabled={disabled}
           handleOnChange={this.onFieldChanged}
@@ -1135,7 +1137,7 @@ class RuleItem extends Component<RuleItemProps> {
           options={getOperators(field)}
           value={operator!}
           style={{
-            color: this.context.theme!.colorScheme === 'dark' ? 'white' : 'black'
+            color: this.context.colorScheme === 'dark' ? 'white' : 'black'
           }}
           className="custom-select-operator"
           disabled={disabled}
@@ -1269,13 +1271,13 @@ class RuleItem extends Component<RuleItemProps> {
 }
 
 interface ActionElementProps {
-  label: string
-  style?: CSSProperties
-  level: number
-  handleOnClick: (event: React.MouseEvent) => void
-  rules?: Rule[]
-  color?: string
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+	label: string;
+	style?: CSSProperties;
+	level: number;
+	handleOnClick: (event: React.MouseEvent) => void;
+	rules?: Rule[];
+	color?: string;
+	variant?: ButtonVariant;
 }
 
 class ActionElement extends Component<ActionElementProps> {

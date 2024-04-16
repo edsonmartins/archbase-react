@@ -1,8 +1,8 @@
 /* eslint-disable */
 import React, { Component, ReactNode } from 'react'
-import { Variants } from '@mantine/styles'
-import { ArchbaseError } from 'components/core'
-import { MaskPattern } from 'components/editors'
+import { ArchbaseError } from '../core'
+import { MaskPattern } from '../editors'
+import { ButtonVariant } from '@mantine/core'
 
 const QUICK_FILTER_INDEX = -2
 const NEW_FILTER_INDEX = -1
@@ -353,7 +353,7 @@ interface ArchbaseQueryBuilderProps {
   showPrintButton?: boolean
   showExportButton?: boolean
   onClearFilter?: (self: any) => {}
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+  variant?: ButtonVariant
   viewName: string
   id: string
   apiVersion: string

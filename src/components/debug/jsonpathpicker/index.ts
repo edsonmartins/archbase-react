@@ -1,1 +1,1 @@
-export {ArchbaseJsonPathPicker} from "./ArchbaseJsonPathPicker"
+export { ArchbaseJsonPathPicker } from './ArchbaseJsonPathPicker';

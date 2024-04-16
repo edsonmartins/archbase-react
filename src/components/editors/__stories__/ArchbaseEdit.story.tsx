@@ -36,27 +36,23 @@ const ArchbaseEditExample = () => {
 			<Grid.Col offset={1} span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Edit Component</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Edit Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
-						<ArchbaseEdit
-							label="Nome"
-							dataSource={dataSource}
-							dataField="nome"
-						/>
+					<Box style={{ height: 100 }}>
+						<ArchbaseEdit label="Nome" dataSource={dataSource} dataField="nome" />
 					</Box>
 				</Card>
 			</Grid.Col>
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

@@ -19,9 +19,7 @@ const PAGE_SIZE = 10;
 
 const ArchbaseAsyncSelectExample = () => {
 	const forceUpdate = useArchbaseForceUpdate();
-	const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(
-		API_TYPE.Pessoa,
-	);
+	const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
 	const { dataSource } = useArchbaseDataSource<Pedido, string>({
 		initialData: pedidosList,
 		name: 'dsPedidos',
@@ -42,17 +40,10 @@ const ArchbaseAsyncSelectExample = () => {
 		},
 	});
 
-	const loadRemotePessoas = async (
-		page,
-		value,
-	): Promise<OptionsResult<Pessoa>> => {
+	const loadRemotePessoas = async (page, value): Promise<OptionsResult<Pessoa>> => {
 		return new Promise<OptionsResult<Pessoa>>(async (resolve, reject) => {
 			try {
-				const result: Page<Pessoa> = await pessoaApi.findAllWithFilter(
-					value,
-					page,
-					PAGE_SIZE,
-				);
+				const result: Page<Pessoa> = await pessoaApi.findAllWithFilter(value, page, PAGE_SIZE);
 				resolve({
 					options: result.content,
 					page: result.pageable.pageNumber,
@@ -69,11 +60,11 @@ const ArchbaseAsyncSelectExample = () => {
 			<Grid.Col offset={1} span={6}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>AsyncSelect Component</Text>
+						<Group justify="space-between">
+							<Text fw={500}>AsyncSelect Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
+					<Box style={{ height: 100 }}>
 						<ArchbaseAsyncSelect<Pedido, string, Pessoa>
 							label="Nome"
 							dataSource={dataSource}
@@ -81,6 +72,7 @@ const ArchbaseAsyncSelectExample = () => {
 							getOptionLabel={(option: Pessoa) => option && option.nome}
 							getOptionValue={(option: Pessoa) => option}
 							getOptions={loadRemotePessoas}
+						// converter={value => value.altura}
 						/>
 					</Box>
 				</Card>
@@ -88,11 +80,11 @@ const ArchbaseAsyncSelectExample = () => {
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPedidos</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPedidos</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

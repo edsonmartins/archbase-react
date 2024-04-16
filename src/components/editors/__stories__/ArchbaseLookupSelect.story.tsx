@@ -43,18 +43,12 @@ const ArchbaseLookupSelectExample = () => {
 			<Grid.Col offset={1} span={6}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Lookup Edit Component</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Lookup Edit Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
-						<Flex
-							justify="flex-start"
-							align="center"
-							direction="row"
-							wrap="nowrap"
-							gap="xs"
-						>
+					<Box style={{ height: 100 }}>
+						<Flex justify="flex-start" align="center" direction="row" wrap="nowrap" gap="xs">
 							<ArchbaseLookupSelect<Pedido, string, Pessoa>
 								label="Código"
 								dataSource={dataSource}
@@ -63,17 +57,11 @@ const ArchbaseLookupSelectExample = () => {
 								lookupDataFieldText="nome"
 								lookupDataFieldId="id"
 								required={true}
-								width={150}
+								width={300}
 								getOptionLabel={(option: Pessoa) => option.nome}
 								getOptionValue={(option: Pessoa) => option}
 							/>
-							<ArchbaseEdit
-								label="Nome"
-								dataSource={dataSource}
-								dataField="cliente.nome"
-								disabled
-								width={500}
-							/>
+							<ArchbaseEdit label="Nome" dataSource={dataSource} dataField="cliente.nome" disabled width={500} />
 						</Flex>
 					</Box>
 				</Card>
@@ -81,11 +69,11 @@ const ArchbaseLookupSelectExample = () => {
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPedidos</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPedidos</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

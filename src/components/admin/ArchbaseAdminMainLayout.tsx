@@ -1,6 +1,6 @@
-import { AppShell, Drawer, px, useMantineTheme } from '@mantine/core';
+import { AppShell, Drawer, px, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import React, { ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'usehooks-ts';
 import { ArchbaseUser } from '../auth/ArchbaseUser';
 import { useArchbaseVisible } from '../hooks/useArchbaseVisible';
@@ -42,6 +42,8 @@ export interface ArchbaseAdminMainLayoutProps {
 	backgroundGroupColor?: string | undefined;
 	groupLabelDarkColor?: string | undefined;
 	groupLabelLightColor?: string | undefined;
+	headerColor?: string;
+	footerHeight?: string | number | undefined;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -60,17 +62,22 @@ function ArchbaseAdminMainLayoutContainer({
 	sidebarDefaultGroupIcon,
 	sideBarHeaderHeight,
 	sideBarHeaderContent,
-	selectedGroupColor="#132441",
-	groupColor="white",
-	backgroundGroupColor="#132441",
-	groupLabelDarkColor="white",
-	groupLabelLightColor="white",
+	selectedGroupColor = '#132441',
+	groupColor = 'white',
+	backgroundGroupColor = '#132441',
+	groupLabelDarkColor = 'white',
+	groupLabelLightColor = 'white',
+	headerColor,
+	footerHeight = '40px',
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
+	const { colorScheme } = useMantineColorScheme();
 	const navigate = useNavigate();
 	const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>();
-	const isHidden = useMediaQuery(`(max-width: ${sideBarHiddenBreakPoint ?? theme.breakpoints.md})`);
+	const isHidden = useMediaQuery(
+		`(max-width: ${sideBarHiddenBreakPoint ? px(sideBarHiddenBreakPoint) : theme.breakpoints.md})`,
+	);
 
 	const onMenuItemClick = (item: ArchbaseNavigationItem) => {
 		if (item.link) {
@@ -89,14 +96,12 @@ function ArchbaseAdminMainLayoutContainer({
 		let headerHeight = 0;
 		let footerHeight = 0;
 		if (sideBarHeaderHeight) {
-			headerHeight = px(sideBarHeaderHeight);
+			headerHeight = Number(px(sideBarHeaderHeight));
 		}
 		if (sideBarFooterHeight) {
-			footerHeight = px(sideBarFooterHeight);
+			footerHeight = Number(px(sideBarFooterHeight));
 		}
-		return `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - ${
-			headerHeight + footerHeight
-		}px)`;
+		return `calc(100vh - var(--app-shell-header-offset, 0px) - ${headerHeight + footerHeight}px)`;
 	};
 
 	const routes = useMemo(() => {
@@ -139,22 +144,31 @@ function ArchbaseAdminMainLayoutContainer({
 		}
 	}, [adminLayoutContextValue.collapsed, onCollapsedSideBar]);
 
+	const currentSidebarWidth = adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth;
 	return (
 		<AppShell
+			header={{ height: '60px' }}
 			styles={{
 				main: {
-					background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-					paddingTop: 'calc(var(--mantine-header-height, 0px) + 0.5rem)',
-					paddingBottom: 'calc(var(--mantine-footer-height, 0px) + 0.5rem)',
-					paddingLeft: 'calc(var(--mantine-navbar-width, 0px) + 0.5rem)',
-					paddingRight: 'calc(var(--mantine-aside-width, 0px) + 0.5rem)',
-				},
-				body: {
+					background: colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
 					overflow: 'hidden',
 				},
 			}}
-			navbar={
-				!isHidden ? (
+		>
+			<AppShell.Header
+				p="xs"
+				color={headerColor}
+				display="flex"
+				style={{
+					backgroundColor: 'var(--mantine-primary-color-8)',
+					alignItems: 'center',
+					borderBottom: 'none',
+				}}
+			>
+				{header}
+			</AppShell.Header>
+			<AppShell.Navbar>
+				{!isHidden ? (
 					<ArchbaseAdvancedSidebar
 						navigationData={navigationData}
 						sidebarHeight={getSideBarHeight()}
@@ -176,68 +190,73 @@ function ArchbaseAdminMainLayoutContainer({
 						sideBarHeaderContent={sideBarHeaderContent}
 						theme={theme}
 						sidebarRef={sidebarRef}
-						margin="calc(var(--mantine-header-height, 0rem) - 1px) 0 0 0"
 						defaultGroupIcon={sidebarDefaultGroupIcon}
 						selectedGroupName={sidebarSelectedGroupName}
 					/>
-				) : undefined
-			}
-			footer={footer}
-			header={header}
-		>
-			{!isHidden &&
-				buildSetCollapsedButton(
-					theme,
-					adminLayoutContextValue,
-					sideBarWidth,
-					sideBarCollapsedWidth,
-					handleCollapseSidebar,
-				)}
-			<div
-				style={{
-					height: 'calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem) - 1rem)',
-					width: `calc(100vw - ${
-						isHidden ? '0rem' : adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth
-					} - 1rem)`,
-					border: `1px solid ${
-						theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors[theme.primaryColor][1]
-					}`,
-					borderRadius: '6px',
-					overflow: 'none',
-				}}
-			>
-				{children}
-				<div style={{ width: '100%', height: 'calc(100% - 48px)' }}>
-					<ArchbaseAliveAbleRoutes>{routes}</ArchbaseAliveAbleRoutes>
+				) : undefined}
+			</AppShell.Navbar>
+			<AppShell.Main bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}>
+				{!isHidden &&
+					buildSetCollapsedButton(
+						colorScheme,
+						theme,
+						adminLayoutContextValue,
+						sideBarWidth,
+						sideBarCollapsedWidth,
+						handleCollapseSidebar,
+					)}
+				<div
+					style={{
+						height: `calc(100vh - var(--app-shell-header-offset, 0px) - ${px(
+							footerHeight,
+						)}px - var(--app-shell-padding) - 1rem)`,
+						width: `calc(100vw - var(--app-shell-padding) - calc(${isHidden ? '0px' : currentSidebarWidth} + 1rem))`,
+						marginTop: '0.5rem',
+						marginLeft: `calc(${isHidden ? '0px' : currentSidebarWidth} + 0.5rem)`,
+						border: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors[theme.primaryColor][1]}`,
+						borderRadius: '6px',
+						overflow: 'none',
+					}}
+				>
+					{children}
+					<div style={{ width: '100%', height: 'calc(100% - 48px)' }}>
+						<ArchbaseAliveAbleRoutes>{routes}</ArchbaseAliveAbleRoutes>
+					</div>
 				</div>
-			</div>
-			<Drawer
-				opened={adminLayoutContextValue.hidden || false}
-				onClose={handleHiddenSidebar}
-				size={sideBarWidth}
-				padding={0}
-			>
-				<ArchbaseAdvancedSidebar
-					navigationData={navigationData}
-					sidebarWidth={sideBarWidth}
-					sidebarHeight="calc(100vh - 26px)"
-					sidebarCollapsedWidth={sideBarCollapsedWidth}
-					sidebarGroupWidth={sideBarCollapsedWidth}
-					selectedGroupColor={selectedGroupColor}
-					groupColor={groupColor}
-					backgroundGroupColor={backgroundGroupColor}
-					groupLabelDarkColor={groupLabelDarkColor}
-					groupLabelLightColor={groupLabelLightColor}
-					showGroupLabels={false}
-					isHidden={isHidden}
-					onMenuItemClick={onMenuItemClick}
-					onClickActionIcon={onClickActionIcon}
-					theme={theme}
-					sidebarRef={sidebarRef}
-					defaultGroupIcon={sidebarDefaultGroupIcon}
-					selectedGroupName={sidebarSelectedGroupName}
-				/>
-			</Drawer>
+				<Drawer
+					opened={adminLayoutContextValue.hidden || false}
+					onClose={handleHiddenSidebar}
+					size={sideBarWidth}
+					padding={0}
+					styles={{
+						header: { minHeight: '10px' },
+					}}
+				>
+					<ArchbaseAdvancedSidebar
+						navigationData={navigationData}
+						sidebarWidth={sideBarWidth}
+						sidebarHeight="calc(100vh - 28px)"
+						sidebarCollapsedWidth={sideBarCollapsedWidth}
+						sidebarGroupWidth={sideBarCollapsedWidth}
+						selectedGroupColor={selectedGroupColor}
+						groupColor={groupColor}
+						backgroundGroupColor={backgroundGroupColor}
+						groupLabelDarkColor={groupLabelDarkColor}
+						groupLabelLightColor={groupLabelLightColor}
+						showGroupLabels={false}
+						isHidden={isHidden}
+						onMenuItemClick={onMenuItemClick}
+						onClickActionIcon={onClickActionIcon}
+						theme={theme}
+						sidebarRef={sidebarRef}
+						defaultGroupIcon={sidebarDefaultGroupIcon}
+						selectedGroupName={sidebarSelectedGroupName}
+					/>
+				</Drawer>
+			</AppShell.Main>
+			<AppShell.Footer h={footerHeight} p="md">
+				{footer}
+			</AppShell.Footer>
 		</AppShell>
 	);
 }
@@ -262,11 +281,13 @@ export function ArchbaseAdminMainLayout({
 	sidebarSelectedGroupName,
 	sideBarHeaderHeight,
 	sideBarHeaderContent,
-	selectedGroupColor="#132441",
-	groupColor="white",
-	backgroundGroupColor="#132441",
-	groupLabelDarkColor="white",
-	groupLabelLightColor="white",
+	selectedGroupColor = '#132441',
+	groupColor = 'white',
+	backgroundGroupColor = '#132441',
+	groupLabelDarkColor = 'white',
+	groupLabelLightColor = 'white',
+	headerColor,
+	footerHeight,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -300,6 +321,8 @@ export function ArchbaseAdminMainLayout({
 				onHiddenSidebar={onHiddenSidebar}
 				sidebarDefaultGroupIcon={sidebarDefaultGroupIcon}
 				sidebarSelectedGroupName={sidebarSelectedGroupName}
+				headerColor={headerColor}
+				footerHeight={footerHeight}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>
