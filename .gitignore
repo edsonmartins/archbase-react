@@ -3,8 +3,12 @@
 
 # dependencies
 node_modules
+.yarn
 .yarn/cache
 .yarn/install-state.gz
+.pnp.cjs
+.pnp.loader.mjs
+.yarnrc.yml
 docs/
 storybook-static
 
