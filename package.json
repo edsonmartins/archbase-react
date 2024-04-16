@@ -157,6 +157,9 @@
     "@rollup/plugin-terser": "^0.3.0",
     "@rollup/plugin-typescript": "^11.1.5",
     "@rollup/plugin-url": "^8.0.2",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.0.3",
     "@storybook/addon-a11y": "^7.5.2",
     "@storybook/addon-actions": "^7.5.2",
     "@storybook/addon-docs": "^7.5.2",
@@ -217,6 +220,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.67.0",
+    "semantic-release": "^23.0.8",
     "storybook": "^7.5.2",
     "ts-jest": "^29.0.4",
     "tslib": "^2.4.1",
@@ -241,6 +245,5 @@
   },
   "engines": {
     "node": ">=16"
-  },
-  "packageManager": "yarn@4.0.1"
+  }
 }
