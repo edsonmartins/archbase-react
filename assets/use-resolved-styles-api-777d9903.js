@@ -1,0 +1,1 @@
+import"./index-76fb7be0.js";import{b as a,c as r,d as i}from"./polymorphic-factory-e212381f.js";function d({classNames:o,styles:l,props:e,stylesCtx:s}){const t=a();return{resolvedClassNames:r({theme:t,classNames:o,props:e,stylesCtx:s||void 0}),resolvedStyles:i({theme:t,styles:l,props:e,stylesCtx:s||void 0})}}export{d as u};
