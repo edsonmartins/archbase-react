@@ -26,6 +26,6 @@ jobs:
 
       - name: Run semantic-release
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GH_TOKEN: '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'
+          NPM_TOKEN: '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'
         run: npx semantic-release
