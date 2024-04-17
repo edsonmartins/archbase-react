@@ -1,4 +1,4 @@
-import { Button, ColorScheme, Group, Stack } from '@mantine/core';
+import { Button, Group, Stack } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
@@ -21,7 +21,7 @@ const ArchbaseAdvancedTabsExample = () => {
 			title: 'IT Technology',
 		},
 	]);
-	const [colorScheme] = useLocalStorage<ColorScheme>({
+	const [colorScheme] = useLocalStorage<any>({
 		key: 'mantine-color-scheme',
 		defaultValue: 'light',
 		getInitialValueInEffect: true,
@@ -70,8 +70,8 @@ const ArchbaseAdvancedTabsExample = () => {
 				onTabChange={(tabs: ArchbaseAdvancedTabItem[]) => setTabs(tabs)}
 				buttonCloseOnlyActiveTab={true}
 			/>
-			<Stack h={80} align="center" justify="center" spacing="lg">
-				<Group spacing="lg">
+			<Stack h={80} align="center" justify="center">
+				<Group>
 					<Button onClick={(_e) => addTab(true)} data-add-tab>
 						Adicionar nova Tab
 					</Button>

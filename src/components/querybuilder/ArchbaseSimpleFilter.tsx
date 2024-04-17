@@ -166,7 +166,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
       onPropChange: this.notifyQueryChange.bind(this, this.onPropChange),
       getLevel: this.getLevel.bind(this),
       isRuleGroup: this.isRuleGroup.bind(this),
-      getOperators: (...args) => this.getOperators(args)
+      getOperators: (field) => this.getOperators(field)
     }
   }
 
