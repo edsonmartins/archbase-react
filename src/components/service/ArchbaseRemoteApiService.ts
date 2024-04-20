@@ -10,7 +10,8 @@ import { ArchbaseTokenManager } from '../auth/ArchbaseTokenManager'
 
 export interface Page<T> {
   content: T[]
-  pageable: Pageable
+  pageable?: Pageable
+  page?: SimplePage
   totalElements: number
   totalPages: number
   last: boolean
@@ -20,6 +21,13 @@ export interface Page<T> {
   first: boolean
   numberOfElements: number
   empty: boolean
+}
+
+export interface SimplePage {
+  size: number
+  number: number
+  totalElements: number
+  totalPages: number
 }
 
 export interface Pageable {
