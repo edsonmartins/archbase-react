@@ -65,6 +65,19 @@ type UseArchbaseRemoteDataSourceState<T, ID> = {
   pageSize?: number
   loadDataCount: number  
 }
+
+function getGrandTotalRecords<T>(result: Page<T>) {
+  return result.totalElements || result.totalElements === 0 ? result.totalElements : result.page.totalElements;
+}
+
+function getTotalPages<T>(result: Page<T>) {
+  return result.totalPages || result.totalPages === 0 ? result.totalPages : result.page.totalPages;
+} 
+
+function getCurrentPageNumber<T>(result: Page<T>) {
+  return result.pageable ? result.pageable.pageNumber : result.page.number;
+}
+
 export function useArchbaseRemoteDataSource<T, ID>(
   props: UseArchbaseRemoteDataSourceProps<T, ID>
 ): UseArchbaseRemoteDataSourceReturnType<T, ID> {
@@ -187,9 +200,9 @@ export function useArchbaseRemoteDataSource<T, ID>(
     setInternalState((prev) => {
       const dsOptions: DataSourceOptions<T> = {
         records: result.content,
-        grandTotalRecords: result.totalElements ? result.totalElements : result.page.totalElements,
-        totalPages: result.totalPages ? result.totalPages : result.page.totalPages,
-        currentPage: result.pageable ? result.pageable.pageNumber : result.page.number,
+        grandTotalRecords: getGrandTotalRecords(result),
+        totalPages: getTotalPages(result),
+        currentPage: getCurrentPageNumber(result),
         pageSize,
         filter,
         sort,
