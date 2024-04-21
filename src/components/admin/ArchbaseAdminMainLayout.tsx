@@ -68,7 +68,7 @@ function ArchbaseAdminMainLayoutContainer({
 	groupLabelDarkColor = 'white',
 	groupLabelLightColor = 'white',
 	headerColor,
-	footerHeight = '40px',
+	footerHeight,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -148,6 +148,7 @@ function ArchbaseAdminMainLayoutContainer({
 	return (
 		<AppShell
 			header={{ height: '60px' }}
+			footer={{height: footerHeight ? footerHeight : '0px'}}
 			styles={{
 				main: {
 					background: colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
@@ -207,9 +208,7 @@ function ArchbaseAdminMainLayoutContainer({
 					)}
 				<div
 					style={{
-						height: `calc(100vh - var(--app-shell-header-offset, 0px) - ${px(
-							footerHeight,
-						)}px - var(--app-shell-padding) - 1rem)`,
+						height: `calc(100vh - var(--app-shell-header-offset, 0px) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding) - 1rem)`,
 						width: `calc(100vw - var(--app-shell-padding) - calc(${isHidden ? '0px' : currentSidebarWidth} + 1rem))`,
 						marginTop: '0.5rem',
 						marginLeft: `calc(${isHidden ? '0px' : currentSidebarWidth} + 0.5rem)`,
@@ -254,7 +253,7 @@ function ArchbaseAdminMainLayoutContainer({
 					/>
 				</Drawer>
 			</AppShell.Main>
-			<AppShell.Footer h={footerHeight} p="md">
+			<AppShell.Footer>
 				{footer}
 			</AppShell.Footer>
 		</AppShell>
