@@ -47,7 +47,7 @@ const StatusValues: ArchbaseItemRenderType[] = [
 	},
 ];
 
-export const ArchbaseTableTemplateExample = () => {
+const ArchbaseTableTemplateExample = () => {
 	const forceUpdate = useArchbaseForceUpdate();
 	const pessoaStore = useArchbaseStore('pessoaStore');
 	const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
