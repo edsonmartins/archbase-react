@@ -17,8 +17,6 @@ import {
 	MantineColorScheme,
 	Menu,
 	Tooltip,
-	useMantineColorScheme,
-	useMantineTheme,
 } from '@mantine/core';
 import { DatePickerInput, DatesRangeValue, DateValue } from '@mantine/dates';
 import { IconDownload, IconPrinter, IconRefresh } from '@tabler/icons-react';
@@ -58,7 +56,7 @@ import { useArchbaseAppContext } from '../core';
 import { ArchbaseObjectHelper } from '../core/helper';
 import { convertISOStringToDate, filter, isEmpty } from '../core/utils';
 import { type ArchbaseDataSource, type DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { useArchbaseDataSourceListener } from '../hooks';
+import { useArchbaseDataSourceListener, useArchbaseTheme } from '../hooks';
 import classes from './ArchbaseDataTable.module.css';
 
 interface JsPDFCustom extends JsPDF {
@@ -686,8 +684,7 @@ export const CustomShowHideColumnsButton = <TData extends Record<string, any> = 
 
 export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTableProps<T, ID>) {
 	const { i18n } = useTranslation();
-	const theme = useMantineTheme();
-	const { colorScheme } = useMantineColorScheme();
+	const theme = useArchbaseTheme();
 	const appContext = useArchbaseAppContext();
 	const divTable = useRef<HTMLDivElement>(null);
 	const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
@@ -739,14 +736,14 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 
 	const getCellBackgroundColor = (cell, table): any => {
 		if (cell.row.index === currentCell.rowIndex && cell.column.id === currentCell.columnName) {
-			return theme.colors[theme.primaryColor][colorScheme === 'dark' ? 5 : 5];
+			return theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 5 : 5];
 		}
 		const result = table.getSelectedRowModel().flatRows.filter((row) => row.index === cell.row.index);
 		if (result && result.length > 0) {
-			return convertHexToRGBA(theme.colors[theme.primaryColor][colorScheme === 'dark' ? 8 : 4], 0.1);
+			return convertHexToRGBA(theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 8 : 4], 0.1);
 		}
 
-		return 'var(--mrt-base-background-color)';
+		return ""
 	};
 
 	const getCellColorFont = (cell: any): any => {
@@ -919,7 +916,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 							Header: ({ column }) => (
 								<i
 									style={{
-										color: theme.colors[theme.primaryColor][colorScheme === 'dark' ? 3 : 7],
+										color: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 3 : 7],
 									}}
 								>
 									{column.columnDef.header}
@@ -945,7 +942,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 										rangeFilterIndex={rangeFilterIndex}
 										value={column.getFilterValue()}
 										variant={column.columnDef.filterVariant}
-										colorScheme={colorScheme}
+										colorScheme={theme.colorScheme}
 									/>
 								),
 							};
@@ -960,7 +957,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 		return result;
 	}, [
 		props.children,
-		colorScheme,
+		theme.colorScheme,
 		getCellBackgroundColor,
 		getCellColorFont,
 		theme.colors[theme.primaryColor],
@@ -1218,7 +1215,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			highlightOnHover: props.highlightOnHover,
 			fz: props.fontSize,
 			style: {
-				borderTop: `1px solid ${theme.colors.gray[colorScheme === 'dark' ? 8 : 3]}`,
+				borderTop: `1px solid ${theme.colors.gray[theme.colorScheme === 'dark' ? 8 : 3]}`,
 			},
 		},
 		mantinePaginationProps: {
@@ -1420,8 +1417,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 	row,
 	variant = 'filled',
 }: ArchbaseTableRowActionsProps<T>) {
-	const theme = useMantineTheme();
-	const { colorScheme } = useMantineColorScheme();
+	const theme = useArchbaseTheme();
 
 	return (
 		<Box style={{ display: 'flex' }}>
@@ -1432,7 +1428,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 						color="green"
 						onClick={() => onEditRow && onEditRow(row)}
 					>
-						<IconEdit color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
+						<IconEdit color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 					</ActionIcon>
 				</Tooltip>
 			) : null}
@@ -1443,7 +1439,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 						color="red"
 						onClick={() => onRemoveRow && onRemoveRow(row)}
 					>
-						<IconTrash color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
+						<IconTrash color={theme.colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
 					</ActionIcon>
 				</Tooltip>
 			) : null}
@@ -1454,7 +1450,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 						color="black"
 						onClick={() => onViewRow && onViewRow(row)}
 					>
-						<IconEye color={colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]} />
+						<IconEye color={theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]} />
 					</ActionIcon>
 				</Tooltip>
 			) : null}

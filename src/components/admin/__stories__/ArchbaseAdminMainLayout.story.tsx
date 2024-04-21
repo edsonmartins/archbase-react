@@ -43,22 +43,22 @@ const ArchbaseAdminMainLayoutExample = () => {
 	const headerActions = useMemo((): ReactNode => {
 		return [
 			<Tooltip key="Trocar empresa" withinPortal withArrow label="Trocar empresa">
-				<ActionIcon variant="transparent">
+				<ActionIcon variant="transparent" c={'#868E96'}>
 					<IconSwitchHorizontal size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
 			<Tooltip key="Tela cheia" withinPortal withArrow label="Tela cheia">
-				<ActionIcon variant="transparent">
+				<ActionIcon variant="transparent" c={'#868E96'}>
 					<IconArrowsMaximize size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
 			<Tooltip key="Notificações" withinPortal withArrow label="Notificações">
-				<ActionIcon variant="transparent">
+				<ActionIcon variant="transparent" c={'#868E96'}>
 					<IconBell size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
 			<Tooltip key="Chat" withinPortal withArrow label="Chat">
-				<ActionIcon variant="transparent">
+				<ActionIcon variant="transparent" c={'#868E96'}>
 					<IconMessageChatbot size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
@@ -105,8 +105,8 @@ const ArchbaseAdminMainLayoutExample = () => {
 				onHiddenSidebar={(hidden) => {
 					console.log(hidden);
 				}}
-				footer={<ArchbaseAdminLayoutFooter />}
-				footerHeight={40}
+				// footer={<ArchbaseAdminLayoutFooter/>}
+				// footerHeight={40}
 				header={
 					<ArchbaseAdminLayoutHeader
 						user={fakeUser}
