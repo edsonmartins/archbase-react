@@ -1,6 +1,6 @@
 {
   "name": "archbase-react",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Biblioteca de compontentes React TypeScript focada em produtividade no desenvolvimento web.",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -95,6 +95,7 @@
     "jspdf-autotable": "^3.5.31",
     "jwt-decode": "^3.1.2",
     "libphonenumber-js": "^1.10.44",
+    "lz-string": "^1.5.0",
     "mantine-flagpack": "^4.0.0",
     "mantine-react-table": "2.0.0-beta.0",
     "mjml-browser": "^4.14.1",
@@ -219,7 +220,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.67.0",
-    "storybook": "^7.5.2", 
+    "storybook": "^7.5.2",
     "ts-jest": "^29.0.4",
     "tslib": "^2.4.1",
     "ttypescript": "^1.5.15",
@@ -244,5 +245,4 @@
   "engines": {
     "node": ">=16"
   }
-
 }

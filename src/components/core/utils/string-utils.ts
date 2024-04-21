@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { parseISO, format } from 'date-fns'
-import LZString from 'lz-string';
+import {compressToUint8Array, decompressFromUint8Array} from 'lz-string';
 
 
 const WHITE_SPACES = [
@@ -443,12 +443,12 @@ const decimalToHex = d => {
 const hexToDecimal = h => parseInt(h, 16);
 
 export const compressString = str =>
-  LZString.compressToUint8Array(str).reduce(
+  compressToUint8Array(str).reduce(
     (acc, value) => `${acc}${decimalToHex(value)}`,
     '',
   );
 
 export const decompressString = str => {
   const compressed = str.match(/.{2}/g).map(hexToDecimal);
-  return LZString.decompressFromUint8Array(compressed);
+  return decompressFromUint8Array(compressed);
 };
