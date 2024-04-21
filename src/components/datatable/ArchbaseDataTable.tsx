@@ -746,7 +746,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			return convertHexToRGBA(theme.colors[theme.primaryColor][colorScheme === 'dark' ? 8 : 4], 0.1);
 		}
 
-		return undefined;
+		return 'var(--mrt-base-background-color)';
 	};
 
 	const getCellColorFont = (cell: any): any => {
@@ -754,7 +754,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			return 'white';
 		}
 
-		return undefined;
+		return 'var(--mantine-color-text)';
 	};
 
 	const renderText = (data: any, maskOptions?: MaskOptions): ReactNode => {
@@ -926,10 +926,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 								</i>
 							),
 							mantineTableBodyCellProps: ({ cell, table }) => ({
-								style: {
-									backgroundColor: `${getCellBackgroundColor(cell, table)}!important`,
-									color: `${getCellColorFont(cell)}!important`,
-								},
+								bg: `${getCellBackgroundColor(cell, table)}`,
+								c: `${getCellColorFont(cell)}`
 							}),
 						};
 
@@ -1424,7 +1422,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 }: ArchbaseTableRowActionsProps<T>) {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
-	console.log(variant);
+
 	return (
 		<Box style={{ display: 'flex' }}>
 			{onEditRow ? (
