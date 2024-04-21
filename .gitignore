@@ -9,6 +9,7 @@ node_modules
 .pnp.cjs
 .pnp.loader.mjs
 .yarnrc.yml
+.tgz
 docs/
 storybook-static
 
