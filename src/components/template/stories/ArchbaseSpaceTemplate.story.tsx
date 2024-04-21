@@ -6,7 +6,7 @@ import React from 'react';
 import { ActionsDemo } from '../../buttons/ActionsDemo';
 import { ArchbaseSpaceTemplate } from '../ArchbaseSpaceTemplate';
 
-export const ArchbaseSpaceTemplateExample = () => {
+const ArchbaseSpaceTemplateExample = () => {
 	return (
 		<div style={{ width: '100%', height: 'calc(100vh - 50px)' }}>
 			<ArchbaseSpaceTemplate
