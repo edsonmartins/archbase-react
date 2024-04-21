@@ -187,9 +187,9 @@ export function useArchbaseRemoteDataSource<T, ID>(
     setInternalState((prev) => {
       const dsOptions: DataSourceOptions<T> = {
         records: result.content,
-        grandTotalRecords: result.totalElements,
-        totalPages: result.totalPages,
-        currentPage: result.pageable.pageNumber,
+        grandTotalRecords: result.totalElements ? result.totalElements : result.page.totalElements,
+        totalPages: result.totalPages ? result.totalPages : result.page.totalPages,
+        currentPage: result.pageable ? result.pageable.pageNumber : result.page.number,
         pageSize,
         filter,
         sort,
