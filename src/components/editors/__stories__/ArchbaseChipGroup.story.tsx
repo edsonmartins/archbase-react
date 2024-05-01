@@ -3,11 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { PedidoStatus, Produto } from '../../../demo/data/types';
 import { Pedido, pedidosData, produtosData } from '../../../demo/index';
-import {
-	ArchbaseDataSource,
-	DataSourceEvent,
-	DataSourceEventNames,
-} from '../../datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../../debug';
 import { useArchbaseForceUpdate } from '../../hooks';
 import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource';
@@ -43,10 +39,7 @@ const getLabelFromProduto = (produto: any) => {
 	return produto.descricao;
 };
 
-const updateTotalValue = (
-	dataSource: ArchbaseDataSource<Pedido, string>,
-	produtos: any,
-) => {
+const updateTotalValue = (dataSource: ArchbaseDataSource<Pedido, string>, produtos: any) => {
 	const total = produtos.reduce((acumulado, produto) => {
 		return acumulado + produto.total;
 	}, 0);
@@ -80,8 +73,8 @@ const ArchbaseChipGroupExample = () => {
 			<Grid.Col offset={1} span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Chip Group Edit</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Chip Group Edit</Text>
 						</Group>
 					</Card.Section>
 					<ArchbaseChipGroup<Pedido, string, Produto>
@@ -92,9 +85,7 @@ const ArchbaseChipGroupExample = () => {
 						getOptionLabel={getLabelFromProduto}
 						getOptionValue={getValueFromProduto}
 						convertToValue={getIdFromProduto}
-						onSelectValue={() =>
-							updateTotalValue(dataSource!, dataSource?.getFieldValue('itens'))
-						}
+						onSelectValue={() => updateTotalValue(dataSource!, dataSource?.getFieldValue('itens'))}
 						multiple={true}
 					/>
 				</Card>
@@ -102,11 +93,11 @@ const ArchbaseChipGroupExample = () => {
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>
@@ -156,8 +147,8 @@ const ArchbaseChipGroupSingleExample = () => {
 			<Grid.Col offset={1} span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Chip Group Edit (multiple = false)</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Chip Group Edit (multiple = false)</Text>
 						</Group>
 					</Card.Section>
 					<ArchbaseChipGroup<Pedido, string, PedidoStatus>
@@ -172,8 +163,8 @@ const ArchbaseChipGroupSingleExample = () => {
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
 					<ArchbaseObjectInspector data={dataSource} />

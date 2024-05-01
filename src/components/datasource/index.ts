@@ -6,6 +6,7 @@ export type {
   FilterFn,
   IDataSource,
   DataSourceEventRefreshDataType,
+  IDataSourceValidator
 } from './ArchbaseDataSource';
 export { DataSourceEventNames, ArchbaseDataSource } from './ArchbaseDataSource';
 export { ArchbaseRemoteDataSource } from './ArchbaseRemoteDataSource';

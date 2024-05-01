@@ -1,24 +1,12 @@
-import { useMantineTheme } from '@mantine/core';
+import { useMantineColorScheme } from '@mantine/core';
 import useComponentSize from '@rehooks/component-size';
 import i18next from 'i18next';
-import React, {
-	ReactNode,
-	useContext,
-	useEffect,
-	useRef,
-	useState,
-} from 'react';
+import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { matchPath } from 'react-router';
 import { ArchbaseAdvancedTabItem, ArchbaseAdvancedTabs } from '../containers';
-import {
-	ArchbaseAdminLayoutContext,
-	ArchbaseAdminLayoutContextValue,
-} from './ArchbaseAdminLayout.context';
-import {
-	ArchbaseNavigationContext,
-	useArchbaseNavigationContext,
-} from './ArchbaseNavigation.context';
+import { ArchbaseAdminLayoutContext, ArchbaseAdminLayoutContextValue } from './ArchbaseAdminLayout.context';
+import { ArchbaseNavigationContext, useArchbaseNavigationContext } from './ArchbaseNavigation.context';
 import { ArchbaseNavigationItem, ArchbaseTabItem } from './types';
 
 export interface ArchbaseAdminTabContainerProps {
@@ -45,17 +33,14 @@ export function ArchbaseAdminTabContainer({
 }: ArchbaseAdminTabContainerProps) {
 	const [isPending, startTransition] = React.useTransition();
 	const navigate = useNavigate();
-	const theme = useMantineTheme();
-	const [openedTabs, setOpenedTabs] =
-		useState<ArchbaseTabItem[]>(defaultOpenedTabs);
+	const { colorScheme } = useMantineColorScheme();
+	const [openedTabs, setOpenedTabs] = useState<ArchbaseTabItem[]>(defaultOpenedTabs);
 	const [activeTabId, setActiveTabId] = useState<any>(defaultActiveTabId);
 	const currentLocation = useLocation();
 	const tabsRef = useRef<any>([]);
 	const size = useComponentSize(tabsRef);
 	const { state, dispatch } = useArchbaseNavigationContext();
-	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(
-		ArchbaseAdminLayoutContext,
-	);
+	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
 
 	const handleOnClose = (id: string) => {
 		const closedIndex = openedTabs.findIndex((tab) => tab.path === id);
@@ -103,7 +88,7 @@ export function ArchbaseAdminTabContainer({
 	}, [state?.linkClosed]);
 
 	const getNavigationItemByLink = (link: string): ResultItem => {
-		let result: ResultItem = {
+		const result: ResultItem = {
 			item: undefined,
 			title: undefined,
 			link,
@@ -112,10 +97,7 @@ export function ArchbaseAdminTabContainer({
 		navigationData.forEach((item) => {
 			if (item.links) {
 				item.links.forEach((subItem) => {
-					const found = matchPath(
-						{ path: subItem.link || '' },
-						location.pathname,
-					);
+					const found = matchPath({ path: subItem.link || '' }, location.pathname);
 					if (found) {
 						result.item = subItem;
 						result.title = `${i18next.t(subItem.label)}`;
@@ -125,7 +107,7 @@ export function ArchbaseAdminTabContainer({
 			} else if (item.link && !result.item) {
 				const found = matchPath({ path: item.link }, location.pathname);
 				if (found) {
-					if (found.params) {
+					if (found.params && Object.keys(found.params).length > 0) {
 						result.title = `${found.params[Object.keys(found.params)[0]]}`;
 					} else {
 						result.title = `${i18next.t(item.label)}`;
@@ -145,9 +127,7 @@ export function ArchbaseAdminTabContainer({
 	}, [JSON.stringify(defaultOpenedTabs)]);
 
 	useEffect(() => {
-		const resultItem: ResultItem = getNavigationItemByLink(
-			currentLocation.pathname,
-		);
+		const resultItem: ResultItem = getNavigationItemByLink(currentLocation.pathname);
 		if (resultItem && resultItem.item) {
 			const index = openedTabs.findIndex((tab) => tab.path === resultItem.link);
 			if (index !== -1) {
@@ -192,9 +172,7 @@ export function ArchbaseAdminTabContainer({
 		dispatch({ type: 'USER_CLOSE_REQUEST', link: id });
 	};
 
-	const buildAdvancedTabs = (
-		openedTabs: ArchbaseTabItem[],
-	): ArchbaseAdvancedTabItem[] => {
+	const buildAdvancedTabs = (openedTabs: ArchbaseTabItem[]): ArchbaseAdvancedTabItem[] => {
 		return openedTabs.map((tab) => {
 			const result: ArchbaseAdvancedTabItem = {
 				key: tab.id,
@@ -205,17 +183,18 @@ export function ArchbaseAdminTabContainer({
 			return result;
 		});
 	};
-
 	return (
 		<div ref={tabsRef}>
 			<ArchbaseAdvancedTabs
 				buttonCloseOnlyActiveTab={true}
 				onClick={(key: any) => handleOnActive(key)}
 				onTabClose={(key: any) => handleOnCloseRequest(key)}
-				onTabChange={(_tabs: ArchbaseAdvancedTabItem[]) => {}}
+				onTabChange={(_tabs: ArchbaseAdvancedTabItem[]) => {
+					return null;
+				}}
 				currentTabs={buildAdvancedTabs(openedTabs)}
 				activeTab={activeTabId}
-				dark={theme.colorScheme === 'dark'}
+				dark={colorScheme === 'dark'}
 			></ArchbaseAdvancedTabs>
 		</div>
 	);

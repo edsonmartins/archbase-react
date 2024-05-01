@@ -36,11 +36,11 @@ const ArchbaseJsonEditExample = () => {
 			<Grid.Col offset={1} span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Json Edit Component</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Json Edit Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
+					<Box style={{ height: 100 }}>
 						<ArchbaseJsonEdit<Pessoa, string>
 							maxRows={100}
 							maxLength={1000}
@@ -54,11 +54,11 @@ const ArchbaseJsonEditExample = () => {
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPessoas</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPessoas</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

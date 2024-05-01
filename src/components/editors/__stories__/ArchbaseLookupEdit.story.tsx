@@ -7,14 +7,8 @@ import { FakePessoaService } from '../../../demo/service/FakePessoaService';
 import { processErrorMessage } from '../../core/exceptions';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../../debug';
-import {
-	useArchbaseDataSource,
-	useArchbaseDataSourceListener,
-} from '../../hooks';
-import {
-	useArchbaseForceUpdate,
-	useArchbaseRemoteServiceApi,
-} from '../../hooks';
+import { useArchbaseDataSource, useArchbaseDataSourceListener } from '../../hooks';
+import { useArchbaseForceUpdate, useArchbaseRemoteServiceApi } from '../../hooks';
 import { ArchbaseNotifications } from '../../notification';
 import { ArchbaseEdit } from '../ArchbaseEdit';
 import { ArchbaseLookupEdit } from '../ArchbaseLookupEdit';
@@ -23,9 +17,7 @@ const pedidosList: Pedido[] = pedidosData;
 
 const ArchbaseLookupEditExample = () => {
 	const forceUpdate = useArchbaseForceUpdate();
-	const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(
-		API_TYPE.Pessoa,
-	);
+	const pessoaApi = useArchbaseRemoteServiceApi<FakePessoaService>(API_TYPE.Pessoa);
 	const { dataSource } = useArchbaseDataSource<Pedido, string>({
 		initialData: pedidosList,
 		name: 'dsPedidos',
@@ -74,18 +66,12 @@ const ArchbaseLookupEditExample = () => {
 			<Grid.Col offset={1} span={6}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Lookup Edit Component</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Lookup Edit Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 100 })}>
-						<Flex
-							justify="flex-start"
-							align="center"
-							direction="row"
-							wrap="nowrap"
-							gap="xs"
-						>
+					<Box style={{ height: 100 }}>
+						<Flex justify="flex-start" align="center" direction="row" wrap="nowrap" gap="xs">
 							<ArchbaseLookupEdit<Pedido, string, Pessoa>
 								label="Código"
 								dataSource={dataSource}
@@ -100,13 +86,7 @@ const ArchbaseLookupEditExample = () => {
 								validateMessage="Pessoa {0} não encontrada."
 								width={150}
 							/>
-							<ArchbaseEdit
-								label="Nome"
-								dataSource={dataSource}
-								dataField="cliente.nome"
-								disabled
-								width={500}
-							/>
+							<ArchbaseEdit label="Nome" dataSource={dataSource} dataField="cliente.nome" disabled width={500} />
 						</Flex>
 					</Box>
 				</Card>
@@ -114,11 +94,11 @@ const ArchbaseLookupEditExample = () => {
 			<Grid.Col span={4}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>DataSource dsPedidos</Text>
+						<Group justify="space-between">
+							<Text fw={500}>DataSource dsPedidos</Text>
 						</Group>
 					</Card.Section>
-					<ScrollArea sx={(_theme) => ({ height: 500 })}>
+					<ScrollArea style={{ height: 500 }}>
 						<ArchbaseObjectInspector data={dataSource} />
 					</ScrollArea>
 				</Card>

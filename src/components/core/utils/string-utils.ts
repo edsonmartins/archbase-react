@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { parseISO, format } from 'date-fns'
-import LZString from 'lz-string';
+import {compressToUint8Array, decompressFromUint8Array} from 'lz-string';
 
 
 const WHITE_SPACES = [
@@ -402,6 +402,9 @@ export function abbreviate(str) {
 }
 
 export function convertISOStringToDate(isoString: string): Date {
+  if (!isoString || isoString === ''){
+    return undefined
+  }
   const hasTimeInfo = isoString.includes('T')
   if (!hasTimeInfo) {
     isoString += 'T00:00:00' // Adiciona hora padrão '00:00:00' se não houver informação de hora
@@ -410,6 +413,9 @@ export function convertISOStringToDate(isoString: string): Date {
 }
 
 export function convertDateToISOString(date: Date): string {
+  if (!date){
+    return ''
+  }
   return format(date, "yyyy-MM-dd'T'HH:mm:ss")
 }
 
@@ -437,12 +443,12 @@ const decimalToHex = d => {
 const hexToDecimal = h => parseInt(h, 16);
 
 export const compressString = str =>
-  LZString.compressToUint8Array(str).reduce(
+  compressToUint8Array(str).reduce(
     (acc, value) => `${acc}${decimalToHex(value)}`,
     '',
   );
 
 export const decompressString = str => {
   const compressed = str.match(/.{2}/g).map(hexToDecimal);
-  return LZString.decompressFromUint8Array(compressed);
+  return decompressFromUint8Array(compressed);
 };

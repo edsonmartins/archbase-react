@@ -65,6 +65,19 @@ type UseArchbaseRemoteDataSourceState<T, ID> = {
   pageSize?: number
   loadDataCount: number  
 }
+
+function getGrandTotalRecords<T>(result: Page<T>) {
+  return result.totalElements || result.totalElements === 0 ? result.totalElements : result.page.totalElements;
+}
+
+function getTotalPages<T>(result: Page<T>) {
+  return result.totalPages || result.totalPages === 0 ? result.totalPages : result.page.totalPages;
+} 
+
+function getCurrentPageNumber<T>(result: Page<T>) {
+  return result.pageable ? result.pageable.pageNumber : result.page.number;
+}
+
 export function useArchbaseRemoteDataSource<T, ID>(
   props: UseArchbaseRemoteDataSourceProps<T, ID>
 ): UseArchbaseRemoteDataSourceReturnType<T, ID> {
@@ -187,9 +200,9 @@ export function useArchbaseRemoteDataSource<T, ID>(
     setInternalState((prev) => {
       const dsOptions: DataSourceOptions<T> = {
         records: result.content,
-        grandTotalRecords: result.totalElements,
-        totalPages: result.totalPages,
-        currentPage: result.pageable.pageNumber,
+        grandTotalRecords: getGrandTotalRecords(result),
+        totalPages: getTotalPages(result),
+        currentPage: getCurrentPageNumber(result),
         pageSize,
         filter,
         sort,
@@ -241,7 +254,8 @@ export function useArchbaseRemoteDataSource<T, ID>(
             isLoading: true,
             filter: options.filter,
             sort: options.sort,
-            currentPage: options.currentPage
+            currentPage: options.currentPage,
+            id: options.id
           }
         })
         queryFn(
@@ -250,7 +264,7 @@ export function useArchbaseRemoteDataSource<T, ID>(
           options.pageSize,
           options.filter,
           options.sort,
-          internalState.id,
+          options.id,
           options.originFilter,
           options.originSort,
           options.originGlobalFilter

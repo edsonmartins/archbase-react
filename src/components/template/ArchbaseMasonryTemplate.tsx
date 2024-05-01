@@ -1,5 +1,5 @@
 import { useArchbaseDataSourceListener } from '@components/hooks';
-import { MantineNumberSize, Pagination, Variants } from '@mantine/core';
+import { ButtonVariant, Pagination } from '@mantine/core';
 import useComponentSize from '@rehooks/component-size';
 import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
 import { t } from 'i18next';
@@ -67,7 +67,7 @@ export interface ArchbaseMasonryTemplateProps<T, ID> {
 	filterFields: ReactNode | undefined;
 	filterPersistenceDelegator: ArchbaseQueryFilterDelegator;
 	userActions?: UserActionsOptions;
-	variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>;
+	variant?: string;
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	isLoading?: boolean;
@@ -79,7 +79,7 @@ export interface ArchbaseMasonryTemplateProps<T, ID> {
 	height?: number | string | undefined;
 	withBorder?: boolean;
 	withPagination?: boolean;
-	radius?: MantineNumberSize;
+	radius?: string | number | undefined;
 	columnsCountBreakPoints?: Record<number, number>;
 	columnsCount?: number;
 	gutter?: string;
@@ -108,7 +108,6 @@ function onRenderCallback(
 	baseDuration, // Tempo em milissegundos estimado para renderização sem memoização
 	startTime, // Timestamp quando a renderização começou
 	commitTime, // Timestamp quando a renderização foi confirmada
-	interactions, // Conjunto de interações do usuário relacionadas a esta renderização
 ) {
 	console.log(`Render de "${id}" na fase "${phase}": ${actualDuration}ms`);
 }
@@ -343,7 +342,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 					viewName={filterOptions.viewName}
 					apiVersion={filterOptions.apiVersion}
 					ref={filterRef}
-					variant={variant ?? appContext.variant}
+					variant={variant ? (variant as ButtonVariant) : (appContext.variant as ButtonVariant)}
 					expandedFilter={filterState.expandedFilter}
 					persistenceDelegator={filterPersistenceDelegator}
 					currentFilter={filterState.currentFilter}

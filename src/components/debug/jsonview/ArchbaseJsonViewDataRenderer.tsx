@@ -57,9 +57,7 @@ function renderExpandableObject({
 	shouldInitiallyExpand,
 }: ExpandableRenderProps) {
 	const shouldInitiallyExpandCalledRef = React.useRef(false);
-	const [expanded, toggleExpanded, setExpanded] = useArchbaseBool(() =>
-		shouldInitiallyExpand(level, value, field),
-	);
+	const [expanded, toggleExpanded, setExpanded] = useArchbaseBool(() => shouldInitiallyExpand(level, value, field));
 
 	React.useEffect(() => {
 		if (!shouldInitiallyExpandCalledRef.current) {
@@ -125,14 +123,7 @@ function renderExpandableObject({
 	);
 }
 
-function JsonObject({
-	field,
-	value,
-	style,
-	lastElement,
-	shouldInitiallyExpand,
-	level,
-}: JsonRenderProps<Object>) {
+function JsonObject({ field, value, style, lastElement, shouldInitiallyExpand, level }: JsonRenderProps<Object>) {
 	return renderExpandableObject({
 		field,
 		value,
@@ -146,14 +137,7 @@ function JsonObject({
 	});
 }
 
-function JsonArray({
-	field,
-	value,
-	style,
-	lastElement,
-	level,
-	shouldInitiallyExpand,
-}: JsonRenderProps<Array<any>>) {
+function JsonArray({ field, value, style, lastElement, level, shouldInitiallyExpand }: JsonRenderProps<Array<any>>) {
 	return renderExpandableObject({
 		field,
 		value,
@@ -207,9 +191,7 @@ function JsonPrimitiveValue({
 	);
 }
 
-export default function ArchbaseJsonViewDataRender(
-	props: JsonRenderProps<any>,
-) {
+export default function ArchbaseJsonViewDataRender(props: JsonRenderProps<any>) {
 	const value = props.value;
 	if (DataTypeDetection.isArray(value)) {
 		return <JsonArray {...props} />;

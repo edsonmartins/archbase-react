@@ -1,14 +1,7 @@
-import { useForceUpdate } from '@mantine/hooks';
-import { rem } from '@mantine/styles';
+import { rem, useMantineColorScheme } from '@mantine/core';
+import { useColorScheme, useForceUpdate } from '@mantine/hooks';
 import lodash from 'lodash';
-import React, {
-	ReactNode,
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useArchbaseTheme } from '../../hooks';
 import { ArchbaseTreeNode } from './ArchbaseTreeView.types';
 import { ArchbaseTreeViewItem } from './ArchbaseTreeViewItem';
@@ -32,18 +25,11 @@ export interface ArchbaseTreeViewProps {
 	withBorder?: boolean;
 	showTags?: boolean;
 	nodes?: ArchbaseTreeNode[];
-	onDoubleClick?: (
-		dataSource: ArchbaseTreeNode[],
-		node: ArchbaseTreeNode,
-	) => void;
+	onDoubleClick?: (dataSource: ArchbaseTreeNode[], node: ArchbaseTreeNode) => void;
 	onClick?: () => void;
 	onFocusedNode?: (node: ArchbaseTreeNode) => void;
 	onLoosedFocusNode?: (focused: ArchbaseTreeNode) => void;
-	onSelectedNode?: (
-		dataSource: ArchbaseTreeNode[],
-		node: ArchbaseTreeNode,
-		selectedNodes: ArchbaseTreeNode[],
-	) => void;
+	onSelectedNode?: (dataSource: ArchbaseTreeNode[], node: ArchbaseTreeNode, selectedNodes: ArchbaseTreeNode[]) => void;
 	onUnSelectedNode?: (
 		dataSource: ArchbaseTreeNode[],
 		node: ArchbaseTreeNode,
@@ -51,18 +37,9 @@ export interface ArchbaseTreeViewProps {
 	) => void;
 	onRemovedNode?: (dataSource: ArchbaseTreeNode[]) => void;
 	onLoadDataSource?: (node: ArchbaseTreeNode) => Promise<ArchbaseTreeNode[]>;
-	onAddedNode?: (
-		node: ArchbaseTreeNode,
-		dataSource: ArchbaseTreeNode[],
-	) => void;
-	onExpandedNode?: (
-		dataSource: ArchbaseTreeNode[],
-		expandedNodes: ArchbaseTreeNode[],
-	) => void;
-	onCollapsedNode?: (
-		dataSource: ArchbaseTreeNode[],
-		expandedNodes: ArchbaseTreeNode[],
-	) => void;
+	onAddedNode?: (node: ArchbaseTreeNode, dataSource: ArchbaseTreeNode[]) => void;
+	onExpandedNode?: (dataSource: ArchbaseTreeNode[], expandedNodes: ArchbaseTreeNode[]) => void;
+	onCollapsedNode?: (dataSource: ArchbaseTreeNode[], expandedNodes: ArchbaseTreeNode[]) => void;
 	onChangedDataSource?: (dataSource: ArchbaseTreeNode[]) => void;
 	dataSource: ArchbaseTreeNode[];
 	focusedNode?: ArchbaseTreeNode;
@@ -111,10 +88,9 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 	update = Math.random(),
 }) => {
 	const theme = useArchbaseTheme();
+	const { colorScheme } = useMantineColorScheme();
 	const [internalDataSource, setDataSource] = useState<ArchbaseTreeNode[]>([]);
-	const [focused, setFocused] = useState<ArchbaseTreeNode | undefined>(
-		focusedNode,
-	);
+	const [focused, setFocused] = useState<ArchbaseTreeNode | undefined>(focusedNode);
 	const nodeList = useRef<string[]>([]);
 	const nodesQuantity = useRef(0);
 	const [updateCounter, setUpdateCounter] = useState(0);
@@ -145,35 +121,28 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 		});
 	}, []);
 
-	const findNodeById = useCallback(
-		(nodes: ArchbaseTreeNode[], id: string): ArchbaseTreeNode | undefined => {
-			let result;
-			if (nodes)
-				nodes.forEach(function (node) {
-					if (node.id === id) result = node;
-					else {
-						if (node.nodes) {
-							result = findNodeById(node.nodes, id) || result;
-						}
+	const findNodeById = useCallback((nodes: ArchbaseTreeNode[], id: string): ArchbaseTreeNode | undefined => {
+		let result;
+		if (nodes)
+			nodes.forEach(function (node) {
+				if (node.id === id) result = node;
+				else {
+					if (node.nodes) {
+						result = findNodeById(node.nodes, id) || result;
 					}
-				});
-			return result;
-		},
-		[],
-	);
+				}
+			});
+		return result;
+	}, []);
 
 	const findPreviousNodeById = useCallback(
 		(id: string, visible: boolean): ArchbaseTreeNode | undefined => {
 			let foundId = false;
 			for (let i = nodeList.current.length - 1; i >= 0; i--) {
 				if (foundId) {
-					let node = findNodeById(internalDataSource, nodeList.current[i]);
+					const node = findNodeById(internalDataSource, nodeList.current[i]);
 					if (
-						(visible &&
-							node &&
-							node.parentNode &&
-							node.parentNode.state &&
-							node.parentNode.state.expanded) ||
+						(visible && node && node.parentNode && node.parentNode.state && node.parentNode.state.expanded) ||
 						(visible && node && node.state && node.state.expanded)
 					)
 						return node;
@@ -189,14 +158,11 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 	const findNextNodeById = useCallback(
 		(id: string, visible: boolean): ArchbaseTreeNode | undefined => {
 			let foundId = false;
-			for (var i = 0; i < nodeList.current.length; i++) {
+			for (let i = 0; i < nodeList.current.length; i++) {
 				if (foundId) {
-					let node = findNodeById(internalDataSource, nodeList.current[i]);
+					const node = findNodeById(internalDataSource, nodeList.current[i]);
 					if (
-						(visible &&
-							node &&
-							node.parentNode &&
-							node.parentNode.state.expanded) ||
+						(visible && node && node.parentNode && node.parentNode.state.expanded) ||
 						(visible && node && node.state && node.state.expanded)
 					)
 						return node;
@@ -209,52 +175,42 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 		[internalDataSource],
 	);
 
-	const deleteById = useCallback(
-		(obj: ArchbaseTreeNode[], id: string): ArchbaseTreeNode[] => {
-			if (!obj || obj.length <= 0) return [];
-			let arr: ArchbaseTreeNode[] = [];
-			lodash.each(obj, (val) => {
-				if (val.nodes && val.nodes.length > 0)
-					val.nodes = deleteById(val.nodes, id);
+	const deleteById = useCallback((obj: ArchbaseTreeNode[], id: string): ArchbaseTreeNode[] => {
+		if (!obj || obj.length <= 0) return [];
+		const arr: ArchbaseTreeNode[] = [];
+		lodash.each(obj, (val) => {
+			if (val.nodes && val.nodes.length > 0) val.nodes = deleteById(val.nodes, id);
 
-				if (val.id !== id) {
-					arr.push(val);
+			if (val.id !== id) {
+				arr.push(val);
+			}
+		});
+		return arr;
+	}, []);
+
+	const setChildrenState = useCallback((nodes: ArchbaseTreeNode[], state: boolean): ArchbaseTreeNode[] => {
+		const selectedNodes: ArchbaseTreeNode[] = [];
+		if (nodes)
+			nodes.forEach(function (node) {
+				if (node && node.state) {
+					node.state.selected = state;
 				}
+				selectedNodes.push(node);
+				selectedNodes.push(...setChildrenState(node.nodes || [], state));
 			});
-			return arr;
-		},
-		[],
-	);
+		return selectedNodes;
+	}, []);
 
-	const setChildrenState = useCallback(
-		(nodes: ArchbaseTreeNode[], state: boolean): ArchbaseTreeNode[] => {
-			let selectedNodes: ArchbaseTreeNode[] = [];
-			if (nodes)
-				nodes.forEach(function (node) {
-					if (node && node.state) {
-						node.state.selected = state;
-					}
-					selectedNodes.push(node);
-					selectedNodes.push(...setChildrenState(node.nodes || [], state));
-				});
-			return selectedNodes;
-		},
-		[],
-	);
-
-	const getSelectedNodesInternal = useCallback(
-		(nodes: ArchbaseTreeNode[]): ArchbaseTreeNode[] => {
-			let selectedNodes: ArchbaseTreeNode[] = [];
-			nodes.forEach((node) => {
-				if (node && node.state && node.state.selected) {
-					selectedNodes.push(node);
-				}
-				selectedNodes.push(...getSelectedNodesInternal(node.nodes || []));
-			});
-			return selectedNodes;
-		},
-		[],
-	);
+	const getSelectedNodesInternal = useCallback((nodes: ArchbaseTreeNode[]): ArchbaseTreeNode[] => {
+		const selectedNodes: ArchbaseTreeNode[] = [];
+		nodes.forEach((node) => {
+			if (node && node.state && node.state.selected) {
+				selectedNodes.push(node);
+			}
+			selectedNodes.push(...getSelectedNodesInternal(node.nodes || []));
+		});
+		return selectedNodes;
+	}, []);
 
 	const setParentSelectable = useCallback((node: ArchbaseTreeNode) => {
 		if (!node.parentNode || !node.parentNode.state) return;
@@ -278,9 +234,9 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 
 	const nodeSelected = useCallback(
 		(id: string, selected: boolean) => {
-			let selectedNodes: ArchbaseTreeNode[] = [];
-			let newDataSource = [...internalDataSource];
-			let node = findNodeById(newDataSource, id);
+			const selectedNodes: ArchbaseTreeNode[] = [];
+			const newDataSource = [...internalDataSource];
+			const node = findNodeById(newDataSource, id);
 			if (node && node.state) {
 				node.state.selected = selected;
 				selectedNodes.push(node);
@@ -296,22 +252,12 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 					}
 				} else {
 					if (onUnSelectedNode) {
-						onUnSelectedNode(
-							newDataSource,
-							node,
-							filterSelecteds(newDataSource),
-						);
+						onUnSelectedNode(newDataSource, node, filterSelecteds(newDataSource));
 					}
 				}
 			}
 		},
-		[
-			internalDataSource,
-			onChangedDataSource,
-			onSelectedNode,
-			onUnSelectedNode,
-			setChildrenState,
-		],
+		[internalDataSource, onChangedDataSource, onSelectedNode, onUnSelectedNode, setChildrenState],
 	);
 
 	useEffect(() => {
@@ -322,8 +268,8 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 	const loadDataSource = useCallback(
 		(id: string) => {
 			if (onLoadDataSource) {
-				let newDataSource = [...internalDataSource];
-				let node = findNodeById(newDataSource, id);
+				const newDataSource = [...internalDataSource];
+				const node = findNodeById(newDataSource, id);
 				if (node) {
 					const callbackPromise = onLoadDataSource(node);
 					if (callbackPromise) {
@@ -351,9 +297,9 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 
 	const nodeExpandedCollapsed = useCallback(
 		(id: string, expanded: boolean) => {
-			let newDataSource = [...internalDataSource];
-			let expandedNodes: ArchbaseTreeNode[] = [];
-			let node = findNodeById(newDataSource, id);
+			const newDataSource = [...internalDataSource];
+			const expandedNodes: ArchbaseTreeNode[] = [];
+			const node = findNodeById(newDataSource, id);
 			if (node && node.state) {
 				let loading = !node.nodes && !node.isleaf;
 				if (!onLoadDataSource && loading) {
@@ -381,14 +327,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 				if (loading) loadDataSource(node.id);
 			}
 		},
-		[
-			internalDataSource,
-			onChangedDataSource,
-			onLoadDataSource,
-			loadDataSource,
-			onExpandedNode,
-			onCollapsedNode,
-		],
+		[internalDataSource, onChangedDataSource, onLoadDataSource, loadDataSource, onExpandedNode, onCollapsedNode],
 	);
 
 	const nodeFocused = useCallback(
@@ -396,7 +335,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 			if (onLoosedFocusNode && focused) {
 				onLoosedFocusNode(focused);
 			}
-			let node = findNodeById(internalDataSource, id);
+			const node = findNodeById(internalDataSource, id);
 			if (node) {
 				setFocused(node);
 				if (onFocusedNode) {
@@ -414,7 +353,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 	const nodeDoubleClicked = useCallback(
 		(id: string, _selected: boolean) => {
 			if (onDoubleClick) {
-				let node = findNodeById(internalDataSource, id);
+				const node = findNodeById(internalDataSource, id);
 				if (node) {
 					onDoubleClick(internalDataSource, node);
 				}
@@ -425,10 +364,10 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 
 	const addNode = useCallback(
 		(id: string, text: string) => {
-			let node = findNodeById(internalDataSource, id);
+			const node = findNodeById(internalDataSource, id);
 
 			if (node) {
-				let newNode: ArchbaseTreeNode = {
+				const newNode: ArchbaseTreeNode = {
 					text: text,
 					state: { selected: false, expanded: false, loading: false },
 					parentNode: node,
@@ -457,7 +396,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 
 	const removeNode = useCallback(
 		(id: string) => {
-			let newDataSource = deleteById([...internalDataSource], id);
+			const newDataSource = deleteById([...internalDataSource], id);
 			if (newDataSource.length === 0) return false;
 			setDataSource(newDataSource);
 
@@ -476,7 +415,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 			if (focused) {
 				if (event.keyCode === 38) {
 					event.preventDefault();
-					let previousNode = findPreviousNodeById(focused.id, true);
+					const previousNode = findPreviousNodeById(focused.id, true);
 					if (previousNode) {
 						nodeFocused(previousNode.id);
 						const element = document.getElementById(`${id}_${previousNode.id}`);
@@ -490,7 +429,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 					}
 				} else if (event.keyCode === 40) {
 					event.preventDefault();
-					let nextNode = findNextNodeById(focused.id, true);
+					const nextNode = findNextNodeById(focused.id, true);
 					if (nextNode) {
 						nodeFocused(nextNode.id);
 						const element = document.getElementById(`${id}_${nextNode.id}`);
@@ -550,7 +489,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 					}
 				} else if (event.keyCode === 32) {
 					event.preventDefault();
-					let node = findNodeById(internalDataSource, focused.id);
+					const node = findNodeById(internalDataSource, focused.id);
 					if (node) {
 						let selected = true;
 						if (node.state.selected) {
@@ -560,7 +499,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 					}
 				} else if (event.keyCode === 107) {
 					event.preventDefault();
-					let node = findNodeById(internalDataSource, focused.id);
+					const node = findNodeById(internalDataSource, focused.id);
 					if (node) {
 						if (!node.state.expanded) {
 							nodeExpandedCollapsed(node.id, true);
@@ -568,7 +507,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 					}
 				} else if (event.keyCode === 109) {
 					event.preventDefault();
-					let node = findNodeById(internalDataSource, focused.id);
+					const node = findNodeById(internalDataSource, focused.id);
 					if (node) {
 						if (node.state.expanded) {
 							nodeExpandedCollapsed(node.id, false);
@@ -595,21 +534,16 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 
 	const renderedStyle = useMemo(() => {
 		return {
-			...style,
 			...(withBorder
 				? {
 						border:
-							borderColor &&
-							`${rem(1)} solid ${
-								theme.colorScheme === 'dark'
-									? theme.colors.dark[4]
-									: theme.colors.gray[3]
-							}`,
+							borderColor && `${rem(1)} solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
 				  }
 				: { border: 'none' }),
 			...(height ? { height } : {}),
 			...(width ? { width } : {}),
 			marginLeft: '-20px',
+			...style,
 		};
 	}, [style, withBorder, borderColor, height, width]);
 
@@ -640,9 +574,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 						focusedColor: focusedColor ? focusedColor : theme.white,
 						focusedBackgroundColor: focusedBackgroundColor
 							? focusedBackgroundColor
-							: theme.colors[theme.primaryColor][
-									theme.colorScheme === 'dark' ? 5 : 5
-							  ],
+							: theme.colors[theme.primaryColor][colorScheme === 'dark' ? 5 : 5],
 						selectedColor: selectedColor ? selectedColor : 'orange',
 						selectedBackgroundColor,
 						iconColor,
@@ -650,12 +582,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 						enableLinks,
 						highlightSelected,
 						borderColor:
-							borderColor ||
-							`${rem(1)} solid ${
-								theme.colorScheme === 'dark'
-									? theme.colors.dark[4]
-									: theme.colors.gray[3]
-							}`,
+							borderColor || `${rem(1)} solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
 						withBorder,
 						showTags,
 						id,
@@ -692,12 +619,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 	]);
 
 	return (
-		<div
-			tabIndex={-1}
-			className="archbase-treeview"
-			onKeyDown={handleKeyDown}
-			style={renderedStyle}
-		>
+		<div tabIndex={-1} className="archbase-treeview" onKeyDown={handleKeyDown} style={renderedStyle}>
 			<ul style={{ height: '100%', overflowY: 'auto' }}>{children}</ul>
 		</div>
 	);

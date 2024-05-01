@@ -40,7 +40,7 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index) {
 								key={subIndex}
 								id={subItem.label}
 								icon={subItem.icon}
-								disabled={subItem.disabled}
+								disabled={typeof subItem.disabled === 'function' ? subItem.disabled() : subItem.disabled}
 							>
 								{`${i18next.t(subItem.label)}`}
 							</MenuItem>
@@ -56,7 +56,7 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index) {
 					}}
 					key={index}
 					id={item.label}
-					disabled={item.disabled}
+					disabled={typeof item.disabled === 'function' ? item.disabled() : item.disabled}
 					onClick={() => onMenuItemClick(item)}
 					icon={item.icon}
 				>

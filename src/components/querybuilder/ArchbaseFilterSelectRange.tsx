@@ -1,117 +1,142 @@
-import { Box, Button, Variants } from '@mantine/core'
-import React, { Component } from 'react'
-import Modal from 'react-modal'
-import { Calendar, Value } from 'react-multi-date-picker'
+import { ActionIcon, Box, Button, ButtonVariant, Space, Tooltip } from '@mantine/core';
+import { IconCalendar, IconCalendarEvent, IconCalendarMonth, IconCalendarWeek } from '@tabler/icons-react';
+import { t } from 'i18next';
+import React, { Component } from 'react';
+import { Calendar, Value } from 'react-multi-date-picker';
 
-const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
-const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
 interface ArchbaseFilterSelectRangeProps {
-  id?: string
-  key?: string
-  isOpen?: boolean
-  top?: string | number | undefined
-  left?: string | number | undefined
-  onCancelSelectRange?: () => void
-  onConfirmSelectRange?: (value: Value | undefined) => void
-  width?: string | undefined
-  selectRangeType?: 'day' | 'week' | 'month' | 'range'
-  variant?: Variants<'filled' | 'outline' | 'light' | 'white' | 'default' | 'subtle' | 'gradient'>
+	id?: string;
+	key?: string;
+	onCancelSelectRange?: () => void;
+	onConfirmSelectRange?: (value: Value | undefined, selectRangeType: any) => void;
+	width?: string | undefined;
+	selectRangeType?: 'day' | 'week' | 'month' | 'range';
+	variant?: ButtonVariant | string;
 }
 
 interface ArchbaseFilterSelectRangeState {
-  value?: Value
+	value?: Value;
+	selectRangeType?: 'day' | 'week' | 'month' | 'range';
 }
 
-class ArchbaseFilterSelectRange extends Component<
-  ArchbaseFilterSelectRangeProps,
-  ArchbaseFilterSelectRangeState
-> {
-  private dateRef: any
-  constructor(props: ArchbaseFilterSelectRangeProps) {
-    super(props)
-    this.state = { value: undefined }
-    this.dateRef = React.createRef()
-  }
+class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps, ArchbaseFilterSelectRangeState> {
+	private dateRef: any;
+	constructor(props: ArchbaseFilterSelectRangeProps) {
+		super(props);
+		this.state = { value: undefined, selectRangeType: 'range' };
+		this.dateRef = React.createRef();
+	}
 
-  UNSAFE_componentWillReceiveProps = (_nextProps: ArchbaseFilterSelectRangeProps) => {
-    this.setState({ value: undefined })
-  }
+	UNSAFE_componentWillReceiveProps = (_nextProps: ArchbaseFilterSelectRangeProps) => {
+		this.setState({ value: undefined });
+	};
 
-  handleDateChange = (value: Value) => {
-    this.setState({ value })
-  }
+	handleDateChange = (value: Value) => {
+		this.setState({ value });
+	};
 
-  render = () => {
-    return (
-      <Modal
-        id={this.props.id}
-        key={this.props.key}
-        isOpen={this.props.isOpen}
-        style={{
-          overlay: {
-            position: 'fixed',
-            left: this.props.left,
-            top: this.props.top,
-            zIndex: 600,
-            width: this.props.selectRangeType === 'month' ? '260px' : this.props.width,
-            height: this.props.selectRangeType === 'month' ? '350px' : '320px',
-            backgroundColor: 'rgba(255, 255, 255, 0.75)'
-          },
-          content: {
-            inset: 0,
-            padding: 0,
-            position: 'absolute',
-            border: 0,
-            background: 'rgb(255, 255, 255)',
-            borderRadius: '4px',
-            outline: 'none'
-          }
-        }}
-        centered={true}
-      >
-        <Calendar
-          ref={this.dateRef}
-          value={this.state.value}
-          shadow={false}
-          weekDays={weekDays}
-          months={months}
-          weekPicker={this.props.selectRangeType === 'week'}
-          onlyMonthPicker={this.props.selectRangeType === 'month'}
-          range={
-            this.props.selectRangeType === 'week' ||
-            this.props.selectRangeType === 'month' ||
-            this.props.selectRangeType === 'range'
-          }
-          multiple={this.props.selectRangeType === 'day'}
-          format={'DD/MM/YYYY'}
-          numberOfMonths={2}
-          onChange={this.handleDateChange}
-          // VER AQUI DEPOIS style={{
-          //   height: '100%',
-          //   width: '100%',
-          //   border: '1px solid silver',
-          // }}
-        />
-        <Box
-          style={{
-            display: 'flex',
-            justifyContent: 'end',
-            width: '100%',
-            height: '40px',
-            marginTop: '10px'
-          }}
-        >
-          <Button variant={this.props.variant} onClick={() => this.props.onConfirmSelectRange!(this.state.value)}>
-            Aplicar
-          </Button>
-          <Button variant={this.props.variant} color="red" onClick={this.props.onCancelSelectRange}>
-            Cancela
-          </Button>
-        </Box>
-      </Modal>
-    )
-  }
+	render = () => {
+		return (
+			<div
+				id={this.props.id}
+				key={this.props.key}
+				style={{ width: this.props.width, display: 'grid', justifyContent: 'center', height: '344px' }}
+			>
+				<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+					<Calendar
+						ref={this.dateRef}
+						value={this.state.value}
+						shadow={false}
+						weekDays={weekDays}
+						months={months}
+						weekPicker={this.state.selectRangeType === 'week'}
+						onlyMonthPicker={this.state.selectRangeType === 'month'}
+						range={
+							this.state.selectRangeType === 'week' ||
+							this.state.selectRangeType === 'month' ||
+							this.state.selectRangeType === 'range'
+						}
+						multiple={this.state.selectRangeType === 'day'}
+						format={'DD/MM/YYYY'}
+						numberOfMonths={2}
+						onChange={this.handleDateChange}
+					/>
+				</div>
+				<Box
+					style={{
+						display: 'flex',
+						justifyContent: 'space-between',
+						alignItems: 'center',
+						width: this.props.width,
+						height: '40px',
+						marginTop: '10px',
+					}}
+				>
+					<div style={{ display: 'flex', alignItems: 'center' }}>
+						<Tooltip withinPortal withArrow label={`${t('archbase:Intervalo')}`}>
+							<ActionIcon
+								variant={this.props.variant}
+								size="lg"
+								color="var(--mantine-primary-color-filled)"
+								onClick={() => this.setState({ ...this.state, selectRangeType: 'range' })}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
+							>
+								<IconCalendarEvent size="1.4rem" />
+							</ActionIcon>
+						</Tooltip>
+						<Tooltip withinPortal withArrow label={`${t('archbase:Mês')}`}>
+							<ActionIcon
+								variant={this.props.variant}
+								size="lg"
+								color="var(--mantine-primary-color-filled)"
+								onClick={() => this.setState({ ...this.state, selectRangeType: 'month' })}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
+							>
+								<IconCalendarMonth size="1.4rem" />
+							</ActionIcon>
+						</Tooltip>
+						<Tooltip withinPortal withArrow label={`${t('archbase:Semana')}`}>
+							<ActionIcon
+								variant={this.props.variant}
+								size="lg"
+								color="var(--mantine-primary-color-filled)"
+								onClick={() => this.setState({ ...this.state, selectRangeType: 'week' })}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
+							>
+								<IconCalendarWeek size="1.4rem" />
+							</ActionIcon>
+						</Tooltip>
+						<Tooltip withinPortal withArrow label={`${t('archbase:Dia')}`}>
+							<ActionIcon
+								variant={this.props.variant}
+								size="lg"
+								color="var(--mantine-primary-color-filled)"
+								onClick={() => this.setState({ ...this.state, selectRangeType: 'day' })}
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
+							>
+								<IconCalendar size="1.4rem" />
+							</ActionIcon>
+						</Tooltip>
+					</div>
+					<div style={{ display: 'flex' }}>
+						<Button
+							variant={this.props.variant}
+							onClick={() => this.props.onConfirmSelectRange!(this.state.value, this.state.selectRangeType)}
+						>
+							Aplicar
+						</Button>
+						<Space w={'sm'}></Space>
+						<Button variant={this.props.variant} color="red" onClick={this.props.onCancelSelectRange}>
+							Cancela
+						</Button>
+					</div>
+				</Box>
+			</div>
+		);
+	};
 }
 
-export { ArchbaseFilterSelectRange }
+export { ArchbaseFilterSelectRange };

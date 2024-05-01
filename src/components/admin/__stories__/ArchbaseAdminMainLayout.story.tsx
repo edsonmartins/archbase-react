@@ -1,5 +1,6 @@
 import { useArchbaseAdminStore } from '@components/hooks';
 import { ActionIcon, Flex, Menu, Space, Text, Tooltip, useMantineTheme } from '@mantine/core';
+import { addons } from '@storybook/preview-api';
 import { Meta, StoryObj } from '@storybook/react';
 import {
 	IconArrowsMaximize,
@@ -13,6 +14,7 @@ import { IconLogout } from '@tabler/icons-react';
 import { IconBrandMessenger } from '@tabler/icons-react';
 import { IconCirclePlus } from '@tabler/icons-react';
 import React, { Fragment, ReactNode, useMemo, useState } from 'react';
+import { UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { ArchbaseUser } from '../../auth/ArchbaseUser';
 import { archbaseLogo3 } from '../../core';
 import { ArchbaseAdminLayoutFooter } from '../ArchbaseAdminLayoutFooter';
@@ -36,26 +38,27 @@ const ArchbaseAdminMainLayoutExample = () => {
 	const adminStore = useArchbaseAdminStore();
 	const [collapsed, setCollapsed] = useState(false);
 	const theme = useMantineTheme();
+	const channel = addons.getChannel();
 
 	const headerActions = useMemo((): ReactNode => {
 		return [
-			<Tooltip withinPortal withArrow label="Trocar empresa">
-				<ActionIcon variant="transparent">
+			<Tooltip key="Trocar empresa" withinPortal withArrow label="Trocar empresa">
+				<ActionIcon variant="transparent" c={'#868E96'}>
 					<IconSwitchHorizontal size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
-			<Tooltip withinPortal withArrow label="Tela cheia">
-				<ActionIcon variant="transparent">
+			<Tooltip key="Tela cheia" withinPortal withArrow label="Tela cheia">
+				<ActionIcon variant="transparent" c={'#868E96'}>
 					<IconArrowsMaximize size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
-			<Tooltip withinPortal withArrow label="Notificações">
-				<ActionIcon variant="transparent">
+			<Tooltip key="Notificações" withinPortal withArrow label="Notificações">
+				<ActionIcon variant="transparent" c={'#868E96'}>
 					<IconBell size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
-			<Tooltip withinPortal withArrow label="Chat">
-				<ActionIcon variant="transparent">
+			<Tooltip key="Chat" withinPortal withArrow label="Chat">
+				<ActionIcon variant="transparent" c={'#868E96'}>
 					<IconMessageChatbot size="2rem" />
 				</ActionIcon>
 			</Tooltip>,
@@ -102,7 +105,8 @@ const ArchbaseAdminMainLayoutExample = () => {
 				onHiddenSidebar={(hidden) => {
 					console.log(hidden);
 				}}
-				footer={<ArchbaseAdminLayoutFooter />}
+				// footer={<ArchbaseAdminLayoutFooter/>}
+				// footerHeight={40}
 				header={
 					<ArchbaseAdminLayoutHeader
 						user={fakeUser}
@@ -111,14 +115,14 @@ const ArchbaseAdminMainLayoutExample = () => {
 						userMenuItems={
 							<Fragment>
 								<Menu.Label>Usuário</Menu.Label>
-								<Menu.Item icon={<IconUserCircle size={14} />}>Meu perfil</Menu.Item>
-								<Menu.Item icon={<IconSettings size={14} />}>Configurações</Menu.Item>
+								<Menu.Item leftSection={<IconUserCircle size={14} />}>Meu perfil</Menu.Item>
+								<Menu.Item leftSection={<IconSettings size={14} />}>Configurações</Menu.Item>
 								<Menu.Divider />
 								<Menu.Label>Conta</Menu.Label>
-								<Menu.Item icon={<IconBrandMessenger size={14} />}>Suporte</Menu.Item>
+								<Menu.Item leftSection={<IconBrandMessenger size={14} />}>Suporte</Menu.Item>
 								<Menu.Item
 									color="red"
-									icon={<IconLogout size={14} />}
+									leftSection={<IconLogout size={14} />}
 									onClick={() => {
 										//
 									}}
@@ -128,6 +132,7 @@ const ArchbaseAdminMainLayoutExample = () => {
 							</Fragment>
 						}
 						logo={archbaseLogo3}
+						toggleColorScheme={() => channel.emit(UPDATE_DARK_MODE_EVENT_NAME)}
 					/>
 				}
 			>

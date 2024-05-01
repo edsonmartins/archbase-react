@@ -1,4 +1,16 @@
-import { ActionIcon, Flex, MantineTheme, Paper, px, ScrollArea, Stack, Text, Tooltip } from '@mantine/core';
+import { useArchbaseAppContext } from '@components/core';
+import {
+	ActionIcon,
+	Flex,
+	MantineTheme,
+	Paper,
+	px,
+	ScrollArea,
+	Stack,
+	Text,
+	Tooltip,
+	useMantineColorScheme,
+} from '@mantine/core';
 import { IconDots } from '@tabler/icons-react';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Sidebar, sidebarClasses, Menu as SidebarMenu } from 'react-pro-sidebar';
@@ -26,7 +38,6 @@ export interface ArchbaseAdvancedSidebarProps {
 	collapsed?: boolean;
 	withBorder?: boolean;
 	showGroupLabels?: boolean;
-	margin?: string;
 	theme: MantineTheme;
 	sidebarRef?: React.Ref<HTMLHtmlElement> | undefined;
 	defaultGroupIcon?: ReactNode;
@@ -45,8 +56,8 @@ export function ArchbaseAdvancedSidebar({
 	navigationData,
 	sidebarGroupWidth = '80px',
 	sidebarWidth = '360px',
-	sidebarHeight = `calc(100vh - var(--mantine-header-height, 0rem) - var(--mantine-footer-height, 0rem))`,
-	sidebarCollapsedWidth,
+	sidebarHeight = `calc(100vh - var(--app-shell-header-offset, 0px))`,
+	sidebarCollapsedWidth = '60px',
 	selectedGroupColor,
 	groupColor,
 	backgroundGroupColor,
@@ -60,7 +71,6 @@ export function ArchbaseAdvancedSidebar({
 	onClickActionIcon,
 	withBorder = false,
 	showGroupLabels = true,
-	margin,
 	theme,
 	sidebarRef,
 	defaultGroupIcon,
@@ -68,9 +78,11 @@ export function ArchbaseAdvancedSidebar({
 	sideBarHeaderContent,
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
+	const appContext = useArchbaseAppContext();
+	const { colorScheme } = useMantineColorScheme();
 	const color = selectedGroupColor
 		? selectedGroupColor
-		: theme.colorScheme === 'dark'
+		: colorScheme === 'dark'
 		? theme.colors[theme.primaryColor][8]
 		: theme.colors[theme.primaryColor][0];
 
@@ -105,7 +117,7 @@ export function ArchbaseAdvancedSidebar({
 								disabled={showGroupLabels}
 							>
 								<Stack
-									spacing="2px"
+									gap={'2px'}
 									style={{
 										alignItems: 'center',
 										alignContent: 'center',
@@ -136,8 +148,8 @@ export function ArchbaseAdvancedSidebar({
 									{showGroupLabels ? (
 										<Text
 											size="xs"
-											color={
-												theme.colorScheme === 'dark'
+											c={
+												colorScheme === 'dark'
 													? groupLabelDarkColor
 														? groupLabelDarkColor
 														: theme.colors[theme.primaryColor][2]
@@ -167,16 +179,23 @@ export function ArchbaseAdvancedSidebar({
 		const grps = [...result].sort((a, b) => a.indexOrder - b.indexOrder);
 
 		return grps;
-	}, [navigationData, activeGroupName, theme.colorScheme, collapsed]);
+	}, [navigationData, activeGroupName, colorScheme, collapsed, appContext.selectedCompany]);
 
-	const menuItemStyles = buildMenuItemStyles(theme, collapsed, 35, px(sidebarCollapsedWidth), groups.length > 1);
+	const menuItemStyles = buildMenuItemStyles(
+		colorScheme,
+		theme,
+		collapsed,
+		35,
+		Number(px(sidebarCollapsedWidth)),
+		groups.length > 1,
+	);
 
 	const sidebarWidthCalculated =
 		collapsed || activeGroupName === '' ? '0px' : `calc(${sidebarWidth} - ${sidebarGroupWidth})`;
 
 	const calcBackgroundGroupColor = backgroundGroupColor
 		? backgroundGroupColor
-		: theme.colorScheme === 'dark'
+		: colorScheme === 'dark'
 		? theme.colors[theme.primaryColor][6]
 		: theme.colors[theme.primaryColor][7];
 
@@ -209,6 +228,7 @@ export function ArchbaseAdvancedSidebar({
 			{groups.length == 1 ? (
 				buildNavbar(
 					sidebarRef,
+					colorScheme,
 					theme,
 					collapsed,
 					sidebarWidth,
@@ -222,20 +242,13 @@ export function ArchbaseAdvancedSidebar({
 				)
 			) : (
 				<Flex direction="column" w={collapsed ? sidebarCollapsedWidth : sidebarWidth}>
-					<div style={{ height: 'auto', width: '100%', margin }}>{sideBarHeaderContent}</div>
-					<Paper
-						withBorder={withBorder}
-						style={{
-							display: 'flex',
-							height: sidebarHeight,
-							width: sidebarWidth,
-						}}
-					>
+					<div style={{ height: 'auto', width: '100%' }}>{sideBarHeaderContent}</div>
+					<Paper withBorder={withBorder} h={sidebarHeight} w={'100%'} display={'flex'}>
 						{groups.length === 0 ? (
 							false
 						) : (
 							<Stack
-								spacing="4px"
+								gap="4px"
 								style={{
 									height: sidebarHeight,
 									width: sidebarGroupWidth,
@@ -251,15 +264,16 @@ export function ArchbaseAdvancedSidebar({
 								ref={sidebarRef}
 								rootStyles={{
 									[`.${sidebarClasses.container}`]: {
-										background: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+										background: colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
 										overflowX: 'hidden',
 										overflowY: 'hidden',
 										left: 0,
 										height: `${px(sidebarHeight)}px`,
 									},
 								}}
+								style={{ borderColor: colorScheme === 'dark' ? '#000' : '#efefef' }}
 								collapsed={collapsed}
-								width={`${px(sidebarWidthCalculated)}px`}
+								width={`${px(sidebarWidthCalculated)}`}
 								collapsedWidth="0px"
 							>
 								<ScrollArea

@@ -1,25 +1,25 @@
-import { ActionIcon, Menu, Tooltip } from '@mantine/core';
+import { ArchbaseAppContext, processDetailErrorMessage, processErrorMessage } from '@components/core';
+import { useArchbaseTheme } from '@components/hooks';
+import { ArchbaseDialog } from '@components/notification';
+import { ActionIcon, Menu, Popover, TextInput, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { useDebouncedValue } from '@mantine/hooks';
 import {
 	IconCalendar,
 	IconCalendarDue,
+	IconDownload,
 	IconFilter,
 	IconFilterOff,
 	IconRefresh,
 	IconSubtask,
 } from '@tabler/icons-react';
+import { IconPrinter } from '@tabler/icons-react';
 import { endOfMonth } from 'date-fns';
 import { t } from 'i18next';
 import { uniqueId } from 'lodash';
-import React, { Component, ReactNode, RefObject } from 'react';
+import React, { Component, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import DateObject from 'react-date-object';
-import { ArchbaseAppContext } from '../core';
-import {
-	processDetailErrorMessage,
-	processErrorMessage,
-} from '../core/exceptions';
-import { ArchbaseEdit } from '../editors';
-import { ArchbaseDialog } from '../notification';
+import { v4 as uuidv4 } from 'uuid';
 import { ArchbaseCompositeFilter } from './ArchbaseCompositeFilter';
 import {
 	ADVANCED,
@@ -62,13 +62,89 @@ export interface ArchbaseQueryBuilderState {
 	modalHandleOnChange?: (value: string) => void;
 }
 
-export class ArchbaseQueryBuilder extends Component<
-	ArchbaseQueryBuilderProps,
-	ArchbaseQueryBuilderState
-> {
+export const DebouncedTextInput = ({
+	onActionSearchExecute,
+	icon,
+	disabled,
+	label,
+	error,
+	initialValue,
+	onChange,
+	style,
+	placeholder,
+	keyProp,
+	readOnly,
+	innerRef,
+	onFocus,
+	onKeyDown,
+	tooltipIconSearch = 'Clique aqui para Localizar',
+	variant = 'filled',
+}) => {
+	const [value, setValue] = useState(initialValue);
+	const [debouncedValue] = useDebouncedValue(value, 500);
+	const isUserAction = useRef(false);
+	const theme = useArchbaseTheme();
+	const { colorScheme } = useMantineColorScheme();
+	useEffect(() => {
+		setValue(initialValue);
+	}, [initialValue]);
+
+	useEffect(() => {
+		if (debouncedValue !== initialValue && isUserAction.current) {
+			onChange(debouncedValue);
+		}
+		isUserAction.current = false;
+	}, [debouncedValue, initialValue, onChange]);
+
+	return (
+		<TextInput
+			label={label}
+			error={error}
+			value={value}
+			key={keyProp}
+			ref={innerRef}
+			w={'100%'}
+			readOnly={readOnly}
+			onFocus={onFocus}
+			onKeyDown={onKeyDown}
+			placeholder={placeholder}
+			style={style}
+			disabled={disabled}
+			rightSection={
+				onActionSearchExecute ? (
+					<Tooltip withinPortal withArrow label={tooltipIconSearch}>
+						<ActionIcon
+							style={{
+								backgroundColor:
+									variant === 'filled'
+										? colorScheme === 'dark'
+											? theme.colors[theme.primaryColor][5]
+											: theme.colors[theme.primaryColor][6]
+										: undefined,
+							}}
+							tabIndex={-1}
+							variant={variant}
+							onClick={onActionSearchExecute}
+						>
+							{icon}
+						</ActionIcon>
+					</Tooltip>
+				) : null
+			}
+			onChange={(e) => {
+				setValue(e.target.value);
+				isUserAction.current = true;
+			}}
+		/>
+	);
+};
+
+export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, ArchbaseQueryBuilderState> {
 	static defaultProps = {
 		showClearButton: true,
 		showToggleButton: true,
+		showPrintButton: false,
+		showExportButton: false,
 		expandedFilter: false,
 		width: '50px',
 		height: '500px',
@@ -87,41 +163,39 @@ export class ArchbaseQueryBuilder extends Component<
 		this.refEdit = React.createRef();
 		this.toggleFilterButtonRef = React.createRef();
 		this.state = {
-			currentFilter: this.props.currentFilter
-				? this.props.currentFilter
-				: getDefaultFilter(props, QUICK),
+			currentFilter: this.props.currentFilter ? this.props.currentFilter : getDefaultFilter(props, QUICK),
 			modalOpen: '',
 			modalSearchField: '',
 			isOpenSelectRange: false,
 			isOpenSelectFields: false,
 			expandedFilter: this.props.expandedFilter!,
 			update: Math.random(),
-			activeFilterIndex: this.props.currentFilter
-				? this.props.activeFilterIndex!
-				: QUICK_FILTER_INDEX,
+			activeFilterIndex: this.props.currentFilter ? this.props.activeFilterIndex! : QUICK_FILTER_INDEX,
 		};
 	}
 
-	shouldComponentUpdate = (
-		nextProps: ArchbaseQueryBuilderProps,
-		nextState: ArchbaseQueryBuilderState,
-	) => {
+	shouldComponentUpdate = (nextProps: ArchbaseQueryBuilderProps, nextState: ArchbaseQueryBuilderState) => {
 		return shallowCompare(this, nextProps, nextState);
 	};
 
 	UNSAFE_componentWillReceiveProps = (nextProps: ArchbaseQueryBuilderProps) => {
+		let filter = nextProps.currentFilter;
+		let activeFilterIndex = nextProps.activeFilterIndex;
+		if (!filter) {
+			if (nextProps.persistenceDelegator && nextProps.persistenceDelegator.getFilters().length > 0) {
+				filter = JSON.parse(nextProps.persistenceDelegator.getFirstFilter()!.filter);
+				activeFilterIndex = 0;
+			} else {
+				filter = getDefaultFilter(nextProps, QUICK);
+				activeFilterIndex = QUICK_FILTER_INDEX;
+			}
+		}
 		this.setState({
 			...this.state,
-			currentFilter: nextProps.currentFilter
-				? nextProps.currentFilter
-				: getDefaultFilter(nextProps, QUICK),
+			currentFilter: filter!,
 			modalOpen: '',
-			expandedFilter: nextProps.expandedFilter
-				? nextProps.expandedFilter
-				: false,
-			activeFilterIndex: nextProps.currentFilter
-				? nextProps.activeFilterIndex
-				: QUICK_FILTER_INDEX,
+			expandedFilter: nextProps.expandedFilter ? nextProps.expandedFilter : false,
+			activeFilterIndex: activeFilterIndex,
 		});
 	};
 
@@ -144,18 +218,12 @@ export class ArchbaseQueryBuilder extends Component<
 				isOpenSelectFields: false,
 			},
 			() => {
-				if (
-					!this.state.currentFilter ||
-					this.state.currentFilter.filter.filterType === QUICK
-				) {
-					const firstFilter: IQueryFilterEntity | undefined =
-						this.props.persistenceDelegator.getFirstFilter();
+				if (!this.state.currentFilter || this.state.currentFilter.filter.filterType === QUICK) {
+					const firstFilter: IQueryFilterEntity | undefined = this.props.persistenceDelegator.getFirstFilter();
 					if (firstFilter) {
-						const currentFilter: ArchbaseQueryFilter = getDefaultEmptyFilter();
-						currentFilter.id = firstFilter.id;
-						currentFilter.name = firstFilter.name;
-						currentFilter.viewName = firstFilter.viewName;
-						currentFilter.filter = JSON.parse(atob(firstFilter.filter || ''));
+						const currentFilter: ArchbaseQueryFilter = firstFilter.filter
+							? JSON.parse(firstFilter.filter)
+							: getDefaultEmptyFilter();
 						this.onChangeSelectedFilter(currentFilter, 0);
 					} else {
 						this.addNewFilter();
@@ -198,25 +266,18 @@ export class ArchbaseQueryBuilder extends Component<
 		this.onCloseFilterClick();
 	};
 
-	onChangeQuickFilter = (value: string, _event: React.MouseEvent) => {
+	onChangeQuickFilter = (value: string) => {
 		this.changeQuickFilter(value);
 	};
 
 	changeQuickFilter = (value: string) => {
 		let currentFilter = this.state.currentFilter;
-		if (
-			this.state.currentFilter &&
-			this.state.currentFilter.type &&
-			this.state.currentFilter.type !== QUICK
-		) {
+		if (currentFilter && currentFilter.filter && currentFilter.filter.filterType !== QUICK) {
 			currentFilter = getDefaultFilter(this.props, QUICK);
 		}
 
 		currentFilter.filter.quickFilterText = value;
-		currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(
-			currentFilter,
-			getFields(this.props),
-		);
+		currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(currentFilter, getFields(this.props));
 		this.setState({
 			...this.state,
 			currentFilter,
@@ -244,18 +305,10 @@ export class ArchbaseQueryBuilder extends Component<
 		return this.state.currentFilter.filter.quickFilterText;
 	};
 
-	onFilterChanged = (
-		currentFilter: ArchbaseQueryFilter,
-		activeFilterIndex: number,
-		callback: () => void,
-	) => {
+	onFilterChanged = (currentFilter: ArchbaseQueryFilter, activeFilterIndex: number, callback: () => void) => {
 		const result = [];
 		if (currentFilter.id) {
-			this.convertFilterToListValues(
-				'root',
-				currentFilter.filter.rules,
-				result,
-			);
+			this.convertFilterToListValues('root', currentFilter.filter.rules, result);
 			const filter = { filter: result, sort: currentFilter.sort.sortFields };
 			localStorage.setItem(`filter${currentFilter.id}`, JSON.stringify(filter));
 		}
@@ -269,11 +322,7 @@ export class ArchbaseQueryBuilder extends Component<
 		}
 	};
 
-	loadListValuesToFilter = (
-		parent: string,
-		rules: string | any[],
-		values: any,
-	) => {
+	loadListValuesToFilter = (parent: string, rules: string | any[], values: any) => {
 		for (let i = 0; i < rules.length; i++) {
 			const rule = rules[i];
 			if (rule.rules) {
@@ -321,21 +370,20 @@ export class ArchbaseQueryBuilder extends Component<
 			itemId === 'mnuItemSalvar' &&
 			this.state.currentFilter &&
 			this.state.currentFilter.id &&
-			this.state.currentFilter.id > 0
+			this.state.currentFilter.id !== QUICK_FILTER_INDEX &&
+			this.state.currentFilter.id !== NEW_FILTER_INDEX
 		) {
 			ArchbaseDialog.showConfirmDialogYesNo(
 				`${t('archbase:Confirme')}`,
 				`${t('archbase:Deseja salvar o Filtro ?')}`,
 				() => {
 					const currentFilter = this.state.currentFilter;
-					currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(
-						currentFilter,
-						getFields(this.props),
+					currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(currentFilter, getFields(this.props));
+					const filter: IQueryFilterEntity | undefined = this.props.persistenceDelegator.getFilterById(
+						currentFilter.id,
 					);
-					const filter: IQueryFilterEntity | undefined =
-						this.props.persistenceDelegator.getFilterById(currentFilter.id);
 					if (filter) {
-						filter.setFilter(btoa(JSON.stringify(currentFilter)));
+						filter.setFilter(currentFilter);
 						this.props.persistenceDelegator.saveFilter(filter, (error: any) => {
 							if (error) {
 								ArchbaseDialog.showErrorWithDetails(
@@ -349,54 +397,47 @@ export class ArchbaseQueryBuilder extends Component<
 				},
 				() => {},
 			);
-		} else if (
-			(itemId === 'mnuItemSalvar' || itemId === 'mnuItemSalvarComo') &&
-			this.state.currentFilter
-		) {
+		} else if ((itemId === 'mnuItemSalvar' || itemId === 'mnuItemSalvarComo') && this.state.currentFilter) {
 			this.inputValue = '';
 			ArchbaseDialog.showInputDialog(
 				`${t('archbase:Salvar como...')}`,
 				`${t('archbase:Informe um nome para o fitro...')}`,
 				`${t('archbase:Confirme')}`,
-				(value: any) => (this.inputValue = value),
+				(input: any) => (this.inputValue = input.target.value),
 				() => {
 					const currentFilter = this.state.currentFilter;
-					currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(
-						currentFilter,
-						getFields(this.props),
-					);
+					currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(currentFilter, getFields(this.props));
 
-					const newFilter: IQueryFilterEntity =
-						QueryFilterEntity.createInstanceWithValues({
-							filter: btoa(JSON.stringify(currentFilter)),
-							id: this.props.id,
-							name: this.inputValue,
-							componentName: this.props.id,
-							userName: this.props.userName,
-							shared: true,
-							viewName: this.props.viewName,
-						});
+					const newFilter: IQueryFilterEntity = QueryFilterEntity.createInstanceWithValues({
+						filter: currentFilter,
+						id: uuidv4(),
+						name: this.inputValue,
+						componentName: this.props.id,
+						userName: this.props.userName,
+						shared: true,
+						viewName: this.props.viewName,
+						isNewFilter: true,
+					});
 
-					this.props.persistenceDelegator.saveFilter(
-						newFilter,
-						(error: any, id: any) => {
-							if (error) {
-								ArchbaseDialog.showErrorWithDetails(
-									`${t('archbase:Warning')}`,
-									processErrorMessage(error),
-									processDetailErrorMessage(error),
-								);
-							} else {
+					this.props.persistenceDelegator.addNewFilter(newFilter, (error: any, id: any) => {
+						if (error) {
+							ArchbaseDialog.showErrorWithDetails(
+								`${t('archbase:Warning')}`,
+								processErrorMessage(error),
+								processDetailErrorMessage(error),
+							);
+						} else {
+							if (currentFilter && currentFilter.id === -1) {
 								currentFilter.id = id;
 								currentFilter.name = newFilter.name;
-								this.setState({
-									...this.state,
-									currentFilter,
-									modalOpen: 'modalSaveFilter',
-								});
 							}
-						},
-					);
+							this.setState({
+								...this.state,
+								currentFilter,
+								modalOpen: 'modalSaveFilter',
+							});
+						}
+					});
 				},
 				() => {},
 			);
@@ -406,10 +447,7 @@ export class ArchbaseQueryBuilder extends Component<
 	onChangeFilterType = (index: number) => {
 		const currentFilter = this.state.currentFilter;
 		currentFilter.filter.filterType = index === 0 ? NORMAL : ADVANCED;
-		currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(
-			currentFilter,
-			getFields(this.props),
-		);
+		currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(currentFilter, getFields(this.props));
 		this.setState({ ...this.state, currentFilter, update: Math.random() });
 		if (this.props.onFilterChanged) {
 			this.props.onFilterChanged(currentFilter, this.state.activeFilterIndex);
@@ -462,37 +500,29 @@ export class ArchbaseQueryBuilder extends Component<
 			`${t('archbase:Deseja remover o Filtro ?')}`,
 			() => {
 				const currentFilter = this.state.currentFilter;
-				const filter: IQueryFilterEntity | undefined =
-					this.props.persistenceDelegator.getFilterById(currentFilter.id);
+				const filter: IQueryFilterEntity | undefined = this.props.persistenceDelegator.getFilterById(currentFilter.id);
 				if (filter) {
-					this.props.persistenceDelegator.removeFilterBy(
-						filter.id,
-						(error: any) => {
-							if (error && error !== null) {
-								ArchbaseDialog.showErrorWithDetails(
-									`${t('archbase:Warning')}`,
-									processErrorMessage(error),
-									processDetailErrorMessage(error),
-								);
+					this.props.persistenceDelegator.removeFilterBy(filter, (error: any) => {
+						if (error && error !== null) {
+							ArchbaseDialog.showErrorWithDetails(
+								`${t('archbase:Warning')}`,
+								processErrorMessage(error),
+								processDetailErrorMessage(error),
+							);
+						} else {
+							const firstFilter = this.props.persistenceDelegator.getFirstFilter();
+							if (firstFilter) {
+								const currentFilter: ArchbaseQueryFilter = getDefaultEmptyFilter();
+								currentFilter.id = firstFilter.id;
+								currentFilter.name = firstFilter.name;
+								currentFilter.viewName = firstFilter.viewName;
+								currentFilter.filter = JSON.parse(firstFilter.filter || '');
+								this.onChangeSelectedFilter(currentFilter, 0);
 							} else {
-								const firstFilter =
-									this.props.persistenceDelegator.getFirstFilter();
-								if (firstFilter) {
-									const currentFilter: ArchbaseQueryFilter =
-										getDefaultEmptyFilter();
-									currentFilter.id = firstFilter.id;
-									currentFilter.name = firstFilter.name;
-									currentFilter.viewName = firstFilter.viewName;
-									currentFilter.filter = JSON.parse(
-										atob(firstFilter.filter || ''),
-									);
-									this.onChangeSelectedFilter(currentFilter, 0);
-								} else {
-									this.addNewFilter();
-								}
+								this.addNewFilter();
 							}
-						},
-					);
+						}
+					});
 				}
 			},
 			() => {},
@@ -528,19 +558,14 @@ export class ArchbaseQueryBuilder extends Component<
 			const { innerHeight: height } = window;
 
 			let left = bb.left;
-			if (
-				(this.state.detailsAlign === 'right' && type === 'filter') ||
-				bb.left + width > window.innerWidth - 100
-			) {
+			if ((this.state.detailsAlign === 'right' && type === 'filter') || bb.left + width > window.innerWidth - 100) {
 				left = bb.right - width;
 			}
 
 			return {
 				left,
 				top: bb.bottom + 2,
-				height: this.props.detailsHeight
-					? this.props.detailsHeight
-					: height - bb.bottom - 30,
+				height: this.props.detailsHeight ? this.props.detailsHeight : height - bb.bottom - 30,
 			};
 		}
 		return { left: 0, top: 0, height: 0 };
@@ -582,27 +607,25 @@ export class ArchbaseQueryBuilder extends Component<
 			isOpenSelectRange: false,
 			selectRangeType: undefined,
 			expandedFilter: false,
+			modalOpen: '',
 			isOpenSelectFields: false,
 		});
 	};
 
-	onConfirmSelectRange = (values: any) => {
-		let newValue: string = '';
-		if (this.state.selectRangeType === 'month') {
+	onConfirmSelectRange = (values: any, selectRangeType: any) => {
+		let newValue = '';
+		if (selectRangeType === 'month') {
 			const first = values[0].toString();
 			const last = new DateObject({
 				date: endOfMonth(values[1].toDate()),
 				format: 'DD/MM/YYYY',
 			}).toString();
 			newValue = `${first}:${last}`;
-		} else if (
-			this.state.selectRangeType === 'range' ||
-			this.state.selectRangeType === 'week'
-		) {
+		} else if (selectRangeType === 'range' || selectRangeType === 'week') {
 			const first = values[0].toString();
 			const last = values[1].toString();
 			newValue = `${first}:${last}`;
-		} else if (this.state.selectRangeType === 'day') {
+		} else if (selectRangeType === 'day') {
 			let appendDelimiter = false;
 			newValue = '';
 			values.forEach((item) => {
@@ -614,18 +637,11 @@ export class ArchbaseQueryBuilder extends Component<
 			});
 		}
 		let currentFilter = this.state.currentFilter;
-		if (
-			this.state.currentFilter &&
-			this.state.currentFilter.type &&
-			this.state.currentFilter.type !== QUICK
-		) {
+		if (currentFilter && currentFilter.filter && currentFilter.filter.filterType !== QUICK) {
 			currentFilter = getDefaultFilter(this.props, QUICK);
 		}
 		currentFilter.filter.quickFilterText = newValue;
-		currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(
-			currentFilter,
-			getFields(this.props),
-		);
+		currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(currentFilter, getFields(this.props));
 		this.setState(
 			{
 				...this.state,
@@ -634,6 +650,7 @@ export class ArchbaseQueryBuilder extends Component<
 				selectRangeType: undefined,
 				isOpenSelectRange: false,
 				isOpenSelectFields: false,
+				modalOpen: '',
 				expandedFilter: false,
 			},
 			() => {
@@ -658,17 +675,17 @@ export class ArchbaseQueryBuilder extends Component<
 		}
 	};
 
-	onCancelSelectFields() {
+	onCancelSelectFields = () => {
 		this.setState({
 			...this.state,
 			isOpenSelectFields: false,
 			isOpenSelectRange: false,
 			expandedFilter: false,
 		});
-	}
+	};
 
-	getSortString(currentFilter: ArchbaseQueryFilter): string {
-		let result: string = '';
+	getSortString = (currentFilter: ArchbaseQueryFilter): string => {
+		let result = '';
 		let appendDelimiter = false;
 		currentFilter.sort.sortFields.forEach((field) => {
 			if (field.selected) {
@@ -681,26 +698,15 @@ export class ArchbaseQueryBuilder extends Component<
 		});
 
 		return result;
-	}
+	};
 
-	onConfirmSelectFields = (
-		selectedFields: Field[],
-		sortFields: SortField[],
-		activeIndex: number,
-	) => {
+	onConfirmSelectFields = (selectedFields: Field[], sortFields: SortField[], activeIndex: number) => {
 		let currentFilter = this.state.currentFilter;
-		if (
-			this.state.currentFilter &&
-			this.state.currentFilter.type &&
-			this.state.currentFilter.type !== QUICK
-		) {
+		if (currentFilter && currentFilter.filter && currentFilter.filter.filterType !== QUICK) {
 			currentFilter = getDefaultFilter(this.props, QUICK);
 		}
 		currentFilter.filter.selectedFields = selectedFields;
-		currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(
-			currentFilter,
-			getFields(this.props),
-		);
+		currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(currentFilter, getFields(this.props));
 		currentFilter.sort.sortFields = sortFields;
 		currentFilter.sort.activeIndex = activeIndex;
 		currentFilter.sort.quickFilterSort = this.getSortString(currentFilter);
@@ -740,10 +746,7 @@ export class ArchbaseQueryBuilder extends Component<
 	onClickOk = (_event, selectedRecords: any[]) => {
 		if (selectedRecords && selectedRecords.length > 0) {
 			let result = '';
-			if (
-				this.state.modalOperator === 'notInList' ||
-				this.state.modalOperator === 'inList'
-			) {
+			if (this.state.modalOperator === 'notInList' || this.state.modalOperator === 'inList') {
 				let appendDelimiter = false;
 				selectedRecords.forEach((record) => {
 					if (appendDelimiter) {
@@ -779,13 +782,7 @@ export class ArchbaseQueryBuilder extends Component<
 		});
 	};
 
-	onSearchButtonClick = (
-		field: string,
-		_event: any,
-		handleOnChange: any,
-		operator: any,
-		searchField: any,
-	) => {
+	onSearchButtonClick = (field: string, _event: any, handleOnChange: any, operator: any, searchField: any) => {
 		this.setState({
 			...this.state,
 			modalOpen: `modal${field}`,
@@ -804,10 +801,7 @@ export class ArchbaseQueryBuilder extends Component<
 				result.push(
 					<SearchComponent
 						key={`modal${field.name}`}
-						isOpen={
-							this.state.modalOpen &&
-							this.state.modalOpen === `modal${field.name}`
-						}
+						isOpen={this.state.modalOpen && this.state.modalOpen === `modal${field.name}`}
 						user={this.props.userName}
 						onClickOk={this.onClickOk}
 						onClickCancel={this.onClickCancel}
@@ -849,12 +843,12 @@ export class ArchbaseQueryBuilder extends Component<
 					maxWidth: this.props.width,
 					height: '50px',
 					backgroundColor:
-						this.context.theme!.colorScheme === 'dark'
+						this.context.colorScheme === 'dark'
 							? this.context.theme!.colors.dark[7]
 							: this.context.theme!.colors.gray[0],
 					position: 'relative',
 					border: `1px solid ${
-						this.context.theme!.colorScheme === 'dark'
+						this.context.colorScheme === 'dark'
 							? this.context.theme!.colors.gray[7]
 							: this.context.theme!.colors.gray[2]
 					}`,
@@ -878,18 +872,24 @@ export class ArchbaseQueryBuilder extends Component<
 					}}
 				>
 					<div style={{ display: 'flex', width: '100%' }}>
-						<ArchbaseEdit
-							onChangeValue={this.onChangeQuickFilter}
+						<DebouncedTextInput
+							onChange={(value) => this.onChangeQuickFilter(value)}
 							innerRef={this.refEdit}
-							width={'100%'}
-							onFocusEnter={this.onFocusEdit}
+							onFocus={this.onFocusEdit}
 							onKeyDown={this.handleQuickFilter}
-							value={this.state.currentFilter.filter.quickFilterText}
+							initialValue={this.state.currentFilter.filter.quickFilterText}
 							placeholder={this.props.placeholder}
 							style={{
 								height: '36px',
 								paddingLeft: '3px',
 							}}
+							label={undefined}
+							error={undefined}
+							keyProp={undefined}
+							readOnly={false}
+							onActionSearchExecute={undefined}
+							icon={undefined}
+							disabled={false}
 						/>
 						<span
 							style={{
@@ -915,8 +915,8 @@ export class ArchbaseQueryBuilder extends Component<
 						<ActionIcon
 							variant={this.props.variant}
 							size="lg"
-							color="primary"
-							sx={{ width: '36px', height: '36px', marginRight: 2 }}
+							color="var(--mantine-primary-color-filled)"
+							style={{ width: '36px', height: '36px', marginRight: 2 }}
 							onClick={() => {
 								this.onSearchClick();
 							}}
@@ -929,8 +929,8 @@ export class ArchbaseQueryBuilder extends Component<
 							<ActionIcon
 								variant={this.props.variant}
 								size="lg"
-								color="primary"
-								sx={{ width: '36px', height: '36px', marginRight: 2 }}
+								color="var(--mantine-primary-color-filled)"
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
 								onClick={() => {
 									this.clearFilter();
 								}}
@@ -939,147 +939,162 @@ export class ArchbaseQueryBuilder extends Component<
 							</ActionIcon>
 						</Tooltip>
 					) : null}
-					<Menu
+					<Popover
+						width={this.props.width}
+						position="bottom-end"
+						withArrow
 						shadow="md"
-						width={200}
-						trigger="hover"
-						openDelay={100}
-						closeDelay={200}
+						onClose={() => this.setState({ ...this.state, modalOpen: '' })}
+						opened={this.state.modalOpen === 'selectDate'}
+						withinPortal={true}
 					>
-						<Menu.Target>
-							<Tooltip
-								withinPortal
-								withArrow
-								label={`${t('archbase:Selecionar período')}`}
-							>
+						<Popover.Target>
+							<Tooltip withinPortal withArrow label={`${t('archbase:Selecionar período')}`}>
 								<ActionIcon
 									variant={this.props.variant}
 									size="lg"
-									color="primary"
-									sx={{ width: '36px', height: '36px', marginRight: 2 }}
+									color="var(--mantine-primary-color-filled)"
+									onClick={() => this.setState({ ...this.state, modalOpen: 'selectDate' })}
+									style={{ width: '36px', height: '36px', marginRight: 2 }}
 								>
 									<IconCalendar size="1.4rem" />
 								</ActionIcon>
 							</Tooltip>
-						</Menu.Target>
-
-						<Menu.Dropdown>
-							<Menu.Label>{`${t('archbase:Período')}`}</Menu.Label>
-							<Menu.Item
-								onClick={() => this.onSelectRange('range')}
-								icon={<IconCalendarDue size={16} />}
-							>
-								{`${t('archbase:Intervalo')}`}
-							</Menu.Item>
-							<Menu.Item
-								onClick={() => this.onSelectRange('month')}
-								icon={<IconCalendarDue size={16} />}
-							>
-								{`${t('archbase:Mês')}`}
-							</Menu.Item>
-							<Menu.Item
-								onClick={() => this.onSelectRange('week')}
-								icon={<IconCalendarDue size={16} />}
-							>
-								{`${t('archbase:Semana')}`}
-							</Menu.Item>
-							<Menu.Item
-								onClick={() => this.onSelectRange('day')}
-								icon={<IconCalendarDue size={16} />}
-							>
-								{`${t('archbase:Dia')}`}
-							</Menu.Item>
-						</Menu.Dropdown>
-					</Menu>
-
-					<Tooltip
-						withinPortal
+						</Popover.Target>
+						<Popover.Dropdown>
+							<ArchbaseFilterSelectRange
+								selectRangeType={this.state.selectRangeType}
+								onConfirmSelectRange={this.onConfirmSelectRange}
+								onCancelSelectRange={this.onCancelSelectRange}
+								width={`calc(${this.props.width} - 2rem)`}
+								variant={this.props.variant}
+							/>
+						</Popover.Dropdown>
+					</Popover>
+					<Popover
+						width={this.props.width}
+						position="bottom-end"
 						withArrow
-						label={`${t('archbase:Selecionar campos filtro rápido')}`}
+						shadow="md"
+						opened={this.state.isOpenSelectFields}
+						onClose={() => this.setState({ ...this.state, isOpenSelectFields: false })}
+						withinPortal={true}
 					>
-						<ActionIcon
-							variant={this.props.variant}
-							size="lg"
-							color="primary"
-							sx={{ width: '36px', height: '36px', marginRight: 2 }}
-							onClick={() => {
-								this.selectFields();
-							}}
-						>
-							<IconSubtask size="1.4rem" />
-						</ActionIcon>
-					</Tooltip>
+						<Popover.Target>
+							<Tooltip withinPortal withArrow label={`${t('archbase:Selecionar campos filtro rápido')}`}>
+								<ActionIcon
+									variant={this.props.variant}
+									size="lg"
+									color="var(--mantine-primary-color-filled)"
+									onClick={() => {
+										this.selectFields();
+									}}
+									style={{ width: '36px', height: '36px', marginRight: 2 }}
+								>
+									<IconSubtask size="1.4rem" />
+								</ActionIcon>
+							</Tooltip>
+						</Popover.Target>
+						<Popover.Dropdown>
+							<ArchbaseFilterSelectFields
+								id={`filrsep${uniqueId()}`}
+								key={`kfilrsep${uniqueId()}`}
+								currentFilter={this.state.currentFilter}
+								selectedOptions={this.state.currentFilter.filter.selectedFields || []}
+								sort={this.state.currentFilter.sort.sortFields || []}
+								fields={getFields(this.props)}
+								onConfirmSelectFields={this.onConfirmSelectFields}
+								onCancelSelectFields={this.onCancelSelectFields}
+								width={`calc(${this.props.width} - 2rem)`}
+								variant={this.props.variant}
+							/>
+						</Popover.Dropdown>
+					</Popover>
 					{this.props.showToggleButton ? (
-						<Tooltip
-							withinPortal
+						<Popover
+							width={this.props.detailsWidth}
+							position="bottom-end"
 							withArrow
-							label={`${t('archbase:Filtro avançado')}`}
+							shadow="md"
+							opened={this.state.expandedFilter}
+							zIndex={199}
+							withinPortal={true}
 						>
+							<Popover.Target>
+								<Tooltip withinPortal withArrow label={`${t('archbase:Filtro avançado')}`}>
+									<ActionIcon
+										variant={this.props.variant}
+										ref={this.toggleFilterButtonRef}
+										size="lg"
+										color="var(--mantine-primary-color-filled)"
+										onClick={() => {
+											this.toggleExpandedFilter();
+										}}
+										style={{ width: '36px', height: '36px', marginRight: 2 }}
+									>
+										<IconFilter size="1.4rem" />
+									</ActionIcon>
+								</Tooltip>
+							</Popover.Target>
+							<Popover.Dropdown>
+								<ArchbaseCompositeFilter
+									update={this.state.update}
+									currentFilter={this.state.currentFilter}
+									activeFilterIndex={this.state.activeFilterIndex}
+									persistenceDelegator={this.props.persistenceDelegator}
+									onFilterChanged={(currentFilter: ArchbaseQueryFilter, activeFilterIndex: number) =>
+										this.onFilterChanged(currentFilter, activeFilterIndex, () => {})
+									}
+									onSaveFilter={this.onSaveFilter}
+									onActionClick={this.onActionClick}
+									onChangeFilterType={this.onChangeFilterType}
+									onChangeSelectedFilter={this.onChangeSelectedFilter}
+									onSearchButtonClick={this.onSearchButtonClick}
+									width={`calc(${this.props.detailsWidth}px - 2rem)`}
+									height={`calc(${this.props.detailsHeight}px - 2rem)`}
+									toggleFilterButtonRef={this.toggleFilterButtonRef}
+									variant={this.props.variant}
+								>
+									{this.props.children}
+								</ArchbaseCompositeFilter>
+							</Popover.Dropdown>
+						</Popover>
+					) : null}
+					{this.props.showExportButton ? (
+						<Tooltip withinPortal withArrow label="Exportar">
 							<ActionIcon
-								ref={this.toggleFilterButtonRef}
 								variant={this.props.variant}
 								size="lg"
-								color="primary"
-								sx={{ width: '36px', height: '36px', marginRight: 2 }}
+								color="var(--mantine-primary-color-filled)"
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
 								onClick={() => {
-									this.toggleExpandedFilter();
+									if (this.props.onExport) {
+										this.props.onExport();
+									}
 								}}
 							>
-								<IconFilter size="1.4rem" />
+								<IconDownload size="1.4rem" />
+							</ActionIcon>
+						</Tooltip>
+					) : null}
+					{this.props.showPrintButton ? (
+						<Tooltip withinPortal withArrow label="Imprimir">
+							<ActionIcon
+								variant={this.props.variant}
+								size="lg"
+								color="var(--mantine-primary-color-filled)"
+								style={{ width: '36px', height: '36px', marginRight: 2 }}
+								onClick={() => {
+									if (this.props.onPrint) {
+										this.props.onPrint();
+									}
+								}}
+							>
+								<IconPrinter size="1.4rem" />
 							</ActionIcon>
 						</Tooltip>
 					) : null}
 				</div>
-				<ArchbaseCompositeFilter
-					update={this.state.update}
-					isOpen={this.state.expandedFilter}
-					currentFilter={this.state.currentFilter}
-					activeFilterIndex={this.state.activeFilterIndex}
-					persistenceDelegator={this.props.persistenceDelegator}
-					onFilterChanged={(
-						currentFilter: ArchbaseQueryFilter,
-						activeFilterIndex: number,
-					) => this.onFilterChanged(currentFilter, activeFilterIndex, () => {})}
-					onSaveFilter={this.onSaveFilter}
-					onActionClick={this.onActionClick}
-					onChangeFilterType={this.onChangeFilterType}
-					onChangeSelectedFilter={this.onChangeSelectedFilter}
-					onSearchButtonClick={this.onSearchButtonClick}
-					left={position.left}
-					top={position.top}
-					width={this.props.detailsWidth}
-					height={this.props.detailsHeight}
-					toggleFilterButtonRef={this.toggleFilterButtonRef}
-					variant={this.props.variant}
-				>
-					{this.props.children}
-				</ArchbaseCompositeFilter>
-
-				<ArchbaseFilterSelectFields
-					id={`filrsep${uniqueId()}`}
-					key={`kfilrsep${uniqueId()}`}
-					isOpen={this.state.isOpenSelectFields}
-					left={position.left}
-					currentFilter={this.state.currentFilter}
-					selectedOptions={getQuickFields(getFields(this.props))}
-					fields={getFields(this.props)}
-					onConfirmSelectFields={this.onConfirmSelectFields}
-					onCancelSelectFields={this.onCancelSelectFields}
-					width={this.props.width}
-					top={position.top}
-					variant={this.props.variant}
-				/>
-
-				<ArchbaseFilterSelectRange
-					selectRangeType={this.state.selectRangeType}
-					isOpen={this.state.isOpenSelectRange}
-					left={position.left}
-					onConfirmSelectRange={this.onConfirmSelectRange}
-					onCancelSelectRange={this.onCancelSelectRange}
-					width={this.props.width}
-					top={position.top}
-					variant={this.props.variant}
-				/>
 				{this.buildSearchModals()}
 			</div>
 		);

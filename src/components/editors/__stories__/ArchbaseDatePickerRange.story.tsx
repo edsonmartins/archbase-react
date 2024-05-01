@@ -38,20 +38,18 @@ const ArchbaseDatePickerRangeExample = () => {
 			<Grid.Col span={12}>
 				<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<Card.Section withBorder inheritPadding py="xs">
-						<Group position="apart">
-							<Text weight={500}>Date Picker Range Component</Text>
+						<Group justify="space-between">
+							<Text fw={500}>Date Picker Range Component</Text>
 						</Group>
 					</Card.Section>
-					<Box sx={(_theme) => ({ height: 500 })}>
-						<ArchbaseDatePickerRange
-							onSelectDateRange={setSelectedRange}
-							label="Informe o período"
-						/>
+					<Box style={{ height: 500 }}>
+						<ArchbaseDatePickerRange onSelectDateRange={setSelectedRange} label="Informe o período" />
 						<Text size="1rem">
-							{selectedRange &&
-								formatISO(selectedRange[0]!) +
-									' -> ' +
-									formatISO(selectedRange[1]!)}
+							{selectedRange && selectedRange[0]
+								? formatISO(selectedRange[0]!) +
+								  ' -> ' +
+								  (selectedRange[1] ? selectedRange[1] && formatISO(selectedRange[1]!) : '')
+								: ''}
 						</Text>
 					</Box>
 				</Card>

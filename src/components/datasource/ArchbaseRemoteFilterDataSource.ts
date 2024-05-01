@@ -17,6 +17,7 @@ export class RemoteFilter {
   userName?: string
   shared?: boolean
   code?: string
+  isNewFilter?: boolean
 
   constructor(data: Partial<RemoteFilter> = {}) {
     Object.assign(this, data)
@@ -43,7 +44,8 @@ export class ArchbaseRemoteFilterDataSource
       componentName: this.getFieldValue('componentName'),
       userName: this.getFieldValue('userName'),
       shared: this.getFieldValue('shared'),
-      filter: atob(this.getFieldValue('filter'))
+      filter: atob(this.getFieldValue('filter')),
+      isNewFilter: this.getFieldValue('isNewFilter'),
     })
   }
 
@@ -58,7 +60,8 @@ export class ArchbaseRemoteFilterDataSource
         filter: btoa(JSON.stringify(filter.filter)),
         shared: filter.shared,
         viewName: filter.viewName,
-        userName: filter.userName
+        userName: filter.userName,
+        isNewFilter: filter.isNewFilter
       })
     )
     const result = await this.save()
@@ -69,8 +72,9 @@ export class ArchbaseRemoteFilterDataSource
     if (this.locate({ id: filter.id })) {
       this.edit()
       this.setFieldValue('filter', btoa(JSON.stringify(filter.filter)))
-      const result = await this.save()
-      onResult(null, result.id)
+      const result = await this.save((error)=>{
+        onResult(error, result.id)
+      })      
     } else {
       onResult('Filtro não encontrado.')
     }
@@ -78,8 +82,10 @@ export class ArchbaseRemoteFilterDataSource
 
   public async removeFilterBy(filter: IQueryFilterEntity, onResult: DelegatorCallback) {
     if (this.locate({ id: filter.id })) {
-      await this.remove()
-      onResult(null, filter.id)
+      await this.remove((error)=>{
+        onResult(error, filter.id)
+      })
+     
     } else {
       onResult('Filtro não encontrado.')
     }
@@ -104,7 +110,8 @@ export class ArchbaseRemoteFilterDataSource
           componentName: filter.componentName,
           userName: filter.userName,
           shared: filter.shared,
-          filter: atob(filter.filter || '')
+          filter: atob(filter.filter || ''),
+          isNewFilter: filter.isNewFilter
         })
       )
     }

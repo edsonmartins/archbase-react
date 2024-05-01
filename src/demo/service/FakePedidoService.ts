@@ -8,8 +8,13 @@ import { API_TYPE } from '../ioc/DemoIOCTypes';
 import { IOCContainer } from '@components/core';
 
 export class FakePedidoService extends ArchbaseRemoteApiService<Pedido, number> {
+  
   constructor(@inject(API_TYPE.ApiClient) client: ArchbaseRemoteApiClient) {
     super(client || IOCContainer.getContainer().get<ArchbaseRemoteApiClient>(API_TYPE.ApiClient));
+  }
+
+  protected configureHeaders(): Record<string, string> {
+    throw new Error("Method not implemented.");
   }
 
   protected getEndpoint(): string {
