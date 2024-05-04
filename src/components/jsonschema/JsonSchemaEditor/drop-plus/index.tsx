@@ -46,7 +46,7 @@ export const DropPlus: React.FunctionComponent<DropPlusProps> = ({
 				</ActionIcon>
 			</Popover.Target>
 
-			<Popover.Dropdown w="100px" color="white">
+			<Popover.Dropdown w="120px" color="white">
 				<Stack>
 					<Button
 						color="blue"

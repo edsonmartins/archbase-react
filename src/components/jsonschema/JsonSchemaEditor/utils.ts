@@ -11,7 +11,7 @@ const ajv = new Ajv();
 export const isValidSchemaValidator = (schema: JSONSchema7): boolean => {
 	let isValid;
 	try {
-		isValid = ajv.validateSchema(schema, true);
+		isValid = ajv.validateSchema(schema);
 	} catch (e) {
 		console.log(e);
 	}

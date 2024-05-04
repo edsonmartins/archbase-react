@@ -61,7 +61,7 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 				/>
 				<Checkbox disabled m={2} color="blue" />
 				<Select
-					disabled={isReadOnly}
+					readOnly={isReadOnly}
 					value={items.type as JSONSchema7TypeName}
 					size="sm"
 					m={2}
@@ -74,7 +74,7 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 				/>
 				<Input
 					value={items.title}
-					disabled={isReadOnly}
+					readOnly={isReadOnly}
 					size="sm"
 					m={2}
 					placeholder={`${i18next.t('archbase:Add Title')}`}
@@ -84,7 +84,7 @@ export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
 				/>
 				<Input
 					value={items.description}
-					disabled={isReadOnly}
+					readOnly={isReadOnly}
 					size="sm"
 					m={2}
 					placeholder={`${i18next.t('archbase:Add Description')}`}

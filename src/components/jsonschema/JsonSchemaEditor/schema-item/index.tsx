@@ -65,7 +65,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 			<Flex align="center" direction="row" wrap="nowrap" className="schema-item" style={tagPaddingLeftStyle}>
 				<Input.Wrapper error={error}>
 					<Input
-						disabled={isReadOnly}
+						readOnly={isReadOnly}
 						defaultValue={name}
 						size="sm"
 						m={2}
@@ -90,7 +90,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 					}}
 				/>
 				<Select
-					disabled={false}
+					readOnly={isReadOnly}
 					value={item.type.toString()}
 					size="sm"
 					m={2}
@@ -102,7 +102,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 					data={itemTypes}
 				/>
 				<Input
-					disabled={isReadOnly}
+					readOnly={isReadOnly}
 					value={item.title || ''}
 					size="sm"
 					m={2}
@@ -112,7 +112,7 @@ export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
 					}}
 				/>
 				<Input
-					disabled={isReadOnly}
+					readOnly={isReadOnly}
 					value={item.description || ''}
 					size="sm"
 					m={2}

@@ -6,6 +6,7 @@ import { JSONSchema7, JSONSchema7TypeName } from '../../ArchbaseJsonSchemaEditor
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
 import { DataType, getDefaultSchema, handleTypeChange, random } from '../utils';
 
+
 export interface SchemaArrayProps extends FlexProps {
 	path: string;
 	jsonSchema: JSONSchema7;
@@ -31,12 +32,11 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 						m={2}
 						width={20}
 						color="blue"
-						// onChange={(event) => handleChange('isReadOnly', event.currentTarget.checked, 'ASSIGN_VALUE')}
 					/>
 				</Tooltip>
 
 				<Select
-					disabled={isReadOnly}
+					readOnly={isReadOnly}
 					value={jsonSchema.type.toString()}
 					size="sm"
 					m={2}
@@ -52,7 +52,7 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 				/>
 				<TextInput
 					value={jsonSchema.title ?? ''}
-					disabled={isReadOnly}
+					readOnly={isReadOnly}
 					size="sm"
 					m={2}
 					placeholder={`${i18next.t('archbase:Add Title')}`}
@@ -62,7 +62,7 @@ export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
 				/>
 				<TextInput
 					value={jsonSchema.description ?? ''}
-					disabled={isReadOnly}
+					readOnly={isReadOnly}
 					size="sm"
 					m={2}
 					placeholder={`${i18next.t('archbase:Add Description')}`}

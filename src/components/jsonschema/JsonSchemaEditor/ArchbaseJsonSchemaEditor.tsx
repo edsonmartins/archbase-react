@@ -2,47 +2,54 @@ import { setNestedObjectValue, SetNestedObjectValueOperation } from '@components
 import { Flex } from '@mantine/core';
 import { useUncontrolled } from '@mantine/hooks';
 import { produce } from 'immer';
-import React, { useEffect } from 'react';
-import { Schema2 } from '../ArchbaseJsonSchemaEditor.types';
+import React from 'react';
+import { JSONSchema7, Schema2 } from '../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorProvider } from './ArchbaseJsonSchemaEditor.context';
 import { SchemaArray } from './schema-array';
 import { SchemaObject } from './schema-object';
 import { SchemaRoot } from './schema-root';
 import { isValidSchemaValidator } from './utils';
+import { useTranslation } from 'react-i18next';
 
 export * from '../ArchbaseJsonSchemaEditor.types';
 
 export interface ArchbaseJsonSchemaEditorProps {
-	rootSchema?: Schema2 | undefined;
-	defaultRootSchema?: Schema2 | undefined;
-	onRootSchemaChange?: (schema: Schema2, isValid: boolean) => void;
+	rootSchema?: JSONSchema7 | undefined;
+	defaultRootSchema?: JSONSchema7 | undefined;
+	onRootSchemaChange?: (schema: JSONSchema7, isValid: boolean) => void;
+	readOnly?: boolean;
 }
 
-const initialSchema: Schema2 = {
-	jsonSchema: {
-		$schema: 'http://json-schema.org/draft-07/schema#',
-		type: 'object',
-		title: 'title',
-		description: '',
-		properties: {},
-		required: [],
-	},
-	isReadOnly: false,
-	fieldId: 0,
-	isValidSchema: true,
+const initialSchema: JSONSchema7 = {
+	$schema: 'http://json-schema.org/draft-07/schema#',
+	type: 'object',
+	title: 'title',
+	description: '',
+	properties: {},
+	required: [],
 };
 
 export const ArchbaseJsonSchemaEditor = ({
 	rootSchema,
 	defaultRootSchema,
 	onRootSchemaChange,
+	readOnly = false,
 }: ArchbaseJsonSchemaEditorProps) => {
 	const [internalRootSchema, setInternalRootSchema] = useUncontrolled({
-		value: rootSchema,
-		defaultValue: defaultRootSchema.jsonSchema ? defaultRootSchema : initialSchema,
+		value: {
+			jsonSchema: rootSchema ?? initialSchema,
+			isReadOnly: readOnly,
+			fieldId: 0,
+		},
+		defaultValue: {
+			jsonSchema: defaultRootSchema ?? initialSchema,
+			isReadOnly: readOnly,
+			fieldId: 0,
+		},
 		finalValue: initialSchema as Schema2,
-		onChange: (value) => onRootSchemaChange(value, isValidSchemaValidator(value.jsonSchema)),
+		onChange: (value) => onRootSchemaChange(value.jsonSchema, isValidSchemaValidator(value.jsonSchema)),
 	});
+	const { ready } = useTranslation();
 
 	const handleChange = (path: string, value: string, operation: SetNestedObjectValueOperation) => {
 		const newState = produce((draft) => {
@@ -53,22 +60,10 @@ export const ArchbaseJsonSchemaEditor = ({
 		}
 
 		if (onRootSchemaChange) {
-			onRootSchemaChange(newState(), isValidSchemaValidator(internalRootSchema.jsonSchema));
+			onRootSchemaChange(newState().jsonSchema, isValidSchemaValidator(internalRootSchema.jsonSchema));
 		}
 	};
-
-	useEffect(() => {
-		if (rootSchema === undefined) {
-			setInternalRootSchema(initialSchema);
-		}
-	}, []);
-
-	useEffect(() => {
-		if (internalRootSchema !== undefined && rootSchema !== internalRootSchema && rootSchema != undefined) {
-			setInternalRootSchema(rootSchema);
-		}
-	}, [rootSchema]);
-
+	if (ready) {
 	return (
 		<ArchbaseJsonSchemaEditorProvider value={{ handleChange }}>
 			<Flex m={2} direction="column">
@@ -95,5 +90,6 @@ export const ArchbaseJsonSchemaEditor = ({
 				)}
 			</Flex>
 		</ArchbaseJsonSchemaEditorProvider>
-	);
+	);}
+	return false;
 };
