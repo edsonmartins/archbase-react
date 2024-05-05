@@ -5,10 +5,10 @@ import { AdvancedItemStateProps } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
 import { isValidEnum, StringFormat } from '../utils';
 
-export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = ({
+export const AdvancedString = ({
 	path,
 	item,
-}: React.PropsWithChildren<AdvancedItemStateProps>) => {
+}: AdvancedItemStateProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 	const [error, setError] = useState<string | undefined>();
 
@@ -129,7 +129,6 @@ export const AdvancedString: React.FunctionComponent<AdvancedItemStateProps> = (
 					value={item.format ?? ''}
 					size="sm"
 					m={2}
-					withinPortal
 					placeholder={`${i18next.t('archbase:Choose data type')}`}
 					onChange={(value: string) => {
 						if (value === '') {

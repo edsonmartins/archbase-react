@@ -91,5 +91,5 @@ export const ArchbaseJsonSchemaEditor = ({
 			</Flex>
 		</ArchbaseJsonSchemaEditorProvider>
 	);}
-	return false;
+	return undefined;
 };

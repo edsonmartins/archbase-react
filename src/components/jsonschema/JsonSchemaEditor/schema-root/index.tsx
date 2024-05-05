@@ -12,11 +12,11 @@ export interface SchemaArrayProps extends FlexProps {
 	jsonSchema: JSONSchema7;
 	isReadOnly: boolean;
 }
-export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = ({
+export const SchemaRoot = ({
 	path,
 	jsonSchema,
 	isReadOnly,
-}: React.PropsWithChildren<SchemaArrayProps>) => {
+}: SchemaArrayProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 	return (
 		<>
