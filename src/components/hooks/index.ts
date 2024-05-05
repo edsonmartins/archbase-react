@@ -64,3 +64,4 @@ export type {
 	ArchbaseAuthenticationManagerProps,
 } from './useArchbaseAuthenticationManager';
 export { useArchbaseGetLoggedUser } from './useArchbaseGetLoggedUser';
+export { ArchbaseDependencyProvider, useArchbaseDependency } from './ArchbaseDepencyManager'

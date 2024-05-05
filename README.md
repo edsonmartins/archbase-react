@@ -6,7 +6,7 @@ O **Archbase React** é uma biblioteca de componentes para React com TypeScript 
 
 ### Objetivo da Library
 
-O Archbase React foi concebido com a ideia de fornecer aos desenvolvedores de FrontEnd a mesma produtividade e padronização que os desenvolvedores de aplicações desktop têm desfrutado por anos. Sua principal missão é simplificar e acelerar o processo de criação de interfaces web para aplicações comerciais e industriais (SASS em geral). A biblioteca começou como um projeto privado, mas agora é open source, permitindo compartilhar esses benefícios com a comunidade.
+O Archbase React foi concebido com a ideia de fornecer aos desenvolvedores de FrontEnd a mesma produtividade e padronização que os desenvolvedores de aplicações desktop têm desfrutado por anos. Sua principal missão é simplificar e acelerar o processo de criação de interfaces web para aplicações comerciais e industriais (SAAS em geral). A biblioteca começou como um projeto privado, mas agora é open source, permitindo compartilhar esses benefícios com a comunidade.
 
 ### Principais Recursos
 
