@@ -10,10 +10,10 @@ export interface AdvancedSettingsProps {
 	item: JSONSchema7;
 }
 
-export const AdvancedSettings: React.FunctionComponent<AdvancedSettingsProps> = ({
+export const AdvancedSettings = ({
 	path,
 	item,
-}: React.PropsWithChildren<AdvancedSettingsProps>) => {
+}: AdvancedSettingsProps) => {
 	const getAdvancedView = (path: string): JSX.Element | undefined => {
 		switch (item.type) {
 			case 'string':

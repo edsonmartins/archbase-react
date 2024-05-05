@@ -4,10 +4,10 @@ import React, { useContext } from 'react';
 import { AdvancedItemStateProps } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
 
-export const AdvancedBoolean: React.FunctionComponent<AdvancedItemStateProps> = ({
+export const AdvancedBoolean = ({
 	path,
 	item,
-}: React.PropsWithChildren<AdvancedItemStateProps>) => {
+}: AdvancedItemStateProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 	return (
 		<Flex direction="column" w="100%" wrap="nowrap">
@@ -17,7 +17,6 @@ export const AdvancedBoolean: React.FunctionComponent<AdvancedItemStateProps> = 
 					value={(item.default as string) ?? ''}
 					size="sm"
 					m={2}
-					withinPortal
 					placeholder={`${i18next.t('archbase:Choose data type')}`}
 					onChange={(value: string) => {
 						handleChange(`${path}.default`, value, 'ASSIGN_VALUE');

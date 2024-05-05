@@ -14,13 +14,13 @@ export interface DropPlusProps extends FlexProps {
 	item: JSONSchema7;
 	isReadOnly: boolean;
 }
-export const DropPlus: React.FunctionComponent<DropPlusProps> = ({
+export const DropPlus = ({
 	itemPath,
 	parentPath,
 	parent,
 	item,
 	isReadOnly,
-}: React.PropsWithChildren<DropPlusProps>) => {
+}:DropPlusProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 	if (isReadOnly) {
 		return <div />;

@@ -15,11 +15,11 @@ export interface SchemaArrayProps extends FlexProps {
 	isReadOnly: boolean;
 }
 const itemTypes = SchemaTypes.map((item) => ({ value: item, label: item }));
-export const SchemaArray: React.FunctionComponent<SchemaArrayProps> = ({
+export const SchemaArray = ({
 	path,
 	jsonSchema,
 	isReadOnly,
-}: React.PropsWithChildren<SchemaArrayProps>) => {
+}: SchemaArrayProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 	const [open, setOpen] = useState(false);
 

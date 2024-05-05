@@ -11,11 +11,11 @@ export interface SchemaObjectProps {
 	isReadOnly: boolean;
 }
 
-export const SchemaObject: React.FunctionComponent<SchemaObjectProps> = ({
+export const SchemaObject = ({
 	path,
 	jsonSchema,
 	isReadOnly,
-}: React.PropsWithChildren<SchemaObjectProps>) => {
+}: SchemaObjectProps) => {
 	const [open, setOpen] = useState(false);
 	const [item, setItem] = useState('');
 

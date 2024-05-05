@@ -22,14 +22,14 @@ export interface SchemaItemProps extends FlexProps {
 }
 
 const itemTypes = SchemaTypes.map((item) => ({ value: item, label: item }));
-export const SchemaItem: React.FunctionComponent<SchemaItemProps> = ({
+export const SchemaItem = ({
 	name,
 	showadvanced,
 	jsonSchema,
 	itemPath,
 	parentPath,
 	isReadOnly,
-}: React.PropsWithChildren<SchemaItemProps>) => {
+}: SchemaItemProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 	const [error, setError] = useState<string | undefined>();
 	const required = jsonSchema.required as string[];

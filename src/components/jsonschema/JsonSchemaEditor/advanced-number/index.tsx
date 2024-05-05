@@ -5,10 +5,10 @@ import { AdvancedItemStateProps } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
 import { isValidEnum } from '../utils';
 
-export const AdvancedNumber: React.FunctionComponent<AdvancedItemStateProps> = ({
+export const AdvancedNumber = ({
 	path,
 	item,
-}: React.PropsWithChildren<AdvancedItemStateProps>) => {
+}: AdvancedItemStateProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
 	const [error, setError] = useState<string | undefined>();
 
