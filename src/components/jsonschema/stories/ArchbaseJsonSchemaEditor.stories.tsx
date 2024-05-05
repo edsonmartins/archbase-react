@@ -18,7 +18,7 @@ const ArchbaseJsonSchemaEditorExample = ({data, readonly}:ArchbaseJsonSchemaEdit
 			<Card shadow="sm" padding="lg" radius="md" withBorder m={20}>
 				<Card.Section withBorder inheritPadding py="xs" mb="1rem">
 					<Group justify='space-between'>
-						<Text fw={500}>Editor de Schema JSON</Text>
+						<Text fw={500}>JSON Schema Editor Component</Text>
 					</Group>
 				</Card.Section>
 				<ScrollArea h={300}>
