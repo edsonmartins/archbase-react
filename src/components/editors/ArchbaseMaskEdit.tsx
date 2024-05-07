@@ -29,8 +29,8 @@ export type ArchbaseMaskEditStylesNames = InputStylesNames | InputWrapperStylesN
 
 export interface ArchbaseMaskEditProps<T, ID>
 	extends StylesApiProps<ArchbaseMaskEditFactory>,
-		__InputProps,
-		Omit<React.ComponentPropsWithoutRef<'input'>, 'size'> {
+	__InputProps,
+	Omit<React.ComponentPropsWithoutRef<'input'>, 'size'> {
 	/** Tipo de campo html */
 	type?: React.HTMLInputTypeAttribute;
 	/** Propriedades para atribuir ao wrapper do mask edit */
@@ -73,6 +73,8 @@ export interface ArchbaseMaskEditProps<T, ID>
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	/** Último erro ocorrido no mask edit */
 	error?: string;
+	/** Título do edit */
+	title?: string;
 }
 
 export type ArchbaseMaskEditFactory = PolymorphicFactory<{
@@ -108,6 +110,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 		disabled,
 		width,
 		innerRef,
+		title,
 		...others
 	} = useInputProps('ArchbaseMaskEdit', defaultProps, props);
 	const id = useId();
@@ -208,7 +211,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	};
 
 	return (
-		<Input.Wrapper {...wrapperProps} error={internalError}>
+		<Input.Wrapper {...wrapperProps} error={internalError} label={title}>
 			<Input<any>
 				{...inputProps}
 				{...others}

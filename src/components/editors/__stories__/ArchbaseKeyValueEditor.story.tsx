@@ -16,7 +16,7 @@ const ArchbaseKeyValueEditorExample = (props) => {
 					</Card.Section>
 					<Box style={{ height: 500 }}>
 						<ScrollArea h={500} p={20}>
-							<ArchbaseKeyValueEditor initialValue={value} layout={props.layout} onChangeKeyValue={(value) => {setValue(value)}} />
+							<ArchbaseKeyValueEditor initialValue={value} layout={props.layout} onChangeKeyValue={(value) => { setValue(value) }} />
 						</ScrollArea>
 					</Box>
 				</Card>
@@ -30,7 +30,7 @@ const ArchbaseKeyValueEditorExample = (props) => {
 					</Card.Section>
 					<ScrollArea h={300}>
 						<Space h={20} />
-						<Textarea minRows={12} value={value} autosize={true}/>
+						<Textarea minRows={12} value={value} autosize={true} />
 					</ScrollArea>
 				</Card>
 			</Grid.Col>
