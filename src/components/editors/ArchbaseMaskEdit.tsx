@@ -117,12 +117,18 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	const innerComponentRef = innerRef || useRef<any>();
 	const [value, setValue] = useState<string>('');
 	const forceUpdate = useForceUpdate();
-	const { dataSource, dataField, onChangeValue, onFocusEnter, onFocusExit, saveWithMask } = props;
-	const [internalError, setInternalError] = useState<string | undefined>(props.error);
+	const { dataSource, dataField, onChangeValue, onFocusEnter, onFocusExit, saveWithMask, error } = props;
+	const [internalError, setInternalError] = useState<string | undefined>(error);
 
 	useEffect(() => {
 		setInternalError(undefined);
 	}, [value]);
+
+	useEffect(() => {
+		if (error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
 		let initialValue: any = value;
@@ -152,6 +158,10 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 			) {
 				loadDataSourceFieldValue();
 				forceUpdate();
+			}
+
+			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
+				setInternalError(event.error);
 			}
 		}
 	}, []);
@@ -211,8 +221,9 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	};
 
 	return (
-		<Input.Wrapper {...wrapperProps} error={internalError} label={title}>
+		<Input.Wrapper {...wrapperProps} label={title}>
 			<Input<any>
+				error={internalError}
 				{...inputProps}
 				{...others}
 				ref={innerComponentRef}
