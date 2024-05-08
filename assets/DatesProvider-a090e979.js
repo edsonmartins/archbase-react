@@ -1,1 +1,0 @@
-import{r,R as o}from"./index-76fb7be0.js";const e={locale:"en",timezone:null,firstDayOfWeek:1,weekendDays:[0,6],labelSeparator:"–",consistentWeeks:!1},s=r.createContext(e);function c({settings:t,children:a}){return o.createElement(s.Provider,{value:{...e,...t}},a)}export{s as D,c as a};

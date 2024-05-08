@@ -1,0 +1,1 @@
+import{j as o}from"./jsx-runtime-c9381026.js";import{r as a}from"./index-8b3efc3f.js";const e={locale:"en",timezone:null,firstDayOfWeek:1,weekendDays:[0,6],labelSeparator:"–",consistentWeeks:!1},s=a.createContext(e);function l({settings:t,children:r}){return o(s.Provider,{value:{...e,...t},children:r})}export{s as D,l as a};

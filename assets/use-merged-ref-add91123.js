@@ -1,0 +1,1 @@
+import{r as o}from"./index-8b3efc3f.js";function r(n,t){typeof n=="function"?n(t):typeof n=="object"&&n!==null&&"current"in n&&(n.current=t)}function u(...n){return t=>{n.forEach(e=>r(e,t))}}function s(...n){return o.useCallback(u(...n),n)}export{r as a,u as m,s as u};
