@@ -19,7 +19,7 @@ export function processErrorMessage(error: any) {
   } else if (error.response && error.response.status && error.response.status === 405) {
     msgErro = 'Método não permitido no servidor ou a url está incorreta. Erro 405'
   } else if (error.response && error.response.status && error.response.status === 400) {
-    msgErro = 'Requisição incorreta. Erro 400'
+    msgErro = `Requisição incorreta. Erro 400 Msg: ${error.response?.data?.message ?? ""}`
   } else if (error.response && error.response.status && error.response.status === 500) {
     msgErro = `Ocorreu um erro no servidor. Erro 500. Caminho: ${error.response.data.path} Msg: ${error.response.data.message}`
   } else if (error.response && error.response.data) {

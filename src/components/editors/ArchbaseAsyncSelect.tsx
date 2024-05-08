@@ -394,8 +394,6 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 			}}
 		>
 			<Combobox
-				disabled={disabled}
-				readOnly={isReadOnly()}
 				store={combobox}
 				withinPortal={true}
 				position={dropdownPosition}
@@ -408,6 +406,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 			>
 				<ComboboxTarget>
 					<InputBase
+						disabled={disabled}
+						readOnly={isReadOnly()}
 						width={width}
 						required={required}
 						leftSection={icon}
@@ -433,6 +433,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 								<Loader size="xs" />
 							) : selectedValue !== null ? (
 								<CloseButton
+									disabled={disabled}
+									hidden={isReadOnly()}
 									size="sm"
 									onMouseDown={(event) => event.preventDefault()}
 									onClick={() => {

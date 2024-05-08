@@ -121,8 +121,8 @@ export function ArchbaseKeyValueEditor({
               <TextInput
                 placeholder={keyLabel}
                 value={pair.key}
-                label={keyLabel}
-                style={{width:layout==='vertical'?'100%':undefined}}
+                label={keyLabel ? keyLabel : (valueLabel && layout === 'horizontal' ? " " : "")}
+                style={{ width: layout === 'vertical' ? '100%' : undefined }}
                 onChange={(e) => handleKeyChange(index, e.target.value)}
                 readOnly={readOnly}
               />
@@ -130,8 +130,8 @@ export function ArchbaseKeyValueEditor({
                 <Select
                   data={valueOptions}
                   value={pair.value}
-                  label={valueLabel ? valueLabel : (keyLabel ? " " : "")}
-                  style={{width:layout==='vertical'?'100%':undefined}}
+                  label={valueLabel ? valueLabel : (keyLabel && layout === 'horizontal' ? " " : "")}
+                  style={{ width: layout === 'vertical' ? '100%' : undefined }}
                   onChange={(val) => handleValueChange(index, val)}
                   placeholder={valueLabel}
                   disabled={readOnly}
@@ -140,25 +140,25 @@ export function ArchbaseKeyValueEditor({
                 <TextInput
                   placeholder={valueLabel}
                   value={pair.value}
-                  label={valueLabel ? valueLabel : (keyLabel ? " " : "")}
-                  style={{width:layout==='vertical'?'100%':undefined}}
+                  label={valueLabel ? valueLabel : (keyLabel && layout === 'horizontal' ? " " : "")}
+                  style={{ width: layout === 'vertical' ? '100%' : undefined }}
                   onChange={(e) => handleValueChange(index, e.target.value)}
                   readOnly={readOnly}
                 />
               )}
-              {!readOnly && 
-              <Tooltip label={tooltipRemove} withinPortal={true}>
-                {
-                  layout==='horizontal'
-                  ?<ActionIcon style={{marginTop: keyLabel ? 20 : 0}} color="red" variant='filled' onClick={() => handleRemovePair(index)} >
-                    <IconTrash></IconTrash>
-                  </ActionIcon>
-                  :<Button style={{marginTop:'0px'}} color="red" variant='filled' onClick={() => handleRemovePair(index)} >
-                    <IconTrash></IconTrash>
-                    {"Remover"}
-                  </Button>
-                }
-              </Tooltip>}
+              {!readOnly &&
+                <Tooltip label={tooltipRemove} withinPortal={true}>
+                  {
+                    layout === 'horizontal'
+                      ? <ActionIcon style={{ marginTop: keyLabel || valueLabel ? 25 : 0 }} color="red" variant='filled' onClick={() => handleRemovePair(index)} >
+                        <IconTrash></IconTrash>
+                      </ActionIcon>
+                      : <Button style={{ marginTop: '0px' }} color="red" variant='filled' onClick={() => handleRemovePair(index)} >
+                        <IconTrash></IconTrash>
+                        {"Remover"}
+                      </Button>
+                  }
+                </Tooltip>}
             </LayoutComponent>
           </Paper>
         ))}

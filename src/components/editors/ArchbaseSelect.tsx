@@ -213,6 +213,12 @@ export function ArchbaseSelect<T, ID, O>({
 		setInternalError(undefined);
 	}, [selectedValue]);
 
+	useEffect(() => {
+		if (error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
+
 	const loadDataSourceFieldValue = () => {
 		let initialValue: any = value;
 		if (dataSource && dataField && !dataSource.isEmpty()) {
@@ -362,7 +368,7 @@ export function ArchbaseSelect<T, ID, O>({
 						leftSectionWidth={iconWidth}
 						label={label}
 						description={description}
-						error={error}
+						error={internalError}
 						onBlur={handleOnFocusExit}
 						onFocus={handleOnFocusEnter}
 						component="button"
