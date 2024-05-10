@@ -135,6 +135,8 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
 	tableRef?: any;
 	onExport?: (exportFunc: () => void) => void;
 	onPrint?: (printFunc: () => void) => void;
+	cellPadding?: string | number;
+	bottomToolbarMinHeight?: string | number;
 }
 
 export interface ToolBarActionsProps {
@@ -1186,7 +1188,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			  }
 			: undefined,
 		initialState: {
-			density: 'xs',
+			// @ts-ignore
+			density: props.cellPadding ?? 4,
 			showGlobalFilter: true,
 		},
 		state: {
@@ -1240,6 +1243,11 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 				handleCurrentCell(selectedCell);
 			},
 		}),
+		mantineBottomToolbarProps: {
+			style: {
+				minHeight: props.bottomToolbarMinHeight ?? '3rem',
+			}
+		}
 	});
 
 	useArchbaseDataSourceListener<T, ID>({
@@ -1294,7 +1302,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 	}, [pagination.pageIndex, pagination.pageSize, JSON.stringify(columnFilters), globalFilter, sorting]);
 
 	return (
-		<div ref={props.tableRef || divTable}>
+		<div ref={props.tableRef || divTable} style={{width: "100%", height: "100%"}}>
 			<MantineReactTable table={table} />
 		</div>
 	);
@@ -1322,7 +1330,7 @@ ArchbaseDataTable.defaultProps = {
 	withBorder: true,
 	width: '100%',
 	height: '100%',
-	pageSize: 25,
+	pageSize: 15,
 	pageIndex: 0,
 	globalDateFormat: 'dd/MM/yyyy',
 	csvOptions: {
