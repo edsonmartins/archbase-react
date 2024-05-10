@@ -73,6 +73,8 @@ export interface ArchbaseTableTemplateProps<T extends Object, ID> {
 	onSearchByFilter?: () => void;
 	withBorder?: boolean;
 	enableTopToolbar?: boolean;
+	cellPadding?: string | number;
+	bottomToolbarMinHeight?: string | number;
 }
 
 const getFilter = (
@@ -122,6 +124,8 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	filterPersistenceDelegator,
 	variant,
 	store,
+	cellPadding,
+	bottomToolbarMinHeight,
 }: ArchbaseTableTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const filterRef = useRef<any>();
@@ -305,6 +309,8 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 				error={<span>{error}</span>}
 				onExport={setExportFunc}
 				onPrint={setPrintFunc}
+				cellPadding={cellPadding}
+				bottomToolbarMinHeight={bottomToolbarMinHeight}
 			>
 				{columns}
 				{userActions?.visible ? (

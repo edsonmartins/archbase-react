@@ -64,7 +64,7 @@ const ArchbaseTableTemplateExample = () => {
 	} = useArchbaseRemoteDataSource<Pessoa, number>({
 		name: 'dsPessoas',
 		service: pessoaApi,
-		pageSize: 10,
+		pageSize: 15,
 		loadOnStart: true,
 		store: pessoaStore,
 		onLoadComplete: (dataSource) => {
@@ -265,7 +265,9 @@ const ArchbaseTableTemplateExample = () => {
 				<ArchbaseTableTemplate
 					title="Pessoas"
 					dataSource={dsPessoas}
-					pageSize={10}
+					pageSize={15}
+					cellPadding={4}
+					bottomToolbarMinHeight={48}
 					isLoading={isLoading}
 					error={error}
 					isError={isError}
