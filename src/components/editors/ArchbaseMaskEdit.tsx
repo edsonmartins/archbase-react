@@ -16,6 +16,7 @@ import { IMaskInput } from 'react-imask';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { t } from 'i18next';
 
 export enum MaskPattern {
 	CNPJ = '00.000.000/0000-00',
@@ -75,6 +76,10 @@ export interface ArchbaseMaskEditProps<T, ID>
 	error?: string;
 	/** Título do edit */
 	title?: string;
+	/** Evento que retorna o valor do erro */
+	onChangeError?: (error: string) => void;
+	/** Mensagem customizada a ser exibida quando o campo está incompleto */
+	customIncompleteErrorMessage?: string;
 }
 
 export type ArchbaseMaskEditFactory = PolymorphicFactory<{
@@ -111,6 +116,8 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 		width,
 		innerRef,
 		title,
+		onChangeError,
+		customIncompleteErrorMessage,
 		...others
 	} = useInputProps('ArchbaseMaskEdit', defaultProps, props);
 	const id = useId();
@@ -119,6 +126,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	const forceUpdate = useForceUpdate();
 	const { dataSource, dataField, onChangeValue, onFocusEnter, onFocusExit, saveWithMask, error } = props;
 	const [internalError, setInternalError] = useState<string | undefined>(error);
+	const specialCharactersLength = useRef(0);
 
 	useEffect(() => {
 		setInternalError(undefined);
@@ -129,6 +137,12 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 			setInternalError(error);
 		}
 	}, [error]);
+
+	useEffect(() => {
+		if(onChangeError) {
+			onChangeError(internalError)
+		}
+	}, [internalError]);
 
 	const loadDataSourceFieldValue = () => {
 		let initialValue: any = value;
@@ -186,7 +200,10 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	}, []);
 
 	const handleAccept = (changedValue, maskObject) => {
-		if (maskObject.value.replaceAll('_', '').length !== mask?.length) {
+		const maskedValue = maskObject.value.replaceAll('_', '')
+		specialCharactersLength.current = maskedValue.length - maskObject.unmaskedValue.length
+		console.log(maskObject.unmaskedValue.length)
+		if (maskedValue.length !== mask?.length && maskObject.unmaskedValue.length !== 0) {
 			return;
 		}
 		setValue((_prev) => changedValue);
@@ -201,6 +218,13 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	};
 
 	const handleOnFocusExit = (event) => {
+		const maskedValue = event.target.value.replaceAll('_', '');
+		specialCharactersLength.current
+		if (maskedValue.length < mask?.length && maskedValue.length - specialCharactersLength.current !== 0) {
+			setInternalError(customIncompleteErrorMessage ?? `${t('archbase:O campo está incompleto')}`)
+		} else {
+			setInternalError("")
+		}
 		if (onFocusExit) {
 			onFocusExit(event);
 		}
@@ -221,11 +245,11 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	};
 
 	return (
-		<Input.Wrapper {...wrapperProps} label={title}>
+		<Input.Wrapper {...wrapperProps} label={title} error={internalError}>
 			<Input<any>
-				error={internalError}
 				{...inputProps}
 				{...others}
+				error={internalError}
 				ref={innerComponentRef}
 				component={IMaskInput}
 				mask={mask}

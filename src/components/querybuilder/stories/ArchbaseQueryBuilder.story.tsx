@@ -2,7 +2,7 @@ import { DataSourceEvent, DataSourceEventNames, LocalFilter } from '@components/
 import { MaskPattern } from '@components/editors';
 import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
 import { ArchbaseNotifications } from '@components/notification';
-import { Pessoa, pessoasData } from '@demo/index';
+import { pessoasData } from '@demo/index';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { FakePessoaService } from '@demo/service/FakePessoaService';
 import {
@@ -28,6 +28,7 @@ import {
 	QueryFieldValue,
 } from '../ArchbaseFilterCommons';
 import { ArchbaseQueryBuilder } from '../ArchbaseQueryBuilder';
+import { Pessoa } from '../../../demo/data/Pessoa';
 
 const filters: LocalFilter[] = [];
 

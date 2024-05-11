@@ -1,13 +1,14 @@
 import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Pessoa, pessoasData } from '../../../demo/index';
+import { pessoasData } from '../../../demo/index';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../../debug';
 import { useArchbaseForceUpdate } from '../../hooks';
 import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener';
 import { ArchbaseCheckbox } from '../ArchbaseCheckbox';
+import { Pessoa } from '../../../demo/data/Pessoa';
 
 const ArchbaseCheckboxExample = () => {
 	const forceUpdate = useArchbaseForceUpdate();

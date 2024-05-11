@@ -15,7 +15,7 @@ import {
 	QueryFields,
 	QueryFieldValue,
 } from '@components/querybuilder';
-import { Pessoa, pessoasData } from '@demo/index';
+import { pessoasData } from '@demo/index';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { FakePessoaService } from '@demo/service/FakePessoaService';
 import {
@@ -34,6 +34,7 @@ import { t } from 'i18next';
 import React, { ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ArchbaseMasonryTemplate } from '../ArchbaseMasonryTemplate';
 import classes from './ArchbaseMasonryTemplate.module.css';
+import { Pessoa } from 'demo/data/Pessoa';
 
 const filters: LocalFilter[] = [];
 

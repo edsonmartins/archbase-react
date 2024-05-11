@@ -1,6 +1,6 @@
 import { ActionIcon, MantineColorScheme, MantineTheme } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
-import React from 'react';
+import React, { Ref } from 'react';
 import { ArchbaseAdminLayoutContextValue } from './ArchbaseAdminLayout.context';
 
 export function buildSetCollapsedButton(

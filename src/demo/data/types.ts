@@ -1,3 +1,5 @@
+import { Pessoa } from "./Pessoa";
+
 export enum PessoaStatus {
   APROVADO,
   REJEITADO,
@@ -7,38 +9,6 @@ export enum PessoaStatus {
 export enum Sexo {
   MASCULINO="Masculino",
   FEMININO="Feminino"
-}
-export interface Pessoa {
-  id: number;
-  nome: string;
-  idade?: number;
-  cpf?: string;
-  rg?: string;
-  data_nasc?: string;
-  sexo?: Sexo;
-  signo?: string;
-  mae?: string;
-  pai?: string;
-  email?: string;
-  senha?: string;
-  cep?: string;
-  endereco?: string;
-  numero?: number;
-  bairro?: string;
-  cidade?: string;
-  estado?: string;
-  telefone_fixo?: string;
-  celular?: string;
-  altura?: string;
-  peso?: number;
-  avaliacao?: number;
-  tipo_sanguineo?: string;
-  cor?: string;
-  foto?: string;
-  status?: PessoaStatus;
-  observacao?:string;
-  codigoJson?:string;
-  creditoOK?: boolean;
 }
 
 export interface Produto {

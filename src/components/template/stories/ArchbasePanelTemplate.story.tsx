@@ -10,7 +10,7 @@ import {
 	QueryFields,
 	QueryFieldValue,
 } from '@components/querybuilder';
-import { Pessoa, pessoasData } from '@demo/index';
+import { pessoasData } from '@demo/index';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { FakePessoaService } from '@demo/service/FakePessoaService';
 import {
@@ -24,6 +24,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { t } from 'i18next';
 import React, { ReactNode, useMemo, useState } from 'react';
 import { ArchbasePanelTemplate } from '../ArchbasePanelTemplate';
+import { Pessoa } from 'demo/data/Pessoa';
 
 const filters: LocalFilter[] = [];
 

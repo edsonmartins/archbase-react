@@ -3,12 +3,13 @@ import { DateValue } from '@mantine/dates';
 import { Meta, StoryObj } from '@storybook/react';
 import { formatISO } from 'date-fns';
 import React, { useState } from 'react';
-import { Pessoa, pessoasData } from '../../../demo/index';
+import { pessoasData } from '../../../demo/index';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { useArchbaseDataSource } from '../../hooks';
 import { useArchbaseForceUpdate } from '../../hooks';
 import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener';
 import { ArchbaseDatePickerRange } from '../ArchbaseDatePickerRange';
+import { Pessoa } from '../../../demo/data/Pessoa';
 
 const ArchbaseDatePickerRangeExample = () => {
 	const [selectedRange, setSelectedRange] = useState<DateValue[]>();

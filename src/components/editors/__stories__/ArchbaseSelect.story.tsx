@@ -2,7 +2,7 @@ import { Badge, Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/
 import { Meta, StoryObj } from '@storybook/react';
 import React, { forwardRef } from 'react';
 import { PedidoStatus } from '../../../demo/data/types';
-import { Pedido, pedidosData, Pessoa, pessoasData } from '../../../demo/index';
+import { Pedido, pedidosData, pessoasData } from '../../../demo/index';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../../debug';
 import { useArchbaseForceUpdate } from '../../hooks';
@@ -10,6 +10,7 @@ import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener';
 import { ArchbaseSelect } from '../ArchbaseSelect';
 import { ArchbaseSelectItem } from '../ArchbaseSelectItem';
+import { Pessoa } from '../../../demo/data/Pessoa';
 
 const pessoasList: Pessoa[] = pessoasData;
 const pedidosList: Pedido[] = pedidosData;

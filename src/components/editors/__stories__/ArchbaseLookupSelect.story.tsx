@@ -1,7 +1,7 @@
 import { Box, Card, Flex, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Pedido, pedidosData, Pessoa, pessoasData } from '../../../demo/index';
+import { Pedido, pedidosData, pessoasData } from '../../../demo/index';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../../debug';
 import { useArchbaseForceUpdate } from '../../hooks';
@@ -9,6 +9,7 @@ import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener';
 import { ArchbaseEdit } from '../ArchbaseEdit';
 import { ArchbaseLookupSelect } from '../ArchbaseLookupSelect';
+import { Pessoa } from '../../../demo/data/Pessoa';
 
 const pedidosList: Pedido[] = pedidosData;
 
