@@ -132,7 +132,6 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
 	renderToolbarInternalActions?: (props: { table: MRT_TableInstance<T> }) => ReactNode | null;
 	renderDetailPanel?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
 	positionActionsColumn?: 'first' | 'last';
-	tableRef?: any;
 	onExport?: (exportFunc: () => void) => void;
 	onPrint?: (printFunc: () => void) => void;
 	cellPadding?: string | number;
@@ -896,6 +895,9 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 							accessorFn: (originalRow) => ArchbaseObjectHelper.getNestedProperty(originalRow, col.props.dataField),
 							header: col.props.header,
 							dataType: col.props.dataType,
+							size: col.props.size,
+							maxSize: col.props.maxSize,
+							minSize: col.props.minSize,
 							enableColumnFilter: col.props.enableColumnFilter,
 							enableGlobalFilter: col.props.enableGlobalFilter,
 							enableClickToCopy: col.props.enableClickToCopy,
@@ -1302,9 +1304,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 	}, [pagination.pageIndex, pagination.pageSize, JSON.stringify(columnFilters), globalFilter, sorting]);
 
 	return (
-		<div ref={props.tableRef || divTable} style={{width: "100%", height: "100%"}}>
-			<MantineReactTable table={table} />
-		</div>
+		<MantineReactTable table={table} />
 	);
 }
 
