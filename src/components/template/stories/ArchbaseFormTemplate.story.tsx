@@ -1,7 +1,7 @@
 import { DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { useArchbaseRemoteServiceApi } from '@components/hooks/useArchbaseRemoteServiceApi';
 import { ArchbaseNotifications } from '@components/notification';
-import { Pessoa, pessoasData } from '@demo/index';
+import { pessoasData } from '@demo/index';
 import { API_TYPE } from '@demo/ioc/DemoIOCTypes';
 import { FakePessoaService } from '@demo/service/FakePessoaService';
 import {
@@ -14,6 +14,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { t } from 'i18next';
 import React from 'react';
 import { ArchbaseFormTemplate } from '../ArchbaseFormTemplate';
+import { Pessoa } from 'demo/data/Pessoa';
 
 const ArchbaseFormTemplateExample = () => {
 	const forceUpdate = useArchbaseForceUpdate();

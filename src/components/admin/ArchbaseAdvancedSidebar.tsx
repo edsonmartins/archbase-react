@@ -43,6 +43,8 @@ export interface ArchbaseAdvancedSidebarProps {
 	defaultGroupIcon?: ReactNode;
 	selectedGroupName?: string;
 	sideBarHeaderContent?: ReactNode | undefined;
+	iconsWithBackground?: boolean;
+	menuItemHeight?: string | number;
 }
 
 type GroupItemSidebar = {
@@ -76,6 +78,8 @@ export function ArchbaseAdvancedSidebar({
 	defaultGroupIcon,
 	selectedGroupName,
 	sideBarHeaderContent,
+	iconsWithBackground = false,
+	menuItemHeight = 40,
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
 	const appContext = useArchbaseAppContext();
@@ -173,7 +177,7 @@ export function ArchbaseAdvancedSidebar({
 		result.forEach((group) => {
 			group.links = navigationData
 				.filter((itm) => itm.showInSidebar === true && itm.group && itm.group.name === group.name)
-				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index));
+				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground));
 		});
 
 		const grps = [...result].sort((a, b) => a.indexOrder - b.indexOrder);
@@ -188,6 +192,8 @@ export function ArchbaseAdvancedSidebar({
 		35,
 		Number(px(sidebarCollapsedWidth)),
 		groups.length > 1,
+		iconsWithBackground,
+		menuItemHeight
 	);
 
 	const sidebarWidthCalculated =
@@ -234,7 +240,7 @@ export function ArchbaseAdvancedSidebar({
 					sidebarWidth,
 					sidebarCollapsedWidth,
 					menuItemStyles,
-					navigationData.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index)),
+					navigationData.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground)),
 					isHidden,
 					sidebarHeight,
 					sideBarHeaderContent,

@@ -3,10 +3,10 @@ import "reflect-metadata";
 import { decorate, inject, injectable } from 'inversify';
 import type { ArchbaseRemoteApiClient, Page } from '../../components/service';
 import { ArchbaseRemoteApiService, DefaultPage } from '../../components/service';
-import { Pessoa } from '../data/types';
 import { API_TYPE } from '../ioc/DemoIOCTypes';
 import { pessoasData } from '../data/pessoasData';
 import { IOCContainer } from '@components/core';
+import { Pessoa } from "demo/data/Pessoa";
 
 
 export class FakePessoaService extends ArchbaseRemoteApiService<Pessoa, number> {

@@ -1,18 +1,23 @@
-import { Card, Grid, Group, Text } from '@mantine/core';
+import { Button, Card, Grid, Group, Text } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
-import { Pessoa, pessoasData } from '../../../demo/index';
+import React, { useState } from 'react';
+import { pessoasData } from '../../../demo/index';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../../debug';
-import { useArchbaseForceUpdate } from '../../hooks';
+import { useArchbaseForceUpdate, useArchbaseValidator } from '../../hooks';
 import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener';
 import { ArchbaseMaskEdit, MaskPattern } from '../ArchbaseMaskEdit';
+import { Pessoa } from '../../../demo/data/Pessoa';
+import { ArchbaseNotifications } from '../../../components/notification';
 
 const ArchbaseEditExample = () => {
+	const [withError, setWithError] = useState(false)
 	const forceUpdate = useArchbaseForceUpdate();
+	const validator = useArchbaseValidator()
 	const { dataSource } = useArchbaseDataSource<Pessoa, string>({
 		initialData: data,
+		validator,
 		name: 'dsPessoas',
 	});
 	if (dataSource?.isBrowsing() && !dataSource?.isEmpty()) {
@@ -40,7 +45,16 @@ const ArchbaseEditExample = () => {
 							<Text fw={500}>Mask Edit Component</Text>
 						</Group>
 					</Card.Section>
-					<ArchbaseMaskEdit title="CPF" dataSource={dataSource} dataField="cpf" mask={MaskPattern.CPF} />
+					<ArchbaseMaskEdit title="CPF" dataSource={dataSource} dataField="cpf" mask={MaskPattern.CPF} onChangeError={(error) => setWithError(!!error)}/>
+					<Button onClick={() => {
+						if (withError) {
+							return;
+						}
+						dataSource.save(() => {
+							ArchbaseNotifications.showSuccess("Sucesso", "CPF salvo")
+							dataSource.edit()
+						})
+					}}>Salvar</Button>
 				</Card>
 			</Grid.Col>
 			<Grid.Col span={4}>
@@ -57,7 +71,7 @@ const ArchbaseEditExample = () => {
 	);
 };
 
-const data = [pessoasData[0]];
+const data = [new Pessoa(pessoasData[0])];
 
 const meta: Meta<typeof ArchbaseMaskEdit> = {
 	title: 'Editores/Mask Edit',

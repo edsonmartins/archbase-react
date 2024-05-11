@@ -1,13 +1,14 @@
 import { Card, Grid, Group, Text } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Pessoa, pessoasData } from '../../../demo/index';
+import { pessoasData } from '../../../demo/index';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../../debug';
 import { useArchbaseForceUpdate } from '../../hooks';
 import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener';
 import { ArchbasePasswordEdit } from '../ArchbasePasswordEdit';
+import { Pessoa } from '../../../demo/data/Pessoa';
 
 const ArchbasePasswordEditExample = () => {
 	const forceUpdate = useArchbaseForceUpdate();

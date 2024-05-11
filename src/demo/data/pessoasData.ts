@@ -1,4 +1,5 @@
-import { Pessoa, PessoaStatus, Sexo } from "./types";
+import { Pessoa } from "./Pessoa";
+import { PessoaStatus, Sexo } from "./types";
 
 export const pessoasData : Pessoa[] = [
 	{

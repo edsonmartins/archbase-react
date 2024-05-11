@@ -2,8 +2,10 @@ import i18next from 'i18next';
 import React from 'react';
 import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar';
 
-export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index) {
+export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground) {
 	if (item.links) {
+		const iconsBackgroundColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][8] : theme.colors[theme.primaryColor][7]) : undefined;
+		const iconsColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][0] : theme.colors[theme.primaryColor][0]) : undefined;
 		return (
 			<SubMenu
 				rootStyles={{
@@ -24,14 +26,8 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index) {
 								onClick={() => onMenuItemClick(subItem)}
 								rootStyles={{
 									[`.${menuClasses.icon}`]: {
-										background:
-											theme.colorScheme === 'dark'
-												? theme.colors[theme.primaryColor][8]
-												: theme.colors[theme.primaryColor][7],
-										color:
-											theme.colorScheme === 'dark'
-												? theme.colors[theme.primaryColor][0]
-												: theme.colors[theme.primaryColor][0],
+										background: iconsBackgroundColor,
+										color: iconsColor,
 									},
 									[`.${menuClasses.button}`]: {
 										paddingLeft: '40px !important',

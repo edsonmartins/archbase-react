@@ -70,7 +70,6 @@ const ArchbaseAdminMainLayoutExample = () => {
 			<ArchbaseAdminMainLayout
 				navigationData={navigationDataSampleWithGroup}
 				navigationRootLink="/"
-				// sidebarDefaultGroupIcon={<IconCirclePlus size="2.2rem" color="#63B1FB" stroke={1} />}
 				sidebarSelectedGroupName="grpPessoas"
 				sideBarCollapsedWidth="60px"
 				sideBarHeaderContent={
@@ -105,8 +104,6 @@ const ArchbaseAdminMainLayoutExample = () => {
 				onHiddenSidebar={(hidden) => {
 					console.log(hidden);
 				}}
-				// footer={<ArchbaseAdminLayoutFooter/>}
-				// footerHeight={40}
 				header={
 					<ArchbaseAdminLayoutHeader
 						user={fakeUser}

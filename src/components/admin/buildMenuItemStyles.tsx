@@ -10,12 +10,15 @@ export const buildMenuItemStyles = (
 	menuIconWidth: number,
 	sidebarCollapsedWidth: number,
 	hasMultipleGroups: boolean,
+	iconsWithBackground: boolean,
+	menuItemHeight: string | number,
 ): MenuItemStyles => {
 	const themes = createThemedStyles(theme);
 	const buttonPadding = hasMultipleGroups
 		? {}
 		: { padding: collapsed ? `0 ${(sidebarCollapsedWidth - menuIconWidth) / 2}px` : '0 20px' };
 	const subMenuIconDisplay = hasMultipleGroups ? {} : { display: 'none' };
+	const iconsBackgroundColor = iconsWithBackground ? (colorScheme === 'dark' ? theme.colors[theme.primaryColor][8] : theme.colors[theme.primaryColor][0]) : undefined;
 	return {
 		root: {
 			fontSize: '14px',
@@ -24,7 +27,7 @@ export const buildMenuItemStyles = (
 			color: theme.white,
 		},
 		icon: {
-			background: colorScheme === 'dark' ? theme.colors[theme.primaryColor][8] : theme.colors[theme.primaryColor][0],
+			background: iconsBackgroundColor,
 			color: colorScheme === 'dark' ? theme.colors[theme.primaryColor][0] : theme.colors[theme.primaryColor][7],
 			[`&.${menuClasses.disabled}`]: {
 				color: themes[colorScheme].menu.disabled.color,
@@ -49,6 +52,7 @@ export const buildMenuItemStyles = (
 			[`&.${menuClasses.active}`]: {
 				backgroundColor: 'red',
 			},
+			height: menuItemHeight,
 			...buttonPadding,
 		},
 

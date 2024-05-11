@@ -411,5 +411,6 @@
   "true": "true",
   "false": "false",
   "Advanced Schema Settings": "Advanced Schema Settings",
-  "Items": "Items"
+  "Items": "Items",
+  "O campo está incompleto": "The field is incomplete."
 }
