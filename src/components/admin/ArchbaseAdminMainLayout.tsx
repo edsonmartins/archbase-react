@@ -13,7 +13,6 @@ import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAliveAbleRoutes';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
-import { useMouse } from '@mantine/hooks';
 
 export interface ArchbaseAdminMainLayoutProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -47,7 +46,6 @@ export interface ArchbaseAdminMainLayoutProps {
 	footerHeight?: string | number | undefined;
 	iconsWithBackground?: boolean;
 	menuItemHeight?: string | number;
-	showCollapsedButtonOnlyOnHover?: boolean;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -75,15 +73,13 @@ function ArchbaseAdminMainLayoutContainer({
 	footerHeight,
 	iconsWithBackground,
 	menuItemHeight,
-	showCollapsedButtonOnlyOnHover = true,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
 	const { colorScheme } = useMantineColorScheme();
 	const navigate = useNavigate();
 	const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>();
-	const {ref: mouseRef, x} = useMouse()
-	
+
 	const isHidden = useMediaQuery(
 		`(max-width: ${sideBarHiddenBreakPoint ? px(sideBarHiddenBreakPoint) : theme.breakpoints.md})`,
 	);
@@ -154,18 +150,16 @@ function ArchbaseAdminMainLayoutContainer({
 	}, [adminLayoutContextValue.collapsed, onCollapsedSideBar]);
 
 	const currentSidebarWidth = adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth;
-	const showCollapsedButton = showCollapsedButtonOnlyOnHover ? x < Number(px(currentSidebarWidth)) + 40 : true
 	return (
 		<AppShell
 			header={{ height: '60px' }}
-			footer={{height: footerHeight ? footerHeight : '0px'}}
+			footer={{ height: footerHeight ? footerHeight : '0px' }}
 			styles={{
 				main: {
 					background: colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
 					overflow: 'hidden',
 				},
 			}}
-			ref={mouseRef}
 		>
 			<AppShell.Header
 				p="xs"
@@ -210,7 +204,7 @@ function ArchbaseAdminMainLayoutContainer({
 				) : undefined}
 			</AppShell.Navbar>
 			<AppShell.Main bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}>
-				{!isHidden && showCollapsedButton &&
+				{!isHidden &&
 					buildSetCollapsedButton(
 						colorScheme,
 						theme,
@@ -304,7 +298,6 @@ export function ArchbaseAdminMainLayout({
 	footerHeight,
 	iconsWithBackground,
 	menuItemHeight,
-	showCollapsedButtonOnlyOnHover,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -342,7 +335,6 @@ export function ArchbaseAdminMainLayout({
 				footerHeight={footerHeight}
 				iconsWithBackground={iconsWithBackground}
 				menuItemHeight={menuItemHeight}
-				showCollapsedButtonOnlyOnHover={showCollapsedButtonOnlyOnHover}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>
