@@ -7,6 +7,8 @@ export interface ArchbaseSelectItemProps<T> {
 	value?: T;
 	/** Indicador se o item está desabilitado */
 	disabled?: boolean;
+	/** Parâmetros adicionais */
+	[key: string]: any;
 }
 
 export function ArchbaseSelectItem<T>(_props: ArchbaseSelectItemProps<T>) {

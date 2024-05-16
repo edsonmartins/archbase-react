@@ -22,7 +22,7 @@ interface RenderStatusPedidoSelectItemProps extends React.ComponentPropsWithoutR
 	origin: PedidoStatus;
 }
 
-export const RenderStatusPedidoSelectItem = forwardRef<HTMLDivElement, RenderStatusPedidoSelectItemProps>(
+const RenderStatusPedidoSelectItem = forwardRef<HTMLDivElement, RenderStatusPedidoSelectItemProps>(
 	({ image, label, description, origin, ...others }: RenderStatusPedidoSelectItemProps, ref) => (
 		<div ref={ref} {...others}>
 			<Flex>{buildStatusPlaformaType(origin)}</Flex>
@@ -31,7 +31,7 @@ export const RenderStatusPedidoSelectItem = forwardRef<HTMLDivElement, RenderSta
 );
 
 const buildStatusPlaformaType = (data?: PedidoStatus) => {
-	if (data != undefined) {
+	if (data !== undefined) {
 		if (data === 1) {
 			return (
 				<Badge color="green" variant="light">
@@ -81,7 +81,7 @@ const ArchbaseSelectExample = () => {
 	return (
 		<Grid>
 			<Grid.Col span={12}>
-				<Card shadow="sm" padding="lg" radius="md" withBorder>
+				<Card shadow="sm" padding="lg" radius="md" withBorder maw={500}>
 					<Card.Section withBorder inheritPadding py="xs">
 						<Group justify="space-between">
 							<Text fw={500}>Select Component</Text>
@@ -94,20 +94,21 @@ const ArchbaseSelectExample = () => {
 							dataField="cliente"
 							initialOptions={pessoasList}
 							getOptionLabel={(option: Pessoa) => option.nome}
-							getOptionValue={(option: Pessoa) => option}
+							getOptionValue={(option: Pessoa) => option.nome}
+							searchable={true}
 						/>
 						<ArchbaseSelect<Pedido, string, PedidoStatus>
 							label="Status"
 							dataSource={dataSource}
 							dataField="status"
 							itemComponent={RenderStatusPedidoSelectItem}
-							searchable={false}
-							getOptionLabel={(option: PedidoStatus) => option.toString()}
-							getOptionValue={(option: PedidoStatus) => option}
+							searchable={true}
+							getOptionLabel={(option: PedidoStatus) => option}
+							getOptionValue={(option: PedidoStatus) => option.toString()}
 						>
-							<ArchbaseSelectItem disabled={false} label="Pendente" value={PedidoStatus.PENDENTE} />
-							<ArchbaseSelectItem disabled={false} label="Faturado" value={PedidoStatus.FATURADO} />
-							<ArchbaseSelectItem disabled={false} label="Cancelado" value={PedidoStatus.CANCELADO} />
+							<ArchbaseSelectItem disabled={false} label="Pendente" value={PedidoStatus.PENDENTE.toString()} origin={PedidoStatus.PENDENTE} />
+							<ArchbaseSelectItem disabled={false} label="Faturado" value={PedidoStatus.FATURADO.toString()} origin={PedidoStatus.FATURADO} />
+							<ArchbaseSelectItem disabled={false} label="Cancelado" value={PedidoStatus.CANCELADO.toString()} origin={PedidoStatus.CANCELADO} />
 						</ArchbaseSelect>
 					</Box>
 				</Card>
