@@ -13,7 +13,7 @@ import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAliveAbleRoutes';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
-import { useMouse } from '@mantine/hooks';
+import { useHover } from '@mantine/hooks';
 
 export interface ArchbaseAdminMainLayoutProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -82,7 +82,7 @@ function ArchbaseAdminMainLayoutContainer({
 	const { colorScheme } = useMantineColorScheme();
 	const navigate = useNavigate();
 	const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>();
-	const {ref: mouseRef, x} = useMouse()
+	const {ref: refHovered, hovered} = useHover()
 	
 	const isHidden = useMediaQuery(
 		`(max-width: ${sideBarHiddenBreakPoint ? px(sideBarHiddenBreakPoint) : theme.breakpoints.md})`,
@@ -154,8 +154,10 @@ function ArchbaseAdminMainLayoutContainer({
 	}, [adminLayoutContextValue.collapsed, onCollapsedSideBar]);
 
 	const currentSidebarWidth = adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth;
-	const showCollapsedButton = showCollapsedButtonOnlyOnHover ? x < Number(px(currentSidebarWidth)) + 40 : true
+	const showCollapsedButton = showCollapsedButtonOnlyOnHover ? !hovered : true
 	return (
+		<>
+		<div ref={refHovered} style={{position: 'absolute', right: 0, width: `calc(100vw - ${Number(px(currentSidebarWidth))}px - 40px)`, height: '100vh'}}></div>
 		<AppShell
 			header={{ height: '60px' }}
 			footer={{height: footerHeight ? footerHeight : '0px'}}
@@ -165,7 +167,6 @@ function ArchbaseAdminMainLayoutContainer({
 					overflow: 'hidden',
 				},
 			}}
-			ref={mouseRef}
 		>
 			<AppShell.Header
 				p="xs"
@@ -272,6 +273,7 @@ function ArchbaseAdminMainLayoutContainer({
 				{footer}
 			</AppShell.Footer>
 		</AppShell>
+		</>
 	);
 }
 
