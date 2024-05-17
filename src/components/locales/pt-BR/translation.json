@@ -103,7 +103,7 @@
   "survey": "Pesquisa",
   "surveySatisfaction": "Pesquisa satisfação",
   "system": "Sistemas",
-  "toggleColorScheme": "Alternar combinación de colores",
+  "toggleColorScheme": "Alternar tema",
   "updateRecordIsNotAllowed": "Registro não está sendo inserido ou editado. Fonte de dados: {{dataSourceName}} não é possível atualizar o registro.",
   "View": "Visualizar",
   "Voltar": "Voltar",
@@ -412,5 +412,7 @@
   "false": "falso",
   "Advanced Schema Settings": "Configurações Avançadas do Schema",
   "Items": "Itens",
-  "O campo está incompleto": "O campo está incompleto"
+  "O campo está incompleto": "O campo está incompleto",
+  "Options": "Opções",
+  "toggleLanguage": "Selecionar linguagem"
 }

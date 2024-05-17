@@ -109,6 +109,19 @@ function ArchbaseAdminMainLayoutContainer({
 		return `calc(100vh - var(--app-shell-header-offset, 0px) - ${headerHeight + footerHeight}px)`;
 	};
 
+	const getSideBarDrawerHeight = () => {
+		let headerHeight = 0;
+		let footerHeight = 0;
+		if (sideBarHeaderHeight) {
+			headerHeight = Number(px(sideBarHeaderHeight));
+		}
+		if (sideBarFooterHeight) {
+			footerHeight = Number(px(sideBarFooterHeight));
+		}
+		return `calc(100vh - 28px - ${headerHeight + footerHeight}px)`;
+	};
+
+
 	const routes = useMemo(() => {
 		return navigationData.map((item, index) =>
 			item.links ? (
@@ -241,7 +254,7 @@ function ArchbaseAdminMainLayoutContainer({
 					<ArchbaseAdvancedSidebar
 						navigationData={navigationData}
 						sidebarWidth={sideBarWidth}
-						sidebarHeight="calc(100vh - 28px)"
+						sidebarHeight={getSideBarDrawerHeight()}
 						sidebarCollapsedWidth={sideBarCollapsedWidth}
 						sidebarGroupWidth={sideBarCollapsedWidth}
 						selectedGroupColor={selectedGroupColor}
@@ -259,6 +272,9 @@ function ArchbaseAdminMainLayoutContainer({
 						selectedGroupName={sidebarSelectedGroupName}
 						iconsWithBackground={iconsWithBackground}
 						menuItemHeight={menuItemHeight}
+						sideBarHeaderContent={sideBarHeaderContent}
+						sideBarFooterContent={sideBarFooterContent}
+						sideBarFooterHeight={sideBarFooterHeight}
 					/>
 				</Drawer>
 			</AppShell.Main>
