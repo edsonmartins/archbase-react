@@ -15,7 +15,7 @@ import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
 
 export interface ArchbaseAdminMainLayoutProps {
-	navigationData: ArchbaseNavigationItem[];
+	navigationData?: ArchbaseNavigationItem[];
 	user?: ArchbaseUser;
 	owner?: ArchbaseOwner;
 	company?: ArchbaseCompany;
@@ -49,7 +49,7 @@ export interface ArchbaseAdminMainLayoutProps {
 }
 
 function ArchbaseAdminMainLayoutContainer({
-	navigationData,
+	navigationData = [],
 	children,
 	header,
 	footer,
@@ -187,7 +187,7 @@ function ArchbaseAdminMainLayoutContainer({
 				{header}
 			</AppShell.Header>
 			<AppShell.Navbar>
-				{!isHidden ? (
+				{!isHidden && navigationData.length > 0 ? (
 					<ArchbaseAdvancedSidebar
 						navigationData={navigationData}
 						sidebarHeight={getSideBarHeight()}
@@ -242,41 +242,43 @@ function ArchbaseAdminMainLayoutContainer({
 						<ArchbaseAliveAbleRoutes>{routes}</ArchbaseAliveAbleRoutes>
 					</div>
 				</div>
-				<Drawer
-					opened={adminLayoutContextValue.hidden || false}
-					onClose={handleHiddenSidebar}
-					size={sideBarWidth}
-					padding={0}
-					styles={{
-						header: { minHeight: '10px' },
-					}}
-				>
-					<ArchbaseAdvancedSidebar
-						navigationData={navigationData}
-						sidebarWidth={sideBarWidth}
-						sidebarHeight={getSideBarDrawerHeight()}
-						sidebarCollapsedWidth={sideBarCollapsedWidth}
-						sidebarGroupWidth={sideBarCollapsedWidth}
-						selectedGroupColor={selectedGroupColor}
-						groupColor={groupColor}
-						backgroundGroupColor={backgroundGroupColor}
-						groupLabelDarkColor={groupLabelDarkColor}
-						groupLabelLightColor={groupLabelLightColor}
-						showGroupLabels={false}
-						isHidden={isHidden}
-						onMenuItemClick={onMenuItemClick}
-						onClickActionIcon={onClickActionIcon}
-						theme={theme}
-						sidebarRef={sidebarRef}
-						defaultGroupIcon={sidebarDefaultGroupIcon}
-						selectedGroupName={sidebarSelectedGroupName}
-						iconsWithBackground={iconsWithBackground}
-						menuItemHeight={menuItemHeight}
-						sideBarHeaderContent={sideBarHeaderContent}
-						sideBarFooterContent={sideBarFooterContent}
-						sideBarFooterHeight={sideBarFooterHeight}
-					/>
-				</Drawer>
+				{navigationData.length > 0 &&
+					<Drawer
+						opened={adminLayoutContextValue.hidden || false}
+						onClose={handleHiddenSidebar}
+						size={sideBarWidth}
+						padding={0}
+						styles={{
+							header: { minHeight: '10px' },
+						}}
+					>
+						<ArchbaseAdvancedSidebar
+							navigationData={navigationData}
+							sidebarWidth={sideBarWidth}
+							sidebarHeight={getSideBarDrawerHeight()}
+							sidebarCollapsedWidth={sideBarCollapsedWidth}
+							sidebarGroupWidth={sideBarCollapsedWidth}
+							selectedGroupColor={selectedGroupColor}
+							groupColor={groupColor}
+							backgroundGroupColor={backgroundGroupColor}
+							groupLabelDarkColor={groupLabelDarkColor}
+							groupLabelLightColor={groupLabelLightColor}
+							showGroupLabels={false}
+							isHidden={isHidden}
+							onMenuItemClick={onMenuItemClick}
+							onClickActionIcon={onClickActionIcon}
+							theme={theme}
+							sidebarRef={sidebarRef}
+							defaultGroupIcon={sidebarDefaultGroupIcon}
+							selectedGroupName={sidebarSelectedGroupName}
+							iconsWithBackground={iconsWithBackground}
+							menuItemHeight={menuItemHeight}
+							sideBarHeaderContent={sideBarHeaderContent}
+							sideBarFooterContent={sideBarFooterContent}
+							sideBarFooterHeight={sideBarFooterHeight}
+						/>
+					</Drawer>
+				}
 			</AppShell.Main>
 			<AppShell.Footer>
 				{footer}

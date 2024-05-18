@@ -140,7 +140,7 @@ export type ArchbaseAdminLayoutHeaderProps = {
 	user?: ArchbaseUser;
 	owner?: ArchbaseOwner;
 	company?: ArchbaseCompany;
-	navigationData: ArchbaseNavigationItem[] | undefined;
+	navigationData?: ArchbaseNavigationItem[] | undefined;
 	headerActions?: ReactNode | ReactNode[];
 	headerLeftContent?: ReactNode | ReactNode[];
 	showLanguageSelector?: boolean;
@@ -148,6 +148,8 @@ export type ArchbaseAdminLayoutHeaderProps = {
 	showUserMenuLanguageSelector?: boolean;
 	showHeaderActions?: boolean;
 	sideBarHiddenBreakPoint?: string | number;
+	logoLeftSection?: ReactNode;
+	logoRightSection?: ReactNode;
 	toggleColorScheme?: () => void;
 };
 
@@ -167,7 +169,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	withDividerAfterUserMenuToggleColorScheme = true,
 	showUserMenuLanguageSelector = true,
 	user,
-	navigationData: navigationItems,
+	navigationData: navigationItems = [],
 	logo,
 	headerActions,
 	styleLogo,
@@ -175,6 +177,8 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	sideBarHiddenBreakPoint,
 	headerLeftContent,
 	toggleColorScheme: toggleColorSchemeExternal,
+	logoLeftSection,
+	logoRightSection,
 }) => {
 	const theme = useMantineTheme();
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -188,41 +192,39 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	);
 	const commands = useMemo(() => {
 		const result = new Array<ArchbaseSpotlightActionData>();
-		if (navigationItems) {
-			navigationItems.forEach((item) => {
-				if (item.links) {
-					item.links.forEach((subItem) => {
-						if (!subItem.disabled && subItem.showInSidebar) {
-							result.push({
-								id: subItem.label,
-								category: subItem.category ? subItem.category.toUpperCase() : '',
-								c: 'white',
-								bg: subItem.color,
-								title: subItem.label,
-								link: subItem.link,
-								onClick: () => {
-									return navigate(subItem.link);
-								},
-							});
-						}
-					});
-				} else {
-					if (!item.disabled && item.showInSidebar) {
+		navigationItems.forEach((item) => {
+			if (item.links) {
+				item.links.forEach((subItem) => {
+					if (!subItem.disabled && subItem.showInSidebar) {
 						result.push({
-							id: item.label,
-							onClick: () => {
-								return navigate(item.link);
-							},
-							category: item.category ? item.category.toUpperCase() : '',
+							id: subItem.label,
+							category: subItem.category ? subItem.category.toUpperCase() : '',
 							c: 'white',
-							bg: item.color,
-							title: item.label,
-							link: item.link,
+							bg: subItem.color,
+							title: subItem.label,
+							link: subItem.link,
+							onClick: () => {
+								return navigate(subItem.link);
+							},
 						});
 					}
+				});
+			} else {
+				if (!item.disabled && item.showInSidebar) {
+					result.push({
+						id: item.label,
+						onClick: () => {
+							return navigate(item.link);
+						},
+						category: item.category ? item.category.toUpperCase() : '',
+						c: 'white',
+						bg: item.color,
+						title: item.label,
+						link: item.link,
+					});
 				}
-			});
-		}
+			}
+		});
 
 		return result;
 	}, [navigationItems, navigate]);
@@ -241,6 +243,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	return (
 		<>
 			<Flex style={{ width: 300, height: 50 }} align="center">
+				{logoLeftSection}
 				<img
 					style={{
 						height: 50,
@@ -249,15 +252,19 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 					alt="logo"
 					src={logo}
 				/>
+				{logoRightSection}
 			</Flex>
-			<Burger
-				opened={adminLayoutContextValue.hidden ? adminLayoutContextValue.hidden : false}
-				onClick={() => adminLayoutContextValue.setHidden(!adminLayoutContextValue.hidden)}
-				size="sm"
-				color={theme.colors.gray[7]}
-				mx="xl"
-				display={isSideBarHiddenBreakPoint ? '' : 'none'}
-			/>
+			{
+				navigationItems.length > 0 && <Burger
+					opened={adminLayoutContextValue.hidden ? adminLayoutContextValue.hidden : false}
+					onClick={() => adminLayoutContextValue.setHidden(!adminLayoutContextValue.hidden)}
+					size="sm"
+					color={theme.colors.gray[7]}
+					mx={{ base: 'xs', xs: 'lg', sm: 'xl' }}
+					display={isSideBarHiddenBreakPoint ? '' : 'none'}
+				/>
+			}
+
 			<div>
 				{commands && commands.length > 0 ? <CommandPaletteButton commands={commands} theme={colorScheme} /> : null}
 			</div>
