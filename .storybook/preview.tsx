@@ -26,6 +26,7 @@ import '../src/styles/treeviews.scss';
 import '../src/styles/errorboundary.scss';
 import '../src/styles/utils.scss';
 import '../src/styles/spaces.css';
+import 'mantine-flagpack/styles.css';
 import '../.storybook/archbase-global.css'
 
 

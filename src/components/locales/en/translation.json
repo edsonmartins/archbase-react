@@ -412,5 +412,7 @@
   "false": "false",
   "Advanced Schema Settings": "Advanced Schema Settings",
   "Items": "Items",
-  "O campo está incompleto": "The field is incomplete."
+  "O campo está incompleto": "The field is incomplete.",
+  "Options": "Options",
+  "toggleLanguage": "Select language"
 }

@@ -107,6 +107,7 @@ const ArchbaseAdminMainLayoutExample = () => {
 				header={
 					<ArchbaseAdminLayoutHeader
 						user={fakeUser}
+						showLanguageSelector={true}
 						headerActions={headerActions}
 						navigationData={navigationDataSampleWithGroup}
 						userMenuItems={
@@ -115,6 +116,35 @@ const ArchbaseAdminMainLayoutExample = () => {
 								<Menu.Item leftSection={<IconUserCircle size={14} />}>Meu perfil</Menu.Item>
 								<Menu.Item leftSection={<IconSettings size={14} />}>Configurações</Menu.Item>
 								<Menu.Divider />
+							</Fragment>
+						}
+						userMenuItemsBeforeToggleColorScheme={
+							<Fragment>
+								<Menu.Item
+									leftSection={<IconSwitchHorizontal size={14}
+									/>}
+								>
+									Troca empresa</Menu.Item>
+								<Menu.Item
+									leftSection={<IconArrowsMaximize size={14}
+									/>}
+								>
+									Tela cheia</Menu.Item>
+								<Menu.Item
+									leftSection={<IconBell size={14} />}
+								>
+									Notificações
+								</Menu.Item>
+								<Menu.Item
+									leftSection={<IconMessageChatbot size={14}
+									/>}
+								>
+									Chat
+								</Menu.Item>
+							</Fragment>
+						}
+						userMenuItemsAfterToggleColorScheme={
+							<Fragment>
 								<Menu.Label>Conta</Menu.Label>
 								<Menu.Item leftSection={<IconBrandMessenger size={14} />}>Suporte</Menu.Item>
 								<Menu.Item
