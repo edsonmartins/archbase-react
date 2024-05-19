@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ActionIcon, rem, Text, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, ActionIconVariant, rem, Text, Tooltip, useMantineColorScheme } from '@mantine/core';
 import {
 	IconCloudDownload,
 	IconCloudUpload,
@@ -47,11 +47,13 @@ export const ArchbaseImagePickerEditor = memo(
 		imageSrcProp = '',
 		color = '#1e88e5',
 		imageChanged = () => {},
+		variant = 'transparent',
 	}: {
 		config: ArchbaseImagePickerConf;
 		imageSrcProp?: string;
 		color?: string;
 		imageChanged?: Function;
+		variant?: ActionIconVariant
 	}) => {
 		const theme = useArchbaseTheme();
 		const { colorScheme } = useMantineColorScheme();
@@ -305,7 +307,7 @@ export const ArchbaseImagePickerEditor = memo(
 							}}
 						>
 							<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Upload a image')}`}>
-								<ActionIcon component="button" color="blue" className="icon-btn image-upload-btn" onClick={onUpload}>
+								<ActionIcon component="button" color="blue" variant={variant} className="icon-btn image-upload-btn" onClick={onUpload}>
 									<IconCloudUpload color="purple" />
 								</ActionIcon>
 							</Tooltip>
@@ -346,7 +348,7 @@ export const ArchbaseImagePickerEditor = memo(
 								<Fragment>
 									<div className="curtain" onClick={onUpload}>
 										<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Upload a image')}`}>
-											<ActionIcon component="button" color="blue">
+											<ActionIcon component="button"  color="blue" variant={variant}>
 												<IconCloudUpload color="white" />
 											</ActionIcon>
 										</Tooltip>
@@ -385,7 +387,7 @@ export const ArchbaseImagePickerEditor = memo(
 						>
 							{!configuration.hideAddBtn && (
 								<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Upload a image')}`}>
-									<ActionIcon id="upload-img" color="blue" onClick={onUpload}>
+									<ActionIcon id="upload-img" color="blue" variant={variant} onClick={onUpload}>
 										<IconCloudUpload color="purple" />
 									</ActionIcon>
 								</Tooltip>
@@ -393,7 +395,7 @@ export const ArchbaseImagePickerEditor = memo(
 
 							{!configuration.hideEditBtn && (
 								<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Open the editor panel')}`}>
-									<ActionIcon id="edit-img" color="blue" onClick={onOpenEditPanel}>
+									<ActionIcon id="edit-img" color="blue" variant={variant} onClick={onOpenEditPanel}>
 										<IconPhotoEdit color="teal" />
 									</ActionIcon>
 								</Tooltip>
@@ -406,6 +408,7 @@ export const ArchbaseImagePickerEditor = memo(
 										href={imageSrc as string}
 										color="green"
 										download={imageName.current}
+										variant={variant}
 									>
 										<IconCloudDownload color="green" />
 									</ActionIcon>
@@ -413,7 +416,7 @@ export const ArchbaseImagePickerEditor = memo(
 							)}
 							{!configuration.hideDeleteBtn && (
 								<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Remove')}`}>
-									<ActionIcon id="delete-img" color="red" onClick={() => onRemove()}>
+									<ActionIcon id="delete-img" color="red" variant={variant} onClick={() => onRemove()}>
 										<IconTrash color="#C91A25" />
 									</ActionIcon>
 								</Tooltip>
