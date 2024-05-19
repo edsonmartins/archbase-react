@@ -46,6 +46,7 @@ export interface ArchbaseAdminMainLayoutProps {
 	footerHeight?: string | number | undefined;
 	iconsWithBackground?: boolean;
 	menuItemHeight?: string | number;
+	showSideBar?: boolean;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -73,6 +74,7 @@ function ArchbaseAdminMainLayoutContainer({
 	footerHeight,
 	iconsWithBackground,
 	menuItemHeight,
+	showSideBar = true,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -187,7 +189,7 @@ function ArchbaseAdminMainLayoutContainer({
 				{header}
 			</AppShell.Header>
 			<AppShell.Navbar>
-				{!isHidden && navigationData.length > 0 ? (
+				{!isHidden && showSideBar ? (
 					<ArchbaseAdvancedSidebar
 						navigationData={navigationData}
 						sidebarHeight={getSideBarHeight()}
@@ -242,7 +244,7 @@ function ArchbaseAdminMainLayoutContainer({
 						<ArchbaseAliveAbleRoutes>{routes}</ArchbaseAliveAbleRoutes>
 					</div>
 				</div>
-				{navigationData.length > 0 &&
+				{showSideBar &&
 					<Drawer
 						opened={adminLayoutContextValue.hidden || false}
 						onClose={handleHiddenSidebar}
@@ -316,6 +318,7 @@ export function ArchbaseAdminMainLayout({
 	footerHeight,
 	iconsWithBackground,
 	menuItemHeight,
+	showSideBar
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -353,6 +356,7 @@ export function ArchbaseAdminMainLayout({
 				footerHeight={footerHeight}
 				iconsWithBackground={iconsWithBackground}
 				menuItemHeight={menuItemHeight}
+				showSideBar={showSideBar}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>
