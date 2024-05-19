@@ -151,6 +151,8 @@ export type ArchbaseAdminLayoutHeaderProps = {
 	logoLeftSection?: ReactNode;
 	logoRightSection?: ReactNode;
 	toggleColorScheme?: () => void;
+	showBurger?: boolean;
+	showCommands?: boolean;
 };
 
 export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps> = ({
@@ -179,6 +181,8 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	toggleColorScheme: toggleColorSchemeExternal,
 	logoLeftSection,
 	logoRightSection,
+	showBurger = true,
+	showCommands = true,
 }) => {
 	const theme = useMantineTheme();
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -255,7 +259,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 				{logoRightSection}
 			</Flex>
 			{
-				navigationItems.length > 0 && <Burger
+				showBurger && <Burger
 					opened={adminLayoutContextValue.hidden ? adminLayoutContextValue.hidden : false}
 					onClick={() => adminLayoutContextValue.setHidden(!adminLayoutContextValue.hidden)}
 					size="sm"
@@ -266,7 +270,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 			}
 
 			<div>
-				{commands && commands.length > 0 ? <CommandPaletteButton commands={commands} theme={colorScheme} /> : null}
+				{showCommands && commands && commands.length > 0 ? <CommandPaletteButton commands={commands} theme={colorScheme} /> : null}
 			</div>
 			<Box style={{ flex: 1 }}>{headerLeftContent}</Box>
 			<ArchbaseHeaderNavAction>
