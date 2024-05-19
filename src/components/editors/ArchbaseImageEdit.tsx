@@ -1,4 +1,4 @@
-import { ImageProps, Input } from '@mantine/core';
+import { ActionIconVariant, ImageProps, Input } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import { isBase64 } from '../core';
@@ -25,7 +25,8 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
 	description?: string;
 	/** Último erro ocorrido no rich edit */
 	error?: string;
-	variant?: string;
+	/** Controla a aparência dos botões, sendo padrão "transparent". ("filled" | "light" | "outline" | "transparent" | "white" | "subtle" | "default" | "gradient")*/
+	variant?: ActionIconVariant;
 	/** Image src */
 	src?: string | null;
 	/** Texto alternativo da imagem, usado como título para espaço reservado se a imagem não foi carregada */
@@ -69,6 +70,7 @@ export function ArchbaseImageEdit<T, ID>({
 	onChangeImage,
 	disabledBase64Convertion,
 	innerRef,
+	variant,
 	...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
 	const [value, setValue] = useState<string | undefined>(undefined);
@@ -173,6 +175,7 @@ export function ArchbaseImageEdit<T, ID>({
 			>
 				<ArchbaseImagePickerEditor
 					imageSrcProp={value}
+					variant={variant}
 					config={{
 						borderRadius: radius,
 						width,
