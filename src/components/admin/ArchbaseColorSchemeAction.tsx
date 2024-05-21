@@ -5,10 +5,14 @@ import React from 'react';
 
 export interface ArchbaseColorSchemeActionProps {
 	toggleColorScheme?: () => void;
+	sunColor?: string;
+	moonColor?: string;
 }
 
 export const ArchbaseColorSchemeAction = ({
 	toggleColorScheme: toggleColorSchemeExternal,
+	sunColor = 'white',
+	moonColor = 'blue',
 }: ArchbaseColorSchemeActionProps) => {
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
@@ -23,7 +27,7 @@ export const ArchbaseColorSchemeAction = ({
 	return (
 		<ActionIcon
 			variant="transparent"
-			color={dark ? 'white' : 'blue'}
+			color={dark ? sunColor : moonColor}
 			onClick={() => handleToggle()}
 			title={i18next.t('toggleColorScheme')}
 		>
