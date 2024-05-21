@@ -145,7 +145,6 @@ export type ArchbaseAdminLayoutHeaderProps = {
 	headerLeftContent?: ReactNode | ReactNode[];
 	showLanguageSelector?: boolean;
 	showHeaderToggleColorScheme?: boolean;
-	showUserMenuLanguageSelector?: boolean;
 	showHeaderActions?: boolean;
 	sideBarHiddenBreakPoint?: string | number;
 	logoLeftSection?: ReactNode;
@@ -173,13 +172,12 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	showHeaderToggleColorScheme = true,
 	hideAutoHeaderActionsOnUserMenuBreakPoint,
 	withDividerAfterUserMenuToggleColorScheme = true,
-	showUserMenuLanguageSelector = true,
 	user,
 	navigationData: navigationItems = [],
 	logo,
 	headerActions,
 	styleLogo,
-	showLanguageSelector = false,
+	showLanguageSelector: externalShowLanguageSelector = false,
 	sideBarHiddenBreakPoint,
 	headerLeftContent,
 	toggleColorScheme: toggleColorSchemeExternal,
@@ -239,6 +237,9 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 		return result;
 	}, [navigationItems, navigate]);
 
+	let showUserMenuLanguageSelector = false;
+	let showLanguageSelector = false;
+
 	if (hideAutoHeaderActionsOnUserMenu) {
 		showHeaderActions = !isHideAutoBreakPoint
 		showHeaderToggleColorScheme = !isHideAutoBreakPoint
@@ -246,8 +247,10 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 		showUserMenuOptionsLabel = isHideAutoBreakPoint
 		showMenuItemsBeforeToggleColorScheme = isHideAutoBreakPoint
 		withDividerAfterUserMenuToggleColorScheme = isHideAutoBreakPoint
-		showLanguageSelector = !isHideAutoBreakPoint
-		showUserMenuLanguageSelector = isHideAutoBreakPoint
+		if (externalShowLanguageSelector) {
+			showLanguageSelector = !isHideAutoBreakPoint
+			showUserMenuLanguageSelector = isHideAutoBreakPoint
+		}
 	}
 
 	return (
