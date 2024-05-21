@@ -153,6 +153,10 @@ export type ArchbaseAdminLayoutHeaderProps = {
 	toggleColorScheme?: () => void;
 	showBurger?: boolean;
 	showCommands?: boolean;
+	/** Cor do sol do botão de troca de tema */
+	sunColor?: string;
+	/** Cor da lua do botão de troca de tema */
+	moonColor?: string;
 };
 
 export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps> = ({
@@ -183,6 +187,8 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	logoRightSection,
 	showBurger = true,
 	showCommands = true,
+	sunColor,
+	moonColor
 }) => {
 	const theme = useMantineTheme();
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -275,7 +281,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 			<Box style={{ flex: 1 }}>{headerLeftContent}</Box>
 			<ArchbaseHeaderNavAction>
 				{showHeaderActions && headerActions}
-				{showHeaderToggleColorScheme && <ArchbaseColorSchemeAction toggleColorScheme={toggleColorSchemeExternal} />}
+				{showHeaderToggleColorScheme && <ArchbaseColorSchemeAction toggleColorScheme={toggleColorSchemeExternal} sunColor={sunColor} moonColor={moonColor} />}
 				{showLanguageSelector && <ArchbaseChangeLanguageAction />}
 				<Menu shadow="md" width={200} position="bottom-end">
 					<Menu.Target>

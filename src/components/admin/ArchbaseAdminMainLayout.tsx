@@ -1,4 +1,4 @@
-import { AppShell, Drawer, px, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { AppShell, Drawer, MantineStyleProp, px, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import React, { ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
 import { Route, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'usehooks-ts';
@@ -47,6 +47,8 @@ export interface ArchbaseAdminMainLayoutProps {
 	iconsWithBackground?: boolean;
 	menuItemHeight?: string | number;
 	showSideBar?: boolean;
+	showHeader?: boolean;
+	headerStyle?: MantineStyleProp;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -75,6 +77,8 @@ function ArchbaseAdminMainLayoutContainer({
 	iconsWithBackground,
 	menuItemHeight,
 	showSideBar = true,
+	showHeader = true,
+	headerStyle = {},
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -167,7 +171,7 @@ function ArchbaseAdminMainLayoutContainer({
 	const currentSidebarWidth = adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth;
 	return (
 		<AppShell
-			header={{ height: '60px' }}
+			header={{ height: '60px',collapsed: !showHeader }}
 			footer={{ height: footerHeight ? footerHeight : '0px' }}
 			styles={{
 				main: {
@@ -184,6 +188,7 @@ function ArchbaseAdminMainLayoutContainer({
 					backgroundColor: 'var(--mantine-primary-color-8)',
 					alignItems: 'center',
 					borderBottom: 'none',
+					...headerStyle
 				}}
 			>
 				{header}
@@ -318,7 +323,9 @@ export function ArchbaseAdminMainLayout({
 	footerHeight,
 	iconsWithBackground,
 	menuItemHeight,
-	showSideBar
+	showSideBar,
+	showHeader,
+	headerStyle
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -357,6 +364,8 @@ export function ArchbaseAdminMainLayout({
 				iconsWithBackground={iconsWithBackground}
 				menuItemHeight={menuItemHeight}
 				showSideBar={showSideBar}
+				showHeader={showHeader}
+				headerStyle={headerStyle}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>
