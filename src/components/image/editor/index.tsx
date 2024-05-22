@@ -131,7 +131,6 @@ export const ArchbaseImagePickerEditor = memo(
 				if (!fileType.current.includes('image')) return;
 				urlImage.current = `data:${file.type};base64,`;
 				if (file) {
-					setState({ ...state, format: fileType.current.split('image/')[1] });
 					const reader = new FileReader();
 					reader.onload = handleReaderLoaded.bind(this);
 					reader.readAsBinaryString(file);
@@ -145,6 +144,7 @@ export const ArchbaseImagePickerEditor = memo(
 			let newState = { ...state };
 			const newImageSrc = urlImage.current + base64textString;
 			newState.originImageSrc = urlImage.current + base64textString;
+			newState.format = fileType.current.split('image/')[1];
 			if (configuration.compressInitial) {
 				newState = {
 					...newState,
