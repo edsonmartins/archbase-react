@@ -70,7 +70,7 @@ export class ArchbaseRemoteDataSource<T, ID>
     try {
       let index = -1
       this.records.forEach((item, idx) => {
-        if (item === this.currentRecord) {
+        if (item['id'] === this.currentRecord['id']) {
           index = idx
         }
       })

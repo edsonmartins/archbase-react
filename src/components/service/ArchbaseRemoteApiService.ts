@@ -294,7 +294,11 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
 
   async save<R>(entity: T): Promise<R> {
     const serviceSpecificHeaders = this.configureHeaders();
-    return this.client.post<T, R>(this.getEndpoint(), entity,serviceSpecificHeaders,false)
+    const result = await this.client.post<T, R>(this.getEndpoint(), entity,serviceSpecificHeaders,false)
+    if (this.isTransformable()){
+      return this['transform'](result);
+    }
+    return result;
   }
 
   async delete<T>(id: ID): Promise<void> {
