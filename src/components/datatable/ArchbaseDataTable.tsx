@@ -17,6 +17,7 @@ import {
 	MantineColorScheme,
 	Menu,
 	Tooltip,
+	px,
 } from '@mantine/core';
 import { DatePickerInput, DatesRangeValue, DateValue } from '@mantine/dates';
 import { IconDownload, IconPrinter, IconRefresh } from '@tabler/icons-react';
@@ -136,6 +137,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
 	onPrint?: (printFunc: () => void) => void;
 	cellPadding?: string | number;
 	bottomToolbarMinHeight?: string | number;
+	tableHeadCellPadding?: string | number;
 }
 
 export interface ToolBarActionsProps {
@@ -1162,6 +1164,9 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 		enableDensityToggle: false,
 		positionToolbarAlertBanner: 'bottom',
 		renderDetailPanel: props.renderDetailPanel,
+		mantineTableHeadCellProps: {
+			style: {padding: props.tableHeadCellPadding}
+		},
 		mantinePaperProps: {
 			withBorder: props.withBorder,
 			shadow: props.withBorder ? 'xs' : '',
@@ -1191,7 +1196,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			: undefined,
 		initialState: {
 			// @ts-ignore
-			density: props.cellPadding ?? 4,
+			density: props.cellPadding,
 			showGlobalFilter: true,
 		},
 		state: {
@@ -1214,7 +1219,9 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 		mantineTableContainerProps: {
 			style: { maxHeight },
 		},
-		mantineSelectCheckboxProps: {},
+		mantineSelectCheckboxProps: {
+			style: {padding: px(props.tableHeadCellPadding) > px(props.cellPadding) ? `calc(${px(props.tableHeadCellPadding)}px - ${px(props.cellPadding)}px)` : 0}
+		},
 		mantineTableProps: {
 			withColumnBorders: props.withColumnBorders,
 			highlightOnHover: props.highlightOnHover,
@@ -1342,6 +1349,8 @@ ArchbaseDataTable.defaultProps = {
 		useKeysAsHeaders: false,
 		headers: [],
 	},
+	cellPadding: 4,
+	tableHeadCellPadding: 10
 };
 
 export type EnumValuesColumnFilter = {
