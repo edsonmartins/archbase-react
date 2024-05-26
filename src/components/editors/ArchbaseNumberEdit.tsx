@@ -116,9 +116,9 @@ export interface ArchbaseNumberEditProps<T, ID>
 	/** Campo onde deverá ser atribuido o valor do number edit na fonte de dados */
 	dataField?: string;
 	/** Indicador se o number edit está desabilitado */
-	disabled: boolean;
+	disabled?: boolean;
 	/** Indicador se o number edit é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
-	readOnly: boolean;
+	readOnly?: boolean;
 	/** Estilo do number edit */
 	style?: CSSProperties;
 	/** Tamanho do number edit */
@@ -134,25 +134,25 @@ export interface ArchbaseNumberEditProps<T, ID>
 	/** Evento quando o edit recebe o foco */
 	onFocusEnter?: FocusEventHandler<T> | undefined;
 	/** Evento quando o valor do edit é alterado */
-	onChangeValue: (maskValue: any, value: number, event: any) => void;
+	onChangeValue?: (maskValue: any, value: number, event: any) => void;
 	/** Valor inicial do campo */
-	value: number | string;
+	value?: number | string;
 	/** Caracter separador decimal */
-	decimalSeparator: string;
+	decimalSeparator?: string;
 	/** Caracter separador de milhar */
-	thousandSeparator: string;
+	thousandSeparator?: string;
 	/** Número de casas decimais */
-	precision: number;
+	precision?: number;
 	/** Permite números negativos */
-	allowNegative: boolean;
+	allowNegative?: boolean;
 	/** Aceita em branco */
-	allowEmpty: boolean;
+	allowEmpty?: boolean;
 	/** Prefixo */
-	prefix: string;
+	prefix?: string;
 	/** Sufixo */
-	suffix: string;
+	suffix?: string;
 	/** Indicador se aceita apenas números inteiros */
-	integer: boolean;
+	integer?: boolean;
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
