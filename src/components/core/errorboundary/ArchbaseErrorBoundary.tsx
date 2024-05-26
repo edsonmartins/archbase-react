@@ -1,4 +1,4 @@
-import { Component, createElement, ErrorInfo, isValidElement } from 'react';
+import React, { Component, createElement, ErrorInfo, isValidElement } from 'react';
 import { ArchbaseErrorBoundaryContext } from './ArchbaseErrorBoundaryContext';
 import { ArchbaseErrorBoundaryProps, FallbackProps } from './types';
 
@@ -78,12 +78,12 @@ export class ArchbaseErrorBoundary extends Component<ArchbaseErrorBoundaryProps,
 				othersProps,
 			};
 
-			if (isValidElement(fallback)) {
-				childToRender = fallback;
-			} else if (typeof fallbackRender === 'function') {
+			if (typeof fallbackRender === 'function') {
 				childToRender = fallbackRender(props);
 			} else if (FallbackComponent) {
 				childToRender = createElement(FallbackComponent, props);
+			} else if (fallback === null || isValidElement(fallback)) {
+				childToRender = fallback;
 			} else {
 				console.error('ArchaseErrorBoundary requer um fallback, fallbackRender, ou FallbackComponent');
 
@@ -105,6 +105,6 @@ export class ArchbaseErrorBoundary extends Component<ArchbaseErrorBoundaryProps,
 	}
 }
 
-function hasArrayChanged(a: any[] = [], b: any[] = []) {
+function hasArrayChanged(a: any[] = [], b: any[] = []): boolean {
 	return a.length !== b.length || a.some((item, index) => !Object.is(item, b[index]));
 }

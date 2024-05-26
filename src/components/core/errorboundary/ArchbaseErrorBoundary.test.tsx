@@ -144,6 +144,18 @@ describe('ArchbaseErrorBoundary', () => {
 			render({ resetKeys: [2] });
 			expect(container.textContent).toBe('Content');
 		});
+
+		it("should render a null fallback if specified", () => {
+			shouldThrow = true;
+			act(() => {
+			  root.render(
+				<ArchbaseErrorBoundary fallback={null}>
+				  <MaybeThrows>Content</MaybeThrows>
+				</ArchbaseErrorBoundary>
+			  );
+			});
+			expect(container.textContent).toBe("");
+		  });
 	});
 
 	describe('"FallbackComponent"', () => {
