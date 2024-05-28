@@ -414,5 +414,19 @@
   "Items": "Itens",
   "O campo está incompleto": "O campo está incompleto",
   "Options": "Opções",
-  "toggleLanguage": "Selecionar linguagem"
+  "toggleLanguage": "Selecionar linguagem",
+  "usuario@email.com": "usuario@email.com",
+  "Sua senha": "Sua senha",
+  "Lembre-me": "Lembre-me",
+  "Esqueci minha senha": "Esqueci minha senha",
+  "Email inválido": "Email inválido",
+  "Um e-mail com instruções para redefinir sua senha foi enviado. Verifique sua caixa de entrada.": "Um e-mail com instruções para redefinir sua senha foi enviado. Verifique sua caixa de entrada.",
+  "A nova senha e a confirmação devem ser iguais.": "A nova senha e a confirmação devem ser iguais.",
+  "Senha redefinida com sucesso.": "Senha redefinida com sucesso.",
+  "Erro ao redefinir senha.": "Erro ao redefinir senha.",
+  "Redefinir senha": "Redefinir senha",
+  "Enviar": "Enviar",
+  "Código enviado no seu e-mail": "Código enviado no seu e-mail",
+  "Nova senha": "Nova senha",
+  "Confirmar senha": "Confirmar senha"
 }
