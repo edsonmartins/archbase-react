@@ -67,7 +67,7 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
 
       if (!passwordErrorResult && !tokenErrorResult) {
         await onResetPassword(email, passwordResetToken, newPassword).then(() => {
-          ArchbaseDialog.showSuccess(`${t("archbase: Senha redefinida com sucesso.")}`)
+          ArchbaseDialog.showSuccess(`${t("archbase:Senha redefinida com sucesso.")}`)
           onClickBackToLogin()
           setEmailSent(false)
         }).catch(() => {

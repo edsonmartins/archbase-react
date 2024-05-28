@@ -104,7 +104,7 @@ export function ArchbaseLogin({
           onLogin(usernameInput, passwordInput, rememberMe)
         }
       >
-        {`${t("archbase:Sig In")}`}
+        {`${t("archbase:sigIn")}`}
       </Button>
       {lastError ? <Text c="red">{lastError}</Text> : null}
     </Card>

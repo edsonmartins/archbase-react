@@ -414,5 +414,19 @@
   "Items": "elementos",
   "O campo está incompleto": "El campo está incompleto.",
   "Options": "Opciones",
-  "toggleLanguage": "Seleccionar idioma"
+  "toggleLanguage": "Seleccionar idioma",
+  "usuario@email.com": "usuario@email.com",
+  "Sua senha": "Su contraseña",
+  "Lembre-me": "Recuérdame",
+  "Esqueci minha senha": "Olvidé mi contraseña",
+  "Email inválido": "Correo electrónico inválido",
+  "Um e-mail com instruções para redefinir sua senha foi enviado. Verifique sua caixa de entrada.": "Se ha enviado un correo electrónico con instrucciones para restablecer su contraseña. Verifique su bandeja de entrada.",
+  "A nova senha e a confirmação devem ser iguais.": "La nueva contraseña y la confirmación deben ser iguales.",
+  "Senha redefinida com sucesso.": "Contraseña restablecida con éxito.",
+  "Erro ao redefinir senha.": "Error al restablecer la contraseña.",
+  "Redefinir senha": "Restablecer contraseña",
+  "Enviar": "Enviar",
+  "Código enviado no seu e-mail": "Código enviado a su correo electrónico",
+  "Nova senha": "Nueva contraseña",
+  "Confirmar senha": "Confirmar contraseña"
 } 
