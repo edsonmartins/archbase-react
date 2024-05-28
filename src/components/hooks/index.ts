@@ -65,3 +65,5 @@ export type {
 } from './useArchbaseAuthenticationManager';
 export { useArchbaseGetLoggedUser } from './useArchbaseGetLoggedUser';
 export { ArchbaseDependencyProvider, useArchbaseDependency } from './ArchbaseDepencyManager'
+export { useArchbaseResetPassword } from './useArchbaseResetPassword';
+export type { ResetPasswordReturnType} from './useArchbaseResetPassword';

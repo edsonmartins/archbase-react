@@ -14,4 +14,10 @@ export class FakeAuthenticator implements ArchbaseAuthenticator {
   getToken(): string | null {
     return 'fake_token';
   }
+  sendResetPasswordEmail(email: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  resetPassword(email: string, passwordResetToken: string, newPassword: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 }
