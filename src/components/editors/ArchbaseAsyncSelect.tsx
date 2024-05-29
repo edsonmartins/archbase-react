@@ -204,12 +204,12 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	onSearchChange,
 	converter,
 	getConvertedOption
-}: ArchbaseAsyncSelectProps<T, ID, O>) {
+  }: ArchbaseAsyncSelectProps<T, ID, O>) {
 	const combobox = useCombobox({
-		onDropdownClose: () => combobox.resetSelectedOption(),
+	  onDropdownClose: () => combobox.resetSelectedOption(),
 	});
 	const [options, setOptions] = useState<any[]>(
-		buildOptions<O>(initialOptions.options, getOptionLabel, getOptionValue, getOptionImage),
+	  buildOptions<O>(initialOptions.options, getOptionLabel, getOptionValue, getOptionImage),
 	);
 	const [selectedValue, setSelectedValue] = useState<any>();
 	const [updateCounter, setUpdateCounter] = useState(0);
@@ -222,280 +222,287 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	const [originData, setOriginData] = useState(initialOptions.options);
 	const innerComponentRef = innerRef || useRef<any>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
-
+  
 	const loadDataSourceFieldValue = async () => {
-		let initialValue: any = value;
-
-		if (dataSource && dataField) {
-			initialValue = dataSource.getFieldValue(dataField);
-			if (!initialValue) {
-				initialValue = null;
-			}
+	  let initialValue: any = value;
+  
+	  if (dataSource && dataField) {
+		initialValue = dataSource.getFieldValue(dataField);
+		if (!initialValue) {
+		  initialValue = null;
 		}
-		if (getConvertedOption && converter && initialValue) {
-			initialValue = await getConvertedOption(initialValue)
-		}
-		setSelectedValue(initialValue);
-		setQueryValue(getOptionLabel(initialValue) || '');
+	  }
+	  if (getConvertedOption && converter && initialValue) {
+		initialValue = await getConvertedOption(initialValue)
+	  }
+	  setSelectedValue(initialValue);
+	  setQueryValue(getOptionLabel(initialValue) || '');
 	};
-
+  
 	const fieldChangedListener = useCallback(() => {
-		loadDataSourceFieldValue();
+	  loadDataSourceFieldValue();
 	}, []);
-
+  
 	const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
-		if (dataSource && dataField) {
-			if (
-				event.type === DataSourceEventNames.dataChanged ||
-				event.type === DataSourceEventNames.recordChanged ||
-				event.type === DataSourceEventNames.afterScroll ||
-				event.type === DataSourceEventNames.afterCancel
-			) {
-				loadDataSourceFieldValue();
-			}
-			if (event.type === DataSourceEventNames.beforeClose) {
-				setOptions([]);
-			}
-
-			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
-				setInternalError(event.error);
-			}
-		}
-	}, []);
-
-	useArchbaseDidMount(() => {
-		loadDataSourceFieldValue();
-		if (dataSource && dataField) {
-			dataSource.addListener(dataSourceEvent);
-			dataSource.addFieldChangeListener(dataField, fieldChangedListener);
-		}
-	});
-
-	useArchbaseWillUnmount(() => {
-		if (dataSource && dataField) {
-			dataSource.removeListener(dataSourceEvent);
-			dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
-		}
-	});
-
-	useEffect(() => {
-		if (onSearchChange) {
-			onSearchChange(debouncedQueryValue);
-		}
+	  if (dataSource && dataField) {
 		if (
-			debouncedQueryValue &&
-			debouncedQueryValue.length >= minCharsToSearch &&
-			debouncedQueryValue != getOptionLabel(selectedValue)
+		  event.type === DataSourceEventNames.dataChanged ||
+		  event.type === DataSourceEventNames.recordChanged ||
+		  event.type === DataSourceEventNames.afterScroll ||
+		  event.type === DataSourceEventNames.afterCancel
 		) {
-			setLoading(true);
-			loadOptions(0, false);
+		  loadDataSourceFieldValue();
 		}
-	}, [debouncedQueryValue]);
-
-	useEffect(() => { }, [currentPage, totalPages]);
-
-	useArchbaseDidUpdate(() => {
-		loadDataSourceFieldValue();
+		if (event.type === DataSourceEventNames.beforeClose) {
+		  setOptions([]);
+		}
+  
+		if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
+		  setInternalError(event.error);
+		}
+	  }
 	}, []);
-
+  
+	useArchbaseDidMount(() => {
+	  loadDataSourceFieldValue();
+	  if (dataSource && dataField) {
+		dataSource.addListener(dataSourceEvent);
+		dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+	  }
+	});
+  
+	useArchbaseWillUnmount(() => {
+	  if (dataSource && dataField) {
+		dataSource.removeListener(dataSourceEvent);
+		dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+	  }
+	});
+  
 	useEffect(() => {
-		setInternalError(undefined);
+	  if (onSearchChange) {
+		onSearchChange(debouncedQueryValue);
+	  }
+	  if (
+		debouncedQueryValue &&
+		debouncedQueryValue.length >= minCharsToSearch &&
+		debouncedQueryValue !== getOptionLabel(selectedValue)
+	  ) {
+		setLoading(true);
+		loadOptions(0, false);
+	  }
+	}, [debouncedQueryValue]);
+  
+	useEffect(() => { }, [currentPage, totalPages]);
+  
+	useArchbaseDidUpdate(() => {
+	  loadDataSourceFieldValue();
+	}, []);
+  
+	useEffect(() => {
+	  setInternalError(undefined);
 	}, [value, selectedValue, debouncedQueryValue]);
-
+  
 	const handleConverter = (value) => {
-		if (converter && value) {
-			return converter(value)
-		}
-		return value
+	  if (converter && value) {
+		return converter(value)
+	  }
+	  return value
 	}
-
+  
 	const handleChange = (value) => {
-		setSelectedValue((_prev) => value);
-
-		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== handleConverter(value)) {
-			dataSource.setFieldValue(dataField, handleConverter(value));
-		}
-
-		if (onSelectValue) {
-			onSelectValue(value);
-		}
+	  setSelectedValue((_prev) => value);
+  
+	  if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== handleConverter(value)) {
+		dataSource.setFieldValue(dataField, handleConverter(value));
+	  }
+  
+	  if (onSelectValue) {
+		onSelectValue(value);
+	  }
 	};
-
+  
 	const handleOnFocusExit = (event) => {
-		if (onFocusExit) {
-			onFocusExit(event);
-		}
+	  if (onFocusExit) {
+		onFocusExit(event);
+	  }
 	};
-
+  
 	const handleOnFocusEnter = (event) => {
-		if (onFocusEnter) {
-			onFocusEnter(event);
-		}
+	  if (onFocusEnter) {
+		onFocusEnter(event);
+	  }
 	};
-
+  
 	const handleDropdownScrollEnded = () => {
-		if (debouncedQueryValue && debouncedQueryValue.length >= minCharsToSearch && currentPage < totalPages - 1) {
-			setLoading(true);
-			loadOptions(currentPage + 1, true);
-		}
+	  if (debouncedQueryValue && debouncedQueryValue.length >= minCharsToSearch && currentPage < totalPages - 1) {
+		setLoading(true);
+		loadOptions(currentPage + 1, true);
+	  }
 	};
-
+  
 	const handleSearchChange = (query: string) => {
-		if (!selectedValue) {
-			setQueryValue(query);
-		}
+	  if (!selectedValue) {
+		setQueryValue(query);
+	  }
+	  if (query && query.length >= minCharsToSearch) {
+		combobox.openDropdown();
+	  }
 	};
-
+  
 	const loadOptions = async (page: number, incremental = false) => {
-		const promise = getOptions(page, debouncedQueryValue);
-		promise.then(
-			(data: OptionsResult<O>) => {
-				setLoading(false);
-				if (data === undefined || data == null) {
-					if (onErrorLoadOptions) {
-						onErrorLoadOptions('Response incorreto.');
-					}
-				}
-				const options = incremental ? originData.concat(data.options) : data.options;
-				setOriginData(options);
-				setOptions(buildOptions<O>(options, getOptionLabel, getOptionValue, getOptionImage));
-				setCurrentPage(data.page);
-				setTotalPages(data.totalPages);
-				setIsLastPage(data.page === data.totalPages - 1);
-				setUpdateCounter((prevCounter) => prevCounter + 1);
-			},
-			(err) => {
-				setLoading(false);
-				if (onErrorLoadOptions) {
-					onErrorLoadOptions(err);
-				}
-			},
-		);
+	  const promise = getOptions(page, debouncedQueryValue);
+	  promise.then(
+		(data: OptionsResult<O>) => {
+		  setLoading(false);
+		  if (data === undefined || data == null) {
+			if (onErrorLoadOptions) {
+			  onErrorLoadOptions('Response incorreto.');
+			}
+		  }
+		  const options = incremental ? originData.concat(data.options) : data.options;
+		  setOriginData(options);
+		  setOptions(buildOptions<O>(options, getOptionLabel, getOptionValue, getOptionImage));
+		  setCurrentPage(data.page);
+		  setTotalPages(data.totalPages);
+		  setIsLastPage(data.page === data.totalPages - 1);
+		  setUpdateCounter((prevCounter) => prevCounter + 1);
+		},
+		(err) => {
+		  setLoading(false);
+		  if (onErrorLoadOptions) {
+			onErrorLoadOptions(err);
+		  }
+		},
+	  );
 	};
+  
 	const isReadOnly = () => {
-		let _readOnly = readOnly;
-		if (dataSource && !readOnly) {
-			_readOnly = dataSource.isBrowsing();
-		}
-
-		return _readOnly;
+	  let _readOnly = readOnly;
+	  if (dataSource && !readOnly) {
+		_readOnly = dataSource.isBrowsing();
+	  }
+  
+	  return _readOnly;
 	};
+  
 	const shouldFilterOptions = options.every((item) => item !== queryValue);
 	const filteredOptions = shouldFilterOptions
-		? options.filter((item) => {
-			return item.label.toLowerCase().includes(queryValue.toLowerCase().trim());
-		})
-		: options;
-
+	  ? options.filter((item) => {
+		return item.label.toLowerCase().includes(queryValue.toLowerCase().trim());
+	  })
+	  : options;
+  
 	return (
-		<ArchbaseAsyncSelectProvider
-			value={{
-				handleDropdownScrollEnded: handleDropdownScrollEnded,
-			}}
+	  <ArchbaseAsyncSelectProvider
+		value={{
+		  handleDropdownScrollEnded: handleDropdownScrollEnded,
+		}}
+	  >
+		<Combobox
+		  store={combobox}
+		  withinPortal={true}
+		  position={dropdownPosition}
+		  zIndex={zIndex}
+		  width={width}
+		  onOptionSubmit={(val) => {
+			handleChange(val);
+			handleSearchChange(getOptionLabel(val as O));
+			combobox.closeDropdown();
+		  }}
 		>
-			<Combobox
-				store={combobox}
-				withinPortal={true}
-				position={dropdownPosition}
-				zIndex={zIndex}
-				onOptionSubmit={(val) => {
-					handleChange(val);
-					handleSearchChange(getOptionLabel(val as O));
-					combobox.closeDropdown();
-				}}
-			>
-				<ComboboxTarget>
-					<InputBase
-						disabled={disabled}
-						readOnly={isReadOnly()}
-						width={width}
-						required={required}
-						leftSection={icon}
-						leftSectionWidth={iconWidth}
-						label={label}
-						description={description}
-						error={internalError}
-						value={queryValue}
-						onChange={(event) => {
-							if (filteredOptions.length > 0) {
-								combobox.openDropdown();
-							}
-							combobox.updateSelectedOptionIndex();
-							handleSearchChange(event.currentTarget.value);
-						}}
-						onBlur={(event) => {
-							handleOnFocusExit(event);
-							handleSearchChange(getOptionLabel(selectedValue) || '');
-						}}
-						onFocus={(event) => handleOnFocusEnter(event)}
-						rightSection={
-							loading ? (
-								<Loader size="xs" />
-							) : selectedValue !== null ? (
-								<CloseButton
-									disabled={disabled}
-									hidden={isReadOnly()}
-									size="sm"
-									onMouseDown={(event) => event.preventDefault()}
-									onClick={() => {
-										setQueryValue('');
-										setSelectedValue(null);
-									}}
-									aria-label="Clear value"
-								/>
-							) : (
-								<Combobox.Chevron />
-							)
-						}
-						onClick={() => {
-							if (filteredOptions.length > 0) {
-								combobox.openDropdown();
-							}
-						}}
-						rightSectionPointerEvents={selectedValue === null ? 'none' : 'all'}
-						placeholder={placeholder}
-					/>
-				</ComboboxTarget>
-				<ComboboxDropdown>
-					<Combobox.Options>
-						<CustomSelectScrollArea mah={280}>
-							{filteredOptions.slice(0, limit ? limit : filteredOptions.length).map((option) => (
-								<Combobox.Option value={option.value} key={option.key}>
-									{ItemComponent ? <ItemComponent {...option} /> : option.label}
-								</Combobox.Option>
-							))}
-						</CustomSelectScrollArea>
-					</Combobox.Options>
-				</ComboboxDropdown>
-			</Combobox>
-		</ArchbaseAsyncSelectProvider>
-	);
-}
-
-export const CustomSelectScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
-	({ style, ...others }: ScrollAreaProps, _ref) => {
-		const sRef = useRef<any>();
-		const selectContextValue = useContext<ArchbaseAsyncSelectContextValue>(ArchbaseAsyncSelectContext);
-		const handleScrollPositionChange = (_position: { x: number; y: number }): void => {
-			if (sRef && sRef.current) {
-				if (sRef.current.scrollTop === sRef.current.scrollHeight - sRef.current.offsetHeight) {
-					selectContextValue.handleDropdownScrollEnded!();
+		  <ComboboxTarget>
+			<InputBase
+			  disabled={disabled}
+			  readOnly={isReadOnly()}
+			  style={{minWidth:width}}
+			  required={required}
+			  leftSection={icon}
+			  leftSectionWidth={iconWidth}
+			  label={label}
+			  description={description}
+			  error={internalError}
+			  value={queryValue}
+			  onChange={(event) => {
+				setQueryValue(event.currentTarget.value);
+				if (filteredOptions.length > 0) {
+				  combobox.openDropdown();
 				}
-			}
-		};
-
-		return (
-			<ScrollArea.Autosize
-				{...others}
-				style={{ width: '100%', ...style }}
-				viewportProps={{ tabIndex: -1 }}
-				viewportRef={sRef}
-				onScrollPositionChange={handleScrollPositionChange}
-			>
-				{others.children}
-			</ScrollArea.Autosize>
-		);
+				combobox.updateSelectedOptionIndex();
+				handleSearchChange(event.currentTarget.value);
+			  }}
+			  onBlur={(event) => {
+				handleOnFocusExit(event);
+				handleSearchChange(getOptionLabel(selectedValue) || '');
+			  }}
+			  onFocus={(event) => handleOnFocusEnter(event)}
+			  rightSection={
+				loading ? (
+				  <Loader size="xs" />
+				) : selectedValue !== null ? (
+				  <CloseButton
+					disabled={disabled}
+					hidden={isReadOnly()}
+					size="sm"
+					onMouseDown={(event) => event.preventDefault()}
+					onClick={() => {
+					  setQueryValue('');
+					  setSelectedValue(null);
+					}}
+					aria-label="Clear value"
+				  />
+				) : (
+				  <Combobox.Chevron />
+				)
+			  }
+			  onClick={() => {
+				if (filteredOptions.length > 0) {
+				  combobox.openDropdown();
+				}
+			  }}
+			  rightSectionPointerEvents={selectedValue === null ? 'none' : 'all'}
+			  placeholder={placeholder}
+			/>
+		  </ComboboxTarget>
+		  <ComboboxDropdown>
+			<Combobox.Options>
+			  <CustomSelectScrollArea mah={280}>
+				{filteredOptions.slice(0, limit ? limit : filteredOptions.length).map((option) => (
+				  <Combobox.Option value={option.value} key={option.key}>
+					{ItemComponent ? <ItemComponent {...option} /> : option.label}
+				  </Combobox.Option>
+				))}
+			  </CustomSelectScrollArea>
+			</Combobox.Options>
+		  </ComboboxDropdown>
+		</Combobox>
+	  </ArchbaseAsyncSelectProvider>
+	);
+  }
+  
+  export const CustomSelectScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
+	({ style, ...others }: ScrollAreaProps, _ref) => {
+	  const sRef = useRef<any>();
+	  const selectContextValue = useContext<ArchbaseAsyncSelectContextValue>(ArchbaseAsyncSelectContext);
+	  const handleScrollPositionChange = (_position: { x: number; y: number }): void => {
+		if (sRef && sRef.current) {
+		  if (sRef.current.scrollTop === sRef.current.scrollHeight - sRef.current.offsetHeight) {
+			selectContextValue.handleDropdownScrollEnded!();
+		  }
+		}
+	  };
+  
+	  return (
+		<ScrollArea.Autosize
+		  {...others}
+		  style={{ width: '100%', ...style }}
+		  viewportProps={{ tabIndex: -1 }}
+		  viewportRef={sRef}
+		  onScrollPositionChange={handleScrollPositionChange}
+		>
+		  {others.children}
+		</ScrollArea.Autosize>
+	  );
 	},
-);
-
-CustomSelectScrollArea.displayName = 'CustomSelectScrollArea';
+  );
+  
+  CustomSelectScrollArea.displayName = 'CustomSelectScrollArea';
