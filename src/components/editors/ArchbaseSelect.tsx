@@ -107,6 +107,28 @@ export interface ArchbaseSelectProps<T, ID, O> {
   customGetDataSourceFieldValue?: () => any
   customSetDataSourceFieldValue?: (value: any) => void
 }
+
+function buildGroupOptions(
+  options,
+) {
+  let uniqueGroups: [] = options.map(item => item.group).filter((value, index, array) => array.indexOf(value) === index);
+  let newOptions: any = []
+  uniqueGroups.forEach(groupName => {
+    const newOption = {
+      group: groupName,
+      items: options.filter(item => item.group === groupName).sort((a,b) => a.label.localeCompare(b.label)).map((item) => {
+        return {
+          value: item.value,
+          label: item.label,
+          origin: item.origin !== undefined ? item.origin : item.value
+        }
+      })
+    }
+    newOptions.push(newOption)
+  })
+  return newOptions
+}
+
 function buildOptions<O>(
   options?: ReadonlyArray<string | SelectItem> | ArchbaseDataSource<any, any>,
   initialOptions?: O[],
@@ -139,6 +161,9 @@ function buildOptions<O>(
     }
     ds.first()
     return result
+  }
+  if (options && Array.isArray(options) && options.length > 0 && options[0].group) {
+    return buildGroupOptions(options)
   }
   if (options) {
     return options
