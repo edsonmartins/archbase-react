@@ -9,5 +9,5 @@ module.exports = {
     ],
     ['@babel/preset-typescript', { allowDeclareFields: true }],
   ],
-  plugins: ['@emotion', '@babel/plugin-transform-runtime'],
+  plugins: ['@emotion', '@babel/plugin-transform-runtime', ["@babel/plugin-transform-typescript", {allowDeclareFields: true}], ["@babel/plugin-proposal-decorators", { "legacy": true }], "@babel/plugin-transform-class-properties"],
 }
