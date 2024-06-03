@@ -1,7 +1,6 @@
-import { ComboboxItem, ComboboxLikeRenderOptionInput, MantineSize, Select } from '@mantine/core'
+import { ComboboxItem, ComboboxLikeRenderOptionInput, MantineSize, MantineStyleProp, Select } from '@mantine/core'
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
 import React, {
-  CSSProperties,
   FocusEventHandler,
   ReactNode,
   useCallback,
@@ -42,7 +41,7 @@ export interface ArchbaseSelectProps<T, ID, O> {
   /** Indicador se o select é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean
   /** Estilo do select */
-  style?: CSSProperties
+  style?: MantineStyleProp
   /** Texto explicativo do select */
   placeholder?: string
   /** Título do select */
@@ -225,6 +224,7 @@ export function ArchbaseSelect<T, ID, O>({
   limit,
   nothingFound,
   zIndex,
+  style = {},
   dropdownPosition,
   children,
   innerRef,
@@ -407,6 +407,7 @@ export function ArchbaseSelect<T, ID, O>({
       }}
     >
       <Select
+        style={style}
         allowDeselect={allowDeselect}
         clearable={clearable}
         disabled={disabled}
