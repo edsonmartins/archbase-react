@@ -2,10 +2,8 @@ import React from 'react'
 import { Grid, Input, ScrollArea, Space, Stack } from '@mantine/core'
 import { t } from 'i18next'
 import { useFocusTrap } from '@mantine/hooks'
-import { GroupRemoteService } from './GroupRemoteService'
 import { GroupDto, ProfileDto, UserDto, UserGroupDto } from './SecurityDomain'
 import { RenderProfileUserItem } from './RenderProfileUserItem'
-import { ProfileRemoteService } from './ProfileRemoteService'
 import { ArchbaseDataSource } from '@components/datasource'
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@components/hooks'
 import { ARCHBASE_IOC_API_TYPE } from '@components/core'
@@ -13,6 +11,8 @@ import { ArchbaseNotifications } from '@components/notification'
 import { ArchbaseFormModalTemplate } from '@components/template'
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseImageEdit, ArchbasePasswordEdit, ArchbaseSelect } from '@components/editors'
 import { ArchbaseDualListSelector } from './ArchbaseDualListSelector'
+import { ArchbaseGroupService } from './ArchbaseGroupService'
+import { ArchbaseProfileService } from './ArchbaseProfileService'
 
 export interface UserModalProps {
   dataSource: ArchbaseDataSource<UserDto, string>
@@ -26,7 +26,7 @@ export interface UserModalProps {
 export const UserModal = (props: UserModalProps) => {
   const focusTrapRef = useFocusTrap()
 
-  const groupApi = useArchbaseRemoteServiceApi<GroupRemoteService>(ARCHBASE_IOC_API_TYPE.Group)
+  const groupApi = useArchbaseRemoteServiceApi<ArchbaseGroupService>(ARCHBASE_IOC_API_TYPE.Group)
   const { dataSource: dsGroups } = useArchbaseRemoteDataSource<GroupDto, string>({
     name: `dsGroups`,
     service: groupApi,
@@ -38,7 +38,7 @@ export const UserModal = (props: UserModalProps) => {
     }
   })
 
-  const profileApi = useArchbaseRemoteServiceApi<ProfileRemoteService>(ARCHBASE_IOC_API_TYPE.Profile)
+  const profileApi = useArchbaseRemoteServiceApi<ArchbaseProfileService>(ARCHBASE_IOC_API_TYPE.Profile)
   const { dataSource: dsProfiles } = useArchbaseRemoteDataSource<ProfileDto, string>({
     name: `dsProfiles`,
     service: profileApi,
