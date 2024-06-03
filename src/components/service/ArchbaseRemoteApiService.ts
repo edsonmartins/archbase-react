@@ -64,89 +64,117 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
 
   protected prepareHeaders(headers: Record<string, string> = {}, withoutToken: boolean = false): Record<string, string> {
     let finalHeaders = { 'Content-Type': 'application/json; charset=utf-8', ...headers };
-  
+
     if (!withoutToken) {
       const token = this.tokenManager.getToken();
       if (token) {
         finalHeaders['Authorization'] = `Bearer ${token.access_token}`;
       }
     }
-  
+
     return finalHeaders;
   }
-  
+
 
   async get<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<T> {
-    const finalHeaders = this.prepareHeaders(headers, withoutToken);
-    const response = await axios.get(url, { headers: finalHeaders, ...options })
-    return ArchbaseJacksonParser.convertJsonToObject(response.data)
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      const response = await axios.get(url, { headers: finalHeaders, ...options })
+      return ArchbaseJacksonParser.convertJsonToObject(response.data)
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async post<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
-    const finalHeaders = this.prepareHeaders(headers, withoutToken);
-    const response = await axios.post(
-      url,
-      ArchbaseJacksonParser.convertObjectToJson(data),
-      {
-        headers: finalHeaders,
-        ...options
-      }
-    )
-    return ArchbaseJacksonParser.convertJsonToObject(response.data)
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      const response = await axios.post(
+        url,
+        ArchbaseJacksonParser.convertObjectToJson(data),
+        {
+          headers: finalHeaders,
+          ...options
+        }
+      )
+      return ArchbaseJacksonParser.convertJsonToObject(response.data)
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async postNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
-    const finalHeaders = this.prepareHeaders(headers, withoutToken); 
-    const response = await axios.post(
-      url,
-      data,
-      {
-        headers: finalHeaders,
-        ...options
-      }
-    )
-    return response.data
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      const response = await axios.post(
+        url,
+        data,
+        {
+          headers: finalHeaders,
+          ...options
+        }
+      )
+      return response.data
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async put<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
-    const finalHeaders = this.prepareHeaders(headers, withoutToken); 
-    const response = await axios.put(url, ArchbaseJacksonParser.convertObjectToJson(data), {
-      headers: finalHeaders,
-      ...options
-    })
-    return ArchbaseJacksonParser.convertJsonToObject(response.data)
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      const response = await axios.put(url, ArchbaseJacksonParser.convertObjectToJson(data), {
+        headers: finalHeaders,
+        ...options
+      })
+      return ArchbaseJacksonParser.convertJsonToObject(response.data)
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async putNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
-    const finalHeaders = this.prepareHeaders(headers, withoutToken); 
-    const response = await axios.put(url, data, {
-      headers: finalHeaders,
-      ...options
-    })
-    return response.data
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      const response = await axios.put(url, data, {
+        headers: finalHeaders,
+        ...options
+      })
+      return response.data
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
-  async binaryPut<T, R>(url: string, data: T, headers: Record<string, string>={}, withoutToken?: boolean, options?: any): Promise<R> {
-    const finalHeaders = this.prepareHeaders(headers, withoutToken);
-    options = options || {}
-    const response = await axios.put(url, data, {
-      headers: finalHeaders,
-      ...options
-    })
-    return response.data
+  async binaryPut<T, R>(url: string, data: T, headers: Record<string, string> = {}, withoutToken?: boolean, options?: any): Promise<R> {
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      options = options || {}
+      const response = await axios.put(url, data, {
+        headers: finalHeaders,
+        ...options
+      })
+      return response.data
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async delete<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<T> {
-    const finalHeaders = this.prepareHeaders(headers, withoutToken);
-    const response = await axios.delete(url, { headers: finalHeaders, ...options })
-    return ArchbaseJacksonParser.convertJsonToObject(response.data)
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      const response = await axios.delete(url, { headers: finalHeaders, ...options })
+      return ArchbaseJacksonParser.convertJsonToObject(response.data)
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 }
 
 inversify.decorate(inversify.injectable(), ArchbaseAxiosRemoteApiClient)
 
 export interface ArchbaseEntityTransformer<T> {
-  transform(entity : T): T
+  transform(entity: T): T
 }
 
 export abstract class ArchbaseRemoteApiService<T, ID> {
@@ -156,7 +184,7 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
     this.client = client
   }
 
-  protected abstract getEndpoint(): string  
+  protected abstract getEndpoint(): string
 
   public abstract getId(entity: T): ID
 
@@ -190,8 +218,8 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
 
 
   async validate(entity: T): Promise<void> {
-    const serviceSpecificHeaders = this.configureHeaders(); 
-    return this.client.post<T, void>(`${this.getEndpoint()}/validate`, entity, serviceSpecificHeaders,false)
+    const serviceSpecificHeaders = this.configureHeaders();
+    return this.client.post<T, void>(`${this.getEndpoint()}/validate`, entity, serviceSpecificHeaders, false)
   }
 
   async validateGroup<R>(entity: T, groups: any[]): Promise<R> {
@@ -203,12 +231,12 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
 
   async exists(id: ID): Promise<boolean> {
     const serviceSpecificHeaders = this.configureHeaders();
-    return this.client.get<boolean>(`${this.getEndpoint()}/exists/${id}`,serviceSpecificHeaders,false)
+    return this.client.get<boolean>(`${this.getEndpoint()}/exists/${id}`, serviceSpecificHeaders, false)
   }
 
   async findAll(page: number, size: number): Promise<Page<T>> {
     const serviceSpecificHeaders = this.configureHeaders();
-    const result =  await this.client.get<Page<T>>(`${this.getEndpoint()}/findAll?page=${page}&size=${size}`,serviceSpecificHeaders,false)
+    const result = await this.client.get<Page<T>>(`${this.getEndpoint()}/findAll?page=${page}&size=${size}`, serviceSpecificHeaders, false)
     this.transformPage(result);
     return result;
   }
@@ -216,7 +244,7 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
   async findAllWithSort(page: number, size: number, sort: string[]): Promise<Page<T>> {
     const serviceSpecificHeaders = this.configureHeaders();
     const result = await this.client.get<Page<T>>(
-      `${this.getEndpoint()}/findAll?page=${page}&size=${size}&sort=${sort}`,serviceSpecificHeaders,false
+      `${this.getEndpoint()}/findAll?page=${page}&size=${size}&sort=${sort}`, serviceSpecificHeaders, false
     )
     this.transformPage(result);
     return result;
@@ -224,7 +252,7 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
 
   async findAllByIds(ids: ID[]): Promise<T[]> {
     const serviceSpecificHeaders = this.configureHeaders();
-    const result = await this.client.get<T[]>(`${this.getEndpoint()}/findAll?ids=${ids}`,serviceSpecificHeaders,false)
+    const result = await this.client.get<T[]>(`${this.getEndpoint()}/findAll?ids=${ids}`, serviceSpecificHeaders, false)
     this.transformList(result);
     return result;
   }
@@ -235,7 +263,7 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
       `${this.getEndpoint()}/findWithFilter?page=${page}&size=${size}&filter=${encodeURIComponent(
         filter
       )}`
-    ,serviceSpecificHeaders,false)
+      , serviceSpecificHeaders, false)
     this.transformPage(result);
     return result;
   }
@@ -252,7 +280,7 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
       `${this.getEndpoint()}/findMultipleFields?page=${page}&size=${size}&fields=${encodeURIComponent(
         fields
       )}&filter=${encodeURIComponent(value)}&sort=${encodeURIComponent(sort)}`
-    ,serviceSpecificHeaders,false)
+      , serviceSpecificHeaders, false)
     this.transformPage(result);
     return result;
   }
@@ -268,15 +296,15 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
       `${this.getEndpoint()}/findWithFilterAndSort?page=${page}&size=${size}&filter=${encodeURIComponent(
         filter
       )}&sort=${sort}`
-    ,serviceSpecificHeaders,false)
+      , serviceSpecificHeaders, false)
     this.transformPage(result);
     return result;
   }
 
   async findOne(id: ID): Promise<T> {
     const serviceSpecificHeaders = this.configureHeaders();
-    const result = await this.client.get<T>(`${this.getEndpoint()}/${id}`,serviceSpecificHeaders,false)
-    if (this.isTransformable()){
+    const result = await this.client.get<T>(`${this.getEndpoint()}/${id}`, serviceSpecificHeaders, false)
+    if (this.isTransformable()) {
       return this['transform'](result);
     }
     return result;
@@ -284,12 +312,12 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
 
   async findByComplexId<R>(id: T): Promise<R> {
     const serviceSpecificHeaders = this.configureHeaders();
-    return this.client.post<T, R>(`${this.getEndpoint()}`, id,serviceSpecificHeaders,false)
+    return this.client.post<T, R>(`${this.getEndpoint()}`, id, serviceSpecificHeaders, false)
   }
 
   async existsByComplexId(id: T): Promise<boolean> {
     const serviceSpecificHeaders = this.configureHeaders();
-    return this.client.post<T, boolean>(`${this.getEndpoint()}`, id,serviceSpecificHeaders,false)
+    return this.client.post<T, boolean>(`${this.getEndpoint()}`, id, serviceSpecificHeaders, false)
   }
 
   async save<R>(entity: T): Promise<R> {
@@ -303,7 +331,7 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
 
   async delete<T>(id: ID): Promise<void> {
     const serviceSpecificHeaders = this.configureHeaders();
-    return this.client.delete<void>(`${this.getEndpoint()}/${id}`,serviceSpecificHeaders,false)
+    return this.client.delete<void>(`${this.getEndpoint()}/${id}`, serviceSpecificHeaders, false)
   }
 }
 

@@ -27,6 +27,7 @@ export * from './components/template';
 export * from './components/validator';
 export * from './components/debug';
 export * from './components/locales/config';
+export * from './components/security';
 // export * from './components/emaileditor/core';
 // export * from './components/emaileditor/editor';
 // export * from './components/emaileditor/extensions';

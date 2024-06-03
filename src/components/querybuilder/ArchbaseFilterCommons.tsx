@@ -332,18 +332,12 @@ interface FilterFieldProps {
   quickFilterSort?: boolean
 }
 
-class FilterField extends Component<FilterFieldProps> {
-  static defaultProps = {
-    sortable: true,
-    quickFilter: true,
-    quickFilterSort: false
-  }
-  static get componentName() {
-    return 'FilterField'
-  }
-  render() {
-    return null
-  }
+function FilterField({
+  sortable = true,
+  quickFilter = true,
+  quickFilterSort = false,
+  ...others }: FilterFieldProps) {
+  return null;
 }
 
 interface ArchbaseQueryBuilderProps {
@@ -375,8 +369,8 @@ interface ArchbaseQueryBuilderProps {
   onSelectedFilter?: (filter: ArchbaseQueryFilter, index: number) => void
   userName?: any
   children?: ReactNode | ReactNode[]
-  onPrint?: ()=>void
-  onExport?: ()=>void
+  onPrint?: () => void
+  onExport?: () => void
 }
 
 interface FilterFieldValueProps {
@@ -397,32 +391,26 @@ interface FilterFieldsProps {
   children?: ReactNode | ReactNode[]
 }
 
-class FilterFields extends Component<FilterFieldsProps> {
-  static get componentName() {
-    return 'FilterFields'
-  }
-
-  render() {
-    return <div>{this.props.children}</div>
-  }
+function FilterFields({ children }: FilterFieldsProps) {
+  return <div>{children}</div>
 }
 
 const getSortString = (currentFilter: { sort: { sortFields: any[] } }): string | undefined => {
-    let result: string = ''
-    let appendDelimiter = false
-    currentFilter.sort.sortFields.forEach(
-      (field: { selected: any; label: string | number; asc_desc: string }) => {
-        if (field.selected) {
-          if (appendDelimiter) {
-            result += ', '
-          }
-          result += field.label + '(' + (field.asc_desc === 'asc' ? 'A' : 'D') + ')'
-          appendDelimiter = true
+  let result: string = ''
+  let appendDelimiter = false
+  currentFilter.sort.sortFields.forEach(
+    (field: { selected: any; label: string | number; asc_desc: string }) => {
+      if (field.selected) {
+        if (appendDelimiter) {
+          result += ', '
         }
+        result += field.label + '(' + (field.asc_desc === 'asc' ? 'A' : 'D') + ')'
+        appendDelimiter = true
       }
-    )
-    return result
-  }
+    }
+  )
+  return result
+}
 
 
 const convertQueryFields = (children: React.ReactNode): React.ReactNode => {
@@ -794,22 +782,22 @@ interface QueryFieldProps {
   name: string
   label: string
   dataType: 'string' | 'number' | 'date' | 'date_time' | 'time' | 'boolean'
-  operator:
-    | 'contains'
-    | 'startsWith'
-    | 'endsWith'
-    | '='
-    | '!='
-    | '<'
-    | '>'
-    | '<='
-    | '>='
-    | 'between'
-    | 'inList'
-    | 'notInList'
-  sortable: boolean
-  quickFilter: boolean
-  quickFilterSort: boolean
+  operator?:
+  | 'contains'
+  | 'startsWith'
+  | 'endsWith'
+  | '='
+  | '!='
+  | '<'
+  | '>'
+  | '<='
+  | '>='
+  | 'between'
+  | 'inList'
+  | 'notInList'
+  sortable?: boolean
+  quickFilter?: boolean
+  quickFilterSort?: boolean
   searchComponent?: any
   children?: ReactNode | ReactNode[] | undefined
   mask?: MaskPattern | Function | string
@@ -825,32 +813,16 @@ interface QueryFieldsProps {
   children: ReactNode | ReactNode[]
 }
 
-class QueryFields extends Component<QueryFieldsProps> {
-  static get componentName() {
-    return 'QueryFields'
-  }
-
-  render() {
-    const { children } = this.props
-
-    return <div>{children}</div>
-  }
+function QueryFields({ children }: QueryFieldsProps) {
+  return <div>{children}</div>
 }
 
-class QueryField extends React.Component<QueryFieldProps> {
-  static get componentName() {
-    return 'QueryField'
-  }
-  static defaultProps = {
-    sortable: true,
-    quickFilter: true,
-    quickFilterSort: false,
-    operator: '=',
-    mask: ''
-  }
-  render() {
-    return null
-  }
+function QueryField({ sortable = true,
+  quickFilter = true,
+  quickFilterSort = false,
+  operator = '=',
+  mask = '', ...others }: QueryFieldProps) {
+  return null;
 }
 
 interface QueryFieldValueProps {

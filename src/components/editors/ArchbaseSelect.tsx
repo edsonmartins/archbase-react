@@ -1,7 +1,6 @@
-import { ComboboxItem, ComboboxLikeRenderOptionInput, MantineSize, Select } from '@mantine/core'
+import { ComboboxItem, ComboboxLikeRenderOptionInput, MantineSize, MantineStyleProp, Select } from '@mantine/core'
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
 import React, {
-  CSSProperties,
   FocusEventHandler,
   ReactNode,
   useCallback,
@@ -42,7 +41,7 @@ export interface ArchbaseSelectProps<T, ID, O> {
   /** Indicador se o select é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean
   /** Estilo do select */
-  style?: CSSProperties
+  style?: MantineStyleProp
   /** Texto explicativo do select */
   placeholder?: string
   /** Título do select */
@@ -107,6 +106,28 @@ export interface ArchbaseSelectProps<T, ID, O> {
   customGetDataSourceFieldValue?: () => any
   customSetDataSourceFieldValue?: (value: any) => void
 }
+
+function buildGroupOptions(
+  options,
+) {
+  let uniqueGroups: [] = options.map(item => item.group).filter((value, index, array) => array.indexOf(value) === index);
+  let newOptions: any = []
+  uniqueGroups.forEach(groupName => {
+    const newOption = {
+      group: groupName,
+      items: options.filter(item => item.group === groupName).sort((a,b) => a.label.localeCompare(b.label)).map((item) => {
+        return {
+          value: item.value,
+          label: item.label,
+          origin: item.origin !== undefined ? item.origin : item.value
+        }
+      })
+    }
+    newOptions.push(newOption)
+  })
+  return newOptions
+}
+
 function buildOptions<O>(
   options?: ReadonlyArray<string | SelectItem> | ArchbaseDataSource<any, any>,
   initialOptions?: O[],
@@ -139,6 +160,9 @@ function buildOptions<O>(
     }
     ds.first()
     return result
+  }
+  if (options && Array.isArray(options) && options.length > 0 && options[0].group) {
+    return buildGroupOptions(options)
   }
   if (options) {
     return options
@@ -200,6 +224,7 @@ export function ArchbaseSelect<T, ID, O>({
   limit,
   nothingFound,
   zIndex,
+  style = {},
   dropdownPosition,
   children,
   innerRef,
@@ -382,6 +407,7 @@ export function ArchbaseSelect<T, ID, O>({
       }}
     >
       <Select
+        style={style}
         allowDeselect={allowDeselect}
         clearable={clearable}
         disabled={disabled}

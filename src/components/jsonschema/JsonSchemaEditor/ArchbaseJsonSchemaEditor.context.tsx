@@ -1,4 +1,4 @@
-import { SetNestedObjectValueOperation } from 'components/core';
+import { SetNestedObjectValueOperation } from '@components/core';
 import React from 'react';
 
 export interface ArchbaseJsonSchemaEditorContextValue {

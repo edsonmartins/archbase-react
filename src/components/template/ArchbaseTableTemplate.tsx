@@ -75,6 +75,10 @@ export interface ArchbaseTableTemplateProps<T extends Object, ID> {
 	enableTopToolbar?: boolean;
 	cellPadding?: string | number;
 	bottomToolbarMinHeight?: string | number;
+	/* Habilitar coluna checkbox de seleção de linha */
+	enableRowSelection?: boolean;
+	/* Padding da célula do cabeçalho da tabela */
+	tableHeadCellPadding?: string | number;
 }
 
 const getFilter = (
@@ -126,6 +130,8 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	store,
 	cellPadding,
 	bottomToolbarMinHeight,
+	enableRowSelection,
+	tableHeadCellPadding,
 }: ArchbaseTableTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const filterRef = useRef<any>();
@@ -311,6 +317,8 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 				onPrint={setPrintFunc}
 				cellPadding={cellPadding}
 				bottomToolbarMinHeight={bottomToolbarMinHeight}
+				enableRowSelection={enableRowSelection}
+				tableHeadCellPadding={tableHeadCellPadding}
 			>
 				{columns}
 				{userActions?.visible ? (
