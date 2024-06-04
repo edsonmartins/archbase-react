@@ -70,8 +70,11 @@ export class ArchbaseRemoteDataSource<T, ID>
     try {
       let index = -1
       this.records.forEach((item, idx) => {
-        if (item === this.currentRecord) {
-          index = idx
+        const recordIdentity = this.getIdentity ? this.getIdentity(item) : item["id"];
+        const currentRecordIdentity = this.getIdentity ? this.getIdentity(this.currentRecord) : this.currentRecord["id"];
+        
+        if (recordIdentity !== undefined && (recordIdentity === currentRecordIdentity || item === this.currentRecord)) {
+            index = idx;
         }
       })
       this.currentRecord = await this.service.save<T>(this.currentRecord)

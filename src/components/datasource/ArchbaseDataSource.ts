@@ -48,6 +48,11 @@ export interface DataSourceOptions<T> {
 	originGlobalFilter?: any;
 	originSort?: any;
 	validator?: IDataSourceValidator;
+		/**
+	 * Função opcional para retornar a identidade que será utilizada para identificar o registro.
+	 * Quando não definida, será utilizada por padrão o id.
+	 */
+	getIdentity?: (record: T) => any;
 }
 
 export type DataSourceEventDataChangedType<T> = {
@@ -509,6 +514,8 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
 	protected validator?: IDataSourceValidator;
 
+	protected getIdentity?: any;
+
 	constructor(name: string, options: DataSourceOptions<T>, label?: string) {
 		this.name = name;
 		this.label = label || name;
@@ -519,6 +526,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 		this.emitter = new ArchbaseDataSourceEventEmitter();
 		this.uuid = uniqueId();
 		this.validator = options.validator;
+		this.getIdentity = options.getIdentity;
 	}
 
 	private loadOptions(options: DataSourceOptions<T>) {
@@ -1018,8 +1026,11 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
 		let index = -1;
 		this.records.forEach((item, idx) => {
-			if (item === this.currentRecord) {
-				index = idx;
+			const recordIdentity = this.getIdentity ? this.getIdentity(item) : item["id"];
+			const currentRecordIdentity = this.getIdentity ? this.getIdentity(this.currentRecord) : this.currentRecord["id"];
+			
+			if (recordIdentity !== undefined && (recordIdentity === currentRecordIdentity || item === this.currentRecord)) {
+					index = idx;
 			}
 		});
 		if (index >= 0) {
