@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pnpm install  
+          pnpm install --no-frozen-lockfile
 
       - name: Build Storybook 
         run: |
