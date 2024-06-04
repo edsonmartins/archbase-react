@@ -1,18 +1,18 @@
-import React from 'react'
-import { Grid, Input, ScrollArea, Space, Stack } from '@mantine/core'
-import { t } from 'i18next'
-import { useFocusTrap } from '@mantine/hooks'
-import { GroupDto, ProfileDto, UserDto, UserGroupDto } from './SecurityDomain'
-import { RenderProfileUserItem } from './RenderProfileUserItem'
-import { ArchbaseDataSource } from '@components/datasource'
-import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@components/hooks'
 import { ARCHBASE_IOC_API_TYPE } from '@components/core'
+import { ArchbaseDataSource } from '@components/datasource'
+import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseImageEdit, ArchbasePasswordEdit, ArchbaseSelect } from '@components/editors'
+import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@components/hooks'
 import { ArchbaseNotifications } from '@components/notification'
 import { ArchbaseFormModalTemplate } from '@components/template'
-import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseImageEdit, ArchbasePasswordEdit, ArchbaseSelect } from '@components/editors'
+import { Grid, Input, ScrollArea, Space, Stack } from '@mantine/core'
+import { useFocusTrap } from '@mantine/hooks'
+import { t } from 'i18next'
+import React, { useEffect, useState } from 'react'
 import { ArchbaseDualListSelector } from './ArchbaseDualListSelector'
 import { ArchbaseGroupService } from './ArchbaseGroupService'
 import { ArchbaseProfileService } from './ArchbaseProfileService'
+import { RenderProfileUserItem } from './RenderProfileUserItem'
+import { GroupDto, ProfileDto, UserDto, UserGroupDto } from './SecurityDomain'
 
 export interface UserModalProps {
   dataSource: ArchbaseDataSource<UserDto, string>
@@ -25,6 +25,7 @@ export interface UserModalProps {
 
 export const UserModal = (props: UserModalProps) => {
   const focusTrapRef = useFocusTrap()
+  const [passwordError, setPasswordError] = useState("")
 
   const groupApi = useArchbaseRemoteServiceApi<ArchbaseGroupService>(ARCHBASE_IOC_API_TYPE.Group)
   const { dataSource: dsGroups } = useArchbaseRemoteDataSource<GroupDto, string>({
@@ -50,6 +51,10 @@ export const UserModal = (props: UserModalProps) => {
     }
   })
 
+  useEffect(() => {
+    setPasswordError("")
+  }, [props.dataSource.getFieldValue("password")])
+
   return (
     <ArchbaseFormModalTemplate
       title={t('archbase:Usuário')}
@@ -61,6 +66,13 @@ export const UserModal = (props: UserModalProps) => {
       onClickCancel={props.onClickCancel}
       onCustomSave={props.onCustomSave}
       onAfterSave={props.onAfterSave}
+      onBeforeOk={(currentRecord) => {
+        if (!currentRecord.password && props.dataSource.isInserting()) {
+          setPasswordError(t('archbase:Informe a senha'))
+          return Promise.reject()
+        }
+        return Promise.resolve()
+      }}
     >
       <ScrollArea ref={focusTrapRef} style={{ height: '600px' }}>
         <Grid>
@@ -95,6 +107,7 @@ export const UserModal = (props: UserModalProps) => {
               label={`${t('archbase:Senha usuário')}`}
               dataSource={props.dataSource}
               dataField="password"
+              error={passwordError}
             />
           </Grid.Col>
         </Grid>
