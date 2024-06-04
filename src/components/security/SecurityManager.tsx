@@ -226,8 +226,7 @@ export function ArchbaseSecurityManager({
         header="Foto"
         render={(cell) => (
           <img
-            height={'32px'}
-            style={{ borderRadius: 50 }}
+            style={{ borderRadius: 50, height:'36px', maxHeight:'36px' }}
             src={cell.row.original.avatar ? atob(cell.row.original.avatar) : NO_USER}
           />
         )}
