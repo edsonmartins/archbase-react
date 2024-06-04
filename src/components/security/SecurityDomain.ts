@@ -299,9 +299,6 @@ export class UserDto extends SecurityDto {
   })
   userName: string
 
-  @IsNotEmpty({
-    message: 'archbase:Informe a senha'
-  })
   password: string
 
   @IsBoolean()

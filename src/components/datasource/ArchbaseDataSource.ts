@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { isDate, parse, parseISO } from 'date-fns';
 import { EventEmitter } from 'events';
-import i18next from 'i18next';
+import i18next, { t } from 'i18next';
 import { cloneDeep, uniqueId } from 'lodash';
 import { ArchbaseDataSourceError } from '../core/exceptions';
 import { ArchbaseObjectHelper } from '../core/helper';
@@ -949,15 +949,15 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 	protected publishEventErrors = (errors: DataSourceValidationError[]) => {
 		errors.forEach((error) => {
 			if (error.fieldName) {
-				this.emitter.emit('onFieldError', error.fieldName, error.errorMessage);
+				this.emitter.emit('onFieldError', error.fieldName, t(error.errorMessage));
 				this.emit({
 					type: DataSourceEventNames.onFieldError,
 					fieldName: error.fieldName,
-					error: error.errorMessage,
+					error: t(error.errorMessage),
 					originalError: error,
 				});
 			} else {
-				this.publishEventError(error.errorMessage, error);
+				this.publishEventError(t(error.errorMessage), error);
 			}
 		});
 	};

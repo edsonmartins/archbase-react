@@ -29,7 +29,7 @@ import { ProfileModal } from './ProfileModal'
 import { SecurityType } from './SecurityType'
 import { ArchbaseDataSource } from '@components/datasource'
 import { ArchbaseListCustomItemProps } from '@components/list'
-import { useArchbaseListContext, useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi, useArchbaseStore, useArchbaseTheme } from '@components/hooks'
+import { useArchbaseListContext, useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi, useArchbaseStore, useArchbaseTheme, useArchbaseValidator } from '@components/hooks'
 import { isBase64 } from '@components/validator'
 import { ARCHBASE_IOC_API_TYPE } from '@components/core'
 import { ArchbaseDialog, ArchbaseNotifications } from '@components/notification'
@@ -43,6 +43,7 @@ interface ArchbaseSecurityManagerProps {
   height?: any
   width?: any
   dataSourceUsers?: ArchbaseDataSource<UserDto, string>
+  createEntitiesWithId?: boolean
 }
 
 const NO_USER = 'data:image/png;base64,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'
@@ -121,10 +122,12 @@ export const UserItem = (props: UserItemProps) => {
 
 export function ArchbaseSecurityManager({
   height = '400px',
-  width = '100%'
+  width = '100%',
+  createEntitiesWithId = false
 }: ArchbaseSecurityManagerProps) {
   const theme = useArchbaseTheme()
   const templateStore = useArchbaseStore('securityStore')
+  const validator = useArchbaseValidator();
   const { colorScheme } = useMantineColorScheme()
   const [error, setError] = useState<string | undefined>(undefined)
   const [activeTab, setActiveTab] = useState<string | null>('users')
@@ -138,6 +141,7 @@ export function ArchbaseSecurityManager({
     name: 'dsUsers',
     service: userApi,
     store: templateStore,
+    validator,
     pageSize: 25,
     loadOnStart: true,
     onLoadComplete: (dataSource) => {
@@ -156,6 +160,7 @@ export function ArchbaseSecurityManager({
     name: 'dsGroups',
     service: groupApi,
     store: templateStore,
+    validator,
     pageSize: 25,
     loadOnStart: true,
     onLoadComplete: (dataSource) => {
@@ -174,6 +179,7 @@ export function ArchbaseSecurityManager({
     name: 'dsProfile',
     service: profileApi,
     store: templateStore,
+    validator,
     pageSize: 25,
     loadOnStart: true,
     onLoadComplete: (dataSource) => {
@@ -192,6 +198,7 @@ export function ArchbaseSecurityManager({
     name: 'dsResources',
     service: resourceApi,
     store: templateStore,
+    validator,
     pageSize: 25,
     loadOnStart: true,
     onLoadComplete: (dataSource) => {
@@ -372,7 +379,11 @@ export function ArchbaseSecurityManager({
   )
 
   const handleAddUserExecute = () => {
-    dsUsers.insert(UserDto.newInstance())
+    const user = UserDto.newInstance()
+    if (!createEntitiesWithId) {
+      user.id = undefined
+    }
+    dsUsers.insert(user)
     setOpenedModal(SecurityType.USER)
   }
 
@@ -423,7 +434,11 @@ export function ArchbaseSecurityManager({
   }
 
   const handleAddGroupExecute = () => {
-    dsGroups.insert(GroupDto.newInstance())
+    const group = GroupDto.newInstance()
+    if (!createEntitiesWithId) {
+      group.id = undefined
+    }
+    dsGroups.insert(group)
     setOpenedModal(SecurityType.GROUP)
   }
 
@@ -486,7 +501,11 @@ export function ArchbaseSecurityManager({
   }
 
   const handleAddProfileExecute = () => {
-    dsProfiles.insert(ProfileDto.newInstance())
+    const profile = ProfileDto.newInstance()
+    if (!createEntitiesWithId) {
+      profile.id = undefined
+    }
+    dsProfiles.insert(profile)
     setOpenedModal(SecurityType.PROFILE)
    }
 

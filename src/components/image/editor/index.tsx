@@ -94,7 +94,6 @@ export const ArchbaseImagePickerEditor = memo(
 						originImageSrc: imageSrcProp,
 					},
 				];
-				// console.log("NEW STATE", newState)
 				setImageSrc(result.imageUri);
 				setState(newState);
 				setLoadImage(true);
@@ -240,7 +239,6 @@ export const ArchbaseImagePickerEditor = memo(
 					canvas.width = img.width * ratio;
 					canvas.height = img.height * ratio;
 					ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-					console.log(newState.quality);
 					const dataURI = canvas.toDataURL(`image/${type}`, newState.quality / 100);
 					return resolve({
 						dataUri: dataURI,

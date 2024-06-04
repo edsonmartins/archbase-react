@@ -113,7 +113,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 			}
 		} else {
 			if (onBeforeOk) {
-				const result = onBeforeOk();
+				const result = onBeforeOk(dataSource.getCurrentRecord());
 				if (result instanceof Promise) {
 					result
 						.then(async () => {

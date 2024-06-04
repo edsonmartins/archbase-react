@@ -53,6 +53,8 @@ export interface ArchbaseRemoteApiClient {
   putNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R>
   binaryPut<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R>
   delete<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<T>
+  patch<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R>
+  patchNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R>
 }
 
 export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
@@ -165,6 +167,32 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
       const response = await axios.delete(url, { headers: finalHeaders, ...options })
       return ArchbaseJacksonParser.convertJsonToObject(response.data)
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  async patch<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      const response = await axios.patch(url, ArchbaseJacksonParser.convertObjectToJson(data), {
+        headers: finalHeaders,
+        ...options
+      })
+      return ArchbaseJacksonParser.convertJsonToObject(response.data)
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  async patchNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      const response = await axios.patch(url, data, {
+        headers: finalHeaders,
+        ...options
+      })
+      return response.data
     } catch (error) {
       return Promise.reject(error);
     }
