@@ -18,7 +18,8 @@
         
         - name: Install dependencies
           run: |
-            yarn install  
+            yarn install --frozen-lockfile
+            yarn upgrade
 
         - name: Build Storybook 
           run: |

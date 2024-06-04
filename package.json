@@ -253,7 +253,9 @@
     "dayjs": "1.11.10",
     "react-i18next": "13.4.1",
     "i18next": "23.7.6",
-    "inversify": "6.0.1"
+    "inversify": "6.0.1",
+    "cli-table3": "0.5.1",
+    "string-width": "4.2.3"
   },
   "engines": {
     "node": ">=16"
