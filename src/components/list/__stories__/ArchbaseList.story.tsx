@@ -4,7 +4,6 @@ import { Meta, StoryObj } from '@storybook/react';
 import { IconUser } from '@tabler/icons-react';
 import { IconAt, IconPhoneCall } from '@tabler/icons-react';
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { Pessoa, pessoasData } from '../../../demo/index';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { ArchbaseJsonView, ArchbaseObjectInspector } from '../../debug';
 import {
@@ -15,6 +14,8 @@ import {
 } from '../../hooks';
 import { ArchbaseList, ArchbaseListCustomItemProps } from '../ArchbaseList';
 import ArchbaseListContext, { ArchbaseListContextValue } from '../ArchbaseList.context';
+import { Pessoa } from 'demo/data/Pessoa';
+import { pessoasData } from 'demo';
 
 const data = pessoasData;
 

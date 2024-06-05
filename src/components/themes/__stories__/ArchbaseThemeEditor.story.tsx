@@ -1,13 +1,14 @@
 import { Box, Card, Grid, Group, ScrollArea, Text } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Pessoa, pessoasData } from '../../../demo/index';
 import { DataSourceEvent, DataSourceEventNames } from '../../datasource';
 import { ArchbaseObjectInspector } from '../../debug';
 import { useArchbaseForceUpdate } from '../../hooks';
 import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener';
 import { ArchbaseThemeEditor } from '../ArchbaseThemeEditor';
+import { Pessoa } from 'demo/data/Pessoa';
+import { pessoasData } from 'demo';
 
 const ArchbaseThemeEditorExample = () => {
 	const forceUpdate = useArchbaseForceUpdate();

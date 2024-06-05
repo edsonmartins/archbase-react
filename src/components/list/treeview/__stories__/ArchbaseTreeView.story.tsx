@@ -1,6 +1,5 @@
 import { Card, Grid, Group, Text } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
-import { Pessoa } from 'demo';
 import React from 'react';
 import { ArchbaseTreeView } from '../ArchbaseTreeView';
 
