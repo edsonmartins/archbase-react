@@ -15,7 +15,7 @@ import {
 import { ArchbaseList, ArchbaseListCustomItemProps } from '../ArchbaseList';
 import ArchbaseListContext, { ArchbaseListContextValue } from '../ArchbaseList.context';
 import { Pessoa } from 'demo/data/Pessoa';
-import { pessoasData } from 'demo';
+import { pessoasData } from '../../../demo';
 
 const data = pessoasData;
 

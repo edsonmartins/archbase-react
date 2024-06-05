@@ -8,7 +8,7 @@ import { useArchbaseDataSource } from '../../hooks/useArchbaseDataSource';
 import { useArchbaseDataSourceListener } from '../../hooks/useArchbaseDataSourceListener';
 import { ArchbaseThemeEditor } from '../ArchbaseThemeEditor';
 import { Pessoa } from 'demo/data/Pessoa';
-import { pessoasData } from 'demo';
+import { pessoasData } from '@/demo';
 
 const ArchbaseThemeEditorExample = () => {
 	const forceUpdate = useArchbaseForceUpdate();
