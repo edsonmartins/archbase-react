@@ -73,7 +73,7 @@ export class ArchbaseRemoteDataSource<T, ID>
         const recordIdentity = this.getIdentity ? this.getIdentity(item) : item["id"];
         const currentRecordIdentity = this.getIdentity ? this.getIdentity(this.currentRecord) : this.currentRecord["id"];
         
-        if (recordIdentity !== undefined && (recordIdentity === currentRecordIdentity || item === this.currentRecord)) {
+        if (item === this.currentRecord || (recordIdentity !== undefined && recordIdentity === currentRecordIdentity)) {
             index = idx;
         }
       })
