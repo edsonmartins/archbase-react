@@ -12,6 +12,12 @@ export class FakeRemoteApiClient implements ArchbaseRemoteApiClient {
   constructor(@inject(API_TYPE.Authenticator) authenticator: ArchbaseAuthenticator) {
     this.authenticator = authenticator||IOCContainer.getContainer().get<ArchbaseAuthenticator>(API_TYPE.Authenticator);
   }
+  patch<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
+    throw new Error('Method not implemented.');
+  }
+  patchNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
+    throw new Error('Method not implemented.');
+  }
 
   protected configureHeaders(): Record<string, string> {
     throw new Error("Method not implemented.");
