@@ -5,6 +5,6 @@
     "includeVersion": true,
     "jsDocCompatibility": true,
     "out":"./storybook-static/docs",
-    "exclude": ["**/__stories__/**"]
+    "exclude": ["**/*.stories.tsx", "**/*.stories.ts", "**/*.stories.js", "**/*.stories.jsx"]
   }
   
