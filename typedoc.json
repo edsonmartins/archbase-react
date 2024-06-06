@@ -4,6 +4,7 @@
     "readme": "README.md",
     "includeVersion": true,
     "jsDocCompatibility": true,
-    "out":"./storybook-static/docs"
+    "out":"./storybook-static/docs",
+    "exclude": ["**/__stories__/**"]
   }
   
