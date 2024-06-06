@@ -3,6 +3,7 @@
     "entryPoints": ["src/index.tsx"],
     "readme": "README.md",
     "includeVersion": true,
+    "skipErrorChecking": true,
     "jsDocCompatibility": true,
     "out":"./storybook-static/docs", 
     "exclude": ["**/*.stories.tsx", "**/*.stories.ts", "**/*.stories.js", "**/*.stories.jsx"]
