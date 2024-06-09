@@ -44,7 +44,7 @@ const ArchbaseAsyncSelectExample = () => {
 	const loadRemotePessoas = async (page, value): Promise<OptionsResult<Pessoa>> => {
 		return new Promise<OptionsResult<Pessoa>>(async (resolve, reject) => {
 			try {
-				const result: Page<Pessoa> = await pessoaApi.findAllWithFilter(value, page, PAGE_SIZE);
+				const result: Page<Pessoa> = await pessoaApi.findAllWithFilter(value.trim(), page, PAGE_SIZE);
 				resolve({
 					options: result.content,
 					page: result.pageable.pageNumber,
@@ -73,6 +73,7 @@ const ArchbaseAsyncSelectExample = () => {
 							getOptionLabel={(option: Pessoa) => option && option.nome}
 							getOptionValue={(option: Pessoa) => option}
 							getOptions={loadRemotePessoas}
+							minCharsToSearch={0}
 						// converter={value => value.altura}
 						/>
 					</Box>
