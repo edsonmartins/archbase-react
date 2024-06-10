@@ -108,14 +108,6 @@ export abstract class SecurityDto {
   @IsOptional()
   actions: ActionDto[]
 
-  @IsEmail(
-    {},
-    {
-      message: 'archbase:Informe um email válido'
-    }
-  )
-  email?: string
-
   constructor(data: any) {
     this.id = data.id || ''
     this.code = data.code || ''
@@ -127,7 +119,6 @@ export abstract class SecurityDto {
     this.name = data.name || ''
     this.description = data.description || ''
     this.actions = data.actions || []
-    this.email = data.email || ''
   }
 }
 
@@ -334,7 +325,15 @@ export class UserDto extends SecurityDto {
   @IsOptional()
   profile?: ProfileDto
 
-  avatar?: string 
+  avatar?: string
+
+  @IsEmail(
+    {},
+    {
+      message: 'archbase:Informe um email válido'
+    }
+  )
+  email?: string
 
   type: string
 
@@ -355,6 +354,7 @@ export class UserDto extends SecurityDto {
     this.groups = data.groups ? data.groups.map((group: any) => new UserGroupDto(group)) : []
     this.profile = data.profile ? new ProfileDto(data.profile) : undefined
     this.avatar = data.avatar || undefined
+    this.email = data.email || ''
   }
 
   static newInstance = () => {
