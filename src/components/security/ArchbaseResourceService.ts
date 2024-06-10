@@ -1,7 +1,8 @@
 import { ArchbaseEntityTransformer, ArchbaseRemoteApiClient, ArchbaseRemoteApiService } from "components/service";
 import { ResourceDto } from "./SecurityDomain";
 import * as inversify from 'inversify';
-import { ARCHBASE_IOC_API_TYPE } from "components/core";
+import { ARCHBASE_IOC_API_TYPE } from "@components/core";
+import { ResourcePermissionsDto } from "./ArchbaseResourcePermissions";
 
 export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDto, string> implements ArchbaseEntityTransformer<ResourceDto> {
   constructor(client: ArchbaseRemoteApiClient) {
@@ -22,6 +23,13 @@ export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDt
 
   public getId(entity: ResourceDto): string {
     return entity.id
+  }
+
+  public getPermissions(resourceName: string) {
+    return this.client.get<ResourcePermissionsDto>(
+      `${this.getEndpoint()}/permissions/${resourceName}`,
+      this.configureHeaders()
+    );
   }
 
 }
