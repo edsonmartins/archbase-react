@@ -61,6 +61,7 @@ export function ArchbaseLookupSelect<T, ID, O>({
 	dataField,
 	options,
 	error,
+	getOptionValue,
 	...otherProps
 }: ArchbaseLookupSelectProps<T, ID, O>) {
 	const [currentOptions, setCurrentOptions] = useState<any[] | undefined>(() =>
@@ -110,14 +111,14 @@ export function ArchbaseLookupSelect<T, ID, O>({
 				lookupDataSource &&
 				lookupDataFieldId &&
 				lookupDataSource.locate({
-					[lookupDataFieldId]: value,
+					[lookupDataFieldId]: ArchbaseObjectHelper.getNestedProperty(value, lookupDataFieldId),
 				})
 			) {
 				if (dataSource && dataField) {
 					if (!simpleValue) {
 						dataSource.setFieldValue(dataField, lookupDataSource.getCurrentRecord());
 					} else {
-						dataSource.setFieldValue(dataField, value);
+						dataSource.setFieldValue(dataField, getOptionValue(value));
 					}
 				}
 			}
@@ -148,6 +149,7 @@ export function ArchbaseLookupSelect<T, ID, O>({
 	return (
 		<ArchbaseSelect
 			{...otherProps}
+			getOptionValue={getOptionValue}
 			dataSource={dataSource}
 			dataField={dataField}
 			customGetDataSourceFieldValue={getDataSourceFieldValue}
