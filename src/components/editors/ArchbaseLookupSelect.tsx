@@ -5,12 +5,13 @@ import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../da
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
 import { ArchbaseSelect, ArchbaseSelectProps } from './ArchbaseSelect';
 
-export interface ArchbaseLookupSelectProps<T, ID, O> extends ArchbaseSelectProps<T, ID, O> {
+export interface ArchbaseLookupSelectProps<T, ID, O> extends Omit<ArchbaseSelectProps<T, ID, O>, 'getOptionLabel'> {
 	lookupDataSource: ArchbaseDataSource<O, ID> | undefined;
 	lookupDataFieldText: string | ((record: any) => string);
 	lookupDataFieldId: string;
 	simpleValue?: boolean;
-}
+  }
+  
 
 const getTextValue = (lookupDataFieldText: string | ((record: any) => string), record: any) => {
 	if (typeof lookupDataFieldText === 'function') {
@@ -146,9 +147,14 @@ export function ArchbaseLookupSelect<T, ID, O>({
 		}
 	});
 
+	const getOptionLabel=(value: any) =>{
+		return value.label ? value.label : getTextValue(lookupDataFieldText, value)
+	}
+
 	return (
 		<ArchbaseSelect
 			{...otherProps}
+			getOptionLabel={getOptionLabel}
 			getOptionValue={getOptionValue}
 			dataSource={dataSource}
 			dataField={dataField}

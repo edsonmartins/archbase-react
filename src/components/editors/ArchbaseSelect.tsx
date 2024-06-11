@@ -432,8 +432,8 @@ export function ArchbaseSelect<T, ID, O>({
         onFocus={handleOnFocusEnter}
         value={selectedValue}
         onSearchChange={setQueryValue}
-        defaultValue={selectedValue && (options instanceof ArchbaseDataSource) ? getOptionLabel(selectedValue) : (selectedValue ?? defaultValue)}
-        searchValue={selectedValue && (options instanceof ArchbaseDataSource) ? getOptionLabel(selectedValue) : (selectedValue ?? defaultValue)}
+        defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
+        searchValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
         // filter={filter}
         defaultDropdownOpened={initiallyOpened}
         onDropdownOpen={onDropdownOpen}
