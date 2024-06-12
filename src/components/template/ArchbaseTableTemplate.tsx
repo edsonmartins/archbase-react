@@ -7,7 +7,7 @@ import { AlertVariant, Button, ButtonVariant, Flex, Paper, useMantineColorScheme
 import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { IconPlus } from '@tabler/icons-react';
 import { t } from 'i18next';
-import { MRT_Row } from 'mantine-react-table';
+import { MRT_Row, MRT_TableInstance } from 'mantine-react-table';
 import React, { Fragment, ReactNode, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import '../../styles/template.scss';
@@ -79,6 +79,7 @@ export interface ArchbaseTableTemplateProps<T extends Object, ID> {
 	enableRowSelection?: boolean;
 	/* Padding da célula do cabeçalho da tabela */
 	tableHeadCellPadding?: string | number;
+	renderDetailPanel?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
 }
 
 const getFilter = (
@@ -132,6 +133,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	bottomToolbarMinHeight,
 	enableRowSelection,
 	tableHeadCellPadding,
+	renderDetailPanel,
 }: ArchbaseTableTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const filterRef = useRef<any>();
@@ -319,6 +321,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 				bottomToolbarMinHeight={bottomToolbarMinHeight}
 				enableRowSelection={enableRowSelection}
 				tableHeadCellPadding={tableHeadCellPadding}
+				renderDetailPanel={renderDetailPanel}
 			>
 				{columns}
 				{userActions?.visible ? (
