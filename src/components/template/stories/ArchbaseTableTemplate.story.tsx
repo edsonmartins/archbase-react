@@ -290,6 +290,7 @@ const ArchbaseTableTemplateExample = () => {
 					}}
 					filterType="advanced"
 					filterPersistenceDelegator={dsFilters as ArchbaseQueryFilterDelegator}
+					renderDetailPanel={({row, table}) => <div>{row.original.nome}</div>}
 				/>
 			</Grid.Col>
 		</Grid>
