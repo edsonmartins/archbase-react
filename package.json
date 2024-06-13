@@ -1,6 +1,6 @@
 {
   "name": "archbase-react",
-  "version": "2.0.27",
+  "version": "2.0.28",
   "description": "Biblioteca de compontentes React TypeScript focada em produtividade no desenvolvimento web.",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -56,7 +56,7 @@
   "dependencies": {
     "@babel/runtime": "^7.20.7",
     "@juggle/resize-observer": "^3.4.0",
-    "@mantine/core": "7.10.1",
+    "@mantine/core": "7.10.2",
     "@mantine/dates": "7.10.2",
     "@mantine/emotion": "7.10.2",
     "@mantine/hooks": "7.10.2",
