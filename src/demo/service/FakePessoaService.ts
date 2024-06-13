@@ -15,7 +15,7 @@ export class FakePessoaService extends ArchbaseRemoteApiService<Pessoa, number> 
   }
 
   protected configureHeaders(): Record<string, string> {
-    throw new Error("Method not implemented.");
+    return {};
   }
 
   protected getEndpoint(): string {
@@ -26,6 +26,10 @@ export class FakePessoaService extends ArchbaseRemoteApiService<Pessoa, number> 
     return entity.id;
   }
 
+  isNewRecord(entity: Pessoa): boolean {
+    return true;
+  }
+  
   findOne(id: number): Promise<Pessoa> {
     return new Promise<Pessoa>((resolve, reject) => {
       const result = pessoasData.filter((pessoa) => pessoa.id === id);

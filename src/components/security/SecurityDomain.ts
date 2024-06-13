@@ -33,7 +33,7 @@ export class AccessScheduleDto {
     static newInstance = () => {
       return new AccessScheduleDto({
         id: uuidv4(),
-        intervals: []
+        intervals: [],
       });
     }
   }
@@ -108,14 +108,6 @@ export abstract class SecurityDto {
   @IsOptional()
   actions: ActionDto[]
 
-  @IsEmail(
-    {},
-    {
-      message: 'archbase:Informe um email válido'
-    }
-  )
-  email?: string
-
   constructor(data: any) {
     this.id = data.id || ''
     this.code = data.code || ''
@@ -127,7 +119,6 @@ export abstract class SecurityDto {
     this.name = data.name || ''
     this.description = data.description || ''
     this.actions = data.actions || []
-    this.email = data.email || ''
   }
 }
 
@@ -163,6 +154,8 @@ export class ActionDto {
 
   actionVersion: string
 
+  isNewAction: boolean
+
   constructor(data: any) {
     this.id = data.id || ''
     this.code = data.code || ''
@@ -177,27 +170,32 @@ export class ActionDto {
     this.category = data.category || ''
     this.active = data.active || false
     this.actionVersion = data.actionVersion || ''
+    this.isNewAction = data.isNewAction || false
   }
 
   static newInstance = () => {
     return new ActionDto({
       id: uuidv4(),
-      active: true
+      active: true,
+      isNewAction: true
     })
   }
 }
 
 export class ProfileDto extends SecurityDto {
   type: string
+  isNewProfile: boolean
 
   constructor(data: any) {
     super(data)
     this.type = SecurityType.PROFILE;
+    this.isNewProfile = data.isNewProfile || false
   }
 
   static newInstance = () => {
     return new ProfileDto({
-      id: uuidv4()
+      id: uuidv4(),
+      isNewProfile: true
     })
   }
 }
@@ -233,15 +231,18 @@ export class UserGroupDto {
 
 export class GroupDto extends SecurityDto {
   type: string
-
+  isNewGroup: boolean
+  
   constructor(data: any) {
     super(data)
     this.type = SecurityType.GROUP;
+    this.isNewGroup = data.isNewGroup || false
   }
 
   static newInstance = () => {
     return new GroupDto({
-      id: uuidv4()
+      id: uuidv4(),
+      isNewGroup: true
     })
   }
 }
@@ -270,6 +271,8 @@ export class ResourceDto {
   @IsBoolean()
   active: boolean
 
+  isNewResource: boolean
+
   constructor(data: any) {
     this.id = data.id || ''
     this.code = data.code || ''
@@ -282,13 +285,15 @@ export class ResourceDto {
     this.description = data.description || ''
     this.actions = data.actions || []
     this.active = data.active || false
+    this.isNewResource = data.isNewResource || false
   }
 
   static newInstance = () => {
     return new ResourceDto({
       id: uuidv4(),
       actions: [],
-      active: true
+      active: true,
+      isNewResource: true
     })
   }
 }
@@ -334,9 +339,19 @@ export class UserDto extends SecurityDto {
   @IsOptional()
   profile?: ProfileDto
 
-  avatar?: string 
+  avatar?: string
+
+  @IsEmail(
+    {},
+    {
+      message: 'archbase:Informe um email válido'
+    }
+  )
+  email?: string
 
   type: string
+
+  isNewUser: boolean
 
   constructor(data: any) {
     super(data)
@@ -354,7 +369,9 @@ export class UserDto extends SecurityDto {
     this.accessSchedule = data.accessSchedule ? new AccessScheduleDto(data.accessSchedule) : undefined
     this.groups = data.groups ? data.groups.map((group: any) => new UserGroupDto(group)) : []
     this.profile = data.profile ? new ProfileDto(data.profile) : undefined
+    this.email = data.email || ''
     this.avatar = data.avatar || undefined
+    this.isNewUser = data.isNewUser || false
   }
 
   static newInstance = () => {
@@ -364,7 +381,8 @@ export class UserDto extends SecurityDto {
       password: '',
       groups: [],
       avatar: null,
-      isAdministrator: false
+      isAdministrator: false,
+      isNewUser: true
     })
   }
 }

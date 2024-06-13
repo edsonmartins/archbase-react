@@ -24,6 +24,10 @@ export class ArchbaseProfileService extends ArchbaseRemoteApiService<ProfileDto,
     return entity.id
   }
 
+  isNewRecord(entity: ProfileDto): boolean {
+    return entity.isNewProfile
+  }
+
 }
 
 inversify.decorate(inversify.inject(ARCHBASE_IOC_API_TYPE.ApiClient), ArchbaseProfileService, 0);

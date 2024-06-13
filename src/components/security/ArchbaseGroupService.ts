@@ -25,6 +25,10 @@ export class ArchbaseGroupService extends ArchbaseRemoteApiService<GroupDto, str
     return entity.id
   }
 
+  isNewRecord(entity: GroupDto): boolean {
+    return entity.isNewGroup
+  }
+
 }
 
 inversify.decorate(inversify.inject(ARCHBASE_IOC_API_TYPE.ApiClient), ArchbaseGroupService, 0);

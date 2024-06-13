@@ -25,6 +25,10 @@ export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDt
     return entity.id
   }
 
+  isNewRecord(entity: ResourceDto): boolean {
+    return entity.isNewResource
+  }
+
   public getPermissions(resourceName: string) {
     return this.client.get<ResourcePermissionsDto>(
       `${this.getEndpoint()}/permissions/${resourceName}`,

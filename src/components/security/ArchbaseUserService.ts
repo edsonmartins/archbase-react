@@ -24,9 +24,13 @@ export class ArchbaseUserService extends ArchbaseRemoteApiService<UserDto, strin
     return entity.id
   }
 
+  isNewRecord(entity: UserDto): boolean {
+    return entity.isNewUser
+  }
+
   public async getUserByEmail(email: string): Promise<UserDto> {
     const response = await this.client.get<UserDto>(
-      `${this.getEndpoint()}/porEmail/${email}`,
+      `${this.getEndpoint()}/byEmail/${email}`,
       this.configureHeaders()
     );
     return this.transform(response);
