@@ -91,9 +91,9 @@ export interface ArchbaseSelectProps<T, ID, O> {
   /** Opções de seleção iniciais */
   initialOptions?: O[]
   /** Function que retorna o label de uma opção */
-  getOptionLabel: (option: O) => ReactNode
+  getOptionLabel: (option: O) => string
   /** Function que retorna o valor de uma opção */
-  getOptionValue: (option: O) => any
+  getOptionValue: (option: O) => string
   /** Coleção de ArchbaseSelectItem[] que representam as opções do select */
   children?: ReactNode | ReactNode[]
   /** Indica se o select tem o preenchimento obrigatório */
@@ -132,7 +132,7 @@ function buildOptions<O>(
   options?: ReadonlyArray<string | SelectItem> | ArchbaseDataSource<any, any>,
   initialOptions?: O[],
   children?: ReactNode | ReactNode[] | undefined,
-  getOptionLabel?: (option: O) => ReactNode,
+  getOptionLabel?: (option: O) => string,
   getOptionValue?: (option: O) => any,
   optionsLabelField?: string
 ): any {
@@ -165,6 +165,7 @@ function buildOptions<O>(
     return buildGroupOptions(options)
   }
   if (options) {
+    console.log("options")
     return options
   }
   if (children) {
@@ -180,6 +181,7 @@ function buildOptions<O>(
     })
   }
   return initialOptions!.map((item: O) => {
+    console.log("initialOptions")
     return {
       label: getOptionLabel!(item),
       value: getOptionValue!(item),
