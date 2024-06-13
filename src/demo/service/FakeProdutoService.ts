@@ -13,7 +13,7 @@ export class FakeProdutoService extends ArchbaseRemoteApiService<Produto, string
   }
 
   protected configureHeaders(): Record<string, string> {
-    throw new Error("Method not implemented.");
+    return {};
   }
 
   protected getEndpoint(): string {
@@ -22,6 +22,10 @@ export class FakeProdutoService extends ArchbaseRemoteApiService<Produto, string
 
   public getId(entity: Produto): string {
     return entity.id;
+  }
+
+  isNewRecord(entity: Produto): boolean {
+    return true;
   }
 }
 

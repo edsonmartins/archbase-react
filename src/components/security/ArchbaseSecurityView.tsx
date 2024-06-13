@@ -120,10 +120,10 @@ export const UserItem = (props: UserItemProps) => {
 
 
 
-export function ArchbaseSecurityManager({
+export function ArchbaseSecurityView({
   height = '400px',
   width = '100%',
-  createEntitiesWithId = false
+  createEntitiesWithId = true
 }: ArchbaseSecurityManagerProps) {
   const theme = useArchbaseTheme()
   const templateStore = useArchbaseStore('securityStore')

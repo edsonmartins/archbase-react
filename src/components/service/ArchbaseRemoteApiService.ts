@@ -350,7 +350,12 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
 
   async save<R>(entity: T): Promise<R> {
     const serviceSpecificHeaders = this.configureHeaders();
-    const result = await this.client.post<T, R>(this.getEndpoint(), entity,serviceSpecificHeaders,false)
+    let result;
+    if (this.isNewRecord(entity)) {
+      result = await this.client.post<T, R>(this.getEndpoint(), entity,serviceSpecificHeaders,false)
+    } else {
+      result = await this.client.put<T, R>(`${this.getEndpoint()}/${entity['id']}`, entity,serviceSpecificHeaders,false)
+    }
     if (this.isTransformable()){
       return this['transform'](result);
     }
@@ -361,6 +366,8 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
     const serviceSpecificHeaders = this.configureHeaders();
     return this.client.delete<void>(`${this.getEndpoint()}/${id}`, serviceSpecificHeaders, false)
   }
+
+  abstract isNewRecord(entity: T): boolean
 }
 
 inversify.decorate(inversify.injectable(), ArchbaseRemoteApiService)
