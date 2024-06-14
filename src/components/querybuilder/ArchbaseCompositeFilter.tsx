@@ -84,7 +84,7 @@ class ArchbaseCompositeFilter extends Component<
   ArchbaseCompositeFilterProps,
   ArchbaseCompositeFilterState
 > {
-  declare context: React.ContextType<typeof ArchbaseAppContext>
+  // declare context: React.ContextType<typeof ArchbaseAppContext>
   constructor(props: ArchbaseCompositeFilterProps) {
     super(props)
     this.state = {
@@ -141,7 +141,8 @@ class ArchbaseCompositeFilter extends Component<
   }
 
   getColor = (color: string) => {
-    return this.context.theme!.colors[color][this.context.colorScheme === 'dark' ? 5 : 7]
+    // return this.context.theme!.colors[color][this.context.colorScheme === 'dark' ? 5 : 7]
+    return 'black'
   }
 
   render = () => {
@@ -284,8 +285,8 @@ class ArchbaseCompositeFilter extends Component<
             onFilterChanged={this.props.onFilterChanged}
             onSearchButtonClick={this.props.onSearchButtonClick}
             fields={this.state.fields}
-            theme={this.context.theme}
-            colorScheme={this.context.colorScheme}
+            // theme={this.context.theme}
+            // colorScheme={this.context.colorScheme}
           />
         ) : null}
         {filterType === ADVANCED ? (
@@ -309,7 +310,7 @@ class ArchbaseCompositeFilter extends Component<
   }
 }
 
-ArchbaseCompositeFilter.contextType = ArchbaseAppContext
+// ArchbaseCompositeFilter.contextType = ArchbaseAppContext
 
 interface ArchbaseDetailedFilterProps {
   currentFilter: ArchbaseQueryFilter

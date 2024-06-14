@@ -157,7 +157,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 	private refEdit: RefObject<HTMLInputElement>;
 	private toggleFilterButtonRef: RefObject<any>;
 	private inputValue: any;
-	declare context: React.ContextType<typeof ArchbaseAppContext>;
+	// declare context: React.ContextType<typeof ArchbaseAppContext>;
 	constructor(props: ArchbaseQueryBuilderProps) {
 		super(props);
 		this.refEdit = React.createRef();
@@ -842,16 +842,16 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 					minWidth: this.props.width,
 					maxWidth: this.props.width,
 					height: '50px',
-					backgroundColor:
-						this.context.colorScheme === 'dark'
-							? this.context.theme!.colors.dark[7]
-							: this.context.theme!.colors.gray[0],
+					// backgroundColor:
+					// 	this.context.colorScheme === 'dark'
+					// 		? this.context.theme!.colors.dark[7]
+					// 		: this.context.theme!.colors.gray[0],
 					position: 'relative',
-					border: `1px solid ${
-						this.context.colorScheme === 'dark'
-							? this.context.theme!.colors.gray[7]
-							: this.context.theme!.colors.gray[2]
-					}`,
+					// border: `1px solid ${
+					// 	this.context.colorScheme === 'dark'
+					// 		? this.context.theme!.colors.gray[7]
+					// 		: this.context.theme!.colors.gray[2]
+					// }`,
 					borderRadius: 4,
 					display: 'flex',
 					flexFlow: 'column nowrap',
@@ -1101,4 +1101,4 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 	};
 }
 
-ArchbaseQueryBuilder.contextType = ArchbaseAppContext;
+// ArchbaseQueryBuilder.contextType = ArchbaseAppContext;
