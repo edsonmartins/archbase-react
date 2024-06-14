@@ -115,7 +115,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
     onError: null
   }
   private prefixId: string
-  declare context: React.ContextType<typeof ArchbaseAppContext>
+  // declare context: React.ContextType<typeof ArchbaseAppContext>
   constructor(props: ArchbaseSimpleFilterProps) {
     super(props)
     this.prefixId = rnd(12, rnd.alphaLower)
@@ -783,7 +783,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
   }
 }
 
-ArchbaseSimpleFilter.contextType = ArchbaseAppContext
+// ArchbaseSimpleFilter.contextType = ArchbaseAppContext
 
 interface SimpleValueEditorProps {
   field: string

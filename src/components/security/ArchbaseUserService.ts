@@ -1,7 +1,7 @@
 import { ArchbaseEntityTransformer, ArchbaseRemoteApiClient, ArchbaseRemoteApiService } from "@components/service";
 import { UserDto } from "./SecurityDomain";
 import * as inversify from 'inversify';
-import { ARCHBASE_IOC_API_TYPE } from "components/core";
+import { ARCHBASE_IOC_API_TYPE } from "@components/core";
 
 export class ArchbaseUserService extends ArchbaseRemoteApiService<UserDto, string> implements ArchbaseEntityTransformer<UserDto> {
   constructor(client: ArchbaseRemoteApiClient) {

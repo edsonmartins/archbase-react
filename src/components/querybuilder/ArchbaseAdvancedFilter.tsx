@@ -750,7 +750,7 @@ export class CustomSortItem<T, ID> extends Component<
     active: true,
     selected: false
   }
-  declare context: React.ContextType<typeof ArchbaseListContext>
+  // declare context: React.ContextType<typeof ArchbaseListContext>
   constructor(props: CustomSortItemProps<T, ID>) {
     super(props)
     this.state = { update: Math.random(), selected: props.recordData.selected }
@@ -770,9 +770,9 @@ export class CustomSortItem<T, ID> extends Component<
   onClick = (event) => {
     event.preventDefault()
     if (!this.props.disabled) {
-      if (this.context.handleSelectItem) {
-        this.context.handleSelectItem(this.props.index, this.props.recordData!)
-      }
+      // if (this.context.handleSelectItem) {
+      //   this.context.handleSelectItem(this.props.index, this.props.recordData!)
+      // }
       if (this.props.onSelectListItem) {
         this.props.onSelectListItem(this.props.index, this)
       }
@@ -816,8 +816,10 @@ export class CustomSortItem<T, ID> extends Component<
 
   render = () => {
     let key = this.props.id
-    const backgroundColor = this.props.active ? this.context.activeBackgroundColor : ''
-    const color = this.props.active ? this.context.activeColor : ''
+    // const backgroundColor = this.props.active ? this.context.activeBackgroundColor : ''
+    // const color = this.props.active ? this.context.activeColor : ''
+    const backgroundColor = 'black'
+    const color = 'black'
     return (
       <li
         style={{
@@ -856,7 +858,7 @@ export class CustomSortItem<T, ID> extends Component<
   }
 }
 
-CustomSortItem.contextType = ArchbaseListContext
+// CustomSortItem.contextType = ArchbaseListContext
 
 interface RuleGroupItemProps {
   id: string
@@ -877,8 +879,8 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
     condition: 'and',
     schema: {}
   }
-  static contextType = ArchbaseAppContext
-  declare context: React.ContextType<typeof ArchbaseAppContext>
+  // static contextType = ArchbaseAppContext
+  // declare context: React.ContextType<typeof ArchbaseAppContext>
 
   constructor(props) {
     super(props)
@@ -895,7 +897,8 @@ class RuleGroupItem extends Component<RuleGroupItemProps> {
   }
 
   getColor = (color: string) => {
-    return this.context.theme!.colors[color][this.context.colorScheme === 'dark' ? 5 : 7]
+    // return this.context.theme!.colors[color][this.context.colorScheme === 'dark' ? 5 : 7]
+    return 'black'
   }
 
   render = () => {
@@ -1054,8 +1057,8 @@ class RuleItem extends Component<RuleItemProps> {
     value2: null,
     disabled: false
   }
-  static contextType = ArchbaseAppContext
-  declare context: React.ContextType<typeof ArchbaseAppContext>
+  // static contextType = ArchbaseAppContext
+  // declare context: React.ContextType<typeof ArchbaseAppContext>
   constructor(props: RuleItemProps) {
     super(props)
   }
@@ -1124,9 +1127,9 @@ class RuleItem extends Component<RuleItemProps> {
           options={fields}
           value={field!}
           className="custom-select-field"
-          style={{
-            color: this.context.colorScheme === 'dark' ? 'white' : 'black'
-          }}
+          // style={{
+          //   color: this.context.colorScheme === 'dark' ? 'white' : 'black'
+          // }}
           disabled={disabled}
           handleOnChange={this.onFieldChanged}
           level={level}
@@ -1136,9 +1139,9 @@ class RuleItem extends Component<RuleItemProps> {
           field={field!}
           options={getOperators(field)}
           value={operator!}
-          style={{
-            color: this.context.colorScheme === 'dark' ? 'white' : 'black'
-          }}
+          // style={{
+          //   color: this.context.colorScheme === 'dark' ? 'white' : 'black'
+          // }}
           className="custom-select-operator"
           disabled={disabled}
           handleOnChange={this.onOperatorChanged}
@@ -1178,7 +1181,8 @@ class RuleItem extends Component<RuleItemProps> {
           ''
         )}
         <ActionIcon id={`btnRemoveRule_${field}`} onClick={this.removeRule}>
-          <IconTrash color={this.context.theme!.colors.red[3]} />
+          {/* <IconTrash color={this.context.theme!.colors.red[3]} /> */}
+          <IconTrash color={'blue'} />
         </ActionIcon>
       </li>
     )
