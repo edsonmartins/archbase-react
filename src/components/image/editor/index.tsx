@@ -300,7 +300,7 @@ export const ArchbaseImagePickerEditor = memo(
 								height: configuration.height,
 								borderRadius: configuration.borderRadius,
 								aspectRatio: configuration.aspectRatio + '',
-								background: colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+								backgroundColor: config.imageBackgroundColor ?? (colorScheme === 'dark' ? theme.colors.dark[7] : theme.white),
 								border: `${rem(1)} solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
 							}}
 						>
@@ -339,7 +339,7 @@ export const ArchbaseImagePickerEditor = memo(
 									height: configuration.height,
 									borderRadius: configuration.borderRadius,
 									objectFit: configuration.objectFit,
-									background: colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+									backgroundColor: config.imageBackgroundColor ?? (colorScheme === 'dark' ? theme.colors.dark[7] : theme.white),
 								}}
 							/>
 							{!configuration.hideEditBtn && (
