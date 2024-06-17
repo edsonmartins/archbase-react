@@ -49,6 +49,8 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
 	disabledBase64Convertion?: boolean;
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
+	/** Cor de fundo da imagem */
+	imageBackgroundColor?: string
 }
 
 export function ArchbaseImageEdit<T, ID>({
@@ -71,6 +73,7 @@ export function ArchbaseImageEdit<T, ID>({
 	disabledBase64Convertion,
 	innerRef,
 	variant,
+	imageBackgroundColor,
 	...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
 	const [value, setValue] = useState<string | undefined>(undefined);
@@ -188,6 +191,7 @@ export function ArchbaseImageEdit<T, ID>({
 						hideEditBtn: isReadOnly(),
 						hideAddBtn: isReadOnly(),
 						onChangeImage: handleChangeImage,
+						imageBackgroundColor,
 					}}
 				/>
 			</Input.Wrapper>

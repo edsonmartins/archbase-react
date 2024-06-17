@@ -11,6 +11,7 @@ export interface ArchbaseImagePickerConf {
   hideAddBtn?: boolean;
   showImageSize?: boolean;
   onChangeImage?: (image: string|undefined) => void;
+  imageBackgroundColor?: string;
 }
 
 export interface IState {
