@@ -443,3 +443,90 @@ export class PermissionDto {
     })
   }
 }
+
+
+export class ApiTokenDto {
+  id: string
+  code: string
+  version: number
+  createEntityDate: string
+  updateEntityDate: string
+  createdByUser: string
+  lastModifiedByUser: string
+
+
+  name: string
+  description: string
+  token: string
+  user: UserDto
+  expirationDate: string
+  revoked: boolean
+  isNovoToken : boolean
+
+  constructor(data: any) {
+    this.id = data.id || ''
+    this.code = data.code || ''
+    this.version = data.version || 0
+    this.createEntityDate = data.createEntityDate || ''
+    this.updateEntityDate = data.updateEntityDate || ''
+    this.createdByUser = data.createdByUser || ''
+    this.lastModifiedByUser = data.lastModifiedByUser || ''
+    this.user = data.user ? new UserDto(data.user) : undefined
+    this.name = data.name|| ''
+    this.description = data.description|| ''
+    this.token = data.token || ''
+    this.expirationDate = data.expirationDate 
+    this.revoked = data.revoked
+  }  
+
+  static newInstance = () => {
+    return new ApiTokenDto({
+      id: uuidv4(),
+    })
+  }
+}
+
+
+export class AccessTokenDto {
+  id: string
+  code: string
+  version: number
+  createEntityDate: string
+  updateEntityDate: string
+  createdByUser: string
+  lastModifiedByUser: string
+  token: string
+  tokenType: string
+  revoked: boolean
+  expired: boolean
+  expirationTime: number
+  expirationDate: string
+  user: UserDto
+  isNewAccessToken: boolean
+
+  constructor(data: any) {
+    this.id = data.id || ''
+    this.code = data.code || ''
+    this.version = data.version || 0
+    this.createEntityDate = data.createEntityDate || new Date().toISOString()
+    this.updateEntityDate = data.updateEntityDate || new Date().toISOString()
+    this.createdByUser = data.createdByUser || ''
+    this.lastModifiedByUser = data.lastModifiedByUser || ''
+    this.token = data.token || ''
+    this.tokenType = data.tokenType || undefined
+    this.user = data.user ? new UserDto(data.user) : undefined
+    this.revoked = data.revoked || false
+    this.expired = data.expired || false
+    this.expirationTime = data.expirationTime || 0
+    this.expirationDate = data.expirationDate || ""
+    this.isNewAccessToken = data.isNewAccessToken || false
+  }
+
+  static newInstance = () => {
+    return new AccessTokenDto({
+      id: uuidv4(),
+      active: true,
+      isNewAccessToken: true
+    })
+  }
+}

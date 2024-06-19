@@ -6,4 +6,6 @@ export const ARCHBASE_IOC_API_TYPE = {
   Group: Symbol.for('Group'),
   Profile: Symbol.for('Profile'),
   Resource: Symbol.for('Resource'),
+  ApiToken: Symbol.for('ApiToken'),
+  AccessToken: Symbol.for('AccessToken'),
 }

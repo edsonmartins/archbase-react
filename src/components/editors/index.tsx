@@ -104,3 +104,4 @@ export type {ArchbaseTreeSelectProps} from './ArchbaseTreeSelect'
 
 export {ArchbaseOperatingHoursEditor} from './ArchbaseOperationHoursEditor'
 export type {ArchbaseOperatingHoursEditorProps} from './ArchbaseOperationHoursEditor'
+export {ArchbaseCountdownProgress} from "./ArchbaseCountdownProgress"
