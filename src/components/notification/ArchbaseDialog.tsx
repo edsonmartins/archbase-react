@@ -10,7 +10,7 @@ import {
 	IconTriangle,
 } from '@tabler/icons-react';
 import i18next from 'i18next';
-import React, { ChangeEventHandler } from 'react';
+import React, { ChangeEventHandler, ReactNode } from 'react';
 
 export class ArchbaseDialog {
 	static showConfirmDialogYesNo = (title: string, question: string, onConfirm: () => void, onCancel: () => void) => {
@@ -26,14 +26,14 @@ export class ArchbaseDialog {
 		});
 	};
 
-	static showInfo = (message: string, title?: string, onConfirm?: () => void) => {
+	static showInfo = (message: ReactNode, title?: string, onConfirm?: () => void) => {
 		modals.open({
 			title: title || i18next.t('archbase:Information'),
 			children: (
 				<Paper>
 					<Flex gap="md" direction="row" justify="flex-start" align="center">
 						<IconInfoCircleFilled size="2rem" style={{ color: '#099CFF' }} />
-						<Text size="md">{message}</Text>
+						{ typeof message === "string" ? <Text size="md">{message}</Text> : message }
 					</Flex>
 					<Button
 						fullWidth
@@ -50,14 +50,14 @@ export class ArchbaseDialog {
 		});
 	};
 
-	static showWarning = (message: string, title?: string, onConfirm?: () => void) => {
+	static showWarning = (message: ReactNode, title?: string, onConfirm?: () => void) => {
 		modals.open({
 			title: title || i18next.t('archbase:Attention'),
 			children: (
 				<Paper>
 					<Flex gap="md" direction="row" justify="flex-start" align="center">
 						<IconAlertTriangleFilled size="2rem" style={{ color: 'orange' }} />
-						<Text size="md">{message}</Text>
+						{ typeof message === "string" ? <Text size="md">{message}</Text> : message }
 					</Flex>
 					<Button
 						fullWidth
@@ -74,14 +74,14 @@ export class ArchbaseDialog {
 		});
 	};
 
-	static showSuccess = (message: string, title?: string, onConfirm?: () => void) => {
+	static showSuccess = (message: ReactNode, title?: string, onConfirm?: () => void) => {
 		modals.open({
 			title: title || i18next.t('archbase:Attention'),
 			children: (
 				<Paper>
 					<Flex gap="md" direction="row" justify="flex-start" align="center">
 						<IconCircleCheckFilled size="2rem" style={{ color: '#1AC455' }} />
-						<Text size="md">{message}</Text>
+						{ typeof message === "string" ? <Text size="md">{message}</Text> : message }
 					</Flex>
 					<Button
 						fullWidth
@@ -98,7 +98,7 @@ export class ArchbaseDialog {
 		});
 	};
 
-	static showError = (message: string, title?: string, onConfirm?: () => void) => {
+	static showError = (message: ReactNode, title?: string, onConfirm?: () => void) => {
 		modals.open({
 			title: title || i18next.t('archbase:Attention'),
 			size: 'md',
@@ -106,7 +106,7 @@ export class ArchbaseDialog {
 				<Paper>
 					<Flex gap="md" direction="row" justify="flex-start" align="center">
 						<IconBug size="96px" style={{ color: 'red' }} />
-						<Text size="md">{message}</Text>
+						{ typeof message === "string" ? <Text size="md">{message}</Text> : message }
 					</Flex>
 					<Button
 						fullWidth
@@ -176,7 +176,7 @@ export const CustomShowErrorModal = ({
 	context,
 	id,
 	innerProps,
-}: ContextModalProps<{ message: string; detailMessage?: string; onConfirm?: () => void }>) => (
+}: ContextModalProps<{ message: ReactNode; detailMessage?: ReactNode; onConfirm?: () => void }>) => (
 	<Paper miw={'400px'}>
 		<Accordion variant="contained">
 			<Accordion.Item value="photos">
