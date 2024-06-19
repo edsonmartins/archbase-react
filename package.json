@@ -8,6 +8,7 @@
     "type": "git",
     "url": "git@github.com:edsonmartins/archbase-react.git"
   },
+  
   "homepage": "https://react.archbase.com.br",
   "sideEffects": false,
   "exports": {
