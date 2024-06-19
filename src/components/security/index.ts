@@ -3,6 +3,7 @@ export type { ArchbaseLoginProps } from "./ArchbaseLogin";
 export { ArchbaseResetPassword } from "./ArchbaseResetPassword";
 export type { ArchbaseResetPasswordProps } from "./ArchbaseResetPassword";
 export { ArchbaseSecurityView } from "./ArchbaseSecurityView"
+export { ArchbaseApiTokenView} from "./ArchbaseApiTokenView"
 export { ArchbaseUserService } from "./ArchbaseUserService"
 export { ArchbaseProfileService } from "./ArchbaseProfileService"
 export { ArchbaseGroupService } from "./ArchbaseGroupService"

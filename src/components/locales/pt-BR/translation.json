@@ -473,5 +473,7 @@
   "Conta desativada ?": "Conta desativada ?",
   "Conta bloqueada ?": "Conta bloqueada ?",
   "Administrador ?": "Administrador ?",
-  "Foto do usuário": "Foto do usuário"
+  "Foto do usuário": "Foto do usuário",
+  "Revoke":"Revogar",
+  "Token de API":"Token de API"
 }

@@ -17,12 +17,13 @@ import {
   IconPlus,
   IconShieldLock,
   IconSquareAsterisk,
+  IconTrashX,
   IconUserSquareRounded,
   IconUsers,
   IconUsersGroup
 } from '@tabler/icons-react'
 import { he } from 'date-fns/locale'
-import { GroupDto, ProfileDto, ResourceDto, UserDto } from './SecurityDomain'
+import { AccessTokenDto, GroupDto, ProfileDto, ResourceDto, UserDto } from './SecurityDomain'
 import { UserModal } from './UserModal'
 import { GroupModal } from './GroupModal'
 import { ProfileModal } from './ProfileModal'
@@ -31,13 +32,16 @@ import { ArchbaseDataSource } from '@components/datasource'
 import { ArchbaseListCustomItemProps } from '@components/list'
 import { useArchbaseListContext, useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi, useArchbaseStore, useArchbaseTheme, useArchbaseValidator } from '@components/hooks'
 import { isBase64 } from '@components/validator'
-import { ARCHBASE_IOC_API_TYPE } from '@components/core'
+import { ARCHBASE_IOC_API_TYPE, builder, emit, processDetailErrorMessage, processErrorMessage } from '@components/core'
 import { ArchbaseDialog, ArchbaseNotifications } from '@components/notification'
 import { ArchbaseDataTable, ArchbaseDataTableColumn, ArchbaseTableRowActions, Columns, ToolBarActions } from '@components/datatable'
 import { ArchbaseUserService } from './ArchbaseUserService'
 import { ArchbaseGroupService } from './ArchbaseGroupService'
 import { ArchbaseResourceService } from './ArchbaseResourceService'
 import { ArchbaseProfileService } from './ArchbaseProfileService'
+import { ArchbaseApiTokenService } from './ArchbaseApiTokenService'
+import { ArchbaseAccessTokenService } from './ArchbaseAccessTokenService'
+import { ArchbaseCountdownProgress } from 'components/editors'
 
 interface ArchbaseSecurityManagerProps {
   height?: any
@@ -46,7 +50,7 @@ interface ArchbaseSecurityManagerProps {
   createEntitiesWithId?: boolean
 }
 
-const NO_USER = 'data:image/png;base64,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'
+export const NO_USER = 'data:image/png;base64,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'
 
 const renderGroups = (user: UserDto) => {
   if (!user.groups) {
@@ -136,6 +140,28 @@ export function ArchbaseSecurityView({
   const resourceApi = useArchbaseRemoteServiceApi<ArchbaseResourceService>(ARCHBASE_IOC_API_TYPE.Resource)
   const profileApi = useArchbaseRemoteServiceApi<ArchbaseProfileService>(ARCHBASE_IOC_API_TYPE.Profile)
   const [openedModal, setOpenedModal] = useState<string>('')
+  const accessTokenApi = useArchbaseRemoteServiceApi<ArchbaseAccessTokenService>(ARCHBASE_IOC_API_TYPE.AccessToken);
+
+  const { dataSource: dsAccessTokens } = useArchbaseRemoteDataSource<AccessTokenDto, string>({
+		name: 'accessTokenApi',
+		service: accessTokenApi,
+		store: templateStore,
+		validator,
+		pageSize: 25,
+		loadOnStart: true,
+    filter: emit(builder.or(builder.eq('revoked', `false`))),
+    sort: ['user.email','expirationTime:desc'],
+		onLoadComplete: (dataSource) => {
+			//
+		},
+		onDestroy: (dataSource) => {
+			//
+		},
+		onError: (error, origin) => {
+			setError(error);
+			ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin);
+		},
+	});
 
   const { dataSource: dsUsers } = useArchbaseRemoteDataSource<UserDto, string>({
     name: 'dsUsers',
@@ -213,9 +239,69 @@ export function ArchbaseSecurityView({
     }
   })
 
-  const borderColor = colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
-  const filledColor = colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0]
   const heightTab = `calc(${height} - 40px)`
+
+  const columns = (
+		<Columns>
+			<ArchbaseDataTableColumn<AccessTokenDto>
+				dataField="user.avatar"
+				dataType="image"
+				size={50}
+				header="Foto"
+				render={(cell) => (
+					<img
+						style={{ borderRadius: 50, height: '36px', maxHeight: '36px' }}
+						src={
+							cell.row.original.user && cell.row.original.user.avatar ? atob(cell.row.original.user.avatar) : NO_USER
+						}
+					/>
+				)}
+				inputFilterType="text"
+				align="center"
+			/>
+			<ArchbaseDataTableColumn<AccessTokenDto>
+				dataField="user.userName"
+				dataType="text"
+				size={300}
+				header="Nome de Usuário"
+				inputFilterType="text"
+			/>
+			<ArchbaseDataTableColumn<AccessTokenDto>
+				dataField="user.email"
+				dataType="text"
+				header="Email"
+				size={300}
+				inputFilterType="text"
+			/>
+      <ArchbaseDataTableColumn<AccessTokenDto>
+				dataField="expirationDate"
+				dataType="text"
+				size={300}
+				header="Expira em"
+				render={(cell) => <ArchbaseCountdownProgress color="orange" targetDate={cell.row.original.expirationDate} />}
+				inputFilterType="text"
+			/>
+			<ArchbaseDataTableColumn<AccessTokenDto>
+				dataField="revoked"
+				dataType="boolean"
+				header="Revogado ?"
+				inputFilterType="checkbox"
+			/>
+      <ArchbaseDataTableColumn<AccessTokenDto>
+				dataField="expired"
+				dataType="boolean"
+				header="Expirado ?"
+				inputFilterType="checkbox"
+			/>
+			<ArchbaseDataTableColumn<AccessTokenDto>
+				dataField="token"
+				dataType="text"
+				header="Token Acesso"
+				size={200}
+				inputFilterType="text"
+			/>			
+		</Columns>
+	);
 
   const userColumns = (
     <Columns>
@@ -554,6 +640,34 @@ export function ArchbaseSecurityView({
     )
   }
 
+  const handleAccessTokenRevokeRow = () => {
+		if (dsAccessTokens.getCurrentRecord()) {
+			ArchbaseDialog.showConfirmDialogYesNo(
+				`${t('archbase:Confirme')}`,
+				`${t('archbase:Deseja revogar o token de Acesso do usuário ')}${dsAccessTokens.getCurrentRecord().user.name} ?`,
+				async () => {
+					await accessTokenApi
+						.revoke(dsAccessTokens.getCurrentRecord().token)
+						.then(async () => {
+							ArchbaseNotifications.showSuccess(
+								`${t('mentors:Informação')}`,
+								`${t('mentors:Token de Acesso revogado com sucesso!')}`,
+							);
+							dsAccessTokens.refreshData();
+						})
+						.catch((error) => {
+							ArchbaseDialog.showErrorWithDetails(
+								`${t('mentors:Atenção')}`,
+								processErrorMessage(error),
+								processDetailErrorMessage(error),
+							);
+						});
+				},
+				() => {},
+			);
+		}
+	};
+
   return (
     <Paper style={{ height: height }}>
       <Tabs value={activeTab} onChange={setActiveTab}>
@@ -562,6 +676,7 @@ export function ArchbaseSecurityView({
           <Tabs.Tab value="groups">Grupos</Tabs.Tab>
           <Tabs.Tab value="profiles">Perfis</Tabs.Tab>
           <Tabs.Tab value="resources">Recursos</Tabs.Tab>
+          <Tabs.Tab value="accessTokens">Tokens Acesso</Tabs.Tab>
         </Tabs.List>
       </Tabs>
       <Box
@@ -704,6 +819,41 @@ export function ArchbaseSecurityView({
             </Flex>
           </ToolBarActions>
         </ArchbaseDataTable>
+      </Box>
+      <Box
+        style={{
+          height: heightTab,
+          display: activeTab === 'accessTokens' ? 'flex' : 'none',
+          width: '100%'
+        }}
+      >
+      <ArchbaseDataTable<AccessTokenDto, string>
+					printTitle={'Tokens de API'}
+					width={'100%'}
+					height={'100%'}
+					withBorder={false}
+					dataSource={dsAccessTokens}
+					withColumnBorders={true}
+					striped={true}
+					enableTopToolbar={true}
+					enableRowActions={true}
+					pageSize={50}
+					isError={false}
+					enableGlobalFilter={true}
+					renderToolbarInternalActions={undefined}
+					error={<span></span>}
+				>
+					{columns}
+					<ToolBarActions>
+						<Flex justify={'space-between'} style={{ width: '50%' }}>
+							<Group align="start" gap={'4px'}>
+								<Button disabled={!dsAccessTokens.getCurrentRecord()} color={'red'} leftSection={<IconTrashX />} onClick={handleAccessTokenRevokeRow}>
+									{t('archbase:Revoke')}
+								</Button>
+							</Group>
+						</Flex>
+					</ToolBarActions>
+				</ArchbaseDataTable>
       </Box>
       {openedModal === SecurityType.USER ? (
         <UserModal

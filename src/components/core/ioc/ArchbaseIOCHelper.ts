@@ -3,6 +3,8 @@ import { Container } from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from '.';
 import { DefaultArchbaseTokenManager } from '../../auth';
 import { ArchbaseGroupService, ArchbaseProfileService, ArchbaseResourceService, ArchbaseUserService } from '@components/security';
+import { ArchbaseApiTokenService } from 'components/security/ArchbaseApiTokenService';
+import { ArchbaseAccessTokenService } from 'components/security/ArchbaseAccessTokenService';
 
 
 let instance: any;
@@ -28,6 +30,8 @@ class ArchbaseIOCHelper {
     container.bind<ArchbaseProfileService>(ARCHBASE_IOC_API_TYPE.Profile).to(ArchbaseProfileService);
     container.bind<ArchbaseGroupService>(ARCHBASE_IOC_API_TYPE.Group).to(ArchbaseGroupService);
     container.bind<ArchbaseResourceService>(ARCHBASE_IOC_API_TYPE.Resource).to(ArchbaseResourceService);
+    container.bind<ArchbaseApiTokenService>(ARCHBASE_IOC_API_TYPE.ApiToken).to(ArchbaseApiTokenService);
+    container.bind<ArchbaseAccessTokenService>(ARCHBASE_IOC_API_TYPE.AccessToken).to(ArchbaseAccessTokenService);
   }
   registerDefaultContainers(): void {
     this.registerDefaultTokenManager()
