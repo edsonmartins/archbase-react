@@ -13,6 +13,8 @@ import { ArchbaseGroupService } from './ArchbaseGroupService'
 import { ArchbaseProfileService } from './ArchbaseProfileService'
 import { RenderProfileUserItem } from './RenderProfileUserItem'
 import { GroupDto, ProfileDto, UserDto, UserGroupDto } from './SecurityDomain'
+import { PermissionsSelector } from './PermissionsSelector'
+import { SecurityType } from './SecurityType'
 
 export interface UserModalProps {
   dataSource: ArchbaseDataSource<UserDto, string>
@@ -58,7 +60,7 @@ export const UserModal = (props: UserModalProps) => {
   return (
     <ArchbaseFormModalTemplate
       title={t('archbase:Usuário')}
-      size="60%"
+      size="80%"
       height={'660px'}
       dataSource={props.dataSource}
       opened={props.opened}
@@ -227,6 +229,7 @@ export const UserModal = (props: UserModalProps) => {
           labelFieldAssigned={(item: UserGroupDto) => (item && item.group ? item.group.name : '')}
           labelFieldAvailable={'name'}
         ></ArchbaseDualListSelector>
+        <PermissionsSelector securityId={props.dataSource.getCurrentRecord()?.id ?? ""} type={SecurityType.USER} />
       </ScrollArea>
     </ArchbaseFormModalTemplate>
   )
