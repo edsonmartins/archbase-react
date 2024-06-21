@@ -540,12 +540,20 @@ export interface GrantPermissionDto {
 export interface PermissionWithTypesDto {
 	permissionId?: string
 	actionId: string
-	actionName: string
+	actionDescription: string
 	types?: string[]
 }
 
 export interface ResoucePermissionsWithTypeDto {
   resourceId: string
-  resourceName: string
+  resourceDescription: string
   permissions: PermissionWithTypesDto[]
+}
+
+export interface ResouceActionPermissionDto {
+  resourceId: string
+  resourceDescription: string
+  permissionId: string
+  actionId: string
+  actionDescription: string
 }

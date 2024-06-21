@@ -1,5 +1,5 @@
 import { ArchbaseEntityTransformer, ArchbaseRemoteApiClient, ArchbaseRemoteApiService } from "@components/service";
-import { GrantPermissionDto, ResoucePermissionsWithTypeDto, ResourceDto } from "./SecurityDomain";
+import { GrantPermissionDto, ResouceActionPermissionDto, ResoucePermissionsWithTypeDto, ResourceDto } from "./SecurityDomain";
 import * as inversify from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from "@components/core";
 import { ResourcePermissionsDto } from "./ArchbaseResourcePermissions";
@@ -59,7 +59,7 @@ export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDt
   }
 
   public createPermission(securityId: string, actionId: string, type: SecurityType) {
-    return this.client.post<GrantPermissionDto, string>(
+    return this.client.post<GrantPermissionDto, ResouceActionPermissionDto>(
       `${this.getEndpoint()}/permissions`,
       {
         securityId,

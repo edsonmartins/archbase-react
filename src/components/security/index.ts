@@ -10,5 +10,5 @@ export { ArchbaseGroupService } from "./ArchbaseGroupService"
 export { ArchbaseResourceService } from "./ArchbaseResourceService"
 export { PermissionsSelector } from './PermissionsSelector'
 export { AccessIntervalDto, AccessScheduleDto, ActionDto, GroupDto, PermissionDto, ProfileDto, ResourceDto, SecurityDto, UserDto, UserGroupDto, AccessTokenDto, ApiTokenDto } from "./SecurityDomain"
-export type { GrantPermissionDto, PermissionWithTypesDto, ResoucePermissionsWithTypeDto } from "./SecurityDomain"
+export type { GrantPermissionDto, PermissionWithTypesDto, ResoucePermissionsWithTypeDto, ResouceActionPermissionDto } from "./SecurityDomain"
 export type { SecurityType } from './SecurityType'
