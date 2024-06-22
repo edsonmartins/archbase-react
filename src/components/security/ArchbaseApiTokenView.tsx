@@ -38,7 +38,7 @@ import {
 	IconUsersGroup,
 	IconUserSquareRounded,
 } from '@tabler/icons-react';
-import { ArchbaseCountdownProgress } from 'components/editors';
+import { ArchbaseCountdownProgress } from '@components/editors';
 import { t } from 'i18next';
 import React, { Fragment, ReactNode, useRef, useState } from 'react';
 import { ApiTokenModal } from './ApiTokenModal';

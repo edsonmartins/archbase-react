@@ -41,7 +41,7 @@ import { ArchbaseResourceService } from './ArchbaseResourceService'
 import { ArchbaseProfileService } from './ArchbaseProfileService'
 import { ArchbaseApiTokenService } from './ArchbaseApiTokenService'
 import { ArchbaseAccessTokenService } from './ArchbaseAccessTokenService'
-import { ArchbaseCountdownProgress } from 'components/editors'
+import { ArchbaseCountdownProgress } from '@components/editors'
 
 interface ArchbaseSecurityManagerProps {
   height?: any
