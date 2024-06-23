@@ -7,7 +7,7 @@ import { isBase64 } from '@components/validator';
 import { Grid, Group, Image, ScrollArea, Text } from '@mantine/core';
 import { DateTimePicker, DateValue } from '@mantine/dates';
 import { useFocusTrap } from '@mantine/hooks';
-import { ARCHBASE_IOC_API_TYPE, builder, convertDateToISOString, emit, processErrorMessage } from 'components/core';
+import { ARCHBASE_IOC_API_TYPE, builder, convertDateToISOString, emit, processErrorMessage } from '@components/core';
 import { t } from 'i18next';
 import React, { useState } from 'react';
 import { NO_USER } from './ArchbaseSecurityView';

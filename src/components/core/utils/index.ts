@@ -58,3 +58,5 @@ export {
 	compressString,
 	decompressString,
 } from './string-utils';
+
+export { getKeyByEnumValue } from './enum-utils';

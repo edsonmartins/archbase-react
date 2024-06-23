@@ -58,7 +58,7 @@ export const UserModal = (props: UserModalProps) => {
   return (
     <ArchbaseFormModalTemplate
       title={t('archbase:Usuário')}
-      size="60%"
+      size="80%"
       height={'660px'}
       dataSource={props.dataSource}
       opened={props.opened}

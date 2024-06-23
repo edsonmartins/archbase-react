@@ -3,8 +3,8 @@ import { Container } from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from '.';
 import { DefaultArchbaseTokenManager } from '../../auth';
 import { ArchbaseGroupService, ArchbaseProfileService, ArchbaseResourceService, ArchbaseUserService } from '@components/security';
-import { ArchbaseApiTokenService } from 'components/security/ArchbaseApiTokenService';
-import { ArchbaseAccessTokenService } from 'components/security/ArchbaseAccessTokenService';
+import { ArchbaseApiTokenService } from '@components/security/ArchbaseApiTokenService';
+import { ArchbaseAccessTokenService } from '@components/security/ArchbaseAccessTokenService';
 
 
 let instance: any;

@@ -23,7 +23,7 @@ export const ProfileModal = (props: ProfileModalProps) => {
     <ArchbaseFormModalTemplate
       title={t('archbase:Perfil')}
       size="60%"
-      height={'200px'}
+      height={'600px'}
       dataSource={props.dataSource}
       opened={props.opened}
       onClickOk={props.onClickOk}
@@ -31,7 +31,7 @@ export const ProfileModal = (props: ProfileModalProps) => {
       onCustomSave={props.onCustomSave}
       onAfterSave={props.onAfterSave}
     >
-      <ScrollArea ref={focusTrapRef} style={{ height: '200px' }}>
+      <ScrollArea ref={focusTrapRef} style={{ height: '600px' }}>
         <Grid>
           <Grid.Col span={{ base: 12, md: 12, lg: 12 }}>
             <ArchbaseEdit

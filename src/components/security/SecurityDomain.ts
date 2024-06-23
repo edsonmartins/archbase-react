@@ -3,40 +3,40 @@ import { SecurityType } from './SecurityType';
 import { IsBoolean, IsEmail, IsNotEmpty, IsOptional } from '@components/validator';
 
 export class AccessScheduleDto {
-    id: string;
-    code: string;
-    version: number;
-    createEntityDate: string;
-    updateEntityDate: string;
-    createdByUser: string;
-    lastModifiedByUser: string;
-    
-    @IsNotEmpty({
-      message: 'archbase:Informe a descrição do cronograma de acesso'
-    })
-    description: string;
-    
-    intervals: AccessIntervalDto[];
-  
-    constructor(data: any) {
-      this.id = data.id || '';
-      this.code = data.code || '';
-      this.version = data.version || 0;
-      this.createEntityDate = data.createEntityDate || '';
-      this.updateEntityDate = data.updateEntityDate || '';
-      this.createdByUser = data.createdByUser || '';
-      this.lastModifiedByUser = data.lastModifiedByUser || '';
-      this.description = data.description || '';
-      this.intervals = data.intervals ? data.intervals.map((interval: any) => new AccessIntervalDto(interval)) : [];
-    }
-  
-    static newInstance = () => {
-      return new AccessScheduleDto({
-        id: uuidv4(),
-        intervals: [],
-      });
-    }
+  id: string;
+  code: string;
+  version: number;
+  createEntityDate: string;
+  updateEntityDate: string;
+  createdByUser: string;
+  lastModifiedByUser: string;
+
+  @IsNotEmpty({
+    message: 'archbase:Informe a descrição do cronograma de acesso'
+  })
+  description: string;
+
+  intervals: AccessIntervalDto[];
+
+  constructor(data: any) {
+    this.id = data.id || '';
+    this.code = data.code || '';
+    this.version = data.version || 0;
+    this.createEntityDate = data.createEntityDate || '';
+    this.updateEntityDate = data.updateEntityDate || '';
+    this.createdByUser = data.createdByUser || '';
+    this.lastModifiedByUser = data.lastModifiedByUser || '';
+    this.description = data.description || '';
+    this.intervals = data.intervals ? data.intervals.map((interval: any) => new AccessIntervalDto(interval)) : [];
   }
+
+  static newInstance = () => {
+    return new AccessScheduleDto({
+      id: uuidv4(),
+      intervals: [],
+    });
+  }
+}
 
 export class AccessIntervalDto {
   id: string
@@ -221,7 +221,7 @@ export class UserGroupDto {
     this.group = data.group ? new GroupDto(data.group) : undefined
   }
 
-  static newInstance = (group :GroupDto) => {
+  static newInstance = (group: GroupDto) => {
     return new UserGroupDto({
       id: uuidv4(),
       group: group
@@ -232,7 +232,7 @@ export class UserGroupDto {
 export class GroupDto extends SecurityDto {
   type: string
   isNewGroup: boolean
-  
+
   constructor(data: any) {
     super(data)
     this.type = SecurityType.GROUP;
@@ -461,7 +461,7 @@ export class ApiTokenDto {
   user: UserDto
   expirationDate: string
   revoked: boolean
-  isNovoToken : boolean
+  isNovoToken: boolean
 
   constructor(data: any) {
     this.id = data.id || ''
@@ -472,12 +472,12 @@ export class ApiTokenDto {
     this.createdByUser = data.createdByUser || ''
     this.lastModifiedByUser = data.lastModifiedByUser || ''
     this.user = data.user ? new UserDto(data.user) : undefined
-    this.name = data.name|| ''
-    this.description = data.description|| ''
+    this.name = data.name || ''
+    this.description = data.description || ''
     this.token = data.token || ''
-    this.expirationDate = data.expirationDate 
+    this.expirationDate = data.expirationDate
     this.revoked = data.revoked
-  }  
+  }
 
   static newInstance = () => {
     return new ApiTokenDto({
@@ -529,4 +529,31 @@ export class AccessTokenDto {
       isNewAccessToken: true
     })
   }
+}
+
+export interface GrantPermissionDto {
+  securityId: string
+  actionId: string
+  type: string
+}
+
+export interface PermissionWithTypesDto {
+	permissionId?: string
+	actionId: string
+	actionDescription: string
+	types?: string[]
+}
+
+export interface ResoucePermissionsWithTypeDto {
+  resourceId: string
+  resourceDescription: string
+  permissions: PermissionWithTypesDto[]
+}
+
+export interface ResouceActionPermissionDto {
+  resourceId: string
+  resourceDescription: string
+  permissionId: string
+  actionId: string
+  actionDescription: string
 }
