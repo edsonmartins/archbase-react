@@ -6,8 +6,6 @@ import { GroupDto } from './SecurityDomain'
 import { ArchbaseDataSource } from '@components/datasource'
 import { ArchbaseFormModalTemplate } from '@components/template'
 import { ArchbaseEdit } from '@components/editors'
-import { PermissionsSelector } from './PermissionsSelector'
-import { SecurityType } from './SecurityType'
 
 export interface GroupModalProps {
   dataSource: ArchbaseDataSource<GroupDto, string>
@@ -50,9 +48,6 @@ export const GroupModal = (props: GroupModalProps) => {
               dataSource={props.dataSource}
               dataField="description"
             />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12 }}>
-            <PermissionsSelector securityId={props.dataSource.getCurrentRecord()?.id ?? ""} type={SecurityType.GROUP} />
           </Grid.Col>
         </Grid>
       </ScrollArea>

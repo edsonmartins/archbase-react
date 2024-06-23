@@ -475,5 +475,13 @@
   "Administrador ?": "Administrador ?",
   "Foto do usuário": "Foto do usuário",
   "Revoke":"Revogar",
-  "Token de API":"Token de API"
+  "Token de API":"Token de API",
+  "user": "Usuário",
+  "group": "Grupo",
+  "profile": "Perfil",
+  "Edit permissions": "Editar permissões",
+  "Available": "Disponível",
+  "Filter available permissions": "Filtrar permissões disponíveis",
+  "Granted": "Atribuídas",
+  "Filter granted permissions": "Filtrar permissões atribuídas"
 }

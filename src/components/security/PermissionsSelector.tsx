@@ -1,18 +1,23 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ActionIcon, Badge, Grid, Group, Paper, Stack, Text, Tooltip, Tree, TreeNodeData, useTree } from "@mantine/core";
-import { IconArrowLeft, IconArrowRight, IconChevronDown } from "@tabler/icons-react";
+import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, ScrollArea, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useTree } from "@mantine/core";
+import { IconArrowLeft, IconArrowRight, IconBorderCornerSquare, IconChevronDown, IconEdit } from "@tabler/icons-react";
 import { SecurityType } from "./SecurityType";
 import { useArchbaseRemoteServiceApi, useArchbaseTheme } from "@components/hooks";
 import { ResouceActionPermissionDto, ResoucePermissionsWithTypeDto } from "./SecurityDomain";
 import { ARCHBASE_IOC_API_TYPE, getKeyByEnumValue } from "@components/core";
 import { ArchbaseResourceService } from "./ArchbaseResourceService";
+import { t } from "i18next";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+import { ArchbaseRemoteDataSource } from "@components/datasource";
 
-export interface PermissionsSelectorProps {
-    securityId: string
-    type: SecurityType
+export interface PermissionsSelectorProps<T, ID> {
+    dataSource: ArchbaseRemoteDataSource<T, ID>
 }
 
-export function PermissionsSelector({ securityId, type }: PermissionsSelectorProps) {
+export function PermissionsSelector<T, ID>({ dataSource }: PermissionsSelectorProps<T, ID>) {
+    const name = dataSource.getFieldValue("name")
+    const securityId = dataSource.getFieldValue("id")
+    const type = dataSource.getFieldValue("type")
     const theme = useArchbaseTheme()
     const availablePermissionsTree = useTree()
     const grantedPermissionsTree = useTree()
@@ -20,58 +25,74 @@ export function PermissionsSelector({ securityId, type }: PermissionsSelectorPro
     const [grantedPermissions, setGrantedPermissions] = useState<ResoucePermissionsWithTypeDto[]>([])
     const [selectedAvailablePermission, setSelectedAvailablePermission] = useState<TreeNodeData>()
     const [selectedGrantedPermission, setSelectedGrantedPermission] = useState<TreeNodeData>()
+    const [opened, { open, close }] = useDisclosure(false);
+    const [availablePermissionsFilter, setAvailablePermissionsFilter] = useState("")
+    const [debouncedAvailablePermissionsFilter] = useDebouncedValue(availablePermissionsFilter, 200);
+    const [grantedPermissionsFilter, setGrantedPermissionsFilter] = useState("")
+    const [debouncedGrantedPermissionsFilter] = useDebouncedValue(grantedPermissionsFilter, 200);
+
 
     const resourceApi = useArchbaseRemoteServiceApi<ArchbaseResourceService>(ARCHBASE_IOC_API_TYPE.Resource)
 
     const selectedColor = theme.colorScheme === "dark" ? "var(--mantine-primary-color-7)" : "var(--mantine-primary-color-4)"
 
-    const permissionsGrantedData: (permissionsGranted: ResoucePermissionsWithTypeDto[]) => TreeNodeData[] = useCallback((permissionsGranted) => permissionsGranted.map(resourcePermissions => {
-        return (
-            {
-                value: resourcePermissions.resourceId,
-                label: resourcePermissions.resourceDescription,
-                children: resourcePermissions.permissions.map(permission => {
-                    return {
-                        value: permission.actionId,
-                        label: permission.actionDescription,
-                        nodeProps: {
-                            permissionId: permission.permissionId,
-                            types: permission.types ?? [],
-                            owner: resourcePermissions
-                        }
-                    }
-                })
-            }
-        )
-    }), [])
+    const permissionsGrantedData: (permissionsGranted: ResoucePermissionsWithTypeDto[]) => TreeNodeData[] = useCallback((permissionsGranted) => permissionsGranted
+        .sort((a, b) => a.resourceDescription.localeCompare(b.resourceDescription))
+        .map(resourcePermissions => {
+            return (
+                {
+                    value: resourcePermissions.resourceId,
+                    label: resourcePermissions.resourceDescription,
+                    children: resourcePermissions.permissions
+                        .filter(permission => permission.actionDescription.toLowerCase().includes(debouncedGrantedPermissionsFilter.toLowerCase()))
+                        .sort((a, b) => a.actionDescription.localeCompare(b.actionDescription))
+                        .map(permission => {
+                            return {
+                                value: permission.actionId,
+                                label: permission.actionDescription,
+                                nodeProps: {
+                                    permissionId: permission.permissionId,
+                                    types: permission.types ?? [],
+                                    owner: resourcePermissions
+                                }
+                            }
+                        })
+                }
+            )
+        }), [debouncedGrantedPermissionsFilter])
 
     const grantedPermissionsActionIds = useCallback((permissionsGranted: ResoucePermissionsWithTypeDto[]) => permissionsGranted
         .map(resourcePermissions => resourcePermissions.permissions.map(permission => permission.actionId))
         .flat(), [])
 
-    const allPermissionsData: (allPermissions: ResoucePermissionsWithTypeDto[], permissionsGranted: ResoucePermissionsWithTypeDto[]) => TreeNodeData[] = useCallback((allPermissions, permissionsGranted) => allPermissions.map(resourcePermissions => {
-        return (
-            {
-                value: resourcePermissions.resourceId,
-                label: resourcePermissions.resourceDescription,
-                children: resourcePermissions.permissions.map(permission => {
-                    const permissionGranted = permissionsGranted
-                        .find(resourcePermissionsGranted => resourcePermissionsGranted.resourceId === resourcePermissions.resourceId)?.permissions
-                        .find(permissionGranted => permissionGranted.actionId === permission.actionId)
-                    return (
-                        {
-                            value: permission.actionId,
-                            label: permission.actionDescription,
-                            nodeProps: {
-                                granted: grantedPermissionsActionIds(permissionsGranted).includes(permission.actionId) && permissionGranted?.types?.includes(getKeyByEnumValue(SecurityType, type)!),
-                                owner: resourcePermissions
-                            }
-                        }
-                    )
-                })
-            }
-        )
-    }), [grantedPermissionsActionIds, type])
+    const allPermissionsData: (allPermissions: ResoucePermissionsWithTypeDto[], permissionsGranted: ResoucePermissionsWithTypeDto[]) => TreeNodeData[] = useCallback((allPermissions, permissionsGranted) => allPermissions
+        .sort((a, b) => a.resourceDescription.localeCompare(b.resourceDescription))
+        .map(resourcePermissions => {
+            return (
+                {
+                    value: resourcePermissions.resourceId,
+                    label: resourcePermissions.resourceDescription,
+                    children: resourcePermissions.permissions
+                        .filter(permission => permission.actionDescription.toLowerCase().includes(debouncedAvailablePermissionsFilter.toLowerCase()))
+                        .sort((a, b) => a.actionDescription.localeCompare(b.actionDescription))
+                        .map(permission => {
+                            const permissionGranted = permissionsGranted
+                                .find(resourcePermissionsGranted => resourcePermissionsGranted.resourceId === resourcePermissions.resourceId)?.permissions
+                                .find(permissionGranted => permissionGranted.actionId === permission.actionId)
+                            return (
+                                {
+                                    value: permission.actionId,
+                                    label: permission.actionDescription,
+                                    nodeProps: {
+                                        granted: grantedPermissionsActionIds(permissionsGranted).includes(permission.actionId) && permissionGranted?.types?.includes(getKeyByEnumValue(SecurityType, type)!),
+                                        owner: resourcePermissions
+                                    }
+                                }
+                            )
+                        })
+                }
+            )
+        }), [grantedPermissionsActionIds, type, debouncedAvailablePermissionsFilter])
 
     const loadPermissions = useCallback(async () => {
         const permissionsGranted = await resourceApi.getPermissionsBySecurityId(securityId, type)
@@ -213,92 +234,135 @@ export function PermissionsSelector({ securityId, type }: PermissionsSelectorPro
     }
 
     useEffect(() => {
+        setSelectedAvailablePermission(undefined)
+        setSelectedGrantedPermission(undefined)
+        setAvailablePermissionsFilter("")
+        setGrantedPermissionsFilter("")
+        grantedPermissionsTree.collapseAllNodes()
+        availablePermissionsTree.collapseAllNodes()
         loadPermissions()
     }, [type, securityId])
 
     return (
-        <Paper withBorder my={20} p={20}>
-            <Grid columns={20} maw={900}>
-                <Grid.Col span={9}>
-                    <Text>Disponíveis</Text>
-                    <Tree
-                        data={allPermissionsData(availablePermissions, grantedPermissions)}
-                        selectOnClick={true}
-                        allowRangeSelection={false}
-                        tree={availablePermissionsTree}
-                        renderNode={({ level, node, expanded, hasChildren, selected, elementProps }) => {
-                            const isGranted = node?.nodeProps?.granted;
-                            const textColor = isGranted ? "dimmed" : undefined;
-                            const textDecoration = isGranted ? "line-through" : undefined;
-                            return (
-                                <Group gap={5} {...elementProps}
-                                    bg={selected && level === 2 ? selectedColor : ""}
-                                    onClick={(event) => {
-                                        setSelectedAvailablePermission(node)
-                                        elementProps.onClick(event)
-                                    }}
-                                >
-                                    {hasChildren && (
-                                        <IconChevronDown
-                                            size={18}
-                                            style={{ transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}
-                                        />
-                                    )}
-                                    <Text
-                                        c={textColor}
-                                        td={textDecoration}
-                                    >
-                                        {node.label}
-                                    </Text>
-                                </Group>
-                            )
-                        }
-                        }
-                    />
-                </Grid.Col>
-                <Grid.Col span={2}>
-                    <Stack gap={5} style={{ minWidth: '10%' }} justify="center" align="center" h={"100%"}>
-                        <Tooltip label="Adicionar">
-                            <ActionIcon onClick={handleAdd} disabled={!selectedAvailablePermission || selectedAvailablePermission?.nodeProps?.granted || !selectedAvailablePermission.nodeProps}>
-                                <IconArrowRight />
-                            </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label="Remover">
-                            <ActionIcon onClick={handleRemove} disabled={!selectedGrantedPermission || !selectedGrantedPermission?.nodeProps?.permissionId || !selectedGrantedPermission.nodeProps}>
-                                <IconArrowLeft />
-                            </ActionIcon>
-                        </Tooltip>
-                    </Stack>
-                </Grid.Col>
-                <Grid.Col span={9}>
-                    <Text>Selecionados</Text>
-                    <Tree
-                        data={permissionsGrantedData(grantedPermissions)}
-                        selectOnClick={true}
-                        allowRangeSelection={false}
-                        tree={grantedPermissionsTree}
-                        renderNode={({ level, node, expanded, hasChildren, selected, elementProps }) => (
-                            <Group gap={5} {...elementProps} bg={selected && level === 2 ? selectedColor : ""}
-                                onClick={(event) => {
-                                    setSelectedGrantedPermission(node)
-                                    elementProps.onClick(event)
-                                }}
-                            >
-                                {hasChildren && (
-                                    <IconChevronDown
-                                        size={18}
-                                        style={{ transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}
+        <>
+            <Button color={'blue'} leftSection={<IconEdit />} onClick={() => open()}>
+                {t('archbase:Edit permissions')}
+            </Button>
+            <Modal opened={opened} onClose={close} title={`${t(`archbase:${type}`)}: ${name}`} size={"80%"} styles={{ root: { overflow: "hidden" } }}>
+                <ScrollArea h={"75vh"}>
+                    <Paper withBorder my={20} p={20}>
+                        <Grid columns={20}>
+                            <Grid.Col span={9}>
+                                <Group mb={20}>
+                                    <Text>{t('archbase:Available')}</Text>
+                                    <TextInput
+                                        size="xs"
+                                        value={availablePermissionsFilter}
+                                        onChange={(event) => setAvailablePermissionsFilter(event.target.value)}
+                                        placeholder={t('archbase:Filter available permissions')}
                                     />
-                                )}
-                                <Text>{node.label}</Text>
-                                {node?.nodeProps?.types?.includes("USER") && <Badge color="blue">Usuário</Badge>}
-                                {node?.nodeProps?.types?.includes("GROUP") && <Badge color="orange">Grupo</Badge>}
-                                {node?.nodeProps?.types?.includes("PROFILE") && <Badge color="pink">Perfil</Badge>}
-                            </Group>
-                        )}
-                    />
-                </Grid.Col>
-            </Grid>
-        </Paper>
+                                </Group>
+                                <Tree
+                                    data={allPermissionsData(availablePermissions, grantedPermissions)}
+                                    selectOnClick={true}
+                                    allowRangeSelection={false}
+                                    tree={availablePermissionsTree}
+                                    renderNode={({ level, node, expanded, hasChildren, selected, elementProps }) => {
+                                        const isGranted = node?.nodeProps?.granted;
+                                        const textColor = isGranted ? "dimmed" : undefined;
+                                        const textDecoration = isGranted ? "line-through" : undefined;
+                                        return (
+                                            <Group ml={hasChildren ? 0 : 5} gap={5} {...elementProps}
+                                                bg={selected && level === 2 ? selectedColor : ""}
+                                                onClick={(event) => {
+                                                    setSelectedAvailablePermission(node)
+                                                    elementProps.onClick(event)
+                                                }}
+                                            >
+                                                {hasChildren && (
+                                                    <IconChevronDown
+                                                        size={18}
+                                                        style={{ transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}
+                                                    />
+                                                )}
+                                                {!hasChildren && (
+                                                    <IconBorderCornerSquare
+                                                        size={12}
+                                                        style={{ transform: 'rotate(-90deg)', marginTop: "-5px" }}
+                                                    />
+                                                )}
+                                                <Text
+                                                    c={textColor}
+                                                    td={textDecoration}
+                                                >
+                                                    {node.label}
+                                                </Text>
+                                            </Group>
+                                        )
+                                    }
+                                    }
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={2}>
+                                <Stack gap={5} style={{ minWidth: '10%' }} justify="center" align="center" h={"100%"}>
+                                    <Tooltip label={t('archbase:Add')}>
+                                        <ActionIcon onClick={handleAdd} disabled={!selectedAvailablePermission || selectedAvailablePermission?.nodeProps?.granted || !selectedAvailablePermission.nodeProps}>
+                                            <IconArrowRight />
+                                        </ActionIcon>
+                                    </Tooltip>
+                                    <Tooltip label={t('archbase:Remove')}>
+                                        <ActionIcon onClick={handleRemove} disabled={!selectedGrantedPermission || !selectedGrantedPermission?.nodeProps?.permissionId || !selectedGrantedPermission.nodeProps}>
+                                            <IconArrowLeft />
+                                        </ActionIcon>
+                                    </Tooltip>
+                                </Stack>
+                            </Grid.Col>
+                            <Grid.Col span={9}>
+                                <Group mb={20}>
+                                    <Text>{t('archbase:Granted')}</Text>
+                                    <TextInput
+                                        size="xs"
+                                        value={grantedPermissionsFilter}
+                                        onChange={(event) => setGrantedPermissionsFilter(event.target.value)}
+                                        placeholder={t('archbase:Filter granted permissions')}
+                                    />
+                                </Group>
+                                <Tree
+                                    data={permissionsGrantedData(grantedPermissions)}
+                                    selectOnClick={true}
+                                    allowRangeSelection={false}
+                                    tree={grantedPermissionsTree}
+                                    renderNode={({ level, node, expanded, hasChildren, selected, elementProps }) => (
+                                        <Group ml={hasChildren ? 0 : 5} gap={5} {...elementProps} bg={selected && level === 2 ? selectedColor : ""}
+                                            onClick={(event) => {
+                                                setSelectedGrantedPermission(node)
+                                                elementProps.onClick(event)
+                                            }}
+                                        >
+                                            {hasChildren && (
+                                                <IconChevronDown
+                                                    size={18}
+                                                    style={{ transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}
+                                                />
+                                            )}
+                                            {!hasChildren && (
+                                                <IconBorderCornerSquare
+                                                    size={12}
+                                                    style={{ transform: 'rotate(-90deg)', marginTop: "-5px" }}
+                                                />
+                                            )}
+                                            <Text>{node.label}</Text>
+                                            {node?.nodeProps?.types?.includes("USER") && <Badge color="blue">{t('archbase:user')}</Badge>}
+                                            {node?.nodeProps?.types?.includes("GROUP") && <Badge color="orange">{t('archbase:group')}</Badge>}
+                                            {node?.nodeProps?.types?.includes("PROFILE") && <Badge color="pink">{t('archbase:profile')}</Badge>}
+                                        </Group>
+                                    )}
+                                />
+                            </Grid.Col>
+                        </Grid>
+                    </Paper>
+                </ScrollArea>
+            </Modal>
+        </>
     )
 }

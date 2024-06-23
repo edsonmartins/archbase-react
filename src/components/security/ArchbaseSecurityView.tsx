@@ -42,6 +42,7 @@ import { ArchbaseProfileService } from './ArchbaseProfileService'
 import { ArchbaseApiTokenService } from './ArchbaseApiTokenService'
 import { ArchbaseAccessTokenService } from './ArchbaseAccessTokenService'
 import { ArchbaseCountdownProgress } from '@components/editors'
+import { PermissionsSelector } from './PermissionsSelector'
 
 interface ArchbaseSecurityManagerProps {
   height?: any
@@ -710,6 +711,7 @@ export function ArchbaseSecurityView({
                 <Button color={'green'} leftSection={<IconPlus />} onClick={handleAddUserExecute}>
                   {t('archbase:New')}
                 </Button>
+                <PermissionsSelector dataSource={dsUsers} />
               </Group>
               <Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
             </Flex>
@@ -746,6 +748,7 @@ export function ArchbaseSecurityView({
                 <Button color={'green'} leftSection={<IconPlus />} onClick={handleAddGroupExecute}>
                   {t('archbase:New')}
                 </Button>
+                <PermissionsSelector dataSource={dsGroups} />
               </Group>
               <Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
             </Flex>
@@ -782,6 +785,7 @@ export function ArchbaseSecurityView({
                 <Button color={'green'} leftSection={<IconPlus />} onClick={handleAddProfileExecute}>
                   {t('archbase:New')}
                 </Button>
+                <PermissionsSelector dataSource={dsProfiles} />
               </Group>
               <Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
             </Flex>

@@ -6,8 +6,6 @@ import { ArchbaseFormModalTemplate } from '@components/template'
 import { t } from 'i18next'
 import { ProfileDto } from './SecurityDomain'
 import { ArchbaseEdit } from '@components/editors'
-import { PermissionsSelector } from './PermissionsSelector'
-import { SecurityType } from './SecurityType'
 
 export interface ProfileModalProps {
   dataSource: ArchbaseDataSource<ProfileDto, string>
@@ -50,9 +48,6 @@ export const ProfileModal = (props: ProfileModalProps) => {
               dataSource={props.dataSource}
               dataField="description"
             />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 12, lg: 12 }}>
-          <PermissionsSelector securityId={props.dataSource.getCurrentRecord()?.id ?? ""} type={SecurityType.PROFILE} />
           </Grid.Col>
         </Grid>
       </ScrollArea>
