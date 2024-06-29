@@ -67,3 +67,5 @@ export { useArchbaseGetLoggedUser } from './useArchbaseGetLoggedUser';
 export { ArchbaseDependencyProvider, useArchbaseDependency } from './ArchbaseDepencyManager'
 export { useArchbaseResetPassword } from './useArchbaseResetPassword';
 export type { ResetPasswordReturnType} from './useArchbaseResetPassword';
+export { useArchbaseSecurityManager } from './useArchbaseSecurityManager'
+export type { UseArchbaseSecurityManagerProps, UseArchbaseSecurityManagerReturnType } from './useArchbaseSecurityManager'
