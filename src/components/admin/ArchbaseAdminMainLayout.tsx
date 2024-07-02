@@ -49,6 +49,7 @@ export interface ArchbaseAdminMainLayoutProps {
 	showSideBar?: boolean;
 	showHeader?: boolean;
 	headerStyle?: MantineStyleProp;
+	highlightActiveMenuItem?: boolean;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -79,6 +80,7 @@ function ArchbaseAdminMainLayoutContainer({
 	showSideBar = true,
 	showHeader = true,
 	headerStyle = {},
+	highlightActiveMenuItem = true
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -220,6 +222,7 @@ function ArchbaseAdminMainLayoutContainer({
 						selectedGroupName={sidebarSelectedGroupName}
 						iconsWithBackground={iconsWithBackground}
 						menuItemHeight={menuItemHeight}
+						highlightActiveMenuItem={highlightActiveMenuItem}
 					/>
 				) : undefined}
 			</AppShell.Navbar>
@@ -283,6 +286,7 @@ function ArchbaseAdminMainLayoutContainer({
 							sideBarHeaderContent={sideBarHeaderContent}
 							sideBarFooterContent={sideBarFooterContent}
 							sideBarFooterHeight={sideBarFooterHeight}
+							highlightActiveMenuItem={highlightActiveMenuItem}
 						/>
 					</Drawer>
 				}
@@ -325,7 +329,8 @@ export function ArchbaseAdminMainLayout({
 	menuItemHeight,
 	showSideBar,
 	showHeader,
-	headerStyle
+	headerStyle,
+	highlightActiveMenuItem,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -366,6 +371,7 @@ export function ArchbaseAdminMainLayout({
 				showSideBar={showSideBar}
 				showHeader={showHeader}
 				headerStyle={headerStyle}
+				highlightActiveMenuItem={highlightActiveMenuItem}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>

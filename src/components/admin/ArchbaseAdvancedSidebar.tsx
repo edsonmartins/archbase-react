@@ -18,6 +18,7 @@ import { buildMenuItem } from './buildMenuItem';
 import { buildMenuItemStyles } from './buildMenuItemStyles';
 import { buildNavbar } from './buildNavbar';
 import { ArchbaseNavigationItem } from './types';
+import { useLocation } from 'react-router';
 
 export interface ArchbaseAdvancedSidebarProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -45,6 +46,7 @@ export interface ArchbaseAdvancedSidebarProps {
 	sideBarHeaderContent?: ReactNode | undefined;
 	iconsWithBackground?: boolean;
 	menuItemHeight?: string | number;
+	highlightActiveMenuItem?: boolean;
 }
 
 type GroupItemSidebar = {
@@ -80,9 +82,11 @@ export function ArchbaseAdvancedSidebar({
 	sideBarHeaderContent,
 	iconsWithBackground = false,
 	menuItemHeight = 40,
+	highlightActiveMenuItem = true,
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
 	const appContext = useArchbaseAppContext();
+	const location = useLocation();
 	const { colorScheme } = useMantineColorScheme();
 	const color = selectedGroupColor
 		? selectedGroupColor
@@ -177,13 +181,13 @@ export function ArchbaseAdvancedSidebar({
 		result.forEach((group) => {
 			group.links = navigationData
 				.filter((itm) => itm.showInSidebar === true && itm.group && itm.group.name === group.name)
-				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground));
+				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem));
 		});
 
 		const grps = [...result].sort((a, b) => a.indexOrder - b.indexOrder);
 
 		return grps;
-	}, [navigationData, activeGroupName, colorScheme, collapsed, appContext.selectedCompany]);
+	}, [navigationData, activeGroupName, colorScheme, collapsed, appContext.selectedCompany, highlightActiveMenuItem, location]);
 
 	const menuItemStyles = buildMenuItemStyles(
 		colorScheme,
@@ -240,7 +244,7 @@ export function ArchbaseAdvancedSidebar({
 					sidebarWidth,
 					sidebarCollapsedWidth,
 					menuItemStyles,
-					navigationData.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground)),
+					navigationData.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem)),
 					isHidden,
 					sidebarHeight,
 					sideBarHeaderContent,
