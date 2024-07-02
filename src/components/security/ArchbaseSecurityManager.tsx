@@ -14,14 +14,16 @@ export class ArchbaseSecurityManager implements ISecurityManager {
   protected permissions: string[]
   protected alreadyApplied: boolean
   protected error: string
+  protected isAdmin: boolean
 
-  constructor(resourceName: string, resourceDescription: string) {
+  constructor(resourceName: string, resourceDescription: string, isAdmin: boolean) {
     this.resourceService = IOCContainer.getContainer().get<ArchbaseResourceService>(ARCHBASE_IOC_API_TYPE.Resource);
     this.resource = { resourceName, resourceDescription }
     this.alreadyApplied = false
     this.actions = []
     this.permissions = []
     this.error = ""
+    this.isAdmin = isAdmin
   }
 
   public registerAction(actionName: string, actionDescription: string) {
@@ -30,13 +32,16 @@ export class ArchbaseSecurityManager implements ISecurityManager {
     }
   }
 
-  public async apply() {
+  public async apply(callback?: Function) {
     if (!this.alreadyApplied) {
       try {
         const resourcePermissions: ResourcePermissionsDto = await this.resourceService.registerResource({ resource: this.resource, actions: this.actions })
         this.permissions = resourcePermissions.permissions;
-        this.alreadyApplied = true
-        this.error = ""
+        this.alreadyApplied = true;
+        this.error = "";
+        if (callback) {
+          callback();
+        }
       } catch (error) {
         this.error = processErrorMessage(error)
       }
@@ -44,7 +49,7 @@ export class ArchbaseSecurityManager implements ISecurityManager {
   }
 
   public hasPermission(actionName: string) {
-    return this.permissions.includes(actionName)
+    return this.permissions.includes(actionName) || this.isAdmin
   }
 
   public isError() {

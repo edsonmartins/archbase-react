@@ -279,7 +279,7 @@ class ArchbaseCompositeFilter extends Component<
           <ArchbaseSimpleFilter
             allowSort={true}
             update={this.props.update}
-            operators={defaultOperators()}
+            operators={defaultOperators}
             currentFilter={this.props.currentFilter}
             activeFilterIndex={this.props.activeFilterIndex}
             onFilterChanged={this.props.onFilterChanged}

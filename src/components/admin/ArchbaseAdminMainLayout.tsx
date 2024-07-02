@@ -1,5 +1,5 @@
 import { AppShell, Drawer, MantineStyleProp, px, useMantineColorScheme, useMantineTheme } from '@mantine/core';
-import React, { ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
+import React, { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Route, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'usehooks-ts';
 import { ArchbaseUser } from '../auth/ArchbaseUser';
@@ -13,6 +13,7 @@ import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAliveAbleRoutes';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
+import { useArchbaseDidMount, useArchbaseSecurityManager } from '@components/hooks';
 
 export interface ArchbaseAdminMainLayoutProps {
 	navigationData?: ArchbaseNavigationItem[];
@@ -49,10 +50,10 @@ export interface ArchbaseAdminMainLayoutProps {
 	showSideBar?: boolean;
 	showHeader?: boolean;
 	headerStyle?: MantineStyleProp;
+	enableSecurity?: boolean;
 }
 
 function ArchbaseAdminMainLayoutContainer({
-	navigationData = [],
 	children,
 	header,
 	footer,
@@ -79,9 +80,15 @@ function ArchbaseAdminMainLayoutContainer({
 	showSideBar = true,
 	showHeader = true,
 	headerStyle = {},
+	enableSecurity = false,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
+	const { securityManager } = useArchbaseSecurityManager({
+		resourceName: "ArchbaseAdvancedSidebar",
+		resourceDescription: "Navigation",
+		enableSecurity
+	})
 	const { colorScheme } = useMantineColorScheme();
 	const navigate = useNavigate();
 	const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>();
@@ -129,7 +136,7 @@ function ArchbaseAdminMainLayoutContainer({
 
 
 	const routes = useMemo(() => {
-		return navigationData.map((item, index) =>
+		return adminLayoutContextValue.navigationData.map((item, index) =>
 			item.links ? (
 				item.links.map((item2, indexSub) => {
 					if (item2.keepAlive) {
@@ -146,7 +153,7 @@ function ArchbaseAdminMainLayoutContainer({
 				<Route key={`${item.link}_${index}`} path={item.link} element={item.component} />
 			),
 		);
-	}, [navigationData, adminLayoutContextValue.collapsed]);
+	}, [adminLayoutContextValue.navigationData, adminLayoutContextValue.collapsed]);
 
 	const handleCollapseSidebar = useCallback(() => {
 		adminLayoutContextValue.setCollapsed(!adminLayoutContextValue.collapsed);
@@ -168,10 +175,24 @@ function ArchbaseAdminMainLayoutContainer({
 		}
 	}, [adminLayoutContextValue.collapsed, onCollapsedSideBar]);
 
+	useArchbaseDidMount(() => {
+		if (enableSecurity) {
+			adminLayoutContextValue.navigationData.forEach(item => {
+				securityManager.registerAction(item.label, item.label)
+			})
+			securityManager.apply(() => {
+				adminLayoutContextValue.setNavigationData(adminLayoutContextValue.navigationData.map(item => ({
+				...item,
+				disabled: !item.disabled ? !securityManager.hasPermission(item.label) : item.disabled,
+			})))
+		})
+	}
+	})
+
 	const currentSidebarWidth = adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth;
 	return (
 		<AppShell
-			header={{ height: '60px',collapsed: !showHeader }}
+			header={{ height: '60px', collapsed: !showHeader }}
 			footer={{ height: footerHeight ? footerHeight : '0px' }}
 			styles={{
 				main: {
@@ -196,7 +217,7 @@ function ArchbaseAdminMainLayoutContainer({
 			<AppShell.Navbar>
 				{!isHidden && showSideBar ? (
 					<ArchbaseAdvancedSidebar
-						navigationData={navigationData}
+						navigationData={adminLayoutContextValue.navigationData}
 						sidebarHeight={getSideBarHeight()}
 						sidebarGroupWidth={sideBarCollapsedWidth}
 						sidebarCollapsedWidth={sideBarCollapsedWidth}
@@ -260,7 +281,7 @@ function ArchbaseAdminMainLayoutContainer({
 						}}
 					>
 						<ArchbaseAdvancedSidebar
-							navigationData={navigationData}
+							navigationData={adminLayoutContextValue.navigationData}
 							sidebarWidth={sideBarWidth}
 							sidebarHeight={getSideBarDrawerHeight()}
 							sidebarCollapsedWidth={sideBarCollapsedWidth}
@@ -325,7 +346,8 @@ export function ArchbaseAdminMainLayout({
 	menuItemHeight,
 	showSideBar,
 	showHeader,
-	headerStyle
+	headerStyle,
+	enableSecurity,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -337,7 +359,6 @@ export function ArchbaseAdminMainLayout({
 		>
 			<ArchbaseAdminMainLayoutContainer
 				navigationRootLink={navigationRootLink}
-				navigationData={navigationData}
 				user={user}
 				header={header}
 				footer={footer}
@@ -366,6 +387,7 @@ export function ArchbaseAdminMainLayout({
 				showSideBar={showSideBar}
 				showHeader={showHeader}
 				headerStyle={headerStyle}
+				enableSecurity={enableSecurity}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>

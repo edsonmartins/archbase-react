@@ -660,8 +660,7 @@ const getDefaultEmptyFilter = (): ArchbaseQueryFilter => {
   }
 }
 
-const defaultOperators = (): Operator[] => {
-  return [
+const defaultOperators: Operator[] = [
     {
       name: 'null',
       label: 'Em branco',
@@ -733,10 +732,8 @@ const defaultOperators = (): Operator[] => {
       dataTypes: ['string', 'number', 'date', 'time']
     }
   ]
-}
 
-const defaultConditions = (): Condition[] => {
-  return [
+const defaultConditions: Condition[] = [
     {
       name: 'and',
       label: 'E'
@@ -746,7 +743,6 @@ const defaultConditions = (): Condition[] => {
       label: 'Ou'
     }
   ]
-}
 
 const getDefaultFilter = (props: Readonly<ArchbaseQueryBuilderProps>, type: FilterType): ArchbaseQueryFilter => {
   let fields = getFields(props)

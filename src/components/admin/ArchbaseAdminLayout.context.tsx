@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { ArchbaseUser } from '../auth';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
 
@@ -8,6 +8,7 @@ export interface ArchbaseAdminLayoutListener {
 
 export interface ArchbaseAdminLayoutContextValue {
 	navigationData?: ArchbaseNavigationItem[];
+	setNavigationData?: (navigationData: ArchbaseNavigationItem[]) => void;
 	user?: ArchbaseUser;
 	owner?: ArchbaseOwner;
 	company?: ArchbaseCompany;
@@ -31,7 +32,7 @@ export interface ArchbaseAdminLayoutContextProps {
 const ArchbaseAdminLayoutContext = React.createContext<ArchbaseAdminLayoutContextValue>({});
 
 const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = ({
-	navigationData,
+	navigationData: initialNavigationData,
 	user,
 	owner,
 	company,
@@ -40,10 +41,11 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 }) => {
 	const [collapsed, setCollapsed] = useState<boolean>(false);
 	const [hidden, setHidden] = useState<boolean>(false);
+	const [navigationData, setNavigationData] = useState<ArchbaseNavigationItem[]>(initialNavigationData);
 
 	return (
 		<ArchbaseAdminLayoutContext.Provider
-			value={{ navigationData, user, owner, company, navigationRootLink, collapsed, setCollapsed, hidden, setHidden }}
+			value={{ navigationData, setNavigationData, user, owner, company, navigationRootLink, collapsed, setCollapsed, hidden, setHidden }}
 		>
 			{children}
 		</ArchbaseAdminLayoutContext.Provider>
