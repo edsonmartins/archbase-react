@@ -76,6 +76,8 @@ export interface ArchbaseMaskEditProps<T, ID>
 	error?: string;
 	/** Título do edit */
 	title?: string;
+	/** Título do edit */
+	label?: string;
 	/** Evento que retorna o valor do erro */
 	onChangeError?: (error: string) => void;
 	/** Mensagem customizada a ser exibida quando o campo está incompleto */
@@ -101,7 +103,7 @@ const defaultProps: Partial<ArchbaseMaskEditProps<any, any>> = {
 	placeholder: '',
 	mask: '',
 	showMask: true,
-	saveWithMask: false,
+	saveWithMask: false
 };
 
 export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) {

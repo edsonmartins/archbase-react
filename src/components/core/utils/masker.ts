@@ -1,3 +1,4 @@
+//https://github.com/vanilla-masker/vanilla-masker
 export type MaskOptions = {
 	delimiter?: string;
 	lastOutput?: string;

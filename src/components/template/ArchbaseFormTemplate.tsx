@@ -94,7 +94,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 			if (onSave) {
 				onSave(entity);
 			} else {
-				onBeforeSave && onBeforeSave(entity);
+				onBeforeSave && await onBeforeSave(entity);
 				if (!dataSource.isBrowsing()) {
 					dataSource
 						.save()
