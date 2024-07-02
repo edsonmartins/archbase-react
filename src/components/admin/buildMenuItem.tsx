@@ -56,6 +56,7 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 					disabled={typeof item.disabled === 'function' ? item.disabled() : item.disabled}
 					onClick={() => onMenuItemClick(item)}
 					icon={item.icon}
+					active={highlightActiveMenuItem && item.link === currentPathName}
 				>
 					{collapsed ? '' : `${i18next.t(item.label)}`}
 				</MenuItem>
