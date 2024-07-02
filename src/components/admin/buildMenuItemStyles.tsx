@@ -50,7 +50,7 @@ export const buildMenuItemStyles = (
 				color: theme.white,
 			},
 			[`&.${menuClasses.active}`]: {
-				backgroundColor: 'red',
+				backgroundColor: colorScheme === 'dark' ? theme.colors[theme.primaryColor][6] : theme.colors[theme.primaryColor][6],
 			},
 			height: menuItemHeight,
 			...buttonPadding,

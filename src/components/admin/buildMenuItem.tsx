@@ -2,7 +2,7 @@ import i18next from 'i18next';
 import React from 'react';
 import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar';
 
-export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground) {
+export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, currentPathName, highlightActiveMenuItem) {
 	if (item.links) {
 		const iconsBackgroundColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][8] : theme.colors[theme.primaryColor][7]) : undefined;
 		const iconsColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][0] : theme.colors[theme.primaryColor][0]) : undefined;
@@ -37,6 +37,7 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 								id={subItem.label}
 								icon={subItem.icon}
 								disabled={typeof subItem.disabled === 'function' ? subItem.disabled() : subItem.disabled}
+								active={highlightActiveMenuItem && subItem.link === currentPathName}
 							>
 								{`${i18next.t(subItem.label)}`}
 							</MenuItem>
