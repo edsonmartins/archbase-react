@@ -17,6 +17,8 @@ import { PedidoView } from '../../demo/view/PedidoView';
 import { PessoaForm } from '../../demo/view/PessoaForm';
 import { PessoaView } from '../../demo/view/PessoaView';
 import { ArchbaseNavigationGroup, ArchbaseNavigationItem } from './types';
+import { PapelView } from '../../demo/view/PapelView';
+import { PapelForm } from '../../demo/view/PapelForm';
 
 const groupPessoas: ArchbaseNavigationGroup = {
 	icon: <IconUsers size="2.2rem" color="#63B1FB" stroke={1} />,
@@ -138,7 +140,7 @@ const papelConsultaView: ArchbaseNavigationItem = {
 	icon: <IconListSearch />,
 	category: 'PESSOAS',
 	color: 'pink',
-	component: <div />,
+	component: <PapelView />,
 	showInSidebar: true,
 	group: groupPessoas,
 };
@@ -159,7 +161,7 @@ const papelNovoView: ArchbaseNavigationItem = {
 	icon: <IconUserCog />,
 	category: 'PESSOAS',
 	color: 'pink',
-	component: <div />,
+	component: <PapelForm />,
 	showInSidebar: true,
 	group: groupPessoas,
 };
