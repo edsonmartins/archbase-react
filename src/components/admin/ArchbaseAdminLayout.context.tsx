@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { ArchbaseUser } from '../auth';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
-import { useArchbaseDidMount, useArchbaseSecurityManager } from '@components/hooks';
+import { useArchbaseGetLoggedUser, useArchbaseSecurityManager } from '@components/hooks';
 
 export interface ArchbaseAdminLayoutListener {
 	onChangeLocationPath: (item: ArchbaseNavigationItem) => void;
@@ -44,15 +44,14 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 }) => {
 	const [collapsed, setCollapsed] = useState<boolean>(false);
 	const [hidden, setHidden] = useState<boolean>(false);
-	const [navigationData, setNavigationData] = useState<ArchbaseNavigationItem[]>(initialNavigationData);
-
+	const [navigationData, setNavigationData] = useState<ArchbaseNavigationItem[]>(enableSecurity ? [] : initialNavigationData);
 	const { securityManager } = useArchbaseSecurityManager({
 		resourceName: "ArchbaseAdvancedSidebar",
 		resourceDescription: "Navegação",
 		enableSecurity
 	})
 
-	useArchbaseDidMount(() => {
+	useEffect(() => {
 		if (enableSecurity) {
 			initialNavigationData.filter(item => item.showInSidebar).forEach(item => {
 				securityManager.registerAction(item.label, item.label)
@@ -66,7 +65,7 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 				}))])
 			})
 		}
-	})
+	}, [user])
 
 	return (
 		<ArchbaseAdminLayoutContext.Provider

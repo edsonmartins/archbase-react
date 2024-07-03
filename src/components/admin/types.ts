@@ -22,6 +22,7 @@ export type ArchbaseNavigationItem = {
 	redirect?: string;
 	keepAlive?: boolean;
 	group?: ArchbaseNavigationGroup;
+	hideDisabledItem?: boolean;
 };
 
 export type ArchbaseCommandColor = {

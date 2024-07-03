@@ -3,6 +3,8 @@ import { ArchbaseSecurityManager } from '@components/security/ArchbaseSecurityMa
 import { ArchbaseStore, useArchbaseStore } from './useArchbaseStore'
 import { useArchbaseGetLoggedUser } from './useArchbaseGetLoggedUser'
 
+export const ARCHBASE_SECURITY_MANAGER_STORE = 'archbaseSecurityManagerStore'
+
 export type UseArchbaseSecurityManagerProps = {
   resourceName: string
   resourceDescription: string
@@ -27,7 +29,7 @@ type UseArchbaseSecurityManagerState = {
 export const useArchbaseSecurityManager = (
   { resourceName, resourceDescription, enableSecurity = true }: UseArchbaseSecurityManagerProps
 ): UseArchbaseSecurityManagerReturnType => {
-  const store = useArchbaseStore('archbaseSecurityManagerStore')
+  const store = useArchbaseStore(ARCHBASE_SECURITY_MANAGER_STORE)
   const user = useArchbaseGetLoggedUser()
   const [internalState, setInternalState] = useState<UseArchbaseSecurityManagerState>({
     securityManager: enableSecurity && buildSecurityManager(store, resourceName, resourceDescription, user.isAdmin)

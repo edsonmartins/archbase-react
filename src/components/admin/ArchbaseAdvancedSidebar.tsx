@@ -97,7 +97,7 @@ export function ArchbaseAdvancedSidebar({
 	const groups = useMemo(() => {
 		const result: Set<GroupItemSidebar> = new Set();
 		navigationData.forEach((item) => {
-			if (item.showInSidebar) {
+			if (item.showInSidebar && (!item.disabled || !item.hideDisabledItem)) {
 				let found = false;
 				if (!item.group) {
 					item.group = {
@@ -180,7 +180,7 @@ export function ArchbaseAdvancedSidebar({
 		});
 		result.forEach((group) => {
 			group.links = navigationData
-				.filter((itm) => itm.showInSidebar === true && itm.group && itm.group.name === group.name)
+				.filter((itm) => itm.showInSidebar === true && (!itm.disabled || !itm.hideDisabledItem) && itm.group && itm.group.name === group.name)
 				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem));
 		});
 
