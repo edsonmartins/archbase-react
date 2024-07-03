@@ -39,7 +39,6 @@ import { ArchbaseUserService } from './ArchbaseUserService'
 import { ArchbaseGroupService } from './ArchbaseGroupService'
 import { ArchbaseResourceService } from './ArchbaseResourceService'
 import { ArchbaseProfileService } from './ArchbaseProfileService'
-import { ArchbaseApiTokenService } from './ArchbaseApiTokenService'
 import { ArchbaseAccessTokenService } from './ArchbaseAccessTokenService'
 import { ArchbaseCountdownProgress } from '@components/editors'
 import { PermissionsSelector } from './PermissionsSelector'
@@ -142,6 +141,7 @@ export function ArchbaseSecurityView({
   const profileApi = useArchbaseRemoteServiceApi<ArchbaseProfileService>(ARCHBASE_IOC_API_TYPE.Profile)
   const [openedModal, setOpenedModal] = useState<string>('')
   const accessTokenApi = useArchbaseRemoteServiceApi<ArchbaseAccessTokenService>(ARCHBASE_IOC_API_TYPE.AccessToken);
+  const [isAddOperation, setIsAddOperation] = useState(false)
 
   const { dataSource: dsAccessTokens } = useArchbaseRemoteDataSource<AccessTokenDto, string>({
 		name: 'accessTokenApi',
@@ -170,7 +170,7 @@ export function ArchbaseSecurityView({
     store: templateStore,
     validator,
     pageSize: 25,
-    loadOnStart: true,
+    loadOnStart: !isAddOperation,
     onLoadComplete: (dataSource) => {
       //
     },
@@ -189,7 +189,7 @@ export function ArchbaseSecurityView({
     store: templateStore,
     validator,
     pageSize: 25,
-    loadOnStart: true,
+    loadOnStart: !isAddOperation,
     onLoadComplete: (dataSource) => {
       //
     },
@@ -208,7 +208,7 @@ export function ArchbaseSecurityView({
     store: templateStore,
     validator,
     pageSize: 25,
-    loadOnStart: true,
+    loadOnStart: !isAddOperation,
     onLoadComplete: (dataSource) => {
       //
     },
@@ -470,6 +470,7 @@ export function ArchbaseSecurityView({
       user.id = undefined
     }
     dsUsers.insert(user)
+    setIsAddOperation(true)
     setOpenedModal(SecurityType.USER)
   }
 
@@ -525,6 +526,7 @@ export function ArchbaseSecurityView({
       group.id = undefined
     }
     dsGroups.insert(group)
+    setIsAddOperation(true)
     setOpenedModal(SecurityType.GROUP)
   }
 
@@ -575,14 +577,17 @@ export function ArchbaseSecurityView({
   }
 
   const handleCloseUserModal = () => {
+    setIsAddOperation(false)
     setOpenedModal('')
   }
 
   const handleCloseGroupModal = () => {
+    setIsAddOperation(false)
     setOpenedModal('')
   }
 
   const handleCloseProfileModal = () => {
+    setIsAddOperation(false)
     setOpenedModal('')
   }
 
@@ -592,6 +597,7 @@ export function ArchbaseSecurityView({
       profile.id = undefined
     }
     dsProfiles.insert(profile)
+    setIsAddOperation(true)
     setOpenedModal(SecurityType.PROFILE)
    }
 
@@ -864,21 +870,24 @@ export function ArchbaseSecurityView({
           onClickOk={handleCloseUserModal}
           opened={true}
           dataSource={dsUsers}
-          onClickCancel={handleCloseUserModal} />
+          onClickCancel={handleCloseUserModal}
+          onAfterSave={() => setIsAddOperation(false)} />
       ) : null}
       {openedModal === SecurityType.GROUP ? (
         <GroupModal
           onClickOk={handleCloseGroupModal}
           opened={true}
           dataSource={dsGroups}
-          onClickCancel={handleCloseGroupModal} />
+          onClickCancel={handleCloseGroupModal}
+          onAfterSave={() => setIsAddOperation(false)} />
       ) : null}
       {openedModal === SecurityType.PROFILE ? (
         <ProfileModal
           onClickOk={handleCloseProfileModal}
           opened={true}
           dataSource={dsProfiles}
-          onClickCancel={handleCloseProfileModal} />
+          onClickCancel={handleCloseProfileModal}
+          onAfterSave={() => setIsAddOperation(false)} />
       ) : null}
     </Paper>
   )

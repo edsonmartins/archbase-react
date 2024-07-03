@@ -95,10 +95,12 @@ export function PermissionsSelector<T, ID>({ dataSource }: PermissionsSelectorPr
         }), [grantedPermissionsActionIds, type, debouncedAvailablePermissionsFilter])
 
     const loadPermissions = useCallback(async () => {
-        const permissionsGranted = await resourceApi.getPermissionsBySecurityId(securityId, type)
-        const allPermissions = await resourceApi.getAllPermissionsAvailable()
-        setAvailablePermissions(allPermissions)
-        setGrantedPermissions(permissionsGranted)
+        if (securityId) {
+            const permissionsGranted = await resourceApi.getPermissionsBySecurityId(securityId, type)
+            const allPermissions = await resourceApi.getAllPermissionsAvailable()
+            setAvailablePermissions(allPermissions)
+            setGrantedPermissions(permissionsGranted)
+        }
     }, [securityId, type])
 
     const handleAdd = () => {
