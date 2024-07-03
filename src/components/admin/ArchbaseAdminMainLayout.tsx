@@ -13,7 +13,6 @@ import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAliveAbleRoutes';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
-import { useArchbaseDidMount, useArchbaseSecurityManager } from '@components/hooks';
 
 export interface ArchbaseAdminMainLayoutProps {
 	navigationData?: ArchbaseNavigationItem[];
@@ -80,15 +79,9 @@ function ArchbaseAdminMainLayoutContainer({
 	showSideBar = true,
 	showHeader = true,
 	headerStyle = {},
-	enableSecurity = false,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
-	const { securityManager } = useArchbaseSecurityManager({
-		resourceName: "ArchbaseAdvancedSidebar",
-		resourceDescription: "Navigation",
-		enableSecurity
-	})
 	const { colorScheme } = useMantineColorScheme();
 	const navigate = useNavigate();
 	const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>();
@@ -174,20 +167,6 @@ function ArchbaseAdminMainLayoutContainer({
 			onCollapsedSideBar(adminLayoutContextValue.collapsed);
 		}
 	}, [adminLayoutContextValue.collapsed, onCollapsedSideBar]);
-
-	useArchbaseDidMount(() => {
-		if (enableSecurity) {
-			adminLayoutContextValue.navigationData.forEach(item => {
-				securityManager.registerAction(item.label, item.label)
-			})
-			securityManager.apply(() => {
-				adminLayoutContextValue.setNavigationData(adminLayoutContextValue.navigationData.map(item => ({
-				...item,
-				disabled: !item.disabled ? !securityManager.hasPermission(item.label) : item.disabled,
-			})))
-		})
-	}
-	})
 
 	const currentSidebarWidth = adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth;
 	return (
@@ -347,7 +326,7 @@ export function ArchbaseAdminMainLayout({
 	showSideBar,
 	showHeader,
 	headerStyle,
-	enableSecurity,
+	enableSecurity = false,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -356,6 +335,7 @@ export function ArchbaseAdminMainLayout({
 			user={user}
 			owner={owner}
 			company={company}
+			enableSecurity={enableSecurity}
 		>
 			<ArchbaseAdminMainLayoutContainer
 				navigationRootLink={navigationRootLink}
