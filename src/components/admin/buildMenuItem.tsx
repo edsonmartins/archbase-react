@@ -3,13 +3,23 @@ import React from 'react';
 import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar';
 
 export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, currentPathName, highlightActiveMenuItem) {
+	const iconsBackgroundColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][8] : theme.colors[theme.primaryColor][7]) : undefined;
+	const iconsColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][0] : theme.colors[theme.primaryColor][0]) : undefined;
 	if (item.links) {
-		const iconsBackgroundColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][8] : theme.colors[theme.primaryColor][7]) : undefined;
-		const iconsColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][0] : theme.colors[theme.primaryColor][0]) : undefined;
 		return (
 			<SubMenu
 				rootStyles={{
 					fontSize: '16px',
+					[`.${menuClasses.button}`]: {
+						'&:hover': {
+							[`.${menuClasses.icon}`]: {
+								color: "white",
+							},
+							[`.${menuClasses.label}`]: {
+								color: "white",
+							},
+						}
+					},
 				}}
 				key={index}
 				id={item.label}
@@ -27,10 +37,21 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 								rootStyles={{
 									[`.${menuClasses.icon}`]: {
 										background: iconsBackgroundColor,
-										color: iconsColor,
+										color: highlightActiveMenuItem && subItem.link === currentPathName ? "white" : iconsColor,
+									},
+									[`.${menuClasses.label}`]: {
+										color: highlightActiveMenuItem && subItem.link === currentPathName ? "white" : "var(--mantine-color-text)",
 									},
 									[`.${menuClasses.button}`]: {
 										paddingLeft: '40px !important',
+										'&:hover': {
+											[`.${menuClasses.icon}`]: {
+												color: "white",
+											},
+											[`.${menuClasses.label}`]: {
+												color: "white",
+											},
+										}
 									},
 								}}
 								key={subIndex}
@@ -50,12 +71,30 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 				<MenuItem
 					rootStyles={{
 						fontSize: '16px',
+						[`.${menuClasses.button}`]: {
+							'&:hover': {
+								[`.${menuClasses.icon}`]: {
+									color: "white",
+								},
+								[`.${menuClasses.label}`]: {
+									color: "white",
+								},
+							}
+						},
+						[`.${menuClasses.icon}`]: {
+							background: iconsBackgroundColor,
+							color: highlightActiveMenuItem && item.link === currentPathName ? "white" : iconsColor,
+						},
+						[`.${menuClasses.label}`]: {
+							color: highlightActiveMenuItem && item.link === currentPathName ? "white" : "var(--mantine-color-text)",
+						},
 					}}
 					key={index}
 					id={item.label}
 					disabled={typeof item.disabled === 'function' ? item.disabled() : item.disabled}
 					onClick={() => onMenuItemClick(item)}
 					icon={item.icon}
+					active={highlightActiveMenuItem && item.link === currentPathName}
 				>
 					{collapsed ? '' : `${i18next.t(item.label)}`}
 				</MenuItem>
