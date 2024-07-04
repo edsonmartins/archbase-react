@@ -1,8 +1,7 @@
 import { ArchbaseEntityTransformer, ArchbaseRemoteApiClient, ArchbaseRemoteApiService } from "@components/service";
-import { GrantPermissionDto, ResouceActionPermissionDto, ResoucePermissionsWithTypeDto, ResourceDto } from "./SecurityDomain";
+import { GrantPermissionDto, ResouceActionPermissionDto, ResoucePermissionsWithTypeDto, ResourceDto, ResourcePermissionsDto, ResourceRegisterDto } from "./SecurityDomain";
 import * as inversify from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from "@components/core";
-import { ResourcePermissionsDto } from "./ArchbaseResourcePermissions";
 import { SecurityType } from "./SecurityType";
 import {getKeyByEnumValue} from "@components/core/utils";
 
@@ -29,13 +28,6 @@ export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDt
 
   isNewRecord(entity: ResourceDto): boolean {
     return entity.isNewResource
-  }
-
-  public getPermissions(resourceName: string) {
-    return this.client.get<ResourcePermissionsDto>(
-      `${this.getEndpoint()}/permissions/${resourceName}`,
-      this.configureHeaders()
-    );
   }
 
   public getAllPermissionsAvailable() {
@@ -73,6 +65,14 @@ export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDt
   public deletePermission(permissionId: string) {
     return this.client.delete<void>(
       `${this.getEndpoint()}/permissions/${permissionId}`,
+      this.configureHeaders(),
+    );
+  }
+
+  public registerResource(resourceRegister: ResourceRegisterDto) {
+    return this.client.post<ResourceRegisterDto, ResourcePermissionsDto>(
+      `${this.getEndpoint()}/register`,
+      resourceRegister,
       this.configureHeaders(),
     );
   }

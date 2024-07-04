@@ -5,6 +5,8 @@ import { ArchbaseAuthenticator } from '../auth/ArchbaseAuthenticator'
 import { ARCHBASE_IOC_API_TYPE } from '../core/ioc'
 import { ArchbaseTokenManager } from '../auth/ArchbaseTokenManager'
 import { processErrorMessage } from '../core/exceptions'
+import { useArchbaseStore } from './useArchbaseStore'
+import { ARCHBASE_SECURITY_MANAGER_STORE } from './useArchbaseSecurityManager'
 
 export interface AuthenticationManagerReturnType {
   login: (username: string, password: string, rememberMe: boolean) => void
@@ -39,6 +41,7 @@ export const useArchbaseAuthenticationManager = ({
   const [isError, setIsError] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const [username, setUsername] = useState<string>('')
+  const securityStore = useArchbaseStore(ARCHBASE_SECURITY_MANAGER_STORE)
 
   useEffect(() => {
     const savedUsername = tokenManager.getUsername();
@@ -68,6 +71,7 @@ export const useArchbaseAuthenticationManager = ({
     setUsername('')
     setError('')
     setIsError(false)
+    securityStore.clearAllValues()
   }
 
   const login = async (username: string, password: string, rememberMe: boolean) => {

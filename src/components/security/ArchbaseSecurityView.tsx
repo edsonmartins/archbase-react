@@ -39,7 +39,6 @@ import { ArchbaseUserService } from './ArchbaseUserService'
 import { ArchbaseGroupService } from './ArchbaseGroupService'
 import { ArchbaseResourceService } from './ArchbaseResourceService'
 import { ArchbaseProfileService } from './ArchbaseProfileService'
-import { ArchbaseApiTokenService } from './ArchbaseApiTokenService'
 import { ArchbaseAccessTokenService } from './ArchbaseAccessTokenService'
 import { ArchbaseCountdownProgress } from '@components/editors'
 import { PermissionsSelector } from './PermissionsSelector'
@@ -321,10 +320,10 @@ export function ArchbaseSecurityView({
         align='center'
       />
       <ArchbaseDataTableColumn<UserDto>
-        dataField="userName"
+        dataField="name"
         dataType="text"
         size={300}
-        header="Nome de Usuário"
+        header="Nome"
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<UserDto>
@@ -703,6 +702,7 @@ export function ArchbaseSecurityView({
           renderToolbarInternalActions={undefined}
           renderRowActions={buildUserRowActions}
           error={<span></span>}
+          enableRowSelection={false}
         >
           {userColumns}
           <ToolBarActions>
@@ -740,6 +740,7 @@ export function ArchbaseSecurityView({
           enableGlobalFilter={true}
           renderToolbarInternalActions={undefined}
           renderRowActions={buildGroupRowActions}
+          enableRowSelection={false}
         >
           {groupColumns}
           <ToolBarActions>
@@ -777,6 +778,7 @@ export function ArchbaseSecurityView({
           enableGlobalFilter={true}
           renderToolbarInternalActions={undefined}
           renderRowActions={buildProfileRowActions}
+          enableRowSelection={false}
         >
           {profileColumns}
           <ToolBarActions>

@@ -59,7 +59,7 @@ export const UserModal = (props: UserModalProps) => {
     <ArchbaseFormModalTemplate
       title={t('archbase:Usuário')}
       size="80%"
-      height={'660px'}
+      height={'540px'}
       dataSource={props.dataSource}
       opened={props.opened}
       onClickOk={props.onClickOk}
@@ -74,7 +74,7 @@ export const UserModal = (props: UserModalProps) => {
         return Promise.resolve()
       }}
     >
-      <ScrollArea ref={focusTrapRef} style={{ height: '600px' }}>
+      <ScrollArea ref={focusTrapRef} style={{ height: '500px' }}>
         <Grid>
           <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
             <ArchbaseEdit
@@ -82,6 +82,7 @@ export const UserModal = (props: UserModalProps) => {
               placeholder={`${t('archbase:Informe o nome completo do usuário')}`}
               dataSource={props.dataSource}
               dataField="name"
+              required
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
@@ -90,24 +91,7 @@ export const UserModal = (props: UserModalProps) => {
               placeholder={`${t('archbase:Informe a descrição do usuário')}`}
               dataSource={props.dataSource}
               dataField="description"
-            />
-          </Grid.Col>
-        </Grid>
-        <Grid>
-          <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-            <ArchbaseEdit
-              label={`${t('archbase:Apelido (username)')}`}
-              placeholder={`${t('archbase:Informe o apelido(username) do usuário')}`}
-              dataSource={props.dataSource}
-              dataField="userName"
-            />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-            <ArchbasePasswordEdit
-              label={`${t('archbase:Senha usuário')}`}
-              dataSource={props.dataSource}
-              dataField="password"
-              error={passwordError}
+              required
             />
           </Grid.Col>
         </Grid>
@@ -117,9 +101,22 @@ export const UserModal = (props: UserModalProps) => {
               label={`${t('archbase:E-mail')}`}
               placeholder={`${t('archbase:Informe o e-mail do usuário')}`}
               dataSource={props.dataSource}
+              onChangeValue={(value) => props.dataSource.setFieldValue("userName", value)}
               dataField="email"
+              required
             />
           </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+            <ArchbasePasswordEdit
+              label={`${t('archbase:Senha usuário')}`}
+              dataSource={props.dataSource}
+              dataField="password"
+              error={passwordError}
+              required={props.dataSource.getFieldValue("isNewUser")}
+            />
+          </Grid.Col>
+        </Grid>
+        <Grid>
           <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
             <ArchbaseSelect<UserDto, string, ProfileDto>
               label={`${t('archbase:Perfil do usuário')}`}
@@ -150,13 +147,6 @@ export const UserModal = (props: UserModalProps) => {
                   dataSource={props.dataSource}
                   dataField="allowPasswordChange"
                   label={`${t('archbase:Pode alterar a senha ?')}`}
-                />
-              </Input.Wrapper>
-              <Input.Wrapper label="">
-                <ArchbaseCheckbox
-                  dataSource={props.dataSource}
-                  dataField="allowMultipleLogins"
-                  label={`${t('archbase:Permite multiplos logins ?')}`}
                 />
               </Input.Wrapper>
               <Input.Wrapper label="">
@@ -227,6 +217,7 @@ export const UserModal = (props: UserModalProps) => {
           labelFieldAssigned={(item: UserGroupDto) => (item && item.group ? item.group.name : '')}
           labelFieldAvailable={'name'}
         ></ArchbaseDualListSelector>
+        <Space h={'12px'} />
       </ScrollArea>
     </ArchbaseFormModalTemplate>
   )

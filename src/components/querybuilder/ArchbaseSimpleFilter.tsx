@@ -43,7 +43,7 @@ import {
 } from './ArchbaseFilterCommons'
 import { t } from 'i18next'
 import { DebouncedTextInput } from './ArchbaseQueryBuilder'
-import { ArchbaseAppContext, ltrim } from '@components/core'
+import { ltrim } from '@components/core'
 import { ArchbaseList } from '@components/list'
 import { ArchbaseDataSource } from '@components/datasource'
 import { ArchbaseDateTimePickerEdit, ArchbaseDateTimePickerRange, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors'
@@ -109,8 +109,8 @@ export interface ArchbaseSimpleFilterState {
 
 class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, ArchbaseSimpleFilterState> {
   static defaultProps = {
-    operators: defaultOperators(),
-    conditions: defaultConditions(),
+    operators: defaultOperators,
+    conditions: defaultConditions,
     onFilterChanged: null,
     onError: null
   }

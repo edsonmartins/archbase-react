@@ -1,5 +1,5 @@
 import { AppShell, Drawer, MantineStyleProp, px, useMantineColorScheme, useMantineTheme } from '@mantine/core';
-import React, { ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
+import React, { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Route, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'usehooks-ts';
 import { ArchbaseUser } from '../auth/ArchbaseUser';
@@ -50,10 +50,10 @@ export interface ArchbaseAdminMainLayoutProps {
 	showHeader?: boolean;
 	headerStyle?: MantineStyleProp;
 	highlightActiveMenuItem?: boolean;
+	enableSecurity?: boolean;
 }
 
 function ArchbaseAdminMainLayoutContainer({
-	navigationData = [],
 	children,
 	header,
 	footer,
@@ -131,7 +131,7 @@ function ArchbaseAdminMainLayoutContainer({
 
 
 	const routes = useMemo(() => {
-		return navigationData.map((item, index) =>
+		return adminLayoutContextValue.navigationData.map((item, index) =>
 			item.links ? (
 				item.links.map((item2, indexSub) => {
 					if (item2.keepAlive) {
@@ -148,7 +148,7 @@ function ArchbaseAdminMainLayoutContainer({
 				<Route key={`${item.link}_${index}`} path={item.link} element={item.component} />
 			),
 		);
-	}, [navigationData, adminLayoutContextValue.collapsed]);
+	}, [adminLayoutContextValue.navigationData, adminLayoutContextValue.collapsed]);
 
 	const handleCollapseSidebar = useCallback(() => {
 		adminLayoutContextValue.setCollapsed(!adminLayoutContextValue.collapsed);
@@ -173,7 +173,7 @@ function ArchbaseAdminMainLayoutContainer({
 	const currentSidebarWidth = adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth;
 	return (
 		<AppShell
-			header={{ height: '60px',collapsed: !showHeader }}
+			header={{ height: '60px', collapsed: !showHeader }}
 			footer={{ height: footerHeight ? footerHeight : '0px' }}
 			styles={{
 				main: {
@@ -198,7 +198,7 @@ function ArchbaseAdminMainLayoutContainer({
 			<AppShell.Navbar>
 				{!isHidden && showSideBar ? (
 					<ArchbaseAdvancedSidebar
-						navigationData={navigationData}
+						navigationData={adminLayoutContextValue.navigationData}
 						sidebarHeight={getSideBarHeight()}
 						sidebarGroupWidth={sideBarCollapsedWidth}
 						sidebarCollapsedWidth={sideBarCollapsedWidth}
@@ -263,7 +263,7 @@ function ArchbaseAdminMainLayoutContainer({
 						}}
 					>
 						<ArchbaseAdvancedSidebar
-							navigationData={navigationData}
+							navigationData={adminLayoutContextValue.navigationData}
 							sidebarWidth={sideBarWidth}
 							sidebarHeight={getSideBarDrawerHeight()}
 							sidebarCollapsedWidth={sideBarCollapsedWidth}
@@ -331,6 +331,7 @@ export function ArchbaseAdminMainLayout({
 	showHeader,
 	headerStyle,
 	highlightActiveMenuItem,
+	enableSecurity = false,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -339,10 +340,10 @@ export function ArchbaseAdminMainLayout({
 			user={user}
 			owner={owner}
 			company={company}
+			enableSecurity={enableSecurity}
 		>
 			<ArchbaseAdminMainLayoutContainer
 				navigationRootLink={navigationRootLink}
-				navigationData={navigationData}
 				user={user}
 				header={header}
 				footer={footer}
@@ -372,6 +373,7 @@ export function ArchbaseAdminMainLayout({
 				showHeader={showHeader}
 				headerStyle={headerStyle}
 				highlightActiveMenuItem={highlightActiveMenuItem}
+				enableSecurity={enableSecurity}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>

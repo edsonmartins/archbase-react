@@ -382,6 +382,8 @@ export class UserDto extends SecurityDto {
       groups: [],
       avatar: null,
       isAdministrator: false,
+      allowPasswordChange: true,
+      passwordNeverExpires: true,
       isNewUser: true
     })
   }
@@ -538,10 +540,10 @@ export interface GrantPermissionDto {
 }
 
 export interface PermissionWithTypesDto {
-	permissionId?: string
-	actionId: string
-	actionDescription: string
-	types?: string[]
+  permissionId?: string
+  actionId: string
+  actionDescription: string
+  types?: string[]
 }
 
 export interface ResoucePermissionsWithTypeDto {
@@ -556,4 +558,24 @@ export interface ResouceActionPermissionDto {
   permissionId: string
   actionId: string
   actionDescription: string
+}
+
+export interface SimpleActionDto {
+  actionName: string
+  actionDescription: string
+}
+
+export interface SimpleResourceDto {
+  resourceName: string
+  resourceDescription: string
+}
+
+export interface ResourceRegisterDto {
+  resource: SimpleResourceDto
+  actions: SimpleActionDto[]
+}
+
+export interface ResourcePermissionsDto {
+  resourceName: string
+  permissions: string[]
 }
