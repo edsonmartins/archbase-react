@@ -141,7 +141,6 @@ export function ArchbaseSecurityView({
   const profileApi = useArchbaseRemoteServiceApi<ArchbaseProfileService>(ARCHBASE_IOC_API_TYPE.Profile)
   const [openedModal, setOpenedModal] = useState<string>('')
   const accessTokenApi = useArchbaseRemoteServiceApi<ArchbaseAccessTokenService>(ARCHBASE_IOC_API_TYPE.AccessToken);
-  const [isAddOperation, setIsAddOperation] = useState(false)
 
   const { dataSource: dsAccessTokens } = useArchbaseRemoteDataSource<AccessTokenDto, string>({
 		name: 'accessTokenApi',
@@ -170,7 +169,7 @@ export function ArchbaseSecurityView({
     store: templateStore,
     validator,
     pageSize: 25,
-    loadOnStart: !isAddOperation,
+    loadOnStart: true,
     onLoadComplete: (dataSource) => {
       //
     },
@@ -189,7 +188,7 @@ export function ArchbaseSecurityView({
     store: templateStore,
     validator,
     pageSize: 25,
-    loadOnStart: !isAddOperation,
+    loadOnStart: true,
     onLoadComplete: (dataSource) => {
       //
     },
@@ -208,7 +207,7 @@ export function ArchbaseSecurityView({
     store: templateStore,
     validator,
     pageSize: 25,
-    loadOnStart: !isAddOperation,
+    loadOnStart: true,
     onLoadComplete: (dataSource) => {
       //
     },
@@ -321,10 +320,10 @@ export function ArchbaseSecurityView({
         align='center'
       />
       <ArchbaseDataTableColumn<UserDto>
-        dataField="userName"
+        dataField="name"
         dataType="text"
         size={300}
-        header="Nome de Usuário"
+        header="Nome"
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<UserDto>
@@ -470,7 +469,6 @@ export function ArchbaseSecurityView({
       user.id = undefined
     }
     dsUsers.insert(user)
-    setIsAddOperation(true)
     setOpenedModal(SecurityType.USER)
   }
 
@@ -526,7 +524,6 @@ export function ArchbaseSecurityView({
       group.id = undefined
     }
     dsGroups.insert(group)
-    setIsAddOperation(true)
     setOpenedModal(SecurityType.GROUP)
   }
 
@@ -577,17 +574,14 @@ export function ArchbaseSecurityView({
   }
 
   const handleCloseUserModal = () => {
-    setIsAddOperation(false)
     setOpenedModal('')
   }
 
   const handleCloseGroupModal = () => {
-    setIsAddOperation(false)
     setOpenedModal('')
   }
 
   const handleCloseProfileModal = () => {
-    setIsAddOperation(false)
     setOpenedModal('')
   }
 
@@ -597,7 +591,6 @@ export function ArchbaseSecurityView({
       profile.id = undefined
     }
     dsProfiles.insert(profile)
-    setIsAddOperation(true)
     setOpenedModal(SecurityType.PROFILE)
    }
 
@@ -709,6 +702,7 @@ export function ArchbaseSecurityView({
           renderToolbarInternalActions={undefined}
           renderRowActions={buildUserRowActions}
           error={<span></span>}
+          enableRowSelection={false}
         >
           {userColumns}
           <ToolBarActions>
@@ -746,6 +740,7 @@ export function ArchbaseSecurityView({
           enableGlobalFilter={true}
           renderToolbarInternalActions={undefined}
           renderRowActions={buildGroupRowActions}
+          enableRowSelection={false}
         >
           {groupColumns}
           <ToolBarActions>
@@ -783,6 +778,7 @@ export function ArchbaseSecurityView({
           enableGlobalFilter={true}
           renderToolbarInternalActions={undefined}
           renderRowActions={buildProfileRowActions}
+          enableRowSelection={false}
         >
           {profileColumns}
           <ToolBarActions>
@@ -870,24 +866,21 @@ export function ArchbaseSecurityView({
           onClickOk={handleCloseUserModal}
           opened={true}
           dataSource={dsUsers}
-          onClickCancel={handleCloseUserModal}
-          onAfterSave={() => setIsAddOperation(false)} />
+          onClickCancel={handleCloseUserModal} />
       ) : null}
       {openedModal === SecurityType.GROUP ? (
         <GroupModal
           onClickOk={handleCloseGroupModal}
           opened={true}
           dataSource={dsGroups}
-          onClickCancel={handleCloseGroupModal}
-          onAfterSave={() => setIsAddOperation(false)} />
+          onClickCancel={handleCloseGroupModal} />
       ) : null}
       {openedModal === SecurityType.PROFILE ? (
         <ProfileModal
           onClickOk={handleCloseProfileModal}
           opened={true}
           dataSource={dsProfiles}
-          onClickCancel={handleCloseProfileModal}
-          onAfterSave={() => setIsAddOperation(false)} />
+          onClickCancel={handleCloseProfileModal} />
       ) : null}
     </Paper>
   )

@@ -382,6 +382,8 @@ export class UserDto extends SecurityDto {
       groups: [],
       avatar: null,
       isAdministrator: false,
+      allowPasswordChange: true,
+      passwordNeverExpires: true,
       isNewUser: true
     })
   }

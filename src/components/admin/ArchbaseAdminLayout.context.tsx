@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { ArchbaseUser } from '../auth';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
-import { useArchbaseGetLoggedUser, useArchbaseSecurityManager } from '@components/hooks';
+import { useArchbaseSecurityManager } from '@components/hooks';
 
 export interface ArchbaseAdminLayoutListener {
 	onChangeLocationPath: (item: ArchbaseNavigationItem) => void;
@@ -58,14 +58,14 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 				item?.links?.forEach(itemChild => securityManager.registerAction(`${item.label} -> ${itemChild.label}`, `${item.label} -> ${itemChild.label}`))
 			})
 			securityManager.apply(() => {
-				setNavigationData([...initialNavigationData.filter(item => item.showInSidebar && !item.disabled).map(item => ({
+				setNavigationData([...initialNavigationData.map(item => ({
 					...item,
 					disabled: !securityManager.hasPermission(item.label),
 					links: item.links && item.links.map(itemChild => ({...itemChild, disabled: !securityManager.hasPermission(`${item.label} -> ${itemChild.label}`)}))
 				}))])
 			})
 		}
-	}, [user])
+	}, [user?.id])
 
 	return (
 		<ArchbaseAdminLayoutContext.Provider
