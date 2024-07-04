@@ -163,10 +163,17 @@ export function PermissionsSelector<T, ID>({ dataSource }: PermissionsSelectorPr
                             return updatedPermissionsGranted
                         })
 
-                        const nextSelectedAvailablePermission = allPermissionsData(availablePermissions, grantedPermissions)
-                            .filter(resourcePermissionsNode => resourcePermissionsNode.value === selectedAvailablePermission?.nodeProps?.owner?.resourceId)
-                            .map(resourcePermissionsNode => resourcePermissionsNode.children).flat()
-                            .find(permissionNode => !permissionNode?.nodeProps?.granted && permissionNode?.value !== selectedAvailablePermission.value)
+                        const resourceAvailablePermissions = allPermissionsData(availablePermissions, grantedPermissions)
+                        .filter(resourcePermissionsNode => resourcePermissionsNode.value === selectedAvailablePermission?.nodeProps?.owner?.resourceId)
+                        .map(resourcePermissionsNode => resourcePermissionsNode.children).flat()
+
+                        const previousSelectedPermissionIndex = resourceAvailablePermissions.map(permission => permission.value).indexOf(selectedAvailablePermission.value)
+                        const nextSelectedAvailablePermission = resourceAvailablePermissions
+                            .find((permissionNode, index) => !permissionNode?.nodeProps?.granted
+                                && permissionNode?.value !== selectedAvailablePermission.value
+                                && (resourceAvailablePermissions.length > previousSelectedPermissionIndex + 1
+                                    ? index > previousSelectedPermissionIndex
+                                    : true))
                         if (nextSelectedAvailablePermission?.value) {
                             availablePermissionsTree.select(nextSelectedAvailablePermission.value)
                         }
