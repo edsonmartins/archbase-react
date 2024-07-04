@@ -344,7 +344,7 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	  if (!selectedValue) {
 		setQueryValue(query);
 	  }
-	  if (query && query.length >= minCharsToSearch) {
+	  if (query && getOptionLabel(selectedValue) !== query && query.length >= minCharsToSearch) {
 		combobox.openDropdown();
 	  }
 	};
