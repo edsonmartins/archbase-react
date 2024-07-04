@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, ScrollArea, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useTree } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight, IconBorderCornerSquare, IconChevronDown, IconEdit } from "@tabler/icons-react";
 import { SecurityType } from "./SecurityType";
@@ -9,7 +9,7 @@ import { ArchbaseResourceService } from "./ArchbaseResourceService";
 import { t } from "i18next";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { ArchbaseRemoteDataSource } from "@components/datasource";
-import { ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from "components/containers";
+import { ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from "@components/containers";
 
 export interface PermissionsSelectorProps<T, ID> {
     dataSource: ArchbaseRemoteDataSource<T, ID>
