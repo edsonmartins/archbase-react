@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, ScrollArea } from '@mantine/core'
+import { Grid } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
 import { t } from 'i18next'
 import { GroupDto } from './SecurityDomain'
@@ -23,7 +23,7 @@ export const GroupModal = (props: GroupModalProps) => {
     <ArchbaseFormModalTemplate
       title={t('archbase:Grupo')}
       size="60%"
-      height={'600px'}
+      height={'500px'}
       dataSource={props.dataSource}
       opened={props.opened}
       onClickOk={props.onClickOk}
@@ -31,26 +31,24 @@ export const GroupModal = (props: GroupModalProps) => {
       onCustomSave={props.onCustomSave}
       onAfterSave={props.onAfterSave}
     >
-      <ScrollArea ref={focusTrapRef} style={{ height: '600px' }}>
-        <Grid>
-          <Grid.Col span={{ base: 12 }}>
-            <ArchbaseEdit
-              label={`${t('archbase:Nome do grupo')}`}
-              placeholder={`${t('archbase:Informe o nome do grupo')}`}
-              dataSource={props.dataSource}
-              dataField="name"
-            />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12 }}>
-            <ArchbaseEdit
-              label={`${t('archbase:Descrição do grupo')}`}
-              placeholder={`${t('archbase:Informe a descrição do grupo')}`}
-              dataSource={props.dataSource}
-              dataField="description"
-            />
-          </Grid.Col>
-        </Grid>
-      </ScrollArea>
+      <Grid ref={focusTrapRef}>
+        <Grid.Col span={{ base: 12 }}>
+          <ArchbaseEdit
+            label={`${t('archbase:Nome do grupo')}`}
+            placeholder={`${t('archbase:Informe o nome do grupo')}`}
+            dataSource={props.dataSource}
+            dataField="name"
+          />
+        </Grid.Col>
+        <Grid.Col span={{ base: 12 }}>
+          <ArchbaseEdit
+            label={`${t('archbase:Descrição do grupo')}`}
+            placeholder={`${t('archbase:Informe a descrição do grupo')}`}
+            dataSource={props.dataSource}
+            dataField="description"
+          />
+        </Grid.Col>
+      </Grid>
     </ArchbaseFormModalTemplate>
   )
 }
