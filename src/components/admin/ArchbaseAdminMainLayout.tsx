@@ -14,6 +14,11 @@ import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAlive
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
 
+export interface ArchbaseAdminMainLayoutSecurityOptions {
+	navigationResourceDescription: string
+	navigationResourceName: string
+}
+
 export interface ArchbaseAdminMainLayoutProps {
 	navigationData?: ArchbaseNavigationItem[];
 	user?: ArchbaseUser;
@@ -51,6 +56,7 @@ export interface ArchbaseAdminMainLayoutProps {
 	headerStyle?: MantineStyleProp;
 	highlightActiveMenuItem?: boolean;
 	enableSecurity?: boolean;
+	securityOptions?: ArchbaseAdminMainLayoutSecurityOptions;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -332,6 +338,7 @@ export function ArchbaseAdminMainLayout({
 	headerStyle,
 	highlightActiveMenuItem,
 	enableSecurity = false,
+	securityOptions,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -341,6 +348,7 @@ export function ArchbaseAdminMainLayout({
 			owner={owner}
 			company={company}
 			enableSecurity={enableSecurity}
+			securityOptions={securityOptions}
 		>
 			<ArchbaseAdminMainLayoutContainer
 				navigationRootLink={navigationRootLink}

@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { ArchbaseUser } from '../auth';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
 import { useArchbaseSecurityManager } from '@components/hooks';
+import { ArchbaseAdminMainLayoutSecurityOptions } from './ArchbaseAdminMainLayout';
 
 export interface ArchbaseAdminLayoutListener {
 	onChangeLocationPath: (item: ArchbaseNavigationItem) => void;
@@ -29,6 +30,7 @@ export interface ArchbaseAdminLayoutContextProps {
 	children?: ReactNode;
 	opened?: boolean;
 	enableSecurity?: boolean;
+	securityOptions?: ArchbaseAdminMainLayoutSecurityOptions;
 }
 
 const ArchbaseAdminLayoutContext = React.createContext<ArchbaseAdminLayoutContextValue>({});
@@ -41,13 +43,14 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 	navigationRootLink,
 	children,
 	enableSecurity,
+	securityOptions,
 }) => {
 	const [collapsed, setCollapsed] = useState<boolean>(false);
 	const [hidden, setHidden] = useState<boolean>(false);
 	const [navigationData, setNavigationData] = useState<ArchbaseNavigationItem[]>(enableSecurity ? [] : initialNavigationData);
 	const { securityManager } = useArchbaseSecurityManager({
-		resourceName: "ArchbaseAdvancedSidebar",
-		resourceDescription: "Navegação",
+		resourceName: securityOptions?.navigationResourceName ? securityOptions.navigationResourceName : "ArchbaseAdvancedSidebar",
+		resourceDescription: securityOptions?.navigationResourceDescription ? securityOptions.navigationResourceDescription : "Navegação",
 		enableSecurity
 	})
 
