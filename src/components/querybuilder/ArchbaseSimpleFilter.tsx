@@ -33,8 +33,6 @@ import {
   ArchbaseQueryFilter,
   Condition,
   DataType,
-  defaultConditions,
-  defaultOperators,
   Field,
   getDefaultEmptyFilter,
   getSortString,
@@ -109,8 +107,88 @@ export interface ArchbaseSimpleFilterState {
 
 class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, ArchbaseSimpleFilterState> {
   static defaultProps = {
-    operators: defaultOperators,
-    conditions: defaultConditions,
+    operators: [
+      {
+        name: 'null',
+        label: 'Em branco',
+        dataTypes: ['string', 'number', 'date', 'date_time', 'time', 'boolean']
+      },
+      {
+        name: 'notNull',
+        label: 'Preenchido',
+        dataTypes: ['string', 'number', 'date', 'date_time', 'time', 'boolean']
+      },
+      {
+        name: 'contains',
+        label: 'Contém',
+        dataTypes: ['string']
+      },
+      {
+        name: 'startsWith',
+        label: 'Iniciado com',
+        dataTypes: ['string']
+      },
+      {
+        name: 'endsWith',
+        label: 'Terminado com',
+        dataTypes: ['string']
+      },
+      {
+        name: '=',
+        label: 'Igual',
+        dataTypes: ['string', 'number', 'date', 'date_time', 'time', 'boolean']
+      },
+      {
+        name: '!=',
+        label: 'Diferente',
+        dataTypes: ['string', 'number', 'date', 'date_time', 'time', 'boolean']
+      },
+      {
+        name: '<',
+        label: 'Menor',
+        dataTypes: ['string', 'number', 'date', 'date_time', 'time']
+      },
+      {
+        name: '>',
+        label: 'Maior',
+        dataTypes: ['string', 'number', 'date', 'date_time', 'time']
+      },
+      {
+        name: '<=',
+        label: 'Menor igual',
+        dataTypes: ['string', 'number', 'date', 'date_time', 'time']
+      },
+      {
+        name: '>=',
+        label: 'Maior igual',
+        dataTypes: ['string', 'number', 'date', 'date_time', 'time']
+      },
+      {
+        name: 'between',
+        label: 'Entre',
+        dataTypes: ['string', 'number', 'date', 'date_time', 'time']
+      },
+      {
+        name: 'inList',
+        label: 'Na lista',
+        dataTypes: ['string', 'number', 'date', 'time']
+      },
+      {
+        name: 'notInList',
+        label: 'Fora da lista',
+        dataTypes: ['string', 'number', 'date', 'time']
+      }
+    ],
+    conditions: [
+      {
+        name: 'and',
+        label: 'E'
+      },
+      {
+        name: 'or',
+        label: 'Ou'
+      }
+    ],
     onFilterChanged: null,
     onError: null
   }
