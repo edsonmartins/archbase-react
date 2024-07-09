@@ -21,6 +21,7 @@ import {
 	getDefaultEmptyFilter,
 } from '../querybuilder';
 import { ArchbaseStateValues } from './ArchbaseStateValues';
+import { ArchbaseActionButton } from 'components/security/ArchbaseActionButton';
 
 export interface UserActionsOptions {
 	visible: boolean;
@@ -334,17 +335,17 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 										? userActions.customUserActions
 										: null}
 									{userActions.onAddExecute ? (
-										<Button
+										<ArchbaseActionButton
 											color={'green'}
 											variant={variant ?? appContext.variant}
 											leftSection={<IconPlus />}
 											onClick={() => userActions && userActions.onAddExecute && userActions!.onAddExecute()}
 										>
 											{t('archbase:New')}
-										</Button>
+										</ArchbaseActionButton>
 									) : null}
 									{userActions.onEditExecute ? (
-										<Button
+										<ArchbaseActionButton
 											color="blue"
 											leftSection={<IconEdit />}
 											disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -352,10 +353,10 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 											onClick={() => userActions && userActions.onEditExecute && userActions!.onEditExecute()}
 										>
 											{t('archbase:Edit')}
-										</Button>
+										</ArchbaseActionButton>
 									) : null}
 									{userActions.onRemoveExecute ? (
-										<Button
+										<ArchbaseActionButton
 											color="red"
 											leftSection={<IconTrash />}
 											disabled={!userActions?.allowRemove || !dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -363,10 +364,10 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 											onClick={() => userActions && userActions.onRemoveExecute && userActions!.onRemoveExecute()}
 										>
 											{t('archbase:Remove')}
-										</Button>
+										</ArchbaseActionButton>
 									) : null}
 									{userActions.onViewExecute ? (
-										<Button
+										<ArchbaseActionButton
 											color="silver"
 											leftSection={<IconEye />}
 											disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -374,7 +375,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 											onClick={() => userActions && userActions.onViewExecute && userActions!.onViewExecute()}
 										>
 											{t('archbase:View')}
-										</Button>
+										</ArchbaseActionButton>
 									) : null}
 									{userActions.customUserActions && userActions.customUserActionsPosition === 'right'
 										? userActions.customUserActions
