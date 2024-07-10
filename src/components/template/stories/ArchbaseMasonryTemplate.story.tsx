@@ -232,6 +232,7 @@ const ArchbaseMasonryTemplateExample = () => {
 				onChangeValue={(value: any, _event: any) => setDebug(value === true)}
 			/>
 			<ArchbaseMasonryTemplate
+				filterType="advanced"
 				title="Pessoas"
 				dataSource={dsPessoas}
 				pageSize={10}
