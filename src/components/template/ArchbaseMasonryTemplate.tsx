@@ -60,7 +60,7 @@ export interface ArchbaseMasonryTemplateProps<T, ID> {
 	title: string;
 	dataSource: ArchbaseDataSource<T, ID>;
 	dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined;
-	onlyGlobalFilter?: boolean;
+	filterType: 'none' | 'normal' | 'advanced';
 	globalFilterFieldNames?: string[];
 	filterOptions: FilterOptions;
 	pageSize?: number;
@@ -123,10 +123,10 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 	innerRef,
 	//isLoading = false,
 	debug = false,
-	onlyGlobalFilter = true,
+	filterType = "normal",
 	isError = false,
 	error = '',
-	clearError = () => {},
+	clearError = () => { },
 	width = '100%',
 	height = '100%',
 	withBorder = true,
@@ -298,7 +298,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 		setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
 	};
 
-	const handleSearchByFilter = () => {};
+	const handleSearchByFilter = () => { };
 
 	const handleSelectItem = (index: number, data: T) => {
 		setActiveIndexValue(index);
@@ -325,7 +325,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 	};
 
 	const buildFilter = (): ReactNode => {
-		if (onlyGlobalFilter && globalFilterFieldNames) {
+		if (filterType === "normal" && globalFilterFieldNames) {
 			return (
 				<ArchbaseGlobalFilter
 					searchableFields={globalFilterFieldNames}
@@ -334,30 +334,32 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 				/>
 			);
 		}
-
-		return (
-			<Profiler id={`profile_${filterOptions.componentName}`} onRender={onRenderCallback}>
-				<ArchbaseQueryBuilder
-					id={filterOptions.componentName}
-					viewName={filterOptions.viewName}
-					apiVersion={filterOptions.apiVersion}
-					ref={filterRef}
-					variant={variant ? (variant as ButtonVariant) : (appContext.variant as ButtonVariant)}
-					expandedFilter={filterState.expandedFilter}
-					persistenceDelegator={filterPersistenceDelegator}
-					currentFilter={filterState.currentFilter}
-					activeFilterIndex={filterState.activeFilterIndex}
-					onSelectedFilter={handleSelectedFilter}
-					onFilterChanged={handleFilterChanged}
-					onSearchByFilter={handleSearchByFilter}
-					onToggleExpandedFilter={handleToggleExpandedFilter}
-					width={'660px'}
-					height="170px"
-				>
-					{filterFields}
-				</ArchbaseQueryBuilder>
-			</Profiler>
-		);
+		if (filterType === "advanced") {
+			return (
+				<Profiler id={`profile_${filterOptions.componentName}`} onRender={onRenderCallback}>
+					<ArchbaseQueryBuilder
+						id={filterOptions.componentName}
+						viewName={filterOptions.viewName}
+						apiVersion={filterOptions.apiVersion}
+						ref={filterRef}
+						variant={variant ? (variant as ButtonVariant) : (appContext.variant as ButtonVariant)}
+						expandedFilter={filterState.expandedFilter}
+						persistenceDelegator={filterPersistenceDelegator}
+						currentFilter={filterState.currentFilter}
+						activeFilterIndex={filterState.activeFilterIndex}
+						onSelectedFilter={handleSelectedFilter}
+						onFilterChanged={handleFilterChanged}
+						onSearchByFilter={handleSearchByFilter}
+						onToggleExpandedFilter={handleToggleExpandedFilter}
+						width={'660px'}
+						height="170px"
+					>
+						{filterFields}
+					</ArchbaseQueryBuilder>
+				</Profiler>
+			);
+		}
+		return <></>
 	};
 
 	const defaultActionsButtonsOptions: ArchbaseActionButtonsOptions = {
