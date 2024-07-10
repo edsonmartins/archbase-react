@@ -2,17 +2,23 @@ import { Button, ButtonProps } from "@mantine/core"
 import React from "react"
 import { ArchbaseSecurityManager } from "./ArchbaseSecurityManager";
 
+export interface ArchbaseActionButtonSecurityProps {
+    securityManager: ArchbaseSecurityManager;
+    actionName: string;
+    actionDescription: string;
+}
+
 export interface ArchbaseActionButtonProps extends ButtonProps {
-    securityManager?: ArchbaseSecurityManager;
-    actionName?: string;
+    securityProps?: ArchbaseActionButtonSecurityProps;
     onClick?: () => void;
 }
 
 export function ArchbaseActionButton(props: ArchbaseActionButtonProps) {
-    const { securityManager, actionName, children, onClick, disabled, ...rest } = props;
+    const { securityProps, children, onClick, disabled, ...rest } = props;
     let isDisabled = disabled;
-    if (securityManager && actionName) {
-        isDisabled = securityManager.hasPermission(actionName)
+    if (securityProps) {
+        securityProps.securityManager.registerAction(securityProps.actionName, securityProps.actionDescription)
+        isDisabled = !securityProps.securityManager.hasPermission(securityProps.actionName)
     }
     return (
         <Button {...rest} disabled={isDisabled} onClick={onClick}>

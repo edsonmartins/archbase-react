@@ -5,6 +5,11 @@ import { useArchbaseGetLoggedUser } from './useArchbaseGetLoggedUser'
 
 export const ARCHBASE_SECURITY_MANAGER_STORE = 'archbaseSecurityManagerStore'
 
+export type SecurityOptions = {
+	resourceDescription: string
+	resourceName: string
+}
+
 export type UseArchbaseSecurityManagerProps = {
   resourceName: string
   resourceDescription: string

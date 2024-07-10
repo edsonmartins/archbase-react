@@ -2,17 +2,27 @@ import { ActionIcon, ActionIconProps, Button } from "@mantine/core";
 import React from "react";
 import { ArchbaseSecurityManager } from "./ArchbaseSecurityManager";
 
+export interface ArchbaseActionIconSecurityProps {
+    securityManager: ArchbaseSecurityManager;
+    actionName: string;
+    actionDescription: string;
+}
+
 export interface ArchbaseActionIconProps extends ActionIconProps {
-    securityManager?: ArchbaseSecurityManager;
-    actionName?: string;
+    securityProps?: ArchbaseActionIconSecurityProps;
+    onClick?: () => void;
 }
 
 export function ArchbaseActionIcon(props: ArchbaseActionIconProps) {
-    let disabled = props.disabled;
-    if (props.securityManager && props.actionName) {
-        disabled = props.securityManager.hasPermission(props.actionName)
+    const { securityProps, children, onClick, disabled, ...rest } = props;
+    let isDisabled = disabled;
+    if (securityProps) {
+        securityProps.securityManager.registerAction(securityProps.actionName, securityProps.actionDescription)
+        isDisabled = !securityProps.securityManager.hasPermission(securityProps.actionName)
     }
     return (
-        <ActionIcon {...props} disabled={disabled}/>
+        <ActionIcon {...rest} disabled={isDisabled} onClick={onClick}>
+            {children}
+        </ActionIcon>
     )
 }

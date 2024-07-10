@@ -1,7 +1,7 @@
 import { emit, useArchbaseAppContext } from '@components/core';
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseDataTable, ToolBarActions } from '@components/datatable';
-import { useArchbaseTheme } from '@components/hooks';
+import { useArchbaseDidMount, useArchbaseSecurityManager, useArchbaseTheme } from '@components/hooks';
 import { ArchbaseAlert } from '@components/notification';
 import { AlertVariant, Button, ButtonVariant, Flex, Paper, useMantineColorScheme } from '@mantine/core';
 import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
@@ -21,7 +21,8 @@ import {
 	getDefaultEmptyFilter,
 } from '../querybuilder';
 import { ArchbaseStateValues } from './ArchbaseStateValues';
-import { ArchbaseActionButton } from 'components/security/ArchbaseActionButton';
+import { ArchbaseActionButton } from '@components/security/ArchbaseActionButton';
+import { SecurityOptions } from '@components/hooks/useArchbaseSecurityManager';
 
 export interface UserActionsOptions {
 	visible: boolean;
@@ -81,6 +82,7 @@ export interface ArchbaseTableTemplateProps<T extends Object, ID> {
 	/* Padding da célula do cabeçalho da tabela */
 	tableHeadCellPadding?: string | number;
 	renderDetailPanel?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
+	securityOptions?: SecurityOptions;
 }
 
 const getFilter = (
@@ -121,7 +123,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	isError = false,
 	enableTopToolbar = true,
 	error = '',
-	clearError = () => {},
+	clearError = () => { },
 	filterType = 'normal',
 	width = '100%',
 	height = '100%',
@@ -135,6 +137,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	enableRowSelection,
 	tableHeadCellPadding,
 	renderDetailPanel,
+	securityOptions,
 }: ArchbaseTableTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const filterRef = useRef<any>();
@@ -146,11 +149,22 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 		currentFilter: undefined,
 		expandedFilter: false,
 	});
+	const { securityManager } = useArchbaseSecurityManager({
+		resourceName: securityOptions?.resourceName ? securityOptions.resourceName : `Tabela ${title}`,
+		resourceDescription: securityOptions?.resourceDescription ? securityOptions.resourceDescription : `Tabela ${title}`,
+		enableSecurity: appContext.enableSecurity
+	})
 
 	useEffect(() => {
 		const state = getFilter(filterOptions, store, filterPersistenceDelegator);
 		setFilterState(state);
 	}, [isLoadingFilter]);
+
+	useArchbaseDidMount(() => {
+		if(appContext.enableSecurity) {
+			securityManager.apply()
+		}
+	})
 
 	const buildRowActions = ({ row }): ReactNode | undefined => {
 		if (!userRowActions && !userRowActions!.actions) {
@@ -336,6 +350,11 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 										: null}
 									{userActions.onAddExecute ? (
 										<ArchbaseActionButton
+											securityProps={securityManager && {
+												securityManager,
+												actionName: `Adicionar ${title}`,
+												actionDescription: `Adicionar ${title}`
+											}}
 											color={'green'}
 											variant={variant ?? appContext.variant}
 											leftSection={<IconPlus />}
@@ -346,6 +365,11 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 									) : null}
 									{userActions.onEditExecute ? (
 										<ArchbaseActionButton
+											securityProps={securityManager && {
+												securityManager,
+												actionName: `Editar ${title}`,
+												actionDescription: `Editar ${title}`
+											}}
 											color="blue"
 											leftSection={<IconEdit />}
 											disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -357,6 +381,11 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 									) : null}
 									{userActions.onRemoveExecute ? (
 										<ArchbaseActionButton
+											securityProps={securityManager && {
+												securityManager,
+												actionName: `Remover ${title}`,
+												actionDescription: `Remover ${title}`
+											}}
 											color="red"
 											leftSection={<IconTrash />}
 											disabled={!userActions?.allowRemove || !dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -368,6 +397,11 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 									) : null}
 									{userActions.onViewExecute ? (
 										<ArchbaseActionButton
+											securityProps={securityManager && {
+												securityManager,
+												actionName: `Ver ${title}`,
+												actionDescription: `Ver ${title}`
+											}}
 											color="silver"
 											leftSection={<IconEye />}
 											disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}

@@ -59,6 +59,8 @@ import { convertISOStringToDate, filter, isEmpty } from '../core/utils';
 import { type ArchbaseDataSource, type DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDataSourceListener, useArchbaseTheme } from '../hooks';
 import classes from './ArchbaseDataTable.module.css';
+import { ArchbaseActionIcon } from '@components/security/ArchbaseActionIcon';
+import { SecurityOptions } from '@components/hooks/useArchbaseSecurityManager';
 
 interface JsPDFCustom extends JsPDF {
 	autoTable: (options: UserOptions) => void;
@@ -1425,6 +1427,7 @@ export interface ArchbaseTableRowActionsProps<T extends Object> {
 	onViewRow: (row: MRT_Row<T>) => void;
 	row: MRT_Row<T>;
 	variant?: string;
+	securityOptions?: SecurityOptions;
 }
 
 export function ArchbaseTableRowActions<T extends Object>({
@@ -1433,6 +1436,7 @@ export function ArchbaseTableRowActions<T extends Object>({
 	onViewRow,
 	row,
 	variant = 'filled',
+	securityOptions,
 }: ArchbaseTableRowActionsProps<T>) {
 	const theme = useArchbaseTheme();
 
@@ -1440,35 +1444,35 @@ export function ArchbaseTableRowActions<T extends Object>({
 		<Box style={{ display: 'flex' }}>
 			{onEditRow ? (
 				<Tooltip withinPortal withArrow position="left" label={t('Edit')}>
-					<ActionIcon
+					<ArchbaseActionIcon
 						variant={variant === 'filled' ? 'transparent' : variant}
 						color="green"
 						onClick={() => onEditRow && onEditRow(row)}
 					>
 						<IconEdit color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
-					</ActionIcon>
+					</ArchbaseActionIcon>
 				</Tooltip>
 			) : null}
 			{onRemoveRow ? (
 				<Tooltip withinPortal withArrow position="right" label={t('Remove')}>
-					<ActionIcon
+					<ArchbaseActionIcon
 						variant={variant === 'filled' ? 'transparent' : variant}
 						color="red"
 						onClick={() => onRemoveRow && onRemoveRow(row)}
 					>
 						<IconTrash color={theme.colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
-					</ActionIcon>
+					</ArchbaseActionIcon>
 				</Tooltip>
 			) : null}
 			{onViewRow ? (
 				<Tooltip withinPortal withArrow position="right" label={t('View')}>
-					<ActionIcon
+					<ArchbaseActionIcon
 						variant={variant === 'filled' ? 'transparent' : variant}
 						color="black"
 						onClick={() => onViewRow && onViewRow(row)}
 					>
 						<IconEye color={theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]} />
-					</ActionIcon>
+					</ArchbaseActionIcon>
 				</Tooltip>
 			) : null}
 		</Box>
