@@ -61,6 +61,7 @@ import { useArchbaseDataSourceListener, useArchbaseTheme } from '../hooks';
 import classes from './ArchbaseDataTable.module.css';
 import { ArchbaseActionIcon } from '@components/security/ArchbaseActionIcon';
 import { SecurityOptions } from '@components/hooks/useArchbaseSecurityManager';
+import { ArchbaseSecurityManager } from 'components/security';
 
 interface JsPDFCustom extends JsPDF {
 	autoTable: (options: UserOptions) => void;
@@ -1427,7 +1428,8 @@ export interface ArchbaseTableRowActionsProps<T extends Object> {
 	onViewRow: (row: MRT_Row<T>) => void;
 	row: MRT_Row<T>;
 	variant?: string;
-	securityOptions?: SecurityOptions;
+	securityManager?: ArchbaseSecurityManager;
+	title?: string;
 }
 
 export function ArchbaseTableRowActions<T extends Object>({
@@ -1436,7 +1438,8 @@ export function ArchbaseTableRowActions<T extends Object>({
 	onViewRow,
 	row,
 	variant = 'filled',
-	securityOptions,
+	securityManager,
+	title,
 }: ArchbaseTableRowActionsProps<T>) {
 	const theme = useArchbaseTheme();
 
@@ -1448,6 +1451,11 @@ export function ArchbaseTableRowActions<T extends Object>({
 						variant={variant === 'filled' ? 'transparent' : variant}
 						color="green"
 						onClick={() => onEditRow && onEditRow(row)}
+						securityProps={securityManager && {
+							securityManager,
+							actionName: `Editar ${title}`,
+							actionDescription: `Editar ${title}`
+						}}
 					>
 						<IconEdit color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 					</ArchbaseActionIcon>
@@ -1459,6 +1467,11 @@ export function ArchbaseTableRowActions<T extends Object>({
 						variant={variant === 'filled' ? 'transparent' : variant}
 						color="red"
 						onClick={() => onRemoveRow && onRemoveRow(row)}
+						securityProps={securityManager && {
+							securityManager,
+							actionName: `Remover ${title}`,
+							actionDescription: `Remover ${title}`
+						}}
 					>
 						<IconTrash color={theme.colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
 					</ArchbaseActionIcon>
@@ -1470,6 +1483,11 @@ export function ArchbaseTableRowActions<T extends Object>({
 						variant={variant === 'filled' ? 'transparent' : variant}
 						color="black"
 						onClick={() => onViewRow && onViewRow(row)}
+						securityProps={securityManager && {
+							securityManager,
+							actionName: `Ver ${title}`,
+							actionDescription: `Ver ${title}`
+						}}
 					>
 						<IconEye color={theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.dark[4]} />
 					</ArchbaseActionIcon>

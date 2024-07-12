@@ -1,15 +1,9 @@
 import { ActionIcon, ActionIconProps, Button } from "@mantine/core";
 import React from "react";
-import { ArchbaseSecurityManager } from "./ArchbaseSecurityManager";
-
-export interface ArchbaseActionIconSecurityProps {
-    securityManager: ArchbaseSecurityManager;
-    actionName: string;
-    actionDescription: string;
-}
+import { SecurityProps } from "./SecurityProps";
 
 export interface ArchbaseActionIconProps extends ActionIconProps {
-    securityProps?: ArchbaseActionIconSecurityProps;
+    securityProps?: SecurityProps;
     onClick?: () => void;
 }
 

@@ -28,7 +28,6 @@ interface ArchbaseAppContextValues {
 	user: ArchbaseUser | null;
 	owner: string | null;
 	selectedCompany: any | null;
-	enableSecurity: boolean;
 	theme: MantineTheme | null;
 	colorScheme: MantineColorScheme | null;
 	iocContainer: Container | null;
@@ -44,7 +43,6 @@ const ArchbaseAppContext = createContext<ArchbaseAppContextValues>({
 	user: null,
 	owner: null,
 	selectedCompany: null,
-	enableSecurity: false,
 	theme: null,
 	colorScheme: null,
 	iocContainer: null,
@@ -60,7 +58,6 @@ interface ArchbaseAppProviderProps {
 	user: any | null;
 	owner: string | null;
 	selectedCompany: any | null;
-	enableSecurity?: boolean;
 	iocContainer?: any;
 	dateFormat?: string;
 	dateTimeFormat?: string;
@@ -74,7 +71,6 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 	user,
 	owner,
 	selectedCompany,
-	enableSecurity = false,
 	children,
 	iocContainer,
 	dateFormat = 'dd/MM/yyyy',
@@ -110,7 +106,6 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 				user,
 				owner,
 				selectedCompany,
-				enableSecurity,
 				theme,
 				colorScheme,
 				iocContainer,

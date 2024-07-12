@@ -1,7 +1,7 @@
 import { emit, useArchbaseAppContext } from '@components/core';
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseDataTable, ToolBarActions } from '@components/datatable';
-import { useArchbaseDidMount, useArchbaseSecurityManager, useArchbaseTheme } from '@components/hooks';
+import { useArchbaseDidMount, useArchbaseTheme } from '@components/hooks';
 import { ArchbaseAlert } from '@components/notification';
 import { AlertVariant, Button, ButtonVariant, Flex, Paper, useMantineColorScheme } from '@mantine/core';
 import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
@@ -22,7 +22,8 @@ import {
 } from '../querybuilder';
 import { ArchbaseStateValues } from './ArchbaseStateValues';
 import { ArchbaseActionButton } from '@components/security/ArchbaseActionButton';
-import { SecurityOptions } from '@components/hooks/useArchbaseSecurityManager';
+import { ArchbaseSecurityManager } from '@components/security';
+import { SecurityProps } from '@components/security/SecurityProps';
 
 export interface UserActionsOptions {
 	visible: boolean;
@@ -45,6 +46,7 @@ export interface UserRowActionsOptions<T extends Object> {
 	onEditRow?: (row: MRT_Row<T>) => void;
 	onRemoveRow?: (row: MRT_Row<T>) => void;
 	onViewRow?: (row: MRT_Row<T>) => void;
+	securityProps?: SecurityProps;
 }
 
 export interface ArchbaseTableTemplateProps<T extends Object, ID> {
@@ -82,7 +84,7 @@ export interface ArchbaseTableTemplateProps<T extends Object, ID> {
 	/* Padding da célula do cabeçalho da tabela */
 	tableHeadCellPadding?: string | number;
 	renderDetailPanel?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
-	securityOptions?: SecurityOptions;
+	securityManager?: ArchbaseSecurityManager;
 }
 
 const getFilter = (
@@ -137,7 +139,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	enableRowSelection,
 	tableHeadCellPadding,
 	renderDetailPanel,
-	securityOptions,
+	securityManager,
 }: ArchbaseTableTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const filterRef = useRef<any>();
@@ -149,11 +151,6 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 		currentFilter: undefined,
 		expandedFilter: false,
 	});
-	const { securityManager } = useArchbaseSecurityManager({
-		resourceName: securityOptions?.resourceName ? securityOptions.resourceName : `Tabela ${title}`,
-		resourceDescription: securityOptions?.resourceDescription ? securityOptions.resourceDescription : `Tabela ${title}`,
-		enableSecurity: appContext.enableSecurity
-	})
 
 	useEffect(() => {
 		const state = getFilter(filterOptions, store, filterPersistenceDelegator);
@@ -161,7 +158,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	}, [isLoadingFilter]);
 
 	useArchbaseDidMount(() => {
-		if(appContext.enableSecurity) {
+		if(securityManager) {
 			securityManager.apply()
 		}
 	})
@@ -178,6 +175,8 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 				onViewRow={userRowActions!.onViewRow}
 				row={row}
 				variant={variant ?? appContext.variant}
+				securityProps={userRowActions.securityProps}
+				title={title}
 			/>
 		);
 	};

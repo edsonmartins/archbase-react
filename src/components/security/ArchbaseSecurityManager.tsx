@@ -10,7 +10,7 @@ export interface ISecurityManager {
 export class ArchbaseSecurityManager implements ISecurityManager {
   protected resourceService: ArchbaseResourceService
   protected resource: SimpleResourceDto
-  protected actions: SimpleActionDto[]
+  protected actions: Map<string, SimpleActionDto>
   protected permissions: string[]
   protected alreadyApplied: boolean
   protected error: string
@@ -20,7 +20,7 @@ export class ArchbaseSecurityManager implements ISecurityManager {
     this.resourceService = IOCContainer.getContainer().get<ArchbaseResourceService>(ARCHBASE_IOC_API_TYPE.Resource);
     this.resource = { resourceName, resourceDescription }
     this.alreadyApplied = false
-    this.actions = []
+    this.actions = new Map()
     this.permissions = []
     this.error = ""
     this.isAdmin = isAdmin
@@ -28,14 +28,17 @@ export class ArchbaseSecurityManager implements ISecurityManager {
 
   public registerAction(actionName: string, actionDescription: string) {
     if (!this.alreadyApplied) {
-      this.actions.push({ actionName, actionDescription })
+      if (!this.actions.has(actionName)) {
+        this.actions.set(actionName, { actionName, actionDescription });
+      }
     }
   }
 
   public async apply(callback?: Function) {
     if (!this.alreadyApplied) {
       try {
-        const resourcePermissions: ResourcePermissionsDto = await this.resourceService.registerResource({ resource: this.resource, actions: this.actions })
+        const actionsArray = Array.from(this.actions.values());
+        const resourcePermissions: ResourcePermissionsDto = await this.resourceService.registerResource({ resource: this.resource, actions: actionsArray })
         this.permissions = resourcePermissions.permissions;
         this.alreadyApplied = true;
         this.error = "";
