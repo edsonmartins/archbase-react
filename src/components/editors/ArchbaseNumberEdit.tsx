@@ -155,6 +155,8 @@ export interface ArchbaseNumberEditProps<T, ID>
 	integer?: boolean;
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
+	/** Evento quando o valor for limpado */
+	onClear?: () => void
 }
 
 export function ArchbaseNumberEdit<T, ID>({
@@ -186,6 +188,7 @@ export function ArchbaseNumberEdit<T, ID>({
 	size,
 	error,
 	innerRef,
+	onClear,
 	...others
 }: ArchbaseNumberEditProps<T, ID>) {
 	const [isOpen, _setIsOpen] = useState(false);
@@ -401,6 +404,9 @@ export function ArchbaseNumberEdit<T, ID>({
 					setCurrentValue((_prev) => 0);
 					if (dataSource && !dataSource.isBrowsing() && dataField) {
 						dataSource.setFieldValue(dataField, allowEmpty ? null : 0);
+					}
+					if (onClear) {
+						onClear()
 					}
 				}}
 				unstyled={unstyled}
