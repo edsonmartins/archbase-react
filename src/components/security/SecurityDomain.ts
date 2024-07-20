@@ -341,6 +341,8 @@ export class UserDto extends SecurityDto {
 
   avatar?: string
 
+  nickname: string
+
   @IsEmail(
     {},
     {
@@ -372,6 +374,7 @@ export class UserDto extends SecurityDto {
     this.email = data.email || ''
     this.avatar = data.avatar || undefined
     this.isNewUser = data.isNewUser || false
+    this.nickname = data.nickname
   }
 
   static newInstance = () => {

@@ -327,6 +327,13 @@ export function ArchbaseSecurityView({
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<UserDto>
+        dataField="nickname"
+        dataType="text"
+        size={120}
+        header="Apelido"
+        inputFilterType="text"
+      />
+      <ArchbaseDataTableColumn<UserDto>
         dataField="email"
         dataType="text"
         header="Email"

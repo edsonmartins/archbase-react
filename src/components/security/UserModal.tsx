@@ -4,7 +4,7 @@ import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseImageEdit, ArchbasePasswordEdit
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@components/hooks'
 import { ArchbaseNotifications } from '@components/notification'
 import { ArchbaseFormModalTemplate } from '@components/template'
-import { Grid, Input, ScrollArea, Space, Stack } from '@mantine/core'
+import { Grid, Group, Input, ScrollArea, Space, Stack } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
 import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
@@ -77,13 +77,23 @@ export const UserModal = (props: UserModalProps) => {
       <ScrollArea ref={focusTrapRef} style={{ height: '500px' }}>
         <Grid>
           <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-            <ArchbaseEdit
-              label={`${t('archbase:Nome completo')}`}
-              placeholder={`${t('archbase:Informe o nome completo do usuário')}`}
-              dataSource={props.dataSource}
-              dataField="name"
-              required
-            />
+            <Group>
+              <ArchbaseEdit
+                label={`${t('archbase:Nome completo')}`}
+                placeholder={`${t('archbase:Informe o nome completo do usuário')}`}
+                dataSource={props.dataSource}
+                dataField="name"
+                required
+                width={'calc(100% - 208px)'}
+              />
+              <ArchbaseEdit
+                label={`${t('archbase:Apelido')}`}
+                placeholder={`${t('archbase:Apelido')}`}
+                dataSource={props.dataSource}
+                dataField="nickname"
+                required
+              />
+            </Group>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
             <ArchbaseEdit
