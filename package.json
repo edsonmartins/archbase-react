@@ -1,6 +1,6 @@
 {
   "name": "archbase-react",
-  "version": "2.0.41",
+  "version": "2.0.42",
   "description": "Biblioteca de compontentes React TypeScript focada em produtividade no desenvolvimento web.",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -104,7 +104,7 @@
     "lodash.debounce": "4.0.8",
     "lz-string": "^1.5.0",
     "mantine-flagpack": "^4.0.0",
-    "mantine-react-table": "2.0.0-beta.5",
+    "mantine-react-table": "2.0.0-beta.6",
     "mjml-browser": "^4.14.1",
     "outlayer": "^2.1.1",
     "overlayscrollbars": "^2.3.2",
