@@ -57,6 +57,7 @@ export interface ArchbaseAdminMainLayoutProps {
 	highlightActiveMenuItem?: boolean;
 	enableSecurity?: boolean;
 	securityOptions?: ArchbaseAdminMainLayoutSecurityOptions;
+	initialSidebarCollapsed?: boolean;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -339,6 +340,7 @@ export function ArchbaseAdminMainLayout({
 	highlightActiveMenuItem,
 	enableSecurity = false,
 	securityOptions,
+	initialSidebarCollapsed = false,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -349,6 +351,7 @@ export function ArchbaseAdminMainLayout({
 			company={company}
 			enableSecurity={enableSecurity}
 			securityOptions={securityOptions}
+			initialSidebarCollapsed={initialSidebarCollapsed}
 		>
 			<ArchbaseAdminMainLayoutContainer
 				navigationRootLink={navigationRootLink}
