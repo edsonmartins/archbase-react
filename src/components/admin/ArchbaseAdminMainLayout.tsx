@@ -66,6 +66,7 @@ export interface ArchbaseAdminMainLayoutProps {
 	customRenderSidebar?: (props: ArchbaseCustomSidebarProps) => ReactNode;
 	onNavigationDataChange?: (navigationData: ArchbaseNavigationItem[]) => void;
 	showCollapsedButton?: boolean;
+	initialSidebarCollapsed?: boolean;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -357,6 +358,7 @@ export function ArchbaseAdminMainLayout({
 	customRenderSidebar,
 	onNavigationDataChange,
 	showCollapsedButton,
+	initialSidebarCollapsed = false,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -368,6 +370,7 @@ export function ArchbaseAdminMainLayout({
 			enableSecurity={enableSecurity}
 			securityOptions={securityOptions}
 			onNavigationDataChange={onNavigationDataChange}
+			initialSidebarCollapsed={initialSidebarCollapsed}
 		>
 			<ArchbaseAdminMainLayoutContainer
 				navigationRootLink={navigationRootLink}

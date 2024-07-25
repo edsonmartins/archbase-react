@@ -34,6 +34,7 @@ export interface ArchbaseAdminLayoutContextProps {
 	enableSecurity?: boolean;
 	securityOptions?: ArchbaseAdminMainLayoutSecurityOptions;
 	onNavigationDataChange?: (navigationData: ArchbaseNavigationItem[]) => void;
+	initialSidebarCollapsed?: boolean;
 }
 
 const ArchbaseAdminLayoutContext = React.createContext<ArchbaseAdminLayoutContextValue>({});
@@ -48,8 +49,9 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 	enableSecurity,
 	securityOptions,
 	onNavigationDataChange,
+	initialSidebarCollapsed,
 }) => {
-	const [collapsed, setCollapsed] = useState<boolean>(false);
+	const [collapsed, setCollapsed] = useState<boolean>(initialSidebarCollapsed);
 	const [hidden, setHidden] = useState<boolean>(false);
 	const [navigationData, setNavigationData] = useUncontrolled({
 		value: initialNavigationData,
