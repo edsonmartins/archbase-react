@@ -65,6 +65,7 @@ export interface ArchbaseAdminMainLayoutProps {
 	securityOptions?: ArchbaseAdminMainLayoutSecurityOptions;
 	customRenderSidebar?: (props: ArchbaseCustomSidebarProps) => ReactNode;
 	onNavigationDataChange?: (navigationData: ArchbaseNavigationItem[]) => void;
+	showCollapsedButton?: boolean;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -96,6 +97,7 @@ function ArchbaseAdminMainLayoutContainer({
 	headerStyle = {},
 	highlightActiveMenuItem = true,
 	customRenderSidebar,
+	showCollapsedButton = true,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -243,7 +245,7 @@ function ArchbaseAdminMainLayoutContainer({
 				) : undefined}
 			</AppShell.Navbar>
 			<AppShell.Main bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}>
-				{!isHidden &&
+				{!isHidden && showCollapsedButton &&
 					buildSetCollapsedButton(
 						colorScheme,
 						theme,
@@ -354,6 +356,7 @@ export function ArchbaseAdminMainLayout({
 	securityOptions,
 	customRenderSidebar,
 	onNavigationDataChange,
+	showCollapsedButton,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -399,6 +402,7 @@ export function ArchbaseAdminMainLayout({
 				highlightActiveMenuItem={highlightActiveMenuItem}
 				enableSecurity={enableSecurity}
 				customRenderSidebar={customRenderSidebar}
+				showCollapsedButton={showCollapsedButton}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>
