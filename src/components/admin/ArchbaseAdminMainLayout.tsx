@@ -19,6 +19,12 @@ export interface ArchbaseAdminMainLayoutSecurityOptions {
 	navigationResourceName: string
 }
 
+export interface ArchbaseCustomSidebarProps {
+	width?: string | number,
+	height?: string | number,
+	isHidden?: boolean,
+}
+
 export interface ArchbaseAdminMainLayoutProps {
 	navigationData?: ArchbaseNavigationItem[];
 	user?: ArchbaseUser;
@@ -57,6 +63,9 @@ export interface ArchbaseAdminMainLayoutProps {
 	highlightActiveMenuItem?: boolean;
 	enableSecurity?: boolean;
 	securityOptions?: ArchbaseAdminMainLayoutSecurityOptions;
+	customRenderSidebar?: (props: ArchbaseCustomSidebarProps) => ReactNode;
+	onNavigationDataChange?: (navigationData: ArchbaseNavigationItem[]) => void;
+	showCollapsedButton?: boolean;
 	initialSidebarCollapsed?: boolean;
 }
 
@@ -87,7 +96,9 @@ function ArchbaseAdminMainLayoutContainer({
 	showSideBar = true,
 	showHeader = true,
 	headerStyle = {},
-	highlightActiveMenuItem = true
+	highlightActiveMenuItem = true,
+	customRenderSidebar,
+	showCollapsedButton = true,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -204,37 +215,38 @@ function ArchbaseAdminMainLayoutContainer({
 			</AppShell.Header>
 			<AppShell.Navbar>
 				{!isHidden && showSideBar ? (
-					<ArchbaseAdvancedSidebar
-						navigationData={adminLayoutContextValue.navigationData}
-						sidebarHeight={getSideBarHeight()}
-						sidebarGroupWidth={sideBarCollapsedWidth}
-						sidebarCollapsedWidth={sideBarCollapsedWidth}
-						selectedGroupColor={selectedGroupColor}
-						groupColor={groupColor}
-						backgroundGroupColor={backgroundGroupColor}
-						groupLabelDarkColor={groupLabelDarkColor}
-						groupLabelLightColor={groupLabelLightColor}
-						showGroupLabels={false}
-						collapsed={adminLayoutContextValue.collapsed}
-						sidebarWidth={sideBarWidth}
-						isHidden={isHidden}
-						onMenuItemClick={onMenuItemClick}
-						onClickActionIcon={onClickActionIcon}
-						sideBarFooterHeight={sideBarFooterHeight}
-						sideBarFooterContent={sideBarFooterContent}
-						sideBarHeaderContent={sideBarHeaderContent}
-						theme={theme}
-						sidebarRef={sidebarRef}
-						defaultGroupIcon={sidebarDefaultGroupIcon}
-						selectedGroupName={sidebarSelectedGroupName}
-						iconsWithBackground={iconsWithBackground}
-						menuItemHeight={menuItemHeight}
-						highlightActiveMenuItem={highlightActiveMenuItem}
-					/>
+					customRenderSidebar ? customRenderSidebar({width: sideBarWidth, height: getSideBarHeight(), isHidden}) :
+						<ArchbaseAdvancedSidebar
+							navigationData={adminLayoutContextValue.navigationData}
+							sidebarHeight={getSideBarHeight()}
+							sidebarGroupWidth={sideBarCollapsedWidth}
+							sidebarCollapsedWidth={sideBarCollapsedWidth}
+							selectedGroupColor={selectedGroupColor}
+							groupColor={groupColor}
+							backgroundGroupColor={backgroundGroupColor}
+							groupLabelDarkColor={groupLabelDarkColor}
+							groupLabelLightColor={groupLabelLightColor}
+							showGroupLabels={false}
+							collapsed={adminLayoutContextValue.collapsed}
+							sidebarWidth={sideBarWidth}
+							isHidden={isHidden}
+							onMenuItemClick={onMenuItemClick}
+							onClickActionIcon={onClickActionIcon}
+							sideBarFooterHeight={sideBarFooterHeight}
+							sideBarFooterContent={sideBarFooterContent}
+							sideBarHeaderContent={sideBarHeaderContent}
+							theme={theme}
+							sidebarRef={sidebarRef}
+							defaultGroupIcon={sidebarDefaultGroupIcon}
+							selectedGroupName={sidebarSelectedGroupName}
+							iconsWithBackground={iconsWithBackground}
+							menuItemHeight={menuItemHeight}
+							highlightActiveMenuItem={highlightActiveMenuItem}
+						/>
 				) : undefined}
 			</AppShell.Navbar>
 			<AppShell.Main bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}>
-				{!isHidden &&
+				{!isHidden && showCollapsedButton &&
 					buildSetCollapsedButton(
 						colorScheme,
 						theme,
@@ -269,32 +281,35 @@ function ArchbaseAdminMainLayoutContainer({
 							header: { minHeight: '10px' },
 						}}
 					>
-						<ArchbaseAdvancedSidebar
-							navigationData={adminLayoutContextValue.navigationData}
-							sidebarWidth={sideBarWidth}
-							sidebarHeight={getSideBarDrawerHeight()}
-							sidebarCollapsedWidth={sideBarCollapsedWidth}
-							sidebarGroupWidth={sideBarCollapsedWidth}
-							selectedGroupColor={selectedGroupColor}
-							groupColor={groupColor}
-							backgroundGroupColor={backgroundGroupColor}
-							groupLabelDarkColor={groupLabelDarkColor}
-							groupLabelLightColor={groupLabelLightColor}
-							showGroupLabels={false}
-							isHidden={isHidden}
-							onMenuItemClick={onMenuItemClick}
-							onClickActionIcon={onClickActionIcon}
-							theme={theme}
-							sidebarRef={sidebarRef}
-							defaultGroupIcon={sidebarDefaultGroupIcon}
-							selectedGroupName={sidebarSelectedGroupName}
-							iconsWithBackground={iconsWithBackground}
-							menuItemHeight={menuItemHeight}
-							sideBarHeaderContent={sideBarHeaderContent}
-							sideBarFooterContent={sideBarFooterContent}
-							sideBarFooterHeight={sideBarFooterHeight}
-							highlightActiveMenuItem={highlightActiveMenuItem}
-						/>
+						{
+							customRenderSidebar ? customRenderSidebar({width: sideBarWidth, height: getSideBarDrawerHeight(), isHidden}) :
+								<ArchbaseAdvancedSidebar
+									navigationData={adminLayoutContextValue.navigationData}
+									sidebarWidth={sideBarWidth}
+									sidebarHeight={getSideBarDrawerHeight()}
+									sidebarCollapsedWidth={sideBarCollapsedWidth}
+									sidebarGroupWidth={sideBarCollapsedWidth}
+									selectedGroupColor={selectedGroupColor}
+									groupColor={groupColor}
+									backgroundGroupColor={backgroundGroupColor}
+									groupLabelDarkColor={groupLabelDarkColor}
+									groupLabelLightColor={groupLabelLightColor}
+									showGroupLabels={false}
+									isHidden={isHidden}
+									onMenuItemClick={onMenuItemClick}
+									onClickActionIcon={onClickActionIcon}
+									theme={theme}
+									sidebarRef={sidebarRef}
+									defaultGroupIcon={sidebarDefaultGroupIcon}
+									selectedGroupName={sidebarSelectedGroupName}
+									iconsWithBackground={iconsWithBackground}
+									menuItemHeight={menuItemHeight}
+									sideBarHeaderContent={sideBarHeaderContent}
+									sideBarFooterContent={sideBarFooterContent}
+									sideBarFooterHeight={sideBarFooterHeight}
+									highlightActiveMenuItem={highlightActiveMenuItem}
+								/>
+						}
 					</Drawer>
 				}
 			</AppShell.Main>
@@ -340,6 +355,9 @@ export function ArchbaseAdminMainLayout({
 	highlightActiveMenuItem,
 	enableSecurity = false,
 	securityOptions,
+	customRenderSidebar,
+	onNavigationDataChange,
+	showCollapsedButton,
 	initialSidebarCollapsed = false,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
@@ -351,6 +369,7 @@ export function ArchbaseAdminMainLayout({
 			company={company}
 			enableSecurity={enableSecurity}
 			securityOptions={securityOptions}
+			onNavigationDataChange={onNavigationDataChange}
 			initialSidebarCollapsed={initialSidebarCollapsed}
 		>
 			<ArchbaseAdminMainLayoutContainer
@@ -385,6 +404,8 @@ export function ArchbaseAdminMainLayout({
 				headerStyle={headerStyle}
 				highlightActiveMenuItem={highlightActiveMenuItem}
 				enableSecurity={enableSecurity}
+				customRenderSidebar={customRenderSidebar}
+				showCollapsedButton={showCollapsedButton}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>

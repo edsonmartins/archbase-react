@@ -3,6 +3,7 @@ import { ArchbaseUser } from '../auth';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
 import { useArchbaseSecurityManager } from '@components/hooks';
 import { ArchbaseAdminMainLayoutSecurityOptions } from './ArchbaseAdminMainLayout';
+import { useUncontrolled } from '@mantine/hooks';
 
 export interface ArchbaseAdminLayoutListener {
 	onChangeLocationPath: (item: ArchbaseNavigationItem) => void;
@@ -19,6 +20,7 @@ export interface ArchbaseAdminLayoutContextValue {
 	setCollapsed?: (value: boolean) => void;
 	hidden?: boolean;
 	setHidden?: (value: boolean) => void;
+	onNavigationDataChange?: (navigationData: ArchbaseNavigationItem[]) => void;
 }
 
 export interface ArchbaseAdminLayoutContextProps {
@@ -31,6 +33,7 @@ export interface ArchbaseAdminLayoutContextProps {
 	opened?: boolean;
 	enableSecurity?: boolean;
 	securityOptions?: ArchbaseAdminMainLayoutSecurityOptions;
+	onNavigationDataChange?: (navigationData: ArchbaseNavigationItem[]) => void;
 	initialSidebarCollapsed?: boolean;
 }
 
@@ -45,36 +48,59 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 	children,
 	enableSecurity,
 	securityOptions,
+	onNavigationDataChange,
 	initialSidebarCollapsed,
 }) => {
 	const [collapsed, setCollapsed] = useState<boolean>(initialSidebarCollapsed);
 	const [hidden, setHidden] = useState<boolean>(false);
-	const [navigationData, setNavigationData] = useState<ArchbaseNavigationItem[]>(enableSecurity ? [] : initialNavigationData);
+	const [navigationData, setNavigationData] = useUncontrolled({
+		value: initialNavigationData,
+		defaultValue: enableSecurity ? [] : initialNavigationData,
+		finalValue: [],
+		onChange: onNavigationDataChange,
+	});
+
 	const { securityManager } = useArchbaseSecurityManager({
 		resourceName: securityOptions?.navigationResourceName ? securityOptions.navigationResourceName : "ArchbaseAdvancedSidebar",
 		resourceDescription: securityOptions?.navigationResourceDescription ? securityOptions.navigationResourceDescription : "Navegação",
 		enableSecurity
-	})
+	});
 
 	useEffect(() => {
 		if (enableSecurity) {
-			initialNavigationData.filter(item => item.showInSidebar).forEach(item => {
-				securityManager.registerAction(item.label, item.label)
-				item?.links?.forEach(itemChild => securityManager.registerAction(`${item.label} -> ${itemChild.label}`, `${item.label} -> ${itemChild.label}`))
-			})
+			const filteredData = initialNavigationData.filter(item => item.showInSidebar);
+			filteredData.forEach(item => {
+				securityManager.registerAction(item.label, item.label);
+				item?.links?.forEach(itemChild => securityManager.registerAction(`${item.label} -> ${itemChild.label}`, `${item.label} -> ${itemChild.label}`));
+			});
 			securityManager.apply(() => {
-				setNavigationData([...initialNavigationData.map(item => ({
+				setNavigationData(initialNavigationData.map(item => ({
 					...item,
 					disabled: !securityManager.hasPermission(item.label),
-					links: item.links && item.links.map(itemChild => ({...itemChild, disabled: !securityManager.hasPermission(`${item.label} -> ${itemChild.label}`)}))
-				}))])
-			})
+					links: item.links && item.links.map(itemChild => ({
+						...itemChild,
+						disabled: !securityManager.hasPermission(`${item.label} -> ${itemChild.label}`)
+					}))
+				})));
+			});
 		}
-	}, [user?.id])
+	}, [user?.id, enableSecurity, initialNavigationData, securityManager, setNavigationData]);
 
 	return (
 		<ArchbaseAdminLayoutContext.Provider
-			value={{ navigationData, setNavigationData, user, owner, company, navigationRootLink, collapsed, setCollapsed, hidden, setHidden }}
+			value={{
+				navigationData,
+				setNavigationData,
+				user,
+				owner,
+				company,
+				navigationRootLink,
+				collapsed,
+				setCollapsed,
+				hidden,
+				setHidden,
+				onNavigationDataChange
+			}}
 		>
 			{children}
 		</ArchbaseAdminLayoutContext.Provider>
