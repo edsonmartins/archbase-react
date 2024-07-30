@@ -134,6 +134,12 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 				inputFilterType="text"
 			/>
 			<ArchbaseDataTableColumn<ApiTokenDto>
+				dataField="activated"
+				dataType="boolean"
+				header="Ativado ?"
+				inputFilterType="checkbox"
+			/>
+			<ArchbaseDataTableColumn<ApiTokenDto>
 				dataField="revoked"
 				dataType="boolean"
 				header="Revogado ?"

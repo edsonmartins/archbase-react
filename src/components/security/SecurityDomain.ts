@@ -466,6 +466,7 @@ export class ApiTokenDto {
   user: UserDto
   expirationDate: string
   revoked: boolean
+  activated: boolean
   isNovoToken: boolean
 
   constructor(data: any) {
@@ -482,6 +483,7 @@ export class ApiTokenDto {
     this.token = data.token || ''
     this.expirationDate = data.expirationDate
     this.revoked = data.revoked
+    this.activated = data.activated || false
   }
 
   static newInstance = () => {

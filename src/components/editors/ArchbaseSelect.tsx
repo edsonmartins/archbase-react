@@ -335,7 +335,7 @@ export function ArchbaseSelect<T, ID, O>({
   }, [])
 
   const handleChange = (vl: string | null, option: SelectItem) => {
-    const value = option.origin
+    const value = option && option.origin ? option.origin : undefined
     setSelectedValue((_prev) => value)
 
     if (
@@ -387,6 +387,7 @@ export function ArchbaseSelect<T, ID, O>({
     }
     return tmpRreadOnly
   }
+
 
   const handleItemComponent = ({ option, checked }) => {
     if (!ItemComponent) {
