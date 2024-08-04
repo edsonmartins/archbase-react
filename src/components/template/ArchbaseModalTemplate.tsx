@@ -7,6 +7,8 @@ import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixe
 import { useArchbaseAppContext } from '../core';
 import { useArchbaseTheme } from '../hooks';
 import { ArchbaseDialog } from '../notification';
+import { ArchbaseActionButton } from '@components/security/ArchbaseActionButton';
+import { SecurityProps } from '@components/security/SecurityProps';
 
 export interface ArchbaseModalTemplateProps extends ModalProps {
 	height: string | number | undefined;
@@ -14,6 +16,7 @@ export interface ArchbaseModalTemplateProps extends ModalProps {
 	onlyOkButton?: boolean;
 	onClickOk?: () => void;
 	onClickCancel?: () => void;
+	securityProps?: SecurityProps;
 }
 
 export function ArchbaseModalTemplate({
@@ -35,6 +38,7 @@ export function ArchbaseModalTemplate({
 	onClickOk,
 	onClickCancel,
 	userActions,
+	securityProps,
 }: ArchbaseModalTemplateProps) {
 	const appContext = useArchbaseAppContext();
 	const theme = useArchbaseTheme();
@@ -57,6 +61,8 @@ export function ArchbaseModalTemplate({
 	const handleClose = () => {
 		ArchbaseDialog.showWarning(t('Click on Ok or Cancel to close'));
 	};
+
+	const actionName = `Ok ${title}`;
 
 	return (
 		<Modal
@@ -85,12 +91,17 @@ export function ArchbaseModalTemplate({
 					<Flex justify="space-between" align="center">
 						<Group>{userActions}</Group>
 						<Group gap="md">
-							<Button
+						<ArchbaseActionButton
+								securityProps={securityProps?.securityManager && {
+									securityManager: securityProps.securityManager,
+									actionName: securityProps.actionName ? securityProps.actionName : actionName,
+									actionDescription: securityProps.actionDescription ? securityProps.actionDescription : actionName,
+								}}
 								leftSection={<IconCheck />}
 								onClick={handleSave}
 								variant={variant ?? appContext.variant}
 								color="green"
-							>{`${t('Ok')}`}</Button>
+							>{`${t('Ok')}`}</ArchbaseActionButton>
 							{!onlyOkButton ? (
 								<Button
 									leftSection={<IconX />}

@@ -19,6 +19,8 @@ import { processErrorMessage } from '../core/exceptions';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDataSourceListener } from '../hooks';
 import { ArchbaseAlert } from '../notification';
+import { ArchbaseActionButton } from '@components/security/ArchbaseActionButton';
+import { SecurityProps } from '@components/security/SecurityProps';
 
 export interface ArchbaseFormTemplateProps<T, ID> {
 	title: string;
@@ -45,15 +47,17 @@ export interface ArchbaseFormTemplateProps<T, ID> {
 	onBeforeCancel?: () => void;
 	onAfterCancel?: () => void;
 	onError?: (error: string) => void;
+	securityProps?: SecurityProps;
 }
 
 export function ArchbaseFormTemplate<T extends object, ID>({
+	title,
 	innerRef,
 	isError = false,
 	isCanceling = false,
 	isSaving = false,
 	error = '',
-	clearError = () => {},
+	clearError = () => { },
 	autoCloseAlertError = 15000,
 	width = '100%',
 	height = '100%',
@@ -69,6 +73,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 	onBeforeCancel,
 	onAfterCancel,
 	onError,
+	securityProps,
 }: ArchbaseFormTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const innerComponentRef = useRef<any>();
@@ -139,6 +144,8 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 		setInternalError('');
 	};
 
+	const actionName = dataSource.isEditing() ? `Editar ${title}` : `Adicionar ${title}`;
+
 	return (
 		<Paper
 			ref={innerRef || innerComponentRef}
@@ -167,13 +174,18 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 					<Space h="lg" />
 					{dataSource && !dataSource.isBrowsing() ? (
 						<Group gap="md">
-							<Button
+							<ArchbaseActionButton
+								securityProps={securityProps?.securityManager && {
+									securityManager: securityProps.securityManager,
+									actionName: securityProps.actionName ? securityProps.actionName : actionName,
+									actionDescription: securityProps.actionDescription ? securityProps.actionDescription : actionName,
+								}}
 								leftSection={<IconDeviceFloppy />}
 								onClick={() => handleSave(dataSource.getCurrentRecord())}
 								disabled={dataSource && dataSource.isBrowsing()}
 								variant={variant ?? appContext.variant}
 								color="green"
-							>{`${t('Ok')}`}</Button>
+							>{`${t('Ok')}`}</ArchbaseActionButton>
 							<Button
 								leftSection={<IconX />}
 								onClick={handleCancel}
