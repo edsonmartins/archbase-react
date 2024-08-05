@@ -152,7 +152,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	}, [isLoadingFilter]);
 
 	const buildRowActions = ({ row }): ReactNode | undefined => {
-		if (!userRowActions && !userRowActions!.actions) {
+		if (!userRowActions && !userRowActions?.actions) {
 			return;
 		}
 		const Comp: any = userRowActions!.actions;
@@ -322,6 +322,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 				enableRowSelection={enableRowSelection}
 				tableHeadCellPadding={tableHeadCellPadding}
 				renderDetailPanel={renderDetailPanel}
+				enableRowActions={!!userRowActions}
 			>
 				{columns}
 				{userActions?.visible ? (
