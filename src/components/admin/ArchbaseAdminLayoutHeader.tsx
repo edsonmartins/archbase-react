@@ -9,6 +9,7 @@ import {
 	Group,
 	Image,
 	Menu,
+	MenuStylesNames,
 	px,
 	Text,
 	Tooltip,
@@ -123,6 +124,10 @@ class CommandPaletteButton extends Component<CommandPaletteButtonProps, CommandP
 	}
 }
 
+export type ArchbaseAdminLayoutHeaderStylesProps = {
+	menu?: Partial<Record<MenuStylesNames, CSSProperties>>;
+}
+
 export type ArchbaseAdminLayoutHeaderProps = {
 	logo: string;
 	styleLogo?: CSSProperties;
@@ -156,6 +161,7 @@ export type ArchbaseAdminLayoutHeaderProps = {
 	sunColor?: string;
 	/** Cor da lua do botão de troca de tema */
 	moonColor?: string;
+	styles?: ArchbaseAdminLayoutHeaderStylesProps;
 };
 
 export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps> = ({
@@ -186,7 +192,8 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 	showBurger = true,
 	showCommands = true,
 	sunColor,
-	moonColor
+	moonColor,
+	styles,
 }) => {
 	const theme = useMantineTheme();
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -286,7 +293,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 				{showHeaderActions && headerActions}
 				{showHeaderToggleColorScheme && <ArchbaseColorSchemeAction toggleColorScheme={toggleColorSchemeExternal} sunColor={sunColor} moonColor={moonColor} />}
 				{showLanguageSelector && <ArchbaseChangeLanguageAction />}
-				<Menu shadow="md" width={200} position="bottom-end">
+				<Menu shadow="md" width={200} position="bottom-end" styles={styles?.menu}>
 					<Menu.Target>
 						<div>
 							<Avatar

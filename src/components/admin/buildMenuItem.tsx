@@ -1,3 +1,4 @@
+import { Tooltip } from '@mantine/core';
 import i18next from 'i18next';
 import React from 'react';
 import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar';
@@ -8,98 +9,102 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 	if (item.links) {
 		if (!(item.disabled && item.hideDisabledItem)) {
 			return (
-				<SubMenu
-					rootStyles={{
-						fontSize: '16px',
-						[`.${menuClasses.button}`]: {
-							'&:hover': {
-								[`.${menuClasses.icon}`]: {
-									color: "white",
-								},
-								[`.${menuClasses.label}`]: {
-									color: "white",
-								},
-							}
-						},
-					}}
-					key={index}
-					id={item.label}
-					icon={item.icon}
-					defaultOpen={!item.disabled}
-					label={collapsed ? '' : `${i18next.t(item.label)}`}
-					disabled={item.disabled}
-				>
-					{item.links &&
-						item.links
-							.filter((itm) => itm.showInSidebar === true && (!itm.disabled || !itm.hideDisabledItem))
-							.map((subItem, subIndex) => (
-								<MenuItem
-									onClick={() => onMenuItemClick(subItem)}
-									rootStyles={{
-										[`.${menuClasses.icon}`]: {
-											background: iconsBackgroundColor,
-											color: highlightActiveMenuItem && subItem.link === currentPathName ? "white" : iconsColor,
-										},
-										[`.${menuClasses.label}`]: {
-											color: highlightActiveMenuItem && subItem.link === currentPathName ? "white" : "var(--mantine-color-text)",
-										},
-										[`.${menuClasses.button}`]: {
-											paddingLeft: '40px !important',
-											'&:hover': {
-												[`.${menuClasses.icon}`]: {
-													color: "white",
-												},
-												[`.${menuClasses.label}`]: {
-													color: "white",
-												},
-											}
-										},
-									}}
-									key={subIndex}
-									id={subItem.label}
-									icon={subItem.icon}
-									disabled={typeof subItem.disabled === 'function' ? subItem.disabled() : subItem.disabled}
-									active={highlightActiveMenuItem && subItem.link === currentPathName}
-								>
-									{`${i18next.t(subItem.label)}`}
-								</MenuItem>
-							))}
-				</SubMenu>
+				<Tooltip disabled={!collapsed} label={`${i18next.t(item.label)}`}>
+					<SubMenu
+						rootStyles={{
+							fontSize: '16px',
+							[`.${menuClasses.button}`]: {
+								'&:hover': {
+									[`.${menuClasses.icon}`]: {
+										color: "white",
+									},
+									[`.${menuClasses.label}`]: {
+										color: "white",
+									},
+								}
+							},
+						}}
+						key={index}
+						id={item.label}
+						icon={item.icon}
+						defaultOpen={!item.disabled}
+						label={collapsed ? '' : `${i18next.t(item.label)}`}
+						disabled={item.disabled}
+					>
+						{item.links &&
+							item.links
+								.filter((itm) => itm.showInSidebar === true && (!itm.disabled || !itm.hideDisabledItem))
+								.map((subItem, subIndex) => (
+									<MenuItem
+										onClick={() => onMenuItemClick(subItem)}
+										rootStyles={{
+											[`.${menuClasses.icon}`]: {
+												background: iconsBackgroundColor,
+												color: highlightActiveMenuItem && subItem.link === currentPathName ? "white" : iconsColor,
+											},
+											[`.${menuClasses.label}`]: {
+												color: highlightActiveMenuItem && subItem.link === currentPathName ? "white" : "var(--mantine-color-text)",
+											},
+											[`.${menuClasses.button}`]: {
+												paddingLeft: '40px !important',
+												'&:hover': {
+													[`.${menuClasses.icon}`]: {
+														color: "white",
+													},
+													[`.${menuClasses.label}`]: {
+														color: "white",
+													},
+												}
+											},
+										}}
+										key={subIndex}
+										id={subItem.label}
+										icon={subItem.icon}
+										disabled={typeof subItem.disabled === 'function' ? subItem.disabled() : subItem.disabled}
+										active={highlightActiveMenuItem && subItem.link === currentPathName}
+									>
+										{`${i18next.t(subItem.label)}`}
+									</MenuItem>
+								))}
+					</SubMenu>
+				</Tooltip>
 			)
 		}
 	} else {
 		if (item.showInSidebar && (!item.disabled || !item.hideDisabledItem)) {
 			return (
-				<MenuItem
-					rootStyles={{
-						fontSize: '16px',
-						[`.${menuClasses.button}`]: {
-							'&:hover': {
-								[`.${menuClasses.icon}`]: {
-									color: "white",
-								},
-								[`.${menuClasses.label}`]: {
-									color: "white",
-								},
-							}
-						},
-						[`.${menuClasses.icon}`]: {
-							background: iconsBackgroundColor,
-							color: highlightActiveMenuItem && item.link === currentPathName ? "white" : iconsColor,
-						},
-						[`.${menuClasses.label}`]: {
-							color: highlightActiveMenuItem && item.link === currentPathName ? "white" : "var(--mantine-color-text)",
-						},
-					}}
-					key={index}
-					id={item.label}
-					disabled={typeof item.disabled === 'function' ? item.disabled() : item.disabled}
-					onClick={() => onMenuItemClick(item)}
-					icon={item.icon}
-					active={highlightActiveMenuItem && item.link === currentPathName}
-				>
-					{collapsed ? '' : `${i18next.t(item.label)}`}
-				</MenuItem>
+				<Tooltip disabled={!collapsed} label={`${i18next.t(item.label)}`}>
+					<MenuItem
+						rootStyles={{
+							fontSize: '16px',
+							[`.${menuClasses.button}`]: {
+								'&:hover': {
+									[`.${menuClasses.icon}`]: {
+										color: "white",
+									},
+									[`.${menuClasses.label}`]: {
+										color: "white",
+									},
+								}
+							},
+							[`.${menuClasses.icon}`]: {
+								background: iconsBackgroundColor,
+								color: highlightActiveMenuItem && item.link === currentPathName ? "white" : iconsColor,
+							},
+							[`.${menuClasses.label}`]: {
+								color: highlightActiveMenuItem && item.link === currentPathName ? "white" : "var(--mantine-color-text)",
+							},
+						}}
+						key={index}
+						id={item.label}
+						disabled={typeof item.disabled === 'function' ? item.disabled() : item.disabled}
+						onClick={() => onMenuItemClick(item)}
+						icon={item.icon}
+						active={highlightActiveMenuItem && item.link === currentPathName}
+					>
+						{collapsed ? '' : `${i18next.t(item.label)}`}
+					</MenuItem>
+				</Tooltip>
 			);
 		}
 	}
