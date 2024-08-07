@@ -91,8 +91,8 @@ export function ArchbaseAdvancedSidebar({
 	const color = selectedGroupColor
 		? selectedGroupColor
 		: colorScheme === 'dark'
-		? theme.colors[theme.primaryColor][8]
-		: theme.colors[theme.primaryColor][0];
+			? theme.colors[theme.primaryColor][8]
+			: theme.colors[theme.primaryColor][0];
 
 	const groups = useMemo(() => {
 		const result: Set<GroupItemSidebar> = new Set();
@@ -162,8 +162,8 @@ export function ArchbaseAdvancedSidebar({
 														? groupLabelDarkColor
 														: theme.colors[theme.primaryColor][2]
 													: groupLabelLightColor
-													? groupLabelLightColor
-													: theme.colors[theme.primaryColor][2]
+														? groupLabelLightColor
+														: theme.colors[theme.primaryColor][2]
 											}
 										>
 											{item.group.label}
@@ -206,8 +206,8 @@ export function ArchbaseAdvancedSidebar({
 	const calcBackgroundGroupColor = backgroundGroupColor
 		? backgroundGroupColor
 		: colorScheme === 'dark'
-		? theme.colors[theme.primaryColor][6]
-		: theme.colors[theme.primaryColor][7];
+			? theme.colors[theme.primaryColor][6]
+			: theme.colors[theme.primaryColor][7];
 
 	const setDefaultActiveGroupName = useCallback(() => {
 		if (selectedGroupName && groups.map((group) => group.name).includes(selectedGroupName)) {
@@ -254,9 +254,7 @@ export function ArchbaseAdvancedSidebar({
 				<Flex direction="column" w={collapsed ? sidebarCollapsedWidth : sidebarWidth}>
 					<div style={{ height: 'auto', width: '100%' }}>{sideBarHeaderContent}</div>
 					<Paper withBorder={withBorder} h={sidebarHeight} w={'100%'} display={'flex'}>
-						{groups.length === 0 ? (
-							false
-						) : (
+						{groups.length !== 0 &&
 							<Stack
 								gap="4px"
 								style={{
@@ -268,8 +266,8 @@ export function ArchbaseAdvancedSidebar({
 							>
 								{groups.map((item) => item.component)}
 							</Stack>
-						)}
-						{activeGroupName !== '' ? (
+						}
+						{activeGroupName !== '' &&
 							<Sidebar
 								ref={sidebarRef}
 								rootStyles={{
@@ -303,9 +301,7 @@ export function ArchbaseAdvancedSidebar({
 									</SidebarMenu>
 								</ScrollArea>
 							</Sidebar>
-						) : (
-							false
-						)}
+						}
 					</Paper>
 					<div style={{ height: 'auto', width: '100%' }}>{sideBarFooterContent}</div>
 				</Flex>
