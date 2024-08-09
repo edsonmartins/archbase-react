@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import {
   TextInput,
   Select,
@@ -48,45 +48,59 @@ export function ArchbaseKeyValueEditor({
   layout = 'horizontal',
   spacing = 'xs'
 }: ArchbaseKeyValueEditorProps) {
-  const parseInitialValue = (value) => {
-    if (!value) {
-      return []
-    }
-
-    return value.split(pairSeparator).map((pair) => {
-      const [key, val] = pair.split(keyValueSeparator)
-      return {
-        key: useBraces ? key.replace(/[{}]/g, '') : key,
-        value: val
+  const parseInitialValue = useCallback(
+    (value) => {
+      if (!value) {
+        return [];
       }
-    })
-  }
+
+      return value.split(pairSeparator).map((pair) => {
+        const [key, val] = pair.split(keyValueSeparator);
+        return {
+          key: useBraces ? key.replace(/[{}]/g, "") : key,
+          value: val,
+        };
+      });
+    },
+    [keyValueSeparator, pairSeparator, useBraces]
+  );
 
   const [pairs, setPairs] = useState(parseInitialValue(initialValue))
-
+  const lastInitialValue = useRef<string>();
   useEffect(() => {
     const newPairs = parseInitialValue(initialValue)
 
     if (JSON.stringify(newPairs) !== JSON.stringify(pairs)) {
       setPairs(newPairs)
     }
-  }, [initialValue, pairSeparator, keyValueSeparator, useBraces])
+  }, [initialValue, pairSeparator, keyValueSeparator, useBraces, parseInitialValue])
 
   useEffect(() => {
     if (onChangeKeyValue) {
-      const validPairs = pairs.filter((pair) => pair.key && pair.value)
-      const formattedString = validPairs
-        .map((pair) => {
-          const key = useBraces ? `{${pair.key}}` : pair.key
-          return `${key}${keyValueSeparator}${pair.value}`
-        })
-        .join(pairSeparator)
+      if (lastInitialValue.current === initialValue) {
+        const validPairs = pairs.filter((pair) => pair.key && pair.value);
+        const formattedString = validPairs
+          .map((pair) => {
+            const key = useBraces ? `{${pair.key}}` : pair.key;
+            return `${key}${keyValueSeparator}${pair.value}`;
+          })
+          .join(pairSeparator);
 
-      if (formattedString !== initialValue) {
-        onChangeKeyValue(formattedString)
+        if (formattedString !== initialValue) {
+          onChangeKeyValue(formattedString);
+        }
+      } else {
+        lastInitialValue.current = initialValue;
       }
     }
-  }, [pairs, onChangeKeyValue, useBraces, pairSeparator, keyValueSeparator, initialValue])
+  }, [
+    pairs,
+    onChangeKeyValue,
+    useBraces,
+    pairSeparator,
+    keyValueSeparator,
+    initialValue,
+  ]);
 
   const handleAddPair = () => {
     const newPairs = [...pairs, { key: '', value: '' }]
@@ -112,6 +126,20 @@ export function ArchbaseKeyValueEditor({
 
   const LayoutComponent = layout === 'horizontal' ? Group : Stack;
 
+  const getKeyLabel = () => {
+    if (keyLabel) {
+      return keyLabel
+    }
+    return valueLabel && layout === 'horizontal' ? " " : ""
+  }
+
+  const getValueLabel = () => {
+    if (valueLabel) {
+      return valueLabel
+    }
+    return keyLabel && layout === 'horizontal' ? " " : ""
+  }
+
   return (
     <Input.Wrapper label={label} error={error}>
       <Box>
@@ -121,7 +149,7 @@ export function ArchbaseKeyValueEditor({
               <TextInput
                 placeholder={keyLabel}
                 value={pair.key}
-                label={keyLabel ? keyLabel : (valueLabel && layout === 'horizontal' ? " " : "")}
+                label={getKeyLabel()}
                 style={{ width: layout === 'vertical' ? '100%' : undefined }}
                 onChange={(e) => handleKeyChange(index, e.target.value)}
                 readOnly={readOnly}
@@ -130,7 +158,7 @@ export function ArchbaseKeyValueEditor({
                 <Select
                   data={valueOptions}
                   value={pair.value}
-                  label={valueLabel ? valueLabel : (keyLabel && layout === 'horizontal' ? " " : "")}
+                  label={getValueLabel()}
                   style={{ width: layout === 'vertical' ? '100%' : undefined }}
                   onChange={(val) => handleValueChange(index, val)}
                   placeholder={valueLabel}
@@ -140,7 +168,7 @@ export function ArchbaseKeyValueEditor({
                 <TextInput
                   placeholder={valueLabel}
                   value={pair.value}
-                  label={valueLabel ? valueLabel : (keyLabel && layout === 'horizontal' ? " " : "")}
+                  label={getValueLabel()}
                   style={{ width: layout === 'vertical' ? '100%' : undefined }}
                   onChange={(e) => handleValueChange(index, e.target.value)}
                   readOnly={readOnly}
