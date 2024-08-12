@@ -1,1 +1,0 @@
-import"./index-8b3efc3f.js";import"./jsx-runtime-c9381026.js";import{b as r,c as a,d as i}from"./polymorphic-factory-8fbd487e.js";function n({classNames:o,styles:l,props:e,stylesCtx:s}){const t=r();return{resolvedClassNames:a({theme:t,classNames:o,props:e,stylesCtx:s||void 0}),resolvedStyles:i({theme:t,styles:l,props:e,stylesCtx:s||void 0})}}export{n as u};
