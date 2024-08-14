@@ -1,10 +1,10 @@
-import { Button, Flex, Group, Modal, ModalProps, useMantineColorScheme } from '@mantine/core';
+import { Button, Flex, Group, LoadingOverlay, LoadingOverlayStylesNames, Modal, ModalProps, OverlayCssVariables, OverlayProps, OverlayStylesNames, useMantineColorScheme } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import { IconCheck } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
 import { IconBug } from '@tabler/icons-react';
 import { t } from 'i18next';
-import React, { ReactNode, useState } from 'react';
+import React, { CSSProperties, ReactNode, useState } from 'react';
 import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '../containers';
 import { useArchbaseAppContext } from '../core';
 import { processDetailErrorMessage, processErrorMessage } from '../core/exceptions';
@@ -25,6 +25,7 @@ export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Om
 	error?: string | undefined;
 	clearError?: () => void;
 	autoCloseAlertError?: number;
+	loadingOverlayStyles?: Partial<Record<LoadingOverlayStylesNames, CSSProperties>>
 }
 
 export function ArchbaseFormModalTemplate<T extends object, ID>({
@@ -50,14 +51,16 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 	onCustomSave,
 	isError,
 	error = '',
-	clearError = () => {},
+	clearError = () => { },
 	autoCloseAlertError = 15000,
+	loadingOverlayStyles,
 }: ArchbaseFormModalTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const theme = useArchbaseTheme();
 	const { colorScheme } = useMantineColorScheme();
 	const [isInternalError, setIsInternalError] = useState<boolean>(isError);
 	const [internalError, setInternalError] = useState<string>(error);
+	const [isLoading, setIsLoading] = useState(false)
 	const forceUpdate = useForceUpdate();
 
 	useArchbaseDataSourceListener<T, ID>({
@@ -77,6 +80,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 		if (dataSource) {
 			if (!dataSource.isBrowsing()) {
 				try {
+					setIsLoading(true)
 					await dataSource.save();
 					onAfterSave && onAfterSave(dataSource.getCurrentRecord());
 				} catch (ex) {
@@ -85,10 +89,12 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 						processErrorMessage(ex),
 						processDetailErrorMessage(ex),
 					);
+					setIsLoading(false)
 					return false;
 				}
 			}
 		}
+		setIsLoading(false)
 		return true;
 	};
 
@@ -171,6 +177,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 			closeOnEscape={closeOnEscape}
 			size={size}
 		>
+			<LoadingOverlay styles={loadingOverlayStyles} visible={isLoading} opacity={0.8} />
 			<ArchbaseSpaceFixed height={height}>
 				{isInternalError ? (
 					<ArchbaseAlert

@@ -1,47 +1,43 @@
+import { ARCHBASE_IOC_API_TYPE, builder, emit, processDetailErrorMessage, processErrorMessage } from '@components/core'
+import { ArchbaseDataSource } from '@components/datasource'
+import { ArchbaseDataTable, ArchbaseDataTableColumn, ArchbaseTableRowActions, Columns, ToolBarActions } from '@components/datatable'
+import { ArchbaseCountdownProgress } from '@components/editors'
+import { useArchbaseListContext, useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi, useArchbaseStore, useArchbaseTheme, useArchbaseValidator } from '@components/hooks'
+import { ArchbaseListCustomItemProps } from '@components/list'
+import { ArchbaseDialog, ArchbaseNotifications } from '@components/notification'
+import { isBase64 } from '@components/validator'
 import {
+  ActionIcon,
   Badge,
   Box,
   Button,
   Flex,
   Group,
-  LoadingOverlay,
   Paper,
   Tabs,
   Text,
-  rem,
+  Tooltip,
   useMantineColorScheme
 } from '@mantine/core'
-import { t } from 'i18next'
-import React, { Fragment, ReactNode, useRef, useState } from 'react'
 import {
+  IconEdit,
   IconPlus,
   IconShieldLock,
-  IconSquareAsterisk,
-  IconTrashX,
-  IconUserSquareRounded,
-  IconUsers,
-  IconUsersGroup
+  IconTrashX
 } from '@tabler/icons-react'
-import { he } from 'date-fns/locale'
-import { AccessTokenDto, GroupDto, ProfileDto, ResourceDto, UserDto } from './SecurityDomain'
-import { UserModal } from './UserModal'
-import { GroupModal } from './GroupModal'
-import { ProfileModal } from './ProfileModal'
-import { SecurityType } from './SecurityType'
-import { ArchbaseDataSource } from '@components/datasource'
-import { ArchbaseListCustomItemProps } from '@components/list'
-import { useArchbaseListContext, useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi, useArchbaseStore, useArchbaseTheme, useArchbaseValidator } from '@components/hooks'
-import { isBase64 } from '@components/validator'
-import { ARCHBASE_IOC_API_TYPE, builder, emit, processDetailErrorMessage, processErrorMessage } from '@components/core'
-import { ArchbaseDialog, ArchbaseNotifications } from '@components/notification'
-import { ArchbaseDataTable, ArchbaseDataTableColumn, ArchbaseTableRowActions, Columns, ToolBarActions } from '@components/datatable'
-import { ArchbaseUserService } from './ArchbaseUserService'
-import { ArchbaseGroupService } from './ArchbaseGroupService'
-import { ArchbaseResourceService } from './ArchbaseResourceService'
-import { ArchbaseProfileService } from './ArchbaseProfileService'
+import { t } from 'i18next'
+import React, { ReactNode, useRef, useState } from 'react'
 import { ArchbaseAccessTokenService } from './ArchbaseAccessTokenService'
-import { ArchbaseCountdownProgress } from '@components/editors'
-import { PermissionsSelector } from './PermissionsSelector'
+import { ArchbaseGroupService } from './ArchbaseGroupService'
+import { ArchbaseProfileService } from './ArchbaseProfileService'
+import { ArchbaseResourceService } from './ArchbaseResourceService'
+import { ArchbaseUserService } from './ArchbaseUserService'
+import { GroupModal } from './GroupModal'
+import { PermissionsSelectorModal } from './PermissionsSelectorModal'
+import { ProfileModal } from './ProfileModal'
+import { AccessTokenDto, GroupDto, ProfileDto, ResourceDto, UserDto } from './SecurityDomain'
+import { SecurityType } from './SecurityType'
+import { UserModal } from './UserModal'
 
 interface ArchbaseSecurityManagerProps {
   height?: any
@@ -140,28 +136,29 @@ export function ArchbaseSecurityView({
   const resourceApi = useArchbaseRemoteServiceApi<ArchbaseResourceService>(ARCHBASE_IOC_API_TYPE.Resource)
   const profileApi = useArchbaseRemoteServiceApi<ArchbaseProfileService>(ARCHBASE_IOC_API_TYPE.Profile)
   const [openedModal, setOpenedModal] = useState<string>('')
+  const [openedPermissionsModal, setOpenedPermissionsModal] = useState<string>('')
   const accessTokenApi = useArchbaseRemoteServiceApi<ArchbaseAccessTokenService>(ARCHBASE_IOC_API_TYPE.AccessToken);
 
   const { dataSource: dsAccessTokens } = useArchbaseRemoteDataSource<AccessTokenDto, string>({
-		name: 'accessTokenApi',
-		service: accessTokenApi,
-		store: templateStore,
-		validator,
-		pageSize: 25,
-		loadOnStart: true,
+    name: 'accessTokenApi',
+    service: accessTokenApi,
+    store: templateStore,
+    validator,
+    pageSize: 25,
+    loadOnStart: true,
     filter: emit(builder.or(builder.eq('revoked', `false`))),
-    sort: ['user.email','expirationTime:desc'],
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
-		onError: (error, origin) => {
-			setError(error);
-			ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin);
-		},
-	});
+    sort: ['user.email', 'expirationTime:desc'],
+    onLoadComplete: (dataSource) => {
+      //
+    },
+    onDestroy: (dataSource) => {
+      //
+    },
+    onError: (error, origin) => {
+      setError(error);
+      ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin);
+    },
+  });
 
   const { dataSource: dsUsers } = useArchbaseRemoteDataSource<UserDto, string>({
     name: 'dsUsers',
@@ -242,66 +239,66 @@ export function ArchbaseSecurityView({
   const heightTab = `calc(${height} - 40px)`
 
   const columns = (
-		<Columns>
-			<ArchbaseDataTableColumn<AccessTokenDto>
-				dataField="user.avatar"
-				dataType="image"
-				size={50}
-				header="Foto"
-				render={(cell) => (
-					<img
-						style={{ borderRadius: 50, height: '36px', maxHeight: '36px' }}
-						src={
-							cell.row.original.user && cell.row.original.user.avatar ? atob(cell.row.original.user.avatar) : NO_USER
-						}
-					/>
-				)}
-				inputFilterType="text"
-				align="center"
-			/>
-			<ArchbaseDataTableColumn<AccessTokenDto>
-				dataField="user.userName"
-				dataType="text"
-				size={300}
-				header="Nome de Usuário"
-				inputFilterType="text"
-			/>
-			<ArchbaseDataTableColumn<AccessTokenDto>
-				dataField="user.email"
-				dataType="text"
-				header="Email"
-				size={300}
-				inputFilterType="text"
-			/>
+    <Columns>
       <ArchbaseDataTableColumn<AccessTokenDto>
-				dataField="expirationDate"
-				dataType="text"
-				size={300}
-				header="Expira em"
-				render={(cell) => <ArchbaseCountdownProgress color="orange" targetDate={cell.row.original.expirationDate} />}
-				inputFilterType="text"
-			/>
-			<ArchbaseDataTableColumn<AccessTokenDto>
-				dataField="revoked"
-				dataType="boolean"
-				header="Revogado ?"
-				inputFilterType="checkbox"
-			/>
+        dataField="user.avatar"
+        dataType="image"
+        size={50}
+        header="Foto"
+        render={(cell) => (
+          <img
+            style={{ borderRadius: 50, height: '36px', maxHeight: '36px' }}
+            src={
+              cell.row.original.user && cell.row.original.user.avatar ? atob(cell.row.original.user.avatar) : NO_USER
+            }
+          />
+        )}
+        inputFilterType="text"
+        align="center"
+      />
       <ArchbaseDataTableColumn<AccessTokenDto>
-				dataField="expired"
-				dataType="boolean"
-				header="Expirado ?"
-				inputFilterType="checkbox"
-			/>
-			<ArchbaseDataTableColumn<AccessTokenDto>
-				dataField="token"
-				dataType="text"
-				header="Token Acesso"
-				size={200}
-				inputFilterType="text"
-			/>			
-		</Columns>
-	);
+        dataField="user.userName"
+        dataType="text"
+        size={300}
+        header="Nome de Usuário"
+        inputFilterType="text"
+      />
+      <ArchbaseDataTableColumn<AccessTokenDto>
+        dataField="user.email"
+        dataType="text"
+        header="Email"
+        size={300}
+        inputFilterType="text"
+      />
+      <ArchbaseDataTableColumn<AccessTokenDto>
+        dataField="expirationDate"
+        dataType="text"
+        size={300}
+        header="Expira em"
+        render={(cell) => <ArchbaseCountdownProgress color="orange" targetDate={cell.row.original.expirationDate} />}
+        inputFilterType="text"
+      />
+      <ArchbaseDataTableColumn<AccessTokenDto>
+        dataField="revoked"
+        dataType="boolean"
+        header="Revogado ?"
+        inputFilterType="checkbox"
+      />
+      <ArchbaseDataTableColumn<AccessTokenDto>
+        dataField="expired"
+        dataType="boolean"
+        header="Expirado ?"
+        inputFilterType="checkbox"
+      />
+      <ArchbaseDataTableColumn<AccessTokenDto>
+        dataField="token"
+        dataType="text"
+        header="Token Acesso"
+        size={200}
+        inputFilterType="text"
+      />
+    </Columns>
+  );
 
   const userColumns = (
     <Columns>
@@ -312,7 +309,7 @@ export function ArchbaseSecurityView({
         header="Foto"
         render={(cell) => (
           <img
-            style={{ borderRadius: 50, height:'36px', maxHeight:'36px' }}
+            style={{ borderRadius: 50, height: '36px', maxHeight: '36px' }}
             src={cell.row.original.avatar ? atob(cell.row.original.avatar) : NO_USER}
           />
         )}
@@ -489,7 +486,7 @@ export function ArchbaseSecurityView({
     }
   }
 
-  const handleUserRemoveRow = (user: any) => { 
+  const handleUserRemoveRow = (user: any) => {
     if (!dsUsers.isEmpty()) {
       const currentUser = dsUsers.gotoRecordByData(user.original)
       if (currentUser) {
@@ -499,13 +496,13 @@ export function ArchbaseSecurityView({
           () => {
             dsUsers.remove()
           },
-          () => {}
+          () => { }
         )
       }
     }
   }
 
-  const handleUserViewRow = (user: any) => { 
+  const handleUserViewRow = (user: any) => {
     if (!dsUsers.isEmpty()) {
       const currentUser = dsUsers.gotoRecordByData(user.original)
       if (currentUser) {
@@ -516,12 +513,22 @@ export function ArchbaseSecurityView({
 
   const buildUserRowActions = ({ row }): ReactNode | undefined => {
     return (
-      <ArchbaseTableRowActions<UserDto>
-        onEditRow={handleUserEditRow}
-        onRemoveRow={handleUserRemoveRow}
-        onViewRow={handleUserViewRow}
-        row={row}
-      ></ArchbaseTableRowActions>
+      <Group gap={4} wrap='nowrap'>
+        <ArchbaseTableRowActions<UserDto>
+          onEditRow={handleUserEditRow}
+          onRemoveRow={handleUserRemoveRow}
+          onViewRow={handleUserViewRow}
+          row={row}
+        ></ArchbaseTableRowActions>
+        <Tooltip withinPortal withArrow position="left" label={t('archbase:Edit permissions')}>
+          <ActionIcon
+            variant='transparent'            
+            onClick={handleOpenUserPermissionsModal}
+          >
+            <IconShieldLock color={theme.colorScheme === 'dark' ? theme.colors.indigo[8] : theme.colors.indigo[4]} />
+          </ActionIcon>
+        </Tooltip>
+      </Group>
     )
   }
 
@@ -554,13 +561,13 @@ export function ArchbaseSecurityView({
           () => {
             dsGroups.remove()
           },
-          () => {}
+          () => { }
         )
       }
     }
   }
 
-  const handleGroupViewRow = (group: any) => { 
+  const handleGroupViewRow = (group: any) => {
     if (!dsGroups.isEmpty()) {
       const currentGroup = dsGroups.gotoRecordByData(group.original)
       if (currentGroup) {
@@ -599,7 +606,7 @@ export function ArchbaseSecurityView({
     }
     dsProfiles.insert(profile)
     setOpenedModal(SecurityType.PROFILE)
-   }
+  }
 
   const handleProfileEditRow = (profile: any) => {
     if (!dsProfiles.isEmpty()) {
@@ -611,7 +618,7 @@ export function ArchbaseSecurityView({
     }
   }
 
-  const handleProfileRemoveRow = (profile: any) => { 
+  const handleProfileRemoveRow = (profile: any) => {
     if (!dsProfiles.isEmpty()) {
       const currentProfile = dsProfiles.gotoRecordByData(profile.original)
       if (currentProfile) {
@@ -621,7 +628,7 @@ export function ArchbaseSecurityView({
           () => {
             dsProfiles.remove()
           },
-          () => {}
+          () => { }
         )
       }
     }
@@ -648,32 +655,48 @@ export function ArchbaseSecurityView({
   }
 
   const handleAccessTokenRevokeRow = () => {
-		if (dsAccessTokens.getCurrentRecord()) {
-			ArchbaseDialog.showConfirmDialogYesNo(
-				`${t('archbase:Confirme')}`,
-				`${t('archbase:Deseja revogar o token de Acesso do usuário ')}${dsAccessTokens.getCurrentRecord().user.name} ?`,
-				async () => {
-					await accessTokenApi
-						.revoke(dsAccessTokens.getCurrentRecord().token)
-						.then(async () => {
-							ArchbaseNotifications.showSuccess(
-								`${t('mentors:Informação')}`,
-								`${t('mentors:Token de Acesso revogado com sucesso!')}`,
-							);
-							dsAccessTokens.refreshData();
-						})
-						.catch((error) => {
-							ArchbaseDialog.showErrorWithDetails(
-								`${t('mentors:Atenção')}`,
-								processErrorMessage(error),
-								processDetailErrorMessage(error),
-							);
-						});
-				},
-				() => {},
-			);
-		}
-	};
+    if (dsAccessTokens.getCurrentRecord()) {
+      ArchbaseDialog.showConfirmDialogYesNo(
+        `${t('archbase:Confirme')}`,
+        `${t('archbase:Deseja revogar o token de Acesso do usuário ')}${dsAccessTokens.getCurrentRecord().user.name} ?`,
+        async () => {
+          await accessTokenApi
+            .revoke(dsAccessTokens.getCurrentRecord().token)
+            .then(async () => {
+              ArchbaseNotifications.showSuccess(
+                `${t('mentors:Informação')}`,
+                `${t('mentors:Token de Acesso revogado com sucesso!')}`,
+              );
+              dsAccessTokens.refreshData();
+            })
+            .catch((error) => {
+              ArchbaseDialog.showErrorWithDetails(
+                `${t('mentors:Atenção')}`,
+                processErrorMessage(error),
+                processDetailErrorMessage(error),
+              );
+            });
+        },
+        () => { },
+      );
+    }
+  };
+
+  const handleOpenUserPermissionsModal = () => {
+    setOpenedPermissionsModal(SecurityType.USER)
+  }
+
+  const handleOpenGroupPermissionsModal = () => {
+    setOpenedPermissionsModal(SecurityType.GROUP)
+  }
+
+  const handleOpenProfilePermissionsModal = () => {
+    setOpenedPermissionsModal(SecurityType.PROFILE)
+  }
+
+  const handleClosePermissionsModal = () => {
+    setOpenedPermissionsModal("")
+  }
 
   return (
     <Paper style={{ height: height }}>
@@ -718,7 +741,10 @@ export function ArchbaseSecurityView({
                 <Button color={'green'} leftSection={<IconPlus />} onClick={handleAddUserExecute}>
                   {t('archbase:New')}
                 </Button>
-                <PermissionsSelector dataSource={dsUsers} />
+                <Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenUserPermissionsModal}>
+                  {t('archbase:Edit permissions')}
+                </Button>
+                <PermissionsSelectorModal dataSource={dsUsers} opened={openedPermissionsModal === SecurityType.USER} close={handleClosePermissionsModal} />
               </Group>
               <Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
             </Flex>
@@ -756,7 +782,10 @@ export function ArchbaseSecurityView({
                 <Button color={'green'} leftSection={<IconPlus />} onClick={handleAddGroupExecute}>
                   {t('archbase:New')}
                 </Button>
-                <PermissionsSelector dataSource={dsGroups} />
+                <Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenGroupPermissionsModal}>
+                  {t('archbase:Edit permissions')}
+                </Button>
+                <PermissionsSelectorModal dataSource={dsGroups} opened={openedPermissionsModal === SecurityType.GROUP} close={handleClosePermissionsModal} />
               </Group>
               <Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
             </Flex>
@@ -794,7 +823,10 @@ export function ArchbaseSecurityView({
                 <Button color={'green'} leftSection={<IconPlus />} onClick={handleAddProfileExecute}>
                   {t('archbase:New')}
                 </Button>
-                <PermissionsSelector dataSource={dsProfiles} />
+                <Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenProfilePermissionsModal}>
+                  {t('archbase:Edit permissions')}
+                </Button>
+                <PermissionsSelectorModal dataSource={dsProfiles} opened={openedPermissionsModal === SecurityType.PROFILE} close={handleClosePermissionsModal} />
               </Group>
               <Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
             </Flex>
@@ -840,33 +872,33 @@ export function ArchbaseSecurityView({
           width: '100%'
         }}
       >
-      <ArchbaseDataTable<AccessTokenDto, string>
-					printTitle={'Tokens de API'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsAccessTokens}
-					withColumnBorders={true}
-					striped={true}
-					enableTopToolbar={true}
-					enableRowActions={true}
-					pageSize={50}
-					isError={false}
-					enableGlobalFilter={true}
-					renderToolbarInternalActions={undefined}
-					error={<span></span>}
-				>
-					{columns}
-					<ToolBarActions>
-						<Flex justify={'space-between'} style={{ width: '50%' }}>
-							<Group align="start" gap={'4px'}>
-								<Button disabled={!dsAccessTokens.getCurrentRecord()} color={'red'} leftSection={<IconTrashX />} onClick={handleAccessTokenRevokeRow}>
-									{t('archbase:Revoke')}
-								</Button>
-							</Group>
-						</Flex>
-					</ToolBarActions>
-				</ArchbaseDataTable>
+        <ArchbaseDataTable<AccessTokenDto, string>
+          printTitle={'Tokens de API'}
+          width={'100%'}
+          height={'100%'}
+          withBorder={false}
+          dataSource={dsAccessTokens}
+          withColumnBorders={true}
+          striped={true}
+          enableTopToolbar={true}
+          enableRowActions={true}
+          pageSize={50}
+          isError={false}
+          enableGlobalFilter={true}
+          renderToolbarInternalActions={undefined}
+          error={<span></span>}
+        >
+          {columns}
+          <ToolBarActions>
+            <Flex justify={'space-between'} style={{ width: '50%' }}>
+              <Group align="start" gap={'4px'}>
+                <Button disabled={!dsAccessTokens.getCurrentRecord()} color={'red'} leftSection={<IconTrashX />} onClick={handleAccessTokenRevokeRow}>
+                  {t('archbase:Revoke')}
+                </Button>
+              </Group>
+            </Flex>
+          </ToolBarActions>
+        </ArchbaseDataTable>
       </Box>
       {openedModal === SecurityType.USER ? (
         <UserModal
