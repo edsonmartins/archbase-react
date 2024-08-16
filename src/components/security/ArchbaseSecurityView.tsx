@@ -22,7 +22,7 @@ import {
 import {
   IconEdit,
   IconPlus,
-  IconShieldLock,
+  IconShieldCheckered,
   IconTrashX
 } from '@tabler/icons-react'
 import { t } from 'i18next'
@@ -522,10 +522,10 @@ export function ArchbaseSecurityView({
         ></ArchbaseTableRowActions>
         <Tooltip withinPortal withArrow position="left" label={t('archbase:Edit permissions')}>
           <ActionIcon
-            variant='transparent'            
+            variant='transparent'
             onClick={handleOpenUserPermissionsModal}
           >
-            <IconShieldLock color={theme.colorScheme === 'dark' ? theme.colors.indigo[8] : theme.colors.indigo[4]} />
+            <IconShieldCheckered color={theme.colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
           </ActionIcon>
         </Tooltip>
       </Group>
@@ -578,12 +578,22 @@ export function ArchbaseSecurityView({
 
   const buildGroupRowActions = ({ row }): ReactNode | undefined => {
     return (
-      <ArchbaseTableRowActions<GroupDto>
-        onEditRow={handleGroupEditRow}
-        onRemoveRow={handleGroupRemoveRow}
-        onViewRow={handleGroupViewRow}
-        row={row}
-      ></ArchbaseTableRowActions>
+      <Group gap={4} wrap='nowrap'>
+        <ArchbaseTableRowActions<GroupDto>
+          onEditRow={handleGroupEditRow}
+          onRemoveRow={handleGroupRemoveRow}
+          onViewRow={handleGroupViewRow}
+          row={row}
+        ></ArchbaseTableRowActions>
+        <Tooltip withinPortal withArrow position="left" label={t('archbase:Edit permissions')}>
+          <ActionIcon
+            variant='transparent'
+            onClick={handleOpenGroupPermissionsModal}
+          >
+            <IconShieldCheckered color={theme.colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
+          </ActionIcon>
+        </Tooltip>
+      </Group>
     )
   }
 
@@ -645,12 +655,22 @@ export function ArchbaseSecurityView({
 
   const buildProfileRowActions = ({ row }): ReactNode | undefined => {
     return (
-      <ArchbaseTableRowActions<ProfileDto>
-        onEditRow={handleProfileEditRow}
-        onRemoveRow={handleProfileRemoveRow}
-        onViewRow={handleProfileViewRow}
-        row={row}
-      ></ArchbaseTableRowActions>
+      <Group gap={4} wrap='nowrap'>
+        <ArchbaseTableRowActions<ProfileDto>
+          onEditRow={handleProfileEditRow}
+          onRemoveRow={handleProfileRemoveRow}
+          onViewRow={handleProfileViewRow}
+          row={row}
+        ></ArchbaseTableRowActions>
+        <Tooltip withinPortal withArrow position="left" label={t('archbase:Edit permissions')}>
+          <ActionIcon
+            variant='transparent'
+            onClick={handleOpenProfilePermissionsModal}
+          >
+            <IconShieldCheckered color={theme.colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
+          </ActionIcon>
+        </Tooltip>
+      </Group>
     )
   }
 
