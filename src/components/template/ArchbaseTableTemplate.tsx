@@ -375,7 +375,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 									) : null}
 									{userActions.onViewExecute ? (
 										<Button
-											color="silver"
+											color="gray.7"
 											leftSection={<IconEye />}
 											disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
 											variant={variant ?? appContext.variant}
