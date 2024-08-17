@@ -13,9 +13,11 @@ import { ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from "@com
 
 export interface PermissionsSelectorProps<T, ID> {
     dataSource: ArchbaseRemoteDataSource<T, ID>
+    opened: boolean
+    close: () => void
 }
 
-export function PermissionsSelector<T, ID>({ dataSource }: PermissionsSelectorProps<T, ID>) {
+export function PermissionsSelectorModal<T, ID>({ dataSource, opened, close }: PermissionsSelectorProps<T, ID>) {
     const name = dataSource.getFieldValue("name")
     const securityId = dataSource.getFieldValue("id")
     const type = dataSource.getFieldValue("type")
@@ -26,7 +28,6 @@ export function PermissionsSelector<T, ID>({ dataSource }: PermissionsSelectorPr
     const [grantedPermissions, setGrantedPermissions] = useState<ResoucePermissionsWithTypeDto[]>([])
     const [selectedAvailablePermission, setSelectedAvailablePermission] = useState<TreeNodeData>()
     const [selectedGrantedPermission, setSelectedGrantedPermission] = useState<TreeNodeData>()
-    const [opened, { open, close }] = useDisclosure(false);
     const [availablePermissionsFilter, setAvailablePermissionsFilter] = useState("")
     const [debouncedAvailablePermissionsFilter] = useDebouncedValue(availablePermissionsFilter, 200);
     const [grantedPermissionsFilter, setGrantedPermissionsFilter] = useState("")
@@ -261,100 +262,36 @@ export function PermissionsSelector<T, ID>({ dataSource }: PermissionsSelectorPr
     }, [type, securityId])
 
     return (
-        <>
-            <Button color={'blue'} leftSection={<IconEdit />} onClick={() => open()}>
-                {t('archbase:Edit permissions')}
-            </Button>
-            <Modal opened={opened} onClose={close} title={`${t(`archbase:${type}`)}: ${name}`} size={"80%"} styles={{ root: { overflow: "hidden" } }}>
-                <ArchbaseSpaceFixed height={"540px"}>
-                    <ArchbaseSpaceFill>
-                        <ScrollArea h={"500px"}>
-                            <Paper withBorder my={20} p={20}>
-                                <Grid columns={20}>
-                                    <Grid.Col span={9}>
-                                        <Group mb={20}>
-                                            <Text>{t('archbase:Available')}</Text>
-                                            <TextInput
-                                                size="xs"
-                                                value={availablePermissionsFilter}
-                                                onChange={(event) => setAvailablePermissionsFilter(event.target.value)}
-                                                placeholder={t('archbase:Filter available permissions')}
-                                            />
-                                        </Group>
-                                        <Tree
-                                            data={allPermissionsData(availablePermissions, grantedPermissions)}
-                                            selectOnClick={true}
-                                            allowRangeSelection={false}
-                                            tree={availablePermissionsTree}
-                                            renderNode={({ level, node, expanded, hasChildren, selected, elementProps }) => {
-                                                const isGranted = node?.nodeProps?.granted;
-                                                const textColor = isGranted ? "dimmed" : undefined;
-                                                const textDecoration = isGranted ? "line-through" : undefined;
-                                                return (
-                                                    <Group ml={hasChildren ? 0 : 5} gap={5} {...elementProps}
-                                                        bg={selected && level === 2 ? selectedColor : ""}
-                                                        onClick={(event) => {
-                                                            setSelectedAvailablePermission(node)
-                                                            elementProps.onClick(event)
-                                                        }}
-                                                    >
-                                                        {hasChildren && (
-                                                            <IconChevronDown
-                                                                size={18}
-                                                                style={{ transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}
-                                                            />
-                                                        )}
-                                                        {!hasChildren && (
-                                                            <IconBorderCornerSquare
-                                                                size={12}
-                                                                style={{ transform: 'rotate(-90deg)', marginTop: "-5px" }}
-                                                            />
-                                                        )}
-                                                        <Text
-                                                            c={textColor}
-                                                            td={textDecoration}
-                                                        >
-                                                            {node.label}
-                                                        </Text>
-                                                    </Group>
-                                                )
-                                            }
-                                            }
+        <Modal opened={opened} onClose={close} title={`${t(`archbase:${type}`)}: ${name}`} size={"80%"} styles={{ root: { overflow: "hidden" } }}>
+            <ArchbaseSpaceFixed height={"540px"}>
+                <ArchbaseSpaceFill>
+                    <ScrollArea h={"500px"}>
+                        <Paper withBorder my={20} p={20}>
+                            <Grid columns={20}>
+                                <Grid.Col span={9}>
+                                    <Group mb={20}>
+                                        <Text>{t('archbase:Available')}</Text>
+                                        <TextInput
+                                            size="xs"
+                                            value={availablePermissionsFilter}
+                                            onChange={(event) => setAvailablePermissionsFilter(event.target.value)}
+                                            placeholder={t('archbase:Filter available permissions')}
                                         />
-                                    </Grid.Col>
-                                    <Grid.Col span={2}>
-                                        <Stack gap={5} style={{ minWidth: '10%' }} justify="center" align="center" h={"100%"}>
-                                            <Tooltip label={t('archbase:Add')}>
-                                                <ActionIcon onClick={handleAdd} disabled={!selectedAvailablePermission || selectedAvailablePermission?.nodeProps?.granted || !selectedAvailablePermission.nodeProps}>
-                                                    <IconArrowRight />
-                                                </ActionIcon>
-                                            </Tooltip>
-                                            <Tooltip label={t('archbase:Remove')}>
-                                                <ActionIcon onClick={handleRemove} disabled={!selectedGrantedPermission || !selectedGrantedPermission?.nodeProps?.permissionId || !selectedGrantedPermission.nodeProps}>
-                                                    <IconArrowLeft />
-                                                </ActionIcon>
-                                            </Tooltip>
-                                        </Stack>
-                                    </Grid.Col>
-                                    <Grid.Col span={9}>
-                                        <Group mb={20}>
-                                            <Text>{t('archbase:Granted')}</Text>
-                                            <TextInput
-                                                size="xs"
-                                                value={grantedPermissionsFilter}
-                                                onChange={(event) => setGrantedPermissionsFilter(event.target.value)}
-                                                placeholder={t('archbase:Filter granted permissions')}
-                                            />
-                                        </Group>
-                                        <Tree
-                                            data={permissionsGrantedData(grantedPermissions)}
-                                            selectOnClick={true}
-                                            allowRangeSelection={false}
-                                            tree={grantedPermissionsTree}
-                                            renderNode={({ level, node, expanded, hasChildren, selected, elementProps }) => (
-                                                <Group ml={hasChildren ? 0 : 5} gap={5} {...elementProps} bg={selected && level === 2 ? selectedColor : ""}
+                                    </Group>
+                                    <Tree
+                                        data={allPermissionsData(availablePermissions, grantedPermissions)}
+                                        selectOnClick={true}
+                                        allowRangeSelection={false}
+                                        tree={availablePermissionsTree}
+                                        renderNode={({ level, node, expanded, hasChildren, selected, elementProps }) => {
+                                            const isGranted = node?.nodeProps?.granted;
+                                            const textColor = isGranted ? "dimmed" : undefined;
+                                            const textDecoration = isGranted ? "line-through" : undefined;
+                                            return (
+                                                <Group ml={hasChildren ? 0 : 5} gap={5} {...elementProps}
+                                                    bg={selected && level === 2 ? selectedColor : ""}
                                                     onClick={(event) => {
-                                                        setSelectedGrantedPermission(node)
+                                                        setSelectedAvailablePermission(node)
                                                         elementProps.onClick(event)
                                                     }}
                                                 >
@@ -370,25 +307,84 @@ export function PermissionsSelector<T, ID>({ dataSource }: PermissionsSelectorPr
                                                             style={{ transform: 'rotate(-90deg)', marginTop: "-5px" }}
                                                         />
                                                     )}
-                                                    <Text>{node.label}</Text>
-                                                    {node?.nodeProps?.types?.includes("USER") && <Badge color="blue">{t('archbase:user')}</Badge>}
-                                                    {node?.nodeProps?.types?.includes("GROUP") && <Badge color="orange">{t('archbase:group')}</Badge>}
-                                                    {node?.nodeProps?.types?.includes("PROFILE") && <Badge color="pink">{t('archbase:profile')}</Badge>}
+                                                    <Text
+                                                        c={textColor}
+                                                        td={textDecoration}
+                                                    >
+                                                        {node.label}
+                                                    </Text>
                                                 </Group>
-                                            )}
+                                            )
+                                        }
+                                        }
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={2}>
+                                    <Stack gap={5} style={{ minWidth: '10%' }} justify="center" align="center" h={"100%"}>
+                                        <Tooltip label={t('archbase:Add')}>
+                                            <ActionIcon onClick={handleAdd} disabled={!selectedAvailablePermission || selectedAvailablePermission?.nodeProps?.granted || !selectedAvailablePermission.nodeProps}>
+                                                <IconArrowRight />
+                                            </ActionIcon>
+                                        </Tooltip>
+                                        <Tooltip label={t('archbase:Remove')}>
+                                            <ActionIcon onClick={handleRemove} disabled={!selectedGrantedPermission || !selectedGrantedPermission?.nodeProps?.permissionId || !selectedGrantedPermission.nodeProps}>
+                                                <IconArrowLeft />
+                                            </ActionIcon>
+                                        </Tooltip>
+                                    </Stack>
+                                </Grid.Col>
+                                <Grid.Col span={9}>
+                                    <Group mb={20}>
+                                        <Text>{t('archbase:Granted')}</Text>
+                                        <TextInput
+                                            size="xs"
+                                            value={grantedPermissionsFilter}
+                                            onChange={(event) => setGrantedPermissionsFilter(event.target.value)}
+                                            placeholder={t('archbase:Filter granted permissions')}
                                         />
-                                    </Grid.Col>
-                                </Grid>
-                            </Paper>
-                        </ScrollArea>
-                    </ArchbaseSpaceFill>
-                    <ArchbaseSpaceBottom size="40px">
-                        <Group justify="flex-end">
-                            <Button onClick={close}>{t("archbase:Close")}</Button>
-                        </Group>
-                    </ArchbaseSpaceBottom>
-                </ArchbaseSpaceFixed>
-            </Modal>
-        </>
+                                    </Group>
+                                    <Tree
+                                        data={permissionsGrantedData(grantedPermissions)}
+                                        selectOnClick={true}
+                                        allowRangeSelection={false}
+                                        tree={grantedPermissionsTree}
+                                        renderNode={({ level, node, expanded, hasChildren, selected, elementProps }) => (
+                                            <Group ml={hasChildren ? 0 : 5} gap={5} {...elementProps} bg={selected && level === 2 ? selectedColor : ""}
+                                                onClick={(event) => {
+                                                    setSelectedGrantedPermission(node)
+                                                    elementProps.onClick(event)
+                                                }}
+                                            >
+                                                {hasChildren && (
+                                                    <IconChevronDown
+                                                        size={18}
+                                                        style={{ transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}
+                                                    />
+                                                )}
+                                                {!hasChildren && (
+                                                    <IconBorderCornerSquare
+                                                        size={12}
+                                                        style={{ transform: 'rotate(-90deg)', marginTop: "-5px" }}
+                                                    />
+                                                )}
+                                                <Text>{node.label}</Text>
+                                                {node?.nodeProps?.types?.includes("USER") && <Badge color="blue">{t('archbase:user')}</Badge>}
+                                                {node?.nodeProps?.types?.includes("GROUP") && <Badge color="orange">{t('archbase:group')}</Badge>}
+                                                {node?.nodeProps?.types?.includes("PROFILE") && <Badge color="pink">{t('archbase:profile')}</Badge>}
+                                            </Group>
+                                        )}
+                                    />
+                                </Grid.Col>
+                            </Grid>
+                        </Paper>
+                    </ScrollArea>
+                </ArchbaseSpaceFill>
+                <ArchbaseSpaceBottom size="40px">
+                    <Group justify="flex-end">
+                        <Button onClick={close}>{t("archbase:Close")}</Button>
+                    </Group>
+                </ArchbaseSpaceBottom>
+            </ArchbaseSpaceFixed>
+        </Modal>
     )
 }

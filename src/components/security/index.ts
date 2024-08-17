@@ -8,7 +8,7 @@ export { ArchbaseUserService } from "./ArchbaseUserService"
 export { ArchbaseProfileService } from "./ArchbaseProfileService"
 export { ArchbaseGroupService } from "./ArchbaseGroupService"
 export { ArchbaseResourceService } from "./ArchbaseResourceService"
-export { PermissionsSelector } from './PermissionsSelector'
+export { PermissionsSelectorModal } from './PermissionsSelectorModal'
 export { AccessIntervalDto, AccessScheduleDto, ActionDto, GroupDto, PermissionDto, ProfileDto, ResourceDto, SecurityDto, UserDto, UserGroupDto, AccessTokenDto, ApiTokenDto } from "./SecurityDomain"
 export type { GrantPermissionDto, PermissionWithTypesDto, ResoucePermissionsWithTypeDto, ResouceActionPermissionDto, ResourcePermissionsDto, ResourceRegisterDto, SimpleActionDto, SimpleResourceDto } from "./SecurityDomain"
 export type { SecurityType } from './SecurityType'
