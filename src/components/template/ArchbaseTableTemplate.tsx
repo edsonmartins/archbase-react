@@ -121,7 +121,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	enableTopToolbar = true,
 	error = '',
 	clearError = () => {},
-	filterType = 'normal',
+	filterType,
 	width = '100%',
 	height = '100%',
 	onSearchByFilter,
@@ -152,6 +152,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	}, [isLoadingFilter]);
 
 	const buildRowActions = ({ row }): ReactNode | undefined => {
+		///@ts-ignore
 		if (!userRowActions && !userRowActions?.actions) {
 			return;
 		}
@@ -253,32 +254,38 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 		}
 	};
 
-	const buildFilter = () => {
-		return (
-			<ArchbaseQueryBuilder
-				id={filterOptions?.componentName!}
-				viewName={filterOptions?.viewName!}
-				apiVersion={filterOptions?.apiVersion!}
-				ref={filterRef}
-				variant={variant ?? (appContext.variant as ButtonVariant)}
-				expandedFilter={filterState.expandedFilter}
-				persistenceDelegator={filterPersistenceDelegator!}
-				currentFilter={filterState.currentFilter}
-				activeFilterIndex={filterState.activeFilterIndex}
-				onSelectedFilter={handleSelectedFilter}
-				onFilterChanged={handleFilterChanged}
-				onSearchByFilter={handleSearchByFilter}
-				onToggleExpandedFilter={handleToggleExpandedFilter}
-				onExport={handleExport}
-				onPrint={handlePrint}
-				showExportButton={true}
-				showPrintButton={true}
-				width={'560px'}
-				height="170px"
-			>
-				{filterFields}
-			</ArchbaseQueryBuilder>
-		);
+	const buildInternalToolbarActionsFilter = () => {
+		if (filterType === 'none'){	
+			return <div></div>
+		}
+		if (filterType === 'advanced') {
+			return (
+				///@ts-ignore
+				<ArchbaseQueryBuilder
+					id={filterOptions?.componentName!}
+					viewName={filterOptions?.viewName!}
+					apiVersion={filterOptions?.apiVersion!}
+					ref={filterRef}
+					variant={variant ?? (appContext.variant as ButtonVariant)}
+					expandedFilter={filterState.expandedFilter}
+					persistenceDelegator={filterPersistenceDelegator!}
+					currentFilter={filterState.currentFilter}
+					activeFilterIndex={filterState.activeFilterIndex}
+					onSelectedFilter={handleSelectedFilter}
+					onFilterChanged={handleFilterChanged}
+					onSearchByFilter={handleSearchByFilter}
+					onToggleExpandedFilter={handleToggleExpandedFilter}
+					onExport={handleExport}
+					onPrint={handlePrint}
+					showExportButton={true}
+					showPrintButton={true}
+					width={'560px'}
+					height="170px"
+				>
+					{filterFields}
+				</ArchbaseQueryBuilder>
+			);
+		}
 	};
 
 	return (
@@ -312,7 +319,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 				pageSize={pageSize}
 				isError={isError}
 				enableGlobalFilter={filterType === 'normal'}
-				renderToolbarInternalActions={filterType === 'advanced' ? buildFilter : undefined}
+				renderToolbarInternalActions={filterType === 'advanced' || filterType === 'none' ? buildInternalToolbarActionsFilter : undefined}
 				renderRowActions={buildRowActions}
 				error={<span>{error}</span>}
 				onExport={setExportFunc}
