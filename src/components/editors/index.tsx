@@ -11,6 +11,7 @@ export { ArchbaseAsyncMultiSelect } from './ArchbaseAsyncMultiSelect';
 export type { ArchbaseAsyncSelectProps, OptionsResult } from './ArchbaseAsyncSelect';
 export { ArchbaseAsyncSelect, CustomSelectScrollArea } from './ArchbaseAsyncSelect';
 
+export type {ArchbaseAsyncSelectContextValue} from './ArchbaseAsyncSelect.context'
 export { ArchbaseAsyncSelectProvider, ArchbaseAsyncSelectContext } from './ArchbaseAsyncSelect.context';
 
 export type { ArchbaseChipProps } from './ArchbaseChip';
