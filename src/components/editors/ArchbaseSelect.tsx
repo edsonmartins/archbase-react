@@ -12,7 +12,7 @@ import React, {
 } from 'react'
 import { uniqueId } from 'lodash'
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks'
-import { useDebouncedState } from '@mantine/hooks'
+import { useDebouncedState, useUncontrolled } from '@mantine/hooks'
 import { ArchbaseSelectProvider } from './ArchbaseSelect.context'
 import {
   ArchbaseAsyncSelectContext,
@@ -115,7 +115,7 @@ function buildGroupOptions(
   uniqueGroups.forEach(groupName => {
     const newOption = {
       group: groupName,
-      items: options.filter(item => item.group === groupName).sort((a,b) => a.label.localeCompare(b.label)).map((item) => {
+      items: options.filter(item => item.group === groupName).sort((a, b) => a.label.localeCompare(b.label)).map((item) => {
         return {
           value: item.value,
           label: item.label,
@@ -165,7 +165,6 @@ function buildOptions<O>(
     return buildGroupOptions(options)
   }
   if (options) {
-    console.log("options")
     return options
   }
   if (children) {
@@ -181,7 +180,6 @@ function buildOptions<O>(
     })
   }
   return initialOptions!.map((item: O) => {
-    console.log("initialOptions")
     return {
       label: getOptionLabel!(item),
       value: getOptionValue!(item),
@@ -240,6 +238,11 @@ export function ArchbaseSelect<T, ID, O>({
   const [internalError, setInternalError] = useState<string | undefined>(error)
   const [updateCounter, setUpdateCounter] = useState(0)
   const sRef = useRef<any>()
+  const [internalReadOnly, setReadOnly] = useUncontrolled<boolean>({
+    value: readOnly,
+    defaultValue: readOnly,
+    finalValue: false,
+  });
   const selectContextValue = useContext<ArchbaseAsyncSelectContextValue>(ArchbaseAsyncSelectContext)
   const currentOptions: any[] = useMemo(() => {
     return buildOptions<O>(
@@ -259,6 +262,66 @@ export function ArchbaseSelect<T, ID, O>({
     getOptionValue,
     optionsLabelField
   ])
+
+  const handleChange = (vl: string | null, option: SelectItem) => {
+    const value = option && option.origin ? option.origin : undefined
+    setSelectedValue((_prev) => value)
+
+    if (
+      dataSource &&
+      !dataSource.isBrowsing() &&
+      dataField &&
+      (customGetDataSourceFieldValue
+        ? customGetDataSourceFieldValue()
+        : dataSource.getFieldValue(dataField)) !== value
+    ) {
+      customSetDataSourceFieldValue
+        ? customSetDataSourceFieldValue(value)
+        : dataSource.setFieldValue(dataField, value)
+    }
+
+    if (onSelectValue) {
+      onSelectValue(value, option ? option.origin : undefined)
+    }
+  }
+
+  const handleOnFocusExit = (event) => {
+    if (onFocusExit) {
+      onFocusExit(event)
+    }
+  }
+
+  const handleOnFocusEnter = (event) => {
+    if (onFocusEnter) {
+      onFocusEnter(event)
+    }
+  }
+
+  const handleDropdownScrollEnded = () => {
+    //
+  }
+
+  const handleScrollPositionChange = (_position: { x: number; y: number }): void => {
+    if (sRef && sRef.current) {
+      if (sRef.current.scrollTop === sRef.current.scrollHeight - sRef.current.offsetHeight) {
+        selectContextValue.handleDropdownScrollEnded!()
+      }
+    }
+  }
+
+  const handleItemComponent = ({ option, checked }) => {
+    if (!ItemComponent) {
+      return undefined
+    }
+    return <ItemComponent {...option} checked={checked} />
+  }
+
+  const renderOption = ItemComponent
+    ? {
+      renderOption: ({ option, checked }: ComboboxLikeRenderOptionInput<ComboboxItem>) =>
+        handleItemComponent({ option, checked })
+    }
+    : {}
 
   useEffect(() => {
     setInternalError(undefined)
@@ -315,7 +378,7 @@ export function ArchbaseSelect<T, ID, O>({
     }
 
     if (options && options instanceof ArchbaseDataSource) {
-      ;(options as ArchbaseDataSource<T, ID>).addListener(dataSourceOptionsEvent)
+      ; (options as ArchbaseDataSource<T, ID>).addListener(dataSourceOptionsEvent)
     }
   })
 
@@ -326,7 +389,7 @@ export function ArchbaseSelect<T, ID, O>({
     }
 
     if (options && options instanceof ArchbaseDataSource) {
-      ;(options as ArchbaseDataSource<T, ID>).removeListener(dataSourceOptionsEvent)
+      ; (options as ArchbaseDataSource<T, ID>).removeListener(dataSourceOptionsEvent)
     }
   })
 
@@ -334,74 +397,13 @@ export function ArchbaseSelect<T, ID, O>({
     loadDataSourceFieldValue()
   }, [])
 
-  const handleChange = (vl: string | null, option: SelectItem) => {
-    const value = option && option.origin ? option.origin : undefined
-    setSelectedValue((_prev) => value)
-
-    if (
-      dataSource &&
-      !dataSource.isBrowsing() &&
-      dataField &&
-      (customGetDataSourceFieldValue
-        ? customGetDataSourceFieldValue()
-        : dataSource.getFieldValue(dataField)) !== value
-    ) {
-      customSetDataSourceFieldValue
-        ? customSetDataSourceFieldValue(value)
-        : dataSource.setFieldValue(dataField, value)
-    }
-
-    if (onSelectValue) {
-      onSelectValue(value, option ? option.origin : undefined)
-    }
-  }
-
-  const handleOnFocusExit = (event) => {
-    if (onFocusExit) {
-      onFocusExit(event)
-    }
-  }
-
-  const handleOnFocusEnter = (event) => {
-    if (onFocusEnter) {
-      onFocusEnter(event)
-    }
-  }
-
-  const handleDropdownScrollEnded = () => {
-    //
-  }
-
-  const handleScrollPositionChange = (_position: { x: number; y: number }): void => {
-    if (sRef && sRef.current) {
-      if (sRef.current.scrollTop === sRef.current.scrollHeight - sRef.current.offsetHeight) {
-        selectContextValue.handleDropdownScrollEnded!()
-      }
-    }
-  }
-
-  const isReadOnly = () => {
+  useEffect(() => {
     let tmpRreadOnly = readOnly
     if (dataSource && !readOnly) {
       tmpRreadOnly = dataSource.isBrowsing()
     }
-    return tmpRreadOnly
-  }
-
-
-  const handleItemComponent = ({ option, checked }) => {
-    if (!ItemComponent) {
-      return undefined
-    }
-    return <ItemComponent {...option} checked={checked} />
-  }
-
-  const renderOption = ItemComponent
-    ? {
-        renderOption: ({ option, checked }: ComboboxLikeRenderOptionInput<ComboboxItem>) =>
-          handleItemComponent({ option, checked })
-      }
-    : {}
+    setReadOnly(tmpRreadOnly)
+  }, [dataSource?.isBrowsing()])
 
   return (
     <ArchbaseSelectProvider
@@ -426,7 +428,7 @@ export function ArchbaseSelect<T, ID, O>({
         leftSection={icon}
         width={width}
         leftSectionWidth={iconWidth}
-        readOnly={isReadOnly()}
+        readOnly={internalReadOnly}
         required={required}
         onChange={handleChange}
         onBlur={handleOnFocusExit}
