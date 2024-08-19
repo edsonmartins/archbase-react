@@ -27,24 +27,26 @@ export class ArchbaseSecurityManager implements ISecurityManager {
   }
 
   public registerAction(actionName: string, actionDescription: string) {
-    if (!this.alreadyApplied) {
+    if (!this.alreadyApplied && this.actions.findIndex(action => action.actionName === actionName) < 0) {
       this.actions.push({ actionName, actionDescription })
     }
   }
 
   public async apply(callback?: Function) {
     if (!this.alreadyApplied) {
-      try {
-        const resourcePermissions: ResourcePermissionsDto = await this.resourceService.registerResource({ resource: this.resource, actions: this.actions })
-        this.permissions = resourcePermissions.permissions;
-        this.alreadyApplied = true;
-        this.error = "";
-        if (callback) {
-          callback();
-        }
-      } catch (error) {
-        this.error = processErrorMessage(error)
-      }
+      this.alreadyApplied = true;
+      this.resourceService.registerResource({ resource: this.resource, actions: this.actions })
+        .then((resourcePermissions) => {
+          this.permissions = resourcePermissions.permissions;
+          this.error = "";
+          if (callback) {
+            callback();
+          }
+        })
+        .catch((error) => {
+          this.alreadyApplied = false;
+          this.error = processErrorMessage(error)
+        })
     }
   }
 
