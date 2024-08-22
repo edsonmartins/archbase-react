@@ -7,7 +7,7 @@ import {
 	useMantineColorScheme,
 	useMantineTheme,
 } from '@mantine/core';
-import { useColorScheme, useForceUpdate } from '@mantine/hooks';
+import { useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
