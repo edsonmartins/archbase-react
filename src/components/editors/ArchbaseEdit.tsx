@@ -58,6 +58,8 @@ export interface ArchbaseEditProps<T, ID> {
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	variant?: ActionIconVariant;
+	minLength?: number;
+	maxLength?: number;
 }
 
 export function ArchbaseEdit<T, ID>({
@@ -84,6 +86,8 @@ export function ArchbaseEdit<T, ID>({
 	onFocusEnter = () => {},
 	onChangeValue = () => {},
 	variant,
+	minLength,
+	maxLength
 }: ArchbaseEditProps<T, ID>) {
 	const [currentValue, setCurrentValue] = useState<string>(value || '');
 	const innerComponentRef = useRef<any>();
@@ -214,6 +218,8 @@ export function ArchbaseEdit<T, ID>({
 			onKeyUp={onKeyUp}
 			label={label}
 			error={internalError}
+			minLength={minLength}
+			maxLength={maxLength}
 			rightSection={
 				onActionSearchExecute ? (
 					<Tooltip withinPortal withArrow label={tooltipIconSearch}>
