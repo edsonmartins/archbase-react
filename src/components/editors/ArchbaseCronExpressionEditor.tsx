@@ -12,6 +12,7 @@ function translateCronToPortuguese(cron) {
     description += cron.dayOfWeek === '*' ? "" : `, e nas ${cron.dayOfWeek.split(',').map(d => isNaN(d) ? d : daysOfWeek[parseInt(d, 10)]).join(', ')}`;
     description += cron.hours === '*' ? ", a qualquer hora" : `, às ${cron.hours.split(',').map(h => `${h}h`).join(', ')}`;
     description += cron.minutes === '*' ? ", e a qualquer minuto" : `, e nos minutos ${cron.minutes}`;
+    description += cron.seconds === '*' ? "" : `, e nos segundos ${cron.seconds}`;
 
     return description;
 }
@@ -22,10 +23,11 @@ export type ArchbaseCronExpressionEditorProps = {
     initialValue: any
     label?: any
     error?: string
-  }
+}
 
 export function ArchbaseCronExpressionEditor({ label, initialValue, onChange, readOnly = false, error }: ArchbaseCronExpressionEditorProps) {
     const [cron, setCron] = useState({
+        seconds: '0',
         minutes: '*',
         hours: '*',
         dayOfMonth: '*',
@@ -34,26 +36,40 @@ export function ArchbaseCronExpressionEditor({ label, initialValue, onChange, re
     });
 
     useEffect(() => {
-        const parts = initialValue ? initialValue.split(' ') : ['*', '*', '*', '*', '*'];
-        setCron({
-            minutes: parts[0],
-            hours: parts[1],
-            dayOfMonth: parts[2],
-            month: parts[3],
-            dayOfWeek: parts[4]
-        });
+        const parts = initialValue ? initialValue.split(' ') : [];
+        if (parts.length === 6) {
+            setCron({
+                seconds: parts[0],
+                minutes: parts[1],
+                hours: parts[2],
+                dayOfMonth: parts[3],
+                month: parts[4],
+                dayOfWeek: parts[5]
+            });
+        } else {
+            // Define os valores padrão ou deixa em branco se o tamanho da string for inadequado
+            setCron({
+                seconds: '0',
+                minutes: '*',
+                hours: '*',
+                dayOfMonth: '*',
+                month: '*',
+                dayOfWeek: '*'
+            });
+        }
     }, [initialValue]);
 
     const updateCronPart = (part, values) => {
         const updatedCron = { ...cron, [part]: values.length > 0 ? values.join(',') : '*' };
         setCron(updatedCron);
-        const value = `${updatedCron.minutes} ${updatedCron.hours} ${updatedCron.dayOfMonth} ${updatedCron.month} ${updatedCron.dayOfWeek}`
+        const value = `${updatedCron.seconds} ${updatedCron.minutes} ${updatedCron.hours} ${updatedCron.dayOfMonth} ${updatedCron.month} ${updatedCron.dayOfWeek}`;
         if (!readOnly){
             onChange(value);
         }
     };
 
     const cronOptions = {
+        seconds: Array.from({ length: 60 }, (_, i) => ({ value: `${i}`, label: `${i} segundo(s)` })),
         minutes: Array.from({ length: 60 }, (_, i) => ({ value: `${i}`, label: `${i} minuto(s)` })),
         hours: Array.from({ length: 24 }, (_, i) => ({ value: `${i}`, label: `${i} hora(s)` })),
         dayOfMonth: Array.from({ length: 31 }, (_, i) => ({ value: `${i + 1}`, label: `${i + 1} dia(s)` })),
@@ -90,6 +106,7 @@ export function ArchbaseCronExpressionEditor({ label, initialValue, onChange, re
                     key={part}
                     data={cronOptions[part]}
                     label={{
+                        seconds: 'Segundos',
                         minutes: 'Minutos',
                         hours: 'Horas',
                         dayOfMonth: 'Dia do Mês',
@@ -107,7 +124,7 @@ export function ArchbaseCronExpressionEditor({ label, initialValue, onChange, re
             ))}
             <Stack gap={"xs"}>
                 <strong>Expressão Cron:</strong> 
-                <Text c="blue">{`${cron.minutes} ${cron.hours} ${cron.dayOfMonth} ${cron.month} ${cron.dayOfWeek}`}</Text>
+                <Text c="blue">{`${cron.seconds} ${cron.minutes} ${cron.hours} ${cron.dayOfMonth} ${cron.month} ${cron.dayOfWeek}`}</Text>
                 <strong>Descrição:</strong> 
                 <Text c="blue">{translateCronToPortuguese(cron)}</Text>
             </Stack>
