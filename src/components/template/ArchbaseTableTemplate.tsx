@@ -129,7 +129,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	filterPersistenceDelegator,
 	variant,
 	store,
-	cellPadding,
+	cellPadding = "4px",
 	bottomToolbarMinHeight,
 	enableRowSelection,
 	tableHeadCellPadding,
