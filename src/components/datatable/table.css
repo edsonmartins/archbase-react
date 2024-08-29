@@ -1,0 +1,3 @@
+.custom-mantine-table table {
+    --table-vertical-spacing: 0px !important;
+}

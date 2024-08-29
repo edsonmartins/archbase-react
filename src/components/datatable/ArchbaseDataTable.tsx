@@ -7,6 +7,7 @@
 /* eslint-disable no-underscore-dangle */
 
 /* eslint-disable no-use-before-define */
+import './table.css';
 import {
 	ActionIcon,
 	type ActionIconProps,
@@ -148,7 +149,7 @@ export function ToolBarActions(props: ToolBarActionsProps) {
 	return <Fragment>{props.children}</Fragment>;
 }
 
-export interface ColumnsProps {}
+export interface ColumnsProps { }
 
 export function Columns(_props: ColumnsProps) {
 	return null;
@@ -371,7 +372,7 @@ export function ArchbaseCustomFilterDatePicker(props: FilterDatePickerProps) {
 	const allowedColumnFilterOptions = column.columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
 	const filterChipLabel = ['empty', 'notEmpty'].includes(currentFilterOption)
 		? // @ts-ignore
-		  localization[`filter${currentFilterOption?.charAt?.(0)?.toUpperCase() + currentFilterOption?.slice(1)}`]
+		localization[`filter${currentFilterOption?.charAt?.(0)?.toUpperCase() + currentFilterOption?.slice(1)}`]
 		: '';
 	const isRangeFilter =
 		column.columnDef.filterVariant === 'range' ||
@@ -912,12 +913,12 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 							mantineFilterMultiSelectProps: { data: col.props.enumValues },
 							Cell: render
 								? ({ cell }) => (
-										<div
-											style={{ width: '100%', display: 'flex', justifyContent: alignContent, alignContent: 'center' }}
-										>
-											{render(cell, col.props.maskOptions)}
-										</div>
-								  )
+									<div
+										style={{ width: '100%', display: 'flex', justifyContent: alignContent, alignContent: 'center' }}
+									>
+										{render(cell, col.props.maskOptions)}
+									</div>
+								)
 								: undefined,
 							Header: ({ column }) => (
 								<i
@@ -1050,8 +1051,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 				props.csvOptions && props.csvOptions.filename
 					? props.csvOptions.filename
 					: props.printTitle
-					? props.printTitle
-					: 'data_table.csv',
+						? props.printTitle
+						: 'data_table.csv',
 			headers: originColumns.map((c) => c.header),
 		});
 		csvExporter.generateCsv(rows.map((row) => row.original));
@@ -1165,7 +1166,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 		positionToolbarAlertBanner: 'bottom',
 		renderDetailPanel: props.renderDetailPanel,
 		mantineTableHeadCellProps: {
-			style: {padding: props.tableHeadCellPadding}
+			style: { padding: props.tableHeadCellPadding }
 		},
 		mantinePaperProps: {
 			withBorder: props.withBorder,
@@ -1190,9 +1191,9 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			: () => buildInternalActionsToolbar(),
 		mantineToolbarAlertBannerProps: props.isError
 			? {
-					color: 'error',
-					children: props.error,
-			  }
+				color: 'error',
+				children: props.error,
+			}
 			: undefined,
 		initialState: {
 			// @ts-ignore
@@ -1220,7 +1221,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			style: { maxHeight },
 		},
 		mantineSelectCheckboxProps: {
-			style: {padding: px(props.tableHeadCellPadding) > px(props.cellPadding) ? `calc(${px(props.tableHeadCellPadding)}px - ${px(props.cellPadding)}px)` : 0}
+			style: { padding: px(props.tableHeadCellPadding) > px(props.cellPadding) ? `calc(${px(props.tableHeadCellPadding)}px - ${px(props.cellPadding)}px)` : 0 }
 		},
 		mantineTableProps: {
 			withColumnBorders: props.withColumnBorders,
@@ -1311,7 +1312,9 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 	}, [pagination.pageIndex, pagination.pageSize, JSON.stringify(columnFilters), globalFilter, sorting]);
 
 	return (
-		<MantineReactTable table={table} />
+		<div className='custom-mantine-table'>
+			<MantineReactTable table={table} />
+		</div>
 	);
 }
 
