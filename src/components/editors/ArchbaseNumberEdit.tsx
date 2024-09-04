@@ -33,6 +33,8 @@ function formatNumber(
 	allowNegative = false,
 	prefix = '',
 	suffix = '',
+	minValue = Number.MIN_SAFE_INTEGER,
+	maxValue = Number.MAX_SAFE_INTEGER
 ) {
 	if (precision < 0) {
 		precision = 0;
@@ -75,8 +77,16 @@ function formatNumber(
 	if (precision > 0) {
 		digits.splice(digits.length - precision, 0, '.');
 	}
-	digits = Number(digits.join('')).toFixed(precision).split('');
-	let raw = Number(digits.join(''));
+
+  // Converte os dígitos para número antes de realizar o clamping
+  let raw = Number(digits.join(''));
+  
+  // Aplica o clamping (limitação do valor entre minValue e maxValue)
+  raw = Math.min(Math.max(raw, minValue), maxValue);
+
+  // Após o clamping, reconverte o número para uma string de dígitos
+  digits = raw.toFixed(precision).split('');
+
 	let decimalpos = digits.length - precision - 1;
 	if (precision > 0) {
 		digits[decimalpos] = decimalSeparator;
@@ -105,8 +115,8 @@ function formatNumber(
 
 export interface ArchbaseNumberEditProps<T, ID>
 	extends TextInputProps,
-		Omit<React.ComponentPropsWithoutRef<'input'>, 'size' | 'value' | 'defaultValue' | 'onChange'>,
-		React.RefAttributes<HTMLInputElement> {
+	Omit<React.ComponentPropsWithoutRef<'input'>, 'size' | 'value' | 'defaultValue' | 'onChange'>,
+	React.RefAttributes<HTMLInputElement> {
 	/** Determina se o valor de entrada pode ser limpo, adiciona o botão limpar à seção direita, falso por padrão */
 	clearable?: boolean;
 	/** Adereços adicionados ao botão limpar */
@@ -157,6 +167,10 @@ export interface ArchbaseNumberEditProps<T, ID>
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	/** Evento quando o valor for limpado */
 	onClear?: () => void
+	/** Valor mínimo permitido */
+	minValue?: number;
+	/** Valor máximo permitido */
+	maxValue?: number;
 }
 
 export function ArchbaseNumberEdit<T, ID>({
@@ -166,9 +180,9 @@ export function ArchbaseNumberEdit<T, ID>({
 	readOnly = false,
 	style,
 	className = '',
-	onFocusExit = () => {},
-	onFocusEnter = () => {},
-	onChangeValue = () => {},
+	onFocusExit = () => { },
+	onFocusEnter = () => { },
+	onChangeValue = () => { },
 	value = 0,
 	decimalSeparator = ',',
 	thousandSeparator = '.',
@@ -189,6 +203,8 @@ export function ArchbaseNumberEdit<T, ID>({
 	error,
 	innerRef,
 	onClear,
+	minValue = Number.MIN_SAFE_INTEGER,
+	maxValue = Number.MAX_SAFE_INTEGER,
 	...others
 }: ArchbaseNumberEditProps<T, ID>) {
 	const [isOpen, _setIsOpen] = useState(false);
@@ -242,6 +258,8 @@ export function ArchbaseNumberEdit<T, ID>({
 			allowNegative,
 			prefix,
 			suffix,
+			minValue,
+      maxValue 
 		);
 
 		return { maskedValue: result.maskedValue, value: result.value };
@@ -261,7 +279,7 @@ export function ArchbaseNumberEdit<T, ID>({
 	const loadDataSourceFieldValue = () => {
 		if (dataSource && dataField) {
 			const value = dataSource.getFieldValue(dataField);
-			const result = formatNumber(value, precision, decimalSeparator, thousandSeparator, allowNegative, prefix, suffix);
+			const result = formatNumber(value, precision, decimalSeparator, thousandSeparator, allowNegative, prefix, suffix, minValue, maxValue);
 			setMaskedValue(result.maskedValue);
 			setCurrentValue(0);
 		}
@@ -359,6 +377,8 @@ export function ArchbaseNumberEdit<T, ID>({
 			allowNegative,
 			prefix,
 			suffix,
+			minValue,
+      maxValue
 		);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField) {
@@ -453,7 +473,7 @@ export function ArchbaseNumberEdit<T, ID>({
 }
 
 ArchbaseNumberEdit.defaultProps = {
-	onChangeValue: () => {},
+	onChangeValue: () => { },
 	value: '0',
 	decimalSeparator: ',',
 	thousandSeparator: '.',
@@ -464,8 +484,8 @@ ArchbaseNumberEdit.defaultProps = {
 	readOnly: false,
 	integer: false,
 	disabled: false,
-	onFocusExit: () => {},
-	onFocusEnter: () => {},
+	onFocusExit: () => { },
+	onFocusEnter: () => { },
 	allowEmpty: true,
 };
 
