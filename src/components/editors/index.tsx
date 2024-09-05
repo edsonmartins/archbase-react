@@ -107,4 +107,5 @@ export {ArchbaseOperatingHoursEditor} from './ArchbaseOperationHoursEditor'
 export type {ArchbaseOperatingHoursEditorProps} from './ArchbaseOperationHoursEditor'
 export {ArchbaseCountdownProgress} from "./ArchbaseCountdownProgress"
 export {ArchbaseFileAttachment} from "./ArchbaseFileAttachment"
+export {ArchbaseCronExpressionEdit} from "./ArchbaseCronExpressionEdit"
 export type {ArchbaseFileAttachmentProps, Attachment} from "./ArchbaseFileAttachment"
