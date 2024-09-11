@@ -264,10 +264,7 @@ export function ArchbaseSelect<T, ID, O>({
     optionsLabelField
   ])
 
-  console.log('ArchbaseSelect render:', { value, defaultValue, selectedValue, currentOptions });
-
   const handleChange = (vl: string | null, option: SelectItem) => {
-    console.log('handleChange called with:', vl, option);
     const value = option && option.origin ? option.origin : vl;
     setSelectedValue((_prev) => value);
   
