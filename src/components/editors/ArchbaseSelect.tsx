@@ -19,6 +19,7 @@ import {
   ArchbaseAsyncSelectContextValue
 } from './ArchbaseAsyncSelect.context'
 
+
 export interface SelectItem extends ComboboxItem {
   selected?: boolean
   group?: string
@@ -232,7 +233,7 @@ export function ArchbaseSelect<T, ID, O>({
   customGetDataSourceFieldValue,
   customSetDataSourceFieldValue
 }: ArchbaseSelectProps<T, ID, O>) {
-  const innerComponentRef = innerRef || useRef<any>()
+  const innerComponentRef = useRef<any>()
   const [selectedValue, setSelectedValue] = useState<any>(value)
   const [queryValue, setQueryValue] = useDebouncedState('', debounceTime)
   const [internalError, setInternalError] = useState<string | undefined>(error)
@@ -263,10 +264,13 @@ export function ArchbaseSelect<T, ID, O>({
     optionsLabelField
   ])
 
-  const handleChange = (vl: string | null, option: SelectItem) => {
-    const value = option && option.origin ? option.origin : undefined
-    setSelectedValue((_prev) => value)
+  console.log('ArchbaseSelect render:', { value, defaultValue, selectedValue, currentOptions });
 
+  const handleChange = (vl: string | null, option: SelectItem) => {
+    console.log('handleChange called with:', vl, option);
+    const value = option && option.origin ? option.origin : vl;
+    setSelectedValue((_prev) => value);
+  
     if (
       dataSource &&
       !dataSource.isBrowsing() &&
@@ -275,15 +279,17 @@ export function ArchbaseSelect<T, ID, O>({
         ? customGetDataSourceFieldValue()
         : dataSource.getFieldValue(dataField)) !== value
     ) {
-      customSetDataSourceFieldValue
-        ? customSetDataSourceFieldValue(value)
-        : dataSource.setFieldValue(dataField, value)
+      if (customSetDataSourceFieldValue) {
+        customSetDataSourceFieldValue(value)
+      } else {
+        dataSource.setFieldValue(dataField, value);
+      }
     }
-
+  
     if (onSelectValue) {
-      onSelectValue(value, option ? option.origin : undefined)
+      onSelectValue(value, option ? option.origin : undefined);
     }
-  }
+  };
 
   const handleOnFocusExit = (event) => {
     if (onFocusExit) {
@@ -382,6 +388,12 @@ export function ArchbaseSelect<T, ID, O>({
     }
   })
 
+  useEffect(() => {
+    if (value !== undefined) {
+      setSelectedValue(value);
+    }
+  }, [value]);
+
   useArchbaseWillUnmount(() => {
     if (dataSource && dataField) {
       dataSource.removeListener(dataSourceEvent)
@@ -420,7 +432,7 @@ export function ArchbaseSelect<T, ID, O>({
         placeholder={placeholder}
         searchable={searchable}
         maxDropdownHeight={280}
-        ref={innerComponentRef}
+        ref={innerRef || innerComponentRef}
         label={label}
         error={internalError}
         data={currentOptions}
@@ -430,13 +442,13 @@ export function ArchbaseSelect<T, ID, O>({
         leftSectionWidth={iconWidth}
         readOnly={internalReadOnly}
         required={required}
-        onChange={handleChange}
+        onChange={(value, option) => handleChange(value, option as SelectItem)}
         onBlur={handleOnFocusExit}
         onFocus={handleOnFocusEnter}
-        value={selectedValue}
+        value={selectedValue !== undefined ? selectedValue : null}
         onSearchChange={setQueryValue}
-        defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
-        searchValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue}
+        searchValue={selectedValue ? getOptionLabel(selectedValue) : queryValue}
+        defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue || ''} 
         // filter={filter}
         defaultDropdownOpened={initiallyOpened}
         onDropdownOpen={onDropdownOpen}
@@ -455,3 +467,4 @@ export function ArchbaseSelect<T, ID, O>({
 }
 
 ArchbaseSelect.displayName = 'ArchbaseSelect'
+
