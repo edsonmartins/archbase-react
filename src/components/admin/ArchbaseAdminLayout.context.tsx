@@ -54,7 +54,7 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 	const [collapsed, setCollapsed] = useState<boolean>(initialSidebarCollapsed);
 	const [hidden, setHidden] = useState<boolean>(false);
 	const [navigationData, setNavigationData] = useUncontrolled({
-		value: initialNavigationData,
+		value: onNavigationDataChange !== undefined ? initialNavigationData : undefined,
 		defaultValue: enableSecurity ? [] : initialNavigationData,
 		finalValue: [],
 		onChange: onNavigationDataChange,
@@ -74,14 +74,18 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 				item?.links?.forEach(itemChild => securityManager.registerAction(`${item.label} -> ${itemChild.label}`, `${item.label} -> ${itemChild.label}`));
 			});
 			securityManager.apply(() => {
-				setNavigationData(initialNavigationData.map(item => ({
+				const updatedNavigationData = initialNavigationData.map(item => ({
 					...item,
 					disabled: !securityManager.hasPermission(item.label),
-					links: item.links && item.links.map(itemChild => ({
-						...itemChild,
-						disabled: !securityManager.hasPermission(`${item.label} -> ${itemChild.label}`)
-					}))
-				})));
+					links: item.links && item.links.map(itemChild => {
+						const childHasPermission = securityManager.hasPermission(`${item.label} -> ${itemChild.label}`)
+						return {
+							...itemChild,
+							disabled: !childHasPermission
+						}
+					})
+				}))
+				setNavigationData(updatedNavigationData);
 			});
 		}
 	}, [user?.id, enableSecurity, initialNavigationData, securityManager, setNavigationData]);
