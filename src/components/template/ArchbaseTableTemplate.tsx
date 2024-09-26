@@ -80,6 +80,7 @@ export interface ArchbaseTableTemplateProps<T extends Object, ID> {
 	/* Padding da célula do cabeçalho da tabela */
 	tableHeadCellPadding?: string | number;
 	renderDetailPanel?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
+	renderTopToolbar?: ((props: { table: MRT_TableInstance<T>}) => ReactNode) | ReactNode;
 }
 
 const getFilter = (
@@ -134,6 +135,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	enableRowSelection,
 	tableHeadCellPadding,
 	renderDetailPanel,
+	renderTopToolbar
 }: ArchbaseTableTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const filterRef = useRef<any>();
@@ -316,6 +318,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 				striped={true}
 				isLoading={isLoading}
 				enableTopToolbar={enableTopToolbar}
+				renderTopToolbar={renderTopToolbar}
 				pageSize={pageSize}
 				isError={isError}
 				enableGlobalFilter={filterType === 'normal'}

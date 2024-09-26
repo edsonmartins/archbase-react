@@ -132,6 +132,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
 	renderRowActions?: (props: { cell: MRT_Cell<T>; row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
 	renderToolbarInternalActions?: (props: { table: MRT_TableInstance<T> }) => ReactNode | null;
 	renderDetailPanel?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
+	renderTopToolbar?: ((props: { table: MRT_TableInstance<T>}) => ReactNode) | ReactNode;
 	positionActionsColumn?: 'first' | 'last';
 	onExport?: (exportFunc: () => void) => void;
 	onPrint?: (printFunc: () => void) => void;
@@ -1235,6 +1236,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 		},
 		onRowSelectionChange: setRowSelection,
 		renderTopToolbarCustomActions: (table) => getToolBarCustomActions(table, props),
+		renderTopToolbar: props.renderTopToolbar,
 		localization: languages[i18n.language],
 		data: isLoadingInternal ? [] : data,
 		rowCount: props.dataSource.getGrandTotalRecords(),
