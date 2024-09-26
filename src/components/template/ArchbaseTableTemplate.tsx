@@ -385,7 +385,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 											onClick={() => userActions && userActions.onViewExecute && userActions!.onViewExecute()}
 										>
 											{t('archbase:View')}
-										</Button>
+										</Button> 
 									) : null}
 									{userActions.customUserActions && userActions.customUserActionsPosition === 'right'
 										? userActions.customUserActions
