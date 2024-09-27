@@ -1,15 +1,12 @@
 import { ActionIcon, Menu, useMantineColorScheme } from '@mantine/core';
-import { IconLanguage, IconMoonStars, IconSun } from '@tabler/icons-react';
 import i18next from 'i18next';
 import { BRFlag, ESFlag, USFlag } from 'mantine-flagpack';
 import React, { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useArchbaseAppContext } from '../core';
 
 export const ArchbaseChangeLanguageAction = () => {
 	const context = useArchbaseAppContext();
 	const { colorScheme } = useMantineColorScheme();
-	const { i18n } = useTranslation();
 	const dark = colorScheme === 'dark';
 
 	const getIconByLanguage = (language: string): ReactNode => {
@@ -40,14 +37,14 @@ export const ArchbaseChangeLanguageAction = () => {
 	};
 
 	const handleChangeLanguage = (language: string) => {
-		i18n.changeLanguage(language);
+		i18next.changeLanguage(language);
 	};
 
 	return (
 		<Menu shadow="md" width={200} position="bottom-end">
 			<Menu.Target>
 				<ActionIcon variant="transparent" color={dark ? 'white' : 'blue'} title={i18next.t('toggleLanguage')}>
-					{getIconByLanguage(i18n.language)}
+					{getIconByLanguage(i18next.language)}
 				</ActionIcon>
 			</Menu.Target>
 

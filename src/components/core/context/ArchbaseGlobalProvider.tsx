@@ -27,32 +27,49 @@ interface ArchbaseAppProviderProps {
 	themeLight?: ArchbaseThemeOverride;
 	withCssVariables?: boolean;
 	notificationAutoClose?: number;
-	translationName?: string;
+	translationName?: string | string[];
 	translationResource?: ArchbaseTranslationResource;
 	notificationPosition?: 'top-left' | 'top-right' | 'top-center' | 'bottom-left' | 'bottom-right' | 'bottom-center';
 }
 
-const buildResources = (
-	resource: Resource,
-	translationName?: string,
-	translationResource?: ArchbaseTranslationResource,
-): Resource | undefined => {
-	const result = resource;
+const buildResources = (resource, translationName, translationResource) => {
+	const result = { ...resource };
+
 	if (translationResource) {
-		const name = translationName ? translationName : 'app';
+		const names = Array.isArray(translationName) ? translationName : [translationName || 'app'];
+
 		Object.keys(translationResource).forEach((language) => {
-			if (!resource[language]) {
-				resource[language] = { [name]: translationResource[language] };
+			if (!result[language]) {
+				result[language] = {};
 			}
-			if (!resource[language][name]) {
-				resource[language][name] = translationResource[language];
-			}
+
+			names.forEach((name) => {
+				// Verificar se estamos lidando com uma única namespace ou múltiplas
+				if (Array.isArray(translationName)) {
+					// Caso seja múltiplos namespaces, esperamos que translationResource[language][name] exista
+					if (translationResource[language][name]) {
+						result[language][name] = {
+							...result[language][name],
+							...translationResource[language][name],
+						};
+					}
+				} else {
+					// Caso seja uma única namespace, adicionamos diretamente a translationResource
+					result[language][name] = {
+						...result[language][name],
+						...translationResource[language],
+					};
+				}
+			});
 		});
-		return result;
 	}
+
+	return result;
 };
 
 export const initArchbaseTranslation = (translationName, translationResource): any => {
+	const namespaces = Array.isArray(translationName) ? ['archbase', ...translationName] : ['archbase', translationName].filter(Boolean);
+
 	i18next
 		.use(initReactI18next)
 		.use(LanguageDetector)
@@ -60,7 +77,7 @@ export const initArchbaseTranslation = (translationName, translationResource): a
 			debug: false,
 			resources: buildResources(archbaseTranslationResources, translationName, translationResource),
 			keySeparator: '.',
-			ns: translationName ? ['archbase', translationName] : ['archbase'],
+			ns: namespaces,
 			defaultNS: 'archbase',
 		});
 
@@ -95,10 +112,18 @@ function ArchbaseGlobalProvider({
 	translationName,
 	translationResource,
 }: ArchbaseAppProviderProps) {
-	const [language, setLanguage] = useState('pt-BR');
+	const [language, setLanguage] = useState(i18next.language || 'pt-BR');
 	useLayoutEffect(() => {
 		setLanguage(initArchbaseTranslation(translationName, translationResource).language);
-	}, []);
+		const handleLanguageChange = (lng: string) => {
+			setLanguage(lng);
+		};
+		i18next.on('languageChanged', handleLanguageChange);
+
+		return () => {
+			i18next.off('languageChanged', handleLanguageChange);
+		};
+	}, [translationName, translationResource]);
 
 	return (
 		<I18nextProvider i18n={i18next} defaultNS={translationName}>
