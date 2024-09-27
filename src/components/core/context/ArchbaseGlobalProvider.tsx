@@ -79,6 +79,11 @@ export const initArchbaseTranslation = (translationName, translationResource): a
 			keySeparator: '.',
 			ns: namespaces,
 			defaultNS: 'archbase',
+			fallbackLng: 'pt-BR', // Define um idioma padrão caso o idioma detectado não seja suportado
+      detection: {
+        order: ['localStorage', 'navigator'], // Tenta detectar o idioma no localStorage primeiro, depois o do navegador
+        caches: ['localStorage'], // Cache o idioma detectado no localStorage
+      },
 		});
 
 	i18next.on('languageChanged', (lng: string) => {

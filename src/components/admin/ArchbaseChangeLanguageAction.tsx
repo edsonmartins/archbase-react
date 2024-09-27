@@ -1,13 +1,31 @@
 import { ActionIcon, Menu, useMantineColorScheme } from '@mantine/core';
 import i18next from 'i18next';
 import { BRFlag, ESFlag, USFlag } from 'mantine-flagpack';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useArchbaseAppContext } from '../core';
+import { useLocalStorage } from '@mantine/hooks';
 
 export const ArchbaseChangeLanguageAction = () => {
 	const context = useArchbaseAppContext();
 	const { colorScheme } = useMantineColorScheme();
 	const dark = colorScheme === 'dark';
+  const [currentLanguage, setCurrentLanguage] = useLocalStorage({
+    key: 'i18nextLng',
+    defaultValue: i18next.language || 'pt-BR',
+  });
+
+	useEffect(() => {
+    const handleLanguageChange = (lng: string) => {
+      setCurrentLanguage(lng);
+    };
+
+    i18next.on('languageChanged', handleLanguageChange);
+
+    // Cleanup listener on unmount
+    return () => {
+      i18next.off('languageChanged', handleLanguageChange);
+    };
+  }, []);
 
 	const getIconByLanguage = (language: string): ReactNode => {
 		if (language === 'en') {
@@ -38,13 +56,14 @@ export const ArchbaseChangeLanguageAction = () => {
 
 	const handleChangeLanguage = (language: string) => {
 		i18next.changeLanguage(language);
+		setCurrentLanguage(language)
 	};
 
 	return (
 		<Menu shadow="md" width={200} position="bottom-end">
 			<Menu.Target>
 				<ActionIcon variant="transparent" color={dark ? 'white' : 'blue'} title={i18next.t('toggleLanguage')}>
-					{getIconByLanguage(i18next.language)}
+					{getIconByLanguage(currentLanguage)}
 				</ActionIcon>
 			</Menu.Target>
 
