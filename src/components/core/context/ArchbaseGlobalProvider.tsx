@@ -117,7 +117,7 @@ function ArchbaseGlobalProvider({
 	translationName,
 	translationResource,
 }: ArchbaseAppProviderProps) {
-	const [language, setLanguage] = useState(i18next.language || 'pt-BR');
+	const [language, setLanguage] = useState(i18next.language);
 	useLayoutEffect(() => {
 		setLanguage(initArchbaseTranslation(translationName, translationResource).language);
 		const handleLanguageChange = (lng: string) => {

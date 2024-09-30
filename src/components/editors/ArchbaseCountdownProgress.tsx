@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Progress, Text } from '@mantine/core';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { t } from 'i18next';
 dayjs.extend(duration);
 
 
@@ -41,7 +42,11 @@ export const ArchbaseCountdownProgress = ({ targetDate, color }) => {
         </Progress.Section>
       </Progress.Root>
       <Text ta="center" mt="sm">
-        {`Faltam ${timeLeft.days} dias, ${timeLeft.hours} horas e ${timeLeft.minutes} minutos`}
+        {t('archbase:Faltam {{days}} dias, {{hours}} horas e {{minutes}} minutos', {
+          days: timeLeft.days,
+          hours: timeLeft.hours,
+          minutes: timeLeft.minutes,
+        })}
       </Text>
     </div>
   );

@@ -244,7 +244,7 @@ export function ArchbaseSecurityView({
         dataField="user.avatar"
         dataType="image"
         size={50}
-        header="Foto"
+        header={t('archbase:Foto')}
         render={(cell) => (
           <img
             style={{ borderRadius: 50, height: '36px', maxHeight: '36px' }}
@@ -260,13 +260,13 @@ export function ArchbaseSecurityView({
         dataField="user.userName"
         dataType="text"
         size={300}
-        header="Nome de Usuário"
+        header={t('archbase:Nome de Usuário')}
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<AccessTokenDto>
         dataField="user.email"
         dataType="text"
-        header="Email"
+        header={t('archbase:Email')}
         size={300}
         inputFilterType="text"
       />
@@ -274,26 +274,26 @@ export function ArchbaseSecurityView({
         dataField="expirationDate"
         dataType="text"
         size={300}
-        header="Expira em"
+        header={t('archbase:Expira em')}
         render={(cell) => <ArchbaseCountdownProgress color="orange" targetDate={cell.row.original.expirationDate} />}
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<AccessTokenDto>
         dataField="revoked"
         dataType="boolean"
-        header="Revogado ?"
+        header={t('archbase:Revogado ?')}
         inputFilterType="checkbox"
       />
       <ArchbaseDataTableColumn<AccessTokenDto>
         dataField="expired"
         dataType="boolean"
-        header="Expirado ?"
+        header={t('archbase:Expirado ?')}
         inputFilterType="checkbox"
       />
       <ArchbaseDataTableColumn<AccessTokenDto>
         dataField="token"
         dataType="text"
-        header="Token Acesso"
+        header={t('archbase:Token Acesso')}
         size={200}
         inputFilterType="text"
       />
@@ -306,7 +306,7 @@ export function ArchbaseSecurityView({
         dataField="avatar"
         dataType="image"
         size={50}
-        header="Foto"
+        header={t('archbase:Foto')}
         render={(cell) => (
           <img
             style={{ borderRadius: 50, height: '36px', maxHeight: '36px' }}
@@ -320,27 +320,27 @@ export function ArchbaseSecurityView({
         dataField="name"
         dataType="text"
         size={300}
-        header="Nome"
+        header={t('archbase:Nome')}
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="nickname"
         dataType="text"
         size={120}
-        header="Apelido"
+        header={t('archbase:Apelido')}
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="email"
         dataType="text"
-        header="Email"
+        header={t('archbase:Email')}
         size={300}
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="profile.name"
         dataType="text"
-        header="Perfil"
+        header={t('archbase:Perfil')}
         size={200}
         render={(cell) => renderProfile(cell.row.original)}
         inputFilterType="text"
@@ -349,61 +349,61 @@ export function ArchbaseSecurityView({
         dataField="groups"
         dataType="text"
         size={300}
-        header="Grupos"
+        header={t('archbase:Grupos')}
         render={(cell) => renderGroups(cell.row.original)}
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="isAdministrator"
         dataType="boolean"
-        header="Admin ?"
+        header={t('archbase:Admin ?')}
         inputFilterType="checkbox"
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="changePasswordOnNextLogin"
         dataType="boolean"
-        header="Alt.senha próximo login?"
+        header={t('archbase:Alt.senha próximo login?')}
         inputFilterType="checkbox"
         size={80}
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="allowPasswordChange"
         dataType="boolean"
-        header="Pode alterar senha?"
+        header={t('archbase:Pode alterar senha?')}
         inputFilterType="checkbox"
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="allowMultipleLogins"
         dataType="boolean"
-        header="Permite multiplos logins?"
+        header={t('archbase:Permite multiplos logins?')}
         inputFilterType="checkbox"
         size={80}
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="passwordNeverExpires"
         dataType="boolean"
-        header="Senha nunca expira?"
+        header={t('archbase:Senha nunca expira?')}
         inputFilterType="checkbox"
         size={80}
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="accountDeactivated"
         dataType="boolean"
-        header="Desativado?"
+        header={t('archbase:Desativado?')}
         inputFilterType="checkbox"
         size={80}
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="accountLocked"
         dataType="boolean"
-        header="BloqueadO?"
+        header={t('archbase:Bloqueado?')}
         inputFilterType="checkbox"
         size={80}
       />
       <ArchbaseDataTableColumn<UserDto>
         dataField="unlimitedAccessHours"
         dataType="boolean"
-        header="Horário acesso ilimitado?"
+        header={t('archbase:Horário acesso ilimitado?')}
         inputFilterType="checkbox"
         size={80}
       />
@@ -416,13 +416,13 @@ export function ArchbaseSecurityView({
         dataField="name"
         dataType="text"
         size={300}
-        header="Nome do grupo"
+        header={t('archbase:Nome do grupo')}
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<GroupDto>
         dataField="description"
         dataType="text"
-        header="Descrição"
+        header={t('archbase:Descrição')}
         size={800}
         inputFilterType="text"
       />
@@ -435,13 +435,13 @@ export function ArchbaseSecurityView({
         dataField="name"
         dataType="text"
         size={300}
-        header="Nome do perfil"
+        header={t('archbase:Nome do perfil')}
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<ProfileDto>
         dataField="description"
         dataType="text"
-        header="Descrição"
+        header={t('archbase:Descrição')}
         size={800}
         inputFilterType="text"
       />
@@ -454,13 +454,13 @@ export function ArchbaseSecurityView({
         dataField="name"
         dataType="text"
         size={300}
-        header="Nome do grupo"
+        header={t('archbase:Nome do recurso')}
         inputFilterType="text"
       />
       <ArchbaseDataTableColumn<ResourceDto>
         dataField="description"
         dataType="text"
-        header="Descrição"
+        header={t('archbase:Descrição')}
         size={800}
         inputFilterType="text"
       />
@@ -722,11 +722,11 @@ export function ArchbaseSecurityView({
     <Paper style={{ height: height }}>
       <Tabs value={activeTab} onChange={setActiveTab}>
         <Tabs.List>
-          <Tabs.Tab value="users">Usuários</Tabs.Tab>
-          <Tabs.Tab value="groups">Grupos</Tabs.Tab>
-          <Tabs.Tab value="profiles">Perfis</Tabs.Tab>
-          <Tabs.Tab value="resources">Recursos</Tabs.Tab>
-          <Tabs.Tab value="accessTokens">Tokens Acesso</Tabs.Tab>
+          <Tabs.Tab value="users">{t('Usuários')}</Tabs.Tab>
+          <Tabs.Tab value="groups">{t('Grupos')}</Tabs.Tab>
+          <Tabs.Tab value="profiles">{t('Perfis')}</Tabs.Tab>
+          <Tabs.Tab value="resources">{t('Recursos')}</Tabs.Tab>
+          <Tabs.Tab value="accessTokens">{t('Tokens Acesso')}</Tabs.Tab>
         </Tabs.List>
       </Tabs>
       <Box
