@@ -511,5 +511,6 @@
   "Token Acesso": "Token Acesso",
   "Faltam {{days}} dias, {{hours}} horas e {{minutes}} minutos": "Faltam {{days}} dias, {{hours}} horas e {{minutes}} minutos",
   "Disponíveis": "Disponíveis",
-  "Selecionados": "Selecionados"
+  "Selecionados": "Selecionados",
+  "Nenhum resultado...": "Nenhum resultado..."
 }

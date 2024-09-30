@@ -97,7 +97,7 @@ class CommandPaletteButton extends Component<CommandPaletteButtonProps, CommandP
 		const filteredCommands = this.props.commands
 			.filter((item) => {
 				const sItem = `${t(item.title)}`;
-				return sItem && item.title.toLowerCase().includes(this.state.query.toLowerCase().trim());
+				return sItem && sItem.toLowerCase().includes(this.state.query.toLowerCase().trim());
 			})
 			.map((item) => CustomCommand(item));
 
@@ -116,7 +116,7 @@ class CommandPaletteButton extends Component<CommandPaletteButtonProps, CommandP
 				>
 					<Spotlight.Search placeholder={`${t('archbase:Localizar...')}`} leftSection={<IconSearch size="1.2rem" />} />
 					<Spotlight.ActionsList>
-						{filteredCommands.length > 0 ? filteredCommands : <Spotlight.Empty>Nothing found...</Spotlight.Empty>}
+						{filteredCommands.length > 0 ? filteredCommands : <Spotlight.Empty>{t("archbase:Nenhum resultado...")}</Spotlight.Empty>}
 					</Spotlight.ActionsList>
 				</Spotlight.Root>
 			</>
