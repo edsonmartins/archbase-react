@@ -78,9 +78,9 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 	timeFormat = 'HH:mm:ss',
 	variant = 'filled',
 	languages = [
-		{ lang: 'en', name: 'Inglês' },
+		{ lang: 'en', name: 'English' },
 		{ lang: 'pt-BR', name: 'Português' },
-		{ lang: 'es', name: 'Espanhol' },
+		{ lang: 'es', name: 'Español' },
 	],
 	setCustomTheme,
 }) => {

@@ -1,15 +1,28 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, ScrollArea, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useTree } from "@mantine/core";
-import { IconArrowLeft, IconArrowRight, IconBorderCornerSquare, IconChevronDown, IconEdit } from "@tabler/icons-react";
+import { IconArrowLeft, IconArrowRight, IconBorderCornerSquare, IconChevronDown } from "@tabler/icons-react";
 import { SecurityType } from "./SecurityType";
 import { useArchbaseRemoteServiceApi, useArchbaseTheme } from "@components/hooks";
 import { ResouceActionPermissionDto, ResoucePermissionsWithTypeDto } from "./SecurityDomain";
 import { ARCHBASE_IOC_API_TYPE, getKeyByEnumValue } from "@components/core";
 import { ArchbaseResourceService } from "./ArchbaseResourceService";
 import { t } from "i18next";
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+import { useDebouncedValue } from "@mantine/hooks";
 import { ArchbaseRemoteDataSource } from "@components/datasource";
 import { ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from "@components/containers";
+
+const translateDelimitedString = (inputString) => {
+    const delimiter = "->"
+    if (inputString.includes(delimiter)) {
+        const parts = inputString.split(delimiter).map(part => part.trim());
+
+        const translatedParts = parts.map(part => t(part));
+
+        return translatedParts.join(` ${delimiter} `);
+    }
+
+    return t(inputString);
+};
 
 export interface PermissionsSelectorProps<T, ID> {
     dataSource: ArchbaseRemoteDataSource<T, ID>
@@ -252,14 +265,16 @@ export function PermissionsSelectorModal<T, ID>({ dataSource, opened, close }: P
     }
 
     useEffect(() => {
-        setSelectedAvailablePermission(undefined)
-        setSelectedGrantedPermission(undefined)
-        setAvailablePermissionsFilter("")
-        setGrantedPermissionsFilter("")
-        grantedPermissionsTree.collapseAllNodes()
-        availablePermissionsTree.collapseAllNodes()
-        loadPermissions()
-    }, [type, securityId])
+        if (opened) {
+            setSelectedAvailablePermission(undefined)
+            setSelectedGrantedPermission(undefined)
+            setAvailablePermissionsFilter("")
+            setGrantedPermissionsFilter("")
+            grantedPermissionsTree.collapseAllNodes()
+            availablePermissionsTree.collapseAllNodes()
+            loadPermissions()
+        }
+    }, [opened, type, securityId])
 
     return (
         <Modal opened={opened} onClose={close} title={`${t(`archbase:${type}`)}: ${name}`} size={"80%"} styles={{ root: { overflow: "hidden" } }}>
@@ -311,7 +326,7 @@ export function PermissionsSelectorModal<T, ID>({ dataSource, opened, close }: P
                                                         c={textColor}
                                                         td={textDecoration}
                                                     >
-                                                        {node.label}
+                                                        {translateDelimitedString(node.label as string)}
                                                     </Text>
                                                 </Group>
                                             )
@@ -367,7 +382,7 @@ export function PermissionsSelectorModal<T, ID>({ dataSource, opened, close }: P
                                                         style={{ transform: 'rotate(-90deg)', marginTop: "-5px" }}
                                                     />
                                                 )}
-                                                <Text>{node.label}</Text>
+                                                <Text>{translateDelimitedString(node.label as string)}</Text>
                                                 {node?.nodeProps?.types?.includes("USER") && <Badge color="blue">{t('archbase:user')}</Badge>}
                                                 {node?.nodeProps?.types?.includes("GROUP") && <Badge color="orange">{t('archbase:group')}</Badge>}
                                                 {node?.nodeProps?.types?.includes("PROFILE") && <Badge color="pink">{t('archbase:profile')}</Badge>}

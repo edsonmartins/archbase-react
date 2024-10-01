@@ -94,7 +94,7 @@ export const UserModal = (props: UserModalProps) => {
                 required
               />
             </Group>
-            
+
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
             <ArchbaseEdit
@@ -208,6 +208,8 @@ export const UserModal = (props: UserModalProps) => {
         </Grid>
         <Space h={'12px'} />
         <ArchbaseDualListSelector<GroupDto, UserGroupDto>
+          titleAvailable={t('archbase:Disponíveis')}
+          titleAssigned={t('archbase:Selecionados')}
           assignedItemsDS={
             new ArchbaseDataSource('dsDualList', {
               records: props.dataSource.getFieldValue('groups'),

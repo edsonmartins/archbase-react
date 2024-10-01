@@ -62,7 +62,7 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 
 	const { securityManager } = useArchbaseSecurityManager({
 		resourceName: securityOptions?.navigationResourceName ? securityOptions.navigationResourceName : "ArchbaseAdvancedSidebar",
-		resourceDescription: securityOptions?.navigationResourceDescription ? securityOptions.navigationResourceDescription : "Navegação",
+		resourceDescription: securityOptions?.navigationResourceDescription ? securityOptions.navigationResourceDescription : "archbase:Navegação",
 		enableSecurity
 	});
 
