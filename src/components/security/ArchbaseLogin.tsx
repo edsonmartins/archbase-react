@@ -68,7 +68,7 @@ export function ArchbaseLogin({
         onChange={(event) => setUsernameInput(event.currentTarget.value)}
       />
       <PasswordInput
-        label="Password"
+        label={t("archbase:Password")}
         placeholder={`${t("archbase:Sua senha")}`}
         onChange={(event) => setPasswordInput(event.currentTarget.value)}
         value={passwordInput || ""}
