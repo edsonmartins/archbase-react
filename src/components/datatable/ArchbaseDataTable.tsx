@@ -43,6 +43,7 @@ import {
 	MRT_ShowHideColumnsMenu,
 	MRT_SortingState,
 	MRT_TableInstance,
+	MRT_TableOptions,
 	MRT_ToggleFiltersButton,
 	MRT_ToggleGlobalFilterButton,
 	useMantineReactTable,
@@ -139,6 +140,12 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
 	cellPadding?: string | number;
 	bottomToolbarMinHeight?: string | number;
 	tableHeadCellPadding?: string | number;
+	dragRowOptions?: DragRowOptionsProps<T>;
+}
+
+export interface DragRowOptionsProps<T> {
+	enableRowOrdering: boolean
+	onDragRowEnd: (row:  MRT_Row<T>, table: MRT_TableInstance<T>) => void
 }
 
 export interface ToolBarActionsProps {
@@ -1142,6 +1149,15 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 		);
 	};
 
+	const dragRow: Partial<MRT_TableOptions<T>> = props?.dragRowOptions ? {
+		enableRowOrdering: props.dragRowOptions.enableRowOrdering,
+		mantineRowDragHandleProps: ({ row, table }) => ({
+			onDragEnd: () => {
+				props.dragRowOptions.onDragRowEnd(row, table)
+			},
+		}),
+	} : {}
+
 	const table = useMantineReactTable({
 		manualFiltering: true,
 		manualPagination: true,
@@ -1258,7 +1274,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			style: {
 				minHeight: props.bottomToolbarMinHeight ?? '3rem',
 			}
-		}
+		},
+		...dragRow
 	});
 
 	useArchbaseDataSourceListener<T, ID>({

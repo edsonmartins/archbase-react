@@ -47,6 +47,8 @@ export interface ArchbaseAdvancedSidebarProps {
 	iconsWithBackground?: boolean;
 	menuItemHeight?: string | number;
 	highlightActiveMenuItem?: boolean;
+	backgroundDarkColor?: string;
+	backgroundLightColor?: string;
 }
 
 type GroupItemSidebar = {
@@ -83,11 +85,16 @@ export function ArchbaseAdvancedSidebar({
 	iconsWithBackground = false,
 	menuItemHeight = 40,
 	highlightActiveMenuItem = true,
+	backgroundDarkColor,
+	backgroundLightColor,
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
 	const appContext = useArchbaseAppContext();
 	const location = useLocation();
 	const { colorScheme } = useMantineColorScheme();
+	const sidebarBackgroundColor = colorScheme === 'dark'
+		? (backgroundDarkColor ?? theme.colors.dark[7])
+		: (backgroundLightColor ?? theme.white)
 	const color = selectedGroupColor
 		? selectedGroupColor
 		: colorScheme === 'dark'
@@ -197,7 +204,8 @@ export function ArchbaseAdvancedSidebar({
 		Number(px(sidebarCollapsedWidth)),
 		groups.length > 1,
 		iconsWithBackground,
-		menuItemHeight
+		menuItemHeight,
+		sidebarBackgroundColor
 	);
 
 	const sidebarWidthCalculated =
@@ -238,8 +246,6 @@ export function ArchbaseAdvancedSidebar({
 			{groups.length == 1 ? (
 				buildNavbar(
 					sidebarRef,
-					colorScheme,
-					theme,
 					collapsed,
 					sidebarWidth,
 					sidebarCollapsedWidth,
@@ -249,6 +255,7 @@ export function ArchbaseAdvancedSidebar({
 					sidebarHeight,
 					sideBarHeaderContent,
 					sideBarFooterContent,
+					sidebarBackgroundColor,
 				)
 			) : (
 				<Flex direction="column" w={collapsed ? sidebarCollapsedWidth : sidebarWidth}>
@@ -272,7 +279,7 @@ export function ArchbaseAdvancedSidebar({
 								ref={sidebarRef}
 								rootStyles={{
 									[`.${sidebarClasses.container}`]: {
-										background: colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+										background: sidebarBackgroundColor,
 										overflowX: 'hidden',
 										overflowY: 'hidden',
 										left: 0,
@@ -292,7 +299,7 @@ export function ArchbaseAdvancedSidebar({
 										width: sidebarWidthCalculated,
 									}}
 								>
-									<SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
+									<SidebarMenu rootStyles={{background: sidebarBackgroundColor}} menuItemStyles={menuItemStyles} closeOnClick={true}>
 										{groups.map((item) => {
 											if (item.name === activeGroupName) {
 												return item.links;

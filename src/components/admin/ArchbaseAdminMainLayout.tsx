@@ -67,6 +67,8 @@ export interface ArchbaseAdminMainLayoutProps {
 	onNavigationDataChange?: (navigationData: ArchbaseNavigationItem[]) => void;
 	showCollapsedButton?: boolean;
 	initialSidebarCollapsed?: boolean;
+	sideBarBackgroundDarkColor?: string;
+	sideBarBackgroundLightColor?: string;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -99,6 +101,8 @@ function ArchbaseAdminMainLayoutContainer({
 	highlightActiveMenuItem = true,
 	customRenderSidebar,
 	showCollapsedButton = true,
+	sideBarBackgroundDarkColor,
+	sideBarBackgroundLightColor,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -242,6 +246,8 @@ function ArchbaseAdminMainLayoutContainer({
 							iconsWithBackground={iconsWithBackground}
 							menuItemHeight={menuItemHeight}
 							highlightActiveMenuItem={highlightActiveMenuItem}
+							backgroundDarkColor={sideBarBackgroundDarkColor}
+							backgroundLightColor={sideBarBackgroundLightColor}
 						/>
 				) : undefined}
 			</AppShell.Navbar>
@@ -308,6 +314,8 @@ function ArchbaseAdminMainLayoutContainer({
 									sideBarFooterContent={sideBarFooterContent}
 									sideBarFooterHeight={sideBarFooterHeight}
 									highlightActiveMenuItem={highlightActiveMenuItem}
+									backgroundDarkColor={sideBarBackgroundDarkColor}
+									backgroundLightColor={sideBarBackgroundLightColor}
 								/>
 						}
 					</Drawer>
@@ -359,6 +367,8 @@ export function ArchbaseAdminMainLayout({
 	onNavigationDataChange,
 	showCollapsedButton,
 	initialSidebarCollapsed = false,
+	sideBarBackgroundDarkColor,
+	sideBarBackgroundLightColor,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -406,6 +416,8 @@ export function ArchbaseAdminMainLayout({
 				enableSecurity={enableSecurity}
 				customRenderSidebar={customRenderSidebar}
 				showCollapsedButton={showCollapsedButton}
+				sideBarBackgroundDarkColor={sideBarBackgroundDarkColor}
+				sideBarBackgroundLightColor={sideBarBackgroundLightColor}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>

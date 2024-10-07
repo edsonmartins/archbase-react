@@ -512,5 +512,13 @@
   "Faltam {{days}} dias, {{hours}} horas e {{minutes}} minutos": "Faltam {{days}} dias, {{hours}} horas e {{minutes}} minutos",
   "Disponíveis": "Disponíveis",
   "Selecionados": "Selecionados",
-  "Nenhum resultado...": "Nenhum resultado..."
+  "Nenhum resultado...": "Nenhum resultado...",
+  "Usuário/senha não encontrados. Não autorizado.": "Usuário/senha não encontrados. Não autorizado.",
+  "recurso_nao_encontrado": "Recurso não encontrado no servidor ou a URL está incorreta. Erro 404",
+  "metodo_nao_permitido": "Método não permitido no servidor ou a URL está incorreta. Erro 405",
+  "dados_incorretos": "Dados incorretos.",
+  "erro_servidor": "Ocorreu um erro no servidor. Erro 500. Caminho: {{path}} Msg: {{message}}",
+  "servidor_nao_disponivel": "Servidor não disponível ou algum problema na rede.",
+  "Password": "Senha",
+  "Código de segurança": "Código de segurança"
 }

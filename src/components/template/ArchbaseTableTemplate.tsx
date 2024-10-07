@@ -21,6 +21,7 @@ import {
 	getDefaultEmptyFilter,
 } from '../querybuilder';
 import { ArchbaseStateValues } from './ArchbaseStateValues';
+import { DragRowOptionsProps } from '@components/datatable/ArchbaseDataTable';
 
 export interface UserActionsOptions {
 	visible: boolean;
@@ -81,6 +82,7 @@ export interface ArchbaseTableTemplateProps<T extends Object, ID> {
 	tableHeadCellPadding?: string | number;
 	renderDetailPanel?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
 	renderTopToolbar?: ((props: { table: MRT_TableInstance<T>}) => ReactNode) | ReactNode;
+	dragRowOptions?: DragRowOptionsProps<T>;
 }
 
 const getFilter = (
@@ -135,7 +137,8 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	enableRowSelection,
 	tableHeadCellPadding,
 	renderDetailPanel,
-	renderTopToolbar
+	renderTopToolbar,
+	dragRowOptions,
 }: ArchbaseTableTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const filterRef = useRef<any>();
@@ -333,6 +336,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 				tableHeadCellPadding={tableHeadCellPadding}
 				renderDetailPanel={renderDetailPanel}
 				enableRowActions={!!userRowActions}
+				dragRowOptions={dragRowOptions}
 			>
 				{columns}
 				{userActions?.visible ? (

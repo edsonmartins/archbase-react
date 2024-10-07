@@ -163,7 +163,7 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
             </Text>
             <Divider m="xs" />
             <TextInput
-              label="Código de segurança"
+              label={t("archbase:Código de segurança")}
               placeholder={`${t("archbase:Código enviado no seu e-mail")}`}
               value={passwordResetTokenInput || ""}
               required
@@ -174,8 +174,8 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
               error={tokenError}
             />
             <PasswordInput
-              label="Nova senha"
-              placeholder={`${t("archbase:Nova senha")}`}
+              label={t("archbase:Nova senha")}
+              placeholder={t("archbase:Nova senha")}
               onChange={(event) => {
                 setNewPasswordInput(event.currentTarget.value)
                 setNewPasswordError("")
@@ -186,8 +186,8 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
               error={newPasswordError}
             />
             <PasswordInput
-              label="Confirmar senha"
-              placeholder={`${t("archbase:Confirmar senha")}`}
+              label={t("archbase:Confirmar senha")}
+              placeholder={t("archbase:Confirmar senha")}
               onChange={(event) => {
                 setConfirmNewPasswordInput(event.currentTarget.value)
                 setConfirmPasswordError("")
