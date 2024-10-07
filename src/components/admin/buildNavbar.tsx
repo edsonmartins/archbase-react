@@ -1,12 +1,10 @@
-import { MantineColorScheme, MantineTheme, px, ScrollArea } from '@mantine/core';
+import { px, ScrollArea } from '@mantine/core';
 import React, { ReactElement, ReactNode } from 'react';
 import type { MenuItemStyles } from 'react-pro-sidebar';
 import { Sidebar, sidebarClasses, Menu as SidebarMenu } from 'react-pro-sidebar';
 
 export function buildNavbar(
 	sidebarRef: React.Ref<HTMLHtmlElement>,
-	colorScheme: MantineColorScheme,
-	theme: MantineTheme,
 	collapsed: boolean,
 	sidebarWidth: string | number,
 	sidebarCollapsedWidth: string | number,
@@ -16,6 +14,7 @@ export function buildNavbar(
 	menuHeight: string | number,
 	sideBarHeaderContent?: ReactNode | undefined,
 	sideBarFooterContent?: ReactNode | undefined,
+	sidebarBackgroundColor?: string
 ): ReactElement {
 	return (
 		<Sidebar
@@ -23,7 +22,7 @@ export function buildNavbar(
 			rootStyles={{
 				[`.${sidebarClasses.container}`]: {
 					position: 'absolute',
-					background: colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+					background: sidebarBackgroundColor,
 					overflowX: 'hidden',
 					overflowY: 'hidden',
 					left: 0,
@@ -37,7 +36,7 @@ export function buildNavbar(
 		>
 			{sideBarHeaderContent}
 			<ScrollArea style={{ overflowY: 'auto', overflowX: 'hidden', height: menuHeight }}>
-				<SidebarMenu menuItemStyles={menuItemStyles} closeOnClick={true}>
+				<SidebarMenu rootStyles={{background: sidebarBackgroundColor}} menuItemStyles={menuItemStyles} closeOnClick={true}>
 					{links}
 				</SidebarMenu>
 			</ScrollArea>

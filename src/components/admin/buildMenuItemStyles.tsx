@@ -12,6 +12,7 @@ export const buildMenuItemStyles = (
 	hasMultipleGroups: boolean,
 	iconsWithBackground: boolean,
 	menuItemHeight: string | number,
+	sidebarBackgroundColor: string,
 ): MenuItemStyles => {
 	const themes = createThemedStyles(theme);
 	const buttonPadding = hasMultipleGroups
@@ -23,7 +24,7 @@ export const buildMenuItemStyles = (
 		root: {
 			fontSize: '14px',
 			fontWeight: 400,
-			background: colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
+			backgroundColor: sidebarBackgroundColor,
 			color: theme.white,
 		},
 		icon: {
