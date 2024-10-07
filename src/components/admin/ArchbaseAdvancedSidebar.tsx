@@ -49,6 +49,10 @@ export interface ArchbaseAdvancedSidebarProps {
 	highlightActiveMenuItem?: boolean;
 	backgroundDarkColor?: string;
 	backgroundLightColor?: string;
+	textDarkColor?: string;
+	textLightColor?: string;
+	iconDarkColor?: string;
+	iconLightColor?: string;
 }
 
 type GroupItemSidebar = {
@@ -87,6 +91,10 @@ export function ArchbaseAdvancedSidebar({
 	highlightActiveMenuItem = true,
 	backgroundDarkColor,
 	backgroundLightColor,
+	textDarkColor,
+	textLightColor,
+	iconDarkColor,
+	iconLightColor,
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
 	const appContext = useArchbaseAppContext();
@@ -100,6 +108,14 @@ export function ArchbaseAdvancedSidebar({
 		: colorScheme === 'dark'
 			? theme.colors[theme.primaryColor][8]
 			: theme.colors[theme.primaryColor][0];
+
+	const sidebarTextColor = colorScheme === 'dark'
+		? (textDarkColor ?? theme.white)
+		: (textLightColor ?? theme.black)
+
+	const sidebarIconColor = colorScheme === 'dark'
+		? (iconDarkColor ?? theme.colors[theme.primaryColor][0])
+		: (iconLightColor ?? theme.colors[theme.primaryColor][7])
 
 	const groups = useMemo(() => {
 		const result: Set<GroupItemSidebar> = new Set();
@@ -205,7 +221,9 @@ export function ArchbaseAdvancedSidebar({
 		groups.length > 1,
 		iconsWithBackground,
 		menuItemHeight,
-		sidebarBackgroundColor
+		sidebarBackgroundColor,
+		sidebarTextColor,
+		sidebarIconColor,
 	);
 
 	const sidebarWidthCalculated =
@@ -299,7 +317,7 @@ export function ArchbaseAdvancedSidebar({
 										width: sidebarWidthCalculated,
 									}}
 								>
-									<SidebarMenu rootStyles={{background: sidebarBackgroundColor}} menuItemStyles={menuItemStyles} closeOnClick={true}>
+									<SidebarMenu rootStyles={{ background: sidebarBackgroundColor }} menuItemStyles={menuItemStyles} closeOnClick={true}>
 										{groups.map((item) => {
 											if (item.name === activeGroupName) {
 												return item.links;

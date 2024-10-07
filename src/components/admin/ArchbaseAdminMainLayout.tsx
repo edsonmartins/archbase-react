@@ -69,6 +69,10 @@ export interface ArchbaseAdminMainLayoutProps {
 	initialSidebarCollapsed?: boolean;
 	sideBarBackgroundDarkColor?: string;
 	sideBarBackgroundLightColor?: string;
+	sideBarTextDarkColor?: string;
+	sideBarTextLightColor?: string;
+	sideBarIconDarkColor?: string;
+	sideBarIconLightColor?: string;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -103,6 +107,10 @@ function ArchbaseAdminMainLayoutContainer({
 	showCollapsedButton = true,
 	sideBarBackgroundDarkColor,
 	sideBarBackgroundLightColor,
+	sideBarTextDarkColor,
+	sideBarTextLightColor,
+	sideBarIconDarkColor,
+	sideBarIconLightColor,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -248,6 +256,10 @@ function ArchbaseAdminMainLayoutContainer({
 							highlightActiveMenuItem={highlightActiveMenuItem}
 							backgroundDarkColor={sideBarBackgroundDarkColor}
 							backgroundLightColor={sideBarBackgroundLightColor}
+							textDarkColor={sideBarTextDarkColor}
+							textLightColor={sideBarTextLightColor}
+							iconDarkColor={sideBarIconDarkColor}
+							iconLightColor={sideBarIconLightColor}
 						/>
 				) : undefined}
 			</AppShell.Navbar>
@@ -316,6 +328,10 @@ function ArchbaseAdminMainLayoutContainer({
 									highlightActiveMenuItem={highlightActiveMenuItem}
 									backgroundDarkColor={sideBarBackgroundDarkColor}
 									backgroundLightColor={sideBarBackgroundLightColor}
+									textDarkColor={sideBarTextDarkColor}
+									textLightColor={sideBarTextLightColor}
+									iconDarkColor={sideBarIconDarkColor}
+									iconLightColor={sideBarIconLightColor}
 								/>
 						}
 					</Drawer>
@@ -369,6 +385,10 @@ export function ArchbaseAdminMainLayout({
 	initialSidebarCollapsed = false,
 	sideBarBackgroundDarkColor,
 	sideBarBackgroundLightColor,
+	sideBarTextDarkColor,
+	sideBarTextLightColor,
+	sideBarIconDarkColor,
+	sideBarIconLightColor,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -418,6 +438,10 @@ export function ArchbaseAdminMainLayout({
 				showCollapsedButton={showCollapsedButton}
 				sideBarBackgroundDarkColor={sideBarBackgroundDarkColor}
 				sideBarBackgroundLightColor={sideBarBackgroundLightColor}
+				sideBarTextDarkColor={sideBarTextDarkColor}
+				sideBarTextLightColor={sideBarTextLightColor}
+				sideBarIconDarkColor={sideBarIconDarkColor}
+				sideBarIconLightColor={sideBarIconLightColor}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>
