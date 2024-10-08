@@ -110,8 +110,8 @@ export function ArchbaseAdvancedSidebar({
 			: theme.colors[theme.primaryColor][0];
 
 	const sidebarTextColor = colorScheme === 'dark'
-		? (textDarkColor ?? theme.white)
-		: (textLightColor ?? theme.black)
+		? (textDarkColor ?? "var(--mantine-color-text)")
+		: (textLightColor ?? "var(--mantine-color-text)")
 
 	const sidebarIconColor = colorScheme === 'dark'
 		? (iconDarkColor ?? theme.colors[theme.primaryColor][0])
@@ -204,7 +204,7 @@ export function ArchbaseAdvancedSidebar({
 		result.forEach((group) => {
 			group.links = navigationData
 				.filter((itm) => itm.showInSidebar === true && (!itm.disabled || !itm.hideDisabledItem) && itm.group && itm.group.name === group.name)
-				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem));
+				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem, sidebarTextColor));
 		});
 
 		const grps = [...result].sort((a, b) => a.indexOrder - b.indexOrder);
@@ -268,7 +268,7 @@ export function ArchbaseAdvancedSidebar({
 					sidebarWidth,
 					sidebarCollapsedWidth,
 					menuItemStyles,
-					navigationData.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem)),
+					navigationData.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem, sidebarTextColor)),
 					isHidden,
 					sidebarHeight,
 					sideBarHeaderContent,
