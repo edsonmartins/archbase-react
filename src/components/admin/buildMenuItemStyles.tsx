@@ -13,6 +13,8 @@ export const buildMenuItemStyles = (
 	iconsWithBackground: boolean,
 	menuItemHeight: string | number,
 	sidebarBackgroundColor: string,
+	sidebarTextColor: string,
+	sidebarIconColor: string,
 ): MenuItemStyles => {
 	const themes = createThemedStyles(theme);
 	const buttonPadding = hasMultipleGroups
@@ -29,7 +31,7 @@ export const buildMenuItemStyles = (
 		},
 		icon: {
 			background: iconsBackgroundColor,
-			color: colorScheme === 'dark' ? theme.colors[theme.primaryColor][0] : theme.colors[theme.primaryColor][7],
+			color: sidebarIconColor,
 			[`&.${menuClasses.disabled}`]: {
 				color: themes[colorScheme].menu.disabled.color,
 			},
@@ -59,7 +61,7 @@ export const buildMenuItemStyles = (
 
 		label: ({ open }) => ({
 			fontWeight: open ? 600 : undefined,
-			color: colorScheme === 'dark' ? theme.white : theme.black,
+			color: sidebarTextColor,
 			'&:hover': {
 				color: theme.white,
 			},

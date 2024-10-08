@@ -34,3 +34,5 @@ export type {
 	LocationDataItem,
 } from './types';
 export { ArchbaseKeepAliveRoute, ArchbaseAliveAbleRoutes } from './ArchbaseAliveAbleRoutes';
+export type { CommandPaletteButtonProps, ArchbaseSpotlightActionData } from './CommandPaletteButton';
+export { CommandPaletteButton } from './CommandPaletteButton';
