@@ -3,6 +3,7 @@ import React, { createContext, ReactNode, useContext, useEffect, useReducer } fr
 interface ArchbaseNavigationState {
 	userCloseLinkRequest: string;
 	linkClosed: string;
+	isClosing: boolean;
 }
 
 interface ArchbaseNavigationAction {
@@ -16,7 +17,7 @@ export interface ArchbaseNavigationContextValues {
 }
 
 export const ArchbaseNavigationContext = createContext<ArchbaseNavigationContextValues>({
-	state: { userCloseLinkRequest: '', linkClosed: '' },
+	state: { userCloseLinkRequest: '', linkClosed: '', isClosing: false },
 	dispatch: (action: ArchbaseNavigationAction) => {
 		return null;
 	},
@@ -30,20 +31,21 @@ export const ArchbaseNavigationProvider = ({ children }: ArchbaseNavigationProvi
 	const initialState: ArchbaseNavigationState = {
 		userCloseLinkRequest: '',
 		linkClosed: '',
+		isClosing: false,
 	};
 
 	const reducer = (state: ArchbaseNavigationState, action: ArchbaseNavigationAction) => {
 		switch (action.type) {
-			case 'USER_CLOSE_REQUEST':
-				return { ...state, userCloseLinkRequest: action.link };
-			case 'CLOSE_ALLOWED':
-				return { ...state, linkClosed: action.link, userCloseLinkRequest: '' };
-			case 'DONE':
-				return { ...state, linkClosed: action.link };
-			default:
-				return state;
+		  case 'USER_CLOSE_REQUEST':
+			return { ...state, userCloseLinkRequest: action.link, isClosing: true };
+		  case 'CLOSE_ALLOWED':
+			return { ...state, linkClosed: action.link, userCloseLinkRequest: '', isClosing: false };
+		  case 'DONE':
+			return { ...state, linkClosed: action.link, isClosing: false };
+		  default:
+			return state;
 		}
-	};
+	  };
 
 	const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -62,18 +64,26 @@ export const useArchbaseNavigationContext = () => {
 
 export interface ArchbaseNavigationListenerType {
 	closeAllowed: () => void;
-}
-
-export const useArchbaseNavigationListener = (id: string, onUserCloseRequest: () => void) => {
+	isClosing: boolean;
+  }
+  
+  export const useArchbaseNavigationListener = (id: string, onUserCloseRequest: () => void) => {
 	const { state, dispatch } = useArchbaseNavigationContext();
+  
 	useEffect(() => {
-		if (state && state.userCloseLinkRequest && state.userCloseLinkRequest === id) {
-			onUserCloseRequest();
-		}
-	}, [state]);
+	  if (state && state.userCloseLinkRequest && state.userCloseLinkRequest === id) {
+		onUserCloseRequest();
+	  }
+	}, [state, id, onUserCloseRequest]);
+  
 	const closeAllowed = () => {
-		dispatch({ type: 'CLOSE_ALLOWED', link: id });
+	  dispatch({ type: 'CLOSE_ALLOWED', link: id });
 	};
-	const result: ArchbaseNavigationListenerType = { closeAllowed };
+  
+	const result: ArchbaseNavigationListenerType = { 
+	  closeAllowed,
+	  isClosing: state.isClosing && state.userCloseLinkRequest === id
+	};
+  
 	return result;
-};
+  };
