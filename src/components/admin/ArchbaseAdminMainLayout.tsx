@@ -73,6 +73,7 @@ export interface ArchbaseAdminMainLayoutProps {
 	sideBarTextLightColor?: string;
 	sideBarIconDarkColor?: string;
 	sideBarIconLightColor?: string;
+	sideBarCollapsedSubmenuWidth?: string | number;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -111,6 +112,7 @@ function ArchbaseAdminMainLayoutContainer({
 	sideBarTextLightColor,
 	sideBarIconDarkColor,
 	sideBarIconLightColor,
+	sideBarCollapsedSubmenuWidth,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -260,6 +262,7 @@ function ArchbaseAdminMainLayoutContainer({
 							textLightColor={sideBarTextLightColor}
 							iconDarkColor={sideBarIconDarkColor}
 							iconLightColor={sideBarIconLightColor}
+							collapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
 						/>
 				) : undefined}
 			</AppShell.Navbar>
@@ -332,6 +335,7 @@ function ArchbaseAdminMainLayoutContainer({
 									textLightColor={sideBarTextLightColor}
 									iconDarkColor={sideBarIconDarkColor}
 									iconLightColor={sideBarIconLightColor}
+									collapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
 								/>
 						}
 					</Drawer>
@@ -389,6 +393,7 @@ export function ArchbaseAdminMainLayout({
 	sideBarTextLightColor,
 	sideBarIconDarkColor,
 	sideBarIconLightColor,
+	sideBarCollapsedSubmenuWidth,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -442,6 +447,7 @@ export function ArchbaseAdminMainLayout({
 				sideBarTextLightColor={sideBarTextLightColor}
 				sideBarIconDarkColor={sideBarIconDarkColor}
 				sideBarIconLightColor={sideBarIconLightColor}
+				sideBarCollapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>

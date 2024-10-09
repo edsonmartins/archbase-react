@@ -3,7 +3,7 @@ import i18next from 'i18next';
 import React from 'react';
 import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar';
 
-export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, currentPathName, highlightActiveMenuItem, sidebarTextColor) {
+export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, currentPathName, highlightActiveMenuItem, sidebarTextColor, collapsedSubmenuWidth) {
 	const iconsBackgroundColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][8] : theme.colors[theme.primaryColor][7]) : undefined;
 	const iconsColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][0] : theme.colors[theme.primaryColor][0]) : undefined;
 	if (item.links) {
@@ -22,6 +22,9 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 										color: "white",
 									},
 								}
+							},
+							[`.${menuClasses.subMenuContent}`]: {
+								width: collapsed && collapsedSubmenuWidth
 							},
 						}}
 						key={index}

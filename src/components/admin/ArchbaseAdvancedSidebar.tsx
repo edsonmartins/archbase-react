@@ -53,6 +53,7 @@ export interface ArchbaseAdvancedSidebarProps {
 	textLightColor?: string;
 	iconDarkColor?: string;
 	iconLightColor?: string;
+	collapsedSubmenuWidth?: string | number;
 }
 
 type GroupItemSidebar = {
@@ -95,6 +96,7 @@ export function ArchbaseAdvancedSidebar({
 	textLightColor,
 	iconDarkColor,
 	iconLightColor,
+	collapsedSubmenuWidth,
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
 	const appContext = useArchbaseAppContext();
@@ -204,7 +206,7 @@ export function ArchbaseAdvancedSidebar({
 		result.forEach((group) => {
 			group.links = navigationData
 				.filter((itm) => itm.showInSidebar === true && (!itm.disabled || !itm.hideDisabledItem) && itm.group && itm.group.name === group.name)
-				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem, sidebarTextColor));
+				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem, sidebarTextColor, collapsedSubmenuWidth));
 		});
 
 		const grps = [...result].sort((a, b) => a.indexOrder - b.indexOrder);
@@ -268,7 +270,7 @@ export function ArchbaseAdvancedSidebar({
 					sidebarWidth,
 					sidebarCollapsedWidth,
 					menuItemStyles,
-					navigationData.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem, sidebarTextColor)),
+					navigationData.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem, sidebarTextColor, collapsedSubmenuWidth)),
 					isHidden,
 					sidebarHeight,
 					sideBarHeaderContent,
