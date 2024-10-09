@@ -287,7 +287,6 @@ export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props)
 				</div>
 				<div className="archbase_tabs-bottom-bar"></div>
 			</div>
-			<div className="archbase_tabs-optional-shadow-below-bottom-bar"></div>
 		</div>
 
 	);

@@ -286,7 +286,7 @@ function buildFooter(
 					style={{
 						border: debug ? '1px dashed' : '',
 						height: 'auto',
-						padding: 'calc(0.625rem / 2)',
+						padding: footerLeft && 'calc(0.625rem / 2)',
 					}}
 				>
 					{footerLeft}
@@ -299,7 +299,7 @@ function buildFooter(
 					style={{
 						border: debug ? '1px dashed' : '',
 						height: 'auto',
-						padding: 'calc(0.625rem / 2)',
+						padding: footerRight && 'calc(0.625rem / 2)',
 					}}
 				>
 					{footerRight}
