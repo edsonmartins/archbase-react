@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useEffect, useReducer } from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useReducer } from 'react';
 
 interface ArchbaseNavigationState {
 	userCloseLinkRequest: string;
@@ -76,20 +76,17 @@ export interface ArchbaseNavigationListenerType {
   export const useArchbaseNavigationListener = (id: string, onUserCloseRequest: () => void) => {
 	const { state, dispatch } = useArchbaseNavigationContext();
   
+	const closeAllowed = useCallback((payload: any) => {
+	  dispatch({ type: 'CLOSE_ALLOWED', link: id, payload });
+	}, [dispatch, id]);
+  
 	useEffect(() => {
 	  if (state && state.userCloseLinkRequest && state.userCloseLinkRequest === id) {
 		onUserCloseRequest();
 	  }
 	}, [state, id, onUserCloseRequest]);
   
-	const closeAllowed = (payload) => {
-	  dispatch({ type: 'CLOSE_ALLOWED', link: id, payload });
-	};
+	const isClosing = state.isClosing && state.userCloseLinkRequest === id;
   
-	const result: ArchbaseNavigationListenerType = { 
-	  closeAllowed,
-	  isClosing: state.isClosing && state.userCloseLinkRequest === id
-	};
-  
-	return result;
+	return { closeAllowed, isClosing };
   };
