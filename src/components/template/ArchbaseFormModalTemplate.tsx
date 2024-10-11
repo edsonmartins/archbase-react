@@ -5,7 +5,7 @@ import { IconX } from '@tabler/icons-react';
 import { IconBug } from '@tabler/icons-react';
 import { t } from 'i18next';
 import React, { CSSProperties, ReactNode, useState } from 'react';
-import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '../containers';
+import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed, ArchbaseSpaceTop, ArchbaseSpaceTopResizable } from '../containers';
 import { useArchbaseAppContext } from '../core';
 import { processDetailErrorMessage, processErrorMessage } from '../core/exceptions';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
@@ -180,18 +180,20 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 			<LoadingOverlay styles={loadingOverlayStyles} visible={isLoading} opacity={0.8} />
 			<ArchbaseSpaceFixed height={height}>
 				{isInternalError ? (
-					<ArchbaseAlert
-						autoClose={autoCloseAlertError}
-						withCloseButton={true}
-						withBorder={true}
-						icon={<IconBug size="1.4rem" />}
-						title={t('WARNING')}
-						titleColor="rgb(250, 82, 82)"
-						variant={variant ?? appContext.variant}
-						onClose={handleCloseAlert}
-					>
-						<span>{internalError}</span>
-					</ArchbaseAlert>
+					<ArchbaseSpaceTop size={'100px'} >
+						<ArchbaseAlert
+							autoClose={autoCloseAlertError}
+							withCloseButton={true}
+							withBorder={true}
+							icon={<IconBug size="1.4rem" />}
+							title={t('WARNING')}
+							titleColor="rgb(250, 82, 82)"
+							variant={variant ?? appContext.variant}
+							onClose={handleCloseAlert}
+						>
+							<span>{internalError}</span>
+						</ArchbaseAlert>
+					</ArchbaseSpaceTop>
 				) : null}
 				<ArchbaseSpaceFill>
 					<ArchbaseForm>{children}</ArchbaseForm>
