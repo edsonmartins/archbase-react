@@ -42,7 +42,7 @@ export type OptionsResult<O> = {
 };
 
 export interface ArchbaseAsyncSelectProps<T, ID, O> {
-	/** Permite ou não delecionar um item */
+	/** Permite ou não desselecionar um item */
 	allowDeselect?: boolean;
 	/** Indicador se permite limpar o select */
 	clearable?: boolean;
@@ -438,10 +438,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 			  rightSection={
 				loading ? (
 				  <Loader size="xs" />
-				) : selectedValue !== null ? (
+				) : (selectedValue !== null && clearable && !disabled && !isReadOnly()) ? (
 				  <CloseButton
-					disabled={disabled}
-					hidden={isReadOnly()}
 					size="sm"
 					onMouseDown={(event) => event.preventDefault()}
 					onClick={() => {
