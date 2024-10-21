@@ -76,7 +76,7 @@ export interface ArchbaseNavigationListenerType {
   export const useArchbaseNavigationListener = (id: string, onUserCloseRequest: () => void) => {
 	const { state, dispatch } = useArchbaseNavigationContext();
   
-	const closeAllowed = useCallback((payload: any) => {
+	const closeAllowed = useCallback((payload?: any) => {
 	  dispatch({ type: 'CLOSE_ALLOWED', link: id, payload });
 	}, [dispatch, id]);
   
