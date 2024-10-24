@@ -31,4 +31,5 @@ export * from './components/security';
 // export * from './components/emaileditor/core';
 // export * from './components/emaileditor/editor';
 // export * from './components/emaileditor/extensions';
+export * from './components/charts';
 export { contains, isEmpty, isBase64 } from './components/validator';
