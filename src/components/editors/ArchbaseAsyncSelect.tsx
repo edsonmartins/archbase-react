@@ -403,7 +403,6 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 		  withinPortal={true}
 		  position={dropdownPosition}
 		  zIndex={zIndex}
-		  width={width}
 		  onOptionSubmit={(val) => {
 			handleChange(val);
 			handleSearchChange(getOptionLabel(val as O));
@@ -414,7 +413,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 			<InputBase
 			  disabled={disabled}
 			  readOnly={isReadOnly()}
-			  style={{minWidth:width}}
+			  style={style}
+				w={width}
 			  required={required}
 			  leftSection={icon}
 			  leftSectionWidth={iconWidth}
@@ -445,6 +445,9 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 					onClick={() => {
 					  setQueryValue('');
 					  setSelectedValue(null);
+						if(onSelectValue) {
+							onSelectValue(null)
+						}
 					}}
 					aria-label="Clear value"
 				  />
