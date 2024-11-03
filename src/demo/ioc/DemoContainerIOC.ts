@@ -4,7 +4,9 @@ import { FakePessoaService } from '../service/FakePessoaService';
 import { FakePedidoService } from '../service/FakePedidoService';
 import { FakeAuthenticator } from '../auth/FakeAuthenticator';
 import { FakeRemoteApiClient } from '../service/FakeRemoteApiClient';
-import { IOCContainer } from '../../components/core/ioc';
+import { FakeUserService } from '../service/FakeUserService';
+import { ARCHBASE_IOC_API_TYPE, IOCContainer } from '../../components/core/ioc';
+import { IUserService } from '@components/service/types';
 
 export const demoContainerIOC = IOCContainer.getContainer();
 
@@ -13,3 +15,4 @@ demoContainerIOC.bind<FakeRemoteApiClient>(API_TYPE.ApiClient).to(FakeRemoteApiC
 demoContainerIOC.bind<FakeProdutoService>(API_TYPE.Produto).to(FakeProdutoService);
 demoContainerIOC.bind<FakePessoaService>(API_TYPE.Pessoa).to(FakePessoaService);
 demoContainerIOC.bind<FakePedidoService>(API_TYPE.Pedido).to(FakePedidoService);
+demoContainerIOC.bind<IUserService>(ARCHBASE_IOC_API_TYPE.User).to(FakeUserService);

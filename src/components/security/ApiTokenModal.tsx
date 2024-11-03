@@ -11,8 +11,8 @@ import { ARCHBASE_IOC_API_TYPE, builder, convertDateToISOString, emit, processEr
 import { t } from 'i18next';
 import React, { useState } from 'react';
 import { NO_USER } from './ArchbaseSecurityView';
-import { ArchbaseUserService } from './ArchbaseUserService';
 import { ApiTokenDto, GroupDto, UserDto } from './SecurityDomain';
+import { IUserService } from '@components/service/types';
 
 export const UserSelectItem = ({ image, label, description, ...others }) => (
 	<div {...others}>
@@ -40,7 +40,7 @@ export interface ApiTokenModalProps {
 export const ApiTokenModal = (props: ApiTokenModalProps) => {
 	const focusTrapRef = useFocusTrap();
 	const [value, setValue] = useState<DateValue | undefined>();
-	const userApi = useArchbaseRemoteServiceApi<ArchbaseUserService>(ARCHBASE_IOC_API_TYPE.User);
+	const userApi = useArchbaseRemoteServiceApi<IUserService>(ARCHBASE_IOC_API_TYPE.User);
 
 	const handleChange = (value: DateValue) => {
 		if (!value) {

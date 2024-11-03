@@ -31,13 +31,13 @@ import { ArchbaseAccessTokenService } from './ArchbaseAccessTokenService'
 import { ArchbaseGroupService } from './ArchbaseGroupService'
 import { ArchbaseProfileService } from './ArchbaseProfileService'
 import { ArchbaseResourceService } from './ArchbaseResourceService'
-import { ArchbaseUserService } from './ArchbaseUserService'
 import { GroupModal } from './GroupModal'
 import { PermissionsSelectorModal } from './PermissionsSelectorModal'
 import { ProfileModal } from './ProfileModal'
 import { AccessTokenDto, GroupDto, ProfileDto, ResourceDto, UserDto } from './SecurityDomain'
 import { SecurityType } from './SecurityType'
 import { UserModal } from './UserModal'
+import { IUserService } from 'components/service/types'
 
 interface ArchbaseSecurityManagerProps {
   height?: any
@@ -131,7 +131,7 @@ export function ArchbaseSecurityView({
   const { colorScheme } = useMantineColorScheme()
   const [error, setError] = useState<string | undefined>(undefined)
   const [activeTab, setActiveTab] = useState<string | null>('users')
-  const userApi = useArchbaseRemoteServiceApi<ArchbaseUserService>(ARCHBASE_IOC_API_TYPE.User)
+  const userApi = useArchbaseRemoteServiceApi<IUserService>(ARCHBASE_IOC_API_TYPE.User)
   const groupApi = useArchbaseRemoteServiceApi<ArchbaseGroupService>(ARCHBASE_IOC_API_TYPE.Group)
   const resourceApi = useArchbaseRemoteServiceApi<ArchbaseResourceService>(ARCHBASE_IOC_API_TYPE.Resource)
   const profileApi = useArchbaseRemoteServiceApi<ArchbaseProfileService>(ARCHBASE_IOC_API_TYPE.Profile)

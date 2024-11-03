@@ -5,6 +5,7 @@ import { DefaultArchbaseTokenManager } from '../../auth';
 import { ArchbaseGroupService, ArchbaseProfileService, ArchbaseResourceService, ArchbaseUserService } from '@components/security';
 import { ArchbaseApiTokenService } from '@components/security/ArchbaseApiTokenService';
 import { ArchbaseAccessTokenService } from '@components/security/ArchbaseAccessTokenService';
+import { IUserService } from '@components/service/types';
 
 
 let instance: any;
@@ -26,7 +27,7 @@ class ArchbaseIOCHelper {
     container.bind<ArchbaseTokenManager>(ARCHBASE_IOC_API_TYPE.TokenManager).to(DefaultArchbaseTokenManager);
   }
   registerDefaultSecurity(): void {
-    container.bind<ArchbaseUserService>(ARCHBASE_IOC_API_TYPE.User).to(ArchbaseUserService);
+    container.bind<IUserService>(ARCHBASE_IOC_API_TYPE.User).to(ArchbaseUserService);
     container.bind<ArchbaseProfileService>(ARCHBASE_IOC_API_TYPE.Profile).to(ArchbaseProfileService);
     container.bind<ArchbaseGroupService>(ARCHBASE_IOC_API_TYPE.Group).to(ArchbaseGroupService);
     container.bind<ArchbaseResourceService>(ARCHBASE_IOC_API_TYPE.Resource).to(ArchbaseResourceService);
