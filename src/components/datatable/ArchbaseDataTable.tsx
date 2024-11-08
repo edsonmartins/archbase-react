@@ -723,6 +723,16 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 		rowData: undefined,
 	});
 
+	const handlePaginationChange = (updater: any) => {
+		if (!props.isLoading) {
+			if (typeof updater === 'function') {
+				setPagination(updater(pagination));
+			} else {
+				setPagination(updater);
+			}
+		}
+	};
+
 	useEffect(() => {
 		if (rowSelection && table && props.onSelectedRowsChanged) {
 			const result: T[] = [];
@@ -1165,7 +1175,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 		getRowId: props.getRowId,
 		onColumnFiltersChange: setColumnFilters,
 		onGlobalFilterChange: setGlobalFilter,
-		onPaginationChange: setPagination,
+		onPaginationChange: handlePaginationChange,
 		onSortingChange: setSorting,
 		enableTopToolbar: props.enableTopToolbar || true,
 		enableColumnFilterModes: props.enableColumnFilterModes,
