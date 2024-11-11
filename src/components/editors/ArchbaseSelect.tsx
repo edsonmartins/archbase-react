@@ -81,6 +81,8 @@ export interface ArchbaseSelectProps<T, ID, O> {
   dropdownPosition?: 'bottom' | 'top' | 'flip'
   /** Evento quando um valor é selecionado */
   onSelectValue?: (value: O, origin: any) => void
+  /** Evento de click */
+  onClick?: React.MouseEventHandler<HTMLInputElement>
   /** Evento quando o foco sai do select */
   onFocusExit?: FocusEventHandler<T> | undefined
   /** Evento quando o select recebe o foco */
@@ -210,6 +212,7 @@ export function ArchbaseSelect<T, ID, O>({
   onFocusEnter,
   onFocusExit,
   onSelectValue,
+  onClick,
   value,
   defaultValue,
   filter,
@@ -431,6 +434,7 @@ export function ArchbaseSelect<T, ID, O>({
       readOnly={internalReadOnly}
       required={required}
       onChange={(value, option) => handleChange(value, option as SelectItem)}
+      onClick={onClick}
       onBlur={handleOnFocusExit}
       onFocus={handleOnFocusEnter}
       value={selectedValue !== undefined ? selectedValue : null}
