@@ -1,4 +1,4 @@
-import { ComboboxItem, ComboboxLikeRenderOptionInput, MantineSize, MantineStyleProp, Select } from '@mantine/core'
+import { ComboboxItem, ComboboxLikeRenderOptionInput, CSSProperties, MantineSize, MantineStyleProp, MantineTheme, Select, SelectProps, SelectStylesNames } from '@mantine/core'
 import { useDebouncedState, useUncontrolled } from '@mantine/hooks'
 import { uniqueId } from 'lodash'
 import React, {
@@ -104,6 +104,8 @@ export interface ArchbaseSelectProps<T, ID, O> {
   optionsLabelField?: string
   customGetDataSourceFieldValue?: () => any
   customSetDataSourceFieldValue?: (value: any) => void
+  classNames?: Partial<Record<SelectStylesNames, string>> | ((theme: MantineTheme, props: SelectProps, ctx: unknown) => Partial<Record<SelectStylesNames, string>>)
+  styles?: Partial<Record<SelectStylesNames, CSSProperties>> | ((theme: MantineTheme, props: SelectProps, ctx: unknown) => Partial<Record<SelectStylesNames, CSSProperties>>)
 }
 
 function buildGroupOptions(
@@ -231,7 +233,9 @@ export function ArchbaseSelect<T, ID, O>({
   innerRef,
   options,
   customGetDataSourceFieldValue,
-  customSetDataSourceFieldValue
+  customSetDataSourceFieldValue,
+  classNames,
+  styles
 }: ArchbaseSelectProps<T, ID, O>) {
   const innerComponentRef = useRef<any>()
   const [selectedValue, setSelectedValue] = useState<any>(value)
@@ -415,7 +419,9 @@ export function ArchbaseSelect<T, ID, O>({
 
   return (
     <Select
+      classNames={classNames}
       style={style}
+      styles={styles}
       allowDeselect={allowDeselect}
       clearable={clearable}
       disabled={disabled}
