@@ -1,23 +1,17 @@
 import { ComboboxItem, ComboboxLikeRenderOptionInput, MantineSize, MantineStyleProp, Select } from '@mantine/core'
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
+import { useDebouncedState, useUncontrolled } from '@mantine/hooks'
+import { uniqueId } from 'lodash'
 import React, {
   FocusEventHandler,
   ReactNode,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState
 } from 'react'
-import { uniqueId } from 'lodash'
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource'
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks'
-import { useDebouncedState, useUncontrolled } from '@mantine/hooks'
-import { ArchbaseSelectProvider } from './ArchbaseSelect.context'
-import {
-  ArchbaseAsyncSelectContext,
-  ArchbaseAsyncSelectContextValue
-} from './ArchbaseAsyncSelect.context'
 
 
 export interface SelectItem extends ComboboxItem {
@@ -71,6 +65,8 @@ export interface ArchbaseSelectProps<T, ID, O> {
   itemComponent?: React.FC<any>
   /** Largura do select */
   width?: string | number
+  /** Estado do dropdown controlado*/
+  dropdownOpened?: boolean;
   /** Chamado quando o menu suspenso é aberto */
   onDropdownOpen?(): void
   /** Chamado quando o menu suspenso é aberto */
@@ -220,9 +216,10 @@ export function ArchbaseSelect<T, ID, O>({
   size,
   initiallyOpened,
   itemComponent: ItemComponent,
+  dropdownOpened,
   onDropdownOpen,
   onDropdownClose,
-  limit,
+  limit = Infinity,
   nothingFound,
   zIndex,
   style = {},
@@ -244,7 +241,8 @@ export function ArchbaseSelect<T, ID, O>({
     defaultValue: readOnly,
     finalValue: false,
   });
-  const selectContextValue = useContext<ArchbaseAsyncSelectContextValue>(ArchbaseAsyncSelectContext)
+  const [currentLimit, setCurrentLimit] = useState(limit);
+
   const currentOptions: any[] = useMemo(() => {
     return buildOptions<O>(
       options,
@@ -267,7 +265,7 @@ export function ArchbaseSelect<T, ID, O>({
   const handleChange = (vl: string | null, option: SelectItem) => {
     const value = option && option.origin ? option.origin : vl;
     setSelectedValue((_prev) => value);
-  
+
     if (
       dataSource &&
       !dataSource.isBrowsing() &&
@@ -282,7 +280,7 @@ export function ArchbaseSelect<T, ID, O>({
         dataSource.setFieldValue(dataField, value);
       }
     }
-  
+
     if (onSelectValue) {
       onSelectValue(value, option ? option.origin : undefined);
     }
@@ -300,14 +298,12 @@ export function ArchbaseSelect<T, ID, O>({
     }
   }
 
-  const handleDropdownScrollEnded = () => {
-    //
-  }
-
   const handleScrollPositionChange = (_position: { x: number; y: number }): void => {
     if (sRef && sRef.current) {
       if (sRef.current.scrollTop === sRef.current.scrollHeight - sRef.current.offsetHeight) {
-        selectContextValue.handleDropdownScrollEnded!()
+        if (limit !== Infinity) {
+          setCurrentLimit(prevLimit => prevLimit + limit);
+        }
       }
     }
   }
@@ -415,51 +411,46 @@ export function ArchbaseSelect<T, ID, O>({
   }, [dataSource?.isBrowsing()])
 
   return (
-    <ArchbaseSelectProvider
-      value={{
-        handleDropdownScrollEnded: handleDropdownScrollEnded
+    <Select
+      style={style}
+      allowDeselect={allowDeselect}
+      clearable={clearable}
+      disabled={disabled}
+      description={description}
+      placeholder={placeholder}
+      searchable={searchable}
+      maxDropdownHeight={280}
+      ref={innerRef || innerComponentRef}
+      label={label}
+      error={internalError}
+      data={currentOptions}
+      size={size!}
+      leftSection={icon}
+      width={width}
+      leftSectionWidth={iconWidth}
+      readOnly={internalReadOnly}
+      required={required}
+      onChange={(value, option) => handleChange(value, option as SelectItem)}
+      onBlur={handleOnFocusExit}
+      onFocus={handleOnFocusEnter}
+      value={selectedValue !== undefined ? selectedValue : null}
+      onSearchChange={setQueryValue}
+      searchValue={selectedValue ? getOptionLabel(selectedValue) : queryValue}
+      defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue || ''}
+      // filter={filter}
+      defaultDropdownOpened={initiallyOpened}
+      dropdownOpened={dropdownOpened}
+      onDropdownOpen={onDropdownOpen}
+      onDropdownClose={onDropdownClose}
+      limit={currentLimit}
+      nothingFoundMessage={nothingFound}
+      scrollAreaProps={{
+        viewportProps: { tabIndex: -1 },
+        viewportRef: sRef,
+        onScrollPositionChange: handleScrollPositionChange
       }}
-    >
-      <Select
-        style={style}
-        allowDeselect={allowDeselect}
-        clearable={clearable}
-        disabled={disabled}
-        description={description}
-        placeholder={placeholder}
-        searchable={searchable}
-        maxDropdownHeight={280}
-        ref={innerRef || innerComponentRef}
-        label={label}
-        error={internalError}
-        data={currentOptions}
-        size={size!}
-        leftSection={icon}
-        width={width}
-        leftSectionWidth={iconWidth}
-        readOnly={internalReadOnly}
-        required={required}
-        onChange={(value, option) => handleChange(value, option as SelectItem)}
-        onBlur={handleOnFocusExit}
-        onFocus={handleOnFocusEnter}
-        value={selectedValue !== undefined ? selectedValue : null}
-        onSearchChange={setQueryValue}
-        searchValue={selectedValue ? getOptionLabel(selectedValue) : queryValue}
-        defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue || ''} 
-        // filter={filter}
-        defaultDropdownOpened={initiallyOpened}
-        onDropdownOpen={onDropdownOpen}
-        onDropdownClose={onDropdownClose}
-        limit={limit}
-        nothingFoundMessage={nothingFound}
-        scrollAreaProps={{
-          viewportProps: { tabIndex: -1 },
-          viewportRef: sRef,
-          onScrollPositionChange: handleScrollPositionChange
-        }}
-        {...renderOption}
-      />
-    </ArchbaseSelectProvider>
+      {...renderOption}
+    />
   )
 }
 
