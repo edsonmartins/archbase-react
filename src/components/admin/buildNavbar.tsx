@@ -27,7 +27,7 @@ export function buildNavbar(
 					overflowY: 'hidden',
 					left: 0,
 					right: 0,
-					height: isHidden ? menuHeight : `${px(menuHeight)}px`,
+					height: isHidden ? "calc(100vh - 28px)" : `${px(menuHeight)}px`,
 				},
 			}}
 			collapsed={collapsed}
