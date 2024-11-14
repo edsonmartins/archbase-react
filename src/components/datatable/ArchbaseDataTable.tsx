@@ -133,7 +133,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
 	renderRowActions?: (props: { cell: MRT_Cell<T>; row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
 	renderToolbarInternalActions?: (props: { table: MRT_TableInstance<T> }) => ReactNode | null;
 	renderDetailPanel?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
-	renderTopToolbar?: ((props: { table: MRT_TableInstance<T>}) => ReactNode) | ReactNode;
+	renderTopToolbar?: ((props: { table: MRT_TableInstance<T> }) => ReactNode) | ReactNode;
 	positionActionsColumn?: 'first' | 'last';
 	onExport?: (exportFunc: () => void) => void;
 	onPrint?: (printFunc: () => void) => void;
@@ -145,7 +145,7 @@ export interface ArchbaseDataTableProps<T extends object, ID> {
 
 export interface DragRowOptionsProps<T> {
 	enableRowOrdering: boolean
-	onDragRowEnd: (row:  MRT_Row<T>, table: MRT_TableInstance<T>) => void
+	onDragRowEnd: (row: MRT_Row<T>, table: MRT_TableInstance<T>) => void
 }
 
 export interface ToolBarActionsProps {
@@ -156,7 +156,7 @@ export function ToolBarActions(props: ToolBarActionsProps) {
 	return <Fragment>{props.children}</Fragment>;
 }
 
-export interface ColumnsProps {}
+export interface ColumnsProps { }
 
 export function Columns(_props: ColumnsProps) {
 	return null;
@@ -379,7 +379,7 @@ export function ArchbaseCustomFilterDatePicker(props: FilterDatePickerProps) {
 	const allowedColumnFilterOptions = column.columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
 	const filterChipLabel = ['empty', 'notEmpty'].includes(currentFilterOption)
 		? // @ts-ignore
-		  localization[`filter${currentFilterOption?.charAt?.(0)?.toUpperCase() + currentFilterOption?.slice(1)}`]
+		localization[`filter${currentFilterOption?.charAt?.(0)?.toUpperCase() + currentFilterOption?.slice(1)}`]
 		: '';
 	const isRangeFilter =
 		column.columnDef.filterVariant === 'range' ||
@@ -564,6 +564,22 @@ const buildFilterExpressionRSQL = (columnFilters, table, originColumns): string 
 	}
 };
 
+const getInitialSorting = <T, ID>(dataSource: ArchbaseDataSource<T, ID>) => {
+	if (dataSource && dataSource.getOptions().originSort) {
+		return dataSource.getOptions().originSort
+	}
+	if (dataSource && dataSource.getOptions().sort) {
+		return dataSource.getOptions()?.sort?.map(sort => {
+			const [id, order] = sort.split(":")
+			return {
+				id,
+				desc: order === 'desc'
+			}
+		})
+	}
+	return []
+}
+
 const getToolBarCustomActions = (_table, props): ReactNode => {
 	const actions: ReactNode[] = filter(
 		props.children,
@@ -714,9 +730,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			: '',
 	);
 	const [stickyEnable, setStickyEnable] = useState(true);
-	const [sorting, setSorting] = useState<MRT_SortingState>(
-		props.dataSource && props.dataSource.getOptions().originSort ? props.dataSource.getOptions().originSort : [],
-	);
+
+	const [sorting, setSorting] = useState<MRT_SortingState>(getInitialSorting(props.dataSource));
 	const [currentCell, setCurrentCell] = useState<ArchbaseDataTableCurrentCell>({
 		rowIndex: 0,
 		columnName: '',
@@ -930,12 +945,12 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 							mantineFilterMultiSelectProps: { data: col.props.enumValues },
 							Cell: render
 								? ({ cell }) => (
-										<div
-											style={{ width: '100%', display: 'flex', justifyContent: alignContent, alignContent: 'center' }}
-										>
-											{render(cell, col.props.maskOptions)}
-										</div>
-								  )
+									<div
+										style={{ width: '100%', display: 'flex', justifyContent: alignContent, alignContent: 'center' }}
+									>
+										{render(cell, col.props.maskOptions)}
+									</div>
+								)
 								: undefined,
 							Header: ({ column }) => (
 								<i
@@ -1068,8 +1083,8 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 				props.csvOptions && props.csvOptions.filename
 					? props.csvOptions.filename
 					: props.printTitle
-					? props.printTitle
-					: 'data_table.csv',
+						? props.printTitle
+						: 'data_table.csv',
 			headers: originColumns.map((c) => c.header),
 		});
 		csvExporter.generateCsv(rows.map((row) => row.original));
@@ -1192,7 +1207,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 		positionToolbarAlertBanner: 'bottom',
 		renderDetailPanel: props.renderDetailPanel,
 		mantineTableHeadCellProps: {
-			style: {padding: props.tableHeadCellPadding}
+			style: { padding: props.tableHeadCellPadding }
 		},
 		mantinePaperProps: {
 			withBorder: props.withBorder,
@@ -1217,9 +1232,9 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			: () => buildInternalActionsToolbar(),
 		mantineToolbarAlertBannerProps: props.isError
 			? {
-					color: 'error',
-					children: props.error,
-			  }
+				color: 'error',
+				children: props.error,
+			}
 			: undefined,
 		initialState: {
 			// @ts-ignore
@@ -1247,7 +1262,7 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 			style: { maxHeight },
 		},
 		mantineSelectCheckboxProps: {
-			style: {padding: px(props.tableHeadCellPadding) > px(props.cellPadding) ? `calc(${px(props.tableHeadCellPadding)}px - ${px(props.cellPadding)}px)` : 0}
+			style: { padding: px(props.tableHeadCellPadding) > px(props.cellPadding) ? `calc(${px(props.tableHeadCellPadding)}px - ${px(props.cellPadding)}px)` : 0 }
 		},
 		mantineTableProps: {
 			withColumnBorders: props.withColumnBorders,
