@@ -1,1 +1,0 @@
-import{b as r}from"./polymorphic-factory-a4611e92.js";import{u as t}from"./use-mantine-color-scheme-44b9a55e.js";function s(){const e=r(),{colorScheme:o}=t();return{...e,colorScheme:o}}export{s as u};
