@@ -11,6 +11,7 @@ export * from './components/auth';
 export * from './components/buttons';
 export * from './components/containers';
 export * from './components/core';
+export * from './components/charts';
 export * from './components/datasource';
 export * from './components/datatable';
 export * from './components/editors';
