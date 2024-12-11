@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Anchor, Button, Card, Checkbox, Divider, Group, PasswordInput, Text, TextInput } from "@mantine/core";
 import { useFocusTrap } from "@mantine/hooks";
 import { useArchbasePasswordRemember } from "@hooks/index";
@@ -20,7 +20,7 @@ export function ArchbaseLogin({
   loginPlaceholder,
 }: ArchbaseLoginProps) {
   const focusTrapRef = useFocusTrap();
-
+  
   const {
     username,
     password,
@@ -29,15 +29,18 @@ export function ArchbaseLogin({
   const [usernameInput, setUsernameInput] = useState<string | null>(username);
   const [passwordInput, setPasswordInput] = useState<string | null>(password);
   const [rememberMe, setRememberMe] = useState<boolean>(remember);
-  const [lastError, setLastError] = useState<string | undefined>(error);
+  const [showError, setShowError] = useState<boolean>(!!error);
 
-  useEffect(() => {
-    setLastError(error);
-  }, [error]);
+  const handleInputChange = () => {
+    setShowError(false);
+  };
 
-  useEffect(() => {
-    setLastError(undefined);
-  }, [usernameInput, passwordInput, rememberMe]);
+  const handleLogin = () => {
+    if (usernameInput && passwordInput) {
+      setShowError(true);
+      onLogin(usernameInput, passwordInput, rememberMe);
+    }
+  };
 
   return (
     <Card
@@ -62,51 +65,56 @@ export function ArchbaseLogin({
       <Divider m="md" />
       <TextInput
         label={loginLabel}
-        placeholder={loginPlaceholder ?? `${t("archbase:usuario@email.com")}`}
+        placeholder={loginPlaceholder ?? t("archbase:usuario@email.com")}
         value={usernameInput || ""}
         required
-        onChange={(event) => setUsernameInput(event.currentTarget.value)}
+        onChange={(event) => {
+          setUsernameInput(event.currentTarget.value);
+          handleInputChange();
+        }}
       />
       <PasswordInput
         label={t("archbase:Password")}
-        placeholder={`${t("archbase:Sua senha")}`}
-        onChange={(event) => setPasswordInput(event.currentTarget.value)}
+        placeholder={t("archbase:Sua senha")}
+        onChange={(event) => {
+          setPasswordInput(event.currentTarget.value);
+          handleInputChange();
+        }}
         value={passwordInput || ""}
         required
         mt="md"
       />
       <Group justify="space-between" mt="md">
         <Checkbox
-          label={`${t("archbase:Lembre-me")}`}
+          label={t("archbase:Lembre-me")}
           checked={rememberMe}
           onChange={(event) => {
-            setRememberMe(event.currentTarget.checked)
+            setRememberMe(event.currentTarget.checked);
+            handleInputChange();
           }}
         />
-        {onClickForgotPassword && <Anchor
-          component="button"
-          c="var(--mantine-text-color)"
-          fz={14}
-          lh='20px'
-          styles={{ root: { cursor: 'pointer' } }}
-          onClick={() => onClickForgotPassword()}
-        >
-          {`${t("archbase:Esqueci minha senha")}`}
-        </Anchor>}
+        {onClickForgotPassword && (
+          <Anchor
+            component="button"
+            c="var(--mantine-text-color)"
+            fz={14}
+            lh="20px"
+            styles={{ root: { cursor: "pointer" } }}
+            onClick={onClickForgotPassword}
+          >
+            {t("archbase:Esqueci minha senha")}
+          </Anchor>
+        )}
       </Group>
       <Button
         disabled={!passwordInput || !usernameInput}
         fullWidth
         mt="xl"
-        onClick={() =>
-          usernameInput &&
-          passwordInput &&
-          onLogin(usernameInput, passwordInput, rememberMe)
-        }
+        onClick={handleLogin}
       >
-        {`${t("archbase:signIn")}`}
+        {t("archbase:signIn")}
       </Button>
-      {lastError ? <Text c="red">{lastError}</Text> : null}
+      {showError && error && <Text c="red" mt="sm">{error}</Text>}
     </Card>
-  )
+  );
 }
