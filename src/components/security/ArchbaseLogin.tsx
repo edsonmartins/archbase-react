@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { Anchor, Button, Card, Checkbox, Divider, Group, PasswordInput, Text, TextInput } from "@mantine/core";
 import { useFocusTrap } from "@mantine/hooks";
 import { useArchbasePasswordRemember } from "@hooks/index";
 import { t } from "i18next";
 
 export interface ArchbaseLoginProps {
-  onLogin: (username: string, password: string, rememberMe: boolean) => void
+  onLogin: (username: string, password: string, rememberMe: boolean) => Promise<void>
   error?: string
   onClickForgotPassword?: () => void
   loginLabel?: string
   loginPlaceholder?: string
+  afterInputs?: ReactNode
 }
 
 export function ArchbaseLogin({
@@ -18,6 +19,7 @@ export function ArchbaseLogin({
   onClickForgotPassword,
   loginLabel = "Email",
   loginPlaceholder,
+  afterInputs,
 }: ArchbaseLoginProps) {
   const focusTrapRef = useFocusTrap();
   
@@ -37,8 +39,7 @@ export function ArchbaseLogin({
 
   const handleLogin = () => {
     if (usernameInput && passwordInput) {
-      setShowError(true);
-      onLogin(usernameInput, passwordInput, rememberMe);
+      onLogin(usernameInput, passwordInput, rememberMe).finally(() => setShowError(true));
     }
   };
 
@@ -106,6 +107,7 @@ export function ArchbaseLogin({
           </Anchor>
         )}
       </Group>
+      {afterInputs}
       <Button
         disabled={!passwordInput || !usernameInput}
         fullWidth
