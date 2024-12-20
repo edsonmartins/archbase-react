@@ -124,6 +124,15 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 				header="Token API"
 				size={200}
 				inputFilterType="text"
+				enableClickToCopy={true}
+			/>
+			<ArchbaseDataTableColumn<ApiTokenDto>
+				dataField="tenantId"
+				dataType="text"
+				header="Tenant ID"
+				size={200}
+				inputFilterType="text"
+				enableClickToCopy={true}
 			/>
 			<ArchbaseDataTableColumn<ApiTokenDto>
 				dataField="expirationDate"
@@ -176,7 +185,7 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 							);
 						});
 				},
-				() => {},
+				() => { },
 			);
 		}
 	};
