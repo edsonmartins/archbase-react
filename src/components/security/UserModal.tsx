@@ -4,7 +4,7 @@ import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseImageEdit, ArchbasePasswordEdit
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@components/hooks'
 import { ArchbaseNotifications } from '@components/notification'
 import { ArchbaseFormModalTemplate } from '@components/template'
-import { Grid, Group, Input, ScrollArea, Space, Stack } from '@mantine/core'
+import { Grid, Group, Input, ScrollArea, Space, Stack, Text } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
 import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
@@ -14,6 +14,52 @@ import { ArchbaseProfileService } from './ArchbaseProfileService'
 import { RenderProfileUserItem } from './RenderProfileUserItem'
 import { GroupDto, ProfileDto, UserDto, UserGroupDto } from './SecurityDomain'
 
+export interface UserModalOptions {
+  // Campos de identificação
+  showNickname?: boolean; // nickname - Apelido
+
+  // Campos de perfil e grupos
+  showProfile?: boolean; // profile - Perfil do usuário
+  showGroups?: boolean; // groups - Grupos (DualListSelector)
+
+  // Campos de configuração de senha
+  showChangePasswordOnNextLogin?: boolean; // changePasswordOnNextLogin
+  showAllowPasswordChange?: boolean; // allowPasswordChange
+  showPasswordNeverExpires?: boolean; // passwordNeverExpires
+
+  // Campos de status da conta
+  showAccountConfigLabel?: boolean;
+  showAccountDeactivated?: boolean; // accountDeactivated
+  showAccountLocked?: boolean; // accountLocked
+  showIsAdministrator?: boolean;
+
+  // Configurações de campos obrigatórios
+  requiredNickname?: boolean;
+}
+
+export const defaultUserModalOptions: UserModalOptions = {
+  // Campos de identificação
+  showNickname: true,
+
+  // Campos de perfil e grupos
+  showProfile: true,
+  showGroups: true,
+
+  // Campos de configuração de senha
+  showChangePasswordOnNextLogin: true,
+  showAllowPasswordChange: true,
+  showPasswordNeverExpires: true,
+
+  // Campos de status da conta
+  showAccountConfigLabel: true,
+  showAccountDeactivated: true,
+  showAccountLocked: true,
+  showIsAdministrator: true,
+
+  // Configurações de campos obrigatórios
+  requiredNickname: true,
+}
+
 export interface UserModalProps {
   dataSource: ArchbaseDataSource<UserDto, string>
   opened: boolean
@@ -21,11 +67,13 @@ export interface UserModalProps {
   onClickCancel: (record?: UserDto) => void
   onCustomSave?: (record?: UserDto, callback?: Function) => void
   onAfterSave?: (record?: UserDto) => void
+  options: UserModalOptions
 }
 
 export const UserModal = (props: UserModalProps) => {
   const focusTrapRef = useFocusTrap()
   const [passwordError, setPasswordError] = useState("")
+  const options = { ...defaultUserModalOptions, ...(props.options ?? {}) }
 
   const groupApi = useArchbaseRemoteServiceApi<ArchbaseGroupService>(ARCHBASE_IOC_API_TYPE.Group)
   const { dataSource: dsGroups } = useArchbaseRemoteDataSource<GroupDto, string>({
@@ -86,15 +134,16 @@ export const UserModal = (props: UserModalProps) => {
                 required
                 width={'calc(100% - 208px)'}
               />
-              <ArchbaseEdit
-                label={`${t('archbase:Apelido')}`}
-                placeholder={`${t('archbase:Apelido')}`}
-                dataSource={props.dataSource}
-                dataField="nickname"
-                required
-              />
+              {options.showNickname && (
+                <ArchbaseEdit
+                  label={`${t('archbase:Apelido')}`}
+                  placeholder={`${t('archbase:Apelido')}`}
+                  dataSource={props.dataSource}
+                  dataField="nickname"
+                  required={options.requiredNickname}
+                />
+              )}
             </Group>
-
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
             <ArchbaseEdit
@@ -128,70 +177,87 @@ export const UserModal = (props: UserModalProps) => {
           </Grid.Col>
         </Grid>
         <Grid>
-          <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-            <ArchbaseSelect<UserDto, string, ProfileDto>
-              label={`${t('archbase:Perfil do usuário')}`}
-              dataSource={props.dataSource}
-              dataField="profile"
-              options={dsProfiles}
-              allowDeselect={true}
-              optionsLabelField="nome"
-              itemComponent={RenderProfileUserItem}
-              getOptionLabel={(option: ProfileDto) => option.name}
-              getOptionValue={(option: ProfileDto) => option.id}
-            />
-          </Grid.Col>
+          {options.showProfile && (
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+              <ArchbaseSelect<UserDto, string, ProfileDto>
+                label={`${t('archbase:Perfil do usuário')}`}
+                dataSource={props.dataSource}
+                dataField="profile"
+                options={dsProfiles}
+                allowDeselect={true}
+                optionsLabelField="nome"
+                itemComponent={RenderProfileUserItem}
+                getOptionLabel={(option: ProfileDto) => option.name}
+                getOptionValue={(option: ProfileDto) => option.id}
+              />
+            </Grid.Col>
+          )}
         </Grid>
 
         <Grid>
+          <Grid.Col span={{ base: 12 }}>
+            {options.showAccountConfigLabel && (<Text fz={14}>Informe</Text>)}
+          </Grid.Col>
           <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
             <Stack gap={'lg'}>
-              <Input.Wrapper label="Informe">
-                <ArchbaseCheckbox
-                  dataSource={props.dataSource}
-                  dataField="changePasswordOnNextLogin"
-                  label={`${t('archbase:Deve alterar senha próximo login ?')}`}
-                />
-              </Input.Wrapper>
-              <Input.Wrapper label="">
-                <ArchbaseCheckbox
-                  dataSource={props.dataSource}
-                  dataField="allowPasswordChange"
-                  label={`${t('archbase:Pode alterar a senha ?')}`}
-                />
-              </Input.Wrapper>
-              <Input.Wrapper label="">
-                <ArchbaseCheckbox
-                  dataSource={props.dataSource}
-                  dataField="passwordNeverExpires"
-                  label={`${t('archbase:Senha nunca expira ?')}`}
-                />
-              </Input.Wrapper>
+              {options.showChangePasswordOnNextLogin && (
+                <Input.Wrapper label="">
+                  <ArchbaseCheckbox
+                    dataSource={props.dataSource}
+                    dataField="changePasswordOnNextLogin"
+                    label={`${t('archbase:Deve alterar senha próximo login ?')}`}
+                  />
+                </Input.Wrapper>
+              )}
+              {options.showAllowPasswordChange && (
+                <Input.Wrapper label="">
+                  <ArchbaseCheckbox
+                    dataSource={props.dataSource}
+                    dataField="allowPasswordChange"
+                    label={`${t('archbase:Pode alterar a senha ?')}`}
+                  />
+                </Input.Wrapper>
+              )}
+              {options.showPasswordNeverExpires && (
+                <Input.Wrapper label="">
+                  <ArchbaseCheckbox
+                    dataSource={props.dataSource}
+                    dataField="passwordNeverExpires"
+                    label={`${t('archbase:Senha nunca expira ?')}`}
+                  />
+                </Input.Wrapper>
+              )}
             </Stack>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
             <Stack gap="lg">
-              <Input.Wrapper label="Informe">
-                <ArchbaseCheckbox
-                  dataSource={props.dataSource}
-                  dataField="accountDeactivated"
-                  label={`${t('archbase:Conta desativada ?')}`}
-                />
-              </Input.Wrapper>
-              <Input.Wrapper label="">
-                <ArchbaseCheckbox
-                  dataSource={props.dataSource}
-                  dataField="accountLocked"
-                  label={`${t('archbase:Conta bloqueada ?')}`}
-                />
-              </Input.Wrapper>
-              <Input.Wrapper label="">
-                <ArchbaseCheckbox
-                  dataSource={props.dataSource}
-                  dataField="isAdministrator"
-                  label={`${t('archbase:Administrador ?')}`}
-                />
-              </Input.Wrapper>
+              {options.showAccountDeactivated && (
+                <Input.Wrapper label="">
+                  <ArchbaseCheckbox
+                    dataSource={props.dataSource}
+                    dataField="accountDeactivated"
+                    label={`${t('archbase:Conta desativada ?')}`}
+                  />
+                </Input.Wrapper>
+              )}
+              {options.showAccountLocked && (
+                <Input.Wrapper label="">
+                  <ArchbaseCheckbox
+                    dataSource={props.dataSource}
+                    dataField="accountLocked"
+                    label={`${t('archbase:Conta bloqueada ?')}`}
+                  />
+                </Input.Wrapper>
+              )}
+              {options.showIsAdministrator && (
+                <Input.Wrapper label="">
+                  <ArchbaseCheckbox
+                    dataSource={props.dataSource}
+                    dataField="isAdministrator"
+                    label={`${t('archbase:Administrador ?')}`}
+                  />
+                </Input.Wrapper>
+              )}
             </Stack>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
@@ -206,30 +272,35 @@ export const UserModal = (props: UserModalProps) => {
             </Stack>
           </Grid.Col>
         </Grid>
-        <Space h={'12px'} />
-        <ArchbaseDualListSelector<GroupDto, UserGroupDto>
-          titleAvailable={t('archbase:Disponíveis')}
-          titleAssigned={t('archbase:Selecionados')}
-          assignedItemsDS={
-            new ArchbaseDataSource('dsDualList', {
-              records: props.dataSource.getFieldValue('groups'),
-              grandTotalRecords: props.dataSource.getFieldValue('groups').length,
-              currentPage: 0,
-              totalPages: 0,
-              pageSize: 999999
-            })
-          }
-          width="600px"
-          height="200px"
-          availableItemsDS={dsGroups}
-          handleCreateAssociationObject={(group: GroupDto) => {
-            return UserGroupDto.newInstance(group)
-          }}
-          idFieldAssigned={(item: UserGroupDto) => (item && item.group ? item.group.id : '')}
-          idFieldAvailable={'id'}
-          labelFieldAssigned={(item: UserGroupDto) => (item && item.group ? item.group.name : '')}
-          labelFieldAvailable={'name'}
-        ></ArchbaseDualListSelector>
+
+        {options.showGroups && (
+          <>
+            <Space h={'12px'} />
+            <ArchbaseDualListSelector<GroupDto, UserGroupDto>
+              titleAvailable={t('archbase:Disponíveis')}
+              titleAssigned={t('archbase:Selecionados')}
+              assignedItemsDS={
+                new ArchbaseDataSource('dsDualList', {
+                  records: props.dataSource.getFieldValue('groups'),
+                  grandTotalRecords: props.dataSource.getFieldValue('groups').length,
+                  currentPage: 0,
+                  totalPages: 0,
+                  pageSize: 999999
+                })
+              }
+              width="600px"
+              height="200px"
+              availableItemsDS={dsGroups}
+              handleCreateAssociationObject={(group: GroupDto) => {
+                return UserGroupDto.newInstance(group)
+              }}
+              idFieldAssigned={(item: UserGroupDto) => (item && item.group ? item.group.id : '')}
+              idFieldAvailable={'id'}
+              labelFieldAssigned={(item: UserGroupDto) => (item && item.group ? item.group.name : '')}
+              labelFieldAvailable={'name'}
+            />
+          </>
+        )}
         <Space h={'12px'} />
       </ScrollArea>
     </ArchbaseFormModalTemplate>
