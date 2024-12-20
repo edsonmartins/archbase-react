@@ -458,7 +458,7 @@ export class ApiTokenDto {
   updateEntityDate: string
   createdByUser: string
   lastModifiedByUser: string
-
+  tenantId: string
 
   name: string
   description: string
@@ -477,6 +477,7 @@ export class ApiTokenDto {
     this.updateEntityDate = data.updateEntityDate || ''
     this.createdByUser = data.createdByUser || ''
     this.lastModifiedByUser = data.lastModifiedByUser || ''
+    this.tenantId = data.tenantId || ''
     this.user = data.user ? new UserDto(data.user) : undefined
     this.name = data.name || ''
     this.description = data.description || ''
