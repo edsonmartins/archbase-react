@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   ArchbaseDataSource,
   DataSourceEvent,
@@ -103,6 +103,9 @@ export function useArchbaseRemoteDataSource<T, ID>(
     id,
     validator
   } = props
+
+  const listenerRegistered = useRef(false);
+
   const existsDataSource = () => {
     if (store && store.existsValue(name)) {
       return true
@@ -244,18 +247,18 @@ export function useArchbaseRemoteDataSource<T, ID>(
    * Registrando listeners
    * @param dataSource
    */
-  const handleDataSourceEventListener = (event: DataSourceEvent<T>): void => {
+  const handleDataSourceEventListener = useCallback((event: DataSourceEvent<T>): void => {
     if (event.type === DataSourceEventNames.refreshData) {
       const options = (event as DataSourceEventRefreshDataType<T>).options
       try {
         setInternalState((prev) => {
           return {
-            ...prev,
-            isLoading: true,
-            filter: options.filter,
-            sort: options.sort,
-            currentPage: options.currentPage,
-            id: options.id
+          ...prev,
+          isLoading: true,
+          filter: options.filter,
+          sort: options.sort,
+          currentPage: options.currentPage,
+          id: options.id
           }
         })
         queryFn(
@@ -293,18 +296,24 @@ export function useArchbaseRemoteDataSource<T, ID>(
         }
       }
     }
-  }
+  }, [queryFn, internalState.name, props.onError])
 
-  const registerListeners = (dataSource: ArchbaseDataSource<T, string>) => {
-    dataSource.addListener(handleDataSourceEventListener)
-  }
+  const registerListeners = useCallback((dataSource: ArchbaseDataSource<T, string>) => {
+    if (!listenerRegistered.current) {
+      dataSource.addListener(handleDataSourceEventListener)
+      listenerRegistered.current = true;
+    }
+  }, [handleDataSourceEventListener]);
   /**
    * Removendo listeners
    * @param dataSource
    */
-  const unRegisterListeners = (dataSource: ArchbaseDataSource<T, string>) => {
-    dataSource.removeListener(handleDataSourceEventListener)
-  }
+  const unRegisterListeners = useCallback((dataSource: ArchbaseDataSource<T, string>) => {
+    if (listenerRegistered.current) {
+      dataSource.removeListener(handleDataSourceEventListener)
+      listenerRegistered.current = false;
+    }
+  }, [handleDataSourceEventListener]);
 
   useEffect(() => {
     try {
