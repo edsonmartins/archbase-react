@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Divider, PasswordInput, Text, TextInput } from "@mantine/core";
+import { Button, Card, CSSProperties, Divider, PasswordInput, Text, TextInput } from "@mantine/core";
 import { useFocusTrap } from "@mantine/hooks";
 import { useArchbaseTheme } from "@hooks/index";
 import { ArchbaseDialog } from "@components/notification";
@@ -15,9 +15,19 @@ export interface ArchbaseResetPasswordProps {
   onClickBackToLogin: () => void
   validatePassword?: () => string
   validateToken?: () => string
+  /** Estilo do card */
+	style?: CSSProperties;
 }
 
-export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onResetPassword, onClickBackToLogin, validatePassword, validateToken, initialEmail = "", description }: ArchbaseResetPasswordProps) {
+const defaultStyle: CSSProperties = {
+  position: "relative",
+  width: '90%',
+  maxWidth: 400,
+  padding: 30,
+  marginTop: 30,
+};
+
+export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onResetPassword, onClickBackToLogin, validatePassword, validateToken, initialEmail = "", description, style }: ArchbaseResetPasswordProps) {
   const focusTrapRef = useFocusTrap();
   const theme = useArchbaseTheme();
 
@@ -95,12 +105,12 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
     <Card
       withBorder
       shadow="md"
-      p={30}
-      mt={30}
       radius="md"
-      w={400}
-      pos="relative"
       ref={focusTrapRef}
+      style={{
+        ...defaultStyle,
+        ...style
+      }}
     >
       {!emailSent
         ? (
