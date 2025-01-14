@@ -907,6 +907,17 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
     }
   }
 
+  handleRangeChange = (value: [Date | null, Date | null]) => {
+    if (value && value.length === 2) {
+      const [startDate, endDate] = value;
+      if (startDate && endDate) {
+        this.props.handleOnChange([startDate, endDate]);
+      } else {
+        this.props.handleOnChange([]);
+      }
+    }
+  };
+
   convertValueCombobox = (value: string, dataType: string): any => {
     if (!value || value.length === 0) {
       return value
@@ -937,6 +948,7 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
       searchComponent,
       handleOnChange
     } = this.props
+
     let newValue: any = value === null || value === undefined ? '' : value
     let newValue2: any = value2 === null || value === undefined ? '' : value2
 
@@ -980,23 +992,30 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
         }
       } else if (dataType === 'date_time') {
         if (operator === 'between') {
-          if (newValue === '' && newValue2 === '') newValue = ''
-          else newValue = [newValue, newValue2]
+          const rangeValue: [Date | null, Date | null] = 
+            newValue === '' && newValue2 === '' 
+              ? [null, null] 
+              : [new Date(newValue), new Date(newValue2)];
+
           return (
-            <ArchbaseDateTimePickerRange
+            <ArchbaseDateTimePickerRange<any, any>
               disabled={disabled}
-              value={newValue}
+              value={rangeValue}
               width="100%"
-              onSelectDateRange={(value: DateValue[]) => handleOnChange(value)}
+              onRangeChange={this.handleRangeChange}
+              withSeconds
+              valueFormat="DD/MM/YYYY HH:mm:ss"
             />
           )
         } else {
           return (
-            <ArchbaseDateTimePickerEdit
+            <ArchbaseDateTimePickerEdit<any, any>
               disabled={disabled}
-              value={newValue}
+              value={newValue ? new Date(newValue) : null}
               width="100%"
-              onChange={(value: any) => handleOnChange(value)}
+              onChange={(value) => handleOnChange(value)}
+              withSeconds
+              valueFormat="DD/MM/YYYY HH:mm:ss"
             />
           )
         }
@@ -1093,24 +1112,25 @@ class SimpleValueEditor extends React.Component<SimpleValueEditorProps> {
     } else {
       return (
         <DebouncedTextInput
-			onChange={(value) => handleOnChange(value)}
-			disabled={disabled}
-			initialValue={newValue}
-			style={{
-				height: '36px',
-				width: '100%',
-				paddingLeft: '3px'
-			}}
-			label={undefined}
-			error={undefined}
-			keyProp={undefined}
-			readOnly={false}
-			placeholder={undefined}
-			innerRef={undefined}
-			onFocus={undefined}
-			onKeyDown={undefined} 
-			onActionSearchExecute={undefined} 
-			icon={undefined}/>
+          onChange={(value) => handleOnChange(value)}
+          disabled={disabled}
+          initialValue={newValue}
+          style={{
+            height: '36px',
+            width: '100%',
+            paddingLeft: '3px'
+          }}
+          label={undefined}
+          error={undefined}
+          keyProp={undefined}
+          readOnly={false}
+          placeholder={undefined}
+          innerRef={undefined}
+          onFocus={undefined}
+          onKeyDown={undefined}
+          onActionSearchExecute={undefined}
+          icon={undefined}
+        />
       )
     }
   }

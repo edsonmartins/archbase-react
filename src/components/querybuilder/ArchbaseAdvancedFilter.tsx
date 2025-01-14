@@ -1372,8 +1372,17 @@ export class ValueEditor extends Component<ValueEditorProps> {
     return value
   }
 
+  handleRangeChange = (value: [Date | null, Date | null]) => {
+    if (value && value.length === 2) {
+      this.onInput(value);
+    } else {
+      this.onInput([null, null]);
+    }
+  };
+
+
   render = () => {
-    const { disabled, dataType, operator, value, value2, listValues, handleOnChange } = this.props
+    const { disabled, dataType, operator, value, value2, listValues } = this.props
     let newValue: any = value === null || value === undefined ? '' : value
     let newValue2: any = value2 === null || value === undefined ? '' : value2
 
@@ -1418,24 +1427,30 @@ export class ValueEditor extends Component<ValueEditorProps> {
         }
       } else if (dataType === 'date_time') {
         if (operator === 'between') {
-          if (newValue === '' && newValue2 === '') newValue = ''
-          else newValue = [newValue, newValue2]
+          const rangeValue: [Date | null, Date | null] = 
+            newValue === '' && newValue2 === '' 
+              ? [null, null] 
+              : [new Date(newValue), new Date(newValue2)];
 
           return (
-            <ArchbaseDateTimePickerRange
+            <ArchbaseDateTimePickerRange<any, any>
               disabled={disabled}
-              value={newValue}
+              value={rangeValue}
               width={this.props.twoFields ? '128px' : '260px'}
-              onSelectDateRange={(value: DateValue[]) => this.onInput(value)}
+              onRangeChange={this.handleRangeChange}
+              withSeconds
+              valueFormat="DD/MM/YYYY HH:mm:ss"
             />
           )
         } else {
           return (
-            <ArchbaseDateTimePickerEdit
+            <ArchbaseDateTimePickerEdit<any, any>
               disabled={disabled}
-              value={newValue}
+              value={newValue ? new Date(newValue) : null}
               width={this.props.twoFields ? '128px' : '260px'}
               onChange={(value) => this.onInput(value)}
+              withSeconds
+              valueFormat="DD/MM/YYYY HH:mm:ss"
             />
           )
         }

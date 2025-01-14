@@ -31,9 +31,8 @@ export { ArchbaseDatePickerRange } from './ArchbaseDatePickerRange';
 
 export type {
 	ArchbaseDateTimePickerEditProps,
-	ArchbaseDateTimePickerEditStylesNames,
 } from './ArchbaseDateTimePickerEdit';
-export { ArchbaseDateTimePickerEdit, assignTime } from './ArchbaseDateTimePickerEdit';
+export { ArchbaseDateTimePickerEdit } from './ArchbaseDateTimePickerEdit';
 
 export type { ArchbaseDateTimePickerRangeProps } from './ArchbaseDateTimePickerRange';
 export { ArchbaseDateTimePickerRange } from './ArchbaseDateTimePickerRange';

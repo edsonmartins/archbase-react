@@ -1,119 +1,187 @@
 import { Flex, Input, MantineSize } from '@mantine/core';
-import { DateValue } from '@mantine/dates';
 import { IconArrowRight, IconCalendar } from '@tabler/icons-react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CSSProperties, ReactNode } from 'react';
 import { ArchbaseDateTimePickerEdit } from './ArchbaseDateTimePickerEdit';
+import type { ArchbaseDataSource } from '../datasource';
 
-export interface ArchbaseDateTimePickerRangeProps {
-	/** Indicador se o date picker range está desabilitado */
-	disabled?: boolean;
-	/** Indicador se o date picker range é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
-	readOnly?: boolean;
-	/** Indicador se o preenchimento do date picker range é obrigatório */
-	required?: boolean;
-	/** Valor inicial */
-	value?: string;
-	/** Estilo do date picker range */
-	style?: CSSProperties;
-	/** Tamanho do date picker range */
-	size?: MantineSize;
-	/** Largura do date picker range */
-	width?: string | number | undefined;
-	/** Icone à direita */
-	icon?: ReactNode;
-	/** Texto sugestão do date picker range */
-	placeholderStart?: string;
-	/** Texto sugestão do date picker range */
-	placeholderEnd?: string;
-	/** Título do date picker range */
-	label?: string;
-	/** Descrição do date picker range */
-	description?: string;
-	/** Último erro ocorrido no date picker range */
-	error?: string;
-	/** Evento quando o foco sai do date picker range */
-	onFocusExit?: React.FocusEvent<HTMLInputElement>;
-	/** Evento quando o date picker range recebe o foco */
-	onFocusEnter?: React.FocusEvent<HTMLInputElement>;
-	/** Evento quando o valor do range do date picker range é alterado */
-	onSelectDateRange?: (value: DateValue[]) => void;
-	onKeyDown?: (event: any) => void;
-	onKeyUp?: (event: any) => void;
-	/** Referência para o componente interno data inicial*/
-	innerRefStart?: React.RefObject<HTMLInputElement> | undefined;
-	/** Referência para o componente interno data final*/
-	innerRefEnd?: React.RefObject<HTMLInputElement> | undefined;
+export interface ArchbaseDateTimePickerRangeProps<T, ID> {
+  /** Data source where the range values will be assigned */
+  dataSource?: ArchbaseDataSource<T, ID>;
+  /** Field for start date in the data source */
+  dataFieldStart?: string;
+  /** Field for end date in the data source */
+  dataFieldEnd?: string;
+  /** Indicates if the date picker range is disabled */
+  disabled?: boolean;
+  /** Indicates if the date picker range is read-only */
+  readOnly?: boolean;
+  /** Indicates if filling the date picker range is required */
+  required?: boolean;
+  /** Initial value */
+  value?: [Date | null, Date | null];
+  /** Style of the date picker range */
+  style?: CSSProperties;
+  /** Size of the date picker range */
+  size?: MantineSize;
+  /** Width of the date picker range */
+  width?: string | number | undefined;
+  /** Custom right section icon */
+  icon?: ReactNode;
+  /** Placeholder text for start date */
+  placeholderStart?: string;
+  /** Placeholder text for end date */
+  placeholderEnd?: string;
+  /** Label for the date picker range */
+  label?: string;
+  /** Description for the date picker range */
+  description?: string;
+  /** Error message */
+  error?: string;
+  /** Event when range value changes */
+  onRangeChange?: (value: [Date | null, Date | null]) => void;
+  /** Event when key down */
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  /** Event when key up */
+  onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  /** Minimum date allowed */
+  minDate?: Date;
+  /** Maximum date allowed */
+  maxDate?: Date;
+  /** Date format */
+  valueFormat?: string;
+  /** With seconds input */
+  withSeconds?: boolean;
+  /** Clear button properties */
+  clearButtonProps?: Record<string, any>;
 }
 
-export function ArchbaseDateTimePickerRange({
-	label,
-	disabled,
-	readOnly,
-	size,
-	width,
-	style,
-	description,
-	onSelectDateRange,
-	placeholderStart,
-	placeholderEnd,
-	onFocusExit,
-	onFocusEnter,
-	icon,
-	innerRefStart,
-	innerRefEnd,
-	error,
-}: ArchbaseDateTimePickerRangeProps) {
-	const [startDate, setStartDate] = useState<DateValue>();
-	const [endDate, setEndDate] = useState<DateValue>();
-	const [internalError, setInternalError] = useState<string | undefined>(error);
+export function ArchbaseDateTimePickerRange<T, ID>({
+  dataSource,
+  dataFieldStart,
+  dataFieldEnd,
+  label,
+  disabled = false,
+  readOnly = false,
+  size,
+  width,
+  style,
+  description,
+  onRangeChange,
+  placeholderStart,
+  placeholderEnd,
+  icon,
+  error,
+  value,
+  minDate,
+  maxDate,
+  valueFormat = "DD/MM/YYYY HH:mm",
+  withSeconds = false,
+  clearButtonProps,
+  required = false,
+}: ArchbaseDateTimePickerRangeProps<T, ID>) {
+  const [startDate, setStartDate] = useState<Date | null>(value?.[0] || null);
+  const [endDate, setEndDate] = useState<Date | null>(value?.[1] || null);
+  const [internalError, setInternalError] = useState<string | undefined>(error);
 
-	const handleSelectRange = (sDt?: DateValue, eDt?: DateValue) => {
-		setStartDate(sDt);
-		setEndDate(eDt);
-		if (onSelectDateRange && sDt && eDt) {
-			onSelectDateRange([sDt, eDt]);
-		}
-	};
+  useEffect(() => {
+    setInternalError(error);
+  }, [error]);
 
-	return (
-		<Input.Wrapper
-			label={label}
-			size={size!}
-			error={internalError}
-			description={description}
-			style={{
-				width,
-				...style,
-			}}
-		>
-			<Flex gap="sm" justify="flex-start" align="center" direction="row">
-				<ArchbaseDateTimePickerEdit
-					clearable={true}
-					rightSection={icon ? icon : <IconCalendar />}
-					readOnly={readOnly}
-					placeholder={placeholderStart}
-					disabled={disabled}
-					ref={innerRefStart}
-					onFocusEnter={onFocusEnter}
-					onFocusExit={onFocusExit}
-					onChange={(value: DateValue) => handleSelectRange(value, endDate)}
-					style={{ width: width ? width : 180 }}
-				/>
-				<IconArrowRight size={'1rem'} />
-				<ArchbaseDateTimePickerEdit
-					clearable={true}
-					rightSection={icon ? icon : <IconCalendar />}
-					placeholder={placeholderEnd}
-					readOnly={readOnly}
-					disabled={disabled}
-					ref={innerRefEnd}
-					onFocusEnter={onFocusEnter}
-					onFocusExit={onFocusExit}
-					onChange={(value: DateValue) => handleSelectRange(startDate, value)}
-					style={{ width: width ? width : 180 }}
-				/>
-			</Flex>
-		</Input.Wrapper>
-	);
+  useEffect(() => {
+    if (value) {
+      setStartDate(value[0]);
+      setEndDate(value[1]);
+    }
+  }, [value]);
+
+  const handleStartDateChange = (date: Date | null) => {
+    setStartDate(date);
+    if (onRangeChange) {
+      onRangeChange([date, endDate]);
+    }
+  };
+
+  const handleEndDateChange = (date: Date | null) => {
+    setEndDate(date);
+    if (onRangeChange) {
+      onRangeChange([startDate, date]);
+    }
+  };
+
+  const validateDateRange = (start: Date | null, end: Date | null): boolean => {
+    if (start && end && start > end) {
+      setInternalError('Data inicial não pode ser maior que a data final');
+      return false;
+    }
+    setInternalError(undefined);
+    return true;
+  };
+
+  return (
+    <Input.Wrapper
+      label={label}
+      size={size}
+      error={internalError}
+      description={description}
+      style={{
+        width,
+        ...style,
+      }}
+    >
+      <Flex gap="sm" justify="flex-start" align="center" direction="row">
+        <ArchbaseDateTimePickerEdit
+          dataSource={dataSource}
+          dataField={dataFieldStart}
+          clearable
+          rightSection={icon || <IconCalendar size="1rem" />}
+          readOnly={readOnly}
+          placeholder={placeholderStart}
+          disabled={disabled}
+          value={startDate}
+          onChangeValue={handleStartDateChange}
+          error={internalError}
+          style={{ width: width ? width : 180 }}
+          minDate={minDate}
+          maxDate={endDate || maxDate}
+          valueFormat={valueFormat}
+          withSeconds={withSeconds}
+          clearButtonProps={clearButtonProps}
+          required={required}
+          onChange={(value) => {
+            if (validateDateRange(value, endDate)) {
+              handleStartDateChange(value);
+            }
+          }}
+        />
+        <IconArrowRight size="1rem" />
+        <ArchbaseDateTimePickerEdit
+          dataSource={dataSource}
+          dataField={dataFieldEnd}
+          clearable
+          rightSection={icon || <IconCalendar size="1rem" />}
+          placeholder={placeholderEnd}
+          readOnly={readOnly}
+          disabled={disabled}
+          value={endDate}
+          onChangeValue={handleEndDateChange}
+          error={internalError}
+          style={{ width: width ? width : 180 }}
+          minDate={startDate || minDate}
+          maxDate={maxDate}
+          valueFormat={valueFormat}
+          withSeconds={withSeconds}
+          clearButtonProps={clearButtonProps}
+          required={required}
+          onChange={(value) => {
+            if (validateDateRange(startDate, value)) {
+              handleEndDateChange(value);
+            }
+          }}
+        />
+      </Flex>
+    </Input.Wrapper>
+  );
 }
+
+ArchbaseDateTimePickerRange.displayName = 'ArchbaseDateTimePickerRange';

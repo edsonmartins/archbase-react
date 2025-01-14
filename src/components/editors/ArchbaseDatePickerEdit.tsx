@@ -229,6 +229,8 @@ export interface ArchbaseDatePickerEditProps<T, ID>
 	error?: string;
 	/** Título do edit */
 	title?: string;
+	/** Título do edit */
+	label?: string;
 }
 
 export type ArchbaseDatePickerEditFactory = PolymorphicFactory<{
@@ -249,7 +251,7 @@ const defaultProps: Partial<ArchbaseDatePickerEditProps<any, any>> = {
 	required: false,
 	placeholderChar: '_',
 	showPlaceholderFormat: true,
-	dateFormat: 'DD/MM/YYYY',
+	dateFormat: 'DD/MM/YYYY'
 };
 
 export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps<T, ID>) {
@@ -532,7 +534,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 	return (
 		<>
-			<Input.Wrapper {...wrapperProps} error={internalError} label={title}>
+			<Input.Wrapper {...wrapperProps} error={internalError} label={title||props.label}>
 				<Popover
 					opened={dropdownOpened}
 					trapFocus={false}

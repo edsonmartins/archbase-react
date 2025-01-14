@@ -1,556 +1,187 @@
-/* eslint-disable no-underscore-dangle */
-
-/* eslint-disable no-unneeded-ternary */
-
-/* eslint-disable @typescript-eslint/naming-convention */
-
-/* eslint-disable react-hooks/exhaustive-deps */
-
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-
-/* eslint-disable no-nested-ternary */
 import {
-	__InputProps,
-	CloseButton,
-	CloseButtonProps,
-	Input,
-	InputStylesNames,
-	InputVariant,
-	InputWrapperStylesNames,
-	MantineSize,
-	PolymorphicFactory,
-	Popover,
-	PopoverProps,
-	StylesApiProps,
-	useInputProps,
-} from '@mantine/core';
-import {
-	Calendar,
-	CalendarBaseProps,
-	CalendarLevel,
-	CalendarStylesNames,
-	DateValue,
-	DecadeLevelSettings,
-	HiddenDatesInput,
-	MonthLevelSettings,
-	pickCalendarProps,
-	useDatesContext,
-	YearLevelSettings,
-} from '@mantine/dates';
-import { useDidUpdate, useUncontrolled } from '@mantine/hooks';
-import dayjs from 'dayjs';
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { IMaskInput } from 'react-imask';
-
-const ARCHBASE_DATETIME_PICKER_EDIT = 'ArchbaseDateTimePickerEdit';
-
-const useStyles = {
-	timeWrapper: {
-		display: 'flex',
-		marginTop: 'var(--mantine-spacing-md)',
-	},
-
-	timeInput: {
-		flex: 1,
-		marginRight: 'var(--mantine-spacing-md)',
-	},
-};
-
-const dateFormats = {
-	'DD/MM/YYYY HH:MM:SS': {
-		mask: '00/00/0000 00:00:00',
-		format: (date: Date) => {
-			if (!date) return '';
-			const day = String(date.getDate()).padStart(2, '0');
-			const month = String(date.getMonth() + 1).padStart(2, '0');
-			const hour = String(date.getHours()).padStart(2, '0');
-			const minutes = String(date.getMinutes()).padStart(2, '0');
-			const seconds = String(date.getSeconds()).padStart(2, '0');
-			const year = date.getFullYear();
-			let result = [day, month, year].join('/');
-			if (Number(hour) > 0 || Number(minutes) > 0 || Number(seconds) > 0) {
-				result = result.concat(' ').concat(hour).concat(':').concat(minutes).concat(':').concat(seconds);
-			}
-			return result;
-		},
-		parse: (str) => {
-			const dt = str.substring(0, 10);
-			const tm = str.substring(11);
-			const [day, month, year] = dt.split('/');
-			const [hour, minute, second] = tm.split(':');
-			return new Date(year, month - 1, day, hour, minute, second, 0);
-		},
-	},
-	'DD-MM-YYYY HH:MM:SS': {
-		mask: '00-00-0000 00:00:00',
-		format: (date) => {
-			if (!date) return '';
-			const day = String(date.getDate()).padStart(2, '0');
-			const month = String(date.getMonth() + 1).padStart(2, '0');
-			const hour = String(date.getHours()).padStart(2, '0');
-			const minutes = String(date.getMinutes()).padStart(2, '0');
-			const seconds = String(date.getSeconds()).padStart(2, '0');
-			const year = date.getFullYear();
-			let result = [day, month, year].join('/');
-			if (Number(hour) > 0 || Number(minutes) > 0 || Number(seconds) > 0) {
-				result = result.concat(' ').concat(hour).concat(':').concat(minutes).concat(':').concat(seconds);
-			}
-			return result;
-		},
-		parse: (str) => {
-			const dt = str.substring(0, 10);
-			const tm = str.substring(11);
-			const [day, month, year] = dt.split('-');
-			const [hour, minute, second] = tm.split(':');
-			return new Date(year, month - 1, day, hour, minute, second, 0);
-		},
-	},
-	'YYYY/MM/DD HH:MM:SS': {
-		mask: '`0000/00/00 00:00:00',
-		format: (date) => {
-			if (!date) return '';
-			const day = String(date.getDate()).padStart(2, '0');
-			const month = String(date.getMonth() + 1).padStart(2, '0');
-			const hour = String(date.getHours()).padStart(2, '0');
-			const minutes = String(date.getMinutes()).padStart(2, '0');
-			const seconds = String(date.getSeconds()).padStart(2, '0');
-			const year = date.getFullYear();
-			let result = [day, month, year].join('/');
-			if (Number(hour) > 0 || Number(minutes) > 0 || Number(seconds) > 0) {
-				result = result.concat(' ').concat(hour).concat(':').concat(minutes).concat(':').concat(seconds);
-			}
-			return result;
-		},
-		parse: (str) => {
-			const dt = str.substring(0, 10);
-			const tm = str.substring(11);
-			const [year, month, day] = dt.split('/');
-			const [hour, minute, second] = tm.split(':');
-			return new Date(year, month - 1, day, hour, minute, second, 0);
-		},
-	},
-	'YYYY-MM-DD HH:MM:SS': {
-		mask: '`0000-00-00 00:00:00',
-		format: (date) => {
-			if (!date) return '';
-			const day = String(date.getDate()).padStart(2, '0');
-			const month = String(date.getMonth() + 1).padStart(2, '0');
-			const hour = String(date.getHours()).padStart(2, '0');
-			const minutes = String(date.getMinutes()).padStart(2, '0');
-			const seconds = String(date.getSeconds()).padStart(2, '0');
-			const year = date.getFullYear();
-			let result = [day, month, year].join('/');
-			if (Number(hour) > 0 || Number(minutes) > 0 || Number(seconds) > 0) {
-				result = result.concat(' ').concat(hour).concat(':').concat(minutes).concat(':').concat(seconds);
-			}
-			return result;
-		},
-		parse: (str) => {
-			const dt = str.substring(0, 10);
-			const tm = str.substring(11);
-			const [year, month, day] = dt.split('-');
-			const [hour, minute, second] = tm.split(':');
-			return new Date(year, month - 1, day, hour, minute, second, 0);
-		},
-	},
-};
-
-function dateStringParser(dateString: string) {
-	const date = new Date(dateString);
-
-	if (Number.isNaN(date.getTime()) || !dateString) {
-		return null;
-	}
-
-	return date;
-}
-
-export function assignTime(originalDate: DateValue, resultDate: DateValue) {
-	if (!originalDate || !resultDate) {
-		return resultDate;
-	}
-
-	const hours = originalDate.getHours();
-	const minutes = originalDate.getMinutes();
-	const seconds = originalDate.getSeconds();
-	const ms = originalDate.getMilliseconds();
-
-	const result = new Date(resultDate);
-	result.setHours(hours);
-	result.setMinutes(minutes);
-	result.setSeconds(seconds);
-	result.setMilliseconds(ms);
-
-	return result;
-}
-
-interface IsDateValid {
-	date: DateValue;
-	maxDate?: Date;
-	minDate?: Date;
-}
-
-function isDateValid({ date, maxDate, minDate }: IsDateValid) {
-	if (date == null) {
-		return false;
-	}
-
-	if (Number.isNaN(date.getTime())) {
-		return false;
-	}
-
-	if (maxDate && dayjs(date).isAfter(maxDate, 'date')) {
-		return false;
-	}
-
-	if (minDate && dayjs(date).isBefore(minDate, 'date')) {
-		return false;
-	}
-
-	return true;
-}
-
-export type ArchbaseDateTimePickerEditStylesNames = CalendarStylesNames | InputStylesNames | InputWrapperStylesNames;
-
-export interface ArchbaseDateTimePickerEditProps
-	extends StylesApiProps<ArchbaseDateTimePickerEditFactory>,
-		Omit<__InputProps, 'size'>,
-		CalendarBaseProps,
-		DecadeLevelSettings,
-		YearLevelSettings,
-		MonthLevelSettings,
-		Omit<React.ComponentPropsWithoutRef<'input'>, 'size' | 'value' | 'defaultValue' | 'onChange'> {
-	/** Analisa a entrada do usuário para convertê-la em um objeto Date */
-	dateParser?: (value: string) => DateValue;
-
-	/** Valor do componente controlado */
-	value?: DateValue;
-
-	/** Valor padrão para componente não controlado */
-	defaultValue?: DateValue;
-
-	/** Chamado quando o valor muda */
-	onChange?(value: DateValue): void;
-
-	/** Adereços adicionados ao componente Popover */
-	popoverProps?: Partial<Omit<PopoverProps, 'children'>>;
-
-	/** Determina se o valor de entrada pode ser limpo, adiciona o botão limpar à seção direita, falso por padrão */
-	clearable?: boolean;
-
-	/** Adereços adicionados ao botão limpar */
-	clearButtonProps?: CloseButtonProps;
-
-	/** Determina se o valor de entrada deve ser revertido para o último valor válido conhecido no desfoque, verdadeiro por padrão */
-	fixOnBlur?: boolean;
-
-	/** Determina se o valor pode ser desmarcado quando o usuário clica na data selecionada no calendário ou apaga o conteúdo da entrada, verdadeiro se prop limpável estiver definido, falso por padrão */
-	allowDeselect?: boolean;
-
-	/** Determina se o tempo (horas, minutos, segundos e milissegundos) deve ser preservado quando uma nova data é escolhida, verdadeiro por padrão */
-	preserveTime?: boolean;
-
-	/** Nível máximo que o usuário pode atingir (década, ano, mês), o padrão é década */
-	maxLevel?: CalendarLevel;
-
-	/** Nível inicial exibido ao usuário (década, ano, mês), usado para componente não controlado */
-	defaultLevel?: CalendarLevel;
-
-	/** Nível atual exibido ao usuário (década, ano, mês), usado para componente controlado */
-	level?: CalendarLevel;
-
-	/** Chamado quando o nível muda */
-	onLevelChange?(level: CalendarLevel): void;
-
+	DateTimePicker,
+	DateTimePickerProps,
+  } from '@mantine/dates';
+  import type { CSSProperties, FocusEventHandler, ForwardedRef } from 'react';
+  import React, { useCallback, useEffect, useState } from 'react';
+  import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
+  import { DataSourceEventNames } from '../datasource';
+  import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+  
+  type OmittedDateTimePickerProps = Omit<DateTimePickerProps, 'value' | 'onChange'>;
+  
+  export interface ArchbaseDateTimePickerEditProps<T, ID> extends OmittedDateTimePickerProps {
+	/** Data source where the edit value will be assigned */
+	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Field where the edit value should be assigned in the data source */
+	dataField?: string;
+	/** Indicates if the edit is disabled */
 	disabled?: boolean;
+	/** Indicates if the edit is read-only. Note: used in conjunction with data source status */
 	readOnly?: boolean;
-	dateFormat?: 'DD/MM/YYYY HH:MM:SS' | 'DD-MM-YYYY HH:MM:SS' | 'YYYY/MM/DD HH:MM:SS' | 'YYYY-MM-DD HH:MM:SS';
-	placeholderChar?: string;
-	showPlaceholderFormat?: boolean;
-	onFocusExit?: React.FocusEvent<HTMLInputElement>;
-	onFocusEnter?: React.FocusEvent<HTMLInputElement>;
-	/** Indica se o date time picker tem o preenchimento obrigatório */
+	/** Indicates if filling the edit is required */
 	required?: boolean;
-	/** Último erro ocorrido no date timer picker */
-	error?: string;
-}
-
-export type ArchbaseDateTimePickerEditFactory = PolymorphicFactory<{
-	props: ArchbaseDateTimePickerEditProps;
-	defaultRef: HTMLInputElement;
-	defaultComponent: 'input';
-	stylesNames: ArchbaseDateTimePickerEditStylesNames;
-	variant: InputVariant;
-}>;
-
-const defaultProps: Partial<ArchbaseDateTimePickerEditProps> = {
-	fixOnBlur: true,
-	preserveTime: true,
-	size: 'sm',
-	readOnly: false,
-	disabled: false,
-	clearable: true,
-	required: false,
-	placeholderChar: '_',
-	showPlaceholderFormat: true,
-	dateFormat: 'DD/MM/YYYY HH:MM:SS',
-};
-
-export const ArchbaseDateTimePickerEdit = forwardRef<HTMLInputElement, ArchbaseDateTimePickerEditProps>(
-	(props, ref) => {
-		const {
-			inputProps,
-			wrapperProps,
-			value,
-			defaultValue,
-			onChange,
-			clearable,
-			clearButtonProps,
-			popoverProps,
-			getDayProps,
-			locale,
-			dateParser,
-			minDate,
-			maxDate,
-			fixOnBlur,
-			onFocus,
-			onBlur,
-			onClick,
-			readOnly,
-			name,
-			form,
-			rightSection,
-			unstyled,
-			classNames,
-			styles,
-			allowDeselect,
-			preserveTime,
-			date,
-			defaultDate,
-			onDateChange,
-			showPlaceholderFormat,
-			placeholderChar,
-			dateFormat,
-			...rest
-		} = useInputProps(ARCHBASE_DATETIME_PICKER_EDIT, defaultProps, props);
-
-		const [internalError, setInternalError] = useState<string | undefined>(props.error);
-
-		const { calendarProps, others } = pickCalendarProps(rest);
-		const ctx = useDatesContext();
-
-		const defaultDateParser = (val: string) => {
-			const parsedDate = dateFormats[dateFormat!].parse(val);
-			return Number.isNaN(parsedDate.getTime()) ? dateStringParser(val) : parsedDate;
-		};
-
-		const timeInputRef = useRef<any>();
-
-		const _dateParser = dateParser || defaultDateParser;
-		const _allowDeselect = clearable || allowDeselect;
-
-		const formatValue = (val: DateValue) => (val ? dateFormats[dateFormat!].format(val) : '');
-
-		const [_value, setValue, controlled] = useUncontrolled({
-			value,
-			defaultValue,
-			finalValue: null,
-			onChange,
-		});
-
-		const [_date, setDate] = useUncontrolled({
-			value: date,
-			defaultValue: defaultValue || defaultDate,
-			finalValue: null,
-			onChange: onDateChange,
-		});
-
-		useEffect(() => {
-			setInternalError(undefined);
-		}, [_value, _date]);
-
-		useEffect(() => {
-			if (controlled) {
-				setDate(value!);
-			}
-		}, [controlled, value]);
-
-		const [inputValue, setInputValue] = useState(formatValue(_value));
-
-		useEffect(() => {
-			setInputValue(formatValue(_value));
-		}, [ctx.getLocale(locale)]);
-
-		const [dropdownOpened, setDropdownOpened] = useState(false);
-
-		const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-			setInternalError(undefined);
-			const val = event.currentTarget.value;
-			setInputValue(val);
-
-			if (val.trim() === '' && _allowDeselect) {
-				setValue(null);
-			} else {
-				const dateValue = _dateParser(val);
-				if (isDateValid({ date: dateValue, minDate, maxDate })) {
-					setValue(dateValue);
-					setDate(dateValue);
-				}
-			}
-		};
-
-		const handleComplete = (maskValue) => {
-			setInternalError(undefined);
-			if (maskValue.trim() === '' && _allowDeselect) {
-				setValue(null);
-				onChange!(null);
-			} else if (maskValue && maskValue.length === dateFormats[dateFormat!].mask.length) {
-				const dateValue = dateFormats[dateFormat!].parse(maskValue);
-				if (isDateValid({ date: dateValue, minDate, maxDate })) {
-					setValue(dateValue);
-					setDate(dateValue);
-					onChange!(dateValue);
-					!controlled && setInputValue(formatValue(dateValue));
-				}
-			}
-		};
-
-		const handleDateChange = (date: Date) => {
-			setInternalError(undefined);
-			setValue(assignTime(_value, date));
-			timeInputRef.current?.focus();
-		};
-
-		const handleAccept = (_maskValue: string, maskRef) => {
-			setInternalError(undefined);
-			if (maskRef.masked.rawInputValue === '' && _allowDeselect) {
-				setValue(null);
-				setDate(null);
-				!controlled && setInputValue('');
-			}
-		};
-
-		const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-			setInternalError(undefined);
-			onBlur?.(event);
-			setDropdownOpened(false);
-			fixOnBlur && setInputValue(formatValue(_value));
-		};
-
-		const handleInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-			onFocus?.(event);
-			setDropdownOpened(true);
-		};
-
-		const handleInputClick = (event: React.MouseEvent<HTMLInputElement>) => {
-			onClick?.(event);
-			setDropdownOpened(true);
-		};
-
-		const _getDayProps = (day: Date) => ({
-			...getDayProps?.(day),
-			selected: dayjs(_value).isSame(day, 'day'),
-			onClick: () => {
-				const valueWithTime = preserveTime ? assignTime(_value, day) : day;
-				const val = _allowDeselect ? (dayjs(_value).isSame(day, 'day') ? null : valueWithTime) : valueWithTime;
-				setValue(val);
-				!controlled && setInputValue(formatValue(val));
-				setDropdownOpened(false);
-			},
-		});
-
-		const _rightSection =
-			rightSection ||
-			(clearable && _value && !readOnly ? (
-				<CloseButton
-					variant="transparent"
-					onMouseDown={(event) => event.preventDefault()}
-					tabIndex={-1}
-					onClick={() => {
-						setValue(null);
-						!controlled && setInputValue('');
-					}}
-					unstyled={unstyled}
-					{...clearButtonProps}
-				/>
-			) : null);
-
-		useDidUpdate(() => {
-			value !== undefined && !dropdownOpened && setInputValue(formatValue(value));
-		}, [value]);
-
-		return (
-			<>
-				<Input.Wrapper {...wrapperProps} error={internalError}>
-					<Popover
-						opened={dropdownOpened}
-						trapFocus={false}
-						position="bottom-start"
-						disabled={readOnly}
-						withRoles={false}
-						withinPortal={true}
-						{...popoverProps}
-					>
-						<Popover.Target>
-							<Input.Wrapper required={props.required} __staticSelector={ARCHBASE_DATETIME_PICKER_EDIT}>
-								<Input<any>
-									data-dates-input
-									data-read-only={readOnly || undefined}
-									autoComplete="off"
-									ref={ref}
-									component={IMaskInput}
-									rightSection={_rightSection}
-									lazy={!showPlaceholderFormat}
-									placeholderChar={placeholderChar}
-									mask={dateFormats[dateFormat!].mask}
-									onBlur={handleInputBlur}
-									onFocus={handleInputFocus}
-									onClick={handleInputClick}
-									onComplete={handleComplete}
-									onChange={handleInputChange}
-									onAccept={handleAccept}
-									readOnly={readOnly}
-									value={inputValue}
-									{...inputProps}
-									{...others}
-									format={(date) => {
-										if (!date) return '';
-										const day = String(date.getDate()).padStart(2, '0');
-										const month = String(date.getMonth() + 1).padStart(2, '0');
-										const year = date.getFullYear();
-
-										return [day, month, year].join('/');
-									}}
-									parse={(str) => {
-										const [day, month, year] = str.split('/');
-										return new Date(year, month - 1, day);
-									}}
-								/>
-							</Input.Wrapper>
-						</Popover.Target>
-						<Popover.Dropdown onMouseDown={(event) => event.preventDefault()} data-dates-dropdown>
-							<Calendar
-								__staticSelector={ARCHBASE_DATETIME_PICKER_EDIT}
-								{...calendarProps}
-								classNames={classNames}
-								styles={styles}
-								unstyled={unstyled}
-								__preventFocus
-								minDate={minDate}
-								maxDate={maxDate}
-								locale={locale}
-								getDayProps={_getDayProps}
-								size={inputProps.size as MantineSize}
-								date={_date ? _date : undefined}
-								onDateChange={handleDateChange}
-							/>
-						</Popover.Dropdown>
-					</Popover>
-					<HiddenDatesInput name={name ? name : ''} form={form ? form : ''} value={_value} type="default" />
-				</Input.Wrapper>
-			</>
-		);
-	},
-);
-
-ArchbaseDateTimePickerEdit.displayName = ARCHBASE_DATETIME_PICKER_EDIT;
+	/** Initial value */
+	value?: Date | null;
+	/** Edit style */
+	style?: CSSProperties;
+	/** Edit width */
+	width?: string | number | undefined;
+	/** Event occurs when focus exits the edit */
+	onFocusExit?: FocusEventHandler<T> | undefined;
+	/** Event occurs when the edit receives focus */
+	onFocusEnter?: FocusEventHandler<T> | undefined;
+	/** Event when the edit value changes (internal use) */
+	onChange?: (value: Date | null) => void;
+	/** Event when the edit value changes (external use) */
+	onChangeValue?: (value: Date | null) => void;
+	/** Clear button properties */
+	clearButtonProps?: Record<string, any>;
+	/** With seconds input */
+	withSeconds?: boolean;
+	/** Value format */
+	valueFormat?: string;
+  }
+  
+  function ArchbaseDateTimePickerEditComponent<T, ID>({
+	dataSource,
+	dataField,
+	disabled = false,
+	readOnly = false,
+	style,
+	required,
+	value,
+	onFocusExit = () => {},
+	onFocusEnter = () => {},
+	onChange,
+	onChangeValue = () => {},
+	width,
+	...rest
+  }: ArchbaseDateTimePickerEditProps<T, ID>, ref: ForwardedRef<HTMLButtonElement>) {
+	const [currentValue, setCurrentValue] = useState<Date | null>(value || null);
+	const [internalError, setInternalError] = useState<string | undefined>(undefined);
+  
+	useEffect(() => {
+	  setInternalError(undefined);
+	}, [currentValue]);
+  
+	const loadDataSourceFieldValue = () => {
+	  let initialValue: Date | null = currentValue;
+  
+	  if (dataSource && dataField) {
+		initialValue = dataSource.getFieldValue(dataField);
+		if (!initialValue) {
+		  initialValue = null;
+		}
+	  }
+  
+	  setCurrentValue(initialValue);
+	};
+  
+	const fieldChangedListener = useCallback(() => {
+	  loadDataSourceFieldValue();
+	}, []);
+  
+	const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
+	  if (dataSource && dataField) {
+		if (
+		  event.type === DataSourceEventNames.dataChanged ||
+		  event.type === DataSourceEventNames.recordChanged ||
+		  event.type === DataSourceEventNames.afterScroll ||
+		  event.type === DataSourceEventNames.afterCancel ||
+		  event.type === DataSourceEventNames.afterEdit
+		) {
+		  loadDataSourceFieldValue();
+		}
+  
+		if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
+		  setInternalError(event.error);
+		}
+	  }
+	}, []);
+  
+	useArchbaseDidMount(() => {
+	  loadDataSourceFieldValue();
+	  if (dataSource && dataField) {
+		dataSource.addListener(dataSourceEvent);
+		dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+	  }
+	});
+  
+	useArchbaseDidUpdate(() => {
+	  loadDataSourceFieldValue();
+	}, []);
+  
+	const handleChange = (changedValue: Date | null) => {
+	  setCurrentValue(changedValue);
+  
+	  if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
+		dataSource.setFieldValue(dataField, changedValue);
+	  }
+  
+	  if (onChange) {
+		onChange(changedValue);
+	  }
+  
+	  if (onChangeValue) {
+		onChangeValue(changedValue);
+	  }
+	};
+  
+	useArchbaseWillUnmount(() => {
+	  if (dataSource && dataField) {
+		dataSource.removeListener(dataSourceEvent);
+		dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+	  }
+	});
+  
+	const handleOnFocusExit = (event) => {
+	  if (onFocusExit) {
+		onFocusExit(event);
+	  }
+	};
+  
+	const handleOnFocusEnter = (event) => {
+	  if (onFocusEnter) {
+		onFocusEnter(event);
+	  }
+	};
+  
+	const isReadOnly = () => {
+	  let tmpReadOnly = readOnly;
+	  if (dataSource && !readOnly) {
+		tmpReadOnly = dataSource.isBrowsing();
+	  }
+	  return tmpReadOnly;
+	};
+  
+	return (
+	  <DateTimePicker
+		{...rest}
+		disabled={disabled}
+		readOnly={isReadOnly()}
+		value={currentValue}
+		onChange={handleChange}
+		onBlur={handleOnFocusExit}
+		onFocus={handleOnFocusEnter}
+		ref={ref}
+		required={required}
+		error={internalError}
+		style={{
+		  width,
+		  ...style,
+		}}
+	  />
+	);
+  }
+  
+  export const ArchbaseDateTimePickerEdit = React.forwardRef(
+	<T, ID>(
+	  props: ArchbaseDateTimePickerEditProps<T, ID>,
+	  ref: ForwardedRef<HTMLButtonElement>
+	) => ArchbaseDateTimePickerEditComponent<T, ID>({ ...props }, ref)
+  ) as <T, ID>(
+	props: ArchbaseDateTimePickerEditProps<T, ID> & { ref?: ForwardedRef<HTMLButtonElement> }
+  ) => JSX.Element;
+  
+  (ArchbaseDateTimePickerEdit as any).displayName = 'ArchbaseDateTimePickerEdit';
