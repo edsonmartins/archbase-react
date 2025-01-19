@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { Group, Image, Button, Stack, Text, Box, rem, Paper, Tooltip, ActionIcon } from '@mantine/core'
-import { Dropzone, MIME_TYPES, DropzoneProps } from '@mantine/dropzone'
-import {
-  IconUpload,
-  IconPhoto,
-  IconX,
-  IconFile,
-  IconFileText,
-  IconFileSpreadsheet,
-  IconTrash
-} from '@tabler/icons-react'
-import { useMantineTheme } from '@mantine/core'
-import { t } from 'i18next'
 import { useArchbaseTheme } from '@components/hooks'
+import { ActionIcon, Box, Group, Image, Paper, rem, Stack, Text, Tooltip } from '@mantine/core'
+import { Dropzone, MIME_TYPES } from '@mantine/dropzone'
+import {
+  IconFile,
+  IconFileSpreadsheet,
+  IconFileText,
+  IconPhoto,
+  IconTrash,
+  IconUpload,
+  IconX
+} from '@tabler/icons-react'
+import { t } from 'i18next'
+import React, { useEffect, useState } from 'react'
 
 export interface Attachment {
   name: string
@@ -23,6 +22,8 @@ export interface Attachment {
 
 export interface ArchbaseFileAttachmentProps {
   attachments: Attachment[]
+  accept?: string[]
+  acceptDescription?: string
   onAttachmentAdd: (newAttachment: Attachment) => void
   onAttachmentRemove: (removedAttachment: Attachment) => void
   height?: number | string
@@ -59,6 +60,8 @@ const getFileIcon = (type: string) => {
 
 export const ArchbaseFileAttachment: React.FC<ArchbaseFileAttachmentProps> = ({
   attachments,
+  accept,
+  acceptDescription,
   onAttachmentAdd,
   onAttachmentRemove,
   height = 'auto',
@@ -127,20 +130,22 @@ export const ArchbaseFileAttachment: React.FC<ArchbaseFileAttachmentProps> = ({
     setSelectedAttachmentIndex(index)
   }
 
+  const defaultAccept = [
+    MIME_TYPES.jpeg,
+    MIME_TYPES.png,
+    MIME_TYPES.pdf,
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  ]
+
   return (
     <Stack>
       <Paper withBorder style={{ border: `2px dashed ${theme.colors.gray[5]}`, padding: '20px' }}>
         <Dropzone
           onDrop={handleDrop}
-          accept={[
-            MIME_TYPES.jpeg,
-            MIME_TYPES.png,
-            MIME_TYPES.pdf,
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'application/vnd.ms-excel',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-          ]}
+          accept={accept ?? defaultAccept}
           multiple
         >
           <Group gap="xl" style={{ minHeight: 60, pointerEvents: 'none' }}>
@@ -167,8 +172,8 @@ export const ArchbaseFileAttachment: React.FC<ArchbaseFileAttachmentProps> = ({
               <Text size="xl" inline>
                 Arraste os arquivos aqui ou clique para selecionar
               </Text>
-              <Text size="sm" color="dimmed" inline mt={7}>
-                Anexe arquivos de imagem, PDFs, DOC, DOCX, XLS ou XLSX
+              <Text size="sm" c="dimmed" inline mt={7}>
+                {acceptDescription ?? "Anexe arquivos de imagem, PDFs, DOC, DOCX, XLS ou XLSX"}
               </Text>
             </div>
           </Group>
@@ -216,12 +221,16 @@ export const ArchbaseFileAttachment: React.FC<ArchbaseFileAttachmentProps> = ({
                   {getFileIcon(attachment.type)}
                 </Box>
               )}
-              <Text size="xs" color="dimmed">
-                {attachment.name}
-              </Text>
-              <Text size="xs" color="dimmed">
-                {formatFileSize(attachment.size)}
-              </Text>
+              {attachment.name &&
+                <Text size="xs" c="dimmed">
+                  {attachment.name}
+                </Text>
+              }
+              {attachment.size &&
+                <Text size="xs" c="dimmed">
+                  {formatFileSize(attachment.size)}
+                </Text>
+              }
               <Tooltip withinPortal withArrow label={t('archbase:Remover')}>
                 <ActionIcon
                   color="red"
