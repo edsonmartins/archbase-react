@@ -83,6 +83,7 @@ export interface ArchbaseTableTemplateProps<T extends Object, ID> {
 	renderDetailPanel?: (props: { row: MRT_Row<T>; table: MRT_TableInstance<T> }) => ReactNode;
 	renderTopToolbar?: ((props: { table: MRT_TableInstance<T>}) => ReactNode) | ReactNode;
 	dragRowOptions?: DragRowOptionsProps<T>;
+	onSelectedRowsChanged?: (rows: T[]) => void;
 }
 
 const getFilter = (
@@ -139,6 +140,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 	renderDetailPanel,
 	renderTopToolbar,
 	dragRowOptions,
+	onSelectedRowsChanged
 }: ArchbaseTableTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const filterRef = useRef<any>();
@@ -337,6 +339,7 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 				renderDetailPanel={renderDetailPanel}
 				enableRowActions={!!userRowActions}
 				dragRowOptions={dragRowOptions}
+				onSelectedRowsChanged={onSelectedRowsChanged}
 			>
 				{columns}
 				{userActions?.visible ? (

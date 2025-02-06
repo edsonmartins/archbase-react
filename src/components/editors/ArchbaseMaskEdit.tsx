@@ -247,7 +247,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	};
 
 	return (
-		<Input.Wrapper {...wrapperProps} label={title} error={internalError}>
+		<Input.Wrapper {...wrapperProps} label={title||props.label} error={internalError}>
 			<Input<any>
 				{...inputProps}
 				{...others}
