@@ -1,1 +1,0 @@
-import{j as p}from"./jsx-runtime-c9381026.js";import"./index-8b3efc3f.js";import{f as i,u as c,B as n}from"./polymorphic-factory-531d6b2a.js";const f={},h=i((a,r)=>{const{w:o,h:s,miw:t,mih:e,...m}=c("Space",f,a);return p(n,{ref:r,...m,w:o,miw:t??o,h:s,mih:e??s})});h.displayName="@mantine/core/Space";export{h as S};
