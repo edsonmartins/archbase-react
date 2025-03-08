@@ -10,6 +10,7 @@ import {
   IconUpload,
   IconX
 } from '@tabler/icons-react'
+import { isBase64 } from 'components/validator'
 import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
 
@@ -196,7 +197,7 @@ export const ArchbaseFileAttachment: React.FC<ArchbaseFileAttachmentProps> = ({
             >
               {attachment.type.startsWith('image/') ? (
                 <Image
-                  src={attachment.content}
+                  src={isBase64(attachment.content)?atob(attachment.content):attachment.content}
                   height={100}
                   width={100}
                   style={{
