@@ -1,7 +1,7 @@
 import { ArchbaseEntityTransformer, ArchbaseRemoteApiClient, ArchbaseRemoteApiService } from "@components/service";
 import { GrantPermissionDto, ResouceActionPermissionDto, ResoucePermissionsWithTypeDto, ResourceDto, ResourcePermissionsDto, ResourceRegisterDto } from "./SecurityDomain";
 import * as inversify from 'inversify';
-import { ARCHBASE_IOC_API_TYPE } from "@components/core";
+import { ARCHBASE_IOC_API_TYPE } from "../../components/core/ioc/ArchbaseIOCTypes";
 import { SecurityType } from "./SecurityType";
 import {getKeyByEnumValue} from "@components/core/utils";
 

@@ -10,7 +10,7 @@ import {
   IconUpload,
   IconX
 } from '@tabler/icons-react'
-import { isBase64 } from 'components/validator'
+import { isBase64 } from '@components/validator'
 import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
 

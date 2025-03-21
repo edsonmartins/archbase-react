@@ -9,9 +9,19 @@ import del from 'rollup-plugin-delete'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import postcss from 'rollup-plugin-postcss'
 import typescript from 'rollup-plugin-typescript2'
-import ttypescript from 'ttypescript'
+// Remova a importação direta do ts-patch
+import * as tsModule from 'typescript'
 // import typescript from '@rollup/plugin-typescript';
 import pkg from './package.json'
+
+// Tente usar o require em vez de import para o ts-patch
+// Esta abordagem costuma funcionar melhor com pnpm
+try {
+  require('ts-patch');
+} catch (err) {
+  console.error('Erro ao carregar ts-patch:', err);
+}
+
 export default [
   {
     input: 'src/index.tsx',
@@ -42,7 +52,7 @@ export default [
         extract: true,
       }),
       typescript({
-        typescript: ttypescript,
+        typescript: tsModule,
         tsconfig: './tsconfig.build.json',
       }),
       nodeResolve(),
