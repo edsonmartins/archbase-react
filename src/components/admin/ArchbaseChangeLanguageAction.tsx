@@ -24,6 +24,9 @@ export const ArchbaseChangeLanguageAction = () => {
 	}, []);
 
 	const getIconByLanguage = (language: string): ReactNode => {
+		if (!language) {
+			return <BRFlag size={24} />;
+		}
 		if (language === 'en' || language === 'en-US') {
 			return <USFlag size={24} />;
 		} else if (language === 'pt-BR') {

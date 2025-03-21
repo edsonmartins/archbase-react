@@ -133,7 +133,7 @@ function JsonObject({ field, value, style, lastElement, shouldInitiallyExpand, l
 		closeBracket: '}',
 		style,
 		shouldInitiallyExpand,
-		data: Object.keys(value).map((key) => [key, value[key]]),
+		data: Object.keys(value).map((key) => [key, value[key as keyof typeof value]]),
 	});
 }
 
@@ -156,8 +156,8 @@ function JsonPrimitiveValue({
 	value,
 	style,
 	lastElement,
-}: JsonRenderProps<string | number | boolean | null | undefined>) {
-	let stringValue = value;
+}: JsonRenderProps<string | number | boolean | bigint | null | undefined>) {
+	let stringValue: string;
 	let valueStyle = style.otherValue;
 
 	if (value === null) {
@@ -179,7 +179,9 @@ function JsonPrimitiveValue({
 		stringValue = `${value.toString()}n`;
 		valueStyle = style.numberValue;
 	} else {
-		stringValue = value.toString();
+		// This case should never be reached due to TypeScript's type narrowing,
+		// but we'll handle it safely anyway
+		stringValue = String(value);
 	}
 
 	return (
@@ -194,12 +196,12 @@ function JsonPrimitiveValue({
 export default function ArchbaseJsonViewDataRender(props: JsonRenderProps<any>) {
 	const value = props.value;
 	if (DataTypeDetection.isArray(value)) {
-		return <JsonArray {...props} />;
+		return <JsonArray {...props} value={value} />;
 	}
 
 	if (DataTypeDetection.isObject(value)) {
-		return <JsonObject {...props} />;
+		return <JsonObject {...props} value={value} />;
 	}
 
-	return <JsonPrimitiveValue {...props} />;
+	return <JsonPrimitiveValue {...props} value={value} />;
 }
