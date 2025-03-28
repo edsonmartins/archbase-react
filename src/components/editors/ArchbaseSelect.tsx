@@ -106,6 +106,14 @@ export interface ArchbaseSelectProps<T, ID, O> {
   customSetDataSourceFieldValue?: (value: any) => void
   classNames?: Partial<Record<SelectStylesNames, string>> | ((theme: MantineTheme, props: SelectProps, ctx: unknown) => Partial<Record<SelectStylesNames, string>>)
   styles?: Partial<Record<SelectStylesNames, CSSProperties>> | ((theme: MantineTheme, props: SelectProps, ctx: unknown) => Partial<Record<SelectStylesNames, CSSProperties>>)
+  /** Converte o valor antes de atribuir ao field do registro atual no datasource
+   * Por exemplo: (obj) => obj.id para armazenar apenas o ID de um objeto
+   */
+  converter?: (value: O) => any
+  /** Function que busca o valor original antes de converter pelo valor de retorno do converter
+   * Por exemplo: (id) => fetchObjectById(id) para converter ID de volta ao objeto
+   */
+  getConvertedOption?: (value: any) => Promise<O>
 }
 
 function buildGroupOptions(
@@ -235,7 +243,9 @@ export function ArchbaseSelect<T, ID, O>({
   customGetDataSourceFieldValue,
   customSetDataSourceFieldValue,
   classNames,
-  styles
+  styles,
+  converter,
+  getConvertedOption
 }: ArchbaseSelectProps<T, ID, O>) {
   const innerComponentRef = useRef<any>()
   const [selectedValue, setSelectedValue] = useState<any>(value)
@@ -269,6 +279,13 @@ export function ArchbaseSelect<T, ID, O>({
     optionsLabelField
   ])
 
+  const handleConverter = (value) => {
+    if (converter && value) {
+      return converter(value)
+    }
+    return value
+  }
+
   const handleChange = (vl: string | null, option: SelectItem) => {
     const value = option && option.origin ? option.origin : vl;
     setSelectedValue((_prev) => value);
@@ -279,12 +296,12 @@ export function ArchbaseSelect<T, ID, O>({
       dataField &&
       (customGetDataSourceFieldValue
         ? customGetDataSourceFieldValue()
-        : dataSource.getFieldValue(dataField)) !== value
+        : dataSource.getFieldValue(dataField)) !== handleConverter(value)
     ) {
       if (customSetDataSourceFieldValue) {
-        customSetDataSourceFieldValue(value)
+        customSetDataSourceFieldValue(handleConverter(value))
       } else {
-        dataSource.setFieldValue(dataField, value);
+        dataSource.setFieldValue(dataField, handleConverter(value));
       }
     }
 
@@ -333,7 +350,7 @@ export function ArchbaseSelect<T, ID, O>({
     setInternalError(undefined)
   }, [selectedValue])
 
-  const loadDataSourceFieldValue = () => {
+  const loadDataSourceFieldValue = async () => {
     let initialValue: any = value
     if (dataSource && dataField && !dataSource.isEmpty()) {
       initialValue = customGetDataSourceFieldValue
@@ -342,6 +359,10 @@ export function ArchbaseSelect<T, ID, O>({
       if (!initialValue) {
         initialValue = ''
       }
+    }
+
+    if (getConvertedOption && converter && initialValue) {
+      initialValue = await getConvertedOption(initialValue)
     }
 
     setSelectedValue(initialValue)
@@ -445,8 +466,8 @@ export function ArchbaseSelect<T, ID, O>({
       onFocus={handleOnFocusEnter}
       value={selectedValue !== undefined ? selectedValue : null}
       onSearchChange={setQueryValue}
-      searchValue={selectedValue ? getOptionLabel(selectedValue) : queryValue}
-      defaultValue={selectedValue ? getOptionLabel(selectedValue) : defaultValue || ''}
+      searchValue={selectedValue && getOptionLabel ? getOptionLabel(selectedValue) : queryValue}
+      defaultValue={selectedValue && getOptionLabel ? getOptionLabel(selectedValue) : defaultValue || ''}
       // filter={filter}
       defaultDropdownOpened={initiallyOpened}
       dropdownOpened={dropdownOpened}
@@ -465,4 +486,3 @@ export function ArchbaseSelect<T, ID, O>({
 }
 
 ArchbaseSelect.displayName = 'ArchbaseSelect'
-
