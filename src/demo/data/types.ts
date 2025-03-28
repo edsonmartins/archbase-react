@@ -40,3 +40,8 @@ export interface Pedido {
   vlTotal : number;
   itens: PedidoItem[]
 }
+
+export interface IntervaloHoras {
+  horaInicio : string;
+  horaFim: string;
+}
