@@ -1,5 +1,5 @@
-import { ArchbaseRemoteApiService } from "@components/service";
-import type { ArchbaseEntityTransformer, ArchbaseRemoteApiClient} from "@components/service";
+import { ArchbaseRemoteApiService } from "../../components/service";
+import type { ArchbaseEntityTransformer, ArchbaseRemoteApiClient} from "../../components/service";
 import * as inversify from 'inversify';
 import { GroupDto } from "./SecurityDomain";
 import { ARCHBASE_IOC_API_TYPE } from "../../components/core/ioc/ArchbaseIOCTypes";
