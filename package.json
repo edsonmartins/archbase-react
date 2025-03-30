@@ -1,6 +1,10 @@
 {
   "name": "archbase-react",
+<<<<<<< HEAD
   "version": "2.0.89",
+=======
+  "version": "2.0.90",
+>>>>>>> baa56a3ef31df88cca888732e71bf5698f817d93
   "description": "Biblioteca de compontentes React TypeScript focada em produtividade no desenvolvimento web.",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -56,6 +60,7 @@
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "@juggle/resize-observer": "^3.4.0",
+<<<<<<< HEAD
     "@mantine/core": "7.17.2",
     "@mantine/dates": "7.17.2",
     "@mantine/dropzone": "7.17.2",
@@ -65,6 +70,17 @@
     "@mantine/notifications": "7.17.2",
     "@mantine/spotlight": "7.17.2",
     "@mantine/tiptap": "7.17.2",
+=======
+    "@mantine/core": "7.17.3",
+    "@mantine/dates": "7.17.3",
+    "@mantine/dropzone": "7.17.3",
+    "@mantine/emotion": "7.17.3",
+    "@mantine/hooks": "7.17.3",
+    "@mantine/modals": "7.17.3",
+    "@mantine/notifications": "7.17.3",
+    "@mantine/spotlight": "7.17.3",
+    "@mantine/tiptap": "7.17.3",
+>>>>>>> baa56a3ef31df88cca888732e71bf5698f817d93
     "@rehooks/component-size": "^1.0.3",
     "@tabler/icons-react": "^2.47.0",
     "ajv": "^8.16.0",
