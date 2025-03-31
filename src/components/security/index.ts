@@ -14,3 +14,5 @@ export type { GrantPermissionDto, PermissionWithTypesDto, ResoucePermissionsWith
 export type { SecurityType } from './SecurityType'
 export { ArchbaseSecurityManager } from './ArchbaseSecurityManager'
 export type { ISecurityManager } from './ArchbaseSecurityManager'
+export {ArchbaseTenantManager, useArchbaseTenantManager} from './ArchbaseTenantManager'
+export type {ArchbaseTenantInfo} from './ArchbaseTenantManager'

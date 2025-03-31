@@ -3,6 +3,7 @@ import type { ArchbaseEntityTransformer, ArchbaseRemoteApiClient} from "../../co
 import * as inversify from 'inversify';
 import { GroupDto } from "./SecurityDomain";
 import { ARCHBASE_IOC_API_TYPE } from "../../components/core/ioc/ArchbaseIOCTypes";
+import { ArchbaseTenantManager } from "./ArchbaseTenantManager";
 
 export class ArchbaseGroupService extends ArchbaseRemoteApiService<GroupDto, string> implements ArchbaseEntityTransformer<GroupDto> {
   constructor(client: ArchbaseRemoteApiClient) {
@@ -10,7 +11,7 @@ export class ArchbaseGroupService extends ArchbaseRemoteApiService<GroupDto, str
   }
 
   protected configureHeaders(): Record<string, string> {
-    return {}
+    return ArchbaseTenantManager.getInstance().getHeaders();
   }
 
   public transform(entity: GroupDto): GroupDto {

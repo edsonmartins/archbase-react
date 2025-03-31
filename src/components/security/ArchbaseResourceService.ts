@@ -4,6 +4,7 @@ import * as inversify from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from "../../components/core/ioc/ArchbaseIOCTypes";
 import { SecurityType } from "./SecurityType";
 import {getKeyByEnumValue} from "../../components/core/utils";
+import { ArchbaseTenantManager } from "./ArchbaseTenantManager";
 
 export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDto, string> implements ArchbaseEntityTransformer<ResourceDto> {
   constructor(client: ArchbaseRemoteApiClient) {
@@ -11,7 +12,7 @@ export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDt
   }
 
   protected configureHeaders(): Record<string, string> {
-    return {}
+    return ArchbaseTenantManager.getInstance().getHeaders();
   }
 
   public transform(entity: ResourceDto): ResourceDto {

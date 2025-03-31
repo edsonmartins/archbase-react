@@ -2,6 +2,7 @@ import { ArchbaseEntityTransformer, ArchbaseRemoteApiClient, ArchbaseRemoteApiSe
 import { UserDto } from "./SecurityDomain";
 import * as inversify from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from "../../components/core/ioc/ArchbaseIOCTypes";
+import { ArchbaseTenantManager } from "./ArchbaseTenantManager";
 
 export class ArchbaseUserService extends ArchbaseRemoteApiService<UserDto, string> implements ArchbaseEntityTransformer<UserDto> {
   constructor(client: ArchbaseRemoteApiClient) {
@@ -9,7 +10,7 @@ export class ArchbaseUserService extends ArchbaseRemoteApiService<UserDto, strin
   }
 
   protected configureHeaders(): Record<string, string> {
-    return {}
+    return ArchbaseTenantManager.getInstance().getHeaders();
   }
 
   public transform(entity: UserDto): UserDto {

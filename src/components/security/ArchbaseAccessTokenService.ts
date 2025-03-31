@@ -2,6 +2,7 @@ import { ArchbaseEntityTransformer, ArchbaseRemoteApiClient, ArchbaseRemoteApiSe
 import { AccessTokenDto, ApiTokenDto } from "./SecurityDomain";
 import * as inversify from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from "../../components/core/ioc/ArchbaseIOCTypes";
+import { ArchbaseTenantManager } from "./ArchbaseTenantManager";
 
 export class ArchbaseAccessTokenService extends ArchbaseRemoteApiService<AccessTokenDto, string> implements ArchbaseEntityTransformer<AccessTokenDto> {
   constructor(client: ArchbaseRemoteApiClient) {
@@ -9,7 +10,7 @@ export class ArchbaseAccessTokenService extends ArchbaseRemoteApiService<AccessT
   }
 
   protected configureHeaders(): Record<string, string> {
-    return {}
+    return ArchbaseTenantManager.getInstance().getHeaders();
   }
 
   public transform(entity: AccessTokenDto): AccessTokenDto {
@@ -25,7 +26,7 @@ export class ArchbaseAccessTokenService extends ArchbaseRemoteApiService<AccessT
   }
 
   isNewRecord(entity: AccessTokenDto): boolean {
-    return entity.isNewAccessToken 
+    return entity.isNewAccessToken
   }
 
   public async revoke(token: string): Promise<undefined> {

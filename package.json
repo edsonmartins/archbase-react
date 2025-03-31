@@ -1,6 +1,6 @@
 {
   "name": "archbase-react",
-  "version": "2.0.90",
+  "version": "2.0.91",
   "description": "Biblioteca de compontentes React TypeScript focada em produtividade no desenvolvimento web.",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -143,6 +143,7 @@
     "reflect-metadata": "^0.1.14",
     "rimraf": "^5.0.7",
     "rollup-plugin-postcss": "^4.0.2",
+    "rxjs": "^7.8.2",
     "storybook-dark-mode": "^3.0.3",
     "suneditor": "^2.46.3",
     "suneditor-react": "^3.6.1",
