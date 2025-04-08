@@ -97,7 +97,7 @@ export type { ArchbaseCronExpressionEditorProps } from './ArchbaseCronExpression
 export { ArchbaseKeyValueEditor } from './ArchbaseKeyValueEditor'
 
 export { ArchbaseTimeRangeSelector } from './ArchbaseTimeRangeSelector'
-export type { ArchbaseTimeRangeSelectorProps, RangeOption } from './ArchbaseTimeRangeSelector'
+export type { ArchbaseTimeRangeSelectorProps, RangeOption, ArchbaseTimeRangeSelectorRef } from './ArchbaseTimeRangeSelector'
 
 export { ArchbaseTreeSelect } from './ArchbaseTreeSelect'
 export type { ArchbaseTreeSelectProps } from './ArchbaseTreeSelect'
