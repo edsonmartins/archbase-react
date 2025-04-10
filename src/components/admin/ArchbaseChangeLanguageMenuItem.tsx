@@ -24,7 +24,7 @@ export const ArchbaseChangeLanguageMenuItem = () => {
 
 	const buildMenuItemLanguages = () => {
 		if (context.languages) {
-			return context.languages.map((language) => {
+			return context.languages.filter(language => language).map((language) => {
 				return (
 					<Menu.Item
 						key={language.name}
@@ -54,7 +54,7 @@ export const ArchbaseChangeLanguageMenuItem = () => {
 					gap={4}
 					title={i18next.t('archbase:toggleLanguage')}>
 					{getIconByLanguage(i18n.language)}
-					{`${context.languages.find(language => language.lang === i18n.language).name}`}
+					{`${context.languages.find(language => language.lang === i18n.language)?.name ?? "Português"}`}
 				</Group>
 			</Menu.Target>
 
