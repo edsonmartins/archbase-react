@@ -13,6 +13,7 @@ export interface ArchbaseAdvancedTabItem {
 export interface ArchbaseAdvancedTabProps {
   favicon : ReactNode | string | undefined;
   title : string;
+  /** Título customizado que aparecerá na aba. Pode ser utilizado $title para interpolar o valor na string do customTitle */
   customTitle?: string;
   activeTab : boolean; 
   position : number;
