@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, FC, useMemo, useImperativeHandle } from 'react';
-import { Select, Button, Group, ActionIcon, Tooltip, Popover, Text, Box, Stack, ComboboxItem } from '@mantine/core';
+import React, { useState, useRef, useEffect, FC, useMemo } from 'react';
+import { Select, Button, Group, ActionIcon, Tooltip, Popover, Text, Box, Stack } from '@mantine/core';
 import { DatePickerInput, TimeInput } from '@mantine/dates';
 import { IconClock, IconCalendar } from '@tabler/icons-react';
 
@@ -64,24 +64,30 @@ export type ArchbaseTimeRangeSelectorProps = {
   ranges: RangeOption[];
   onRangeChange?: (selectedValue: string|null, range: { start: Date | null; end: Date | null }) => void;
   defaultRangeValue?: string|null;
-  label?: string;                    // Label visível fora do popover
-  popoverTitle?: string;             // Título dentro do popover
+  // Nova propriedade para receber o intervalo de datas do componente pai
+  defaultDateRange?: { start: Date | null; end: Date | null };
+  label?: string;
+  popoverTitle?: string;
   width?: number | string;
   position?: 'bottom' | 'top' | 'left' | 'right';
   componentRef?: React.MutableRefObject<ArchbaseTimeRangeSelectorRef>;
 };
 
-export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = ({
-  ranges,
-  onRangeChange,
-  defaultRangeValue,
-  label,
-  popoverTitle = 'Intervalo de tempo',
-  width = 300,
-  position = 'bottom',
-  componentRef
-}) => {
-  const [selectedRange, setSelectedRange] = useState<string|null>(defaultRangeValue ? defaultRangeValue : (ranges.length > 0 ? ranges[0].value : ''));
+export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (props) => {
+  const {
+    ranges,
+    onRangeChange,
+    defaultRangeValue,
+    defaultDateRange,
+    label,
+    popoverTitle = 'Intervalo de tempo',
+    width = 300,
+    position = 'bottom',
+    componentRef
+  } = props;
+
+  // Aceitar null explicitamente para o valor inicial
+  const [selectedRange, setSelectedRange] = useState<string|null>(defaultRangeValue || null);
   const [customRange, setCustomRange] = useState<CustomRange>({ start: null, end: null });
   const [dateRange, setDateRange] = useState<{ start: Date | null, end: Date | null }>({ start: null, end: null });
   const [opened, setOpened] = useState(false);
@@ -91,24 +97,40 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = ({
 
   // Ref para expor métodos públicos do componente
   const internalRef = useRef<ArchbaseTimeRangeSelectorRef>({
-    updateCurrentRange: () => dateRange,
-    getCurrentRange: () => ({ selectedValue: selectedRange, range: dateRange })
+    updateCurrentRange: () => {
+      // Para ranger predefinidos, recalcular baseado na data atual
+      if (selectedRange && selectedRange !== 'custom') {
+        const range = ranges.find(r => r.value === selectedRange);
+        if (range) {
+          const newRange = range.rangeFunction(new Date());
+          setDateRange(newRange);
+          return newRange;
+        }
+      }
+      // Para custom ou não definido, retornar o valor atual
+      return dateRange;
+    },
+    getCurrentRange: () => ({
+      selectedValue: selectedRange,
+      range: dateRange
+    })
   });
 
   // Texto para exibir no botão
   const buttonText = useMemo(() => {
+    // Se for um range predefinido, mostrar o label do range
     const option = ranges.find(r => r.value === selectedRange);
     if (option && selectedRange !== 'custom') {
       return option.label;
     }
 
+    // Se for um range customizado ou não há seleção, mostrar o formato de data
     return formatDateRange(dateRange.start, dateRange.end);
   }, [selectedRange, dateRange, ranges]);
 
-  // Atualizar a referência interna com a função updateCurrentRange
+  // Sincronizar a ref interna quando o estado muda
   useEffect(() => {
     internalRef.current = {
-      ...internalRef.current,
       updateCurrentRange: () => {
         if (selectedRange && selectedRange !== 'custom') {
           const range = ranges.find(r => r.value === selectedRange);
@@ -130,73 +152,120 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = ({
     };
   }, [selectedRange, ranges, onRangeChange, dateRange]);
 
-  // Expor os métodos via componentRef
+  // Expor a referência para o componente pai
   useEffect(() => {
     if (componentRef) {
-      componentRef.current = {
-        updateCurrentRange: () => {
-          // Explicitamente retorna o resultado da chamada para garantir a tipagem correta
-          return internalRef.current.updateCurrentRange();
-        },
-        getCurrentRange: () => {
-          return internalRef.current.getCurrentRange();
-        }
-      };
+      componentRef.current = internalRef.current;
     }
-  }, [componentRef]);
+  }, [componentRef, internalRef.current]);
 
-  // Configura o valor inicial
+  // Inicializar o estado com base nas props
   useEffect(() => {
-    // Configura o valor inicial
-    if (defaultRangeValue && (selectedRange !== defaultRangeValue || dateRange.start === null)) {
-      const range = ranges.find(r => r.value === defaultRangeValue);
-      if (range) {
-        const { start, end } = range.rangeFunction(new Date());
-        if (dateRange.start !== start || dateRange.end !== end) {
-          setDateRange({ start, end });
+    // Inicializar dateRange a partir de defaultDateRange se disponível
+    if (defaultDateRange && defaultDateRange.start && defaultDateRange.end) {
+      setDateRange({
+        start: new Date(defaultDateRange.start.getTime()),
+        end: new Date(defaultDateRange.end.getTime())
+      });
+    }
+  }, []);
+
+  // Atualizar o estado quando o defaultRangeValue muda
+  useEffect(() => {
+    if (defaultRangeValue !== undefined) {
+      // Atualizar o selectedRange
+      setSelectedRange(defaultRangeValue);
+
+      // Se for um range predefinido
+      if (defaultRangeValue && defaultRangeValue !== 'custom') {
+        const range = ranges.find(r => r.value === defaultRangeValue);
+        if (range) {
+          const newRange = range.rangeFunction(new Date());
+          setDateRange(newRange);
         }
-      } else if (defaultRangeValue === 'custom' && customRange.start && customRange.end) {
-        // Se for customizado e temos datas definidas, utilize-as
-        setDateRange({ start: customRange.start, end: customRange.end });
+      }
+      // Se for custom e temos defaultDateRange disponível
+      else if (defaultRangeValue === 'custom' && defaultDateRange &&
+               defaultDateRange.start && defaultDateRange.end) {
+        // Criar novas instâncias para evitar problemas de referência
+        setDateRange({
+          start: new Date(defaultDateRange.start.getTime()),
+          end: new Date(defaultDateRange.end.getTime())
+        });
+
+        // Também atualizar o customRange para ficar sincronizado
+        setCustomRange({
+          start: new Date(defaultDateRange.start.getTime()),
+          end: new Date(defaultDateRange.end.getTime())
+        });
       }
     }
-  }, [defaultRangeValue, ranges]);
+  }, [defaultRangeValue, ranges, defaultDateRange]);
 
+  // Aplicar um intervalo customizado
   const applyCustomRange = () => {
-    setDateRange({ start: customRange.start, end: customRange.end });
+    // Verificar se as datas foram definidas
+    if (!customRange.start || !customRange.end) {
+      return;
+    }
+
+    // IMPORTANTE: Criar novas instâncias de datas para evitar referências compartilhadas
+    const newDateRange = {
+      start: new Date(customRange.start.getTime()),
+      end: new Date(customRange.end.getTime())
+    };
+
+    // Atualizar o estado interno
+    setSelectedRange('custom');
+    setDateRange(newDateRange);
+
+    // Fechar o popover
     setOpened(false);
+
+    // Notificar o componente pai
     if (onRangeChange) {
-      onRangeChange('custom', { start: customRange.start, end: customRange.end });
+      onRangeChange('custom', newDateRange);
     }
   };
 
+  // Manipular a mudança de range (predefinido ou customizado)
   const handleRangeChange = (value: string | null) => {
     setSelectedRange(value);
 
-    // Se não for range customizado, podemos aplicar imediatamente
-    if (value !== 'custom') {
+    // Se não for range customizado, aplicar imediatamente
+    if (value && value !== 'custom') {
       const range = ranges.find(r => r.value === value);
       if (range) {
-        const { start, end } = range.rangeFunction(new Date());
-        setDateRange({ start, end });
+        const newRange = range.rangeFunction(new Date());
+        setDateRange(newRange);
         setOpened(false);
+
+        // Notificar o componente pai
         if (onRangeChange) {
-          onRangeChange(value, { start, end });
+          onRangeChange(value, newRange);
         }
       }
-    } else {
+    } else if (value === 'custom') {
       // Para range customizado, inicializar com o intervalo atual se estiver vazio
       if (!customRange.start && !customRange.end && dateRange.start && dateRange.end) {
-        setCustomRange({ start: dateRange.start, end: dateRange.end });
+        // Criar novas instâncias das datas
+        setCustomRange({
+          start: new Date(dateRange.start.getTime()),
+          end: new Date(dateRange.end.getTime())
+        });
       }
-      // Não fechamos o popover para permitir a configuração do range customizado
+      // Mantém o popover aberto para configuração
     }
   };
 
+  // Atualizar as horas do intervalo customizado
   const updateTime = (timeString: string, isStart: boolean) => {
     const [hours, minutes] = timeString.split(':').map(Number);
+    // Usar a data atual se não houver uma data definida
     const date = new Date((isStart ? customRange.start : customRange.end) || new Date());
     date.setHours(hours, minutes);
+
+    // Atualizar apenas a parte relevante do estado
     setCustomRange(prev => ({
       ...prev,
       [isStart ? 'start' : 'end']: new Date(date)
@@ -205,12 +274,14 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = ({
 
   return (
     <Box>
+      {/* Exibir o label se fornecido */}
       {label && (
         <Text size="sm" fw={500} mb={6}>
           {label}
         </Text>
       )}
 
+      {/* Popover para seleção de intervalo */}
       <Popover
         position={position}
         opened={opened}
@@ -246,15 +317,20 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = ({
             <Text size="sm" fw={500} mb="md">{popoverTitle}</Text>
 
             <Stack gap="xs" w="100%">
+              {/* Seletor de intervalos predefinidos ou customizado */}
               <Select
                 label="Selecione um intervalo"
                 placeholder="Selecionado..."
                 value={selectedRange}
                 onChange={handleRangeChange}
-                data={[...ranges.map(({ value, label }) => ({ value, label })), { value: 'custom', label: 'Customizado' }]}
+                data={[
+                  ...ranges.map(({ value, label }) => ({ value, label })),
+                  { value: 'custom', label: 'Customizado' }
+                ]}
                 style={{ width: '100%' }}
               />
 
+              {/* Controles para configuração de intervalo customizado */}
               {selectedRange === 'custom' && (
                 <>
                   <Group grow mt="xs">
@@ -303,7 +379,12 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = ({
 
                   <Group justify="flex-end" mt="md">
                     <Button onClick={() => setOpened(false)} variant="outline" mr="xs">Cancelar</Button>
-                    <Button onClick={applyCustomRange}>Aplicar</Button>
+                    <Button
+                      onClick={applyCustomRange}
+                      disabled={!customRange.start || !customRange.end}
+                    >
+                      Aplicar
+                    </Button>
                   </Group>
                 </>
               )}
