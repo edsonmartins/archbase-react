@@ -22,6 +22,7 @@ interface ResultItem {
 	title: string | undefined;
 	link: string;
 	redirect?: string;
+	customTitle?: string;
 }
 
 export function ArchbaseAdminTabContainer({
@@ -93,6 +94,7 @@ export function ArchbaseAdminTabContainer({
 			title: undefined,
 			link,
 			redirect: undefined,
+			customTitle: undefined,
 		};
 		navigationData.forEach((item) => {
 			if (item.links) {
@@ -102,6 +104,7 @@ export function ArchbaseAdminTabContainer({
 						result.item = subItem;
 						result.title = `${i18next.t(subItem.label)}`;
 						result.redirect = subItem.redirect;
+						result.customTitle = subItem.customTitle;
 					}
 				});
 			} else if (item.link && !result.item) {
@@ -112,11 +115,15 @@ export function ArchbaseAdminTabContainer({
 					} else {
 						result.title = `${i18next.t(item.label)}`;
 					}
-					result.redirect = item.redirect;
 					result.item = item;
+					result.redirect = item.redirect;
+					result.customTitle = item.customTitle;
 				}
 			}
 		});
+		if (result.customTitle) {
+			result.customTitle = result.customTitle.replace("$title", result.title)
+		}
 
 		return result;
 	};
@@ -145,6 +152,7 @@ export function ArchbaseAdminTabContainer({
 						iconClass: resultItem.item!.icon,
 						closeButton: true,
 						redirect: resultItem.redirect,
+						customTitle: resultItem.customTitle,
 					});
 					onChangeOpenedTabs && onChangeOpenedTabs(openedTabs);
 					setActiveTabId(`${resultItem.link}`);
@@ -178,6 +186,7 @@ export function ArchbaseAdminTabContainer({
 				key: tab.id,
 				favicon: tab.iconClass,
 				title: tab.title,
+				customTitle: tab.customTitle
 			};
 
 			return result;

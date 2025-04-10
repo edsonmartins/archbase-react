@@ -7,11 +7,13 @@ export interface ArchbaseAdvancedTabItem {
   key: any;
   favicon: ReactNode | string | undefined;
   title: string;
+  customTitle?: string;
 }
 
 export interface ArchbaseAdvancedTabProps {
   favicon : ReactNode | string | undefined;
   title : string;
+  customTitle?: string;
   activeTab : boolean; 
   position : number;
   contentWidth : number;
@@ -28,7 +30,7 @@ export interface ArchbaseAdvancedTabProps {
 }
 
 const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
-	const { favicon, title, activeTab, position, contentWidth, onClick, onClose, setDragging, tabsContentWidth, animateTabMove,
+	const { favicon, title, customTitle, activeTab, position, contentWidth, onClick, onClose, setDragging, tabsContentWidth, animateTabMove,
 		isDragging, index, sorting, showButtonClose } = props;
 	const [width, setWidth] = useState(0);
 	const [isAdded, setAdd] = useState(false);
@@ -124,8 +126,8 @@ const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 			</div>
 			<div className="archbase_tab-content">
 				{!!favicon && <div className="archbase_tab-favicon" style={{ "backgroundImage": `url(${favicon})` }}></div>}
-				<div className="archbase_tab-title">{title}</div>
-				<div className="archbase_tab-drag-handle" title={title} onClick={onClick} onPointerDown={e => (onClick(e))} onMouseUp={onDragEnd} onMouseMove={onDragMove} onMouseDown={onDragStart}></div>
+				<div className="archbase_tab-title">{customTitle ?? title}</div>
+				<div className="archbase_tab-drag-handle" title={customTitle ?? title} onClick={onClick} onPointerDown={e => (onClick(e))} onMouseUp={onDragEnd} onMouseMove={onDragMove} onMouseDown={onDragStart}></div>
 				{showButtonClose?<div className="archbase_tab-close" onClick={onClose}></div>:null}
 			</div>
 		</div>
@@ -269,6 +271,7 @@ export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props)
 								key={m.key}
 								favicon={m.favicon}
 								title={m.title}
+								customTitle={m.customTitle}
 								activeTab={activeTab === m.key}
 								position={positions[index]}
 								contentWidth={tabContentWidths[index]}
