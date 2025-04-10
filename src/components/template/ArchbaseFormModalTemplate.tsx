@@ -7,12 +7,12 @@ import { t } from 'i18next';
 import React, { CSSProperties, ReactNode, useState } from 'react';
 import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed, ArchbaseSpaceTop, ArchbaseSpaceTopResizable } from '../containers';
 import { useArchbaseAppContext } from '../core';
-import { processDetailErrorMessage, processErrorMessage } from '../core/exceptions';
+import { processErrorMessage } from '../core/exceptions';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDataSourceListener, useArchbaseTheme } from '../hooks';
 import { ArchbaseAlert, ArchbaseDialog } from '../notification';
 
-export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Omit<ModalProps, 'onClose'> {
+export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Omit<ModalProps, 'onClose' | 'onError'> {
 	dataSource?: ArchbaseDataSource<T, ID>;
 	height: string | number | undefined;
 	userActions?: ReactNode;
@@ -24,6 +24,7 @@ export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Om
 	isError?: boolean;
 	error?: string | undefined;
 	clearError?: () => void;
+	onError?: (error: string) => void;
 	autoCloseAlertError?: number;
 	loadingOverlayStyles?: Partial<Record<LoadingOverlayStylesNames, CSSProperties>>
 }
@@ -52,6 +53,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 	isError,
 	error = '',
 	clearError = () => { },
+	onError,
 	autoCloseAlertError = 15000,
 	loadingOverlayStyles,
 }: ArchbaseFormModalTemplateProps<T, ID>) {
@@ -83,12 +85,10 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 					setIsLoading(true)
 					await dataSource.save();
 					onAfterSave && onAfterSave(dataSource.getCurrentRecord());
-				} catch (ex) {
-					ArchbaseDialog.showErrorWithDetails(
-						`${t('archbase:Warning')}`,
-						processErrorMessage(ex),
-						processDetailErrorMessage(ex),
-					);
+				} catch (e) {
+					onError && onError(processErrorMessage(e));
+					setIsInternalError(true);
+					setInternalError(processErrorMessage(e));
 					setIsLoading(false)
 					return false;
 				}
@@ -127,12 +127,10 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 								onClickOk && onClickOk();
 							}
 						})
-						.catch((error) => {
-							ArchbaseDialog.showErrorWithDetails(
-								`${t('archbase:Warning')}`,
-								processErrorMessage(error),
-								processDetailErrorMessage(error),
-							);
+						.catch((e) => {
+							onError && onError(processErrorMessage(e));
+							setIsInternalError(true);
+							setInternalError(processErrorMessage(e));
 						});
 				}
 			} else {

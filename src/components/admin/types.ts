@@ -20,6 +20,7 @@ export type ArchbaseNavigationItem = {
 	showInSidebar: boolean;
 	disabled?: boolean | Function;
 	redirect?: string;
+	customTitle?: string;
 	keepAlive?: boolean;
 	group?: ArchbaseNavigationGroup;
 	hideDisabledItem?: boolean;
@@ -61,6 +62,7 @@ export type ArchbaseTabItem = {
 	closeButton: boolean;
 	active: boolean;
 	redirect?: string;
+	customTitle?: string;
 };
 
 export type LocationDataItem = {
