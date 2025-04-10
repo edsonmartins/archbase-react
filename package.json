@@ -37,7 +37,7 @@
     "docs": "npx typedoc --options typedoc.json",
     "commit": "git-cz"
   },
-  "lint-staged": {
+  "lint-staged":  {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
