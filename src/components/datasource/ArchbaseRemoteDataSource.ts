@@ -78,9 +78,12 @@ export class ArchbaseRemoteDataSource<T, ID>
         }
       })
       this.currentRecord = await this.service.save<T>(this.currentRecord)
+      // Cópias com spread para evitar problemas com Object.freeze
       if (this.editing) {
+        this.filteredRecords = [...this.filteredRecords];
         this.filteredRecords[this.getCurrentIndex()] = this.currentRecord!
-      }      
+      }
+      this.records = [...this.records];
       if (index >= 0) {
         this.records[index] = this.currentRecord!
       } else {

@@ -1,6 +1,6 @@
 import { ARCHBASE_IOC_API_TYPE } from '@components/core'
 import { ArchbaseDataSource } from '@components/datasource'
-import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseImageEdit, ArchbasePasswordEdit, ArchbaseSelect } from '@components/editors'
+import { ArchbaseAvatarEdit, ArchbaseCheckbox, ArchbaseEdit, ArchbasePasswordEdit, ArchbaseSelect } from '@components/editors'
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@components/hooks'
 import { ArchbaseNotifications } from '@components/notification'
 import { ArchbaseFormModalTemplate } from '@components/template'
@@ -262,12 +262,12 @@ export const UserModal = (props: UserModalProps) => {
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
             <Stack gap="lg">
-              <ArchbaseImageEdit
-                width={'120px'}
-                height={'120px'}
-                dataSource={props.dataSource}
-                dataField={'avatar'}
+              <ArchbaseAvatarEdit
                 label={`${t('archbase:Foto do usuário')}`}
+                dataSource={props.dataSource}
+                dataField="avatar"
+                width={120}
+                height={120}
               />
             </Stack>
           </Grid.Col>
