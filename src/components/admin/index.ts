@@ -41,3 +41,6 @@ export { ArchbaseDrawerContent } from './drawer/DrawerContent'
 export type { ArchbaseDrawerContentProps } from './drawer/DrawerContent'
 export { ArchbaseDrawerTrigger } from './drawer/DrawerTrigger'
 export { useArchbaseDrawer } from './drawer/useArchbaseDrawer'
+
+export { ArchbaseMyProfileModal, defaultMyProfileModalOptions } from './ArchbaseMyProfileModal'
+export type { ArchbaseMyProfileModalProps, MyProfileModalOptions } from './ArchbaseMyProfileModal'

@@ -111,3 +111,6 @@ export type { ArchbaseFileAttachmentProps, Attachment } from "./ArchbaseFileAtta
 
 export { ArchbaseTimeEdit } from './ArchbaseTimeEdit'
 export type { ArchbaseTimeEditProps } from './ArchbaseTimeEdit'
+
+export { ArchbaseAvatarEdit } from './ArchbaseAvatarEdit'
+export type { ArchbaseAvatarEditProps } from './ArchbaseAvatarEdit'
