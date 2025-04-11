@@ -1,6 +1,6 @@
 {
   "name": "archbase-react",
-  "version": "2.0.91",
+  "version": "2.0.95",
   "description": "Biblioteca de compontentes React TypeScript focada em produtividade no desenvolvimento web.",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -37,7 +37,7 @@
     "docs": "npx typedoc --options typedoc.json",
     "commit": "git-cz"
   },
-  "lint-staged": {
+  "lint-staged":  {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
@@ -56,15 +56,16 @@
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "@juggle/resize-observer": "^3.4.0",
-    "@mantine/core": "7.17.3",
-    "@mantine/dates": "7.17.3",
-    "@mantine/dropzone": "7.17.3",
-    "@mantine/emotion": "7.17.3",
-    "@mantine/hooks": "7.17.3",
-    "@mantine/modals": "7.17.3",
-    "@mantine/notifications": "7.17.3",
-    "@mantine/spotlight": "7.17.3",
-    "@mantine/tiptap": "7.17.3",
+    "@mantine/core": "7.17.4",
+    "@mantine/dates": "7.17.4",
+    "@mantine/dropzone": "7.17.4",
+    "@mantine/emotion": "7.17.4",
+    "@mantine/hooks": "7.17.4",
+    "@mantine/modals": "7.17.4",
+    "@mantine/notifications": "7.17.4",
+    "@mantine/spotlight": "7.17.4",
+    "@mantine/tiptap": "7.17.4",
+    "@mui/x-data-grid": "^7.28.3",
     "@rehooks/component-size": "^1.0.3",
     "@tabler/icons-react": "^2.47.0",
     "ajv": "^8.16.0",
@@ -83,6 +84,7 @@
     "element-resize-detector": "^1.2.4",
     "events": "^3.3.0",
     "export-to-csv": "^0.2.2",
+    "file-saver": "^2.0.5",
     "final-form": "^4.20.10",
     "final-form-arrays": "^3.1.0",
     "final-form-set-field-touched": "^1.0.1",
@@ -152,6 +154,7 @@
     "usehooks-ts": "^2.16.0",
     "uuid": "^9.0.1",
     "validator": "^13.12.0",
+    "xlsx": "^0.18.5",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

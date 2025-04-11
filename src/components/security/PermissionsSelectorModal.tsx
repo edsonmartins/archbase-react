@@ -24,16 +24,18 @@ const translateDelimitedString = (inputString) => {
     return t(inputString);
 };
 
-export interface PermissionsSelectorProps<T, ID> {
-    dataSource: ArchbaseRemoteDataSource<T, ID>
+export interface PermissionsSelectorProps {
+    dataSource: ArchbaseRemoteDataSource<any, any> | null
     opened: boolean
     close: () => void
 }
 
-export function PermissionsSelectorModal<T, ID>({ dataSource, opened, close }: PermissionsSelectorProps<T, ID>) {
-    const name = dataSource.getFieldValue("name")
-    const securityId = dataSource.getFieldValue("id")
-    const type = dataSource.getFieldValue("type")
+export function PermissionsSelectorModal({ dataSource, opened, close }: PermissionsSelectorProps) {
+    // Verifica se o dataSource existe antes de acessá-lo
+    const name = dataSource?.getFieldValue("name") || '';
+    const securityId = dataSource?.getFieldValue("id") || '';
+    const type = dataSource?.getFieldValue("type") || '';
+
     const theme = useArchbaseTheme()
     const availablePermissionsTree = useTree()
     const grantedPermissionsTree = useTree()
@@ -110,16 +112,16 @@ export function PermissionsSelectorModal<T, ID>({ dataSource, opened, close }: P
         }), [grantedPermissionsActionIds, type, debouncedAvailablePermissionsFilter])
 
     const loadPermissions = useCallback(async () => {
-        if (securityId) {
+        if (securityId && dataSource) {
             const permissionsGranted = await resourceApi.getPermissionsBySecurityId(securityId, type)
             const allPermissions = await resourceApi.getAllPermissionsAvailable()
             setAvailablePermissions(allPermissions)
             setGrantedPermissions(permissionsGranted)
         }
-    }, [securityId, type])
+    }, [securityId, type, dataSource])
 
     const handleAdd = () => {
-        if (selectedAvailablePermission?.value) {
+        if (selectedAvailablePermission?.value && securityId) {
             resourceApi.createPermission(securityId, selectedAvailablePermission.value, type)
                 .then((resouceActionPermissionDto: ResouceActionPermissionDto) => {
                     if (resouceActionPermissionDto) {
@@ -265,7 +267,7 @@ export function PermissionsSelectorModal<T, ID>({ dataSource, opened, close }: P
     }
 
     useEffect(() => {
-        if (opened) {
+        if (opened && dataSource) {
             setSelectedAvailablePermission(undefined)
             setSelectedGrantedPermission(undefined)
             setAvailablePermissionsFilter("")
@@ -274,7 +276,12 @@ export function PermissionsSelectorModal<T, ID>({ dataSource, opened, close }: P
             availablePermissionsTree.collapseAllNodes()
             loadPermissions()
         }
-    }, [opened, type, securityId])
+    }, [opened, type, securityId, dataSource])
+
+    // Não exibir o modal se não houver dataSource
+    if (!dataSource) {
+        return null;
+    }
 
     return (
         <Modal opened={opened} onClose={close} title={`${t(`archbase:${type}`)}: ${name}`} size={"80%"} styles={{ root: { overflow: "hidden" } }}>

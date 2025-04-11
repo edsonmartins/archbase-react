@@ -29,7 +29,5 @@ export * from './components/validator';
 export * from './components/debug';
 export * from './components/locales/config';
 export * from './components/security';
-// export * from './components/emaileditor/core';
-// export * from './components/emaileditor/editor';
-// export * from './components/emaileditor/extensions';
+export * from './components/datagrid';
 export { contains, isEmpty, isBase64 } from './components/validator';

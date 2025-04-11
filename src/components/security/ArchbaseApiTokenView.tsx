@@ -1,14 +1,6 @@
 import { ARCHBASE_IOC_API_TYPE, processDetailErrorMessage, processErrorMessage } from '@components/core';
 import {
-	ArchbaseDataTable,
-	ArchbaseDataTableColumn,
-	ArchbaseTableRowActions,
-	Columns,
-	ToolBarActions,
-} from '@components/datatable';
-import {
 	useArchbaseDataSource,
-	useArchbaseListContext,
 	useArchbaseRemoteDataSource,
 	useArchbaseRemoteServiceApi,
 	useArchbaseStore,
@@ -45,6 +37,10 @@ import { ApiTokenModal } from './ApiTokenModal';
 import { ArchbaseApiTokenService } from './ArchbaseApiTokenService';
 import { NO_USER } from './ArchbaseSecurityView';
 import { ApiTokenDto, GroupDto, ProfileDto, ResourceDto, UserDto } from './SecurityDomain';
+import { ArchbaseDataGridColumn } from 'components/datagrid';
+import { ArchbaseDataGrid, ArchbaseDataGridRef, GridColumns } from 'components/datagrid/main';
+import { ArchbaseGridTemplateRef } from 'components/template/ArchbaseGridTemplate';
+
 
 interface ArchbaseApiTokenViewProps {
 	height?: any;
@@ -59,13 +55,19 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 	const [error, setError] = useState<string | undefined>(undefined);
 	const apiTokenApi = useArchbaseRemoteServiceApi<ArchbaseApiTokenService>(ARCHBASE_IOC_API_TYPE.ApiToken);
 	const [openedModal, setOpenedModal] = useState<string>('');
+	const gridRef = useRef<ArchbaseDataGridRef | null>(null)
+
+	// Função para obter o ID da linha
+	const getRowId = (row: ApiTokenDto): string => {
+		return row.id;
+	};
 
 	const { dataSource } = useArchbaseDataSource<ApiTokenDto, string>({
 		initialData: [],
 		name: 'dataSource',
 	});
 
-	const { dataSource: dsApiTokens } = useArchbaseRemoteDataSource<ApiTokenDto, string>({
+	const { dataSource: dsApiTokens, isLoading } = useArchbaseRemoteDataSource<ApiTokenDto, string>({
 		name: 'dsApiToken',
 		service: apiTokenApi,
 		store: templateStore,
@@ -87,74 +89,74 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 	const heightTab = `calc(${height} - 40px)`;
 
 	const columns = (
-		<Columns>
-			<ArchbaseDataTableColumn<ApiTokenDto>
+		<GridColumns>
+			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="user.avatar"
 				dataType="image"
-				size={50}
+				size={80}
 				header="Foto"
-				render={(cell) => (
+				render={(data) => (
 					<img
-						style={{ borderRadius: 50, height: '36px', maxHeight: '36px' }}
+						style={{ borderRadius: 50, height: '32px', maxHeight: '32px' }}
 						src={
-							cell.row.original.user && cell.row.original.user.avatar ? atob(cell.row.original.user.avatar) : NO_USER
+							data.row.user && data.row.user.avatar ? atob(data.row.user.avatar) : NO_USER
 						}
 					/>
 				)}
 				inputFilterType="text"
 				align="center"
 			/>
-			<ArchbaseDataTableColumn<ApiTokenDto>
+			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="user.userName"
 				dataType="text"
 				size={300}
 				header="Nome de Usuário"
 				inputFilterType="text"
 			/>
-			<ArchbaseDataTableColumn<ApiTokenDto>
+			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="user.email"
 				dataType="text"
 				header="Email"
-				size={300}
+				size={240}
 				inputFilterType="text"
 			/>
-			<ArchbaseDataTableColumn<ApiTokenDto>
+			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="token"
 				dataType="text"
 				header="Token API"
-				size={200}
+				size={260}
 				inputFilterType="text"
 				enableClickToCopy={true}
 			/>
-			<ArchbaseDataTableColumn<ApiTokenDto>
+			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="tenantId"
 				dataType="text"
 				header="Tenant ID"
-				size={200}
+				size={260}
 				inputFilterType="text"
 				enableClickToCopy={true}
 			/>
-			<ArchbaseDataTableColumn<ApiTokenDto>
+			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="expirationDate"
 				dataType="text"
 				size={300}
 				header="Expira em"
-				render={(cell) => <ArchbaseCountdownProgress color="orange" targetDate={cell.row.original.expirationDate} />}
+				render={(data) => <ArchbaseCountdownProgress color="orange" targetDate={data.row.expirationDate} />}
 				inputFilterType="text"
 			/>
-			<ArchbaseDataTableColumn<ApiTokenDto>
+			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="activated"
 				dataType="boolean"
 				header="Ativado ?"
 				inputFilterType="checkbox"
 			/>
-			<ArchbaseDataTableColumn<ApiTokenDto>
+			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="revoked"
 				dataType="boolean"
 				header="Revogado ?"
 				inputFilterType="checkbox"
 			/>
-		</Columns>
+		</GridColumns>
 	);
 
 	const handleCreateApiTokenExecute = () => {
@@ -229,6 +231,22 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 		}
 	};
 
+	// Componente de ações da barra de ferramentas
+	const renderToolbarActions = () => {
+		return (
+			<Flex justify={'space-between'} style={{ width: '50%' }}>
+				<Group align="start" gap={'2px'} wrap="nowrap">
+					<Button color={'green'} leftSection={<IconPlus />} onClick={handleCreateApiTokenExecute}>
+						{t('archbase:New')}
+					</Button>
+					<Button disabled={!dsApiTokens.getCurrentRecord()} color={'red'} leftSection={<IconTrashX />} onClick={handleApiTokenRevokeRow}>
+						{t('archbase:Revoke')}
+					</Button>
+				</Group>
+			</Flex>
+		);
+	};
+
 	return (
 		<Paper style={{ height: height }}>
 			<Box
@@ -238,7 +256,8 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 					width: '100%',
 				}}
 			>
-				<ArchbaseDataTable<ApiTokenDto, string>
+				<ArchbaseDataGrid<ApiTokenDto, string>
+					gridRef={gridRef}
 					printTitle={'Tokens de API'}
 					width={'100%'}
 					height={'100%'}
@@ -247,27 +266,16 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 					withColumnBorders={true}
 					striped={true}
 					enableTopToolbar={true}
-					enableRowActions={true}
+					enableRowActions={false}
 					pageSize={50}
-					isError={false}
+					isLoading={isLoading}
+					isError={!!error}
+					error={error}
 					enableGlobalFilter={true}
-					renderToolbarInternalActions={undefined}
-					error={<span></span>}
-				>
-					{columns}
-					<ToolBarActions>
-						<Flex justify={'space-between'} style={{ width: '50%' }}>
-							<Group align="start" gap={'4px'}>
-								<Button color={'green'} leftSection={<IconPlus />} onClick={handleCreateApiTokenExecute}>
-									{t('archbase:New')}
-								</Button>
-								<Button disabled={!dsApiTokens.getCurrentRecord()} color={'red'} leftSection={<IconTrashX />} onClick={handleApiTokenRevokeRow}>
-									{t('archbase:Revoke')}
-								</Button>
-							</Group>
-						</Flex>
-					</ToolBarActions>
-				</ArchbaseDataTable>
+					getRowId={getRowId}
+					toolbarLeftContent={renderToolbarActions()}
+					children={columns}
+				/>
 			</Box>
 			{openedModal === 'apiToken' ? (
 				<ApiTokenModal
