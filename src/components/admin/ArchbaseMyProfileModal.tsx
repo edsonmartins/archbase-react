@@ -61,7 +61,7 @@ export function ArchbaseMyProfileModal({ opened, handleClose, userId, updateUser
             //
         },
         onError: (error, origin) => {
-            ArchbaseNotifications.showError(t('mentors:WARNING'), error, origin)
+            ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin)
         }
     })
 
@@ -81,7 +81,7 @@ export function ArchbaseMyProfileModal({ opened, handleClose, userId, updateUser
 
     return (
         <ArchbaseFormModalTemplate
-            title={t('mentors:Meu Perfil')}
+            title={t('archbase:My Profile')}
             size={800}
             height={'500px'}
             opened={opened}

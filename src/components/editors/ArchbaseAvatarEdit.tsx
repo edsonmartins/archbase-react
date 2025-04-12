@@ -405,7 +405,6 @@ export function ArchbaseAvatarEdit<T, ID>({
                 <Modal
                     opened={modalOpen}
                     onClose={() => setModalOpen(false)}
-                    title={i18next.t('archbase:Edit avatar')}
                     size="lg"
                 >
                     <Box style={{ position: 'relative', height: 400, width: '100%' }}>
@@ -430,7 +429,7 @@ export function ArchbaseAvatarEdit<T, ID>({
                     <Stack gap="xs" mt="md">
                         <Group justify="space-between">
                             <Box style={{ flex: 1 }}>
-                                <Tooltip label={i18next.t('archbase:Zoom')}>
+                                <Tooltip label={'Zoom'}>
                                     <IconZoomIn size={20} />
                                 </Tooltip>
                                 <Slider

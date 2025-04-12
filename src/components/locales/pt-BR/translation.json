@@ -520,5 +520,7 @@
   "erro_servidor": "Ocorreu um erro no servidor. Erro 500. Caminho: {{path}} Msg: {{message}}",
   "servidor_nao_disponivel": "Servidor não disponível ou algum problema na rede.",
   "Password": "Senha",
-  "Código de segurança": "Código de segurança"
+  "Código de segurança": "Código de segurança",
+  "My Profile": "Meu Perfil",
+  "Rotation": "Rotação"
 }
