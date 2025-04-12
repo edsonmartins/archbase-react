@@ -520,5 +520,9 @@
   "erro_servidor": "A server error occurred. Error 500. Path: {{path}} Msg: {{message}}",
   "servidor_nao_disponivel": "Server not available or there is a network issue.",
   "Password": "Password",
-  "Código de segurança": "Security code"
+  "Código de segurança": "Security code",
+  "My Profile": "My Profile",
+  "Rotation": "Rotation",
+  "Image max size": "Image max size",
+  "erro_avatar_crop": "Image size {{imageSize}}KB exceeds the maximum limit ({{maxImageSize}}KB)."
 }

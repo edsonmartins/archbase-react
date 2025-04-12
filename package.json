@@ -37,7 +37,7 @@
     "docs": "npx typedoc --options typedoc.json",
     "commit": "git-cz"
   },
-  "lint-staged":  {
+  "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
@@ -123,6 +123,7 @@
     "react-date-object": "^2.1.8",
     "react-demo-page": "^0.3.6",
     "react-dom": "^18.3.1",
+    "react-easy-crop": "^5.4.1",
     "react-final-form": "^6.5.9",
     "react-final-form-arrays": "^3.1.4",
     "react-frame-component": "^5.2.7",
