@@ -35,6 +35,11 @@ export interface UserModalOptions {
 
   // Configurações de campos obrigatórios
   requiredNickname?: boolean;
+
+  /** Tamanho máximo da imagem do avatar em kilobytes */
+  avatarMaxSizeKB?: number;
+  /** Qualidade da compressão da imagem do avatar (0 a 1), sendo 1 melhor qualidade */
+  avatarImageQuality?: number;
 }
 
 export const defaultUserModalOptions: UserModalOptions = {
@@ -58,6 +63,9 @@ export const defaultUserModalOptions: UserModalOptions = {
 
   // Configurações de campos obrigatórios
   requiredNickname: true,
+
+  avatarMaxSizeKB: 2000,
+  avatarImageQuality: 1
 }
 
 export interface UserModalProps {
@@ -268,6 +276,8 @@ export const UserModal = (props: UserModalProps) => {
                 dataField="avatar"
                 width={120}
                 height={120}
+                maxSizeKB={options.avatarMaxSizeKB}
+                imageQuality={options.avatarImageQuality}
               />
             </Stack>
           </Grid.Col>

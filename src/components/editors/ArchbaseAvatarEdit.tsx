@@ -1,10 +1,10 @@
-import { ActionIcon, ActionIconVariant, Box, Button, Group, Input, Modal, Paper, Slider, Stack, Tooltip } from '@mantine/core';
+import { ActionIcon, ActionIconVariant, Box, Button, Group, Input, Modal, Paper, Slider, Space, Stack, Text, Tooltip } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import { IconCameraPlus, IconEdit, IconRotate, IconTrash, IconZoomIn } from '@tabler/icons-react';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseTheme, useArchbaseWillUnmount } from '../../components/hooks';
 import { isBase64 } from '../../components/validator';
-import i18next from 'i18next';
+import { t } from 'i18next';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
 
@@ -46,7 +46,11 @@ export interface ArchbaseAvatarEditProps<T, ID> {
     /** Desabilita conversão do conteúdo em base64 antes de salvar na fonte de dados */
     disabledBase64Convertion?: boolean;
     /** Cor de fundo de hover do avatar */
-    hoverBackgroundColor?: string
+    hoverBackgroundColor?: string;
+    /** Tamanho máximo da imagem em kilobytes */
+    maxSizeKB?: number;
+    /** Qualidade da compressão da imagem (0 a 1), sendo 1 melhor qualidade */
+    imageQuality?: number;
 }
 
 export function ArchbaseAvatarEdit<T, ID>({
@@ -68,6 +72,8 @@ export function ArchbaseAvatarEdit<T, ID>({
     innerRef,
     variant = 'transparent',
     hoverBackgroundColor = 'rgba(0, 0, 0, 0.6)',
+    maxSizeKB = 0, // 0 significa sem limite
+    imageQuality = 0.95,
     ...otherProps
 }: ArchbaseAvatarEditProps<T, ID>) {
     const [value, setValue] = useState<string | undefined>(undefined);
@@ -82,6 +88,7 @@ export function ArchbaseAvatarEdit<T, ID>({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const cropperRef = useRef<any>(null);
     const [internalError, setInternalError] = useState<string | undefined>(error);
+    const [cropError, setCropError] = useState<string>("");
     const forceUpdate = useForceUpdate();
     const theme = useArchbaseTheme()
     const [showControls, setShowControls] = useState(false);
@@ -226,6 +233,7 @@ export function ArchbaseAvatarEdit<T, ID>({
         imageSrc: string,
         pixelCrop: any,
         rotation = 0,
+        quality = imageQuality,
     ): Promise<string> {
         const image = await createImage(imageSrc);
         const canvas = document.createElement('canvas');
@@ -269,8 +277,8 @@ export function ArchbaseAvatarEdit<T, ID>({
         // Colocar os dados da imagem rotacionada de volta no canvas
         ctx.putImageData(data, -pixelCrop.x, - pixelCrop.y);
 
-        // Retornar como base64
-        return canvas.toDataURL('image/jpeg', 0.95);
+        // Retornar como base64 com a qualidade especificada
+        return canvas.toDataURL('image/jpeg', quality);
     }
 
     // Função auxiliar para calcular o tamanho do retângulo delimitador após rotação
@@ -287,17 +295,71 @@ export function ArchbaseAvatarEdit<T, ID>({
         if (!image || !croppedAreaPixels) return;
 
         try {
-            const croppedImage = await getCroppedImg(
-                image,
-                croppedAreaPixels,
-                rotation,
-            );
+            // Função para verificar o tamanho da imagem em KB
+            const getImageSizeInKB = (dataUrl: string): number => {
+                // Remove o cabeçalho da URL de dados
+                const base64String = dataUrl.split(',')[1];
+                // Calcula o tamanho em bytes e converte para KB
+                const sizeInBytes = window.atob(base64String).length;
+                return sizeInBytes / 1024;
+            };
 
-            handleChangeImage(croppedImage);
+            // Função para comprimir a imagem até atingir o tamanho desejado
+            const compressImage = async (
+                imgSrc: string,
+                pixelCrop: any,
+                rotation: number,
+                maxSize: number,
+                initialQuality = imageQuality
+            ): Promise<string> => {
+                let quality = initialQuality;
+                let compressedImage = await getCroppedImg(imgSrc, pixelCrop, rotation, quality);
+                let currentSize = getImageSizeInKB(compressedImage);
+
+                // Se não houver limite de tamanho ou já estiver abaixo do limite, retorna a imagem
+                if (maxSize <= 0 || currentSize <= maxSize) {
+                    return compressedImage;
+                }
+
+                // Tenta comprimir a imagem até 10 vezes, reduzindo a qualidade gradualmente
+                let attempts = 0;
+                const maxAttempts = 10;
+
+                while (currentSize > maxSize && attempts < maxAttempts) {
+                    // Reduz a qualidade com base no quão longe estamos do tamanho desejado
+                    const ratio = Math.min(maxSize / currentSize, 0.9);
+                    quality = quality * ratio;
+
+                    // Não permite que a qualidade fique muito baixa
+                    if (quality < 0.1) quality = 0.1;
+
+                    compressedImage = await getCroppedImg(imgSrc, pixelCrop, rotation, quality);
+                    currentSize = getImageSizeInKB(compressedImage);
+                    attempts++;
+                }
+
+                return compressedImage;
+            };
+
+            // Comprime a imagem se necessário
+            const processedImage = await compressImage(image, croppedAreaPixels, rotation, maxSizeKB);
+
+            // Mostra um aviso se não foi possível atingir o tamanho desejado
+            const finalSize = getImageSizeInKB(processedImage);
+            if (maxSizeKB > 0 && finalSize > maxSizeKB) {
+                setCropError(t('archbase:erro_avatar_crop', {
+                    imageSize: finalSize.toFixed(2),
+                    maxImageSize: maxSizeKB,
+                }))
+                return
+            }
+
+            handleChangeImage(processedImage);
             setModalOpen(false);
             setOriginalImage(undefined);
+            setCropError("")
         } catch (error) {
-            console.error("Error cropping the image: ", error);
+            setCropError(`Error cropping the image: ${error}`)
         }
     };
 
@@ -354,7 +416,7 @@ export function ArchbaseAvatarEdit<T, ID>({
                                     onMouseEnter={() => setShowControls(true)}
                                     onMouseLeave={() => setShowControls(false)}
                                 >
-                                    <Tooltip label={i18next.t('archbase:Edit')}>
+                                    <Tooltip label={t('archbase:Edit')}>
                                         <ActionIcon
                                             radius="xl"
                                             size="lg"
@@ -365,7 +427,7 @@ export function ArchbaseAvatarEdit<T, ID>({
                                             <IconEdit color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
                                         </ActionIcon>
                                     </Tooltip>
-                                    <Tooltip label={i18next.t('archbase:Remove')}>
+                                    <Tooltip label={t('archbase:Remove')}>
                                         <ActionIcon
                                             radius="xl"
                                             size="lg"
@@ -415,25 +477,34 @@ export function ArchbaseAvatarEdit<T, ID>({
                     onClose={handleCloseModal}
                     size="lg"
                 >
-                    <Box style={{ position: 'relative', height: 400, width: '100%' }}>
-                        {image && (
-                            <Cropper
-                                image={image}
-                                crop={crop}
-                                zoom={zoom}
-                                rotation={rotation}
-                                aspect={1}
-                                cropShape="round"
-                                showGrid={false}
-                                onCropChange={setCrop}
-                                onCropComplete={handleCropComplete}
-                                onZoomChange={setZoom}
-                                onRotationChange={setRotation}
-                                ref={cropperRef}
-                            />
+                    <Input.Wrapper
+                        error={cropError}
+                    >
+                        <Box style={{ position: 'relative', height: 400, width: '100%' }}>
+                            {image && (
+                                <Cropper
+                                    image={image}
+                                    crop={crop}
+                                    zoom={zoom}
+                                    rotation={rotation}
+                                    aspect={1}
+                                    cropShape="round"
+                                    showGrid={false}
+                                    onCropChange={setCrop}
+                                    onCropComplete={handleCropComplete}
+                                    onZoomChange={setZoom}
+                                    onRotationChange={setRotation}
+                                    ref={cropperRef}
+                                />
+                            )}
+                        </Box>
+                        <Space h={8} />
+                        {(maxSizeKB > 0 && !cropError) && (
+                            <Text fz={12} style={{ color: theme.colorScheme === 'dark' ? theme.colors.gray[5] : theme.colors.gray[6] }}>
+                                {t('archbase:Image max size')}: {maxSizeKB} KB
+                            </Text>
                         )}
-                    </Box>
-
+                    </Input.Wrapper>
                     <Stack gap="xs" mt="md">
                         <Group justify="space-between">
                             <Box style={{ flex: 1 }}>
@@ -454,7 +525,7 @@ export function ArchbaseAvatarEdit<T, ID>({
 
                         <Group justify="space-between">
                             <Box style={{ flex: 1 }}>
-                                <Tooltip label={i18next.t('archbase:Rotation')}>
+                                <Tooltip label={t('archbase:Rotation')}>
                                     <IconRotate size={20} />
                                 </Tooltip>
                                 <Slider
@@ -470,13 +541,15 @@ export function ArchbaseAvatarEdit<T, ID>({
                         </Group>
                     </Stack>
 
-                    <Group justify="flex-end" mt="md">
-                        <Button variant="outline" onClick={handleCloseModal}>
-                            {i18next.t('archbase:Cancel')}
-                        </Button>
-                        <Button onClick={handleSaveCrop}>
-                            {i18next.t('archbase:Apply')}
-                        </Button>
+                    <Group justify="space-between" mt="md">
+                        <Group>
+                            <Button variant="outline" onClick={handleCloseModal}>
+                                {t('archbase:Cancel')}
+                            </Button>
+                            <Button onClick={handleSaveCrop}>
+                                {t('archbase:Apply')}
+                            </Button>
+                        </Group>
                     </Group>
                 </Modal>
             </Input.Wrapper>

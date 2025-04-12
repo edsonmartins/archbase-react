@@ -522,5 +522,7 @@
   "Password": "Senha",
   "Código de segurança": "Código de segurança",
   "My Profile": "Meu Perfil",
-  "Rotation": "Rotação"
+  "Rotation": "Rotação",
+  "Image max size": "Tamanho máximo da imagem",
+  "erro_avatar_crop": "Tamanho da imagem {{imageSize}}KB excede o limite máximo ({{maxImageSize}}KB)."
 }
