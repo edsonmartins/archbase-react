@@ -27,7 +27,7 @@ export function ArchbaseGridRowActions<T extends Object>({
   const theme = useArchbaseTheme();
 
   return (
-    <Group gap="0" justify='center' align='center'>
+    <Group gap="2" justify='center' align='center'>
       {onViewRow ? (
         <Tooltip withinPortal withArrow position="top" label={t('View')}>
           <ActionIcon

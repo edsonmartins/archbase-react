@@ -766,7 +766,7 @@ export function ArchbaseSecurityView({
 	const renderUsersToolbarActions = () : ReactNode => {
 		return (
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
-				<Group align="end" gap={'2px'} wrap="nowrap">
+				<Group align="end" gap={'4px'} wrap="nowrap">
 					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddUserExecute}>
 						{t('archbase:New')}
 					</Button>
@@ -782,7 +782,7 @@ export function ArchbaseSecurityView({
 	const renderGroupsToolbarActions = () : ReactNode => {
 		return (
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
-				<Group align="end" gap={'2px'} wrap="nowrap">
+				<Group align="end" gap={'4px'} wrap="nowrap">
 					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddGroupExecute}>
 						{t('archbase:New')}
 					</Button>
@@ -798,7 +798,7 @@ export function ArchbaseSecurityView({
 	const renderProfilesToolbarActions = ()  : ReactNode => {
 		return (
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
-				<Group align="end" gap={'2px'} wrap='nowrap'>
+				<Group align="end" gap={'4px'} wrap='nowrap'>
 					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddProfileExecute}>
 						{t('archbase:New')}
 					</Button>
@@ -814,7 +814,7 @@ export function ArchbaseSecurityView({
 	const renderAccessTokensToolbarActions = () : ReactNode => {
 		return (
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
-				<Group align="start" gap={'2px'} wrap='nowrap'>
+				<Group align="start" gap={'4px'} wrap='nowrap'>
 					<Button
 						disabled={!dsAccessTokens.getCurrentRecord()}
 						color={'red'}

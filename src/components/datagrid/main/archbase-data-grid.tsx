@@ -386,6 +386,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   }
 
   const handlePaginationChange = (newPaginationModel: { page: number; pageSize: number }) => {
+		console.log('[PAGINATION] Mudou pagination model ',newPaginationModel.page, newPaginationModel.pageSize)
     // Garantir que o pageSize não exceda o limite
     const safePageSize = Math.min(newPaginationModel.pageSize, MAX_PAGE_SIZE_MIT)
 

@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { debounce } from 'lodash';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from 'components/datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, DataSourceOptions } from 'components/datasource';
 
 /**
- * Hook para estabilizar o comportamento da Grid e evitar perda de foco em inputs
- * ao interagir com a Grid.
+ * Hook para estabilizar o comportamento da Grid e evitar chamadas duplicadas à busca,
+ * além de preservar o foco em inputs durante interações.
  */
 export function useArchbaseDataGridStableRendering<T extends object, ID>({
   dataSource,
@@ -18,9 +18,16 @@ export function useArchbaseDataGridStableRendering<T extends object, ID>({
   const [totalRecords, setTotalRecords] = useState<number>(() => dataSource.getGrandTotalRecords());
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Ref para controlar operações em andamento e evitar loops
+  // Refs para controle de estado
   const blockUpdates = useRef<boolean>(false);
   const pendingUpdate = useRef<boolean>(false);
+  const refreshInProgress = useRef<boolean>(false);
+  const refreshTimestampRef = useRef<number>(0);
+  const lastRefreshRequestRef = useRef<number>(0);
+
+  // Um Map para rastrear quais eventos foram processados recentemente
+  // Chave: tipo de evento, Valor: timestamp
+  const processedEvents = useRef<Map<DataSourceEventNames, number>>(new Map());
 
   // Função debounce para atualizar os dados de forma eficiente
   const debouncedUpdateData = useRef(
@@ -30,41 +37,90 @@ export function useArchbaseDataGridStableRendering<T extends object, ID>({
         return;
       }
 
+      // Verificar se uma atualização já foi feita recentemente
+      const now = Date.now();
+      if (now - refreshTimestampRef.current < debounceTime) {
+        return;
+      }
+
       try {
-        // Atualizar os dados
         setRows(dataSource.browseRecords());
         setTotalRecords(dataSource.getGrandTotalRecords());
         setIsLoading(false);
+        refreshTimestampRef.current = now;
+        refreshInProgress.current = false;
       } catch (error) {
         console.error('Erro ao atualizar dados:', error);
         setIsLoading(false);
+        refreshInProgress.current = false;
       }
     }, debounceTime)
   ).current;
 
+  // Função para forçar atualização dos dados com proteção contra chamadas duplicadas
+  const refreshData = () => {
+    const now = Date.now();
+
+    // Verificar se uma requisição de refresh já foi feita recentemente
+    if (now - lastRefreshRequestRef.current < debounceTime || refreshInProgress.current) {
+      console.log('Ignorando refresh duplicado');
+      return;
+    }
+
+    lastRefreshRequestRef.current = now;
+    refreshInProgress.current = true;
+    setIsLoading(true);
+
+    // Usar uma referência para rastrear este refresh especificamente
+    const refreshId = now;
+    const eventKey = Symbol('refreshEvent');
+
+    // Armazenar o ID do refresh para verificação posterior
+    (window as any)[eventKey] = refreshId;
+
+    // Chamar refresh com um ID que podemos verificar
+    dataSource.refreshData();
+
+    // Limpar a referência após um tempo
+    setTimeout(() => {
+      delete (window as any)[eventKey];
+    }, debounceTime * 2);
+  };
+
   // Efeito para gerenciar eventos do DataSource
   useEffect(() => {
     const handleDataSourceEvent = (event: DataSourceEvent<T>) => {
-      // Eventos que causam atualização de dados
-      if ([
+      // Lista de eventos que causam atualização de dados
+      const dataUpdateEvents = [
         DataSourceEventNames.refreshData,
         DataSourceEventNames.dataChanged,
         DataSourceEventNames.afterRemove,
         DataSourceEventNames.afterSave,
         DataSourceEventNames.afterAppend,
         DataSourceEventNames.afterCancel
-      ].includes(event.type)) {
-        // Se um componente de input estiver com foco, adiar a atualização
-        if (document.activeElement &&
-            ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
-          // Marcar que há uma atualização pendente
-          pendingUpdate.current = true;
+      ];
 
-          // Não atualizar imediatamente para evitar perda de foco
+      if (dataUpdateEvents.includes(event.type)) {
+        const now = Date.now();
+        const lastProcessed = processedEvents.current.get(event.type) || 0;
+
+        // Verificar se processamos este tipo de evento recentemente
+        if (now - lastProcessed < debounceTime) {
+          console.log(`Ignorando evento ${DataSourceEventNames[event.type]} próximo demais ao anterior`);
           return;
         }
 
-        // Caso contrário, atualizar normalmente com debounce
+        // Marcar este evento como processado
+        processedEvents.current.set(event.type, now);
+
+        // Se um componente de input estiver com foco, adiar a atualização
+        if (document.activeElement &&
+            ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+          pendingUpdate.current = true;
+          return;
+        }
+
+        // Atualizar com debounce para coalescer múltiplos eventos
         debouncedUpdateData();
       }
     };
@@ -72,7 +128,7 @@ export function useArchbaseDataGridStableRendering<T extends object, ID>({
     // Adicionar listener ao dataSource
     dataSource.addListener(handleDataSourceEvent);
 
-    // Verificar se há foco em um input e aplicar eventos de monitoramento
+    // Gerenciamento de foco para preservar experiência de usuário
     const handleFocusIn = () => {
       const activeElement = document.activeElement;
       if (activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(activeElement.tagName)) {
@@ -83,14 +139,13 @@ export function useArchbaseDataGridStableRendering<T extends object, ID>({
     const handleFocusOut = () => {
       blockUpdates.current = false;
 
-      // Se houve uma atualização pendente enquanto o input estava em foco, aplicá-la agora
+      // Aplicar atualizações pendentes após perder o foco
       if (pendingUpdate.current) {
         pendingUpdate.current = false;
         debouncedUpdateData();
       }
     };
 
-    // Tratamento para evitar perda de foco durante digitação
     document.addEventListener('focusin', handleFocusIn);
     document.addEventListener('focusout', handleFocusOut);
 
@@ -101,13 +156,7 @@ export function useArchbaseDataGridStableRendering<T extends object, ID>({
       document.removeEventListener('focusin', handleFocusIn);
       document.removeEventListener('focusout', handleFocusOut);
     };
-  }, [dataSource, debouncedUpdateData]);
-
-  // Função para forçar atualização dos dados
-  const refreshData = () => {
-    setIsLoading(true);
-    dataSource.refreshData();
-  };
+  }, [dataSource, debouncedUpdateData, debounceTime]);
 
   return {
     rows,
