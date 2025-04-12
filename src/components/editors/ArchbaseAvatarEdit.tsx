@@ -72,6 +72,7 @@ export function ArchbaseAvatarEdit<T, ID>({
 }: ArchbaseAvatarEditProps<T, ID>) {
     const [value, setValue] = useState<string | undefined>(undefined);
     const [image, setImage] = useState<string | undefined>(undefined);
+    const [originalImage, setOriginalImage] = useState<string | undefined>(undefined);
     const [modalOpen, setModalOpen] = useState(false);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(initialZoom);
@@ -183,6 +184,7 @@ export function ArchbaseAvatarEdit<T, ID>({
             const file = e.target.files[0];
             const reader = new FileReader();
             reader.onload = () => {
+                setOriginalImage(image);
                 setImage(reader.result as string);
                 setModalOpen(true);
                 setCrop({ x: 0, y: 0 });
@@ -203,6 +205,11 @@ export function ArchbaseAvatarEdit<T, ID>({
 
     const handleCropComplete = (croppedArea: any, croppedAreaPixelsData: any) => {
         setCroppedAreaPixels(croppedAreaPixelsData);
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+        setImage(originalImage);
     };
 
     // Função para criar uma imagem a partir de URL
@@ -288,6 +295,7 @@ export function ArchbaseAvatarEdit<T, ID>({
 
             handleChangeImage(croppedImage);
             setModalOpen(false);
+            setOriginalImage(undefined);
         } catch (error) {
             console.error("Error cropping the image: ", error);
         }
@@ -404,7 +412,7 @@ export function ArchbaseAvatarEdit<T, ID>({
 
                 <Modal
                     opened={modalOpen}
-                    onClose={() => setModalOpen(false)}
+                    onClose={handleCloseModal}
                     size="lg"
                 >
                     <Box style={{ position: 'relative', height: 400, width: '100%' }}>
@@ -463,7 +471,7 @@ export function ArchbaseAvatarEdit<T, ID>({
                     </Stack>
 
                     <Group justify="flex-end" mt="md">
-                        <Button variant="outline" onClick={() => setModalOpen(false)}>
+                        <Button variant="outline" onClick={handleCloseModal}>
                             {i18next.t('archbase:Cancel')}
                         </Button>
                         <Button onClick={handleSaveCrop}>
