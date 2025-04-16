@@ -40,6 +40,9 @@ export interface UserModalOptions {
   avatarMaxSizeKB?: number;
   /** Qualidade da compressão da imagem do avatar (0 a 1), sendo 1 melhor qualidade */
   avatarImageQuality?: number;
+
+  /** Configuração de permissão de edição de campos */
+  allowEditEmail?: boolean;
 }
 
 export const defaultUserModalOptions: UserModalOptions = {
@@ -65,7 +68,9 @@ export const defaultUserModalOptions: UserModalOptions = {
   requiredNickname: true,
 
   avatarMaxSizeKB: 2000,
-  avatarImageQuality: 1
+  avatarImageQuality: 1,
+
+  allowEditEmail: true,
 }
 
 export interface UserModalProps {
@@ -171,6 +176,7 @@ export const UserModal = (props: UserModalProps) => {
               dataSource={props.dataSource}
               onChangeValue={(value) => props.dataSource.setFieldValue("userName", value)}
               dataField="email"
+              readOnly={props.dataSource.isEditing() ? !options.allowEditEmail : false}
               required
             />
           </Grid.Col>
