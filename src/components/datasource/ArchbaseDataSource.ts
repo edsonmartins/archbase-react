@@ -787,7 +787,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
 		this.grandTotalRecords++;
 		const nextRecordIndex = this.getTotalRecords();
-		this.filteredRecords.push(record);
+		this.filteredRecords = [...this.filteredRecords, record];
 		this.currentRecordIndex = nextRecordIndex;
 		this.currentRecord = record;
 		this.inserting = true;
