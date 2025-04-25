@@ -13,6 +13,7 @@ import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAliveAbleRoutes';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
+import { useArchbaseNavigateParams } from 'components/hooks';
 
 export interface ArchbaseAdminMainLayoutSecurityOptions {
 	navigationResourceDescription: string
@@ -117,7 +118,7 @@ function ArchbaseAdminMainLayoutContainer({
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
 	const { colorScheme } = useMantineColorScheme();
-	const navigate = useNavigate();
+	const navigate = useArchbaseNavigateParams()
 	const [sidebarRef, sidebarVisible] = useArchbaseVisible<HTMLHtmlElement, boolean>();
 
 	const isHidden = useMediaQuery(
@@ -126,7 +127,11 @@ function ArchbaseAdminMainLayoutContainer({
 
 	const onMenuItemClick = (item: ArchbaseNavigationItem) => {
 		if (item.link) {
-			navigate(item.link);
+			if (item.routeParams) {
+				navigate(item.link, {}, item.routeParams);
+			} else {
+				navigate(item.link);
+			}
 		}
 	};
 
@@ -229,7 +234,7 @@ function ArchbaseAdminMainLayoutContainer({
 			</AppShell.Header>
 			<AppShell.Navbar>
 				{!isHidden && showSideBar ? (
-					customRenderSidebar ? customRenderSidebar({width: sideBarWidth, height: getSideBarHeight(), isHidden}) :
+					customRenderSidebar ? customRenderSidebar({ width: sideBarWidth, height: getSideBarHeight(), isHidden }) :
 						<ArchbaseAdvancedSidebar
 							navigationData={adminLayoutContextValue.navigationData}
 							sidebarHeight={getSideBarHeight()}
@@ -303,7 +308,7 @@ function ArchbaseAdminMainLayoutContainer({
 						}}
 					>
 						{
-							customRenderSidebar ? customRenderSidebar({width: sideBarWidth, height: getSideBarDrawerHeight(), isHidden}) :
+							customRenderSidebar ? customRenderSidebar({ width: sideBarWidth, height: getSideBarDrawerHeight(), isHidden }) :
 								<ArchbaseAdvancedSidebar
 									navigationData={adminLayoutContextValue.navigationData}
 									sidebarWidth={sideBarWidth}

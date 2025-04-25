@@ -253,11 +253,6 @@ export function ArchbaseSelect<T, ID, O>({
   const [internalError, setInternalError] = useState<string | undefined>(error)
   const [updateCounter, setUpdateCounter] = useState(0)
   const sRef = useRef<any>()
-  const [internalReadOnly, setReadOnly] = useUncontrolled<boolean>({
-    value: readOnly,
-    defaultValue: readOnly,
-    finalValue: false,
-  });
   const [currentLimit, setCurrentLimit] = useState(limit);
 
   const currentOptions: any[] = useMemo(() => {
@@ -430,13 +425,13 @@ export function ArchbaseSelect<T, ID, O>({
     loadDataSourceFieldValue()
   }, [])
 
-  useEffect(() => {
-    let tmpRreadOnly = readOnly
-    if (dataSource && !readOnly) {
-      tmpRreadOnly = dataSource.isBrowsing()
-    }
-    setReadOnly(tmpRreadOnly)
-  }, [dataSource?.isBrowsing()])
+  const isReadOnly = () => {
+		let tmpReadOnly = readOnly;
+		if (dataSource && !readOnly) {
+			tmpReadOnly = dataSource.isBrowsing();
+		}
+		return tmpReadOnly;
+	};
 
   return (
     <Select
@@ -458,7 +453,7 @@ export function ArchbaseSelect<T, ID, O>({
       leftSection={icon}
       width={width}
       leftSectionWidth={iconWidth}
-      readOnly={internalReadOnly}
+      readOnly={isReadOnly()}
       required={required}
       onChange={(value, option) => handleChange(value, option as SelectItem)}
       onClick={onClick}

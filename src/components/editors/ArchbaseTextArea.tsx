@@ -165,10 +165,18 @@ export function ArchbaseTextArea<T, ID>({
 		}
 	};
 
+	const isReadOnly = () => {
+		let tmpReadOnly = readOnly;
+		if (dataSource && !readOnly) {
+			tmpReadOnly = dataSource.isBrowsing();
+		}
+		return tmpReadOnly;
+	};
+
 	return (
 		<Textarea
 			disabled={disabled}
-			readOnly={readOnly}
+			readOnly={isReadOnly()}
 			style={style}
 			value={value}
 			ref={innerRef || innerComponentRef}

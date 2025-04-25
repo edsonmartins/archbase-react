@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { URLSearchParamsInit } from 'react-router-dom';
 
 export type ArchbaseNavigationGroup = {
 	label: string;
@@ -12,6 +13,7 @@ export type ArchbaseNavigationItem = {
 	label: string;
 	icon: any;
 	link?: string | undefined;
+	routeParams?: URLSearchParamsInit;
 	initiallyOpened?: boolean;
 	links?: ArchbaseNavigationItem[];
 	category: string | undefined | null;
