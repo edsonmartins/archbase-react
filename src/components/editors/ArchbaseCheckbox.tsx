@@ -130,7 +130,8 @@ export function ArchbaseCheckbox<T, ID>({
 		loadDataSourceFieldValue();
 	}, []);
 
-	const handleChange = (event) => {
+	const handleChange = (event, isReadOnly) => {
+		if (isReadOnly) return
 		const changedChecked = event.target.checked;
 		const resultValue = changedChecked ? trueValue : falseValue;
 
@@ -168,13 +169,12 @@ export function ArchbaseCheckbox<T, ID>({
 	return (
 		<Checkbox
 			disabled={disabled}
-			readOnly={isReadOnly()}
 			required={required}
 			style={{ ...style, width }}
 			checked={checked}
 			ref={innerRef || innerComponentRef}
 			value={checked ? trueValue : falseValue}
-			onChange={handleChange}
+			onChange={(event) => handleChange(event, isReadOnly())}
 			onBlur={handleOnFocusExit}
 			onFocus={handleOnFocusEnter}
 			description={description}
