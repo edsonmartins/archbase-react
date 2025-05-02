@@ -581,6 +581,10 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
             theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
           padding: theme.spacing.md,
           width: '100%'
+        },
+        
+        '& .MuiDataGrid-virtualScroller': {
+          paddingBottom: '14px !important'
         }
       }
     }
@@ -1084,7 +1088,6 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
           onFilterModelChange={handleFilterModelChange}
           rowHeight={rowHeight}
           checkboxSelection={enableRowSelection}
-          autoHeight={false}
           rowSelectionModel={rowSelection}
           columnVisibilityModel={columnVisibilityModel}
           onRowSelectionModelChange={handleSelectionModelChange}

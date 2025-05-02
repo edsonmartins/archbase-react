@@ -356,7 +356,9 @@ export function ArchbaseSecurityView({
 						src={data.row.avatar ? atob(data.row.avatar) : NO_USER}
 					/>
 				)}
-				inputFilterType="text"
+				enableSorting={false}
+				enableColumnFilter={false}
+				enableGlobalFilter={false}
 				align="center"
 			/>
 			<ArchbaseDataGridColumn<UserDto>
@@ -394,7 +396,9 @@ export function ArchbaseSecurityView({
 				size={300}
 				header={t('archbase:Grupos')}
 				render={(data) => renderGroups(data.row)}
-				inputFilterType="text"
+				enableSorting={false}
+				enableColumnFilter={false}
+				enableGlobalFilter={false}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="isAdministrator"
