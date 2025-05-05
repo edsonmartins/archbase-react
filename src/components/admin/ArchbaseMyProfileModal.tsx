@@ -60,7 +60,9 @@ export function ArchbaseMyProfileModal({ opened, handleClose, userId, updateUser
         validator,
         id: userId,
         onLoadComplete: (dataSource) => {
-            dataSource.edit()
+            if (dataSource.isBrowsing()) {
+                dataSource.edit()
+            }
             forceUpdate()
         },
         onDestroy: (_dataSource) => {
