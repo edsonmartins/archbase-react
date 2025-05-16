@@ -2,6 +2,11 @@ import { v4 as uuidv4 } from 'uuid'
 import { SecurityType } from './SecurityType';
 import { IsBoolean, IsEmail, IsNotEmpty, IsOptional } from '@components/validator';
 
+export enum TipoRecurso {
+  VIEW = 'VIEW',
+  API = 'API'
+}
+
 export class AccessScheduleDto {
   id: string;
   code: string;
@@ -271,6 +276,8 @@ export class ResourceDto {
   @IsBoolean()
   active: boolean
 
+  type: TipoRecurso
+
   isNewResource: boolean
 
   constructor(data: any) {
@@ -285,6 +292,7 @@ export class ResourceDto {
     this.description = data.description || ''
     this.actions = data.actions || []
     this.active = data.active || false
+    this.type = data.type || TipoRecurso.VIEW
     this.isNewResource = data.isNewResource || false
   }
 
