@@ -13,6 +13,7 @@ export interface AuthenticationManagerReturnType {
   logout: () => void
   username: string
   isAuthenticating: boolean
+  isInitializing: boolean
   isAuthenticated: boolean
   isError: boolean
   error: any
@@ -37,6 +38,7 @@ export const useArchbaseAuthenticationManager = ({
   )
   const [accessToken, setAccessToken] = useState<ArchbaseAccessToken | null>(null)
   const [isAuthenticating, setAuthenticating] = useState<boolean>(false)
+  const [isInitializing, setIsInitializing] = useState<boolean>(true)
   const [isAuthenticated, setAuthenticated] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
@@ -44,19 +46,18 @@ export const useArchbaseAuthenticationManager = ({
   const securityStore = useArchbaseStore(ARCHBASE_SECURITY_MANAGER_STORE)
 
   useEffect(() => {
-    setAuthenticating(true)
     const savedUsername = tokenManager.getUsername();
     if (savedUsername && savedUsername != '') {
       setUsername(savedUsername)
     }
     const token = tokenManager.getToken()
     if (token) {
-      setAuthenticating(false)
       setAuthenticated(true)
       setError('')
       setIsError(false)
       setAccessToken(token)
     }
+    setIsInitializing(false)
   }, [])
 
   const clearError = () => {
@@ -130,6 +131,7 @@ export const useArchbaseAuthenticationManager = ({
     username,
     isAuthenticated,
     isAuthenticating,
+    isInitializing,
     isError,
     error,
     clearError,
