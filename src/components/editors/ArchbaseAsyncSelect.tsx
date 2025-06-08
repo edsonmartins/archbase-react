@@ -467,11 +467,14 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 		  <ComboboxDropdown>
 			<Combobox.Options>
 			  <CustomSelectScrollArea mah={280}>
-				{filteredOptions.slice(0, limit ? limit : filteredOptions.length).map((option) => (
-				  <Combobox.Option value={option.value} key={option.key}>
-					{ItemComponent ? <ItemComponent {...option} /> : option.label}
-				  </Combobox.Option>
-				))}
+				{filteredOptions.slice(0, limit ? limit : filteredOptions.length).map((option) => {
+					const {key, ...rest} = option
+					return (
+					<Combobox.Option value={option.value} key={option.key}>
+						{ItemComponent ? <ItemComponent {...rest} /> : option.label}
+					</Combobox.Option>
+					)
+				})}
 			  </CustomSelectScrollArea>
 			</Combobox.Options>
 		  </ComboboxDropdown>
