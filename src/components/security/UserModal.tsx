@@ -125,7 +125,7 @@ export const UserModal = (props: UserModalProps) => {
       title={t('archbase:Usuário')}
       size="80%"
       height={'540px'}
-      styles={{content: {maxWidth: 1000}}}
+      styles={{ content: { maxWidth: 1000 } }}
       dataSource={props.dataSource}
       opened={props.opened}
       onClickOk={props.onClickOk}
@@ -221,7 +221,7 @@ export const UserModal = (props: UserModalProps) => {
 
           <Grid>
             <Grid.Col span={{ base: 12 }}>
-              {options.showAccountConfigLabel && (<Text fz={14}>Informe</Text>)}
+              {options.showAccountConfigLabel && (<Text fz={14} fw={500}>Informe</Text>)}
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
               <Stack gap={'lg'}>
@@ -301,32 +301,36 @@ export const UserModal = (props: UserModalProps) => {
           </Grid>
 
           {options.showGroups && (
-            <>
-              <Space h={'12px'} />
-              <ArchbaseDualListSelector<GroupDto, UserGroupDto>
-                titleAvailable={t('archbase:Disponíveis')}
-                titleAssigned={t('archbase:Selecionados')}
-                assignedItemsDS={
-                  new ArchbaseDataSource('dsDualList', {
-                    records: props.dataSource.getFieldValue('groups'),
-                    grandTotalRecords: props.dataSource.getFieldValue('groups').length,
-                    currentPage: 0,
-                    totalPages: 0,
-                    pageSize: 999999
-                  })
-                }
-                width="100%"
-                height="200px"
-                availableItemsDS={dsGroups}
-                handleCreateAssociationObject={(group: GroupDto) => {
-                  return UserGroupDto.newInstance(group)
-                }}
-                idFieldAssigned={(item: UserGroupDto) => (item && item.group ? item.group.id : '')}
-                idFieldAvailable={'id'}
-                labelFieldAssigned={(item: UserGroupDto) => (item && item.group ? item.group.name : '')}
-                labelFieldAvailable={'name'}
-              />
-            </>
+            <Grid>
+              <Grid.Col span={{ base: 12 }}>
+                <Text fz={14} fw={500}>Grupos</Text>
+              </Grid.Col>
+              <Grid.Col span={{ base: 12 }}>
+                <ArchbaseDualListSelector<GroupDto, UserGroupDto>
+                  titleAvailable={t('archbase:Disponíveis')}
+                  titleAssigned={t('archbase:Selecionados')}
+                  assignedItemsDS={
+                    new ArchbaseDataSource('dsDualList', {
+                      records: props.dataSource.getFieldValue('groups'),
+                      grandTotalRecords: props.dataSource.getFieldValue('groups').length,
+                      currentPage: 0,
+                      totalPages: 0,
+                      pageSize: 999999
+                    })
+                  }
+                  width="100%"
+                  height="200px"
+                  availableItemsDS={dsGroups}
+                  handleCreateAssociationObject={(group: GroupDto) => {
+                    return UserGroupDto.newInstance(group)
+                  }}
+                  idFieldAssigned={(item: UserGroupDto) => (item && item.group ? item.group.id : '')}
+                  idFieldAvailable={'id'}
+                  labelFieldAssigned={(item: UserGroupDto) => (item && item.group ? item.group.name : '')}
+                  labelFieldAvailable={'name'}
+                />
+              </Grid.Col>
+            </Grid>
           )}
           {options?.customContentAfter && (
             <>
