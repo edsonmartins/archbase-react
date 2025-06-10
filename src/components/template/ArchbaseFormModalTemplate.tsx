@@ -56,6 +56,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 	onError,
 	autoCloseAlertError = 15000,
 	loadingOverlayStyles,
+	...rest
 }: ArchbaseFormModalTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
 	const theme = useArchbaseTheme();
@@ -174,6 +175,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 			centered={centered}
 			closeOnEscape={closeOnEscape}
 			size={size}
+			{...rest}
 		>
 			<LoadingOverlay styles={loadingOverlayStyles} visible={isLoading} opacity={0.8} />
 			<ArchbaseSpaceFixed height={height}>
