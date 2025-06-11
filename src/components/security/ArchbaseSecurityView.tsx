@@ -36,9 +36,9 @@ import { ArchbaseGroupService } from './ArchbaseGroupService';
 import { ArchbaseProfileService } from './ArchbaseProfileService';
 import { ArchbaseResourceService } from './ArchbaseResourceService';
 import { ArchbaseUserService } from './ArchbaseUserService';
-import { GroupModal } from './GroupModal';
+import { GroupModal, GroupModalOptions } from './GroupModal';
 import { PermissionsSelectorModal } from './PermissionsSelectorModal';
-import { ProfileModal } from './ProfileModal';
+import { ProfileModal, ProfileModalOptions } from './ProfileModal';
 import { AccessTokenDto, GroupDto, ProfileDto, ResourceDto, UserDto } from './SecurityDomain';
 import { SecurityType } from './SecurityType';
 import { UserModal, UserModalOptions } from './UserModal';
@@ -50,6 +50,8 @@ interface ArchbaseSecurityManagerProps {
 	dataSourceUsers?: ArchbaseDataSource<UserDto, string>;
 	createEntitiesWithId?: boolean;
 	userModalOptions?: UserModalOptions;
+	groupModalOptions?: GroupModalOptions;
+	profileModalOptions?: ProfileModalOptions;
 }
 
 export const NO_USER =
@@ -138,6 +140,8 @@ export function ArchbaseSecurityView({
 	width = '100%',
 	createEntitiesWithId = true,
 	userModalOptions,
+	profileModalOptions,
+	groupModalOptions,
 }: ArchbaseSecurityManagerProps) {
 	const theme = useArchbaseTheme();
 	const templateStore = useArchbaseStore('securityStore');
@@ -997,6 +1001,7 @@ export function ArchbaseSecurityView({
 					opened={true}
 					dataSource={dsGroups}
 					onClickCancel={handleCloseGroupModal}
+					options={groupModalOptions}
 				/>
 			) : null}
 			{openedModal === SecurityType.PROFILE ? (
@@ -1005,6 +1010,7 @@ export function ArchbaseSecurityView({
 					opened={true}
 					dataSource={dsProfiles}
 					onClickCancel={handleCloseProfileModal}
+					options={profileModalOptions}
 				/>
 			) : null}
 			{openedPermissionsModal === SecurityType.USER?

@@ -10,9 +10,10 @@ import { ARCHBASE_SECURITY_MANAGER_STORE } from './useArchbaseSecurityManager'
 
 export interface AuthenticationManagerReturnType {
   login: (username: string, password: string, rememberMe: boolean) => void
-  logout: ()=>void
+  logout: () => void
   username: string
   isAuthenticating: boolean
+  isInitializing: boolean
   isAuthenticated: boolean
   isError: boolean
   error: any
@@ -28,7 +29,7 @@ export interface ArchbaseAuthenticationManagerProps {
 export const useArchbaseAuthenticationManager = ({
   checkIntervalTokenHasExpired = 30000, // Verificar a 30 segundos
   expirationThresholdOfToken = 300 // Antecipar em 5 minutos
-} : ArchbaseAuthenticationManagerProps): AuthenticationManagerReturnType => {
+}: ArchbaseAuthenticationManagerProps): AuthenticationManagerReturnType => {
   const tokenManager = useContainer((container) =>
     container.get<ArchbaseTokenManager>(ARCHBASE_IOC_API_TYPE.TokenManager)
   )
@@ -37,6 +38,7 @@ export const useArchbaseAuthenticationManager = ({
   )
   const [accessToken, setAccessToken] = useState<ArchbaseAccessToken | null>(null)
   const [isAuthenticating, setAuthenticating] = useState<boolean>(false)
+  const [isInitializing, setIsInitializing] = useState<boolean>(true)
   const [isAuthenticated, setAuthenticated] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
@@ -50,12 +52,12 @@ export const useArchbaseAuthenticationManager = ({
     }
     const token = tokenManager.getToken()
     if (token) {
-      setAuthenticating(false)
       setAuthenticated(true)
       setError('')
       setIsError(false)
       setAccessToken(token)
     }
+    setIsInitializing(false)
   }, [])
 
   const clearError = () => {
@@ -80,7 +82,7 @@ export const useArchbaseAuthenticationManager = ({
       setAuthenticated(false)
       const access_token = await authenticator.login(username, password)
       tokenManager.saveToken(access_token)
-      if (rememberMe){
+      if (rememberMe) {
         tokenManager.saveUsernameAndPassword(username, password)
       }
       tokenManager.saveUsername(username)
@@ -103,7 +105,7 @@ export const useArchbaseAuthenticationManager = ({
           renovarToken()
         }
       }
-    }, checkIntervalTokenHasExpired) 
+    }, checkIntervalTokenHasExpired)
 
     return () => {
       clearInterval(checkTokenExpirationInterval)
@@ -129,6 +131,7 @@ export const useArchbaseAuthenticationManager = ({
     username,
     isAuthenticated,
     isAuthenticating,
+    isInitializing,
     isError,
     error,
     clearError,
