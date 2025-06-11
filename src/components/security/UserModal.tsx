@@ -44,9 +44,9 @@ export interface UserModalOptions {
   /** Configuração de permissão de edição de campos */
   allowEditEmail?: boolean;
 
-  customContentBefore?: React.ReactNode;
+  customContentBefore?: (user: UserDto) => React.ReactNode
 
-  customContentAfter?: React.ReactNode;
+  customContentAfter?: (user: UserDto) => React.ReactNode
 }
 
 export const defaultUserModalOptions: UserModalOptions = {
@@ -142,9 +142,9 @@ export const UserModal = (props: UserModalProps) => {
     >
       <ScrollArea ref={focusTrapRef} style={{ height: '500px' }}>
         <Stack w={"98%"}>
-          {options?.customContentBefore && (
+          {options?.customContentBefore && props?.dataSource?.getCurrentRecord() && (
             <>
-              {options.customContentBefore}
+              {options.customContentBefore(props.dataSource.getCurrentRecord())}
             </>
           )}
           <Grid>
@@ -332,9 +332,9 @@ export const UserModal = (props: UserModalProps) => {
               </Grid.Col>
             </Grid>
           )}
-          {options?.customContentAfter && (
+          {options?.customContentAfter && props?.dataSource?.getCurrentRecord() && (
             <>
-              {options.customContentAfter}
+              {options.customContentAfter(props.dataSource.getCurrentRecord())}
             </>
           )}
           <Space h={'12px'} />

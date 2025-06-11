@@ -8,9 +8,9 @@ import { ProfileDto } from './SecurityDomain'
 import { ArchbaseEdit } from '@components/editors'
 
 export interface ProfileModalOptions {
-  customContentBefore?: React.ReactNode;
-
-  customContentAfter?: React.ReactNode;
+  customContentBefore?: (profile: ProfileDto) => React.ReactNode
+  
+  customContentAfter?: (profile: ProfileDto) => React.ReactNode
 }
 
 export interface ProfileModalProps {
@@ -20,8 +20,6 @@ export interface ProfileModalProps {
   onClickCancel: (record?: ProfileDto) => void
   onCustomSave?: (record?: ProfileDto, callback?: Function) => void
   onAfterSave?: (record?: ProfileDto) => void
-  customContentBefore?: React.ReactNode
-  customContentAfter?: React.ReactNode
   options?: ProfileModalOptions
 }
 
@@ -43,9 +41,9 @@ export const ProfileModal = (props: ProfileModalProps) => {
     >
       <ScrollArea ref={focusTrapRef} style={{ height: '460px' }}>
         <Stack w={"98%"}>
-          {options?.customContentBefore && (
+          {options?.customContentBefore && props?.dataSource?.getCurrentRecord() && (
             <>
-              {options.customContentBefore}
+              {options.customContentBefore(props.dataSource.getCurrentRecord())}
             </>
           )}
           <Grid ref={focusTrapRef}>
@@ -66,9 +64,9 @@ export const ProfileModal = (props: ProfileModalProps) => {
               />
             </Grid.Col>
           </Grid>
-          {options?.customContentAfter && (
+          {options?.customContentAfter && props?.dataSource?.getCurrentRecord() && (
             <>
-              {options.customContentAfter}
+              {options.customContentAfter(props.dataSource.getCurrentRecord())}
             </>
           )}
         </Stack>
