@@ -43,6 +43,7 @@ import { AccessTokenDto, GroupDto, ProfileDto, ResourceDto, UserDto } from './Se
 import { SecurityType } from './SecurityType';
 import { UserModal, UserModalOptions } from './UserModal';
 import { IconEye } from '@tabler/icons-react';
+import { useForceUpdate } from '@mantine/hooks';
 
 interface ArchbaseSecurityManagerProps {
 	height?: any;
@@ -65,12 +66,12 @@ const renderGroups = (user: UserDto) => {
 		<div style={{ display: 'flex' }}>
 			{user.groups
 				? user.groups.map((item, index) => {
-						return (
-							<div key={index} style={{ paddingRight: '2px' }}>
-								<Badge color="blue">{item.group?.name}</Badge>
-							</div>
-						);
-				  })
+					return (
+						<div key={index} style={{ paddingRight: '2px' }}>
+							<Badge color="blue">{item.group?.name}</Badge>
+						</div>
+					);
+				})
 				: null}
 		</div>
 	);
@@ -83,7 +84,7 @@ const renderProfile = (user: UserDto) => {
 	return <Badge color="green">{user.profile?.name}</Badge>;
 };
 
-export interface UserItemProps extends ArchbaseListCustomItemProps<UserDto, string> {}
+export interface UserItemProps extends ArchbaseListCustomItemProps<UserDto, string> { }
 
 export const UserItem = (props: UserItemProps) => {
 	const theme = useArchbaseTheme();
@@ -156,6 +157,7 @@ export function ArchbaseSecurityView({
 	const [openedModal, setOpenedModal] = useState<string>('');
 	const [openedPermissionsModal, setOpenedPermissionsModal] = useState<string>('');
 	const accessTokenApi = useArchbaseRemoteServiceApi<ArchbaseAccessTokenService>(ARCHBASE_IOC_API_TYPE.AccessToken);
+	const forceUpdate = useForceUpdate()
 
 	// Referências para os grids
 	const usersGridRef = useRef<ArchbaseDataGridRef | null>(null);
@@ -216,6 +218,7 @@ export function ArchbaseSecurityView({
 		validator,
 		pageSize: 25,
 		loadOnStart: true,
+		sort: ['name:asc'],
 		onLoadComplete: (dataSource) => {
 			//
 		},
@@ -548,7 +551,7 @@ export function ArchbaseSecurityView({
 					() => {
 						dsUsers.remove();
 					},
-					() => {},
+					() => { },
 				);
 			}
 		}
@@ -613,7 +616,7 @@ export function ArchbaseSecurityView({
 					() => {
 						dsGroups.remove();
 					},
-					() => {},
+					() => { },
 				);
 			}
 		}
@@ -690,7 +693,7 @@ export function ArchbaseSecurityView({
 					() => {
 						dsProfiles.remove();
 					},
-					() => {},
+					() => { },
 				);
 			}
 		}
@@ -749,7 +752,7 @@ export function ArchbaseSecurityView({
 							);
 						});
 				},
-				() => {},
+				() => { },
 			);
 		}
 	};
@@ -771,7 +774,7 @@ export function ArchbaseSecurityView({
 	};
 
 	// Componentes de ações da barra de ferramentas para cada grid
-	const renderUsersToolbarActions = () : ReactNode => {
+	const renderUsersToolbarActions = (): ReactNode => {
 		return (
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
 				<Group align="end" gap={'4px'} wrap="nowrap">
@@ -787,7 +790,7 @@ export function ArchbaseSecurityView({
 		);
 	};
 
-	const renderGroupsToolbarActions = () : ReactNode => {
+	const renderGroupsToolbarActions = (): ReactNode => {
 		return (
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
 				<Group align="end" gap={'4px'} wrap="nowrap">
@@ -803,7 +806,7 @@ export function ArchbaseSecurityView({
 		);
 	};
 
-	const renderProfilesToolbarActions = ()  : ReactNode => {
+	const renderProfilesToolbarActions = (): ReactNode => {
 		return (
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
 				<Group align="end" gap={'4px'} wrap='nowrap'>
@@ -819,7 +822,7 @@ export function ArchbaseSecurityView({
 		);
 	};
 
-	const renderAccessTokensToolbarActions = () : ReactNode => {
+	const renderAccessTokensToolbarActions = (): ReactNode => {
 		return (
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
 				<Group align="start" gap={'4px'} wrap='nowrap'>
@@ -992,6 +995,10 @@ export function ArchbaseSecurityView({
 					opened={true}
 					dataSource={dsUsers}
 					onClickCancel={handleCloseUserModal}
+					onAfterSave={() => {
+						const options = dsUsers.getOptions()
+						dsUsers.refreshData(options)
+					}}
 					options={userModalOptions}
 				/>
 			) : null}
@@ -1001,6 +1008,10 @@ export function ArchbaseSecurityView({
 					opened={true}
 					dataSource={dsGroups}
 					onClickCancel={handleCloseGroupModal}
+					onAfterSave={() => {
+						const options = dsGroups.getOptions()
+						dsGroups.refreshData(options)
+					}}
 					options={groupModalOptions}
 				/>
 			) : null}
@@ -1010,27 +1021,31 @@ export function ArchbaseSecurityView({
 					opened={true}
 					dataSource={dsProfiles}
 					onClickCancel={handleCloseProfileModal}
+					onAfterSave={() => {
+						const options = dsProfiles.getOptions()
+						dsProfiles.refreshData(options)
+					}}
 					options={profileModalOptions}
 				/>
 			) : null}
-			{openedPermissionsModal === SecurityType.USER?
-			<PermissionsSelectorModal
-				dataSource={dsUsers}
-				opened={!!openedPermissionsModal}
-				close={handleClosePermissionsModal}
-			/>:null}
-			{openedPermissionsModal === SecurityType.GROUP?
-			<PermissionsSelectorModal
-				dataSource={dsGroups}
-				opened={!!openedPermissionsModal}
-				close={handleClosePermissionsModal}
-			/>:null}
-			{openedPermissionsModal === SecurityType.PROFILE?
-			<PermissionsSelectorModal
-				dataSource={dsProfiles}
-				opened={!!openedPermissionsModal}
-				close={handleClosePermissionsModal}
-			/>:null}
+			{openedPermissionsModal === SecurityType.USER ?
+				<PermissionsSelectorModal
+					dataSource={dsUsers}
+					opened={!!openedPermissionsModal}
+					close={handleClosePermissionsModal}
+				/> : null}
+			{openedPermissionsModal === SecurityType.GROUP ?
+				<PermissionsSelectorModal
+					dataSource={dsGroups}
+					opened={!!openedPermissionsModal}
+					close={handleClosePermissionsModal}
+				/> : null}
+			{openedPermissionsModal === SecurityType.PROFILE ?
+				<PermissionsSelectorModal
+					dataSource={dsProfiles}
+					opened={!!openedPermissionsModal}
+					close={handleClosePermissionsModal}
+				/> : null}
 
 		</Paper>
 	);
