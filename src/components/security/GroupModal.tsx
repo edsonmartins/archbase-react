@@ -8,9 +8,9 @@ import { ArchbaseFormModalTemplate } from '@components/template'
 import { ArchbaseEdit } from '@components/editors'
 
 export interface GroupModalOptions {
-  customContentBefore?: React.ReactNode;
+  customContentBefore?: (group: GroupDto) => React.ReactNode
 
-  customContentAfter?: React.ReactNode;
+  customContentAfter?: (group: GroupDto) => React.ReactNode
 }
 
 export interface GroupModalProps {
@@ -20,8 +20,6 @@ export interface GroupModalProps {
   onClickCancel: (record?: GroupDto) => void
   onCustomSave?: (record?: GroupDto, callback?: Function) => void
   onAfterSave?: (record?: GroupDto) => void
-  customContentBefore?: React.ReactNode
-  customContentAfter?: React.ReactNode
   options?: GroupModalOptions
 }
 
@@ -43,9 +41,9 @@ export const GroupModal = (props: GroupModalProps) => {
     >
       <ScrollArea ref={focusTrapRef} style={{ height: '460px' }}>
         <Stack w={"98%"}>
-          {options?.customContentBefore && (
+          {options?.customContentBefore && props?.dataSource?.getCurrentRecord() && (
             <>
-              {props.options.customContentBefore}
+              {options.customContentBefore(props.dataSource.getCurrentRecord())}
             </>
           )}
           <Grid ref={focusTrapRef}>
@@ -66,9 +64,9 @@ export const GroupModal = (props: GroupModalProps) => {
               />
             </Grid.Col>
           </Grid>
-          {options?.customContentAfter && (
+          {options?.customContentAfter && props?.dataSource?.getCurrentRecord() && (
             <>
-              {props.options.customContentAfter}
+              {options.customContentAfter(props.dataSource.getCurrentRecord())}
             </>
           )}
         </Stack>
