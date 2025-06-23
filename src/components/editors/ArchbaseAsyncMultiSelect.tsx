@@ -268,7 +268,6 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
       initialValue = await getConvertedOption(initialValue)
     }
     setSelectedValues(initialValue ?? []);
-    setQueryValue(getOptionLabel(initialValue) || '');
   };
 
   const fieldChangedListener = useCallback(() => {
@@ -460,13 +459,10 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
 
     return isReadOnly;
   };
-
-  const shouldFilterOptions = options.every((item) => item !== queryValue);
-  const filteredOptions = shouldFilterOptions
-    ? options.filter((item) => {
-      return item.label.toLowerCase().includes(queryValue.toLowerCase().trim());
-    })
-    : options;
+  const selectedValuesLabels = selectedValues.map(selecteValue => getOptionLabel(selecteValue).toLowerCase())
+  const filteredOptions = options.filter((item) => {
+      return item.label.toLowerCase().includes(queryValue.toLowerCase().trim()) && !selectedValuesLabels.includes(item.label.toLowerCase());
+  })
 
   const values = selectedValues.map((item) => (
     <SelectedItemComponent
@@ -564,7 +560,14 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
           <Combobox.Options>
             <CustomSelectScrollArea mah={280}>
               {(limit ? filteredOptions.slice(0, limit) : filteredOptions).map((option) => (
-                <Combobox.Option value={option.value} key={option.key}>
+                <Combobox.Option
+                  value={option.value}
+                  key={option.key}
+                  onClick={() => {
+                    setQueryValue("")
+                    combobox.closeDropdown()
+                  }}
+                >
                   {ItemComponent ? <ItemComponent values={selectedValues} {...option} /> : option.label}
                 </Combobox.Option>
               ))}
