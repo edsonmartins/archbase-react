@@ -45,6 +45,15 @@ import { UserModal, UserModalOptions } from './UserModal';
 import { IconEye } from '@tabler/icons-react';
 import { useForceUpdate } from '@mantine/hooks';
 
+export interface ArchbaseSecurityProps {
+	beforeDefaultUserActions?: (row: UserDto) => ReactNode
+	afterDefaultUserActions?: (row: UserDto) => ReactNode
+	beforeDefaultProfileActions?: (row: ProfileDto) => ReactNode
+	afterDefaultProfileActions?: (row: ProfileDto) => ReactNode
+	beforeDefaultGroupActions?: (row: GroupDto) => ReactNode
+	afterDefaultGroupActions?: (row: GroupDto) => ReactNode
+}
+
 interface ArchbaseSecurityManagerProps {
 	height?: any;
 	width?: any;
@@ -53,6 +62,7 @@ interface ArchbaseSecurityManagerProps {
 	userModalOptions?: UserModalOptions;
 	groupModalOptions?: GroupModalOptions;
 	profileModalOptions?: ProfileModalOptions;
+	options?: ArchbaseSecurityProps;
 }
 
 export const NO_USER =
@@ -143,6 +153,7 @@ export function ArchbaseSecurityView({
 	userModalOptions,
 	profileModalOptions,
 	groupModalOptions,
+	options,
 }: ArchbaseSecurityManagerProps) {
 	const theme = useArchbaseTheme();
 	const templateStore = useArchbaseStore('securityStore');
@@ -569,6 +580,7 @@ export function ArchbaseSecurityView({
 	const buildUserRowActions = (row: UserDto): ReactNode => {
 		return (
 			<Group gap={1} wrap="nowrap">
+				{options?.beforeDefaultUserActions && options?.beforeDefaultUserActions(row)}
 				<ActionIcon variant="transparent" onClick={() => handleUserViewRow(row)}>
 					<IconEye size={20} color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 				</ActionIcon>
@@ -583,6 +595,7 @@ export function ArchbaseSecurityView({
 						<IconShieldCheckered size={20} color={theme.colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
 				</Tooltip>
+				{options?.afterDefaultUserActions && options?.afterDefaultUserActions(row)}
 			</Group>
 		);
 	};
@@ -634,6 +647,7 @@ export function ArchbaseSecurityView({
 	const buildGroupRowActions = (row: GroupDto): ReactNode => {
 		return (
 			<Group gap={1} wrap="nowrap">
+				{options?.beforeDefaultGroupActions && options?.beforeDefaultGroupActions(row)}
 				<ActionIcon variant="transparent" onClick={() => handleGroupViewRow(row)}>
 					<IconEye size={20} color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 				</ActionIcon>
@@ -648,6 +662,7 @@ export function ArchbaseSecurityView({
 						<IconShieldCheckered size={20} color={theme.colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
 				</Tooltip>
+				{options?.afterDefaultGroupActions && options?.afterDefaultGroupActions(row)}
 			</Group>
 		);
 	};
@@ -711,6 +726,7 @@ export function ArchbaseSecurityView({
 	const buildProfileRowActions = (row: ProfileDto): ReactNode => {
 		return (
 			<Group gap={1} wrap="nowrap">
+				{options?.beforeDefaultProfileActions && options?.beforeDefaultProfileActions(row)}
 				<ActionIcon variant="transparent" onClick={() => handleProfileViewRow(row)}>
 					<IconEye size={20} color={theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 				</ActionIcon>
@@ -725,6 +741,7 @@ export function ArchbaseSecurityView({
 						<IconShieldCheckered size={20} color={theme.colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
 				</Tooltip>
+				{options?.afterDefaultProfileActions && options?.afterDefaultProfileActions(row)}
 			</Group>
 		);
 	};
