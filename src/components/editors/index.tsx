@@ -114,3 +114,6 @@ export type { ArchbaseTimeEditProps } from './ArchbaseTimeEdit'
 
 export { ArchbaseAvatarEdit } from './ArchbaseAvatarEdit'
 export type { ArchbaseAvatarEditProps } from './ArchbaseAvatarEdit'
+
+export { ArchbaseTagInputEdit } from './ArchbaseTagInputEdit'
+export type { ArchbaseTagInputEditProps } from './ArchbaseTagInputEdit'
