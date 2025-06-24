@@ -1,4 +1,4 @@
-import { ARCHBASE_IOC_API_TYPE } from '@components/core'
+import { ARCHBASE_IOC_API_TYPE, builder, emit } from '@components/core'
 import { ArchbaseDataSource } from '@components/datasource'
 import { ArchbaseAvatarEdit, ArchbaseCheckbox, ArchbaseEdit, ArchbasePasswordEdit, ArchbaseSelect } from '@components/editors'
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@components/hooks'
@@ -47,6 +47,11 @@ export interface UserModalOptions {
   customContentBefore?: (user: UserDto) => React.ReactNode
 
   customContentAfter?: (user: UserDto) => React.ReactNode
+
+  /** Nome do perfil padrão que um novo usuário já virá pré-preenchido */
+  userDefaultProfile?: string;
+  /** Nome dos grupos padrões que um novo usuário já virá pré-preenchido */
+	userDefaultGroups?: string[];
 }
 
 export const defaultUserModalOptions: UserModalOptions = {
@@ -116,9 +121,33 @@ export const UserModal = (props: UserModalProps) => {
     }
   })
 
+  const setDefaultValues = async () => {
+    if (!props.dataSource.isInserting()) {
+      return
+    }
+    if (options.userDefaultProfile) {
+      const filter = emit(builder.eq("name", options.userDefaultProfile))
+      const result = await profileApi.findAllWithFilter(filter, 0, 1)
+      if (result && result.content.length > 0) {
+        props.dataSource.setFieldValue("profile", result.content[0])
+      }
+    }
+    if (options.userDefaultGroups) {
+      const filter = emit(builder.in("name", options.userDefaultGroups))
+      const result = await groupApi.findAllWithFilter(filter, 0, 500)
+      if (result && result.content.length > 0) {
+        props.dataSource.setFieldValue("groups", result.content.map(group => UserGroupDto.newInstance(group)))
+      }
+    }
+  }
+
   useEffect(() => {
     setPasswordError("")
   }, [props.dataSource.getFieldValue("password")])
+
+  useEffect(() => {
+    setDefaultValues()
+  }, [])
 
   return (
     <ArchbaseFormModalTemplate
