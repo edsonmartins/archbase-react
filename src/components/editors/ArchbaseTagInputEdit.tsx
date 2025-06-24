@@ -204,6 +204,7 @@ export function ArchbaseTagInputEdit<T, ID>({
 			}
 		}
 
+		initialValue = initialValue.filter(value => value && value.trim() !== '');
 		setCurrentValue(initialValue);
 	};
 
@@ -245,20 +246,35 @@ export function ArchbaseTagInputEdit<T, ID>({
 	}, []);
 
 	const handleChange = (changedValue: string[]) => {
-		setCurrentValue(changedValue);
+		// Filtra valores vazios ou que contenham apenas espaços
+		const filteredValue = changedValue.filter(value => value && value.trim() !== '');
+		
+		setCurrentValue(filteredValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField) {
 			// Usa o outputConverter se fornecido, senão salva como array
-			const valueToSave = outputConverter ? outputConverter(changedValue) : changedValue;
+			const valueToSave = outputConverter ? outputConverter(filteredValue) : filteredValue;
 			dataSource.setFieldValue(dataField, valueToSave);
 		}
 
 		if (onChangeValue) {
-			onChangeValue(changedValue);
+			onChangeValue(filteredValue);
 		}
 	};
 
 	const handleRemove = (removedValue: string) => {
+		const newValue = currentValue.filter(value => value !== removedValue && value && value.trim() !== '');
+		setCurrentValue(newValue);
+		
+		if (dataSource && !dataSource.isBrowsing() && dataField) {
+			const valueToSave = outputConverter ? outputConverter(newValue) : newValue;
+			dataSource.setFieldValue(dataField, valueToSave);
+		}
+
+		if (onChangeValue) {
+			onChangeValue(newValue);
+		}
+
 		if (onRemove) {
 			onRemove(removedValue);
 		}
