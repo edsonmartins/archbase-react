@@ -134,7 +134,8 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     detailPanelTitle = 'Detalhes',
     detailPanelPosition = 'right',
     detailPanelSize = 'md',
-    showPagination = true
+    showPagination = true,
+    actionsColumnWidth = 120,
   } = props
   const theme = useArchbaseTheme()
   const apiRef = useGridApiRef()
@@ -620,7 +621,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         headerName: 'Ações',
         sortable: false,
         filterable: false,
-        width: 120,
+        width: actionsColumnWidth,
         renderCell: (params) => renderRowActions(params.row as T)
       }
 

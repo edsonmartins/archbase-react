@@ -216,6 +216,8 @@ export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
 
   // Referência para o grid
   gridRef?: RefObject<ArchbaseDataGridRef<T>> | MutableRefObject<ArchbaseDataGridRef<T> | null>;
+
+  actionsColumnWidth?: number;
 }
 
 export interface CellClickEvent {

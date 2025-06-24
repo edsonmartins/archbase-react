@@ -52,6 +52,9 @@ export interface ArchbaseSecurityProps {
 	afterDefaultProfileActions?: (row: ProfileDto) => ReactNode
 	beforeDefaultGroupActions?: (row: GroupDto) => ReactNode
 	afterDefaultGroupActions?: (row: GroupDto) => ReactNode
+	userActionsColumnWidth?: number
+	profileActionsColumnWidth?: number
+	groupActionsColumnWidth?: number
 }
 
 interface ArchbaseSecurityManagerProps {
@@ -894,6 +897,7 @@ export function ArchbaseSecurityView({
 					toolbarLeftContent={renderUsersToolbarActions()}
 					renderRowActions={buildUserRowActions}
 					children={userColumns}
+					actionsColumnWidth={options?.userActionsColumnWidth}
 				/>
 			</Box>
 			<Box
@@ -922,6 +926,7 @@ export function ArchbaseSecurityView({
 					renderRowActions={buildGroupRowActions}
 					children={groupColumns}
 					toolbarLeftContent={renderGroupsToolbarActions()}
+					actionsColumnWidth={options?.groupActionsColumnWidth}
 				/>
 			</Box>
 			<Box
@@ -950,6 +955,7 @@ export function ArchbaseSecurityView({
 					toolbarLeftContent={renderProfilesToolbarActions()}
 					renderRowActions={buildProfileRowActions}
 					children={profileColumns}
+					actionsColumnWidth={options?.profileActionsColumnWidth}
 				/>
 			</Box>
 			<Box
