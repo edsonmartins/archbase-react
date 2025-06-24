@@ -1,7 +1,6 @@
 // Exportar tudo de cada arquivo
 export * from './archbase-data-grid';
 export * from './archbase-data-grid-types';
-export * from './archbase-data-grid-column';
 export * from './archbase-data-grid-toolbar';
 export * from './archbase-data-grid-pagination';
 export * from './archbase-detail-panel-component';
