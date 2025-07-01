@@ -27,8 +27,8 @@ import {
 } from '@mantine/core';
 import { IconEdit, IconPlus, IconShieldCheckered, IconTrashX } from '@tabler/icons-react';
 // Importações da DataGrid
-import { ArchbaseDataGridColumn } from 'components/datagrid';
-import { ArchbaseDataGrid, ArchbaseDataGridRef, GridColumns } from 'components/datagrid/main';
+import { ArchbaseDataGridColumn } from '../../components/datagrid';
+import { ArchbaseDataGrid, ArchbaseDataGridRef, GridColumns } from '../../components/datagrid/main';
 import { t } from 'i18next';
 import React, { ReactNode, useRef, useState } from 'react';
 import { ArchbaseAccessTokenService } from './ArchbaseAccessTokenService';

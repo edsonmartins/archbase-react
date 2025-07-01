@@ -2,7 +2,7 @@ import React from 'react';
 import { ActionIcon, Box, Group, Tooltip } from '@mantine/core';
 import { IconEdit, IconTrash, IconEye } from '@tabler/icons-react';
 import { t } from 'i18next';
-import { useArchbaseTheme } from 'components/hooks';
+import { useArchbaseTheme } from '../../../components/hooks';
 
 export interface ArchbaseGridRowActionsProps<T extends Object> {
   onEditRow?: (row: T) => void;

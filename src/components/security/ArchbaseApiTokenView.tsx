@@ -37,9 +37,9 @@ import { ApiTokenModal } from './ApiTokenModal';
 import { ArchbaseApiTokenService } from './ArchbaseApiTokenService';
 import { NO_USER } from './ArchbaseSecurityView';
 import { ApiTokenDto, GroupDto, ProfileDto, ResourceDto, UserDto } from './SecurityDomain';
-import { ArchbaseDataGridColumn } from 'components/datagrid';
-import { ArchbaseDataGrid, ArchbaseDataGridRef, GridColumns } from 'components/datagrid/main';
-import { ArchbaseGridTemplateRef } from 'components/template/ArchbaseGridTemplate';
+import { ArchbaseDataGridColumn } from '../../components/datagrid';
+import { ArchbaseDataGrid, ArchbaseDataGridRef, GridColumns } from '../../components/datagrid/main';
+import { ArchbaseGridTemplateRef } from '../../components/template/ArchbaseGridTemplate';
 
 
 interface ArchbaseApiTokenViewProps {

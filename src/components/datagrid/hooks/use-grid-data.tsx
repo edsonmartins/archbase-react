@@ -8,7 +8,7 @@ import {
   GridCallbackDetails,
   GridEventListener
 } from '@mui/x-data-grid';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from 'components/datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../../components/datasource';
 
 /**
  * Interface para o estado do grid

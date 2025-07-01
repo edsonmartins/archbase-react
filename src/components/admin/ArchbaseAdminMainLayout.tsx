@@ -13,7 +13,7 @@ import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAliveAbleRoutes';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
-import { useArchbaseNavigateParams } from 'components/hooks';
+import { useArchbaseNavigateParams } from '../../components/hooks';
 
 export interface ArchbaseAdminMainLayoutSecurityOptions {
 	navigationResourceDescription: string

@@ -11,11 +11,11 @@ import {
   CellClickEvent
 } from '../datagrid/main';
 import { ArchbaseStateValues } from './ArchbaseStateValues';
-import { ArchbaseQueryBuilder, ArchbaseQueryFilter, ArchbaseQueryFilterDelegator, ArchbaseQueryFilterState, FilterOptions, buildFrom } from 'components/querybuilder';
-import { ArchbaseDataSource } from 'components/datasource';
-import { useArchbaseTheme } from 'components/hooks';
-import { emit, useArchbaseAppContext } from 'components/core';
-import { ArchbaseAlert } from 'components/notification';
+import { ArchbaseQueryBuilder, ArchbaseQueryFilter, ArchbaseQueryFilterDelegator, ArchbaseQueryFilterState, FilterOptions, buildFrom } from '../../components/querybuilder';
+import { ArchbaseDataSource } from '../../components/datasource';
+import { useArchbaseTheme } from '../../components/hooks';
+import { emit, useArchbaseAppContext } from '../../components/core';
+import { ArchbaseAlert } from '../../components/notification';
 
 export interface UserActionsOptions {
   visible: boolean;

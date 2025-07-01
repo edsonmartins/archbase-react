@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { format } from 'date-fns';
 import { Checkbox } from '@mantine/core';
-import { ArchbaseMasker, MaskOptions, convertISOStringToDate } from 'components/core';
+import { ArchbaseMasker, MaskOptions, convertISOStringToDate } from '../../../components/core';
 
 
 /**

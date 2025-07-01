@@ -55,10 +55,10 @@ import {
   useAvailableSpace
 } from '../hooks/use-grid-details-panel'
 import { IconX } from '@tabler/icons-react'
-import { useArchbaseTheme } from 'components/hooks'
-import { useArchbaseAppContext } from 'components/core'
-import { DataSourceEvent, DataSourceEventNames } from 'components/datasource'
-import { Columns } from 'components/datatable'
+import { useArchbaseTheme } from '../../../components/hooks'
+import { useArchbaseAppContext } from '../../../components/core'
+import { DataSourceEvent, DataSourceEventNames } from '../../../components/datasource'
+import { Columns } from '../../../components/datatable'
 
 // Constante para o limite máximo de pageSize permitido na versão MIT do DataGrid
 const MAX_PAGE_SIZE_MIT = 100

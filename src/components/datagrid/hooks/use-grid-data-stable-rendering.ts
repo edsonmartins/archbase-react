@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { debounce } from 'lodash';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, DataSourceOptions } from 'components/datasource';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, DataSourceOptions } from '../../../components/datasource';
 
 /**
  * Hook para estabilizar o comportamento da Grid e evitar chamadas duplicadas à busca,

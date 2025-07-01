@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Group, ActionIcon, Tooltip, Menu } from '@mantine/core';
 import { IconRefresh, IconDownload, IconPrinter, IconSearch } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { useArchbaseTheme } from 'components/hooks';
+import { useArchbaseTheme } from '../../../../components/hooks';
 
 
 interface GridToolbarProps {

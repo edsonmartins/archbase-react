@@ -3,7 +3,7 @@ import { TextInput, ActionIcon, useMantineColorScheme } from '@mantine/core';
 import { IconSearch, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useArchbaseTheme } from 'components/hooks';
+import { useArchbaseTheme } from '../../../../components/hooks';
 
 /**
  * Props para o componente de pesquisa global
