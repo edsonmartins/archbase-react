@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(find:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm build:*)",
+      "Bash(source:*)",
+      "Bash(nvm use:*)",
+      "Bash(pnpm storybook:*)",
+      "Bash(timeout 45 pnpm storybook)",
+      "Bash(pnpm add:*)",
+      "Bash(npm install:*)",
+      "Bash(npm test:*)",
+      "Bash(rg:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(pnpm test:*)",
+      "Bash(git add:*)",
+      "Bash(npx tsc:*)",
+      "Bash(grep:*)",
+      "Bash(npm run build:*)"
+    ],
+    "deny": []
+  }
+}

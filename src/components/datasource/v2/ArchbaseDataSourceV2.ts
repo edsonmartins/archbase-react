@@ -3,7 +3,10 @@ import {
   DataSourceEventNames,
   DataSourceEvent,
   DataSourceListener,
-  IDataSourceValidator
+  IDataSourceValidator,
+  IDataSource,
+  DataSourceOptions,
+  FilterFn
 } from '../ArchbaseDataSource';
 
 /**
@@ -33,7 +36,7 @@ export interface ArchbaseDataSourceV2Config<T> {
  * - Suporte a operações em arrays com type safety
  * - Event system compatível com V1
  */
-export class ArchbaseDataSourceV2<T> {
+export class ArchbaseDataSourceV2<T> implements IDataSource<T> {
   private name: string;
   private label: string;
   private records: T[] = [];
@@ -110,25 +113,27 @@ export class ArchbaseDataSourceV2<T> {
 
   // =================== Navigation ===================
 
-  first(): void {
+  first(): this {
     if (this.records.length > 0) {
       this.currentIndex = 0;
       this.emit({
         type: DataSourceEventNames.afterScroll
       });
     }
+    return this;
   }
 
-  last(): void {
+  last(): this {
     if (this.records.length > 0) {
       this.currentIndex = this.records.length - 1;
       this.emit({
         type: DataSourceEventNames.afterScroll
       });
     }
+    return this;
   }
 
-  next(): void {
+  next(): this {
     if (this.currentIndex < this.records.length - 1) {
       this.currentIndex++;
       this.emit({
@@ -137,9 +142,10 @@ export class ArchbaseDataSourceV2<T> {
         index: this.currentIndex
       });
     }
+    return this;
   }
 
-  prior(): void {
+  prior(): this {
     if (this.currentIndex > 0) {
       this.currentIndex--;
       this.emit({
@@ -148,9 +154,10 @@ export class ArchbaseDataSourceV2<T> {
         index: this.currentIndex
       });
     }
+    return this;
   }
 
-  goToRecord(index: number): void {
+  goToRecord(index: number): T | undefined {
     if (index >= 0 && index < this.records.length) {
       this.currentIndex = index;
       this.emit({
@@ -158,7 +165,9 @@ export class ArchbaseDataSourceV2<T> {
         record: this.getCurrentRecord(),
         index: this.currentIndex
       });
+      return this.getCurrentRecord();
     }
+    return undefined;
   }
 
   isFirst(): boolean {
@@ -191,7 +200,7 @@ export class ArchbaseDataSourceV2<T> {
     return this.state === 'insert';
   }
 
-  edit(): void {
+  edit(): this {
     this.validateDataSourceActive('edit');
     if (this.isEmpty() || !this.getCurrentRecord()) {
       throw new Error(`No records to edit in DataSource ${this.name}`);
@@ -211,9 +220,10 @@ export class ArchbaseDataSourceV2<T> {
       record: this.getCurrentRecord(),
       index: this.currentIndex
     });
+    return this;
   }
 
-  cancel(): void {
+  cancel(): this {
     this.validateDataSourceActive('cancel');
     
     if (this.state === 'edit' && this.originalRecord) {
@@ -239,9 +249,10 @@ export class ArchbaseDataSourceV2<T> {
       record: this.getCurrentRecord(),
       index: this.currentIndex
     });
+    return this;
   }
 
-  insert(record: T): void {
+  insert(record: T): this {
     this.validateDataSourceActive('insert');
     
     this.state = 'insert';
@@ -260,6 +271,7 @@ export class ArchbaseDataSourceV2<T> {
       record,
       index: this.currentIndex
     });
+    return this;
   }
 
   async save(callback?: Function): Promise<T> {
@@ -354,15 +366,15 @@ export class ArchbaseDataSourceV2<T> {
 
   // =================== Field Operations ===================
 
-  setFieldValue(fieldName: string, value: any): void {
+  setFieldValue(fieldName: string, value: any): this {
     this.validateDataSourceActive('setFieldValue');
     if (!this.getCurrentRecord()) {
-      return;
+      return this;
     }
 
     const oldValue = this.getFieldValue(fieldName);
     if (oldValue === value) {
-      return;
+      return this;
     }
 
     const prevRecords = [...this.records];
@@ -389,6 +401,7 @@ export class ArchbaseDataSourceV2<T> {
       type: DataSourceEventNames.dataChanged,
       data: this.records
     });
+    return this;
   }
 
   getFieldValue(fieldName: string): any {
@@ -566,14 +579,195 @@ export class ArchbaseDataSourceV2<T> {
     return Array.isArray(value);
   }
 
-  // =================== Event Management ===================
-
-  addListener(listener: DataSourceListener<T>): void {
-    this.listeners.add(listener);
+  // =================== Interface Compatibility Methods ===================
+  
+  open(options: DataSourceOptions<T>): void {
+    this.setData(options);
   }
 
-  removeListener(listener: DataSourceListener<T>): void {
-    this.listeners.delete(listener);
+
+  clear(): void {
+    this.records = [];
+    this.currentIndex = -1;
+    this.state = 'browse';
+    this.originalRecord = null;
+    this.emit({
+      type: DataSourceEventNames.dataChanged,
+      data: this.records
+    });
+  }
+
+  setData(options: DataSourceOptions<T>): void {
+    this.records = [...(options.records || [])];
+    this.currentIndex = this.records.length > 0 ? 0 : -1;
+    this.state = 'browse';
+    this.originalRecord = null;
+    this.emit({
+      type: DataSourceEventNames.dataChanged,
+      data: this.records
+    });
+  }
+
+  getOptions(): DataSourceOptions<T> {
+    return {
+      records: [...this.records],
+      grandTotalRecords: this.records.length,
+      currentPage: 0,
+      totalPages: 1,
+      pageSize: this.records.length || 10
+    };
+  }
+
+  refreshData(options?: DataSourceOptions<T>): void {
+    if (options) {
+      this.setData(options);
+    }
+  }
+
+  browseRecords(): T[] {
+    return [...this.records];
+  }
+
+  getGrandTotalRecords(): number {
+    return this.records.length;
+  }
+
+  getCurrentPage(): number {
+    return 0;
+  }
+
+  getTotalPages(): number {
+    return 1;
+  }
+
+  isEmptyField(fieldName: string): boolean {
+    const value = this.getFieldValue(fieldName);
+    return value === null || value === undefined || value === '';
+  }
+
+
+
+  goToPage(pageNumber: number): this {
+    // V2 doesn't support pagination, so this is a no-op
+    return this;
+  }
+
+  gotoRecordByData(record: T): boolean {
+    const index = this.records.findIndex(r => r === record);
+    if (index >= 0) {
+      this.currentIndex = index;
+      this.emit({
+        type: DataSourceEventNames.recordChanged,
+        record: this.getCurrentRecord(),
+        index: this.currentIndex
+      });
+      return true;
+    }
+    return false;
+  }
+
+  disabledAllListeners(): this {
+    // V2 doesn't support disabling listeners - always active
+    return this;
+  }
+
+  enableAllListeners(): this {
+    // V2 doesn't support disabling listeners - always active
+    return this;
+  }
+
+  addFieldChangeListener(
+    fieldName: string,
+    listener: (fieldName: string, oldValue: any, newValue: any) => void
+  ): this {
+    // V2 handles this through main listener system
+    const wrappedListener = (event: DataSourceEvent<T>) => {
+      if (event.type === DataSourceEventNames.fieldChanged && 
+          'fieldName' in event && event.fieldName === fieldName) {
+        listener(fieldName, (event as any).oldValue, (event as any).newValue);
+      }
+    };
+    this.addListener(wrappedListener);
+    return this;
+  }
+
+  removeFieldChangeListener(
+    fieldName: string,
+    listener: (fieldName: string, oldValue: any, newValue: any) => void
+  ): this {
+    // V2 simplification - would need to track wrapped listeners for exact removal
+    return this;
+  }
+
+  addFilter(filterFn: FilterFn<T>): this {
+    // V2 doesn't support runtime filters yet - could be added in future
+    return this;
+  }
+
+  removeFilter(filterFn: FilterFn<T>): this {
+    // V2 doesn't support runtime filters yet
+    return this;
+  }
+
+  clearFilters(): this {
+    // V2 doesn't support runtime filters yet
+    return this;
+  }
+
+  locate(values: any): boolean {
+    // V2 simplification - locate by field value matching
+    for (let i = 0; i < this.records.length; i++) {
+      const record = this.records[i];
+      let matches = true;
+      for (const [field, value] of Object.entries(values)) {
+        if (this.getNestedValue(record, field) !== value) {
+          matches = false;
+          break;
+        }
+      }
+      if (matches) {
+        this.currentIndex = i;
+        this.emit({
+          type: DataSourceEventNames.recordChanged,
+          record: this.getCurrentRecord(),
+          index: this.currentIndex
+        });
+        return true;
+      }
+    }
+    return false;
+  }
+
+  locateByFilter(filterFn: (record: T) => boolean): boolean {
+    for (let i = 0; i < this.records.length; i++) {
+      if (filterFn(this.records[i])) {
+        this.currentIndex = i;
+        this.emit({
+          type: DataSourceEventNames.recordChanged,
+          record: this.getCurrentRecord(),
+          index: this.currentIndex
+        });
+        return true;
+      }
+    }
+    return false;
+  }
+
+  validate(): boolean {
+    // V2 validation will be enhanced in future - basic implementation
+    return true;
+  }
+
+  // =================== Event Management ===================
+
+  addListener(...listeners: DataSourceListener<T>[]): this {
+    listeners.forEach(listener => this.listeners.add(listener));
+    return this;
+  }
+
+  removeListener(...listeners: DataSourceListener<T>[]): this {
+    listeners.forEach(listener => this.listeners.delete(listener));
+    return this;
   }
 
   private emit(event: DataSourceEvent<T>): void {

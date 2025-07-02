@@ -112,19 +112,21 @@ import {
 	  loadDataSourceFieldValue();
 	}, []);
   
-	const handleChange = (changedValue: Date | null) => {
-	  setCurrentValue(changedValue);
+	const handleChange = (changedValue: string | null) => {
+	  // Convert string to Date for internal use (maintaining compatibility)
+	  const dateValue = changedValue ? new Date(changedValue) : null;
+	  setCurrentValue(dateValue);
   
-	  if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-		dataSource.setFieldValue(dataField, changedValue);
+	  if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== dateValue) {
+		dataSource.setFieldValue(dataField, dateValue);
 	  }
   
 	  if (onChange) {
-		onChange(changedValue);
+		onChange(dateValue);
 	  }
   
 	  if (onChangeValue) {
-		onChangeValue(changedValue);
+		onChangeValue(dateValue);
 	  }
 	};
   
@@ -160,7 +162,7 @@ import {
 		{...rest}
 		disabled={disabled}
 		readOnly={isReadOnly()}
-		value={currentValue}
+		value={currentValue ? currentValue.toISOString() : null}
 		onChange={handleChange}
 		onBlur={handleOnFocusExit}
 		onFocus={handleOnFocusEnter}

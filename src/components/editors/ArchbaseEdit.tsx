@@ -96,6 +96,13 @@ export function ArchbaseEdit<T, ID>({
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 
+	// Detecta automaticamente se é DataSource V2
+	const isDataSourceV2 = dataSource && ('appendToFieldArray' in dataSource || 'updateFieldArrayItem' in dataSource);
+	
+	// Para V2: estado otimizado (sem re-renders desnecessários)
+	const [v2Value, setV2Value] = useState<string>('');
+	const [v2ShouldUpdate, setV2ShouldUpdate] = useState(0);
+
 	useEffect(() => {
 		setInternalError(undefined);
 	}, [currentValue]);
@@ -107,7 +114,7 @@ export function ArchbaseEdit<T, ID>({
 	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
-		let initialValue: any = currentValue;
+		let initialValue: any = value || '';
 
 		if (dataSource && dataField) {
 			initialValue = dataSource.getFieldValue(dataField);
@@ -116,7 +123,14 @@ export function ArchbaseEdit<T, ID>({
 			}
 		}
 
-		setCurrentValue(initialValue);
+		if (isDataSourceV2) {
+			// V2: Update otimizado
+			setV2Value(initialValue);
+			setV2ShouldUpdate(prev => prev + 1);
+		} else {
+			// V1: Comportamento original
+			setCurrentValue(initialValue);
+		}
 	};
 
 	const fieldChangedListener = useCallback(() => {
@@ -133,14 +147,18 @@ export function ArchbaseEdit<T, ID>({
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				if (!isDataSourceV2) {
+					// V1: Força re-render (comportamento original)
+					forceUpdate();
+				}
+				// V2: Re-render automático via estado otimizado
 			}
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -159,10 +177,19 @@ export function ArchbaseEdit<T, ID>({
 		const changedValue = event.target.value;
 
 		event.persist();
-		setCurrentValue((_prev) => changedValue);
-
-		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-			dataSource.setFieldValue(dataField, changedValue);
+		
+		if (isDataSourceV2) {
+			// V2: Otimizado com menos re-renders
+			setV2Value(changedValue);
+			if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
+				dataSource.setFieldValue(dataField, changedValue);
+			}
+		} else {
+			// V1: Comportamento original mantido
+			setCurrentValue((_prev) => changedValue);
+			if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
+				dataSource.setFieldValue(dataField, changedValue);
+			}
 		}
 
 		if (onChangeValue) {
@@ -206,7 +233,7 @@ export function ArchbaseEdit<T, ID>({
 				width,
 				...style,
 			}}
-			value={currentValue}
+			value={isDataSourceV2 ? v2Value : currentValue}
 			ref={innerRef || innerComponentRef}
 			required={required}
 			onChange={handleChange}

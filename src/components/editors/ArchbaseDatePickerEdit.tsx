@@ -29,7 +29,7 @@ import {
 	CalendarBaseProps,
 	CalendarLevel,
 	CalendarStylesNames,
-	DateValue,
+	DateStringValue,
 	DecadeLevelSettings,
 	HiddenDatesInput,
 	MonthLevelSettings,
@@ -37,6 +37,9 @@ import {
 	useDatesContext,
 	YearLevelSettings,
 } from '@mantine/dates';
+
+// Compatibility type for old DateValue (keeping internal usage as Date)
+type DateValue = Date | null;
 import { useDidUpdate, useForceUpdate, useUncontrolled } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
@@ -119,12 +122,16 @@ export function assignTime(originalDate: DateValue, resultDate: DateValue) {
 		return resultDate;
 	}
 
-	const hours = originalDate.getHours();
-	const minutes = originalDate.getMinutes();
-	const seconds = originalDate.getSeconds();
-	const ms = originalDate.getMilliseconds();
+	// Ensure we have Date objects
+	const origDate = originalDate instanceof Date ? originalDate : new Date(originalDate);
+	const resDate = resultDate instanceof Date ? resultDate : new Date(resultDate);
 
-	const result = new Date(resultDate);
+	const hours = origDate.getHours();
+	const minutes = origDate.getMinutes();
+	const seconds = origDate.getSeconds();
+	const ms = origDate.getMilliseconds();
+
+	const result = new Date(resDate);
 	result.setHours(hours);
 	result.setMinutes(minutes);
 	result.setSeconds(seconds);
@@ -135,8 +142,8 @@ export function assignTime(originalDate: DateValue, resultDate: DateValue) {
 
 interface IsDateValid {
 	date: DateValue;
-	maxDate?: Date;
-	minDate?: Date;
+	maxDate?: DateValue;
+	minDate?: DateValue;
 }
 
 function isDateValid({ date, maxDate, minDate }: IsDateValid) {
@@ -144,16 +151,24 @@ function isDateValid({ date, maxDate, minDate }: IsDateValid) {
 		return false;
 	}
 
-	if (Number.isNaN(date.getTime())) {
+	// Convert to Date object if it's a string
+	const dateObj = date instanceof Date ? date : new Date(date);
+	if (Number.isNaN(dateObj.getTime())) {
 		return false;
 	}
 
-	if (maxDate && dayjs(date).isAfter(maxDate, 'date')) {
-		return false;
+	if (maxDate) {
+		const maxDateObj = maxDate instanceof Date ? maxDate : new Date(maxDate);
+		if (dayjs(dateObj).isAfter(maxDateObj, 'date')) {
+			return false;
+		}
 	}
 
-	if (minDate && dayjs(date).isBefore(minDate, 'date')) {
-		return false;
+	if (minDate) {
+		const minDateObj = minDate instanceof Date ? minDate : new Date(minDate);
+		if (dayjs(dateObj).isBefore(minDateObj, 'date')) {
+			return false;
+		}
 	}
 
 	return true;
@@ -309,8 +324,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	const forceUpdate = useForceUpdate();
 
 	const [_date, setDate] = useUncontrolled({
-		value: date,
-		defaultValue: defaultValue || defaultDate,
+		value: date ? (typeof date === 'string' ? date : date.toISOString().split('T')[0]) : null,
+		defaultValue: defaultValue ? (typeof defaultValue === 'string' ? defaultValue : defaultValue.toISOString().split('T')[0]) : defaultDate ? (typeof defaultDate === 'string' ? defaultDate : defaultDate.toISOString().split('T')[0]) : null,
 		finalValue: null,
 		onChange: onDateChange,
 	});
@@ -366,7 +381,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 				const result = dateFormats[dateFormat!].format(resultDate);
 				if (result !== inputValue) {
 					setInputValue(result);
-					setDate(resultDate);
+					setDate(resultDate.toISOString().split('T')[0]);
 					setValue(resultDate);
 				}
 			} else {
@@ -417,8 +432,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	}, [_value, _date, inputValue]);
 
 	useEffect(() => {
-		if (controlled) {
-			setDate(value!);
+		if (controlled && value) {
+			setDate(typeof value === 'string' ? value : value.toISOString().split('T')[0]);
 		}
 	}, [controlled, value]);
 
@@ -438,9 +453,12 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 				setDataSourceFieldValue(null);
 			} else {
 				const dateValue = _dateParser(val);
-				if (isDateValid({ date: dateValue, minDate, maxDate })) {
+				// Convert minDate and maxDate to DateValue for validation
+				const minDateValue = minDate ? (typeof minDate === 'string' ? new Date(minDate) : minDate) : undefined;
+				const maxDateValue = maxDate ? (typeof maxDate === 'string' ? new Date(maxDate) : maxDate) : undefined;
+				if (isDateValid({ date: dateValue, minDate: minDateValue, maxDate: maxDateValue })) {
 					setValue(dateValue);
-					setDate(dateValue);
+					setDate(dateValue ? (typeof dateValue === 'string' ? dateValue : dateValue.toISOString().split('T')[0]) : null);
 				}
 			}
 		}
@@ -453,9 +471,12 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 				setDataSourceFieldValue(null);
 			} else if (maskValue && maskValue.length === 10) {
 				const dateValue = dateFormats[dateFormat!].parse(maskValue);
-				if (isDateValid({ date: dateValue, minDate, maxDate })) {
+				// Convert minDate and maxDate to DateValue for validation
+				const minDateValue = minDate ? (typeof minDate === 'string' ? new Date(minDate) : minDate) : undefined;
+				const maxDateValue = maxDate ? (typeof maxDate === 'string' ? new Date(maxDate) : maxDate) : undefined;
+				if (isDateValid({ date: dateValue, minDate: minDateValue, maxDate: maxDateValue })) {
 					setValue(dateValue);
-					setDate(dateValue);
+					setDate(dateValue ? (typeof dateValue === 'string' ? dateValue : dateValue.toISOString().split('T')[0]) : null);
 					setInputValue(formatValue(dateValue));
 					setDataSourceFieldValue(dateValue);
 				}
@@ -496,20 +517,23 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		}
 	};
 
-	const _getDayProps = (day: Date) => ({
-		...getDayProps?.(day),
-		selected: dayjs(_value).isSame(day, 'day'),
-		onClick: () => {
-			if (!isReadOnly()) {
-				const valueWithTime = preserveTime ? assignTime(_value, day) : day;
-				const val = _allowDeselect ? (dayjs(_value).isSame(day, 'day') ? null : valueWithTime) : valueWithTime;
-				setValue(val);
-				setInputValue(formatValue(val));
-				setInternalError(undefined);
-				setDropdownOpened(false);
-			}
-		},
-	});
+	const _getDayProps = (dayString: DateStringValue) => {
+		const day = new Date(dayString);
+		return {
+			...getDayProps?.(dayString),
+			selected: dayjs(_value).isSame(day, 'day'),
+			onClick: () => {
+				if (!isReadOnly()) {
+					const valueWithTime = preserveTime ? assignTime(_value, day) : day;
+					const val = _allowDeselect ? (dayjs(_value).isSame(day, 'day') ? null : valueWithTime) : valueWithTime;
+					setValue(val);
+					setInputValue(formatValue(val));
+					setInternalError(undefined);
+					setDropdownOpened(false);
+				}
+			},
+		};
+	};
 
 	const _rightSection =
 		rightSection ||

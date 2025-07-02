@@ -336,8 +336,8 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
                   <Group grow mt="xs">
                     <DatePickerInput
                       label="Data inicial"
-                      value={customRange.start}
-                      onChange={(date: Date | null) => setCustomRange(prev => ({ ...prev, start: date }))}
+                      value={customRange.start ? customRange.start.toISOString().split('T')[0] : null}
+                      onChange={(date: string | null) => setCustomRange(prev => ({ ...prev, start: date ? new Date(date) : null }))}
                       style={{ flex: 1 }}
                       popoverProps={{ withinPortal: false, closeOnClickOutside: false }}
                     />
@@ -358,8 +358,8 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
                   <Group grow mt="xs">
                     <DatePickerInput
                       label="Data final"
-                      value={customRange.end}
-                      onChange={(date: Date | null) => setCustomRange(prev => ({ ...prev, end: date }))}
+                      value={customRange.end ? customRange.end.toISOString().split('T')[0] : null}
+                      onChange={(date: string | null) => setCustomRange(prev => ({ ...prev, end: date ? new Date(date) : null }))}
                       style={{ flex: 1 }}
                       popoverProps={{ withinPortal: false, closeOnClickOutside: false }}
                     />

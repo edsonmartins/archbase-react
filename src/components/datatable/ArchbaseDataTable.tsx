@@ -412,10 +412,10 @@ export function ArchbaseCustomFilterDatePicker(props: FilterDatePickerProps) {
 					variant="filled"
 					style={{ marginTop: '8px' }}
 					placeholder={`${i18next.t('date')} ${rangeIndex === 0 ? 'inicio' : 'final'}`}
-					value={value ? value[rangeIndex] : null}
-					onChange={(newValue: Date) => {
+					value={value && value[rangeIndex] ? value[rangeIndex].toISOString().split('T')[0] : null}
+					onChange={(newValue: string | null) => {
 						const newArray = [currentValue[0], currentValue[1]];
-						newArray[rangeIndex] = newValue;
+						newArray[rangeIndex] = newValue ? new Date(newValue) : null;
 						column.setFilterValue(newArray);
 					}}
 				/>
@@ -435,9 +435,9 @@ export function ArchbaseCustomFilterDatePicker(props: FilterDatePickerProps) {
 				variant="filled"
 				style={{ marginTop: '8px' }}
 				placeholder={`${i18next.t('date')}`}
-				value={value as DateValue}
-				onChange={(newValue: Date) => {
-					column.setFilterValue(newValue);
+				value={value ? (value as Date).toISOString().split('T')[0] : null}
+				onChange={(newValue: string | null) => {
+					column.setFilterValue(newValue ? new Date(newValue) : null);
 				}}
 			/>
 		</Box>

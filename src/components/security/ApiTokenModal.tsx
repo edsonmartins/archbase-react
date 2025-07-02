@@ -46,7 +46,9 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 		if (!value) {
 			props.dataSource.setFieldValue('expirationDate', undefined);
 		} else {
-			props.dataSource.setFieldValue('expirationDate', convertDateToISOString(value));
+			// Convert string to Date if needed before calling convertDateToISOString
+			const dateValue = typeof value === 'string' ? new Date(value) : value;
+			props.dataSource.setFieldValue('expirationDate', convertDateToISOString(dateValue));
 		}
 		setValue(value);
 	};

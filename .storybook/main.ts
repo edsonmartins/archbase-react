@@ -15,36 +15,12 @@ const config: StorybookConfig = {
   staticDirs: ['./assets'],
   addons: [
     '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    "@storybook/addon-onboarding",
-    '@storybook/addon-interactions',
-    '@storybook/addon-actions',
-    'storybook-addon-measure-viewport',
-    '@storybook/react',
-    'storybook-addon-mantine',
-    'storybook-dark-mode',
-    'storybook-react-i18next',
-    'storybook-addon-measure-viewport',
-    '@storybook/addon-measure',
-    '@storybook/addon-styling',
     {
       name: '@storybook/preset-scss',
       options: {
         cssLoaderOptions: {
           modules: true,
           localIdentName: '[name]__[local]--[hash:base64:5]',
-        },
-      },
-    },
-    {
-      name: 'storybook-addon-sass-postcss',
-      options: {
-        loadSassAfterPostCSS: true,
-        postcssLoaderOptions: {
-          implementation: require('postcss'),
-        },
-        rule: {
-          test: /\.(scss|sass)$/i,
         },
       },
     },
@@ -56,8 +32,7 @@ const config: StorybookConfig = {
         sourceLoaderOptions: null,
         transcludeMarkdown: true,
       }
-    },
-    '@storybook/addon-mdx-gfm'
+    }
   ],
   framework: {
     name: '@storybook/react-vite',
@@ -71,6 +46,13 @@ const config: StorybookConfig = {
         '@components': path.resolve(__dirname, '../src/components'),
         '@demo': path.resolve(__dirname, '../src/demo'),
         '@emaileditor': path.resolve(__dirname, '../src/components/emaileditor'),
+        'components/hooks': path.resolve(__dirname, '../src/components/hooks'),
+        'components/datagrid': path.resolve(__dirname, '../src/components/datagrid'),
+        'components/querybuilder': path.resolve(__dirname, '../src/components/querybuilder'),
+        'components/core': path.resolve(__dirname, '../src/components/core'),
+        'components/notification': path.resolve(__dirname, '../src/components/notification'),
+        'components/datasource': path.resolve(__dirname, '../src/components/datasource'),
+        'components/datatable': path.resolve(__dirname, '../src/components/datatable'),
       };
     }
     return config;
