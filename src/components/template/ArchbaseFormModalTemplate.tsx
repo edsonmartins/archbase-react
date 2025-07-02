@@ -11,6 +11,7 @@ import { processErrorMessage } from '../core/exceptions';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDataSourceListener, useArchbaseTheme } from '../hooks';
 import { ArchbaseAlert, ArchbaseDialog } from '../notification';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Omit<ModalProps, 'onClose' | 'onError'> {
 	dataSource?: ArchbaseDataSource<T, ID>;
@@ -66,6 +67,14 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 	const [isLoading, setIsLoading] = useState(false)
 	const forceUpdate = useForceUpdate();
 
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<T>(
+		'ArchbaseFormModalTemplate',
+		dataSource,
+		undefined,
+		undefined
+	);
+
 	useArchbaseDataSourceListener<T, ID>({
 		dataSource,
 		listener: (event: DataSourceEvent<T>): void => {
@@ -74,7 +83,10 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 				setInternalError(event.error);
 			}
 			if (event.type === DataSourceEventNames.afterEdit || event.type === DataSourceEventNames.afterInsert) {
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: ForceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 		},
 	});

@@ -1,8 +1,10 @@
 import { Card, ColorPicker, MantineSize } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
+import { useArchbaseDataSourceListener } from '../hooks';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
 
 export interface ArchbaseThemeEditorProps<T, ID> {
@@ -50,97 +52,59 @@ export interface ArchbaseThemeEditorProps<T, ID> {
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
-export function ArchbaseThemeEditor<T, ID>({ dataSource, dataField, value }: ArchbaseThemeEditorProps<T, ID>) {
-	const [currentValue, setCurrentValue] = useState<string>(value || '');
+export function ArchbaseThemeEditor<T, ID>({ 
+	dataSource, 
+	dataField, 
+	value,
+	onChangeValue,
+	disabled = false,
+	readOnly = false,
+	...props 
+}: ArchbaseThemeEditorProps<T, ID>) {
+	// V1/V2 Compatibility Pattern
+	const {
+		isDataSourceV2,
+		currentValue,
+		handleValueChange,
+		dataSourceEvent,
+		loadDataSourceFieldValue,
+		isReadOnly
+	} = useArchbaseV1V2Compatibility<string>(
+		'ArchbaseThemeEditor',
+		dataSource,
+		dataField,
+		value || ''
+	);
 
-	const loadDataSourceFieldValue = () => {
-		let initialValue: any = currentValue;
-
-		if (dataSource && dataField) {
-			initialValue = dataSource.getFieldValue(dataField);
-			if (!initialValue) {
-				initialValue = '';
-			}
-		}
-
-		setCurrentValue(initialValue);
-	};
-
-	const fieldChangedListener = useCallback(() => {}, []);
-
-	const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
-		if (dataSource && dataField) {
-			if (
-				event.type === DataSourceEventNames.dataChanged ||
-				event.type === DataSourceEventNames.fieldChanged ||
-				event.type === DataSourceEventNames.recordChanged ||
-				event.type === DataSourceEventNames.afterScroll ||
-				event.type === DataSourceEventNames.afterCancel
-			) {
-				loadDataSourceFieldValue();
-			}
-		}
-	}, []);
-
-	useArchbaseDidMount(() => {
-		loadDataSourceFieldValue();
-		if (dataSource && dataField) {
-			dataSource.addListener(dataSourceEvent);
-			dataSource.addFieldChangeListener(dataField, fieldChangedListener);
-		}
+	// DataSource listener setup
+	useArchbaseDataSourceListener<T, ID>({
+		dataSource,
+		listener: dataSourceEvent
 	});
 
-	useArchbaseDidUpdate(() => {
+	// Load initial value
+	useEffect(() => {
 		loadDataSourceFieldValue();
-	}, []);
+	}, [loadDataSourceFieldValue]);
 
-	// const handleChange = (event) => {
-	//   event.preventDefault();
-	//   const changedValue = event.target.value;
-
-	//   event.persist();
-	//   setCurrentValue((_prev) => changedValue);
-
-	//   if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-	//     dataSource.setFieldValue(dataField, changedValue);
-	//   }
-
-	//   if (onChangeValue) {
-	//     onChangeValue(event, changedValue);
-	//   }
-	// };
-
-	useArchbaseWillUnmount(() => {
-		if (dataSource && dataField) {
-			dataSource.removeListener(dataSourceEvent);
-			dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+	// Handle color change
+	const handleColorChange = useCallback((color: string) => {
+		handleValueChange(color, { target: { value: color } });
+		
+		// External callback
+		if (onChangeValue) {
+			onChangeValue(color, { target: { value: color } });
 		}
-	});
-
-	// const handleOnFocusExit = (event) => {
-	//   if (onFocusExit) {
-	//     onFocusExit(event);
-	//   }
-	// };
-
-	// const handleOnFocusEnter = (event) => {
-	//   if (onFocusEnter) {
-	//     onFocusEnter(event);
-	//   }
-	// };
-
-	// const isReadOnly = () => {
-	//   let _readOnly = readOnly;
-	//   if (dataSource && !readOnly) {
-	//     _readOnly = dataSource.isBrowsing();
-	//   }
-
-	//   return _readOnly;
-	// };
+	}, [handleValueChange, onChangeValue]);
 
 	return (
 		<Card>
-			<ColorPicker />
+			<ColorPicker 
+				value={currentValue || '#000000'}
+				onChange={handleColorChange}
+				disabled={disabled || isReadOnly}
+				{...props}
+			/>
 		</Card>
 	);
 }

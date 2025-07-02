@@ -1,6 +1,7 @@
 import { ArchbaseForm } from '@components/containers';
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseList } from '@components/list';
+import { detectDataSourceVersion } from '@components/core/fallback/ArchbaseSafeMigrationWrapper';
 import {
 	ActionIcon,
 	Box,
@@ -42,6 +43,8 @@ interface ArchbaseFilterSelectFieldsState {
 	allChecked: boolean;
 	activeIndex: number;
 	update: number;
+	// 🔄 MIGRAÇÃO V1/V2: Adicionar estado para compatibilidade
+	forceUpdateCounter: number;
 }
 
 class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsProps, ArchbaseFilterSelectFieldsState> {
@@ -55,7 +58,31 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
 			allChecked: false,
 			activeIndex: props.currentFilter.sort.activeIndex,
 			update: Math.random(),
+			// 🔄 MIGRAÇÃO V1/V2: Inicializar contador de forceUpdate
+			forceUpdateCounter: 0,
 		};
+	}
+
+	// 🔄 MIGRAÇÃO V1/V2: Helper para criar DataSource com compatibilidade
+	createCompatibleDataSource = (records: any[]) => {
+		const dataSource = new ArchbaseDataSource('dsSortFields', {
+			records: records,
+			grandTotalRecords: records.length,
+			currentPage: 0,
+			totalPages: 0,
+			pageSize: 999999,
+		});
+
+		// Detectar se é V1 e aplicar forceUpdate se necessário
+		const isV1 = detectDataSourceVersion(dataSource) !== 'V2';
+		if (isV1) {
+			this.setState({ 
+				...this.state, 
+				forceUpdateCounter: this.state.forceUpdateCounter + 1 
+			});
+		}
+
+		return dataSource;
 	}
 
 	onCheckboxChange = (_value, _checked: boolean, item) => {
@@ -264,13 +291,8 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
 										height="100%"
 										width="100%"
 										dataSource={
-											new ArchbaseDataSource('dsSortFields', {
-												records: this.state.sortFields,
-												grandTotalRecords: this.state.sortFields.length,
-												currentPage: 0,
-												totalPages: 0,
-												pageSize: 999999,
-											})
+											// 🔄 MIGRAÇÃO V1/V2: Usar método de compatibilidade
+											this.createCompatibleDataSource(this.state.sortFields)
 										}
 										withBorder={false}
 										dataFieldId="name"

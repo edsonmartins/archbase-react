@@ -1,4 +1,5 @@
 import { useArchbaseDataSourceListener } from '@components/hooks';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 import { ButtonVariant, Pagination } from '@mantine/core';
 import useComponentSize from '@rehooks/component-size';
 import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
@@ -165,11 +166,24 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 	});
 	const [updateCounter, setUpdateCounter] = useState<number>(0);
 
+	// V1/V2 Compatibility Pattern
+	const {
+		isDataSourceV2,
+		v1State: { forceUpdate }
+	} = useArchbaseV1V2Compatibility<T>(
+		'ArchbaseMasonryTemplate',
+		dataSource
+	);
+
 	useArchbaseDataSourceListener<T, ID>({
 		dataSource,
 		listener: (event: DataSourceEvent<T>): void => {
 			if (event.type === DataSourceEventNames.afterRemove || event.type === DataSourceEventNames.refreshData) {
 				setUpdateCounter((prev) => prev + 1);
+				// Force update for V1 DataSource
+				if (!isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 		},
 	});
@@ -313,6 +327,10 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 			options.filter = buildedQuery;
 			options.currentPage = activePage;
 			dataSource.refreshData(options);
+			// Force update for V1 DataSource
+			if (!isDataSourceV2) {
+				forceUpdate();
+			}
 		}
 	};
 
@@ -321,6 +339,10 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 			const options = dataSource.getOptions();
 			options.currentPage = page;
 			dataSource.refreshData(options);
+			// Force update for V1 DataSource
+			if (!isDataSourceV2) {
+				forceUpdate();
+			}
 		}
 	};
 

@@ -1,5 +1,6 @@
 import { Rating } from '@mantine/core';
 import React, { CSSProperties, FocusEventHandler } from 'react';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 import { ArchbaseDataSource } from '../datasource';
 
 export interface ArchbaseImageProps<T, ID> {
@@ -33,6 +34,23 @@ export interface ArchbaseImageProps<T, ID> {
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
-export function ArchbaseImage<T, ID>(_props: ArchbaseImageProps<T, ID>) {
-	return <Rating defaultValue={2} />;
+export function ArchbaseImage<T, ID>({
+	dataSource,
+	dataField,
+	disabled = false,
+	readOnly = false,
+	..._props
+}: ArchbaseImageProps<T, ID>) {
+	// V1/V2 Compatibility Pattern (basic setup)
+	const {
+		isDataSourceV2
+	} = useArchbaseV1V2Compatibility<T>(
+		'ArchbaseImage',
+		dataSource,
+		dataField
+	);
+
+	// This component currently just renders a Rating as placeholder
+	// TODO: Implement actual image functionality with DataSource integration
+	return <Rating defaultValue={2} disabled={disabled || readOnly} />;
 }

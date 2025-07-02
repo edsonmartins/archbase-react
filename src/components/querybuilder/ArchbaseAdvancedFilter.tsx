@@ -49,6 +49,7 @@ import { ArchbaseAppContext, ArchbaseError, ltrim } from '@components/core'
 import { ArchbaseList, ArchbaseListContext } from '@components/list'
 import { ArchbaseDataSource } from '@components/datasource'
 import { ArchbaseDateTimePickerEdit, ArchbaseDateTimePickerRange, ArchbaseSelect, ArchbaseSelectItem, ArchbaseSwitch } from '@components/editors'
+import { detectDataSourceVersion } from '@components/core/fallback/ArchbaseSafeMigrationWrapper'
 
 
 interface ArchbaseAdvancedFilterProps<_T, _ID> {
@@ -78,6 +79,8 @@ interface ArchbaseAdvancedFilterState {
   activeFilterIndex: number
   schema: Schema
   sortFocused?: string
+  // 🔄 MIGRAÇÃO V1/V2: Adicionar estado para compatibilidade
+  forceUpdateCounter: number
 }
 
 class ArchbaseAdvancedFilter<T, ID> extends Component<
@@ -182,7 +185,9 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<
       modalOpen: '',
       currentFilter: props.currentFilter ? props.currentFilter : getDefaultEmptyFilter(),
       activeFilterIndex: props.currentFilter ? props.activeFilterIndex : -1,
-      schema: this.createSchema()
+      schema: this.createSchema(),
+      // 🔄 MIGRAÇÃO V1/V2: Inicializar contador de forceUpdate
+      forceUpdateCounter: 0
     }
   }
 
@@ -191,6 +196,28 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<
     nextState: ArchbaseAdvancedFilterState
   ) => {
     return shallowCompare(this, nextProps, nextState)
+  }
+
+  // 🔄 MIGRAÇÃO V1/V2: Helper para criar DataSource com compatibilidade
+  createCompatibleDataSource = (records: any[]) => {
+    const dataSource = new ArchbaseDataSource('dsSortFields', {
+      records: records,
+      grandTotalRecords: records.length,
+      currentPage: 0,
+      totalPages: 0,
+      pageSize: 999999
+    });
+
+    // Detectar se é V1 e aplicar forceUpdate se necessário
+    const isV1 = detectDataSourceVersion(dataSource) !== 'V2';
+    if (isV1) {
+      this.setState({ 
+        ...this.state, 
+        forceUpdateCounter: this.state.forceUpdateCounter + 1 
+      });
+    }
+
+    return dataSource;
   }
 
   getQuickFields = () => {
@@ -694,13 +721,8 @@ class ArchbaseAdvancedFilter<T, ID> extends Component<
                     width="100%"
                     withBorder={false}
                     dataSource={
-                      new ArchbaseDataSource('dsSortFields', {
-                        records: this.state.currentFilter.sort.sortFields,
-                        grandTotalRecords: this.state.currentFilter.sort.sortFields.length,
-                        currentPage: 0,
-                        totalPages: 0,
-                        pageSize: 999999
-                      })
+                      // 🔄 MIGRAÇÃO V1/V2: Usar método de compatibilidade
+                      this.createCompatibleDataSource(this.state.currentFilter.sort.sortFields)
                     }
                     dataFieldId="name"
                     dataFieldText="name"

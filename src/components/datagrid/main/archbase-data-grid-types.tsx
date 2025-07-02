@@ -3,6 +3,14 @@ import { Fragment, MutableRefObject, ReactNode, RefObject } from 'react';
 import { GridRowId, GridSortModel, GridFilterModel, GridPaginationModel } from '@mui/x-data-grid';
 import { ArchbaseDataSource } from 'components/datasource';
 
+/**
+ * DataGrid Types - V1/V2 Compatible
+ * 
+ * These types support both V1 and V2 DataSource versions.
+ * The actual V1/V2 compatibility logic is handled in the 
+ * components that use these types (like ArchbaseDataGrid and useGridData).
+ */
+
 // Interface para a referência externa da Grid
 export interface ArchbaseDataGridRef<T = any> {
   /**

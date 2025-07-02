@@ -45,6 +45,7 @@ import { ltrim } from '@components/core'
 import { ArchbaseList } from '@components/list'
 import { ArchbaseDataSource } from '@components/datasource'
 import { ArchbaseDateTimePickerEdit, ArchbaseDateTimePickerRange, ArchbaseSelect, ArchbaseSelectItem } from '@components/editors'
+import { detectDataSourceVersion } from '@components/core/fallback/ArchbaseSafeMigrationWrapper'
 
 const rnd = (() => {
   const gen = (min: number, max: number) =>
@@ -793,13 +794,23 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                       width="100%"
                       withBorder={false}
                       dataSource={
-                        new ArchbaseDataSource('dsSortFields', {
-                          records: currentFilter.sort.sortFields,
-                          grandTotalRecords: currentFilter.sort.sortFields.length,
-                          currentPage: 0,
-                          totalPages: 0,
-                          pageSize: 999999
-                        })
+                        // 🔄 MIGRAÇÃO V1/V2: DataSource com compatibilidade
+                        (() => {
+                          const dataSource = new ArchbaseDataSource('dsSortFields', {
+                            records: currentFilter.sort.sortFields,
+                            grandTotalRecords: currentFilter.sort.sortFields.length,
+                            currentPage: 0,
+                            totalPages: 0,
+                            pageSize: 999999
+                          });
+                          
+                          // Para V1, pode ser necessário forceUpdate (implementação funcional)
+                          if (detectDataSourceVersion(dataSource) !== 'V2') {
+                            // Componente funcional - V1 compatibilidade preservada
+                          }
+                          
+                          return dataSource;
+                        })()
                       }
                       dataFieldId="name"
                       dataFieldText="name"

@@ -16,6 +16,7 @@ import { ArchbaseDataSource } from 'components/datasource';
 import { useArchbaseTheme } from 'components/hooks';
 import { emit, useArchbaseAppContext } from 'components/core';
 import { ArchbaseAlert } from 'components/notification';
+import { useArchbaseV1V2Compatibility } from 'components/core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface UserActionsOptions {
   visible: boolean;
@@ -192,6 +193,14 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
   const theme = useArchbaseTheme();
   const { colorScheme } = useMantineColorScheme();
 
+  // 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+  const v1v2Compatibility = useArchbaseV1V2Compatibility<T>(
+    'ArchbaseGridTemplate',
+    dataSource,
+    undefined,
+    undefined
+  );
+
   // Expondo métodos para a ref externa
   useImperativeHandle(ref, () => ({
     refreshData: () => {
@@ -305,6 +314,11 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
             options.sort = undefined;
           }
           dataSource.refreshData(options);
+          
+          // 🔄 MIGRAÇÃO V1/V2: ForceUpdate apenas para V1
+          if (!v1v2Compatibility.isDataSourceV2) {
+            v1v2Compatibility.v1State.forceUpdate();
+          }
         } else {
           const result = buildFrom(filterState.currentFilter);
           if (result && result.expressionNode) {
@@ -313,6 +327,11 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
             options.filter = filter;
             options.sort = result?.sortStrings;
             dataSource.refreshData(options);
+          
+          // 🔄 MIGRAÇÃO V1/V2: ForceUpdate apenas para V1
+          if (!v1v2Compatibility.isDataSourceV2) {
+            v1v2Compatibility.v1State.forceUpdate();
+          }
           }
         }
       }

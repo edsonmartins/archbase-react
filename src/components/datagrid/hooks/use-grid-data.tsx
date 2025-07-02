@@ -9,6 +9,7 @@ import {
   GridEventListener
 } from '@mui/x-data-grid';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from 'components/datasource';
+import { useArchbaseV1V2Compatibility } from '../../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 /**
  * Interface para o estado do grid
@@ -191,6 +192,15 @@ export function useGridData<T extends object, ID>({
   getRowId: (row: T) => any;
   columns: any[];
 }): ArchbaseGridState<T> {
+  // V1/V2 Compatibility Pattern
+  const {
+    isDataSourceV2,
+    v1State: { forceUpdate }
+  } = useArchbaseV1V2Compatibility<T>(
+    'useGridData',
+    dataSource
+  );
+
   // Ref para o dataSource para evitar loops
   const dataSourceRef = useRef(dataSource);
 
@@ -237,7 +247,12 @@ export function useGridData<T extends object, ID>({
     pendingRefresh.current = true;
     setIsLoading(true);
     dataSourceRef.current.refreshData(options);
-  }, []);
+    
+    // Force update for V1 DataSource
+    if (!isDataSourceV2) {
+      forceUpdate();
+    }
+  }, [forceUpdate, isDataSourceV2]);
 
   // Handler para atualização de ordenação
   const handleSortModelChange = useCallback((model: GridSortModel) => {
@@ -250,7 +265,12 @@ export function useGridData<T extends object, ID>({
     pendingRefresh.current = true;
     setIsLoading(true);
     dataSourceRef.current.refreshData(options);
-  }, []);
+    
+    // Force update for V1 DataSource
+    if (!isDataSourceV2) {
+      forceUpdate();
+    }
+  }, [forceUpdate, isDataSourceV2]);
 
   // Handler para atualização de filtros
   const handleFilterModelChange = useCallback((model: GridFilterModel) => {
@@ -272,7 +292,12 @@ export function useGridData<T extends object, ID>({
     pendingRefresh.current = true;
     setIsLoading(true);
     dataSourceRef.current.refreshData(options);
-  }, [columns]);
+    
+    // Force update for V1 DataSource
+    if (!isDataSourceV2) {
+      forceUpdate();
+    }
+  }, [columns, forceUpdate, isDataSourceV2]);
 
   // Handler para atualização de seleção
   const handleSelectionModelChange = useCallback((model: GridRowSelectionModel) => {
@@ -393,7 +418,12 @@ export function useGridData<T extends object, ID>({
     pendingRefresh.current = true;
     setIsLoading(true);
     dataSourceRef.current.refreshData();
-  }, []);
+    
+    // Force update for V1 DataSource
+    if (!isDataSourceV2) {
+      forceUpdate();
+    }
+  }, [forceUpdate, isDataSourceV2]);
 
   // Configura o listener do DataSource uma única vez
   useEffect(() => {
@@ -420,6 +450,11 @@ export function useGridData<T extends object, ID>({
         setTotalPages(Math.ceil(dataSourceRef.current.getGrandTotalRecords() / dataSourceRef.current.getPageSize()));
         setIsLoading(false);
         pendingRefresh.current = false;
+        
+        // Force update for V1 DataSource
+        if (!isDataSourceV2) {
+          forceUpdate();
+        }
 
         // Após o refresh, verificar o registro atual do dataSource e atualizar a seleção na grid
         const currentRecord = dataSourceRef.current.getCurrentRecord();
@@ -456,6 +491,11 @@ export function useGridData<T extends object, ID>({
         setTotalPages(Math.ceil(dataSourceRef.current.getGrandTotalRecords() / dataSourceRef.current.getPageSize()));
         setIsLoading(false);
         pendingRefresh.current = false;
+        
+        // Force update for V1 DataSource
+        if (!isDataSourceV2) {
+          forceUpdate();
+        }
       }
       // Quando o registro atual do dataSource muda
       else if (event.type === DataSourceEventNames.afterScroll) {
@@ -526,7 +566,7 @@ export function useGridData<T extends object, ID>({
         eventListenerRef.current = null;
       }
     };
-  }, [dataSource, getRowId, pageSize]); // Dependências minimizadas para evitar ciclos
+  }, [dataSource, getRowId, pageSize, forceUpdate, isDataSourceV2]); // Dependências minimizadas para evitar ciclos
 
   return {
     // Dados

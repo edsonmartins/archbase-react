@@ -46,6 +46,7 @@ import { ArchbaseSimpleFilter } from './ArchbaseSimpleFilter'
 import { ArchbaseDataSource } from '@components/datasource'
 import { ArchbaseAppContext } from '@components/core'
 import { ArchbaseList } from '@components/list'
+import { detectDataSourceVersion } from '@components/core/fallback/ArchbaseSafeMigrationWrapper'
 
 interface ArchbaseCompositeFilterProps {
   variant?: ButtonVariant
@@ -78,6 +79,9 @@ interface ArchbaseCompositeFilterState {
   showEditor: boolean
   expandedFilter: boolean
   dataSource: ArchbaseDataSource<any,any>;
+  // 🔄 MIGRAÇÃO V1/V2: Adicionar estado para compatibilidade
+  isDataSourceV2: boolean;
+  forceUpdateCounter: number;
 }
 
 class ArchbaseCompositeFilter extends Component<
@@ -87,19 +91,26 @@ class ArchbaseCompositeFilter extends Component<
   // declare context: React.ContextType<typeof ArchbaseAppContext>
   constructor(props: ArchbaseCompositeFilterProps) {
     super(props)
+    const dataSource = new ArchbaseDataSource('dsSortFields', {
+      records: this.props.persistenceDelegator.getFilters(),
+      grandTotalRecords: this.props.persistenceDelegator.getFilters().length,
+      currentPage: 0,
+      totalPages: 0,
+      pageSize: 999999
+    });
+
+    // 🔄 MIGRAÇÃO V1/V2: Detectar versão do DataSource  
+    const isDataSourceV2 = detectDataSourceVersion(dataSource) === 'V2';
+
     this.state = {
       modalOpen: '',
       activeFilterIndex: props.activeFilterIndex,
       fields: getFields(props),
       showEditor: false,
       expandedFilter: false,
-	  dataSource: new ArchbaseDataSource('dsSortFields', {
-		records: this.props.persistenceDelegator.getFilters(),
-		grandTotalRecords: this.props.persistenceDelegator.getFilters().length,
-		currentPage: 0,
-		totalPages: 0,
-		pageSize: 999999
-	  })
+      dataSource: dataSource,
+      isDataSourceV2: isDataSourceV2,
+      forceUpdateCounter: 0
     }
   }
 
@@ -111,17 +122,25 @@ class ArchbaseCompositeFilter extends Component<
   }
 
   UNSAFE_componentWillReceiveProps = (nextProps: ArchbaseCompositeFilterProps) => {
+    const dataSource = new ArchbaseDataSource('dsSortFields', {
+      records: this.props.persistenceDelegator.getFilters(),
+      grandTotalRecords: this.props.persistenceDelegator.getFilters().length,
+      currentPage: 0,
+      totalPages: 0,
+      pageSize: 999999
+    });
+
+    // 🔄 MIGRAÇÃO V1/V2: Detectar versão e aplicar forceUpdate se V1
+    const isDataSourceV2 = detectDataSourceVersion(dataSource) === 'V2';
+
     this.setState({
       ...this.state,
       fields: getFields(nextProps),
       activeFilterIndex: nextProps.activeFilterIndex,
-	  dataSource: new ArchbaseDataSource('dsSortFields', {
-		records: this.props.persistenceDelegator.getFilters(),
-		grandTotalRecords: this.props.persistenceDelegator.getFilters().length,
-		currentPage: 0,
-		totalPages: 0,
-		pageSize: 999999
-	  })
+      dataSource: dataSource,
+      isDataSourceV2: isDataSourceV2,
+      // Para V1, incrementar contador para forçar re-render
+      forceUpdateCounter: !isDataSourceV2 ? this.state.forceUpdateCounter + 1 : this.state.forceUpdateCounter
     })
   }
 
@@ -137,6 +156,14 @@ class ArchbaseCompositeFilter extends Component<
     if (this.props.onChangeSelectedFilter && data && data.filter) {
       const filter = JSON.parse(data.filter)
       this.props.onChangeSelectedFilter(filter, index)
+      
+      // 🔄 MIGRAÇÃO V1/V2: ForceUpdate apenas para V1
+      if (!this.state.isDataSourceV2) {
+        this.setState({ 
+          ...this.state, 
+          forceUpdateCounter: this.state.forceUpdateCounter + 1 
+        });
+      }
     }
   }
 
@@ -150,6 +177,10 @@ class ArchbaseCompositeFilter extends Component<
     if (this.props.currentFilter) {
       filterType = this.props.currentFilter.filter.filterType
     }
+
+    // 🔄 MIGRAÇÃO V1/V2: Componente migrado para suporte dual compatibility
+    // DataSource versão: {this.state.isDataSourceV2 ? 'V2' : 'V1'}
+    // ForceUpdate counter (V1 only): {this.state.forceUpdateCounter}
 
     return (
       <ScrollArea h={this.props.height} w={this.props.width}>

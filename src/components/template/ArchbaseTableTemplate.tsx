@@ -1,4 +1,5 @@
 import { emit, useArchbaseAppContext } from '@components/core';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseDataTable, ToolBarActions } from '@components/datatable';
 import { useArchbaseTheme } from '@components/hooks';
@@ -153,6 +154,15 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 		expandedFilter: false,
 	});
 
+	// V1/V2 Compatibility Pattern
+	const {
+		isDataSourceV2,
+		v1State: { forceUpdate }
+	} = useArchbaseV1V2Compatibility<T>(
+		'ArchbaseTableTemplate',
+		dataSource
+	);
+
 	useEffect(() => {
 		const state = getFilter(filterOptions, store, filterPersistenceDelegator);
 		setFilterState(state);
@@ -223,6 +233,10 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 						options.sort = undefined;
 					}
 					dataSource.refreshData(options);
+					// Force update for V1 DataSource
+					if (!isDataSourceV2) {
+						forceUpdate();
+					}
 				} else {
 					const result = buildFrom(filterState.currentFilter);
 					if (result && result.expressionNode) {
@@ -231,6 +245,10 @@ export function ArchbaseTableTemplate<T extends object, ID>({
 						options.filter = filter;
 						options.sort = result?.sortStrings;
 						dataSource.refreshData(options);
+						// Force update for V1 DataSource
+						if (!isDataSourceV2) {
+							forceUpdate();
+						}
 					}
 				}
 			}

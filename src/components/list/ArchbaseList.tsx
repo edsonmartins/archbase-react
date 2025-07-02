@@ -3,6 +3,7 @@ import { uniqueId } from 'lodash';
 import React, { FocusEventHandler, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { ArchbaseError } from '../core';
 import { ArchbaseObjectHelper } from '../core/helper';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseWillUnmount } from '../hooks';
 import { useArchbaseForceRerender } from '../hooks/useArchbaseForceRenderer';
@@ -175,6 +176,15 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 	const [currentFilter, setCurrentFilter] = useState(filter);
 	const [idList] = useState(id);
 
+	// V1/V2 Compatibility Pattern
+	const {
+		isDataSourceV2,
+		v1State: { forceUpdate }
+	} = useArchbaseV1V2Compatibility<T>(
+		'ArchbaseList',
+		dataSource
+	);
+
 	// Efeito para atualizar o índice ativo quando a propriedade controlledActiveIndex muda
 	useEffect(() => {
 		if (controlledActiveIndex !== undefined) {
@@ -205,6 +215,10 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 					}
 				} else {
 					setUpdateCounter((prev) => prev + 1);
+					// Force update for V1 DataSource
+					if (!isDataSourceV2) {
+						forceUpdate();
+					}
 				}
 			}
 		};
@@ -220,7 +234,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 				dataSource.removeListener(dataSourceListener);
 			}
 		};
-	}, [dataSource, activeIndex, onSelectListItem]);
+	}, [dataSource, activeIndex, onSelectListItem, forceUpdate, isDataSourceV2]);
 
 	useEffect(() => {
 		setCurrentFilter(filter);
@@ -464,13 +478,17 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 		if (dataSource) {
 			const newChildrens = buildChildrensFromDataSource(dataSource);
 			setRebuildedChildrens(newChildrens);
+			// Force update for V1 DataSource on data changes
+			if (!isDataSourceV2) {
+				forceUpdate();
+			}
 		} else if (children) {
 			const newChildrens = rebuildChildrens();
 			setRebuildedChildrens(newChildrens);
 		} else {
 			setRebuildedChildrens([]);
 		}
-	}, [updateCounter, activeIndex, dataSource?.lastDataChangedAt, dataSource?.lastDataBrowsingOn, children]);
+	}, [updateCounter, activeIndex, dataSource?.lastDataChangedAt, dataSource?.lastDataBrowsingOn, children, forceUpdate, isDataSourceV2]);
 
 	return (
 		<Paper

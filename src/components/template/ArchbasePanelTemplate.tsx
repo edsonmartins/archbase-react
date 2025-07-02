@@ -8,6 +8,7 @@ import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
 import { t } from 'i18next';
 import React, { CSSProperties, ReactNode, useMemo, useRef, useState } from 'react';
 import { useArchbaseAppContext } from '../core';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 import type { ArchbaseDataSource } from '../datasource';
 import {
 	ArchbaseQueryBuilder,
@@ -118,6 +119,16 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 		activeFilterIndex: -1,
 		expandedFilter: false,
 	});
+
+	// V1/V2 Compatibility Pattern
+	const {
+		isDataSourceV2,
+		v1State: { forceUpdate }
+	} = useArchbaseV1V2Compatibility<T>(
+		'ArchbasePanelTemplate',
+		dataSource
+	);
+
 	const userActionsBuilded: ArchbaseAction[] = useMemo(() => {
 		const userActionsEnd = { ...defaultUserActions, ...userActions };
 

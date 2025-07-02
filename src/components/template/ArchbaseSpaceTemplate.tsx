@@ -18,6 +18,7 @@ import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
 import { t } from 'i18next';
 import React, { CSSProperties, Fragment, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useArchbaseAppContext } from '../core';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 import type { ArchbaseDataSource } from '../datasource';
 import { ArchbaseDebugInspector } from '../debug/objectinspector';
 import { ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed, ArchbaseSpaceTop } from '../layout/spaces';
@@ -344,6 +345,14 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 	});
 	useHotkeys([[debugOptions && debugOptions.debugLayoutHotKey, () => setDebug(!_debug)]]);
 	const appContext = useArchbaseAppContext();
+
+	// V1/V2 Compatibility Pattern (basic setup)
+	const {
+		isDataSourceV2
+	} = useArchbaseV1V2Compatibility<T>(
+		'ArchbaseSpaceTemplate',
+		undefined // No dataSource in this template
+	);
 	const innerComponentRef = innerRef || useRef<any>();
 	const headerRef = useRef<any>();
 	const footerRef = useRef<any>();
