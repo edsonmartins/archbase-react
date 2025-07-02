@@ -22,6 +22,8 @@ try {
   console.error('Erro ao carregar ts-patch:', err);
 }
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 export default [
   {
     input: 'src/index.tsx',
@@ -65,7 +67,7 @@ export default [
       json(),
       url(),
       svgr(),
-      terser(),
+      ...(isProduction ? [terser()] : []),
       del({ targets: 'dist/*' }),
     ],
   },
