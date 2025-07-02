@@ -2,11 +2,13 @@ import {
 	DateTimePicker,
 	DateTimePickerProps,
   } from '@mantine/dates';
+  import { useForceUpdate } from '@mantine/hooks';
   import type { CSSProperties, FocusEventHandler, ForwardedRef } from 'react';
   import React, { useCallback, useEffect, useState } from 'react';
   import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
   import { DataSourceEventNames } from '../datasource';
   import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+  import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
   
   type OmittedDateTimePickerProps = Omit<DateTimePickerProps, 'value' | 'onChange'>;
   
@@ -28,9 +30,9 @@ import {
 	/** Edit width */
 	width?: string | number | undefined;
 	/** Event occurs when focus exits the edit */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Event occurs when the edit receives focus */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Event when the edit value changes (internal use) */
 	onChange?: (value: Date | null) => void;
 	/** Event when the edit value changes (external use) */
@@ -60,6 +62,20 @@ import {
   }: ArchbaseDateTimePickerEditProps<T, ID>, ref: ForwardedRef<HTMLButtonElement>) {
 	const [currentValue, setCurrentValue] = useState<Date | null>(value || null);
 	const [internalError, setInternalError] = useState<string | undefined>(undefined);
+	const forceUpdate = useForceUpdate();
+
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<Date | null>(
+		'ArchbaseDateTimePickerEdit',
+		dataSource,
+		dataField,
+		null
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseDateTimePickerEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
   
 	useEffect(() => {
 	  setInternalError(undefined);
@@ -92,13 +108,17 @@ import {
 		  event.type === DataSourceEventNames.afterEdit
 		) {
 		  loadDataSourceFieldValue();
+		  // 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+		  if (!v1v2Compatibility.isDataSourceV2) {
+			forceUpdate();
+		  }
 		}
   
 		if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 		  setInternalError(event.error);
 		}
 	  }
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
   
 	useArchbaseDidMount(() => {
 	  loadDataSourceFieldValue();
@@ -117,9 +137,8 @@ import {
 	  const dateValue = changedValue ? new Date(changedValue) : null;
 	  setCurrentValue(dateValue);
   
-	  if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== dateValue) {
-		dataSource.setFieldValue(dataField, dateValue);
-	  }
+	  // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+	  v1v2Compatibility.handleValueChange(dateValue);
   
 	  if (onChange) {
 		onChange(dateValue);
@@ -150,11 +169,8 @@ import {
 	};
   
 	const isReadOnly = () => {
-	  let tmpReadOnly = readOnly;
-	  if (dataSource && !readOnly) {
-		tmpReadOnly = dataSource.isBrowsing();
-	  }
-	  return tmpReadOnly;
+	  // 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+	  return v1v2Compatibility.isReadOnly(readOnly);
 	};
   
 	return (

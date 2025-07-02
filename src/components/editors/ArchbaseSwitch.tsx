@@ -4,7 +4,8 @@ import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface ArchbaseSwitchProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do switch */
@@ -46,9 +47,9 @@ export interface ArchbaseSwitchProps<T, ID> {
 	/** Último erro ocorrido no switch */
 	error?: string;
 	/** Evento quando o foco sai do switch */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o switch recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o valor do switch é alterado */
 	onChangeValue?: (value: any, event: any) => void;
 	/** Referência para o componente interno */
@@ -79,6 +80,18 @@ export function ArchbaseSwitch<T, ID>({
 	onChangeValue = () => {},
 	innerRef,
 }: ArchbaseSwitchProps<T, ID>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<any>(
+		'ArchbaseSwitch',
+		dataSource,
+		dataField,
+		falseValue
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseSwitch] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
 	const [checked, setChecked] = useState<boolean | undefined>(isChecked);
 	const innerComponentRef = useRef<any>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
@@ -114,14 +127,17 @@ export function ArchbaseSwitch<T, ID>({
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -142,14 +158,16 @@ export function ArchbaseSwitch<T, ID>({
 		loadDataSourceFieldValue();
 	}, []);
 
-	const handleChange = (event) => {
+	const handleChange = (event, isReadOnly) => {
+		if (isReadOnly) return;
 		const changedChecked = event.target.checked;
 		const resultValue = changedChecked ? trueValue : falseValue;
 
 		setChecked(changedChecked);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== resultValue) {
-			dataSource.setFieldValue(dataField, resultValue);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(resultValue);
 		}
 
 		if (onChangeValue) {
@@ -170,11 +188,8 @@ export function ArchbaseSwitch<T, ID>({
 	};
 
 	const isReadOnly = () => {
-		let tmpRreadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpRreadOnly = dataSource.isBrowsing();
-		}
-		return tmpRreadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	return (
@@ -186,7 +201,7 @@ export function ArchbaseSwitch<T, ID>({
 			checked={checked}
 			ref={innerRef || innerComponentRef}
 			value={checked ? trueValue : falseValue}
-			onChange={handleChange}
+			onChange={(event) => handleChange(event, isReadOnly())}
 			onBlur={handleOnFocusExit}
 			onFocus={handleOnFocusEnter}
 			offLabel={offLabel}

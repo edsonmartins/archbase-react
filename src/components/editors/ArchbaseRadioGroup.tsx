@@ -6,6 +6,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface ArchbaseRadioGroupProps<T, ID, O> {
 	/** Fonte de dados onde será atribuido o valor do RadioGroup*/
@@ -25,9 +26,9 @@ export interface ArchbaseRadioGroupProps<T, ID, O> {
 	/** Último erro ocorrido no RadioGroup */
 	error?: string;
 	/** Evento quando o foco sai do RadioGroup */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o RadioGroup recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando um valor é selecionado */
 	onSelectValue?: (value: any) => void;
 	/** Function que retorna o label de uma RadioItem */
@@ -103,6 +104,18 @@ export function ArchbaseRadioGroup<T, ID, O>({
 	children,
 	direction = 'vertical',
 }: ArchbaseRadioGroupProps<T, ID, O>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<any>(
+		'ArchbaseRadioGroup',
+		dataSource,
+		dataField,
+		''
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseRadioGroup] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
 	const [options, _setOptions] = useState<RadioItemProps[]>(
 		buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
 	);
@@ -135,23 +148,25 @@ export function ArchbaseRadioGroup<T, ID, O>({
 
 	const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
 		if (dataSource && dataField) {
-			switch (event.type) {
-				case (DataSourceEventNames.dataChanged,
-				DataSourceEventNames.recordChanged,
-				DataSourceEventNames.afterScroll,
-				DataSourceEventNames.afterEdit,
-				DataSourceEventNames.afterCancel): {
-					loadDataSourceFieldValue();
+			if (
+				event.type === DataSourceEventNames.dataChanged ||
+				event.type === DataSourceEventNames.recordChanged ||
+				event.type === DataSourceEventNames.afterScroll ||
+				event.type === DataSourceEventNames.afterCancel ||
+				event.type === DataSourceEventNames.afterEdit
+			) {
+				loadDataSourceFieldValue();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
 					forceUpdate();
-					break;
 				}
-				default:
 			}
+
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -180,7 +195,8 @@ export function ArchbaseRadioGroup<T, ID, O>({
 			savedValue = convertFromString(currentSelectedValue);
 		}
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== savedValue) {
-			dataSource.setFieldValue(dataField, savedValue);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(savedValue);
 		}
 
 		if (onSelectValue) {

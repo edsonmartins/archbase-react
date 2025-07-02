@@ -37,7 +37,6 @@ export {
 
 // Re-export dos tipos necessários da versão V1 para compatibilidade
 export type {
-  ArchbaseDataSourceConfig,
   DataSourceOptions,
   FilterFn,
   IDataSourceValidator,

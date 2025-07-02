@@ -12,6 +12,8 @@ module.exports = {
     '^query-string$': '<rootDir>/src/__mocks__/query-string.js',
     // Mock other problematic dependencies for tests
     '^../querybuilder/ArchbaseFilterDSL$': '<rootDir>/src/__mocks__/ArchbaseFilterDSL.js',
+    // Mock specific CSS files that cause issues
+    './ArchbaseFloatingWindow.css': '<rootDir>/src/__mocks__/ArchbaseFloatingWindow.css.js',
     // Mock CSS and other static files
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },

@@ -5,6 +5,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface ArchbaseChipProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do chip */
@@ -34,9 +35,9 @@ export interface ArchbaseChipProps<T, ID> {
 	/** Valor de tamanho predefinido */
 	size?: MantineSize;
 	/** Evento quando o foco sai do chip */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o chip recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o valor do chip é alterado */
 	onChangeValue?: (value: any) => void;
 	/** Referência para o componente interno */
@@ -65,6 +66,18 @@ export function ArchbaseChip<T, ID>({
 	onChangeValue = () => {},
 	innerRef,
 }: ArchbaseChipProps<T, ID>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<any>(
+		'ArchbaseChip',
+		dataSource,
+		dataField,
+		falseValue
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseChip] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
 	const [checked, setChecked] = useState<boolean>(isChecked ? true : false);
 	const innerComponentRef = innerRef || useRef<any>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
@@ -96,13 +109,16 @@ export function ArchbaseChip<T, ID>({
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -129,7 +145,8 @@ export function ArchbaseChip<T, ID>({
 		setChecked(changedChecked);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== resultValue) {
-			dataSource.setFieldValue(dataField, resultValue);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(resultValue);
 		}
 
 		if (onChangeValue) {
@@ -150,11 +167,8 @@ export function ArchbaseChip<T, ID>({
 	};
 
 	const isReadOnly = () => {
-		let tmpRreadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpRreadOnly = dataSource.isBrowsing();
-		}
-		return tmpRreadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	return (

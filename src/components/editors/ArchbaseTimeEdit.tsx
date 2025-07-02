@@ -14,6 +14,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface ArchbaseTimeEditProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do edit */
@@ -49,9 +50,9 @@ export interface ArchbaseTimeEditProps<T, ID> {
 	/** Último erro ocorrido no edit */
 	error?: string;
 	/** Evento quando o foco sai do edit */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o edit recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o valor do edit é alterado */
 	onChangeValue?: (value: string, event: any) => void;
 	onKeyDown?: (event: any) => void;
@@ -89,6 +90,19 @@ export function ArchbaseTimeEdit<T, ID>({
 	variant,
 	withPicker = true
 }: ArchbaseTimeEditProps<T, ID>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<string>(
+		'ArchbaseTimeEdit',
+		dataSource,
+		dataField,
+		''
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseTimeEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
 	const [currentValue, setCurrentValue] = useState<string>(value || '');
 	const timeInputRef = useRef<HTMLInputElement>(null);
 	const theme = useMantineTheme();
@@ -133,14 +147,17 @@ export function ArchbaseTimeEdit<T, ID>({
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -162,7 +179,8 @@ export function ArchbaseTimeEdit<T, ID>({
 		setCurrentValue((_prev) => changedValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-			dataSource.setFieldValue(dataField, changedValue);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(changedValue);
 		}
 
 		if (onChangeValue) {
@@ -190,11 +208,8 @@ export function ArchbaseTimeEdit<T, ID>({
 	};
 
 	const isReadOnly = () => {
-		let tmpReadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpReadOnly = dataSource.isBrowsing();
-		}
-		return tmpReadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	// Componente padrão do picker de hora

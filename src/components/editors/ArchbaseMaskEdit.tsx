@@ -16,6 +16,7 @@ import { IMaskInput } from 'react-imask';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 import { t } from 'i18next';
 
 export enum MaskPattern {
@@ -65,9 +66,9 @@ export interface ArchbaseMaskEditProps<T, ID>
 	/** Indicador se deverá ser salvo o valor com a máscara */
 	saveWithMask?: boolean;
 	/** Evento quando o foco sai do edit */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o edit recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o valor do edit é alterado */
 	onChangeValue?: (value: string, event: any) => void;
 	/** Referência para o componente interno */
@@ -123,6 +124,19 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 		...others
 	} = useInputProps('ArchbaseMaskEdit', defaultProps, props);
 	const id = useId();
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<string>(
+		'ArchbaseMaskEdit',
+		props.dataSource,
+		props.dataField,
+		''
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && props.dataSource) {
+		console.log(`[ArchbaseMaskEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
 	const innerComponentRef = innerRef || useRef<any>();
 	const [value, setValue] = useState<string>('');
 	const forceUpdate = useForceUpdate();
@@ -173,14 +187,17 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -211,7 +228,8 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 		setValue((_prev) => changedValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-			dataSource.setFieldValue(dataField, changedValue);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(changedValue);
 		}
 
 		if (onChangeValue) {
@@ -239,11 +257,8 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	};
 
 	const isReadOnly = () => {
-		let tmpRreadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpRreadOnly = dataSource.isBrowsing();
-		}
-		return tmpRreadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	return (

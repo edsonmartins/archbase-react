@@ -13,6 +13,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface ArchbasePasswordEditProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do edit */
@@ -42,9 +43,9 @@ export interface ArchbasePasswordEditProps<T, ID> {
 	/** Último erro ocorrido no edit */
 	error?: string;
 	/** Evento quando o foco sai do edit */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o edit recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o valor do edit é alterado */
 	onChangeValue?: (value: any, event: any) => void;
 	onKeyDown?: (event: any) => void;
@@ -76,6 +77,19 @@ export function ArchbasePasswordEdit<T, ID>({
 	onChangeValue = () => {},
 	variant,
 }: ArchbasePasswordEditProps<T, ID>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<string>(
+		'ArchbasePasswordEdit',
+		dataSource,
+		dataField,
+		''
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbasePasswordEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
 	const [currentValue, setCurrentValue] = useState<string>(value || '');
 	const innerComponentRef = useRef<any>();
 	const theme = useMantineTheme();
@@ -119,14 +133,17 @@ export function ArchbasePasswordEdit<T, ID>({
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -148,7 +165,8 @@ export function ArchbasePasswordEdit<T, ID>({
 		setCurrentValue((_prev) => changedValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-			dataSource.setFieldValue(dataField, changedValue);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(changedValue);
 		}
 
 		if (onChangeValue) {
@@ -176,11 +194,8 @@ export function ArchbasePasswordEdit<T, ID>({
 	};
 
 	const isReadOnly = () => {
-		let tmpRreadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpRreadOnly = dataSource.isBrowsing();
-		}
-		return tmpRreadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	return (

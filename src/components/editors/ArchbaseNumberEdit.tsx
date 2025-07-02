@@ -2,6 +2,7 @@ import { CloseButton, CloseButtonProps, MantineSize, TextInput, TextInputProps }
 import { useForceUpdate } from '@mantine/hooks';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@components/datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@components/hooks';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -116,8 +117,8 @@ export interface ArchbaseNumberEditProps<T, ID>
   width?: string | number | undefined;
   className?: string;
   error?: string;
-  onFocusExit?: FocusEventHandler<HTMLInputElement>;
-  onFocusEnter?: FocusEventHandler<HTMLInputElement>;
+  onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
   onChangeValue?: (maskValue: string, value: number | null, event: any) => void;
   value?: number | string;
   decimalSeparator?: string;
@@ -168,6 +169,19 @@ export function ArchbaseNumberEdit<T, ID>({
   maxValue = Number.MAX_SAFE_INTEGER,
   ...others
 }: ArchbaseNumberEditProps<T, ID>) {
+  // 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+  const v1v2Compatibility = useArchbaseV1V2Compatibility<number | null>(
+    'ArchbaseNumberEdit',
+    dataSource,
+    dataField,
+    allowEmpty ? null : 0
+  );
+
+  // 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+  if (process.env.NODE_ENV === 'development' && dataSource) {
+    console.log(`[ArchbaseNumberEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+  }
+
   const [maskedValue, setMaskedValue] = useState<string>('');
   const [currentValue, setCurrentValue] = useState<number | null>(0);
   const maskedValuePrev = useArchbasePrevious(maskedValue);
@@ -244,13 +258,16 @@ export function ArchbaseNumberEdit<T, ID>({
         event.type === DataSourceEventNames.afterSave
       ) {
         loadDataSourceFieldValue();
-        forceUpdate();
+        // 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+        if (!v1v2Compatibility.isDataSourceV2) {
+          forceUpdate();
+        }
       }
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
         setInternalError(event.error);
       }
     }
-  }, [dataSource, dataField, loadDataSourceFieldValue, forceUpdate]);
+  }, [dataSource, dataField, loadDataSourceFieldValue, forceUpdate, v1v2Compatibility.isDataSourceV2]);
 
   useArchbaseDidMount(() => {
     const result = prepareProps();
@@ -316,7 +333,8 @@ export function ArchbaseNumberEdit<T, ID>({
     setCurrentValue(newValue);
 
     if (dataSource && !dataSource.isBrowsing() && dataField) {
-      dataSource.setFieldValue(dataField, newValue);
+      // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+      v1v2Compatibility.handleValueChange(newValue);
     }
 
     if (onChangeValue) {
@@ -376,7 +394,8 @@ export function ArchbaseNumberEdit<T, ID>({
     setCurrentValue(result.value);
 
     if (dataSource && !dataSource.isBrowsing() && dataField) {
-      dataSource.setFieldValue(dataField, allowEmpty ? null : 0);
+      // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+      v1v2Compatibility.handleValueChange(allowEmpty ? null : 0);
     }
 
     if (onClear) {
@@ -427,7 +446,8 @@ export function ArchbaseNumberEdit<T, ID>({
       setCurrentValue(newNumericValue);
 
       if (dataSource && !dataSource.isBrowsing() && dataField) {
-        dataSource.setFieldValue(dataField, newNumericValue);
+        // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+        v1v2Compatibility.handleValueChange(newNumericValue);
       }
 
       if (onChangeValue) {
@@ -476,7 +496,8 @@ export function ArchbaseNumberEdit<T, ID>({
       setCurrentValue(newValue);
 
       if (dataSource && !dataSource.isBrowsing() && dataField) {
-        dataSource.setFieldValue(dataField, newValue);
+        // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+        v1v2Compatibility.handleValueChange(newValue);
       }
 
       if (onChangeValue) {
@@ -495,13 +516,8 @@ export function ArchbaseNumberEdit<T, ID>({
   };
 
   const isReadOnly = () => {
-    if (readOnly !== undefined) {
-      return readOnly
-    }
-    if (dataSource) {
-      return dataSource.isBrowsing();
-    }
-    return false
+    // 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+    return v1v2Compatibility.isReadOnly(readOnly);
   };
 
   const _rightSection =

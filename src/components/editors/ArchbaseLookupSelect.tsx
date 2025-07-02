@@ -3,6 +3,8 @@ import { ArchbaseError } from '../core';
 import { ArchbaseObjectHelper } from '../core/helper';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
+import { useForceUpdate } from '@mantine/hooks';
 import { ArchbaseSelect, ArchbaseSelectProps } from './ArchbaseSelect';
 
 export interface ArchbaseLookupSelectProps<T, ID, O> extends Omit<ArchbaseSelectProps<T, ID, O>, 'getOptionLabel'> {
@@ -65,12 +67,27 @@ export function ArchbaseLookupSelect<T, ID, O>({
 	getOptionValue,
 	...otherProps
 }: ArchbaseLookupSelectProps<T, ID, O>) {
+	const forceUpdate = useForceUpdate();
+
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<any>(
+		'ArchbaseLookupSelect',
+		dataSource,
+		dataField,
+		null
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseLookupSelect] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
 	const [currentOptions, setCurrentOptions] = useState<any[] | undefined>(() =>
 		rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId),
 	);
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 
-	const lookupDataSourceEvent = (event: DataSourceEvent<O>) => {
+	const lookupDataSourceEvent = useCallback((event: DataSourceEvent<O>) => {
 		if (lookupDataSource) {
 			if (
 				event.type === DataSourceEventNames.dataChanged ||
@@ -82,12 +99,16 @@ export function ArchbaseLookupSelect<T, ID, O>({
 				if (lookupDataSource) {
 					setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
 				}
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	};
+	}, [v1v2Compatibility.isDataSourceV2, lookupDataSource, lookupDataFieldText, lookupDataFieldId, dataField]);
 
 	const getDataSourceFieldValue = () => {
 		let result = '';
@@ -116,16 +137,15 @@ export function ArchbaseLookupSelect<T, ID, O>({
 				})
 			) {
 				if (dataSource && dataField) {
-					if (!simpleValue) {
-						dataSource.setFieldValue(dataField, lookupDataSource.getCurrentRecord());
-					} else {
-						dataSource.setFieldValue(dataField, getOptionValue(value));
-					}
+					const newValue = !simpleValue ? lookupDataSource.getCurrentRecord() : getOptionValue(value);
+					// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+					v1v2Compatibility.handleValueChange(newValue);
 				}
 			}
 		} else {
 			if (dataSource && dataField) {
-				dataSource.setFieldValue(dataField, null);
+				// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+				v1v2Compatibility.handleValueChange(null);
 			}
 		}
 	};

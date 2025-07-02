@@ -1540,4 +1540,21 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 			}
 		}
 	}
+
+	/**
+	 * Define um erro para um campo específico
+	 * @param fieldName Nome do campo
+	 * @param errors Array de mensagens de erro
+	 */
+	public setFieldError(fieldName: string, errors: string[]): void {
+		if (errors && errors.length > 0) {
+			this.emitter.emit('onFieldError', fieldName, errors[0]);
+			this.emit({
+				type: DataSourceEventNames.onFieldError,
+				fieldName,
+				error: errors[0],
+				originalError: errors
+			});
+		}
+	}
 }

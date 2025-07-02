@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   Button,
   Group,
@@ -14,6 +14,8 @@ import {
 } from '@mantine/core'
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 import { ArchbaseDataSource } from '@components/datasource'
+import { useArchbaseV1V2Compatibility } from '@components/core/patterns/ArchbaseV1V2CompatibilityPattern'
+import { useArchbaseDataSourceListener } from '@components/hooks'
 
 // Definindo props com genéricos para os tipos de item das duas listas
 export interface ArchbaseDualListSelectorProps<T, U> {
@@ -43,15 +45,50 @@ export function ArchbaseDualListSelector<T, U>({
   titleAvailable = 'Disponíveis',
   titleAssigned = 'Selecionados'
 }: ArchbaseDualListSelectorProps<T, U>) {
+  // 🔄 MIGRAÇÃO V1/V2: Hooks de compatibilidade para ambos DataSources
+  const availableV1V2 = useArchbaseV1V2Compatibility<T[]>(
+    'ArchbaseDualListSelector-Available',
+    availableItemsDS,
+    undefined,
+    []
+  );
+
+  const assignedV1V2 = useArchbaseV1V2Compatibility<U[]>(
+    'ArchbaseDualListSelector-Assigned', 
+    assignedItemsDS,
+    undefined,
+    []
+  );
+
   const [availableItems, setAvailableItems] = useState<T[]>([])
   const [assignedItems, setAssignedItems] = useState<U[]>([])
   const [selectedAvailable, setSelectedAvailable] = useState<string[]>([])
   const [selectedAssigned, setSelectedAssigned] = useState<string[]>([])
 
+  // 🔄 MIGRAÇÃO V1/V2: Função para carregar dados condicionalmente
+  const loadItemsData = useCallback(() => {
+    if (availableItemsDS) {
+      setAvailableItems(availableItemsDS.browseRecords())
+    }
+    if (assignedItemsDS) {
+      setAssignedItems(assignedItemsDS.browseRecords())
+    }
+  }, [availableItemsDS, assignedItemsDS]);
+
+  // 🔄 MIGRAÇÃO V1/V2: Listeners para ambos DataSources
+  useArchbaseDataSourceListener<T, any>({
+    dataSource: availableItemsDS,
+    listener: availableV1V2.dataSourceEvent
+  });
+
+  useArchbaseDataSourceListener<U, any>({
+    dataSource: assignedItemsDS,
+    listener: assignedV1V2.dataSourceEvent
+  });
+
   useEffect(() => {
-    setAvailableItems(availableItemsDS.browseRecords())
-    setAssignedItems(assignedItemsDS.browseRecords())
-  }, [availableItemsDS, assignedItemsDS])
+    loadItemsData();
+  }, [loadItemsData])
 
   const getItemId = (item: any, field: string | ((item: any) => string)): string =>
     typeof field === 'function' ? field(item) : item[field]
@@ -68,8 +105,18 @@ export function ArchbaseDualListSelector<T, U>({
       const originalItem = availableItems.find((item) => getItemId(item, idFieldAvailable) === id)
       if (originalItem) {
         const newItem = handleCreateAssociationObject(originalItem)
-        assignedItemsDS.insert(newItem)
-        assignedItemsDS.save()
+        
+        // 🔄 MIGRAÇÃO V1/V2: Usar operações condicionais baseadas na versão
+        if (assignedV1V2.isDataSourceV2) {
+          // Para DataSource V2: usar métodos otimizados
+          assignedItemsDS.insert(newItem)
+          assignedItemsDS.save()
+        } else {
+          // Para DataSource V1: comportamento original + forceUpdate
+          assignedItemsDS.insert(newItem)
+          assignedItemsDS.save()
+          assignedV1V2.v1State.forceUpdate()
+        }
       }
     })
     setSelectedAvailable([])
@@ -84,7 +131,16 @@ export function ArchbaseDualListSelector<T, U>({
           typeof idFieldAssigned === 'function'
             ? { customId: idFieldAssigned(record) }
             : { [idFieldAssigned]: id }
-        assignedItemsDS.remove(() => assignedItemsDS.locate(criteria))
+        
+        // 🔄 MIGRAÇÃO V1/V2: Usar operações condicionais baseadas na versão
+        if (assignedV1V2.isDataSourceV2) {
+          // Para DataSource V2: usar métodos otimizados
+          assignedItemsDS.remove(() => assignedItemsDS.locate(criteria))
+        } else {
+          // Para DataSource V1: comportamento original + forceUpdate
+          assignedItemsDS.remove(() => assignedItemsDS.locate(criteria))
+          assignedV1V2.v1State.forceUpdate()
+        }
       }
     })
     setSelectedAssigned([])

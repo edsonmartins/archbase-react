@@ -2,7 +2,8 @@ import { Input, MantineSize, Rating } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import React, { CSSProperties, FocusEventHandler, useCallback, useEffect, useRef, useState } from 'react';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface ArchbaseRatingProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do rating*/
@@ -44,9 +45,9 @@ export interface ArchbaseRatingProps<T, ID> {
 	/** Tamanho do rating */
 	size?: MantineSize;
 	/** Evento quando o foco sai do rating */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o rating recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o valor do rating é alterado */
 	onChangeValue?: (value?: number) => void;
 	/** Referência para o componente interno */
@@ -69,6 +70,18 @@ export function ArchbaseRating<T, ID>({
 	label,
 	description,
 }: ArchbaseRatingProps<T, ID>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<number>(
+		'ArchbaseRating',
+		dataSource,
+		dataField,
+		0
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseRating] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
 	const [currentValue, setCurrentValue] = useState<number | undefined>(value);
 	const innerComponentRef = innerRef || useRef<any>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
@@ -105,13 +118,16 @@ export function ArchbaseRating<T, ID>({
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -136,7 +152,8 @@ export function ArchbaseRating<T, ID>({
 		setCurrentValue((_prev) => value);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== value) {
-			dataSource.setFieldValue(dataField, value);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(value);
 		}
 
 		if (onChangeValue) {
@@ -157,11 +174,8 @@ export function ArchbaseRating<T, ID>({
 	};
 
 	const isReadOnly = () => {
-		let tmpRreadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpRreadOnly = dataSource.isBrowsing();
-		}
-		return tmpRreadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	return (

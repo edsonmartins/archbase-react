@@ -1,10 +1,12 @@
 import { JsonInput, MantineSize } from '@mantine/core';
+import { useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { isBase64 } from '../core/utils';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface ArchbaseJsonEditProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do json input */
@@ -42,9 +44,9 @@ export interface ArchbaseJsonEditProps<T, ID> {
 	/** Último erro ocorrido no json input */
 	error?: string;
 	/** Evento quando o foco sai do json input */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLTextAreaElement>) => void;
 	/** Evento quando o json input recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLTextAreaElement>) => void;
 	/** Evento quando o valor do json input é alterado */
 	onChangeValue?: (value: any) => void;
 	/** Referência para o componente interno */
@@ -72,9 +74,22 @@ export function ArchbaseJsonEdit<T, ID>({
 	disabledBase64Convertion = false,
 	innerRef,
 }: ArchbaseJsonEditProps<T, ID>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<string>(
+		'ArchbaseJsonEdit',
+		dataSource,
+		dataField,
+		''
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseJsonEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
 	const [value, setValue] = useState<string>('');
 	const innerComponentRef = innerRef || useRef<any>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
+	const forceUpdate = useForceUpdate();
 
 	useEffect(() => {
 		setInternalError(undefined);
@@ -107,16 +122,21 @@ export function ArchbaseJsonEdit<T, ID>({
 				event.type === DataSourceEventNames.dataChanged ||
 				event.type === DataSourceEventNames.recordChanged ||
 				event.type === DataSourceEventNames.afterScroll ||
-				event.type === DataSourceEventNames.afterCancel
+				event.type === DataSourceEventNames.afterCancel ||
+				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -133,7 +153,9 @@ export function ArchbaseJsonEdit<T, ID>({
 	const handleChange = (value) => {
 		setValue((_prev) => value);
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== value) {
-			dataSource.setFieldValue(dataField, disabledBase64Convertion ? value : btoa(value));
+			const valueToSave = disabledBase64Convertion ? value : btoa(value);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(valueToSave);
 		}
 
 		if (onChangeValue) {
@@ -161,11 +183,8 @@ export function ArchbaseJsonEdit<T, ID>({
 	};
 
 	const isReadOnly = () => {
-		let tmpRreadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpRreadOnly = dataSource.isBrowsing();
-		}
-		return tmpRreadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	return (

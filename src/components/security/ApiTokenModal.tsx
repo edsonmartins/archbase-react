@@ -8,6 +8,7 @@ import { Grid, Group, Image, ScrollArea, Text } from '@mantine/core';
 import { DateTimePicker, DateValue } from '@mantine/dates';
 import { useFocusTrap } from '@mantine/hooks';
 import { ARCHBASE_IOC_API_TYPE, builder, convertDateToISOString, emit, processErrorMessage } from '@components/core';
+import { useArchbaseV1V2Compatibility } from '@components/core/patterns/ArchbaseV1V2CompatibilityPattern';
 import { t } from 'i18next';
 import React, { useState } from 'react';
 import { NO_USER } from './ArchbaseSecurityView';
@@ -42,13 +43,29 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 	const [value, setValue] = useState<DateValue | undefined>();
 	const userApi = useArchbaseRemoteServiceApi<ArchbaseUserService>(ARCHBASE_IOC_API_TYPE.User);
 
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade para ApiTokenModal
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<string>(
+		'ApiTokenModal',
+		props.dataSource,
+		'expirationDate',
+		''
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && props.dataSource) {
+		console.log(`[ApiTokenModal] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
 	const handleChange = (value: DateValue) => {
 		if (!value) {
-			props.dataSource.setFieldValue('expirationDate', undefined);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(undefined);
 		} else {
 			// Convert string to Date if needed before calling convertDateToISOString
 			const dateValue = typeof value === 'string' ? new Date(value) : value;
-			props.dataSource.setFieldValue('expirationDate', convertDateToISOString(dateValue));
+			const isoString = convertDateToISOString(dateValue);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(isoString);
 		}
 		setValue(value);
 	};

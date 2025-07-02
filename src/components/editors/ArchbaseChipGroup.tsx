@@ -3,7 +3,9 @@ import { uniqueId } from 'lodash';
 import React, { CSSProperties, ReactNode, useCallback, useEffect, useState } from 'react';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
-import { useArchbaseDidMount, useArchbaseDidUpdate } from '../hooks/lifecycle';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
+import { useForceUpdate } from '@mantine/hooks';
 
 export interface ArchbaseChipGroupProps<T, ID, O> {
 	/** Fonte de dados onde será atribuido o valor do ChipGroup*/
@@ -99,11 +101,24 @@ export function ArchbaseChipGroup<T, ID, O>({
 	label,
 	description,
 }: ArchbaseChipGroupProps<T, ID, O>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<any>(
+		'ArchbaseChipGroup',
+		dataSource,
+		dataField,
+		multiple ? [] : ''
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseChipGroup] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
 	const [options, _setOptions] = useState<ChipItemProps[]>(
 		buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
 	);
 	const [selectedValue, setSelectedValue] = useState<any>(value);
 	const [internalError, setInternalError] = useState<string | undefined>(error);
+	const forceUpdate = useForceUpdate();
 
 	useEffect(() => {
 		setInternalError(undefined);
@@ -131,28 +146,38 @@ export function ArchbaseChipGroup<T, ID, O>({
 
 	const dataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
 		if (dataSource && dataField) {
-			switch (event.type) {
-				case (DataSourceEventNames.dataChanged,
-				DataSourceEventNames.recordChanged,
-				DataSourceEventNames.afterScroll,
-				DataSourceEventNames.afterCancel): {
-					loadDataSourceFieldValue();
-					break;
+			if (
+				event.type === DataSourceEventNames.dataChanged ||
+				event.type === DataSourceEventNames.recordChanged ||
+				event.type === DataSourceEventNames.afterScroll ||
+				event.type === DataSourceEventNames.afterCancel ||
+				event.type === DataSourceEventNames.afterEdit
+			) {
+				loadDataSourceFieldValue();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
 				}
-				default:
 			}
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
 		if (dataSource && dataField) {
 			dataSource.addListener(dataSourceEvent);
 			dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+		}
+	});
+
+	useArchbaseWillUnmount(() => {
+		if (dataSource && dataField) {
+			dataSource.removeListener(dataSourceEvent);
+			dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
 		}
 	});
 
@@ -168,7 +193,8 @@ export function ArchbaseChipGroup<T, ID, O>({
 			savedValue = convertFromValue(currentSelectedValue);
 		}
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== savedValue) {
-			dataSource.setFieldValue(dataField, savedValue);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(savedValue);
 		}
 
 		if (onSelectValue) {

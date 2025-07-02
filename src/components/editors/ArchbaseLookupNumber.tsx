@@ -7,6 +7,8 @@ import { ArchbaseObjectHelper } from '../core/helper';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
+import { useForceUpdate } from '@mantine/hooks';
 import { ArchbaseNumberEdit } from './ArchbaseNumberEdit';
 
 export interface ArchbaseLookupNumberProps<T, ID, O> {
@@ -59,9 +61,9 @@ export interface ArchbaseLookupNumberProps<T, ID, O> {
 	/** Evento ocorre quando clica no botão localizar */
 	onActionSearchExecute?: () => void;
 	/** Evento quando o foco sai do lookup edit */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o lookup edit recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o valor do lookup edit é alterado */
 	onChangeValue?: (value: any, event: any) => void;
 	/** Evento ocorre quando um valor é localizado */
@@ -118,6 +120,21 @@ export function ArchbaseLookupNumber<T, ID, O>({
 	allowNegative = false,
 	allowEmpty = true,
 }: ArchbaseLookupNumberProps<T, ID, O>) {
+	const forceUpdate = useForceUpdate();
+
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<any>(
+		'ArchbaseLookupNumber',
+		dataSource,
+		dataField,
+		null
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseLookupNumber] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
 	const [currentValue, setCurrentValue] = useState<any | undefined>(
@@ -148,12 +165,16 @@ export function ArchbaseLookupNumber<T, ID, O>({
 				event.type === DataSourceEventNames.afterCancel
 			) {
 				loadDataSourceFieldValue();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -187,7 +208,8 @@ export function ArchbaseLookupNumber<T, ID, O>({
 		if (dataSource && dataField && !dataSource.isBrowsing() && lookupField) {
 			if (currentValue != dataSource.getFieldValue(lookupField)) {
 				if (!currentValue || currentValue == null) {
-					dataSource.setFieldValue(dataField, null);
+					// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+					v1v2Compatibility.handleValueChange(null);
 				} else {
 					const promise = lookupValueDelegator(currentValue);
 					promise
@@ -202,10 +224,12 @@ export function ArchbaseLookupNumber<T, ID, O>({
 							if (onLookupResult) {
 								onLookupResult(data);
 							}
-							dataSource.setFieldValue(dataField, data);
+							// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+							v1v2Compatibility.handleValueChange(data);
 						})
 						.catch((error) => {
-							dataSource.setFieldValue(dataField, null);
+							// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+							v1v2Compatibility.handleValueChange(null);
 							innerComponentRef.current?.focus();
 							if (validateMessage) {
 								setInternalError(formatStr(validateMessage, value));
@@ -265,11 +289,8 @@ export function ArchbaseLookupNumber<T, ID, O>({
 	};
 
 	const isReadOnly = () => {
-		let tmpRreadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpRreadOnly = dataSource.isBrowsing();
-		}
-		return tmpRreadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	const icon = iconSearch ? iconSearch : <IconSearch size="1rem" />;

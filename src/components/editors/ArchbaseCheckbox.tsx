@@ -5,6 +5,7 @@ import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'reac
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface ArchbaseCheckboxProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do checkbox */
@@ -38,9 +39,9 @@ export interface ArchbaseCheckboxProps<T, ID> {
 	/** Valor de tamanho predefinido */
 	size?: MantineSize;
 	/** Evento quando o foco sai do checkbox */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o checkbox recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o valor do checkbox é alterado */
 	onChangeValue?: (value: any, event: any) => void;
 	/** Referência para o componente interno */
@@ -68,6 +69,19 @@ export function ArchbaseCheckbox<T, ID>({
 	onChangeValue = () => {},
 	innerRef,
 }: ArchbaseCheckboxProps<T, ID>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<any>(
+		'ArchbaseCheckbox',
+		dataSource,
+		dataField,
+		falseValue
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseCheckbox] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
 	const [checked, setChecked] = useState<boolean | undefined>(isChecked);
 	const innerComponentRef = useRef<any>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
@@ -103,13 +117,16 @@ export function ArchbaseCheckbox<T, ID>({
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -138,7 +155,8 @@ export function ArchbaseCheckbox<T, ID>({
 		setChecked(changedChecked);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== resultValue) {
-			dataSource.setFieldValue(dataField, resultValue);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(resultValue);
 		}
 
 		if (onChangeValue) {
@@ -159,11 +177,8 @@ export function ArchbaseCheckbox<T, ID>({
 	};
 
 	const isReadOnly = () => {
-		let tmpRreadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpRreadOnly = dataSource.isBrowsing();
-		}
-		return tmpRreadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	return (

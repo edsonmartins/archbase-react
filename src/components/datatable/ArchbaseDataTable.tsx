@@ -59,6 +59,8 @@ import { ArchbaseObjectHelper } from '../core/helper';
 import { convertISOStringToDate, filter, isEmpty } from '../core/utils';
 import { type ArchbaseDataSource, type DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDataSourceListener, useArchbaseTheme } from '../hooks';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
+import { useForceUpdate } from '@mantine/hooks';
 import classes from './ArchbaseDataTable.module.css';
 
 interface JsPDFCustom extends JsPDF {
@@ -714,6 +716,21 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 	const theme = useArchbaseTheme();
 	const appContext = useArchbaseAppContext();
 	const divTable = useRef<HTMLDivElement>(null);
+	const forceUpdate = useForceUpdate();
+
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade para ArchbaseDataTable
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<any>(
+		'ArchbaseDataTable',
+		props.dataSource,
+		undefined, // ArchbaseDataTable não trabalha com campo específico
+		null
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && props.dataSource) {
+		console.log(`[ArchbaseDataTable] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
 	const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
 	const [data, setData] = useState<any>(props.dataSource.browseRecords());
 	const [isLoadingInternal, setLoadingInternal] = useState<boolean>(false);
@@ -1321,6 +1338,10 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 					pageSize: props.dataSource ? props.dataSource.getPageSize() : props.pageSize,
 				});
 				setLoadingInternal(false);
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 			// Trate também outros eventos, como afterRemove, afterSave, etc.
 			else if (
@@ -1336,6 +1357,10 @@ export function ArchbaseDataTable<T extends object, ID>(props: ArchbaseDataTable
 					pageSize: props.dataSource ? props.dataSource.getPageSize() : props.pageSize,
 				});
 				setLoadingInternal(true);
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 		},
 	});

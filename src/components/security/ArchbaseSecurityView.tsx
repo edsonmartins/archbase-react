@@ -1,6 +1,7 @@
 import { ARCHBASE_IOC_API_TYPE, builder, emit, processDetailErrorMessage, processErrorMessage } from '@components/core';
 import { ArchbaseDataSource } from '@components/datasource';
 import { ArchbaseCountdownProgress } from '@components/editors';
+import { useArchbaseV1V2Compatibility } from '@components/core/patterns/ArchbaseV1V2CompatibilityPattern';
 import {
 	useArchbaseListContext,
 	useArchbaseRemoteDataSource,
@@ -156,6 +157,28 @@ export function ArchbaseSecurityView({
 	const [openedModal, setOpenedModal] = useState<string>('');
 	const [openedPermissionsModal, setOpenedPermissionsModal] = useState<string>('');
 	const accessTokenApi = useArchbaseRemoteServiceApi<ArchbaseAccessTokenService>(ARCHBASE_IOC_API_TYPE.AccessToken);
+
+	// 🔄 MIGRAÇÃO V1/V2: Compatibilidade para DataSources principais
+	const usersV1V2 = useArchbaseV1V2Compatibility<UserDto>(
+		'ArchbaseSecurityView-Users',
+		undefined, // Will be set when dsUsers is available
+		undefined,
+		undefined
+	);
+
+	const groupsV1V2 = useArchbaseV1V2Compatibility<GroupDto>(
+		'ArchbaseSecurityView-Groups',
+		undefined, // Will be set when dsGroups is available
+		undefined,
+		undefined
+	);
+
+	const profilesV1V2 = useArchbaseV1V2Compatibility<ProfileDto>(
+		'ArchbaseSecurityView-Profiles',
+		undefined, // Will be set when dsProfiles is available
+		undefined,
+		undefined
+	);
 
 	// Referências para os grids
 	const usersGridRef = useRef<ArchbaseDataGridRef | null>(null);
@@ -524,7 +547,15 @@ export function ArchbaseSecurityView({
 		if (!createEntitiesWithId) {
 			user.id = undefined;
 		}
+		
+		// 🔄 MIGRAÇÃO V1/V2: Inserção com compatibilidade
 		dsUsers.insert(user);
+		
+		// Se for V1, forçar atualização
+		if (dsUsers && !usersV1V2.isDataSourceV2) {
+			usersV1V2.v1State.forceUpdate();
+		}
+		
 		setOpenedModal(SecurityType.USER);
 	};
 
@@ -533,6 +564,12 @@ export function ArchbaseSecurityView({
 			const currentUser = dsUsers.gotoRecordByData(row);
 			if (currentUser) {
 				dsUsers.edit();
+				
+				// 🔄 MIGRAÇÃO V1/V2: Edição com compatibilidade V1
+				if (!usersV1V2.isDataSourceV2) {
+					usersV1V2.v1State.forceUpdate();
+				}
+				
 				setOpenedModal(SecurityType.USER);
 			}
 		}
@@ -547,6 +584,11 @@ export function ArchbaseSecurityView({
 					`${t('archbase:Deseja remover o usuário ')}${row.name} ?`,
 					() => {
 						dsUsers.remove();
+						
+						// 🔄 MIGRAÇÃO V1/V2: Remoção com compatibilidade V1
+						if (!usersV1V2.isDataSourceV2) {
+							usersV1V2.v1State.forceUpdate();
+						}
 					},
 					() => {},
 				);
@@ -589,7 +631,15 @@ export function ArchbaseSecurityView({
 		if (!createEntitiesWithId) {
 			group.id = undefined;
 		}
+		
+		// 🔄 MIGRAÇÃO V1/V2: Inserção com compatibilidade
 		dsGroups.insert(group);
+		
+		// Se for V1, forçar atualização
+		if (dsGroups && !groupsV1V2.isDataSourceV2) {
+			groupsV1V2.v1State.forceUpdate();
+		}
+		
 		setOpenedModal(SecurityType.GROUP);
 	};
 
@@ -666,7 +716,15 @@ export function ArchbaseSecurityView({
 		if (!createEntitiesWithId) {
 			profile.id = undefined;
 		}
+		
+		// 🔄 MIGRAÇÃO V1/V2: Inserção com compatibilidade
 		dsProfiles.insert(profile);
+		
+		// Se for V1, forçar atualização
+		if (dsProfiles && !profilesV1V2.isDataSourceV2) {
+			profilesV1V2.v1State.forceUpdate();
+		}
+		
 		setOpenedModal(SecurityType.PROFILE);
 	};
 

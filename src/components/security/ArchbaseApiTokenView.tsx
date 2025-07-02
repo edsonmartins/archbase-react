@@ -7,6 +7,7 @@ import {
 	useArchbaseTheme,
 	useArchbaseValidator,
 } from '@components/hooks';
+import { useArchbaseV1V2Compatibility } from '@components/core/patterns/ArchbaseV1V2CompatibilityPattern';
 import { ArchbaseDialog, ArchbaseNotifications } from '@components/notification';
 import {
 	Badge,
@@ -67,6 +68,14 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 		name: 'dataSource',
 	});
 
+	// 🔄 MIGRAÇÃO V1/V2: Hooks de compatibilidade para DataSources
+	const localDataSourceV1V2 = useArchbaseV1V2Compatibility<ApiTokenDto>(
+		'ArchbaseApiTokenView-LocalDataSource',
+		dataSource,
+		undefined,
+		undefined
+	);
+
 	const { dataSource: dsApiTokens, isLoading } = useArchbaseRemoteDataSource<ApiTokenDto, string>({
 		name: 'dsApiToken',
 		service: apiTokenApi,
@@ -85,6 +94,14 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 			ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin);
 		},
 	});
+
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade para DataSource remoto
+	const remoteDataSourceV1V2 = useArchbaseV1V2Compatibility<ApiTokenDto>(
+		'ArchbaseApiTokenView-RemoteDataSource',
+		dsApiTokens,
+		undefined,
+		undefined
+	);
 
 	const heightTab = `calc(${height} - 40px)`;
 
@@ -160,7 +177,14 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 	);
 
 	const handleCreateApiTokenExecute = () => {
+		// 🔄 MIGRAÇÃO V1/V2: Inserção com compatibilidade
 		dataSource.insert(ApiTokenDto.newInstance());
+		
+		// Se for V1, forçar atualização
+		if (dataSource && !localDataSourceV1V2.isDataSourceV2) {
+			localDataSourceV1V2.v1State.forceUpdate();
+		}
+		
 		setOpenedModal('apiToken');
 	};
 
@@ -177,7 +201,14 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 								`${t('mentors:Informação')}`,
 								`${t('mentors:Token de API revogado com sucesso!')}`,
 							);
+							
+							// 🔄 MIGRAÇÃO V1/V2: Refresh com compatibilidade
 							dsApiTokens.refreshData();
+							
+							// Se for V1, forçar atualização
+							if (dsApiTokens && !remoteDataSourceV1V2.isDataSourceV2) {
+								remoteDataSourceV1V2.v1State.forceUpdate();
+							}
 						})
 						.catch((error) => {
 							ArchbaseDialog.showErrorWithDetails(
@@ -204,8 +235,21 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 				await apiTokenApi
 					.create(apiToken.user.email, apiToken.expirationDate, apiToken.name, apiToken.description)
 					.then(async (response: ApiTokenDto) => {
+						// 🔄 MIGRAÇÃO V1/V2: Cancelar e adicionar com compatibilidade
 						dataSource.cancel();
+						
+						// Se for V1, forçar atualização no local DataSource
+						if (dataSource && !localDataSourceV1V2.isDataSourceV2) {
+							localDataSourceV1V2.v1State.forceUpdate();
+						}
+						
 						dsApiTokens.append(response);
+						
+						// Se for V1, forçar atualização no remote DataSource
+						if (dsApiTokens && !remoteDataSourceV1V2.isDataSourceV2) {
+							remoteDataSourceV1V2.v1State.forceUpdate();
+						}
+						
 						ArchbaseNotifications.showSuccess(
 							`${t('mentors:Informação')}`,
 							`${t('mentors:Token de API gerado com sucesso!')}`,

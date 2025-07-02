@@ -10,7 +10,8 @@ import es from 'suneditor/src/lang/es';
 import ptBR from 'suneditor/src/lang/pt_br';
 import { isBase64 } from '../core/utils';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 function getInitialValue<T, ID>(
 	value: any,
@@ -175,6 +176,18 @@ export function ArchbaseRichTextEdit<T, ID>({
 	showController,
 	imageUploadHandler,
 }: ArchbaseRichTextEditProps<T, ID>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<string>(
+		'ArchbaseRichTextEdit',
+		dataSource,
+		dataField,
+		''
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseRichTextEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
 	const { i18n } = useTranslation();
 	const [currentValue, setCurrentValue] = useState<string | undefined>(
 		getInitialValue(value, dataSource, dataField, disabledBase64Convertion),
@@ -217,13 +230,16 @@ export function ArchbaseRichTextEdit<T, ID>({
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -248,7 +264,9 @@ export function ArchbaseRichTextEdit<T, ID>({
 		setCurrentValue((_prev) => content);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== content) {
-			dataSource.setFieldValue(dataField, disabledBase64Convertion ? content : btoa(content));
+			const valueToSave = disabledBase64Convertion ? content : btoa(content);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(valueToSave);
 		}
 
 		if (onChangeValue) {
@@ -262,11 +280,8 @@ export function ArchbaseRichTextEdit<T, ID>({
 	};
 
 	const isReadOnly = () => {
-		let _readOnly = readOnly;
-		if (dataSource && !readOnly) {
-			_readOnly = dataSource.isBrowsing();
-		}
-		return _readOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	return (

@@ -7,6 +7,8 @@ import { ArchbaseObjectHelper } from '../core/helper';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
+import { useForceUpdate } from '@mantine/hooks';
 
 export interface ArchbaseLookupEditProps<T, ID, O> {
 	/** Fonte de dados onde será atribuido o valor do lookup edit */
@@ -46,9 +48,9 @@ export interface ArchbaseLookupEditProps<T, ID, O> {
 	/** Evento ocorre quando clica no botão localizar */
 	onActionSearchExecute?: () => void;
 	/** Evento quando o foco sai do lookup edit */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o lookup edit recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o valor do lookup edit é alterado */
 	onChangeValue?: (value: any, event: any) => void;
 	/** Evento ocorre quando um valor é localizado */
@@ -88,6 +90,21 @@ export function ArchbaseLookupEdit<T, ID, O>({
 	onActionSearchExecute = () => {},
 	innerRef,
 }: ArchbaseLookupEditProps<T, ID, O>) {
+	const forceUpdate = useForceUpdate();
+
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<any>(
+		'ArchbaseLookupEdit',
+		dataSource,
+		dataField,
+		null
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseLookupEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
 	const [value, setValue] = useState<any | undefined>('');
@@ -124,12 +141,16 @@ export function ArchbaseLookupEdit<T, ID, O>({
 				event.type === DataSourceEventNames.afterCancel
 			) {
 				loadDataSourceFieldValue();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -167,7 +188,8 @@ export function ArchbaseLookupEdit<T, ID, O>({
 		if (dataSource && dataField && !dataSource.isBrowsing() && lookupField) {
 			if (value != dataSource.getFieldValue(lookupField)) {
 				if (!value || value == null) {
-					dataSource.setFieldValue(dataField, null);
+					// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+					v1v2Compatibility.handleValueChange(null);
 				} else {
 					const promise = lookupValueDelegator(value);
 					promise
@@ -182,10 +204,12 @@ export function ArchbaseLookupEdit<T, ID, O>({
 							if (onLookupResult) {
 								onLookupResult(data);
 							}
-							dataSource.setFieldValue(dataField, data);
+							// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+							v1v2Compatibility.handleValueChange(data);
 						})
 						.catch((error) => {
-							dataSource.setFieldValue(dataField, undefined);
+							// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+						v1v2Compatibility.handleValueChange(undefined);
 							innerComponentRef.current?.focus();
 							if (validateMessage) {
 								setInternalError(formatStr(validateMessage, value));
@@ -245,11 +269,8 @@ export function ArchbaseLookupEdit<T, ID, O>({
 	};
 
 	const isReadOnly = () => {
-		let tmpRreadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpRreadOnly = dataSource.isBrowsing();
-		}
-		return tmpRreadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	const icon = iconSearch ? iconSearch : <IconSearch size="1rem" />;

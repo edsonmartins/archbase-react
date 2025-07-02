@@ -32,6 +32,8 @@ import React, {
 } from 'react';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
+import { useForceUpdate } from '@mantine/hooks';
 import {
 	ArchbaseAsyncSelectContext,
 	ArchbaseAsyncSelectContextValue,
@@ -108,9 +110,9 @@ export interface ArchbaseAsyncMultiSelectProps<T, ID, O> {
   /** Evento quando os valores selecionados são alterados */
   onChangeValues?: (values: O[]) => void;
   /** Evento quando o foco sai do select */
-  onFocusExit?: FocusEventHandler<T> | undefined;
+  onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
   /** Evento quando o select recebe o foco */
-  onFocusEnter?: FocusEventHandler<T> | undefined;
+  onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
   /** Opções de seleção iniciais */
   initialOptions?: OptionsResult<O>;
   /** Function que retorna o label de uma opção */
@@ -238,6 +240,21 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
   converter,
   getConvertedOption
 }: ArchbaseAsyncMultiSelectProps<T, ID, O>) {
+  const forceUpdate = useForceUpdate();
+
+  // 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+  const v1v2Compatibility = useArchbaseV1V2Compatibility<O[]>(
+    'ArchbaseAsyncMultiSelect',
+    dataSource,
+    dataField,
+    []
+  );
+
+  // 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+  if (process.env.NODE_ENV === 'development' && dataSource) {
+    console.log(`[ArchbaseAsyncMultiSelect] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+  }
+
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -284,6 +301,10 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
         event.type === DataSourceEventNames.afterCancel
       ) {
         loadDataSourceFieldValue();
+        // 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+        if (!v1v2Compatibility.isDataSourceV2) {
+          forceUpdate();
+        }
       }
       if (event.type === DataSourceEventNames.beforeClose) {
         setOptions([]);
@@ -293,7 +314,7 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
         setInternalError(event.error);
       }
     }
-  }, []);
+  }, [v1v2Compatibility.isDataSourceV2]);
 
   useArchbaseDidMount(() => {
     loadDataSourceFieldValue();
@@ -344,16 +365,10 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
     setSelectedValues((current) => {
       const updatedValues = current.filter((item) => getOptionValue(item) !== getOptionValue(val))
       const convertedValues = updatedValues.map(updatedValue => handleConverter(updatedValue))
-      if (
-        dataSource &&
-        !dataSource.isBrowsing() &&
-        dataField &&
-        !areArraysEqual(
-          dataSource.getFieldValue(dataField) || [],
-          convertedValues
-        )
-      ) {
-        dataSource.setFieldValue(dataField, convertedValues);
+      
+      // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+      if (dataSource && dataField) {
+        v1v2Compatibility.handleValueChange(convertedValues);
       }
 
       if (onChangeValues) {
@@ -377,16 +392,10 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
         )
         : [...prevSelected, value];
       const convertedValues = updatedValues.map(updatedValue => handleConverter(updatedValue))
-      if (
-        dataSource &&
-        !dataSource.isBrowsing() &&
-        dataField &&
-        !areArraysEqual(
-          dataSource.getFieldValue(dataField) || [],
-          convertedValues
-        )
-      ) {
-        dataSource.setFieldValue(dataField, convertedValues);
+      
+      // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+      if (dataSource && dataField) {
+        v1v2Compatibility.handleValueChange(convertedValues);
       }
 
       if (onChangeValues) {
@@ -453,12 +462,8 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
   };
 
   const isReadOnly = () => {
-    let isReadOnly = readOnly;
-    if (dataSource && !readOnly) {
-      isReadOnly = dataSource.isBrowsing();
-    }
-
-    return isReadOnly;
+    // 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+    return v1v2Compatibility.isReadOnly(readOnly);
   };
 
   const shouldFilterOptions = options.every((item) => item !== queryValue);
@@ -514,6 +519,10 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
                     onClick={() => {
                       setQueryValue('');
                       setSelectedValues([]);
+                      // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+                      if (dataSource && dataField) {
+                        v1v2Compatibility.handleValueChange([]);
+                      }
                       if (onChangeValues) {
                         onChangeValues([])
                       }

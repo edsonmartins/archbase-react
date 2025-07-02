@@ -3,7 +3,8 @@ import { useForceUpdate } from '@mantine/hooks';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import { isBase64 } from '../core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 import { ArchbaseImagePickerEditor } from '../image';
 
 export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
@@ -76,6 +77,18 @@ export function ArchbaseImageEdit<T, ID>({
 	imageBackgroundColor,
 	...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<string | undefined>(
+		'ArchbaseImageEdit',
+		dataSource,
+		dataField,
+		undefined
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseImageEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
 	const [value, setValue] = useState<string | undefined>(undefined);
 	const innerComponentRef = useRef<any>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
@@ -116,13 +129,16 @@ export function ArchbaseImageEdit<T, ID>({
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -148,11 +164,14 @@ export function ArchbaseImageEdit<T, ID>({
 		setValue((_prev) => changedValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
+			let valueToSave: string | undefined;
 			if (!changedValue) {
-				dataSource.setFieldValue(dataField, undefined);
+				valueToSave = undefined;
 			} else {
-				dataSource.setFieldValue(dataField, disabledBase64Convertion ? changedValue : btoa(changedValue));
+				valueToSave = disabledBase64Convertion ? changedValue : btoa(changedValue);
 			}
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(valueToSave);
 		}
 		if (onChangeImage) {
 			onChangeImage(image);
@@ -160,11 +179,8 @@ export function ArchbaseImageEdit<T, ID>({
 	};
 
 	const isReadOnly = () => {
-		let tmpRreadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpRreadOnly = dataSource.isBrowsing();
-		}
-		return tmpRreadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	return (

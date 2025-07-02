@@ -33,9 +33,9 @@ export interface ArchbaseDatePickerRangeProps {
 	/** Último erro ocorrido no date picker range */
 	error?: string;
 	/** Evento quando o foco sai do date picker range */
-	onFocusExit?: React.FocusEvent<HTMLInputElement>;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o date picker range recebe o foco */
-	onFocusEnter?: React.FocusEvent<HTMLInputElement>;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o valor do date picker range é alterado */
 	onChangeValue?: (value: any, event: any) => void;
 	onKeyDown?: (event: any) => void;

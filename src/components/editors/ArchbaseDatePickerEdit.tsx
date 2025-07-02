@@ -47,6 +47,7 @@ import { IMaskInput } from 'react-imask';
 import { convertDateToISOString, convertISOStringToDate } from '../core/utils/string-utils';
 import { type ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 const dateFormats = {
 	'DD/MM/YYYY': {
@@ -187,11 +188,13 @@ export interface ArchbaseDatePickerEditProps<T, ID>
 	/** Analisa a entrada do usuário para convertê-la em um objeto Date */
 	dateParser?: (value: string) => DateValue;
 	/** Valor do componente controlado */
-	value?: DateValue;
+	value?: DateValue | string;
 	/** Valor padrão para componente não controlado */
-	defaultValue?: DateValue;
+	defaultValue?: DateValue | string;
 	/** Chamado quando o valor muda */
 	onChange?(value: DateValue): void;
+	/** Evento quando o valor é alterado */
+	onChangeValue?: (value: any, event: any) => void;
 	/** Adereços adicionados ao componente Popover */
 	popoverProps?: Partial<Omit<PopoverProps, 'children'>>;
 	/** Determina se o valor de entrada pode ser limpo, adiciona o botão limpar à seção direita, falso por padrão */
@@ -233,9 +236,9 @@ export interface ArchbaseDatePickerEditProps<T, ID>
 	/** Indicador se o caracter deve ser mostrado quando não houver um valor */
 	showPlaceholderFormat?: boolean;
 	/** Evento quando o foco sai do date picker */
-	onFocusExit?: React.FocusEvent<HTMLInputElement>;
+	onFocusExit?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Evento quando o date picker recebe o foco */
-	onFocusEnter?: React.FocusEvent<HTMLInputElement>;
+	onFocusEnter?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	/** Indica se o date picker tem o preenchimento obrigatório */
 	required?: boolean;
 	/** Referência para o componente interno */
@@ -276,6 +279,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		value,
 		defaultValue,
 		onChange,
+		onChangeValue,
 		clearable,
 		clearButtonProps,
 		popoverProps,
@@ -286,6 +290,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		maxDate,
 		fixOnBlur,
 		onFocus,
+		onFocusEnter,
+		onFocusExit,
 		onBlur,
 		onClick,
 		readOnly,
@@ -314,9 +320,41 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	const { calendarProps, others } = pickCalendarProps(rest);
 	const innerComponentRef = innerRef || useRef<any>();
 	const ctx = useDatesContext();
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<Date | null>(
+		'ArchbaseDatePickerEdit',
+		dataSource,
+		dataField,
+		null
+	);
+
+	// 🔄 DEBUG: Log da versão detectada (apenas desenvolvimento)
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseDatePickerEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
+	// 🔄 MIGRAÇÃO V1/V2: Converter valores string para Date se necessário
+	const processValue = (val: DateValue | string | null) => {
+		if (!val) return null;
+		if (typeof val === 'string') {
+			try {
+				// Tentar parsear como data formatada primeiro
+				return dateFormats[dateFormat!].parse(val);
+			} catch {
+				// Se falhar, tentar como ISO string
+				try {
+					return convertISOStringToDate(val);
+				} catch {
+					return null;
+				}
+			}
+		}
+		return val as DateValue;
+	};
+
 	const [_value, setValue, controlled] = useUncontrolled({
-		value,
-		defaultValue,
+		value: processValue(value),
+		defaultValue: processValue(defaultValue),
 		finalValue: null,
 		onChange,
 	});
@@ -325,7 +363,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 	const [_date, setDate] = useUncontrolled({
 		value: date ? (typeof date === 'string' ? date : date.toISOString().split('T')[0]) : null,
-		defaultValue: defaultValue ? (typeof defaultValue === 'string' ? defaultValue : defaultValue.toISOString().split('T')[0]) : defaultDate ? (typeof defaultDate === 'string' ? defaultDate : defaultDate.toISOString().split('T')[0]) : null,
+		defaultValue: _value ? _value.toISOString().split('T')[0] : defaultDate ? (typeof defaultDate === 'string' ? defaultDate : defaultDate.toISOString().split('T')[0]) : null,
 		finalValue: null,
 		onChange: onDateChange,
 	});
@@ -342,7 +380,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	const isReadOnly = () => {
 		let _readOnly = readOnly;
 		if (dataSource && !readOnly) {
-			_readOnly = dataSource.isBrowsing();
+			// 🔄 MIGRAÇÃO V1/V2: Usar compatibilidade para determinar readonly
+			_readOnly = v1v2Compatibility.isReadOnly;
 		}
 		return _readOnly;
 	};
@@ -354,6 +393,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		loadDataSourceFieldValue();
 	}, []);
 
+	// 🔄 MIGRAÇÃO V1/V2: Event listener compatível
 	const dataSourceEvent = useCallback((event: DataSourceEvent<any>) => {
 		if (dataSource && dataField) {
 			if (
@@ -364,21 +404,47 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
+				// V2 atualiza automaticamente via estado otimizado
 			}
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	const loadDataSourceFieldValue = useCallback(() => {
 		if (dataSource && dataField) {
 			const value = dataSource.getFieldValue(dataField);
 			if (value) {
-				const resultDate: Date = convertISOStringToDate(value);
-				const result = dateFormats[dateFormat!].format(resultDate);
+				// 🔄 MIGRAÇÃO V1/V2: Tratar tanto strings formatadas quanto ISO strings
+				let resultDate: Date;
+				let result: string;
+				
+				if (typeof value === 'string') {
+					// Tentar parsear como data formatada primeiro
+					try {
+						resultDate = dateFormats[dateFormat!].parse(value);
+						if (isNaN(resultDate.getTime())) {
+							throw new Error('Invalid date');
+						}
+						result = value; // Já está no formato correto
+					} catch {
+						// Se falhar, tentar como ISO string
+						resultDate = convertISOStringToDate(value);
+						result = dateFormats[dateFormat!].format(resultDate);
+					}
+				} else {
+					// Assumir que é Date
+					resultDate = value instanceof Date ? value : new Date(value);
+					result = dateFormats[dateFormat!].format(resultDate);
+				}
+				
 				if (result !== inputValue) {
 					setInputValue(result);
 					setDate(resultDate.toISOString().split('T')[0]);
@@ -390,23 +456,21 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 				setValue(null);
 			}
 		}
-	}, []);
+	}, [dataField, dataSource, dateFormat, inputValue]);
 
-	const setDataSourceFieldValue = useCallback((value: Date | undefined | null) => {
+	const setDataSourceFieldValue = useCallback((value: Date | undefined | null | string) => {
 		if (dataSource && dataField) {
-			const fieldValue = dataSource.getFieldValue(dataField);
-			if (!value || value === null) {
-				if (value !== fieldValue) {
-					dataSource.setFieldValue(dataField, value);
-				}
-			} else {
-				const resultValue = convertDateToISOString(value);
-				if (resultValue !== fieldValue) {
-					dataSource.setFieldValue(dataField, resultValue);
-				}
+			// 🔄 MIGRAÇÃO V1/V2: Para compatibilidade V1, usar strings formatadas ao invés de ISO
+			let processedValue: any = value;
+			
+			if (value && typeof value !== 'string') {
+				// Se for Date, converter para string formatada (formato do input)
+				processedValue = formatValue(value);
 			}
+			
+			v1v2Compatibility.handleValueChange(processedValue);
 		}
-	}, []);
+	}, [v1v2Compatibility.handleValueChange, dateFormat]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -432,10 +496,10 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	}, [_value, _date, inputValue]);
 
 	useEffect(() => {
-		if (controlled && value) {
-			setDate(typeof value === 'string' ? value : value.toISOString().split('T')[0]);
+		if (controlled && _value) {
+			setDate(_value.toISOString().split('T')[0]);
 		}
-	}, [controlled, value]);
+	}, [controlled, _value]);
 
 	useEffect(() => {
 		setInputValue(formatValue(_value));
@@ -450,7 +514,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 			if (val.trim() === '' && _allowDeselect) {
 				setValue(null);
-				setDataSourceFieldValue(null);
+				setDataSourceFieldValue('');
+				onChangeValue?.(null, event);
 			} else {
 				const dateValue = _dateParser(val);
 				// Convert minDate and maxDate to DateValue for validation
@@ -459,6 +524,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 				if (isDateValid({ date: dateValue, minDate: minDateValue, maxDate: maxDateValue })) {
 					setValue(dateValue);
 					setDate(dateValue ? (typeof dateValue === 'string' ? dateValue : dateValue.toISOString().split('T')[0]) : null);
+					setDataSourceFieldValue(val);
+					onChangeValue?.(val, event);
 				}
 			}
 		}
@@ -468,7 +535,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		if (!isReadOnly()) {
 			if (maskValue.trim() === '' && _allowDeselect) {
 				setValue(null);
-				setDataSourceFieldValue(null);
+				setDataSourceFieldValue('');
+				onChangeValue?.(null, { target: { value: maskValue } });
 			} else if (maskValue && maskValue.length === 10) {
 				const dateValue = dateFormats[dateFormat!].parse(maskValue);
 				// Convert minDate and maxDate to DateValue for validation
@@ -478,7 +546,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 					setValue(dateValue);
 					setDate(dateValue ? (typeof dateValue === 'string' ? dateValue : dateValue.toISOString().split('T')[0]) : null);
 					setInputValue(formatValue(dateValue));
-					setDataSourceFieldValue(dateValue);
+					setDataSourceFieldValue(maskValue);
+					onChangeValue?.(maskValue, { target: { value: maskValue } });
 				}
 			}
 		}
@@ -489,14 +558,16 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 			if (maskRef.masked.rawInputValue === '' && _allowDeselect) {
 				setValue(null);
 				setDate(null);
-				setDataSourceFieldValue(null);
+				setDataSourceFieldValue('');
 				setInputValue('');
+				onChangeValue?.('', { target: { value: '' } });
 			}
 		}
 	};
 
 	const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
 		onBlur?.(event);
+		onFocusExit?.(event);
 		setDropdownOpened(false);
 		if (!isReadOnly()) {
 			fixOnBlur && setInputValue(formatValue(_value));
@@ -506,6 +577,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	const handleInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
 		if (!isReadOnly()) {
 			onFocus?.(event);
+			onFocusEnter?.(event);
 			setDropdownOpened(true);
 		}
 	};
@@ -527,9 +599,12 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 					const valueWithTime = preserveTime ? assignTime(_value, day) : day;
 					const val = _allowDeselect ? (dayjs(_value).isSame(day, 'day') ? null : valueWithTime) : valueWithTime;
 					setValue(val);
-					setInputValue(formatValue(val));
+					const formattedValue = formatValue(val);
+					setInputValue(formattedValue);
 					setInternalError(undefined);
 					setDropdownOpened(false);
+					setDataSourceFieldValue(formattedValue);
+					onChangeValue?.(formattedValue, { target: { value: formattedValue } });
 				}
 			},
 		};
@@ -545,7 +620,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 				onClick={() => {
 					setValue(null);
 					setInputValue('');
-					setDataSourceFieldValue(null);
+					setDataSourceFieldValue('');
+					onChangeValue?.('', { target: { value: '' } });
 				}}
 				unstyled={unstyled}
 				{...clearButtonProps}
@@ -553,8 +629,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		) : null);
 
 	useDidUpdate(() => {
-		value !== undefined && !dropdownOpened && setInputValue(formatValue(value));
-	}, [value]);
+		value !== undefined && !dropdownOpened && setInputValue(formatValue(_value));
+	}, [_value]);
 
 	return (
 		<>

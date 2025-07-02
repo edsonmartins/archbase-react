@@ -3,6 +3,7 @@ import { useForceUpdate } from '@mantine/hooks';
 import { IconCameraPlus, IconEdit, IconRotate, IconTrash, IconZoomIn } from '@tabler/icons-react';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../../components/datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseTheme, useArchbaseWillUnmount } from '../../components/hooks';
+import { useArchbaseV1V2Compatibility } from '../../components/core/patterns/ArchbaseV1V2CompatibilityPattern';
 import { isBase64 } from '../../components/validator';
 import { t } from 'i18next';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
@@ -93,6 +94,19 @@ export function ArchbaseAvatarEdit<T, ID>({
     const theme = useArchbaseTheme()
     const [showControls, setShowControls] = useState(false);
 
+    // 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+    const v1v2Compatibility = useArchbaseV1V2Compatibility<string | undefined>(
+        'ArchbaseAvatarEdit',
+        dataSource,
+        dataField,
+        undefined
+    );
+
+    // 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+    if (process.env.NODE_ENV === 'development' && dataSource) {
+        console.log(`[ArchbaseAvatarEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+    }
+
     useEffect(() => {
         setInternalError(undefined);
     }, [value]);
@@ -129,13 +143,16 @@ export function ArchbaseAvatarEdit<T, ID>({
                 event.type === DataSourceEventNames.afterEdit
             ) {
                 loadDataSourceFieldValue();
-                forceUpdate();
+                // 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+                if (!v1v2Compatibility.isDataSourceV2) {
+                    forceUpdate();
+                }
             }
             if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
                 setInternalError(event.error);
             }
         }
-    }, []);
+    }, [v1v2Compatibility.isDataSourceV2]);
 
     useArchbaseDidMount(() => {
         loadDataSourceFieldValue();
@@ -162,11 +179,14 @@ export function ArchbaseAvatarEdit<T, ID>({
         setImage(changedValue);
 
         if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
+            let valueToSave: string | undefined;
             if (!changedValue) {
-                dataSource.setFieldValue(dataField, undefined);
+                valueToSave = undefined;
             } else {
-                dataSource.setFieldValue(dataField, disabledBase64Convertion ? changedValue : btoa(changedValue));
+                valueToSave = disabledBase64Convertion ? changedValue : btoa(changedValue);
             }
+            // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+            v1v2Compatibility.handleValueChange(valueToSave);
         }
         if (onChangeImage) {
             onChangeImage(image);
@@ -174,11 +194,8 @@ export function ArchbaseAvatarEdit<T, ID>({
     };
 
     const isReadOnly = () => {
-        let tmpReadOnly = readOnly;
-        if (dataSource && !readOnly) {
-            tmpReadOnly = dataSource.isBrowsing();
-        }
-        return tmpReadOnly;
+        // 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+        return v1v2Compatibility.isReadOnly(readOnly);
     };
 
     const handleSelectImage = () => {

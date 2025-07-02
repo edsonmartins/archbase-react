@@ -6,6 +6,7 @@ import { isBase64 } from '../core/utils';
 import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
 import { DataSourceEventNames } from '../datasource';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
+import { useArchbaseV1V2Compatibility } from '../core/patterns/ArchbaseV1V2CompatibilityPattern';
 
 export interface ArchbaseTextAreaProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do textarea */
@@ -41,9 +42,9 @@ export interface ArchbaseTextAreaProps<T, ID> {
 	/** Último erro ocorrido no textarea */
 	error?: string;
 	/** Evento quando o foco sai do textarea */
-	onFocusExit?: FocusEventHandler<T> | undefined;
+	onFocusExit?: (event: React.FocusEvent<HTMLTextAreaElement>) => void;
 	/** Evento quando o textarea recebe o foco */
-	onFocusEnter?: FocusEventHandler<T> | undefined;
+	onFocusEnter?: (event: React.FocusEvent<HTMLTextAreaElement>) => void;
 	/** Evento quando o valor do textarea é alterado */
 	onChangeValue?: (value: any, event: any) => void;
 	/** Referência para o componente interno */
@@ -70,6 +71,19 @@ export function ArchbaseTextArea<T, ID>({
 	disabledBase64Convertion = false,
 	innerRef,
 }: ArchbaseTextAreaProps<T, ID>) {
+	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
+	const v1v2Compatibility = useArchbaseV1V2Compatibility<string>(
+		'ArchbaseTextArea',
+		dataSource,
+		dataField,
+		''
+	);
+
+	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
+	if (process.env.NODE_ENV === 'development' && dataSource) {
+		console.log(`[ArchbaseTextArea] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
+	}
+
 	const [value, setValue] = useState<string>('');
 	const innerComponentRef = useRef<any>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
@@ -110,13 +124,16 @@ export function ArchbaseTextArea<T, ID>({
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				forceUpdate();
+				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
 			}
 		}
-	}, []);
+	}, [v1v2Compatibility.isDataSourceV2]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -138,7 +155,9 @@ export function ArchbaseTextArea<T, ID>({
 		setValue((_prev) => changedValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
-			dataSource.setFieldValue(dataField, disabledBase64Convertion ? changedValue : btoa(changedValue));
+			const valueToSave = disabledBase64Convertion ? changedValue : btoa(changedValue);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+			v1v2Compatibility.handleValueChange(valueToSave);
 		}
 
 		if (onChangeValue) {
@@ -166,11 +185,8 @@ export function ArchbaseTextArea<T, ID>({
 	};
 
 	const isReadOnly = () => {
-		let tmpReadOnly = readOnly;
-		if (dataSource && !readOnly) {
-			tmpReadOnly = dataSource.isBrowsing();
-		}
-		return tmpReadOnly;
+		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
+		return v1v2Compatibility.isReadOnly(readOnly);
 	};
 
 	return (
