@@ -102,7 +102,7 @@ export function ArchbaseThemeEditor<T, ID>({
 			<ColorPicker 
 				value={currentValue || '#000000'}
 				onChange={handleColorChange}
-				disabled={disabled || isReadOnly}
+				// disabled={disabled || isReadOnly}
 				{...props}
 			/>
 		</Card>

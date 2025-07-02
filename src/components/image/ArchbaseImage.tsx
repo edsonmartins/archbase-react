@@ -52,5 +52,5 @@ export function ArchbaseImage<T, ID>({
 
 	// This component currently just renders a Rating as placeholder
 	// TODO: Implement actual image functionality with DataSource integration
-	return <Rating defaultValue={2} disabled={disabled || readOnly} />;
+	return <Rating defaultValue={2}/>;
 }

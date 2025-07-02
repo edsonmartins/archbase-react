@@ -24,7 +24,11 @@ export const ArchbaseEditExamples = () => {
     records: [
       { id: 1, nome: 'João Silva', email: 'joao@test.com', idade: 30 },
       { id: 2, nome: 'Maria Santos', email: 'maria@test.com', idade: 25 }
-    ]
+    ],
+    grandTotalRecords: 2,
+    currentPage: 0,
+    totalPages: 1,
+    pageSize: 10
   });
 
   // ===== EXEMPLO 2: DataSource V2 (Comportamento Otimizado) =====
