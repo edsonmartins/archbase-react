@@ -14,3 +14,6 @@ export type { IRemoteDataSource } from './ArchbaseRemoteDataSource';
 export { ArchbaseLocalFilterDataSource, LocalFilter } from './ArchbaseLocalFilterDataSource';
 export { ArchbaseRemoteFilterDataSource, RemoteFilter } from './ArchbaseRemoteFilterDataSource';
 
+// DataSource V2 exports
+export * from './v2';
+

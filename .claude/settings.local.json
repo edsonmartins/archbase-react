@@ -22,7 +22,8 @@
       "Bash(npm run build:*)",
       "Bash(mkdir:*)",
       "Bash(pnpm lint:*)",
-      "Bash(pnpm tsc:*)"
+      "Bash(pnpm tsc:*)",
+      "Bash(tree:*)"
     ],
     "deny": []
   }
