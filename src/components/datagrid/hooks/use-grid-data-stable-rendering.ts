@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, DataSourceOptions } from 'components/datasource';
 
 /**

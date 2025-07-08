@@ -23,7 +23,7 @@ import {
   IconTrash
 } from '@tabler/icons-react'
 import { uniqueId } from 'lodash'
-import debounce from 'lodash.debounce'
+import debounce from 'lodash/debounce'
 import React, { Component, CSSProperties, ReactNode } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import {

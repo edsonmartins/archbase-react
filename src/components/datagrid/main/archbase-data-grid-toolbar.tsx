@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Box, Paper } from '@mantine/core';
 import { Children, isValidElement } from 'react';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import GridToolbar from '../components/toolbar/grid-toolbar';
 import GlobalSearchInput from '../components/toolbar/global-search-input';
 import { ArchbaseDataGridToolbarProps } from './archbase-data-grid-types';
