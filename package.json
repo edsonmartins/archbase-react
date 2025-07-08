@@ -11,8 +11,13 @@
   "homepage": "https://react.archbase.com.br",
   "sideEffects": false,
   "exports": {
-    "import": "./dist/esm/index.js",
-    "require": "./dist/cjs/index.js"
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./dist/index.css": "./dist/cjs/index.css",
+    "./dist/cjs/index.css": "./dist/cjs/index.css",
+    "./dist/esm/index.css": "./dist/esm/index.css"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -107,7 +112,6 @@
     "lodash.debounce": "4.0.8",
     "lz-string": "^1.5.0",
     "mantine-flagpack": "^4.0.1",
-    "mantine-react-table": "2.0.0-beta.8",
     "mjml-browser": "^4.15.3",
     "outlayer": "^2.1.1",
     "overlayscrollbars": "^2.8.3",

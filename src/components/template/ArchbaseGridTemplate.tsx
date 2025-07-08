@@ -6,7 +6,7 @@ import React, { Fragment, ReactNode, useEffect, useRef, useState, forwardRef, us
 import {
   ArchbaseDataGrid,
   ArchbaseDataGridRef,
-  GridColumns,
+  Columns,
   GridToolBarActions,
   CellClickEvent
 } from '../datagrid/main';

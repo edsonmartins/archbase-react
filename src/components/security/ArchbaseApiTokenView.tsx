@@ -39,7 +39,7 @@ import { ArchbaseApiTokenService } from './ArchbaseApiTokenService';
 import { NO_USER } from './ArchbaseSecurityView';
 import { ApiTokenDto, GroupDto, ProfileDto, ResourceDto, UserDto } from './SecurityDomain';
 import { ArchbaseDataGridColumn } from 'components/datagrid';
-import { ArchbaseDataGrid, ArchbaseDataGridRef, GridColumns } from 'components/datagrid/main';
+import { ArchbaseDataGrid, ArchbaseDataGridRef, Columns } from 'components/datagrid/main';
 import { ArchbaseGridTemplateRef } from 'components/template/ArchbaseGridTemplate';
 
 
@@ -106,7 +106,7 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 	const heightTab = `calc(${height} - 40px)`;
 
 	const columns = (
-		<GridColumns>
+		<Columns>
 			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="user.avatar"
 				dataType="image"
@@ -173,7 +173,7 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 				header="Revogado ?"
 				inputFilterType="checkbox"
 			/>
-		</GridColumns>
+		</Columns>
 	);
 
 	const handleCreateApiTokenExecute = () => {

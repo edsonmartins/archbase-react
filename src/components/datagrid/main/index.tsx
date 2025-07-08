@@ -17,7 +17,7 @@ export { default as ArchbaseDataGrid } from './archbase-data-grid';
 // Exportar componentes auxiliares de forma explícita
 export {
   ArchbaseDataGridColumn,
-  GridColumns,
+  Columns,
   GridToolBarActions
 } from './archbase-data-grid-types';
 

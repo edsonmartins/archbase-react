@@ -29,7 +29,7 @@ import {
 import { IconEdit, IconPlus, IconShieldCheckered, IconTrashX } from '@tabler/icons-react';
 // Importações da DataGrid
 import { ArchbaseDataGridColumn } from 'components/datagrid';
-import { ArchbaseDataGrid, ArchbaseDataGridRef, GridColumns } from 'components/datagrid/main';
+import { ArchbaseDataGrid, ArchbaseDataGridRef, Columns } from 'components/datagrid/main';
 import { t } from 'i18next';
 import React, { ReactNode, useRef, useState } from 'react';
 import { ArchbaseAccessTokenService } from './ArchbaseAccessTokenService';
@@ -311,7 +311,7 @@ export function ArchbaseSecurityView({
 	const heightTab = `calc(${height} - 40px)`;
 
 	const accessTokenColumns = (
-		<GridColumns>
+		<Columns>
 			<ArchbaseDataGridColumn<AccessTokenDto>
 				dataField="user.avatar"
 				dataType="image"
@@ -367,11 +367,11 @@ export function ArchbaseSecurityView({
 				size={300}
 				inputFilterType="text"
 			/>
-		</GridColumns>
+		</Columns>
 	);
 
 	const userColumns = (
-		<GridColumns>
+		<Columns>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="avatar"
 				dataType="image"
@@ -482,11 +482,11 @@ export function ArchbaseSecurityView({
 				inputFilterType="checkbox"
 				size={140}
 			/>
-		</GridColumns>
+		</Columns>
 	);
 
 	const groupColumns = (
-		<GridColumns>
+		<Columns>
 			<ArchbaseDataGridColumn<GroupDto>
 				dataField="name"
 				dataType="text"
@@ -501,11 +501,11 @@ export function ArchbaseSecurityView({
 				size={800}
 				inputFilterType="text"
 			/>
-		</GridColumns>
+		</Columns>
 	);
 
 	const profileColumns = (
-		<GridColumns>
+		<Columns>
 			<ArchbaseDataGridColumn<ProfileDto>
 				dataField="name"
 				dataType="text"
@@ -520,11 +520,11 @@ export function ArchbaseSecurityView({
 				size={800}
 				inputFilterType="text"
 			/>
-		</GridColumns>
+		</Columns>
 	);
 
 	const resourceColumns = (
-		<GridColumns>
+		<Columns>
 			<ArchbaseDataGridColumn<ResourceDto>
 				dataField="name"
 				dataType="text"
@@ -539,7 +539,7 @@ export function ArchbaseSecurityView({
 				size={800}
 				inputFilterType="text"
 			/>
-		</GridColumns>
+		</Columns>
 	);
 
 	const handleAddUserExecute = () => {

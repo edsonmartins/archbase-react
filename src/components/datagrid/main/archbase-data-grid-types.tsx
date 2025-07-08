@@ -96,12 +96,12 @@ export function GridToolBarActions(props: GridToolBarActionsProps) {
 /**
  * Componente para agrupar as definições de colunas
  */
-export function GridColumns(props: GridColumnsProps) {
+export function Columns(props: GridColumnsProps) {
   return <>{props.children}</>;
 }
 
 // Adiciona marca de identificação para o componente Columns
-GridColumns.componentName = 'Columns';
+Columns.componentName = 'Columns';
 
 /**
  * Componente para definir uma coluna na grid

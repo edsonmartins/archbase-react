@@ -29,7 +29,7 @@ import { getAlignmentByDataType, getRendererByDataType } from './archbase-data-g
 import {
   ArchbaseDataGridProps,
   ArchbaseDataGridColumnProps,
-  GridColumns,
+  Columns,
   ArchbaseDataGridRef
 } from './archbase-data-grid-types'
 import {
@@ -58,7 +58,7 @@ import { IconX } from '@tabler/icons-react'
 import { useArchbaseTheme } from 'components/hooks'
 import { useArchbaseAppContext } from 'components/core'
 import { DataSourceEvent, DataSourceEventNames } from 'components/datasource'
-import { Columns } from 'components/datatable'
+
 
 // Constante para o limite máximo de pageSize permitido na versão MIT do DataGrid
 const MAX_PAGE_SIZE_MIT = 100
@@ -639,8 +639,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
 
     // Extrai definições de colunas dos children
     Children.forEach(children, (child) => {
-      if ((isValidElement(child) && child.type === GridColumns) ||
-          (isValidElement(child) && child.type === Columns)) {
+      if ((isValidElement(child) && child.type === Columns)) {
         Children.forEach(child.props.children, (column) => {
           if (isValidElement(column)) {
             // Tratamos column.props como desconhecido e fornecemos tipagem explícita
