@@ -1,0 +1,724 @@
+# DataSource V2 - API Reference
+
+> **Referência completa da API do ArchbaseDataSourceV2**
+
+## 📋 Índice
+
+- [ArchbaseDataSourceV2](#archbasedatasourcev2)
+- [ArchbaseRemoteDataSourceV2](#archbaseremotedatasourcev2)
+- [React Hooks](#react-hooks)
+- [Type Definitions](#type-definitions)
+- [Utility Functions](#utility-functions)
+
+## 🎯 ArchbaseDataSourceV2
+
+### Constructor
+
+```typescript
+class ArchbaseDataSourceV2<T> implements IDataSource<T>
+```
+
+#### Interface
+```typescript
+interface ArchbaseDataSourceV2Config<T> {
+  name: string;                                    // Nome único do DataSource
+  label?: string;                                  // Label para exibição
+  records?: T[];                                   // Registros iniciais
+  validator?: IDataSourceValidator;                // Validador personalizado
+  onStateChange?: (state: DataSourceState) => void; // Callback de mudança de estado
+}
+```
+
+#### Exemplo
+```typescript
+const dataSource = new ArchbaseDataSourceV2<Pessoa>({
+  name: 'pessoas',
+  label: 'Cadastro de Pessoas',
+  records: pessoasList,
+  validator: customValidator,
+  onStateChange: (state) => {
+    console.log('Estado mudou para:', state);
+  }
+});
+```
+
+### Core Methods (Compatível com V1)
+
+#### Navigation Methods
+```typescript
+// Navegação entre registros
+first(): this                    // Vai para o primeiro registro
+last(): this                     // Vai para o último registro
+next(): this                     // Próximo registro
+prior(): this                    // Registro anterior
+goToRecord(index: number): T | undefined  // Vai para índice específico
+
+// Informações de posição
+getCurrentIndex(): number        // Índice atual
+getTotalRecords(): number        // Total de registros
+isFirst(): boolean              // Está no primeiro?
+isLast(): boolean               // Está no último?
+isBOF(): boolean                // Beginning of file
+isEOF(): boolean                // End of file
+isEmpty(): boolean              // DataSource vazio?
+```
+
+#### State Management
+```typescript
+// Estados do DataSource
+isBrowsing(): boolean           // Modo navegação
+isEditing(): boolean            // Modo edição
+isInserting(): boolean          // Modo inserção
+isActive(): boolean             // DataSource ativo
+
+// Transições de estado
+edit(): this                    // Entra em modo edição
+save(): Promise<T>              // Salva alterações
+cancel(): this                  // Cancela alterações
+insert(record: T): this         // Insere novo registro
+remove(): Promise<T | undefined> // Remove registro atual
+```
+
+#### Field Operations
+```typescript
+// Operações em campos
+setFieldValue(fieldName: string, value: any): this
+getFieldValue(fieldName: string): any
+isEmptyField(fieldName: string): boolean
+
+// Valores aninhados suportados
+setFieldValue('endereco.rua', 'Nova Rua');
+getFieldValue('pessoa.contatos[0].email');
+```
+
+#### Event Management
+```typescript
+// Sistema de eventos
+addListener(...listeners: DataSourceListener<T>[]): this
+removeListener(...listeners: DataSourceListener<T>[]): this
+addFieldChangeListener(
+  fieldName: string, 
+  listener: (fieldName: string, oldValue: any, newValue: any) => void
+): this
+removeFieldChangeListener(fieldName: string, listener: Function): this
+```
+
+### 🆕 V2 Exclusive Methods
+
+#### Array Operations
+```typescript
+// Operações em arrays com type safety
+appendToFieldArray<K extends keyof T>(
+  fieldName: K, 
+  item: T[K] extends Array<infer U> ? U : never
+): void
+
+updateFieldArrayItem<K extends keyof T>(
+  fieldName: K,
+  index: number,
+  updater: (draft: T[K] extends Array<infer U> ? U : never) => void
+): void
+
+removeFromFieldArray<K extends keyof T>(
+  fieldName: K,
+  index: number
+): void
+
+insertIntoFieldArray<K extends keyof T>(
+  fieldName: K,
+  index: number,
+  item: T[K] extends Array<infer U> ? U : never
+): void
+
+// Utilitários para arrays
+getFieldArray<K extends keyof T>(fieldName: K): T[K] extends Array<infer U> ? U[] : never[]
+hasFieldArrayItems<K extends keyof T>(fieldName: K): boolean
+getFieldArrayLength<K extends keyof T>(fieldName: K): number
+```
+
+#### Batch Operations
+```typescript
+// Operações em lote (futuro)
+batchUpdate(updater: (draft: T[]) => void): void
+batchFieldUpdate(fieldName: string, updater: (draft: any) => void): void
+```
+
+#### Debug & Monitoring
+```typescript
+// Debug e monitoramento
+getDebugSnapshot(): DataSourceDebugInfo
+getLastOperationTime(): number
+getPerformanceMetrics(): DataSourceMetrics
+```
+
+### Example Usage
+
+```typescript
+interface Pessoa {
+  id: number;
+  nome: string;
+  contatos: Contato[];
+  endereco: {
+    rua: string;
+    cidade: string;
+  };
+}
+
+const dataSource = new ArchbaseDataSourceV2<Pessoa>({
+  name: 'pessoas',
+  records: []
+});
+
+// Navegação
+dataSource.first().edit();
+
+// Campo simples
+dataSource.setFieldValue('nome', 'João Silva');
+
+// Campo aninhado
+dataSource.setFieldValue('endereco.rua', 'Rua das Flores, 123');
+
+// Array operations
+dataSource.appendToFieldArray('contatos', {
+  tipo: 'EMAIL',
+  valor: 'joao@email.com',
+  principal: true
+});
+
+// Update array item
+dataSource.updateFieldArrayItem('contatos', 0, (draft) => {
+  draft.principal = false;
+});
+
+// Save changes
+await dataSource.save();
+```
+
+## 🌐 ArchbaseRemoteDataSourceV2
+
+### Constructor
+
+```typescript
+class ArchbaseRemoteDataSourceV2<T> implements IRemoteDataSource<T>
+```
+
+#### Interface
+```typescript
+interface ArchbaseRemoteDataSourceV2Config<T> {
+  name: string;
+  service: ArchbaseRemoteApiService<T, any>;
+  pageSize?: number;
+  loadOnCreate?: boolean;
+  onStateChange?: (state: DataSourceState) => void;
+}
+```
+
+#### Exemplo
+```typescript
+const remoteDataSource = new ArchbaseRemoteDataSourceV2<Pessoa>({
+  name: 'pessoas-remote',
+  service: pessoaService,
+  pageSize: 20,
+  loadOnCreate: true,
+  onStateChange: (state) => console.log('State:', state)
+});
+```
+
+### Remote-Specific Methods
+
+```typescript
+// CRUD remoto
+async save(callback?: Function): Promise<T>
+async remove(callback?: Function): Promise<T | undefined>
+async refresh(): Promise<void>
+
+// Paginação
+goToPage(page: number): this
+getCurrentPage(): number
+getTotalPages(): number
+getPageSize(): number
+
+// Filtros e ordenação
+applyRemoteFilter(
+  filter: ArchbaseQueryFilter, 
+  page: number, 
+  callback?: () => void
+): void
+clearRemoteFilter(): void
+applySorting(sortFields: string[]): void
+
+// Loading states
+isLoading(): boolean
+getLoadingMessage(): string
+```
+
+### Integration com TanStack Query (Futuro)
+
+```typescript
+// Configuração com React Query
+const remoteDataSource = new ArchbaseRemoteDataSourceV2({
+  name: 'pessoas',
+  service: pessoaService,
+  queryConfig: {
+    staleTime: 5 * 60 * 1000,    // 5 minutos
+    cacheTime: 10 * 60 * 1000,   // 10 minutos
+    refetchOnWindowFocus: false,
+    retry: 3
+  }
+});
+```
+
+## ⚛️ React Hooks
+
+### useArchbaseDataSourceV2
+
+Hook principal para DataSource local com estado reativo.
+
+```typescript
+function useArchbaseDataSourceV2<T>(
+  config: ArchbaseDataSourceV2Config<T>
+): UseArchbaseDataSourceV2Result<T>
+```
+
+#### Return Type
+```typescript
+interface UseArchbaseDataSourceV2Result<T> {
+  // DataSource instance
+  dataSource: ArchbaseDataSourceV2<T>;
+  
+  // Estado reativo
+  currentRecord: T | undefined;
+  currentIndex: number;
+  totalRecords: number;
+  isEditing: boolean;
+  isBrowsing: boolean;
+  isInserting: boolean;
+  isEmpty: boolean;
+  
+  // Navigation
+  first: () => void;
+  last: () => void;
+  next: () => void;
+  prior: () => void;
+  goToRecord: (index: number) => void;
+  
+  // CRUD operations
+  edit: () => void;
+  save: () => Promise<T>;
+  cancel: () => void;
+  insert: (record: T) => void;
+  remove: () => Promise<T | undefined>;
+  
+  // Field operations
+  setFieldValue: (fieldName: string, value: any) => void;
+  getFieldValue: (fieldName: string) => any;
+  
+  // Array operations
+  appendToArray: <K extends keyof T>(fieldName: K, item: any) => void;
+  updateArrayItem: <K extends keyof T>(
+    fieldName: K, 
+    index: number, 
+    updater: (draft: any) => void
+  ) => void;
+  removeFromArray: <K extends keyof T>(fieldName: K, index: number) => void;
+  
+  // Debug
+  debugInfo?: DataSourceDebugInfo;
+}
+```
+
+#### Exemplo
+```typescript
+function MeuComponente() {
+  const {
+    currentRecord,
+    totalRecords,
+    isEditing,
+    setFieldValue,
+    edit,
+    save,
+    appendToArray
+  } = useArchbaseDataSourceV2<Pessoa>({
+    name: 'pessoas',
+    records: pessoasList
+  });
+
+  const handleEdit = () => edit();
+  const handleSave = () => save();
+  
+  const addContact = () => {
+    appendToArray('contatos', {
+      tipo: 'EMAIL',
+      valor: 'novo@email.com',
+      principal: false
+    });
+  };
+
+  return (
+    <div>
+      <h3>{currentRecord?.nome}</h3>
+      <p>Total: {totalRecords}</p>
+      
+      {isEditing ? (
+        <button onClick={handleSave}>Salvar</button>
+      ) : (
+        <button onClick={handleEdit}>Editar</button>
+      )}
+      
+      <button onClick={addContact}>Adicionar Contato</button>
+    </div>
+  );
+}
+```
+
+### useArchbaseRemoteDataSourceV2
+
+Hook para DataSource remoto com loading states.
+
+```typescript
+function useArchbaseRemoteDataSourceV2<T>(
+  config: ArchbaseRemoteDataSourceV2Config<T>
+): UseArchbaseRemoteDataSourceV2Result<T>
+```
+
+#### Return Type
+```typescript
+interface UseArchbaseRemoteDataSourceV2Result<T> {
+  // Herda tudo de UseArchbaseDataSourceV2Result<T>
+  ...UseArchbaseDataSourceV2Result<T>;
+  
+  // Remote-specific
+  isLoading: boolean;
+  error: Error | null;
+  refresh: () => Promise<void>;
+  
+  // Pagination
+  currentPage: number;
+  totalPages: number;
+  goToPage: (page: number) => void;
+  
+  // Filtering
+  applyFilter: (filter: ArchbaseQueryFilter) => void;
+  clearFilter: () => void;
+}
+```
+
+#### Exemplo
+```typescript
+function RemoteDataComponent() {
+  const {
+    currentRecord,
+    isLoading,
+    error,
+    refresh,
+    save,
+    currentPage,
+    totalPages,
+    goToPage
+  } = useArchbaseRemoteDataSourceV2<Pessoa>({
+    name: 'pessoas-remote',
+    service: pessoaService,
+    pageSize: 20
+  });
+
+  if (isLoading) return <div>Carregando...</div>;
+  if (error) return <div>Erro: {error.message}</div>;
+
+  return (
+    <div>
+      <h3>{currentRecord?.nome}</h3>
+      
+      <button onClick={refresh}>Atualizar</button>
+      <button onClick={save}>Salvar</button>
+      
+      <div>
+        Página {currentPage} de {totalPages}
+        <button onClick={() => goToPage(currentPage - 1)}>Anterior</button>
+        <button onClick={() => goToPage(currentPage + 1)}>Próxima</button>
+      </div>
+    </div>
+  );
+}
+```
+
+### Hook Utilities
+
+```typescript
+// Read-only hook (para componentes que só exibem dados)
+function useArchbaseDataSourceV2ReadOnly<T>(
+  config: ArchbaseDataSourceV2Config<T>
+): Omit<UseArchbaseDataSourceV2Result<T>, 'edit' | 'save' | 'cancel' | 'insert' | 'remove'>
+
+// Hook para arrays específicos
+function useFieldArray<T, K extends keyof T>(
+  dataSource: ArchbaseDataSourceV2<T>,
+  fieldName: K
+): {
+  items: T[K] extends Array<infer U> ? U[] : never[];
+  append: (item: any) => void;
+  update: (index: number, updater: (draft: any) => void) => void;
+  remove: (index: number) => void;
+  insert: (index: number, item: any) => void;
+}
+```
+
+## 📝 Type Definitions
+
+### Core Types
+
+```typescript
+// Estado do DataSource
+type DataSourceState = 'browse' | 'edit' | 'insert';
+
+// Listener de eventos
+type DataSourceListener<T> = (event: DataSourceEvent<T>) => void;
+
+// Eventos do DataSource
+interface DataSourceEvent<T> {
+  type: DataSourceEventNames;
+  record?: T;
+  index?: number;
+  fieldName?: string;
+  oldValue?: any;
+  newValue?: any;
+  data?: T[];
+  error?: string;
+}
+
+// Debug info
+interface DataSourceDebugInfo {
+  name: string;
+  recordCount: number;
+  currentIndex: number;
+  state: DataSourceState;
+  lastOperation: string;
+  operationTime: number;
+  memoryUsage: {
+    listeners: number;
+    recordsSize: number;
+  };
+}
+
+// Métricas de performance
+interface DataSourceMetrics {
+  totalOperations: number;
+  averageOperationTime: number;
+  slowestOperation: {
+    name: string;
+    time: number;
+  };
+  reRenderCount: number;
+  memoryFootprint: number;
+}
+```
+
+### Array Operation Types
+
+```typescript
+// Type helpers para arrays
+type ArrayFieldType<T, K extends keyof T> = T[K] extends Array<infer U> ? U : never;
+
+type ArrayField<T> = {
+  [K in keyof T]: T[K] extends Array<any> ? K : never;
+}[keyof T];
+
+// Array updater function
+type ArrayItemUpdater<T> = (draft: T) => void;
+
+// Field path type (para campos aninhados)
+type FieldPath<T> = string; // Simplificado - pode ser melhorado com template literals
+```
+
+## 🛠️ Utility Functions
+
+### Type Guards
+
+```typescript
+// Detecta se é DataSource V2
+export function isDataSourceV2<T>(
+  ds: ArchbaseDataSource<T, any> | ArchbaseDataSourceV2<T>
+): ds is ArchbaseDataSourceV2<T> {
+  return 'appendToFieldArray' in ds;
+}
+
+// Detecta se é Remote DataSource V2
+export function isRemoteDataSourceV2<T>(
+  ds: any
+): ds is ArchbaseRemoteDataSourceV2<T> {
+  return 'applyRemoteFilter' in ds && isDataSourceV2(ds);
+}
+```
+
+### Factory Functions
+
+```typescript
+// Factory para DataSource local
+export function createLocalDataSource<T>(
+  name: string,
+  records: T[] = [],
+  options: Partial<ArchbaseDataSourceV2Config<T>> = {}
+): ArchbaseDataSourceV2<T> {
+  return new ArchbaseDataSourceV2<T>({
+    name,
+    records,
+    ...options
+  });
+}
+
+// Factory para DataSource remoto
+export function createRemoteDataSource<T>(
+  name: string,
+  service: ArchbaseRemoteApiService<T, any>,
+  options: Partial<ArchbaseRemoteDataSourceV2Config<T>> = {}
+): ArchbaseRemoteDataSourceV2<T> {
+  return new ArchbaseRemoteDataSourceV2<T>({
+    name,
+    service,
+    pageSize: 20,
+    loadOnCreate: true,
+    ...options
+  });
+}
+```
+
+### Performance Utilities
+
+```typescript
+// Wrapper para monitoramento de performance
+export function withPerformanceMonitoring<T>(
+  dataSource: ArchbaseDataSourceV2<T>
+): ArchbaseDataSourceV2<T> {
+  const originalSetFieldValue = dataSource.setFieldValue.bind(dataSource);
+  
+  dataSource.setFieldValue = function(fieldName: string, value: any) {
+    const start = performance.now();
+    const result = originalSetFieldValue(fieldName, value);
+    const duration = performance.now() - start;
+    
+    console.log(`setFieldValue(${fieldName}): ${duration}ms`);
+    return result;
+  };
+  
+  return dataSource;
+}
+
+// Batch de operações para performance
+export function batchOperations<T>(
+  dataSource: ArchbaseDataSourceV2<T>,
+  operations: () => void
+): void {
+  // Implementação futura: agrupa operações para reduzir re-renders
+  operations();
+}
+```
+
+### Migration Helpers
+
+```typescript
+// Helper para migração gradual
+export function createHybridDataSource<T>(
+  config: {
+    name: string;
+    records: T[];
+    useV2: boolean;
+    v1Options?: any;
+  }
+): ArchbaseDataSource<T, any> | ArchbaseDataSourceV2<T> {
+  if (config.useV2) {
+    return new ArchbaseDataSourceV2<T>({
+      name: config.name,
+      records: config.records
+    });
+  } else {
+    return new ArchbaseDataSource<T, any>(config.name, {
+      records: config.records,
+      grandTotalRecords: config.records.length,
+      currentPage: 0,
+      totalPages: 1,
+      pageSize: config.records.length || 10,
+      ...config.v1Options
+    });
+  }
+}
+```
+
+---
+
+## 📚 Exemplos de Uso Avançado
+
+### Validação Customizada
+
+```typescript
+const customValidator: IDataSourceValidator = {
+  validate: (record: Pessoa) => {
+    const errors: string[] = [];
+    
+    if (!record.nome || record.nome.length < 2) {
+      errors.push('Nome deve ter pelo menos 2 caracteres');
+    }
+    
+    if (!record.email || !record.email.includes('@')) {
+      errors.push('Email inválido');
+    }
+    
+    return errors.length === 0;
+  }
+};
+
+const dataSource = new ArchbaseDataSourceV2<Pessoa>({
+  name: 'pessoas',
+  records: [],
+  validator: customValidator
+});
+```
+
+### Operações Complexas em Arrays
+
+```typescript
+// Manipulação avançada de arrays aninhados
+interface Pedido {
+  id: number;
+  cliente: string;
+  itens: ItemPedido[];
+}
+
+interface ItemPedido {
+  produtoId: number;
+  quantidade: number;
+  precoUnitario: number;
+  observacoes: string[];
+}
+
+const dataSource = new ArchbaseDataSourceV2<Pedido>({
+  name: 'pedidos',
+  records: []
+});
+
+// Adicionar item ao pedido
+dataSource.appendToFieldArray('itens', {
+  produtoId: 123,
+  quantidade: 1,
+  precoUnitario: 29.90,
+  observacoes: []
+});
+
+// Adicionar observação ao item
+const itemIndex = 0;
+dataSource.updateFieldArrayItem('itens', itemIndex, (draft) => {
+  draft.observacoes.push('Sem cebola');
+});
+
+// Calcular total do pedido (campo derivado)
+const calcularTotal = () => {
+  const itens = dataSource.getFieldArray('itens');
+  return itens.reduce((total, item) => 
+    total + (item.quantidade * item.precoUnitario), 0
+  );
+};
+```
+
+---
+
+*API Reference atualizada em: Dezembro 2024*  
+*Versão: 2.1.4-dev*  
+*Status: ✅ Documentação Completa*

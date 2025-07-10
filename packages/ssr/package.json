@@ -1,0 +1,57 @@
+{
+  "name": "@archbase/ssr",
+  "version": "3.0.0",
+  "description": "Server-Side Rendering utilities for Archbase React components with TanStack Start",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "@mantine/core": "^8.1.2",
+    "@mantine/hooks": "^8.1.2",
+    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/start": "^1.0.0"
+  },
+  "dependencies": {
+    "@archbase/core": "workspace:*",
+    "@archbase/data": "workspace:*",
+    "serialize-javascript": "^6.0.2"
+  },
+  "devDependencies": {
+    "@types/serialize-javascript": "^5.0.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.1",
+    "vite-plugin-dts": "^4.3.0"
+  },
+  "keywords": [
+    "react",
+    "ssr",
+    "server-side-rendering",
+    "tanstack-start",
+    "archbase",
+    "components"
+  ],
+  "author": "Edson Martins",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edsonmartins/archbase-react"
+  }
+}

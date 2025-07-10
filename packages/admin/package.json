@@ -1,0 +1,73 @@
+{
+  "name": "@archbase/admin",
+  "version": "3.0.0",
+  "description": "Admin interface components for Archbase React",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "NODE_OPTIONS=\"--max-old-space-size=8192\" vite build && NODE_OPTIONS=\"--max-old-space-size=16384\" tsc --emitDeclarationOnly",
+    "dev": "vite build --watch",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "admin",
+    "interface",
+    "archbase"
+  ],
+  "author": "Edson Martins",
+  "license": "MIT",
+  "dependencies": {
+    "@archbase/components": "workspace:*",
+    "@archbase/core": "workspace:*",
+    "@archbase/data": "workspace:*",
+    "@archbase/layout": "workspace:*",
+    "@archbase/security": "workspace:*",
+    "@archbase/template": "workspace:*",
+    "@storybook/preview-api": "^8.6.14",
+    "i18next": "^25.3.1",
+    "lodash": "4.17.21",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^15.1.2",
+    "react-router-dom": "^6.28.0",
+    "react-router": "^6.28.0",
+    "mantine-flagpack": "^4.0.0",
+    "react-pro-sidebar": "^1.1.0",
+    "zustand": "^5.0.6",
+    "usehooks-ts": "^2.16.0",
+    "@rehooks/component-size": "^1.0.3",
+    "@mantine/spotlight": "8.1.2",
+    "@mantine/core": "8.1.2",
+    "@mantine/hooks": "8.1.2",
+    "@tabler/icons-react": "^3.27.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.200",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/react-router-dom": "^5.3.3",
+    "typescript": "^5.7.0",
+    "vite": "^6.3.5",
+    "vitest": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "@mantine/core": "8.1.2",
+    "@mantine/hooks": "8.1.2",
+    "@mantine/modals": "8.1.2",
+    "@mantine/notifications": "8.1.2",
+    "@mantine/spotlight": "8.1.2",
+    "@tabler/icons-react": "^3.27.0"
+  }
+}

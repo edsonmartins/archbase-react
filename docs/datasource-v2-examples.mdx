@@ -1,0 +1,1429 @@
+# DataSource V2 - Exemplos Práticos
+
+> **Exemplos reais de uso do DataSource V2 para diferentes cenários**
+
+## 📋 Índice
+
+- [Formulários Básicos](#formulários-básicos)
+- [Operações em Arrays](#operações-em-arrays)  
+- [Master-Detail](#master-detail)
+- [CRUD Remoto](#crud-remoto)
+- [Validação Avançada](#validação-avançada)
+- [Performance Optimization](#performance-optimization)
+
+## 📝 Formulários Básicos
+
+### Exemplo 1: Cadastro de Pessoa
+
+```typescript
+import React from 'react';
+import { 
+  ArchbaseDataSourceV2, 
+  ArchbaseEdit, 
+  ArchbaseSelect,
+  ArchbaseCheckbox,
+  ArchbaseFormTemplate 
+} from '@archbase/react';
+
+interface Pessoa {
+  id: number;
+  nome: string;
+  email: string;
+  telefone: string;
+  ativo: boolean;
+  tipoContrato: 'CLT' | 'PJ' | 'ESTAGIARIO';
+  endereco: {
+    cep: string;
+    rua: string;
+    numero: string;
+    cidade: string;
+    estado: string;
+  };
+}
+
+export function CadastroPessoa() {
+  // ✅ DataSource V2 com dados iniciais
+  const dataSource = new ArchbaseDataSourceV2<Pessoa>({
+    name: 'cadastro-pessoa',
+    records: [{
+      id: 0,
+      nome: '',
+      email: '',
+      telefone: '',
+      ativo: true,
+      tipoContrato: 'CLT',
+      endereco: {
+        cep: '',
+        rua: '',
+        numero: '',
+        cidade: '',
+        estado: ''
+      }
+    }]
+  });
+
+  const handleSave = async () => {
+    try {
+      await dataSource.save();
+      console.log('Pessoa salva:', dataSource.getCurrentRecord());
+    } catch (error) {
+      console.error('Erro ao salvar:', error);
+    }
+  };
+
+  const handleCancel = () => {
+    dataSource.cancel();
+  };
+
+  return (
+    <ArchbaseFormTemplate 
+      dataSource={dataSource}
+      title="Cadastro de Pessoa"
+      onSave={handleSave}
+      onCancel={handleCancel}
+    >
+      {/* Dados Pessoais */}
+      <div className="form-section">
+        <h3>Dados Pessoais</h3>
+        
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="nome"
+          label="Nome Completo"
+          placeholder="Digite o nome completo"
+          required
+          width="100%"
+        />
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="email"
+            label="E-mail"
+            placeholder="exemplo@email.com"
+            required
+          />
+          
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="telefone"
+            label="Telefone"
+            placeholder="(11) 99999-9999"
+          />
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '16px', alignItems: 'center' }}>
+          <ArchbaseSelect
+            dataSource={dataSource}
+            dataField="tipoContrato"
+            label="Tipo de Contrato"
+            data={[
+              { value: 'CLT', label: 'CLT' },
+              { value: 'PJ', label: 'Pessoa Jurídica' },
+              { value: 'ESTAGIARIO', label: 'Estagiário' }
+            ]}
+          />
+          
+          <ArchbaseCheckbox
+            dataSource={dataSource}
+            dataField="ativo"
+            label="Ativo"
+          />
+        </div>
+      </div>
+
+      {/* Endereço */}
+      <div className="form-section">
+        <h3>Endereço</h3>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '16px' }}>
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="endereco.cep"
+            label="CEP"
+            placeholder="00000-000"
+          />
+          
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="endereco.rua"
+            label="Rua"
+            placeholder="Nome da rua"
+          />
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr 200px', gap: '16px' }}>
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="endereco.numero"
+            label="Número"
+            placeholder="123"
+          />
+          
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="endereco.cidade"
+            label="Cidade"
+            placeholder="Nome da cidade"
+          />
+          
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="endereco.estado"
+            label="Estado"
+            placeholder="SP"
+          />
+        </div>
+      </div>
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+### Exemplo 2: Hook Reativo
+
+```typescript
+import { useArchbaseDataSourceV2 } from '@archbase/react';
+
+export function CadastroPessoaHook() {
+  const {
+    currentRecord,
+    isEditing,
+    setFieldValue,
+    getFieldValue,
+    edit,
+    save,
+    cancel
+  } = useArchbaseDataSourceV2<Pessoa>({
+    name: 'cadastro-pessoa-hook',
+    records: [{ /* dados iniciais */ }]
+  });
+
+  // ✅ Estado reativo - re-render apenas quando necessário
+  const nomeCompleto = getFieldValue('nome');
+  const email = getFieldValue('email');
+  const isFormValid = nomeCompleto && email;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!isFormValid) {
+      alert('Preencha os campos obrigatórios');
+      return;
+    }
+    
+    try {
+      await save();
+      alert('Pessoa salva com sucesso!');
+    } catch (error) {
+      alert('Erro ao salvar: ' + error.message);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Nome:</label>
+        <input
+          value={nomeCompleto || ''}
+          onChange={(e) => setFieldValue('nome', e.target.value)}
+          disabled={!isEditing}
+          required
+        />
+      </div>
+      
+      <div>
+        <label>E-mail:</label>
+        <input
+          type="email"
+          value={email || ''}
+          onChange={(e) => setFieldValue('email', e.target.value)}
+          disabled={!isEditing}
+          required
+        />
+      </div>
+      
+      <div>
+        {isEditing ? (
+          <>
+            <button type="submit" disabled={!isFormValid}>
+              Salvar
+            </button>
+            <button type="button" onClick={cancel}>
+              Cancelar
+            </button>
+          </>
+        ) : (
+          <button type="button" onClick={edit}>
+            Editar
+          </button>
+        )}
+      </div>
+    </form>
+  );
+}
+```
+
+## 📊 Operações em Arrays
+
+### Exemplo 3: Gestão de Contatos
+
+```typescript
+interface Pessoa {
+  id: number;
+  nome: string;
+  contatos: Contato[];
+}
+
+interface Contato {
+  id: number;
+  tipo: 'EMAIL' | 'TELEFONE' | 'WHATSAPP';
+  valor: string;
+  principal: boolean;
+  observacao?: string;
+}
+
+export function GestaoContatos() {
+  const dataSource = new ArchbaseDataSourceV2<Pessoa>({
+    name: 'gestao-contatos',
+    records: [{
+      id: 1,
+      nome: 'João Silva',
+      contatos: [
+        { id: 1, tipo: 'EMAIL', valor: 'joao@email.com', principal: true },
+        { id: 2, tipo: 'TELEFONE', valor: '(11) 99999-9999', principal: false }
+      ]
+    }]
+  });
+
+  // ✅ V2: Array operations com type safety
+  const adicionarContato = (tipo: Contato['tipo']) => {
+    const novoContato: Contato = {
+      id: Date.now(), // ID temporário
+      tipo,
+      valor: '',
+      principal: false
+    };
+    
+    dataSource.appendToFieldArray('contatos', novoContato);
+  };
+
+  const marcarComoPrincipal = (index: number) => {
+    // Primeiro desmarca todos
+    const contatos = dataSource.getFieldArray('contatos');
+    contatos.forEach((_, i) => {
+      dataSource.updateFieldArrayItem('contatos', i, (draft) => {
+        draft.principal = false;
+      });
+    });
+
+    // Marca o selecionado como principal
+    dataSource.updateFieldArrayItem('contatos', index, (draft) => {
+      draft.principal = true;
+    });
+  };
+
+  const atualizarContato = (index: number, campo: keyof Contato, valor: any) => {
+    dataSource.updateFieldArrayItem('contatos', index, (draft) => {
+      (draft as any)[campo] = valor;
+    });
+  };
+
+  const removerContato = (index: number) => {
+    dataSource.removeFromFieldArray('contatos', index);
+  };
+
+  const contatos = dataSource.getFieldArray('contatos');
+
+  return (
+    <div>
+      <h2>Contatos de {dataSource.getFieldValue('nome')}</h2>
+      
+      {/* Lista de Contatos */}
+      <div className="contatos-list">
+        {contatos.map((contato, index) => (
+          <div key={index} className="contato-item">
+            <div className="contato-fields">
+              <select
+                value={contato.tipo}
+                onChange={(e) => atualizarContato(index, 'tipo', e.target.value)}
+              >
+                <option value="EMAIL">E-mail</option>
+                <option value="TELEFONE">Telefone</option>
+                <option value="WHATSAPP">WhatsApp</option>
+              </select>
+              
+              <input
+                type={contato.tipo === 'EMAIL' ? 'email' : 'text'}
+                value={contato.valor}
+                onChange={(e) => atualizarContato(index, 'valor', e.target.value)}
+                placeholder={`Digite o ${contato.tipo.toLowerCase()}`}
+              />
+              
+              <input
+                type="text"
+                value={contato.observacao || ''}
+                onChange={(e) => atualizarContato(index, 'observacao', e.target.value)}
+                placeholder="Observação"
+              />
+            </div>
+            
+            <div className="contato-actions">
+              <label>
+                <input
+                  type="radio"
+                  name="principal"
+                  checked={contato.principal}
+                  onChange={() => marcarComoPrincipal(index)}
+                />
+                Principal
+              </label>
+              
+              <button onClick={() => removerContato(index)}>
+                Remover
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {/* Botões para Adicionar */}
+      <div className="add-buttons">
+        <button onClick={() => adicionarContato('EMAIL')}>
+          + E-mail
+        </button>
+        <button onClick={() => adicionarContato('TELEFONE')}>
+          + Telefone
+        </button>
+        <button onClick={() => adicionarContato('WHATSAPP')}>
+          + WhatsApp
+        </button>
+      </div>
+      
+      {/* Resumo */}
+      <div className="resumo">
+        <p>Total de contatos: {contatos.length}</p>
+        <p>Contato principal: {contatos.find(c => c.principal)?.valor || 'Nenhum'}</p>
+      </div>
+    </div>
+  );
+}
+```
+
+### Exemplo 4: Array de Objetos Complexos
+
+```typescript
+interface Pedido {
+  id: number;
+  cliente: string;
+  data: Date;
+  itens: ItemPedido[];
+  desconto: number;
+  frete: number;
+}
+
+interface ItemPedido {
+  id: number;
+  produtoId: number;
+  produtoNome: string;
+  quantidade: number;
+  precoUnitario: number;
+  observacoes: string[];
+}
+
+export function GestaoPedido() {
+  const dataSource = new ArchbaseDataSourceV2<Pedido>({
+    name: 'gestao-pedido',
+    records: [{
+      id: 1,
+      cliente: 'Cliente Teste',
+      data: new Date(),
+      itens: [],
+      desconto: 0,
+      frete: 0
+    }]
+  });
+
+  const adicionarItem = (produto: { id: number; nome: string; preco: number }) => {
+    const novoItem: ItemPedido = {
+      id: Date.now(),
+      produtoId: produto.id,
+      produtoNome: produto.nome,
+      quantidade: 1,
+      precoUnitario: produto.preco,
+      observacoes: []
+    };
+    
+    dataSource.appendToFieldArray('itens', novoItem);
+  };
+
+  const atualizarQuantidade = (index: number, quantidade: number) => {
+    dataSource.updateFieldArrayItem('itens', index, (draft) => {
+      draft.quantidade = quantidade;
+    });
+  };
+
+  const adicionarObservacao = (itemIndex: number, observacao: string) => {
+    dataSource.updateFieldArrayItem('itens', itemIndex, (draft) => {
+      draft.observacoes.push(observacao);
+    });
+  };
+
+  const removerObservacao = (itemIndex: number, obsIndex: number) => {
+    dataSource.updateFieldArrayItem('itens', itemIndex, (draft) => {
+      draft.observacoes.splice(obsIndex, 1);
+    });
+  };
+
+  // ✅ Cálculos reativos baseados no estado do DataSource
+  const itens = dataSource.getFieldArray('itens');
+  const subtotal = itens.reduce((total, item) => 
+    total + (item.quantidade * item.precoUnitario), 0
+  );
+  const desconto = dataSource.getFieldValue('desconto') || 0;
+  const frete = dataSource.getFieldValue('frete') || 0;
+  const total = subtotal - desconto + frete;
+
+  return (
+    <div>
+      <h2>Pedido #{dataSource.getFieldValue('id')}</h2>
+      
+      {/* Cabeçalho do Pedido */}
+      <div className="pedido-header">
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="cliente"
+          label="Cliente"
+        />
+        
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="desconto"
+          label="Desconto (R$)"
+          type="number"
+        />
+        
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="frete"
+          label="Frete (R$)"
+          type="number"
+        />
+      </div>
+      
+      {/* Itens do Pedido */}
+      <div className="pedido-itens">
+        <h3>Itens</h3>
+        
+        {itens.map((item, index) => (
+          <div key={item.id} className="item-pedido">
+            <div className="item-info">
+              <span>{item.produtoNome}</span>
+              <span>R$ {item.precoUnitario.toFixed(2)}</span>
+              
+              <input
+                type="number"
+                value={item.quantidade}
+                onChange={(e) => atualizarQuantidade(index, parseInt(e.target.value))}
+                min="1"
+              />
+              
+              <span>= R$ {(item.quantidade * item.precoUnitario).toFixed(2)}</span>
+            </div>
+            
+            {/* Observações do Item */}
+            <div className="item-observacoes">
+              {item.observacoes.map((obs, obsIndex) => (
+                <div key={obsIndex} className="observacao">
+                  <span>{obs}</span>
+                  <button onClick={() => removerObservacao(index, obsIndex)}>
+                    ✕
+                  </button>
+                </div>
+              ))}
+              
+              <button 
+                onClick={() => {
+                  const obs = prompt('Digite a observação:');
+                  if (obs) adicionarObservacao(index, obs);
+                }}
+              >
+                + Observação
+              </button>
+            </div>
+          </div>
+        ))}
+        
+        <button onClick={() => {
+          // Simular seleção de produto
+          const produto = { id: Date.now(), nome: 'Produto Teste', preco: 29.90 };
+          adicionarItem(produto);
+        }}>
+          + Adicionar Item
+        </button>
+      </div>
+      
+      {/* Totais */}
+      <div className="pedido-totais">
+        <div>Subtotal: R$ {subtotal.toFixed(2)}</div>
+        <div>Desconto: R$ {desconto.toFixed(2)}</div>
+        <div>Frete: R$ {frete.toFixed(2)}</div>
+        <div><strong>Total: R$ {total.toFixed(2)}</strong></div>
+      </div>
+    </div>
+  );
+}
+```
+
+## 🔗 Master-Detail
+
+### Exemplo 5: Cliente e Pedidos
+
+```typescript
+interface Cliente {
+  id: number;
+  nome: string;
+  email: string;
+  pedidos: Pedido[];
+}
+
+interface Pedido {
+  id: number;
+  data: Date;
+  valor: number;
+  status: 'PENDENTE' | 'PROCESSANDO' | 'ENVIADO' | 'ENTREGUE';
+}
+
+export function ClientePedidos() {
+  // DataSource Master (Clientes)
+  const clientesDataSource = new ArchbaseDataSourceV2<Cliente>({
+    name: 'clientes',
+    records: [
+      {
+        id: 1,
+        nome: 'João Silva',
+        email: 'joao@email.com',
+        pedidos: [
+          { id: 101, data: new Date(), valor: 150.00, status: 'ENTREGUE' },
+          { id: 102, data: new Date(), valor: 89.90, status: 'PROCESSANDO' }
+        ]
+      },
+      {
+        id: 2,
+        nome: 'Maria Santos',
+        email: 'maria@email.com',
+        pedidos: [
+          { id: 201, data: new Date(), valor: 250.00, status: 'ENVIADO' }
+        ]
+      }
+    ]
+  });
+
+  // ✅ Hook para estado reativo do master
+  const {
+    currentRecord: clienteAtual,
+    currentIndex: clienteIndex,
+    next: proximoCliente,
+    prior: clienteAnterior,
+    totalRecords: totalClientes
+  } = useArchbaseDataSourceV2({
+    name: 'clientes-hook',
+    records: clientesDataSource.getRecords()
+  });
+
+  // ✅ Array de pedidos do cliente atual (detail)
+  const pedidosCliente = clienteAtual?.pedidos || [];
+
+  const adicionarPedido = () => {
+    const novoPedido: Pedido = {
+      id: Date.now(),
+      data: new Date(),
+      valor: 0,
+      status: 'PENDENTE'
+    };
+    
+    clientesDataSource.appendToFieldArray('pedidos', novoPedido);
+  };
+
+  const atualizarStatusPedido = (pedidoIndex: number, novoStatus: Pedido['status']) => {
+    clientesDataSource.updateFieldArrayItem('pedidos', pedidoIndex, (draft) => {
+      draft.status = novoStatus;
+    });
+  };
+
+  const removerPedido = (pedidoIndex: number) => {
+    clientesDataSource.removeFromFieldArray('pedidos', pedidoIndex);
+  };
+
+  // Cálculos agregados
+  const totalPedidos = pedidosCliente.length;
+  const valorTotal = pedidosCliente.reduce((sum, p) => sum + p.valor, 0);
+  const pedidosPendentes = pedidosCliente.filter(p => p.status === 'PENDENTE').length;
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '20px' }}>
+      
+      {/* Master: Lista de Clientes */}
+      <div className="clientes-master">
+        <h3>Clientes ({totalClientes})</h3>
+        
+        <div className="cliente-navigation">
+          <button onClick={clienteAnterior} disabled={clienteIndex === 0}>
+            ← Anterior
+          </button>
+          
+          <span>{clienteIndex + 1} de {totalClientes}</span>
+          
+          <button onClick={proximoCliente} disabled={clienteIndex === totalClientes - 1}>
+            Próximo →
+          </button>
+        </div>
+        
+        {clienteAtual && (
+          <div className="cliente-info">
+            <h4>{clienteAtual.nome}</h4>
+            <p>{clienteAtual.email}</p>
+            <small>{totalPedidos} pedidos</small>
+          </div>
+        )}
+      </div>
+      
+      {/* Detail: Pedidos do Cliente */}
+      <div className="pedidos-detail">
+        <div className="pedidos-header">
+          <h3>Pedidos de {clienteAtual?.nome}</h3>
+          
+          <div className="pedidos-stats">
+            <span>Total: {totalPedidos}</span>
+            <span>Pendentes: {pedidosPendentes}</span>
+            <span>Valor Total: R$ {valorTotal.toFixed(2)}</span>
+          </div>
+          
+          <button onClick={adicionarPedido}>
+            + Novo Pedido
+          </button>
+        </div>
+        
+        <div className="pedidos-list">
+          {pedidosCliente.map((pedido, index) => (
+            <div key={pedido.id} className="pedido-item">
+              <div className="pedido-info">
+                <span>#{pedido.id}</span>
+                <span>{pedido.data.toLocaleDateString()}</span>
+                <span>R$ {pedido.valor.toFixed(2)}</span>
+              </div>
+              
+              <div className="pedido-actions">
+                <select
+                  value={pedido.status}
+                  onChange={(e) => atualizarStatusPedido(index, e.target.value as Pedido['status'])}
+                >
+                  <option value="PENDENTE">Pendente</option>
+                  <option value="PROCESSANDO">Processando</option>
+                  <option value="ENVIADO">Enviado</option>
+                  <option value="ENTREGUE">Entregue</option>
+                </select>
+                
+                <input
+                  type="number"
+                  value={pedido.valor}
+                  onChange={(e) => {
+                    clientesDataSource.updateFieldArrayItem('pedidos', index, (draft) => {
+                      draft.valor = parseFloat(e.target.value) || 0;
+                    });
+                  }}
+                  step="0.01"
+                  min="0"
+                />
+                
+                <button onClick={() => removerPedido(index)}>
+                  Remover
+                </button>
+              </div>
+            </div>
+          ))}
+          
+          {pedidosCliente.length === 0 && (
+            <div className="no-pedidos">
+              Nenhum pedido encontrado para este cliente.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+## 🌐 CRUD Remoto
+
+### Exemplo 6: DataSource Remoto com API
+
+```typescript
+import { 
+  ArchbaseRemoteDataSourceV2,
+  useArchbaseRemoteDataSourceV2,
+  ArchbaseRemoteApiService 
+} from '@archbase/react';
+
+// Service para API REST
+class PessoaService extends ArchbaseRemoteApiService<Pessoa, number> {
+  constructor() {
+    super('/api/pessoas');
+  }
+  
+  // Métodos customizados se necessário
+  async buscarPorCPF(cpf: string): Promise<Pessoa[]> {
+    const response = await this.client.get(`${this.endpoint}/cpf/${cpf}`);
+    return response.data;
+  }
+}
+
+export function CrudRemotoPessoas() {
+  const pessoaService = new PessoaService();
+  
+  // ✅ Hook V2 para DataSource remoto
+  const {
+    currentRecord,
+    totalRecords,
+    isLoading,
+    error,
+    isEditing,
+    currentPage,
+    totalPages,
+    
+    // Navigation
+    first,
+    last,
+    next,
+    prior,
+    goToPage,
+    
+    // CRUD
+    edit,
+    save,
+    cancel,
+    insert,
+    remove,
+    refresh,
+    
+    // Fields
+    setFieldValue,
+    getFieldValue
+  } = useArchbaseRemoteDataSourceV2<Pessoa>({
+    name: 'pessoas-remote',
+    service: pessoaService,
+    pageSize: 10,
+    loadOnCreate: true
+  });
+
+  const handleNovaPessoa = () => {
+    const novaPessoa: Pessoa = {
+      id: 0,
+      nome: '',
+      email: '',
+      telefone: '',
+      ativo: true,
+      tipoContrato: 'CLT',
+      endereco: {
+        cep: '', rua: '', numero: '', cidade: '', estado: ''
+      }
+    };
+    
+    insert(novaPessoa);
+  };
+
+  const handleSalvar = async () => {
+    try {
+      await save();
+      alert('Pessoa salva com sucesso!');
+    } catch (error) {
+      alert('Erro ao salvar: ' + error.message);
+    }
+  };
+
+  const handleExcluir = async () => {
+    if (confirm('Deseja realmente excluir esta pessoa?')) {
+      try {
+        await remove();
+        alert('Pessoa excluída com sucesso!');
+      } catch (error) {
+        alert('Erro ao excluir: ' + error.message);
+      }
+    }
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="loading">
+        <span>Carregando dados...</span>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="error">
+        <h3>Erro ao carregar dados</h3>
+        <p>{error.message}</p>
+        <button onClick={refresh}>Tentar Novamente</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="crud-remoto">
+      
+      {/* Toolbar */}
+      <div className="toolbar">
+        <h2>Cadastro de Pessoas (Remoto)</h2>
+        
+        <div className="toolbar-actions">
+          <button onClick={handleNovaPessoa}>
+            Nova Pessoa
+          </button>
+          
+          <button onClick={refresh}>
+            Atualizar
+          </button>
+          
+          {isEditing ? (
+            <>
+              <button onClick={handleSalvar}>
+                Salvar
+              </button>
+              <button onClick={cancel}>
+                Cancelar
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={edit} disabled={!currentRecord}>
+                Editar
+              </button>
+              <button onClick={handleExcluir} disabled={!currentRecord}>
+                Excluir
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+      
+      {/* Navigation */}
+      <div className="navigation">
+        <button onClick={first}>⏮️</button>
+        <button onClick={prior}>⏪</button>
+        
+        <span>
+          Registro {totalRecords > 0 ? 1 : 0} de {totalRecords}
+        </span>
+        
+        <button onClick={next}>⏩</button>
+        <button onClick={last}>⏭️</button>
+      </div>
+      
+      {/* Form */}
+      {currentRecord ? (
+        <div className="form">
+          <div className="form-row">
+            <label>Nome:</label>
+            <input
+              value={getFieldValue('nome') || ''}
+              onChange={(e) => setFieldValue('nome', e.target.value)}
+              disabled={!isEditing}
+            />
+          </div>
+          
+          <div className="form-row">
+            <label>E-mail:</label>
+            <input
+              type="email"
+              value={getFieldValue('email') || ''}
+              onChange={(e) => setFieldValue('email', e.target.value)}
+              disabled={!isEditing}
+            />
+          </div>
+          
+          <div className="form-row">
+            <label>Telefone:</label>
+            <input
+              value={getFieldValue('telefone') || ''}
+              onChange={(e) => setFieldValue('telefone', e.target.value)}
+              disabled={!isEditing}
+            />
+          </div>
+          
+          <div className="form-row">
+            <label>
+              <input
+                type="checkbox"
+                checked={getFieldValue('ativo') || false}
+                onChange={(e) => setFieldValue('ativo', e.target.checked)}
+                disabled={!isEditing}
+              />
+              Ativo
+            </label>
+          </div>
+        </div>
+      ) : (
+        <div className="no-data">
+          Nenhum registro encontrado.
+        </div>
+      )}
+      
+      {/* Pagination */}
+      <div className="pagination">
+        <span>Página {currentPage} de {totalPages}</span>
+        
+        <div className="pagination-buttons">
+          <button 
+            onClick={() => goToPage(currentPage - 1)} 
+            disabled={currentPage <= 1}
+          >
+            Anterior
+          </button>
+          
+          <button 
+            onClick={() => goToPage(currentPage + 1)} 
+            disabled={currentPage >= totalPages}
+          >
+            Próxima
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+## ✅ Validação Avançada
+
+### Exemplo 7: Validação com Feedback Visual
+
+```typescript
+import { IDataSourceValidator } from '@archbase/react';
+
+// Validador customizado
+class PessoaValidator implements IDataSourceValidator {
+  validate(record: Pessoa): boolean {
+    const errors: string[] = [];
+    
+    // Validação de nome
+    if (!record.nome || record.nome.trim().length < 2) {
+      errors.push('Nome deve ter pelo menos 2 caracteres');
+    }
+    
+    // Validação de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!record.email || !emailRegex.test(record.email)) {
+      errors.push('E-mail inválido');
+    }
+    
+    // Validação de telefone
+    const telefoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
+    if (record.telefone && !telefoneRegex.test(record.telefone)) {
+      errors.push('Telefone deve estar no formato (XX) XXXXX-XXXX');
+    }
+    
+    // Validação de endereço
+    if (record.endereco.cep && !/^\d{5}-?\d{3}$/.test(record.endereco.cep)) {
+      errors.push('CEP inválido');
+    }
+    
+    // Armazenar erros para exibição
+    this.lastErrors = errors;
+    
+    return errors.length === 0;
+  }
+  
+  getErrors(): string[] {
+    return this.lastErrors || [];
+  }
+  
+  private lastErrors: string[] = [];
+}
+
+export function FormularioComValidacao() {
+  const validator = new PessoaValidator();
+  
+  const dataSource = new ArchbaseDataSourceV2<Pessoa>({
+    name: 'pessoa-validacao',
+    records: [{ 
+      /* registro inicial */ 
+    }],
+    validator
+  });
+
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  // Validação em tempo real
+  const validateField = (fieldName: string, value: any) => {
+    const errors: Record<string, string> = { ...fieldErrors };
+    
+    switch (fieldName) {
+      case 'nome':
+        if (!value || value.trim().length < 2) {
+          errors.nome = 'Nome deve ter pelo menos 2 caracteres';
+        } else {
+          delete errors.nome;
+        }
+        break;
+        
+      case 'email':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value || !emailRegex.test(value)) {
+          errors.email = 'E-mail inválido';
+        } else {
+          delete errors.email;
+        }
+        break;
+        
+      case 'telefone':
+        if (value) {
+          const telefoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
+          if (!telefoneRegex.test(value)) {
+            errors.telefone = 'Formato: (XX) XXXXX-XXXX';
+          } else {
+            delete errors.telefone;
+          }
+        } else {
+          delete errors.telefone;
+        }
+        break;
+    }
+    
+    setFieldErrors(errors);
+  };
+
+  const handleFieldChange = (fieldName: string, value: any) => {
+    dataSource.setFieldValue(fieldName, value);
+    validateField(fieldName, value);
+  };
+
+  const handleSave = async () => {
+    // Validação completa antes de salvar
+    const isValid = validator.validate(dataSource.getCurrentRecord()!);
+    
+    if (!isValid) {
+      setValidationErrors(validator.getErrors());
+      return;
+    }
+    
+    setValidationErrors([]);
+    
+    try {
+      await dataSource.save();
+      alert('Dados salvos com sucesso!');
+    } catch (error) {
+      alert('Erro ao salvar: ' + error.message);
+    }
+  };
+
+  const hasErrors = Object.keys(fieldErrors).length > 0 || validationErrors.length > 0;
+
+  return (
+    <div className="formulario-validacao">
+      
+      {/* Erros Gerais */}
+      {validationErrors.length > 0 && (
+        <div className="validation-errors">
+          <h4>Erros de Validação:</h4>
+          <ul>
+            {validationErrors.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
+      {/* Campos com Validação */}
+      <div className="form-field">
+        <label>Nome *</label>
+        <input
+          value={dataSource.getFieldValue('nome') || ''}
+          onChange={(e) => handleFieldChange('nome', e.target.value)}
+          className={fieldErrors.nome ? 'error' : ''}
+        />
+        {fieldErrors.nome && (
+          <span className="field-error">{fieldErrors.nome}</span>
+        )}
+      </div>
+      
+      <div className="form-field">
+        <label>E-mail *</label>
+        <input
+          type="email"
+          value={dataSource.getFieldValue('email') || ''}
+          onChange={(e) => handleFieldChange('email', e.target.value)}
+          className={fieldErrors.email ? 'error' : ''}
+        />
+        {fieldErrors.email && (
+          <span className="field-error">{fieldErrors.email}</span>
+        )}
+      </div>
+      
+      <div className="form-field">
+        <label>Telefone</label>
+        <input
+          value={dataSource.getFieldValue('telefone') || ''}
+          onChange={(e) => handleFieldChange('telefone', e.target.value)}
+          placeholder="(11) 99999-9999"
+          className={fieldErrors.telefone ? 'error' : ''}
+        />
+        {fieldErrors.telefone && (
+          <span className="field-error">{fieldErrors.telefone}</span>
+        )}
+      </div>
+      
+      {/* Actions */}
+      <div className="form-actions">
+        <button 
+          onClick={handleSave} 
+          disabled={hasErrors}
+          className={hasErrors ? 'disabled' : 'primary'}
+        >
+          Salvar
+        </button>
+        
+        <button onClick={() => dataSource.cancel()}>
+          Cancelar
+        </button>
+      </div>
+      
+      {/* Status */}
+      <div className="form-status">
+        {hasErrors ? (
+          <span className="status-error">
+            ❌ Corrija os erros antes de salvar
+          </span>
+        ) : (
+          <span className="status-ok">
+            ✅ Formulário válido
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+## ⚡ Performance Optimization
+
+### Exemplo 8: Otimização para Grandes Datasets
+
+```typescript
+import { memo, useMemo, useCallback } from 'react';
+
+interface ItemLista {
+  id: number;
+  nome: string;
+  categoria: string;
+  preco: number;
+  ativo: boolean;
+}
+
+// Componente otimizado para item da lista
+const ItemListaMemo = memo<{
+  item: ItemLista;
+  index: number;
+  onUpdate: (index: number, field: keyof ItemLista, value: any) => void;
+  onRemove: (index: number) => void;
+}>(({ item, index, onUpdate, onRemove }) => {
+  console.log(`Rendering item ${item.id}`); // Debug re-renders
+  
+  return (
+    <div className="item-lista">
+      <input
+        value={item.nome}
+        onChange={(e) => onUpdate(index, 'nome', e.target.value)}
+      />
+      
+      <select
+        value={item.categoria}
+        onChange={(e) => onUpdate(index, 'categoria', e.target.value)}
+      >
+        <option value="ELETRONICOS">Eletrônicos</option>
+        <option value="ROUPAS">Roupas</option>
+        <option value="CASA">Casa</option>
+      </select>
+      
+      <input
+        type="number"
+        value={item.preco}
+        onChange={(e) => onUpdate(index, 'preco', parseFloat(e.target.value))}
+        step="0.01"
+      />
+      
+      <label>
+        <input
+          type="checkbox"
+          checked={item.ativo}
+          onChange={(e) => onUpdate(index, 'ativo', e.target.checked)}
+        />
+        Ativo
+      </label>
+      
+      <button onClick={() => onRemove(index)}>
+        Remover
+      </button>
+    </div>
+  );
+});
+
+export function ListaOtimizada() {
+  // ✅ DataSource V2 com muitos registros
+  const dataSource = useMemo(() => 
+    new ArchbaseDataSourceV2<{ itens: ItemLista[] }>({
+      name: 'lista-otimizada',
+      records: [{
+        itens: Array.from({ length: 1000 }, (_, i) => ({
+          id: i + 1,
+          nome: `Item ${i + 1}`,
+          categoria: 'ELETRONICOS',
+          preco: Math.random() * 100,
+          ativo: Math.random() > 0.5
+        }))
+      }]
+    }), []
+  );
+
+  // ✅ Callbacks otimizados
+  const handleUpdateItem = useCallback((index: number, field: keyof ItemLista, value: any) => {
+    dataSource.updateFieldArrayItem('itens', index, (draft) => {
+      (draft as any)[field] = value;
+    });
+  }, [dataSource]);
+
+  const handleRemoveItem = useCallback((index: number) => {
+    dataSource.removeFromFieldArray('itens', index);
+  }, [dataSource]);
+
+  const handleAddItem = useCallback(() => {
+    const novoItem: ItemLista = {
+      id: Date.now(),
+      nome: 'Novo Item',
+      categoria: 'ELETRONICOS',
+      preco: 0,
+      ativo: true
+    };
+    
+    dataSource.appendToFieldArray('itens', novoItem);
+  }, [dataSource]);
+
+  // ✅ Dados memoizados
+  const itens = useMemo(() => 
+    dataSource.getFieldArray('itens'), 
+    [dataSource.getFieldArray('itens')]
+  );
+
+  // ✅ Filtros e estatísticas memoizadas
+  const [filtroCategoria, setFiltroCategoria] = useState<string>('TODOS');
+  const [filtroAtivo, setFiltroAtivo] = useState<boolean | null>(null);
+
+  const itensFiltrados = useMemo(() => {
+    return itens.filter(item => {
+      if (filtroCategoria !== 'TODOS' && item.categoria !== filtroCategoria) {
+        return false;
+      }
+      
+      if (filtroAtivo !== null && item.ativo !== filtroAtivo) {
+        return false;
+      }
+      
+      return true;
+    });
+  }, [itens, filtroCategoria, filtroAtivo]);
+
+  const estatisticas = useMemo(() => ({
+    total: itens.length,
+    ativos: itens.filter(i => i.ativo).length,
+    valorTotal: itens.reduce((sum, i) => sum + i.preco, 0),
+    porCategoria: itens.reduce((acc, item) => {
+      acc[item.categoria] = (acc[item.categoria] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>)
+  }), [itens]);
+
+  return (
+    <div className="lista-otimizada">
+      
+      {/* Header com Estatísticas */}
+      <div className="header">
+        <h2>Lista Otimizada ({estatisticas.total} itens)</h2>
+        
+        <div className="stats">
+          <span>Ativos: {estatisticas.ativos}</span>
+          <span>Valor Total: R$ {estatisticas.valorTotal.toFixed(2)}</span>
+          <span>Eletrônicos: {estatisticas.porCategoria.ELETRONICOS || 0}</span>
+          <span>Roupas: {estatisticas.porCategoria.ROUPAS || 0}</span>
+          <span>Casa: {estatisticas.porCategoria.CASA || 0}</span>
+        </div>
+      </div>
+      
+      {/* Filtros */}
+      <div className="filtros">
+        <select
+          value={filtroCategoria}
+          onChange={(e) => setFiltroCategoria(e.target.value)}
+        >
+          <option value="TODOS">Todas as Categorias</option>
+          <option value="ELETRONICOS">Eletrônicos</option>
+          <option value="ROUPAS">Roupas</option>
+          <option value="CASA">Casa</option>
+        </select>
+        
+        <select
+          value={filtroAtivo === null ? 'TODOS' : filtroAtivo.toString()}
+          onChange={(e) => {
+            const value = e.target.value;
+            setFiltroAtivo(value === 'TODOS' ? null : value === 'true');
+          }}
+        >
+          <option value="TODOS">Todos os Status</option>
+          <option value="true">Apenas Ativos</option>
+          <option value="false">Apenas Inativos</option>
+        </select>
+        
+        <button onClick={handleAddItem}>
+          + Adicionar Item
+        </button>
+      </div>
+      
+      {/* Lista Virtual (simplificada) */}
+      <div className="lista-container" style={{ height: '400px', overflow: 'auto' }}>
+        {itensFiltrados.map((item, index) => (
+          <ItemListaMemo
+            key={item.id}
+            item={item}
+            index={index}
+            onUpdate={handleUpdateItem}
+            onRemove={handleRemoveItem}
+          />
+        ))}
+      </div>
+      
+      {/* Footer */}
+      <div className="footer">
+        <span>Exibindo {itensFiltrados.length} de {estatisticas.total} itens</span>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## 🎯 Próximos Passos
+
+1. **[Performance Guide](./datasource-v2-performance.mdx)** - Otimizações avançadas
+2. **[Testing Examples](./datasource-v2-testing.mdx)** - Estratégias de teste
+3. **[Advanced Patterns](./datasource-v2-patterns.mdx)** - Padrões avançados
+
+---
+
+*Exemplos atualizados em: Dezembro 2024*  
+*Versão: 2.1.4-dev*  
+*Status: ✅ Documentação Completa*

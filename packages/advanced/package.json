@@ -1,0 +1,59 @@
+{
+  "name": "@archbase/advanced",
+  "version": "3.0.0",
+  "description": "Archbase React Advanced Components - Charts, Kanban, QueryBuilder",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build && tsc --emitDeclarationOnly",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@mantine/core": "8.1.2",
+    "@mantine/hooks": "8.1.2",
+    "@mantine/dates": "8.1.2",
+    "@tabler/icons-react": "^3.29.0"
+  },
+  "dependencies": {
+    "@archbase/core": "workspace:*",
+    "@archbase/data": "workspace:*", 
+    "@archbase/components": "workspace:*",
+    "@archbase/layout": "workspace:*",
+    "i18next": "^23.16.8",
+    "lodash": "^4.17.21",
+    "react-addons-shallow-compare": "^15.6.3",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-select": "^5.8.0",
+    "react-multi-date-picker": "4.1.2",
+    "react-date-object": "^2.1.8",
+    "react-accessible-accordion": "^5.0.0",
+    "uuid": "^9.0.1",
+    "react-use": "^17.5.0",
+    "dayjs": "^1.11.10",
+    "react-i18next": "^13.5.0",
+    "react-modal": "^3.16.1",
+    "date-fns": "^2.30.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@types/lodash": "^4.17.13",
+    "@types/react-addons-shallow-compare": "^0.14.22",
+    "typescript": "^5.7.2",
+    "vite": "^6.3.5"
+  }
+}

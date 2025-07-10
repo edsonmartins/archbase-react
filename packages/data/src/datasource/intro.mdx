@@ -1,0 +1,202 @@
+import { Meta, Markdown } from '@storybook/blocks';
+import {ArchbaseDataSource} from './'
+
+
+<Meta title="Fontes de dados/Introdução"/>
+
+# Introdução ao DataSource
+
+[Veja também a API da classe ArchbaseDataSource](https://react.archbase.com.br/docs/classes/ArchbaseDataSource.html)
+
+O **DataSource** é uma funcionalidade fundamental no núcleo da nossa biblioteca React, desempenhando um papel crucial na gestão de dados e interações dentro de uma aplicação. O DataSource é uma abstração poderosa que permite aos desenvolvedores controlar e gerenciar conjuntos de dados de forma eficiente e dinâmica.
+
+Nossa implementação do **DataSource** oferece uma ampla gama de recursos, desde a manipulação de registros individuais até o controle de eventos e validação de dados. Ele é projetado para ser altamente flexível e personalizável, tornando-o adequado para uma variedade de casos de uso.
+
+O **DataSource** oferece suporte a uma variedade de eventos que permitem aos desenvolvedores reagir a mudanças nos dados, como adição, remoção ou edição de registros. Além disso, ele facilita a validação de dados por meio de um sistema de validação integrado.
+
+## Extensões do DataSource
+
+Além do DataSource básico, nossa biblioteca oferece implementações especializadas, como o **DataSource Remote**. Esta extensão permite a integração com APIs de serviços para buscar e salvar dados remotamente. O DataSource Remote simplifica a comunicação com serviços externos, tornando a interação com APIs uma tarefa fácil e eficiente.
+
+## Componentes Visuais e Bind Bidirecional
+
+Nossos principais componentes visuais foram projetados para serem compatíveis com o **DataSource** e oferecem vinculação bidirecional automática. Isso significa que você pode associar nossas listas e tabelas diretamente ao **DataSource** para criar interfaces de usuário dinâmicas e reativas.
+
+### Como Funciona o Bind Bidirecional
+
+O bind bidirecional é implementado através de um sistema de eventos e listeners:
+
+**1. Componente → DataSource**: Quando o usuário altera um valor em um componente:
+```typescript
+// No componente ArchbaseEdit
+if (dataSource && !dataSource.isBrowsing() && dataField) {
+  dataSource.setFieldValue(dataField, changedValue);
+}
+```
+
+**2. DataSource → Componente**: Através de listeners registrados que recebem notificações de mudanças:
+```typescript
+// Componente se registra para ouvir mudanças
+dataSource.addListener(dataSourceEvent);
+dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+```
+
+### Exemplo de Uso com ArchbaseEdit
+
+```typescript
+// Conectar um campo de edição ao DataSource
+<ArchbaseEdit
+  dataSource={dataSource}
+  dataField="nome"
+  label="Nome"
+  placeholder="Digite o nome"
+  required
+/>
+```
+
+Os componentes visuais da biblioteca facilitam a exibição e a edição de dados do **DataSource** em interfaces de usuário elegantes e interativas. Combinados com as extensões do **DataSource**, como o **DataSource Remote**, você pode criar aplicativos React que se comunicam de forma eficiente com serviços externos e apresentam dados de maneira amigável para o usuário.
+
+<img src="/datasource_bind.png"/>
+
+## Gerenciamento de Hierarquias de Dados com DataSource
+
+O **DataSource** é uma ferramenta poderosa para o gerenciamento de hierarquias de dados complexas. Quando seus objetos de dados formam uma árvore ou uma hierarquia com listas filhas, é possível criar DataSources para cada coleção principal e suas coleções filhas associadas. Isso permite que você mantenha a integridade dos dados e atualizações consistentes em toda a estrutura complexa do objeto.
+
+Neste tópico, exploraremos como lidar com esses cenários complexos, onde objetos podem conter listas de objetos filhos aninhados. Mostraremos como criar e gerenciar DataSources para essas listas filhas, permitindo que você mantenha a integridade dos dados e atualizações consistentes em toda a estrutura complexa do objeto.
+
+Se você está procurando uma maneira eficiente e poderosa de gerenciar hierarquias de dados em suas aplicações React, o **DataSource** é a ferramenta que você precisa conhecer. Vamos mergulhar fundo nesta funcionalidade essencial e descobrir como ela pode tornar o desenvolvimento de aplicações mais eficiente e produtivo.
+
+Continue lendo para explorar todas as nuances do **DataSource** e aproveitar ao máximo essa poderosa ferramenta em nossa biblioteca React.
+
+
+<img src="/datasource_hierarquia.png"/>
+
+## Arquitetura e Classes Principais
+
+### ArchbaseDataSource<T, ID>
+
+A classe base do sistema que gerencia coleções de dados de forma reativa:
+
+- **Gerenciamento de Estado**: Controla estados como `browsing`, `editing`, `inserting`
+- **Navegação**: Métodos como `first()`, `last()`, `next()`, `prior()`
+- **Operações CRUD**: `insert()`, `edit()`, `save()`, `cancel()`, `remove()`
+- **Validação**: Suporte integrado para validação de dados
+- **Eventos**: Sistema completo de eventos para sincronização
+
+### ArchbaseRemoteDataSource<T, ID>
+
+Extensão para integração com APIs REST:
+
+- **Integração com Serviços**: Conecta-se a APIs através de `ArchbaseRemoteApiService`
+- **Paginação**: Suporte nativo para paginação de resultados
+- **Filtros e Ordenação**: Aplicação de filtros e ordenação no servidor
+- **Gestão de Erros**: Tratamento centralizado de erros de rede
+
+### Sistema de Eventos
+
+O DataSource emite diversos eventos que permitem sincronização entre componentes:
+
+```typescript
+// Eventos de dados
+DataSourceEventNames.dataChanged
+DataSourceEventNames.fieldChanged
+DataSourceEventNames.recordChanged
+
+// Eventos de navegação
+DataSourceEventNames.afterScroll
+
+// Eventos de edição
+DataSourceEventNames.beforeEdit
+DataSourceEventNames.afterEdit
+DataSourceEventNames.beforeSave
+DataSourceEventNames.afterSave
+
+// Eventos de inserção/remoção
+DataSourceEventNames.beforeInsert
+DataSourceEventNames.afterInsert
+DataSourceEventNames.beforeRemove
+DataSourceEventNames.afterRemove
+```
+
+## Integração com Hooks
+
+### useArchbaseRemoteDataSource
+
+Hook para criar e gerenciar um DataSource remoto:
+
+```typescript
+const { dataSource, isLoading, error } = useArchbaseRemoteDataSource<Pessoa, number>({
+  name: 'dsPessoas',
+  service: pessoaApi,
+  pageSize: 20,
+  loadOnStart: true,
+  onLoadComplete: (ds) => {
+    console.log(`${ds.getTotalRecords()} registros carregados`);
+  }
+});
+```
+
+### useArchbaseDataSourceListener
+
+Hook para reagir a eventos do DataSource:
+
+```typescript
+useArchbaseDataSourceListener<Pessoa, number>({
+  dataSource,
+  listener: (event) => {
+    if (event.type === DataSourceEventNames.afterSave) {
+      // Registro salvo com sucesso
+    }
+  }
+});
+```
+
+## Exemplo Completo de Integração
+
+```typescript
+// 1. Obter serviço via IoC
+const pessoaApi = useArchbaseRemoteServiceApi<PessoaService>(API_TYPE.Pessoa);
+
+// 2. Criar DataSource remoto
+const { dataSource, isLoading } = useArchbaseRemoteDataSource<Pessoa, number>({
+  name: 'dsPessoas',
+  service: pessoaApi,
+  loadOnStart: true
+});
+
+// 3. Interface com múltiplos campos conectados
+<Form>
+  <ArchbaseEdit
+    dataSource={dataSource}
+    dataField="nome"
+    label="Nome"
+    required
+  />
+  
+  <ArchbaseEdit
+    dataSource={dataSource}
+    dataField="email"
+    label="E-mail"
+    type="email"
+  />
+  
+  <ArchbaseDatePickerEdit
+    dataSource={dataSource}
+    dataField="dataNascimento"
+    label="Data de Nascimento"
+  />
+  
+  <ArchbaseSelect
+    dataSource={dataSource}
+    dataField="status"
+    label="Status"
+    options={[
+      { value: 'ATIVO', label: 'Ativo' },
+      { value: 'INATIVO', label: 'Inativo' }
+    ]}
+  />
+</Form>
+```
+
+Todos os componentes permanecem automaticamente sincronizados através do sistema de eventos do DataSource.
+

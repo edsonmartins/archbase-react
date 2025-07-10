@@ -1,8 +1,0 @@
-.chipBox {
-    border-bottom: light-dark(2px solid var(--mantine-color-gray-3), 2px solid  var(--mantine-color-gray-7));
-    width: 100%;
-    &:mantine-TextInput-input {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-}

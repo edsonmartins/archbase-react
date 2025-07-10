@@ -1,0 +1,15 @@
+{
+  "name": "@archbase/build-config",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./vite.base.config.ts",
+  "exports": {
+    ".": "./vite.base.config.ts",
+    "./tsconfig": "./tsconfig.base.json"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.3"
+  }
+}

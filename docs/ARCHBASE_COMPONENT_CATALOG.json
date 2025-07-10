@@ -1,0 +1,1149 @@
+{
+  "metadata": {
+    "version": "3.0.0",
+    "generatedAt": "2025-07-09T20:26:56.853Z",
+    "totalComponents": 149,
+    "packages": [
+      "@archbase/admin",
+      "@archbase/advanced",
+      "@archbase/components",
+      "@archbase/core",
+      "@archbase/data",
+      "@archbase/layout",
+      "@archbase/security",
+      "@archbase/template",
+      "@archbase/tools"
+    ],
+    "categories": [
+      {
+        "name": "security",
+        "count": 12
+      },
+      {
+        "name": "button",
+        "count": 1
+      },
+      {
+        "name": "admin",
+        "count": 19
+      },
+      {
+        "name": "querybuilder",
+        "count": 11
+      },
+      {
+        "name": "container",
+        "count": 4
+      },
+      {
+        "name": "notification",
+        "count": 3
+      },
+      {
+        "name": "core",
+        "count": 7
+      },
+      {
+        "name": "editor",
+        "count": 42
+      },
+      {
+        "name": "layout",
+        "count": 4
+      },
+      {
+        "name": "datagrid",
+        "count": 7
+      },
+      {
+        "name": "debug",
+        "count": 6
+      },
+      {
+        "name": "template",
+        "count": 8
+      },
+      {
+        "name": "image",
+        "count": 3
+      },
+      {
+        "name": "jsonschema",
+        "count": 1
+      },
+      {
+        "name": "list",
+        "count": 4
+      },
+      {
+        "name": "masonry",
+        "count": 1
+      },
+      {
+        "name": "data",
+        "count": 1
+      },
+      {
+        "name": "space",
+        "count": 12
+      },
+      {
+        "name": "theme",
+        "count": 1
+      },
+      {
+        "name": "chart",
+        "count": 1
+      },
+      {
+        "name": "oauth2",
+        "count": 1
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "ApiTokenModal",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/ApiTokenModal.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "ArchbaseActionButtons",
+      "package": "@archbase/components",
+      "category": "button",
+      "filePath": "src/buttons/ArchbaseActionButtons.tsx",
+      "description": "Interactive button component"
+    },
+    {
+      "name": "ArchbaseAdminLayoutContext",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseAdminLayout.context.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseAdminLayoutFooter",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseAdminLayoutFooter.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseAdminLayoutHeader",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseAdminLayoutHeader.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseAdminLayoutProvider",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseAdminLayout.context.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseAdminMainLayout",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseAdminMainLayout.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseAdminTabContainer",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseAdminTabContainer.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseAdvancedFilter",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseAdvancedFilter.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseAdvancedSidebar",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseAdvancedSidebar.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseAdvancedTabs",
+      "package": "@archbase/layout",
+      "category": "container",
+      "filePath": "src/containers/advancedtabs/ArchbaseAdvancedTabs.tsx",
+      "description": "Container and layout component"
+    },
+    {
+      "name": "ArchbaseAlert",
+      "package": "@archbase/components",
+      "category": "notification",
+      "filePath": "src/notification/ArchbaseAlert.tsx",
+      "description": "Notification and alert component"
+    },
+    {
+      "name": "ArchbaseAliveAbleRoutes",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseAliveAbleRoutes.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseApiTokenView",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/ArchbaseApiTokenView.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "ArchbaseAppContext",
+      "package": "@archbase/core",
+      "category": "core",
+      "filePath": "src/context/ArchbaseAppContext.tsx",
+      "description": "Core utility component"
+    },
+    {
+      "name": "ArchbaseAsyncMultiSelect",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseAsyncMultiSelect.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseAsyncSelect",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseAsyncSelect.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseAvatarEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseAvatarEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseCard",
+      "package": "@archbase/layout",
+      "category": "layout",
+      "filePath": "src/ArchbaseCard.tsx",
+      "description": "Layout management component"
+    },
+    {
+      "name": "ArchbaseChangeLanguageAction",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseChangeLanguageAction.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseChangeLanguageMenuItem",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseChangeLanguageMenuItem.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseCheckbox",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseCheckbox.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseChip",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseChip.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseChipGroup",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseChipGroup.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseChipItem",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseChipItem.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseClickOutside",
+      "package": "@archbase/core",
+      "category": "core",
+      "filePath": "src/helper/ArchbaseClickOutside.tsx",
+      "description": "Core utility component"
+    },
+    {
+      "name": "ArchbaseColorPicker",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseColorPicker.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseColorSchemeAction",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseColorSchemeAction.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseCompositeFilter",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseCompositeFilter.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseContainer",
+      "package": "@archbase/layout",
+      "category": "layout",
+      "filePath": "src/ArchbaseContainer.tsx",
+      "description": "Layout management component"
+    },
+    {
+      "name": "ArchbaseCountdownProgress",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseCountdownProgress.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseCronExpressionEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseCronExpressionEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseCronExpressionEditor",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseCronExpressionEditor.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseDataGrid",
+      "package": "@archbase/components",
+      "category": "datagrid",
+      "filePath": "src/datagrid/main/archbase-data-grid.tsx",
+      "description": "Data grid component for tabular data"
+    },
+    {
+      "name": "ArchbaseDataGridColumn",
+      "package": "@archbase/components",
+      "category": "datagrid",
+      "filePath": "src/datagrid/main/archbase-data-grid-column.ts",
+      "description": "Data grid component for tabular data"
+    },
+    {
+      "name": "ArchbaseDataGridPagination",
+      "package": "@archbase/components",
+      "category": "datagrid",
+      "filePath": "src/datagrid/main/archbase-data-grid-pagination.tsx",
+      "description": "Data grid component for tabular data"
+    },
+    {
+      "name": "ArchbaseDataGridToolbar",
+      "package": "@archbase/components",
+      "category": "datagrid",
+      "filePath": "src/datagrid/main/archbase-data-grid-toolbar.tsx",
+      "description": "Data grid component for tabular data"
+    },
+    {
+      "name": "ArchbaseDatePicker",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseDatePicker.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseDatePickerEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseDatePickerEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseDatePickerRange",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseDatePickerRange.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseDateTimePickerEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseDateTimePickerEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseDateTimePickerRange",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseDateTimePickerRange.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseDebugInspector",
+      "package": "@archbase/components",
+      "category": "debug",
+      "filePath": "src/debug/objectinspector/ArchbaseDebugInspector.tsx",
+      "description": "Development and debugging utility component"
+    },
+    {
+      "name": "ArchbaseDetailedFilter",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseCompositeFilter.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseDetailPanel",
+      "package": "@archbase/components",
+      "category": "datagrid",
+      "filePath": "src/datagrid/main/archbase-detail-panel-component.tsx",
+      "description": "Data grid component for tabular data"
+    },
+    {
+      "name": "ArchbaseDialog",
+      "package": "@archbase/components",
+      "category": "notification",
+      "filePath": "src/notification/ArchbaseDialog.tsx",
+      "description": "Notification and alert component"
+    },
+    {
+      "name": "ArchbaseDockableContainer",
+      "package": "@archbase/layout",
+      "category": "container",
+      "filePath": "src/containers/ArchbaseDockableContainer.tsx",
+      "description": "Container and layout component"
+    },
+    {
+      "name": "ArchbaseDrawerContent",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/drawer/DrawerContent.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseDrawerTrigger",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/drawer/DrawerTrigger.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseDualListSelector",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/ArchbaseDualListSelector.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "ArchbaseEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseErrorBoundary",
+      "package": "@archbase/core",
+      "category": "core",
+      "filePath": "src/errorboundary/ArchbaseErrorBoundary.tsx",
+      "description": "Core utility component"
+    },
+    {
+      "name": "ArchbaseErrorFallback",
+      "package": "@archbase/core",
+      "category": "core",
+      "filePath": "src/errorboundary/ArchbaseErrorFallback.tsx",
+      "description": "Core utility component"
+    },
+    {
+      "name": "ArchbaseExpandButton",
+      "package": "@archbase/components",
+      "category": "datagrid",
+      "filePath": "src/datagrid/main/archbase-expand-button.tsx",
+      "description": "Data grid component for tabular data"
+    },
+    {
+      "name": "ArchbaseFeedback",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseFeedback.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseFileAttachment",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseFileAttachment.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseFilterSelectFields",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseFilterSelectFields.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseFilterSelectRange",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseFilterSelectRange.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseFloatingWindow",
+      "package": "@archbase/components",
+      "category": "debug",
+      "filePath": "src/debug/objectinspector/ArchbaseFloatingWindow.tsx",
+      "description": "Development and debugging utility component"
+    },
+    {
+      "name": "ArchbaseFloatingWindow",
+      "package": "@archbase/layout",
+      "category": "container",
+      "filePath": "src/containers/window/ArchbaseFloatingWindow.tsx",
+      "description": "Container and layout component"
+    },
+    {
+      "name": "ArchbaseForm",
+      "package": "@archbase/layout",
+      "category": "container",
+      "filePath": "src/containers/form/ArchbaseForm.tsx",
+      "description": "Container and layout component"
+    },
+    {
+      "name": "ArchbaseFormModalTemplate",
+      "package": "@archbase/template",
+      "category": "template",
+      "filePath": "src/ArchbaseFormModalTemplate.tsx",
+      "description": "Template and scaffold component"
+    },
+    {
+      "name": "ArchbaseFormTemplate",
+      "package": "@archbase/template",
+      "category": "template",
+      "filePath": "src/ArchbaseFormTemplate.tsx",
+      "description": "Template and scaffold component"
+    },
+    {
+      "name": "ArchbaseGlobalFilter",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseGlobalFilter.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseGlobalProvider",
+      "package": "@archbase/core",
+      "category": "core",
+      "filePath": "src/context/ArchbaseGlobalProvider.tsx",
+      "description": "Core utility component"
+    },
+    {
+      "name": "ArchbaseGridPopover",
+      "package": "@archbase/components",
+      "category": "datagrid",
+      "filePath": "src/datagrid/main/archbase-grid-popover.tsx",
+      "description": "Data grid component for tabular data"
+    },
+    {
+      "name": "ArchbaseGridTemplate",
+      "package": "@archbase/template",
+      "category": "template",
+      "filePath": "src/ArchbaseGridTemplate.tsx",
+      "description": "Template and scaffold component"
+    },
+    {
+      "name": "ArchbaseGroup",
+      "package": "@archbase/layout",
+      "category": "layout",
+      "filePath": "src/ArchbaseGroup.tsx",
+      "description": "Layout management component"
+    },
+    {
+      "name": "ArchbaseHeaderNavAction",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseHeaderNavAction.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseImage",
+      "package": "@archbase/components",
+      "category": "image",
+      "filePath": "src/image/ArchbaseImage.tsx",
+      "description": "Image handling and display component"
+    },
+    {
+      "name": "ArchbaseImageEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseImageEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseImageEditor",
+      "package": "@archbase/components",
+      "category": "image",
+      "filePath": "src/image/editor/index.tsx",
+      "description": "Image handling and display component"
+    },
+    {
+      "name": "ArchbaseInputSearch",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseInputSearch.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseJsonEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseJsonEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseJsonPathPicker",
+      "package": "@archbase/components",
+      "category": "debug",
+      "filePath": "src/debug/jsonpathpicker/ArchbaseJsonPathPicker.tsx",
+      "description": "Development and debugging utility component"
+    },
+    {
+      "name": "ArchbaseJsonSchemaEditor",
+      "package": "@archbase/components",
+      "category": "jsonschema",
+      "filePath": "src/jsonschema/JsonSchemaEditor/ArchbaseJsonSchemaEditor.tsx",
+      "description": "JSON schema editing component"
+    },
+    {
+      "name": "ArchbaseJsonView",
+      "package": "@archbase/components",
+      "category": "debug",
+      "filePath": "src/debug/jsonview/index.tsx",
+      "description": "Development and debugging utility component"
+    },
+    {
+      "name": "ArchbaseJsonViewDataRenderer",
+      "package": "@archbase/components",
+      "category": "debug",
+      "filePath": "src/debug/jsonview/ArchbaseJsonViewDataRenderer.tsx",
+      "description": "Development and debugging utility component"
+    },
+    {
+      "name": "ArchbaseKeepAliveRoute",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseAliveAbleRoutes.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseKeyValueEditor",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseKeyValueEditor.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseList",
+      "package": "@archbase/components",
+      "category": "list",
+      "filePath": "src/list/ArchbaseList.tsx",
+      "description": "List and tree view component"
+    },
+    {
+      "name": "ArchbaseListItem",
+      "package": "@archbase/components",
+      "category": "list",
+      "filePath": "src/list/ArchbaseListItem.tsx",
+      "description": "List and tree view component"
+    },
+    {
+      "name": "ArchbaseLogin",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/ArchbaseLogin.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "ArchbaseLookupEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseLookupEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseLookupNumber",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseLookupNumber.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseLookupSelect",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseLookupSelect.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseMaskEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseMaskEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseMasonry",
+      "package": "@archbase/components",
+      "category": "masonry",
+      "filePath": "src/masonry/ArchbaseMasonry.tsx",
+      "description": "Masonry layout component"
+    },
+    {
+      "name": "ArchbaseMasonryTemplate",
+      "package": "@archbase/template",
+      "category": "template",
+      "filePath": "src/ArchbaseMasonryTemplate.tsx",
+      "description": "Template and scaffold component"
+    },
+    {
+      "name": "ArchbaseMicrosoftAvatar",
+      "package": "@archbase/components",
+      "category": "image",
+      "filePath": "src/image/ArchbaseMicrosoftAvatar.tsx",
+      "description": "Image handling and display component"
+    },
+    {
+      "name": "ArchbaseModalTemplate",
+      "package": "@archbase/template",
+      "category": "template",
+      "filePath": "src/ArchbaseModalTemplate.tsx",
+      "description": "Template and scaffold component"
+    },
+    {
+      "name": "ArchbaseMyProfileModal",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseMyProfileModal.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseNavigationContext",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseNavigation.context.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseNavigationProvider",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/ArchbaseNavigation.context.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "ArchbaseNotifications",
+      "package": "@archbase/components",
+      "category": "notification",
+      "filePath": "src/notification/ArchbaseNotifications.tsx",
+      "description": "Notification and alert component"
+    },
+    {
+      "name": "ArchbaseNumberEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseNumberEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseNumberInput",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseNumberInput.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseObjectInspector",
+      "package": "@archbase/components",
+      "category": "debug",
+      "filePath": "src/debug/objectinspector/ArchbaseObjectInspector.tsx",
+      "description": "Development and debugging utility component"
+    },
+    {
+      "name": "ArchbaseOperatingHoursEditor",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseOperationHoursEditor.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbasePanelTemplate",
+      "package": "@archbase/template",
+      "category": "template",
+      "filePath": "src/ArchbasePanelTemplate.tsx",
+      "description": "Template and scaffold component"
+    },
+    {
+      "name": "ArchbasePasswordEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbasePasswordEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbasePasswordInput",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbasePasswordInput.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseQueryBuilder",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseQueryBuilder.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseQueryProvider",
+      "package": "@archbase/data",
+      "category": "data",
+      "filePath": "src/datasource/v2/ArchbaseQueryProvider.tsx",
+      "description": "Data management component"
+    },
+    {
+      "name": "ArchbaseRadio",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseRadio.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseRadioGroup",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseRadioGroup.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseRadioItem",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseRadioItem.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseRating",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseRating.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseResetPassword",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/ArchbaseResetPassword.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "ArchbaseRichTextEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseRichTextEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseSafeMigrationWrapper",
+      "package": "@archbase/core",
+      "category": "core",
+      "filePath": "src/fallback/ArchbaseSafeMigrationWrapper.tsx",
+      "description": "Core utility component"
+    },
+    {
+      "name": "ArchbaseSaveFilter",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseSaveFilter.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseSearchTemplate",
+      "package": "@archbase/template",
+      "category": "template",
+      "filePath": "src/ArchbaseSearchTemplate.tsx",
+      "description": "Template and scaffold component"
+    },
+    {
+      "name": "ArchbaseSecurityManager",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/ArchbaseSecurityManager.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "ArchbaseSecurityView",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/ArchbaseSecurityView.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "ArchbaseSelect",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseSelect.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseSelectItem",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseSelectItem.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseSimpleAppContext",
+      "package": "@archbase/core",
+      "category": "core",
+      "filePath": "src/context/ArchbaseSimpleAppContext.tsx",
+      "description": "Core utility component"
+    },
+    {
+      "name": "ArchbaseSimpleFilter",
+      "package": "@archbase/advanced",
+      "category": "querybuilder",
+      "filePath": "src/querybuilder/ArchbaseSimpleFilter.tsx",
+      "description": "Query builder and filter component"
+    },
+    {
+      "name": "ArchbaseSpace",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpace.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpaceAnchored",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpaceAnchored.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpaceCentered",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpaceCentered.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpaceCenteredVertically",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpaceCenteredVertically.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpaceCustom",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpaceCustom.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpaceFill",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpaceFill.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpaceFixed",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpaceFixed.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpaceInfo",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpaceInfo.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpaceLayer",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpaceLayer.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpaceOptions",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpaceOptions.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpacePositioned",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpacePositioned.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseSpaceTemplate",
+      "package": "@archbase/template",
+      "category": "template",
+      "filePath": "src/ArchbaseSpaceTemplate.tsx",
+      "description": "Template and scaffold component"
+    },
+    {
+      "name": "ArchbaseSpaceViewPort",
+      "package": "@archbase/layout",
+      "category": "space",
+      "filePath": "src/spaces/components/ArchbaseSpaceViewPort.tsx",
+      "description": "Layout and spacing component"
+    },
+    {
+      "name": "ArchbaseStack",
+      "package": "@archbase/layout",
+      "category": "layout",
+      "filePath": "src/ArchbaseStack.tsx",
+      "description": "Layout management component"
+    },
+    {
+      "name": "ArchbaseSwitch",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseSwitch.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseTextArea",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseTextArea.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseThemeEditor",
+      "package": "@archbase/components",
+      "category": "theme",
+      "filePath": "src/themes/ArchbaseThemeEditor.tsx",
+      "description": "Theme and styling component"
+    },
+    {
+      "name": "ArchbaseTimeEdit",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseTimeEdit.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseTimeline",
+      "package": "@archbase/components",
+      "category": "chart",
+      "filePath": "src/charts/ArchbaseTimeline.tsx",
+      "description": "Data visualization component"
+    },
+    {
+      "name": "ArchbaseTimeRangeSelector",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseTimeRangeSelector.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseTreeSelect",
+      "package": "@archbase/components",
+      "category": "editor",
+      "filePath": "src/editors/ArchbaseTreeSelect.tsx",
+      "description": "Form input editor with data binding"
+    },
+    {
+      "name": "ArchbaseTreeView",
+      "package": "@archbase/components",
+      "category": "list",
+      "filePath": "src/list/treeview/ArchbaseTreeView.tsx",
+      "description": "List and tree view component"
+    },
+    {
+      "name": "ArchbaseTreeViewItem",
+      "package": "@archbase/components",
+      "category": "list",
+      "filePath": "src/list/treeview/ArchbaseTreeViewItem.tsx",
+      "description": "List and tree view component"
+    },
+    {
+      "name": "AuthContext",
+      "package": "@archbase/security",
+      "category": "oauth2",
+      "filePath": "src/oauth2/AuthContext.tsx",
+      "description": "OAuth2 authentication component"
+    },
+    {
+      "name": "CommandPaletteButton",
+      "package": "@archbase/admin",
+      "category": "admin",
+      "filePath": "src/CommandPaletteButton.tsx",
+      "description": "Admin layout and navigation component"
+    },
+    {
+      "name": "GroupModal",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/GroupModal.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "PermissionsSelectorModal",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/PermissionsSelectorModal.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "ProfileModal",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/ProfileModal.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "RenderProfileUserItem",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/RenderProfileUserItem.tsx",
+      "description": "Security and authentication component"
+    },
+    {
+      "name": "UserModal",
+      "package": "@archbase/security",
+      "category": "security",
+      "filePath": "src/UserModal.tsx",
+      "description": "Security and authentication component"
+    }
+  ]
+}

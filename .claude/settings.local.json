@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install:*)",
+      "Bash(time pnpm turbo build --force)",
+      "Bash(node:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(time pnpm build:*)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm turbo build:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(pnpm test:*)"
+    ],
+    "deny": []
+  }
+}

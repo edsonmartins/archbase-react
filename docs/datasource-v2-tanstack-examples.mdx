@@ -1,0 +1,1109 @@
+# DataSource V2 + TanStack Query - Exemplos Práticos
+
+> **Exemplos reais de integração entre DataSource V2 e TanStack Query**
+
+## 📋 Índice
+
+- [Setup Básico](#setup-básico)
+- [CRUD com Optimistic Updates](#crud-com-optimistic-updates)
+- [Caching e Performance](#caching-e-performance)
+- [Real-time Sync](#real-time-sync)
+- [Offline Support](#offline-support)
+- [Advanced Patterns](#advanced-patterns)
+
+## 🚀 Setup Básico
+
+### 1. Configuração do Provider
+
+```typescript
+// App.tsx
+import React from 'react';
+import { ArchbaseQueryProvider } from '@archbase/react';
+import { MeuComponente } from './MeuComponente';
+
+export function App() {
+  return (
+    <ArchbaseQueryProvider
+      enableDevTools={true}
+      defaultStaleTime={30 * 1000}          // 30 segundos
+      defaultCacheTime={5 * 60 * 1000}      // 5 minutos
+      refetchOnWindowFocus={false}
+      onError={(error) => {
+        console.error('Erro global:', error);
+        // Integração com sistema de notificações
+        showNotification('Erro ao carregar dados', 'error');
+      }}
+    >
+      <MeuComponente />
+    </ArchbaseQueryProvider>
+  );
+}
+```
+
+### 2. Serviço de API
+
+```typescript
+// services/PessoaService.ts
+import { ArchbaseRemoteApiService } from '@archbase/react';
+
+interface Pessoa {
+  id: number;
+  nome: string;
+  email: string;
+  telefone: string;
+  ativo: boolean;
+  contatos: Contato[];
+  endereco: Endereco;
+}
+
+interface Contato {
+  id: number;
+  tipo: 'EMAIL' | 'TELEFONE' | 'WHATSAPP';
+  valor: string;
+  principal: boolean;
+}
+
+interface Endereco {
+  cep: string;
+  rua: string;
+  numero: string;
+  cidade: string;
+  estado: string;
+}
+
+export const pessoaService = new ArchbaseRemoteApiService<Pessoa, number>({
+  baseURL: 'https://api.exemplo.com',
+  resourcePath: '/pessoas',
+  // Configurações específicas se necessário
+});
+```
+
+## 📝 CRUD com Optimistic Updates
+
+### Exemplo 1: Formulário de Pessoa com Query
+
+```typescript
+// components/PessoaForm.tsx
+import React from 'react';
+import { 
+  useArchbaseRemoteDataSourceWithQuery,
+  ArchbaseEdit,
+  ArchbaseSelect,
+  ArchbaseCheckbox,
+  ArchbaseArrayEditor
+} from '@archbase/react';
+import { pessoaService } from '../services/PessoaService';
+
+interface PessoaFormProps {
+  pessoaId?: number;
+  onSave?: (pessoa: Pessoa) => void;
+  onCancel?: () => void;
+}
+
+export function PessoaForm({ pessoaId, onSave, onCancel }: PessoaFormProps) {
+  const {
+    dataSource,
+    isLoading,
+    isError,
+    error,
+    save,
+    isSaving,
+    saveError,
+    refetch
+  } = useArchbaseRemoteDataSourceWithQuery<Pessoa>({
+    name: `pessoa-${pessoaId || 'new'}`,
+    service: pessoaService,
+    filter: pessoaId ? { id: pessoaId } : undefined,
+    enabled: !!pessoaId,
+    queryConfig: {
+      staleTime: 2 * 60 * 1000,  // 2 minutos para dados de pessoa
+      cacheTime: 10 * 60 * 1000, // 10 minutos
+      retry: 2
+    }
+  });
+
+  // Preparar registro para inserção se necessário
+  React.useEffect(() => {
+    if (!pessoaId && !dataSource.getCurrentRecord()) {
+      dataSource.insert({
+        id: 0,
+        nome: '',
+        email: '',
+        telefone: '',
+        ativo: true,
+        contatos: [],
+        endereco: {
+          cep: '',
+          rua: '',
+          numero: '',
+          cidade: '',
+          estado: ''
+        }
+      });
+    }
+  }, [pessoaId, dataSource]);
+
+  const handleSave = async () => {
+    try {
+      const savedPessoa = await save();
+      onSave?.(savedPessoa);
+      
+      // Invalidar queries relacionadas
+      await dataSource.invalidateCache();
+      
+    } catch (error) {
+      console.error('Erro ao salvar:', error);
+    }
+  };
+
+  const handleCancel = () => {
+    dataSource.cancel();
+    onCancel?.();
+  };
+
+  const addContato = () => {
+    dataSource.appendToFieldArray('contatos', {
+      id: 0,
+      tipo: 'EMAIL',
+      valor: '',
+      principal: false
+    });
+  };
+
+  const updateContato = (index: number, campo: string, valor: any) => {
+    dataSource.updateFieldArrayItem('contatos', index, (draft) => {
+      (draft as any)[campo] = valor;
+    });
+  };
+
+  const removeContato = (index: number) => {
+    dataSource.removeFromFieldArray('contatos', index);
+  };
+
+  if (isLoading) {
+    return <div className="loading">Carregando pessoa...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="error">
+        <p>Erro ao carregar pessoa: {error?.message}</p>
+        <button onClick={refetch}>Tentar Novamente</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="pessoa-form">
+      <h2>{pessoaId ? 'Editar Pessoa' : 'Nova Pessoa'}</h2>
+      
+      {/* Dados Básicos */}
+      <div className="form-section">
+        <h3>Dados Pessoais</h3>
+        
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="nome"
+          label="Nome Completo"
+          placeholder="Digite o nome completo"
+          required
+          width="100%"
+        />
+        
+        <div className="form-row">
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="email"
+            label="Email"
+            placeholder="email@exemplo.com"
+            type="email"
+            width="50%"
+          />
+          
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="telefone"
+            label="Telefone"
+            placeholder="(11) 99999-9999"
+            width="50%"
+          />
+        </div>
+        
+        <ArchbaseCheckbox
+          dataSource={dataSource}
+          dataField="ativo"
+          label="Pessoa Ativa"
+        />
+      </div>
+
+      {/* Endereço */}
+      <div className="form-section">
+        <h3>Endereço</h3>
+        
+        <div className="form-row">
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="endereco.cep"
+            label="CEP"
+            placeholder="00000-000"
+            width="30%"
+          />
+          
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="endereco.rua"
+            label="Rua"
+            placeholder="Nome da rua"
+            width="50%"
+          />
+          
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="endereco.numero"
+            label="Número"
+            placeholder="123"
+            width="20%"
+          />
+        </div>
+        
+        <div className="form-row">
+          <ArchbaseEdit
+            dataSource={dataSource}
+            dataField="endereco.cidade"
+            label="Cidade"
+            placeholder="Nome da cidade"
+            width="50%"
+          />
+          
+          <ArchbaseSelect
+            dataSource={dataSource}
+            dataField="endereco.estado"
+            label="Estado"
+            data={[
+              { value: 'SP', label: 'São Paulo' },
+              { value: 'RJ', label: 'Rio de Janeiro' },
+              { value: 'MG', label: 'Minas Gerais' }
+            ]}
+            width="50%"
+          />
+        </div>
+      </div>
+
+      {/* Contatos */}
+      <div className="form-section">
+        <div className="section-header">
+          <h3>Contatos</h3>
+          <button 
+            type="button" 
+            onClick={addContato}
+            className="btn-add"
+          >
+            Adicionar Contato
+          </button>
+        </div>
+        
+        <ArchbaseArrayEditor
+          dataSource={dataSource}
+          dataField="contatos"
+          renderItem={(contato, index) => (
+            <div key={index} className="contato-item">
+              <ArchbaseSelect
+                value={contato.tipo}
+                onChange={(value) => updateContato(index, 'tipo', value)}
+                data={[
+                  { value: 'EMAIL', label: 'Email' },
+                  { value: 'TELEFONE', label: 'Telefone' },
+                  { value: 'WHATSAPP', label: 'WhatsApp' }
+                ]}
+                label="Tipo"
+                width="30%"
+              />
+              
+              <ArchbaseEdit
+                value={contato.valor}
+                onChange={(value) => updateContato(index, 'valor', value)}
+                label="Valor"
+                placeholder="Digite o contato"
+                width="50%"
+              />
+              
+              <ArchbaseCheckbox
+                checked={contato.principal}
+                onChange={(checked) => updateContato(index, 'principal', checked)}
+                label="Principal"
+              />
+              
+              <button 
+                type="button"
+                onClick={() => removeContato(index)}
+                className="btn-remove"
+              >
+                Remover
+              </button>
+            </div>
+          )}
+        />
+      </div>
+
+      {/* Ações */}
+      <div className="form-actions">
+        <button 
+          type="button" 
+          onClick={handleCancel}
+          disabled={isSaving}
+          className="btn-cancel"
+        >
+          Cancelar
+        </button>
+        
+        <button 
+          type="button" 
+          onClick={handleSave}
+          disabled={isSaving}
+          className="btn-save"
+        >
+          {isSaving ? 'Salvando...' : 'Salvar'}
+        </button>
+      </div>
+      
+      {saveError && (
+        <div className="error-message">
+          Erro ao salvar: {saveError.message}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## 🚀 Caching e Performance
+
+### Exemplo 2: Lista com Paginação e Cache
+
+```typescript
+// components/PessoaList.tsx
+import React from 'react';
+import { 
+  useArchbaseRemoteDataSourceWithQuery,
+  ArchbaseDataTable,
+  ArchbasePagination,
+  ArchbaseQueryDebugger
+} from '@archbase/react';
+import { pessoaService } from '../services/PessoaService';
+
+export function PessoaList() {
+  const [currentPage, setCurrentPage] = React.useState(0);
+  const [filter, setFilter] = React.useState<any>(undefined);
+
+  const {
+    dataSource,
+    records,
+    isLoading,
+    error,
+    totalRecords,
+    totalPages,
+    refetch,
+    prefetchNextPage,
+    invalidateCache
+  } = useArchbaseRemoteDataSourceWithQuery<Pessoa>({
+    name: 'pessoas-list',
+    service: pessoaService,
+    pageSize: 20,
+    filter,
+    queryConfig: {
+      staleTime: 1 * 60 * 1000,     // 1 minuto para listas
+      cacheTime: 5 * 60 * 1000,     // 5 minutos
+      refetchOnWindowFocus: false,
+      retry: 3
+    }
+  });
+
+  // Prefetch da próxima página quando usuário está próximo do final
+  React.useEffect(() => {
+    if (currentPage < totalPages - 1) {
+      prefetchNextPage();
+    }
+  }, [currentPage, totalPages, prefetchNextPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    dataSource.goToPage(page);
+  };
+
+  const handleFilterChange = (newFilter: any) => {
+    setFilter(newFilter);
+    setCurrentPage(0);
+  };
+
+  const handleRefresh = () => {
+    invalidateCache();
+    refetch();
+  };
+
+  const columns = [
+    {
+      accessor: 'id',
+      Header: 'ID',
+      width: 80
+    },
+    {
+      accessor: 'nome',
+      Header: 'Nome',
+      width: 200
+    },
+    {
+      accessor: 'email',
+      Header: 'Email',
+      width: 250
+    },
+    {
+      accessor: 'telefone',
+      Header: 'Telefone',
+      width: 150
+    },
+    {
+      accessor: 'ativo',
+      Header: 'Ativo',
+      width: 100,
+      Cell: ({ value }: any) => value ? '✅' : '❌'
+    }
+  ];
+
+  return (
+    <div className="pessoa-list">
+      <div className="list-header">
+        <h2>Lista de Pessoas</h2>
+        
+        <div className="list-actions">
+          <button onClick={handleRefresh}>
+            {isLoading ? 'Atualizando...' : 'Atualizar'}
+          </button>
+        </div>
+      </div>
+
+      {/* Debug info em desenvolvimento */}
+      {process.env.NODE_ENV === 'development' && (
+        <ArchbaseQueryDebugger />
+      )}
+
+      {error && (
+        <div className="error-message">
+          Erro ao carregar dados: {error.message}
+          <button onClick={refetch}>Tentar Novamente</button>
+        </div>
+      )}
+
+      <ArchbaseDataTable
+        dataSource={dataSource}
+        columns={columns}
+        loading={isLoading}
+        height={400}
+        enableSelection
+        enableSorting
+        onRowClick={(record) => {
+          console.log('Pessoa selecionada:', record);
+        }}
+      />
+
+      <ArchbasePagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalRecords={totalRecords}
+        pageSize={20}
+        onPageChange={handlePageChange}
+        showInfo
+      />
+
+      <div className="list-stats">
+        Total: {totalRecords} pessoas | Página {currentPage + 1} de {totalPages}
+      </div>
+    </div>
+  );
+}
+```
+
+## ⚡ Real-time Sync
+
+### Exemplo 3: Sincronização em Tempo Real
+
+```typescript
+// components/RealTimePessoaList.tsx
+import React from 'react';
+import { 
+  useArchbaseRemoteDataSourceWithQuery,
+  useArchbaseRealTimeSync,
+  ArchbaseDataTable 
+} from '@archbase/react';
+import { pessoaService } from '../services/PessoaService';
+
+export function RealTimePessoaList() {
+  const {
+    dataSource,
+    records,
+    isLoading,
+    refetch,
+    invalidateCache
+  } = useArchbaseRemoteDataSourceWithQuery<Pessoa>({
+    name: 'pessoas-realtime',
+    service: pessoaService,
+    queryConfig: {
+      staleTime: 10 * 1000,        // 10 segundos (mais agressivo)
+      refetchInterval: 30 * 1000,  // Refetch automático a cada 30s
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true
+    }
+  });
+
+  // Sincronização em tempo real
+  useArchbaseRealTimeSync('pessoas-realtime', {
+    interval: 15 * 1000,  // Check a cada 15 segundos
+    enabled: true
+  });
+
+  // WebSocket para updates em tempo real (opcional)
+  React.useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080/pessoas-updates');
+    
+    ws.onmessage = (event) => {
+      const update = JSON.parse(event.data);
+      
+      switch (update.type) {
+        case 'PESSOA_CREATED':
+        case 'PESSOA_UPDATED':
+        case 'PESSOA_DELETED':
+          // Invalidar cache e refetch
+          invalidateCache();
+          break;
+      }
+    };
+
+    return () => ws.close();
+  }, [invalidateCache]);
+
+  const handleManualRefresh = () => {
+    invalidateCache();
+    refetch();
+  };
+
+  return (
+    <div className="realtime-list">
+      <div className="list-header">
+        <h2>Lista em Tempo Real</h2>
+        <div className="sync-indicator">
+          🟢 Sincronizando...
+        </div>
+        <button onClick={handleManualRefresh}>
+          Atualizar Agora
+        </button>
+      </div>
+
+      <ArchbaseDataTable
+        dataSource={dataSource}
+        columns={[
+          { accessor: 'id', Header: 'ID' },
+          { accessor: 'nome', Header: 'Nome' },
+          { accessor: 'email', Header: 'Email' },
+          { 
+            accessor: 'updatedAt', 
+            Header: 'Última Atualização',
+            Cell: ({ value }: any) => new Date(value).toLocaleString()
+          }
+        ]}
+        loading={isLoading}
+        height={500}
+      />
+    </div>
+  );
+}
+```
+
+## 📱 Offline Support
+
+### Exemplo 4: Suporte Offline com Queue
+
+```typescript
+// components/OfflinePessoaEditor.tsx
+import React from 'react';
+import { 
+  useArchbaseRemoteDataSourceWithQuery,
+  ArchbaseOfflineIndicator,
+  ArchbaseEdit
+} from '@archbase/react';
+import { pessoaService } from '../services/PessoaService';
+
+export function OfflinePessoaEditor({ pessoaId }: { pessoaId: number }) {
+  const [offlineQueue, setOfflineQueue] = React.useState<any[]>([]);
+  const [isOnline, setIsOnline] = React.useState(navigator.onLine);
+
+  const {
+    dataSource,
+    currentRecord,
+    save,
+    isSaving,
+    getCachedData
+  } = useArchbaseRemoteDataSourceWithQuery<Pessoa>({
+    name: `pessoa-offline-${pessoaId}`,
+    service: pessoaService,
+    filter: { id: pessoaId },
+    queryConfig: {
+      staleTime: Infinity,           // Cache infinito para offline
+      cacheTime: 24 * 60 * 60 * 1000, // 24 horas
+      retry: false,                  // Não retry quando offline
+      networkMode: 'offlineFirst'    // Prioriza cache
+    }
+  });
+
+  // Monitor de conectividade
+  React.useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      processOfflineQueue();
+    };
+    
+    const handleOffline = () => {
+      setIsOnline(false);
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  const processOfflineQueue = async () => {
+    if (offlineQueue.length === 0) return;
+
+    for (const operation of offlineQueue) {
+      try {
+        await operation.execute();
+        console.log('Operação offline processada:', operation.type);
+      } catch (error) {
+        console.error('Erro ao processar operação offline:', error);
+      }
+    }
+
+    setOfflineQueue([]);
+  };
+
+  const handleSave = async () => {
+    if (!isOnline) {
+      // Salvar na queue offline
+      const operation = {
+        type: 'SAVE_PESSOA',
+        data: currentRecord,
+        timestamp: Date.now(),
+        execute: () => save()
+      };
+      
+      setOfflineQueue(prev => [...prev, operation]);
+      
+      // Salvar no localStorage para persistência
+      localStorage.setItem('offline-queue', JSON.stringify([...offlineQueue, operation]));
+      
+      alert('Operação salva para quando voltar online!');
+      return;
+    }
+
+    try {
+      await save();
+    } catch (error) {
+      console.error('Erro ao salvar:', error);
+    }
+  };
+
+  // Recuperar queue do localStorage ao inicializar
+  React.useEffect(() => {
+    const savedQueue = localStorage.getItem('offline-queue');
+    if (savedQueue) {
+      setOfflineQueue(JSON.parse(savedQueue));
+    }
+  }, []);
+
+  return (
+    <div className="offline-editor">
+      <ArchbaseOfflineIndicator />
+      
+      <div className="editor-header">
+        <h2>Editor Offline</h2>
+        <div className="connection-status">
+          {isOnline ? '🟢 Online' : '🔴 Offline'}
+        </div>
+        {offlineQueue.length > 0 && (
+          <div className="offline-queue">
+            📝 {offlineQueue.length} operações pendentes
+          </div>
+        )}
+      </div>
+
+      <div className="form-fields">
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="nome"
+          label="Nome"
+          disabled={!currentRecord}
+        />
+        
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="email"
+          label="Email"
+          disabled={!currentRecord}
+        />
+      </div>
+
+      <div className="form-actions">
+        <button 
+          onClick={handleSave}
+          disabled={isSaving || !currentRecord}
+        >
+          {isSaving ? 'Salvando...' : 'Salvar'}
+        </button>
+        
+        {!isOnline && (
+          <div className="offline-notice">
+            💾 Será salvo quando voltar online
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+## 🎯 Advanced Patterns
+
+### Exemplo 5: Master-Detail com Query
+
+```typescript
+// components/MasterDetailWithQuery.tsx
+import React from 'react';
+import { 
+  useArchbaseRemoteDataSourceWithQuery,
+  ArchbaseDataTable,
+  ArchbaseMasterDetail
+} from '@archbase/react';
+import { pessoaService, pedidoService } from '../services';
+
+export function MasterDetailWithQuery() {
+  const [selectedPessoaId, setSelectedPessoaId] = React.useState<number | null>(null);
+
+  // Master: Lista de pessoas
+  const {
+    dataSource: pessoaDataSource,
+    records: pessoas,
+    isLoading: loadingPessoas
+  } = useArchbaseRemoteDataSourceWithQuery<Pessoa>({
+    name: 'master-pessoas',
+    service: pessoaService,
+    queryConfig: {
+      staleTime: 2 * 60 * 1000
+    }
+  });
+
+  // Detail: Pedidos da pessoa selecionada
+  const {
+    dataSource: pedidoDataSource,
+    records: pedidos,
+    isLoading: loadingPedidos,
+    refetch: refetchPedidos
+  } = useArchbaseRemoteDataSourceWithQuery<Pedido>({
+    name: `detail-pedidos-${selectedPessoaId}`,
+    service: pedidoService,
+    filter: selectedPessoaId ? { pessoaId: selectedPessoaId } : undefined,
+    enabled: !!selectedPessoaId,
+    queryConfig: {
+      staleTime: 1 * 60 * 1000
+    }
+  });
+
+  const handlePessoaSelect = (pessoa: Pessoa) => {
+    setSelectedPessoaId(pessoa.id);
+    pessoaDataSource.goToRecord(pessoas.findIndex(p => p.id === pessoa.id));
+  };
+
+  React.useEffect(() => {
+    if (selectedPessoaId) {
+      refetchPedidos();
+    }
+  }, [selectedPessoaId, refetchPedidos]);
+
+  return (
+    <ArchbaseMasterDetail
+      orientation="horizontal"
+      masterComponent={
+        <div className="master-panel">
+          <h3>Pessoas</h3>
+          <ArchbaseDataTable
+            dataSource={pessoaDataSource}
+            columns={[
+              { accessor: 'nome', Header: 'Nome' },
+              { accessor: 'email', Header: 'Email' }
+            ]}
+            loading={loadingPessoas}
+            onRowClick={handlePessoaSelect}
+            selectedRowId={selectedPessoaId}
+            height={400}
+          />
+        </div>
+      }
+      detailComponent={
+        <div className="detail-panel">
+          <h3>Pedidos</h3>
+          {selectedPessoaId ? (
+            <ArchbaseDataTable
+              dataSource={pedidoDataSource}
+              columns={[
+                { accessor: 'numero', Header: 'Número' },
+                { accessor: 'data', Header: 'Data' },
+                { accessor: 'valor', Header: 'Valor' }
+              ]}
+              loading={loadingPedidos}
+              height={400}
+            />
+          ) : (
+            <div className="no-selection">
+              Selecione uma pessoa para ver seus pedidos
+            </div>
+          )}
+        </div>
+      }
+    />
+  );
+}
+```
+
+### Exemplo 6: Query Composition e Dependencies
+
+```typescript
+// hooks/usePessoaWithRelated.ts
+import { 
+  useArchbaseRemoteDataSourceWithQuery,
+  useQueries
+} from '@archbase/react';
+
+export function usePessoaWithRelated(pessoaId: number) {
+  // Query principal da pessoa
+  const pessoaQuery = useArchbaseRemoteDataSourceWithQuery<Pessoa>({
+    name: `pessoa-${pessoaId}`,
+    service: pessoaService,
+    filter: { id: pessoaId },
+    queryConfig: {
+      staleTime: 5 * 60 * 1000
+    }
+  });
+
+  // Queries dependentes (executam apenas se pessoa carregou)
+  const relatedQueries = useQueries({
+    queries: [
+      {
+        queryKey: ['pedidos', pessoaId],
+        queryFn: () => pedidoService.findMultiple({ pessoaId }),
+        enabled: !!pessoaQuery.currentRecord,
+        staleTime: 2 * 60 * 1000
+      },
+      {
+        queryKey: ['enderecos', pessoaId],
+        queryFn: () => enderecoService.findMultiple({ pessoaId }),
+        enabled: !!pessoaQuery.currentRecord,
+        staleTime: 10 * 60 * 1000 // Endereços mudam menos
+      },
+      {
+        queryKey: ['documentos', pessoaId],
+        queryFn: () => documentoService.findMultiple({ pessoaId }),
+        enabled: !!pessoaQuery.currentRecord,
+        staleTime: 30 * 60 * 1000 // Documentos mudam raramente
+      }
+    ]
+  });
+
+  const [pedidosQuery, enderecosQuery, documentosQuery] = relatedQueries;
+
+  return {
+    // Pessoa principal
+    pessoa: pessoaQuery.currentRecord,
+    isLoadingPessoa: pessoaQuery.isLoading,
+    pessoaError: pessoaQuery.error,
+    
+    // Dados relacionados
+    pedidos: pedidosQuery.data?.content || [],
+    enderecos: enderecosQuery.data?.content || [],
+    documentos: documentosQuery.data?.content || [],
+    
+    // Estados de loading
+    isLoadingPedidos: pedidosQuery.isLoading,
+    isLoadingEnderecos: enderecosQuery.isLoading,
+    isLoadingDocumentos: documentosQuery.isLoading,
+    
+    // Ações
+    refetchAll: () => {
+      pessoaQuery.refetch();
+      pedidosQuery.refetch();
+      enderecosQuery.refetch();
+      documentosQuery.refetch();
+    },
+    
+    // Estados combinados
+    isLoading: pessoaQuery.isLoading || relatedQueries.some(q => q.isLoading),
+    hasError: pessoaQuery.error || relatedQueries.some(q => q.error),
+    
+    // DataSource para components
+    dataSource: pessoaQuery.dataSource
+  };
+}
+```
+
+## 📊 Performance Monitoring
+
+### Exemplo 7: Métricas e Monitoramento
+
+```typescript
+// components/QueryPerformanceMonitor.tsx
+import React from 'react';
+import { 
+  useArchbaseQueryStates,
+  ArchbaseQueryDebugger 
+} from '@archbase/react';
+
+export function QueryPerformanceMonitor() {
+  const {
+    stats,
+    queries,
+    invalidateAll,
+    clearAll,
+    refetchAll,
+    isOnline
+  } = useArchbaseQueryStates();
+
+  const [performanceLog, setPerformanceLog] = React.useState<any[]>([]);
+
+  // Log de performance
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      const entry = {
+        timestamp: Date.now(),
+        stats: { ...stats },
+        memoryUsage: (performance as any).memory ? {
+          used: (performance as any).memory.usedJSHeapSize,
+          total: (performance as any).memory.totalJSHeapSize,
+          limit: (performance as any).memory.jsHeapSizeLimit
+        } : null
+      };
+      
+      setPerformanceLog(prev => [...prev.slice(-50), entry]); // Keep last 50 entries
+    }, 5000); // A cada 5 segundos
+
+    return () => clearInterval(interval);
+  }, [stats]);
+
+  const getHealthColor = () => {
+    if (stats.error > 0) return '🔴';
+    if (stats.loading > 5) return '🟡';
+    return '🟢';
+  };
+
+  return (
+    <div className="performance-monitor">
+      <div className="monitor-header">
+        <h3>Query Performance Monitor</h3>
+        <div className="health-indicator">
+          {getHealthColor()} {isOnline ? 'Online' : 'Offline'}
+        </div>
+      </div>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-value">{stats.total}</div>
+          <div className="stat-label">Total Queries</div>
+        </div>
+        
+        <div className="stat-card">
+          <div className="stat-value">{stats.loading}</div>
+          <div className="stat-label">Loading</div>
+        </div>
+        
+        <div className="stat-card">
+          <div className="stat-value">{stats.error}</div>
+          <div className="stat-label">Errors</div>
+        </div>
+        
+        <div className="stat-card">
+          <div className="stat-value">{stats.fresh}</div>
+          <div className="stat-label">Fresh</div>
+        </div>
+        
+        <div className="stat-card">
+          <div className="stat-value">{stats.stale}</div>
+          <div className="stat-label">Stale</div>
+        </div>
+      </div>
+
+      <div className="actions">
+        <button onClick={invalidateAll}>Invalidate All</button>
+        <button onClick={refetchAll}>Refetch All</button>
+        <button onClick={clearAll}>Clear Cache</button>
+      </div>
+
+      <div className="query-list">
+        <h4>Active Queries</h4>
+        <div className="query-items">
+          {queries.slice(0, 10).map((query, index) => (
+            <div key={index} className="query-item">
+              <div className="query-key">
+                {JSON.stringify(query.queryKey).slice(0, 50)}...
+              </div>
+              <div className="query-status">
+                Status: {query.state.status} | 
+                Updated: {new Date(query.state.dataUpdatedAt).toLocaleTimeString()}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <ArchbaseQueryDebugger />
+    </div>
+  );
+}
+```
+
+---
+
+## 🚀 Getting Started
+
+Para usar estes exemplos em seu projeto:
+
+1. **Instale as dependências:**
+```bash
+npm install @tanstack/react-query @archbase/react
+```
+
+2. **Configure o Provider:**
+```typescript
+// App.tsx
+import { ArchbaseQueryProvider } from '@archbase/react';
+
+function App() {
+  return (
+    <ArchbaseQueryProvider>
+      <YourApp />
+    </ArchbaseQueryProvider>
+  );
+}
+```
+
+3. **Use os hooks:**
+```typescript
+const { dataSource, save, isLoading } = useArchbaseRemoteDataSourceWithQuery({
+  name: 'my-data',
+  service: myService
+});
+```
+
+---
+
+*Exemplos TanStack Query criados em: Dezembro 2024*  
+*Versão: 2.1.4-dev*  
+*Status: ✅ Integração Implementada*

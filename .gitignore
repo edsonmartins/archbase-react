@@ -1,39 +1,52 @@
-
-# See https://help.github.com/ignore-files/ for more about ignoring files.
-
-# dependencies
+# Dependencies
 node_modules
-.yarn
-.yarn/cache
-.yarn/install-state.gz
-.pnp.cjs
-.pnp.loader.mjs
-.yarnrc.yml
-.tgz
-docs/
-storybook-static
+.pnp
+.pnp.js
 
-# builds
-build
+# Testing
+coverage
+*.lcov
+.nyc_output
+
+# Build outputs
 dist
-.rpt2_cache
-.tgz
-
-# misc
-.DS_Store
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.tgz
+build
+.next
+out
 .turbo
-.history
 
-# debug
+# Misc
+.DS_Store
+*.pem
+.env*.local
+
+# Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-coverage
-storybook-static
 .pnpm-debug.log*
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Storybook
+storybook-static
+.storybook-cache
+
+# Vitest
+*.timestamp-*
+
+# Turbo
+.turbo
+
+# Changesets
+.changeset/README.md
