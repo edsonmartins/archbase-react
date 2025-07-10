@@ -5,6 +5,16 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./dist/index.css": "./dist/index.css",
+    "./dist/cjs/index.css": "./dist/index.css",
+    "./dist/esm/index.css": "./dist/index.css"
+  },
   "files": [
     "dist"
   ],

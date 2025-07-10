@@ -436,6 +436,73 @@ cd packages/core && pnpm build
 cd packages/components && pnpm build
 ```
 
+## 🛠️ Scripts de Build e Empacotamento
+
+### Build Completo e Empacotamento
+```bash
+# Build all packages e criar tarballs para instalação local
+./build-and-pack.sh
+```
+
+### Apenas Empacotar (builds já feitos)
+```bash
+# Criar tarballs dos packages já compilados (mais rápido)
+./pack-only.sh
+```
+
+### Instalação em Outro Projeto
+```bash
+# Instalar automaticamente em outro projeto
+./install-local.sh /path/to/your/project
+```
+
+### Instalação Manual
+```bash
+# Instalar pacote específico
+npm install /path/to/archbase-react-v3/dist-packages/archbase-core-3.0.0.tgz
+
+# Instalar todos os pacotes
+npm install /path/to/archbase-react-v3/dist-packages/archbase-*.tgz
+```
+
+## 🔧 Scripts para Verdaccio (Registry Privado)
+
+### Configurar Verdaccio
+```bash
+# Configurar registry privado (padrão: http://192.168.1.110:4873)
+./configure-verdaccio.sh
+
+# Ou com URL personalizada
+./configure-verdaccio.sh http://your-server:4873
+```
+
+### Publicar no Verdaccio
+```bash
+# Build e publicar todos os packages no Verdaccio (com force republish)
+./publish-verdaccio.sh
+```
+
+### Instalar do Verdaccio em Outro Projeto
+```bash
+# Instalar automaticamente do Verdaccio
+./install-from-verdaccio.sh /path/to/your/project
+
+# Ou com URL personalizada
+./install-from-verdaccio.sh http://your-server:4873 /path/to/your/project
+```
+
+### Configuração Manual do Verdaccio
+```bash
+# Configurar registry para escopo @archbase (recomendado)
+pnpm config set @archbase:registry http://192.168.1.110:4873
+
+# Verificar configuração
+pnpm config get @archbase:registry
+
+# Criar .npmrc no projeto
+echo "@archbase:registry=http://192.168.1.110:4873" > .npmrc
+```
+
 ## 📄 Licença
 
 MIT © Edson Martins e Mayker Miyanaga 

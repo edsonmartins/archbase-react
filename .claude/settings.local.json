@@ -15,7 +15,10 @@
       "Bash(cp:*)",
       "Bash(grep:*)",
       "Bash(find:*)",
-      "Bash(pnpm test:*)"
+      "Bash(pnpm test:*)",
+      "Bash(pnpm pack:*)",
+      "Bash(ls:*)",
+      "Bash(chmod:*)"
     ],
     "deny": []
   }
