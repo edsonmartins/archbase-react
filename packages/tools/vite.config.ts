@@ -62,6 +62,7 @@ export default defineConfig({
         
         // Dependency Injection
         'inversify',
+        'inversify-react',
         
         // Security
         'jwt-decode',
