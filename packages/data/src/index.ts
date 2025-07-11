@@ -30,5 +30,10 @@ export {
   QUICK,
   NORMAL,
   ADVANCED,
-  useArchbaseBool
+  useArchbaseBool,
+  ARCHBASE_IOC_API_TYPE
 } from '@archbase/core';
+
+// Export needed API client classes for IOC configuration
+export { ArchbaseAxiosRemoteApiClient } from './service/ArchbaseRemoteApiService';
+export type { ArchbaseRemoteApiClient } from './service/ArchbaseRemoteApiService';

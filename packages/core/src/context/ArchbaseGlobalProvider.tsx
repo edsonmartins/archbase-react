@@ -10,8 +10,8 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { Provider as IOCProvider } from 'inversify-react';
 import React, { Suspense, useLayoutEffect, useState } from 'react';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import '../../locales/config';
-import { archbaseTranslationResources } from '../../locales/config';
+import '../locales/config';
+import { archbaseTranslationResources } from '../locales/config';
 
 type ArchbaseThemeOverride = MantineThemeOverride;
 
