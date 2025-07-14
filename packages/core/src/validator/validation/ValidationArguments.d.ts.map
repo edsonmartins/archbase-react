@@ -1,0 +1,1 @@
+{"version":3,"file":"ValidationArguments.d.ts","sourceRoot":"","sources":["ValidationArguments.ts"],"names":[],"mappings":"AAAA;;;GAGG;AACH,MAAM,WAAW,mBAAmB;IAClC;;OAEG;IACH,KAAK,EAAE,GAAG,CAAC;IAEX;;OAEG;IACH,WAAW,EAAE,GAAG,EAAE,CAAC;IAEnB;;OAEG;IACH,UAAU,EAAE,MAAM,CAAC;IAEnB;;OAEG;IACH,MAAM,EAAE,MAAM,CAAC;IAEf;;OAEG;IACH,QAAQ,EAAE,MAAM,CAAC;CAClB"}

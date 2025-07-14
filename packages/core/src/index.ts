@@ -1,3 +1,7 @@
+// Import CSS styles
+import './errorboundary.scss';
+import './utils.scss';
+
 export * from './context';
 export * from './exceptions';
 export * from './helper';
@@ -24,5 +28,3 @@ export * from './fallback/ArchbaseSafeMigrationWrapper'
 export function detectDataSourceVersion(dataSource: any): string {
   return dataSource?.version || 'v1';
 }
-
-

@@ -1,0 +1,1 @@
+{"version":3,"file":"ArchbaseErrorFallback.d.ts","sourceRoot":"","sources":["ArchbaseErrorFallback.tsx"],"names":[],"mappings":"AACA,OAAc,EAAE,aAAa,EAAE,MAAM,OAAO,CAAC;AAC7C,OAAO,EAAE,aAAa,EAAE,MAAM,SAAS,CAAC;AAExC,MAAM,MAAM,0BAA0B,GAAG,aAAa,CAAC;AAEvD,qBAAa,qBAAsB,SAAQ,aAAa,CAAC,0BAA0B,CAAC;IACnF,OAAO;IAIP,MAAM;CA+BN"}

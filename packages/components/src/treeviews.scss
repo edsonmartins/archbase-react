@@ -1,0 +1,80 @@
+
+/*********
+***  TreeViews
+*********/
+.archbase-treeview {
+    min-height:100px;
+    padding:4px;
+    margin-bottom:20px;
+    font-size: 14px;
+    line-height: 20px;   
+    height: 100%;
+  }
+  
+  .archbase-treeview ul {
+    -webkit-padding-start: 28px;
+    margin: 0px 0px 0px 0px;
+  }
+  .archbase-treeview li {
+    list-style-type:none;
+    margin:0;
+    position:relative;
+    line-height: 16px;
+  }
+  .archbase-treeview li::before{
+    content:'';
+    left:-16px;
+    position:absolute;
+    right:auto
+  }
+  .archbase-treeview li::after {
+    content: '';
+    left: -16px;
+    position: absolute;
+    right: auto;
+  }
+  .archbase-treeview li::before {
+    border-left:1px dotted #999;
+    bottom: 30px;
+    height: 100%;
+    top: -2px;
+    width:1px;
+  }
+  .archbase-treeview li::after {
+    border-top: 1px dotted #999;
+    height: 20px;
+    top: 15px;
+    width: 22px;
+  }
+  .archbase-treeview li span {
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    display:inline-block;
+    padding:2px;
+    text-decoration:none
+  }
+  
+  .archbase-treeview img {
+    vertical-align: middle;
+    height: auto;
+    max-width: 100%;
+  }
+  
+  .archbase-treeview li.parent_li>span {
+    cursor:pointer
+  }
+  .archbase-treeview>ul>li::before, .archbase-treeview>ul>li::after {
+    border:0
+  }
+  .archbase-treeview li:last-child::before {
+    height:18px
+  }
+  .archbase-treeview-item  {
+    background:auto;
+    margin: 1px 1px 1px 2px;
+  }
+  
+  .archbase-treeview-item:hover { 
+    margin: 1px 1px 1px 2px;
+  }
+  

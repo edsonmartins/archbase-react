@@ -1,99 +1,56 @@
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import pkg from './package.json';
 
 export default defineConfig({
+  plugins: [react()],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'ArchbaseTools',
-      fileName: 'index',
-      formats: ['es']
+      formats: ['es'],
+      fileName: 'index'
     },
     rollupOptions: {
-      external: [
-        // React core
-        'react',
-        'react-dom',
-        'react/jsx-runtime',
+      external: (id) => {
+        // Sempre externos: peerDependencies
+        const peerDeps = Object.keys(pkg.peerDependencies || {});
+        for (const dep of peerDeps) {
+          if (id === dep || id.startsWith(dep + '/')) {
+            return true;
+          }
+        }
         
-        // Mantine ecosystem
-        '@mantine/core',
-        '@mantine/hooks',
-        '@mantine/form',
-        '@mantine/dates',
-        '@mantine/notifications',
-        '@mantine/modals',
-        '@mantine/spotlight',
-        '@tabler/icons-react',
+        // Todas as dependências devem ser externas
+        const deps = Object.keys(pkg.dependencies || {});
+        for (const dep of deps) {
+          if (id === dep || id.startsWith(dep + '/')) {
+            return true;
+          }
+        }
         
-        // Lodash
-        'lodash',
-        /^lodash\/.*/,
+        // Lodash paths
+        if (id === 'lodash' || id.startsWith('lodash/')) {
+          return true;
+        }
         
-        // Internationalization
-        'i18next',
-        'i18next-browser-languagedetector',
-        'react-i18next',
-        
-        // HTTP and data fetching
-        'axios',
-        '@tanstack/react-query',
-        
-        // Date utilities
-        'dayjs',
-        'date-fns',
-        
-        // Utilities
-        'clsx',
-        'immer',
-        'uuid',
-        'crypto-js',
-        'file-saver',
-        'events',
-        'query-string',
-        'ramda',
-        
-        // Validation
-        'ajv',
-        'validator',
-        
-        // Forms
-        'react-hook-form',
-        
-        // Dependency Injection
-        'inversify',
-        'inversify-react',
-        
-        // Security
-        'jwt-decode',
-        
-        // State management
-        'zustand',
-        
-        // Animation
-        'framer-motion',
-        
-        // Routing
-        'react-router-dom',
-        
-        // Archbase packages
-        '@archbase/core',
-        '@archbase/data',
-        '@archbase/components',
-        '@archbase/layout',
-        '@archbase/admin',
-        '@archbase/security',
-        '@archbase/template',
-        '@archbase/tools',
-        '@archbase/advanced'
-      ],
+        return false;
+      },
       output: {
         globals: {
           react: 'React',
-          'react-dom': 'ReactDOM',
-          'react/jsx-runtime': 'react/jsx-runtime'
+          'react-dom': 'ReactDOM'
         }
       }
-    }
+    },
+    sourcemap: true,
+    minify: false,
+    target: 'esnext'
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './test/setup.ts'
   }
 });

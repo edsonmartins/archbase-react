@@ -1,0 +1,1 @@
+{"version":3,"file":"ArchbaseJacksonParser.d.ts","sourceRoot":"","sources":["ArchbaseJacksonParser.ts"],"names":[],"mappings":"AAGA,qBAAa,qBAAqB;IAEhC,OAAO,CAAC,MAAM,CAAC,WAAW;IAU1B,OAAO,CAAC,MAAM,CAAC,aAAa;IAK5B,OAAO,CAAC,MAAM,CAAC,WAAW;IAS1B;;;OAGG;IACH,MAAM,CAAC,mBAAmB,CAAC,IAAI,EAAE,GAAG;IA0DpC;;;OAGG;IACH,MAAM,CAAC,mBAAmB,CAAC,GAAG,EAAE,GAAG;CA0DpC"}

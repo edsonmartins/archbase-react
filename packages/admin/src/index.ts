@@ -1,3 +1,6 @@
+// Importar estilos CSS do admin
+import './admin.css';
+
 export { ArchbaseAdminLayoutContext, ArchbaseAdminLayoutProvider } from './ArchbaseAdminLayout.context';
 export type {
 	ArchbaseAdminLayoutListener,

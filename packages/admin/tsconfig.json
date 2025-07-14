@@ -10,9 +10,7 @@
       "@archbase/security": ["../security/src"]
     },
     "outDir": "dist",
-    "declarationDir": "dist",
     "declaration": true,
-    "emitDeclarationOnly": false,
     "strict": false,
     "noImplicitAny": false,
     "strictNullChecks": false,

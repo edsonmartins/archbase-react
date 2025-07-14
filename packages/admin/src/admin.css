@@ -1,0 +1,15 @@
+/* Estilos do Archbase Admin */
+
+.archbase-admin-action {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.archbase-admin-action:hover {
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-4));
+}
+
+/* Adicione mais estilos específicos do admin aqui conforme necessário */

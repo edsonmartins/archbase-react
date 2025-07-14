@@ -1,6 +1,6 @@
 {
   "name": "@archbase/data",
-  "version": "3.0.0",
+  "version": "3.0.10",
   "description": "Data management layer for Archbase React v3 - DataSource, hooks, and API services",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -34,7 +34,7 @@
     "@mantine/hooks": "8.1.2"
   },
   "dependencies": {
-    "@archbase/core": "workspace:*",
+    "@archbase/core": "3.0.10",
     "@tanstack/react-query": "^5.81.5",
     "axios": "^1.7.2",
     "zustand": "^5.0.6",

@@ -8,3 +8,4 @@ export * from './kanban';
 // Version
 export const ArchbaseAdvancedVersion = '3.0.0';
 
+import './querybuilder.scss';

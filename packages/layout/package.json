@@ -1,25 +1,23 @@
 {
   "name": "@archbase/layout",
-  "version": "3.0.0",
+  "version": "3.0.10",
   "description": "Layout components for Archbase React",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
-    "./dist/index.css": "./dist/index.css",
-    "./dist/cjs/index.css": "./dist/index.css",
-    "./dist/esm/index.css": "./dist/index.css"
+    "./dist/index.css": "./dist/index.css"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "NODE_OPTIONS=\"--max-old-space-size=8192\" vite build && NODE_OPTIONS=\"--max-old-space-size=16384\" tsc --emitDeclarationOnly",
+    "build": "NODE_OPTIONS=\"--max-old-space-size=8192\" vite build",
     "dev": "vite build --watch",
     "test": "vitest",
     "test:watch": "vitest --watch",
@@ -36,8 +34,8 @@
   "author": "Edson Martins",
   "license": "MIT",
   "dependencies": {
-    "@archbase/core": "workspace:*",
-    "@archbase/data": "workspace:*",
+    "@archbase/core": "3.0.10",
+    "@archbase/data": "3.0.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^15.1.2",

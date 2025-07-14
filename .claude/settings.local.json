@@ -18,7 +18,17 @@
       "Bash(pnpm test:*)",
       "Bash(pnpm pack:*)",
       "Bash(ls:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(./scripts/publish-verdaccio.sh:*)",
+      "Bash(npm unpublish:*)",
+      "Bash(npm publish:*)",
+      "Bash(tsc:*)",
+      "Bash(npx tsc:*)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=16384\" npx tsc --emitDeclarationOnly --noEmitOnError false --skipLibCheck true)",
+      "Bash(cat:*)",
+      "Bash(pnpm:*)",
+      "Bash(./scripts/update-project-version.sh:*)",
+      "Bash(./scripts/fix-project-deps.sh:*)"
     ],
     "deny": []
   }

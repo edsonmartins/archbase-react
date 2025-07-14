@@ -1,0 +1,62 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
+import pkg from './package.json';
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'src/index.ts'),
+      name: 'ArchbaseCore',
+      formats: ['es'],
+      fileName: 'index'
+    },
+    rollupOptions: {
+      external: (id) => {
+        // console.log('Checking external for:', id);
+        
+        // Sempre externos: peerDependencies
+        const peerDeps = Object.keys(pkg.peerDependencies || {});
+        for (const dep of peerDeps) {
+          if (id === dep || id.startsWith(dep + '/')) {
+            console.log(`✓ External (peer): ${id}`);
+            return true;
+          }
+        }
+        
+        // Todas as dependências devem ser externas
+        const deps = Object.keys(pkg.dependencies || {});
+        for (const dep of deps) {
+          if (id === dep || id.startsWith(dep + '/')) {
+            console.log(`✓ External (dep): ${id}`);
+            return true;
+          }
+        }
+        
+        // Lodash paths
+        if (id === 'lodash' || id.startsWith('lodash/')) {
+          console.log(`✓ External (lodash): ${id}`);
+          return true;
+        }
+        
+        console.log(`✗ Internal: ${id}`);
+        return false;
+      },
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM'
+        }
+      }
+    },
+    sourcemap: true,
+    minify: 'esbuild',
+    target: 'esnext'
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './test/setup.ts'
+  }
+});

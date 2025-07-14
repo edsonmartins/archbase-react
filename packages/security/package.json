@@ -1,6 +1,6 @@
 {
   "name": "@archbase/security",
-  "version": "3.0.0",
+  "version": "3.0.10",
   "description": "Security and authentication components for Archbase React",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -16,7 +16,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "NODE_OPTIONS=\"--max-old-space-size=8192\" vite build && NODE_OPTIONS=\"--max-old-space-size=16384\" tsc --emitDeclarationOnly --noEmitOnError false --skipLibCheck true",
+    "build": "NODE_OPTIONS=\"--max-old-space-size=8192\" vite build",
     "dev": "vite build --watch",
     "test": "vitest",
     "test:watch": "vitest --watch",
@@ -34,11 +34,11 @@
   "author": "Edson Martins",
   "license": "MIT",
   "dependencies": {
-    "@archbase/core": "workspace:*",
-    "@archbase/data": "workspace:*",
-    "@archbase/components": "workspace:*",
-    "@archbase/layout": "workspace:*",
-    "@archbase/template": "workspace:*",
+    "@archbase/core": "3.0.10",
+    "@archbase/data": "3.0.10",
+    "@archbase/components": "3.0.10",
+    "@archbase/layout": "3.0.10",
+    "@archbase/template": "3.0.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^15.1.2",

@@ -1,0 +1,1 @@
+{"version":3,"file":"IsEthereumAddress.d.ts","sourceRoot":"","sources":["IsEthereumAddress.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,iBAAiB,EAAE,MAAM,sBAAsB,CAAC;AAIzD,eAAO,MAAM,mBAAmB,sBAAsB,CAAC;AAEvD;;;GAGG;AACH,wBAAgB,iBAAiB,CAAC,KAAK,EAAE,OAAO,GAAG,OAAO,CAEzD;AAED;;;GAGG;AACH,wBAAgB,iBAAiB,CAAC,iBAAiB,CAAC,EAAE,iBAAiB,GAAG,iBAAiB,CAc1F"}

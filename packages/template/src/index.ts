@@ -14,3 +14,4 @@ export * from './ArchbaseSearchTemplate';
 export * from './ArchbaseTemplateCommonTypes';
 export * from './ArchbaseTemplateState';
 export * from './ArchbaseStateValues';
+import './template.scss';

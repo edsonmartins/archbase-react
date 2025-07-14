@@ -1,0 +1,1 @@
+{"version":3,"file":"ArchbaseMicrosoftAvatar.d.ts","sourceRoot":"","sources":["ArchbaseMicrosoftAvatar.tsx"],"names":[],"mappings":"AAAA,OAAO,EAAU,WAAW,EAAE,MAAM,eAAe,CAAC;AAIpD,eAAO,MAAM,cAAc,mnHACslH,CAAC;AAoBlnH,MAAM,WAAW,4BAA6B,SAAQ,WAAW;IAChE,KAAK,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;IACtB,KAAK,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CACtB;AAED,eAAO,MAAM,uBAAuB,gCAAiC,4BAA4B,4CAmBhG,CAAC"}

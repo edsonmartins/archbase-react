@@ -1,0 +1,1 @@
+{"version":3,"file":"IsDivisibleBy.d.ts","sourceRoot":"","sources":["IsDivisibleBy.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,iBAAiB,EAAE,MAAM,sBAAsB,CAAC;AAIzD,eAAO,MAAM,eAAe,kBAAkB,CAAC;AAE/C;;GAEG;AACH,wBAAgB,aAAa,CAAC,KAAK,EAAE,OAAO,EAAE,GAAG,EAAE,MAAM,GAAG,OAAO,CAElE;AAED;;GAEG;AACH,wBAAgB,aAAa,CAAC,GAAG,EAAE,MAAM,EAAE,iBAAiB,CAAC,EAAE,iBAAiB,GAAG,iBAAiB,CAenG"}

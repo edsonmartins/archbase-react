@@ -1,6 +1,6 @@
 {
   "name": "@archbase/core",
-  "version": "3.0.0",
+  "version": "3.0.10",
   "description": "Core utilities and foundation for Archbase React v3",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -37,38 +37,38 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "peerDependencies": {
-    "react": "^18.3.0 || ^19.0.0",
-    "react-dom": "^18.3.0 || ^19.0.0",
     "@mantine/core": "8.1.2",
-    "@mantine/hooks": "8.1.2",
     "@mantine/dates": "8.1.2",
+    "@mantine/hooks": "8.1.2",
     "@mantine/modals": "8.1.2",
-    "@mantine/notifications": "8.1.2"
+    "@mantine/notifications": "8.1.2",
+    "react": "^18.3.0 || ^19.0.0",
+    "react-dom": "^18.3.0 || ^19.0.0"
   },
   "dependencies": {
+    "@juggle/resize-observer": "^3.4.0",
+    "@tanstack/react-query": "^5.25.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "date-fns": "^2.30.0",
+    "dayjs": "^1.11.10",
+    "dot-prop": "^8.0.2",
+    "i18next": "^23.10.0",
+    "i18next-browser-languagedetector": "^7.2.0",
     "inversify": "^6.2.0",
     "inversify-react": "^1.2.0",
-    "reflect-metadata": "^0.2.2",
-    "date-fns": "^2.30.0",
-    "lz-string": "^1.5.0",
-    "i18next": "^23.10.0",
-    "class-validator": "^0.14.0",
-    "class-transformer": "^0.5.1",
-    "dayjs": "^1.11.10",
     "lodash": "^4.17.21",
-    "validator": "^13.11.0",
-    "uuid": "^9.0.1",
-    "react-i18next": "^13.5.0",
-    "i18next-browser-languagedetector": "^7.2.0",
-    "usehooks-ts": "^2.16.0",
-    "react-router-dom": "^6.22.0",
-    "@tanstack/react-query": "^5.25.0",
-    "react-use": "^17.5.0",
-    "use-query-params": "^2.2.1",
-    "react-pro-sidebar": "^1.1.0",
+    "lz-string": "^1.5.0",
     "query-string": "^8.2.0",
-    "@juggle/resize-observer": "^3.4.0",
-    "dot-prop": "^8.0.2"
+    "react-i18next": "^13.5.0",
+    "react-pro-sidebar": "^1.1.0",
+    "react-router-dom": "^6.22.0",
+    "react-use": "^17.5.0",
+    "reflect-metadata": "^0.2.2",
+    "use-query-params": "^2.2.1",
+    "usehooks-ts": "^2.16.0",
+    "uuid": "^9.0.1",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.4",
@@ -78,6 +78,7 @@
     "react-dom": "^19.0.0",
     "typescript": "~5.7.2",
     "vite": "^6.0.3",
+    "vite-plugin-external": "^6.2.2",
     "vitest": "^2.1.8"
   }
 }
