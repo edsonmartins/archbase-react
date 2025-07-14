@@ -83,8 +83,19 @@ function publishPackage(packageName) {
     // Obter informações do package
     const packageInfo = getPackageInfo(packageName);
     
-    // Publicar usando o arquivo .tgz com force para sobrepor versões existentes
-    const publishCommand = `pnpm publish ${tgzFile} --access public --no-git-checks --force`;
+    // Tentar despublicar a versão existente primeiro (ignora erro se não existir)
+    try {
+      const unpublishCommand = `pnpm unpublish @archbase/${packageName}@${packageInfo.version} --force`;
+      log(`   Removendo versão existente: ${unpublishCommand}`, YELLOW);
+      execSync(unpublishCommand, { stdio: 'pipe' });
+      log(`   ✅ Versão existente removida`, GREEN);
+    } catch (unpublishError) {
+      // Ignora erro se a versão não existir
+      log(`   ℹ️  Versão não existia ou erro ao remover (continuando...)`, YELLOW);
+    }
+    
+    // Publicar usando o arquivo .tgz
+    const publishCommand = `pnpm publish ${tgzFile} --access public --no-git-checks`;
     
     log(`   Executando: ${publishCommand}`, YELLOW);
     execSync(publishCommand, { stdio: 'inherit' });
