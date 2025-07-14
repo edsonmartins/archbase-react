@@ -45,28 +45,9 @@ function updatePackageForBuild(packageName, isDebug) {
   const backupPath = `${packageJsonPath}.backup`;
   fs.writeFileSync(backupPath, JSON.stringify(packageJson, null, 2) + '\n');
   
-  // Atualizar dependências internas para usar versões específicas no build
-  const version = packageJson.version;
-  
-  if (packageJson.dependencies) {
-    Object.keys(packageJson.dependencies).forEach(dep => {
-      if (dep.startsWith('@archbase/')) {
-        packageJson.dependencies[dep] = isDebug ? `${version}-debug.${Date.now()}` : version;
-      }
-    });
-  }
-  
-  if (packageJson.devDependencies) {
-    Object.keys(packageJson.devDependencies).forEach(dep => {
-      if (dep.startsWith('@archbase/')) {
-        packageJson.devDependencies[dep] = isDebug ? `${version}-debug.${Date.now()}` : version;
-      }
-    });
-  }
-  
-  // Atualizar versão se for debug
+  // Atualizar versão se for debug (mas manter dependências como workspace)
   if (isDebug) {
-    packageJson.version = `${version}-debug.${Date.now()}`;
+    packageJson.version = `${packageJson.version}-debug.${Date.now()}`;
   }
   
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
@@ -79,6 +60,48 @@ function restorePackageJson(packageName) {
   
   if (fs.existsSync(backupPath)) {
     fs.renameSync(backupPath, packageJsonPath);
+  }
+}
+
+function buildWithTurbo(isDebug) {
+  const mode = isDebug ? 'DEBUG' : 'RELEASE';
+  log(`🚀 Usando Turbo para build ${mode}...`, BLUE);
+  
+  try {
+    // Primeiro, vamos preparar as versões se for debug
+    if (isDebug) {
+      const packages = getAllPackages();
+      packages.forEach(packageName => {
+        updatePackageForBuild(packageName, isDebug);
+      });
+    }
+    
+    // Executar build com Turbo
+    const envVars = isDebug ? { NODE_ENV: 'development' } : { NODE_ENV: 'production' };
+    const turboCmd = `turbo build`;
+    execSync(turboCmd, { stdio: 'inherit', env: { ...process.env, ...envVars } });
+    
+    // Restaurar package.json se foi debug
+    if (isDebug) {
+      const packages = getAllPackages();
+      packages.forEach(packageName => {
+        restorePackageJson(packageName);
+      });
+    }
+    
+    return true;
+  } catch (error) {
+    log(`❌ Erro no build com Turbo: ${error.message}`, RED);
+    
+    // Restaurar package.json em caso de erro
+    if (isDebug) {
+      const packages = getAllPackages();
+      packages.forEach(packageName => {
+        restorePackageJson(packageName);
+      });
+    }
+    
+    return false;
   }
 }
 
@@ -148,60 +171,79 @@ function main() {
   
   log(`🚀 Iniciando build em modo ${mode}...`, BLUE);
   
-  const packages = getAllPackages();
-  const buildOrder = [
-    'core',
-    'data',
-    'security',
-    'layout',
-    'components',
-    'advanced',
-    'admin',
-    'template',
-    'tools'
-  ];
+  // Verificar se Turbo está disponível
+  const useTurbo = process.argv.includes('--turbo') || fs.existsSync(path.join(process.cwd(), 'turbo.json'));
   
-  // Ordenar packages por dependências
-  const sortedPackages = buildOrder.filter(pkg => packages.includes(pkg));
-  const remainingPackages = packages.filter(pkg => !buildOrder.includes(pkg));
-  const allPackages = [...sortedPackages, ...remainingPackages];
-  
-  log(`📦 Packages para build: ${allPackages.join(', ')}`, BLUE);
-  
-  const results = [];
-  let successful = 0;
-  let failed = 0;
-  
-  for (const packageName of allPackages) {
-    const result = buildPackage(packageName, isDebug);
-    results.push({ packageName, success: result });
+  if (useTurbo) {
+    log(`⚡ Usando Turbo para build otimizado...`, YELLOW);
+    const success = buildWithTurbo(isDebug);
     
-    if (result) {
-      successful++;
+    if (success) {
+      log(`\n🎉 Build ${mode} com Turbo concluído com sucesso!`, GREEN);
+      log(`💡 Próximo passo: npm run pack${isDebug ? ':debug' : ''}`, BLUE);
     } else {
-      failed++;
+      log(`\n💥 Build ${mode} com Turbo falhou`, RED);
+      process.exit(1);
     }
-  }
-  
-  log(`\n📋 Resumo do build (${mode}):`, BLUE);
-  results.forEach(({ packageName, success }) => {
-    const status = success ? '✅' : '❌';
-    const color = success ? GREEN : RED;
-    log(`${status} @archbase/${packageName}`, color);
-  });
-  
-  log(`\n📊 Estatísticas:`, BLUE);
-  log(`✅ Sucessos: ${successful}`, GREEN);
-  if (failed > 0) {
-    log(`❌ Falhas: ${failed}`, RED);
-  }
-  
-  if (failed === 0) {
-    log(`\n🎉 Build ${mode} concluído com sucesso!`, GREEN);
-    log(`💡 Próximo passo: npm run pack${isDebug ? ':debug' : ''}`, BLUE);
   } else {
-    log(`\n💥 Build ${mode} falhou em ${failed} package(s)`, RED);
-    process.exit(1);
+    // Fallback para build sequencial
+    log(`📦 Usando build sequencial (sem Turbo)...`, YELLOW);
+    
+    const packages = getAllPackages();
+    const buildOrder = [
+      'core',
+      'data',
+      'security',
+      'layout',
+      'components',
+      'advanced',
+      'admin',
+      'template',
+      'tools'
+    ];
+    
+    // Ordenar packages por dependências
+    const sortedPackages = buildOrder.filter(pkg => packages.includes(pkg));
+    const remainingPackages = packages.filter(pkg => !buildOrder.includes(pkg));
+    const allPackages = [...sortedPackages, ...remainingPackages];
+    
+    log(`📦 Packages para build: ${allPackages.join(', ')}`, BLUE);
+    
+    const results = [];
+    let successful = 0;
+    let failed = 0;
+    
+    for (const packageName of allPackages) {
+      const result = buildPackage(packageName, isDebug);
+      results.push({ packageName, success: result });
+      
+      if (result) {
+        successful++;
+      } else {
+        failed++;
+      }
+    }
+    
+    log(`\n📋 Resumo do build (${mode}):`, BLUE);
+    results.forEach(({ packageName, success }) => {
+      const status = success ? '✅' : '❌';
+      const color = success ? GREEN : RED;
+      log(`${status} @archbase/${packageName}`, color);
+    });
+    
+    log(`\n📊 Estatísticas:`, BLUE);
+    log(`✅ Sucessos: ${successful}`, GREEN);
+    if (failed > 0) {
+      log(`❌ Falhas: ${failed}`, RED);
+    }
+    
+    if (failed === 0) {
+      log(`\n🎉 Build ${mode} concluído com sucesso!`, GREEN);
+      log(`💡 Próximo passo: npm run pack${isDebug ? ':debug' : ''}`, BLUE);
+    } else {
+      log(`\n💥 Build ${mode} falhou em ${failed} package(s)`, RED);
+      process.exit(1);
+    }
   }
 }
 
