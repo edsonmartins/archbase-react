@@ -6,7 +6,7 @@ if [ -f "vite.config.js" ]; then
 fi
 
 cp vite.config.debug.js vite.config.js
-npm run build
+pnpm run build
 
 if [ $? -eq 0 ]; then
   echo "✅ Build debug concluído!"

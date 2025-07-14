@@ -1,6 +1,6 @@
 {
   "name": "archbase-react",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "private": true,
   "type": "module",
   "description": "Monorepo for Archbase React v3 - Modern TypeScript React Component Library",
@@ -18,19 +18,15 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "test": "turbo test",
-    "test:watch": "turbo test:watch",
-    "test:coverage": "turbo test:coverage",
-    "lint": "turbo lint",
+    "build": "node scripts/build.js",
+    "build:debug": "node scripts/build.js --debug",
+    "pack": "node scripts/pack.js",
+    "pack:debug": "node scripts/pack.js --debug",
+    "publish:verdaccio": "node scripts/publish.js",
+    "version:update": "node scripts/update-version.js",
+    "clean": "node scripts/clean.js",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "changeset": "changeset",
-    "version": "changeset version",
-    "release": "turbo build && changeset publish",
-    "storybook": "pnpm --filter @archbase/storybook dev",
-    "storybook:build": "pnpm --filter @archbase/storybook build",
-    "clean": "turbo clean && rm -rf node_modules"
+    "lint": "turbo lint"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.5",

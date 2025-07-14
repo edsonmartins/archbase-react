@@ -10,6 +10,22 @@ Uma biblioteca moderna de componentes React TypeScript com arquitetura modular p
 - **🎯 Type Safety**: TypeScript rigoroso com inferência melhorada
 - **🧪 Testing**: Vitest nativo com cobertura completa
 - **🏗️ Monorepo**: pnpm workspaces com Turbo para builds paralelos
+- **🚀 Scripts Simplificados**: Build, empacotamento e publicação automatizados
+
+## 🔧 Scripts Rápidos
+
+```bash
+# Atualizar versão unificada
+npm run version:update 3.0.12
+
+# Build e publicação completa
+npm run build && npm run pack && npm run publish:verdaccio
+
+# Limpar projeto
+npm run clean
+```
+
+> 📖 **Documentação completa**: [SCRIPTS.md](./SCRIPTS.md)
 
 ## 📁 Estrutura de Pacotes
 
@@ -411,101 +427,93 @@ dataSource.removeFromFieldArray('enderecos', index);
 
 ## 🤝 Desenvolvimento
 
-### Comandos Disponíveis
+### 🔧 Scripts Simplificados
+
+O projeto foi completamente reorganizado com scripts modernos e simplificados:
 
 ```bash
-# Instalar dependências
-pnpm install
+# Atualizar versão de todos os packages
+npm run version:update 3.0.12
 
-# Build de todos os pacotes
-pnpm build
+# Build de todos os packages
+npm run build              # Modo release
+npm run build:debug        # Modo debug (com timestamp)
 
-# Build em desenvolvimento
-pnpm dev
+# Empacotar packages
+npm run pack               # Modo release
+npm run pack:debug         # Modo debug
 
-# Testes
-pnpm test
+# Publicar no Verdaccio
+npm run publish:verdaccio
 
-# Lint
-pnpm lint
+# Limpar projeto
+npm run clean
+
+# Outros comandos úteis
+npm run format             # Formatar código
+npm run lint               # Verificar código
 ```
 
-### Estrutura de Desenvolvimento
+### 📋 Fluxo de Trabalho Completo
 
 ```bash
-# Build manual com ordem específica
-./build-all.sh
+# 1. Atualizar versão (quando necessário)
+npm run version:update 3.0.12
 
-# Build individual por pacote
-cd packages/core && pnpm build
-cd packages/components && pnpm build
+# 2. Build completo
+npm run build
+
+# 3. Empacotar packages
+npm run pack
+
+# 4. Publicar no Verdaccio
+npm run publish:verdaccio
 ```
 
-## 🛠️ Scripts de Build e Empacotamento
+### 🎯 Como Funciona
 
-### Build Completo e Empacotamento
+#### **Gestão de Dependências**
+- **Desenvolvimento**: Usa `workspace:*` para sempre usar a versão local
+- **Build/Pack**: Converte automaticamente para versões específicas
+- **Zero conflitos**: Sem problemas de versionamento circular
+
+#### **Build Inteligente**
+- Compila packages em ordem de dependência
+- Valida se todos os arquivos foram gerados
+- Modo debug adiciona timestamp nas versões
+- Estatísticas detalhadas de tamanho
+
+#### **Empacotamento Otimizado**
+- Atualiza package.json automaticamente
+- Configura exports corretamente
+- Gera arquivos .tgz prontos para publicação
+- Backup automático em caso de erro
+
+### 📖 Documentação dos Scripts
+
+Consulte [SCRIPTS.md](./SCRIPTS.md) para documentação completa de todos os scripts disponíveis.
+
+## 🔧 Configuração do Verdaccio
+
+### Instalação e Configuração
 ```bash
-# Build all packages e criar tarballs para instalação local
-./build-and-pack.sh
+# Instalar Verdaccio globalmente
+npm install -g verdaccio
+
+# Iniciar Verdaccio
+verdaccio
+
+# Em outro terminal, configurar registry
+pnpm config set registry http://localhost:4873
+
+# Ou configurar apenas para @archbase
+pnpm config set @archbase:registry http://localhost:4873
 ```
 
-### Apenas Empacotar (builds já feitos)
+### Publicação
 ```bash
-# Criar tarballs dos packages já compilados (mais rápido)
-./pack-only.sh
-```
-
-### Instalação em Outro Projeto
-```bash
-# Instalar automaticamente em outro projeto
-./install-local.sh /path/to/your/project
-```
-
-### Instalação Manual
-```bash
-# Instalar pacote específico
-npm install /path/to/archbase-react-v3/dist-packages/archbase-core-3.0.0.tgz
-
-# Instalar todos os pacotes
-npm install /path/to/archbase-react-v3/dist-packages/archbase-*.tgz
-```
-
-## 🔧 Scripts para Verdaccio (Registry Privado)
-
-### Configurar Verdaccio
-```bash
-# Configurar registry privado (padrão: http://192.168.1.110:4873)
-./configure-verdaccio.sh
-
-# Ou com URL personalizada
-./configure-verdaccio.sh http://your-server:4873
-```
-
-### Publicar no Verdaccio
-```bash
-# Build e publicar todos os packages no Verdaccio (com force republish)
-./publish-verdaccio.sh
-```
-
-### Instalar do Verdaccio em Outro Projeto
-```bash
-# Instalar automaticamente do Verdaccio
-./install-from-verdaccio.sh /path/to/your/project
-
-# Ou com URL personalizada
-./install-from-verdaccio.sh http://your-server:4873 /path/to/your/project
-```
-
-### Configuração Manual do Verdaccio
-```bash
-# Configurar registry para escopo @archbase (recomendado)
-pnpm config set @archbase:registry http://192.168.1.110:4873
-
-# Verificar configuração
-pnpm config get @archbase:registry
-
-# Criar .npmrc no projeto
-echo "@archbase:registry=http://192.168.1.110:4873" > .npmrc
+# Publicar todos os packages
+npm run publish:verdaccio
 ```
 
 ## 📄 Licença

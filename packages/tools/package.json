@@ -1,6 +1,6 @@
 {
   "name": "@archbase/tools",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "Archbase React Tools - CLI, Development Tools, Generators",
   "type": "module",
   "main": "./dist/index.js",
@@ -29,7 +29,7 @@
     "@tabler/icons-react": "^3.0.0"
   },
   "dependencies": {
-    "@archbase/core": "3.0.10"
+    "@archbase/core": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^19.0.2",

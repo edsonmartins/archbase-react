@@ -1,6 +1,6 @@
 {
   "name": "@archbase/advanced",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "Archbase React Advanced Components - Charts, Kanban, QueryBuilder",
   "type": "module",
   "main": "./dist/index.js",
@@ -30,10 +30,10 @@
     "@tabler/icons-react": "^3.29.0"
   },
   "dependencies": {
-    "@archbase/core": "3.0.10",
-    "@archbase/data": "3.0.10", 
-    "@archbase/components": "3.0.10",
-    "@archbase/layout": "3.0.10",
+    "@archbase/core": "workspace:*",
+    "@archbase/data": "workspace:*",
+    "@archbase/components": "workspace:*",
+    "@archbase/layout": "workspace:*",
     "i18next": "^23.16.8",
     "lodash": "^4.17.21",
     "react-addons-shallow-compare": "^15.6.3",
