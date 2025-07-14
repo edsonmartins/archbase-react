@@ -41,6 +41,17 @@ function updatePackageForPack(packageName, isDebug) {
   const packageJsonPath = path.join(process.cwd(), 'packages', packageName, 'package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
   
+  // Limpar arquivos .tgz existentes no dist
+  const distPath = path.join(process.cwd(), 'packages', packageName, 'dist');
+  if (fs.existsSync(distPath)) {
+    const tgzFiles = fs.readdirSync(distPath).filter(file => file.endsWith('.tgz'));
+    tgzFiles.forEach(file => {
+      const filePath = path.join(distPath, file);
+      fs.unlinkSync(filePath);
+      log(`   🗑️  Removido arquivo antigo: ${file}`, YELLOW);
+    });
+  }
+  
   // Fazer backup do package.json original
   const backupPath = `${packageJsonPath}.backup`;
   fs.writeFileSync(backupPath, JSON.stringify(packageJson, null, 2) + '\n');
