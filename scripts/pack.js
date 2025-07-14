@@ -62,7 +62,7 @@ function updatePackageForPack(packageName, isDebug) {
   if (packageJson.dependencies) {
     Object.keys(packageJson.dependencies).forEach(dep => {
       if (dep.startsWith('@archbase/')) {
-        packageJson.dependencies[dep] = isDebug ? `${version}-debug.${Date.now()}` : version;
+        packageJson.dependencies[dep] = version;
       }
     });
   }
@@ -70,14 +70,9 @@ function updatePackageForPack(packageName, isDebug) {
   if (packageJson.devDependencies) {
     Object.keys(packageJson.devDependencies).forEach(dep => {
       if (dep.startsWith('@archbase/')) {
-        packageJson.devDependencies[dep] = isDebug ? `${version}-debug.${Date.now()}` : version;
+        packageJson.devDependencies[dep] = version;
       }
     });
-  }
-  
-  // Atualizar versão se for debug
-  if (isDebug) {
-    packageJson.version = `${version}-debug.${Date.now()}`;
   }
   
   // Garantir que exports estão corretos

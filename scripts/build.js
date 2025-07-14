@@ -45,10 +45,7 @@ function updatePackageForBuild(packageName, isDebug) {
   const backupPath = `${packageJsonPath}.backup`;
   fs.writeFileSync(backupPath, JSON.stringify(packageJson, null, 2) + '\n');
   
-  // Atualizar versão se for debug (mas manter dependências como workspace)
-  if (isDebug) {
-    packageJson.version = `${packageJson.version}-debug.${Date.now()}`;
-  }
+  // Não alterar versão nem para debug - mantém versão original
   
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
   return packageJson;
