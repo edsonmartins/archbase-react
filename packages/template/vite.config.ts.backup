@@ -8,12 +8,13 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: `Archbase${pkg.name.split('/')[1].charAt(0).toUpperCase() + pkg.name.split('/')[1].slice(1)}`,
+      name: 'ArchbaseTemplate',
       formats: ['es'],
       fileName: 'index'
     },
     rollupOptions: {
       external: (id) => {
+        // Sempre externos: peerDependencies
         const peerDeps = Object.keys(pkg.peerDependencies || {});
         for (const dep of peerDeps) {
           if (id === dep || id.startsWith(dep + '/')) {
@@ -21,6 +22,7 @@ export default defineConfig({
           }
         }
         
+        // Todas as dependências devem ser externas
         const deps = Object.keys(pkg.dependencies || {});
         for (const dep of deps) {
           if (id === dep || id.startsWith(dep + '/')) {
@@ -28,6 +30,7 @@ export default defineConfig({
           }
         }
         
+        // Lodash paths
         if (id === 'lodash' || id.startsWith('lodash/')) {
           return true;
         }
@@ -45,10 +48,9 @@ export default defineConfig({
     minify: false,
     target: 'esnext'
   },
-  esbuild: {
-    keepNames: true,
-    target: 'esnext',
-    treeShaking: false
-  },
-  mode: 'development'
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './test/setup.ts'
+  }
 });

@@ -94,9 +94,18 @@ export const safeSessionStorage = {
  */
 export function serializeForSSR<T>(data: T): string {
   try {
-    return serialize(data, {
-      isJSON: true,
-      unsafe: false // Security: don't serialize functions
+    return JSON.stringify(data, (key, value) => {
+      // Filter out functions and undefined values
+      if (typeof value === 'function' || value === undefined) {
+        return null;
+      }
+      // Handle circular references
+      if (typeof value === 'object' && value !== null) {
+        if (typeof value.toJSON === 'function') {
+          return value.toJSON();
+        }
+      }
+      return value;
     });
   } catch (error) {
     console.warn('Failed to serialize data for SSR:', error);
@@ -109,8 +118,8 @@ export function serializeForSSR<T>(data: T): string {
  */
 export function deserializeFromSSR<T>(serializedData: string): T | null {
   try {
-    // Use eval in a controlled way (serialize-javascript output is safe)
-    return eval(`(${serializedData})`);
+    // Use JSON.parse instead of eval for security
+    return JSON.parse(serializedData);
   } catch (error) {
     console.warn('Failed to deserialize SSR data:', error);
     return null;

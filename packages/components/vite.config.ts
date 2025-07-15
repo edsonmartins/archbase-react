@@ -1,16 +1,23 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 import pkg from './package.json';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    dts({
+      insertTypesEntry: true,
+      skipDiagnostics: true
+    })
+  ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'ArchbaseComponents',
+      name: 'Archbase' + pkg.name.split('/')[1].charAt(0).toUpperCase() + pkg.name.split('/')[1].slice(1),
       formats: ['es'],
-      fileName: 'index'
+      fileName: (format) => 'index.js'
     },
     rollupOptions: {
       external: (id) => {
@@ -45,9 +52,16 @@ export default defineConfig({
       }
     },
     sourcemap: true,
-    minify: false,  
+    minify: false,
     target: 'esnext'
   },
+  esbuild: {
+      "keepNames": true,
+      "target": "esnext",
+      "minify": false,
+      "treeShaking": false
+  },
+  mode: 'development',
   test: {
     globals: true,
     environment: 'jsdom',

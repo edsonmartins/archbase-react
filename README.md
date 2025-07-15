@@ -15,17 +15,23 @@ Uma biblioteca moderna de componentes React TypeScript com arquitetura modular p
 ## 🔧 Scripts Rápidos
 
 ```bash
-# Atualizar versão unificada
-npm run version:update 3.0.12
+# Build produção
+npm run build
 
-# Build e publicação completa
-npm run build && npm run pack && npm run publish:verdaccio
+# Build debug
+npm run build:debug
+
+# Build + publicação (produção)
+npm run build:publish
+
+# Build + publicação (debug no Verdaccio)
+npm run build:publish:debug
 
 # Limpar projeto
 npm run clean
 ```
 
-> 📖 **Documentação completa**: [SCRIPTS.md](./SCRIPTS.md)
+> 📖 **Documentação completa**: [BUILD-DEBUG.md](./BUILD-DEBUG.md)
 
 ## 📁 Estrutura de Pacotes
 

@@ -15,9 +15,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'ArchbaseSecurity',
+      name: 'Archbase' + pkg.name.split('/')[1].charAt(0).toUpperCase() + pkg.name.split('/')[1].slice(1),
       formats: ['es'],
-      fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`
+      fileName: (format) => 'index.js'
     },
     rollupOptions: {
       external: (id) => {
@@ -55,6 +55,13 @@ export default defineConfig({
     minify: false,
     target: 'esnext'
   },
+  esbuild: {
+      "keepNames": true,
+      "target": "esnext",
+      "minify": false,
+      "treeShaking": false
+  },
+  mode: 'development',
   test: {
     globals: true,
     environment: 'jsdom',

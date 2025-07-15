@@ -112,8 +112,8 @@ export function useArchbaseQuery<TData = unknown, TError = Error>(
     if (ssrData) return ssrData;
     
     if (serverData?.queries) {
-      const queryKey = Array.isArray(key) ? key.join(':') : key;
-      return serverData.queries[queryKey];
+      const queryKey = Array.isArray(key) ? key.join(':') : String(key);
+      return serverData.queries[queryKey as keyof typeof serverData.queries];
     }
     
     return undefined;
@@ -148,7 +148,7 @@ export function useArchbaseQuery<TData = unknown, TError = Error>(
       }
 
       if (Array.isArray(recordsToSet)) {
-        dataSource.setRecords(recordsToSet);
+        (dataSource as any).setRecords(recordsToSet);
       }
     } catch (err) {
       console.error('Failed to sync query data with DataSource:', err);

@@ -40,7 +40,7 @@ export function useArchbaseSSRDataSource<T extends Record<string, any>, ID>(
     const ds = new ArchbaseSSRDataSource<T, ID>(name);
     
     if (isServer && initialRecords.length > 0) {
-      ds.setRecords(initialRecords);
+      (ds as any).setRecords(initialRecords);
     }
     
     return ds;
@@ -83,13 +83,13 @@ export function useArchbaseSSRDataSource<T extends Record<string, any>, ID>(
 
       // Set records from hydrated data
       if (dataToHydrate && Array.isArray(dataToHydrate.records)) {
-        dataSource.setRecords(dataToHydrate.records);
+        (dataSource as any).setRecords(dataToHydrate.records);
         
         if (typeof dataToHydrate.currentIndex === 'number') {
-          dataSource.gotoRecNo(dataToHydrate.currentIndex);
+          dataSource.gotoRecord(dataToHydrate.currentIndex);
         }
       } else if (fallbackRecords.length > 0) {
-        dataSource.setRecords(fallbackRecords);
+        (dataSource as any).setRecords(fallbackRecords);
       }
 
     } catch (err) {
@@ -98,7 +98,7 @@ export function useArchbaseSSRDataSource<T extends Record<string, any>, ID>(
       
       // Use fallback data on error
       if (fallbackRecords.length > 0) {
-        dataSource.setRecords(fallbackRecords);
+        (dataSource as any).setRecords(fallbackRecords);
       }
     } finally {
       setIsLoading(false);
@@ -138,7 +138,7 @@ export function useArchbaseSSRDataSource<T extends Record<string, any>, ID>(
   const getMinimalState = () => {
     return {
       recordCount: dataSource.getRecordCount(),
-      currentIndex: dataSource.getRecNo(),
+      currentIndex: dataSource.getRecordIndex(),
       hasData: dataSource.hasData(),
       isActive: dataSource.isActive()
     };
@@ -153,10 +153,10 @@ export function useArchbaseSSRDataSource<T extends Record<string, any>, ID>(
 
     try {
       if (newRecords) {
-        dataSource.setRecords(newRecords);
+        (dataSource as any).setRecords(newRecords);
       } else {
         // Trigger any refresh logic
-        dataSource.refresh?.();
+        dataSource.refreshData();
       }
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Refresh failed'));
