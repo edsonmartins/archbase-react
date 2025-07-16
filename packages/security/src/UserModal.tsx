@@ -1,4 +1,4 @@
-import { ARCHBASE_IOC_API_TYPE } from '@archbase/core'
+import { ARCHBASE_IOC_API_TYPE, getI18nextInstance } from '@archbase/core'
 import { ArchbaseDataSource } from '@archbase/data'
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect } from '@archbase/components'
 import { PasswordInput } from '@mantine/core'
@@ -101,7 +101,7 @@ export const UserModal = (props: UserModalProps) => {
     loadOnStart: true,
     sort: ['name:asc'],
     onError: (error, origin) => {
-      ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin)
+      ArchbaseNotifications.showError(getI18nextInstance().t('archbase:WARNING'), error, origin)
     }
   })
 
@@ -113,7 +113,7 @@ export const UserModal = (props: UserModalProps) => {
     loadOnStart: true,
     sort: ['name:asc'],
     onError: (error, origin) => {
-      ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin)
+      ArchbaseNotifications.showError(getI18nextInstance().t('archbase:WARNING'), error, origin)
     }
   })
 
@@ -123,7 +123,7 @@ export const UserModal = (props: UserModalProps) => {
 
   return (
     <Modal
-      title={t('archbase:Usuário')}
+      title={getI18nextInstance().t('archbase:Usuário')}
       size="80%"
       style={{ height: '540px' }}
       styles={{ content: { maxWidth: 1000 } }}
@@ -141,8 +141,8 @@ export const UserModal = (props: UserModalProps) => {
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <Group>
                 <ArchbaseEdit
-                  label={`${t('archbase:Nome completo')}`}
-                  placeholder={`${t('archbase:Informe o nome completo do usuário')}`}
+                  label={`${getI18nextInstance().t('archbase:Nome completo')}`}
+                  placeholder={`${getI18nextInstance().t('archbase:Informe o nome completo do usuário')}`}
                   dataSource={props.dataSource}
                   dataField="name"
                   required
@@ -150,8 +150,8 @@ export const UserModal = (props: UserModalProps) => {
                 />
                 {options.showNickname && (
                   <ArchbaseEdit
-                    label={`${t('archbase:Apelido')}`}
-                    placeholder={`${t('archbase:Apelido')}`}
+                    label={`${getI18nextInstance().t('archbase:Apelido')}`}
+                    placeholder={`${getI18nextInstance().t('archbase:Apelido')}`}
                     dataSource={props.dataSource}
                     dataField="nickname"
                     required={options.requiredNickname}
@@ -161,8 +161,8 @@ export const UserModal = (props: UserModalProps) => {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <ArchbaseEdit
-                label={`${t('archbase:Descrição do usuário')}`}
-                placeholder={`${t('archbase:Informe a descrição do usuário')}`}
+                label={`${getI18nextInstance().t('archbase:Descrição do usuário')}`}
+                placeholder={`${getI18nextInstance().t('archbase:Informe a descrição do usuário')}`}
                 dataSource={props.dataSource}
                 dataField="description"
                 required
@@ -172,8 +172,8 @@ export const UserModal = (props: UserModalProps) => {
           <Grid>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <ArchbaseEdit
-                label={`${t('archbase:E-mail')}`}
-                placeholder={`${t('archbase:Informe o e-mail do usuário')}`}
+                label={`${getI18nextInstance().t('archbase:E-mail')}`}
+                placeholder={`${getI18nextInstance().t('archbase:Informe o e-mail do usuário')}`}
                 dataSource={props.dataSource}
                 onChangeValue={(value) => props.dataSource.setFieldValue("userName", value)}
                 dataField="email"
@@ -183,7 +183,7 @@ export const UserModal = (props: UserModalProps) => {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <PasswordInput
-                label={`${t('archbase:Senha usuário')}`}
+                label={`${getI18nextInstance().t('archbase:Senha usuário')}`}
                 error={passwordError}
                 required={props.dataSource.getFieldValue("isNewUser")}
               />
@@ -193,7 +193,7 @@ export const UserModal = (props: UserModalProps) => {
             {options.showProfile && (
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <ArchbaseSelect<UserDto, string, ProfileDto>
-                  label={`${t('archbase:Perfil do usuário')}`}
+                  label={`${getI18nextInstance().t('archbase:Perfil do usuário')}`}
                   dataSource={props.dataSource}
                   dataField="profile"
                   options={dsProfiles}
@@ -218,7 +218,7 @@ export const UserModal = (props: UserModalProps) => {
                     <ArchbaseCheckbox
                       dataSource={props.dataSource}
                       dataField="changePasswordOnNextLogin"
-                      label={`${t('archbase:Deve alterar senha próximo login ?')}`}
+                      label={`${getI18nextInstance().t('archbase:Deve alterar senha próximo login ?')}`}
                     />
                   </Input.Wrapper>
                 )}
@@ -227,7 +227,7 @@ export const UserModal = (props: UserModalProps) => {
                     <ArchbaseCheckbox
                       dataSource={props.dataSource}
                       dataField="allowPasswordChange"
-                      label={`${t('archbase:Pode alterar a senha ?')}`}
+                      label={`${getI18nextInstance().t('archbase:Pode alterar a senha ?')}`}
                     />
                   </Input.Wrapper>
                 )}
@@ -236,7 +236,7 @@ export const UserModal = (props: UserModalProps) => {
                     <ArchbaseCheckbox
                       dataSource={props.dataSource}
                       dataField="passwordNeverExpires"
-                      label={`${t('archbase:Senha nunca expira ?')}`}
+                      label={`${getI18nextInstance().t('archbase:Senha nunca expira ?')}`}
                     />
                   </Input.Wrapper>
                 )}
@@ -249,7 +249,7 @@ export const UserModal = (props: UserModalProps) => {
                     <ArchbaseCheckbox
                       dataSource={props.dataSource}
                       dataField="accountDeactivated"
-                      label={`${t('archbase:Conta desativada ?')}`}
+                      label={`${getI18nextInstance().t('archbase:Conta desativada ?')}`}
                     />
                   </Input.Wrapper>
                 )}
@@ -258,7 +258,7 @@ export const UserModal = (props: UserModalProps) => {
                     <ArchbaseCheckbox
                       dataSource={props.dataSource}
                       dataField="accountLocked"
-                      label={`${t('archbase:Conta bloqueada ?')}`}
+                      label={`${getI18nextInstance().t('archbase:Conta bloqueada ?')}`}
                     />
                   </Input.Wrapper>
                 )}
@@ -267,7 +267,7 @@ export const UserModal = (props: UserModalProps) => {
                     <ArchbaseCheckbox
                       dataSource={props.dataSource}
                       dataField="isAdministrator"
-                      label={`${t('archbase:Administrador ?')}`}
+                      label={`${getI18nextInstance().t('archbase:Administrador ?')}`}
                     />
                   </Input.Wrapper>
                 )}
@@ -275,7 +275,7 @@ export const UserModal = (props: UserModalProps) => {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
               <Stack gap="lg">
-                <Text>{t('archbase:Foto do usuário')}</Text>
+                <Text>{getI18nextInstance().t('archbase:Foto do usuário')}</Text>
                 {/* Avatar editor temporarily disabled */}
               </Stack>
             </Grid.Col>
@@ -288,8 +288,8 @@ export const UserModal = (props: UserModalProps) => {
               </Grid.Col>
               <Grid.Col span={{ base: 12 }}>
                 <ArchbaseDualListSelector<GroupDto, UserGroupDto>
-                  titleAvailable={t('archbase:Disponíveis')}
-                  titleAssigned={t('archbase:Selecionados')}
+                  titleAvailable={getI18nextInstance().t('archbase:Disponíveis')}
+                  titleAssigned={getI18nextInstance().t('archbase:Selecionados')}
                   assignedItemsDS={
                     new ArchbaseDataSource('dsDualList', {
                       records: props.dataSource.getFieldValue('groups'),

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Card, CSSProperties, Divider, PasswordInput, Text, TextInput, useMantineColorScheme } from "@mantine/core";
 import { useFocusTrap } from "@mantine/hooks";
-import { useArchbaseTheme, isEmailValidate } from "@archbase/core";
+import { useArchbaseTheme, isEmailValidate, getI18nextInstance } from "@archbase/core";
 import { ArchbaseDialog } from "@archbase/components";
 import { useArchbaseTranslation } from '@archbase/core';
 
@@ -46,10 +46,10 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
   async function handleSendResetPasswordEmail(email: string) {
     if (email) {
       if (!isEmailValidate(email)) {
-        setEmailError(`${t("archbase:Email inválido")}`)
+        setEmailError(`${getI18nextInstance().t("archbase:Email inválido")}`)
       } else {
         await onSendResetPasswordEmail(email).then(() => {
-          ArchbaseDialog.showSuccess(`${t("archbase:Um e-mail com instruções para redefinir sua senha foi enviado. Verifique sua caixa de entrada.")}`)
+          ArchbaseDialog.showSuccess(`${getI18nextInstance().t("archbase:Um e-mail com instruções para redefinir sua senha foi enviado. Verifique sua caixa de entrada.")}`)
           setEmailSent(true)
         }).catch(() => {})
       }
@@ -71,20 +71,20 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
         setNewPasswordError(passwordErrorResult)
       }
       if (newPassword !== confirmPassword) {
-        confirmPasswordError = `${t("archbase:A nova senha e a confirmação devem ser iguais.")}`
+        confirmPasswordError = `${getI18nextInstance().t("archbase:A nova senha e a confirmação devem ser iguais.")}`
         setConfirmPasswordError(confirmPasswordError);
       }
 
       if (!passwordErrorResult && !tokenErrorResult) {
         await onResetPassword(email, passwordResetToken, newPassword).then(() => {
-          ArchbaseDialog.showSuccess(`${t("archbase:Senha redefinida com sucesso.")}`)
+          ArchbaseDialog.showSuccess(`${getI18nextInstance().t("archbase:Senha redefinida com sucesso.")}`)
           onClickBackToLogin()
           setEmailSent(false)
         }).catch(() => {
           if (error) {
             setLastError(error)
           } else {
-            setLastError(`${t("archbase:Erro ao redefinir senha.")}`)
+            setLastError(`${getI18nextInstance().t("archbase:Erro ao redefinir senha.")}`)
           }
         })
       }
@@ -122,7 +122,7 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
               style={{ textAlign: "center", letterSpacing: "-1px" }}
               mt="xs"
             >
-              {t("archbase:Redefinir senha")}
+              {getI18nextInstance().t("archbase:Redefinir senha")}
             </Text>
             <Text c="dimmed" fz={14} style={{ textAlign: "justify" }}>
               {description}
@@ -130,7 +130,7 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
             <Divider m="md" />
             <TextInput
               label="Email"
-              placeholder={`${t("archbase:usuario@email.com")}`}
+              placeholder={`${getI18nextInstance().t("archbase:usuario@email.com")}`}
               value={emailInput || ""}
               required
               onChange={(event) => {
@@ -145,7 +145,7 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
               fullWidth
               onClick={() => handleSendResetPasswordEmail(emailInput)}
             >
-              {`${t("archbase:Enviar")}`}
+              {`${getI18nextInstance().t("archbase:Enviar")}`}
             </Button>
             <Button
               mt="6px"
@@ -156,7 +156,7 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
                 onClickBackToLogin()
               }
             >
-              {`${t("archbase:Voltar")}`}
+              {`${getI18nextInstance().t("archbase:Voltar")}`}
             </Button>
           </>
         )
@@ -169,12 +169,12 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
               style={{ textAlign: "center", letterSpacing: "-1px" }}
               mt="xs"
             >
-              {t("archbase:Redefinir senha")}
+              {getI18nextInstance().t("archbase:Redefinir senha")}
             </Text>
             <Divider m="xs" />
             <TextInput
-              label={t("archbase:Código de segurança")}
-              placeholder={`${t("archbase:Código enviado no seu e-mail")}`}
+              label={getI18nextInstance().t("archbase:Código de segurança")}
+              placeholder={`${getI18nextInstance().t("archbase:Código enviado no seu e-mail")}`}
               value={passwordResetTokenInput || ""}
               required
               onChange={(event) => {
@@ -184,8 +184,8 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
               error={tokenError}
             />
             <PasswordInput
-              label={t("archbase:Nova senha")}
-              placeholder={t("archbase:Nova senha")}
+              label={getI18nextInstance().t("archbase:Nova senha")}
+              placeholder={getI18nextInstance().t("archbase:Nova senha")}
               onChange={(event) => {
                 setNewPasswordInput(event.currentTarget.value)
                 setNewPasswordError("")
@@ -196,8 +196,8 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
               error={newPasswordError}
             />
             <PasswordInput
-              label={t("archbase:Confirmar senha")}
-              placeholder={t("archbase:Confirmar senha")}
+              label={getI18nextInstance().t("archbase:Confirmar senha")}
+              placeholder={getI18nextInstance().t("archbase:Confirmar senha")}
               onChange={(event) => {
                 setConfirmNewPasswordInput(event.currentTarget.value)
                 setConfirmPasswordError("")
@@ -212,7 +212,7 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
               fullWidth
               onClick={() => handleResetPassword(emailInput, passwordResetTokenInput, newPasswordInput, confirmNewPasswordInput)}
             >
-              {`${t("archbase:Redefinir senha")}`}
+              {`${getI18nextInstance().t("archbase:Redefinir senha")}`}
             </Button>
             <Button
               mt="6px"
@@ -224,7 +224,7 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
                 }
               }}
             >
-              {`${t("archbase:Voltar")}`}
+              {`${getI18nextInstance().t("archbase:Voltar")}`}
             </Button>
           </>
         )}

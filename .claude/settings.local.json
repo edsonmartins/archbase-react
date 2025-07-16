@@ -37,7 +37,8 @@
       "Bash(do echo \"=== $file ===\")",
       "Bash(done)",
       "Bash(npm run:*)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(diff:*)"
     ],
     "deny": []
   }

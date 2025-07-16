@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid, ScrollArea, Stack } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
-import { useArchbaseTranslation } from '@archbase/core';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { GroupDto } from './SecurityDomain'
 import { ArchbaseDataSource } from '@archbase/data'
 import { Modal, Button, Group } from '@mantine/core'
@@ -32,7 +32,7 @@ export const GroupModal = (props: GroupModalProps) => {
     <Modal
       opened={props.opened}
       onClose={props.onClickCancel}
-      title={t('archbase:Grupo')}
+      title={getI18nextInstance().t('archbase:Grupo')}
       size="60%"
       styles={{content: {maxWidth: 1000}}}
     >
@@ -46,16 +46,16 @@ export const GroupModal = (props: GroupModalProps) => {
           <Grid ref={focusTrapRef}>
             <Grid.Col span={{ base: 12 }}>
               <ArchbaseEdit
-                label={`${t('archbase:Nome do grupo')}`}
-                placeholder={`${t('archbase:Informe o nome do grupo')}`}
+                label={`${getI18nextInstance().t('archbase:Nome do grupo')}`}
+                placeholder={`${getI18nextInstance().t('archbase:Informe o nome do grupo')}`}
                 dataSource={props.dataSource}
                 dataField="name"
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
               <ArchbaseEdit
-                label={`${t('archbase:Descrição do grupo')}`}
-                placeholder={`${t('archbase:Informe a descrição do grupo')}`}
+                label={`${getI18nextInstance().t('archbase:Descrição do grupo')}`}
+                placeholder={`${getI18nextInstance().t('archbase:Informe a descrição do grupo')}`}
                 dataSource={props.dataSource}
                 dataField="description"
               />
@@ -70,10 +70,10 @@ export const GroupModal = (props: GroupModalProps) => {
       </ScrollArea>
       <Group mt="md" justify="flex-end">
         <Button variant="outline" onClick={() => props.onClickCancel()}>
-          {t('archbase:Cancelar')}
+          {getI18nextInstance().t('archbase:Cancelar')}
         </Button>
         <Button onClick={() => props.onClickOk()}>
-          {t('archbase:Salvar')}
+          {getI18nextInstance().t('archbase:Salvar')}
         </Button>
       </Group>
     </Modal>

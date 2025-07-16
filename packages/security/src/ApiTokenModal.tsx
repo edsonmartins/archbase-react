@@ -7,7 +7,7 @@ import { Modal } from '@mantine/core';
 import { Grid, Group, Image, ScrollArea, Text } from '@mantine/core';
 import { DateTimePicker, DateValue } from '@mantine/dates';
 import { useFocusTrap } from '@mantine/hooks';
-import { ARCHBASE_IOC_API_TYPE, builder, convertDateToISOString, emit, processErrorMessage, OptionsResult, isBase64Validate } from '@archbase/core';
+import { ARCHBASE_IOC_API_TYPE, builder, convertDateToISOString, emit, processErrorMessage, OptionsResult, isBase64Validate, getI18nextInstance } from '@archbase/core';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { useState } from 'react';
@@ -88,7 +88,7 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 
 	return (
 		<ArchbaseFormModalTemplate
-			title={t('archbase:Token de API')}
+			title={getI18nextInstance().t('archbase:Token de API')}
 			size="50%"
 			height={'400px'}
 			dataSource={props.dataSource}
@@ -100,14 +100,14 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 		>
 			<ScrollArea ref={focusTrapRef} style={{ height: '300px' }}>
 				<ArchbaseEdit
-					label={`${t('archbase:Nome do token')}`}
-					placeholder={`${t('archbase:Informe o nome do token')}`}
+					label={`${getI18nextInstance().t('archbase:Nome do token')}`}
+					placeholder={`${getI18nextInstance().t('archbase:Informe o nome do token')}`}
 					dataSource={props.dataSource}
 					dataField="name"
 				/>
 				<ArchbaseEdit
-					label={`${t('archbase:Descrição do token')}`}
-					placeholder={`${t('archbase:Informe a descrição do token')}`}
+					label={`${getI18nextInstance().t('archbase:Descrição do token')}`}
+					placeholder={`${getI18nextInstance().t('archbase:Informe a descrição do token')}`}
 					dataSource={props.dataSource}
 					dataField="description"
 				/>
@@ -119,10 +119,10 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 					placeholder={'Selecione a data de expiração'}
 				/>
 				<ArchbaseSelect<any, string, UserDto>
-					label={`${t('archbase:Usuário')}`}
+					label={`${getI18nextInstance().t('archbase:Usuário')}`}
 					dataSource={props.dataSource}
 					dataField="user"
-					placeholder={`${t('archbase:Digite aqui o nome do usuário')}`}
+					placeholder={`${getI18nextInstance().t('archbase:Digite aqui o nome do usuário')}`}
 					getOptionLabel={(option: UserDto) => option && option.email!}
 					getOptionValue={(option: UserDto) => option.id?.toString() || ''}
 					debounceTime={500}

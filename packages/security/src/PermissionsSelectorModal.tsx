@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useArchbaseTheme, ARCHBASE_IOC_API_TYPE, getKeyByEnumValue } from "@archbase/core";
+import { useArchbaseTheme, ARCHBASE_IOC_API_TYPE, getKeyByEnumValue, getI18nextInstance } from "@archbase/core";
 import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, ScrollArea, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useMantineColorScheme, useTree } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight, IconBorderCornerSquare, IconChevronDown } from "@tabler/icons-react";
 import { SecurityType } from "./SecurityType";
@@ -15,12 +15,12 @@ const translateDelimitedString = (inputString) => {
     if (inputString.includes(delimiter)) {
         const parts = inputString.split(delimiter).map(part => part.trim());
 
-        const translatedParts = parts.map(part => t(part));
+        const translatedParts = parts.map(part => getI18nextInstance().t(part));
 
         return translatedParts.join(` ${delimiter} `);
     }
 
-    return t(inputString);
+    return getI18nextInstance().t(inputString);
 };
 
 export interface PermissionsSelectorProps {
@@ -285,7 +285,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
     }
 
     return (
-        <Modal opened={opened} onClose={close} title={`${t(`archbase:${type}`)}: ${name}`} size={"80%"} styles={{ root: { overflow: "hidden" } }}>
+        <Modal opened={opened} onClose={close} title={`${getI18nextInstance().t(`archbase:${type}`)}: ${name}`} size={"80%"} styles={{ root: { overflow: "hidden" } }}>
             <ArchbaseSpaceFixed height={"540px"}>
                 <ArchbaseSpaceFill>
                     <ScrollArea h={"500px"}>
@@ -293,12 +293,12 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                             <Grid columns={20}>
                                 <Grid.Col span={9}>
                                     <Group mb={20}>
-                                        <Text>{t('archbase:Available')}</Text>
+                                        <Text>{getI18nextInstance().t('archbase:Available')}</Text>
                                         <TextInput
                                             size="xs"
                                             value={availablePermissionsFilter}
                                             onChange={(event) => setAvailablePermissionsFilter(event.target.value)}
-                                            placeholder={t('archbase:Filter available permissions')}
+                                            placeholder={getI18nextInstance().t('archbase:Filter available permissions')}
                                         />
                                     </Group>
                                     <Tree
@@ -344,12 +344,12 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                                 </Grid.Col>
                                 <Grid.Col span={2}>
                                     <Stack gap={5} style={{ minWidth: '10%' }} justify="center" align="center" h={"100%"}>
-                                        <Tooltip label={t('archbase:Add')}>
+                                        <Tooltip label={getI18nextInstance().t('archbase:Add')}>
                                             <ActionIcon onClick={handleAdd} disabled={!selectedAvailablePermission || selectedAvailablePermission?.nodeProps?.granted || !selectedAvailablePermission.nodeProps}>
                                                 <IconArrowRight />
                                             </ActionIcon>
                                         </Tooltip>
-                                        <Tooltip label={t('archbase:Remove')}>
+                                        <Tooltip label={getI18nextInstance().t('archbase:Remove')}>
                                             <ActionIcon onClick={handleRemove} disabled={!selectedGrantedPermission || !selectedGrantedPermission?.nodeProps?.permissionId || !selectedGrantedPermission.nodeProps}>
                                                 <IconArrowLeft />
                                             </ActionIcon>
@@ -358,12 +358,12 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                                 </Grid.Col>
                                 <Grid.Col span={9}>
                                     <Group mb={20}>
-                                        <Text>{t('archbase:Granted')}</Text>
+                                        <Text>{getI18nextInstance().t('archbase:Granted')}</Text>
                                         <TextInput
                                             size="xs"
                                             value={grantedPermissionsFilter}
                                             onChange={(event) => setGrantedPermissionsFilter(event.target.value)}
-                                            placeholder={t('archbase:Filter granted permissions')}
+                                            placeholder={getI18nextInstance().t('archbase:Filter granted permissions')}
                                         />
                                     </Group>
                                     <Tree
@@ -391,9 +391,9 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                                                     />
                                                 )}
                                                 <Text>{translateDelimitedString(node.label as string)}</Text>
-                                                {node?.nodeProps?.types?.includes("USER") && <Badge color="blue">{t('archbase:user')}</Badge>}
-                                                {node?.nodeProps?.types?.includes("GROUP") && <Badge color="orange">{t('archbase:group')}</Badge>}
-                                                {node?.nodeProps?.types?.includes("PROFILE") && <Badge color="pink">{t('archbase:profile')}</Badge>}
+                                                {node?.nodeProps?.types?.includes("USER") && <Badge color="blue">{getI18nextInstance().t('archbase:user')}</Badge>}
+                                                {node?.nodeProps?.types?.includes("GROUP") && <Badge color="orange">{getI18nextInstance().t('archbase:group')}</Badge>}
+                                                {node?.nodeProps?.types?.includes("PROFILE") && <Badge color="pink">{getI18nextInstance().t('archbase:profile')}</Badge>}
                                             </Group>
                                         )}
                                     />
@@ -404,7 +404,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                 </ArchbaseSpaceFill>
                 <ArchbaseSpaceBottom size="40px">
                     <Group justify="flex-end">
-                        <Button onClick={close}>{t("archbase:Close")}</Button>
+                        <Button onClick={close}>{getI18nextInstance().t("archbase:Close")}</Button>
                     </Group>
                 </ArchbaseSpaceBottom>
             </ArchbaseSpaceFixed>

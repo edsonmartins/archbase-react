@@ -1,4 +1,4 @@
-import { ARCHBASE_IOC_API_TYPE, processDetailErrorMessage, processErrorMessage } from '@archbase/core';
+import { ARCHBASE_IOC_API_TYPE, getI18nextInstance, getNestedObjectValue, processDetailErrorMessage, processErrorMessage } from '@archbase/core';
 import {
 	useArchbaseDataSource,
 	useArchbaseRemoteDataSource,
@@ -46,7 +46,7 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 	const apiTokenApi = useArchbaseRemoteServiceApi<ArchbaseApiTokenService>(ARCHBASE_IOC_API_TYPE.ApiToken);
 	const [openedModal, setOpenedModal] = useState<string>('');
 	const gridRef = useRef<ArchbaseDataGridRef | null>(null)
-
+ 
 	// Função para obter o ID da linha
 	const getRowId = (row: ApiTokenDto): string => {
 		return row.id;
@@ -80,7 +80,7 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 		},
 		onError: (error, origin) => {
 			setError(error);
-			ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin);
+			ArchbaseNotifications.showError(getI18nextInstance().t('archbase:WARNING'), error, origin);
 		},
 	});
 
@@ -180,15 +180,15 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 	const handleApiTokenRevokeRow = () => {
 		if (dsApiTokens.getCurrentRecord()) {
 			ArchbaseDialog.showConfirmDialogYesNo(
-				`${t('archbase:Confirme')}`,
-				`${t('archbase:Deseja revogar o token de API do usuário ')}${dsApiTokens.getCurrentRecord().user.name} ?`,
+				`${getI18nextInstance().t('archbase:Confirme')}`,
+				`${getI18nextInstance().t('archbase:Deseja revogar o token de API do usuário ')}${dsApiTokens.getCurrentRecord().user.name} ?`,
 				async () => {
 					await apiTokenApi
 						.revoke(dsApiTokens.getCurrentRecord().token)
 						.then(async () => {
 							ArchbaseNotifications.showSuccess(
-								`${t('mentors:Informação')}`,
-								`${t('mentors:Token de API revogado com sucesso!')}`,
+								`${getI18nextInstance().t('mentors:Informação')}`,
+								`${getI18nextInstance().t('mentors:Token de API revogado com sucesso!')}`,
 							);
 							
 							// 🔄 MIGRAÇÃO V1/V2: Refresh com compatibilidade
@@ -201,7 +201,7 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 						})
 						.catch((error) => {
 							ArchbaseDialog.showErrorWithDetails(
-								`${t('mentors:Atenção')}`,
+								`${getI18nextInstance().t('mentors:Atenção')}`,
 								processErrorMessage(error),
 								processDetailErrorMessage(error),
 							);
@@ -240,8 +240,8 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 						}
 						
 						ArchbaseNotifications.showSuccess(
-							`${t('mentors:Informação')}`,
-							`${t('mentors:Token de API gerado com sucesso!')}`,
+							`${getI18nextInstance().t('mentors:Informação')}`,
+							`${getI18nextInstance().t('mentors:Token de API gerado com sucesso!')}`,
 						);
 						if (callback) {
 							callback();
@@ -249,14 +249,14 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 					})
 					.catch((error) => {
 						ArchbaseDialog.showErrorWithDetails(
-							`${t('mentors:Atenção')}`,
+							`${getI18nextInstance().t('mentors:Atenção')}`,
 							processErrorMessage(error),
 							processDetailErrorMessage(error),
 						);
 					});
 			} catch (ex) {
 				ArchbaseDialog.showErrorWithDetails(
-					`${t('mentors:Atenção')}`,
+					`${getI18nextInstance().t('mentors:Atenção')}`,
 					processErrorMessage(ex),
 					processDetailErrorMessage(ex),
 				);
@@ -270,10 +270,10 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
 				<Group align="start" gap={'2px'} wrap="nowrap">
 					<Button color={'green'} leftSection={<IconPlus />} onClick={handleCreateApiTokenExecute}>
-						{t('archbase:New')}
+						{getI18nextInstance().t('archbase:New')}
 					</Button>
 					<Button disabled={!dsApiTokens.getCurrentRecord()} color={'red'} leftSection={<IconTrashX />} onClick={handleApiTokenRevokeRow}>
-						{t('archbase:Revoke')}
+						{getI18nextInstance().t('archbase:Revoke')}
 					</Button>
 				</Group>
 			</Flex>

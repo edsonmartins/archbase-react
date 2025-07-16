@@ -3,7 +3,7 @@ import { Grid, ScrollArea, Stack } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
 import { ArchbaseDataSource } from '@archbase/data'
 import { Modal, Button, Group } from '@mantine/core'
-import { useArchbaseTranslation } from '@archbase/core';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { ProfileDto } from './SecurityDomain'
 import { ArchbaseEdit } from '@archbase/components'
 
@@ -32,7 +32,7 @@ export const ProfileModal = (props: ProfileModalProps) => {
     <Modal
       opened={props.opened}
       onClose={props.onClickCancel}
-      title={t('archbase:Perfil')}
+      title={getI18nextInstance().t('archbase:Perfil')}
       size="60%"
       styles={{content: {maxWidth: 1000}}}
     >
@@ -46,16 +46,16 @@ export const ProfileModal = (props: ProfileModalProps) => {
           <Grid ref={focusTrapRef}>
             <Grid.Col span={{ base: 12, md: 12, lg: 12 }}>
               <ArchbaseEdit
-                label={`${t('archbase:Nome do perfil')}`}
-                placeholder={`${t('archbase:Informe o nome do perfil')}`}
+                label={`${getI18nextInstance().t('archbase:Nome do perfil')}`}
+                placeholder={`${getI18nextInstance().t('archbase:Informe o nome do perfil')}`}
                 dataSource={props.dataSource}
                 dataField="name"
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 12, lg: 12 }}>
               <ArchbaseEdit
-                label={`${t('archbase:Descrição do perfil')}`}
-                placeholder={`${t('archbase:Informe a descrição do perfil')}`}
+                label={`${getI18nextInstance().t('archbase:Descrição do perfil')}`}
+                placeholder={`${getI18nextInstance().t('archbase:Informe a descrição do perfil')}`}
                 dataSource={props.dataSource}
                 dataField="description"
               />
@@ -70,10 +70,10 @@ export const ProfileModal = (props: ProfileModalProps) => {
       </ScrollArea>
       <Group mt="md" justify="flex-end">
         <Button variant="outline" onClick={() => props.onClickCancel()}>
-          {t('archbase:Cancelar')}
+          {getI18nextInstance().t('archbase:Cancelar')}
         </Button>
         <Button onClick={() => props.onClickOk()}>
-          {t('archbase:Salvar')}
+          {getI18nextInstance().t('archbase:Salvar')}
         </Button>
       </Group>
     </Modal>

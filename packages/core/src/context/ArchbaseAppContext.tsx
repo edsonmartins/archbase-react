@@ -18,7 +18,9 @@ import { ArchbaseUser } from '../types';
 
 // Mock components for missing dependencies
 const CustomShowErrorModal = (props: any) => <div>{props.innerProps?.children}</div>;
-const ArchbaseNavigationProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+
+// Default navigation provider that does nothing (will be replaced by actual provider)
+const DefaultNavigationProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 
 export type ArchbaseLanguage = {
 	lang: string;
@@ -66,6 +68,7 @@ interface ArchbaseAppProviderProps {
 	variant?: string;
 	languages?: ArchbaseLanguage[];
 	setCustomTheme?: (dark: MantineThemeOverride, light: MantineThemeOverride) => void;
+	navigationProvider?: React.ComponentType<{ children: React.ReactNode }>;
 }
 
 const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
@@ -84,7 +87,18 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 		{ lang: 'es', name: 'Español' },
 	],
 	setCustomTheme,
+	navigationProvider,
 }) => {
+	// Determina qual NavigationProvider usar
+	const FinalNavigationProvider = navigationProvider || DefaultNavigationProvider;
+	
+	// Log para debug
+	console.log('[ArchbaseAppProvider] NavigationProvider escolhido:', {
+		providedByUser: !!navigationProvider,
+		usingDefault: FinalNavigationProvider === DefaultNavigationProvider,
+		providerName: FinalNavigationProvider.name || 'AnonymousProvider'
+	});
+	
 	const theme = useMantineTheme();
 	const currentColorScheme = useRef('');
 	const { colorScheme, setColorScheme } = useMantineColorScheme();
@@ -129,7 +143,7 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 				}}
 			>
 				<ProSidebarProvider>
-					<ArchbaseNavigationProvider>
+					<FinalNavigationProvider>
 						<BrowserRouter>
 							<QueryParamProvider
 								adapter={ReactRouter6Adapter}
@@ -141,7 +155,7 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 								{children as any}
 							</QueryParamProvider>
 						</BrowserRouter>
-					</ArchbaseNavigationProvider>
+					</FinalNavigationProvider>
 				</ProSidebarProvider>
 			</ModalsProvider>
 		</ArchbaseAppContext.Provider>

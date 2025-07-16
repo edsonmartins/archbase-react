@@ -155,7 +155,7 @@ export function ArchbaseSecurityView({
 	const [openedModal, setOpenedModal] = useState<string>('');
 	const [openedPermissionsModal, setOpenedPermissionsModal] = useState<string>('');
 	const accessTokenApi = useArchbaseRemoteServiceApi<ArchbaseAccessTokenService>(ARCHBASE_IOC_API_TYPE.AccessToken);
-
+	const {t} = useArchbaseTranslation();
 	// 🔄 MIGRAÇÃO V1/V2: Compatibilidade para DataSources principais
 	const usersV1V2 = useArchbaseV1V2Compatibility<UserDto>(
 		'ArchbaseSecurityView-Users',
@@ -226,7 +226,7 @@ export function ArchbaseSecurityView({
 		},
 		onError: (error, origin) => {
 			setError(error);
-			ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin);
+			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
@@ -245,7 +245,7 @@ export function ArchbaseSecurityView({
 		},
 		onError: (error, origin) => {
 			setError(error);
-			ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin);
+			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
@@ -264,7 +264,7 @@ export function ArchbaseSecurityView({
 		},
 		onError: (error, origin) => {
 			setError(error);
-			ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin);
+			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
@@ -283,7 +283,7 @@ export function ArchbaseSecurityView({
 		},
 		onError: (error, origin) => {
 			setError(error);
-			ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin);
+			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
@@ -302,7 +302,7 @@ export function ArchbaseSecurityView({
 		},
 		onError: (error, origin) => {
 			setError(error);
-			ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin);
+			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
@@ -314,7 +314,7 @@ export function ArchbaseSecurityView({
 				dataField="user.avatar"
 				dataType="image"
 				size={80}
-				header={t('archbase:Foto')}
+				header={`${t('archbase:Foto')}`}
 				render={(data) => (
 					<img
 						style={{ borderRadius: 50, height: '32px', maxHeight: '32px' }}
@@ -328,13 +328,13 @@ export function ArchbaseSecurityView({
 				dataField="user.userName"
 				dataType="text"
 				size={300}
-				header={t('archbase:Nome de Usuário')}
+				header={`${t('archbase:Nome de Usuário')}`}
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<AccessTokenDto>
 				dataField="user.email"
 				dataType="text"
-				header={t('archbase:Email')}
+				header={`${t('archbase:Email')}`}
 				size={300}
 				inputFilterType="text"
 			/>
@@ -342,26 +342,26 @@ export function ArchbaseSecurityView({
 				dataField="expirationDate"
 				dataType="text"
 				size={300}
-				header={t('archbase:Expira em')}
+				header={`${t('archbase:Expira em')}`}
 				render={(data) => <Text size="sm">{data.row.expirationDate}</Text>}
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<AccessTokenDto>
 				dataField="revoked"
 				dataType="boolean"
-				header={t('archbase:Revogado ?')}
+				header={`${t('archbase:Revogado ?')}`}
 				inputFilterType="checkbox"
 			/>
 			<ArchbaseDataGridColumn<AccessTokenDto>
 				dataField="expired"
 				dataType="boolean"
-				header={t('archbase:Expirado ?')}
+				header={`${t('archbase:Expirado ?')}`}
 				inputFilterType="checkbox"
 			/>
 			<ArchbaseDataGridColumn<AccessTokenDto>
 				dataField="token"
 				dataType="text"
-				header={t('archbase:Token Acesso')}
+				header={`${t('archbase:Token Acesso')}`}
 				size={300}
 				inputFilterType="text"
 			/>
@@ -374,7 +374,7 @@ export function ArchbaseSecurityView({
 				dataField="avatar"
 				dataType="image"
 				size={80}
-				header={t('archbase:Foto')}
+				header={`${t('archbase:Foto')}`}
 				render={(data) => (
 					<img
 						style={{ borderRadius: 50, height: '32px', maxHeight: '32px' }}
@@ -390,27 +390,27 @@ export function ArchbaseSecurityView({
 				dataField="name"
 				dataType="text"
 				size={300}
-				header={t('archbase:Nome')}
+				header={`${t('archbase:Nome')}`}
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="nickname"
 				dataType="text"
 				size={120}
-				header={t('archbase:Apelido')}
+				header={`${t('archbase:Apelido')}`}
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="email"
 				dataType="text"
-				header={t('archbase:Email')}
+				header={`${t('archbase:Email')}`}
 				size={300}
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="profile.name"
 				dataType="text"
-				header={t('archbase:Perfil')}
+				header={`${t('archbase:Perfil')}`}
 				size={200}
 				render={(data) => renderProfile(data.row)}
 				inputFilterType="text"
@@ -419,7 +419,7 @@ export function ArchbaseSecurityView({
 				dataField="groups"
 				dataType="text"
 				size={300}
-				header={t('archbase:Grupos')}
+				header={`${t('archbase:Grupos')}`}
 				render={(data) => renderGroups(data.row)}
 				enableSorting={false}
 				enableColumnFilter={false}
@@ -428,55 +428,55 @@ export function ArchbaseSecurityView({
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="isAdministrator"
 				dataType="boolean"
-				header={t('archbase:Admin ?')}
+				header={`${t('archbase:Admin ?')}`}
 				inputFilterType="checkbox"
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="changePasswordOnNextLogin"
 				dataType="boolean"
-				header={t('archbase:Alt.senha próximo login?')}
+				header={`${t('archbase:Alt.senha próximo login?')}`}
 				inputFilterType="checkbox"
 				size={120}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="allowPasswordChange"
 				dataType="boolean"
-				header={t('archbase:Pode alterar senha?')}
+				header={`${t('archbase:Pode alterar senha?')}`}
 				inputFilterType="checkbox"
 				size={120}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="allowMultipleLogins"
 				dataType="boolean"
-				header={t('archbase:Permite multiplos logins?')}
+				header={`${t('archbase:Permite multiplos logins?')}`}
 				inputFilterType="checkbox"
 				size={120}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="passwordNeverExpires"
 				dataType="boolean"
-				header={t('archbase:Senha nunca expira?')}
+				header={`${t('archbase:Senha nunca expira?')}`}
 				inputFilterType="checkbox"
 				size={120}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="accountDeactivated"
 				dataType="boolean"
-				header={t('archbase:Desativado?')}
+				header={`${t('archbase:Desativado?')}`}
 				inputFilterType="checkbox"
 				size={120}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="accountLocked"
 				dataType="boolean"
-				header={t('archbase:Bloqueado?')}
+				header={`${t('archbase:Bloqueado?')}`}
 				inputFilterType="checkbox"
 				size={120}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="unlimitedAccessHours"
 				dataType="boolean"
-				header={t('archbase:Horário acesso ilimitado?')}
+				header={`${t('archbase:Horário acesso ilimitado?')}`}
 				inputFilterType="checkbox"
 				size={140}
 			/>
@@ -489,13 +489,13 @@ export function ArchbaseSecurityView({
 				dataField="name"
 				dataType="text"
 				size={300}
-				header={t('archbase:Nome do grupo')}
+				header={`${t('archbase:Nome do grupo')}`}
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<GroupDto>
 				dataField="description"
 				dataType="text"
-				header={t('archbase:Descrição')}
+				header={`${t('archbase:Descrição')}`}
 				size={800}
 				inputFilterType="text"
 			/>
@@ -508,13 +508,13 @@ export function ArchbaseSecurityView({
 				dataField="name"
 				dataType="text"
 				size={300}
-				header={t('archbase:Nome do perfil')}
+				header={`${t('archbase:Nome do perfil')}`}
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<ProfileDto>
 				dataField="description"
 				dataType="text"
-				header={t('archbase:Descrição')}
+				header={`${t('archbase:Descrição')}`}
 				size={800}
 				inputFilterType="text"
 			/>
@@ -527,13 +527,13 @@ export function ArchbaseSecurityView({
 				dataField="name"
 				dataType="text"
 				size={300}
-				header={t('archbase:Nome do recurso')}
+				header={`${t('archbase:Nome do recurso')}`}
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<ResourceDto>
 				dataField="description"
 				dataType="text"
-				header={t('archbase:Descrição')}
+				header={`${t('archbase:Descrição')}`}
 				size={800}
 				inputFilterType="text"
 			/>
@@ -615,7 +615,7 @@ export function ArchbaseSecurityView({
 				<ActionIcon variant="transparent" onClick={() => handleUserRemoveRow(row)}>
 					<IconTrashX size={20} color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
 				</ActionIcon>
-				<Tooltip withinPortal withArrow position="left" label={t('archbase:Edit permissions')}>
+				<Tooltip withinPortal withArrow position="left" label={`${t('archbase:Edit permissions')}`}>
 					<ActionIcon variant="transparent" onClick={handleOpenUserPermissionsModal}>
 						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
@@ -688,7 +688,7 @@ export function ArchbaseSecurityView({
 				<ActionIcon variant="transparent" onClick={() => handleGroupRemoveRow(row)}>
 					<IconTrashX size={20} color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
 				</ActionIcon>
-				<Tooltip withinPortal withArrow position="left" label={t('archbase:Edit permissions')}>
+				<Tooltip withinPortal withArrow position="left" label={`${t('archbase:Edit permissions')}`}>
 					<ActionIcon variant="transparent" onClick={handleOpenGroupPermissionsModal}>
 						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
@@ -773,7 +773,7 @@ export function ArchbaseSecurityView({
 				<ActionIcon variant="transparent" onClick={() => handleProfileRemoveRow(row)}>
 					<IconTrashX size={20} color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
 				</ActionIcon>
-				<Tooltip withinPortal withArrow position="left" label={t('archbase:Edit permissions')}>
+				<Tooltip withinPortal withArrow position="left" label={`${t('archbase:Edit permissions')}`}>
 					<ActionIcon variant="transparent" onClick={handleOpenProfilePermissionsModal}>
 						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
@@ -832,10 +832,10 @@ export function ArchbaseSecurityView({
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
 				<Group align="end" gap={'4px'} wrap="nowrap">
 					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddUserExecute}>
-						{t('archbase:New')}
+						{`${t('archbase:New')}`}
 					</Button>
 					<Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenUserPermissionsModal}>
-						{t('archbase:Edit permissions')}
+						{`${t('archbase:Edit permissions')}`}
 					</Button>
 				</Group>
 				<Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
@@ -848,10 +848,10 @@ export function ArchbaseSecurityView({
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
 				<Group align="end" gap={'4px'} wrap="nowrap">
 					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddGroupExecute}>
-						{t('archbase:New')}
+						{`${t('archbase:New')}`}
 					</Button>
 					<Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenGroupPermissionsModal}>
-						{t('archbase:Edit permissions')}
+						{`${t('archbase:Edit permissions')}`}
 					</Button>
 				</Group>
 				<Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
@@ -864,10 +864,10 @@ export function ArchbaseSecurityView({
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
 				<Group align="end" gap={'4px'} wrap='nowrap'>
 					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddProfileExecute}>
-						{t('archbase:New')}
+						{`${t('archbase:New')}`}
 					</Button>
 					<Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenProfilePermissionsModal}>
-						{t('archbase:Edit permissions')}
+						{`${t('archbase:Edit permissions')}`}
 					</Button>
 				</Group>
 				<Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
@@ -885,7 +885,7 @@ export function ArchbaseSecurityView({
 						leftSection={<IconTrashX />}
 						onClick={handleAccessTokenRevokeRow}
 					>
-						{t('archbase:Revoke')}
+						{`${t('archbase:Revoke')}`}
 					</Button>
 				</Group>
 			</Flex>
@@ -896,11 +896,11 @@ export function ArchbaseSecurityView({
 		<Paper style={{ height: height }}>
 			<Tabs variant='pills' value={activeTab} onChange={setActiveTab}>
 				<Tabs.List>
-					<Tabs.Tab value="users">{t('Usuários')}</Tabs.Tab>
-					<Tabs.Tab value="groups">{t('Grupos')}</Tabs.Tab>
-					<Tabs.Tab value="profiles">{t('Perfis')}</Tabs.Tab>
-					<Tabs.Tab value="resources">{t('Recursos')}</Tabs.Tab>
-					<Tabs.Tab value="accessTokens">{t('Tokens Acesso')}</Tabs.Tab>
+					<Tabs.Tab value="users">{`${t('Usuários')}`}</Tabs.Tab>
+					<Tabs.Tab value="groups">{`${t('Grupos')}`}</Tabs.Tab>
+					<Tabs.Tab value="profiles">{`${t('Perfis')}`}</Tabs.Tab>
+					<Tabs.Tab value="resources">{`${t('Recursos')}`}</Tabs.Tab>
+					<Tabs.Tab value="accessTokens">{`${t('Tokens Acesso')}`}</Tabs.Tab>
 				</Tabs.List>
 			</Tabs>
 			<Box
