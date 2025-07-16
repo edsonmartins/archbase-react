@@ -57,17 +57,14 @@ export default defineConfig({
         }
       }
     },
-    sourcemap: true,
-    minify: false,
+    sourcemap: false,
+    minify: 'esbuild',
     target: 'esnext'
   },
   esbuild: {
-      "keepNames": true,
-      "target": "esnext",
-      "minify": false,
-      "treeShaking": false
+      "target": "esnext"
   },
-  mode: 'development',
+  mode: 'production',
   test: {
     globals: true,
     environment: 'jsdom',
