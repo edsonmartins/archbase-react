@@ -4,5 +4,5 @@ export * from './ArchbaseSimpleAppContext';
 // Full context exports (restored for components package)
 export { ArchbaseAppContext, ArchbaseAppProvider, useArchbaseAppContext } from './ArchbaseAppContext';
 export type { ArchbaseAppContextValues, ArchbaseLanguage } from './ArchbaseAppContext';
-export { ArchbaseGlobalProvider, initArchbaseTranslation } from './ArchbaseGlobalProvider';
+export { ArchbaseGlobalProvider, initArchbaseTranslation, initArchbaseI18nEarly, syncSafeTranslate, getI18nextInstance, useArchbaseTranslation, archbaseI18next } from './ArchbaseGlobalProvider';
 export type { ArchbaseThemeOverride } from './ArchbaseGlobalProvider';

@@ -3,7 +3,7 @@ import { Grid, ScrollArea, Stack } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
 import { ArchbaseDataSource } from '@archbase/data'
 import { Modal, Button, Group } from '@mantine/core'
-import { t } from 'i18next'
+import { useArchbaseTranslation } from '@archbase/core';
 import { ProfileDto } from './SecurityDomain'
 import { ArchbaseEdit } from '@archbase/components'
 

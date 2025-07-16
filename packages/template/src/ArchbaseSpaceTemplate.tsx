@@ -17,7 +17,7 @@ type ColSpan = GridColProps['span'];
 import { useHotkeys, useUncontrolled } from '@mantine/hooks';
 import useComponentSize, { ComponentSize } from '@rehooks/component-size';
 import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { CSSProperties, Fragment, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useArchbaseAppContext } from '@archbase/core';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
@@ -347,6 +347,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 	});
 	useHotkeys([[debugOptions && debugOptions.debugLayoutHotKey, () => setDebug(!_debug)]]);
 	const appContext = useArchbaseAppContext();
+	const {t} = useArchbaseTranslation();
 
 	// V1/V2 Compatibility Pattern (basic setup)
 	const {
@@ -403,7 +404,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 											withCloseButton={true}
 											withBorder={true}
 											icon={<IconBug size="1.4rem" />}
-											title={t('WARNING')}
+											title={`${t('WARNING')}`}
 											titleColor="rgb(250, 82, 82)"
 											variant={variant ?? appContext.variant}
 											onClose={() => clearError && clearError()}

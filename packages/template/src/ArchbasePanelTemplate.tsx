@@ -5,7 +5,7 @@ import {
 } from '@archbase/components';
 import { ButtonVariant, Pagination } from '@mantine/core';
 import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import React, { CSSProperties, ReactNode, useMemo, useRef, useState } from 'react';
 import { useArchbaseAppContext } from '@archbase/core';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
@@ -119,6 +119,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 		activeFilterIndex: -1,
 		expandedFilter: false,
 	});
+	
 
 	// V1/V2 Compatibility Pattern
 	const {
@@ -138,7 +139,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 						id: '1',
 						icon: <IconPlus />,
 						color: 'green',
-						label: userActionsEnd.labelAdd ? userActionsEnd.labelAdd : t('archbase:New'),
+						label: userActionsEnd.labelAdd ? userActionsEnd.labelAdd : getI18nextInstance().t('archbase:New'),
 						executeAction: () => userActionsEnd && userActionsEnd!.onAddExecute,
 						enabled: true,
 						hint: 'Clique para criar.',
@@ -149,7 +150,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 						id: '2',
 						icon: <IconEdit />,
 						color: 'blue',
-						label: userActionsEnd.labelEdit ? userActionsEnd.labelEdit : t('archbase:Edit'),
+						label: userActionsEnd.labelEdit ? userActionsEnd.labelEdit : getI18nextInstance().t('archbase:Edit'),
 						executeAction: () => userActionsEnd && userActionsEnd!.onEditExecute,
 						enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
 						hint: 'Clique para editar.',
@@ -160,7 +161,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 						id: '3',
 						icon: <IconTrash />,
 						color: 'red',
-						label: userActionsEnd.labelRemove ? userActionsEnd.labelRemove : t('archbase:Remove'),
+						label: userActionsEnd.labelRemove ? userActionsEnd.labelRemove : getI18nextInstance().t('archbase:Remove'),
 						executeAction: () => userActionsEnd && userActionsEnd!.onRemoveExecute,
 						enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
 						hint: 'Clique para remover.',
@@ -171,7 +172,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 						id: '4',
 						icon: <IconEye />,
 						color: 'green',
-						label: userActionsEnd.labelView ? userActionsEnd.labelView : t('archbase:View'),
+						label: userActionsEnd.labelView ? userActionsEnd.labelView : getI18nextInstance().t('archbase:View'),
 						executeAction: () => userActionsEnd && userActionsEnd!.onView,
 						enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
 						hint: 'Clique para visualizar.',

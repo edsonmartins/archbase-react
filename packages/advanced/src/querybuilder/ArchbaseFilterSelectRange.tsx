@@ -1,6 +1,6 @@
 import { ActionIcon, Box, Button, ButtonVariant, Space, Tooltip } from '@mantine/core';
 import { IconCalendar, IconCalendarEvent, IconCalendarMonth, IconCalendarWeek } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import React, { Component } from 'react';
 import { Calendar, Value } from 'react-multi-date-picker';
 
@@ -76,7 +76,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 					}}
 				>
 					<div style={{ display: 'flex', alignItems: 'center' }}>
-						<Tooltip withinPortal withArrow label={`${t('archbase:Intervalo')}`}>
+						<Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Intervalo')}`}>
 							<ActionIcon
 								variant={this.props.variant}
 								size="lg"
@@ -87,7 +87,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 								<IconCalendarEvent size="1.4rem" />
 							</ActionIcon>
 						</Tooltip>
-						<Tooltip withinPortal withArrow label={`${t('archbase:Mês')}`}>
+						<Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Mês')}`}>
 							<ActionIcon
 								variant={this.props.variant}
 								size="lg"
@@ -98,7 +98,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 								<IconCalendarMonth size="1.4rem" />
 							</ActionIcon>
 						</Tooltip>
-						<Tooltip withinPortal withArrow label={`${t('archbase:Semana')}`}>
+						<Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Semana')}`}>
 							<ActionIcon
 								variant={this.props.variant}
 								size="lg"
@@ -109,7 +109,7 @@ class ArchbaseFilterSelectRange extends Component<ArchbaseFilterSelectRangeProps
 								<IconCalendarWeek size="1.4rem" />
 							</ActionIcon>
 						</Tooltip>
-						<Tooltip withinPortal withArrow label={`${t('archbase:Dia')}`}>
+						<Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Dia')}`}>
 							<ActionIcon
 								variant={this.props.variant}
 								size="lg"

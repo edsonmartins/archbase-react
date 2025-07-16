@@ -1,7 +1,7 @@
 import { Input } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import React, { CSSProperties, useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import SunEditor from 'suneditor-react';
 import { UploadBeforeHandler, UploadBeforeReturn, UploadInfo } from 'suneditor-react/dist/types/upload';
 import 'suneditor/dist/css/suneditor.min.css';
@@ -188,7 +188,7 @@ export function ArchbaseRichTextEdit<T, ID>({
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 		console.log(`[ArchbaseRichTextEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
-	const { i18n } = useTranslation();
+	const { i18n } = useArchbaseTranslation();
 	const [currentValue, setCurrentValue] = useState<string | undefined>(
 		getInitialValue(value, dataSource, dataField, disabledBase64Convertion),
 	);

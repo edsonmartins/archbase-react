@@ -43,7 +43,7 @@ import {
   SortField
 } from './ArchbaseFilterCommons'
 import { IconSortDescendingLetters } from '@tabler/icons-react'
-import { t } from 'i18next'
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { DebouncedTextInput } from './ArchbaseQueryBuilder'
 import { ArchbaseAppContext, ArchbaseError, ltrim } from '@archbase/core'
 import { ArchbaseList, ArchbaseListContext } from '@archbase/components'
@@ -856,7 +856,7 @@ export class CustomSortItem<T, ID> extends Component<
         key={key}
       >
         <Checkbox
-          label={<Text color={color}>{t(this.props.recordData.label)}</Text>}
+          label={<Text color={color}>{getI18nextInstance().t(this.props.recordData.label)}</Text>}
           checked={this.state.selected}
           style={{ cursor: 'pointer' }}
           onChange={this.onCheckboxChange}

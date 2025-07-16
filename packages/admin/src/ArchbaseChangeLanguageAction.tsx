@@ -1,5 +1,5 @@
 import { ActionIcon, Menu, useMantineColorScheme } from '@mantine/core';
-import i18next from 'i18next';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { ARFlag, BOFlag, BRFlag, CLFlag, COFlag, CRFlag, CUFlag, DOFlag, ECFlag, ESFlag, GTFlag, HNFlag, MXFlag, NIFlag, PAFlag, PEFlag, PYFlag, SVFlag, USFlag, UYFlag, VEFlag } from 'mantine-flagpack';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useArchbaseAppContext } from '@archbase/core';
@@ -8,18 +8,18 @@ export const ArchbaseChangeLanguageAction = () => {
 	const context = useArchbaseAppContext();
 	const { colorScheme } = useMantineColorScheme();
 	const dark = colorScheme === 'dark';
-	const [currentLanguage, setCurrentLanguage] = useState(i18next.language);
+	const [currentLanguage, setCurrentLanguage] = useState(getI18nextInstance().language);
 
 	useEffect(() => {
 		const handleLanguageChange = (lng: string) => {
 			setCurrentLanguage(lng);
 		};
 
-		i18next.on('languageChanged', handleLanguageChange);
+		getI18nextInstance().on('languageChanged', handleLanguageChange);
 
 		// Cleanup listener on unmount
 		return () => {
-			i18next.off('languageChanged', handleLanguageChange);
+			getI18nextInstance().off('languageChanged', handleLanguageChange);
 		};
 	}, []);
 
@@ -96,13 +96,13 @@ export const ArchbaseChangeLanguageAction = () => {
 	};
 
 	const handleChangeLanguage = (language: string) => {
-		i18next.changeLanguage(language);
+		getI18nextInstance().changeLanguage(language);
 	};
 
 	return (
 		<Menu shadow="md" width={200} position="bottom-end">
 			<Menu.Target>
-				<ActionIcon variant="transparent" color={dark ? 'white' : 'blue'} title={i18next.t('toggleLanguage')}>
+				<ActionIcon variant="transparent" color={dark ? 'white' : 'blue'} title={getI18nextInstance().t('toggleLanguage')}>
 					{getIconByLanguage(currentLanguage)}
 				</ActionIcon>
 			</Menu.Target>

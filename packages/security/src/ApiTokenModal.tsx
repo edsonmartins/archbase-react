@@ -9,7 +9,7 @@ import { DateTimePicker, DateValue } from '@mantine/dates';
 import { useFocusTrap } from '@mantine/hooks';
 import { ARCHBASE_IOC_API_TYPE, builder, convertDateToISOString, emit, processErrorMessage, OptionsResult, isBase64Validate } from '@archbase/core';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
-import { t } from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { useState } from 'react';
 import { NO_USER } from './ArchbaseSecurityView';
 import { ArchbaseUserService } from './ArchbaseUserService';

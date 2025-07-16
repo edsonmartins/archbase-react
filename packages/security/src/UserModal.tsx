@@ -7,7 +7,7 @@ import { ArchbaseNotifications } from '@archbase/components'
 // import { ArchbaseFormModalTemplate } from '@archbase/components' // Temporarily disabled
 import { Grid, Group, Input, ScrollArea, Space, Stack, Text, Modal, Button } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
-import { t } from 'i18next'
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { useEffect, useState } from 'react'
 import { ArchbaseDualListSelector } from './ArchbaseDualListSelector'
 import { ArchbaseGroupService } from './ArchbaseGroupService'

@@ -1,4 +1,4 @@
-import { ArchbaseAppContext, processDetailErrorMessage, processErrorMessage } from '@archbase/core';
+import { ArchbaseAppContext, getI18nextInstance, processDetailErrorMessage, processErrorMessage } from '@archbase/core';
 import { useArchbaseTheme } from '@archbase/core';
 import { ArchbaseDialog } from '@archbase/components';
 import { ActionIcon, Menu, Popover, TextInput, Tooltip, useMantineColorScheme } from '@mantine/core';
@@ -14,7 +14,7 @@ import {
 } from '@tabler/icons-react';
 import { IconPrinter } from '@tabler/icons-react';
 import { endOfMonth } from 'date-fns';
-import { t } from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import { uniqueId } from 'lodash';
 import React, { Component, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
@@ -85,6 +85,7 @@ export const DebouncedTextInput = ({
 	const isUserAction = useRef(false);
 	const theme = useArchbaseTheme();
 	const { colorScheme } = useMantineColorScheme();
+	
 	useEffect(() => {
 		setValue(initialValue);
 	}, [initialValue]);
@@ -374,8 +375,8 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 			this.state.currentFilter.id !== NEW_FILTER_INDEX
 		) {
 			ArchbaseDialog.showConfirmDialogYesNo(
-				`${t('archbase:Confirme')}`,
-				`${t('archbase:Deseja salvar o Filtro ?')}`,
+				`${getI18nextInstance().t('archbase:Confirme')}`,
+				`${getI18nextInstance().t('archbase:Deseja salvar o Filtro ?')}`,
 				() => {
 					const currentFilter = this.state.currentFilter;
 					currentFilter.filter.quickFilterFieldsText = getQuickFilterFields(currentFilter, getFields(this.props));
@@ -387,7 +388,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 						this.props.persistenceDelegator.saveFilter(filter, (error: any) => {
 							if (error) {
 								ArchbaseDialog.showErrorWithDetails(
-									`${t('archbase:Warning')}`,
+									`${getI18nextInstance().t('archbase:Warning')}`,
 									processErrorMessage(error),
 									processDetailErrorMessage(error),
 								);
@@ -400,9 +401,9 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 		} else if ((itemId === 'mnuItemSalvar' || itemId === 'mnuItemSalvarComo') && this.state.currentFilter) {
 			this.inputValue = '';
 			ArchbaseDialog.showInputDialog(
-				`${t('archbase:Salvar como...')}`,
-				`${t('archbase:Informe um nome para o fitro...')}`,
-				`${t('archbase:Confirme')}`,
+				`${getI18nextInstance().t('archbase:Salvar como...')}`,
+				`${getI18nextInstance().t('archbase:Informe um nome para o fitro...')}`,
+				`${getI18nextInstance().t('archbase:Confirme')}`,
 				(input: any) => (this.inputValue = input.target.value),
 				() => {
 					const currentFilter = this.state.currentFilter;
@@ -422,7 +423,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 					this.props.persistenceDelegator.addNewFilter(newFilter, (error: any, id: any) => {
 						if (error) {
 							ArchbaseDialog.showErrorWithDetails(
-								`${t('archbase:Warning')}`,
+								`${getI18nextInstance().t('archbase:Warning')}`,
 								processErrorMessage(error),
 								processDetailErrorMessage(error),
 							);
@@ -496,8 +497,8 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 
 	removeFilter = () => {
 		ArchbaseDialog.showConfirmDialogYesNo(
-			`${t('archbase:Confirme')}`,
-			`${t('archbase:Deseja remover o Filtro ?')}`,
+			`${getI18nextInstance().t('archbase:Confirme')}`,
+			`${getI18nextInstance().t('archbase:Deseja remover o Filtro ?')}`,
 			() => {
 				const currentFilter = this.state.currentFilter;
 				const filter: IQueryFilterEntity | undefined = this.props.persistenceDelegator.getFilterById(currentFilter.id);
@@ -505,7 +506,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 					this.props.persistenceDelegator.removeFilterBy(filter, (error: any) => {
 						if (error && error !== null) {
 							ArchbaseDialog.showErrorWithDetails(
-								`${t('archbase:Warning')}`,
+								`${getI18nextInstance().t('archbase:Warning')}`,
 								processErrorMessage(error),
 								processDetailErrorMessage(error),
 							);
@@ -949,7 +950,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 						withinPortal={true}
 					>
 						<Popover.Target>
-							<Tooltip withinPortal withArrow label={`${t('archbase:Selecionar período')}`}>
+							<Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Selecionar período')}`}>
 								<ActionIcon
 									variant={this.props.variant}
 									size="lg"
@@ -981,7 +982,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 						withinPortal={true}
 					>
 						<Popover.Target>
-							<Tooltip withinPortal withArrow label={`${t('archbase:Selecionar campos filtro rápido')}`}>
+							<Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Selecionar campos filtro rápido')}`}>
 								<ActionIcon
 									variant={this.props.variant}
 									size="lg"
@@ -1021,7 +1022,7 @@ export class ArchbaseQueryBuilder extends Component<ArchbaseQueryBuilderProps, A
 							withinPortal={true}
 						>
 							<Popover.Target>
-								<Tooltip withinPortal withArrow label={`${t('archbase:Filtro avançado')}`}>
+								<Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Filtro avançado')}`}>
 									<ActionIcon
 										variant={this.props.variant}
 										ref={this.toggleFilterButtonRef}

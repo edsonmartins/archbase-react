@@ -9,7 +9,7 @@ import { SchemaArray } from './schema-array';
 import { SchemaObject } from './schema-object';
 import { SchemaRoot } from './schema-root';
 import { isValidSchemaValidator } from './utils';
-import { useTranslation } from 'react-i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 
 export * from '../ArchbaseJsonSchemaEditor.types';
 
@@ -49,7 +49,7 @@ export const ArchbaseJsonSchemaEditor = ({
 		finalValue: initialSchema as Schema2,
 		onChange: (value) => onRootSchemaChange(value.jsonSchema, isValidSchemaValidator(value.jsonSchema)),
 	});
-	const { ready } = useTranslation();
+	const { ready } = useArchbaseTranslation();
 
 	const handleChange = (path: string, value: string, operation: SetNestedObjectValueOperation) => {
 		const newState = produce(internalRootSchema, (draft: any) => {

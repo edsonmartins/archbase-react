@@ -2,7 +2,7 @@ import { ArchbaseForm } from '@archbase/layout';
 import { ArchbaseEdit } from '@archbase/components';
 import { ArchbaseDialog } from '@archbase/components';
 import { Button, ButtonVariant, Checkbox, Group, Modal } from '@mantine/core';
-import { t } from 'i18next';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import React, { useState } from 'react';
 
 interface ArchbaseSaveFilterProps {
@@ -67,7 +67,7 @@ export const ArchbaseSaveFilter: React.FC<ArchbaseSaveFilterProps> = ({
 				/>
 				<Checkbox
 					onChange={(event: any) => setShared(event.currentTarget.checked)}
-					label={t('archbase:Filtro compartilhado ?')}
+					label={getI18nextInstance().t('archbase:Filtro compartilhado ?')}
 				/>
 			</ArchbaseForm>
 		</Modal>

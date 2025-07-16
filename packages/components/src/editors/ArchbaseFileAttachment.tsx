@@ -11,7 +11,7 @@ import {
   IconX
 } from '@tabler/icons-react'
 import { isBase64 } from '@archbase/core'
-import { t } from 'i18next'
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { useEffect, useState } from 'react'
 
 export interface Attachment {
@@ -70,6 +70,7 @@ export const ArchbaseFileAttachment: React.FC<ArchbaseFileAttachmentProps> = ({
 }) => {
   const [selectedAttachmentIndex, setSelectedAttachmentIndex] = useState<number | null>(null)
   const theme = useArchbaseTheme()
+  const { t } = useArchbaseTranslation()
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -232,7 +233,7 @@ export const ArchbaseFileAttachment: React.FC<ArchbaseFileAttachmentProps> = ({
                   {formatFileSize(attachment.size)}
                 </Text>
               }
-              <Tooltip withinPortal withArrow label={t('archbase:Remover')}>
+              <Tooltip withinPortal withArrow label={`${t('archbase:Remover')}`}>
                 <ActionIcon
                   color="red"
                   style={{

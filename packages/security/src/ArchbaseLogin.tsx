@@ -1,8 +1,7 @@
 import { ReactNode, useState } from "react";
 import { Anchor, Button, Card, Checkbox, Divider, Group, PasswordInput, Text, TextInput } from "@mantine/core";
 import { useFocusTrap } from "@mantine/hooks";
-import { useArchbasePasswordRemember } from "@archbase/core";
-import { t } from "i18next";
+import { useArchbasePasswordRemember, useArchbaseTranslation } from "@archbase/core";
 
 export interface ArchbaseLoginProps {
   onLogin: (username: string, password: string, rememberMe: boolean) => Promise<void>
@@ -21,6 +20,7 @@ export function ArchbaseLogin({
   loginPlaceholder,
   afterInputs,
 }: ArchbaseLoginProps) {
+  const { t } = useArchbaseTranslation();
   const focusTrapRef = useFocusTrap();
   
   const {

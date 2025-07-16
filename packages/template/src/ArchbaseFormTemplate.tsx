@@ -12,7 +12,7 @@ import {
 import { useForceUpdate } from '@mantine/hooks';
 import { IconBug, IconDeviceFloppy } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import React, { useRef, useState } from 'react';
 import { useArchbaseAppContext } from '@archbase/core';
 import { processErrorMessage } from '@archbase/core';
@@ -164,7 +164,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 					withCloseButton={true}
 					withBorder={true}
 					icon={<IconBug size="1.4rem" />}
-					title={t('WARNING')}
+					title={getI18nextInstance().t('WARNING')}
 					titleColor="rgb(250, 82, 82)"
 					variant={variant ?? appContext.variant}
 					onClose={handleCloseAlert}
@@ -185,18 +185,18 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 								disabled={dataSource && dataSource.isBrowsing()}
 								variant={variant ?? appContext.variant}
 								color="green"
-							>{`${t('Ok')}`}</Button>
+							>{`${getI18nextInstance().t('Ok')}`}</Button>
 							<Button
 								leftSection={<IconX />}
 								onClick={handleCancel}
 								disabled={dataSource && dataSource.isBrowsing()}
 								variant={variant ?? appContext.variant}
 								color="red"
-							>{`${t('Cancel')}`}</Button>
+							>{`${getI18nextInstance().t('Cancel')}`}</Button>
 						</Group>
 					) : (
 						<Group gap="md">
-							<Button leftSection={<IconX />} onClick={handleCancel} variant={variant ?? appContext.variant}>{`${t(
+							<Button leftSection={<IconX />} onClick={handleCancel} variant={variant ?? appContext.variant}>{`${getI18nextInstance().t(
 								'Close',
 							)}`}</Button>
 						</Group>

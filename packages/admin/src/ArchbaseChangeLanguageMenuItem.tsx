@@ -1,14 +1,12 @@
 import { ActionIcon, Button, Group, Menu, Space, useMantineColorScheme } from '@mantine/core';
-import i18next from 'i18next';
+import { useArchbaseTranslation, useArchbaseAppContext, getI18nextInstance } from '@archbase/core';
 import { BRFlag, ESFlag, USFlag } from 'mantine-flagpack';
 import React, { Fragment, ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useArchbaseAppContext } from '@archbase/core';
 
 export const ArchbaseChangeLanguageMenuItem = () => {
 	const context = useArchbaseAppContext();
 	const { colorScheme } = useMantineColorScheme();
-	const { i18n } = useTranslation();
+	const { t, i18n } = useArchbaseTranslation();
 	const dark = colorScheme === 'dark';
 
 	const getIconByLanguage = (language: string): ReactNode => {
@@ -52,7 +50,7 @@ export const ArchbaseChangeLanguageMenuItem = () => {
 					variant="transparent"
 					fw={400}
 					gap={4}
-					title={i18next.t('archbase:toggleLanguage')}>
+					title={getI18nextInstance().t('archbase:toggleLanguage')}>
 					{getIconByLanguage(i18n.language)}
 					{`${context.languages.find(language => language.lang === i18n.language)?.name ?? "Português"}`}
 				</Group>

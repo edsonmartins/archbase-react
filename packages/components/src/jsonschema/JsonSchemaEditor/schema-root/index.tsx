@@ -1,6 +1,6 @@
 import { ActionIcon, Checkbox, Flex, FlexProps, Input, Select, TextInput, Tooltip } from '@mantine/core';
 import { IconCirclePlus } from '@tabler/icons-react';
-import i18next from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { useContext } from 'react';
 import { JSONSchema7, JSONSchema7TypeName } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
@@ -18,13 +18,14 @@ export const SchemaRoot = ({
 	isReadOnly,
 }: SchemaArrayProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
+	const { t } = useArchbaseTranslation();
 	return (
 		<>
 			<Flex data-testid="jsonschema-editor" direction="row" align="center" wrap="nowrap" mt={2} mr={5}>
-				<Input disabled placeholder={`${i18next.t('archbase:root')}`} m={2} />
+				<Input disabled placeholder={`${t('archbase:root')}`} m={2} />
 				<Tooltip
-					aria-label={`${i18next.t('archbase:All Required')}`}
-					label={`${i18next.t('archbase:All Required')}`}
+					aria-label={`${t('archbase:All Required')}`}
+					label={`${t('archbase:All Required')}`}
 					position="top"
 				>
 					<Checkbox
@@ -40,7 +41,7 @@ export const SchemaRoot = ({
 					value={jsonSchema.type.toString()}
 					size="sm"
 					m={2}
-					placeholder={`${i18next.t('archbase:Choose root data type')}`}
+					placeholder={`${t('archbase:Choose root data type')}`}
 					onChange={(value: string) => {
 						const newSchema = handleTypeChange(value as JSONSchema7TypeName, false);
 						handleChange(`${path}`, newSchema, 'ASSIGN_VALUE');
@@ -55,7 +56,7 @@ export const SchemaRoot = ({
 					readOnly={isReadOnly}
 					size="sm"
 					m={2}
-					placeholder={`${i18next.t('archbase:Add Title')}`}
+					placeholder={`${t('archbase:Add Title')}`}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.title`, event.currentTarget.value, 'ASSIGN_VALUE');
 					}}
@@ -65,7 +66,7 @@ export const SchemaRoot = ({
 					readOnly={isReadOnly}
 					size="sm"
 					m={2}
-					placeholder={`${i18next.t('archbase:Add Description')}`}
+					placeholder={`${t('archbase:Add Description')}`}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.description`, event.currentTarget.value, 'ASSIGN_VALUE');
 					}}
@@ -74,8 +75,8 @@ export const SchemaRoot = ({
 				{jsonSchema.type === 'object' && (
 					<>
 						<Tooltip
-							aria-label={`${i18next.t('archbase:Add Child Node')}`}
-							label={`${i18next.t('archbase:Add Child Node')}`}
+							aria-label={`${t('archbase:Add Child Node')}`}
+							label={`${t('archbase:Add Child Node')}`}
 							position="top"
 						>
 							<ActionIcon
@@ -85,7 +86,7 @@ export const SchemaRoot = ({
 								mb={2}
 								mr={2}
 								color="green"
-								aria-label={`${i18next.t('archbase:Add Child Node')}`}
+								aria-label={`${t('archbase:Add Child Node')}`}
 								onClick={() => {
 									const fieldName = `field_${random()}`;
 									handleChange(`${path}.properties.${fieldName}`, getDefaultSchema(DataType.string), 'ASSIGN_VALUE');

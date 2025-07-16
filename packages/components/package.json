@@ -1,6 +1,6 @@
 {
   "name": "@archbase/components",
-  "version": "3.0.14",
+  "version": "3.0.28",
   "description": "UI Components for Archbase React v3 - Form editors, data visualization, and business components",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -20,7 +20,7 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "src"
   ],
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build --watch",
@@ -132,5 +132,8 @@
     "vite": "^6.0.3",
     "vitest": "^2.1.8",
     "sass-embedded": "^1.80.7"
+  },
+  "publishConfig": {
+    "registry": "http://192.168.1.110:4873"
   }
 }

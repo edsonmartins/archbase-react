@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Modal, Stack, Group, Button, TextInput, Checkbox, Select, Box, ScrollArea } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import { PrintConfig } from './print-data';
 
 // Props do modal de impressão
@@ -20,7 +20,7 @@ export function PrintModal({
   columns,
   defaultConfig = {}
 }: PrintModalProps) {
-  const { t } = useTranslation();
+  const { t } = useArchbaseTranslation();
   const [config, setConfig] = useState<PrintConfig>({
     orientation: 'landscape',
     pageSize: 'A4',
@@ -52,7 +52,7 @@ export function PrintModal({
     <Modal 
       opened={opened} 
       onClose={onClose} 
-      title={t('Configuração de Impressão')} 
+      title={`${t('Configuração de Impressão')}`} 
       size="lg"
       styles={{
         body: {
@@ -64,20 +64,20 @@ export function PrintModal({
       <ScrollArea.Autosize mah="70vh" p="md" offsetScrollbars>
         <Stack gap="md" pb={8}>
           <TextInput
-            label={t('Título')}
+            label={`${t('Título')}`}
             value={config.title}
             onChange={(e) => setConfig((prev) => ({ ...prev, title: e.target.value }))}
           />
 
           <TextInput
-            label={t('Subtítulo')}
+            label={`${t('Subtítulo')}`}
             value={config.subtitle}
             onChange={(e) => setConfig((prev) => ({ ...prev, subtitle: e.target.value }))}
           />
 
           <Group grow>
             <Select
-              label={t('Tamanho da Página')}
+              label={`${t('Tamanho da Página')}`}
               value={config.pageSize}
               onChange={handlePageSizeChange}
               data={[
@@ -88,21 +88,21 @@ export function PrintModal({
             />
 
             <Select
-              label={t('Orientação')}
+              label={`${t('Orientação')}`}
               value={config.orientation}
               onChange={handleOrientationChange}
               data={[
-                { value: 'portrait', label: t('Retrato') },
-                { value: 'landscape', label: t('Paisagem') }
+                { value: 'portrait', label: `${t('Retrato')}` },
+                { value: 'landscape', label: `${t('Paisagem')}` }
               ]}
             />
           </Group>
 
           <Box>
-            <Box mb="xs">{t('Opções')}</Box>
+            <Box mb="xs">{`${t('Opções')}`}</Box>
             <Stack gap="xs">
               <Checkbox
-                label={t('Mostrar Cabeçalho')}
+                label={`${t('Mostrar Cabeçalho')}`}
                 checked={config.showHeader}
                 onChange={(e) =>
                   setConfig((prev) => ({ ...prev, showHeader: e.currentTarget.checked }))
@@ -110,14 +110,14 @@ export function PrintModal({
               />
               {config.showHeader && (
                 <TextInput
-                  label={t('Texto do Cabeçalho')}
+                  label={`${t('Texto do Cabeçalho')}`}
                   value={config.headerText}
                   onChange={(e) => setConfig((prev) => ({ ...prev, headerText: e.target.value }))}
                 />
               )}
 
               <Checkbox
-                label={t('Mostrar Rodapé')}
+                label={`${t('Mostrar Rodapé')}`}
                 checked={config.showFooter}
                 onChange={(e) =>
                   setConfig((prev) => ({ ...prev, showFooter: e.currentTarget.checked }))
@@ -125,14 +125,14 @@ export function PrintModal({
               />
               {config.showFooter && (
                 <TextInput
-                  label={t('Texto do Rodapé')}
+                  label={`${t('Texto do Rodapé')}`}
                   value={config.footerText}
                   onChange={(e) => setConfig((prev) => ({ ...prev, footerText: e.target.value }))}
                 />
               )}
 
               <Checkbox
-                label={t('Mostrar Números das Páginas')}
+                label={`${t('Mostrar Números das Páginas')}`}
                 checked={config.showPageNumbers}
                 onChange={(e) =>
                   setConfig((prev) => ({
@@ -143,7 +143,7 @@ export function PrintModal({
               />
 
               <Checkbox
-                label={t('Mostrar Data')}
+                label={`${t('Mostrar Data')}`}
                 checked={config.showDate}
                 onChange={(e) =>
                   setConfig((prev) => ({ ...prev, showDate: e.currentTarget.checked }))
@@ -153,7 +153,7 @@ export function PrintModal({
           </Box>
 
           <Box>
-            <Box mb="xs">{t('Selecionar Colunas')}</Box>
+            <Box mb="xs">{`${t('Selecionar Colunas')}`}</Box>
             <Stack gap="xs">
               {columns.map((column) => (
                 <Checkbox
@@ -191,9 +191,9 @@ export function PrintModal({
         }}
       >
         <Button variant="light" onClick={onClose}>
-          {t('Cancelar')}
+          {`${t('Cancelar')}`}
         </Button>
-        <Button onClick={handlePrint}>{t('Imprimir')}</Button>
+        <Button onClick={handlePrint}>{`${t('Imprimir')}`}</Button>
       </Group>
     </Modal>
   );

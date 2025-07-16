@@ -1,6 +1,6 @@
 import React from 'react';
 import { Group, Select, Text, ActionIcon, Pagination, Box } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { PaginationProps } from '../../types';
 
@@ -19,7 +19,8 @@ export const GridPagination: React.FC<PaginationProps> = ({
   showRecordInfo = true,
   labels
 }) => {
-  const { t } = useTranslation();
+  const { t } = useArchbaseTranslation();
+  const tString = (key: string) => String(t(key));
   
   // Garantir que os valores sejam números válidos
   const safePageSize = isNaN(pageSize) || pageSize <= 0 ? 10 : pageSize;
@@ -77,9 +78,9 @@ export const GridPagination: React.FC<PaginationProps> = ({
       {showRecordInfo && (
         <Text size="sm" color="dimmed">
           {safeTotalRecords === 0 ? (
-            t('archbase:Nenhum registro')
+            tString('archbase:Nenhum registro')
           ) : (
-            `${recordRange.start}-${recordRange.end} ${labels.of || t('archbase:de')} ${safeTotalRecords} ${labels.totalRecords || t('archbase:registros')}`
+            `${recordRange.start}-${recordRange.end} ${labels.of || tString('archbase:de')} ${safeTotalRecords} ${labels.totalRecords || tString('archbase:registros')}`
           )}
         </Text>
       )}
@@ -88,7 +89,7 @@ export const GridPagination: React.FC<PaginationProps> = ({
         {/* Seletor de tamanho de página */}
         {showPageSizeSelector && (
           <Group gap="xs">
-            <Text size="sm" color="dimmed">{labels.pageSize || t('archbase:Registros por página')}:</Text>
+            <Text size="sm" color="dimmed">{labels.pageSize || tString('archbase:Registros por página')}:</Text>
             <Select
               size="xs"
               value={safePageSize.toString()}

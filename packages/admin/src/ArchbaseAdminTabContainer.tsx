@@ -1,10 +1,10 @@
 import { useMantineColorScheme } from '@mantine/core';
 import useComponentSize from '@rehooks/component-size';
-import i18next from 'i18next';
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { matchPath } from 'react-router';
 import { ArchbaseAdvancedTabItem, ArchbaseAdvancedTabs } from '@archbase/layout';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { ArchbaseAdminLayoutContext, ArchbaseAdminLayoutContextValue } from './ArchbaseAdminLayout.context';
 import { ArchbaseNavigationContext, useArchbaseNavigationContext } from './ArchbaseNavigation.context';
 import { ArchbaseNavigationItem, ArchbaseTabItem } from './types';
@@ -102,7 +102,7 @@ export function ArchbaseAdminTabContainer({
 					const found = matchPath({ path: subItem.link || '' }, location.pathname);
 					if (found) {
 						result.item = subItem;
-						result.title = `${i18next.t(subItem.label)}`;
+						result.title = `${getI18nextInstance().t(subItem.label)}`;
 						result.redirect = subItem.redirect;
 						result.customTitle = subItem.customTitle;
 					}
@@ -113,7 +113,7 @@ export function ArchbaseAdminTabContainer({
 					if (found.params && Object.keys(found.params).length > 0) {
 						result.title = `${found.params[Object.keys(found.params)[0]]}`;
 					} else {
-						result.title = `${i18next.t(item.label)}`;
+						result.title = `${getI18nextInstance().t(item.label)}`;
 					}
 					result.item = item;
 					result.redirect = item.redirect;

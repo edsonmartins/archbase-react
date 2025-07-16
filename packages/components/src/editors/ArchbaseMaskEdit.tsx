@@ -17,7 +17,7 @@ import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
-import { t } from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 
 export enum MaskPattern {
 	CNPJ = '00.000.000/0000-00',
@@ -143,6 +143,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	const { dataSource, dataField, onChangeValue, onFocusEnter, onFocusExit, saveWithMask, error } = props;
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const specialCharactersLength = useRef(0);
+	const { t } = useArchbaseTranslation();
 
 	useEffect(() => {
 		setInternalError(undefined);

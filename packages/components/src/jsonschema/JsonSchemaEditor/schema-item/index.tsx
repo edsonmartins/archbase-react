@@ -1,7 +1,7 @@
 import { getPathDepthLevel } from '@archbase/core';
 import { ActionIcon, Checkbox, Flex, FlexProps, Input, Select, Tooltip } from '@mantine/core';
 import { IconCirclePlus, IconSettings, IconTrash } from '@tabler/icons-react';
-import i18next from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { useContext, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { JSONSchema7, JSONSchema7TypeName } from '../../ArchbaseJsonSchemaEditor.types';
@@ -31,6 +31,7 @@ export const SchemaItem = ({
 	isReadOnly,
 }: SchemaItemProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
+	const { t } = useArchbaseTranslation();
 	const [error, setError] = useState<string | undefined>();
 	const required = jsonSchema.required as string[];
 	const item: JSONSchema7 = jsonSchema.properties[name] as JSONSchema7;
@@ -44,7 +45,7 @@ export const SchemaItem = ({
 	const debounced = useDebouncedCallback(
 		(newValue: string) => {
 			if (jsonSchema.properties && jsonSchema.properties[newValue]) {
-				setError(`${i18next.t('archbase:Duplicate Properties, the property already exists')}`);
+				setError(`${t('archbase:Duplicate Properties, the property already exists')}`);
 			} else {
 				const oldName = name;
 				const proptoupdate = newValue;
@@ -69,7 +70,7 @@ export const SchemaItem = ({
 						defaultValue={name}
 						size="sm"
 						m={2}
-						placeholder={`${i18next.t('archbase:Enter property name')}`}
+						placeholder={`${t('archbase:Enter property name')}`}
 						onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 							debounced(evt.target.value);
 						}}
@@ -94,7 +95,7 @@ export const SchemaItem = ({
 					value={item.type.toString()}
 					size="sm"
 					m={2}
-					placeholder={`${i18next.t('archbase:Choose data type')}`}
+					placeholder={`${t('archbase:Choose data type')}`}
 					onChange={(value: string) => {
 						const newSchema = handleTypeChange(value as JSONSchema7TypeName, false);
 						handleChange(`${itemPath}`, newSchema, 'ASSIGN_VALUE');
@@ -106,7 +107,7 @@ export const SchemaItem = ({
 					value={item.title || ''}
 					size="sm"
 					m={2}
-					placeholder={`${i18next.t('archbase:Add Title')}`}
+					placeholder={`${t('archbase:Add Title')}`}
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${itemPath}.title`, evt.target.value, 'ASSIGN_VALUE');
 					}}
@@ -116,7 +117,7 @@ export const SchemaItem = ({
 					value={item.description || ''}
 					size="sm"
 					m={2}
-					placeholder={`${i18next.t('archbase:Add Description')}`}
+					placeholder={`${t('archbase:Add Description')}`}
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${itemPath}.description`, evt.target.value, 'ASSIGN_VALUE');
 					}}
@@ -124,8 +125,8 @@ export const SchemaItem = ({
 
 				{item.type !== 'object' && item.type !== 'array' && (
 					<Tooltip
-						aria-label={`${i18next.t('archbase:Advanced Settings')}`}
-						label={`${i18next.t('archbase:Advanced Settings')}`}
+						aria-label={`${t('archbase:Advanced Settings')}`}
+						label={`${t('archbase:Advanced Settings')}`}
 						position="top"
 					>
 						<ActionIcon
@@ -134,7 +135,7 @@ export const SchemaItem = ({
 							mt={2}
 							mb={2}
 							ml={1}
-							aria-label={`${i18next.t('archbase:Advanced Settings')}`}
+							aria-label={`${t('archbase:Advanced Settings')}`}
 							onClick={() => {
 								showadvanced(name);
 							}}
@@ -145,8 +146,8 @@ export const SchemaItem = ({
 				)}
 
 				<Tooltip
-					aria-label={`${i18next.t('archbase:Remove Node')}`}
-					label={`${i18next.t('archbase:Remove Node')}`}
+					aria-label={`${t('archbase:Remove Node')}`}
+					label={`${t('archbase:Remove Node')}`}
 					position="top"
 				>
 					<ActionIcon
@@ -156,7 +157,7 @@ export const SchemaItem = ({
 						mb={2}
 						ml={1}
 						color="red"
-						aria-label={`${i18next.t('archbase:Remove Node')}`}
+						aria-label={`${t('archbase:Remove Node')}`}
 						onClick={() => {
 							const updatedState = deleteKey(name, JSON.parse(JSON.stringify(jsonSchema.properties)));
 							handleChange(`${parentPath}.properties`, updatedState, 'ASSIGN_VALUE');
@@ -176,8 +177,8 @@ export const SchemaItem = ({
 					/>
 				) : (
 					<Tooltip
-						aria-label={`${i18next.t('archbase:Add Sibling Node')}`}
-						label={`${i18next.t('archbase:Add Sibling Node')}`}
+						aria-label={`${t('archbase:Add Sibling Node')}`}
+						label={`${t('archbase:Add Sibling Node')}`}
 						position="top"
 					>
 						<ActionIcon
@@ -188,7 +189,7 @@ export const SchemaItem = ({
 							mr={2}
 							variant="subtle"
 							color="green"
-							aria-label={`${i18next.t('archbase:Add Sibling Node')}`}
+							aria-label={`${t('archbase:Add Sibling Node')}`}
 							onClick={() => {
 								if (jsonSchema.properties) {
 									const fieldName = `field_${random()}`;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Group, ActionIcon, Tooltip, Menu } from '@mantine/core';
 import { IconRefresh, IconDownload, IconPrinter, IconSearch } from '@tabler/icons-react';
-import { useTranslation } from 'react-i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import { useArchbaseTheme } from '@archbase/core';
 
 
@@ -35,7 +35,7 @@ export const GridToolbar: React.FC<GridToolbarProps> = ({
   toolbarAlignment = 'right', // Mantido como 'right' por padrão
   toolbarLeftContent
 }) => {
-  const { t } = useTranslation();
+  const { t } = useArchbaseTranslation();
   const theme = useArchbaseTheme();
   const [showExportMenu, setShowExportMenu] = useState(false);
 
@@ -47,7 +47,7 @@ export const GridToolbar: React.FC<GridToolbarProps> = ({
   // Botões de ação
   const renderActionButtons = () => (
     <Group gap="2">
-      <Tooltip label={t('Atualizar')}>
+      <Tooltip label={`${t('Atualizar')}`}>
         <ActionIcon
           size="lg"
           onClick={onRefresh}
@@ -61,7 +61,7 @@ export const GridToolbar: React.FC<GridToolbarProps> = ({
       {allowExportData && (
         <Menu opened={showExportMenu} onChange={setShowExportMenu}>
           <Menu.Target>
-            <Tooltip label={t('Exportar')}>
+            <Tooltip label={`${t('Exportar')}`}>
               <ActionIcon
                 size="lg"
                 color={theme.primaryColor}
@@ -72,13 +72,13 @@ export const GridToolbar: React.FC<GridToolbarProps> = ({
             </Tooltip>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item onClick={onExport}>{t('Exportar')}</Menu.Item>
+            <Menu.Item onClick={onExport}>{`${t('Exportar')}`}</Menu.Item>
           </Menu.Dropdown>
         </Menu>
       )}
 
       {allowPrintData && (
-        <Tooltip label={t('Imprimir')}>
+        <Tooltip label={`${t('Imprimir')}`}>
           <ActionIcon
             size="lg"
             onClick={onPrint}

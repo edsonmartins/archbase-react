@@ -1,4 +1,4 @@
-import i18next from 'i18next';
+import { archbaseI18next } from '@archbase/core';
 import { produce, Draft } from 'immer';
 import { ArchbaseDataSourceError, processErrorMessage, ArchbaseQueryFilter, ADVANCED, NORMAL, QUICK, ArchbaseFilterDSL } from '@archbase/core';
 import {
@@ -208,7 +208,7 @@ export class ArchbaseRemoteDataSourceV2<T> {
   edit(): void {
     this.validateDataSourceActive('edit');
     if (this.isEmpty() || !this.getCurrentRecord()) {
-      const msg = i18next.t('archbase:noRecordsToEdit', { dataSourceName: this.name });
+      const msg = archbaseI18next.t('archbase:noRecordsToEdit', { dataSourceName: this.name });
       this.publishEventError(msg, {});
       throw new ArchbaseDataSourceError(msg);
     }
@@ -297,12 +297,12 @@ export class ArchbaseRemoteDataSourceV2<T> {
   async save(callback?: Function): Promise<T> {
     this.validateDataSourceActive('save');
     if (!this.isInserting() && !this.isEditing()) {
-      const msg = i18next.t('archbase:saveRecordIsNotAllowed', { dataSourceName: this.name });
+      const msg = archbaseI18next.t('archbase:saveRecordIsNotAllowed', { dataSourceName: this.name });
       this.publishEventError(msg, {});
       throw new ArchbaseDataSourceError(msg);
     }
     if (!this.getCurrentRecord()) {
-      const msg = i18next.t('archbase:noRecordToSave', { dataSourceName: this.name });
+      const msg = archbaseI18next.t('archbase:noRecordToSave', { dataSourceName: this.name });
       this.publishEventError(msg, {});
       throw new ArchbaseDataSourceError(msg);
     }
@@ -322,7 +322,7 @@ export class ArchbaseRemoteDataSourceV2<T> {
         if (!errors[0].fieldName) {
           throw new ArchbaseDataSourceError(errors[0].errorMessage);
         } else {
-          const msg = i18next.t('archbase:errorSavingRecord', { dataSourceName: this.label });
+          const msg = archbaseI18next.t('archbase:errorSavingRecord', { dataSourceName: this.label });
           throw new ArchbaseDataSourceError(msg);
         }
       }
@@ -381,12 +381,12 @@ export class ArchbaseRemoteDataSourceV2<T> {
   async remove(callback?: Function): Promise<T | undefined> {
     this.validateDataSourceActive('remove');
     if (this.isInserting() || this.isEditing()) {
-      const msg = i18next.t('archbase:removingRecordIsNotAllowed', { dataSourceName: this.name });
+      const msg = archbaseI18next.t('archbase:removingRecordIsNotAllowed', { dataSourceName: this.name });
       this.publishEventError(msg, {});
       throw new ArchbaseDataSourceError(msg);
     }
     if (this.isEmpty() || !this.getCurrentRecord()) {
-      const msg = i18next.t('archbase:noRecordsToEdit', { dataSourceName: this.name });
+      const msg = archbaseI18next.t('archbase:noRecordsToEdit', { dataSourceName: this.name });
       this.publishEventError(msg, {});
       throw new ArchbaseDataSourceError(msg);
     }

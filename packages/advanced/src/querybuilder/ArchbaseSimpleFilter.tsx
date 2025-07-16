@@ -39,7 +39,7 @@ import {
   Operator,
   SelectedSort
 } from './ArchbaseFilterCommons'
-import { t } from 'i18next'
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { DebouncedTextInput } from './ArchbaseQueryBuilder'
 import { ltrim } from '@archbase/core'
 import { ArchbaseList } from '@archbase/components'
@@ -630,7 +630,7 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 />
                 <Space w={'sm'}></Space>
                 <Text c={this.props.colorScheme === 'dark' ? 'white' : 'black'}>
-                  {t(child.label)}
+                  {getI18nextInstance().t(child.label)}
                 </Text>
                 <SimpleValueSelector
                   field={child.name}

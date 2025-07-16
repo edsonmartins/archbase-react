@@ -1,7 +1,7 @@
 import { ActionIcon, useMantineColorScheme } from '@mantine/core';
 import { IconMoonStars, IconSun } from '@tabler/icons-react';
-import i18next from 'i18next';
 import React from 'react';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 
 export interface ArchbaseColorSchemeActionProps {
 	toggleColorScheme?: () => void;
@@ -14,6 +14,7 @@ export const ArchbaseColorSchemeAction = ({
 	sunColor = 'white',
 	moonColor = 'blue',
 }: ArchbaseColorSchemeActionProps) => {
+	const { t } = useArchbaseTranslation();
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
 	const handleToggle = () => {
@@ -29,7 +30,7 @@ export const ArchbaseColorSchemeAction = ({
 			variant="transparent"
 			color={dark ? sunColor : moonColor}
 			onClick={() => handleToggle()}
-			title={i18next.t('toggleColorScheme')}
+			title={getI18nextInstance().t('archbase:toggleColorScheme')}
 		>
 			{dark ? <IconSun size="1.5rem" /> : <IconMoonStars size="1.5rem" />}
 		</ActionIcon>

@@ -6,7 +6,7 @@ import { SecurityType } from "./SecurityType";
 import { useArchbaseRemoteServiceApi, ArchbaseRemoteDataSource } from "@archbase/data";
 import { ResouceActionPermissionDto, ResoucePermissionsWithTypeDto } from "./SecurityDomain";
 import { ArchbaseResourceService } from "./ArchbaseResourceService";
-import { t } from "i18next";
+import { useArchbaseTranslation } from '@archbase/core';
 import { useDebouncedValue } from "@mantine/hooks";
 import { ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from "@archbase/layout";
 

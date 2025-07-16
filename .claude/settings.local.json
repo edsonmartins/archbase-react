@@ -29,7 +29,15 @@
       "Bash(pnpm:*)",
       "Bash(./scripts/update-project-version.sh:*)",
       "Bash(./scripts/fix-project-deps.sh:*)",
-      "Bash(jq:*)"
+      "Bash(jq:*)",
+      "Bash(rg:*)",
+      "Bash(npm run publish:debug:*)",
+      "Bash(sed:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(done)",
+      "Bash(npm run:*)",
+      "Bash(npx eslint:*)"
     ],
     "deny": []
   }

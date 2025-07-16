@@ -1,7 +1,7 @@
 import { Tooltip } from '@mantine/core';
-import i18next from 'i18next';
 import React from 'react';
 import { menuClasses, MenuItem, SubMenu } from 'react-pro-sidebar';
+import { archbaseI18next } from '@archbase/core';
 
 export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, currentPathName, highlightActiveMenuItem, sidebarTextColor, collapsedSubmenuWidth) {
 	const iconsBackgroundColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][8] : theme.colors[theme.primaryColor][7]) : undefined;
@@ -9,7 +9,7 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 	if (item.links) {
 		if (!(item.disabled && item.hideDisabledItem)) {
 			return (
-				<Tooltip disabled={!collapsed} label={`${i18next.t(item.label)}`}>
+				<Tooltip disabled={!collapsed} label={archbaseI18next.t(item.label)}>
 					<SubMenu
 						rootStyles={{
 							fontSize: '16px',
@@ -31,7 +31,7 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 						id={item.label}
 						icon={item.icon}
 						defaultOpen={!item.disabled}
-						label={collapsed ? '' : `${i18next.t(item.label)}`}
+						label={collapsed ? '' : archbaseI18next.t(item.label)}
 						disabled={item.disabled}
 					>
 						{item.links &&
@@ -66,7 +66,7 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 										disabled={typeof subItem.disabled === 'function' ? subItem.disabled() : subItem.disabled}
 										active={highlightActiveMenuItem && subItem.link === currentPathName}
 									>
-										{`${i18next.t(subItem.label)}`}
+										{archbaseI18next.t(subItem.label)}
 									</MenuItem>
 								))}
 					</SubMenu>
@@ -76,7 +76,7 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 	} else {
 		if (item.showInSidebar && (!item.disabled || !item.hideDisabledItem)) {
 			return (
-				<Tooltip disabled={!collapsed} label={`${i18next.t(item.label)}`}>
+				<Tooltip disabled={!collapsed} label={archbaseI18next.t(item.label)}>
 					<MenuItem
 						rootStyles={{
 							fontSize: '16px',
@@ -105,7 +105,7 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 						icon={item.icon}
 						active={highlightActiveMenuItem && item.link === currentPathName}
 					>
-						{collapsed ? '' : `${i18next.t(item.label)}`}
+						{collapsed ? '' : archbaseI18next.t(item.label)}
 					</MenuItem>
 				</Tooltip>
 			);

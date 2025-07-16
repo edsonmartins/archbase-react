@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid, ScrollArea, Stack } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
-import { t } from 'i18next'
+import { useArchbaseTranslation } from '@archbase/core';
 import { GroupDto } from './SecurityDomain'
 import { ArchbaseDataSource } from '@archbase/data'
 import { Modal, Button, Group } from '@mantine/core'

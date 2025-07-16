@@ -3,7 +3,7 @@ import { Button, Card, CSSProperties, Divider, PasswordInput, Text, TextInput, u
 import { useFocusTrap } from "@mantine/hooks";
 import { useArchbaseTheme, isEmailValidate } from "@archbase/core";
 import { ArchbaseDialog } from "@archbase/components";
-import { t } from "i18next";
+import { useArchbaseTranslation } from '@archbase/core';
 
 export interface ArchbaseResetPasswordProps {
   error?: string

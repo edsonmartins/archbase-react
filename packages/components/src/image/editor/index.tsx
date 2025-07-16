@@ -9,7 +9,7 @@ import {
 	IconPhotoX,
 	IconTrash,
 } from '@tabler/icons-react';
-import i18next from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { Fragment, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useArchbaseTheme } from '@archbase/core';
 import ArchbaseEditImage from './components/EditImage/ArchbaseEditImage';
@@ -57,6 +57,7 @@ export const ArchbaseImagePickerEditor = memo(
 	}) => {
 		const theme = useArchbaseTheme();
 		const { colorScheme } = useMantineColorScheme();
+		const { t } = useArchbaseTranslation();
 		const [state, setState] = useState<IState>({
 			...initialState,
 		});
@@ -304,7 +305,7 @@ export const ArchbaseImagePickerEditor = memo(
 								border: `${rem(1)} solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
 							}}
 						>
-							<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Upload a image')}`}>
+							<Tooltip withinPortal withArrow label={`${t('archbase:Upload a image')}`}>
 								<ActionIcon component="button" color="blue" variant={variant} className="icon-btn image-upload-btn" onClick={onUpload}>
 									<IconCloudUpload color="purple" />
 								</ActionIcon>
@@ -345,7 +346,7 @@ export const ArchbaseImagePickerEditor = memo(
 							{!configuration.hideEditBtn && (
 								<Fragment>
 									<div className="curtain" onClick={onUpload}>
-										<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Upload a image')}`}>
+										<Tooltip withinPortal withArrow label={`${t('archbase:Upload a image')}`}>
 											<ActionIcon component="button"  color="blue" variant={variant}>
 												<IconCloudUpload color="white" />
 											</ActionIcon>
@@ -369,7 +370,7 @@ export const ArchbaseImagePickerEditor = memo(
 									fontWeight: sizeImage > 120 ? '500' : 'unset',
 								}}
 							>
-								<Text>{`${i18next.t('archbase:size')}: ${sizeImage}Kb ${state.format}`}</Text>
+								<Text>{`${t('archbase:size')}: ${sizeImage}Kb ${state.format}`}</Text>
 							</div>
 						)}
 
@@ -384,7 +385,7 @@ export const ArchbaseImagePickerEditor = memo(
 							className="editing-bar-btn"
 						>
 							{!configuration.hideAddBtn && (
-								<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Upload a image')}`}>
+								<Tooltip withinPortal withArrow label={`${t('archbase:Upload a image')}`}>
 									<ActionIcon id="upload-img" color="blue" variant={variant} onClick={onUpload}>
 										<IconCloudUpload color="purple" />
 									</ActionIcon>
@@ -392,14 +393,14 @@ export const ArchbaseImagePickerEditor = memo(
 							)}
 
 							{!configuration.hideEditBtn && (
-								<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Open the editor panel')}`}>
+								<Tooltip withinPortal withArrow label={`${t('archbase:Open the editor panel')}`}>
 									<ActionIcon id="edit-img" color="blue" variant={variant} onClick={onOpenEditPanel}>
 										<IconPhotoEdit color="teal" />
 									</ActionIcon>
 								</Tooltip>
 							)}
 							{!configuration.hideDownloadBtn && (
-								<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Download the image')}`}>
+								<Tooltip withinPortal withArrow label={`${t('archbase:Download the image')}`}>
 									<ActionIcon
 										component="a"
 										id="download-img"
@@ -413,7 +414,7 @@ export const ArchbaseImagePickerEditor = memo(
 								</Tooltip>
 							)}
 							{!configuration.hideDeleteBtn && (
-								<Tooltip withinPortal withArrow label={`${i18next.t('archbase:Remove')}`}>
+								<Tooltip withinPortal withArrow label={`${t('archbase:Remove')}`}>
 									<ActionIcon id="delete-img" color="red" variant={variant} onClick={() => onRemove()}>
 										<IconTrash color="#C91A25" />
 									</ActionIcon>

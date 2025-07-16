@@ -2,7 +2,7 @@ import { Avatar, Button, Group, Input, MantineSize, Popover, Space, Text, Unstyl
 import { IconChevronRight } from '@tabler/icons-react'
 import { useArchbaseTheme } from '@archbase/core'
 import { ArchbaseTreeNode, ArchbaseTreeView, ArchbaseTreeViewProps } from '../list'
-import { t } from 'i18next'
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { ReactNode, forwardRef, useState } from 'react'
 
 export interface ArchbaseTreeSelectProps extends ArchbaseTreeViewProps {
@@ -27,6 +27,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
     const colorScheme: 'light' | 'dark' = 'light';
     const [focusedNode, setFocusedNode] = useState<ArchbaseTreeNode|undefined>();
     const [opened,setOpened] = useState<boolean>(false);
+    const { t } = useArchbaseTranslation();
 
     const handleFocusedNode = (node: ArchbaseTreeNode) => {
       setFocusedNode(node);
@@ -101,7 +102,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
                   }
                 }}
                 color="green">
-                  {t('archbase:Ok')}                
+                  {`${t('archbase:Ok')}`}                
               </Button>
               <Space w={"md"}/>
               <Button 
@@ -112,7 +113,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
                   }
                 }}
                 color="red">
-                {t('archbase:Cancel')}
+                {`${t('archbase:Cancel')}`}
                 </Button>
           </div>
         </Popover.Dropdown>

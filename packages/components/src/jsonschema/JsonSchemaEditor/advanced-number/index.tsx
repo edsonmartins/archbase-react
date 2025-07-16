@@ -1,5 +1,5 @@
 import { Checkbox, Flex, Input, NumberInput, Stack, Text, Textarea } from '@mantine/core';
-import i18next from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { useContext, useState } from 'react';
 import { AdvancedItemStateProps } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
@@ -10,6 +10,7 @@ export const AdvancedNumber = ({
 	item,
 }: AdvancedItemStateProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
+	const { t } = useArchbaseTranslation();
 	const [error, setError] = useState<string | undefined>();
 
 	const changeEnumOtherValue = (value: string): string[] | null => {
@@ -29,11 +30,11 @@ export const AdvancedNumber = ({
 		<Flex direction="column" w="100%" wrap="nowrap">
 			<Stack align="stretch" justify="center" m={1}>
 				<NumberInput
-					label={`${i18next.t('archbase:Default value')}`}
+					label={`${t('archbase:Default value')}`}
 					size="sm"
 					defaultValue={item.default !== undefined ? Number(item.default) : ''}
 					value={item.default !== undefined ? Number(item.default) : ''}
-					placeholder={`${i18next.t('archbase:Default value')}`}
+					placeholder={`${t('archbase:Default value')}`}
 					onChange={(value: number | string) => {
 						if (value !== '') {
 							handleChange(`${path}.default`, Number(value), 'ASSIGN_VALUE');
@@ -47,7 +48,7 @@ export const AdvancedNumber = ({
 			<Stack align="stretch" justify="center" m={1}>
 				<Flex justify="space-between">
 					<NumberInput
-						label={`${i18next.t('archbase:Min Value')}`}
+						label={`${t('archbase:Min Value')}`}
 						size="sm"
 						defaultValue={item.minimum !== undefined ? Number(item.minimum) : ''}
 						value={item.minimum !== undefined ? Number(item.minimum) : ''}
@@ -60,7 +61,7 @@ export const AdvancedNumber = ({
 						}}
 					/>
 					<NumberInput
-						label={`${i18next.t('archbase:Max Value')}`}
+						label={`${t('archbase:Max Value')}`}
 						size="sm"
 						defaultValue={item.maximum !== undefined ? Number(item.maximum) : ''}
 						value={item.maximum !== undefined ? Number(item.maximum) : ''}
@@ -76,7 +77,7 @@ export const AdvancedNumber = ({
 			</Stack>
 			<Stack align="stretch" justify="center" mt={8}>
 				<Flex align="center" justify="space-between">
-					<Text>{`${i18next.t('archbase:Enum')}`}</Text>
+					<Text>{`${t('archbase:Enum')}`}</Text>
 					<Checkbox
 						mx={16}
 						checked={isEnumChecked}
@@ -92,7 +93,7 @@ export const AdvancedNumber = ({
 						<Textarea
 							value={enumValue}
 							disabled={!isEnumChecked}
-							placeholder={`${i18next.t('archbase:ENUM Values - One Entry Per Line')}`}
+							placeholder={`${t('archbase:ENUM Values - One Entry Per Line')}`}
 							datatype="number"
 							onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
 								const re = /^[0-9\n]+$/;
@@ -105,7 +106,7 @@ export const AdvancedNumber = ({
 											handleChange(`${path}.enum`, update as string[], 'ASSIGN_VALUE');
 										}
 									} else {
-										setError(`${i18next.t('archbase:Enum must not have duplicate values')}`);
+										setError(`${t('archbase:Enum must not have duplicate values')}`);
 									}
 								}
 							}}

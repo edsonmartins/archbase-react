@@ -1,7 +1,7 @@
 import { Button, Flex, Group, Modal, ModalProps, useMantineColorScheme } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import React, { ReactNode } from 'react';
 import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from '@archbase/layout';
 import { useArchbaseAppContext } from '@archbase/core';
@@ -55,7 +55,7 @@ export function ArchbaseModalTemplate({
 	};
 
 	const handleClose = () => {
-		ArchbaseDialog.showWarning(t('Click on Ok or Cancel to close'));
+		ArchbaseDialog.showWarning(getI18nextInstance().t('Click on Ok or Cancel to close'));
 	};
 
 	return (
@@ -90,7 +90,7 @@ export function ArchbaseModalTemplate({
 								onClick={handleSave}
 								variant={variant ?? appContext.variant}
 								color="green"
-							>{`${t('Ok')}`}</Button>
+							>{`${getI18nextInstance().t('Ok')}`}</Button>
 							{!onlyOkButton ? (
 								<Button
 									leftSection={<IconX />}
@@ -98,7 +98,7 @@ export function ArchbaseModalTemplate({
 									variant={variant ?? appContext.variant}
 									color="red"
 								>
-									{onClickCancel ? `${t('Cancel')}` : `${t('Close')}`}
+									{onClickCancel ? `${getI18nextInstance().t('Cancel')}` : `${getI18nextInstance().t('Close')}`}
 								</Button>
 							) : null}
 						</Group>

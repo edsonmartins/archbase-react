@@ -4,7 +4,7 @@ import { IconCameraPlus, IconEdit, IconRotate, IconTrash, IconZoomIn } from '@ta
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseTheme, isBase64 } from '@archbase/core';
-import { t } from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
 
@@ -94,6 +94,7 @@ export function ArchbaseAvatarEdit<T, ID>({
     // Usar tema padrão para simplificar migração Mantine 8  
     const colorScheme: 'light' | 'dark' = 'light';
     const [showControls, setShowControls] = useState(false);
+    const { t } = useArchbaseTranslation();
 
     // 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
     const v1v2Compatibility = useArchbaseV1V2Compatibility<string | undefined>(
@@ -365,10 +366,10 @@ export function ArchbaseAvatarEdit<T, ID>({
             // Mostra um aviso se não foi possível atingir o tamanho desejado
             const finalSize = getImageSizeInKB(processedImage);
             if (maxSizeKB > 0 && finalSize > maxSizeKB) {
-                setCropError(t('archbase:erro_avatar_crop', {
+                setCropError(`${t('archbase:erro_avatar_crop', {
                     imageSize: finalSize.toFixed(2),
                     maxImageSize: maxSizeKB,
-                }))
+                })}`)
                 return
             }
 
@@ -434,7 +435,7 @@ export function ArchbaseAvatarEdit<T, ID>({
                                     onMouseEnter={() => setShowControls(true)}
                                     onMouseLeave={() => setShowControls(false)}
                                 >
-                                    <Tooltip label={t('archbase:Edit')}>
+                                    <Tooltip label={`${t('archbase:Edit')}`}>
                                         <ActionIcon
                                             radius="xl"
                                             size="lg"
@@ -445,7 +446,7 @@ export function ArchbaseAvatarEdit<T, ID>({
                                             <IconEdit color={theme.colors.blue[4]} />
                                         </ActionIcon>
                                     </Tooltip>
-                                    <Tooltip label={t('archbase:Remove')}>
+                                    <Tooltip label={`${t('archbase:Remove')}`}>
                                         <ActionIcon
                                             radius="xl"
                                             size="lg"
@@ -519,7 +520,7 @@ export function ArchbaseAvatarEdit<T, ID>({
                         <Space h={8} />
                         {(maxSizeKB > 0 && !cropError) && (
                             <Text fz={12} style={{ color: theme.colors.gray[6] }}>
-                                {t('archbase:Image max size')}: {maxSizeKB} KB
+                                {`${t('archbase:Image max size')}`}: {maxSizeKB} KB
                             </Text>
                         )}
                     </Input.Wrapper>
@@ -543,7 +544,7 @@ export function ArchbaseAvatarEdit<T, ID>({
 
                         <Group justify="space-between">
                             <Box style={{ flex: 1 }}>
-                                <Tooltip label={t('archbase:Rotation')}>
+                                <Tooltip label={`${t('archbase:Rotation')}`}>
                                     <IconRotate size={20} />
                                 </Tooltip>
                                 <Slider
@@ -562,10 +563,10 @@ export function ArchbaseAvatarEdit<T, ID>({
                     <Group justify="space-between" mt="md">
                         <Group>
                             <Button variant="outline" onClick={handleCloseModal}>
-                                {t('archbase:Cancel')}
+                                {`${t('archbase:Cancel')}`}
                             </Button>
                             <Button onClick={handleSaveCrop}>
-                                {t('archbase:Apply')}
+                                {`${t('archbase:Apply')}`}
                             </Button>
                         </Group>
                     </Group>

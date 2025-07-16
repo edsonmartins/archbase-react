@@ -1,7 +1,7 @@
 import { getPathDepthLevel } from '@archbase/core';
 import { ActionIcon, Button, Checkbox, Flex, FlexProps, Input, Modal, Select, Tooltip } from '@mantine/core';
 import { IconCirclePlus, IconSettings } from '@tabler/icons-react';
-import i18next from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { useContext, useRef, useState } from 'react';
 import { JSONSchema7, JSONSchema7TypeName } from '../../ArchbaseJsonSchemaEditor.types';
 import { ArchbaseJsonSchemaEditorContext } from '../ArchbaseJsonSchemaEditor.context';
@@ -21,6 +21,7 @@ export const SchemaArray = ({
 	isReadOnly,
 }: SchemaArrayProps) => {
 	const { handleChange } = useContext(ArchbaseJsonSchemaEditorContext);
+	const { t } = useArchbaseTranslation();
 	const [open, setOpen] = useState(false);
 
 	const items = jsonSchema.items as JSONSchema7;
@@ -54,7 +55,7 @@ export const SchemaArray = ({
 					key="Items"
 					style={{ flexShrink: 1 }}
 					disabled
-					value={`${i18next.t('archbase:Items')}`}
+					value={`${t('archbase:Items')}`}
 					size="sm"
 					m={2}
 					variant="outline"
@@ -65,7 +66,7 @@ export const SchemaArray = ({
 					value={items.type as JSONSchema7TypeName}
 					size="sm"
 					m={2}
-					placeholder={`${i18next.t('archbase:Choose data type')}`}
+					placeholder={`${t('archbase:Choose data type')}`}
 					onChange={(value: string) => {
 						const newSchema = handleTypeChange(value as JSONSchema7TypeName, false);
 						handleChange(`${path}.items`, newSchema, 'ASSIGN_VALUE');
@@ -77,7 +78,7 @@ export const SchemaArray = ({
 					readOnly={isReadOnly}
 					size="sm"
 					m={2}
-					placeholder={`${i18next.t('archbase:Add Title')}`}
+					placeholder={`${t('archbase:Add Title')}`}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.items.title`, event.target.value, 'ASSIGN_VALUE');
 					}}
@@ -87,14 +88,14 @@ export const SchemaArray = ({
 					readOnly={isReadOnly}
 					size="sm"
 					m={2}
-					placeholder={`${i18next.t('archbase:Add Description')}`}
+					placeholder={`${t('archbase:Add Description')}`}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						handleChange(`${path}.items.description`, event.target.value, 'ASSIGN_VALUE');
 					}}
 				/>
 				<Tooltip
-					aria-label={`${i18next.t('archbase:Advanced Settings')}`}
-					label={`${i18next.t('archbase:Advanced Settings')}`}
+					aria-label={`${t('archbase:Advanced Settings')}`}
+					label={`${t('archbase:Advanced Settings')}`}
 					position="top"
 				>
 					<ActionIcon
@@ -104,7 +105,7 @@ export const SchemaArray = ({
 						mb={2}
 						ml={1}
 						color="blue"
-						aria-label={`${i18next.t('archbase:Advanced Settings')}`}
+						aria-label={`${t('archbase:Advanced Settings')}`}
 						onClick={() => {
 							showadvanced();
 						}}
@@ -115,8 +116,8 @@ export const SchemaArray = ({
 
 				{items.type === 'object' && (
 					<Tooltip
-						aria-label={`${i18next.t('archbase:Add Child Node')}`}
-						label={`${i18next.t('archbase:Add Child Node')}`}
+						aria-label={`${t('archbase:Add Child Node')}`}
+						label={`${t('archbase:Add Child Node')}`}
 						position="top"
 					>
 						<ActionIcon
@@ -126,7 +127,7 @@ export const SchemaArray = ({
 							mb={2}
 							mr={2}
 							color="green"
-							aria-label={`${i18next.t('archbase:Add Child Node')}`}
+							aria-label={`${t('archbase:Add Child Node')}`}
 							onClick={() => {
 								const fieldName = `field_${random()}`;
 								handleChange(
@@ -148,12 +149,12 @@ export const SchemaArray = ({
 					opened={open}
 					size="lg"
 					onClose={onCloseAdvanced}
-					title={`${i18next.t('archbase:Advanced Schema Settings')}`}
+					title={`${t('archbase:Advanced Schema Settings')}`}
 				>
 					<AdvancedSettings path={`${path}.items`} item={items} />
 					<Flex justify="flex-end">
 						<Button mr={3} onClick={onCloseAdvanced}>
-							{`${i18next.t('archbase:Close')}`}
+							{`${t('archbase:Close')}`}
 						</Button>
 					</Flex>
 				</Modal>

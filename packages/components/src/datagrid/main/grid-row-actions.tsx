@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionIcon, Box, Group, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { IconEdit, IconTrash, IconEye } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import { useArchbaseTheme } from '@archbase/core';
 
 export interface ArchbaseGridRowActionsProps<T extends Object> {
@@ -26,11 +26,15 @@ export function ArchbaseGridRowActions<T extends Object>({
 }: ArchbaseGridRowActionsProps<T>) {
   const theme = useArchbaseTheme();
   const { colorScheme } = useMantineColorScheme();
+  const { t } = useArchbaseTranslation();
+  
+  // Função utilitária para garantir que t() retorne string
+  const tString = (key: string) => String(t(key));
 
   return (
     <Group gap="2" justify='center' align='center'>
       {onViewRow ? (
-        <Tooltip withinPortal withArrow position="top" label={t('View')}>
+        <Tooltip withinPortal withArrow position="top" label={tString('View')}>
           <ActionIcon
             variant={variant === 'filled' ? 'transparent' : variant}
             color="gray"
@@ -43,7 +47,7 @@ export function ArchbaseGridRowActions<T extends Object>({
       ) : null}
 
       {onEditRow ? (
-        <Tooltip withinPortal withArrow position="top" label={t('Edit')}>
+        <Tooltip withinPortal withArrow position="top" label={tString('Edit')}>
           <ActionIcon
             variant={variant === 'filled' ? 'transparent' : variant}
             color="blue"
@@ -56,7 +60,7 @@ export function ArchbaseGridRowActions<T extends Object>({
       ) : null}
 
       {onRemoveRow ? (
-        <Tooltip withinPortal withArrow position="top" label={t('Remove')}>
+        <Tooltip withinPortal withArrow position="top" label={tString('Remove')}>
           <ActionIcon
             variant={variant === 'filled' ? 'transparent' : variant}
             color="red"

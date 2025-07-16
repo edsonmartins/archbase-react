@@ -3,7 +3,7 @@ import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { ButtonVariant, Pagination } from '@mantine/core';
 import useComponentSize from '@rehooks/component-size';
 import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { uniqueId } from 'lodash';
 import React, { CSSProperties, Fragment, Profiler, ReactNode, useMemo, useRef, useState } from 'react';
 import { ArchbaseAction, ArchbaseActionButtons, ArchbaseActionButtonsOptions } from '@archbase/components';
@@ -196,14 +196,14 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 				id: 'actAdd',
 				icon: <IconPlus />,
 				color: 'green',
-				label: userActionsEnd.labelAdd ? userActionsEnd.labelAdd : t('archbase:New'),
+				label: userActionsEnd.labelAdd ? userActionsEnd.labelAdd : getI18nextInstance().t('archbase:New'),
 				executeAction: () => {
 					if (userActionsEnd && userActionsEnd.onAddExecute) {
 						userActionsEnd.onAddExecute();
 					}
 				},
 				enabled: true,
-				hint: `${t('archbase:Clique para criar um novo registro')}`,
+				hint: `${getI18nextInstance().t('archbase:Clique para criar um novo registro')}`,
 			});
 		}
 		if (userActionsEnd.allowEdit && userActionsEnd.onEditExecute) {
@@ -211,14 +211,14 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 				id: 'actEdit',
 				icon: <IconEdit />,
 				color: 'blue',
-				label: userActionsEnd.labelEdit ? userActionsEnd.labelEdit : t('archbase:Edit'),
+				label: userActionsEnd.labelEdit ? userActionsEnd.labelEdit : getI18nextInstance().t('archbase:Edit'),
 				executeAction: () => {
 					if (userActionsEnd && userActionsEnd.onEditExecute) {
 						userActionsEnd.onEditExecute();
 					}
 				},
 				enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-				hint: `${t('archbase:Clique para editar o registro')}`,
+				hint: `${getI18nextInstance().t('archbase:Clique para editar o registro')}`,
 			});
 		}
 		if (userActionsEnd.allowRemove && userActionsEnd.onRemoveExecute) {
@@ -226,14 +226,14 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 				id: 'actRemove',
 				icon: <IconTrash />,
 				color: 'red',
-				label: userActionsEnd.labelRemove ? userActionsEnd.labelRemove : t('archbase:Remove'),
+				label: userActionsEnd.labelRemove ? userActionsEnd.labelRemove : getI18nextInstance().t('archbase:Remove'),
 				executeAction: () => {
 					if (userActionsEnd && userActionsEnd.onRemoveExecute) {
 						userActionsEnd.onRemoveExecute();
 					}
 				},
 				enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-				hint: `${t('archbase:Clique para remover o registro')}`,
+				hint: `${getI18nextInstance().t('archbase:Clique para remover o registro')}`,
 			});
 		}
 
@@ -241,14 +241,14 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 			defaultActions.push({
 				id: 'actView',
 				icon: <IconEye />,
-				label: userActionsEnd.labelView ? userActionsEnd.labelView : t('archbase:View'),
+				label: userActionsEnd.labelView ? userActionsEnd.labelView : getI18nextInstance().t('archbase:View'),
 				executeAction: () => {
 					if (userActionsEnd && userActionsEnd.onViewExecute) {
 						userActionsEnd.onViewExecute();
 					}
 				},
 				enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-				hint: `${t('archbase:Clique para visualizar o registro')}`,
+				hint: `${getI18nextInstance().t('archbase:Clique para visualizar o registro')}`,
 			});
 		}
 

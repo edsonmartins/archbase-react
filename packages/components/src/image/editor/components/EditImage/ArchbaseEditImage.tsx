@@ -1,7 +1,7 @@
 import { ActionIcon, Button, Text, Tooltip } from '@mantine/core';
 import { IconCrop, IconX } from '@tabler/icons-react';
 import { IconCheck } from '@tabler/icons-react';
-import i18next from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { convertImageUsingCanvas, dragElement, saveState } from '../../functions/image-processing';
 import { IBasicFilterState, IState } from '../../models/index.models';
@@ -41,6 +41,7 @@ const ArchbaseEditImage = memo(
 
 		const isMobile = useRef<boolean>(false);
 		const allFormats = ['webp', 'jpeg', 'png'];
+		const { t } = useArchbaseTranslation();
 
 		useEffect(() => {
 			isMobile.current = window.innerWidth < 800;
@@ -266,11 +267,11 @@ const ArchbaseEditImage = memo(
 
 						<div className="control-panel">
 							<TabContainer lazy borderLine>
-								<TabItem name={`${i18next.t('Basic')}`}>
+								<TabItem name={`${t('Basic')}`}>
 									{(!isMobile.current || (isMobile.current && !showCrop)) && (
 										<React.Fragment>
 											<div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-												<p className="item-panel">{`${i18next.t('Quality')}`}</p>
+												<p className="item-panel">{`${t('Quality')}`}</p>
 												<p className="item-panel">{state.quality + '%'}</p>
 											</div>
 
@@ -299,7 +300,7 @@ const ArchbaseEditImage = memo(
 												className="item-panel"
 												style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}
 											>
-												{`${i18next.t('Max dimensions')}`}
+												{`${t('Max dimensions')}`}
 												<div style={{ display: 'flex', alignItems: 'center' }}>
 													<input
 														disabled={showCrop}
@@ -309,17 +310,17 @@ const ArchbaseEditImage = memo(
 														onChange={(e) => setState({ ...state, maintainAspectRatio: e.target.checked })}
 														style={{ color: color }}
 													/>
-													<span className="caption">{`${i18next.t('aspect-ratio')}`}</span>
+													<span className="caption">{`${t('aspect-ratio')}`}</span>
 												</div>
 											</div>
 
 											<div className="flex-row-start" style={{ marginTop: '10px', justifyContent: 'space-between' }}>
 												<div className="form-field" style={{ maxWidth: '48%', width: '48%' }}>
-													<label>{`${i18next.t('max-width(px)')}`}</label>
+													<label>{`${t('max-width(px)')}`}</label>
 													<Input
 														readOnly={showCrop}
 														disabled={showCrop}
-														placeholder={`${i18next.t('max-width(px)')}`}
+														placeholder={`${t('max-width(px)')}`}
 														value={state.maxWidth}
 														onChangedValue={(value: number) => setState({ ...state, maxWidth: value })}
 														type="number"
@@ -332,11 +333,11 @@ const ArchbaseEditImage = memo(
 												</div>
 
 												<div className="form-field" style={{ maxWidth: '48%', width: '48%' }}>
-													<label>{`${i18next.t('max-height(px)')}`}</label>
+													<label>{`${t('max-height(px)')}`}</label>
 													<Input
 														readOnly={showCrop}
 														disabled={showCrop}
-														placeholder={`${i18next.t('max-height(px)')}`}
+														placeholder={`${t('max-height(px)')}`}
 														value={state.maxHeight}
 														onChangedValue={(value: number) => setState({ ...state, maxHeight: value })}
 														type="number"
@@ -349,7 +350,7 @@ const ArchbaseEditImage = memo(
 												</div>
 											</div>
 
-											<p className="item-panel">{`${i18next.t('Format')}`}</p>
+											<p className="item-panel">{`${t('Format')}`}</p>
 											<div className="flex-row-start" style={{ marginTop: '10px', justifyContent: 'space-between' }}>
 												<div className="form-field" style={{ width: '100%' }}>
 													<select disabled={showCrop} value={state.format} onChange={onChangeFormat}>
@@ -374,14 +375,14 @@ const ArchbaseEditImage = memo(
 												checked={showCrop}
 												style={{ color: color, marginBottom: '3px' }}
 											/>
-											<span className="item-panel" style={{ marginLeft: '4px' }}>{`${i18next.t('Crop')}`}</span>
+											<span className="item-panel" style={{ marginLeft: '4px' }}>{`${t('Crop')}`}</span>
 										</span>
 									</div>
 									{showCrop && (
 										<React.Fragment>
 											<div className="flex-row-start" style={{ marginTop: '10px', justifyContent: 'space-between' }}>
 												<div className="form-field" style={{ maxWidth: '48%', width: '48%' }}>
-													<label>{`${i18next.t('width(px)')}`}</label>
+													<label>{`${t('width(px)')}`}</label>
 													<Input
 														type="number"
 														min={0}
@@ -390,12 +391,12 @@ const ArchbaseEditImage = memo(
 														onInputChangedEnd={(value: number) => {
 															onChangeCrop(+value, null);
 														}}
-														placeholder={`${i18next.t('width(px)')}`}
+														placeholder={`${t('width(px)')}`}
 													/>
 												</div>
 
 												<div className="form-field" style={{ maxWidth: '48%', width: '48%' }}>
-													<label>{`${i18next.t('height(px)')}`}</label>
+													<label>{`${t('height(px)')}`}</label>
 													<Input
 														type="number"
 														min={0}
@@ -404,20 +405,20 @@ const ArchbaseEditImage = memo(
 															onChangeCrop(null, +value);
 														}}
 														onChangedValue={(value: number) => setState({ ...state, cropHeight: value })}
-														placeholder={`${i18next.t('height(px)')}`}
+														placeholder={`${t('height(px)')}`}
 													/>
 												</div>
 											</div>
 
 											<p style={{ marginBottom: '4px !important' }}>
 												<Button onClick={onCrop} leftSection={<IconCrop color="orange" />}>
-													{`${i18next.t('Crop')}`}
+													{`${t('Crop')}`}
 												</Button>
 											</p>
 										</React.Fragment>
 									)}
 								</TabItem>
-								<TabItem disabled={showCrop} name={`${i18next.t('Filters')}`}>
+								<TabItem disabled={showCrop} name={`${t('Filters')}`}>
 									<BasicFilter
 										color={color}
 										initialState={state.basicFilters}
@@ -426,13 +427,13 @@ const ArchbaseEditImage = memo(
 								</TabItem>
 							</TabContainer>
 							<button
-								title={`${i18next.t('Undo')}`}
+								title={`${t('Undo')}`}
 								disabled={state.arrayCopiedImages.length <= 1}
 								style={{ position: 'absolute', right: '10px', top: '30px' }}
 								className="icon-btn"
 								onClick={onRestore}
 							>
-								<span className="material-icons">{`${i18next.t('Refresh')}`}</span>
+								<span className="material-icons">{`${t('Refresh')}`}</span>
 							</button>
 							<div
 								className="flex-row-start"
@@ -444,7 +445,7 @@ const ArchbaseEditImage = memo(
 									onClick={() => {
 										onCloseEditPanel(true);
 									}}
-								>{`${i18next.t('archbase:Apply')}`}</Button>
+								>{`${t('archbase:Apply')}`}</Button>
 								{sizeImage && (
 									<p
 										className="caption image-caption"
@@ -453,7 +454,7 @@ const ArchbaseEditImage = memo(
 											fontWeight: sizeImage > 120 ? '500' : 'unset',
 										}}
 									>
-										<Text>{`${i18next.t('archbase:size')}: ${sizeImage}Kb ${state.format}`}</Text>
+										<Text>{`${t('archbase:size')}: ${sizeImage}Kb ${state.format}`}</Text>
 									</p>
 								)}
 							</div>

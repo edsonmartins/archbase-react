@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Modal, Stack, Group, Button, TextInput, Checkbox, Select, Box, ScrollArea } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import { ExportConfig, ExportFormat } from './export-data';
 
 // Props para o modal de exportação
@@ -20,7 +20,7 @@ export function ExportModal({
   columns,
   defaultConfig = {}
 }: ExportModalProps) {
-  const { t } = useTranslation();
+  const { t } = useArchbaseTranslation();
   const [config, setConfig] = useState<ExportConfig>({
     format: 'excel',
     filename: 'export',
@@ -48,7 +48,7 @@ export function ExportModal({
     <Modal 
       opened={opened} 
       onClose={onClose} 
-      title={t('Exportar Dados')}
+      title={`${t('Exportar Dados')}`}
       size="lg"
       styles={{
         body: {
@@ -60,7 +60,7 @@ export function ExportModal({
       <ScrollArea.Autosize mah="70vh" p="md" offsetScrollbars>
         <Stack gap="md" pb={8}>
           <Select
-            label={t('Formato de Exportação')}
+            label={`${t('Formato de Exportação')}`}
             value={config.format}
             onChange={handleFormatChange}
             data={[
@@ -71,7 +71,7 @@ export function ExportModal({
           />
 
           <TextInput
-            label={t('Nome do Arquivo')}
+            label={`${t('Nome do Arquivo')}`}
             value={config.filename}
             onChange={(e) => setConfig(prev => ({ ...prev, filename: e.target.value }))}
           />
@@ -79,12 +79,12 @@ export function ExportModal({
           {config.format === 'csv' && (
             <>
               <TextInput
-                label={t('Delimitador')}
+                label={`${t('Delimitador')}`}
                 value={config.delimiter}
                 onChange={(e) => setConfig(prev => ({ ...prev, delimiter: e.target.value }))}
               />
               <Select
-                label={t('Codificação')}
+                label={`${t('Codificação')}`}
                 value={config.encoding}
                 onChange={(value: string | null) => setConfig(prev => ({ 
                   ...prev, 
@@ -101,7 +101,7 @@ export function ExportModal({
 
           {config.format === 'excel' && (
             <TextInput
-              label={t('Nome da Planilha')}
+              label={`${t('Nome da Planilha')}`}
               value={config.sheetName}
               onChange={(e) => setConfig(prev => ({ ...prev, sheetName: e.target.value }))}
             />
@@ -109,7 +109,7 @@ export function ExportModal({
 
           <Box>
             <Checkbox
-              label={t('Incluir Cabeçalhos')}
+              label={`${t('Incluir Cabeçalhos')}`}
               checked={config.includeHeaders}
               onChange={(e) => setConfig(prev => ({ 
                 ...prev, 
@@ -119,7 +119,7 @@ export function ExportModal({
           </Box>
 
           <Box>
-            <Box mb="xs">{t('Selecionar Colunas')}</Box>
+            <Box mb="xs">{`${t('Selecionar Colunas')}`}</Box>
             <Stack gap="xs">
               {columns.map(column => (
                 <Checkbox
@@ -157,10 +157,10 @@ export function ExportModal({
         }}
       >
         <Button variant="light" onClick={onClose}>
-          {t('Cancelar')}
+          {`${t('Cancelar')}`}
         </Button>
         <Button onClick={handleExport}>
-          {t('Exportar')}
+          {`${t('Exportar')}`}
         </Button>
       </Group>
     </Modal>

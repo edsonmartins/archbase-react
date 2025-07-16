@@ -59,6 +59,7 @@ npm run clean
 - **Mantine 8.1.2** (UI components)
 - **TanStack Query v5** (data fetching)
 - **Zustand 5** (state management)
+- **i18next** (internacionalização)
 
 ## 🚀 Instalação
 
@@ -385,6 +386,69 @@ dataSource.removeFromFieldArray('enderecos', index);
 **Para Projetos Novos**: Use V2 desde o início  
 **Para Projetos Existentes**: Migração gradual com feature flags  
 **Zero Riscos**: V1 continua funcionando normalmente
+
+## 🌍 Sistema de Localização
+
+O Archbase React v3 inclui um sistema de localização robusto e flexível baseado em i18next:
+
+### 🚀 Configuração Rápida
+
+```typescript
+// main.tsx
+import { initArchbaseI18nEarly } from '@archbase/core'
+import translation_en from './locales/en/translation.json'
+import translation_ptbr from './locales/pt-BR/translation.json'
+
+// Inicializar antes de renderizar
+initArchbaseI18nEarly('minha-app', {
+  en: translation_en,
+  'pt-BR': translation_ptbr
+})
+
+// App.tsx
+<ArchbaseGlobalProvider
+  translationName="minha-app"
+  translationResource={{
+    en: translation_en,
+    'pt-BR': translation_ptbr
+  }}
+>
+  <MinhaAplicacao />
+</ArchbaseGlobalProvider>
+```
+
+### 💡 Uso em Componentes
+
+```typescript
+// React Components
+import { useArchbaseTranslation } from '@archbase/core'
+
+function MeuComponente() {
+  const { t } = useArchbaseTranslation()
+  
+  return (
+    <div>
+      <h1>{t('Bem-vindo')}</h1>
+      <button>{t('archbase:signIn')}</button>
+    </div>
+  )
+}
+
+// Funções e Classes
+import { archbaseI18next } from '@archbase/core'
+
+const message = archbaseI18next.t('minha-app:Dashboard')
+```
+
+### 🎯 Principais Recursos
+
+- ✅ **Inicialização Precoce**: Traduções disponíveis antes da renderização
+- ✅ **Híbrido**: Suporte para componentes React e funções utilitárias
+- ✅ **Namespaces**: Separação clara entre traduções da lib e aplicação
+- ✅ **Performance**: Sem overhead de contexto React
+- ✅ **TypeScript**: Suporte completo com tipagem
+
+**📖 Documentação Completa**: [LOCALIZATION.md](./LOCALIZATION.md)
 
 ## 🔄 Migração da v2
 

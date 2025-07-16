@@ -3,7 +3,7 @@ import { useArchbaseTheme } from '@archbase/core';
 import { ActionIcon, ActionIconProps, Flex, Space, TextInput, TextInputProps, Tooltip } from '@mantine/core';
 import { useDebouncedState, useDebouncedValue } from '@mantine/hooks';
 import { IconFilterX, IconRefresh, IconSearch } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { useEffect, useRef, useState } from 'react';
 
 export interface ArchbaseGlobalFilterProps {
@@ -45,6 +45,7 @@ export function ArchbaseGlobalFilter({
 	minFilterValueLength,
 	options,
 }: ArchbaseGlobalFilterProps) {
+	const { t } = useArchbaseTranslation();
 	const [filterValue, setFilterValue] = useState<string>('');
 	const [debouncedFilterValue, setDebouncedFilterValue] = useDebouncedValue(filterValue, 500);
 	const [lastBuildedSearch, setLastBuildedSearch] = useState('');

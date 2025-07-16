@@ -1,7 +1,7 @@
 import { AlertVariant, Box, Button, ButtonVariant, Flex, Paper, useMantineColorScheme } from '@mantine/core';
 import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { IconPlus } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import React, { Fragment, ReactNode, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import {
   ArchbaseDataGrid,
@@ -412,7 +412,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
           withCloseButton={true}
           withBorder={true}
           icon={<IconBug size="1.4rem" />}
-          title={t('archbase:WARNING')}
+          title={getI18nextInstance().t('archbase:WARNING')}
           titleColor="rgb(250, 82, 82)"
           variant={variant ?? appContext.variant}
           onClose={() => clearError && clearError()}
@@ -481,7 +481,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
                       leftSection={<IconPlus />}
                       onClick={() => userActions && userActions.onAddExecute && userActions.onAddExecute()}
                     >
-                      {userActions.labelAdd || t('archbase:New')}
+                      {userActions.labelAdd || getI18nextInstance().t('archbase:New')}
                     </Button>
                   ) : null}
                   {userActions.onEditExecute ? (
@@ -492,7 +492,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
                       variant={variant ?? appContext.variant}
                       onClick={() => userActions && userActions.onEditExecute && userActions.onEditExecute()}
                     >
-                      {userActions.labelEdit || t('archbase:Edit')}
+                      {userActions.labelEdit || getI18nextInstance().t('archbase:Edit')}
                     </Button>
                   ) : null}
                   {userActions.onRemoveExecute ? (
@@ -503,7 +503,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
                       variant={variant ?? appContext.variant}
                       onClick={() => userActions && userActions.onRemoveExecute && userActions.onRemoveExecute()}
                     >
-                      {userActions.labelRemove || t('archbase:Remove')}
+                      {userActions.labelRemove || getI18nextInstance().t('archbase:Remove')}
                     </Button>
                   ) : null}
                   {userActions.onViewExecute ? (
@@ -514,7 +514,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
                       variant={variant ?? appContext.variant}
                       onClick={() => userActions && userActions.onViewExecute && userActions.onViewExecute()}
                     >
-                      {userActions.labelView || t('archbase:View')}
+                      {userActions.labelView || getI18nextInstance().t('archbase:View')}
                     </Button>
                   ) : null}
                   {userActions.customUserActions && userActions.customUserActionsPosition === 'right'

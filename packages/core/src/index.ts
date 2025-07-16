@@ -3,6 +3,8 @@ import './errorboundary.scss';
 import './utils.scss';
 
 export * from './context';
+// Exports explícitos para facilitar o uso
+export { useArchbaseTranslation, archbaseI18next, getI18nextInstance } from './context/ArchbaseGlobalProvider';
 export * from './exceptions';
 export * from './helper';
 export * from './hooks';

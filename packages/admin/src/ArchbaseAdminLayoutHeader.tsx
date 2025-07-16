@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMoonStars, IconSun } from '@tabler/icons-react';
-import i18next from 'i18next';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import React, { CSSProperties, ReactNode, useContext } from 'react';
 import { ArchbaseUser } from '@archbase/security';
 import { ArchbaseAdminLayoutContext, ArchbaseAdminLayoutContextValue } from './ArchbaseAdminLayout.context';
@@ -193,7 +193,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 
 					<Menu.Dropdown>
 						{userMenuItems}
-						{showUserMenuOptionsLabel && <Menu.Label>{`${i18next.t("archbase:Opções")}`}</Menu.Label>}
+						{showUserMenuOptionsLabel && <Menu.Label>{`${getI18nextInstance().t("archbase:Opções")}`}</Menu.Label>}
 						{showMenuItemsBeforeToggleColorScheme && userMenuItemsBeforeToggleColorScheme}
 						{
 							showUserMenuToggleColorScheme &&
@@ -201,7 +201,7 @@ export const ArchbaseAdminLayoutHeader: React.FC<ArchbaseAdminLayoutHeaderProps>
 								leftSection={colorScheme === 'dark' ? <IconSun size={userMenuToggleColorSchemeIconSize} /> : <IconMoonStars size={userMenuToggleColorSchemeIconSize} />}
 								onClick={toggleColorSchemeExternal ? toggleColorSchemeExternal : toggleColorScheme}
 							>
-								{`${i18next.t("archbase:toggleColorScheme")}`}
+								{`${getI18nextInstance().t("archbase:toggleColorScheme")}`}
 							</Menu.Item>
 						}
 						{showUserMenuLanguageSelector && <ArchbaseChangeLanguageMenuItem />}

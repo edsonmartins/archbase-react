@@ -3,7 +3,7 @@ import { useForceUpdate } from '@mantine/hooks';
 import { IconCheck } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
 import { IconBug } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import React, { CSSProperties, ReactNode, useState } from 'react';
 import { ArchbaseForm, ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed, ArchbaseSpaceTop } from '@archbase/layout';
 import { useArchbaseAppContext } from '@archbase/core';
@@ -162,7 +162,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 	};
 
 	const handleClose = () => {
-		ArchbaseDialog.showWarning(t('archbase:Click on Ok or Cancel to close'));
+		ArchbaseDialog.showWarning(getI18nextInstance().t('archbase:Click on Ok or Cancel to close'));
 	};
 
 	const handleCloseAlert = () => {
@@ -200,7 +200,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 							withCloseButton={true}
 							withBorder={true}
 							icon={<IconBug size="1.4rem" />}
-							title={t('WARNING')}
+							title={getI18nextInstance().t('WARNING')}
 							titleColor="rgb(250, 82, 82)"
 							variant={variant ?? appContext.variant}
 							onClose={handleCloseAlert}
@@ -223,18 +223,18 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 									disabled={dataSource && dataSource.isBrowsing()}
 									variant={variant ?? appContext.variant}
 									color="green"
-								>{`${t('Ok')}`}</Button>
+								>{`${getI18nextInstance().t('Ok')}`}</Button>
 								<Button
 									leftSection={<IconX />}
 									onClick={handleCancel}
 									disabled={dataSource && dataSource.isBrowsing()}
 									variant={variant ?? appContext.variant}
 									color="red"
-								>{`${t('Cancel')}`}</Button>
+								>{`${getI18nextInstance().t('Cancel')}`}</Button>
 							</Group>
 						) : (
 							<Group gap="md">
-								<Button leftSection={<IconX />} onClick={handleCancel} variant={variant ?? appContext.variant}>{`${t(
+								<Button leftSection={<IconX />} onClick={handleCancel} variant={variant ?? appContext.variant}>{`${getI18nextInstance().t(
 									'Close',
 								)}`}</Button>
 							</Group>

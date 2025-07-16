@@ -28,7 +28,7 @@ import { IconEdit, IconPlus, IconShieldCheckered, IconTrashX } from '@tabler/ico
 // Importações da DataGrid
 import { ArchbaseDataGridColumn } from '@archbase/components';
 import { ArchbaseDataGrid, ArchbaseDataGridRef, Columns } from '@archbase/components';
-import { t } from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { ReactNode, useRef, useState } from 'react';
 import { ArchbaseAccessTokenService } from './ArchbaseAccessTokenService';
 import { ArchbaseGroupService } from './ArchbaseGroupService';

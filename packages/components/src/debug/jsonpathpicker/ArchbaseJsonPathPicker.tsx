@@ -1,5 +1,5 @@
 import { IconArrowBigRightFilled } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { archbaseI18next } from '@archbase/core';
 import React, { Component } from 'react';
 import './ArchbaseJsonPathPicker.css';
 
@@ -173,7 +173,7 @@ export class ArchbaseJsonPathPicker extends Component<ArchbaseJsonPathPickerProp
 									) : (
 										key
 									)}
-									<span className="pick-path" title={`${t('archbase:Pick path')}`}>
+									<span className="pick-path" title={archbaseI18next.t('archbase:Pick path')}>
 										<IconArrowBigRightFilled size="1.0rem" />
 									</span>
 									: {this.json2jsx(json[key], options)}

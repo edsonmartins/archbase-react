@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { TextInput, ActionIcon, useMantineColorScheme } from '@mantine/core';
 import { IconSearch, IconX } from '@tabler/icons-react';
-import { useTranslation } from 'react-i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useArchbaseTheme } from '@archbase/core';
 
@@ -25,7 +25,8 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
   onClear,
   debounceTime = 500 // Valor padrão de debounce (300ms)
 }) => {
-  const { t } = useTranslation();
+  const { t } = useArchbaseTranslation();
+  const tString = (key: string) => String(t(key));
   const theme = useArchbaseTheme();
   const scheme = useMantineColorScheme();
 
@@ -72,7 +73,7 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
 
   return (
     <TextInput
-      placeholder={t('Buscar...')}
+      placeholder={tString('Buscar...')}
       value={inputValue}
       onChange={handleInputChange}
       leftSection={<IconSearch size={16} color={theme.colors.gray[6]} />}

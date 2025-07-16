@@ -1,12 +1,12 @@
 import { ScrollArea, Stack } from "@mantine/core";
 import { useFocusTrap, useForceUpdate } from "@mantine/hooks";
-import { ARCHBASE_IOC_API_TYPE } from "@archbase/core";
+import { ARCHBASE_IOC_API_TYPE, getI18nextInstance } from "@archbase/core";
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi, useArchbaseStore } from "@archbase/data";
 import { useArchbaseValidator } from "@archbase/core";
 import { ArchbaseNotifications } from "@archbase/components";
 import { ArchbaseUserService, UserDto } from "@archbase/security";
 import { ArchbaseFormModalTemplate } from "@archbase/template";
-import { t } from "i18next";
+import { useArchbaseTranslation } from '@archbase/core';
 import React, { useEffect } from "react";
 import { ArchbaseEdit, ArchbaseAvatarEdit } from "@archbase/components";
 
@@ -53,7 +53,7 @@ export function ArchbaseMyProfileModal({ opened, handleClose, userId, updateUser
         string
     >({
         name: `dsUser${userId}`,
-        label: `${t('archbase:My Profile')}`,
+        label: `${getI18nextInstance().t('archbase:My Profile')}`,
         service: serviceApi,
         store: templateStore,
         pageSize: 50,
@@ -70,7 +70,7 @@ export function ArchbaseMyProfileModal({ opened, handleClose, userId, updateUser
             //
         },
         onError: (error, origin) => {
-            ArchbaseNotifications.showError(t('archbase:WARNING'), error, origin)
+            ArchbaseNotifications.showError(getI18nextInstance().t('archbase:WARNING'), error, origin)
         }
     })
 
@@ -90,7 +90,7 @@ export function ArchbaseMyProfileModal({ opened, handleClose, userId, updateUser
 
     return (
         <ArchbaseFormModalTemplate
-            title={t('archbase:My Profile')}
+            title={getI18nextInstance().t('archbase:My Profile')}
             size={800}
             height={'500px'}
             opened={opened}
@@ -112,24 +112,24 @@ export function ArchbaseMyProfileModal({ opened, handleClose, userId, updateUser
                         />
                     </Stack>
                     <ArchbaseEdit
-                        label={`${t('archbase:Nome completo')}`}
-                        placeholder={`${t('archbase:Informe o nome completo do usuário')}`}
+                        label={`${getI18nextInstance().t('archbase:Nome completo')}`}
+                        placeholder={`${getI18nextInstance().t('archbase:Informe o nome completo do usuário')}`}
                         dataSource={dataSource}
                         dataField="name"
                         required
                     />
                     {options.showNickname && (
                         <ArchbaseEdit
-                            label={`${t('archbase:Apelido')}`}
-                            placeholder={`${t('archbase:Apelido')}`}
+                            label={`${getI18nextInstance().t('archbase:Apelido')}`}
+                            placeholder={`${getI18nextInstance().t('archbase:Apelido')}`}
                             dataSource={dataSource}
                             dataField="nickname"
                             required={options.requiredNickname}
                         />
                     )}
                     <ArchbaseEdit
-                        label={`${t('archbase:Descrição do usuário')}`}
-                        placeholder={`${t('archbase:Informe a descrição do usuário')}`}
+                        label={`${getI18nextInstance().t('archbase:Descrição do usuário')}`}
+                        placeholder={`${getI18nextInstance().t('archbase:Informe a descrição do usuário')}`}
                         dataSource={dataSource}
                         dataField="description"
                         required

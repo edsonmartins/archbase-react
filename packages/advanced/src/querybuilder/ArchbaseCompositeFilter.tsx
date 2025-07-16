@@ -21,7 +21,7 @@ import {
 } from '@tabler/icons-react'
 import { IconFilterSearch } from '@tabler/icons-react'
 import { IconRefresh } from '@tabler/icons-react'
-import { t } from 'i18next'
+import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { uniqueId } from 'lodash'
 import React, { Component, CSSProperties, ReactNode } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
@@ -190,7 +190,7 @@ class ArchbaseCompositeFilter extends Component<
             <Accordion.Control
               icon={<IconFilterSearch size={24} color={this.getColor('red')} />}
             >
-              <Text style={{ fontWeight: 'bold' }}>{`${t('archbase:Filtros salvos')}`}</Text>
+              <Text style={{ fontWeight: 'bold' }}>{`${getI18nextInstance().t('archbase:Filtros salvos')}`}</Text>
             </Accordion.Control>
             <Accordion.Panel>
               <ArchbaseList
@@ -206,17 +206,17 @@ class ArchbaseCompositeFilter extends Component<
         </Accordion>
         <div className="filter-apply">
           <Group gap="xs">
-            <Tooltip withinPortal withArrow label={`${t('archbase:Novo filtro')}`}>
+            <Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Novo filtro')}`}>
               <Button
                 id="btnNew"
                 variant={this.props.variant}
                 leftSection={<IconPlus />}
                 onClick={(event) => this.props.onActionClick && this.props.onActionClick('new')}
               >
-                {t('archbase:New')}
+                {getI18nextInstance().t('archbase:New')}
               </Button>
             </Tooltip>
-            <Tooltip withinPortal withArrow label={`${t('archbase:Remover filtro')}`}>
+            <Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Remover filtro')}`}>
               <Button
                 id="btnRemove"
                 color="red"
@@ -228,7 +228,7 @@ class ArchbaseCompositeFilter extends Component<
                 leftSection={<IconTrash />}
                 onClick={(event) => this.props.onActionClick && this.props.onActionClick('remove')}
               >
-                {t('archbase:Remover')}
+                {getI18nextInstance().t('archbase:Remover')}
               </Button>
             </Tooltip>
           </Group>
@@ -241,30 +241,30 @@ class ArchbaseCompositeFilter extends Component<
             >
               <Menu.Target>
                 <Button variant={this.props.variant} leftSection={<IconDeviceFloppy />}>
-                  {`${t('archbase:Save')}`}
+                  {`${getI18nextInstance().t('archbase:Save')}`}
                 </Button>
               </Menu.Target>
 
               <Menu.Dropdown>
-                <Menu.Label>{`${t('archbase:Filter')}`}</Menu.Label>
+                <Menu.Label>{`${getI18nextInstance().t('archbase:Filter')}`}</Menu.Label>
                 <Menu.Item
                   onClick={() => this.onSelectMenuItem('mnuItemSalvar')}
                   disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
                   leftSection={<IconDeviceFloppy size={14} />}
                 >
-                  {`${t('archbase:Save')}`}
+                  {`${getI18nextInstance().t('archbase:Save')}`}
                 </Menu.Item>
                 <Menu.Item
                   onClick={() => this.onSelectMenuItem('mnuItemSalvarComo')}
                   disabled={this.props.activeFilterIndex === QUICK_FILTER_INDEX}
                   leftSection={<IconDeviceFloppy size={14} />}
                 >
-                  {`${t('archbase:Salvar como...')}`}
+                  {`${getI18nextInstance().t('archbase:Salvar como...')}`}
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
 
-            <Tooltip withinPortal withArrow label={`${t('archbase:Aplicar filtro')}`}>
+            <Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Aplicar filtro')}`}>
               <Button
                 id="btnApply"
                 variant={this.props.variant}
@@ -276,10 +276,10 @@ class ArchbaseCompositeFilter extends Component<
                   this.props.onActionClick('apply')
                 }}
               >
-                {`${t('archbase:Aplicar')}`}
+                {`${getI18nextInstance().t('archbase:Aplicar')}`}
               </Button>
             </Tooltip>
-            <Tooltip withinPortal withArrow label={`${t('archbase:Fechar filtro')}`}>
+            <Tooltip withinPortal withArrow label={`${getI18nextInstance().t('archbase:Fechar filtro')}`}>
               <Button
                 id="btnClose"
                 variant={this.props.variant}
@@ -287,7 +287,7 @@ class ArchbaseCompositeFilter extends Component<
                 leftSection={<IconDoorExit />}
                 onClick={(event) => this.props.onActionClick && this.props.onActionClick('close')}
               >
-                {`${t('archbase:Close')}`}
+                {`${getI18nextInstance().t('archbase:Close')}`}
               </Button>
             </Tooltip>
           </Group>
@@ -296,13 +296,13 @@ class ArchbaseCompositeFilter extends Component<
           <Radio.Group
             value={this.props.currentFilter.filter.filterType}
             name="filterType"
-            label={`${t('archbase:Selecione o tipo do filtro')}`}
+            label={`${getI18nextInstance().t('archbase:Selecione o tipo do filtro')}`}
             withAsterisk
             onChange={(value: string) => this.onChangeFilterType(value === 'normal' ? 0 : 1)}
           >
             <Group mt="xs">
-              <Radio value="normal" label={`${t('archbase:Simples')}`} />
-              <Radio value="advanced" label={`${t('archbase:Avançado')}`} />
+              <Radio value="normal" label={`${getI18nextInstance().t('archbase:Simples')}`} />
+              <Radio value="advanced" label={`${getI18nextInstance().t('archbase:Avançado')}`} />
             </Group>
           </Radio.Group>
         ) : null}
@@ -409,7 +409,7 @@ class ArchbaseDetailedFilter extends Component<
         </ArchbaseAdvancedFilter>
         <ArchbaseSaveFilter
           id="modalSaveFilter"
-          title={`${t('archbase:Salvar filtro')}`}
+          title={`${getI18nextInstance().t('archbase:Salvar filtro')}`}
           modalOpen={this.state.modalOpen}
           variant={this.props.variant}
         />
@@ -453,12 +453,12 @@ class FilterItem extends Component<FilterItemProps> {
 
   render = () => {
     let color = '#28C76F'
-    let newData = `${t('archbase:Simples')}`
+    let newData = `${getI18nextInstance().t('archbase:Simples')}`
     if (this.props.recordData.filter) {
       let filter = JSON.parse(this.props.recordData.filter)
       if (filter.filter.filterType === 'advanced') {
         color = '#437de0'
-        newData = `${t('archbase:Avançado')}`
+        newData = `${getI18nextInstance().t('archbase:Avançado')}`
       }
     }
     let className = 'list-group-item list-group-item-action'
@@ -479,7 +479,7 @@ class FilterItem extends Component<FilterItemProps> {
 
     return (
       <div className={className} style={style} onClick={this.onClick}>
-        <Text style={{cursor: 'pointer'}}>{t(this.props.recordData.name)}</Text>
+        <Text style={{cursor: 'pointer'}}>{getI18nextInstance().t(this.props.recordData.name)}</Text>
         <Badge style={{ cursor: 'pointer', maxWidth: '100px', fontWeight: 'bold' }} color={color}>
           {newData}
         </Badge>

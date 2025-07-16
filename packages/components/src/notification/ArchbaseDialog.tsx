@@ -9,7 +9,7 @@ import {
 	IconInfoCircleFilled,
 	IconTriangle,
 } from '@tabler/icons-react';
-import i18next from 'i18next';
+import { archbaseI18next } from '@archbase/core';
 import React, { ChangeEventHandler, ReactNode } from 'react';
 
 export class ArchbaseDialog {
@@ -18,7 +18,7 @@ export class ArchbaseDialog {
 			title,
 			centered: true,
 			children: <Text size="sm">{question}</Text>,
-			labels: { confirm: i18next.t('archbase:No'), cancel: i18next.t('archbase:Yes') },
+			labels: { confirm: archbaseI18next.t('archbase:No'), cancel: archbaseI18next.t('archbase:Yes') },
 			confirmProps: { color: 'red' },
 			cancelProps: { color: 'green' },
 			onConfirm: onCancel,
@@ -28,7 +28,7 @@ export class ArchbaseDialog {
 
 	static showInfo = (message: ReactNode, title?: string, onConfirm?: () => void) => {
 		modals.open({
-			title: title || i18next.t('archbase:Information'),
+			title: title || archbaseI18next.t('archbase:Information'),
 			children: (
 				<Paper>
 					<Flex gap="md" direction="row" justify="flex-start" align="center">
@@ -52,7 +52,7 @@ export class ArchbaseDialog {
 
 	static showWarning = (message: ReactNode, title?: string, onConfirm?: () => void) => {
 		modals.open({
-			title: title || i18next.t('archbase:Attention'),
+			title: title || archbaseI18next.t('archbase:Attention'),
 			children: (
 				<Paper>
 					<Flex gap="md" direction="row" justify="flex-start" align="center">
@@ -76,7 +76,7 @@ export class ArchbaseDialog {
 
 	static showSuccess = (message: ReactNode, title?: string, onConfirm?: () => void) => {
 		modals.open({
-			title: title || i18next.t('archbase:Attention'),
+			title: title || archbaseI18next.t('archbase:Attention'),
 			children: (
 				<Paper>
 					<Flex gap="md" direction="row" justify="flex-start" align="center">
@@ -100,7 +100,7 @@ export class ArchbaseDialog {
 
 	static showError = (message: ReactNode, title?: string, onConfirm?: () => void) => {
 		modals.open({
-			title: title || i18next.t('archbase:Attention'),
+			title: title || archbaseI18next.t('archbase:Attention'),
 			size: 'md',
 			children: (
 				<Paper>
@@ -144,7 +144,7 @@ export class ArchbaseDialog {
 		onCancel?: () => void,
 	) => {
 		modals.open({
-			title: title || i18next.t('archbase:Informe'),
+			title: title || archbaseI18next.t('archbase:Informe'),
 			children: (
 				<Paper>
 					<TextInput label={label} placeholder={placeholder} data-autofocus onChange={onInputChange} />
@@ -164,7 +164,7 @@ export class ArchbaseDialog {
 						}}
 						mt="md"
 					>
-						{i18next.t('archbase:Cancel')}
+						{archbaseI18next.t('archbase:Cancel')}
 					</Button>
 				</Paper>
 			),

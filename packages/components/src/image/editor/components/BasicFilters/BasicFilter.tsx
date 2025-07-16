@@ -2,7 +2,7 @@
 import React, { memo, useEffect, useState } from 'react'
 import { IBasicFilterState } from '../../models/index.models';
 import Input from '../Input/Input';
-import i18next from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 
 export interface BasicFilterProps {
   color: string;
@@ -22,6 +22,7 @@ const _initialState: IBasicFilterState = {
 
 const BasicFilter = memo(({ color, initialState = _initialState, changeFilter = () => { } }: BasicFilterProps) => {
   const [state, setState] = useState<IBasicFilterState>(initialState as any)
+  const { t } = useArchbaseTranslation()
 
   useEffect(() => {
     if (initialState) {
@@ -54,7 +55,7 @@ const BasicFilter = memo(({ color, initialState = _initialState, changeFilter = 
 
   return <div>
     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-      <p className="item-panel">{`${i18next.t('Contrast')}`}</p>
+      <p className="item-panel">{`${t('Contrast')}`}</p>
       <p className="item-panel">{(+state.contrast).toFixed(2)}</p>
     </div>
 
@@ -75,7 +76,7 @@ const BasicFilter = memo(({ color, initialState = _initialState, changeFilter = 
     </div>
 
     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-      <p className="item-panel">{`${i18next.t('Brightness')}`}</p>
+      <p className="item-panel">{`${t('Brightness')}`}</p>
       <p className="item-panel">{(+state.brightness).toFixed(2)}</p>
     </div>
 
@@ -95,7 +96,7 @@ const BasicFilter = memo(({ color, initialState = _initialState, changeFilter = 
     </div>
 
     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-      <p className="item-panel">{`${i18next.t('Grayscale')}`}</p>
+      <p className="item-panel">{`${t('Grayscale')}`}</p>
       <p className="item-panel">{(+state.grayscale).toFixed(2)}</p>
     </div>
 
@@ -114,7 +115,7 @@ const BasicFilter = memo(({ color, initialState = _initialState, changeFilter = 
         value={state.grayscale} />
     </div>
     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-      <p className="item-panel">{`${i18next.t('Saturate')}`}</p>
+      <p className="item-panel">{`${t('Saturate')}`}</p>
       <p className="item-panel">{(+state.saturate).toFixed(2)}</p>
     </div>
 
@@ -134,7 +135,7 @@ const BasicFilter = memo(({ color, initialState = _initialState, changeFilter = 
     </div>
 
     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-      <p className="item-panel">{`${i18next.t('Sepia')}`}</p>
+      <p className="item-panel">{`${t('Sepia')}`}</p>
       <p className="item-panel">{(+state.sepia).toFixed(2)}</p>
     </div>
 
@@ -154,7 +155,7 @@ const BasicFilter = memo(({ color, initialState = _initialState, changeFilter = 
     </div>
 
     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-      <p className="item-panel">{`${i18next.t('Blur')}`}</p>
+      <p className="item-panel">{`${t('Blur')}`}</p>
       <p className="item-panel">{(+state.blur).toFixed(2)}</p>
     </div>
 

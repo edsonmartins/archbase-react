@@ -1,7 +1,7 @@
 import { ArchbaseForm } from '@archbase/layout';
 import { ArchbaseDataSource } from '@archbase/data';
 import { ArchbaseList } from '@archbase/components';
-import { detectDataSourceVersion } from '@archbase/core';
+import { detectDataSourceVersion, getI18nextInstance } from '@archbase/core';
 import {
 	ActionIcon,
 	Box,
@@ -17,7 +17,7 @@ import {
 	Tooltip,
 } from '@mantine/core';
 import { IconArrowDown, IconArrowUp } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import { cloneDeep } from 'lodash';
 import React, { Component } from 'react';
 import { CustomSortItem } from './ArchbaseAdvancedFilter';
@@ -249,12 +249,12 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
 								width: '100%',
 							}}
 						>
-							<Text style={{ fontWeight: '700' }}>{t('archbase:Selecione os campos p/ o filtro rápido:')}</Text>
+							<Text style={{ fontWeight: '700' }}>{getI18nextInstance().t('archbase:Selecione os campos p/ o filtro rápido:')}</Text>
 							<Checkbox
 								checked={this.state.allChecked}
 								style={{ cursor: 'pointer' }}
 								onChange={(event) => this.selectAllFields(event.currentTarget.checked)}
-								label={t('archbase:Selecionar todos ?')}
+								label={getI18nextInstance().t('archbase:Selecionar todos ?')}
 							/>
 						</Paper>
 						<Grid.Col>
@@ -284,7 +284,7 @@ class ArchbaseFilterSelectFields extends Component<ArchbaseFilterSelectFieldsPro
 											</ActionIcon>
 										</Tooltip>
 									</div>
-									<Text>{t('archbase:Ordenação')}</Text>
+									<Text>{getI18nextInstance().t('archbase:Ordenação')}</Text>
 								</div>
 								<ScrollArea className="sort-body">
 									<ArchbaseList<any, any>

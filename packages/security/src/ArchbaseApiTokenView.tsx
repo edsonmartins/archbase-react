@@ -21,7 +21,7 @@ import {
 	IconPlus,
 	IconTrashX,
 } from '@tabler/icons-react';
-import { t } from 'i18next';
+import { useArchbaseTranslation } from '@archbase/core';
 import { useRef, useState } from 'react';
 import { ApiTokenModal } from './ApiTokenModal';
 import { ArchbaseApiTokenService } from './ArchbaseApiTokenService';
