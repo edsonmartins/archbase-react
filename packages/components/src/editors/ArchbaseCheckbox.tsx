@@ -178,7 +178,7 @@ export function ArchbaseCheckbox<T, ID>({
 
 	const isReadOnly = () => {
 		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
-		return v1v2Compatibility.isReadOnly(readOnly);
+		return readOnly || v1v2Compatibility.isReadOnly;
 	};
 
 	return (

@@ -290,7 +290,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
 
 	const isReadOnly = () => {
 		// 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
-		return v1v2Compatibility.isReadOnly(readOnly);
+		return readOnly || v1v2Compatibility.isReadOnly;
 	};
 
 	const icon = iconSearch ? iconSearch : <IconSearch size="1rem" />;

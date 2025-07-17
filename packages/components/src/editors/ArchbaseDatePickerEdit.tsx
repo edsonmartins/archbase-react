@@ -381,7 +381,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		let _readOnly = readOnly;
 		if (dataSource && !readOnly) {
 			// 🔄 MIGRAÇÃO V1/V2: Usar compatibilidade para determinar readonly
-			_readOnly = v1v2Compatibility.isReadOnly(readOnly);
+			_readOnly = readOnly || v1v2Compatibility.isReadOnly;
 		}
 		return _readOnly;
 	};
