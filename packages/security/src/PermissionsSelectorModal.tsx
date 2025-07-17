@@ -119,7 +119,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
             setAvailablePermissions(allPermissions)
             setGrantedPermissions(permissionsGranted)
         }
-    }, [securityId, type, dataSource])
+    }, [securityId, type])
 
     const handleAdd = () => {
         if (selectedAvailablePermission?.value && securityId) {
@@ -277,7 +277,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
             availablePermissionsTree.collapseAllNodes()
             loadPermissions()
         }
-    }, [opened, type, securityId, dataSource])
+    }, [opened, type, securityId, loadPermissions])
 
     // Não exibir o modal se não houver dataSource
     if (!dataSource) {
