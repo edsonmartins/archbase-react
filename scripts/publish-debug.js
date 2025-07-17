@@ -202,10 +202,6 @@ function main() {
   // Limpar Verdaccio completamente
   cleanupAllVerdaccioPackages();
   
-  // Configurar para debug
-  log(`⚙️  Configurando para modo debug...`, YELLOW);
-  execSync(`node ${path.join(__dirname, 'build-config.js')} debug`, { stdio: 'inherit' });
-  
   // Build em modo debug
   log(`🔧 Fazendo build debug...`, YELLOW);
   execSync(`node ${path.join(__dirname, 'build-unified.js')} --debug`, { stdio: 'inherit' });
