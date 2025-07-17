@@ -4,6 +4,8 @@ import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 import pkg from './package.json';
 
+const isDebug = process.env.NODE_ENV === 'development';
+
 export default defineConfig({
   plugins: [
     react(),
@@ -57,14 +59,14 @@ export default defineConfig({
         }
       }
     },
-    sourcemap: false,
+    sourcemap: isDebug,
     minify: 'esbuild',
     target: 'esnext'
   },
   esbuild: {
       "target": "esnext"
   },
-  mode: 'production',
+  mode: isDebug ? 'development' : 'production',
   test: {
     globals: true,
     environment: 'jsdom',
