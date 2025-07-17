@@ -1276,7 +1276,7 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 
 	public prior(): this {
 		this.validateDataSourceActive('prior');
-		if (!this.inserting || !this.editing || this.isBOF() || this.isEOF()) {
+		if (this.inserting || this.editing || this.isBOF() || this.isEOF()) {
 			const msg = archbaseI18next.t('archbase:notAllowedBrowseRecords', { dataSourceName: this.name });
 			this.publishEventError(msg, {});
 			throw new ArchbaseDataSourceError(msg);

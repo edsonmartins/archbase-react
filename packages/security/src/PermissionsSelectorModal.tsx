@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { useArchbaseTheme, ARCHBASE_IOC_API_TYPE, getKeyByEnumValue, getI18nextInstance } from "@archbase/core";
 import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, ScrollArea, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useMantineColorScheme, useTree } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight, IconBorderCornerSquare, IconChevronDown } from "@tabler/icons-react";
@@ -30,10 +30,10 @@ export interface PermissionsSelectorProps {
 }
 
 export function PermissionsSelectorModal({ dataSource, opened, close }: PermissionsSelectorProps) {
-    // Verifica se o dataSource existe antes de acessá-lo
-    const name = dataSource?.getFieldValue("name") || '';
-    const securityId = dataSource?.getFieldValue("id") || '';
-    const type = dataSource?.getFieldValue("type") || '';
+    // Memoiza os valores do dataSource para evitar recálculos
+    const name = useMemo(() => dataSource?.getFieldValue("name") || '', [dataSource]);
+    const securityId = useMemo(() => dataSource?.getFieldValue("id") || '', [dataSource]);
+    const type = useMemo(() => dataSource?.getFieldValue("type") || '', [dataSource]);
 
     // const theme = useArchbaseTheme() // Temporarily disabled
     const availablePermissionsTree = useTree()
@@ -113,7 +113,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
         }), [grantedPermissionsActionIds, type, debouncedAvailablePermissionsFilter])
 
     const loadPermissions = useCallback(async () => {
-        if (securityId && dataSource) {
+        if (securityId) {
             const permissionsGranted = await resourceApi.getPermissionsBySecurityId(securityId, type)
             const allPermissions = await resourceApi.getAllPermissionsAvailable()
             setAvailablePermissions(allPermissions)
