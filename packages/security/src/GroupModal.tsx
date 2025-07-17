@@ -1,10 +1,10 @@
 import React from 'react'
 import { Grid, ScrollArea, Stack } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
-import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
+import { getI18nextInstance } from '@archbase/core';
 import { GroupDto } from './SecurityDomain'
 import { ArchbaseDataSource } from '@archbase/data'
-import { Modal, Button, Group } from '@mantine/core'
+import { ArchbaseFormModalTemplate } from '@archbase/template'
 import { ArchbaseEdit } from '@archbase/components'
 
 export interface GroupModalOptions {
@@ -29,12 +29,17 @@ export const GroupModal = (props: GroupModalProps) => {
   const focusTrapRef = useFocusTrap()
   const options = {...(props.options ?? {}) }
   return (
-    <Modal
+    <ArchbaseFormModalTemplate
       opened={props.opened}
-      onClose={props.onClickCancel}
+      onClickOk={props.onClickOk}
+      onClickCancel={props.onClickCancel}
+      onCustomSave={props.onCustomSave}
+      onAfterSave={props.onAfterSave}
       title={getI18nextInstance().t('archbase:Grupo')}
       size="60%"
+      height="460px"
       styles={{content: {maxWidth: 1000}}}
+      dataSource={props.dataSource}
     >
       <ScrollArea ref={focusTrapRef} style={{ height: '460px' }}>
         <Stack w={"98%"}>
@@ -68,14 +73,6 @@ export const GroupModal = (props: GroupModalProps) => {
           )}
         </Stack>
       </ScrollArea>
-      <Group mt="md" justify="flex-end">
-        <Button variant="outline" onClick={() => props.onClickCancel()}>
-          {getI18nextInstance().t('archbase:Cancelar')}
-        </Button>
-        <Button onClick={() => props.onClickOk()}>
-          {getI18nextInstance().t('archbase:Salvar')}
-        </Button>
-      </Group>
-    </Modal>
+    </ArchbaseFormModalTemplate>
   )
 }

@@ -80,7 +80,6 @@ export function ArchbaseRating<T, ID>({
 
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
-		console.log(`[ArchbaseRating] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
 	const [currentValue, setCurrentValue] = useState<number | undefined>(value);
 	const innerComponentRef = innerRef || useRef<any>(null);

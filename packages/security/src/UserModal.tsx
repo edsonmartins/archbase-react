@@ -1,11 +1,10 @@
 import { ARCHBASE_IOC_API_TYPE, getI18nextInstance } from '@archbase/core'
 import { ArchbaseDataSource } from '@archbase/data'
-import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect } from '@archbase/components'
-import { PasswordInput } from '@mantine/core'
+import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit } from '@archbase/components'
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@archbase/data'
 import { ArchbaseNotifications } from '@archbase/components'
-// import { ArchbaseFormModalTemplate } from '@archbase/components' // Temporarily disabled
-import { Grid, Group, Input, ScrollArea, Space, Stack, Text, Modal, Button } from '@mantine/core'
+import { ArchbaseFormModalTemplate } from '@archbase/template'
+import { Grid, Group, Input, ScrollArea, Space, Stack, Text } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { useEffect, useState } from 'react'
@@ -122,13 +121,24 @@ export const UserModal = (props: UserModalProps) => {
   }, [props.dataSource.getFieldValue("password")])
 
   return (
-    <Modal
+    <ArchbaseFormModalTemplate
       title={getI18nextInstance().t('archbase:Usuário')}
       size="80%"
-      style={{ height: '540px' }}
+      height={'540px'}
       styles={{ content: { maxWidth: 1000 } }}
+      dataSource={props.dataSource}
       opened={props.opened}
-      onClose={props.onClickCancel}
+      onClickOk={props.onClickOk}
+      onClickCancel={props.onClickCancel}
+      onCustomSave={props.onCustomSave}
+      onAfterSave={props.onAfterSave}
+      onBeforeOk={(currentRecord) => {
+        if (!currentRecord.password && props.dataSource.isInserting()) {
+          setPasswordError(getI18nextInstance().t('archbase:Informe a senha'))
+          return Promise.reject()
+        }
+        return Promise.resolve()
+      }}
     >
       <ScrollArea ref={focusTrapRef} style={{ height: '500px' }}>
         <Stack w={"98%"}>
@@ -182,8 +192,10 @@ export const UserModal = (props: UserModalProps) => {
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-              <PasswordInput
+              <ArchbasePasswordEdit
                 label={`${getI18nextInstance().t('archbase:Senha usuário')}`}
+                dataSource={props.dataSource}
+                dataField="password"
                 error={passwordError}
                 required={props.dataSource.getFieldValue("isNewUser")}
               />
@@ -321,6 +333,6 @@ export const UserModal = (props: UserModalProps) => {
           <Space h={'12px'} />
         </Stack>
       </ScrollArea>
-    </Modal>
+    </ArchbaseFormModalTemplate>
   )
 }

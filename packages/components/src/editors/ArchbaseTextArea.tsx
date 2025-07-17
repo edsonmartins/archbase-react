@@ -81,7 +81,6 @@ export function ArchbaseTextArea<T, ID>({
 
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
-		console.log(`[ArchbaseTextArea] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
 
 	const [value, setValue] = useState<string>('');

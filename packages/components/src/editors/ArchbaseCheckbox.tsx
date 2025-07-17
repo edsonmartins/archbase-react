@@ -79,7 +79,6 @@ export function ArchbaseCheckbox<T, ID>({
 
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
-		console.log(`[ArchbaseCheckbox] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
 
 	const [checked, setChecked] = useState<boolean | undefined>(isChecked);

@@ -76,7 +76,6 @@ export function ArchbaseChip<T, ID>({
 
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
-		console.log(`[ArchbaseChip] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
 	const [checked, setChecked] = useState<boolean>(isChecked ? true : false);
 	const innerComponentRef = innerRef || useRef<any>(null);

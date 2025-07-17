@@ -179,7 +179,6 @@ export function ArchbaseNumberEdit<T, ID>({
 
   // 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
   if (process.env.NODE_ENV === 'development' && dataSource) {
-    console.log(`[ArchbaseNumberEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
   }
 
   const [maskedValue, setMaskedValue] = useState<string>('');

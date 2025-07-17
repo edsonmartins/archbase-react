@@ -33,7 +33,6 @@ export interface ArchbaseAdvancedTabProps {
 const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 	const { favicon, title, customTitle, activeTab, position, contentWidth, onClick, onClose, setDragging, tabsContentWidth, animateTabMove,
 		isDragging, index, sorting, showButtonClose } = props;
-	console.log('[ArchbaseAdvancedTab] Render tab:', title, 'showButtonClose:', showButtonClose, 'activeTab:', activeTab);
 	const [width, setWidth] = useState(0);
 	const [isAdded, setAdd] = useState(false);
 	const [movePosition, setMovePosition] = useState<Number|null>(null);
@@ -131,7 +130,6 @@ const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 				<div className="archbase_tab-title">{customTitle ?? title}</div>
 				<div className="archbase_tab-drag-handle" title={customTitle ?? title} onClick={onClick} onPointerDown={e => (onClick(e))} onMouseUp={onDragEnd} onMouseMove={onDragMove} onMouseDown={onDragStart}></div>
 				{showButtonClose?<div className="archbase_tab-close" onClick={(e) => {
-					console.log('[ArchbaseAdvancedTab] Close button clicked for tab:', title);
 					onClose(e);
 				}}></div>:null}
 			</div>
@@ -261,13 +259,9 @@ export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props)
 	}
 
 	const closeTab = (idx:any) => {
-		console.log('[ArchbaseAdvancedTabs] closeTab called with idx:', idx);
-		console.log('[ArchbaseAdvancedTabs] onClose function exists:', !!onClose);
 		if (!!onClose) {
-			console.log('[ArchbaseAdvancedTabs] Calling onClose with idx:', idx);
 			onClose(idx);
 		} else {
-			console.log('[ArchbaseAdvancedTabs] No onClose, using onChange fallback');
 			onChange(tabs.filter((_m, index) => index != idx));
 		}
 	}
@@ -293,7 +287,6 @@ export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props)
 								setDragging={setDragging}
 								showButtonClose={(() => {
 									const shouldShow = buttonCloseOnlyActiveTab ? activeTab === m.key : true;
-									console.log('[ArchbaseAdvancedTabs] showButtonClose for', m.title, ':', shouldShow, 'buttonCloseOnlyActiveTab:', buttonCloseOnlyActiveTab, 'activeTab:', activeTab, 'tabKey:', m.key);
 									return shouldShow;
 								})()}
 								tabsContentWidth={tabContentEl.current && tabContentEl.current.clientWidth}

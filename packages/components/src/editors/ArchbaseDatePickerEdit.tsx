@@ -330,7 +330,6 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 	// 🔄 DEBUG: Log da versão detectada (apenas desenvolvimento)
 	if (process.env.NODE_ENV === 'development' && dataSource) {
-		console.log(`[ArchbaseDatePickerEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
 
 	// 🔄 MIGRAÇÃO V1/V2: Converter valores string para Date se necessário

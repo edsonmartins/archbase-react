@@ -40,8 +40,8 @@ function configureMode(isDebug) {
   const mode = isDebug ? 'debug' : 'production';
   log(`⚙️  Configurando para modo ${mode}...`, YELLOW);
   
-  const configScript = path.join(__dirname, 'build-config.js');
-  execSync(`node ${configScript} ${mode}`, { stdio: 'inherit' });
+  // Configuração integrada - não precisa mais de arquivo separado
+  log(`📝 Modo configurado: ${mode}`, BLUE);
 }
 
 function buildWithTurbo(isDebug) {

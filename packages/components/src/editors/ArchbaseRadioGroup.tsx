@@ -114,7 +114,6 @@ export function ArchbaseRadioGroup<T, ID, O>({
 
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
-		console.log(`[ArchbaseRadioGroup] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
 	const [options, _setOptions] = useState<RadioItemProps[]>(
 		buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),

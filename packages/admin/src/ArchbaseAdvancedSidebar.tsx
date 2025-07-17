@@ -120,12 +120,6 @@ export function ArchbaseAdvancedSidebar({
 		: (iconLightColor ?? theme.colors[theme.primaryColor][7])
 
 	const groups = useMemo(() => {
-		console.log('🐛 ArchbaseAdvancedSidebar - groups useMemo executado:', {
-			navigationDataLength: navigationData.length,
-			activeGroupName,
-			collapsed,
-			timestamp: new Date().toISOString()
-		});
 		const result: Set<GroupItemSidebar> = new Set();
 		navigationData.forEach((item) => {
 			if (item.showInSidebar && (!item.disabled || !item.hideDisabledItem)) {
@@ -213,13 +207,6 @@ export function ArchbaseAdvancedSidebar({
 			const filteredItems = navigationData
 				.filter((itm) => itm.showInSidebar === true && (!itm.disabled || !itm.hideDisabledItem) && itm.group && itm.group.name === group.name);
 			
-			console.log('🐛 ArchbaseAdvancedSidebar - buildMenuItem será chamado para grupo:', {
-				groupName: group.name,
-				itemsCount: filteredItems.length,
-				items: filteredItems.map(item => ({ label: item.label, link: item.link })),
-				timestamp: new Date().toISOString()
-			});
-			
 			group.links = filteredItems
 				.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem, sidebarTextColor, collapsedSubmenuWidth));
 		});
@@ -280,12 +267,6 @@ export function ArchbaseAdvancedSidebar({
 		<>
 			{groups.length == 1 ? (
 				(() => {
-					console.log('🐛 ArchbaseAdvancedSidebar - buildNavbar (single group) será chamado:', {
-						navigationDataLength: navigationData.length,
-						navigationItems: navigationData.map(item => ({ label: item.label, link: item.link })),
-						timestamp: new Date().toISOString()
-					});
-					
 					return buildNavbar(
 						sidebarRef,
 						collapsed,

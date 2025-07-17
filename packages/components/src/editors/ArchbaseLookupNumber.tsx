@@ -132,7 +132,6 @@ export function ArchbaseLookupNumber<T, ID, O>({
 
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
-		console.log(`[ArchbaseLookupNumber] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
 
 	const theme = useMantineTheme();

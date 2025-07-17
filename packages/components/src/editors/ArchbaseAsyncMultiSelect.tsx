@@ -252,7 +252,6 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
 
   // 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
   if (process.env.NODE_ENV === 'development' && dataSource) {
-    console.log(`[ArchbaseAsyncMultiSelect] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
   }
 
   const combobox = useCombobox({

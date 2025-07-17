@@ -111,7 +111,6 @@ export function ArchbaseChipGroup<T, ID, O>({
 
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
-		console.log(`[ArchbaseChipGroup] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
 	const [options, _setOptions] = useState<ChipItemProps[]>(
 		buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),

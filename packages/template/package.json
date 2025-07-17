@@ -1,6 +1,6 @@
 {
   "name": "@archbase/template",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Template components for Archbase React v3 - High-level templates and layouts",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",

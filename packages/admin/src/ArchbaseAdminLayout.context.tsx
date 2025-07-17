@@ -60,14 +60,9 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 		onChange: onNavigationDataChange,
 	});
 
-	// DEBUG: Log quando navigationData é atualizado
+	// navigationData change listener
 	useEffect(() => {
-		console.log('🐛 ArchbaseAdminLayoutContext - navigationData atualizado:', {
-			navigationDataLength: navigationData?.length || 0,
-			navigationItems: navigationData?.map(item => ({ label: item.label, link: item.link })) || [],
-			enableSecurity,
-			timestamp: new Date().toISOString()
-		});
+		// Effect for navigation data changes
 	}, [navigationData, enableSecurity]);
 
 	const { securityManager } = useArchbaseSecurityManager({
@@ -77,20 +72,8 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 	});
 
 	useEffect(() => {
-		console.log('🐛 ArchbaseAdminLayoutContext - useEffect security executado:', {
-			enableSecurity,
-			userId: user?.id,
-			initialNavigationDataLength: initialNavigationData?.length || 0,
-			timestamp: new Date().toISOString()
-		});
-		
 		if (enableSecurity) {
 			const filteredData = initialNavigationData.filter(item => item.showInSidebar);
-			console.log('🐛 ArchbaseAdminLayoutContext - registrando ações de segurança:', {
-				filteredDataLength: filteredData.length,
-				items: filteredData.map(item => ({ label: item.label, link: item.link })),
-				timestamp: new Date().toISOString()
-			});
 			
 			filteredData.forEach(item => {
 				securityManager.registerAction(item.label, item.label);
@@ -98,10 +81,6 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 			});
 			
 			securityManager.apply(() => {
-				console.log('🐛 ArchbaseAdminLayoutContext - securityManager.apply executado:', {
-					timestamp: new Date().toISOString()
-				});
-				
 				const updatedNavigationData = initialNavigationData.map(item => ({
 					...item,
 					disabled: !securityManager.hasPermission(item.label),
@@ -113,12 +92,6 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 						}
 					})
 				}))
-				
-				console.log('🐛 ArchbaseAdminLayoutContext - setNavigationData será chamado:', {
-					updatedNavigationDataLength: updatedNavigationData.length,
-					items: updatedNavigationData.map(item => ({ label: item.label, link: item.link, disabled: item.disabled })),
-					timestamp: new Date().toISOString()
-				});
 				
 				setNavigationData(updatedNavigationData);
 			});

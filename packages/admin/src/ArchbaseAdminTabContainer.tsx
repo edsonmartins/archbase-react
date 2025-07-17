@@ -41,15 +41,10 @@ export function ArchbaseAdminTabContainer({
 	const tabsRef = useRef<any>([]);
 	const size = useComponentSize(tabsRef);
 	const navigationContext = useArchbaseNavigationContext();
-	console.log('[TabContainer] Full navigation context:', navigationContext);
 	const { state, dispatch } = navigationContext;
-	console.log('[TabContainer] Context state:', state);
-	console.log('[TabContainer] Context dispatch:', dispatch);
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
 
 	const handleOnClose = useCallback((id: string) => {
-		console.log('[TabContainer] handleOnClose called for:', id);
-		console.log('[TabContainer] Current openedTabs:', openedTabs.map(t => ({ id: t.id, path: t.path })));
 		const closedIndex = openedTabs.findIndex((tab) => tab.path === id);
 		let redirect: string | undefined;
 		if (closedIndex >= 0) {
@@ -85,14 +80,11 @@ export function ArchbaseAdminTabContainer({
 			onChangeActiveTabId && onChangeActiveTabId(undefined);
 			navigate(adminLayoutContextValue.navigationRootLink!);
 		}
-		console.log('[TabContainer] handleOnClose completed, dispatching DONE');
 		dispatch({ type: 'DONE', link: '' });
 	}, [openedTabs, activeTabId, navigate, adminLayoutContextValue.navigationRootLink, dispatch, onChangeOpenedTabs, onChangeActiveTabId]);
 
 	useEffect(() => {
-		console.log('[TabContainer] useEffect - linkClosed:', state?.linkClosed);
 		if (state?.linkClosed) {
-			console.log('[TabContainer] Calling handleOnClose from useEffect');
 			handleOnClose(state?.linkClosed);
 		}
 	}, [state?.linkClosed, handleOnClose]);
@@ -186,11 +178,8 @@ export function ArchbaseAdminTabContainer({
 	};
 
 	const handleOnCloseRequest = (id: string) => {
-		console.log('[TabContainer] handleOnCloseRequest - User clicked close on tab:', id);
-		console.log('[TabContainer] About to dispatch USER_CLOSE_REQUEST with dispatch:', dispatch);
 		try {
 			dispatch({ type: 'USER_CLOSE_REQUEST', link: id });
-			console.log('[TabContainer] Dispatch completed successfully');
 		} catch (error) {
 			console.error('[TabContainer] Dispatch failed:', error);
 		}

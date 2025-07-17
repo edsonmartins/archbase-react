@@ -28,10 +28,7 @@ export function useArchbaseV1V2Compatibility<T>(
     'updateFieldArrayItem' in dataSource
   );
   
-  // Log da versão detectada (apenas desenvolvimento)
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`[${componentName}] DataSource version:`, isDataSourceV2 ? 'V2' : 'V1');
-  }
+  // Versão detectada automaticamente
 
   // 2. ESTADOS DUAIS V1/V2 (OBRIGATÓRIO)
   // V1: Estado tradicional + forceUpdate

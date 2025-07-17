@@ -134,7 +134,6 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && props.dataSource) {
-		console.log(`[ArchbaseMaskEdit] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
 
 	const innerComponentRef = innerRef || useRef<any>(null);

@@ -90,7 +90,6 @@ export function ArchbaseSwitch<T, ID>({
 
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
-		console.log(`[ArchbaseSwitch] DataSource version: ${v1v2Compatibility.dataSourceVersion}`);
 	}
 	const [checked, setChecked] = useState<boolean | undefined>(isChecked);
 	const innerComponentRef = useRef<any>(null);
