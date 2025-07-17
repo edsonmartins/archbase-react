@@ -296,7 +296,7 @@ export function useArchbaseRemoteDataSource<T, ID>(
         }
       }
     }
-  }, [queryFn, name, props.onError])
+  }, [queryFn, internalState.name, props.onError])
 
   const registerListeners = useCallback((dataSource: ArchbaseDataSource<T, string>) => {
     if (!listenerRegistered.current) {
@@ -323,12 +323,12 @@ export function useArchbaseRemoteDataSource<T, ID>(
           return { ...prev, isLoading: true }
         })
         queryFn(
-          name,
+          internalState.name,
           currentPage,
           pageSize,
-          filter,
-          sort,
-          id
+          internalState.filter,
+          internalState.sort,
+          internalState.id
         ).catch((err) => {
           const userError = processErrorMessage(err)
           setInternalState((prev) => ({
@@ -365,12 +365,12 @@ export function useArchbaseRemoteDataSource<T, ID>(
       }
     }
   }, [
-    name,
-    sort,
-    filter,
-    id,
-    currentPage,
-    pageSize
+    internalState.name,
+    internalState.sort,
+    internalState.filter,
+    internalState.id,
+    internalState.currentPage,
+    internalState.pageSize
   ])
 
   const clearError = () => {
