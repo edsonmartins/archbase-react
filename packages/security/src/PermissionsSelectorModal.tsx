@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState, useMemo } from "react";
-import { useArchbaseTheme, ARCHBASE_IOC_API_TYPE, getKeyByEnumValue, getI18nextInstance } from "@archbase/core";
+import { ARCHBASE_IOC_API_TYPE, getKeyByEnumValue, getI18nextInstance } from "@archbase/core";
 import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, ScrollArea, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useMantineColorScheme, useTree } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight, IconBorderCornerSquare, IconChevronDown } from "@tabler/icons-react";
 import { SecurityType } from "./SecurityType";
 import { useArchbaseRemoteServiceApi, ArchbaseRemoteDataSource } from "@archbase/data";
 import { ResouceActionPermissionDto, ResoucePermissionsWithTypeDto } from "./SecurityDomain";
 import { ArchbaseResourceService } from "./ArchbaseResourceService";
-import { useArchbaseTranslation } from '@archbase/core';
 import { useDebouncedValue } from "@mantine/hooks";
 import { ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from "@archbase/layout";
 
@@ -35,7 +34,6 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
     const securityId = useMemo(() => dataSource?.getFieldValue("id") || '', [dataSource]);
     const type = useMemo(() => dataSource?.getFieldValue("type") || '', [dataSource]);
 
-    // const theme = useArchbaseTheme() // Temporarily disabled
     const availablePermissionsTree = useTree()
     const grantedPermissionsTree = useTree()
     const [availablePermissions, setAvailablePermissions] = useState<ResoucePermissionsWithTypeDto[]>([])
@@ -50,11 +48,10 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
 
     const resourceApi = useArchbaseRemoteServiceApi<ArchbaseResourceService>(ARCHBASE_IOC_API_TYPE.Resource)
 
-    const theme = useArchbaseTheme();
     const { colorScheme } = useMantineColorScheme();
     const selectedColor = colorScheme === "dark" ? "var(--mantine-primary-color-7)" : "var(--mantine-primary-color-4)"
 
-    const permissionsGrantedData: (permissionsGranted: ResoucePermissionsWithTypeDto[]) => TreeNodeData[] = useCallback((permissionsGranted) => permissionsGranted
+    const permissionsGrantedData = useMemo(() => grantedPermissions
         .sort((a, b) => a.resourceDescription.localeCompare(b.resourceDescription))
         .map(resourcePermissions => {
             return (
@@ -77,13 +74,13 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                         })
                 }
             )
-        }), [debouncedGrantedPermissionsFilter])
+        }), [grantedPermissions, debouncedGrantedPermissionsFilter])
 
-    const grantedPermissionsActionIds = useCallback((permissionsGranted: ResoucePermissionsWithTypeDto[]) => permissionsGranted
+    const grantedPermissionsActionIds = useMemo(() => grantedPermissions
         .map(resourcePermissions => resourcePermissions.permissions.map(permission => permission.actionId))
-        .flat(), [])
+        .flat(), [grantedPermissions])
 
-    const allPermissionsData: (allPermissions: ResoucePermissionsWithTypeDto[], permissionsGranted: ResoucePermissionsWithTypeDto[]) => TreeNodeData[] = useCallback((allPermissions, permissionsGranted) => allPermissions
+    const allPermissionsData = useMemo(() => availablePermissions
         .sort((a, b) => a.resourceDescription.localeCompare(b.resourceDescription))
         .map(resourcePermissions => {
             return (
@@ -94,7 +91,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                         .filter(permission => permission.actionDescription.toLowerCase().includes(debouncedAvailablePermissionsFilter.toLowerCase()))
                         .sort((a, b) => a.actionDescription.localeCompare(b.actionDescription))
                         .map(permission => {
-                            const permissionGranted = permissionsGranted
+                            const permissionGranted = grantedPermissions
                                 .find(resourcePermissionsGranted => resourcePermissionsGranted.resourceId === resourcePermissions.resourceId)?.permissions
                                 .find(permissionGranted => permissionGranted.actionId === permission.actionId)
                             return (
@@ -102,7 +99,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                                     value: permission.actionId,
                                     label: permission.actionDescription,
                                     nodeProps: {
-                                        granted: grantedPermissionsActionIds(permissionsGranted).includes(permission.actionId) && permissionGranted?.types?.includes(getKeyByEnumValue(SecurityType, type)!),
+                                        granted: grantedPermissionsActionIds.includes(permission.actionId) && permissionGranted?.types?.includes(getKeyByEnumValue(SecurityType, type)!),
                                         owner: resourcePermissions
                                     }
                                 }
@@ -110,7 +107,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                         })
                 }
             )
-        }), [grantedPermissionsActionIds, type, debouncedAvailablePermissionsFilter])
+        }), [availablePermissions, grantedPermissions, grantedPermissionsActionIds, type, debouncedAvailablePermissionsFilter])
 
     const loadPermissions = useCallback(async () => {
         if (securityId) {
@@ -121,7 +118,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
         }
     }, [securityId, type])
 
-    const handleAdd = () => {
+    const handleAdd = useCallback(() => {
         if (selectedAvailablePermission?.value && securityId) {
             resourceApi.createPermission(securityId, selectedAvailablePermission.value, type)
                 .then((resouceActionPermissionDto: ResouceActionPermissionDto) => {
@@ -181,13 +178,13 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                             return updatedPermissionsGranted
                         })
 
-                        const resourceAvailablePermissions = allPermissionsData(availablePermissions, grantedPermissions)
-                            .filter(resourcePermissionsNode => resourcePermissionsNode.value === selectedAvailablePermission?.nodeProps?.owner?.resourceId)
-                            .map(resourcePermissionsNode => resourcePermissionsNode.children).flat()
+                        const resourceAvailablePermissions = allPermissionsData
+                            .filter((resourcePermissionsNode: any) => resourcePermissionsNode.value === selectedAvailablePermission?.nodeProps?.owner?.resourceId)
+                            .map((resourcePermissionsNode: any) => resourcePermissionsNode.children).flat()
 
-                        const previousSelectedPermissionIndex = resourceAvailablePermissions.map(permission => permission.value).indexOf(selectedAvailablePermission.value)
+                        const previousSelectedPermissionIndex = resourceAvailablePermissions.map((permission: any) => permission.value).indexOf(selectedAvailablePermission.value)
                         const nextSelectedAvailablePermission = resourceAvailablePermissions
-                            .find((permissionNode, index) => !permissionNode?.nodeProps?.granted
+                            .find((permissionNode: any, index: any) => !permissionNode?.nodeProps?.granted
                                 && permissionNode?.value !== selectedAvailablePermission.value
                                 && (resourceAvailablePermissions.length > previousSelectedPermissionIndex + 1
                                     ? index > previousSelectedPermissionIndex
@@ -200,9 +197,9 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                     }
                 })
         }
-    }
+    }, [selectedAvailablePermission, securityId, type, resourceApi, allPermissionsData, availablePermissions, grantedPermissions, availablePermissionsTree, grantedPermissionsTree])
 
-    const handleRemove = () => {
+    const handleRemove = useCallback(() => {
         if (selectedGrantedPermission?.nodeProps?.permissionId) {
             resourceApi.deletePermission(selectedGrantedPermission.nodeProps.permissionId)
                 .then(() => {
@@ -249,14 +246,14 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                         return updatedPermissionsGranted
                     })
 
-                    const resourceGrantedPermissions = permissionsGrantedData(grantedPermissions)
-                        .filter(resourcePermissionsNode => resourcePermissionsNode.value === selectedGrantedPermission?.nodeProps?.owner?.resourceId)
-                        .map(resourcePermissionsNode => resourcePermissionsNode.children).flat()
+                    const resourceGrantedPermissions = permissionsGrantedData
+                        .filter((resourcePermissionsNode: any) => resourcePermissionsNode.value === selectedGrantedPermission?.nodeProps?.owner?.resourceId)
+                        .map((resourcePermissionsNode: any) => resourcePermissionsNode.children).flat()
 
-                    const previousSelectedPermissionIndex = resourceGrantedPermissions.map(permission => permission.value).indexOf(selectedGrantedPermission.value)
+                    const previousSelectedPermissionIndex = resourceGrantedPermissions.map((permission: any) => permission.value).indexOf(selectedGrantedPermission.value)
 
                     const nextSelectedGrantedPermission = resourceGrantedPermissions
-                        .find((permissionNode, index) => permissionNode?.nodeProps?.types.includes(getKeyByEnumValue(SecurityType, type))
+                        .find((permissionNode: any, index: any) => permissionNode?.nodeProps?.types.includes(getKeyByEnumValue(SecurityType, type))
                             && permissionNode?.value !== selectedGrantedPermission.value
                             && (resourceGrantedPermissions.length > previousSelectedPermissionIndex + 1 ? index > previousSelectedPermissionIndex : true))
                     if (nextSelectedGrantedPermission?.value) {
@@ -265,7 +262,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                     setSelectedGrantedPermission(nextSelectedGrantedPermission)
                 })
         }
-    }
+    }, [selectedGrantedPermission, resourceApi, type, permissionsGrantedData, grantedPermissions, grantedPermissionsTree])
 
     useEffect(() => {
         if (opened && dataSource) {
@@ -302,7 +299,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                                         />
                                     </Group>
                                     <Tree
-                                        data={allPermissionsData(availablePermissions, grantedPermissions)}
+                                        data={allPermissionsData}
                                         selectOnClick={true}
                                         allowRangeSelection={false}
                                         tree={availablePermissionsTree}
@@ -310,13 +307,16 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                                             const isGranted = node?.nodeProps?.granted;
                                             const textColor = isGranted ? "dimmed" : undefined;
                                             const textDecoration = isGranted ? "line-through" : undefined;
+                                            
+                                            const handleClick = useCallback((event: any) => {
+                                                setSelectedAvailablePermission(node)
+                                                elementProps.onClick(event)
+                                            }, [node, elementProps.onClick])
+                                            
                                             return (
                                                 <Group ml={hasChildren ? 0 : 5} gap={5} {...elementProps}
                                                     bg={selected && level === 2 ? selectedColor : ""}
-                                                    onClick={(event) => {
-                                                        setSelectedAvailablePermission(node)
-                                                        elementProps.onClick(event)
-                                                    }}
+                                                    onClick={handleClick}
                                                 >
                                                     {hasChildren && (
                                                         <IconChevronDown
@@ -367,35 +367,39 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                                         />
                                     </Group>
                                     <Tree
-                                        data={permissionsGrantedData(grantedPermissions)}
+                                        data={permissionsGrantedData}
                                         selectOnClick={true}
                                         allowRangeSelection={false}
                                         tree={grantedPermissionsTree}
-                                        renderNode={({ level, node, expanded, hasChildren, selected, elementProps }) => (
-                                            <Group ml={hasChildren ? 0 : 5} gap={5} {...elementProps} bg={selected && level === 2 ? selectedColor : ""}
-                                                onClick={(event) => {
-                                                    setSelectedGrantedPermission(node)
-                                                    elementProps.onClick(event)
-                                                }}
-                                            >
-                                                {hasChildren && (
-                                                    <IconChevronDown
-                                                        size={18}
-                                                        style={{ transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}
-                                                    />
-                                                )}
-                                                {!hasChildren && (
-                                                    <IconBorderCornerSquare
-                                                        size={12}
-                                                        style={{ transform: 'rotate(-90deg)', marginTop: "-5px" }}
-                                                    />
-                                                )}
-                                                <Text>{translateDelimitedString(node.label as string)}</Text>
-                                                {node?.nodeProps?.types?.includes("USER") && <Badge color="blue">{getI18nextInstance().t('archbase:user')}</Badge>}
-                                                {node?.nodeProps?.types?.includes("GROUP") && <Badge color="orange">{getI18nextInstance().t('archbase:group')}</Badge>}
-                                                {node?.nodeProps?.types?.includes("PROFILE") && <Badge color="pink">{getI18nextInstance().t('archbase:profile')}</Badge>}
-                                            </Group>
-                                        )}
+                                        renderNode={({ level, node, expanded, hasChildren, selected, elementProps }) => {
+                                            const handleClick = useCallback((event: any) => {
+                                                setSelectedGrantedPermission(node)
+                                                elementProps.onClick(event)
+                                            }, [node, elementProps.onClick])
+                                            
+                                            return (
+                                                <Group ml={hasChildren ? 0 : 5} gap={5} {...elementProps} bg={selected && level === 2 ? selectedColor : ""}
+                                                    onClick={handleClick}
+                                                >
+                                                    {hasChildren && (
+                                                        <IconChevronDown
+                                                            size={18}
+                                                            style={{ transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}
+                                                        />
+                                                    )}
+                                                    {!hasChildren && (
+                                                        <IconBorderCornerSquare
+                                                            size={12}
+                                                            style={{ transform: 'rotate(-90deg)', marginTop: "-5px" }}
+                                                        />
+                                                    )}
+                                                    <Text>{translateDelimitedString(node.label as string)}</Text>
+                                                    {node?.nodeProps?.types?.includes("USER") && <Badge color="blue">{getI18nextInstance().t('archbase:user')}</Badge>}
+                                                    {node?.nodeProps?.types?.includes("GROUP") && <Badge color="orange">{getI18nextInstance().t('archbase:group')}</Badge>}
+                                                    {node?.nodeProps?.types?.includes("PROFILE") && <Badge color="pink">{getI18nextInstance().t('archbase:profile')}</Badge>}
+                                                </Group>
+                                            )
+                                        }}
                                     />
                                 </Grid.Col>
                             </Grid>
