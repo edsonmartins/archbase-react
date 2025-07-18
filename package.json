@@ -1,6 +1,6 @@
 {
   "name": "archbase-react",
-  "version": "3.0.2",
+  "version": "3.0.7",
   "private": true,
   "type": "module",
   "description": "Monorepo for Archbase React v3 - Modern TypeScript React Component Library",
@@ -19,6 +19,9 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "turbo dev",
+    "dev:link": "node scripts/dev-link.js",
+    "dev:restore": "node scripts/dev-link.js --restore",
+    "link:project": "node scripts/link-to-project.js",
     "build": "node scripts/build-unified.js",
     "build:dev": "node scripts/build-unified.js --debug",
     "build:prod": "node scripts/build-unified.js --publish",

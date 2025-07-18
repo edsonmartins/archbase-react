@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
+import React, { useCallback, useEffect, useState, useMemo, useLayoutEffect } from "react";
 import { useArchbaseTheme, ARCHBASE_IOC_API_TYPE, getKeyByEnumValue, getI18nextInstance } from "@archbase/core";
-import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, ScrollArea, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useMantineColorScheme, useTree } from "@mantine/core";
+import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useMantineColorScheme, useTree } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight, IconBorderCornerSquare, IconChevronDown } from "@tabler/icons-react";
 import { SecurityType } from "./SecurityType";
 import { useArchbaseRemoteServiceApi, ArchbaseRemoteDataSource } from "@archbase/data";
@@ -31,11 +31,22 @@ export interface PermissionsSelectorProps {
 
 export function PermissionsSelectorModal({ dataSource, opened, close }: PermissionsSelectorProps) {
     // Memoiza os valores do dataSource para evitar recálculos
-    const name = useMemo(() => dataSource?.getFieldValue("name") || '', [dataSource]);
-    const securityId = useMemo(() => dataSource?.getFieldValue("id") || '', [dataSource]);
-    const type = useMemo(() => dataSource?.getFieldValue("type") || '', [dataSource]);
+    const name = useMemo(() => {
+        const value = dataSource?.getFieldValue("name") || '';
+        console.log('[PermissionsSelectorModal] name memoization:', value);
+        return value;
+    }, [dataSource]);
+    const securityId = useMemo(() => {
+        const value = dataSource?.getFieldValue("id") || '';
+        console.log('[PermissionsSelectorModal] securityId memoization:', value);
+        return value;
+    }, [dataSource]);
+    const type = useMemo(() => {
+        const value = dataSource?.getFieldValue("type") || '';
+        console.log('[PermissionsSelectorModal] type memoization:', value);
+        return value;
+    }, [dataSource]);
 
-    // const theme = useArchbaseTheme() // Temporarily disabled
     const availablePermissionsTree = useTree()
     const grantedPermissionsTree = useTree()
     const [availablePermissions, setAvailablePermissions] = useState<ResoucePermissionsWithTypeDto[]>([])
@@ -113,9 +124,11 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
         }), [grantedPermissionsActionIds, type, debouncedAvailablePermissionsFilter])
 
     const loadPermissions = useCallback(async () => {
+        console.log('[PermissionsSelectorModal] loadPermissions called with:', { securityId, type });
         if (securityId) {
             const permissionsGranted = await resourceApi.getPermissionsBySecurityId(securityId, type)
             const allPermissions = await resourceApi.getAllPermissionsAvailable()
+            console.log('[PermissionsSelectorModal] loaded permissions:', { permissionsGranted, allPermissions });
             setAvailablePermissions(allPermissions)
             setGrantedPermissions(permissionsGranted)
         }
@@ -192,10 +205,17 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                                 && (resourceAvailablePermissions.length > previousSelectedPermissionIndex + 1
                                     ? index > previousSelectedPermissionIndex
                                     : true))
-                        if (nextSelectedAvailablePermission?.value) {
-                            availablePermissionsTree.select(nextSelectedAvailablePermission.value)
-                        }
-                        grantedPermissionsTree.expand(resouceActionPermissionDto.resourceId)
+                        // Executa seleção e expansão após um pequeno delay
+                        setTimeout(() => {
+                            try {
+                                if (nextSelectedAvailablePermission?.value) {
+                                    availablePermissionsTree.select(nextSelectedAvailablePermission.value)
+                                }
+                                grantedPermissionsTree.expand(resouceActionPermissionDto.resourceId)
+                            } catch (error) {
+                                console.warn('[PermissionsSelectorModal] Tree selection error:', error)
+                            }
+                        }, 50)
                         setSelectedAvailablePermission(nextSelectedAvailablePermission)
                     }
                 })
@@ -259,25 +279,46 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                         .find((permissionNode, index) => permissionNode?.nodeProps?.types.includes(getKeyByEnumValue(SecurityType, type))
                             && permissionNode?.value !== selectedGrantedPermission.value
                             && (resourceGrantedPermissions.length > previousSelectedPermissionIndex + 1 ? index > previousSelectedPermissionIndex : true))
-                    if (nextSelectedGrantedPermission?.value) {
-                        grantedPermissionsTree.select(nextSelectedGrantedPermission.value)
-                    }
+                    // Executa seleção após um pequeno delay
+                    setTimeout(() => {
+                        try {
+                            if (nextSelectedGrantedPermission?.value) {
+                                grantedPermissionsTree.select(nextSelectedGrantedPermission.value)
+                            }
+                        } catch (error) {
+                            console.warn('[PermissionsSelectorModal] Tree selection error:', error)
+                        }
+                    }, 50)
                     setSelectedGrantedPermission(nextSelectedGrantedPermission)
                 })
         }
     }
 
     useEffect(() => {
+        console.log('[PermissionsSelectorModal] useEffect triggered with:', { opened, type, securityId, dataSource: !!dataSource });
         if (opened && dataSource) {
+            console.log('[PermissionsSelectorModal] executing useEffect actions');
             setSelectedAvailablePermission(undefined)
             setSelectedGrantedPermission(undefined)
             setAvailablePermissionsFilter("")
             setGrantedPermissionsFilter("")
-            grantedPermissionsTree.collapseAllNodes()
-            availablePermissionsTree.collapseAllNodes()
             loadPermissions()
         }
     }, [opened, type, securityId, loadPermissions])
+
+    // Executa operações do tree após o DOM estar estável
+    useLayoutEffect(() => {
+        if (opened && dataSource && availablePermissions.length > 0) {
+            setTimeout(() => {
+                try {
+                    grantedPermissionsTree.collapseAllNodes()
+                    availablePermissionsTree.collapseAllNodes()
+                } catch (error) {
+                    console.warn('[PermissionsSelectorModal] Tree operations error:', error)
+                }
+            }, 100)
+        }
+    }, [opened, availablePermissions.length, grantedPermissions.length])
 
     // Não exibir o modal se não houver dataSource
     if (!dataSource) {
@@ -288,7 +329,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
         <Modal opened={opened} onClose={close} title={`${getI18nextInstance().t(`archbase:${type}`)}: ${name}`} size={"80%"} styles={{ root: { overflow: "hidden" } }}>
             <ArchbaseSpaceFixed height={"540px"}>
                 <ArchbaseSpaceFill>
-                    <ScrollArea h={"500px"}>
+                    <div style={{ height: "500px", overflowY: "auto", overflowX: "hidden" }}>
                         <Paper withBorder my={20} p={20}>
                             <Grid columns={20}>
                                 <Grid.Col span={9}>
@@ -400,7 +441,7 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
                                 </Grid.Col>
                             </Grid>
                         </Paper>
-                    </ScrollArea>
+                    </div>
                 </ArchbaseSpaceFill>
                 <ArchbaseSpaceBottom size="40px">
                     <Group justify="flex-end">
