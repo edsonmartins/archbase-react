@@ -170,7 +170,7 @@ const areArraysEqual = (arr1: any[], arr2: any[]) => {
   return arr1.every((item, index) => item === arr2[index]);
 };
 
-export const SelectItem = ({ image, label, description, values, ...others }) => (
+export const SelectItem = ({ image, label, description, values, value, ...others }) => (
   <div {...others}>
     <Group style={{ flexWrap: "nowrap" }}>
       <Image w={50} src={image} />
@@ -180,7 +180,7 @@ export const SelectItem = ({ image, label, description, values, ...others }) => 
           {description}
         </Text>
       </div>
-      {values.includes(others.value) ? <CheckIcon size={12} /> : null}
+      {values.includes(value) ? <CheckIcon size={12} /> : null}
     </Group>
   </div>
 );
