@@ -261,11 +261,14 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 		return readOnly || v1v2Compatibility.isReadOnly;
 	};
 
+	// Filtrar props que não devem ser passadas para o Input
+	const { dataSource: _, dataField: __, showMask: ___, saveWithMask: ____, onChangeValue: _____, onFocusEnter: ______, onFocusExit: _______, ...filteredOthers } = others;
+
 	return (
 		<Input.Wrapper {...wrapperProps} label={title||props.label} error={internalError}>
 			<Input<any>
 				{...inputProps}
-				{...others}
+				{...filteredOthers}
 				error={internalError}
 				ref={innerComponentRef}
 				component={IMaskInput}
