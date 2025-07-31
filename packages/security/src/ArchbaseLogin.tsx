@@ -1,7 +1,14 @@
 import { ReactNode, useState } from "react";
-import { Anchor, Button, Card, Checkbox, Divider, Group, PasswordInput, Text, TextInput } from "@mantine/core";
+import { Anchor, Button, Card, Checkbox, Divider, Group, PasswordInput, Select, Text, TextInput, Tooltip } from "@mantine/core";
 import { useFocusTrap } from "@mantine/hooks";
 import { getI18nextInstance, useArchbasePasswordRemember, useArchbaseTranslation } from "@archbase/core";
+import { IconCopy } from "@tabler/icons-react";
+
+export interface MockUser {
+  email: string;
+  password: string;
+  type: string;
+}
 
 export interface ArchbaseLoginProps {
   onLogin: (username: string, password: string, rememberMe: boolean) => Promise<void>
@@ -10,6 +17,9 @@ export interface ArchbaseLoginProps {
   loginLabel?: string
   loginPlaceholder?: string
   afterInputs?: ReactNode
+  showMockUsersSelector?: boolean
+  mockUsers?: MockUser[]
+  mockUsersGroupMap?: Record<string, string>
 }
 
 export function ArchbaseLogin({
@@ -19,8 +29,10 @@ export function ArchbaseLogin({
   loginLabel = "Email",
   loginPlaceholder,
   afterInputs,
+  showMockUsersSelector = false,
+  mockUsers = [],
+  mockUsersGroupMap,
 }: ArchbaseLoginProps) {
-  const { t } = useArchbaseTranslation();
   const focusTrapRef = useFocusTrap();
   
   const {
@@ -32,6 +44,7 @@ export function ArchbaseLogin({
   const [passwordInput, setPasswordInput] = useState<string | null>(password);
   const [rememberMe, setRememberMe] = useState<boolean>(remember);
   const [showError, setShowError] = useState<boolean>(!!error);
+  const [selectedMockUser, setSelectedMockUser] = useState<string | null>(null);
 
   const handleInputChange = () => {
     setShowError(false);
@@ -40,6 +53,46 @@ export function ArchbaseLogin({
   const handleLogin = () => {
     if (usernameInput && passwordInput) {
       onLogin(usernameInput, passwordInput, rememberMe).finally(() => setShowError(true));
+    }
+  };
+
+  const getGroupedMockUsers = () => {
+    if (!mockUsersGroupMap) {
+      return mockUsers.map(user => ({
+        value: user.email,
+        label: user.email
+      }));
+    }
+
+    const grouped = mockUsers.reduce((acc, user) => {
+      const group = mockUsersGroupMap[user.type];
+      if (!group) {
+        return acc;
+      }
+      if (!acc[group]) {
+        acc[group] = [];
+      }
+      acc[group].push({
+        value: user.email,
+        label: user.email
+      });
+      return acc;
+    }, {} as Record<string, Array<{ value: string; label: string }>>);
+
+    return Object.entries(grouped).map(([group, items]) => ({
+      group,
+      items
+    }));
+  };
+
+  const handleApplyMockUser = () => {
+    if (selectedMockUser) {
+      const user = mockUsers.find(u => u.email === selectedMockUser);
+      if (user) {
+        setUsernameInput(user.email);
+        setPasswordInput(user.password);
+        handleInputChange();
+      }
     }
   };
 
@@ -64,6 +117,34 @@ export function ArchbaseLogin({
         {getI18nextInstance().t("archbase:signIn")}
       </Text>
       <Divider m="md" />
+      
+      {showMockUsersSelector && (
+        <>
+          <Group gap="sm" mb="md">
+            <Select
+              placeholder="Selecione um usuário mock"
+              data={getGroupedMockUsers()}
+              value={selectedMockUser}
+              onChange={setSelectedMockUser}
+              searchable
+              clearable
+              style={{ flexGrow: 1 }}
+            />
+            <Tooltip label="Aplicar">
+              <Button
+                variant="light"
+                size="sm"
+                onClick={handleApplyMockUser}
+                disabled={!selectedMockUser}
+                aria-label="Aplicar usuário mock selecionado"
+              >
+                <IconCopy size={16} />
+              </Button>
+            </Tooltip>
+          </Group>
+          <Divider mb="md" />
+        </>
+      )}
       <TextInput
         label={loginLabel}
         placeholder={loginPlaceholder ?? getI18nextInstance().t("archbase:usuario@email.com")}
