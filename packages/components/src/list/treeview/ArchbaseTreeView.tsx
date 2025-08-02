@@ -24,6 +24,7 @@ export interface ArchbaseTreeViewProps {
 	highlightSelected?: boolean;
 	withBorder?: boolean;
 	showTags?: boolean;
+	selectChildrenOnParentSelect?: boolean;
 	nodes?: ArchbaseTreeNode[];
 	onDoubleClick?: (dataSource: ArchbaseTreeNode[], node: ArchbaseTreeNode) => void;
 	onClick?: () => void;
@@ -68,6 +69,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 	highlightSelected = true,
 	withBorder = true,
 	showTags = false,
+	selectChildrenOnParentSelect = true,
 	onDoubleClick,
 	onFocusedNode,
 	onLoosedFocusNode,
@@ -240,7 +242,9 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 			if (node && node.state) {
 				node.state.selected = selected;
 				selectedNodes.push(node);
-				selectedNodes.push(...setChildrenState(node.nodes || [], selected));
+				if (selectChildrenOnParentSelect) {
+					selectedNodes.push(...setChildrenState(node.nodes || [], selected));
+				}
 				setDataSource(newDataSource);
 				if (onChangedDataSource) {
 					onChangedDataSource(newDataSource);
@@ -257,7 +261,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 				}
 			}
 		},
-		[internalDataSource, onChangedDataSource, onSelectedNode, onUnSelectedNode, setChildrenState],
+		[internalDataSource, onChangedDataSource, onSelectedNode, onUnSelectedNode, setChildrenState, selectChildrenOnParentSelect],
 	);
 
 	useEffect(() => {
@@ -585,6 +589,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 							borderColor || `${rem(1)} solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
 						withBorder,
 						showTags,
+						selectChildrenOnParentSelect,
 						id,
 					}}
 				/>

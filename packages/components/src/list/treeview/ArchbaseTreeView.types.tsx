@@ -37,4 +37,5 @@ export interface ArchbaseTreeViewOptions {
 	enableLinks: boolean;
 	withBorder: boolean;
 	showTags: boolean;
+	selectChildrenOnParentSelect?: boolean;
 }
