@@ -38,4 +38,5 @@ export interface ArchbaseTreeViewOptions {
 	withBorder: boolean;
 	showTags: boolean;
 	selectChildrenOnParentSelect?: boolean;
+	singleSelect?: boolean;
 }

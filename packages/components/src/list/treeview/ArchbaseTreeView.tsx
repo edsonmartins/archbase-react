@@ -25,6 +25,7 @@ export interface ArchbaseTreeViewProps {
 	withBorder?: boolean;
 	showTags?: boolean;
 	selectChildrenOnParentSelect?: boolean;
+	singleSelect?: boolean;
 	nodes?: ArchbaseTreeNode[];
 	onDoubleClick?: (dataSource: ArchbaseTreeNode[], node: ArchbaseTreeNode) => void;
 	onClick?: () => void;
@@ -70,6 +71,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 	withBorder = true,
 	showTags = false,
 	selectChildrenOnParentSelect = true,
+	singleSelect = false,
 	onDoubleClick,
 	onFocusedNode,
 	onLoosedFocusNode,
@@ -203,6 +205,19 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 		return selectedNodes;
 	}, []);
 
+	const clearAllSelections = useCallback((nodes: ArchbaseTreeNode[]): void => {
+		if (nodes) {
+			nodes.forEach(function (node) {
+				if (node && node.state) {
+					node.state.selected = false;
+				}
+				if (node.nodes) {
+					clearAllSelections(node.nodes);
+				}
+			});
+		}
+	}, []);
+
 	const getSelectedNodesInternal = useCallback((nodes: ArchbaseTreeNode[]): ArchbaseTreeNode[] => {
 		const selectedNodes: ArchbaseTreeNode[] = [];
 		nodes.forEach((node) => {
@@ -240,9 +255,15 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 			const newDataSource = [...internalDataSource];
 			const node = findNodeById(newDataSource, id);
 			if (node && node.state) {
+				// Se singleSelect está ativo e estamos selecionando um nó
+				if (singleSelect && selected) {
+					// Primeiro desmarcar todos os nós
+					clearAllSelections(newDataSource);
+				}
+				
 				node.state.selected = selected;
 				selectedNodes.push(node);
-				if (selectChildrenOnParentSelect) {
+				if (selectChildrenOnParentSelect && !singleSelect) {
 					selectedNodes.push(...setChildrenState(node.nodes || [], selected));
 				}
 				setDataSource(newDataSource);
@@ -261,7 +282,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 				}
 			}
 		},
-		[internalDataSource, onChangedDataSource, onSelectedNode, onUnSelectedNode, setChildrenState, selectChildrenOnParentSelect],
+		[internalDataSource, onChangedDataSource, onSelectedNode, onUnSelectedNode, setChildrenState, selectChildrenOnParentSelect, singleSelect, clearAllSelections],
 	);
 
 	useEffect(() => {
@@ -590,6 +611,7 @@ export const ArchbaseTreeView: React.FC<ArchbaseTreeViewProps> = ({
 						withBorder,
 						showTags,
 						selectChildrenOnParentSelect,
+						singleSelect,
 						id,
 					}}
 				/>

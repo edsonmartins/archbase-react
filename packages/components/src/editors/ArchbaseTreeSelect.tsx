@@ -92,7 +92,8 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
               style={{marginLeft:0, marginBottom:0}}
               focusedNode={focusedNode}
               onFocusedNode={handleFocusedNode}
-              selectChildrenOnParentSelect={false}/>
+              selectChildrenOnParentSelect={false}
+              singleSelect={true}/>
           <div style={{position:'absolute', bottom: 2, right:2, left:2, height:'50px', display:"flex", justifyContent:"flex-end", alignItems:"center"}}>
               <Button
                 disabled={!nodeSelectedIsValid()}
