@@ -5,7 +5,7 @@ import { ArchbaseTreeNode, ArchbaseTreeView, ArchbaseTreeViewProps } from '../li
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { ReactNode, forwardRef, useState } from 'react'
 
-export interface ArchbaseTreeSelectProps extends ArchbaseTreeViewProps {
+export interface ArchbaseTreeSelectProps extends Omit<ArchbaseTreeViewProps, 'selectChildrenOnParentSelect' | 'singleSelect'> {
   icon?: ReactNode | undefined
   label?: string | undefined
   placeholder?: string | undefined;
@@ -13,7 +13,7 @@ export interface ArchbaseTreeSelectProps extends ArchbaseTreeViewProps {
   width: string
   widthTreeView?: string
   heightTreeView?: string
-  renderComponent?: ReactNode | undefined
+  renderComponent?: (node: ArchbaseTreeNode) => ReactNode | undefined
   allowNodeSelectType?: string[];
   onConfirm?: (node: ArchbaseTreeNode)=>void
   onCancel?: ()=>void
@@ -34,7 +34,10 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
     }
 
     const nodeSelectedIsValid = () =>{
-      if ((!focusedNode) || (!allowNodeSelectType) || (!focusedNode.type)) {
+      if ((!allowNodeSelectType || allowNodeSelectType.length === 0) && focusedNode) {
+        return true;
+      }
+      if ((!focusedNode) || (!focusedNode.type)) {
         return false;
       }
       return allowNodeSelectType.includes(focusedNode.type)
@@ -63,7 +66,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
               }}
             >
               {renderComponent ? (
-                renderComponent
+                renderComponent(focusedNode)
               ) : (
                 <Group>
                   {icon}
