@@ -10,6 +10,14 @@ export interface MockUser {
   type: string;
 }
 
+export interface ArchbaseLoginOptions {
+  customContentBefore?: React.ReactNode;
+
+  afterInputs?: React.ReactNode;
+
+  customContentAfter?: React.ReactNode;
+}
+
 export interface ArchbaseLoginProps {
   onLogin: (username: string, password: string, rememberMe: boolean) => Promise<void>
   error?: string
@@ -20,6 +28,7 @@ export interface ArchbaseLoginProps {
   showMockUsersSelector?: boolean
   mockUsers?: MockUser[]
   mockUsersGroupMap?: Record<string, string>
+  options?: ArchbaseLoginOptions
 }
 
 export function ArchbaseLogin({
@@ -32,6 +41,7 @@ export function ArchbaseLogin({
   showMockUsersSelector = false,
   mockUsers = [],
   mockUsersGroupMap,
+  options = {}
 }: ArchbaseLoginProps) {
   const focusTrapRef = useFocusTrap();
   
@@ -118,6 +128,8 @@ export function ArchbaseLogin({
       </Text>
       <Divider m="md" />
       
+      {options?.customContentBefore}
+
       {showMockUsersSelector && (
         <>
           <Group gap="sm" mb="md">
@@ -188,7 +200,7 @@ export function ArchbaseLogin({
           </Anchor>
         )}
       </Group>
-      {afterInputs}
+      {options?.afterInputs || afterInputs}
       <Button
         disabled={!passwordInput || !usernameInput}
         fullWidth
@@ -197,6 +209,7 @@ export function ArchbaseLogin({
       >
         {getI18nextInstance().t("archbase:signIn")}
       </Button>
+      {options?.customContentAfter}
       {showError && error && <Text c="red" mt="sm">{error}</Text>}
     </Card>
   );
