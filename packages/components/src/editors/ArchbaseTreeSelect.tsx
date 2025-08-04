@@ -18,6 +18,8 @@ export interface ArchbaseTreeSelectProps<T, ID> {
   readOnly?: boolean
   /** Indicador se o select está em estado de carregamento */
   loading?: boolean
+  /** Indicador se o campo é obrigatório */
+  required?: boolean
   /** Valor inicial controlado */
   value?: any
   /** Valor padrão inicial não controlado */
@@ -128,6 +130,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
     disabled = false,
     readOnly = false,
     loading = false,
+    required = false,
     value,
     defaultValue,
     size,
@@ -280,11 +283,13 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
         }}
       >
         <Popover.Target>
-          <Input.Wrapper 
+          <Input.Wrapper
             label={label}
+            title={label}
             description={description}
             error={error}
             size={size}
+            required={required}
           >
             <UnstyledButton
               ref={ref}
@@ -376,6 +381,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
             selectable={false}
             selectChildrenOnParentSelect={false}
             singleSelect={true}
+            customRenderText={renderComponent}
           />
         </Popover.Dropdown>
       </Popover>
