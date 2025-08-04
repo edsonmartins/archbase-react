@@ -62,19 +62,47 @@ export interface ArchbaseTreeSelectProps<T, ID> {
   onDropdownClose?: () => void
 }
 
-// Função para encontrar um nó na árvore pelo valor
-const findNodeByValue = (nodes: ArchbaseTreeNode[], searchValue: any, getOptionValue: (node: ArchbaseTreeNode) => any): ArchbaseTreeNode | undefined => {
+// Função helper para extrair ID de um valor
+const getValueId = (value: any): string | undefined => {
+  if (value === null || value === undefined) {
+    return undefined;
+  }
+  if (typeof value === 'object' && value.id !== undefined) {
+    return String(value.id);
+  }
+  if (typeof value === 'string' || typeof value === 'number') {
+    return String(value);
+  }
+  return undefined;
+};
+
+// Função para encontrar um nó na árvore pelo valor (otimizada usando ID)
+const findNodeByValueId = (nodes: ArchbaseTreeNode[], searchValue: any, getOptionValue: (node: ArchbaseTreeNode) => any): ArchbaseTreeNode | undefined => {
   let result: ArchbaseTreeNode | undefined;
   if (nodes) {
+    const searchId = getValueId(searchValue);
+    
     nodes.forEach(function (node) {
-      const nodeValue = getOptionValue(node);
-      // Comparar o valor do nó com o valor procurado
-      if (nodeValue === searchValue || (typeof searchValue === 'object' && JSON.stringify(nodeValue) === JSON.stringify(searchValue))) {
-        result = node;
-      } else {
-        if (node.nodes) {
-          result = findNodeByValue(node.nodes, searchValue, getOptionValue) || result;
+      // Tentar comparação por ID primeiro (mais eficiente e confiável)
+      if (searchId !== undefined) {
+        const nodeValue = getOptionValue(node);
+        const nodeId = getValueId(nodeValue);
+        if (nodeId === searchId) {
+          result = node;
+          return;
         }
+      } else {
+        // Fallback para comparação direta quando não há ID
+        const nodeValue = getOptionValue(node);
+        if (nodeValue === searchValue) {
+          result = node;
+          return;
+        }
+      }
+      
+      // Busca recursiva nos filhos
+      if (node.nodes && !result) {
+        result = findNodeByValueId(node.nodes, searchValue, getOptionValue);
       }
     });
   }
@@ -141,7 +169,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
     // Encontrar o nó selecionado baseado no valor atual
     const currentSelectedNode = useMemo(() => {
       if (currentValue !== undefined && currentValue !== null && options.length > 0) {
-        return findNodeByValue(options, currentValue, getOptionValue)
+        return findNodeByValueId(options, currentValue, getOptionValue)
       }
       return undefined
     }, [currentValue, options, getOptionValue])
