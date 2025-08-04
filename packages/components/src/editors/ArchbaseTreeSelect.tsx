@@ -1,4 +1,4 @@
-import { Group, Input, MantineSize, Popover, Text, UnstyledButton } from '@mantine/core'
+import { Group, Input, Loader, MantineSize, Popover, Text, UnstyledButton } from '@mantine/core'
 import { IconChevronRight } from '@tabler/icons-react'
 import { useArchbaseTheme } from '@archbase/core'
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data'
@@ -16,6 +16,8 @@ export interface ArchbaseTreeSelectProps<T, ID> {
   disabled?: boolean
   /** Indicador se o select é somente leitura. Obs: usado em conjunto com o status da fonte de dados */
   readOnly?: boolean
+  /** Indicador se o select está em estado de carregamento */
+  loading?: boolean
   /** Valor inicial controlado */
   value?: any
   /** Valor padrão inicial não controlado */
@@ -23,13 +25,13 @@ export interface ArchbaseTreeSelectProps<T, ID> {
   /** Tamanho do select */
   size?: MantineSize
   /** Largura do select */
-  width: string
+  width: string | number
   /** Altura do select */
-  height?: string
+  height?: string | number
   /** Largura do dropdown da árvore */
-  widthTreeView?: string
+  widthTreeView?: string | number
   /** Altura do dropdown da árvore */
-  heightTreeView?: string
+  heightTreeView?: string | number
   /** Ícone à esquerda do select */
   icon?: ReactNode
   /** Texto sugestão do select */
@@ -125,6 +127,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
     dataField,
     disabled = false,
     readOnly = false,
+    loading = false,
     value,
     defaultValue,
     size,
@@ -253,7 +256,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
 
     // Determinar se o componente é readonly
     const isReadOnly = readOnly || (dataSource ? !dataSource.isActive() : false)
-    const isDisabled = disabled || isReadOnly
+    const isDisabled = disabled || isReadOnly || loading
 
     // Texto a ser exibido
     const displayText = currentSelectedNode ? getOptionLabel(currentSelectedNode) : (placeholder || '')
@@ -287,7 +290,11 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
               disabled={isDisabled}
               onClick={handleTogglePopover}
               onFocus={onFocusEnter}
-              onBlur={onFocusExit}
+              onBlur={(event) => {
+                if (onFocusExit) {
+                  onFocusExit(event)
+                }
+              }}
               style={{
                 display: 'block',
                 width,
@@ -304,7 +311,21 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
                 }
               }}
             >
-              {renderComponent && currentSelectedNode ? (
+              {loading ? (
+                <Group justify="space-between" wrap="nowrap">
+                  <Group gap="sm" wrap="nowrap">
+                    <Loader size="xs" />
+                    <Text 
+                      truncate 
+                      c="dimmed"
+                      size={size}
+                    >
+                      {displayText}
+                    </Text>
+                  </Group>
+                  <Loader size="xs" />
+                </Group>
+              ) : renderComponent && currentSelectedNode ? (
                 renderComponent(currentSelectedNode)
               ) : (
                 <Group justify="space-between" wrap="nowrap">
