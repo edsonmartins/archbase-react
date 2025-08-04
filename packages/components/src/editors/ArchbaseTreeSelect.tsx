@@ -270,6 +270,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
         withArrow 
         shadow="md" 
         withinPortal 
+        closeOnEscape={true}
         clickOutsideEvents={['mouseup', 'touchend']}
         onClose={() => {
           setOpened(false)
@@ -290,11 +291,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
               disabled={isDisabled}
               onClick={handleTogglePopover}
               onFocus={onFocusEnter}
-              onBlur={(event) => {
-                if (onFocusExit) {
-                  onFocusExit(event)
-                }
-              }}
+              onBlur={onFocusExit}
               style={{
                 display: 'block',
                 width,
@@ -351,6 +348,21 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
             background: theme.white,
             padding: 0,
             height: heightTreeView || '200px'
+          }}
+          onBlur={(event) => {
+            // Verificar se o foco está saindo completamente do dropdown
+            const relatedTarget = event.relatedTarget as HTMLElement;
+            const dropdown = event.currentTarget;
+            
+            // Só fechar se o foco não estiver indo para um elemento dentro do dropdown
+            if (!relatedTarget || !dropdown.contains(relatedTarget)) {
+              if (opened) {
+                setOpened(false)
+                if (onDropdownClose) {
+                  onDropdownClose()
+                }
+              }
+            }
           }}
         >
           <ArchbaseTreeView
