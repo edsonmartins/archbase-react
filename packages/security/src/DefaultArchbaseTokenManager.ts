@@ -8,6 +8,7 @@ export const ENCRYPTION_KEY = 'YngzI1guK3dGaElFcFY9MywqK3xgPzg/Ojg7eD8xRmg='
 export const TOKEN_COOKIE_NAME = 'c1ab58e7-c113-4225-a190-a9e59d1207fc'
 export const USER_NAME_AND_PASSWORD = '6faf6932-a0b5-457b-83b1-8d89ddbd91fd'
 export const USER_NAME = '602b05c5-ec46-451e-aba6-187e463bc245'
+export const CONTEXT_STORAGE_KEY = '8b4a7c2d-9e5f-4163-b8a7-3f2c9d8e5a1b'
 
 export class DefaultArchbaseTokenManager implements ArchbaseTokenManager {
   getUsernameAndPassword(): ArchbaseUsernameAndPassword|null {
@@ -103,6 +104,31 @@ export class DefaultArchbaseTokenManager implements ArchbaseTokenManager {
     } catch (ex) {
         return null
     }
+  }
+
+  saveContext(context: string): void {
+    try {
+      const encryptedContext = CryptoJS.AES.encrypt(context, ENCRYPTION_KEY).toString()
+      localStorage.setItem(CONTEXT_STORAGE_KEY, encryptedContext)
+    } catch (ex) {
+      console.warn('Erro ao salvar contexto:', ex)
+    }
+  }
+
+  getContext(): string | null {
+    try {
+      const encryptedContext = localStorage.getItem(CONTEXT_STORAGE_KEY)
+      if (!encryptedContext) {
+        return null
+      }
+      return CryptoJS.AES.decrypt(encryptedContext, ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8)
+    } catch (ex) {
+      return null
+    }
+  }
+
+  clearContext(): void {
+    localStorage.removeItem(CONTEXT_STORAGE_KEY)
   }
 }
 

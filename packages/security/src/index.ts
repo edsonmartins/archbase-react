@@ -7,6 +7,9 @@ export * from './ArchbaseTokenManager';
 export * from './ArchbaseUser';
 export * from './DefaultArchbaseTokenManager';
 
+// Contextual authentication types
+export * from './types/ContextualAuthentication';
+
 // OAuth2 authentication
 export * from './oauth2';
 

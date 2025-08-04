@@ -44,4 +44,12 @@ export interface ArchbaseTokenManager {
   clearUsernameAndPassword(): void
   getToken(): ArchbaseAccessToken | null
   isTokenExpired(token?: ArchbaseAccessToken, expirationThreshold?: number): boolean
+  
+  // Métodos opcionais para suporte a contexto
+  /** Salva o contexto da autenticação como string JSON */
+  saveContext?(context: string): void
+  /** Recupera o contexto salvo */
+  getContext?(): string | null
+  /** Limpa contexto */
+  clearContext?(): void
 }
