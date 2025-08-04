@@ -24,6 +24,8 @@ export interface ArchbaseTreeSelectProps<T, ID> {
   size?: MantineSize
   /** Largura do select */
   width: string
+  /** Altura do select */
+  height?: string
   /** Largura do dropdown da árvore */
   widthTreeView?: string
   /** Altura do dropdown da árvore */
@@ -99,6 +101,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
     defaultValue,
     size,
     width,
+    height,
     widthTreeView,
     heightTreeView,
     icon,
@@ -260,7 +263,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
               style={{
                 display: 'block',
                 width,
-                height: '36px',
+                height: height || '36px',
                 padding: '8px',
                 color: isDisabled ? theme.colors.gray[5] : theme.colors.dark[9],
                 backgroundColor: isDisabled ? theme.colors.gray[1] : theme.white,
