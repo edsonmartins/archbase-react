@@ -61,4 +61,66 @@ export class ArchbaseSecurityManager implements ISecurityManager {
   public getError() {
     return this.error
   }
+
+  /**
+   * Retorna todas as permissões atuais
+   */
+  public getPermissions(): string[] {
+    return [...this.permissions];
+  }
+
+  /**
+   * Retorna o status de carregamento
+   */
+  public isLoading(): boolean {
+    return !this.alreadyApplied;
+  }
+
+  /**
+   * Verifica múltiplas permissões
+   */
+  public hasAnyPermission(permissions: string[]): boolean {
+    return permissions.some(permission => this.hasPermission(permission));
+  }
+
+  /**
+   * Verifica se tem todas as permissões
+   */
+  public hasAllPermissions(permissions: string[]): boolean {
+    return permissions.every(permission => this.hasPermission(permission));
+  }
+
+  /**
+   * Retorna informações detalhadas sobre uma permissão
+   */
+  public getPermissionInfo(actionName: string): {
+    hasPermission: boolean;
+    isAdmin: boolean;
+    reason: string;
+  } {
+    const hasPermission = this.hasPermission(actionName);
+    return {
+      hasPermission,
+      isAdmin: this.isAdmin,
+      reason: hasPermission 
+        ? (this.isAdmin ? 'Usuário é administrador' : 'Usuário tem permissão específica')
+        : 'Usuário não tem permissão'
+    };
+  }
+
+  /**
+   * Registra múltiplas ações de uma vez
+   */
+  public registerActions(actions: Array<{ actionName: string; actionDescription: string }>): void {
+    actions.forEach(({ actionName, actionDescription }) => {
+      this.registerAction(actionName, actionDescription);
+    });
+  }
+
+  /**
+   * Retorna todas as ações registradas
+   */
+  public getRegisteredActions(): Array<{ actionName: string; actionDescription: string }> {
+    return [...this.actions];
+  }
 }

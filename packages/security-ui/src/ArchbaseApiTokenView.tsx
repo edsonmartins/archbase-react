@@ -24,12 +24,12 @@ import {
 import { useArchbaseTranslation } from '@archbase/core';
 import { useRef, useState } from 'react';
 import { ApiTokenModal } from './ApiTokenModal';
-import { ArchbaseApiTokenService } from './ArchbaseApiTokenService';
+import { ArchbaseApiTokenService } from '@archbase/security';
 import { NO_USER } from './ArchbaseSecurityView';
-import { ApiTokenDto } from './SecurityDomain';
+import { ApiTokenDto } from '@archbase/security';
 import { ArchbaseDataGridColumn } from '@archbase/components';
 import { ArchbaseDataGrid, ArchbaseDataGridRef, Columns } from '@archbase/components';
-import { ArchbaseGridTemplateRef } from '@archbase/template';
+// import { ArchbaseGridTemplateRef } from '@archbase/template'; // Removed to break circular dependency
 
 
 interface ArchbaseApiTokenViewProps {

@@ -20,7 +20,9 @@ import {
 } from '@archbase/advanced';
 import { Field } from '@archbase/core';
 import { ArchbaseSpaceTemplate, ArchbaseSpaceTemplateOptions } from './ArchbaseSpaceTemplate';
-import { ArchbaseDebugOptions } from './ArchbaseTemplateCommonTypes';
+import { ArchbaseDebugOptions, ArchbaseTemplateSecurityProps } from './ArchbaseTemplateCommonTypes';
+import { ArchbaseConditionalSecurityWrapper } from './components';
+import { useOptionalTemplateSecurity } from './hooks';
 
 export interface MasonryUserActionsOptions {
 	visible?: boolean;
@@ -57,7 +59,7 @@ export interface MasonryUserRowActionsOptions<T> {
 	onViewRow?: (row: T) => void;
 }
 
-export interface ArchbaseMasonryTemplateProps<T, ID> {
+export interface ArchbaseMasonryTemplateProps<T, ID> extends ArchbaseTemplateSecurityProps {
 	title: string;
 	dataSource: ArchbaseDataSource<T, ID>;
 	dataSourceEdition?: ArchbaseDataSource<T, ID> | undefined;
@@ -150,8 +152,22 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 	variant,
 	id = uniqueId('masonry'),
 	debugOptions,
+	// Props de segurança (opcionais)
+	resourceName,
+	resourceDescription,
+	requiredPermissions,
+	fallbackComponent,
+	securityOptions,
 }: ArchbaseMasonryTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
+
+	// 🔐 SEGURANÇA: Hook opcional de segurança (só ativa se resourceName fornecido)
+	const security = useOptionalTemplateSecurity({
+		resourceName,
+		resourceDescription,
+		autoRegisterActions: securityOptions?.autoRegisterActions ?? true
+	});
+
 	const [idMasonry] = useState(id);
 	const innerComponentRef = innerRef || useRef<any>(null);
 	const filterRef = useRef<any>(null);
@@ -191,65 +207,86 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 	const userActionsBuilded: ArchbaseAction[] = useMemo(() => {
 		const userActionsEnd = { ...defaultUserActions, ...userActions };
 		const defaultActions: ArchbaseAction[] = [];
+
+		// 🔐 SEGURANÇA: Função helper para verificar se tem permissão
+		const hasActionPermission = (actionName: string): boolean => {
+			if (!security.isAvailable) return true; // Sem contexto de segurança = permite tudo
+			// Por enquanto registra e permite - lógica completa será implementada posteriormente
+			security.registerAction();
+			return security.hasPermission();
+		};
+
 		if (userActionsEnd.allowAdd && userActionsEnd.onAddExecute) {
-			defaultActions.push({
-				id: 'actAdd',
-				icon: <IconPlus />,
-				color: 'green',
-				label: userActionsEnd.labelAdd ? userActionsEnd.labelAdd : getI18nextInstance().t('archbase:New'),
-				executeAction: () => {
-					if (userActionsEnd && userActionsEnd.onAddExecute) {
-						userActionsEnd.onAddExecute();
-					}
-				},
-				enabled: true,
-				hint: `${getI18nextInstance().t('archbase:Clique para criar um novo registro')}`,
-			});
+			const hasPermission = hasActionPermission('add');
+			if (hasPermission) {
+				defaultActions.push({
+					id: 'actAdd',
+					icon: <IconPlus />,
+					color: 'green',
+					label: userActionsEnd.labelAdd ? userActionsEnd.labelAdd : getI18nextInstance().t('archbase:New'),
+					executeAction: () => {
+						if (userActionsEnd && userActionsEnd.onAddExecute) {
+							userActionsEnd.onAddExecute();
+						}
+					},
+					enabled: true,
+					hint: `${getI18nextInstance().t('archbase:Clique para criar um novo registro')}`,
+				});
+			}
 		}
 		if (userActionsEnd.allowEdit && userActionsEnd.onEditExecute) {
-			defaultActions.push({
-				id: 'actEdit',
-				icon: <IconEdit />,
-				color: 'blue',
-				label: userActionsEnd.labelEdit ? userActionsEnd.labelEdit : getI18nextInstance().t('archbase:Edit'),
-				executeAction: () => {
-					if (userActionsEnd && userActionsEnd.onEditExecute) {
-						userActionsEnd.onEditExecute();
-					}
-				},
-				enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-				hint: `${getI18nextInstance().t('archbase:Clique para editar o registro')}`,
-			});
+			const hasPermission = hasActionPermission('edit');
+			if (hasPermission) {
+				defaultActions.push({
+					id: 'actEdit',
+					icon: <IconEdit />,
+					color: 'blue',
+					label: userActionsEnd.labelEdit ? userActionsEnd.labelEdit : getI18nextInstance().t('archbase:Edit'),
+					executeAction: () => {
+						if (userActionsEnd && userActionsEnd.onEditExecute) {
+							userActionsEnd.onEditExecute();
+						}
+					},
+					enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
+					hint: `${getI18nextInstance().t('archbase:Clique para editar o registro')}`,
+				});
+			}
 		}
 		if (userActionsEnd.allowRemove && userActionsEnd.onRemoveExecute) {
-			defaultActions.push({
-				id: 'actRemove',
-				icon: <IconTrash />,
-				color: 'red',
-				label: userActionsEnd.labelRemove ? userActionsEnd.labelRemove : getI18nextInstance().t('archbase:Remove'),
-				executeAction: () => {
-					if (userActionsEnd && userActionsEnd.onRemoveExecute) {
-						userActionsEnd.onRemoveExecute();
-					}
-				},
-				enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-				hint: `${getI18nextInstance().t('archbase:Clique para remover o registro')}`,
-			});
+			const hasPermission = hasActionPermission('delete');
+			if (hasPermission) {
+				defaultActions.push({
+					id: 'actRemove',
+					icon: <IconTrash />,
+					color: 'red',
+					label: userActionsEnd.labelRemove ? userActionsEnd.labelRemove : getI18nextInstance().t('archbase:Remove'),
+					executeAction: () => {
+						if (userActionsEnd && userActionsEnd.onRemoveExecute) {
+							userActionsEnd.onRemoveExecute();
+						}
+					},
+					enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
+					hint: `${getI18nextInstance().t('archbase:Clique para remover o registro')}`,
+				});
+			}
 		}
 
 		if (userActionsEnd.allowView && userActionsEnd.onViewExecute) {
-			defaultActions.push({
-				id: 'actView',
-				icon: <IconEye />,
-				label: userActionsEnd.labelView ? userActionsEnd.labelView : getI18nextInstance().t('archbase:View'),
-				executeAction: () => {
-					if (userActionsEnd && userActionsEnd.onViewExecute) {
-						userActionsEnd.onViewExecute();
-					}
-				},
-				enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-				hint: `${getI18nextInstance().t('archbase:Clique para visualizar o registro')}`,
-			});
+			const hasPermission = hasActionPermission('view');
+			if (hasPermission) {
+				defaultActions.push({
+					id: 'actView',
+					icon: <IconEye />,
+					label: userActionsEnd.labelView ? userActionsEnd.labelView : getI18nextInstance().t('archbase:View'),
+					executeAction: () => {
+						if (userActionsEnd && userActionsEnd.onViewExecute) {
+							userActionsEnd.onViewExecute();
+						}
+					},
+					enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
+					hint: `${getI18nextInstance().t('archbase:Clique para visualizar o registro')}`,
+				});
+			}
 		}
 
 		if (userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'before') {
@@ -261,7 +298,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 		}
 
 		return defaultActions;
-	}, [userActions, dataSource]);
+	}, [userActions, dataSource, security]);
 
 	const cards: ReactNode[] = useMemo(() => {
 		if (component) {
@@ -397,7 +434,8 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 	const _actionsButtonsOptions = { ...defaultActionsButtonsOptions, ...actionsButtonsOptions };
 	const _spaceTemplateOptions = { ...defaultSpaceTemplateOptions, ...spaceOptions };
 
-	return (
+	// Componente interno que contém toda a lógica
+	const TemplateContent = () => (
 		<ArchbaseSpaceTemplate
 			innerRef={innerComponentRef}
 			width={width}
@@ -436,5 +474,19 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 				</ArchbaseMasonryResponsive>
 			</ArchbaseMasonryProvider>
 		</ArchbaseSpaceTemplate>
+	);
+
+	// 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido
+	return (
+		<ArchbaseConditionalSecurityWrapper
+			resourceName={resourceName}
+			resourceDescription={resourceDescription}
+			requiredPermissions={requiredPermissions}
+			fallbackComponent={fallbackComponent}
+			onSecurityReady={securityOptions?.onSecurityReady}
+			onAccessDenied={securityOptions?.onAccessDenied}
+		>
+			<TemplateContent />
+		</ArchbaseConditionalSecurityWrapper>
 	);
 }

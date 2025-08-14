@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { ARCHBASE_IOC_API_TYPE, getKeyByEnumValue, getI18nextInstance } from "@archbase/core";
 import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, ScrollArea, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useMantineColorScheme, useTree } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight, IconBorderCornerSquare, IconChevronDown } from "@tabler/icons-react";
-import { SecurityType } from "./SecurityType";
+import { SecurityType } from "@archbase/security";
 import { useArchbaseRemoteServiceApi, ArchbaseRemoteDataSource } from "@archbase/data";
-import { ResouceActionPermissionDto, ResoucePermissionsWithTypeDto } from "./SecurityDomain";
-import { ArchbaseResourceService } from "./ArchbaseResourceService";
+import { ResouceActionPermissionDto, ResoucePermissionsWithTypeDto } from "@archbase/security";
+import { ArchbaseResourceService } from "@archbase/security";
 import { useDebouncedValue } from "@mantine/hooks";
 import { ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from "@archbase/layout";
 

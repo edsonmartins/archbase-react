@@ -134,12 +134,47 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     detailPanelTitle = 'Detalhes',
     detailPanelPosition = 'right',
     detailPanelSize = 'md',
-    showPagination = true
+    showPagination = true,
+    // Props de segurança
+    resourceName,
+    resourceDescription,
+    columnSecurityOptions
   } = props
   const theme = useArchbaseTheme()
   const { colorScheme } = useMantineColorScheme();
   const apiRef = useGridApiRef()
   const appContext = useArchbaseAppContext()
+
+  // 🔐 HOOK DE SEGURANÇA INTERNO
+  const useGridSecurity = (resourceName?: string) => {
+    const [securityState, setSecurityState] = useState({
+      isAvailable: false,
+      hasPermission: (permission?: string) => true,
+      registerAction: (action?: string, description?: string) => {},
+    });
+
+    useEffect(() => {
+      // Só ativa segurança SE resourceName fornecido
+      if (!resourceName) return;
+
+      try {
+        // Tentar usar o contexto de segurança se disponível
+        // Por enquanto, apenas simula que sempre tem permissão
+        console.debug(`Grid solicitou segurança para '${resourceName}', mas integração ainda em desenvolvimento.`);
+        setSecurityState({
+          isAvailable: false, // Desabilita por enquanto
+          hasPermission: (permission?: string) => true,
+          registerAction: (action?: string, description?: string) => {},
+        });
+      } catch (error) {
+        console.debug('Módulo de segurança não disponível');
+      }
+    }, [resourceName]);
+
+    return securityState;
+  };
+
+  const security = useGridSecurity(resourceName);
 
   // Referência para o contêiner da grid (para detectar cliques e scroll)
   const gridContainerRef = useRef<HTMLDivElement>(null)
@@ -639,7 +674,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       }
     }
 
-    // Extrai definições de colunas dos children
+    // Extrai definições de colunas dos children com SEGURANÇA
     Children.forEach(children, (child) => {
       if ((isValidElement(child) && child.type === Columns)) {
         Children.forEach((child.props as any).children, (column) => {
@@ -647,7 +682,33 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
             // Tratamos column.props como desconhecido e fornecemos tipagem explícita
             const columnProps = column.props as ArchbaseDataGridColumnProps<any>
 
+            // 🔐 VERIFICAR SEGURANÇA DA COLUNA
+            const permissionName = columnProps.viewPermission ? 
+              (columnSecurityOptions?.permissionPrefix ? 
+                `${columnSecurityOptions.permissionPrefix}${columnProps.viewPermission}` : 
+                columnProps.viewPermission) : 
+              undefined;
+
+            const hasColumnPermission = !security.isAvailable || 
+                                       !permissionName || 
+                                       security.hasPermission(permissionName);
+
+            // SE NÃO TEM PERMISSÃO E deve ocultar completamente
+            if (!hasColumnPermission && columnProps.hideWhenNoPermission) {
+              return; // Pula esta coluna completamente
+            }
+
             if (columnProps.visible !== false) {
+              // Auto-registrar permissão se solicitado
+              if (security.isAvailable && 
+                  columnProps.autoRegisterPermission !== false && 
+                  permissionName) {
+                security.registerAction(
+                  permissionName, 
+                  `Visualizar coluna ${columnProps.header}`
+                );
+              }
+
               // Armazenar metadados personalizados
               columnMetadata[columnProps.dataField] = {
                 enableGlobalFilter: columnProps.enableGlobalFilter,
@@ -655,7 +716,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
               }
 
               // Obter o renderizador adequado para o tipo de dados
-              const renderer = getRendererByDataType(columnProps.dataType, columnProps.render, {
+              const originalRenderer = getRendererByDataType(columnProps.dataType, columnProps.render, {
                 maskOptions: columnProps.maskOptions,
                 dateFormat: appContext?.dateFormat || globalDateFormat,
                 dateTimeFormat: appContext?.dateTimeFormat,
@@ -663,6 +724,22 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
                 enumValues: columnProps.enumValues,
                 decimalPlaces: 2 // Padrão para campos percentuais ou decimais
               })
+
+              // 🔐 CRIAR RENDERIZADOR SEGURO
+              const secureRenderer = (params: any) => {
+                // Se não tem permissão, mostrar fallback
+                if (!hasColumnPermission) {
+                  const fallback = columnProps.fallbackContent || 
+                                 columnSecurityOptions?.defaultFallback || 
+                                 '***';
+                  return typeof fallback === 'string' ? 
+                    <span style={{ color: '#999', fontStyle: 'italic' }}>{fallback}</span> : 
+                    fallback;
+                }
+                
+                // Se tem permissão, renderizar normalmente
+                return originalRenderer(params);
+              };
 
               // Obter o alinhamento adequado para o tipo de dados
               const alignment = getAlignmentByDataType(columnProps.dataType, columnProps.align)
@@ -677,7 +754,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
                 filterable: columnProps.enableColumnFilter !== false,
                 editable: false,
                 flex: columnAutoWidth ? 1 : undefined,
-                // Usar o renderizador determinado pelo tipo de dados
+                // 🔐 Usar o renderizador seguro
                 renderCell: (params) => {
                   return (
                     <div
@@ -693,7 +770,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
                         alignItems: 'center'
                       }}
                     >
-                      {renderer({
+                      {secureRenderer({
                         getValue: () => params.value,
                         row: params.row
                       })}
@@ -744,7 +821,10 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     positionActionsColumn,
     renderDetailPanel,
     expandedRowIds,
-    toggleExpand
+    toggleExpand,
+    // Dependências de segurança
+    security,
+    columnSecurityOptions
   ])
 
   // Listener para eventos do DataSource

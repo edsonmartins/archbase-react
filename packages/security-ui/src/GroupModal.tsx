@@ -1,10 +1,9 @@
 import React from 'react'
-import { Grid, ScrollArea, Stack } from '@mantine/core'
+import { Grid, ScrollArea, Stack, Modal, Button, Group } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
 import { getI18nextInstance } from '@archbase/core';
-import { GroupDto } from './SecurityDomain'
+import { GroupDto } from '@archbase/security'
 import { ArchbaseDataSource } from '@archbase/data'
-import { ArchbaseFormModalTemplate } from '@archbase/template'
 import { ArchbaseEdit } from '@archbase/components'
 
 export interface GroupModalOptions {
@@ -28,27 +27,40 @@ export interface GroupModalProps {
 export const GroupModal = (props: GroupModalProps) => {
   const focusTrapRef = useFocusTrap()
   const options = {...(props.options ?? {}) }
+  
+  const handleSave = () => {
+    if (props.onCustomSave) {
+      props.onCustomSave(props.dataSource.current, (success: boolean) => {
+        if (success && props.onAfterSave) {
+          props.onAfterSave(props.dataSource.current);
+        }
+        props.onClickOk(props.dataSource.current, success);
+      });
+    } else {
+      props.onClickOk(props.dataSource.current, true);
+    }
+  };
+
+  const handleCancel = () => {
+    props.onClickCancel(props.dataSource.current);
+  };
+  
   return (
-    <ArchbaseFormModalTemplate
+    <Modal
       opened={props.opened}
-      onClickOk={props.onClickOk}
-      onClickCancel={props.onClickCancel}
-      onCustomSave={props.onCustomSave}
-      onAfterSave={props.onAfterSave}
+      onClose={handleCancel}
       title={getI18nextInstance().t('archbase:Grupo')}
       size="60%"
-      height="460px"
       styles={{content: {maxWidth: 1000}}}
-      dataSource={props.dataSource}
     >
-      <ScrollArea ref={focusTrapRef} style={{ height: '460px' }}>
+      <ScrollArea style={{ height: '460px' }}>
         <Stack w={"98%"}>
           {options?.customContentBefore && (
             <>
               {props.options.customContentBefore}
             </>
           )}
-          <Grid ref={focusTrapRef}>
+          <Grid>
             <Grid.Col span={{ base: 12 }}>
               <ArchbaseEdit
                 label={`${getI18nextInstance().t('archbase:Nome do grupo')}`}
@@ -71,8 +83,17 @@ export const GroupModal = (props: GroupModalProps) => {
               {props.options.customContentAfter}
             </>
           )}
+          
+          <Group justify="flex-end" mt="md">
+            <Button variant="default" onClick={handleCancel}>
+              {getI18nextInstance().t('archbase:Cancelar')}
+            </Button>
+            <Button onClick={handleSave}>
+              {getI18nextInstance().t('archbase:Salvar')}
+            </Button>
+          </Group>
         </Stack>
       </ScrollArea>
-    </ArchbaseFormModalTemplate>
+    </Modal>
   )
 }

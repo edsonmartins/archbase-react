@@ -14,4 +14,9 @@ export * from './ArchbaseSearchTemplate';
 export * from './ArchbaseTemplateCommonTypes';
 export * from './ArchbaseTemplateState';
 export * from './ArchbaseStateValues';
+
+// Template Security Components and Hooks
+export * from './components';
+export * from './hooks';
+
 import './template.scss';

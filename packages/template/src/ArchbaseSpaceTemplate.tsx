@@ -33,7 +33,9 @@ import {
 	FilterOptions,
 	getDefaultEmptyFilter,
 } from '@archbase/advanced';
-import { ArchbaseDebugOptions } from './ArchbaseTemplateCommonTypes';
+import { ArchbaseDebugOptions, ArchbaseTemplateSecurityProps } from './ArchbaseTemplateCommonTypes';
+import { ArchbaseConditionalSecurityWrapper } from './components';
+import { useOptionalTemplateSecurity } from './hooks';
 
 interface ArchbaseBreakpointsColSpans {
 	/** Col span em (min-width: theme.breakpoints.xs) */
@@ -75,7 +77,7 @@ export interface ArchbaseSpaceTemplateOptions {
 	};
 }
 
-export interface ArchbaseSpaceTemplateProps<T, ID> {
+export interface ArchbaseSpaceTemplateProps<T, ID> extends ArchbaseTemplateSecurityProps {
 	title: string;
 	variant?: AlertVariant | string;
 	headerLeft?: ReactNode;
@@ -339,6 +341,12 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 		debugObjectInspectorHotKey: 'ctrl+shift+D',
 		objectsToInspect: [],
 	},
+	// Props de segurança (opcionais)
+	resourceName,
+	resourceDescription,
+	requiredPermissions,
+	fallbackComponent,
+	securityOptions,
 }: ArchbaseSpaceTemplateProps<T, ID>) {
 	const [_debug, setDebug] = useUncontrolled({
 		value: debug,
@@ -348,6 +356,13 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 	useHotkeys([[debugOptions && debugOptions.debugLayoutHotKey, () => setDebug(!_debug)]]);
 	const appContext = useArchbaseAppContext();
 	const {t} = useArchbaseTranslation();
+
+	// 🔐 SEGURANÇA: Hook opcional de segurança (só ativa se resourceName fornecido)
+	const security = useOptionalTemplateSecurity({
+		resourceName,
+		resourceDescription,
+		autoRegisterActions: securityOptions?.autoRegisterActions ?? true
+	});
 
 	// V1/V2 Compatibility Pattern (basic setup)
 	const {
@@ -376,7 +391,8 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 		}
 	}, [defaultDebug, setDebug]);
 
-	return (
+	// Componente interno que contém toda a lógica
+	const TemplateContent = () => (
 		<>
 			<Paper
 				ref={innerComponentRef}
@@ -433,5 +449,19 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 				objectsToInspect={debugOptions && debugOptions.objectsToInspect}
 			/>
 		</>
+	);
+
+	// 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido
+	return (
+		<ArchbaseConditionalSecurityWrapper
+			resourceName={resourceName}
+			resourceDescription={resourceDescription}
+			requiredPermissions={requiredPermissions}
+			fallbackComponent={fallbackComponent}
+			onSecurityReady={securityOptions?.onSecurityReady}
+			onAccessDenied={securityOptions?.onAccessDenied}
+		>
+			<TemplateContent />
+		</ArchbaseConditionalSecurityWrapper>
 	);
 }

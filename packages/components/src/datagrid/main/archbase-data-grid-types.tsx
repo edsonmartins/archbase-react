@@ -124,13 +124,35 @@ ArchbaseDataGridColumn.defaultProps = {
   enableSorting: true,
   dataType: 'text',
   inputFilterType: 'text',
-  enumValues: []
+  enumValues: [],
+  
+  // Novos defaults de segurança
+  hideWhenNoPermission: false, // Por padrão, mostra fallback
+  autoRegisterPermission: true, // Auto-registra permissões
+  fallbackContent: '***', // Conteúdo padrão quando sem permissão
 };
 
 export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
   // Propriedades de dados
   dataSource: ArchbaseDataSource<T, ID>;
   getRowId?: (row: T) => ID;
+  
+  // NOVAS props de segurança (100% opcionais)
+  /** Nome do recurso para ativar segurança no grid */
+  resourceName?: string;
+  
+  /** Descrição do recurso para contexto de segurança */
+  resourceDescription?: string;
+  
+  /** Configurações de segurança para colunas */
+  columnSecurityOptions?: {
+    /** Fallback padrão para colunas sem permissão */
+    defaultFallback?: ReactNode | string;
+    /** Se true, oculta colunas sem permissão por padrão */
+    hideByDefault?: boolean;
+    /** Prefixo para auto-registro de permissões de coluna */
+    permissionPrefix?: string;
+  };
 
   // Propriedades de habilitação de recursos
   enableColumnResizing?: boolean;
@@ -266,4 +288,20 @@ export interface ArchbaseDataGridColumnProps<T = any> {
   align?: string;
   headerAlign?: string;
   footerAlign?: string;
+  
+  // NOVAS props de segurança (100% opcionais)
+  /** Nome da permissão para visualizar esta coluna */
+  viewPermission?: string;
+  
+  /** Nome da permissão para editar esta coluna (futuro) */
+  editPermission?: string;
+  
+  /** Componente/texto a ser exibido quando não tem permissão */
+  fallbackContent?: ReactNode | string;
+  
+  /** Se true, oculta coluna completamente sem permissão. Se false, mostra fallback */
+  hideWhenNoPermission?: boolean;
+  
+  /** Auto-registra a permissão da coluna (padrão: true) */
+  autoRegisterPermission?: boolean;
 }

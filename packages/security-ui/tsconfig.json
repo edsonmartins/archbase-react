@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@archbase/core": ["../core/src"],
+      "@archbase/data": ["../data/src"], 
+      "@archbase/components": ["../components/src"],
+      "@archbase/layout": ["../layout/src"],
+      "@archbase/security": ["../security/src"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ]
+}

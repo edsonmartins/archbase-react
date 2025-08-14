@@ -14,8 +14,13 @@ import { useArchbaseTheme } from '@archbase/core';
 import { ArchbaseAlert } from '@archbase/components';
 import { ArchbaseDialog } from '@archbase/components';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { ArchbaseTemplateSecurityProps } from './ArchbaseTemplateCommonTypes';
+import { ArchbaseConditionalSecurityWrapper, ArchbaseSmartActionButton } from './components';
+import { useOptionalTemplateSecurity } from './hooks';
 
-export interface ArchbaseFormModalTemplateProps<T extends object, ID> extends Omit<ModalProps, 'onClose' | 'onError'> {
+export interface ArchbaseFormModalTemplateProps<T extends object, ID> 
+	extends Omit<ModalProps, 'onClose' | 'onError'>, 
+	        ArchbaseTemplateSecurityProps {
 	dataSource?: ArchbaseDataSource<T, ID>;
 	height: string | number | undefined;
 	userActions?: ReactNode;
@@ -59,6 +64,12 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 	onError,
 	autoCloseAlertError = 15000,
 	loadingOverlayStyles,
+	// Props de segurança (opcionais)
+	resourceName,
+	resourceDescription,
+	requiredPermissions,
+	fallbackComponent,
+	securityOptions,
 	...rest
 }: ArchbaseFormModalTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
@@ -68,6 +79,13 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 	const [internalError, setInternalError] = useState<string>(error);
 	const [isLoading, setIsLoading] = useState(false)
 	const forceUpdate = useForceUpdate();
+
+	// 🔐 SEGURANÇA: Hook opcional de segurança (só ativa se resourceName fornecido)
+	const security = useOptionalTemplateSecurity({
+		resourceName,
+		resourceDescription: resourceDescription || title?.toString(),
+		autoRegisterActions: securityOptions?.autoRegisterActions ?? true
+	});
 
 	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
 	const v1v2Compatibility = useArchbaseV1V2Compatibility<T>(
@@ -171,7 +189,8 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 		setInternalError('');
 	};
 
-	return (
+	// Componente interno que contém toda a lógica
+	const TemplateContent = () => (
 		<Modal
 			title={title}
 			withOverlay={withOverlay}
@@ -217,31 +236,53 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 						<Group>{userActions}</Group>
 						{dataSource && !dataSource.isBrowsing() ? (
 							<Group gap="md">
-								<Button
+								<ArchbaseSmartActionButton
+									actionName="save"
+									actionDescription={`Salvar ${resourceDescription || title || 'registro'}`}
 									leftSection={<IconCheck />}
 									onClick={handleSave}
 									disabled={dataSource && dataSource.isBrowsing()}
 									variant={variant ?? appContext.variant}
 									color="green"
-								>{`${getI18nextInstance().t('Ok')}`}</Button>
-								<Button
+								>{`${getI18nextInstance().t('Ok')}`}</ArchbaseSmartActionButton>
+								<ArchbaseSmartActionButton
+									actionName="cancel"
+									actionDescription="Cancelar operação"
 									leftSection={<IconX />}
 									onClick={handleCancel}
 									disabled={dataSource && dataSource.isBrowsing()}
 									variant={variant ?? appContext.variant}
 									color="red"
-								>{`${getI18nextInstance().t('Cancel')}`}</Button>
+								>{`${getI18nextInstance().t('Cancel')}`}</ArchbaseSmartActionButton>
 							</Group>
 						) : (
 							<Group gap="md">
-								<Button leftSection={<IconX />} onClick={handleCancel} variant={variant ?? appContext.variant}>{`${getI18nextInstance().t(
-									'Close',
-								)}`}</Button>
+								<ArchbaseSmartActionButton 
+									actionName="close"
+									actionDescription="Fechar janela"
+									leftSection={<IconX />} 
+									onClick={handleCancel} 
+									variant={variant ?? appContext.variant}
+								>{`${getI18nextInstance().t('Close')}`}</ArchbaseSmartActionButton>
 							</Group>
 						)}
 					</Flex>
 				</ArchbaseSpaceBottom>
 			</ArchbaseSpaceFixed>
 		</Modal>
+	);
+
+	// 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido
+	return (
+		<ArchbaseConditionalSecurityWrapper
+			resourceName={resourceName}
+			resourceDescription={resourceDescription}
+			requiredPermissions={requiredPermissions}
+			fallbackComponent={fallbackComponent}
+			onSecurityReady={securityOptions?.onSecurityReady}
+			onAccessDenied={securityOptions?.onAccessDenied}
+		>
+			<TemplateContent />
+		</ArchbaseConditionalSecurityWrapper>
 	);
 }

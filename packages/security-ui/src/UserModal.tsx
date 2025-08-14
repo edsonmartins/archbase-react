@@ -3,16 +3,15 @@ import { ArchbaseDataSource } from '@archbase/data'
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit } from '@archbase/components'
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@archbase/data'
 import { ArchbaseNotifications } from '@archbase/components'
-import { ArchbaseFormModalTemplate } from '@archbase/template'
-import { Grid, Group, Input, ScrollArea, Space, Stack, Text } from '@mantine/core'
+import { Grid, Group, Input, ScrollArea, Space, Stack, Text, Modal, Button } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { useEffect, useState } from 'react'
 import { ArchbaseDualListSelector } from './ArchbaseDualListSelector'
-import { ArchbaseGroupService } from './ArchbaseGroupService'
-import { ArchbaseProfileService } from './ArchbaseProfileService'
+import { ArchbaseGroupService } from '@archbase/security'
+import { ArchbaseProfileService } from '@archbase/security'
 import { RenderProfileUserItem } from './RenderProfileUserItem'
-import { GroupDto, ProfileDto, UserDto, UserGroupDto } from './SecurityDomain'
+import { GroupDto, ProfileDto, UserDto, UserGroupDto } from '@archbase/security'
 
 export interface UserModalOptions {
   // Campos de identificação
@@ -120,25 +119,36 @@ export const UserModal = (props: UserModalProps) => {
     setPasswordError("")
   }, [props.dataSource.getFieldValue("password")])
 
+  const handleSave = () => {
+    const currentRecord = props.dataSource.current;
+    if (!currentRecord.password && props.dataSource.isInserting()) {
+      setPasswordError(getI18nextInstance().t('archbase:Informe a senha'))
+      return;
+    }
+    
+    if (props.onCustomSave) {
+      props.onCustomSave(currentRecord, (success: boolean) => {
+        if (success && props.onAfterSave) {
+          props.onAfterSave(currentRecord);
+        }
+        props.onClickOk(currentRecord, success);
+      });
+    } else {
+      props.onClickOk(currentRecord, true);
+    }
+  };
+
+  const handleCancel = () => {
+    props.onClickCancel(props.dataSource.current);
+  };
+
   return (
-    <ArchbaseFormModalTemplate
+    <Modal
+      opened={props.opened}
+      onClose={handleCancel}
       title={getI18nextInstance().t('archbase:Usuário')}
       size="80%"
-      height={'540px'}
       styles={{ content: { maxWidth: 1000 } }}
-      dataSource={props.dataSource}
-      opened={props.opened}
-      onClickOk={props.onClickOk}
-      onClickCancel={props.onClickCancel}
-      onCustomSave={props.onCustomSave}
-      onAfterSave={props.onAfterSave}
-      onBeforeOk={(currentRecord) => {
-        if (!currentRecord.password && props.dataSource.isInserting()) {
-          setPasswordError(getI18nextInstance().t('archbase:Informe a senha'))
-          return Promise.reject()
-        }
-        return Promise.resolve()
-      }}
     >
       <ScrollArea ref={focusTrapRef} style={{ height: '500px' }}>
         <Stack w={"98%"}>
@@ -333,6 +343,15 @@ export const UserModal = (props: UserModalProps) => {
           <Space h={'12px'} />
         </Stack>
       </ScrollArea>
-    </ArchbaseFormModalTemplate>
+      
+      <Group justify="flex-end" mt="md">
+        <Button variant="default" onClick={handleCancel}>
+          {getI18nextInstance().t('archbase:Cancelar')}
+        </Button>
+        <Button onClick={handleSave}>
+          {getI18nextInstance().t('archbase:Salvar')}
+        </Button>
+      </Group>
+    </Modal>
   )
 }

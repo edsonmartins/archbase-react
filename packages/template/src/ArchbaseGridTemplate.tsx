@@ -17,6 +17,9 @@ import { useArchbaseTheme } from '@archbase/core';
 import { emit, useArchbaseAppContext } from '@archbase/core';
 import { ArchbaseAlert } from '@archbase/components';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { ArchbaseTemplateSecurityProps } from './ArchbaseTemplateCommonTypes';
+import { ArchbaseConditionalSecurityWrapper, ArchbaseSmartActionButton } from './components';
+import { useOptionalTemplateSecurity } from './hooks';
 
 export interface UserActionsOptions {
   visible: boolean;
@@ -41,7 +44,7 @@ export interface UserRowActionsOptions<T extends Object> {
   onViewRow?: (row: T) => void;
 }
 
-export interface ArchbaseGridTemplateProps<T extends Object, ID> {
+export interface ArchbaseGridTemplateProps<T extends Object, ID> extends ArchbaseTemplateSecurityProps {
   id?: string;
   title: string;
   printTitle?: string;
@@ -186,12 +189,25 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     onSelectedRowsChanged,
     onCellDoubleClick,
     paginationLabels,
+    // Props de segurança (opcionais)
+    resourceName,
+    resourceDescription,
+    requiredPermissions,
+    fallbackComponent,
+    securityOptions,
   } = props;
 
   const filterRef = useRef<any>(null);
   const gridRef = useRef<ArchbaseDataGridRef>(null);
   const theme = useArchbaseTheme();
   const { colorScheme } = useMantineColorScheme();
+
+  // 🔐 SEGURANÇA: Hook opcional de segurança (só ativa se resourceName fornecido)
+  const security = useOptionalTemplateSecurity({
+    resourceName,
+    resourceDescription,
+    autoRegisterActions: securityOptions?.autoRegisterActions ?? true
+  });
 
   // 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
   const v1v2Compatibility = useArchbaseV1V2Compatibility<T>(
@@ -404,7 +420,8 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     return <div></div>;
   };
 
-  return (
+  // Componente interno que contém toda a lógica
+  const TemplateContent = () => (
     <Paper withBorder={withBorder} ref={innerRef} style={{ overflow: 'none', height: 'calc(100% - 4px)' }}>
       {isError ? (
         <ArchbaseAlert
@@ -475,17 +492,21 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
                     ? userActions.customUserActions
                     : null}
                   {userActions.onAddExecute ? (
-                    <Button
+                    <ArchbaseSmartActionButton
+                      actionName="add"
+                      actionDescription={`Adicionar novo ${resourceDescription || 'registro'}`}
                       color={'green'}
                       variant={variant ?? appContext.variant}
                       leftSection={<IconPlus />}
                       onClick={() => userActions && userActions.onAddExecute && userActions.onAddExecute()}
                     >
                       {userActions.labelAdd || getI18nextInstance().t('archbase:New')}
-                    </Button>
+                    </ArchbaseSmartActionButton>
                   ) : null}
                   {userActions.onEditExecute ? (
-                    <Button
+                    <ArchbaseSmartActionButton
+                      actionName="edit"
+                      actionDescription={`Editar ${resourceDescription || 'registro'}`}
                       color="blue"
                       leftSection={<IconEdit />}
                       disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -493,10 +514,12 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
                       onClick={() => userActions && userActions.onEditExecute && userActions.onEditExecute()}
                     >
                       {userActions.labelEdit || getI18nextInstance().t('archbase:Edit')}
-                    </Button>
+                    </ArchbaseSmartActionButton>
                   ) : null}
                   {userActions.onRemoveExecute ? (
-                    <Button
+                    <ArchbaseSmartActionButton
+                      actionName="delete"
+                      actionDescription={`Remover ${resourceDescription || 'registro'}`}
                       color="red"
                       leftSection={<IconTrash />}
                       disabled={!userActions?.allowRemove || !dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -504,10 +527,12 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
                       onClick={() => userActions && userActions.onRemoveExecute && userActions.onRemoveExecute()}
                     >
                       {userActions.labelRemove || getI18nextInstance().t('archbase:Remove')}
-                    </Button>
+                    </ArchbaseSmartActionButton>
                   ) : null}
                   {userActions.onViewExecute ? (
-                    <Button
+                    <ArchbaseSmartActionButton
+                      actionName="view"
+                      actionDescription={`Visualizar ${resourceDescription || 'registro'}`}
                       color="gray.7"
                       leftSection={<IconEye />}
                       disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
@@ -515,7 +540,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
                       onClick={() => userActions && userActions.onViewExecute && userActions.onViewExecute()}
                     >
                       {userActions.labelView || getI18nextInstance().t('archbase:View')}
-                    </Button>
+                    </ArchbaseSmartActionButton>
                   ) : null}
                   {userActions.customUserActions && userActions.customUserActionsPosition === 'right'
                     ? userActions.customUserActions
@@ -527,6 +552,20 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
         ) : null}
       </ArchbaseDataGrid>
     </Paper>
+  );
+
+  // 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido
+  return (
+    <ArchbaseConditionalSecurityWrapper
+      resourceName={resourceName}
+      resourceDescription={resourceDescription}
+      requiredPermissions={requiredPermissions}
+      fallbackComponent={fallbackComponent}
+      onSecurityReady={securityOptions?.onSecurityReady}
+      onAccessDenied={securityOptions?.onAccessDenied}
+    >
+      <TemplateContent />
+    </ArchbaseConditionalSecurityWrapper>
   );
 }
 

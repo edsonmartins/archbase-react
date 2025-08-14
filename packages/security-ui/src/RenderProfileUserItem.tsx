@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex, Space, Text } from '@mantine/core'
 import { forwardRef } from 'react'
-import { ProfileDto } from './SecurityDomain'
+import { ProfileDto } from '@archbase/security'
 
 export interface RenderProfileUserItemProps extends React.ComponentPropsWithoutRef<'div'> {
   image: string

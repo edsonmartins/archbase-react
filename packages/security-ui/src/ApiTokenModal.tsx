@@ -1,10 +1,9 @@
 import { ArchbaseDataSource } from '@archbase/data';
 import { ArchbaseSelect, ArchbaseEdit } from '@archbase/components';
-import { ArchbaseFormModalTemplate } from '@archbase/template';
 import { useArchbaseRemoteServiceApi } from '@archbase/data';
 import { Page } from '@archbase/data';
 import { Modal } from '@mantine/core';
-import { Grid, Group, Image, ScrollArea, Text } from '@mantine/core';
+import { Grid, Group, Image, ScrollArea, Text, Button } from '@mantine/core';
 import { DateTimePicker, DateValue } from '@mantine/dates';
 import { useFocusTrap } from '@mantine/hooks';
 import { ARCHBASE_IOC_API_TYPE, builder, convertDateToISOString, emit, processErrorMessage, OptionsResult, isBase64Validate, getI18nextInstance } from '@archbase/core';
@@ -12,8 +11,8 @@ import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { useState } from 'react';
 import { NO_USER } from './ArchbaseSecurityView';
-import { ArchbaseUserService } from './ArchbaseUserService';
-import { ApiTokenDto, GroupDto, UserDto } from './SecurityDomain';
+import { ArchbaseUserService } from '@archbase/security';
+import { ApiTokenDto, GroupDto, UserDto } from '@archbase/security';
 
 export const UserSelectItem = ({ image, label, description, ...others }) => (
 	<div {...others}>
@@ -86,19 +85,31 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 		});
 	};
 
+	const handleSave = () => {
+		if (props.onCustomSave) {
+			props.onCustomSave(props.dataSource.current, (success: boolean) => {
+				if (success && props.onAfterSave) {
+					props.onAfterSave(props.dataSource.current);
+				}
+				props.onClickOk(props.dataSource.current, success);
+			});
+		} else {
+			props.onClickOk(props.dataSource.current, true);
+		}
+	};
+
+	const handleCancel = () => {
+		props.onClickCancel(props.dataSource.current);
+	};
+
 	return (
-		<ArchbaseFormModalTemplate
+		<Modal
+			opened={props.opened}
+			onClose={handleCancel}
 			title={getI18nextInstance().t('archbase:Token de API')}
 			size="50%"
-			height={'400px'}
-			dataSource={props.dataSource}
-			opened={props.opened}
-			onClickOk={props.onClickOk}
-			onClickCancel={props.onClickCancel}
-			onCustomSave={props.onCustomSave}
-			onAfterSave={props.onAfterSave}
 		>
-			<ScrollArea ref={focusTrapRef} style={{ height: '300px' }}>
+			<ScrollArea style={{ height: '300px' }}>
 				<ArchbaseEdit
 					label={`${getI18nextInstance().t('archbase:Nome do token')}`}
 					placeholder={`${getI18nextInstance().t('archbase:Informe o nome do token')}`}
@@ -130,6 +141,15 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 					options={[]}
 				/>
 			</ScrollArea>
-		</ArchbaseFormModalTemplate>
+			
+			<Group justify="flex-end" mt="md">
+				<Button variant="default" onClick={handleCancel}>
+					{getI18nextInstance().t('archbase:Cancelar')}
+				</Button>
+				<Button onClick={handleSave}>
+					{getI18nextInstance().t('archbase:Salvar')}
+				</Button>
+			</Group>
+		</Modal>
 	);
 };
