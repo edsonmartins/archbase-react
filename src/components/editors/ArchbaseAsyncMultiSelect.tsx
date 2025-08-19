@@ -510,6 +510,13 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
                     onClick={() => {
                       setQueryValue('');
                       setSelectedValues([]);
+                      if (
+                        dataSource &&
+                        !dataSource.isBrowsing() &&
+                        dataField
+                      ) {
+                        dataSource.setFieldValue(dataField, []);
+                      }
                       if (onChangeValues) {
                         onChangeValues([])
                       }
