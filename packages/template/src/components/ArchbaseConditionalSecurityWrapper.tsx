@@ -30,22 +30,16 @@ export const ArchbaseConditionalSecurityWrapper: React.FC<ConditionalSecurityWra
   onSecurityReady,
   onAccessDenied
 }) => {
-  const [wrappedContent, setWrappedContent] = React.useState<ReactNode>(children);
+  // Se não tem resourceName, renderiza direto sem estado
+  if (!resourceName) {
+    return <>{children}</>;
+  }
 
-  React.useEffect(() => {
-    // Se não tem resourceName, não envolve - renderiza direto
-    if (!resourceName) {
-      setWrappedContent(children);
-      return;
-    }
-
-    // Por enquanto, apenas renderiza o conteúdo diretamente
-    // A integração completa será feita posteriormente
-    console.debug(`Template solicitou segurança para '${resourceName}', mas integração ainda em desenvolvimento.`);
-    setWrappedContent(children);
-  }, [resourceName, resourceDescription, requiredPermissions, fallbackComponent, onSecurityReady, onAccessDenied, children]);
-
-  return <>{wrappedContent}</>;
+  // Por enquanto, apenas renderiza o conteúdo diretamente
+  // A integração completa será feita posteriormente
+  console.debug(`Template solicitou segurança para '${resourceName}', mas integração ainda em desenvolvimento.`);
+  
+  return <>{children}</>;
 };
 
 /**

@@ -1,6 +1,6 @@
 import { ARCHBASE_IOC_API_TYPE, getI18nextInstance } from '@archbase/core'
 import { ArchbaseDataSource } from '@archbase/data'
-import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit } from '@archbase/components'
+import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit, ArchbaseAvatarEdit } from '@archbase/components'
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@archbase/data'
 import { ArchbaseNotifications } from '@archbase/components'
 import { Grid, Group, Input, ScrollArea, Space, Stack, Text, Modal, Button } from '@mantine/core'
@@ -297,8 +297,15 @@ export const UserModal = (props: UserModalProps) => {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
               <Stack gap="lg">
-                <Text>{getI18nextInstance().t('archbase:Foto do usuário')}</Text>
-                {/* Avatar editor temporarily disabled */}
+                <ArchbaseAvatarEdit
+                  label={getI18nextInstance().t('archbase:Foto do usuário')}
+                  dataSource={props.dataSource}
+                  dataField="avatar"
+                  width={120}
+                  height={120}
+                  maxSizeKB={options.avatarMaxSizeKB}
+                  imageQuality={options.avatarImageQuality}
+                />
               </Stack>
             </Grid.Col>
           </Grid>

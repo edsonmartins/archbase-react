@@ -281,6 +281,18 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
   };
 
   const appContext = useArchbaseAppContext();
+  const innerComponentRef = useRef<any>(null);
+
+  // 🔧 CORREÇÃO: Ref estável - sempre usa innerComponentRef interno para evitar loops
+  // Se innerRef for fornecido, sincronizamos manualmente
+  React.useEffect(() => {
+    if (innerRef && innerRef.current !== innerComponentRef.current) {
+      if (innerRef.current && innerComponentRef.current) {
+        // Sincroniza as refs se necessário
+        innerRef.current = innerComponentRef.current;
+      }
+    }
+  }, [innerRef]);
 
   const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
     const newState = { ...filterState, currentFilter: filter, activeFilterIndex };
@@ -422,7 +434,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
 
   // Componente interno que contém toda a lógica
   const TemplateContent = () => (
-    <Paper withBorder={withBorder} ref={innerRef} style={{ overflow: 'none', height: 'calc(100% - 4px)' }}>
+    <Paper withBorder={withBorder} ref={innerComponentRef} style={{ overflow: 'none', height: 'calc(100% - 4px)' }}>
       {isError ? (
         <ArchbaseAlert
           autoClose={20000}

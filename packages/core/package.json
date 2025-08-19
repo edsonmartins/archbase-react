@@ -1,6 +1,6 @@
 {
   "name": "@archbase/core",
-  "version": "3.0.12",
+  "version": "3.0.0",
   "description": "Core utilities and foundation for Archbase React v3",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -39,11 +39,12 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "peerDependencies": {
-    "@mantine/core": "8.2.4",
-    "@mantine/dates": "8.2.4",
-    "@mantine/hooks": "8.2.4",
-    "@mantine/modals": "8.2.4",
-    "@mantine/notifications": "8.2.4",
+    "@mantine/core": "8.2.5",
+    "@mantine/dates": "8.2.5",
+    "@mantine/hooks": "8.2.5",
+    "@mantine/modals": "8.2.5",
+    "@mantine/notifications": "8.2.5",
+    "@mantine/spotlight": "8.2.5",
     "react": "^18.3.0 || ^19.0.0",
     "react-dom": "^18.3.0 || ^19.0.0"
   },

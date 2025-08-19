@@ -87,6 +87,17 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 	const [internalError, setInternalError] = useState<string>(error);
 	const forceUpdate = useForceUpdate();
 
+	// 🔧 CORREÇÃO: Ref estável - sempre usa innerComponentRef interno para evitar loops
+	// Se innerRef for fornecido, sincronizamos manualmente
+	React.useEffect(() => {
+		if (innerRef && innerRef.current !== innerComponentRef.current) {
+			if (innerRef.current && innerComponentRef.current) {
+				// Sincroniza as refs se necessário
+				innerRef.current = innerComponentRef.current;
+			}
+		}
+	}, [innerRef]);
+
 	// 🔐 SEGURANÇA: Hook opcional de segurança (só ativa se resourceName fornecido)
 	const security = useOptionalTemplateSecurity({
 		resourceName,
@@ -171,7 +182,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 	// Componente interno que contém toda a lógica
 	const TemplateContent = () => (
 		<Paper
-			ref={innerRef || innerComponentRef}
+			ref={innerComponentRef}
 			withBorder={withBorder}
 			radius={radius}
 			style={{ width: width, height: height, padding: 20 }}
