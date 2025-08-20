@@ -218,7 +218,8 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 	const smallerButtonWidthRef = useRef<any>([]);
 	const [visibleActionsLength, setVisibleActionsLength] = useState(actions.length);
 	const [hiddenActions, setHiddenActions] = useState<ArchbaseAction[]>([]);
-	const { ref: containerRef, width: containerWidth } = useArchbaseSize();
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [containerWidth] = useArchbaseSize(containerRef);
 	const [opened, setOpened] = useState(false);
 
 	const theme = useMantineTheme();

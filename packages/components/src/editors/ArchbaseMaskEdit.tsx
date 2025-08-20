@@ -221,7 +221,6 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 	const handleAccept = (changedValue, maskObject) => {
 		const maskedValue = maskObject.value.replaceAll('_', '')
 		specialCharactersLength.current = maskedValue.length - maskObject.unmaskedValue.length
-		console.log(maskObject.unmaskedValue.length)
 		if (maskedValue.length !== mask?.length && maskObject.unmaskedValue.length !== 0) {
 			return;
 		}
