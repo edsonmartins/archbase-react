@@ -258,7 +258,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
 
 
     // Determinar se o componente é readonly
-    const isReadOnly = readOnly || (dataSource ? !dataSource.isActive() : false)
+    const isReadOnly = readOnly || (dataSource ? !dataSource.isActive() || dataSource.isBrowsing() : false)
     const isDisabled = disabled || isReadOnly || loading
 
     // Texto a ser exibido
