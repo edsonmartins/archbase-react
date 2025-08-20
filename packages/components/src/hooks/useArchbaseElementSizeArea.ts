@@ -36,4 +36,4 @@ function useArchbaseElementSizeArea<T extends HTMLElement = HTMLDivElement>(): [
 	return [setRef, size];
 }
 
-export default useArchbaseElementSizeArea;
+export { useArchbaseElementSizeArea };
