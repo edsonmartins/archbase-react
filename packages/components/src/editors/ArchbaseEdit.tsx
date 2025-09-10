@@ -36,7 +36,7 @@ export interface ArchbaseEditProps<T, ID> {
 	/** Icone à direita */
 	icon?: ReactNode;
 	/** Dica para botão localizar */
-	tooltipIconSearch?: string;
+	tooltipIconSearch?: ReactNode;
 	/** Evento ocorre quando clica no botão localizar */
 	onActionSearchExecute?: () => void;
 	/** Texto sugestão do edit */
