@@ -39,7 +39,7 @@ export function ArchbaseLogin({
     username,
     password,
     rememberMe: remember,
-    clear
+    clearRememberMe
   } = useArchbasePasswordRemember();
   const [usernameInput, setUsernameInput] = useState<string | null>(username);
   const [passwordInput, setPasswordInput] = useState<string | null>(password);
@@ -136,7 +136,7 @@ export function ArchbaseLogin({
             const checked = event.currentTarget.checked;
             setRememberMe(checked);
             if (!checked) {
-              clear();
+              clearRememberMe();
             }
           }}
         />
