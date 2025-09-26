@@ -10,7 +10,7 @@ import { ARCHBASE_SECURITY_MANAGER_STORE } from './useArchbaseSecurityManager'
 
 export interface AuthenticationManagerReturnType {
   login: (username: string, password: string, rememberMe: boolean) => void
-  logout: () => void
+  logout: (clearRememberMe?: boolean) => void
   username: string
   isAuthenticating: boolean
   isInitializing: boolean
@@ -65,11 +65,13 @@ export const useArchbaseAuthenticationManager = ({
     setError('')
   }
 
-  const logout = () => {
+  const logout = (clearRememberMe?: boolean) => {
     setAuthenticating(false)
     setAuthenticated(false)
     tokenManager.clearToken()
-    tokenManager.clearUsernameAndPassword()
+    if (clearRememberMe) {
+      tokenManager.clearUsernameAndPassword()
+    }
     setUsername('')
     setError('')
     setIsError(false)
@@ -84,6 +86,8 @@ export const useArchbaseAuthenticationManager = ({
       tokenManager.saveToken(access_token)
       if (rememberMe) {
         tokenManager.saveUsernameAndPassword(username, password)
+      } else {
+        tokenManager.clearUsernameAndPassword()
       }
       tokenManager.saveUsername(username)
       setUsername(username)
