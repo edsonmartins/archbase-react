@@ -41,6 +41,6 @@ export const useArchbasePasswordRemember = (): PasswordRememberReturnType => {
     clear,
     username,
     password,
-    rememberMe: (!username && !password)
+    rememberMe: !!(username && password)
   }
 }

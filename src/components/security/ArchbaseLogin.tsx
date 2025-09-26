@@ -39,6 +39,7 @@ export function ArchbaseLogin({
     username,
     password,
     rememberMe: remember,
+    clear
   } = useArchbasePasswordRemember();
   const [usernameInput, setUsernameInput] = useState<string | null>(username);
   const [passwordInput, setPasswordInput] = useState<string | null>(password);
@@ -48,6 +49,21 @@ export function ArchbaseLogin({
   useEffect(() => {
     setShowError(!!error);
   }, [error]);
+
+  useEffect(() => {
+    if (username !== usernameInput) {
+      setUsernameInput(username);
+    }
+    if (password !== passwordInput) {
+      setPasswordInput(password);
+    }
+    if (remember !== rememberMe) {
+      setRememberMe(remember);
+      if (!remember) {
+        clear()
+      }
+    }
+  }, [username, password, remember]);
 
   const handleInputChange = () => {
     setShowError(false);
@@ -120,7 +136,6 @@ export function ArchbaseLogin({
           checked={rememberMe}
           onChange={(event) => {
             setRememberMe(event.currentTarget.checked);
-            handleInputChange();
           }}
         />
         {onClickForgotPassword && (
