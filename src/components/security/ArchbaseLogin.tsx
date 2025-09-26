@@ -53,6 +53,7 @@ export function ArchbaseLogin({
   useEffect(() => {
     if (username !== usernameInput) {
       setUsernameInput(username);
+      onChangeUsername?.(username)
     }
     if (password !== passwordInput) {
       setPasswordInput(password);
