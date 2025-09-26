@@ -1,5 +1,5 @@
-import React, { ReactNode, useState } from "react";
-import { Anchor, Button, Card, Checkbox, Divider, Group, PasswordInput, Text, TextInput } from "@mantine/core";
+import React, { ReactNode, useEffect, useState } from "react";
+import { Anchor, Button, Card, Checkbox, Divider, Group, Loader, PasswordInput, Text, TextInput, CardProps } from "@mantine/core";
 import { useFocusTrap } from "@mantine/hooks";
 import { useArchbasePasswordRemember } from "@hooks/index";
 import { t } from "i18next";
@@ -10,7 +10,13 @@ export interface ArchbaseLoginProps {
   onClickForgotPassword?: () => void
   loginLabel?: string
   loginPlaceholder?: string
+  beforeInputs?: ReactNode
   afterInputs?: ReactNode
+  onChangeUsername?: (username: string) => void
+  disabledLogin?: boolean
+  isCheckingUsername?: boolean
+  showSignIn?: boolean
+  cardProps?: CardProps
 }
 
 export function ArchbaseLogin({
@@ -19,10 +25,16 @@ export function ArchbaseLogin({
   onClickForgotPassword,
   loginLabel = "Email",
   loginPlaceholder,
+  beforeInputs,
   afterInputs,
+  onChangeUsername,
+  disabledLogin = false,
+  isCheckingUsername = false,
+  showSignIn = true,
+  cardProps
 }: ArchbaseLoginProps) {
   const focusTrapRef = useFocusTrap();
-  
+
   const {
     username,
     password,
@@ -31,7 +43,11 @@ export function ArchbaseLogin({
   const [usernameInput, setUsernameInput] = useState<string | null>(username);
   const [passwordInput, setPasswordInput] = useState<string | null>(password);
   const [rememberMe, setRememberMe] = useState<boolean>(remember);
-  const [showError, setShowError] = useState<boolean>(!!error);
+  const [showError, setShowError] = useState<boolean>(false);
+
+  useEffect(() => {
+    setShowError(!!error);
+  }, [error]);
 
   const handleInputChange = () => {
     setShowError(false);
@@ -43,34 +59,47 @@ export function ArchbaseLogin({
     }
   };
 
+  const cardFinalProps = {
+    withBorder: true,
+    shadow: "md",
+    p: 30,
+    mt: 30,
+    radius: "md",
+    w: 400,
+    ...cardProps
+  }
+
   return (
     <Card
-      withBorder
-      shadow="md"
-      p={30}
-      mt={30}
-      radius="md"
-      w={400}
+      {...cardFinalProps}
       pos="relative"
       ref={focusTrapRef}
     >
-      <Text
-        c="light-dark(var(--mantine-color-black), var(--mantine-color-white))"
-        fw={800}
-        fz={{ base: "20px", md: "35px" }}
-        style={{ textAlign: "center", letterSpacing: "-1px" }}
-        mt="xs"
-      >
-        {t("archbase:signIn")}
-      </Text>
-      <Divider m="md" />
+      {
+        showSignIn &&
+        <>
+          <Text
+            c="light-dark(var(--mantine-color-black), var(--mantine-color-white))"
+            fw={800}
+            fz={{ base: "20px", md: "35px" }}
+            style={{ textAlign: "center", letterSpacing: "-1px" }}
+            mt="xs"
+          >
+            {t("archbase:signIn")}
+          </Text>
+          <Divider m="md" />
+        </>
+      }
+      {beforeInputs}
       <TextInput
         label={loginLabel}
         placeholder={loginPlaceholder ?? t("archbase:usuario@email.com")}
+        rightSection={isCheckingUsername ? <Loader size="xs" /> : null}
         value={usernameInput || ""}
         required
         onChange={(event) => {
           setUsernameInput(event.currentTarget.value);
+          onChangeUsername?.(event.currentTarget.value)
           handleInputChange();
         }}
       />
@@ -109,7 +138,7 @@ export function ArchbaseLogin({
       </Group>
       {afterInputs}
       <Button
-        disabled={!passwordInput || !usernameInput}
+        disabled={!passwordInput || !usernameInput || disabledLogin}
         fullWidth
         mt="xl"
         onClick={handleLogin}
