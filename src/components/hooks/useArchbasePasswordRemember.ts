@@ -7,6 +7,7 @@ import { ArchbaseTokenManager } from '../auth/ArchbaseTokenManager'
 export interface PasswordRememberReturnType {
   saveUsernameAndPassword: (username: string, password: string) => void
   clear: ()=>void
+  clearRememberMe: ()=>void
   username: string|null
   password: string|null
   rememberMe: boolean
@@ -32,6 +33,10 @@ export const useArchbasePasswordRemember = (): PasswordRememberReturnType => {
     setPassword(null)
   }
 
+  const clearRememberMe = () => {
+    tokenManager.clearUsernameAndPassword()
+  }
+
   const saveUsernameAndPassword = (username: string, password: string) => {
     tokenManager.saveUsernameAndPassword(username, password)
   }
@@ -39,6 +44,7 @@ export const useArchbasePasswordRemember = (): PasswordRememberReturnType => {
   return {
     saveUsernameAndPassword,
     clear,
+    clearRememberMe,
     username,
     password,
     rememberMe: !!(username && password)
