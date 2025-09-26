@@ -59,9 +59,6 @@ export function ArchbaseLogin({
     }
     if (remember !== rememberMe) {
       setRememberMe(remember);
-      if (!remember) {
-        clear()
-      }
     }
   }, [username, password, remember]);
 
@@ -135,7 +132,11 @@ export function ArchbaseLogin({
           label={t("archbase:Lembre-me")}
           checked={rememberMe}
           onChange={(event) => {
-            setRememberMe(event.currentTarget.checked);
+            const checked = event.currentTarget.checked;
+            setRememberMe(checked);
+            if (!checked) {
+              clear();
+            }
           }}
         />
         {onClickForgotPassword && (
