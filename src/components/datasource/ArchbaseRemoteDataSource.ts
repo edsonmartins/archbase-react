@@ -179,10 +179,13 @@ export class ArchbaseRemoteDataSource<T, ID>
           index = idx
         }
       })
+      // Cópias com spread para evitar problemas com Object.freeze
+      this.records = [...this.records];
       if (index >= 0) {
         this.records.splice(index, 1)
       }
       if (this.records !== this.filteredRecords) {
+        this.filteredRecords = [...this.filteredRecords];
         this.filteredRecords.splice(this.getCurrentIndex(), 1)
       }
       this.grandTotalRecords--
