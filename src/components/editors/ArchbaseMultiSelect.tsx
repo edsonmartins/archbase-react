@@ -118,6 +118,8 @@ export interface ArchbaseMultiSelectProps<T, ID, O> {
   children?: ReactNode | ReactNode[];
   /** Máxima altura do dropdown */
   maxDropdownHeight?: number;
+  /** Função de ordenação customizada para os valores selecionados */
+  sortSelectedValues?: (a: O, b: O) => number;
 }
 
 function buildOptions<O>(
@@ -276,7 +278,8 @@ export function ArchbaseMultiSelect<T, ID, O>({
   options,
   optionsLabelField,
   children,
-  maxDropdownHeight = 280
+  maxDropdownHeight = 280,
+  sortSelectedValues
 }: ArchbaseMultiSelectProps<T, ID, O>) {
   const combobox = useCombobox({
     onDropdownClose: () => {
@@ -506,7 +509,11 @@ export function ArchbaseMultiSelect<T, ID, O>({
     return matchesSearch && notSelected;
   });
 
-  const values = selectedValues.map((item) => (
+  const sortedSelectedValues = sortSelectedValues
+    ? [...selectedValues].sort(sortSelectedValues)
+    : selectedValues;
+
+  const values = sortedSelectedValues.map((item) => (
     <SelectedItemComponent
       key={getOptionValue(item)}
       item={item}
