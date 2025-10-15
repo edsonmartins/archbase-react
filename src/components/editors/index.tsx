@@ -8,6 +8,9 @@ export type { ArchbaseDatePickerEditProps, ArchbaseDatePickerEditStylesNames } f
 
 export { ArchbaseAsyncMultiSelect } from './ArchbaseAsyncMultiSelect';
 
+export { ArchbaseMultiSelect } from './ArchbaseMultiSelect';
+export type { ArchbaseMultiSelectProps } from './ArchbaseMultiSelect';
+
 export type { ArchbaseAsyncSelectProps, OptionsResult } from './ArchbaseAsyncSelect';
 export { ArchbaseAsyncSelect, CustomSelectScrollArea } from './ArchbaseAsyncSelect';
 
