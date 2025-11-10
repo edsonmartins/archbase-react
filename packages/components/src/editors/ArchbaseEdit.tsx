@@ -98,14 +98,16 @@ export function ArchbaseEdit<T, ID>({
 
 	// Detecta automaticamente se é DataSource V2
 	const isDataSourceV2 = dataSource && ('appendToFieldArray' in dataSource || 'updateFieldArrayItem' in dataSource);
-	
+
 	// Para V2: estado otimizado (sem re-renders desnecessários)
 	const [v2Value, setV2Value] = useState<string>('');
 	const [v2ShouldUpdate, setV2ShouldUpdate] = useState(0);
 
-	useEffect(() => {
-		setInternalError(undefined);
-	}, [currentValue]);
+	// ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+	// O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
+	// useEffect(() => {
+	// 	setInternalError(undefined);
+	// }, [currentValue]);
 
 	useEffect(() => {
 		if (error !== internalError) {
@@ -177,7 +179,12 @@ export function ArchbaseEdit<T, ID>({
 		const changedValue = event.target.value;
 
 		event.persist();
-		
+
+		// ✅ Limpa erro quando usuário edita o campo
+		if (internalError) {
+			setInternalError(undefined);
+		}
+
 		if (isDataSourceV2) {
 			// V2: Otimizado com menos re-renders
 			setV2Value(changedValue);

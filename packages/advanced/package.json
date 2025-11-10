@@ -1,6 +1,6 @@
 {
   "name": "@archbase/advanced",
-  "version": "3.0.0",
+  "version": "3.0.5",
   "description": "Archbase React Advanced Components - Charts, Kanban, QueryBuilder",
   "type": "module",
   "main": "./dist/index.js",
@@ -24,9 +24,9 @@
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@mantine/core": "8.2.5",
-    "@mantine/hooks": "8.2.5",
-    "@mantine/dates": "8.2.5",
+    "@mantine/core": "8.3.6",
+    "@mantine/hooks": "8.3.6",
+    "@mantine/dates": "8.3.6",
     "@tabler/icons-react": "^3.29.0"
   },
   "dependencies": {

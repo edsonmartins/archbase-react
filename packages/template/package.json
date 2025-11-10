@@ -1,6 +1,6 @@
 {
   "name": "@archbase/template",
-  "version": "3.0.0",
+  "version": "3.0.5",
   "description": "Template components for Archbase React v3 - High-level templates and layouts",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -31,10 +31,10 @@
   "peerDependencies": {
     "react": "^18.3.0 || ^19.0.0",
     "react-dom": "^18.3.0 || ^19.0.0",
-    "@mantine/core": "8.2.5",
-    "@mantine/dates": "8.2.5",
-    "@mantine/hooks": "8.2.5",
-    "@mantine/modals": "8.2.5",
+    "@mantine/core": "8.3.6",
+    "@mantine/dates": "8.3.6",
+    "@mantine/hooks": "8.3.6",
+    "@mantine/modals": "8.3.6",
     "@tabler/icons-react": "^3.26.0"
   },
   "dependencies": {
