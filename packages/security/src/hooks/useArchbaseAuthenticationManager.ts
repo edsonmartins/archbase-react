@@ -20,7 +20,7 @@ import {
 export interface AuthenticationManagerReturnType {
   // Métodos básicos (compatibilidade)
   login: (username: string, password: string, rememberMe: boolean) => void
-  logout: () => void
+  logout: (clearRememberMe?: boolean) => void
   username: string
   isAuthenticating: boolean
   isInitializing: boolean
@@ -120,11 +120,13 @@ export const useArchbaseAuthenticationManager = ({
     setError('')
   }
 
-  const logout = () => {
+  const logout = (clearRememberMe?: boolean) => {
     setAuthenticating(false)
     setAuthenticated(false)
     tokenManager.clearToken()
-    tokenManager.clearUsernameAndPassword()
+    if (clearRememberMe) {
+      tokenManager.clearUsernameAndPassword()
+    }
     
     // Limpar contexto se suportado
     if (capabilities.hasContextSupport && tokenManager.clearContext) {
@@ -185,6 +187,8 @@ export const useArchbaseAuthenticationManager = ({
       tokenManager.saveToken(access_token)
       if (rememberMe) {
         tokenManager.saveUsernameAndPassword(request.email, request.password)
+      } else {
+        tokenManager.clearUsernameAndPassword()
       }
       tokenManager.saveUsername(request.email)
       

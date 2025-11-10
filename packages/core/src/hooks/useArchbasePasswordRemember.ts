@@ -38,8 +38,17 @@ export function useArchbasePasswordRemember() {
     setRememberMe(false);
   };
 
+  const clearRememberMe = () => {
+    localStorage.removeItem('archbase-username');
+    localStorage.removeItem('archbase-password');
+    localStorage.removeItem('archbase-remember-me');
+    setRememberMe(false);
+  };
+
+
   return {
     rememberMe,
+    clearRememberMe,
     username,
     password,
     setRememberMe,
