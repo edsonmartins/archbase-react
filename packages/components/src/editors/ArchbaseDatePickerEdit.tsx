@@ -48,6 +48,7 @@ import { convertDateToISOString, convertISOStringToDate } from '@archbase/core';
 import { type ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { useValidationErrors } from '@archbase/core';
 
 const dateFormats = {
 	'DD/MM/YYYY': {
@@ -332,6 +333,15 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	// 🔄 MIGRAÇÃO V1/V2: Converter valores string para Date se necessário
 	const processValue = (val: DateValue | string | null) => {
 		if (!val) return null;
@@ -403,7 +413,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
-				
+
 				// 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1
 				if (!v1v2Compatibility.isDataSourceV2) {
 					forceUpdate();
@@ -413,9 +423,11 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
 	const loadDataSourceFieldValue = useCallback(() => {
 		if (dataSource && dataField) {
@@ -424,7 +436,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 				// 🔄 MIGRAÇÃO V1/V2: Tratar tanto strings formatadas quanto ISO strings
 				let resultDate: Date;
 				let result: string;
-				
+
 				if (typeof value === 'string') {
 					// Tentar parsear como data formatada primeiro
 					try {
@@ -443,7 +455,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 					resultDate = value instanceof Date ? value : new Date(value);
 					result = dateFormats[dateFormat!].format(resultDate);
 				}
-				
+
 				if (result !== inputValue) {
 					setInputValue(result);
 					setDate(resultDate.toISOString().split('T')[0]);
@@ -461,12 +473,12 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		if (dataSource && dataField) {
 			// 🔄 MIGRAÇÃO V1/V2: Para compatibilidade V1, usar strings formatadas ao invés de ISO
 			let processedValue: any = value;
-			
+
 			if (value && typeof value !== 'string') {
 				// Se for Date, converter para string formatada (formato do input)
 				processedValue = formatValue(value);
 			}
-			
+
 			v1v2Compatibility.handleValueChange(processedValue);
 		}
 	}, [v1v2Compatibility.handleValueChange, dateFormat]);
@@ -490,9 +502,19 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		}
 	});
 
+	// ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+	// O erro deve ser limpo apenas quando o usuário EDITA o campo (nos handlers)
+	// useEffect(() => {
+	// 	setInternalError(undefined);
+	// }, [_value, _date, inputValue]);
+
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-		setInternalError(undefined);
-	}, [_value, _date, inputValue]);
+		if (props.error !== undefined && props.error !== internalError) {
+			setInternalError(props.error);
+		}
+	}, [props.error]);
 
 	useEffect(() => {
 		if (controlled && _value) {
@@ -510,6 +532,13 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		if (!isReadOnly()) {
 			const val = event.currentTarget.value;
 			setInputValue(val);
+
+			// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+			const hasError = internalError || contextError;
+			if (hasError) {
+				setInternalError(undefined);
+				validationContext?.clearError(fieldKey);
+			}
 
 			if (val.trim() === '' && _allowDeselect) {
 				setValue(null);
@@ -532,6 +561,13 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 	const handleComplete = (maskValue) => {
 		if (!isReadOnly()) {
+			// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+			const hasError = internalError || contextError;
+			if (hasError) {
+				setInternalError(undefined);
+				validationContext?.clearError(fieldKey);
+			}
+
 			if (maskValue.trim() === '' && _allowDeselect) {
 				setValue(null);
 				setDataSourceFieldValue('');
@@ -555,6 +591,13 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	const handleAccept = (_maskValue: string, maskRef) => {
 		if (!isReadOnly()) {
 			if (maskRef.masked.rawInputValue === '' && _allowDeselect) {
+				// ✅ Limpa erro quando usuário limpa o campo
+				const hasError = internalError || contextError;
+				if (hasError) {
+					setInternalError(undefined);
+					validationContext?.clearError(fieldKey);
+				}
+
 				setValue(null);
 				setDate(null);
 				setDataSourceFieldValue('');
@@ -595,12 +638,18 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 			selected: dayjs(_value).isSame(day, 'day'),
 			onClick: () => {
 				if (!isReadOnly()) {
+					// ✅ Limpa erro quando usuário seleciona uma data no calendário
+					const hasError = internalError || contextError;
+					if (hasError) {
+						setInternalError(undefined);
+						validationContext?.clearError(fieldKey);
+					}
+
 					const valueWithTime = preserveTime ? assignTime(_value, day) : day;
 					const val = _allowDeselect ? (dayjs(_value).isSame(day, 'day') ? null : valueWithTime) : valueWithTime;
 					setValue(val);
 					const formattedValue = formatValue(val);
 					setInputValue(formattedValue);
-					setInternalError(undefined);
 					setDropdownOpened(false);
 					setDataSourceFieldValue(formattedValue);
 					onChangeValue?.(formattedValue, { target: { value: formattedValue } });
@@ -617,6 +666,13 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 				onMouseDown={(event) => event.preventDefault()}
 				tabIndex={-1}
 				onClick={() => {
+					// ✅ Limpa erro quando usuário usa o botão clear
+					const hasError = internalError || contextError;
+					if (hasError) {
+						setInternalError(undefined);
+						validationContext?.clearError(fieldKey);
+					}
+
 					setValue(null);
 					setInputValue('');
 					setDataSourceFieldValue('');
@@ -631,9 +687,12 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		value !== undefined && !dropdownOpened && setInputValue(formatValue(_value));
 	}, [_value]);
 
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	return (
 		<>
-			<Input.Wrapper {...wrapperProps} error={internalError} label={title||props.label}>
+			<Input.Wrapper {...wrapperProps} error={displayError} label={title||props.label}>
 				<Popover
 					opened={dropdownOpened}
 					trapFocus={false}

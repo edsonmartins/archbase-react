@@ -20,6 +20,7 @@ import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { ArchbaseTemplateSecurityProps } from './ArchbaseTemplateCommonTypes';
 import { useOptionalTemplateSecurity } from './hooks';
 import { ArchbaseConditionalSecurityWrapper, ArchbaseSmartActionButton } from './components';
+import { ValidationErrorsProvider, useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseFormTemplateProps<T, ID> extends ArchbaseTemplateSecurityProps {
 	title: string;
@@ -121,6 +122,8 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 		},
 	});
 
+	const validationContext = useValidationErrors();
+
 	const handleSave = async (entity) => {
 		try {
 			if (onSave) {
@@ -131,6 +134,8 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 					dataSource
 						.save()
 						.then(() => {
+							// Limpar erros de validação após salvar com sucesso
+							validationContext?.clearAll();
 							onAfterSave && onAfterSave(entity);
 						})
 						.catch((e) => {
@@ -156,6 +161,8 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 				if (!dataSource.isBrowsing()) {
 					dataSource.cancel();
 				}
+				// Limpar erros de validação ao cancelar
+				validationContext?.clearAll();
 				onAfterCancel && onAfterCancel();
 			}
 		} catch (e) {
@@ -173,6 +180,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 
 	// ✅ Layout 100% CSS Flexbox - SEM useComponentSize (sem loops!)
 	const TemplateContent = () => (
+		<ValidationErrorsProvider>
 		<Paper
 			ref={innerRef}
 			withBorder={withBorder}
@@ -273,6 +281,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 				)}
 			</Box>
 		</Paper>
+		</ValidationErrorsProvider>
 	);
 
 	// 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido

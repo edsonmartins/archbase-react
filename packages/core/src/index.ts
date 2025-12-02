@@ -30,3 +30,4 @@ export * from './fallback/ArchbaseSafeMigrationWrapper'
 export function detectDataSourceVersion(dataSource: any): string {
   return dataSource?.version || 'v1';
 }
+export { ValidationErrorsProvider, useValidationErrors, useRequiredValidationErrors } from './validation/ValidationErrorsContext';

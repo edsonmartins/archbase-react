@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { CSSProperties, ReactNode } from 'react';
 import { ArchbaseDateTimePickerEdit } from './ArchbaseDateTimePickerEdit';
 import type { ArchbaseDataSource } from '@archbase/data';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseDateTimePickerRangeProps<T, ID> {
   /** Data source where the range values will be assigned */
@@ -84,8 +85,19 @@ export function ArchbaseDateTimePickerRange<T, ID>({
   const [endDate, setEndDate] = useState<Date | null>(value?.[1] || null);
   const [internalError, setInternalError] = useState<string | undefined>(error);
 
+  // Contexto de validação (opcional - pode não existir)
+  const validationContext = useValidationErrors();
+
+  // Chave única para o field (usando combinação de dataFieldStart/End ou label)
+  const fieldKey = dataFieldStart && dataFieldEnd ? `${dataFieldStart}-${dataFieldEnd}` : label || 'datetime-picker-range';
+
+  // Recuperar erro do contexto se existir
+  const contextError = validationContext?.getError(fieldKey);
+
   useEffect(() => {
-    setInternalError(error);
+    if (error !== undefined && error !== internalError) {
+      setInternalError(error);
+    }
   }, [error]);
 
   useEffect(() => {
@@ -96,6 +108,13 @@ export function ArchbaseDateTimePickerRange<T, ID>({
   }, [value]);
 
   const handleStartDateChange = (date: Date | null) => {
+    // ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+    const hasError = internalError || contextError;
+    if (hasError) {
+      setInternalError(undefined);
+      validationContext?.clearError(fieldKey);
+    }
+
     setStartDate(date);
     if (onRangeChange) {
       onRangeChange([date, endDate]);
@@ -103,6 +122,13 @@ export function ArchbaseDateTimePickerRange<T, ID>({
   };
 
   const handleEndDateChange = (date: Date | null) => {
+    // ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+    const hasError = internalError || contextError;
+    if (hasError) {
+      setInternalError(undefined);
+      validationContext?.clearError(fieldKey);
+    }
+
     setEndDate(date);
     if (onRangeChange) {
       onRangeChange([startDate, date]);
@@ -111,18 +137,25 @@ export function ArchbaseDateTimePickerRange<T, ID>({
 
   const validateDateRange = (start: Date | null, end: Date | null): boolean => {
     if (start && end && start > end) {
-      setInternalError('Data inicial não pode ser maior que a data final');
+      const errorMsg = 'Data inicial não pode ser maior que a data final';
+      setInternalError(errorMsg);
+      // Salvar no contexto (se disponível)
+      validationContext?.setError(fieldKey, errorMsg);
       return false;
     }
     setInternalError(undefined);
+    validationContext?.clearError(fieldKey);
     return true;
   };
+
+  // Erro a ser exibido: local ou do contexto
+  const displayError = internalError || contextError;
 
   return (
     <Input.Wrapper
       label={label}
       size={size}
-      error={internalError}
+      error={displayError}
       description={description}
       style={{
         width,

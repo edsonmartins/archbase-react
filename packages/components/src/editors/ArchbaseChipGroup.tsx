@@ -6,6 +6,7 @@ import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useForceUpdate } from '@mantine/hooks';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseChipGroupProps<T, ID, O> {
 	/** Fonte de dados onde será atribuido o valor do ChipGroup*/
@@ -109,6 +110,15 @@ export function ArchbaseChipGroup<T, ID, O>({
 		multiple ? [] : ''
 	);
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
@@ -119,9 +129,13 @@ export function ArchbaseChipGroup<T, ID, O>({
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-		setInternalError(undefined);
-	}, [selectedValue]);
+		if (error !== undefined && error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
 		let initialValue: any = value;
@@ -161,9 +175,11 @@ export function ArchbaseChipGroup<T, ID, O>({
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -185,6 +201,13 @@ export function ArchbaseChipGroup<T, ID, O>({
 	}, []);
 
 	const handleChange = (currentSelectedValue: string | string[]) => {
+		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+		const hasError = internalError || contextError;
+		if (hasError) {
+			setInternalError(undefined);
+			validationContext?.clearError(fieldKey);
+		}
+
 		setSelectedValue((_prev) => currentSelectedValue);
 
 		let savedValue = currentSelectedValue;
@@ -201,8 +224,11 @@ export function ArchbaseChipGroup<T, ID, O>({
 		}
 	};
 
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	return (
-		<Input.Wrapper label={label} error={internalError} description={description}>
+		<Input.Wrapper label={label} error={displayError} description={description}>
 			<Chip.Group
 				defaultValue={selectedValue ? getOptionValue(selectedValue) : defaultValue}
 				value={selectedValue}

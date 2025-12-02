@@ -1,11 +1,12 @@
 import { Chip, MantineSize } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseChipProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do chip */
@@ -74,6 +75,15 @@ export function ArchbaseChip<T, ID>({
 		falseValue
 	);
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
@@ -81,6 +91,14 @@ export function ArchbaseChip<T, ID>({
 	const innerComponentRef = innerRef || useRef<any>(null);
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
+
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
+	useEffect(() => {
+		if (error !== undefined && error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
 		let currentChecked = checked;
@@ -115,9 +133,11 @@ export function ArchbaseChip<T, ID>({
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -139,6 +159,13 @@ export function ArchbaseChip<T, ID>({
 	}, []);
 
 	const handleChange = (changedChecked) => {
+		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+		const hasError = internalError || contextError;
+		if (hasError) {
+			setInternalError(undefined);
+			validationContext?.clearError(fieldKey);
+		}
+
 		const resultValue = changedChecked ? trueValue : falseValue;
 
 		setChecked(changedChecked);

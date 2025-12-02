@@ -33,6 +33,7 @@ import React, {
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { useValidationErrors } from '@archbase/core';
 import { useForceUpdate } from '@mantine/hooks';
 import {
 	ArchbaseAsyncSelectContext,
@@ -254,6 +255,15 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
   if (process.env.NODE_ENV === 'development' && dataSource) {
   }
 
+  // Contexto de validação (opcional - pode não existir)
+  const validationContext = useValidationErrors();
+
+  // Chave única para o field
+  const fieldKey = `${dataField}`;
+
+  // Recuperar erro do contexto se existir
+  const contextError = validationContext?.getError(fieldKey);
+
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -311,9 +321,11 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
 
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
         setInternalError(event.error);
+        // Salvar no contexto (se disponível)
+        validationContext?.setError(fieldKey, event.error);
       }
     }
-  }, [v1v2Compatibility.isDataSourceV2]);
+  }, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
   useArchbaseDidMount(() => {
     loadDataSourceFieldValue();
@@ -349,9 +361,19 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
     loadDataSourceFieldValue();
   }, []);
 
+  // ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+  // O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
+  // useEffect(() => {
+  //   setInternalError(undefined);
+  // }, [value, selectedValues, debouncedQueryValue]);
+
+  // ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+  // Não limpar o internalError se o prop error for undefined
   useEffect(() => {
-    setInternalError(undefined);
-  }, [value, selectedValues, debouncedQueryValue]);
+    if (error !== undefined && error !== internalError) {
+      setInternalError(error);
+    }
+  }, [error]);
 
   const handleConverter = (value) => {
     if (converter && value) {
@@ -361,6 +383,13 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
   }
 
   const handleValueRemove = (val: O) => {
+    // ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+    const hasError = internalError || contextError;
+    if (hasError) {
+      setInternalError(undefined);
+      validationContext?.clearError(fieldKey);
+    }
+
     setSelectedValues((current) => {
       const updatedValues = current.filter((item) => getOptionValue(item) !== getOptionValue(val))
       const convertedValues = updatedValues.map(updatedValue => handleConverter(updatedValue))
@@ -379,6 +408,13 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
   }
 
   const handleChange = (value) => {
+    // ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+    const hasError = internalError || contextError;
+    if (hasError) {
+      setInternalError(undefined);
+      validationContext?.clearError(fieldKey);
+    }
+
     setSelectedValues((prevSelected) => {
       const isSelected = prevSelected.some(
         (item) => getOptionValue(item) === getOptionValue(value)
@@ -481,6 +517,9 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
     />
   ));
 
+  // Erro a ser exibido: local ou do contexto
+  const displayError = internalError || contextError;
+
   return (
     <ArchbaseAsyncSelectProvider
       value={{
@@ -504,7 +543,7 @@ export function ArchbaseAsyncMultiSelect<T, ID, O>({
             label={label}
             w={width}
             description={description}
-            error={internalError}
+            error={displayError}
             required={required}
             style={style}
             onClick={() => combobox.openDropdown()}

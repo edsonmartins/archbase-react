@@ -9,6 +9,7 @@ import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useForceUpdate } from '@mantine/hooks';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseLookupEditProps<T, ID, O> {
 	/** Fonte de dados onde será atribuido o valor do lookup edit */
@@ -104,14 +105,34 @@ export function ArchbaseLookupEdit<T, ID, O>({
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
 	const [value, setValue] = useState<any | undefined>('');
 	const innerComponentRef = innerRef || useRef<any>(null);
 	const [internalError, setInternalError] = useState<string | undefined>(error);
+
+	// ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+	// O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
+	// useEffect(() => {
+	// 	setInternalError(undefined);
+	// }, [value]);
+
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-		setInternalError(undefined);
-	}, [value]);
+		if (error !== undefined && error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
 		let initialValue: any = value;
@@ -124,7 +145,8 @@ export function ArchbaseLookupEdit<T, ID, O>({
 		}
 
 		setValue(initialValue);
-		setInternalError(undefined);
+		// ❌ REMOVIDO: Não limpar erro ao carregar valor do datasource
+		// setInternalError(undefined);
 	};
 
 	const fieldChangedListener = useCallback(() => {
@@ -147,9 +169,11 @@ export function ArchbaseLookupEdit<T, ID, O>({
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -171,7 +195,13 @@ export function ArchbaseLookupEdit<T, ID, O>({
 	});
 
 	const handleChange = (event) => {
-		setInternalError(undefined);
+		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+		const hasError = internalError || contextError;
+		if (hasError) {
+			setInternalError(undefined);
+			validationContext?.clearError(fieldKey);
+		}
+
 		event.preventDefault();
 		const changedValue = event.target.value;
 
@@ -208,10 +238,13 @@ export function ArchbaseLookupEdit<T, ID, O>({
 						})
 						.catch((error) => {
 							// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
-						v1v2Compatibility.handleValueChange(undefined);
+							v1v2Compatibility.handleValueChange(undefined);
 							innerComponentRef.current?.focus();
 							if (validateMessage) {
-								setInternalError(formatStr(validateMessage, value));
+								const errorMsg = formatStr(validateMessage, value);
+								setInternalError(errorMsg);
+								// ✅ Salvar erro no contexto também
+								validationContext?.setError(fieldKey, errorMsg);
 							}
 							if (onLookupError) {
 								onLookupError(error);
@@ -243,7 +276,10 @@ export function ArchbaseLookupEdit<T, ID, O>({
 					.catch((error) => {
 						setValue(undefined);
 						if (validateMessage) {
-							setInternalError(formatStr(validateMessage, value));
+							const errorMsg = formatStr(validateMessage, value);
+							setInternalError(errorMsg);
+							// ✅ Salvar erro no contexto também
+							validationContext?.setError(fieldKey, errorMsg);
 						}
 						innerComponentRef.current?.focus();
 						if (onLookupError) {
@@ -272,6 +308,9 @@ export function ArchbaseLookupEdit<T, ID, O>({
 		return readOnly || v1v2Compatibility.isReadOnly;
 	};
 
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	const icon = iconSearch ? iconSearch : <IconSearch size="1rem" />;
 
 	return (
@@ -288,7 +327,7 @@ export function ArchbaseLookupEdit<T, ID, O>({
 			placeholder={placeholder}
 			description={description}
 			label={label}
-			error={internalError}
+			error={displayError}
 			size={size}
 			rightSection={
 				<Tooltip withinPortal withArrow label={tooltipIconSearch}>

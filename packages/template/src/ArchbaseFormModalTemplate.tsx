@@ -17,6 +17,7 @@ import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { ArchbaseTemplateSecurityProps } from './ArchbaseTemplateCommonTypes';
 import { ArchbaseConditionalSecurityWrapper, ArchbaseSmartActionButton } from './components';
 import { useOptionalTemplateSecurity } from './hooks';
+import { ValidationErrorsProvider } from '@archbase/core';
 
 export interface ArchbaseFormModalTemplateProps<T extends object, ID> 
 	extends Omit<ModalProps, 'onClose' | 'onError'>, 
@@ -210,6 +211,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 			size={size}
 			{...rest}
 		>
+			<ValidationErrorsProvider>
 			<LoadingOverlay styles={loadingOverlayStyles} visible={isLoading} opacity={0.8} />
 			<ArchbaseSpaceFixed height={height}>
 				{isInternalError ? (
@@ -269,6 +271,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 					</Flex>
 				</ArchbaseSpaceBottom>
 			</ArchbaseSpaceFixed>
+			</ValidationErrorsProvider>
 		</Modal>
 	);
 

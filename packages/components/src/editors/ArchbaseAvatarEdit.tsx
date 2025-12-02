@@ -7,6 +7,7 @@ import { useArchbaseTheme, isBase64 } from '@archbase/core';
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseAvatarEditProps<T, ID> {
     /** Fonte de dados onde será atribuido o valor do avatar */
@@ -104,13 +105,26 @@ export function ArchbaseAvatarEdit<T, ID>({
         undefined
     );
 
+    // Contexto de validação (opcional - pode não existir)
+    const validationContext = useValidationErrors();
+
+    // Chave única para o field
+    const fieldKey = `${dataField}`;
+
+    // Recuperar erro do contexto se existir
+    const contextError = validationContext?.getError(fieldKey);
+
     // 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
     if (process.env.NODE_ENV === 'development' && dataSource) {
     }
 
+    // ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+    // Não limpar o internalError se o prop error for undefined
     useEffect(() => {
-        setInternalError(undefined);
-    }, [value]);
+        if (error !== undefined && error !== internalError) {
+            setInternalError(error);
+        }
+    }, [error]);
 
     const loadDataSourceFieldValue = () => {
         let initialValue: any = value;
@@ -151,9 +165,11 @@ export function ArchbaseAvatarEdit<T, ID>({
             }
             if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
                 setInternalError(event.error);
+                // Salvar no contexto (se disponível)
+                validationContext?.setError(fieldKey, event.error);
             }
         }
-    }, [v1v2Compatibility.isDataSourceV2]);
+    }, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
     useArchbaseDidMount(() => {
         loadDataSourceFieldValue();
@@ -175,6 +191,13 @@ export function ArchbaseAvatarEdit<T, ID>({
     });
 
     const handleChangeImage = (image: string | undefined) => {
+        // ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+        const hasError = internalError || contextError;
+        if (hasError) {
+            setInternalError(undefined);
+            validationContext?.clearError(fieldKey);
+        }
+
         const changedValue = image;
         setValue((_prev) => changedValue);
         setImage(changedValue);
@@ -224,6 +247,14 @@ export function ArchbaseAvatarEdit<T, ID>({
 
     const handleRemoveImage = () => {
         if (isReadOnly() || disabled) return;
+
+        // ✅ Limpa erro quando usuário remove a imagem
+        const hasError = internalError || contextError;
+        if (hasError) {
+            setInternalError(undefined);
+            validationContext?.clearError(fieldKey);
+        }
+
         setImage(undefined);
         handleChangeImage(undefined);
     };
@@ -381,13 +412,16 @@ export function ArchbaseAvatarEdit<T, ID>({
         }
     };
 
+    // Erro a ser exibido: local ou do contexto
+    const displayError = internalError || contextError;
+
     return (
         <div style={{ position: 'relative', display: 'inline-block' }}>
             <Input.Wrapper
                 withAsterisk={required}
                 label={label}
                 description={description}
-                error={internalError}
+                error={displayError}
                 ref={innerRef || innerComponentRef}
             >
                 <Paper

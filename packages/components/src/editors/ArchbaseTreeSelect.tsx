@@ -5,7 +5,8 @@ import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@arch
 import { useArchbaseDidMount, useArchbaseWillUnmount } from '@archbase/data'
 import { useArchbaseV1V2Compatibility } from '@archbase/data'
 import { ArchbaseTreeNode, ArchbaseTreeView } from '../list'
-import React, { ReactNode, forwardRef, useState, useCallback, useMemo } from 'react'
+import React, { ReactNode, forwardRef, useState, useCallback, useMemo, useEffect } from 'react'
+import { useValidationErrors } from '@archbase/core'
 
 export interface ArchbaseTreeSelectProps<T, ID> {
   /** Fonte de dados onde será atribuido o valor selecionado */
@@ -155,10 +156,11 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
     onDropdownClose,
   }: ArchbaseTreeSelectProps<T, ID>, ref: React.ForwardedRef<HTMLButtonElement>) => {
     const theme = useArchbaseTheme()
-    
+
     // Estado interno
     const [internalValue, setInternalValue] = useState<any>(defaultValue)
     const [opened, setOpened] = useState<boolean>(false)
+    const [internalError, setInternalError] = useState<string | undefined>(error)
 
     // 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade (silenciado)
     useArchbaseV1V2Compatibility<T>(
@@ -167,6 +169,23 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
       dataField,
       value !== undefined ? value : internalValue
     )
+
+    // Contexto de validação (opcional - pode não existir)
+    const validationContext = useValidationErrors()
+
+    // Chave única para o field
+    const fieldKey = `${dataField}`
+
+    // Recuperar erro do contexto se existir
+    const contextError = validationContext?.getError(fieldKey)
+
+    // ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+    // Não limpar o internalError se o prop error for undefined
+    useEffect(() => {
+      if (error !== undefined && error !== internalError) {
+        setInternalError(error)
+      }
+    }, [error])
 
     // Determinar se é controlado ou não
     const isControlled = value !== undefined
@@ -207,15 +226,22 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
     // Handler para seleção de nó
     const handleNodeSelection = useCallback((node: ArchbaseTreeNode) => {
       if (isNodeSelectable(node)) {
+        // ✅ Limpa erro quando usuário seleciona um valor (tanto do estado local quanto do contexto)
+        const hasError = internalError || contextError
+        if (hasError) {
+          setInternalError(undefined)
+          validationContext?.clearError(fieldKey)
+        }
+
         const nodeValue = getOptionValue(node)
         updateValue(nodeValue, node)
         setOpened(false)
-        
+
         if (onDropdownClose) {
           onDropdownClose()
         }
       }
-    }, [isNodeSelectable, updateValue, onDropdownClose, getOptionValue])
+    }, [isNodeSelectable, updateValue, onDropdownClose, getOptionValue, internalError, contextError, validationContext, fieldKey])
 
     // Handler para abertura/fechamento do popover
     const handleTogglePopover = useCallback(() => {
@@ -236,8 +262,14 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
       (event: DataSourceEvent<T>) => {
         // O React já re-renderiza automaticamente quando currentValue muda
         // via getFieldValue do datasource
+
+        if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
+          setInternalError(event.error)
+          // Salvar no contexto (se disponível)
+          validationContext?.setError(fieldKey, event.error)
+        }
       },
-      []
+      [dataField, validationContext, fieldKey]
     )
 
     // Hooks do ciclo de vida do datasource
@@ -264,6 +296,9 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
     // Texto a ser exibido
     const displayText = currentSelectedNode ? getOptionLabel(currentSelectedNode) : (placeholder || '')
 
+    // Erro a ser exibido: local ou do contexto
+    const displayError = internalError || contextError
+
     return (
       <Popover 
         opened={opened} 
@@ -287,7 +322,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
             label={label}
             title={label}
             description={description}
-            error={error}
+            error={displayError}
             size={size}
             required={required}
           >
@@ -305,7 +340,7 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
                 color: isDisabled ? theme.colors.gray[5] : theme.colors.dark[9],
                 backgroundColor: isDisabled ? theme.colors.gray[1] : theme.white,
                 borderRadius: theme.radius.sm,
-                border: `1px solid ${error ? theme.colors.red[6] : theme.colors.gray[4]}`,
+                border: `1px solid ${displayError ? theme.colors.red[6] : theme.colors.gray[4]}`,
                 cursor: isDisabled ? 'not-allowed' : 'pointer',
                 
                 '&:hover': {

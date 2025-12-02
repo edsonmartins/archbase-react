@@ -6,6 +6,7 @@ import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@arch
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { ArchbaseImagePickerEditor } from '../image';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
 	/** Fonte de dados onde será atribuido o valor do rich edit*/
@@ -85,6 +86,15 @@ export function ArchbaseImageEdit<T, ID>({
 		undefined
 	);
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
@@ -93,9 +103,13 @@ export function ArchbaseImageEdit<T, ID>({
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-		setInternalError(undefined);
-	}, [value]);
+		if (error !== undefined && error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
 		let initialValue: any = value;
@@ -135,9 +149,11 @@ export function ArchbaseImageEdit<T, ID>({
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -159,6 +175,13 @@ export function ArchbaseImageEdit<T, ID>({
 	});
 
 	const handleChangeImage = (image: string | undefined) => {
+		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+		const hasError = internalError || contextError;
+		if (hasError) {
+			setInternalError(undefined);
+			validationContext?.clearError(fieldKey);
+		}
+
 		const changedValue = image;
 		setValue((_prev) => changedValue);
 
@@ -182,13 +205,16 @@ export function ArchbaseImageEdit<T, ID>({
 		return readOnly || v1v2Compatibility.isReadOnly;
 	};
 
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	return (
 		<div style={{ position: 'relative', display: 'inline-block' }}>
 			<Input.Wrapper
 				withAsterisk={required}
 				label={label}
 				description={description}
-				error={internalError}
+				error={displayError}
 				ref={innerRef || innerComponentRef}
 			>
 				<ArchbaseImagePickerEditor

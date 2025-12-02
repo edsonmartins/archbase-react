@@ -6,6 +6,7 @@ import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseSwitchProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do switch */
@@ -91,14 +92,34 @@ export function ArchbaseSwitch<T, ID>({
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
+
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	const [checked, setChecked] = useState<boolean | undefined>(isChecked);
 	const innerComponentRef = useRef<any>(null);
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 
+	// ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+	// O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
+	// useEffect(() => {
+	// 	setInternalError(undefined);
+	// }, [checked]);
+
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-		setInternalError(undefined);
-	}, [checked]);
+		if (error !== undefined && error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
 		let currentChecked = checked;
@@ -134,9 +155,11 @@ export function ArchbaseSwitch<T, ID>({
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -159,6 +182,14 @@ export function ArchbaseSwitch<T, ID>({
 
 	const handleChange = (event, isReadOnly) => {
 		if (isReadOnly) return;
+
+		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+		const hasError = internalError || contextError;
+		if (hasError) {
+			setInternalError(undefined);
+			validationContext?.clearError(fieldKey);
+		}
+
 		const changedChecked = event.target.checked;
 		const resultValue = changedChecked ? trueValue : falseValue;
 
@@ -191,6 +222,9 @@ export function ArchbaseSwitch<T, ID>({
 		return readOnly || v1v2Compatibility.isReadOnly;
 	};
 
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	return (
 		<Switch
 			disabled={disabled}
@@ -211,7 +245,7 @@ export function ArchbaseSwitch<T, ID>({
 			size={size}
 			radius={radius}
 			thumbIcon={thumbIcon}
-			error={internalError}
+			error={displayError}
 		/>
 	);
 }

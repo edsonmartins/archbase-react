@@ -9,6 +9,7 @@ import {
   import { DataSourceEventNames } from '@archbase/data';
   import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
   import { useArchbaseV1V2Compatibility } from '@archbase/data';
+  import { useValidationErrors } from '@archbase/core';
   
   type OmittedDateTimePickerProps = Omit<DateTimePickerProps, 'value' | 'onChange'>;
   
@@ -43,6 +44,8 @@ import {
 	withSeconds?: boolean;
 	/** Value format */
 	valueFormat?: string;
+	/** Error message */
+	error?: string;
   }
   
   function ArchbaseDateTimePickerEditComponent<T, ID>({
@@ -58,6 +61,7 @@ import {
 	onChange,
 	onChangeValue = () => {},
 	width,
+	error,
 	...rest
   }: ArchbaseDateTimePickerEditProps<T, ID>, ref: ForwardedRef<HTMLButtonElement>) {
 	const [currentValue, setCurrentValue] = useState<Date | null>(value || null);
@@ -72,13 +76,26 @@ import {
 		null
 	);
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
-  
+
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-	  setInternalError(undefined);
-	}, [currentValue]);
+		if (error !== undefined && error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
   
 	const loadDataSourceFieldValue = () => {
 	  let initialValue: Date | null = currentValue;
@@ -112,12 +129,14 @@ import {
 			forceUpdate();
 		  }
 		}
-  
+
 		if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 		  setInternalError(event.error);
+		  // Salvar no contexto (se disponível)
+		  validationContext?.setError(fieldKey, event.error);
 		}
 	  }
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
   
 	useArchbaseDidMount(() => {
 	  loadDataSourceFieldValue();
@@ -132,17 +151,24 @@ import {
 	}, []);
   
 	const handleChange = (changedValue: string | null) => {
+	  // ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+	  const hasError = internalError || contextError;
+	  if (hasError) {
+		setInternalError(undefined);
+		validationContext?.clearError(fieldKey);
+	  }
+
 	  // Convert string to Date for internal use (maintaining compatibility)
 	  const dateValue = changedValue ? new Date(changedValue) : null;
 	  setCurrentValue(dateValue);
-  
+
 	  // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
 	  v1v2Compatibility.handleValueChange(dateValue);
-  
+
 	  if (onChange) {
 		onChange(dateValue);
 	  }
-  
+
 	  if (onChangeValue) {
 		onChangeValue(dateValue);
 	  }
@@ -171,7 +197,10 @@ import {
 	  // 🔄 MIGRAÇÃO V1/V2: Usar padrão de compatibilidade para isReadOnly
 	  return readOnly || v1v2Compatibility.isReadOnly;
 	};
-  
+
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	return (
 	  <DateTimePicker
 		{...rest}
@@ -183,7 +212,7 @@ import {
 		onFocus={handleOnFocusEnter}
 		ref={ref}
 		required={required}
-		error={internalError}
+		error={displayError}
 		style={{
 		  width,
 		  ...style,

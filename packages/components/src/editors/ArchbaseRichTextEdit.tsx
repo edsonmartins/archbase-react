@@ -12,6 +12,7 @@ import { isBase64 } from '@archbase/core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { useValidationErrors } from '@archbase/core';
 
 function getInitialValue<T, ID>(
 	value: any,
@@ -187,6 +188,16 @@ export function ArchbaseRichTextEdit<T, ID>({
 	// 🔄 MIGRAÇÃO V1/V2: Debug info para desenvolvimento
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
+
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	const { i18n } = useArchbaseTranslation();
 	const [currentValue, setCurrentValue] = useState<string | undefined>(
 		getInitialValue(value, dataSource, dataField, disabledBase64Convertion),
@@ -194,9 +205,19 @@ export function ArchbaseRichTextEdit<T, ID>({
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 
+	// ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+	// O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
+	// useEffect(() => {
+	// 	setInternalError(undefined);
+	// }, [currentValue]);
+
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-		setInternalError(undefined);
-	}, [currentValue]);
+		if (error !== undefined && error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
 		let initialValue: any = value;
@@ -236,9 +257,11 @@ export function ArchbaseRichTextEdit<T, ID>({
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -260,6 +283,13 @@ export function ArchbaseRichTextEdit<T, ID>({
 	});
 
 	const handleChange = (content: string) => {
+		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+		const hasError = internalError || contextError;
+		if (hasError) {
+			setInternalError(undefined);
+			validationContext?.clearError(fieldKey);
+		}
+
 		setCurrentValue((_prev) => content);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== content) {
@@ -283,8 +313,11 @@ export function ArchbaseRichTextEdit<T, ID>({
 		return readOnly || v1v2Compatibility.isReadOnly;
 	};
 
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	return (
-		<Input.Wrapper withAsterisk={required} label={label} description={description} error={internalError}>
+		<Input.Wrapper withAsterisk={required} label={label} description={description} error={displayError}>
 			<SunEditor
 				autoFocus={autoFocus}
 				disable={disabled}

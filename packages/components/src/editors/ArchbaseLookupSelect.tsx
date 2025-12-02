@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ArchbaseError } from '@archbase/core';
 import { ArchbaseObjectHelper } from '@archbase/core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useForceUpdate } from '@mantine/hooks';
+import { useValidationErrors } from '@archbase/core';
 import { ArchbaseSelect, ArchbaseSelectProps } from './ArchbaseSelect';
 
 export interface ArchbaseLookupSelectProps<T, ID, O> extends Omit<ArchbaseSelectProps<T, ID, O>, 'getOptionLabel'> {
@@ -81,10 +82,27 @@ export function ArchbaseLookupSelect<T, ID, O>({
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	const [currentOptions, setCurrentOptions] = useState<any[] | undefined>(() =>
 		rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId),
 	);
 	const [internalError, setInternalError] = useState<string | undefined>(error);
+
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
+	useEffect(() => {
+		if (error !== undefined && error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
 
 	const lookupDataSourceEvent = useCallback((event: DataSourceEvent<O>) => {
 		if (lookupDataSource) {
@@ -105,9 +123,11 @@ export function ArchbaseLookupSelect<T, ID, O>({
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2, lookupDataSource, lookupDataFieldText, lookupDataFieldId, dataField]);
+	}, [v1v2Compatibility.isDataSourceV2, lookupDataSource, lookupDataFieldText, lookupDataFieldId, dataField, validationContext, fieldKey]);
 
 	const getDataSourceFieldValue = () => {
 		let result = '';
@@ -170,6 +190,9 @@ export function ArchbaseLookupSelect<T, ID, O>({
 		return value.label ? value.label : getTextValue(lookupDataFieldText, value)
 	}
 
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	return (
 		<ArchbaseSelect
 			{...otherProps}
@@ -180,7 +203,7 @@ export function ArchbaseLookupSelect<T, ID, O>({
 			customGetDataSourceFieldValue={getDataSourceFieldValue}
 			customSetDataSourceFieldValue={setDataSourceFieldValue}
 			options={currentOptions}
-			error={internalError}
+			error={displayError}
 		>
 			{children}
 		</ArchbaseSelect>

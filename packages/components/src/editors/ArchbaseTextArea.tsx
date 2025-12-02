@@ -7,6 +7,7 @@ import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseTextAreaProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do textarea */
@@ -88,9 +89,28 @@ export function ArchbaseTextArea<T, ID>({
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
+	// ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+	// O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
+	// useEffect(() => {
+	// 	setInternalError(undefined);
+	// }, [value]);
+
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-		setInternalError(undefined);
-	}, [value]);
+		if (error !== undefined && error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
 		let initialValue: any = value;
@@ -130,9 +150,15 @@ export function ArchbaseTextArea<T, ID>({
 			}
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
+				// Força re-render para garantir que o erro seja exibido
+				if (!v1v2Compatibility.isDataSourceV2) {
+					forceUpdate();
+				}
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, dataSource, dataField, loadDataSourceFieldValue, forceUpdate, validationContext, fieldKey]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -151,6 +177,14 @@ export function ArchbaseTextArea<T, ID>({
 		const changedValue = event.target.value;
 
 		event.persist();
+
+		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+		const hasError = internalError || contextError;
+		if (hasError) {
+			setInternalError(undefined);
+			validationContext?.clearError(fieldKey);
+		}
+
 		setValue((_prev) => changedValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
@@ -188,6 +222,9 @@ export function ArchbaseTextArea<T, ID>({
 		return readOnly || v1v2Compatibility.isReadOnly;
 	};
 
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	return (
 		<Textarea
 			disabled={disabled}
@@ -201,7 +238,7 @@ export function ArchbaseTextArea<T, ID>({
 			placeholder={placeholder}
 			label={label}
 			description={description}
-			error={internalError}
+			error={displayError}
 			autosize={autosize}
 			minRows={minRows}
 			maxRows={maxRows}

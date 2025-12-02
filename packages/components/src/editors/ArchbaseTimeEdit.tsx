@@ -15,6 +15,7 @@ import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseTimeEditProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do edit */
@@ -102,6 +103,15 @@ export function ArchbaseTimeEdit<T, ID>({
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	const [currentValue, setCurrentValue] = useState<string>(value || '');
 	const timeInputRef = useRef<HTMLInputElement>(null);
 	const theme = useMantineTheme();
@@ -109,12 +119,16 @@ export function ArchbaseTimeEdit<T, ID>({
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 
-	useEffect(() => {
-		setInternalError(undefined);
-	}, [currentValue]);
+	// ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+	// O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
+	// useEffect(() => {
+	// 	setInternalError(undefined);
+	// }, [currentValue]);
 
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-		if (error !== internalError) {
+		if (error !== undefined && error !== internalError) {
 			setInternalError(error);
 		}
 	}, [error]);
@@ -154,9 +168,11 @@ export function ArchbaseTimeEdit<T, ID>({
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -175,6 +191,14 @@ export function ArchbaseTimeEdit<T, ID>({
 		const changedValue = event.target.value;
 
 		event.persist();
+
+		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+		const hasError = internalError || contextError;
+		if (hasError) {
+			setInternalError(undefined);
+			validationContext?.clearError(fieldKey);
+		}
+
 		setCurrentValue((_prev) => changedValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
@@ -213,9 +237,9 @@ export function ArchbaseTimeEdit<T, ID>({
 
 	// Componente padrão do picker de hora
 	const defaultPickerControl = (
-		<ActionIcon 
-			variant="subtle" 
-			color="gray" 
+		<ActionIcon
+			variant="subtle"
+			color="gray"
 			onClick={() => timeInputRef.current?.showPicker()}
 			disabled={disabled || isReadOnly()}
 		>
@@ -246,9 +270,12 @@ export function ArchbaseTimeEdit<T, ID>({
 	) : null;
 
 	// Define o que será exibido à direita do componente
-	const rightSection = onActionSearchExecute 
-		? searchButton 
+	const rightSection = onActionSearchExecute
+		? searchButton
 		: (withPicker ? defaultPickerControl : null);
+
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
 
 	return (
 		<TimeInput
@@ -270,7 +297,7 @@ export function ArchbaseTimeEdit<T, ID>({
 			onKeyDown={onKeyDown}
 			onKeyUp={onKeyUp}
 			label={label}
-			error={internalError}
+			error={displayError}
 			rightSection={rightSection}
 		/>
 	);

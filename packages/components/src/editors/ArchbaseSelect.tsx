@@ -14,6 +14,7 @@ import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@arch
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data'
 import { useArchbaseV1V2Compatibility } from '@archbase/data'
 import { useForceUpdate } from '@mantine/hooks'
+import { useValidationErrors } from '@archbase/core'
 
 
 export interface SelectItem extends ComboboxItem {
@@ -271,6 +272,15 @@ export function ArchbaseSelect<T, ID, O>({
   const sRef = useRef<any>(null)
   const [currentLimit, setCurrentLimit] = useState(limit);
 
+  // Contexto de validação (opcional - pode não existir)
+  const validationContext = useValidationErrors();
+
+  // Chave única para o field
+  const fieldKey = `${dataField}`;
+
+  // Recuperar erro do contexto se existir
+  const contextError = validationContext?.getError(fieldKey);
+
   const currentOptions: any[] = useMemo(() => {
     return buildOptions<O>(
       options,
@@ -299,6 +309,14 @@ export function ArchbaseSelect<T, ID, O>({
 
   const handleChange = (vl: string | null, option: SelectItem) => {
     const value = option && option.origin ? option.origin : vl;
+
+    // ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+    const hasError = internalError || contextError;
+    if (hasError) {
+      setInternalError(undefined);
+      validationContext?.clearError(fieldKey);
+    }
+
     setSelectedValue((_prev) => value);
 
     // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
@@ -352,9 +370,19 @@ export function ArchbaseSelect<T, ID, O>({
     }
     : {}
 
+  // ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+  // O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
+  // useEffect(() => {
+  //   setInternalError(undefined)
+  // }, [selectedValue])
+
+  // ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+  // Não limpar o internalError se o prop error for undefined
   useEffect(() => {
-    setInternalError(undefined)
-  }, [selectedValue])
+    if (error !== undefined && error !== internalError) {
+      setInternalError(error);
+    }
+  }, [error]);
 
   const loadDataSourceFieldValue = async () => {
     let initialValue: any = value
@@ -394,10 +422,16 @@ export function ArchbaseSelect<T, ID, O>({
       }
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
         setInternalError(event.error)
+        // Salvar no contexto (se disponível)
+        validationContext?.setError(fieldKey, event.error);
         setUpdateCounter((prevCounter) => prevCounter + 1)
+        // Força re-render para garantir que o erro seja exibido
+        if (!v1v2Compatibility.isDataSourceV2) {
+          forceUpdate();
+        }
       }
     }
-  }, [v1v2Compatibility.isDataSourceV2])
+  }, [v1v2Compatibility.isDataSourceV2, dataSource, dataField, loadDataSourceFieldValue, forceUpdate, validationContext, fieldKey])
 
   const dataSourceOptionsEvent = useCallback((event: DataSourceEvent<T>) => {
     if (dataSource && dataField) {
@@ -445,6 +479,9 @@ export function ArchbaseSelect<T, ID, O>({
     return readOnly || v1v2Compatibility.isReadOnly;
   };
 
+  // Erro a ser exibido: local ou do contexto
+  const displayError = internalError || contextError;
+
   return (
     <Select
       classNames={classNames}
@@ -459,7 +496,7 @@ export function ArchbaseSelect<T, ID, O>({
       maxDropdownHeight={280}
       ref={innerRef || innerComponentRef}
       label={label}
-      error={internalError}
+      error={displayError}
       data={currentOptions}
       size={size!}
       leftSection={icon}

@@ -5,6 +5,7 @@ import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } fro
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useValidationErrors } from '@archbase/core';
 
 function useArchbasePrevious(value) {
   // O objeto ref é um contêiner genérico cuja propriedade atual é mutável ...
@@ -188,9 +189,28 @@ export function ArchbaseNumberEdit<T, ID>({
   const [internalError, setInternalError] = useState<string | undefined>(error);
   const forceUpdate = useForceUpdate();
 
+  // Contexto de validação (opcional - pode não existir)
+  const validationContext = useValidationErrors();
+
+  // Chave única para o field
+  const fieldKey = `${dataField}`;
+
+  // Recuperar erro do contexto se existir
+  const contextError = validationContext?.getError(fieldKey);
+
+  // ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+  // O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
+  // useEffect(() => {
+  //   setInternalError(undefined);
+  // }, [maskedValue, currentValue]);
+
+  // ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+  // Não limpar o internalError se o prop error for undefined
   useEffect(() => {
-    setInternalError(undefined);
-  }, [maskedValue, currentValue]);
+    if (error !== undefined && error !== internalError) {
+      setInternalError(error);
+    }
+  }, [error]);
 
   const prepareProps = useCallback(() => {
     let initialValue: any = value;
@@ -264,9 +284,11 @@ export function ArchbaseNumberEdit<T, ID>({
       }
       if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
         setInternalError(event.error);
+        // Salvar no contexto (se disponível)
+        validationContext?.setError(fieldKey, event.error);
       }
     }
-  }, [dataSource, dataField, loadDataSourceFieldValue, forceUpdate, v1v2Compatibility.isDataSourceV2]);
+  }, [dataSource, dataField, loadDataSourceFieldValue, forceUpdate, v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
   useArchbaseDidMount(() => {
     const result = prepareProps();
@@ -294,6 +316,13 @@ export function ArchbaseNumberEdit<T, ID>({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
+
+    // ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+    const hasError = internalError || contextError;
+    if (hasError) {
+      setInternalError(undefined);
+      validationContext?.clearError(fieldKey);
+    }
 
     let inputValue = event.target.value;
     const previousValue = maskedValue;
@@ -532,6 +561,9 @@ export function ArchbaseNumberEdit<T, ID>({
       />
     ) : null);
 
+  // Erro a ser exibido: local ou do contexto
+  const displayError = internalError || contextError;
+
   return (
     <TextInput
       {...others}
@@ -542,7 +574,7 @@ export function ArchbaseNumberEdit<T, ID>({
       value={maskedValue}
       rightSection={_rightSection}
       size={size}
-      error={internalError}
+      error={displayError}
       style={{
         width,
         ...style,

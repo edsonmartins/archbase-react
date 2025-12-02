@@ -4,6 +4,7 @@ import { IconArrowRight, IconCalendar } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import { CSSProperties, ReactNode } from 'react';
 import { ArchbaseDatePickerEdit } from './ArchbaseDatePickerEdit';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseDatePickerRangeProps {
 	/** Indicador se o date picker range está desabilitado */
@@ -66,11 +67,31 @@ export function ArchbaseDatePickerRange({
 	const [endDate, setEndDate] = useState<DateValue>();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field (usando label como fallback)
+	const fieldKey = label || 'date-picker-range';
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-		setInternalError(undefined);
-	}, [startDate, endDate]);
+		if (error !== undefined && error !== internalError) {
+			setInternalError(error);
+		}
+	}, [error]);
 
 	const handleSelectRange = (sDt?: DateValue, eDt?: DateValue) => {
+		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+		const hasError = internalError || contextError;
+		if (hasError) {
+			setInternalError(undefined);
+			validationContext?.clearError(fieldKey);
+		}
+
 		setStartDate(sDt);
 		setEndDate(eDt);
 		if (onSelectDateRange) {
@@ -78,11 +99,14 @@ export function ArchbaseDatePickerRange({
 		}
 	};
 
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	return (
 		<Input.Wrapper
 			label={label}
 			size={size!}
-			error={internalError}
+			error={displayError}
 			style={{
 				width,
 				...style,

@@ -14,6 +14,7 @@ import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbasePasswordEditProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do edit */
@@ -89,18 +90,31 @@ export function ArchbasePasswordEdit<T, ID>({
 	if (process.env.NODE_ENV === 'development' && dataSource) {
 	}
 
+	// Contexto de validação (opcional - pode não existir)
+	const validationContext = useValidationErrors();
+
+	// Chave única para o field
+	const fieldKey = `${dataField}`;
+
+	// Recuperar erro do contexto se existir
+	const contextError = validationContext?.getError(fieldKey);
+
 	const [currentValue, setCurrentValue] = useState<string>(value || '');
 	const innerComponentRef = useRef<any>(null);
 	const theme = useMantineTheme();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 
-	useEffect(() => {
-		setInternalError(undefined);
-	}, [currentValue]);
+	// ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
+	// O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
+	// useEffect(() => {
+	// 	setInternalError(undefined);
+	// }, [currentValue]);
 
+	// ✅ CORRIGIDO: Apenas atualizar se o prop error vier definido
+	// Não limpar o internalError se o prop error for undefined
 	useEffect(() => {
-		if (error !== internalError) {
+		if (error !== undefined && error !== internalError) {
 			setInternalError(error);
 		}
 	}, [error]);
@@ -140,9 +154,11 @@ export function ArchbasePasswordEdit<T, ID>({
 
 			if (event.type === DataSourceEventNames.onFieldError && event.fieldName === dataField) {
 				setInternalError(event.error);
+				// Salvar no contexto (se disponível)
+				validationContext?.setError(fieldKey, event.error);
 			}
 		}
-	}, [v1v2Compatibility.isDataSourceV2]);
+	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
 	useArchbaseDidMount(() => {
 		loadDataSourceFieldValue();
@@ -161,6 +177,14 @@ export function ArchbasePasswordEdit<T, ID>({
 		const changedValue = event.target.value;
 
 		event.persist();
+
+		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+		const hasError = internalError || contextError;
+		if (hasError) {
+			setInternalError(undefined);
+			validationContext?.clearError(fieldKey);
+		}
+
 		setCurrentValue((_prev) => changedValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
@@ -197,6 +221,9 @@ export function ArchbasePasswordEdit<T, ID>({
 		return readOnly || v1v2Compatibility.isReadOnly;
 	};
 
+	// Erro a ser exibido: local ou do contexto
+	const displayError = internalError || contextError;
+
 	return (
 		<PasswordInput
 			disabled={disabled}
@@ -217,7 +244,7 @@ export function ArchbasePasswordEdit<T, ID>({
 			onKeyDown={onKeyDown}
 			onKeyUp={onKeyUp}
 			label={label}
-			error={internalError}
+			error={displayError}
 		/>
 	);
 }
