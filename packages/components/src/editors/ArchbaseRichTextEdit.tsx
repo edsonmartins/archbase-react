@@ -1,6 +1,6 @@
 import { Input } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
-import React, { CSSProperties, useCallback, useEffect, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import { useArchbaseTranslation } from '@archbase/core';
 import SunEditor from 'suneditor-react';
 import { UploadBeforeHandler, UploadBeforeReturn, UploadInfo } from 'suneditor-react/dist/types/upload';
@@ -9,9 +9,8 @@ import en from 'suneditor/src/lang/en';
 import es from 'suneditor/src/lang/es';
 import ptBR from 'suneditor/src/lang/pt_br';
 import { isBase64 } from '@archbase/core';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
-import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import { DataSourceEventNames, useArchbaseDidUpdate, useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
 
 function getInitialValue<T, ID>(
@@ -263,24 +262,34 @@ export function ArchbaseRichTextEdit<T, ID>({
 		}
 	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
-	useArchbaseDidMount(() => {
+	// Ref para manter callback sempre atualizado (corrige problema de closure desatualizada)
+	const dataSourceEventRef = useRef(dataSourceEvent);
+	useEffect(() => {
+		dataSourceEventRef.current = dataSourceEvent;
+	}, [dataSourceEvent]);
+
+	// Wrapper estável que delega para ref
+	const stableDataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
+		dataSourceEventRef.current(event);
+	}, []);
+
+	// Registrar listeners com cleanup apropriado
+	useEffect(() => {
 		loadDataSourceFieldValue();
 		if (dataSource && dataField) {
-			dataSource.addListener(dataSourceEvent);
+			dataSource.addListener(stableDataSourceEvent);
 			dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+
+			return () => {
+				dataSource.removeListener(stableDataSourceEvent);
+				dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+			};
 		}
-	});
+	}, [dataSource, dataField, stableDataSourceEvent, fieldChangedListener]);
 
 	useArchbaseDidUpdate(() => {
 		loadDataSourceFieldValue();
 	}, []);
-
-	useArchbaseWillUnmount(() => {
-		if (dataSource && dataField) {
-			dataSource.removeListener(dataSourceEvent);
-			dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
-		}
-	});
 
 	const handleChange = (content: string) => {
 		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)

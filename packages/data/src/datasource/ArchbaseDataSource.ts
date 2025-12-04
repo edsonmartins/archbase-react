@@ -944,15 +944,18 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
 	protected publishEventErrors = (errors: DataSourceValidationError[]) => {
 		errors.forEach((error) => {
 			if (error.fieldName) {
-				this.emitter.emit('onFieldError', error.fieldName, archbaseI18next.t(error.errorMessage));
+				// Usar keySeparator: false para tratar a chave como literal (sem interpretar pontos como aninhamento)
+				// Isso permite chaves como "namespace:chave.com.pontos" - o namespace é separado por : mas a chave é literal
+				const translatedMessage = archbaseI18next.t(error.errorMessage, { keySeparator: false });
+				this.emitter.emit('onFieldError', error.fieldName, translatedMessage);
 				this.emit({
 					type: DataSourceEventNames.onFieldError,
 					fieldName: error.fieldName,
-					error: archbaseI18next.t(error.errorMessage),
+					error: translatedMessage,
 					originalError: error,
 				});
 			} else {
-				this.publishEventError(archbaseI18next.t(error.errorMessage), error);
+				this.publishEventError(archbaseI18next.t(error.errorMessage, { keySeparator: false }), error);
 			}
 		});
 	};

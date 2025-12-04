@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArchbaseError } from '@archbase/core';
 import { ArchbaseObjectHelper } from '@archbase/core';
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
+import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useForceUpdate } from '@mantine/hooks';
 import { useValidationErrors } from '@archbase/core';
@@ -169,22 +169,32 @@ export function ArchbaseLookupSelect<T, ID, O>({
 		}
 	};
 
-	useArchbaseDidMount(() => {
+	// Ref para manter callback sempre atualizado (corrige problema de closure desatualizada)
+	const lookupDataSourceEventRef = useRef(lookupDataSourceEvent);
+	useEffect(() => {
+		lookupDataSourceEventRef.current = lookupDataSourceEvent;
+	}, [lookupDataSourceEvent]);
+
+	// Wrapper estável que delega para ref
+	const stableLookupDataSourceEvent = useCallback((event: DataSourceEvent<O>) => {
+		lookupDataSourceEventRef.current(event);
+	}, []);
+
+	// Registrar listeners com cleanup apropriado
+	useEffect(() => {
 		setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
 		if (lookupDataSource) {
-			lookupDataSource.addListener(lookupDataSourceEvent);
+			lookupDataSource.addListener(stableLookupDataSourceEvent);
+
+			return () => {
+				lookupDataSource.removeListener(stableLookupDataSourceEvent);
+			};
 		}
-	});
+	}, [lookupDataSource, stableLookupDataSourceEvent, lookupDataFieldText, lookupDataFieldId]);
 
 	useArchbaseDidUpdate(() => {
 		setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));
 	}, []);
-
-	useArchbaseWillUnmount(() => {
-		if (lookupDataSource) {
-			lookupDataSource.removeListener(lookupDataSourceEvent);
-		}
-	});
 
 	const getOptionLabel=(value: any) =>{
 		return value.label ? value.label : getTextValue(lookupDataFieldText, value)

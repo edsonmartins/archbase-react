@@ -1,8 +1,8 @@
 import { ActionIcon, ActionIconVariant, Box, Button, Group, Input, Modal, Paper, Slider, Space, Stack, Text, Tooltip } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import { IconCameraPlus, IconEdit, IconRotate, IconTrash, IconZoomIn } from '@tabler/icons-react';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, useArchbaseV1V2Compatibility } from '@archbase/data';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import { DataSourceEventNames, useArchbaseV1V2Compatibility, useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseTheme, isBase64 } from '@archbase/core';
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
@@ -171,24 +171,34 @@ export function ArchbaseAvatarEdit<T, ID>({
         }
     }, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
-    useArchbaseDidMount(() => {
+    // Ref para manter callback sempre atualizado (corrige problema de closure desatualizada)
+    const dataSourceEventRef = useRef(dataSourceEvent);
+    useEffect(() => {
+        dataSourceEventRef.current = dataSourceEvent;
+    }, [dataSourceEvent]);
+
+    // Wrapper estável que delega para ref
+    const stableDataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
+        dataSourceEventRef.current(event);
+    }, []);
+
+    // Registrar listeners com cleanup apropriado
+    useEffect(() => {
         loadDataSourceFieldValue();
         if (dataSource && dataField) {
-            dataSource.addListener(dataSourceEvent);
+            dataSource.addListener(stableDataSourceEvent);
             dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+
+            return () => {
+                dataSource.removeListener(stableDataSourceEvent);
+                dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+            };
         }
-    });
+    }, [dataSource, dataField, stableDataSourceEvent, fieldChangedListener]);
 
     useArchbaseDidUpdate(() => {
         loadDataSourceFieldValue();
     }, []);
-
-    useArchbaseWillUnmount(() => {
-        if (dataSource && dataField) {
-            dataSource.removeListener(dataSourceEvent);
-            dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
-        }
-    });
 
     const handleChangeImage = (image: string | undefined) => {
         // ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)

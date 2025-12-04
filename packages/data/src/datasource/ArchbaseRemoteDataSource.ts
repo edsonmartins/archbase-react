@@ -116,11 +116,13 @@ export class ArchbaseRemoteDataSource<T, ID>
         if (error.response.data.apierror.subErrors) {
           error.response.data.apierror.subErrors.forEach((element: any) => {
             if (element.field){
-              this.emitter.emit("onFieldError",element.field, element.message)
+              // Tenta traduzir a mensagem (se for chave i18n) ou usa a mensagem original
+              const translatedMessage = archbaseI18next.t(element.message, { defaultValue: element.message })
+              this.emitter.emit("onFieldError",element.field, translatedMessage)
               this.emit({
                 type: DataSourceEventNames.onFieldError,
                 fieldName: element.field,
-                error: element.message,
+                error: translatedMessage,
                 originalError: element.message
               })
             }

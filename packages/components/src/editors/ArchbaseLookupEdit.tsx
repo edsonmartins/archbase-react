@@ -6,7 +6,7 @@ import { formatStr } from '@archbase/core';
 import { ArchbaseObjectHelper } from '@archbase/core';
 import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
+import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useForceUpdate } from '@mantine/hooks';
 import { useValidationErrors } from '@archbase/core';
@@ -175,24 +175,34 @@ export function ArchbaseLookupEdit<T, ID, O>({
 		}
 	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
-	useArchbaseDidMount(() => {
+	// Ref para manter callback sempre atualizado (corrige problema de closure desatualizada)
+	const dataSourceEventRef = useRef(dataSourceEvent);
+	useEffect(() => {
+		dataSourceEventRef.current = dataSourceEvent;
+	}, [dataSourceEvent]);
+
+	// Wrapper estável que delega para ref
+	const stableDataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
+		dataSourceEventRef.current(event);
+	}, []);
+
+	// Registrar listeners com cleanup apropriado
+	useEffect(() => {
 		loadDataSourceFieldValue();
 		if (dataSource && lookupField) {
-			dataSource.addListener(dataSourceEvent);
+			dataSource.addListener(stableDataSourceEvent);
 			dataSource.addFieldChangeListener(lookupField, fieldChangedListener);
+
+			return () => {
+				dataSource.removeListener(stableDataSourceEvent);
+				dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+			};
 		}
-	});
+	}, [dataSource, dataField, lookupField, stableDataSourceEvent, fieldChangedListener]);
 
 	useArchbaseDidUpdate(() => {
 		loadDataSourceFieldValue();
 	}, []);
-
-	useArchbaseWillUnmount(() => {
-		if (dataSource && dataField) {
-			dataSource.removeListener(dataSourceEvent);
-			dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
-		}
-	});
 
 	const handleChange = (event) => {
 		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)

@@ -178,113 +178,9 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 		setInternalError('');
 	};
 
-	// ✅ Layout 100% CSS Flexbox - SEM useComponentSize (sem loops!)
-	const TemplateContent = () => (
-		<ValidationErrorsProvider>
-		<Paper
-			ref={innerRef}
-			withBorder={withBorder}
-			radius={radius}
-			style={{
-				width: width,
-				height: height,
-				display: 'flex',
-				flexDirection: 'column',
-				padding: 4,
-			}}
-		>
-			{/* Header: Error Alert (altura automática) */}
-			{isInternalError && (
-				<Box style={{ flexShrink: 0 }}>
-					<ArchbaseAlert
-						autoClose={autoCloseAlertError}
-						withCloseButton={true}
-						withBorder={true}
-						icon={<IconBug size="1.4rem" />}
-						title={getI18nextInstance().t('WARNING')}
-						titleColor="rgb(250, 82, 82)"
-						variant={variant ?? appContext.variant}
-						onClose={handleCloseAlert}
-					>
-						<span>{internalError}</span>
-					</ArchbaseAlert>
-				</Box>
-			)}
-
-			{/* Body: Conteúdo scrollável (flex: 1) */}
-			<ScrollArea
-				style={{
-					flex: 1,
-					minHeight: 0, // Importante para flex funcionar
-					padding: 'calc(0.625rem / 2)',
-				}}
-			>
-				<LoadingOverlay visible={isCanceling || isSaving} opacity={0.3} />
-				{children}
-			</ScrollArea>
-
-			{/* Footer: Botões de ação e conteúdo customizado (altura automática) */}
-			<Box
-				style={{
-					flexShrink: 0,
-					padding: 'calc(0.625rem / 2)',
-					display: 'flex',
-					justifyContent: footerAlign === 'center' ? 'center' : 'space-between',
-					alignItems: 'center',
-					gap: '1rem'
-				}}
-			>
-				{/* Conteúdo customizado à esquerda (se footerAlign='right') */}
-				{footerAlign === 'right' && footerContent && (
-					<Box style={{ flex: 1 }}>{footerContent}</Box>
-				)}
-
-				{/* Botões de ação */}
-				{dataSource && !dataSource.isBrowsing() ? (
-					<Group gap="md">
-						<ArchbaseSmartActionButton
-							actionName="save"
-							actionDescription={`Salvar ${resourceDescription || 'registro'}`}
-							leftSection={<IconDeviceFloppy />}
-							onClick={() => handleSave(dataSource.getCurrentRecord())}
-							disabled={dataSource && dataSource.isBrowsing()}
-							variant={variant ?? appContext.variant}
-							color="green"
-						>{`${getI18nextInstance().t('Ok')}`}</ArchbaseSmartActionButton>
-						<ArchbaseSmartActionButton
-							actionName="cancel"
-							actionDescription="Cancelar operação"
-							leftSection={<IconX />}
-							onClick={handleCancel}
-							disabled={dataSource && dataSource.isBrowsing()}
-							variant={variant ?? appContext.variant}
-							color="red"
-						>{`${getI18nextInstance().t('Cancel')}`}</ArchbaseSmartActionButton>
-					</Group>
-				) : (
-					<Group gap="md">
-						<ArchbaseSmartActionButton
-							actionName="close"
-							actionDescription="Fechar formulário"
-							leftSection={<IconX />}
-							onClick={handleCancel}
-							variant={variant ?? appContext.variant}
-						>{`${getI18nextInstance().t('Close')}`}</ArchbaseSmartActionButton>
-					</Group>
-				)}
-
-				{/* Conteúdo customizado à direita (se footerAlign='left' ou 'center') */}
-				{(footerAlign === 'left' || footerAlign === 'center') && footerContent && (
-					<Box style={{ flex: footerAlign === 'left' ? 1 : 0, textAlign: 'right' }}>
-						{footerContent}
-					</Box>
-				)}
-			</Box>
-		</Paper>
-		</ValidationErrorsProvider>
-	);
-
 	// 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido
+	// ✅ CORRIGIDO: Removido componente inline (TemplateContent) que causava remontagem
+	// a cada re-render, perdendo o estado dos editores filhos (incluindo erros de validação)
 	return (
 		<ArchbaseConditionalSecurityWrapper
 			resourceName={resourceName}
@@ -294,7 +190,108 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 			onSecurityReady={securityOptions?.onSecurityReady}
 			onAccessDenied={securityOptions?.onAccessDenied}
 		>
-			<TemplateContent />
+			<ValidationErrorsProvider>
+				<Paper
+					ref={innerRef}
+					withBorder={withBorder}
+					radius={radius}
+					style={{
+						width: width,
+						height: height,
+						display: 'flex',
+						flexDirection: 'column',
+						padding: 4,
+					}}
+				>
+					{/* Header: Error Alert (altura automática) */}
+					{isInternalError && (
+						<Box style={{ flexShrink: 0 }}>
+							<ArchbaseAlert
+								autoClose={autoCloseAlertError}
+								withCloseButton={true}
+								withBorder={true}
+								icon={<IconBug size="1.4rem" />}
+								title={getI18nextInstance().t('WARNING')}
+								titleColor="rgb(250, 82, 82)"
+								variant={variant ?? appContext.variant}
+								onClose={handleCloseAlert}
+							>
+								<span>{internalError}</span>
+							</ArchbaseAlert>
+						</Box>
+					)}
+
+					{/* Body: Conteúdo scrollável (flex: 1) */}
+					<ScrollArea
+						style={{
+							flex: 1,
+							minHeight: 0, // Importante para flex funcionar
+							padding: 'calc(0.625rem / 2)',
+						}}
+					>
+						<LoadingOverlay visible={isCanceling || isSaving} opacity={0.3} />
+						{children}
+					</ScrollArea>
+
+					{/* Footer: Botões de ação e conteúdo customizado (altura automática) */}
+					<Box
+						style={{
+							flexShrink: 0,
+							padding: 'calc(0.625rem / 2)',
+							display: 'flex',
+							justifyContent: footerAlign === 'center' ? 'center' : 'space-between',
+							alignItems: 'center',
+							gap: '1rem'
+						}}
+					>
+						{/* Conteúdo customizado à esquerda (se footerAlign='right') */}
+						{footerAlign === 'right' && footerContent && (
+							<Box style={{ flex: 1 }}>{footerContent}</Box>
+						)}
+
+						{/* Botões de ação */}
+						{dataSource && !dataSource.isBrowsing() ? (
+							<Group gap="md">
+								<ArchbaseSmartActionButton
+									actionName="save"
+									actionDescription={`Salvar ${resourceDescription || 'registro'}`}
+									leftSection={<IconDeviceFloppy />}
+									onClick={() => handleSave(dataSource.getCurrentRecord())}
+									disabled={dataSource && dataSource.isBrowsing()}
+									variant={variant ?? appContext.variant}
+									color="green"
+								>{`${getI18nextInstance().t('Ok')}`}</ArchbaseSmartActionButton>
+								<ArchbaseSmartActionButton
+									actionName="cancel"
+									actionDescription="Cancelar operação"
+									leftSection={<IconX />}
+									onClick={handleCancel}
+									disabled={dataSource && dataSource.isBrowsing()}
+									variant={variant ?? appContext.variant}
+									color="red"
+								>{`${getI18nextInstance().t('Cancel')}`}</ArchbaseSmartActionButton>
+							</Group>
+						) : (
+							<Group gap="md">
+								<ArchbaseSmartActionButton
+									actionName="close"
+									actionDescription="Fechar formulário"
+									leftSection={<IconX />}
+									onClick={handleCancel}
+									variant={variant ?? appContext.variant}
+								>{`${getI18nextInstance().t('Close')}`}</ArchbaseSmartActionButton>
+							</Group>
+						)}
+
+						{/* Conteúdo customizado à direita (se footerAlign='left' ou 'center') */}
+						{(footerAlign === 'left' || footerAlign === 'center') && footerContent && (
+							<Box style={{ flex: footerAlign === 'left' ? 1 : 0, textAlign: 'right' }}>
+								{footerContent}
+							</Box>
+						)}
+					</Box>
+				</Paper>
+			</ValidationErrorsProvider>
 		</ArchbaseConditionalSecurityWrapper>
 	);
 }

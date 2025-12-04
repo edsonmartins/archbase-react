@@ -17,17 +17,19 @@ export class ArchbaseValidator implements IDataSourceValidator {
   validateEntity<T>(value: T): DataSourceValidationError[] {
     const errors : ValidationError[] = validateSync(value as object);
     const result : DataSourceValidationError[] = [];
-    errors.forEach(error => {    
-      if (error.constraints){  
-        for (const [key, value] of Object.entries(error.constraints)) {
+
+    errors.forEach(error => {
+      if (error.constraints){
+        for (const [key, constraintMessage] of Object.entries(error.constraints)) {
           result.push({
-            errorMessage: value,
-            debugMessage: `key: ${key} value: ${value}`,
+            errorMessage: constraintMessage,
+            debugMessage: `key: ${key} value: ${constraintMessage}`,
             fieldName: error.property
           })
         }
       }
     })
+
     return result
   }
 

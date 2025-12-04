@@ -11,7 +11,7 @@ import React, {
   useState
 } from 'react'
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data'
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data'
+import { useArchbaseDidUpdate } from '@archbase/data'
 import { useArchbaseV1V2Compatibility } from '@archbase/data'
 import { useForceUpdate } from '@mantine/hooks'
 import { useValidationErrors } from '@archbase/core'
@@ -441,34 +441,46 @@ export function ArchbaseSelect<T, ID, O>({
     }
   }, [])
 
-  useArchbaseDidMount(() => {
+  // Ref para manter callback sempre atualizado (corrige problema de closure desatualizada)
+  const dataSourceEventRef = useRef(dataSourceEvent);
+  useEffect(() => {
+    dataSourceEventRef.current = dataSourceEvent;
+  }, [dataSourceEvent]);
+
+  // Wrapper estável que delega para ref - nunca muda, então o listener permanece consistente
+  const stableDataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
+    dataSourceEventRef.current(event);
+  }, []);
+
+  // Registrar listeners com cleanup apropriado
+  useEffect(() => {
     loadDataSourceFieldValue()
     if (dataSource && dataField) {
-      dataSource.addListener(dataSourceEvent)
+      dataSource.addListener(stableDataSourceEvent)
       dataSource.addFieldChangeListener(dataField, fieldChangedListener)
     }
 
     if (options && options instanceof ArchbaseDataSource) {
       ; (options as ArchbaseDataSource<T, ID>).addListener(dataSourceOptionsEvent)
     }
-  })
+
+    return () => {
+      if (dataSource && dataField) {
+        dataSource.removeListener(stableDataSourceEvent)
+        dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+      }
+
+      if (options && options instanceof ArchbaseDataSource) {
+        ; (options as ArchbaseDataSource<T, ID>).removeListener(dataSourceOptionsEvent)
+      }
+    }
+  }, [dataSource, dataField, stableDataSourceEvent, fieldChangedListener])
 
   useEffect(() => {
     if (value !== undefined) {
       setSelectedValue(value);
     }
   }, [value]);
-
-  useArchbaseWillUnmount(() => {
-    if (dataSource && dataField) {
-      dataSource.removeListener(dataSourceEvent)
-      dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
-    }
-
-    if (options && options instanceof ArchbaseDataSource) {
-      ; (options as ArchbaseDataSource<T, ID>).removeListener(dataSourceOptionsEvent)
-    }
-  })
 
   useArchbaseDidUpdate(() => {
     loadDataSourceFieldValue()

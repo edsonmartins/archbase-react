@@ -2,10 +2,10 @@ import { Group, Input, Loader, MantineSize, Popover, Text, UnstyledButton } from
 import { IconChevronRight } from '@tabler/icons-react'
 import { useArchbaseTheme } from '@archbase/core'
 import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data'
-import { useArchbaseDidMount, useArchbaseWillUnmount } from '@archbase/data'
+import { useArchbaseDidUpdate } from '@archbase/data'
 import { useArchbaseV1V2Compatibility } from '@archbase/data'
 import { ArchbaseTreeNode, ArchbaseTreeView } from '../list'
-import React, { ReactNode, forwardRef, useState, useCallback, useMemo, useEffect } from 'react'
+import React, { ReactNode, forwardRef, useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useValidationErrors } from '@archbase/core'
 
 export interface ArchbaseTreeSelectProps<T, ID> {
@@ -272,18 +272,27 @@ export const ArchbaseTreeSelect = forwardRef<HTMLButtonElement, ArchbaseTreeSele
       [dataField, validationContext, fieldKey]
     )
 
-    // Hooks do ciclo de vida do datasource
-    useArchbaseDidMount(() => {
-      if (dataSource) {
-        dataSource.addListener(handleDataSourceEvent)
-      }
-    })
+    // Ref para manter callback sempre atualizado (corrige problema de closure desatualizada)
+    const handleDataSourceEventRef = useRef(handleDataSourceEvent)
+    useEffect(() => {
+      handleDataSourceEventRef.current = handleDataSourceEvent
+    }, [handleDataSourceEvent])
 
-    useArchbaseWillUnmount(() => {
+    // Wrapper estável que delega para ref
+    const stableHandleDataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
+      handleDataSourceEventRef.current(event)
+    }, [])
+
+    // Registrar listeners com cleanup apropriado
+    useEffect(() => {
       if (dataSource) {
-        dataSource.removeListener(handleDataSourceEvent)
+        dataSource.addListener(stableHandleDataSourceEvent)
+
+        return () => {
+          dataSource.removeListener(stableHandleDataSourceEvent)
+        }
       }
-    })
+    }, [dataSource, stableHandleDataSourceEvent])
 
     // useArchbaseDidUpdate removido - React já re-renderiza automaticamente
     // quando currentValue ou options mudam via suas dependências

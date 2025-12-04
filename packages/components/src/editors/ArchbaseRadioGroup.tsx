@@ -2,10 +2,10 @@ import { MantineSize, Radio } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import { uniqueId } from 'lodash';
 import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
+import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
 
@@ -190,20 +190,30 @@ export function ArchbaseRadioGroup<T, ID, O>({
 		}
 	}, [v1v2Compatibility.isDataSourceV2, validationContext, fieldKey]);
 
-	useArchbaseDidMount(() => {
+	// Ref para manter callback sempre atualizado (corrige problema de closure desatualizada)
+	const dataSourceEventRef = useRef(dataSourceEvent);
+	useEffect(() => {
+		dataSourceEventRef.current = dataSourceEvent;
+	}, [dataSourceEvent]);
+
+	// Wrapper estável que delega para ref
+	const stableDataSourceEvent = useCallback((event: DataSourceEvent<T>) => {
+		dataSourceEventRef.current(event);
+	}, []);
+
+	// Registrar listeners com cleanup apropriado
+	useEffect(() => {
 		loadDataSourceFieldValue();
 		if (dataSource && dataField) {
-			dataSource.addListener(dataSourceEvent);
+			dataSource.addListener(stableDataSourceEvent);
 			dataSource.addFieldChangeListener(dataField, fieldChangedListener);
-		}
-	});
 
-	useArchbaseWillUnmount(() => {
-		if (dataSource && dataField) {
-			dataSource.removeListener(dataSourceEvent);
-			dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+			return () => {
+				dataSource.removeListener(stableDataSourceEvent);
+				dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+			};
 		}
-	});
+	}, [dataSource, dataField, stableDataSourceEvent, fieldChangedListener]);
 
 	useArchbaseDidUpdate(() => {
 		loadDataSourceFieldValue();

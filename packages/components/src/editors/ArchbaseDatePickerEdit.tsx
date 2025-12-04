@@ -46,7 +46,7 @@ import React, { CSSProperties, useCallback, useEffect, useRef, useState } from '
 import { IMaskInput } from 'react-imask';
 import { convertDateToISOString, convertISOStringToDate } from '@archbase/core';
 import { type ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/data';
+import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
 
@@ -483,24 +483,34 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		}
 	}, [v1v2Compatibility.handleValueChange, dateFormat]);
 
-	useArchbaseDidMount(() => {
+	// Ref para manter callback sempre atualizado (corrige problema de closure desatualizada)
+	const dataSourceEventRef = useRef(dataSourceEvent);
+	useEffect(() => {
+		dataSourceEventRef.current = dataSourceEvent;
+	}, [dataSourceEvent]);
+
+	// Wrapper estável que delega para ref - nunca muda, então o listener permanece consistente
+	const stableDataSourceEvent = useCallback((event: DataSourceEvent<any>) => {
+		dataSourceEventRef.current(event);
+	}, []);
+
+	// Registrar listeners com cleanup apropriado
+	useEffect(() => {
 		loadDataSourceFieldValue();
 		if (dataSource && dataField) {
-			dataSource.addListener(dataSourceEvent);
+			dataSource.addListener(stableDataSourceEvent);
 			dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+
+			return () => {
+				dataSource.removeListener(stableDataSourceEvent);
+				dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+			};
 		}
-	});
+	}, [dataSource, dataField, stableDataSourceEvent, fieldChangedListener]);
 
 	useArchbaseDidUpdate(() => {
 		loadDataSourceFieldValue();
 	}, []);
-
-	useArchbaseWillUnmount(() => {
-		if (dataSource && dataField) {
-			dataSource.removeListener(dataSourceEvent);
-			dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
-		}
-	});
 
 	// ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
 	// O erro deve ser limpo apenas quando o usuário EDITA o campo (nos handlers)
