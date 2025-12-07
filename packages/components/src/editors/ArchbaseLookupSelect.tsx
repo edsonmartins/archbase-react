@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArchbaseError } from '@archbase/core';
 import { ArchbaseObjectHelper } from '@archbase/core';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, IArchbaseDataSourceBase } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useForceUpdate } from '@mantine/hooks';
@@ -9,7 +9,7 @@ import { useValidationErrors } from '@archbase/core';
 import { ArchbaseSelect, ArchbaseSelectProps } from './ArchbaseSelect';
 
 export interface ArchbaseLookupSelectProps<T, ID, O> extends Omit<ArchbaseSelectProps<T, ID, O>, 'getOptionLabel'> {
-	lookupDataSource: ArchbaseDataSource<O, ID> | undefined;
+	lookupDataSource: IArchbaseDataSourceBase<O> | undefined;
 	lookupDataFieldText: string | ((record: any) => string);
 	lookupDataFieldId: string;
 	simpleValue?: boolean;
@@ -24,8 +24,8 @@ const getTextValue = (lookupDataFieldText: string | ((record: any) => string), r
 	}
 };
 
-function rebuildOptions<_T, ID, O>(
-	lookupDataSource: ArchbaseDataSource<O, ID> | undefined,
+function rebuildOptions<_T, O>(
+	lookupDataSource: IArchbaseDataSourceBase<O> | undefined,
 	lookupDataFieldText: string | ((record: any) => string),
 	lookupDataFieldId: string,
 ): any[] | undefined {

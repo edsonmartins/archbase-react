@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, DataSourceOptions } from '@archbase/data';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, DataSourceOptions, IArchbaseDataSourceBase } from '@archbase/data';
 
 /**
  * Hook para estabilizar o comportamento da Grid e evitar chamadas duplicadas à busca,
  * além de preservar o foco em inputs durante interações.
+ * Suporta tanto ArchbaseDataSource (V1) quanto ArchbaseRemoteDataSourceV2 (V2)
  */
 export function useArchbaseDataGridStableRendering<T extends object, ID>({
   dataSource,
   debounceTime = 300
 }: {
-  dataSource: ArchbaseDataSource<T, ID>;
+  dataSource: IArchbaseDataSourceBase<T>;
   debounceTime?: number;
 }) {
   // Estados para controle da grid
@@ -79,7 +80,7 @@ export function useArchbaseDataGridStableRendering<T extends object, ID>({
     (window as any)[eventKey] = refreshId;
 
     // Chamar refresh com um ID que podemos verificar
-    dataSource.refreshData();
+    (dataSource as any).refreshData?.();
 
     // Limpar a referência após um tempo
     setTimeout(() => {

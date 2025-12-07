@@ -3,15 +3,15 @@ import { useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { isBase64Validate } from '@archbase/core';
-import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseTextAreaProps<T, ID> {
-	/** Fonte de dados onde será atribuido o valor do textarea */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do textarea (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do textarea na fonte de dados */
 	dataField?: string;
 	/** Indicador se o textarea está desabilitado */

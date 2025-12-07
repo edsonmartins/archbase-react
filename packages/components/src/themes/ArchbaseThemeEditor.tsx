@@ -2,14 +2,14 @@ import { Card, ColorPicker, MantineSize } from '@mantine/core';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
-import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDataSourceListener } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/core';
 
 export interface ArchbaseThemeEditorProps<T, ID> {
-	/** Fonte de dados onde será atribuido o valor do edit */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do edit (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do edit na fonte de dados */
 	dataField?: string;
 	/** Indicador se o edit está desabilitado */

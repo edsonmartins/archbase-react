@@ -1,11 +1,11 @@
 import { Rating } from '@mantine/core';
 import React, { CSSProperties, FocusEventHandler } from 'react';
-import { useArchbaseV1V2Compatibility } from '@archbase/data';
+import { useArchbaseV1V2Compatibility, IArchbaseDataSourceBase } from '@archbase/data';
 import { ArchbaseDataSource } from '@archbase/data';
 
 export interface ArchbaseImageProps<T, ID> {
-	/** Fonte de dados onde será atribuido o valor do rating*/
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do rating (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do rating na fonte de dados */
 	dataField?: string;
 	/** Indicador se o rating está desabilitado */

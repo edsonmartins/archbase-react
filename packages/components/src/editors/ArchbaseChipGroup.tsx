@@ -1,7 +1,7 @@
 import { Chip, ChipVariant, Flex, Input } from '@mantine/core';
 import { uniqueId } from 'lodash';
 import React, { CSSProperties, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
@@ -9,8 +9,8 @@ import { useForceUpdate } from '@mantine/hooks';
 import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseChipGroupProps<T, ID, O> {
-	/** Fonte de dados onde será atribuido o valor do ChipGroup*/
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do ChipGroup (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do ChipGroup na fonte de dados */
 	dataField?: string;
 	/** Evento quando um valor é selecionado */

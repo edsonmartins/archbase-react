@@ -1,6 +1,6 @@
 {
   "name": "@archbase/ssr",
-  "version": "3.0.29",
+  "version": "3.0.30",
   "description": "Server-Side Rendering utilities for Archbase React components with TanStack Start",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -45,7 +45,7 @@ import dayjs from 'dayjs';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 import { convertDateToISOString, convertISOStringToDate } from '@archbase/core';
-import { type ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
+import { type ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, type IArchbaseDataSourceBase } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
@@ -216,8 +216,8 @@ export interface ArchbaseDatePickerEditProps<T, ID>
 	level?: CalendarLevel;
 	/** Chamado quando o nível muda */
 	onLevelChange?(level: CalendarLevel): void;
-	/** Fonte de dados onde será atribuido o valor do datePicker */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do datePicker (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do datePicker na fonte de dados */
 	dataField?: string;
 	/** Indicador se o date picker está desabilitado */

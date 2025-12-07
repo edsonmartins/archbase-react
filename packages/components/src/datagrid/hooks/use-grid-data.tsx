@@ -8,7 +8,7 @@ import {
   GridCallbackDetails,
   GridEventListener
 } from '@mui/x-data-grid';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, IArchbaseDataSourceBase } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 
 /**
@@ -156,15 +156,16 @@ const buildSortExpression = (sortModel: GridSortModel): string[] | undefined => 
 };
 
 /**
- * Obtém ordenação inicial do DataSource
+ * Obtém ordenação inicial do DataSource (V1 ou V2)
  */
-const getInitialSortModel = <T, ID>(dataSource: ArchbaseDataSource<T, ID>): GridSortModel => {
-  if (dataSource && dataSource.getOptions().originSort) {
-    return dataSource.getOptions().originSort;
+const getInitialSortModel = <T,>(dataSource: IArchbaseDataSourceBase<T>): GridSortModel => {
+  const dsWithOptions = dataSource as any;
+  if (dataSource && dsWithOptions.getOptions?.()?.originSort) {
+    return dsWithOptions.getOptions().originSort;
   }
 
-  if (dataSource && dataSource.getOptions() && dataSource.getOptions().sort) {
-    return dataSource.getOptions().sort!.map((sort: string) => {
+  if (dataSource && dsWithOptions.getOptions?.()?.sort) {
+    return dsWithOptions.getOptions().sort!.map((sort: string) => {
       const [field, order] = sort.split(':');
       return {
         field,
@@ -177,7 +178,7 @@ const getInitialSortModel = <T, ID>(dataSource: ArchbaseDataSource<T, ID>): Grid
 };
 
 /**
- * Hook personalizado para integrar o MUI X DataGrid com o ArchbaseDataSource
+ * Hook personalizado para integrar o MUI X DataGrid com o ArchbaseDataSource (V1 ou V2)
  */
 export function useGridData<T extends object, ID>({
   dataSource,
@@ -186,7 +187,7 @@ export function useGridData<T extends object, ID>({
   getRowId,
   columns
 }: {
-  dataSource: ArchbaseDataSource<T, ID>;
+  dataSource: IArchbaseDataSourceBase<T>;
   pageSize?: number;
   pageIndex?: number;
   getRowId: (row: T) => any;
@@ -214,10 +215,13 @@ export function useGridData<T extends object, ID>({
   const [sortModel, setSortModel] = useState<GridSortModel>(() =>
     getInitialSortModel(dataSource)
   );
-  const [filterModel, setFilterModel] = useState<GridFilterModel>(() => ({
-    items: dataSource && dataSource.getOptions().originFilter ? dataSource.getOptions().originFilter : [],
-    quickFilterValues: dataSource && dataSource.getOptions().originGlobalFilter ? [dataSource.getOptions().originGlobalFilter] : []
-  }));
+  const [filterModel, setFilterModel] = useState<GridFilterModel>(() => {
+    const dsWithOptions = dataSource as any;
+    return {
+      items: dataSource && dsWithOptions.getOptions?.()?.originFilter ? dsWithOptions.getOptions().originFilter : [],
+      quickFilterValues: dataSource && dsWithOptions.getOptions?.()?.originGlobalFilter ? [dsWithOptions.getOptions().originGlobalFilter] : []
+    };
+  });
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
   const [selectedRowsData, setSelectedRowsData] = useState<T[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(() => dataSource.getGrandTotalRecords());
@@ -240,14 +244,15 @@ export function useGridData<T extends object, ID>({
   const handlePaginationModelChange = useCallback((model: GridPaginationModel) => {
     setPaginationModel(model);
 
-    const options = dataSourceRef.current.getOptions();
+    const ds = dataSourceRef.current as any;
+    const options = ds.getOptions?.() || {};
     options.currentPage = model.page;
     options.pageSize = model.pageSize;
 
     pendingRefresh.current = true;
     setIsLoading(true);
-    dataSourceRef.current.refreshData(options);
-    
+    ds.refreshData?.(options);
+
     // Force update for V1 DataSource
     if (!isDataSourceV2) {
       forceUpdate();
@@ -258,14 +263,15 @@ export function useGridData<T extends object, ID>({
   const handleSortModelChange = useCallback((model: GridSortModel) => {
     setSortModel(model);
 
-    const options = dataSourceRef.current.getOptions();
+    const ds = dataSourceRef.current as any;
+    const options = ds.getOptions?.() || {};
     options.sort = buildSortExpression(model);
     options.originSort = model;
 
     pendingRefresh.current = true;
     setIsLoading(true);
-    dataSourceRef.current.refreshData(options);
-    
+    ds.refreshData?.(options);
+
     // Force update for V1 DataSource
     if (!isDataSourceV2) {
       forceUpdate();
@@ -276,7 +282,8 @@ export function useGridData<T extends object, ID>({
   const handleFilterModelChange = useCallback((model: GridFilterModel) => {
     setFilterModel(model);
 
-    const options = dataSourceRef.current.getOptions();
+    const ds = dataSourceRef.current as any;
+    const options = ds.getOptions?.() || {};
     options.filter = buildFilterExpression(model, columns);
     options.originFilter = model.items;
 
@@ -291,8 +298,8 @@ export function useGridData<T extends object, ID>({
 
     pendingRefresh.current = true;
     setIsLoading(true);
-    dataSourceRef.current.refreshData(options);
-    
+    ds.refreshData?.(options);
+
     // Force update for V1 DataSource
     if (!isDataSourceV2) {
       forceUpdate();
@@ -417,8 +424,8 @@ export function useGridData<T extends object, ID>({
   const refreshData = useCallback(() => {
     pendingRefresh.current = true;
     setIsLoading(true);
-    dataSourceRef.current.refreshData();
-    
+    (dataSourceRef.current as any).refreshData?.();
+
     // Force update for V1 DataSource
     if (!isDataSourceV2) {
       forceUpdate();

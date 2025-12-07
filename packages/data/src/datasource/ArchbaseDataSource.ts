@@ -3,6 +3,7 @@ import { isDate, parse, parseISO } from 'date-fns';
 import { EventEmitter } from 'events';
 import { cloneDeep, uniqueId } from 'lodash';
 import { ArchbaseDataSourceError, ArchbaseObjectHelper, DataSourceValidationError, IDataSourceValidator, archbaseI18next } from '@archbase/core';
+import { IArchbaseDataSourceBase } from './IArchbaseDataSourceBase';
 
 export enum DataSourceEventNames {
 	dataChanged,
@@ -448,7 +449,7 @@ export class ArchbaseDataSourceEventEmitter {
 	}
 }
 
-export class ArchbaseDataSource<T, _ID> implements IDataSource<T> {
+export class ArchbaseDataSource<T, _ID> implements IDataSource<T>, IArchbaseDataSourceBase<T> {
 	protected fieldEventListeners: Record<string, ((fieldName: string, oldValue: any, newValue: any) => void)[]>;
 
 	protected records: T[];

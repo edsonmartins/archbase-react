@@ -1,9 +1,0 @@
-export declare const isBoolean: (data: any) => data is boolean | Boolean;
-export declare const isNumber: (data: any) => data is number | Number;
-export declare const isBigInt: (data: any) => data is bigint | BigInt;
-export declare const isString: (data: any) => data is string | String;
-export declare const isArray: (data: any) => data is any[];
-export declare const isObject: (data: any) => boolean;
-export declare const isNull: (data: any) => boolean;
-export declare const isUndefined: (data: any) => boolean;
-//# sourceMappingURL=ArchbaseJsonViewDataTypeDetection.d.ts.map

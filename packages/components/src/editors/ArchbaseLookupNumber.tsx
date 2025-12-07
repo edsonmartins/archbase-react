@@ -4,7 +4,7 @@ import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { formatStr } from '@archbase/core';
 import { ArchbaseObjectHelper } from '@archbase/core';
-import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
@@ -13,8 +13,8 @@ import { useValidationErrors } from '@archbase/core';
 import { ArchbaseNumberEdit } from './ArchbaseNumberEdit';
 
 export interface ArchbaseLookupNumberProps<T, ID, O> {
-	/** Fonte de dados onde será atribuido o valor do lookup edit */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do lookup edit (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do lookup edit na fonte de dados */
 	dataField?: string;
 	/** Campo da fonte de dados que será usado para apresentar o valor no lookup edit */
@@ -77,7 +77,7 @@ export interface ArchbaseLookupNumberProps<T, ID, O> {
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 }
 
-function getInitialValue<T, ID>(value: any, dataSource?: ArchbaseDataSource<T, ID>, lookupField?: string): any {
+function getInitialValue<T>(value: any, dataSource?: IArchbaseDataSourceBase<T>, lookupField?: string): any {
 	let initialValue: any = value;
 	if (dataSource && lookupField) {
 		initialValue = dataSource.getFieldValue(lookupField);
@@ -147,7 +147,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
 	const [currentValue, setCurrentValue] = useState<any | undefined>(
-		getInitialValue<T, ID>(value, dataSource, lookupField),
+		getInitialValue<T>(value, dataSource, lookupField),
 	);
 	const innerComponentRef = innerRef || useRef<any>(null);
 	const [internalError, setInternalError] = useState<string | undefined>(error);
@@ -167,7 +167,7 @@ export function ArchbaseLookupNumber<T, ID, O>({
 	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
-		const initialValue: any = getInitialValue<T, ID>(currentValue, dataSource, lookupField);
+		const initialValue: any = getInitialValue<T>(currentValue, dataSource, lookupField);
 		setCurrentValue(initialValue);
 		// ❌ REMOVIDO: Não limpar erro ao carregar valor do datasource
 		// setInternalError(undefined);

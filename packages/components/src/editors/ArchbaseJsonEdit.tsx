@@ -3,13 +3,13 @@ import { useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { isBase64 } from '@archbase/core';
-import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames, useArchbaseDidUpdate, useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseJsonEditProps<T, ID> {
-	/** Fonte de dados onde será atribuido o valor do json input */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do json input (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do json input na fonte de dados */
 	dataField?: string;
 	/** Indicador se o json input está desabilitado */

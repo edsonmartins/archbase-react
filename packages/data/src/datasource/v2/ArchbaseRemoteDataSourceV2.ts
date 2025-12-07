@@ -7,6 +7,7 @@ import {
   DataSourceListener,
   IDataSourceValidator
 } from '../ArchbaseDataSource';
+import { IArchbaseDataSourceBase } from '../IArchbaseDataSourceBase';
 import { ArchbaseRemoteApiService } from '../../service/ArchbaseRemoteApiService';
 
 /**
@@ -41,7 +42,7 @@ export interface ArchbaseRemoteDataSourceV2Config<T> {
  * - Gestão de cache e sincronização otimizada
  * - Interface simplificada focada em funcionalidade V2
  */
-export class ArchbaseRemoteDataSourceV2<T> {
+export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T> {
   private name: string;
   private label: string;
   private service: ArchbaseRemoteApiService<T, any>;
@@ -758,8 +759,78 @@ export class ArchbaseRemoteDataSourceV2<T> {
     this.pageSize = pageSize;
   }
 
+  /**
+   * Retorna a página atual (0-indexed)
+   * Implementação baseada no índice atual dividido pelo tamanho da página
+   */
+  getCurrentPage(): number {
+    if (this.pageSize <= 0) return 0;
+    return Math.floor(this.currentIndex / this.pageSize);
+  }
+
+  /**
+   * Alias para getRecords - compatibilidade com V1
+   */
+  browseRecords(): T[] {
+    return [...this.filteredRecords];
+  }
+
   getRecords(): T[] {
     return [...this.filteredRecords];
+  }
+
+  /**
+   * Localiza um registro por valores de campos e navega para ele
+   * @param values Objeto com campos/valores para busca
+   * @returns true se encontrou, false caso contrário
+   */
+  locate(values: any): boolean {
+    const keys = Object.keys(values);
+    const index = this.filteredRecords.findIndex(record => {
+      return keys.every(key => {
+        const recordValue = (record as any)[key];
+        const searchValue = values[key];
+        return recordValue === searchValue;
+      });
+    });
+
+    if (index >= 0) {
+      this.currentIndex = index;
+      this.emit({
+        type: DataSourceEventNames.afterScroll
+      });
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Vai para um registro pelo seu índice (alias para goToRecord)
+   * @param index Índice do registro
+   */
+  gotoRecord(index: number): void {
+    this.goToRecord(index);
+  }
+
+  /**
+   * Vai para um registro pelo seu dado
+   * @param record Dados do registro para navegar
+   * @returns true se encontrou, false caso contrário
+   */
+  gotoRecordByData(record: T): boolean {
+    const recordId = this.service.getId(record);
+    const index = this.filteredRecords.findIndex(r =>
+      this.service.getId(r) === recordId
+    );
+
+    if (index >= 0) {
+      this.currentIndex = index;
+      this.emit({
+        type: DataSourceEventNames.afterScroll
+      });
+      return true;
+    }
+    return false;
   }
 
   setRecords(records: T[]): void {

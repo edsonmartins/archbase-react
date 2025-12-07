@@ -30,7 +30,7 @@ import React, {
 	useRef,
 	useState
 } from 'react';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, IArchbaseDataSourceBase } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
@@ -52,8 +52,8 @@ export interface ArchbaseAsyncMultiSelectProps<T, ID, O> {
   allowDeselect?: boolean;
   /** Indicador se permite limpar o select */
   clearable?: boolean;
-  /** Fonte de dados onde será atribuido o item selecionado */
-  dataSource?: ArchbaseDataSource<T, ID>;
+  /** Fonte de dados onde será atribuido o item selecionado (V1 ou V2) */
+  dataSource?: IArchbaseDataSourceBase<T>;
   /** Campo onde deverá ser atribuido o item selecionado na fonte de dados */
   dataField?: string;
   /** Tempo de espero antes de realizar a busca */

@@ -1,11 +1,11 @@
 import React from 'react';
-import { ArchbaseDataSource } from '@archbase/data';
+import { ArchbaseDataSource, IArchbaseDataSourceBase } from '@archbase/data';
 
 export interface ArchbaseListContextValue<T, ID> {
 	/** Indica se a lista esta desabilitada */
 	disabled?: boolean;
-	/** Fonte de dados da lista */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados da lista (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Function para notificar a lista que o item foi selecionado */
 	handleSelectItem?: (index: number, data: T) => void;
 	/** Id da lista pai */

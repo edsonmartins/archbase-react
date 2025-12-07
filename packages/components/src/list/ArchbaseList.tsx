@@ -5,7 +5,7 @@ import React, { FocusEventHandler, ReactNode, useEffect, useMemo, useRef, useSta
 import { ArchbaseError } from '@archbase/core';
 import { ArchbaseObjectHelper } from '@archbase/core';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, IArchbaseDataSourceBase } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseWillUnmount } from '@archbase/data';
 import { useArchbaseForceRerender } from '@archbase/data';
 import { ArchbaseListProvider } from './ArchbaseList.context';
@@ -72,8 +72,8 @@ export interface ArchbaseListProps<T, ID> {
 	style?: React.CSSProperties;
 	/** Id da lista */
 	id?: string;
-	/** Fonte de dados a ser usado pela lista */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados a ser usado pela lista (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Filtro a ser aplicado na lista */
 	filter?: string;
 	/** Function a ser aplicada na lista para filtrar os itens */
@@ -322,7 +322,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 		handleSelectItem(index, getRecordDataFromChildren(index));
 	};
 
-	const buildChildrensFromDataSource = (dataSource: ArchbaseDataSource<T, ID>) => {
+	const buildChildrensFromDataSource = (dataSource: IArchbaseDataSourceBase<T>) => {
 		const sourceData = dataSource.browseRecords();
 		return sourceData.map((record: any, index: number) => {
 			if (!record) {
@@ -487,7 +487,7 @@ export function ArchbaseList<T, ID>(props: ArchbaseListProps<T, ID>) {
 		} else {
 			setRebuildedChildrens([]);
 		}
-	}, [updateCounter, activeIndex, dataSource?.lastDataChangedAt, dataSource?.lastDataBrowsingOn, children, forceUpdate, v1v2Compatibility.isDataSourceV2]);
+	}, [updateCounter, activeIndex, (dataSource as any)?.lastDataChangedAt, (dataSource as any)?.lastDataBrowsingOn, children, forceUpdate, v1v2Compatibility.isDataSourceV2]);
 
 	return (
 		<Paper

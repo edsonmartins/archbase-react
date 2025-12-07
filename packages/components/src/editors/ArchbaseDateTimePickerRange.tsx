@@ -3,12 +3,12 @@ import { IconArrowRight, IconCalendar } from '@tabler/icons-react';
 import React, { useState, useEffect } from 'react';
 import { CSSProperties, ReactNode } from 'react';
 import { ArchbaseDateTimePickerEdit } from './ArchbaseDateTimePickerEdit';
-import type { ArchbaseDataSource } from '@archbase/data';
+import type { ArchbaseDataSource, IArchbaseDataSourceBase } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseDateTimePickerRangeProps<T, ID> {
-  /** Data source where the range values will be assigned */
-  dataSource?: ArchbaseDataSource<T, ID>;
+  /** Data source where the range values will be assigned (V1 ou V2) */
+  dataSource?: IArchbaseDataSourceBase<T>;
   /** Field for start date in the data source */
   dataFieldStart?: string;
   /** Field for end date in the data source */

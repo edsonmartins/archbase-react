@@ -4,7 +4,7 @@ import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { formatStr } from '@archbase/core';
 import { ArchbaseObjectHelper } from '@archbase/core';
-import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
@@ -12,8 +12,8 @@ import { useForceUpdate } from '@mantine/hooks';
 import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseLookupEditProps<T, ID, O> {
-	/** Fonte de dados onde será atribuido o valor do lookup edit */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do lookup edit (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do lookup edit na fonte de dados */
 	dataField?: string;
 	/** Campo da fonte de dados que será usado para apresentar o valor no lookup edit */

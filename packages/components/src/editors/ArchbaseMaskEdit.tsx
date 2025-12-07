@@ -13,7 +13,7 @@ import { useForceUpdate, useId } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
-import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
@@ -40,8 +40,8 @@ export interface ArchbaseMaskEditProps<T, ID>
 	wrapperProps?: Record<string, any>;
 	/** Nome do seletor estático */
 	__staticSelector?: string;
-	/** Fonte de dados onde será atribuido o valor do mask edit */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do mask edit (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do mask edit na fonte de dados */
 	dataField?: string;
 	/** Indicador se o mask edit está desabilitado */

@@ -7,6 +7,7 @@ export type {
   IDataSource,
   DataSourceEventRefreshDataType
 } from './ArchbaseDataSource';
+export type { IArchbaseDataSourceBase } from './IArchbaseDataSourceBase';
 // IDataSourceValidator and DataSourceValidationError moved to @archbase/core
 export type { IDataSourceValidator, DataSourceValidationError } from '@archbase/core';
 export { DataSourceEventNames, ArchbaseDataSource } from './ArchbaseDataSource';

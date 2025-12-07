@@ -5,7 +5,7 @@ import {
   import { useForceUpdate } from '@mantine/hooks';
   import type { CSSProperties, FocusEventHandler, ForwardedRef } from 'react';
   import React, { useCallback, useEffect, useRef, useState } from 'react';
-  import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+  import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
   import { DataSourceEventNames } from '@archbase/data';
   import { useArchbaseDidUpdate } from '@archbase/data';
   import { useArchbaseV1V2Compatibility } from '@archbase/data';
@@ -14,8 +14,8 @@ import {
   type OmittedDateTimePickerProps = Omit<DateTimePickerProps, 'value' | 'onChange'>;
   
   export interface ArchbaseDateTimePickerEditProps<T, ID> extends OmittedDateTimePickerProps {
-	/** Data source where the edit value will be assigned */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Data source where the edit value will be assigned (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Field where the edit value should be assigned in the data source */
 	dataField?: string;
 	/** Indicates if the edit is disabled */

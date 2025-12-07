@@ -1,7 +1,7 @@
 import { ActionIcon, ActionIconVariant, Box, Button, Group, Input, Modal, Paper, Slider, Space, Stack, Text, Tooltip } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import { IconCameraPlus, IconEdit, IconRotate, IconTrash, IconZoomIn } from '@tabler/icons-react';
-import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames, useArchbaseV1V2Compatibility, useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseTheme, isBase64 } from '@archbase/core';
 import { useArchbaseTranslation } from '@archbase/core';
@@ -10,8 +10,8 @@ import Cropper from 'react-easy-crop';
 import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseAvatarEditProps<T, ID> {
-    /** Fonte de dados onde será atribuido o valor do avatar */
-    dataSource?: ArchbaseDataSource<T, ID>;
+    /** Fonte de dados onde será atribuido o valor do avatar (V1 ou V2) */
+    dataSource?: IArchbaseDataSourceBase<T>;
     /** Campo onde deverá ser atribuido o valor do avatar na fonte de dados */
     dataField?: string;
     /** Indicador se o avatar está desabilitado */

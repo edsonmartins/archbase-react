@@ -1,14 +1,14 @@
 import { Input, MantineSize, Rating } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import React, { CSSProperties, FocusEventHandler, useCallback, useEffect, useRef, useState } from 'react';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, IArchbaseDataSourceBase } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseRatingProps<T, ID> {
-	/** Fonte de dados onde será atribuido o valor do rating*/
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do rating (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do rating na fonte de dados */
 	dataField?: string;
 	/** Indicador se o rating está desabilitado */

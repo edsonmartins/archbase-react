@@ -2,15 +2,15 @@ import { Checkbox, MantineSize } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler } from 'react';
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseCheckboxProps<T, ID> {
-	/** Fonte de dados onde será atribuido o valor do checkbox */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do checkbox (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do checkbox na fonte de dados */
 	dataField?: string;
 	/** Indicador se o checkbox está desabilitado */

@@ -1,7 +1,7 @@
 import { Group, Input, Loader, MantineSize, Popover, Text, UnstyledButton } from '@mantine/core'
 import { IconChevronRight } from '@tabler/icons-react'
 import { useArchbaseTheme } from '@archbase/core'
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data'
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, IArchbaseDataSourceBase } from '@archbase/data'
 import { useArchbaseDidUpdate } from '@archbase/data'
 import { useArchbaseV1V2Compatibility } from '@archbase/data'
 import { ArchbaseTreeNode, ArchbaseTreeView } from '../list'
@@ -9,8 +9,8 @@ import React, { ReactNode, forwardRef, useState, useCallback, useMemo, useEffect
 import { useValidationErrors } from '@archbase/core'
 
 export interface ArchbaseTreeSelectProps<T, ID> {
-  /** Fonte de dados onde será atribuido o valor selecionado */
-  dataSource?: ArchbaseDataSource<T, ID>
+  /** Fonte de dados onde será atribuido o valor selecionado (V1 ou V2) */
+  dataSource?: IArchbaseDataSourceBase<T>
   /** Campo onde deverá ser atribuido o valor selecionado na fonte de dados */
   dataField?: string
   /** Indicador se o select está desabilitado */

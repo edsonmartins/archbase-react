@@ -1,14 +1,14 @@
 // Common component types and interfaces
 import { CSSProperties, FocusEventHandler, RefObject } from 'react';
 import { MantineSize } from '@mantine/core';
-import { ArchbaseDataSource } from '@archbase/data';
+import { ArchbaseDataSource, IArchbaseDataSourceBase } from '@archbase/data';
 
 /**
  * Base props for all Archbase components that support DataSource integration
  */
 export interface ArchbaseComponentProps<T = any, ID = any> {
-  /** DataSource for data binding */
-  dataSource?: ArchbaseDataSource<T, ID>;
+  /** DataSource for data binding (V1 ou V2) */
+  dataSource?: IArchbaseDataSourceBase<T>;
   /** Field name for data binding */
   dataField?: string;
   /** Whether the component is disabled */

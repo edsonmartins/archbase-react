@@ -1,6 +1,6 @@
 import { CloseButton, CloseButtonProps, MantineSize, TextInput, TextInputProps } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, IArchbaseDataSourceBase } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import type { CSSProperties, FocusEventHandler } from 'react';
@@ -109,7 +109,8 @@ export interface ArchbaseNumberEditProps<T, ID>
   React.RefAttributes<HTMLInputElement> {
   clearable?: boolean;
   clearButtonProps?: CloseButtonProps;
-  dataSource?: ArchbaseDataSource<T, ID>;
+  /** Fonte de dados onde será atribuido o valor (V1 ou V2) */
+  dataSource?: IArchbaseDataSourceBase<T>;
   dataField?: string;
   disabled?: boolean;
   readOnly?: boolean;

@@ -457,13 +457,13 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         ? filterModel.quickFilterValues[0]
         : ''
 
-    console.log('[REFRESH] Refresh com filtro global:', options.originGlobalFilter)
+    console.log('[REFRESH] Refresh com filtro global:', options.originGlobalFilter);
 
     // Indicar que estamos carregando
-    setIsLoadingInternal(true)
+    setIsLoadingInternal(true);
 
     // Aplicar a atualização com os filtros
-    dataSource.refreshData(options)
+    (dataSource as any).refreshData?.(options);
 
     // Fechar todos os painéis de detalhes
     closeAllDetailPanels()
@@ -491,7 +491,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     options.pageSize = safePageSize
 
     setIsLoadingInternal(true)
-    dataSource.refreshData(options)
+    ;(dataSource as any).refreshData?.(options)
 
     // Fechar todos os painéis de detalhes ao mudar de página
     closeAllDetailPanels()
@@ -512,7 +512,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     options.originSort = newSortModel
 
     setIsLoadingInternal(true)
-    dataSource.refreshData(options)
+    ;(dataSource as any).refreshData?.(options)
 
     // Fechar todos os painéis de detalhes ao mudar a ordenação
     closeAllDetailPanels()
@@ -555,7 +555,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     setIsLoadingInternal(true)
 
     // Aplicar o filtro no dataSource
-    dataSource.refreshData(options)
+    ;(dataSource as any).refreshData?.(options)
 
     // Fechar todos os painéis de detalhes ao filtrar
     closeAllDetailPanels()

@@ -2,14 +2,14 @@ import { ActionIconVariant, ImageProps, Input } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import { isBase64 } from '@archbase/core';
-import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames, useArchbaseDidUpdate, useArchbaseV1V2Compatibility } from '@archbase/data';
 import { ArchbaseImagePickerEditor } from '../image';
 import { useValidationErrors } from '@archbase/core';
 
 export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
-	/** Fonte de dados onde será atribuido o valor do rich edit*/
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados onde será atribuido o valor do rich edit (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Campo onde deverá ser atribuido o valor do rich edit na fonte de dados */
 	dataField?: string;
 	/** Indicador se o rich edit está desabilitado */

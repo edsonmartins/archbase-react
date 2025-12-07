@@ -1,9 +1,9 @@
 import React from 'react';
-import { ArchbaseDataSource } from '@archbase/data';
+import { ArchbaseDataSource, IArchbaseDataSourceBase } from '@archbase/data';
 
 export interface ArchbaseMasonryContextValue<T, ID> {
-	/** Fonte de dados do masonry */
-	dataSource?: ArchbaseDataSource<T, ID>;
+	/** Fonte de dados do masonry (V1 ou V2) */
+	dataSource?: IArchbaseDataSourceBase<T>;
 	/** Function para notificar o masonry que o item foi selecionado */
 	handleSelectItem?: (index: number, data: T) => void;
 	/** Id do masonry pai */

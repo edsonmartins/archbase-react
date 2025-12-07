@@ -1,7 +1,7 @@
 import React from 'react'
 import { Fragment, MutableRefObject, ReactNode, RefObject } from 'react';
 import { GridRowId, GridSortModel, GridFilterModel, GridPaginationModel } from '@mui/x-data-grid';
-import { ArchbaseDataSource } from '@archbase/data';
+import { ArchbaseDataSource, IArchbaseDataSourceBase } from '@archbase/data';
 
 /**
  * DataGrid Types - V1/V2 Compatible
@@ -52,7 +52,7 @@ export interface GridColumnsProps {
 
 // Props para o componente ArchbaseDataGridToolbar
 export interface ArchbaseDataGridToolbarProps {
-  dataSource: ArchbaseDataSource<any, any>;
+  dataSource: IArchbaseDataSourceBase<any>;
   filterModel: GridFilterModel;
   enableGlobalFilter?: boolean;
   enableTopToolbarActions?: boolean;
@@ -136,7 +136,7 @@ export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
   // Propriedades de dados
   // Aceita tanto ArchbaseDataSource (V1) quanto ArchbaseRemoteDataSourceV2 (V2)
   // A detecção de versão é feita em runtime dentro do componente
-  dataSource: ArchbaseDataSource<T, ID> | any;
+  dataSource: IArchbaseDataSourceBase<T>;
   getRowId?: (row: T) => ID;
   
   // NOVAS props de segurança (100% opcionais)
