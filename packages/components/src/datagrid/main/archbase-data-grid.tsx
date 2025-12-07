@@ -64,8 +64,48 @@ import { DataSourceEvent, DataSourceEventNames } from '@archbase/data'
 const MAX_PAGE_SIZE_MIT = 100
 
 /**
+ * Helper para detectar se o dataSource é V2
+ * V2 tem métodos específicos como appendToFieldArray e updateFieldArrayItem
+ */
+const isDataSourceV2 = (ds: any): boolean => {
+  return ds && ('appendToFieldArray' in ds || 'updateFieldArrayItem' in ds || 'getRecords' in ds);
+}
+
+/**
+ * Helper para obter registros do dataSource (compatível com V1 e V2)
+ */
+const getRecordsFromDataSource = <T,>(ds: any): T[] => {
+  if (isDataSourceV2(ds)) {
+    return ds.getRecords?.() || [];
+  }
+  return ds.browseRecords?.() || [];
+}
+
+/**
+ * Helper para obter opções do dataSource (V1 only, V2 retorna objeto vazio)
+ */
+const getDataSourceOptions = (ds: any): any => {
+  if (isDataSourceV2(ds)) {
+    return {};
+  }
+  return ds.getOptions?.() || {};
+}
+
+/**
+ * Helper para obter página atual (compatível com V1 e V2)
+ */
+const getCurrentPageFromDataSource = (ds: any): number => {
+  if (isDataSourceV2(ds)) {
+    return 0; // V2 não tem paginação interna no dataSource
+  }
+  return ds.getCurrentPage?.() || 0;
+}
+
+/**
  * Componente ArchbaseDataGrid - Grid avançada baseada no MUI X DataGrid
  * com toolbar e paginação extraídos para fora da grid para evitar problemas de foco
+ *
+ * Suporta tanto ArchbaseDataSource (V1) quanto ArchbaseRemoteDataSourceV2 (V2)
  */
 function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataGridProps<T, ID>) {
   const {
@@ -182,8 +222,11 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   // Referências para os botões de expansão
   const expandButtonRefs = useRef<Map<GridRowId, React.RefObject<HTMLButtonElement>>>(new Map())
 
+  // Detectar versão do DataSource
+  const isV2 = isDataSourceV2(dataSource);
+
   // Estados para dados e funcionalidades da grid
-  const [rows, setRows] = useState<T[]>(() => dataSource.browseRecords())
+  const [rows, setRows] = useState<T[]>(() => getRecordsFromDataSource<T>(dataSource))
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>({})
   const [exportModalOpen, setExportModalOpen] = useState<boolean>(false)
   const [printModalOpen, setPrintModalOpen] = useState<boolean>(false)
@@ -197,23 +240,18 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
 
   // Estado para paginação com limitação de tamanho de página (MIT version)
   const [paginationModel, setPaginationModel] = useState({
-    page: Number.isFinite(dataSource?.getCurrentPage()) ? dataSource.getCurrentPage() : pageIndex,
+    page: Number.isFinite(getCurrentPageFromDataSource(dataSource)) ? getCurrentPageFromDataSource(dataSource) : pageIndex,
     pageSize: Math.min(
-      Number.isFinite(dataSource?.getPageSize()) ? dataSource.getPageSize() : pageSize,
+      Number.isFinite(dataSource?.getPageSize?.()) ? dataSource.getPageSize() : pageSize,
       MAX_PAGE_SIZE_MIT
     )
   });
 
   const [sortModel, setSortModel] = useState(() => getInitialSortModel(dataSource))
+  const dsOptions = getDataSourceOptions(dataSource);
   const [filterModel, setFilterModel] = useState({
-    items:
-      dataSource && dataSource.getOptions().originFilter
-        ? dataSource.getOptions().originFilter
-        : [],
-    quickFilterValues:
-      dataSource && dataSource.getOptions().originGlobalFilter
-        ? [dataSource.getOptions().originGlobalFilter]
-        : []
+    items: dsOptions.originFilter || [],
+    quickFilterValues: dsOptions.originGlobalFilter ? [dsOptions.originGlobalFilter] : []
   })
 
   // Usar os hooks personalizados para gerenciar os painéis de detalhes
@@ -282,8 +320,10 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
             // Sincronizar com o dataSource
             syncInProgress.current = true
 
-            // Ir para o registro correspondente no DataSource
-            dataSource.gotoRecordByData(row)
+            // Ir para o registro correspondente no DataSource (V1 only)
+            if (!isV2 && dataSource.gotoRecordByData) {
+              dataSource.gotoRecordByData(row)
+            }
 
             // Resetar flag após um breve delay
             setTimeout(() => {
@@ -357,8 +397,8 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       onSelectedRowsChanged(selected)
     }
 
-    // Se temos exatamente uma linha, atualizar o dataSource
-    if (selected.length === 1) {
+    // Se temos exatamente uma linha, atualizar o dataSource (V1 only)
+    if (selected.length === 1 && !isV2 && dataSource.gotoRecordByData) {
       syncInProgress.current = true
 
       try {
@@ -396,8 +436,16 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
 
   // Métodos para atualização de dados
   const handleRefresh = () => {
-    // Garantir que o modelo de filtro atual seja usado
-    const options = dataSource.getOptions()
+    // V2: Não tem getOptions/refreshData no dataSource, o refresh é controlado externamente
+    if (isV2) {
+      // Para V2, apenas atualiza os rows do estado atual
+      setRows(getRecordsFromDataSource<T>(dataSource));
+      closeAllDetailPanels();
+      return;
+    }
+
+    // V1: Comportamento original
+    const options = getDataSourceOptions(dataSource)
 
     // Reutilizar o filtro atual
     options.filter = buildFilterExpression(filterModel, columns)
@@ -431,7 +479,14 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       pageSize: safePageSize
     })
 
-    const options = dataSource.getOptions()
+    // V2: Paginação é controlada externamente pelo hook
+    if (isV2) {
+      closeAllDetailPanels();
+      return;
+    }
+
+    // V1: Comportamento original
+    const options = getDataSourceOptions(dataSource)
     options.currentPage = newPaginationModel.page
     options.pageSize = safePageSize
 
@@ -445,7 +500,14 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   const handleSortModelChange = (newSortModel: any) => {
     setSortModel(newSortModel)
 
-    const options = dataSource.getOptions()
+    // V2: Ordenação é controlada externamente
+    if (isV2) {
+      closeAllDetailPanels();
+      return;
+    }
+
+    // V1: Comportamento original
+    const options = getDataSourceOptions(dataSource)
     options.sort = newSortModel.map((sort: any) => `${sort.field}:${sort.sort}`)
     options.originSort = newSortModel
 
@@ -463,7 +525,15 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     // Certificar que estamos usando o valor mais recente
     console.log('[FILTER] Aplicando filtro:', newFilterModel)
 
-    const options = dataSource.getOptions()
+    // V2: Filtro é controlado externamente pelo hook
+    if (isV2) {
+      setPaginationModel((prev) => ({ ...prev, page: 0 }));
+      closeAllDetailPanels();
+      return;
+    }
+
+    // V1: Comportamento original
+    const options = getDataSourceOptions(dataSource)
 
     // Construir a expressão de filtro
     options.filter = buildFilterExpression(newFilterModel, columns)
@@ -832,14 +902,14 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     const handleDataSourceEvent = (event: DataSourceEvent<T>) => {
       // Quando os dados são atualizados
       if (event.type === DataSourceEventNames.refreshData) {
-        setRows(dataSource.browseRecords());
+        setRows(getRecordsFromDataSource<T>(dataSource));
 
       // Validar valores da paginação
-      const currentPage = Number.isFinite(dataSource.getCurrentPage())
-        ? dataSource.getCurrentPage()
+      const currentPage = Number.isFinite(getCurrentPageFromDataSource(dataSource))
+        ? getCurrentPageFromDataSource(dataSource)
         : 0;
 
-      const pageSize = Number.isFinite(dataSource.getPageSize())
+      const pageSize = Number.isFinite(dataSource.getPageSize?.())
         ? Math.min(Math.max(1, dataSource.getPageSize()), MAX_PAGE_SIZE_MIT)
         : 10;
 
@@ -849,7 +919,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       });
 
       // Validar o total de registros
-      const grandTotal = Number.isFinite(dataSource.getGrandTotalRecords())
+      const grandTotal = Number.isFinite(dataSource.getGrandTotalRecords?.())
         ? Math.max(0, dataSource.getGrandTotalRecords())
         : 0;
 
@@ -867,14 +937,14 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         event.type === DataSourceEventNames.afterAppend ||
         event.type === DataSourceEventNames.afterCancel
       ) {
-        setRows(dataSource.browseRecords());
+        setRows(getRecordsFromDataSource<T>(dataSource));
 
       // Validar valores da paginação
-      const currentPage = Number.isFinite(dataSource.getCurrentPage())
-        ? dataSource.getCurrentPage()
+      const currentPage = Number.isFinite(getCurrentPageFromDataSource(dataSource))
+        ? getCurrentPageFromDataSource(dataSource)
         : 0;
 
-      const pageSize = Number.isFinite(dataSource.getPageSize())
+      const pageSize = Number.isFinite(dataSource.getPageSize?.())
         ? Math.min(Math.max(1, dataSource.getPageSize()), MAX_PAGE_SIZE_MIT)
         : 10;
 
@@ -884,7 +954,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       });
 
       // Validar o total de registros
-      const grandTotal = Number.isFinite(dataSource.getGrandTotalRecords())
+      const grandTotal = Number.isFinite(dataSource.getGrandTotalRecords?.())
         ? Math.max(0, dataSource.getGrandTotalRecords())
         : 0;
 

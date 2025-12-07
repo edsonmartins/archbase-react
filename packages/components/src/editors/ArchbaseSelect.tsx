@@ -456,8 +456,11 @@ export function ArchbaseSelect<T, ID, O>({
   useEffect(() => {
     loadDataSourceFieldValue()
     if (dataSource && dataField) {
+      const hasFieldListener = typeof (dataSource as any).addFieldChangeListener === 'function'
       dataSource.addListener(stableDataSourceEvent)
-      dataSource.addFieldChangeListener(dataField, fieldChangedListener)
+      if (hasFieldListener) {
+        ;(dataSource as any).addFieldChangeListener(dataField, fieldChangedListener)
+      }
     }
 
     if (options && options instanceof ArchbaseDataSource) {
@@ -466,8 +469,11 @@ export function ArchbaseSelect<T, ID, O>({
 
     return () => {
       if (dataSource && dataField) {
+        const hasFieldListener = typeof (dataSource as any).addFieldChangeListener === 'function'
         dataSource.removeListener(stableDataSourceEvent)
-        dataSource.removeFieldChangeListener(dataField, fieldChangedListener)
+        if (hasFieldListener) {
+          ;(dataSource as any).removeFieldChangeListener(dataField, fieldChangedListener)
+        }
       }
 
       if (options && options instanceof ArchbaseDataSource) {

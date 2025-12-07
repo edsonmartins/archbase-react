@@ -183,6 +183,11 @@ export class ArchbaseRemoteDataSource<T, ID>
       let index = -1
       const deletedRecord = this.currentRecord
       const deletedIndex = this.currentRecordIndex
+
+      // Copiamos as coleções para evitar problemas com arrays congelados/imutos
+      this.records = [...this.records]
+      this.filteredRecords = [...this.filteredRecords]
+
       this.records.forEach((item, idx) => {
         if (this.currentRecord === item) {
           index = idx
@@ -304,4 +309,3 @@ export class ArchbaseRemoteDataSource<T, ID>
     return this.defaultSortFields
   }
 }
-

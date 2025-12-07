@@ -432,140 +432,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     return <div></div>;
   };
 
-  // Componente interno que contém toda a lógica
-  const TemplateContent = () => (
-    <Paper withBorder={withBorder} ref={innerComponentRef} style={{ overflow: 'none', height: 'calc(100% - 4px)' }}>
-      {isError ? (
-        <ArchbaseAlert
-          autoClose={20000}
-          withCloseButton={true}
-          withBorder={true}
-          icon={<IconBug size="1.4rem" />}
-          title={getI18nextInstance().t('archbase:WARNING')}
-          titleColor="rgb(250, 82, 82)"
-          variant={variant ?? appContext.variant}
-          onClose={() => clearError && clearError()}
-        >
-          <span>{error}</span>
-        </ArchbaseAlert>
-      ) : null}
-      <ArchbaseDataGrid<T, ID>
-        gridRef={gridRef}
-        printTitle={printTitle || title}
-        logoPrint={logoPrint}
-        width={width}
-        height={height}
-        withBorder={withBorder}
-        dataSource={dataSource}
-        enableColumnResizing={true}
-        enableRowNumbers={enableRowNumbers}
-        enableRowSelection={enableRowSelection}
-        enableRowActions={enableRowActions}
-        enableTopToolbar={enableTopToolbar}
-        enableTopToolbarActions={enableTopToolbarActions}
-        manualPagination={true}
-        manualSorting={true}
-        isLoading={isLoading}
-        pageSize={pageSize}
-        pageIndex={pageIndex}
-        allowColumnFilters={filterType !== 'none'}
-        enableGlobalFilter={filterType !== 'none'}
-        renderToolbarInternalActions={filterType == 'none' ? ()=><div></div>:undefined}
-        allowExportData={true}
-        allowPrintData={true}
-        onSelectedRowsChanged={onSelectedRowsChanged}
-        onCellDoubleClick={onCellDoubleClick}
-        renderRowActions={enableRowActions ? getRenderRowActions : undefined}
-        positionActionsColumn={positionActionsColumn}
-        toolbarAlignment={toolbarAlignment}
-        toolbarLeftContent={toolbarLeftContent}
-        renderToolbarActions={filterType === 'advanced' || filterType === 'none' ? buildInternalToolbarActionsFilter : undefined}
-        paginationLabels={paginationLabels}
-        cellPadding={cellPadding}
-        bottomToolbarMinHeight={bottomToolbarMinHeight}
-        tableHeadCellPadding={tableHeadCellPadding}
-        getRowId={getRowId}
-        renderDetailPanel={renderDetailPanel ?
-          ({ row }) => renderDetailPanel({ row: row as unknown as T }) : undefined
-        }
-        renderTopToolbar={renderTopToolbar}
-        onExport={setExportFunc}
-        onPrint={setPrintFunc}
-        variant={variant as any}
-      >
-        {columns}
-        {userActions?.visible ? (
-          <GridToolBarActions>
-            <>
-              <h3 className="only-print">{printTitle || title}</h3>
-              <div className="no-print">
-                <Flex gap="8px" rowGap="8px">
-                  {userActions.customUserActions && userActions.customUserActionsPosition === 'left'
-                    ? userActions.customUserActions
-                    : null}
-                  {userActions.onAddExecute ? (
-                    <ArchbaseSmartActionButton
-                      actionName="add"
-                      actionDescription={`Adicionar novo ${resourceDescription || 'registro'}`}
-                      color={'green'}
-                      variant={variant ?? appContext.variant}
-                      leftSection={<IconPlus />}
-                      onClick={() => userActions && userActions.onAddExecute && userActions.onAddExecute()}
-                    >
-                      {userActions.labelAdd || getI18nextInstance().t('archbase:New')}
-                    </ArchbaseSmartActionButton>
-                  ) : null}
-                  {userActions.onEditExecute ? (
-                    <ArchbaseSmartActionButton
-                      actionName="edit"
-                      actionDescription={`Editar ${resourceDescription || 'registro'}`}
-                      color="blue"
-                      leftSection={<IconEdit />}
-                      disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
-                      variant={variant ?? appContext.variant}
-                      onClick={() => userActions && userActions.onEditExecute && userActions.onEditExecute()}
-                    >
-                      {userActions.labelEdit || getI18nextInstance().t('archbase:Edit')}
-                    </ArchbaseSmartActionButton>
-                  ) : null}
-                  {userActions.onRemoveExecute ? (
-                    <ArchbaseSmartActionButton
-                      actionName="delete"
-                      actionDescription={`Remover ${resourceDescription || 'registro'}`}
-                      color="red"
-                      leftSection={<IconTrash />}
-                      disabled={!userActions?.allowRemove || !dataSource.isBrowsing() || dataSource.isEmpty()}
-                      variant={variant ?? appContext.variant}
-                      onClick={() => userActions && userActions.onRemoveExecute && userActions.onRemoveExecute()}
-                    >
-                      {userActions.labelRemove || getI18nextInstance().t('archbase:Remove')}
-                    </ArchbaseSmartActionButton>
-                  ) : null}
-                  {userActions.onViewExecute ? (
-                    <ArchbaseSmartActionButton
-                      actionName="view"
-                      actionDescription={`Visualizar ${resourceDescription || 'registro'}`}
-                      color="gray.7"
-                      leftSection={<IconEye />}
-                      disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
-                      variant={variant ?? appContext.variant}
-                      onClick={() => userActions && userActions.onViewExecute && userActions.onViewExecute()}
-                    >
-                      {userActions.labelView || getI18nextInstance().t('archbase:View')}
-                    </ArchbaseSmartActionButton>
-                  ) : null}
-                  {userActions.customUserActions && userActions.customUserActionsPosition === 'right'
-                    ? userActions.customUserActions
-                    : null}
-                </Flex>
-              </div>
-            </>
-          </GridToolBarActions>
-        ) : null}
-      </ArchbaseDataGrid>
-    </Paper>
-  );
-
+  // ✅ CORRIGIDO: Usando JSX inline em vez de componente função para evitar remontagem
   // 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido
   return (
     <ArchbaseConditionalSecurityWrapper
@@ -576,7 +443,136 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
       onSecurityReady={securityOptions?.onSecurityReady}
       onAccessDenied={securityOptions?.onAccessDenied}
     >
-      <TemplateContent />
+      <Paper withBorder={withBorder} ref={innerComponentRef} style={{ overflow: 'none', height: 'calc(100% - 4px)' }}>
+        {isError ? (
+          <ArchbaseAlert
+            autoClose={20000}
+            withCloseButton={true}
+            withBorder={true}
+            icon={<IconBug size="1.4rem" />}
+            title={getI18nextInstance().t('archbase:WARNING')}
+            titleColor="rgb(250, 82, 82)"
+            variant={variant ?? appContext.variant}
+            onClose={() => clearError && clearError()}
+          >
+            <span>{error}</span>
+          </ArchbaseAlert>
+        ) : null}
+        <ArchbaseDataGrid<T, ID>
+          gridRef={gridRef}
+          printTitle={printTitle || title}
+          logoPrint={logoPrint}
+          width={width}
+          height={height}
+          withBorder={withBorder}
+          dataSource={dataSource}
+          enableColumnResizing={true}
+          enableRowNumbers={enableRowNumbers}
+          enableRowSelection={enableRowSelection}
+          enableRowActions={enableRowActions}
+          enableTopToolbar={enableTopToolbar}
+          enableTopToolbarActions={enableTopToolbarActions}
+          manualPagination={true}
+          manualSorting={true}
+          isLoading={isLoading}
+          pageSize={pageSize}
+          pageIndex={pageIndex}
+          allowColumnFilters={filterType !== 'none'}
+          enableGlobalFilter={filterType !== 'none'}
+          renderToolbarInternalActions={filterType == 'none' ? ()=><div></div>:undefined}
+          allowExportData={true}
+          allowPrintData={true}
+          onSelectedRowsChanged={onSelectedRowsChanged}
+          onCellDoubleClick={onCellDoubleClick}
+          renderRowActions={enableRowActions ? getRenderRowActions : undefined}
+          positionActionsColumn={positionActionsColumn}
+          toolbarAlignment={toolbarAlignment}
+          toolbarLeftContent={toolbarLeftContent}
+          renderToolbarActions={filterType === 'advanced' || filterType === 'none' ? buildInternalToolbarActionsFilter : undefined}
+          paginationLabels={paginationLabels}
+          cellPadding={cellPadding}
+          bottomToolbarMinHeight={bottomToolbarMinHeight}
+          tableHeadCellPadding={tableHeadCellPadding}
+          getRowId={getRowId}
+          renderDetailPanel={renderDetailPanel ?
+            ({ row }) => renderDetailPanel({ row: row as unknown as T }) : undefined
+          }
+          renderTopToolbar={renderTopToolbar}
+          onExport={setExportFunc}
+          onPrint={setPrintFunc}
+          variant={variant as any}
+        >
+          {columns}
+          {userActions?.visible ? (
+            <GridToolBarActions>
+              <>
+                <h3 className="only-print">{printTitle || title}</h3>
+                <div className="no-print">
+                  <Flex gap="8px" rowGap="8px">
+                    {userActions.customUserActions && userActions.customUserActionsPosition === 'left'
+                      ? userActions.customUserActions
+                      : null}
+                    {userActions.onAddExecute ? (
+                      <ArchbaseSmartActionButton
+                        actionName="add"
+                        actionDescription={`Adicionar novo ${resourceDescription || 'registro'}`}
+                        color={'green'}
+                        variant={variant ?? appContext.variant}
+                        leftSection={<IconPlus />}
+                        onClick={() => userActions && userActions.onAddExecute && userActions.onAddExecute()}
+                      >
+                        {userActions.labelAdd || getI18nextInstance().t('archbase:New')}
+                      </ArchbaseSmartActionButton>
+                    ) : null}
+                    {userActions.onEditExecute ? (
+                      <ArchbaseSmartActionButton
+                        actionName="edit"
+                        actionDescription={`Editar ${resourceDescription || 'registro'}`}
+                        color="blue"
+                        leftSection={<IconEdit />}
+                        disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
+                        variant={variant ?? appContext.variant}
+                        onClick={() => userActions && userActions.onEditExecute && userActions.onEditExecute()}
+                      >
+                        {userActions.labelEdit || getI18nextInstance().t('archbase:Edit')}
+                      </ArchbaseSmartActionButton>
+                    ) : null}
+                    {userActions.onRemoveExecute ? (
+                      <ArchbaseSmartActionButton
+                        actionName="delete"
+                        actionDescription={`Remover ${resourceDescription || 'registro'}`}
+                        color="red"
+                        leftSection={<IconTrash />}
+                        disabled={!userActions?.allowRemove || !dataSource.isBrowsing() || dataSource.isEmpty()}
+                        variant={variant ?? appContext.variant}
+                        onClick={() => userActions && userActions.onRemoveExecute && userActions.onRemoveExecute()}
+                      >
+                        {userActions.labelRemove || getI18nextInstance().t('archbase:Remove')}
+                      </ArchbaseSmartActionButton>
+                    ) : null}
+                    {userActions.onViewExecute ? (
+                      <ArchbaseSmartActionButton
+                        actionName="view"
+                        actionDescription={`Visualizar ${resourceDescription || 'registro'}`}
+                        color="gray.7"
+                        leftSection={<IconEye />}
+                        disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
+                        variant={variant ?? appContext.variant}
+                        onClick={() => userActions && userActions.onViewExecute && userActions.onViewExecute()}
+                      >
+                        {userActions.labelView || getI18nextInstance().t('archbase:View')}
+                      </ArchbaseSmartActionButton>
+                    ) : null}
+                    {userActions.customUserActions && userActions.customUserActionsPosition === 'right'
+                      ? userActions.customUserActions
+                      : null}
+                  </Flex>
+                </div>
+              </>
+            </GridToolBarActions>
+          ) : null}
+        </ArchbaseDataGrid>
+      </Paper>
     </ArchbaseConditionalSecurityWrapper>
   );
 }

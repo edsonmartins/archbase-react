@@ -88,7 +88,7 @@ export function ArchbaseChipGroup<T, ID, O>({
 	onSelectValue = () => {},
 	getOptionLabel = (o: any) => o.label,
 	getOptionValue = (o: any) => o.value,
-	convertToValue = (value) => value.toString(),
+	convertToValue = (value) => (value === undefined || value === null ? '' : value.toString()),
 	convertFromValue,
 	value,
 	defaultValue,
@@ -125,7 +125,7 @@ export function ArchbaseChipGroup<T, ID, O>({
 	const [options, _setOptions] = useState<ChipItemProps[]>(
 		buildOptions<O>(initialOptions, children, getOptionLabel, getOptionValue),
 	);
-	const [selectedValue, setSelectedValue] = useState<any>(value);
+	const [selectedValue, setSelectedValue] = useState<any>(multiple ? [] : value);
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 
@@ -138,15 +138,26 @@ export function ArchbaseChipGroup<T, ID, O>({
 	}, [error]);
 
 	const loadDataSourceFieldValue = () => {
-		let initialValue: any = value;
+		let initialValue: any = multiple ? [] : value;
 
 		if (dataSource && dataField) {
-			initialValue = multiple
-				? dataSource.getFieldValue(dataField).map((it) => convertToValue(it))
-				: convertToValue(dataSource.getFieldValue(dataField));
+			const fieldValue = dataSource.getFieldValue(dataField);
+			if (multiple) {
+				const sourceArray = Array.isArray(fieldValue)
+					? fieldValue
+					: fieldValue === undefined || fieldValue === null
+						? []
+						: [fieldValue];
 
-			if (!initialValue) {
-				initialValue = multiple ? [] : '';
+				const mapped = sourceArray
+					.map((it) => convertToValue(it))
+					.flat()
+					.filter((it) => it !== undefined && it !== null && it !== '');
+
+				initialValue = Array.isArray(mapped) ? mapped : [mapped];
+			} else {
+				const converted = convertToValue(fieldValue);
+				initialValue = converted !== undefined && converted !== null ? converted : '';
 			}
 		}
 
@@ -196,12 +207,17 @@ export function ArchbaseChipGroup<T, ID, O>({
 	useEffect(() => {
 		loadDataSourceFieldValue();
 		if (dataSource && dataField) {
+			const hasFieldListener = typeof (dataSource as any).addFieldChangeListener === 'function';
 			dataSource.addListener(stableDataSourceEvent);
-			dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+			if (hasFieldListener) {
+				(dataSource as any).addFieldChangeListener(dataField, fieldChangedListener);
+			}
 
 			return () => {
 				dataSource.removeListener(stableDataSourceEvent);
-				dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+				if (hasFieldListener) {
+					(dataSource as any).removeFieldChangeListener(dataField, fieldChangedListener);
+				}
 			};
 		}
 	}, [dataSource, dataField, stableDataSourceEvent, fieldChangedListener]);
@@ -218,11 +234,19 @@ export function ArchbaseChipGroup<T, ID, O>({
 			validationContext?.clearError(fieldKey);
 		}
 
-		setSelectedValue((_prev) => currentSelectedValue);
+		const nextValue = multiple
+			? Array.isArray(currentSelectedValue)
+				? currentSelectedValue
+				: currentSelectedValue
+					? [currentSelectedValue]
+					: []
+			: currentSelectedValue;
 
-		let savedValue = currentSelectedValue;
+		setSelectedValue((_prev) => nextValue);
+
+		let savedValue = nextValue;
 		if (convertFromValue) {
-			savedValue = convertFromValue(currentSelectedValue);
+			savedValue = convertFromValue(nextValue);
 		}
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== savedValue) {
 			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
@@ -240,12 +264,12 @@ export function ArchbaseChipGroup<T, ID, O>({
 	return (
 		<Input.Wrapper label={label} error={displayError} description={description}>
 			<Chip.Group
-				defaultValue={selectedValue ? getOptionValue(selectedValue) : defaultValue}
+				defaultValue={undefined}
 				value={selectedValue}
 				onChange={handleChange}
 				multiple={multiple}
 			>
-				<Flex gap="md" justify="center" align="center" direction="column" wrap="wrap">
+				<Flex gap="sm" wrap="wrap" justify="flex-start" align="center">
 					{options.map((item) => (
 						<Chip style={style} value={item.value} key={item.key} variant={variant} type={type}>
 							{item.label}

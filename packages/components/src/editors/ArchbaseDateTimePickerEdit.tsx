@@ -99,14 +99,23 @@ import {
   
 	const loadDataSourceFieldValue = () => {
 	  let initialValue: Date | null = currentValue;
-  
+
 	  if (dataSource && dataField) {
-		initialValue = dataSource.getFieldValue(dataField);
-		if (!initialValue) {
+		const rawValue = dataSource.getFieldValue(dataField);
+		if (!rawValue) {
+		  initialValue = null;
+		} else if (rawValue instanceof Date) {
+		  // Verificar se é uma data válida
+		  initialValue = isNaN(rawValue.getTime()) ? null : rawValue;
+		} else if (typeof rawValue === 'string') {
+		  // Converter string ISO para Date
+		  const date = new Date(rawValue);
+		  initialValue = isNaN(date.getTime()) ? null : date;
+		} else {
 		  initialValue = null;
 		}
 	  }
-  
+
 	  setCurrentValue(initialValue);
 	};
   
@@ -150,18 +159,23 @@ import {
 	}, []);
 
 	// Registrar listeners com cleanup apropriado
-	useEffect(() => {
-	  loadDataSourceFieldValue();
-	  if (dataSource && dataField) {
+useEffect(() => {
+  loadDataSourceFieldValue();
+	if (dataSource && dataField) {
+		const hasFieldListener = typeof (dataSource as any).addFieldChangeListener === 'function';
 		dataSource.addListener(stableDataSourceEvent);
-		dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+		if (hasFieldListener) {
+			(dataSource as any).addFieldChangeListener(dataField, fieldChangedListener);
+		}
 
 		return () => {
-		  dataSource.removeListener(stableDataSourceEvent);
-		  dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+			dataSource.removeListener(stableDataSourceEvent);
+			if (hasFieldListener) {
+				(dataSource as any).removeFieldChangeListener(dataField, fieldChangedListener);
+			}
 		};
-	  }
-	}, [dataSource, dataField, stableDataSourceEvent, fieldChangedListener]);
+	}
+}, [dataSource, dataField, stableDataSourceEvent, fieldChangedListener]);
 
 	useArchbaseDidUpdate(() => {
 	  loadDataSourceFieldValue();
@@ -175,19 +189,21 @@ import {
 		validationContext?.clearError(fieldKey);
 	  }
 
-	  // Convert string to Date for internal use (maintaining compatibility)
+	  // Mantine DateTimePicker retorna string | null, converter para Date
 	  const dateValue = changedValue ? new Date(changedValue) : null;
-	  setCurrentValue(dateValue);
+	  // Validar se a data é válida
+	  const validDate = dateValue && !isNaN(dateValue.getTime()) ? dateValue : null;
+	  setCurrentValue(validDate);
 
 	  // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
-	  v1v2Compatibility.handleValueChange(dateValue);
+	  v1v2Compatibility.handleValueChange(validDate);
 
 	  if (onChange) {
-		onChange(dateValue);
+		onChange(validDate);
 	  }
 
 	  if (onChangeValue) {
-		onChangeValue(dateValue);
+		onChangeValue(validDate);
 	  }
 	};
   
@@ -216,7 +232,7 @@ import {
 		{...rest}
 		disabled={disabled}
 		readOnly={isReadOnly()}
-		value={currentValue ? currentValue.toISOString() : null}
+		value={currentValue}
 		onChange={handleChange}
 		onBlur={handleOnFocusExit}
 		onFocus={handleOnFocusEnter}

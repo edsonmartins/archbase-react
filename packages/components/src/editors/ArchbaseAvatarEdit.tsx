@@ -185,15 +185,20 @@ export function ArchbaseAvatarEdit<T, ID>({
     // Registrar listeners com cleanup apropriado
     useEffect(() => {
         loadDataSourceFieldValue();
-        if (dataSource && dataField) {
-            dataSource.addListener(stableDataSourceEvent);
-            dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+	if (dataSource && dataField) {
+		const hasFieldListener = typeof (dataSource as any).addFieldChangeListener === 'function';
+		dataSource.addListener(stableDataSourceEvent);
+		if (hasFieldListener) {
+			(dataSource as any).addFieldChangeListener(dataField, fieldChangedListener);
+		}
 
-            return () => {
-                dataSource.removeListener(stableDataSourceEvent);
-                dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
-            };
-        }
+		return () => {
+			dataSource.removeListener(stableDataSourceEvent);
+			if (hasFieldListener) {
+				(dataSource as any).removeFieldChangeListener(dataField, fieldChangedListener);
+			}
+		};
+	}
     }, [dataSource, dataField, stableDataSourceEvent, fieldChangedListener]);
 
     useArchbaseDidUpdate(() => {

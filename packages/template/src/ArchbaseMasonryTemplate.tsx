@@ -434,48 +434,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 	const _actionsButtonsOptions = { ...defaultActionsButtonsOptions, ...actionsButtonsOptions };
 	const _spaceTemplateOptions = { ...defaultSpaceTemplateOptions, ...spaceOptions };
 
-	// Componente interno que contém toda a lógica
-	const TemplateContent = () => (
-		<ArchbaseSpaceTemplate
-			innerRef={innerComponentRef}
-			width={width}
-			height={height}
-			radius={radius}
-			withBorder={withBorder}
-			isError={isError}
-			error={error}
-			clearError={clearError}
-			title={title}
-			defaultDebug={debug}
-			debugOptions={debugOptions}
-			style={style}
-			options={_spaceTemplateOptions}
-			headerLeft={<ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />}
-			headerRight={buildFilter()}
-			footerRight={
-				withPagination ? <Pagination total={dataSource.getTotalPages()} onChange={handlePageChange} /> : undefined
-			}
-		>
-			<ArchbaseMasonryProvider
-				value={{
-					dataSource,
-					ownerId: id,
-					handleSelectItem,
-					activeBackgroundColor,
-					activeColor,
-					onItemEnter,
-					onItemLeave,
-				}}
-			>
-				<ArchbaseMasonryResponsive columnsCountBreakPoints={columnsCountBreakPoints}>
-					<ArchbaseMasonry gutter={gutter} columnsCount={columnsCount}>
-						{cards}
-					</ArchbaseMasonry>
-				</ArchbaseMasonryResponsive>
-			</ArchbaseMasonryProvider>
-		</ArchbaseSpaceTemplate>
-	);
-
+	// ✅ CORRIGIDO: Usando JSX inline em vez de componente função para evitar remontagem
 	// 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido
 	return (
 		<ArchbaseConditionalSecurityWrapper
@@ -486,7 +445,44 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 			onSecurityReady={securityOptions?.onSecurityReady}
 			onAccessDenied={securityOptions?.onAccessDenied}
 		>
-			<TemplateContent />
+			<ArchbaseSpaceTemplate
+				innerRef={innerComponentRef}
+				width={width}
+				height={height}
+				radius={radius}
+				withBorder={withBorder}
+				isError={isError}
+				error={error}
+				clearError={clearError}
+				title={title}
+				defaultDebug={debug}
+				debugOptions={debugOptions}
+				style={style}
+				options={_spaceTemplateOptions}
+				headerLeft={<ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />}
+				headerRight={buildFilter()}
+				footerRight={
+					withPagination ? <Pagination total={dataSource.getTotalPages()} onChange={handlePageChange} /> : undefined
+				}
+			>
+				<ArchbaseMasonryProvider
+					value={{
+						dataSource,
+						ownerId: id,
+						handleSelectItem,
+						activeBackgroundColor,
+						activeColor,
+						onItemEnter,
+						onItemLeave,
+					}}
+				>
+					<ArchbaseMasonryResponsive columnsCountBreakPoints={columnsCountBreakPoints}>
+						<ArchbaseMasonry gutter={gutter} columnsCount={columnsCount}>
+							{cards}
+						</ArchbaseMasonry>
+					</ArchbaseMasonryResponsive>
+				</ArchbaseMasonryProvider>
+			</ArchbaseSpaceTemplate>
 		</ArchbaseConditionalSecurityWrapper>
 	);
 }

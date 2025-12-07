@@ -424,17 +424,26 @@ export class ArchbaseDataSourceV2<T> implements IDataSource<T> {
     }
 
     const currentArray = this.getFieldValue(fieldName as string);
+
+    // Se o campo é undefined/null, não podemos adicionar (o dev deve inicializar o array no DTO)
+    // Isso preserva a semântica onde null != [] para ORMs como Hibernate
+    if (currentArray === undefined || currentArray === null) {
+      console.warn(`appendToFieldArray: Field ${String(fieldName)} is undefined/null. Initialize the array in your DTO before using appendToFieldArray.`);
+      return;
+    }
     if (!Array.isArray(currentArray)) {
-      throw new Error(`Field ${String(fieldName)} is not an array`);
+      throw new Error(`Field ${String(fieldName)} is not an array (found: ${typeof currentArray})`);
     }
 
     const prevRecords = [...this.records];
-    
+
     this.records = produce(this.records, draft => {
       const record = draft[this.currentIndex];
       if (record) {
         const array = this.getNestedValue(record, fieldName as string) as any[];
-        array.push(item);
+        if (array) {
+          array.push(item);
+        }
       }
     });
 
@@ -568,8 +577,14 @@ export class ArchbaseDataSourceV2<T> implements IDataSource<T> {
 
   getFieldArray<K extends keyof T>(fieldName: K): T[K] extends Array<infer U> ? U[] : never {
     const value = this.getFieldValue(fieldName as string);
+    // Retorna array vazio se o campo for undefined/null
+    // Isso evita erros em campos opcionais que ainda não foram inicializados
+    if (value === undefined || value === null) {
+      return [] as T[K] extends Array<infer U> ? U[] : never;
+    }
     if (!Array.isArray(value)) {
-      throw new Error(`Field ${String(fieldName)} is not an array`);
+      console.warn(`Field ${String(fieldName)} is not an array (found: ${typeof value}), returning empty array`);
+      return [] as T[K] extends Array<infer U> ? U[] : never;
     }
     return value as T[K] extends Array<infer U> ? U[] : never;
   }

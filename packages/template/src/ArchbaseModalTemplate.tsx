@@ -74,61 +74,7 @@ export function ArchbaseModalTemplate({
 		ArchbaseDialog.showWarning(getI18nextInstance().t('Click on Ok or Cancel to close'));
 	};
 
-	// Componente interno que contém toda a lógica
-	const TemplateContent = () => (
-		<Modal
-			title={title}
-			withOverlay={withOverlay}
-			overlayProps={
-				overlayProps || {
-					color: colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[6],
-					opacity: 0.25,
-				}
-			}
-			withCloseButton={withCloseButton}
-			closeButtonProps={closeButtonProps}
-			onClose={handleClose}
-			opened={opened}
-			fullScreen={fullScreen}
-			centered={centered}
-			closeOnEscape={closeOnEscape}
-			size={size}
-		>
-			<ArchbaseSpaceFixed height={height}>
-				<ArchbaseSpaceFill>
-					<ArchbaseForm>{children}</ArchbaseForm>
-				</ArchbaseSpaceFill>
-				<ArchbaseSpaceBottom size="40px">
-					<Flex justify="space-between" align="center">
-						<Group>{userActions}</Group>
-						<Group gap="md">
-							<ArchbaseSmartActionButton
-								actionName="save"
-								actionDescription={`Salvar ${resourceDescription || 'registro'}`}
-								leftSection={<IconCheck />}
-								onClick={handleSave}
-								variant={variant ?? appContext.variant}
-								color="green"
-							>{`${getI18nextInstance().t('Ok')}`}</ArchbaseSmartActionButton>
-							{!onlyOkButton ? (
-								<ArchbaseSmartActionButton
-									actionName="cancel"
-									actionDescription="Cancelar operação"
-									leftSection={<IconX />}
-									onClick={handleCancel}
-									variant={variant ?? appContext.variant}
-									color="red"
-								>
-									{onClickCancel ? `${getI18nextInstance().t('Cancel')}` : `${getI18nextInstance().t('Close')}`}
-								</ArchbaseSmartActionButton>
-							) : null}
-						</Group>
-					</Flex>
-				</ArchbaseSpaceBottom>
-			</ArchbaseSpaceFixed>
-		</Modal>
-	);
-
+	// ✅ CORRIGIDO: Usando JSX inline em vez de componente função para evitar remontagem
 	// 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido
 	return (
 		<ArchbaseConditionalSecurityWrapper
@@ -139,7 +85,57 @@ export function ArchbaseModalTemplate({
 			onSecurityReady={securityOptions?.onSecurityReady}
 			onAccessDenied={securityOptions?.onAccessDenied}
 		>
-			<TemplateContent />
+			<Modal
+				title={title}
+				withOverlay={withOverlay}
+				overlayProps={
+					overlayProps || {
+						color: colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[6],
+						opacity: 0.25,
+					}
+				}
+				withCloseButton={withCloseButton}
+				closeButtonProps={closeButtonProps}
+				onClose={handleClose}
+				opened={opened}
+				fullScreen={fullScreen}
+				centered={centered}
+				closeOnEscape={closeOnEscape}
+				size={size}
+			>
+				<ArchbaseSpaceFixed height={height}>
+					<ArchbaseSpaceFill>
+						<ArchbaseForm>{children}</ArchbaseForm>
+					</ArchbaseSpaceFill>
+					<ArchbaseSpaceBottom size="40px">
+						<Flex justify="space-between" align="center">
+							<Group>{userActions}</Group>
+							<Group gap="md">
+								<ArchbaseSmartActionButton
+									actionName="save"
+									actionDescription={`Salvar ${resourceDescription || 'registro'}`}
+									leftSection={<IconCheck />}
+									onClick={handleSave}
+									variant={variant ?? appContext.variant}
+									color="green"
+								>{`${getI18nextInstance().t('Ok')}`}</ArchbaseSmartActionButton>
+								{!onlyOkButton ? (
+									<ArchbaseSmartActionButton
+										actionName="cancel"
+										actionDescription="Cancelar operação"
+										leftSection={<IconX />}
+										onClick={handleCancel}
+										variant={variant ?? appContext.variant}
+										color="red"
+									>
+										{onClickCancel ? `${getI18nextInstance().t('Cancel')}` : `${getI18nextInstance().t('Close')}`}
+									</ArchbaseSmartActionButton>
+								) : null}
+							</Group>
+						</Flex>
+					</ArchbaseSpaceBottom>
+				</ArchbaseSpaceFixed>
+			</Modal>
 		</ArchbaseConditionalSecurityWrapper>
 	);
 }

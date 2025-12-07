@@ -265,50 +265,7 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 	const _actionsButtonsOptions = { ...defaultActionsButtonsOptions, ...actionsButtonsOptions };
 	const _spaceTemplateOptions = { ...defaultSpaceTemplateOptions, ...spaceOptions };
 
-	// Componente interno que contém toda a lógica
-	const TemplateContent = () => (
-		<ArchbaseSpaceTemplate
-			innerRef={innerComponentRef}
-			width={width}
-			height={height}
-			radius={radius}
-			withBorder={withBorder}
-			isError={isError}
-			error={error}
-			clearError={clearError}
-			title={title}
-			defaultDebug={debug}
-			debugOptions={debugOptions}
-			style={style}
-			options={_spaceTemplateOptions}
-			headerLeft={<ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />}
-			headerRight={
-				<ArchbaseQueryBuilder
-					id={filterOptions.componentName}
-					viewName={filterOptions.viewName}
-					apiVersion={filterOptions.apiVersion}
-					ref={filterRef}
-					variant={variant ? (variant as ButtonVariant) : (appContext.variant as ButtonVariant)}
-					expandedFilter={filterState.expandedFilter}
-					persistenceDelegator={filterPersistenceDelegator}
-					currentFilter={filterState.currentFilter}
-					activeFilterIndex={filterState.activeFilterIndex}
-					onSelectedFilter={handleSelectedFilter}
-					onFilterChanged={handleFilterChanged}
-					onSearchByFilter={handleSearchByFilter}
-					onToggleExpandedFilter={handleToggleExpandedFilter}
-					width={'660px'}
-					height="170px"
-				>
-					{filterFields}
-				</ArchbaseQueryBuilder>
-			}
-			footerRight={withPagination && <Pagination total={10} />}
-		>
-			{children}
-		</ArchbaseSpaceTemplate>
-	);
-
+	// ✅ CORRIGIDO: Usando JSX inline em vez de componente função para evitar remontagem
 	// 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido
 	return (
 		<ArchbaseConditionalSecurityWrapper
@@ -319,7 +276,46 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 			onSecurityReady={securityOptions?.onSecurityReady}
 			onAccessDenied={securityOptions?.onAccessDenied}
 		>
-			<TemplateContent />
+			<ArchbaseSpaceTemplate
+				innerRef={innerComponentRef}
+				width={width}
+				height={height}
+				radius={radius}
+				withBorder={withBorder}
+				isError={isError}
+				error={error}
+				clearError={clearError}
+				title={title}
+				defaultDebug={debug}
+				debugOptions={debugOptions}
+				style={style}
+				options={_spaceTemplateOptions}
+				headerLeft={<ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />}
+				headerRight={
+					<ArchbaseQueryBuilder
+						id={filterOptions.componentName}
+						viewName={filterOptions.viewName}
+						apiVersion={filterOptions.apiVersion}
+						ref={filterRef}
+						variant={variant ? (variant as ButtonVariant) : (appContext.variant as ButtonVariant)}
+						expandedFilter={filterState.expandedFilter}
+						persistenceDelegator={filterPersistenceDelegator}
+						currentFilter={filterState.currentFilter}
+						activeFilterIndex={filterState.activeFilterIndex}
+						onSelectedFilter={handleSelectedFilter}
+						onFilterChanged={handleFilterChanged}
+						onSearchByFilter={handleSearchByFilter}
+						onToggleExpandedFilter={handleToggleExpandedFilter}
+						width={'660px'}
+						height="170px"
+					>
+						{filterFields}
+					</ArchbaseQueryBuilder>
+				}
+				footerRight={withPagination && <Pagination total={10} />}
+			>
+				{children}
+			</ArchbaseSpaceTemplate>
 		</ArchbaseConditionalSecurityWrapper>
 	);
 }

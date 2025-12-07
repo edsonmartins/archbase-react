@@ -190,12 +190,17 @@ export function ArchbaseLookupEdit<T, ID, O>({
 	useEffect(() => {
 		loadDataSourceFieldValue();
 		if (dataSource && lookupField) {
+			const hasFieldListener = typeof (dataSource as any).addFieldChangeListener === 'function';
 			dataSource.addListener(stableDataSourceEvent);
-			dataSource.addFieldChangeListener(lookupField, fieldChangedListener);
+			if (hasFieldListener) {
+				(dataSource as any).addFieldChangeListener(lookupField, fieldChangedListener);
+			}
 
 			return () => {
 				dataSource.removeListener(stableDataSourceEvent);
-				dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+				if (hasFieldListener) {
+					(dataSource as any).removeFieldChangeListener(lookupField, fieldChangedListener);
+				}
 			};
 		}
 	}, [dataSource, dataField, lookupField, stableDataSourceEvent, fieldChangedListener]);

@@ -134,7 +134,9 @@ ArchbaseDataGridColumn.defaultProps = {
 
 export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
   // Propriedades de dados
-  dataSource: ArchbaseDataSource<T, ID>;
+  // Aceita tanto ArchbaseDataSource (V1) quanto ArchbaseRemoteDataSourceV2 (V2)
+  // A detecção de versão é feita em runtime dentro do componente
+  dataSource: ArchbaseDataSource<T, ID> | any;
   getRowId?: (row: T) => ID;
   
   // NOVAS props de segurança (100% opcionais)

@@ -181,12 +181,14 @@ export const getRgbValues = (hexColor: string): string => {
  * Obtém o modelo de ordenação inicial a partir do DataSource
  */
 export const getInitialSortModel = (dataSource: any): GridSortModel => {
-  if (dataSource && dataSource.getOptions().originSort) {
-    return dataSource.getOptions().originSort;
+  const options = dataSource && typeof dataSource.getOptions === 'function' ? dataSource.getOptions() : {};
+
+  if (options && options.originSort) {
+    return options.originSort;
   }
-  
-  if (dataSource && dataSource.getOptions() && dataSource.getOptions().sort) {
-    return dataSource.getOptions().sort.map((sort: string) => {
+
+  if (options && options.sort) {
+    return options.sort.map((sort: string) => {
       const [field, order] = sort.split(':');
       return {
         field,
@@ -194,6 +196,6 @@ export const getInitialSortModel = (dataSource: any): GridSortModel => {
       };
     });
   }
-  
+
   return [];
 };

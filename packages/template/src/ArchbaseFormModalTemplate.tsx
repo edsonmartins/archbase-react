@@ -190,91 +190,7 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 		setInternalError('');
 	};
 
-	// Componente interno que contém toda a lógica
-	const TemplateContent = () => (
-		<Modal
-			title={title}
-			withOverlay={withOverlay}
-			overlayProps={
-				overlayProps || {
-					color: colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[6],
-					opacity: 0.25,
-				}
-			}
-			withCloseButton={withCloseButton}
-			closeButtonProps={closeButtonProps}
-			onClose={handleClose}
-			opened={opened}
-			fullScreen={fullScreen}
-			centered={centered}
-			closeOnEscape={closeOnEscape}
-			size={size}
-			{...rest}
-		>
-			<ValidationErrorsProvider>
-			<LoadingOverlay styles={loadingOverlayStyles} visible={isLoading} opacity={0.8} />
-			<ArchbaseSpaceFixed height={height}>
-				{isInternalError ? (
-					<ArchbaseSpaceTop size={'100px'} >
-						<ArchbaseAlert
-							autoClose={autoCloseAlertError}
-							withCloseButton={true}
-							withBorder={true}
-							icon={<IconBug size="1.4rem" />}
-							title={getI18nextInstance().t('WARNING')}
-							titleColor="rgb(250, 82, 82)"
-							variant={variant ?? appContext.variant}
-							onClose={handleCloseAlert}
-						>
-							<span>{internalError}</span>
-						</ArchbaseAlert>
-					</ArchbaseSpaceTop>
-				) : null}
-				<ArchbaseSpaceFill>
-					<ArchbaseForm>{children}</ArchbaseForm>
-				</ArchbaseSpaceFill>
-				<ArchbaseSpaceBottom size="40px">
-					<Flex justify="space-between" align="center">
-						<Group>{userActions}</Group>
-						{dataSource && !dataSource.isBrowsing() ? (
-							<Group gap="md">
-								<ArchbaseSmartActionButton
-									actionName="save"
-									actionDescription={`Salvar ${resourceDescription || title || 'registro'}`}
-									leftSection={<IconCheck />}
-									onClick={handleSave}
-									disabled={dataSource && dataSource.isBrowsing()}
-									variant={variant ?? appContext.variant}
-									color="green"
-								>{`${getI18nextInstance().t('Ok')}`}</ArchbaseSmartActionButton>
-								<ArchbaseSmartActionButton
-									actionName="cancel"
-									actionDescription="Cancelar operação"
-									leftSection={<IconX />}
-									onClick={handleCancel}
-									disabled={dataSource && dataSource.isBrowsing()}
-									variant={variant ?? appContext.variant}
-									color="red"
-								>{`${getI18nextInstance().t('Cancel')}`}</ArchbaseSmartActionButton>
-							</Group>
-						) : (
-							<Group gap="md">
-								<ArchbaseSmartActionButton 
-									actionName="close"
-									actionDescription="Fechar janela"
-									leftSection={<IconX />} 
-									onClick={handleCancel} 
-									variant={variant ?? appContext.variant}
-								>{`${getI18nextInstance().t('Close')}`}</ArchbaseSmartActionButton>
-							</Group>
-						)}
-					</Flex>
-				</ArchbaseSpaceBottom>
-			</ArchbaseSpaceFixed>
-			</ValidationErrorsProvider>
-		</Modal>
-	);
-
+	// ✅ CORRIGIDO: Usando JSX inline em vez de componente função para evitar remontagem
 	// 🔐 WRAPPER CONDICIONAL: Só aplica segurança SE resourceName fornecido
 	return (
 		<ArchbaseConditionalSecurityWrapper
@@ -285,7 +201,87 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 			onSecurityReady={securityOptions?.onSecurityReady}
 			onAccessDenied={securityOptions?.onAccessDenied}
 		>
-			<TemplateContent />
+			<Modal
+				title={title}
+				withOverlay={withOverlay}
+				overlayProps={
+					overlayProps || {
+						color: colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[6],
+						opacity: 0.25,
+					}
+				}
+				withCloseButton={withCloseButton}
+				closeButtonProps={closeButtonProps}
+				onClose={handleClose}
+				opened={opened}
+				fullScreen={fullScreen}
+				centered={centered}
+				closeOnEscape={closeOnEscape}
+				size={size}
+				{...rest}
+			>
+				<ValidationErrorsProvider>
+				<LoadingOverlay styles={loadingOverlayStyles} visible={isLoading} opacity={0.8} />
+				<ArchbaseSpaceFixed height={height}>
+					{isInternalError ? (
+						<ArchbaseSpaceTop size={'100px'} >
+							<ArchbaseAlert
+								autoClose={autoCloseAlertError}
+								withCloseButton={true}
+								withBorder={true}
+								icon={<IconBug size="1.4rem" />}
+								title={getI18nextInstance().t('WARNING')}
+								titleColor="rgb(250, 82, 82)"
+								variant={variant ?? appContext.variant}
+								onClose={handleCloseAlert}
+							>
+								<span>{internalError}</span>
+							</ArchbaseAlert>
+						</ArchbaseSpaceTop>
+					) : null}
+					<ArchbaseSpaceFill>
+						<ArchbaseForm>{children}</ArchbaseForm>
+					</ArchbaseSpaceFill>
+					<ArchbaseSpaceBottom size="40px">
+						<Flex justify="space-between" align="center">
+							<Group>{userActions}</Group>
+							{dataSource && !dataSource.isBrowsing() ? (
+								<Group gap="md">
+									<ArchbaseSmartActionButton
+										actionName="save"
+										actionDescription={`Salvar ${resourceDescription || title || 'registro'}`}
+										leftSection={<IconCheck />}
+										onClick={handleSave}
+										disabled={dataSource && dataSource.isBrowsing()}
+										variant={variant ?? appContext.variant}
+										color="green"
+									>{`${getI18nextInstance().t('Ok')}`}</ArchbaseSmartActionButton>
+									<ArchbaseSmartActionButton
+										actionName="cancel"
+										actionDescription="Cancelar operação"
+										leftSection={<IconX />}
+										onClick={handleCancel}
+										disabled={dataSource && dataSource.isBrowsing()}
+										variant={variant ?? appContext.variant}
+										color="red"
+									>{`${getI18nextInstance().t('Cancel')}`}</ArchbaseSmartActionButton>
+								</Group>
+							) : (
+								<Group gap="md">
+									<ArchbaseSmartActionButton
+										actionName="close"
+										actionDescription="Fechar janela"
+										leftSection={<IconX />}
+										onClick={handleCancel}
+										variant={variant ?? appContext.variant}
+									>{`${getI18nextInstance().t('Close')}`}</ArchbaseSmartActionButton>
+								</Group>
+							)}
+						</Flex>
+					</ArchbaseSpaceBottom>
+				</ArchbaseSpaceFixed>
+				</ValidationErrorsProvider>
+			</Modal>
 		</ArchbaseConditionalSecurityWrapper>
 	);
 }

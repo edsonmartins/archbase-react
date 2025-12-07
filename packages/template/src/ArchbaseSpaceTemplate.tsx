@@ -20,7 +20,7 @@ import { IconBug, IconEdit, IconEye } from '@tabler/icons-react';
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { CSSProperties, Fragment, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useArchbaseAppContext } from '@archbase/core';
-import { useArchbaseV1V2Compatibility } from '@archbase/data';
+// REMOVIDO: useArchbaseV1V2Compatibility - ArchbaseSpaceTemplate não usa dataSource
 import type { ArchbaseDataSource } from '@archbase/data';
 import { ArchbaseDebugInspector } from '@archbase/components';
 import { ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed, ArchbaseSpaceTop } from '@archbase/layout';
@@ -364,23 +364,24 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 		autoRegisterActions: securityOptions?.autoRegisterActions ?? true
 	});
 
-	// V1/V2 Compatibility Pattern (basic setup)
-	const {
-		isDataSourceV2
-	} = useArchbaseV1V2Compatibility<T>(
-		'ArchbaseSpaceTemplate',
-		undefined // No dataSource in this template
-	);
-	const innerComponentRef = innerRef || useRef<any>(null);
+	// NOTA: ArchbaseSpaceTemplate não usa dataSource, então não precisa de useArchbaseV1V2Compatibility
+	// O hook foi removido pois causava re-renders desnecessários
+
+	// Usar ref local se innerRef não for fornecido (evita criar ref condicional)
+	const localRef = useRef<any>(null);
+	const innerComponentRef = innerRef || localRef;
 	const headerRef = useRef<any>(null);
 	const footerRef = useRef<any>(null);
 	const headerSize = useComponentSize(headerRef);
 	const footerSize = useComponentSize(footerRef);
 	const innerComponentSize = useComponentSize(innerComponentRef);
-	const contentSize: ComponentSize = {
+
+	// CORREÇÃO: Usar useMemo para evitar criar novo objeto a cada render
+	// Isso previne loops infinitos quando useComponentSize dispara re-renders
+	const contentSize: ComponentSize = useMemo(() => ({
 		height: innerComponentSize.height - headerSize.height - footerSize.height - Number(px('0.625rem')),
 		width: innerComponentSize.width - headerSize.width - footerSize.width,
-	};
+	}), [innerComponentSize.height, innerComponentSize.width, headerSize.height, headerSize.width, footerSize.height, footerSize.width]);
 
 	const debugRef = useRef<boolean>(defaultDebug);
 
@@ -391,8 +392,8 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 		}
 	}, [defaultDebug, setDebug]);
 
-	// Componente interno que contém toda a lógica
-	const TemplateContent = () => (
+	// Conteúdo do template (inline para evitar criar função a cada render)
+	const templateContent = (
 		<>
 			<Paper
 				ref={innerComponentRef}
@@ -461,7 +462,7 @@ export function ArchbaseSpaceTemplate<T extends object, ID>({
 			onSecurityReady={securityOptions?.onSecurityReady}
 			onAccessDenied={securityOptions?.onAccessDenied}
 		>
-			<TemplateContent />
+			{templateContent}
 		</ArchbaseConditionalSecurityWrapper>
 	);
 }

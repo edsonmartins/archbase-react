@@ -308,12 +308,17 @@ export function ArchbaseNumberEdit<T, ID>({
     setCurrentValue(result.value);
 
     if (dataSource && dataField) {
+      const hasFieldListener = typeof (dataSource as any).addFieldChangeListener === 'function';
       dataSource.addListener(stableDataSourceEvent);
-      dataSource.addFieldChangeListener(dataField, fieldChangedListener);
+      if (hasFieldListener) {
+        (dataSource as any).addFieldChangeListener(dataField, fieldChangedListener);
+      }
 
       return () => {
         dataSource.removeListener(stableDataSourceEvent);
-        dataSource.removeFieldChangeListener(dataField, fieldChangedListener);
+        if (hasFieldListener) {
+          (dataSource as any).removeFieldChangeListener(dataField, fieldChangedListener);
+        }
       };
     }
   }, [dataSource, dataField, stableDataSourceEvent, fieldChangedListener]);
