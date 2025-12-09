@@ -723,6 +723,8 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
     originFilter?: any;
     originGlobalFilter?: string;
   }): void {
+    console.log('[V2 refreshData] Chamado com options:', options);
+
     // Atualiza configurações se fornecidas
     if (options?.pageSize !== undefined) {
       this.pageSize = options.pageSize;
@@ -730,9 +732,12 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
 
     const page = options?.currentPage ?? this.currentPage;
     this.currentPage = page;
+    console.log('[V2 refreshData] Página atual definida:', this.currentPage);
 
-    if (options?.filter !== undefined) {
-      this.currentFilter = options.filter;
+    // Se filter foi passado nas options (mesmo que seja undefined ou string vazia), atualiza
+    if ('filter' in (options || {})) {
+      this.currentFilter = options?.filter;
+      console.log('[V2 refreshData] Filtro definido:', this.currentFilter);
     }
 
     if (options?.sort !== undefined) {
@@ -745,42 +750,62 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
       });
     }
 
-    // Emite evento de refreshData para compatibilidade
-    this.emit({
-      type: DataSourceEventNames.refreshData,
-      options
-    } as DataSourceEvent<T>);
-
-    // Se tiver filtro no formato JSON (como usado pelo V1 com RSQL)
-    if (this.currentFilter) {
-      try {
-        const filterObj = JSON.parse(this.currentFilter);
-        // Verifica se é um filtro de busca rápida (quick filter)
-        if (filterObj.search !== undefined) {
-          // Monta o ArchbaseQueryFilter para quick filter
-          const queryFilter: ArchbaseQueryFilter = {
-            filter: {
-              filterType: QUICK,
-              quickFilterText: filterObj.search,
-              quickFilterFieldsText: filterObj.fields || []
-            },
-            sort: {
-              quickFilterSort: this.currentSort?.join(',') || this.defaultSortFields.join(',')
-            }
-          } as ArchbaseQueryFilter;
-
-          this.applyRemoteFilter(queryFilter, page);
-          return;
-        }
-      } catch (e) {
-        // Se não for JSON válido, trata como filtro RSQL direto
-        // Por enquanto, apenas ignora o filtro e carrega sem filtro
-        console.warn('Filtro não é JSON válido, carregando sem filtro:', e);
-      }
+    // Se tiver filtro, usa os métodos com filtro
+    if (this.currentFilter && this.currentFilter.trim() !== '') {
+      console.log('[V2 refreshData] Chamando getDataWithRsqlFilter para página:', page);
+      this.getDataWithRsqlFilter(page);
+      return;
     }
 
     // Carrega dados sem filtro mas respeitando página e ordenação
+    console.log('[V2 refreshData] Chamando getDataWithoutFilter para página:', page);
     this.getDataWithoutFilter(page);
+  }
+
+  /**
+   * Carrega dados com filtro RSQL
+   */
+  private async getDataWithRsqlFilter(page: number, callback?: (() => void) | undefined): Promise<any> {
+    try {
+      let result: any;
+
+      if (this.currentSort && this.currentSort.length > 0) {
+        result = await this.service.findAllWithFilterAndSort(
+          this.currentFilter!,
+          page,
+          this.getPageSize(),
+          this.currentSort
+        );
+      } else if (this.defaultSortFields.length > 0) {
+        result = await this.service.findAllWithFilterAndSort(
+          this.currentFilter!,
+          page,
+          this.getPageSize(),
+          this.defaultSortFields
+        );
+      } else {
+        result = await this.service.findAllWithFilter(
+          this.currentFilter!,
+          page,
+          this.getPageSize()
+        );
+      }
+
+      if (result && result.content) {
+        // IMPORTANTE: Definir grandTotalRecords ANTES de setRecords
+        this.grandTotalRecords = result.totalElements || result.content.length;
+        this.setRecords(result.content);
+      }
+
+      if (callback) {
+        callback();
+      }
+
+      return result;
+    } catch (error) {
+      this.handleRemoteError(error, callback);
+      throw error;
+    }
   }
 
   /**
@@ -864,11 +889,9 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
 
   /**
    * Retorna a página atual (0-indexed)
-   * Implementação baseada no índice atual dividido pelo tamanho da página
    */
   getCurrentPage(): number {
-    if (this.pageSize <= 0) return 0;
-    return Math.floor(this.currentIndex / this.pageSize);
+    return this.currentPage;
   }
 
   /**
@@ -1125,6 +1148,8 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
 
   private async getDataWithoutFilter(page: number, callback?: (() => void) | undefined): Promise<any> {
     try {
+      console.log('[V2 getDataWithoutFilter] Buscando página:', page, 'pageSize:', this.getPageSize(), 'sort:', this.defaultSortFields);
+
       let result: any;
       if (this.defaultSortFields.length > 0) {
         result = await this.service.findAllWithSort(page, this.getPageSize(), this.defaultSortFields);
@@ -1132,11 +1157,14 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
         result = await this.service.findAll(page, this.getPageSize());
       }
 
+      console.log('[V2 getDataWithoutFilter] Resultado:', result?.totalElements, 'registros totais,', result?.content?.length, 'na página');
+
       if (result && result.content) {
         // IMPORTANTE: Definir grandTotalRecords ANTES de setRecords para que o evento
         // dataChanged seja emitido com o valor correto do total de registros
         this.grandTotalRecords = result.totalElements || result.content.length;
         this.setRecords(result.content);
+        console.log('[V2 getDataWithoutFilter] Após setRecords - currentPage:', this.currentPage, 'grandTotal:', this.grandTotalRecords);
       }
 
       if (callback) {

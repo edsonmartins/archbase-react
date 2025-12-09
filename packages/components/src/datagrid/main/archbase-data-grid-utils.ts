@@ -29,6 +29,11 @@ export const buildGlobalFilterExpression = (filterValue: string, columns: any[])
   }
 
   try {
+    console.log('[buildGlobalFilterExpression] columns recebidas:', columns.map(c => ({
+      field: c.field,
+      enableGlobalFilter: c.enableGlobalFilter
+    })));
+
     // Filtrar colunas que suportam busca global e excluir a coluna "actions"
     const filterableColumns = columns.filter((col) => {
       try {
@@ -39,12 +44,16 @@ export const buildGlobalFilterExpression = (filterValue: string, columns: any[])
       }
     });
 
+    console.log('[buildGlobalFilterExpression] colunas filtráveis:', filterableColumns.map(c => c.field));
+
     if (filterableColumns.length === 0) {
       return undefined;
     }
 
     // Construir expressões de filtro
     const filterExpressions = filterableColumns.map((col) => `${col.field}==^*${filterValue}*`);
+
+    console.log('[buildGlobalFilterExpression] expressão final:', filterExpressions.join(','));
 
     return filterExpressions.join(',');
   } catch (error) {

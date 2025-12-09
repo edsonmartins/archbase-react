@@ -40,13 +40,16 @@ export const ArchbaseDataGridToolbar = React.memo<ArchbaseDataGridToolbarProps>(
   // Função para aplicar o filtro global
   const applyGlobalFilter = useCallback((value: string | null) => {
     const newValue = value || '';
+    console.log('[Toolbar] applyGlobalFilter chamado com:', value, '-> newValue:', newValue);
     setGlobalFilterValue(newValue);
-    
-    // Aplicar filtro no modelo
-    onFilterModelChange({
+
+    const newFilterModel = {
       ...filterModel,
       quickFilterValues: newValue ? [newValue] : []
-    });
+    };
+    console.log('[Toolbar] Chamando onFilterModelChange com:', newFilterModel);
+    // Aplicar filtro no modelo
+    onFilterModelChange(newFilterModel);
   }, [filterModel, onFilterModelChange]);
   
   // Versão com debounce para evitar muitas chamadas durante digitação
@@ -62,18 +65,13 @@ export const ArchbaseDataGridToolbar = React.memo<ArchbaseDataGridToolbarProps>(
     };
   }, [debouncedApplyFilter]);
   
-  // Função de refresh que também considera o filtro global
+  // Função de refresh - apenas executa o refresh mantendo o estado atual
+  // Não deve chamar onFilterModelChange pois isso resetaria a página para 0
+  // O grid já considera o filtro atual no seu próprio handleRefresh
   const handleRefresh = useCallback(() => {
-    // Garantir que o filtro global seja aplicado ao fazer refresh
-    const currentFilter = {...filterModel};
-    currentFilter.quickFilterValues = globalFilterValue ? [globalFilterValue] : [];
-    
-    // Primeiro atualizar o modelo de filtro
-    onFilterModelChange(currentFilter);
-    
-    // Depois executar o refresh
+    console.log('[Toolbar] handleRefresh chamado - executando apenas onRefresh');
     onRefresh();
-  }, [onRefresh, onFilterModelChange, filterModel, globalFilterValue]);
+  }, [onRefresh]);
 
   if (!toolbarLeftContent && !enableGlobalFilter && !enableTopToolbarActions) {
     return null;

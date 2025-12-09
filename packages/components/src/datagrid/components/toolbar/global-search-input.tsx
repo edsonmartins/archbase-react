@@ -33,6 +33,10 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
   // Estado interno para o input
   const [inputValue, setInputValue] = React.useState(value);
 
+  // Flag para indicar que o clear foi chamado intencionalmente
+  // Isso evita que o debounce restaure o valor antigo após o clear
+  const clearIntentionalRef = React.useRef(false);
+
   // Aplicar debounce ao valor digitado
   const [debouncedValue] = useDebouncedValue(inputValue, debounceTime);
 
@@ -43,18 +47,31 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
 
   // Propagar o valor com debounce para o callback
   React.useEffect(() => {
+    // Se o clear foi intencional e o inputValue está vazio, não fazer nada
+    // Isso evita que o debounce com valor antigo sobrescreva o clear
+    if (clearIntentionalRef.current && inputValue === '') {
+      // Se o debouncedValue também está vazio, resetar a flag
+      if (debouncedValue === '') {
+        clearIntentionalRef.current = false;
+      }
+      return;
+    }
+
     if (debouncedValue !== value) {
       onChange(debouncedValue);
     }
-  }, [debouncedValue, onChange, value]);
+  }, [debouncedValue, onChange, value, inputValue]);
 
   // Manipular mudança no input
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    clearIntentionalRef.current = false; // Reset flag ao digitar
     setInputValue(event.currentTarget.value);
   };
 
   // Manipular limpar input
   const handleClear = () => {
+    console.log('[GlobalSearchInput] handleClear chamado');
+    clearIntentionalRef.current = true; // Marcar que o clear foi intencional
     setInputValue('');
     onClear();
   };

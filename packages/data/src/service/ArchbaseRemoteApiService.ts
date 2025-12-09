@@ -316,11 +316,12 @@ export abstract class ArchbaseRemoteApiService<T, ID> {
     sort: string[]
   ): Promise<Page<T>> {
     const serviceSpecificHeaders = this.configureHeaders();
-    const result = await this.client.get<Page<T>>(
-      `${this.getEndpoint()}/findWithFilterAndSort?page=${page}&size=${size}&filter=${encodeURIComponent(
-        filter
-      )}&sort=${sort}`
-      , serviceSpecificHeaders, false)
+    const url = `${this.getEndpoint()}/findWithFilterAndSort?page=${page}&size=${size}&filter=${encodeURIComponent(
+      filter
+    )}&sort=${sort}`;
+    console.log('[findAllWithFilterAndSort] URL:', url);
+    console.log('[findAllWithFilterAndSort] filter original:', filter);
+    const result = await this.client.get<Page<T>>(url, serviceSpecificHeaders, false)
     this.transformPage(result);
     return result;
   }

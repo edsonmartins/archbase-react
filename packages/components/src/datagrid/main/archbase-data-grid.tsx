@@ -95,10 +95,10 @@ const getDataSourceOptions = (ds: any): any => {
  * Helper para obter página atual (compatível com V1 e V2)
  */
 const getCurrentPageFromDataSource = (ds: any): number => {
-  if (isDataSourceV2(ds)) {
-    return 0; // V2 não tem paginação interna no dataSource
-  }
-  return ds.getCurrentPage?.() || 0;
+  // Ambos V1 e V2 agora têm getCurrentPage()
+  const page = ds.getCurrentPage?.() ?? 0;
+  console.log('[getCurrentPageFromDataSource] isV2:', isDataSourceV2(ds), 'page:', page);
+  return page;
 }
 
 /**
@@ -320,8 +320,8 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
             // Sincronizar com o dataSource
             syncInProgress.current = true
 
-            // Ir para o registro correspondente no DataSource (V1 only)
-            if (!isV2 && dataSource.gotoRecordByData) {
+            // Ir para o registro correspondente no DataSource (V1 e V2)
+            if (dataSource.gotoRecordByData) {
               dataSource.gotoRecordByData(row)
             }
 
@@ -397,8 +397,8 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       onSelectedRowsChanged(selected)
     }
 
-    // Se temos exatamente uma linha, atualizar o dataSource (V1 only)
-    if (selected.length === 1 && !isV2 && dataSource.gotoRecordByData) {
+    // Se temos exatamente uma linha, atualizar o dataSource (V1 e V2)
+    if (selected.length === 1 && dataSource.gotoRecordByData) {
       syncInProgress.current = true
 
       try {
@@ -485,7 +485,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   }
 
   const handlePaginationChange = (newPaginationModel: { page: number; pageSize: number }) => {
-    console.log('[PAGINATION] Mudou pagination model ', newPaginationModel.page, newPaginationModel.pageSize)
+    console.log('[PAGINATION] Mudou pagination model ', newPaginationModel.page, newPaginationModel.pageSize, 'isV2:', isV2)
     // Garantir que o pageSize não exceda o limite
     const safePageSize = Math.min(newPaginationModel.pageSize, MAX_PAGE_SIZE_MIT)
 
@@ -496,6 +496,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
 
     // V2: Agora também chama refreshData para recarregar dados
     if (isV2) {
+      console.log('[PAGINATION V2] Chamando refreshData com page:', newPaginationModel.page, 'size:', safePageSize)
       setIsLoadingInternal(true)
       ;(dataSource as any).refreshData?.({
         currentPage: newPaginationModel.page,
@@ -562,6 +563,9 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         newFilterModel.quickFilterValues && newFilterModel.quickFilterValues.length > 0
           ? newFilterModel.quickFilterValues[0]
           : ''
+
+      console.log('[FILTER V2] filter construído:', filter, 'tipo:', typeof filter)
+      console.log('[FILTER V2] originGlobalFilter:', originGlobalFilter)
 
       setIsLoadingInternal(true)
       ;(dataSource as any).refreshData?.({

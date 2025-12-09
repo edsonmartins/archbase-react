@@ -595,9 +595,13 @@ export class ArchbaseDataSourceV2<T> implements IDataSource<T> {
   }
 
   // =================== Interface Compatibility Methods ===================
-  
-  open(options: DataSourceOptions<T>): void {
-    this.setData(options);
+
+  /**
+   * Abre o DataSource com os dados fornecidos.
+   * Aceita tanto o formato completo DataSourceOptions quanto um formato simplificado { records: T[] }
+   */
+  open(options: DataSourceOptions<T> | { records: T[] }): void {
+    this.setData(options as DataSourceOptions<T>);
   }
 
 
@@ -612,7 +616,11 @@ export class ArchbaseDataSourceV2<T> implements IDataSource<T> {
     });
   }
 
-  setData(options: DataSourceOptions<T>): void {
+  /**
+   * Define os dados do DataSource.
+   * Quando apenas records é informado, os valores de paginação são derivados automaticamente.
+   */
+  setData(options: DataSourceOptions<T> | { records: T[] }): void {
     this.records = [...(options.records || [])];
     this.currentIndex = this.records.length > 0 ? 0 : -1;
     this.state = 'browse';
