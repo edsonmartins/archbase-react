@@ -48,6 +48,7 @@ export function useArchbaseRemoteDataSourceV2<T, ID = any>(
     switch (event.type) {
       case DataSourceEventNames.dataChanged:
       case DataSourceEventNames.recordChanged:
+      case DataSourceEventNames.refreshData:
         setCurrentRecord(dataSource.getCurrentRecord());
         setCurrentIndex(dataSource.getCurrentIndex());
         setTotalRecords(dataSource.getTotalRecords());
@@ -55,6 +56,7 @@ export function useArchbaseRemoteDataSourceV2<T, ID = any>(
         setIsBrowsingState(dataSource.isBrowsing());
         setIsEditingState(dataSource.isEditing());
         setIsInsertingState(dataSource.isInserting());
+        setIsLoading(false); // Desliga loading quando dados são atualizados
         setError(null);
         break;
         
@@ -241,15 +243,20 @@ export function useArchbaseRemoteDataSourceV2<T, ID = any>(
     }
   }, [dataSource]);
 
-  const refreshData = useCallback(async () => {
+  const refreshData = useCallback(async (options?: {
+    currentPage?: number;
+    pageSize?: number;
+    filter?: string;
+    sort?: string[];
+  }) => {
     try {
       setIsLoading(true);
       setError(null);
-      
-      // Para um refresh simples, aplicamos filtro vazio na página 0
-      await dataSource.applyRemoteFilter({} as ArchbaseQueryFilter, 0, () => {
-        setIsLoading(false);
-      });
+
+      // Usa o novo método refreshData do dataSource que mantém estado
+      dataSource.refreshData(options);
+
+      // O loading será desligado pelo listener quando dataChanged for emitido
     } catch (error: any) {
       setIsLoading(false);
       setError(error.message || 'Erro ao atualizar dados');

@@ -702,11 +702,114 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
 
   // =================== Remote Filter Operations ===================
 
+  /**
+   * Interface de opções para refreshData - compatibilidade com V1
+   */
+  private currentPage: number = 0;
+  private currentFilter?: string;
+  private currentSort?: string[];
+
+  /**
+   * Atualiza os dados do DataSource com as opções fornecidas.
+   * Compatível com a interface do DataSource V1.
+   *
+   * @param options Opções de refresh incluindo página, filtro e ordenação
+   */
+  refreshData(options?: {
+    currentPage?: number;
+    pageSize?: number;
+    filter?: string;
+    sort?: string[];
+    originFilter?: any;
+    originGlobalFilter?: string;
+  }): void {
+    // Atualiza configurações se fornecidas
+    if (options?.pageSize !== undefined) {
+      this.pageSize = options.pageSize;
+    }
+
+    const page = options?.currentPage ?? this.currentPage;
+    this.currentPage = page;
+
+    if (options?.filter !== undefined) {
+      this.currentFilter = options.filter;
+    }
+
+    if (options?.sort !== undefined) {
+      this.currentSort = options.sort;
+      // Atualiza defaultSortFields se sort for fornecido
+      this.defaultSortFields = options.sort.map(s => {
+        // Remove :asc ou :desc se presente
+        const parts = s.split(':');
+        return parts[0];
+      });
+    }
+
+    // Emite evento de refreshData para compatibilidade
+    this.emit({
+      type: DataSourceEventNames.refreshData,
+      options
+    } as DataSourceEvent<T>);
+
+    // Se tiver filtro no formato JSON (como usado pelo V1 com RSQL)
+    if (this.currentFilter) {
+      try {
+        const filterObj = JSON.parse(this.currentFilter);
+        // Verifica se é um filtro de busca rápida (quick filter)
+        if (filterObj.search !== undefined) {
+          // Monta o ArchbaseQueryFilter para quick filter
+          const queryFilter: ArchbaseQueryFilter = {
+            filter: {
+              filterType: QUICK,
+              quickFilterText: filterObj.search,
+              quickFilterFieldsText: filterObj.fields || []
+            },
+            sort: {
+              quickFilterSort: this.currentSort?.join(',') || this.defaultSortFields.join(',')
+            }
+          } as ArchbaseQueryFilter;
+
+          this.applyRemoteFilter(queryFilter, page);
+          return;
+        }
+      } catch (e) {
+        // Se não for JSON válido, trata como filtro RSQL direto
+        // Por enquanto, apenas ignora o filtro e carrega sem filtro
+        console.warn('Filtro não é JSON válido, carregando sem filtro:', e);
+      }
+    }
+
+    // Carrega dados sem filtro mas respeitando página e ordenação
+    this.getDataWithoutFilter(page);
+  }
+
+  /**
+   * Retorna as opções atuais do DataSource - compatibilidade com V1
+   */
+  getOptions(): {
+    currentPage: number;
+    pageSize: number;
+    filter?: string;
+    sort?: string[];
+    grandTotalRecords: number;
+  } {
+    return {
+      currentPage: this.currentPage,
+      pageSize: this.pageSize,
+      filter: this.currentFilter,
+      sort: this.currentSort || this.defaultSortFields,
+      grandTotalRecords: this.grandTotalRecords
+    };
+  }
+
   applyRemoteFilter(
     filter: ArchbaseQueryFilter,
     page: number,
     callback?: (() => void) | undefined
   ): void {
+    // Atualiza página atual
+    this.currentPage = page;
+
     const hasFilterObject = filter && (filter as any).filter;
     if (!hasFilterObject) {
       this.getDataWithoutFilter(page, callback);
@@ -833,12 +936,20 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
     return false;
   }
 
-  setRecords(records: T[]): void {
+  setRecords(records: T[], totalElements?: number): void {
     const prevRecords = [...this.filteredRecords];
     this.records = [...records];
     this.filteredRecords = [...records];
-    this.grandTotalRecords = records.length;
-    
+
+    // Se totalElements foi passado, usa ele; caso contrário, só atualiza se
+    // grandTotalRecords for menor que o tamanho dos registros (para não sobrescrever
+    // um valor já definido corretamente pelos métodos de fetch)
+    if (totalElements !== undefined) {
+      this.grandTotalRecords = totalElements;
+    } else if (this.grandTotalRecords < records.length) {
+      this.grandTotalRecords = records.length;
+    }
+
     if (records.length > 0) {
       this.currentIndex = 0;
     } else {
@@ -995,8 +1106,10 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
       }
 
       if (result && result.content) {
-        this.setRecords(result.content);
+        // IMPORTANTE: Definir grandTotalRecords ANTES de setRecords para que o evento
+        // dataChanged seja emitido com o valor correto do total de registros
         this.grandTotalRecords = result.totalElements || result.content.length;
+        this.setRecords(result.content);
       }
 
       if (callback) {
@@ -1020,8 +1133,10 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
       }
 
       if (result && result.content) {
-        this.setRecords(result.content);
+        // IMPORTANTE: Definir grandTotalRecords ANTES de setRecords para que o evento
+        // dataChanged seja emitido com o valor correto do total de registros
         this.grandTotalRecords = result.totalElements || result.content.length;
+        this.setRecords(result.content);
       }
 
       if (callback) {
@@ -1041,12 +1156,12 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
     callback?: (() => void) | undefined
   ): Promise<any> {
     try {
-      const fieldsStr = Array.isArray(currentFilter.filter.quickFilterFieldsText) 
+      const fieldsStr = Array.isArray(currentFilter.filter.quickFilterFieldsText)
         ? currentFilter.filter.quickFilterFieldsText.join(',')
         : currentFilter.filter.quickFilterFieldsText;
-      
+
       const sortStr = this.getSortFields(currentFilter).join(',');
-      
+
       const result = await this.service.findAllMultipleFields(
         currentFilter.filter.quickFilterText,
         fieldsStr,
@@ -1056,8 +1171,10 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
       );
 
       if (result && result.content) {
-        this.setRecords(result.content);
+        // IMPORTANTE: Definir grandTotalRecords ANTES de setRecords para que o evento
+        // dataChanged seja emitido com o valor correto do total de registros
         this.grandTotalRecords = result.totalElements || result.content.length;
+        this.setRecords(result.content);
       }
 
       if (callback) {

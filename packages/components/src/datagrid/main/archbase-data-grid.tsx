@@ -436,12 +436,27 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
 
   // Métodos para atualização de dados
   const handleRefresh = () => {
-    // V2: Não tem getOptions/refreshData no dataSource, o refresh é controlado externamente
+    // V2: Agora também chama refreshData no dataSource
     if (isV2) {
-      // Para V2, apenas atualiza os rows do estado atual
-      setRows(getRecordsFromDataSource<T>(dataSource));
-      closeAllDetailPanels();
-      return;
+      // Construir a expressão de filtro
+      const filter = buildFilterExpression(filterModel, columns)
+      const originGlobalFilter =
+        filterModel.quickFilterValues && filterModel.quickFilterValues.length > 0
+          ? filterModel.quickFilterValues[0]
+          : ''
+
+      console.log('[REFRESH V2] Refresh com filtro global:', originGlobalFilter);
+
+      setIsLoadingInternal(true)
+      ;(dataSource as any).refreshData?.({
+        currentPage: paginationModel.page,
+        pageSize: paginationModel.pageSize,
+        filter: filter,
+        originFilter: filterModel.items,
+        originGlobalFilter: originGlobalFilter
+      })
+      closeAllDetailPanels()
+      return
     }
 
     // V1: Comportamento original
@@ -470,7 +485,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   }
 
   const handlePaginationChange = (newPaginationModel: { page: number; pageSize: number }) => {
-		console.log('[PAGINATION] Mudou pagination model ',newPaginationModel.page, newPaginationModel.pageSize)
+    console.log('[PAGINATION] Mudou pagination model ', newPaginationModel.page, newPaginationModel.pageSize)
     // Garantir que o pageSize não exceda o limite
     const safePageSize = Math.min(newPaginationModel.pageSize, MAX_PAGE_SIZE_MIT)
 
@@ -479,10 +494,15 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       pageSize: safePageSize
     })
 
-    // V2: Paginação é controlada externamente pelo hook
+    // V2: Agora também chama refreshData para recarregar dados
     if (isV2) {
-      closeAllDetailPanels();
-      return;
+      setIsLoadingInternal(true)
+      ;(dataSource as any).refreshData?.({
+        currentPage: newPaginationModel.page,
+        pageSize: safePageSize
+      })
+      closeAllDetailPanels()
+      return
     }
 
     // V1: Comportamento original
@@ -500,10 +520,17 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   const handleSortModelChange = (newSortModel: any) => {
     setSortModel(newSortModel)
 
-    // V2: Ordenação é controlada externamente
+    // V2: Agora também chama refreshData para recarregar dados com nova ordenação
     if (isV2) {
-      closeAllDetailPanels();
-      return;
+      const sortFields = newSortModel.map((sort: any) => `${sort.field}:${sort.sort}`)
+      setIsLoadingInternal(true)
+      ;(dataSource as any).refreshData?.({
+        currentPage: paginationModel.page,
+        pageSize: paginationModel.pageSize,
+        sort: sortFields
+      })
+      closeAllDetailPanels()
+      return
     }
 
     // V1: Comportamento original
@@ -525,11 +552,27 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     // Certificar que estamos usando o valor mais recente
     console.log('[FILTER] Aplicando filtro:', newFilterModel)
 
-    // V2: Filtro é controlado externamente pelo hook
+    // V2: Agora também chama refreshData para recarregar dados com filtro
     if (isV2) {
-      setPaginationModel((prev) => ({ ...prev, page: 0 }));
-      closeAllDetailPanels();
-      return;
+      setPaginationModel((prev) => ({ ...prev, page: 0 }))
+
+      // Construir a expressão de filtro
+      const filter = buildFilterExpression(newFilterModel, columns)
+      const originGlobalFilter =
+        newFilterModel.quickFilterValues && newFilterModel.quickFilterValues.length > 0
+          ? newFilterModel.quickFilterValues[0]
+          : ''
+
+      setIsLoadingInternal(true)
+      ;(dataSource as any).refreshData?.({
+        currentPage: 0,
+        pageSize: paginationModel.pageSize,
+        filter: filter,
+        originFilter: newFilterModel.items,
+        originGlobalFilter: originGlobalFilter
+      })
+      closeAllDetailPanels()
+      return
     }
 
     // V1: Comportamento original
