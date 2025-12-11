@@ -1,0 +1,49 @@
+import catalog from '../../component-catalog.json';
+import { Meta, Story } from '@storybook/addon-docs';
+
+<Meta title="Security/Security Recipes" />
+
+# Security Recipes
+
+Antes de montar um fluxo de segurança (SecurityView + ApiTokenView), consulte o `component-catalog.json` para obter o `canonicalUrl`.
+
+## Passo a passo
+
+1. **Provider**: envolva a app em `ArchbaseSecurityProvider` para expor `useArchbaseSecurity` e `useArchbasePermissionCheck`.
+2. **SecurityView**: conecte usuários, grupos, perfis, recursos e tokens usando `ArchbaseDataGrid` + `ArchbaseDualListSelector`.
+3. **Modais**: abra `UserModal`, `GroupModal`, `ApiTokenModal` e `PermissionsSelectorModal` para gerenciar entidades e permissões.
+4. **Ações seguras**: use `ArchbaseSecureActionButton`/`ArchbaseSecureFormField` com `requiredPermissions` para manter o controle de acesso.
+
+## Links canônicos
+
+```
+{
+  "name": "ArchbaseSecurityView",
+  "canonicalUrl": "https://docs.archbase.com/storybook/archbase-security-view"
+}
+```
+
+<Story name="Links">
+  {() => (
+    <ul className="recipe-links">
+      {[
+        'ArchbaseSecurityProvider',
+        'ArchbaseSecurityView',
+        'ArchbaseApiTokenView',
+        'UserModal',
+        'GroupModal',
+        'ApiTokenModal',
+        'PermissionsSelectorModal'
+      ]
+        .map((name) => catalog.components.find((c) => c.name === name))
+        .filter(Boolean)
+        .map((component) => (
+          <li key={component?.name}>
+            <strong>{component?.name}</strong>: <a href={component?.canonicalUrl}>{component?.canonicalUrl}</a>
+          </li>
+        ))}
+    </ul>
+  )}
+</Story>
+
+Use esses links para documentar os recipes de segurança e referenciar as docs do Storybook nos `llms.txt` e `DOCS_AUDIT.md`.

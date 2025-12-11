@@ -1,3 +1,7 @@
+/**
+ * ArchbaseMasonryTemplate — template de layout masonry responsivo com integração a DataSource.
+ * @status stable
+ */
 import { useArchbaseDataSourceListener } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { ButtonVariant, Pagination } from '@mantine/core';

@@ -1,3 +1,7 @@
+/**
+ * ArchbaseModalTemplate — template de modal com ações padrão e binding ao DataSource.
+ * @status stable
+ */
 import { Button, Flex, Group, Modal, ModalProps, useMantineColorScheme } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';

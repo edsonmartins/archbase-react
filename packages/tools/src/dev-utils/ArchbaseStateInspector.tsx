@@ -1,3 +1,7 @@
+/**
+ * ArchbaseStateInspector — inspetor de estado com histórico para debug.
+ * @status stable
+ */
 import React, { useState, useEffect } from 'react';
 import { emitDebugInfo } from '../debug/ArchbaseDebugPanel';
 

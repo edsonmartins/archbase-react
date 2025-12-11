@@ -1,3 +1,7 @@
+/**
+ * ArchbaseTimeline — timeline simples baseada em Mantine Timeline.
+ * @status experimental
+ */
 import { px, ScrollArea, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import * as d3 from 'd3';

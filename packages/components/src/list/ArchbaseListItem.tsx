@@ -1,3 +1,7 @@
+/**
+ * ArchbaseListItem — item de lista com seleção, ícones e binding ao ArchbaseList.
+ * @status stable
+ */
 import { Image, Space } from '@mantine/core';
 import React, { ReactNode, useContext, useEffect, useRef } from 'react';
 import ArchbaseListContext, { ArchbaseListContextValue } from './ArchbaseList.context';

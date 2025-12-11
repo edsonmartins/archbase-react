@@ -1,3 +1,7 @@
+/**
+ * ArchbaseFormTemplate — template de formulário CRUD com integração a DataSource v1/v2.
+ * @status stable
+ */
 import {
 	AlertVariant,
 	ButtonVariant,

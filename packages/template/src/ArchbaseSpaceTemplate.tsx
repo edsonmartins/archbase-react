@@ -1,3 +1,7 @@
+/**
+ * ArchbaseSpaceTemplate — template de página com filtros, toolbar e grid/conteúdo, integrado ao DataSource.
+ * @status stable
+ */
 import {
 	AlertVariant,
 	Box,

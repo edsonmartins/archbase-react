@@ -1,3 +1,7 @@
+/**
+ * ArchbaseNetworkMonitor — monitor de requisições de rede para desenvolvimento.
+ * @status stable
+ */
 import React, { useState, useEffect } from 'react';
 import { emitDebugInfo } from '../debug/ArchbaseDebugPanel';
 

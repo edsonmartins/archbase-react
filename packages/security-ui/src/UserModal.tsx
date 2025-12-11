@@ -1,3 +1,7 @@
+/**
+ * UserModal — modal de cadastro/edição de usuários com roles e ações.
+ * @status stable
+ */
 import { ARCHBASE_IOC_API_TYPE, getI18nextInstance } from '@archbase/core'
 import { ArchbaseDataSource } from '@archbase/data'
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit, ArchbaseAvatarEdit } from '@archbase/components'

@@ -1,0 +1,34 @@
+import catalog from '../../component-catalog.json';
+
+# Catalog API
+
+O `component-catalog.json` gerado por `pnpm generate:catalog` expõe:
+
+```json
+"components": [
+  {
+    "name": "ArchbaseEdit",
+    "description": "...",
+    "sourcePath": "...",
+    "exportsFrom": "@archbase/components",
+    "props": [
+      { "name": "dataSource", "type": "...", "required": false },
+      ...
+    ],
+    "tags": ["form", "datasource"],
+    "status": "stable",
+    "canonicalUrl": "https://docs.archbase.com/storybook/archbase-edit",
+    "examples": [{ "title": "Basic", "code": "<ArchbaseEdit .../>" }]
+  }
+]
+```
+
+Use esse JSON para:
+
+1. Alimentar o portal editorial (links canônicos, props tables).
+2. Fornecer dados para LLMs (veja `llms.txt`) e futuros MCP/assistentes.
+3. Gerar interfaces de busca (ex: `GET /catalog?tag=form`).
+
+> Dica: durante o deploy do Storybook, defina `CATALOG_CANONICAL_BASE` para o URL final (ex: `https://docs.archbase.com/storybook`); o script atualiza todos os `canonicalUrl` automaticamente.
+
+Você pode importar o JSON do `docs-site` (como neste MDX) e listar os componentes em tabelas usando `catalog.components`. O `component-catalog.json` também deve ser publicado como artefato no pipeline.

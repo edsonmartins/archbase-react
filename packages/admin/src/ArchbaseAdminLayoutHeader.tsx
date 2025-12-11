@@ -1,3 +1,7 @@
+/**
+ * ArchbaseAdminLayoutHeader — header do layout admin com ações de tema/idioma e usuário.
+ * @status stable
+ */
 import {
 	Avatar,
 	Box,

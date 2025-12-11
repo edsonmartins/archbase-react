@@ -1,3 +1,7 @@
+/**
+ * ArchbaseLookupSelect — lookup remoto/local com integração a dataSource e campos configuráveis.
+ * @status stable
+ */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArchbaseError } from '@archbase/core';
 import { ArchbaseObjectHelper } from '@archbase/core';

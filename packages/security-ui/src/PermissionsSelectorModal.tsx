@@ -1,3 +1,7 @@
+/**
+ * PermissionsSelectorModal — modal para selecionar permissões/roles.
+ * @status stable
+ */
 import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { ARCHBASE_IOC_API_TYPE, getKeyByEnumValue, getI18nextInstance } from "@archbase/core";
 import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, ScrollArea, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useMantineColorScheme, useTree } from "@mantine/core";

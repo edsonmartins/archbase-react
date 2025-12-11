@@ -1,0 +1,45 @@
+# Archbase UI (Mantine v8) — LLM Guide
+
+## Quick Start
+- Instale peers: `pnpm add react react-dom @mantine/core @mantine/hooks`
+- Instale lib: `pnpm add @archbase/core @archbase/components @archbase/data`
+- Imports principais: `ArchbaseGlobalProvider`, `ArchbaseEdit`, `ArchbaseAsyncSelect`, `ArchbaseDataGrid`, `ArchbaseFormTemplate`.
+
+## Providers
+- i18n inicial: `initArchbaseI18nEarly('app', resources)` antes de renderizar.
+- App shell: `<ArchbaseGlobalProvider colorScheme="light" translationName="app" translationResource={resources} containerIOC={container}> ... </ArchbaseGlobalProvider>` (themeLight/themeDark são `MantineThemeOverride`).
+- SSR (quando houver): envolver com `<ArchbaseSSRProvider>` e `<ArchbaseTanStackProvider>` conforme `packages/ssr/src`.
+
+## Componentes-chave (origem → 1 linha)
+- `ArchbaseEdit` — input data-aware v1/v2 (`packages/components/src/editors/ArchbaseEdit.tsx`)
+- `ArchbaseAsyncSelect` — select remoto data-aware (`packages/components/src/editors/ArchbaseAsyncSelect.tsx`)
+- `ArchbaseDatePickerEdit` — date input data-aware (`packages/components/src/editors/ArchbaseDatePickerEdit.tsx`)
+- `ArchbaseMaskEdit` — input com máscara (`packages/components/src/editors/ArchbaseMaskEdit.tsx`)
+- `ArchbaseNumberEdit` — input numérico data-aware (`packages/components/src/editors/ArchbaseNumberEdit.tsx`)
+- `ArchbaseLookupSelect` — lookup remoto (`packages/components/src/editors/ArchbaseLookupSelect.tsx`)
+- `ArchbaseRichTextEdit` — editor tiptap (`packages/components/src/editors/ArchbaseRichTextEdit.tsx`)
+- `ArchbaseFileAttachment` — anexos (`packages/components/src/editors/ArchbaseFileAttachment.tsx`)
+- `ArchbaseActionButtons` — grupo de ações padrão (`packages/components/src/buttons/ArchbaseActionButtons.tsx`)
+- `ArchbaseDataGrid` — grid data-aware (`packages/components/src/datagrid/main/archbase-data-grid.tsx`)
+- `ArchbaseFormTemplate` — template CRUD (`packages/template/src/ArchbaseFormTemplate.tsx`)
+- `ArchbaseSecurityProvider` — segurança/roles (`packages/security/src/ArchbaseSecurityContext.tsx`)
+- `ArchbaseDebugPanel` — painel de debug (`packages/tools/src/debug/ArchbaseDebugPanel.tsx`)
+- `ArchbaseSSRProvider` — utilidades SSR (`packages/ssr/src/providers/ArchbaseSSRProvider.tsx`)
+
+- ## Recipes (copiáveis)
+- Ver `DOCS_AUDIT.md` seção 6 para: Form completo, DataGrid com actions, Modal/Drawer, Layout admin, Notificações, Upload, Autocomplete remoto, Wizard.
+- Consulte `docs-site/docs/forms`, `docs-site/docs/security`, `docs-site/docs/datagrid` e `docs-site/docs/templates` para guias passo a passo (todos citam o `component-catalog.json`).
+- Veja `docs-site/docs/catalog-api.mdx` para entender como consumir `component-catalog.json` (props, tags, canonicalUrl) via MCP/IA.
+
+## Component Catalog e Docs
+- Catálogo: `component-catalog.json` descreve todos os exports públicos e inclui `canonicalUrl` para cada componente (defina `CATALOG_CANONICAL_BASE` com o URL do Storybook/site para ativar links editáveis).
+- Guia executivo: `DOCS_AUDIT.md`, `docs/Plano_Documentacao_Archbase_UI.md` e `docs/CATALOG_GUIDE.md` explicam o plano editorial + recipes e servem como source of truth para IA.
+
+## Como linkar
+- Ao citar um componente em um recipe, use o `canonicalUrl` do catálogo para direcionar a story ou o MDX correspondente.
+- Mantenha `llms.txt`, `DOCS_AUDIT.md` e `component-catalog.json` atualizados juntos (rodar `pnpm generate:catalog` após mudanças nos exports).
+
+## Referências úteis
+- DataSource v2: `docs/datasource-v2.mdx` e `docs/datasource-v2-api.mdx`
+- Segurança: `docs/archbase_security_complete_guide.md`
+- Scripts/build: `README.md`, `SCRIPTS.md`

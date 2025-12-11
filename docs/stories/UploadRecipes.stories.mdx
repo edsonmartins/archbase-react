@@ -1,0 +1,25 @@
+import catalog from '../../component-catalog.json';
+import { Meta, Story } from '@storybook/addon-docs';
+
+<Meta title="Recipes/Upload Recipes" />
+
+# Upload Recipes
+
+Referencie `ArchbaseFileAttachment` e `ArchbaseImageEdit` (quando aplicável) através dos `canonicalUrl` do catálogo ao documentar upload/anexo.
+
+<Story name="Links">
+  {() => (
+    <ul>
+      {['ArchbaseFileAttachment', 'ArchbaseImageEdit']
+        .map((name) => catalog.components.find((c) => c.name === name))
+        .filter(Boolean)
+        .map((component) => (
+          <li key={component?.name}>
+            <strong>{component?.name}</strong>: <a href={component?.canonicalUrl}>{component?.canonicalUrl}</a>
+          </li>
+        ))}
+    </ul>
+  )}
+</Story>
+
+Inclua observações sobre `accept`, `maxFiles` e preview. Use o catalog link nos recipes e em `llms.txt`.

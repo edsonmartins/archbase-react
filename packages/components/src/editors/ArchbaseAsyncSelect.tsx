@@ -1,3 +1,7 @@
+/**
+ * ArchbaseAsyncSelect — select assíncrono com dataSource opcional, suporta paginação/scroll e loading.
+ * @status stable
+ */
 import {
 	CloseButton,
 	Combobox,

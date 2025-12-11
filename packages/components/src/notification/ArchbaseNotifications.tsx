@@ -1,3 +1,7 @@
+/**
+ * ArchbaseNotifications — helpers para mostrar notificações Mantine (erro/sucesso/info).
+ * @status stable
+ */
 import { Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconAlertCircle, IconBug, IconCircleCheck } from '@tabler/icons-react';

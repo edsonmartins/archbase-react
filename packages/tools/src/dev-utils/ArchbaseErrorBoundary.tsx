@@ -1,3 +1,7 @@
+/**
+ * ArchbaseErrorBoundary — error boundary com fallback e logging para dev.
+ * @status stable
+ */
 import React, { Component, ReactNode, ErrorInfo } from 'react';
 import { emitDebugInfo } from '../debug/ArchbaseDebugPanel';
 

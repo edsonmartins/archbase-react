@@ -1,3 +1,7 @@
+/**
+ * ArchbaseDebugPanel — painel de debug com eventos/inspeção para desenvolvimento.
+ * @status stable
+ */
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 

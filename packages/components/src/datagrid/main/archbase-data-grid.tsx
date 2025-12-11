@@ -1,4 +1,8 @@
 // ArchbaseDataGrid.tsx - Implementação completa com Detail Panel
+/**
+ * ArchbaseDataGrid — grid reativo ligado ao DataSource com toolbar, exportação e painéis de detalhe.
+ * @status stable
+ */
 import React, {
   useState,
   useEffect,

@@ -1,0 +1,25 @@
+import catalog from '../../component-catalog.json';
+import { Meta, Story } from '@storybook/addon-docs';
+
+<Meta title="Recipes/Modal Recipes" />
+
+# Modal Recipes
+
+Mostre o fluxo de confirmação com `ArchbaseDialog` e `ArchbaseNotifications` usando o `canonicalUrl` do catálogo para referência segura.
+
+<Story name="Links">
+  {() => (
+    <ul>
+      {['ArchbaseDialog', 'ArchbaseNotifications']
+        .map((name) => catalog.components.find((c) => c.name === name))
+        .filter(Boolean)
+        .map((component) => (
+          <li key={component?.name}>
+            <strong>{component?.name}</strong>: <a href={component?.canonicalUrl}>{component?.canonicalUrl}</a>
+          </li>
+        ))}
+    </ul>
+  )}
+</Story>
+
+Incorpore esses links no recipe “Modal flow com confirmação” e adicione remark sobre acessibilidade (`aria-modal`, foco, ESC).

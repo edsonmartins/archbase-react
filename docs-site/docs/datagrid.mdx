@@ -1,0 +1,26 @@
+import catalog from '../../component-catalog.json';
+
+# DataGrid
+
+Arquitetura do grid:
+
+- **Datasource first**: `ArchbaseDataGrid` consome `ArchbaseDataSource` (v1/v2). Configure `dataSource`, `columns` e `idField`. O catálogo expõe as props de `ArchbaseDataGrid` com types (`component-catalog.json`).
+- **Toolbar + filters**: use `ArchbaseDataGridToolbar` com `enableGlobalFilter`, `renderToolbarActions` e `onRefresh` para mostrar export, impressão e search. Veja o story `/docs/stories/DataGridRecipes.stories.mdx`.
+- **Detail panels**: combine com `ArchbaseDetailPanel` e `ArchbaseExpandButton` para mostrar informações extra (link do catálogo abaixo).
+
+## Checklist de implementação
+
+1. Defina `columns` com `dataField`, `title`, `render` (ex: `renderText`/`renderCurrency`).
+2. Controle estados de loading/display (`isLoading`, `emptyState` com `ArchbaseAlert`).
+3. Habilite export/print em `ArchbaseDataGridToolbar`. Exporte o CSV com `exportData`.
+4. Use `ArchbaseGridRowActions` para botões inline (edição, exclusão).
+5. Documente a seleção com `ArchbaseDataGridRef`.
+
+## Links canônicos
+
+- `ArchbaseDataGrid`: <a href={catalog.components.find((c) => c.name === 'ArchbaseDataGrid')?.canonicalUrl}>link</a>
+- `ArchbaseDataGridToolbar`: <a href={catalog.components.find((c) => c.name === 'ArchbaseDataGridToolbar')?.canonicalUrl}>link</a>
+- `ArchbaseDetailPanel`: <a href={catalog.components.find((c) => c.name === 'ArchbaseDetailPanel')?.canonicalUrl}>link</a>
+- `renderText/renderCurrency/...`: <a href={catalog.components.find((c) => c.name === 'renderText')?.canonicalUrl}>link</a>
+
+Use `docs/stories/DataGridRecipes.stories.mdx` como referência (loading/empty + actions + detail panel) e mantenha os helpers `render*` sincronizados com o catálogo para garantir consistência de formatação.

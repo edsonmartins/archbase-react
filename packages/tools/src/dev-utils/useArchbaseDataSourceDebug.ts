@@ -1,3 +1,7 @@
+/**
+ * useArchbaseDataSourceDebug — hook que expõe logs de DataSource para o painel de debug.
+ * @status stable
+ */
 import { useEffect, useRef, useState } from 'react';
 import { emitDebugInfo } from '../debug/ArchbaseDebugPanel';
 
@@ -261,6 +265,10 @@ export function useArchbaseDataSourceDebug<T, ID>(
 
 /**
  * Hook to register multiple DataSources for debugging
+ */
+/**
+ * useArchbaseDataSourceRegistry — hook que mantém múltiplos DataSources registrados para debug.
+ * @status stable
  */
 export function useArchbaseDataSourceRegistry() {
   const [dataSources, setDataSources] = useState<Array<{

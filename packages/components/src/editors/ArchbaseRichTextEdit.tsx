@@ -1,3 +1,7 @@
+/**
+ * ArchbaseRichTextEdit — editor rich text (SunEditor) com binding opcional ao dataSource.
+ * @status stable
+ */
 import { Input } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';

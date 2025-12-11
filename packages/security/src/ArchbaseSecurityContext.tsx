@@ -1,3 +1,7 @@
+/**
+ * ArchbaseSecurityProvider — provider de segurança com autenticação, tokens e permissões.
+ * @status stable
+ */
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { ArchbaseSecurityManager } from './ArchbaseSecurityManager';
 import { UserDto } from './SecurityDomain';

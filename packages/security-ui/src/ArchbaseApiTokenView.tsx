@@ -1,3 +1,7 @@
+/**
+ * ArchbaseApiTokenView — listagem e gestão de tokens de API.
+ * @status stable
+ */
 import { ARCHBASE_IOC_API_TYPE, getI18nextInstance, getNestedObjectValue, processDetailErrorMessage, processErrorMessage } from '@archbase/core';
 import {
 	useArchbaseDataSource,

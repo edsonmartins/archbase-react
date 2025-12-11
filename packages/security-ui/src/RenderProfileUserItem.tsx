@@ -1,3 +1,7 @@
+/**
+ * RenderProfileUserItem — item de lista para usuário (usado em modais/profile).
+ * @status stable
+ */
 import React from 'react'
 import { Flex, Space, Text } from '@mantine/core'
 import { forwardRef } from 'react'

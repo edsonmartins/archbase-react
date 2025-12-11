@@ -1,3 +1,7 @@
+/**
+ * ArchbaseTreeView — treeview com seleção e expansão, suporta integração com dataSource.
+ * @status stable
+ */
 import { rem, useMantineColorScheme } from '@mantine/core';
 import { useColorScheme, useForceUpdate } from '@mantine/hooks';
 import lodash from 'lodash';

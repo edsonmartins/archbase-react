@@ -1,3 +1,7 @@
+/**
+ * ArchbasePanelTemplate — template de painel com toolbar de ações e binding ao DataSource.
+ * @status stable
+ */
 import {
 	ArchbaseAction,
 	ArchbaseActionButtons,

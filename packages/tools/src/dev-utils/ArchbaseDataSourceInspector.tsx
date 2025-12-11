@@ -1,3 +1,7 @@
+/**
+ * ArchbaseDataSourceInspector — painel para inspecionar DataSource e eventos (dev).
+ * @status stable
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import { useHotkeys } from '@mantine/hooks';
 import { Accordion, Flex, Badge, Group, Text, Button, JsonInput, Select } from '@mantine/core';

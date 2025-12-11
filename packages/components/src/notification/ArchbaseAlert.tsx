@@ -1,3 +1,7 @@
+/**
+ * ArchbaseAlert — wrapper de alerta (Mantine Alert) para feedback rápido.
+ * @status stable
+ */
 import { Alert, AlertProps, AlertVariant, MantineColor, useProps } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 

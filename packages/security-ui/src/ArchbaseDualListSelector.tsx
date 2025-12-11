@@ -1,3 +1,7 @@
+/**
+ * ArchbaseDualListSelector — duplo painel para mover itens entre permissões/roles.
+ * @status stable
+ */
 import React, { useState, useEffect, useCallback } from 'react'
 import {
   Button,

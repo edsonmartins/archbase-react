@@ -1,3 +1,7 @@
+/**
+ * ApiTokenModal — modal para criação/edição de tokens de API.
+ * @status stable
+ */
 import { ArchbaseDataSource } from '@archbase/data';
 import { ArchbaseSelect, ArchbaseEdit } from '@archbase/components';
 import { useArchbaseRemoteServiceApi } from '@archbase/data';

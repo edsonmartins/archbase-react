@@ -1,0 +1,25 @@
+import catalog from '../../component-catalog.json';
+
+# Templates
+
+Templates CRUD (Form, Space, Grid) unem layout + data source + actions:
+
+- `ArchbaseFormTemplate`: formulário completo com toolbar e validação. Use `dataSource`, `renderForm`/`renderToolbar`.
+- `ArchbaseSpaceTemplate`: estrutura página com filtros, toolbar e grid. Ideal para dashboards com `filters`, `content`, `toolbar`.
+- `ArchbaseGridTemplate`: combina DataGrid + filtros + actions rápidas para listas.
+
+## Padrões
+
+1. **Ação centralizada**: use `ArchbaseActionButtons` para salvar/cancelar; configure `isSaving`/`isCanceling`.
+2. **Filtros**: insira `ArchbaseSimpleFilter` ou `ArchbaseAdvancedFilter` no `filterComponent`.
+3. **Empty/loading**: defina `emptyState`, `loading` e `notifications`.
+4. **Segurança**: combine com `ArchbaseSecureFormField` para esconder campos quando falta permissão (link do catálogo abaixo).
+
+## Links canônicos
+
+- `ArchbaseFormTemplate`: <a href={catalog.components.find((c) => c.name === 'ArchbaseFormTemplate')?.canonicalUrl}>link</a>
+- `ArchbaseSpaceTemplate`: <a href={catalog.components.find((c) => c.name === 'ArchbaseSpaceTemplate')?.canonicalUrl}>link</a>
+- `ArchbaseGridTemplate`: <a href={catalog.components.find((c) => c.name === 'ArchbaseGridTemplate')?.canonicalUrl}>link</a>
+- `ArchbaseSecureFormField`: <a href={catalog.components.find((c) => c.name === 'ArchbaseSecureFormField')?.canonicalUrl}>link</a>
+
+Use `docs/stories/TemplateRecipes.stories.mdx` e `docs/stories/WizardRecipes.stories.mdx` como base; amarre o `canonicalUrl` sempre que descrever componentes novos ou variantes (wizard, modal).

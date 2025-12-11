@@ -1,3 +1,7 @@
+/**
+ * ArchbaseMaskEdit — input mascarado com padrões comuns e integração com dataSource.
+ * @status stable
+ */
 import {
 	__InputProps,
 	Input,

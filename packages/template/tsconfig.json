@@ -25,6 +25,8 @@
     "node_modules",
     "dist",
     "**/*.test.*",
-    "**/*.spec.*"
+    "**/*.spec.*",
+    "**/*.story.*",
+    "**/*.stories.*"
   ]
 }

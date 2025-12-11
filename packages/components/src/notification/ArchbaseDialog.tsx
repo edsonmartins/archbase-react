@@ -1,3 +1,7 @@
+/**
+ * ArchbaseDialog — diálogo de confirmação/erro usando Mantine modals.
+ * @status stable
+ */
 import { Accordion, Button, Flex, Paper, rem, ScrollArea, Text, TextInput } from '@mantine/core';
 import { ContextModalProps, modals } from '@mantine/modals';
 import {

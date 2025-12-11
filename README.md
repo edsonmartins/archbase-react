@@ -495,6 +495,25 @@ const message = archbaseI18next.t('minha-app:Dashboard')
 - [ ] Exemplos de uso prático
 - [ ] Migração assistida da v2
 
+## 🧭 Portal editorial (Docusaurus)
+
+```bash
+pnpm --filter docs-site install
+pnpm docs:site
+```
+
+O `docs-site` monta um portal Docusaurus com Getting Started, guias (Forms, DataGrid, Templates, Security, Migração) e receitas que referenciam o `component-catalog.json` (links canônicos). Ideal para alinhar IA, docs e Storybook.
+
+## 🧱 Storybook + docs pipeline
+
+O workflow `.github/workflows/storybook-preview.yml` executa exatamente isso por PR:
+
+- `pnpm storybook:build` + `pnpm docs:site:build`.
+- define `STORYBOOK_DEPLOY_URL` e passa para `CATALOG_CANONICAL_BASE` ao gerar `component-catalog.json`.
+- publica `storybook-static`, `docs-site/build`, `component-catalog.json` e `llms.txt` como artefatos (pronto para Chromatic/Vercel).
+
+Use o Playbook (`docs/storybook/StorybookPlaybook.md`) para entender as categorias IA e os links canônicos associados.
+
 ## 🤝 Desenvolvimento
 
 ### 🔧 Scripts Simplificados

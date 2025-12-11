@@ -1,3 +1,7 @@
+/**
+ * ArchbaseJsonSchemaEditor — editor visual de JSON Schema (objetos/arrays/avançado).
+ * @status experimental
+ */
 import { setNestedObjectValue, SetNestedObjectValueOperation } from '@archbase/core';
 import { Flex } from '@mantine/core';
 import { useUncontrolled } from '@mantine/hooks';

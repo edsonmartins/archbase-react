@@ -1,3 +1,7 @@
+/**
+ * ArchbaseSSRProvider — provider SSR-safe com hydration id e hooks de mídia seguros.
+ * @status stable
+ */
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { isServer, canUseDOM } from '../utils/ArchbaseSSRUtils';
 

@@ -1,0 +1,54 @@
+import { ArchbaseEdit } from '@archbase/components';
+import { ArchbaseGlobalProvider, useArchbaseTranslation } from '@archbase/core';
+import React from 'react';
+import { Meta, Story } from '@storybook/addon-docs';
+
+const translationName = 'storybook';
+const translationResource = {
+  'pt-BR': {
+    storybook: {
+      welcome: 'Bem-vindo ao Storybook Archbase',
+      provider: 'Provider carregado',
+      editLabel: 'Nome (PT-BR)'
+    }
+  }
+};
+
+const TranslationDemo = () => {
+  const { t } = useArchbaseTranslation('storybook');
+  return (
+    <p>
+      {t('storybook:welcome', { defaultValue: 'Welcome to Archbase Storybook' })} —{' '}
+      {t('storybook:provider')}
+    </p>
+  );
+};
+
+<Meta title="Foundations/Provider" />
+
+# Foundations
+
+```tsx
+const translationResource = {
+  'pt-BR': {
+    storybook: {
+      welcome: 'Bem-vindo ao Storybook Archbase'
+    }
+  }
+};
+```
+
+O *Foundations* é onde documentamos os providers-chave (`ArchbaseGlobalProvider`, `ArchbaseSecurityProvider`, `ArchbaseSSRProvider`), as cores `Mantine` e o `useArchbaseTranslation`.
+
+<Story name="Provider + Theme">
+  {() => (
+    <ArchbaseGlobalProvider
+      colorScheme="light"
+      translationName={translationName}
+      translationResource={translationResource}
+    >
+      <TranslationDemo />
+      <ArchbaseEdit label="Nome" placeholder="Digite aqui" />
+    </ArchbaseGlobalProvider>
+  )}
+</Story>

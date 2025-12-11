@@ -1,3 +1,7 @@
+/**
+ * ArchbaseTreeViewItem — linha da árvore com checks, ícones e suporte a carregamento preguiçoso.
+ * @status stable
+ */
 import { ActionIcon, Space, Text } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import { IconChevronDown, IconChevronRight, IconSquare, IconSquareCheck } from '@tabler/icons-react';

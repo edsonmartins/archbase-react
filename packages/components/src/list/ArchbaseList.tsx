@@ -1,3 +1,7 @@
+/**
+ * ArchbaseList — lista com seleção opcional e integração com dataSource.
+ * @status stable
+ */
 import { Box, Paper, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import { uniqueId } from 'lodash';

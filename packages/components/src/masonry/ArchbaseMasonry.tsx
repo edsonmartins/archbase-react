@@ -1,3 +1,7 @@
+/**
+ * ArchbaseMasonry — layout masonry responsivo com provider de contexto.
+ * @status stable
+ */
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
 const DEFAULT_COLUMNS_COUNT = 1;

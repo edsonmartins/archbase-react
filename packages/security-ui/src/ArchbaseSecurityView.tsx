@@ -1,3 +1,7 @@
+/**
+ * ArchbaseSecurityView — visão completa de usuários/grupos/permissões.
+ * @status stable
+ */
 import { ARCHBASE_IOC_API_TYPE, builder, emit, processDetailErrorMessage, processErrorMessage } from '@archbase/core';
 import { ArchbaseDataSource } from '@archbase/data';
 // import { ArchbaseCountdownProgress } from '@archbase/components'; // Temporarily disabled

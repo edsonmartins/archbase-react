@@ -1,3 +1,7 @@
+/**
+ * ArchbaseMemoryLeakDetector — detector simples de vazamentos de memória (dev).
+ * @status stable
+ */
 import { emitDebugInfo } from '../debug/ArchbaseDebugPanel';
 
 interface MemorySnapshot {

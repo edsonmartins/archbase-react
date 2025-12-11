@@ -1,0 +1,28 @@
+import catalog from '../../component-catalog.json';
+
+# Security
+
+Para equipes de segurança, enfatize `ArchbaseSecurityView`, `ArchbaseSecurityProvider` e `ArchbaseApiTokenView`. Acompanhe os modais (`UserModal`, `ApiTokenModal`, `GroupModal`) para flows completos.
+
+## Checklist de segurança
+
+- 🔒 `ArchbaseSecurityProvider` envolve a app e libera hooks `useArchbaseSecurity`, `useArchbasePermissionCheck`.
+- 🧾 Use `ArchbaseSecurityView` com data sources remotos (`useArchbaseRemoteDataSource`) e expanda com `ArchbaseDualListSelector`.
+- 🔐 Para API tokens, combine `ArchbaseApiTokenView` com `ArchbaseDialog` e `ArchbaseNotifications` nos callbacks de sucesso/erro.
+- 🔎 Documente as permissões via `useArchbaseSecureForm` e `ArchbaseSecureActionButton`.
+
+## Links canônicos
+
+- `ArchbaseSecurityView`: <a href={catalog.components.find((c) => c.name === 'ArchbaseSecurityView')?.canonicalUrl}>link</a>
+- `ArchbaseApiTokenView`: <a href={catalog.components.find((c) => c.name === 'ArchbaseApiTokenView')?.canonicalUrl}>link</a>
+- `UserModal`: <a href={catalog.components.find((c) => c.name === 'UserModal')?.canonicalUrl}>link</a>
+- `ArchbaseSecurityProvider`: <a href={catalog.components.find((c) => c.name === 'ArchbaseSecurityProvider')?.canonicalUrl}>link</a>
+
+Consulte `docs/stories/SecurityRecipes.stories.mdx` para ver essas histórias lado a lado, e referencie o catálogo nos seus recipes e no `llms.txt`.
+
+## Fluxos recomendados
+
+1. `login` → `ArchbaseSecurityProvider` registra tokens e expõe `useArchbaseSecurity`.
+2. `ArchbaseSecurityView` renderiza `DataGrid` + modais `UserModal`/`GroupModal` e usa `ArchbaseDualListSelector`.
+3. Em cada ação restrita, envolva com `ArchbaseSecureActionButton` e defina `requiredPermissions`.
+4. Documente os `canonicalUrl` destes componentes no portal e cite no `llms.txt` para orientar IA (ex: `docs/stories/SecurityRecipes.stories.mdx` mostra o fluxo completo).

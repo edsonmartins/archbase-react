@@ -1,3 +1,7 @@
+/**
+ * ArchbaseActionButtons — grupo de ações padrão para fluxos CRUD.
+ * @status stable
+ */
 import { ActionIcon, Button, Menu, px, Space, Text, Tooltip, useMantineTheme } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMenu2 } from '@tabler/icons-react';

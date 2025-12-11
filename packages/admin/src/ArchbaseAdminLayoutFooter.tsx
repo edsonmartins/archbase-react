@@ -1,3 +1,7 @@
+/**
+ * ArchbaseAdminLayoutFooter — rodapé do layout admin.
+ * @status stable
+ */
 import { Flex } from '@mantine/core';
 import React, { ReactNode } from 'react';
 

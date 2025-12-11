@@ -1,3 +1,7 @@
+/**
+ * GroupModal — modal para gerenciar grupos/roles de usuários.
+ * @status stable
+ */
 import React from 'react'
 import { Grid, ScrollArea, Stack, Modal, Button, Group } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'

@@ -1,3 +1,7 @@
+/**
+ * ArchbaseGridTemplate — template de grid/data table com integração a DataSource v1/v2.
+ * @status stable
+ */
 import { AlertVariant, Box, Button, ButtonVariant, Flex, Paper, useMantineColorScheme } from '@mantine/core';
 import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { IconPlus } from '@tabler/icons-react';

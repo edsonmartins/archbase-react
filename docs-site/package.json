@@ -1,0 +1,14 @@
+{
+  "name": "archbase-docs-site",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "serve": "docusaurus serve"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^2.5.0",
+    "@docusaurus/preset-classic": "^2.5.0"
+  }
+}

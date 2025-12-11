@@ -1,3 +1,7 @@
+/**
+ * ArchbaseFormModalTemplate — template de formulário em modal com integração a DataSource v1/v2.
+ * @status stable
+ */
 import { Button, Flex, Group, LoadingOverlay, LoadingOverlayStylesNames, Modal, ModalProps, OverlayCssVariables, OverlayProps, OverlayStylesNames, useMantineColorScheme } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import { IconCheck } from '@tabler/icons-react';

@@ -1,3 +1,7 @@
+/**
+ * ArchbaseEdit — input texto integrado ao DataSource (v1/v2) com suporte a validação e estado controlado.
+ * @status stable
+ */
 import {
 	ActionIcon,
 	ActionIconVariant,

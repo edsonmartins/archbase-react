@@ -1,0 +1,30 @@
+import catalog from '../../component-catalog.json';
+import { Meta, Story } from '@storybook/addon-docs';
+
+<Meta title="Foundations/Catalog Links" />
+
+# Catalog Links
+
+O `component-catalog.json` gera `canonicalUrl` para cada componente. Use esse link nos recipes, MDX e `llms.txt` para apontar ao Storybook oficial.
+
+```
+{
+  "name": "ArchbaseDataGrid",
+  "canonicalUrl": "https://docs.archbase.com/storybook/archbase-data-grid"
+}
+```
+
+<Story name="Links">
+  {() => (
+    <ul>
+      {['ArchbaseEdit', 'ArchbaseDataGrid', 'ArchbaseFormTemplate']
+        .map((name) => catalog.components.find((c) => c.name === name))
+        .filter(Boolean)
+        .map((component) => (
+          <li key={component?.name}>
+            <strong>{component?.name}</strong>: <a href={component?.canonicalUrl}>{component?.canonicalUrl}</a>
+          </li>
+        ))}
+    </ul>
+  )}
+</Story>

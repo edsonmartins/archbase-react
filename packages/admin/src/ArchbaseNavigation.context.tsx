@@ -1,3 +1,7 @@
+/**
+ * ArchbaseNavigationProvider — contexto de navegação para o layout admin (menus/abas).
+ * @status stable
+ */
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useReducer } from 'react';
 
 interface ArchbaseNavigationState {

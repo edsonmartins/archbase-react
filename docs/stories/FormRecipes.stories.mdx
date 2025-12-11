@@ -1,0 +1,32 @@
+import catalog from '../../component-catalog.json';
+import { Meta, Story } from '@storybook/addon-docs';
+
+<Meta title="Recipes/Form Recipes" />
+
+# Form Recipes
+
+Use `ArchbaseEdit`, `ArchbaseMaskEdit` e `ArchbaseActionButtons` vinculados ao `canonicalUrl` do catálogo para montar um formulário completo com validação e loading.
+
+```
+{
+  "name": "ArchbaseEdit",
+  "canonicalUrl": "https://docs.archbase.com/storybook/archbase-edit"
+}
+```
+
+<Story name="Links">
+  {() => (
+    <ul>
+      {['ArchbaseEdit', 'ArchbaseActionButtons', 'ArchbaseMaskEdit']
+        .map((name) => catalog.components.find((c) => c.name === name))
+        .filter(Boolean)
+        .map((component) => (
+          <li key={component?.name}>
+            <strong>{component?.name}</strong>: <a href={component?.canonicalUrl}>{component?.canonicalUrl}</a>
+          </li>
+        ))}
+    </ul>
+  )}
+</Story>
+
+Essa página serve de referência rápida para IA/teams recriarem o formulário com validação, loading e erro centralizado.

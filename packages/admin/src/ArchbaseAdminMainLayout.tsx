@@ -1,3 +1,7 @@
+/**
+ * ArchbaseAdminMainLayout — layout administrativo base com header/nav/conteúdo.
+ * @status stable
+ */
 import { AppShell, Drawer, MantineStyleProp, px, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import React, { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Route, useNavigate } from 'react-router-dom';
