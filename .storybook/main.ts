@@ -26,8 +26,8 @@ const aliases = packages.reduce<Record<string, string>>((map, pkg) => {
 
 const config: StorybookConfig = {
   stories: [
-    '../docs/stories/**/*.stories.@(tsx|mdx)',
-    '../packages/**/src/**/*.stories.@(tsx|mdx)'
+    '../docs/stories/**/*.stories.tsx',
+    '../packages/**/src/**/*.stories.tsx'
   ],
   staticDirs: ['../docs/static'],
   addons: [

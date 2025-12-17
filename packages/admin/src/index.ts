@@ -40,6 +40,9 @@ export { ArchbaseKeepAliveRoute, ArchbaseAliveAbleRoutes } from './ArchbaseAlive
 export type { CommandPaletteButtonProps, ArchbaseSpotlightActionData } from './CommandPaletteButton';
 export { CommandPaletteButton } from './CommandPaletteButton';
 
+export type { ArchbaseAdvancedSidebarProps } from './ArchbaseAdvancedSidebar';
+export { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
+
 export { ArchbaseDrawerContent } from './drawer/DrawerContent'
 export type { ArchbaseDrawerContentProps } from './drawer/DrawerContent'
 export { ArchbaseDrawerTrigger } from './drawer/DrawerTrigger'

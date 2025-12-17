@@ -1,43 +1,53 @@
 import { Meta, StoryObj } from '@storybook/react';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { ArchbaseSpaceTemplate } from './ArchbaseSpaceTemplate';
-import { ArchbaseDataSource } from '@archbase/data';
-import { ArchbaseSimpleFilter } from './hooks';
-import { ArchbaseDataGrid } from '../components'; // ensure alias works
-
-const records = [
-  { id: 1, name: 'Cliente A', status: 'Ativo' },
-  { id: 2, name: 'Cliente B', status: 'Inativo' }
-];
-
-const createDataSource = () =>
-  new ArchbaseDataSource('space-template', {
-    records,
-    grandTotalRecords: records.length,
-    currentPage: 1,
-    totalPages: 1,
-    pageSize: records.length
-  });
+import { Button, Text } from '@mantine/core';
 
 const meta: Meta<typeof ArchbaseSpaceTemplate> = {
   title: 'Templates/ArchbaseSpaceTemplate',
   component: ArchbaseSpaceTemplate,
-  tags: ['autodocs']
+  tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: 'Template de página com filtros, toolbar e grid/conteúdo.'
+      }
+    }
+  }
 };
 
 export default meta;
 
-export const Basic: StoryObj<typeof ArchbaseSpaceTemplate> = {
+type Story = StoryObj<typeof ArchbaseSpaceTemplate>;
+
+export const Basic: Story = {
   render: () => {
-    const dataSource = useMemo(() => createDataSource(), []);
     return (
-      <div style={{ padding: 16 }}>
+      <div style={{ height: 400 }}>
         <ArchbaseSpaceTemplate
           title="Clientes"
-          dataSource={dataSource}
-          filterComponent={<ArchbaseSimpleFilter fields={['name']} onChange={() => {}} />}
-          content={<ArchbaseDataGrid dataSource={dataSource} columns={[{ id: 'name', dataField: 'name', title: 'Nome' }, { id: 'status', dataField: 'status', title: 'Status' }]} />}
-        />
+          headerRight={<Button variant="outline">Novo</Button>}
+        >
+          <Text p="md">Conteúdo do template</Text>
+        </ArchbaseSpaceTemplate>
+      </div>
+    );
+  }
+};
+
+export const WithHeaderAndFooter: Story = {
+  render: () => {
+    return (
+      <div style={{ height: 500 }}>
+        <ArchbaseSpaceTemplate
+          title="Pedidos"
+          headerLeft={<Text>Filtros</Text>}
+          headerRight={<Button variant="filled">Adicionar</Button>}
+          footerLeft={<Text size="sm">Total: 10 registros</Text>}
+          footerRight={<Button variant="light">Exportar</Button>}
+        >
+          <Text p="md">Listagem de pedidos...</Text>
+        </ArchbaseSpaceTemplate>
       </div>
     );
   }

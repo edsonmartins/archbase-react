@@ -1,23 +1,23 @@
-[21:02:01.678] [INFO] storybook v10.1.5
-[21:02:01.713] [WARN] As of Storybook 10.0, PnP is deprecated.
+[13:22:38.113] [INFO] storybook v10.1.5
+[13:22:39.366] [WARN] As of Storybook 10.0, PnP is deprecated.
 If you are using PnP, you can continue to use Storybook 10.0, but we recommend migrating to a different package manager or linker-mode.
 
 In future versions, PnP compatibility will be removed.
-[21:02:03.047] [DEBUG] Getting package.json info for /Users/edsonmartins/tmp/archbase-react-v3/package.json...
-[21:02:04.195] [DEBUG] Serving static files from [36mdocs/static[39m at [36m/[39m
-[21:02:04.248] [INFO] Starting...
-[21:02:04.725] [ERROR] [38;2;241;97;97mError: Build failed with 2 errors:
-node_modules/.pnpm/storybook@10.1.5_@testing-library+dom@10.4.0_prettier@3.6.2_react-dom@19.1.0_react@19.1.0__react@19.1.0/node_modules/storybook/dist/core-server/presets/common-manager.js:68:34: ERROR: Could not resolve "@storybook/global"
-node_modules/.pnpm/storybook@10.1.5_@testing-library+dom@10.4.0_prettier@3.6.2_react-dom@19.1.0_react@19.1.0__react@19.1.0/node_modules/storybook/dist/core-server/presets/common-manager.js:97:38: ERROR: Could not resolve "storybook/internal/csf"[39m
-    at failureErrorWithLog (./node_modules/.pnpm/esbuild@0.25.6/node_modules/esbuild/lib/main.js:1465:15)
-    at ./node_modules/.pnpm/esbuild@0.25.6/node_modules/esbuild/lib/main.js:924:25
-    at runOnEndCallbacks (./node_modules/.pnpm/esbuild@0.25.6/node_modules/esbuild/lib/main.js:1305:45)
-    at buildResponseToResult (./node_modules/.pnpm/esbuild@0.25.6/node_modules/esbuild/lib/main.js:922:7)
-    at ./node_modules/.pnpm/esbuild@0.25.6/node_modules/esbuild/lib/main.js:949:16
-    at responseCallbacks.<computed> (./node_modules/.pnpm/esbuild@0.25.6/node_modules/esbuild/lib/main.js:601:9)
-    at handleIncomingPacket (./node_modules/.pnpm/esbuild@0.25.6/node_modules/esbuild/lib/main.js:656:12)
-    at Socket.readFromStdout (./node_modules/.pnpm/esbuild@0.25.6/node_modules/esbuild/lib/main.js:579:7)
+[13:22:42.703] [DEBUG] Getting package.json info for /Users/edsonmartins/tmp/archbase-react-v3/package.json...
+[13:22:46.638] [DEBUG] Serving static files from [36mdocs/static[39m at [36m/[39m
+[13:22:46.934] [INFO] Starting...
+[13:22:48.548] [ERROR] [38;2;241;97;97mError: Build failed with 2 errors:
+node_modules/storybook/dist/core-server/presets/common-manager.js:68:34: ERROR: Could not resolve "@storybook/global"
+node_modules/storybook/dist/core-server/presets/common-manager.js:97:38: ERROR: Could not resolve "storybook/internal/csf"[39m
+    at failureErrorWithLog (./node_modules/esbuild/lib/main.js:1651:15)
+    at ./node_modules/esbuild/lib/main.js:1059:25
+    at runOnEndCallbacks (./node_modules/esbuild/lib/main.js:1486:45)
+    at buildResponseToResult (./node_modules/esbuild/lib/main.js:1057:7)
+    at ./node_modules/esbuild/lib/main.js:1086:16
+    at responseCallbacks.<computed> (./node_modules/esbuild/lib/main.js:704:9)
+    at handleIncomingPacket (./node_modules/esbuild/lib/main.js:764:9)
+    at Socket.readFromStdout (./node_modules/esbuild/lib/main.js:680:7)
     at Socket.emit (node:events:524:28)
     at addChunk (node:internal/streams/readable:561:12)
-[21:02:04.731] [WARN] Broken build, fix the error above.
+[13:22:48.552] [WARN] Broken build, fix the error above.
 You may need to refresh the browser.
