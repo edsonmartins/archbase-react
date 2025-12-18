@@ -1,0 +1,30 @@
+{
+  "id": "admin/navigation",
+  "title": "Navigation",
+  "description": "Componentes para navegação em aplicações admin.",
+  "source": "@site/docs/admin/navigation.mdx",
+  "sourceDirName": "admin",
+  "slug": "/admin/navigation",
+  "permalink": "/docs/admin/navigation",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/admin/navigation.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "title": "Navigation",
+    "sidebar_position": 4
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Sidebar",
+    "permalink": "/docs/admin/sidebar"
+  },
+  "next": {
+    "title": "Tabs",
+    "permalink": "/docs/admin/tabs"
+  }
+}

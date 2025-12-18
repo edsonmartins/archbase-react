@@ -1,0 +1,60 @@
+.titleOffset {
+  position: relative;
+  top: rem(-80px);
+}
+
+.title {
+  margin-top: var(--mantine-spacing-xl);
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.titleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.titleLink:hover {
+  text-decoration: underline;
+}
+
+.code {
+  margin: var(--mantine-spacing-md) 0;
+  border-radius: var(--mantine-radius-md);
+}
+
+.paragraph {
+  margin: var(--mantine-spacing-md) 0;
+  line-height: 1.7;
+  font-size: var(--mantine-font-size-md);
+}
+
+.ul {
+  margin: var(--mantine-spacing-md) 0;
+  padding-left: var(--mantine-spacing-lg);
+}
+
+.li {
+  margin-bottom: var(--mantine-spacing-xs);
+  line-height: 1.6;
+}
+
+.link {
+  color: var(--mantine-color-blue-6);
+}
+
+.tableContainer {
+  margin: var(--mantine-spacing-md) 0;
+}
+
+.table {
+  font-size: var(--mantine-font-size-sm);
+}
+
+.th {
+  font-weight: 600;
+  text-align: left;
+}
+
+.td {
+  vertical-align: top;
+}

@@ -1,0 +1,28 @@
+{
+  "id": "architecture",
+  "title": "Arquitetura da UI",
+  "description": "Archbase React é modularizado em pacotes (components, template, admin, security-ui, tools, core, data, ssr). O catálogo (component-catalog.json) lista cada export com description, props, tags, status e canonicalUrl.",
+  "source": "@site/docs/architecture.mdx",
+  "sourceDirName": ".",
+  "slug": "/architecture",
+  "permalink": "/docs/architecture",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/docs/architecture.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "Arquitetura da UI",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Conventions",
+    "permalink": "/docs/conventions"
+  },
+  "next": {
+    "title": "Forms",
+    "permalink": "/docs/forms"
+  }
+}

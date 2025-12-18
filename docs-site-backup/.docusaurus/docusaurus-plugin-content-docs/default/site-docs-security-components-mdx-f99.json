@@ -1,0 +1,30 @@
+{
+  "id": "security/components",
+  "title": "Componentes",
+  "description": "Componentes com verificação de permissão integrada.",
+  "source": "@site/docs/security/components.mdx",
+  "sourceDirName": "security",
+  "slug": "/security/components",
+  "permalink": "/docs/security/components",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/security/components.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "title": "Componentes",
+    "sidebar_position": 5
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Providers",
+    "permalink": "/docs/security/providers"
+  },
+  "next": {
+    "title": "UI Components",
+    "permalink": "/docs/security/ui-components"
+  }
+}

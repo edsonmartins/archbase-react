@@ -1,0 +1,50 @@
+
+# Autorização
+
+Sistema de permissões e roles.
+
+## Verificação de Permissões
+
+```tsx
+const { hasPermission, hasRole, user } = useArchbaseSecurity();
+
+// Verificar permissão específica
+if (hasPermission('USUARIO_CRIAR')) {
+  // Mostrar botão de criar
+}
+
+// Verificar role
+if (hasRole('ADMIN')) {
+  // Mostrar menu admin
+}
+```
+
+## ProtectedComponent
+
+```tsx
+import { ProtectedComponent } from '@archbase/security';
+
+<ProtectedComponent
+  permission="PRODUTO_EDITAR"
+  fallback={<AccessDenied />}
+>
+  <EditButton />
+</ProtectedComponent>
+```
+
+## SecureRoute
+
+```tsx
+import { SecureRoute } from '@archbase/security';
+
+<Routes>
+  <Route element={<SecureRoute permission="ADMIN" />}>
+    <Route path="/admin/*" element={<AdminPanel />} />
+  </Route>
+</Routes>
+```
+
+## Próximos Passos
+
+- [Providers](/security/providers) - Configuração
+- [Componentes](/security/components) - UI de segurança

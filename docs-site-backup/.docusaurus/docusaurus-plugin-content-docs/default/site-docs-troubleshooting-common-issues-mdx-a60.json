@@ -1,0 +1,30 @@
+{
+  "id": "troubleshooting/common-issues",
+  "title": "Problemas Comuns",
+  "description": "Erro: Cannot find module '@archbase/...'",
+  "source": "@site/docs/troubleshooting/common-issues.mdx",
+  "sourceDirName": "troubleshooting",
+  "slug": "/troubleshooting/common-issues",
+  "permalink": "/docs/troubleshooting/common-issues",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/troubleshooting/common-issues.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "Problemas Comuns",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "FAQ",
+    "permalink": "/docs/troubleshooting/faq"
+  },
+  "next": {
+    "title": "Mensagens de Erro",
+    "permalink": "/docs/troubleshooting/error-messages"
+  }
+}

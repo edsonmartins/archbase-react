@@ -1,0 +1,30 @@
+{
+  "id": "components/feedback/notifications",
+  "title": "Notificações",
+  "description": "Sistema de notificações toast para feedback ao usuário.",
+  "source": "@site/docs/components/feedback/notifications.mdx",
+  "sourceDirName": "components/feedback",
+  "slug": "/components/feedback/notifications",
+  "permalink": "/docs/components/feedback/notifications",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/feedback/notifications.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Notificações",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Gráficos",
+    "permalink": "/docs/components/data-display/charts"
+  },
+  "next": {
+    "title": "Modais",
+    "permalink": "/docs/components/feedback/modals"
+  }
+}

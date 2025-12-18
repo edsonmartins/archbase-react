@@ -1,0 +1,30 @@
+{
+  "id": "layout/overview",
+  "title": "Visão Geral",
+  "description": "O pacote @archbase/layout fornece componentes para estruturação de interfaces.",
+  "source": "@site/docs/layout/overview.mdx",
+  "sourceDirName": "layout",
+  "slug": "/layout/overview",
+  "permalink": "/docs/layout/overview",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/layout/overview.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Visão Geral",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "SpaceTemplate",
+    "permalink": "/docs/templates/space-template"
+  },
+  "next": {
+    "title": "Containers",
+    "permalink": "/docs/layout/containers"
+  }
+}

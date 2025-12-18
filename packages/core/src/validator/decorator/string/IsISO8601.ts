@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isIso8601Validator from 'validator/lib/isISO8601';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_ISO8601 = 'isIso8601';
@@ -11,7 +11,7 @@ export const IS_ISO8601 = 'isIso8601';
  * If given value is not a string, then it returns false.
  * Use the option strict = true for additional checks for a valid date, e.g. invalidates dates like 2019-02-29.
  */
-export function isISO8601(value: unknown, options?: ValidatorJS.IsISO8601Options): boolean {
+export function isISO8601(value: unknown, options?: validator.IsISO8601Options): boolean {
   return typeof value === 'string' && isIso8601Validator(value, options);
 }
 
@@ -21,7 +21,7 @@ export function isISO8601(value: unknown, options?: ValidatorJS.IsISO8601Options
  * Use the option strict = true for additional checks for a valid date, e.g. invalidates dates like 2019-02-29.
  */
 export function IsISO8601(
-  options?: ValidatorJS.IsISO8601Options,
+  options?: validator.IsISO8601Options,
   validationOptions?: ValidationOptions
 ): PropertyDecorator {
   return ValidateBy(

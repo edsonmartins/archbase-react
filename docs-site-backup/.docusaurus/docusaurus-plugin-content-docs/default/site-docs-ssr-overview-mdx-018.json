@@ -1,0 +1,30 @@
+{
+  "id": "ssr/overview",
+  "title": "Visão Geral",
+  "description": "Utilitários para SSR com TanStack Start/Router.",
+  "source": "@site/docs/ssr/overview.mdx",
+  "sourceDirName": "ssr",
+  "slug": "/ssr/overview",
+  "permalink": "/docs/ssr/overview",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/ssr/overview.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Visão Geral",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Filtros",
+    "permalink": "/docs/advanced/filters"
+  },
+  "next": {
+    "title": "Providers",
+    "permalink": "/docs/ssr/providers"
+  }
+}

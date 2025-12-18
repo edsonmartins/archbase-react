@@ -1,0 +1,27 @@
+{
+  "id": "intro",
+  "title": "Archbase React",
+  "description": "Bem-vindo à documentação oficial do Archbase React - uma biblioteca completa de componentes React para construção de aplicações empresariais modernas.",
+  "source": "@site/docs/intro.mdx",
+  "sourceDirName": ".",
+  "slug": "/",
+  "permalink": "/docs/",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/intro.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "slug": "/",
+    "title": "Archbase React",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "next": {
+    "title": "Instalação",
+    "permalink": "/docs/getting-started/installation"
+  }
+}

@@ -1,0 +1,134 @@
+
+# Notificações
+
+Sistema de notificações toast para feedback ao usuário.
+
+## ArchbaseNotifications
+
+### Configuração
+
+```tsx
+import { ArchbaseNotifications } from '@archbase/components';
+
+// No App.tsx
+function App() {
+  return (
+    <MantineProvider>
+      <ArchbaseNotifications position="top-right" />
+      {/* Resto da aplicação */}
+    </MantineProvider>
+  );
+}
+```
+
+### Uso
+
+```tsx
+import { showNotification, showSuccessNotification, showErrorNotification } from '@archbase/components';
+
+// Notificação simples
+showNotification({
+  title: 'Informação',
+  message: 'Esta é uma mensagem informativa',
+});
+
+// Notificação de sucesso
+showSuccessNotification({
+  title: 'Sucesso',
+  message: 'Operação realizada com sucesso!',
+});
+
+// Notificação de erro
+showErrorNotification({
+  title: 'Erro',
+  message: 'Ocorreu um erro ao processar a requisição',
+});
+
+// Notificação de aviso
+showWarningNotification({
+  title: 'Atenção',
+  message: 'Esta ação não pode ser desfeita',
+});
+```
+
+### Props de Notificação
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `title` | `string` | - | Título da notificação |
+| `message` | `string` | - | Mensagem |
+| `color` | `string` | - | Cor (blue, green, red, yellow) |
+| `icon` | `ReactNode` | - | Ícone customizado |
+| `autoClose` | `number \| false` | `4000` | Tempo para fechar (ms) |
+| `withCloseButton` | `boolean` | `true` | Mostra botão de fechar |
+| `loading` | `boolean` | `false` | Mostra loading |
+
+### Posições
+
+```tsx
+<ArchbaseNotifications position="top-right" />
+<ArchbaseNotifications position="top-left" />
+<ArchbaseNotifications position="bottom-right" />
+<ArchbaseNotifications position="bottom-left" />
+<ArchbaseNotifications position="top-center" />
+<ArchbaseNotifications position="bottom-center" />
+```
+
+---
+
+## ArchbaseAlert
+
+Componente de alerta inline.
+
+### Exemplo
+
+```tsx
+import { ArchbaseAlert } from '@archbase/components';
+
+<ArchbaseAlert
+  variant="info"
+  title="Informação importante"
+>
+  Este é o conteúdo do alerta informativo.
+</ArchbaseAlert>
+
+<ArchbaseAlert
+  variant="success"
+  title="Sucesso!"
+  withCloseButton
+  onClose={() => setShowAlert(false)}
+>
+  A operação foi concluída com sucesso.
+</ArchbaseAlert>
+
+<ArchbaseAlert
+  variant="error"
+  title="Erro"
+>
+  Não foi possível completar a operação.
+</ArchbaseAlert>
+
+<ArchbaseAlert
+  variant="warning"
+  title="Atenção"
+>
+  Esta ação pode ter consequências irreversíveis.
+</ArchbaseAlert>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `variant` | `'info' \| 'success' \| 'error' \| 'warning'` | `'info'` | Variante visual |
+| `title` | `string` | - | Título do alerta |
+| `withCloseButton` | `boolean` | `false` | Mostra botão de fechar |
+| `onClose` | `() => void` | - | Callback ao fechar |
+| `icon` | `ReactNode` | - | Ícone customizado |
+
+---
+
+## Próximos Passos
+
+- [Modais](/components/feedback/modals) - Modal, Confirm
+- [Botões](/components/navigation/buttons) - Botões de ação

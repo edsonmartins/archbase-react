@@ -1,0 +1,30 @@
+{
+  "id": "api-reference/core",
+  "title": "@archbase/core",
+  "description": "Pacote fundamental com providers, hooks e utilitários base.",
+  "source": "@site/docs/api-reference/core.mdx",
+  "sourceDirName": "api-reference",
+  "slug": "/api-reference/core",
+  "permalink": "/docs/api-reference/core",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/api-reference/core.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "@archbase/core",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Migração v2 → v3",
+    "permalink": "/docs/guides/migration-v2-v3"
+  },
+  "next": {
+    "title": "@archbase/data",
+    "permalink": "/docs/api-reference/data"
+  }
+}

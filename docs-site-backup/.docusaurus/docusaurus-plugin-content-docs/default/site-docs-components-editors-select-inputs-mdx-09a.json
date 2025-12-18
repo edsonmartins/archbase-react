@@ -1,0 +1,30 @@
+{
+  "id": "components/editors/select-inputs",
+  "title": "Campos de Seleção",
+  "description": "Componentes para seleção de opções com binding ao DataSource.",
+  "source": "@site/docs/components/editors/select-inputs.mdx",
+  "sourceDirName": "components/editors",
+  "slug": "/components/editors/select-inputs",
+  "permalink": "/docs/components/editors/select-inputs",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/editors/select-inputs.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "Campos de Seleção",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Campos de Texto",
+    "permalink": "/docs/components/editors/text-inputs"
+  },
+  "next": {
+    "title": "Campos Numéricos",
+    "permalink": "/docs/components/editors/number-inputs"
+  }
+}

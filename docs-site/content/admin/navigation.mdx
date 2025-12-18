@@ -1,0 +1,44 @@
+
+# Sistema de Navegação
+
+Componentes para navegação em aplicações admin.
+
+## ArchbaseUserDropdown
+
+Menu do usuário logado.
+
+```tsx
+import { ArchbaseUserDropdown } from '@archbase/admin';
+
+<ArchbaseUserDropdown
+  user={{
+    name: 'João Silva',
+    email: 'joao@email.com',
+    avatar: '/avatar.jpg',
+  }}
+  onLogout={handleLogout}
+  onProfile={handleProfile}
+  onSettings={handleSettings}
+/>
+```
+
+## ArchbaseBreadcrumbs
+
+Navegação de breadcrumbs.
+
+```tsx
+import { ArchbaseBreadcrumbs } from '@archbase/admin';
+
+<ArchbaseBreadcrumbs
+  items={[
+    { label: 'Home', link: '/' },
+    { label: 'Cadastros', link: '/cadastros' },
+    { label: 'Usuários' },
+  ]}
+/>
+```
+
+## Próximos Passos
+
+- [Tabs](/admin/tabs) - Container de abas
+- [Drawers](/admin/drawers) - Painéis laterais

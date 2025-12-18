@@ -1,0 +1,125 @@
+
+# Botões e Ações
+
+Componentes para ações do usuário.
+
+## ArchbaseActionButtons
+
+Barra de botões de ação padrão para formulários.
+
+### Exemplo
+
+```tsx
+import { ArchbaseActionButtons } from '@archbase/components';
+
+<ArchbaseActionButtons
+  onNew={handleNew}
+  onEdit={handleEdit}
+  onSave={handleSave}
+  onCancel={handleCancel}
+  onDelete={handleDelete}
+  isBrowsing={isBrowsing}
+  isEmpty={isEmpty}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `onNew` | `() => void` | - | Callback para novo |
+| `onEdit` | `() => void` | - | Callback para editar |
+| `onSave` | `() => void` | - | Callback para salvar |
+| `onCancel` | `() => void` | - | Callback para cancelar |
+| `onDelete` | `() => void` | - | Callback para excluir |
+| `isBrowsing` | `boolean` | - | Estado de navegação |
+| `isEditing` | `boolean` | - | Estado de edição |
+| `isEmpty` | `boolean` | - | Sem registros |
+| `showNew` | `boolean` | `true` | Mostra botão Novo |
+| `showEdit` | `boolean` | `true` | Mostra botão Editar |
+| `showSave` | `boolean` | `true` | Mostra botão Salvar |
+| `showCancel` | `boolean` | `true` | Mostra botão Cancelar |
+| `showDelete` | `boolean` | `true` | Mostra botão Excluir |
+
+---
+
+## ArchbaseNavigationButtons
+
+Botões de navegação entre registros.
+
+### Exemplo
+
+```tsx
+import { ArchbaseNavigationButtons } from '@archbase/components';
+
+<ArchbaseNavigationButtons
+  onFirst={first}
+  onPrior={prior}
+  onNext={next}
+  onLast={last}
+  disabled={!isBrowsing}
+/>
+```
+
+---
+
+## SecureButton
+
+Botão com verificação de permissão de segurança.
+
+### Exemplo
+
+```tsx
+import { SecureButton } from '@archbase/security';
+
+<SecureButton
+  permission="PRODUTO_CRIAR"
+  onClick={handleCriarProduto}
+>
+  Criar Produto
+</SecureButton>
+```
+
+O botão só será renderizado se o usuário tiver a permissão especificada.
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `permission` | `string` | - | Permissão necessária |
+| `resource` | `string` | - | Recurso associado |
+| `action` | `string` | - | Ação (create, update, delete) |
+| `fallback` | `ReactNode` | `null` | Componente alternativo |
+
+---
+
+## ArchbaseFabButton
+
+Floating Action Button.
+
+### Exemplo
+
+```tsx
+import { ArchbaseFabButton } from '@archbase/components';
+
+<ArchbaseFabButton
+  icon={<IconPlus />}
+  onClick={handleNew}
+  position="bottom-right"
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `icon` | `ReactNode` | - | Ícone do botão |
+| `position` | `'bottom-right' \| 'bottom-left'` | `'bottom-right'` | Posição |
+| `color` | `string` | `'blue'` | Cor do botão |
+
+---
+
+## Próximos Passos
+
+- [Inspector](/components/debug/inspector) - Debug tools
+- [Templates](/templates/overview) - Templates prontos

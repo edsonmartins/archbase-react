@@ -1,0 +1,69 @@
+---
+title: Query Builder
+sidebar_position: 1
+---
+
+# ArchbaseQueryBuilder
+
+Construtor visual de queries e filtros avançados.
+
+## Exemplo
+
+```tsx
+import { ArchbaseQueryBuilder, QueryField, QueryFields } from '@archbase/advanced';
+
+function FiltroAvancado() {
+  const [filter, setFilter] = useState(getDefaultEmptyFilter());
+
+  return (
+    <ArchbaseQueryBuilder
+      currentFilter={filter}
+      onFilterChanged={setFilter}
+      onSearchByFilter={handleSearch}
+    >
+      <QueryFields>
+        <QueryField name="id" label="ID" dataType="number" />
+        <QueryField name="nome" label="Nome" dataType="string" />
+        <QueryField name="email" label="E-mail" dataType="string" />
+        <QueryField name="dataCadastro" label="Data" dataType="date" />
+        <QueryField name="status" label="Status" dataType="string">
+          <QueryFieldValue label="Ativo" value="ativo" />
+          <QueryFieldValue label="Inativo" value="inativo" />
+        </QueryField>
+      </QueryFields>
+    </ArchbaseQueryBuilder>
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `currentFilter` | `ArchbaseQueryFilter` | Filtro atual |
+| `onFilterChanged` | `(filter) => void` | Callback de mudança |
+| `onSearchByFilter` | `() => void` | Callback de busca |
+| `persistenceDelegator` | `object` | Persistência de filtros |
+
+## Tipos de Dados
+
+- `string` - Texto
+- `number` - Número
+- `date` - Data
+- `boolean` - Booleano
+- `datetime` - Data e hora
+
+## Operadores
+
+- `equals` - Igual
+- `notEquals` - Diferente
+- `contains` - Contém
+- `startsWith` - Inicia com
+- `endsWith` - Termina com
+- `greaterThan` - Maior que
+- `lessThan` - Menor que
+- `between` - Entre
+
+## Próximos Passos
+
+- [Filtros](/advanced/filters) - Sistema de filtros

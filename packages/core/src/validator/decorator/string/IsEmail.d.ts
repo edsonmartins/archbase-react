@@ -1,14 +1,14 @@
 import { ValidationOptions } from '../ValidationOptions';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 export declare const IS_EMAIL = "isEmail";
 /**
  * Checks if the string is an email.
  * If given value is not a string, then it returns false.
  */
-export declare function isEmailValidate(value: unknown, options?: ValidatorJS.IsEmailOptions): boolean;
+export declare function isEmailValidate(value: unknown, options?: validator.IsEmailOptions): boolean;
 /**
  * Checks if the string is an email.
  * If given value is not a string, then it returns false.
  */
-export declare function IsEmail(options?: ValidatorJS.IsEmailOptions, validationOptions?: ValidationOptions): PropertyDecorator;
+export declare function IsEmail(options?: validator.IsEmailOptions, validationOptions?: ValidationOptions): PropertyDecorator;
 //# sourceMappingURL=IsEmail.d.ts.map

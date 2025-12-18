@@ -1,0 +1,71 @@
+---
+title: "@archbase/data"
+sidebar_position: 2
+---
+
+# @archbase/data
+
+Gerenciamento de dados com DataSource V2 e integração TanStack Query.
+
+## Hooks
+
+| Hook | Descrição |
+|------|-----------|
+| `useArchbaseDataSourceV2` | DataSource principal |
+| `useArchbaseRemoteServiceApi` | Serviços REST |
+| `useArchbaseRemoteDataSource` | DataSource remoto |
+
+## useArchbaseDataSourceV2
+
+```tsx
+const {
+  dataSource,
+  insert,
+  edit,
+  save,
+  cancel,
+  remove,
+  isBrowsing,
+  isEditing,
+  isInserting,
+  isEmpty,
+  currentRecord,
+  first,
+  prior,
+  next,
+  last,
+  goTo,
+} = useArchbaseDataSourceV2<T>({
+  initialData: T[],
+  name: string,
+  primaryKey?: string,
+  initialIndex?: number,
+  onDataChanged?: (data: T[]) => void,
+  onStateChanged?: (state: DataSourceState) => void,
+  onError?: (error: Error) => void,
+});
+```
+
+## useArchbaseRemoteServiceApi
+
+```tsx
+const service = useArchbaseRemoteServiceApi<T>({
+  baseUrl: string,
+  headers?: Record<string, string>,
+});
+
+// Métodos
+await service.findAll(params);
+await service.findById(id);
+await service.save(entity);
+await service.update(id, entity);
+await service.delete(id);
+```
+
+## Classes
+
+| Classe | Descrição |
+|--------|-----------|
+| `ArchbaseDataSource` | Classe base do DataSource |
+| `ArchbaseRemoteDataSource` | DataSource para APIs |
+| `ArchbaseQueryClient` | Cliente de query configurado |

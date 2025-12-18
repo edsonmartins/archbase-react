@@ -1,0 +1,79 @@
+
+# Perguntas Frequentes
+
+## Geral
+
+### Qual versão do React é suportada?
+
+React 18.3+ e React 19.0+.
+
+### Posso usar com Next.js?
+
+Sim! Veja o guia de [instalação](/getting-started/installation#configuração-com-nextjs).
+
+### O Archbase é compatível com Mantine v7?
+
+Não, o Archbase React v3 requer Mantine v8.
+
+## DataSource
+
+### Como atualizo os dados do DataSource?
+
+```tsx
+// Substituir todos os dados
+dataSource.setData(novosDados);
+
+// Ou re-criar o DataSource com novos initialData
+```
+
+### Por que meu formulário não está editável?
+
+Verifique se você:
+1. Chamou `edit()` para entrar em modo de edição
+2. Não está passando `disabled={isBrowsing}` nos campos
+
+### Como faço validação de formulário?
+
+Use os decorators de validação no seu tipo ou valide no `onSave`:
+
+```tsx
+const handleSave = async () => {
+  const errors = validate(currentRecord);
+  if (errors.length > 0) {
+    showErrors(errors);
+    return;
+  }
+  await save();
+};
+```
+
+## Componentes
+
+### Por que o Select não mostra as opções?
+
+Verifique se o formato das opções está correto:
+
+```tsx
+// Correto
+data={[{ value: 'a', label: 'Opção A' }]}
+
+// Incorreto
+data={['a', 'b']}
+```
+
+### Como customizo o tema?
+
+Use o `createTheme` do Mantine:
+
+```tsx
+const theme = createTheme({
+  primaryColor: 'blue',
+});
+
+<MantineProvider theme={theme}>
+```
+
+## Próximos Passos
+
+- [Problemas Comuns](/troubleshooting/common-issues)
+- [Mensagens de Erro](/troubleshooting/error-messages)

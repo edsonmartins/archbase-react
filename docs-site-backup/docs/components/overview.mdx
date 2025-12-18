@@ -1,0 +1,102 @@
+---
+title: Visão Geral
+sidebar_position: 1
+---
+
+# Componentes
+
+O Archbase React oferece mais de 80 componentes prontos para uso em aplicações empresariais.
+
+## Categorias
+
+### Editores de Texto
+
+Componentes para entrada de texto com binding ao DataSource.
+
+- [ArchbaseEdit](/components/editors/text-inputs#archbaseedit) - Campo de texto simples
+- [ArchbaseTextArea](/components/editors/text-inputs#archbasetextarea) - Área de texto multilinha
+- [ArchbasePasswordEdit](/components/editors/text-inputs#archbasepasswordedit) - Campo de senha
+- [ArchbaseMaskEdit](/components/editors/text-inputs#archbasemaskedit) - Campo com máscara
+
+### Seleção
+
+Componentes para seleção de opções.
+
+- [ArchbaseSelect](/components/editors/select-inputs#archbaseselect) - Select simples
+- [ArchbaseAsyncSelect](/components/editors/select-inputs#archbaseasyncselect) - Select com busca assíncrona
+- [ArchbaseMultiSelect](/components/editors/select-inputs#archbasemultiselect) - Seleção múltipla
+
+### Números
+
+Componentes para entrada numérica.
+
+- [ArchbaseNumberEdit](/components/editors/number-inputs#archbasenumberedit) - Campo numérico
+- [ArchbaseRating](/components/editors/number-inputs#archbaserating) - Avaliação com estrelas
+- [ArchbaseCountdownTimer](/components/editors/number-inputs#archbasecountdowntimer) - Timer com contagem regressiva
+
+### Data e Hora
+
+Componentes para seleção de datas e horários.
+
+- [ArchbaseDatePickerEdit](/components/editors/date-time#archbasedatepickeredit) - Seleção de data
+- [ArchbaseTimePicker](/components/editors/date-time#archbasetimepicker) - Seleção de horário
+- [ArchbaseDateTimeRange](/components/editors/date-time#archbasedatetimerange) - Intervalo de datas
+
+### Boolean
+
+Componentes para valores booleanos.
+
+- [ArchbaseCheckbox](/components/editors/boolean-inputs#archbasecheckbox) - Checkbox
+- [ArchbaseSwitch](/components/editors/boolean-inputs#archbaseswitch) - Switch on/off
+- [ArchbaseRadioGroup](/components/editors/boolean-inputs#archbaseradiogroup) - Grupo de radio buttons
+
+### Data Display
+
+Componentes para exibição de dados.
+
+- [ArchbaseDataGrid](/components/data-display/datagrid) - Grid de dados avançado
+- [ArchbaseTreeView](/components/data-display/lists#archbasetreeview) - Árvore hierárquica
+- [ArchbaseMasonryList](/components/data-display/lists#archbasemasonrylist) - Lista em formato masonry
+
+### Feedback
+
+Componentes de feedback ao usuário.
+
+- [ArchbaseNotifications](/components/feedback/notifications) - Sistema de notificações
+- [ArchbaseModal](/components/feedback/modals) - Modais e diálogos
+
+## Padrão de Uso
+
+Todos os componentes seguem um padrão consistente de props:
+
+```tsx
+<ArchbaseEdit
+  // Binding com DataSource
+  dataSource={dataSource}
+  dataField="nome"
+
+  // Aparência
+  label="Nome"
+  placeholder="Digite o nome"
+  description="Nome completo da pessoa"
+  required
+
+  // Estado
+  disabled={isBrowsing}
+  readOnly={false}
+
+  // Validação
+  error={errors?.nome}
+
+  // Estilo
+  variant="default"
+  size="md"
+  w="100%"
+/>
+```
+
+## Próximos Passos
+
+- [Editores de Texto](/components/editors/text-inputs) - ArchbaseEdit, TextArea, etc.
+- [DataGrid](/components/data-display/datagrid) - Grid de dados completo
+- [Templates](/templates/overview) - Templates prontos

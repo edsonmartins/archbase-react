@@ -1,0 +1,30 @@
+{
+  "id": "components/debug/inspector",
+  "title": "Inspector",
+  "description": "Componentes para visualização e debug de dados.",
+  "source": "@site/docs/components/debug/inspector.mdx",
+  "sourceDirName": "components/debug",
+  "slug": "/components/debug/inspector",
+  "permalink": "/docs/components/debug/inspector",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/debug/inspector.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Inspector",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Botões",
+    "permalink": "/docs/components/navigation/buttons"
+  },
+  "next": {
+    "title": "Visão Geral",
+    "permalink": "/docs/templates/overview"
+  }
+}

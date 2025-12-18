@@ -1,0 +1,261 @@
+
+# DataSource V2
+
+O DataSource V2 é o sistema central de gerenciamento de dados do Archbase React. Ele controla o estado dos registros, navegação, edição e sincronização com a interface.
+
+## Conceito
+
+O DataSource V2 funciona como uma camada de abstração entre seus dados e os componentes de UI. Ele gerencia:
+
+- **Estado dos dados** (browsing, editing, inserting)
+- **Navegação** entre registros
+- **Binding automático** com componentes de formulário
+- **Validação** de dados
+- **Eventos** de mudança de estado
+
+## Hook useArchbaseDataSourceV2
+
+O hook `useArchbaseDataSourceV2` é a forma principal de criar e usar um DataSource.
+
+```tsx
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+interface Pessoa {
+  id: number;
+  nome: string;
+  email: string;
+}
+
+function MeuFormulario() {
+  const {
+    dataSource,
+    insert,
+    edit,
+    save,
+    cancel,
+    remove,
+    isBrowsing,
+    isEditing,
+    isInserting,
+    isEmpty,
+    currentRecord,
+    first,
+    prior,
+    next,
+    last,
+    goTo,
+  } = useArchbaseDataSourceV2<Pessoa>({
+    initialData: [],
+    name: 'pessoas-datasource',
+  });
+
+  return (
+    <ArchbaseEdit
+      dataSource={dataSource}
+      dataField="nome"
+      label="Nome"
+      disabled={isBrowsing}
+    />
+  );
+}
+```
+
+## Estados do DataSource
+
+| Estado | Descrição |
+|--------|-----------|
+| `isBrowsing` | Navegando pelos registros (modo leitura) |
+| `isEditing` | Editando um registro existente |
+| `isInserting` | Inserindo um novo registro |
+| `isEmpty` | Não há registros no DataSource |
+
+## Ações Disponíveis
+
+### Manipulação de Registros
+
+| Ação | Descrição |
+|------|-----------|
+| `insert(data)` | Inicia inserção de novo registro |
+| `edit()` | Inicia edição do registro atual |
+| `save()` | Salva as alterações (retorna Promise) |
+| `cancel()` | Cancela a operação atual |
+| `remove()` | Remove o registro atual |
+
+### Navegação
+
+| Ação | Descrição |
+|------|-----------|
+| `first()` | Vai para o primeiro registro |
+| `prior()` | Vai para o registro anterior |
+| `next()` | Vai para o próximo registro |
+| `last()` | Vai para o último registro |
+| `goTo(index)` | Vai para um índice específico |
+
+## Opções de Configuração
+
+```tsx
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+  // Dados iniciais
+  initialData: pessoas,
+
+  // Nome único do DataSource
+  name: 'pessoas-datasource',
+
+  // Campo que identifica o registro
+  primaryKey: 'id',
+
+  // Índice inicial
+  initialIndex: 0,
+
+  // Callbacks
+  onDataChanged: (data) => console.log('Dados alterados', data),
+  onStateChanged: (state) => console.log('Estado alterado', state),
+  onError: (error) => console.error('Erro', error),
+});
+```
+
+## Binding com Componentes
+
+Todos os componentes de formulário do Archbase aceitam `dataSource` e `dataField`:
+
+```tsx
+<ArchbaseEdit
+  dataSource={dataSource}
+  dataField="nome"
+  label="Nome"
+/>
+
+<ArchbaseSelect
+  dataSource={dataSource}
+  dataField="status"
+  label="Status"
+  data={opcoesStatus}
+/>
+
+<ArchbaseDatePickerEdit
+  dataSource={dataSource}
+  dataField="dataNascimento"
+  label="Data de Nascimento"
+/>
+```
+
+## Exemplo Completo
+
+```tsx
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { ArchbaseEdit, ArchbaseSelect } from '@archbase/components';
+import { Button, Stack, Group } from '@mantine/core';
+
+interface Produto {
+  id: number;
+  nome: string;
+  preco: number;
+  categoria: string;
+}
+
+const dadosIniciais: Produto[] = [
+  { id: 1, nome: 'Notebook', preco: 3500, categoria: 'eletronicos' },
+  { id: 2, nome: 'Mouse', preco: 150, categoria: 'perifericos' },
+];
+
+function ProdutoForm() {
+  const {
+    dataSource,
+    insert,
+    edit,
+    save,
+    cancel,
+    remove,
+    isBrowsing,
+    isEditing,
+    isEmpty,
+    first,
+    prior,
+    next,
+    last,
+  } = useArchbaseDataSourceV2<Produto>({
+    initialData: dadosIniciais,
+    name: 'produtos-ds',
+  });
+
+  const handleNovo = () => {
+    insert({
+      id: Date.now(),
+      nome: '',
+      preco: 0,
+      categoria: '',
+    });
+  };
+
+  return (
+    <Stack>
+      {/* Toolbar */}
+      <Group>
+        <Button onClick={handleNovo} disabled={!isBrowsing}>Novo</Button>
+        <Button onClick={edit} disabled={!isBrowsing || isEmpty}>Editar</Button>
+        <Button onClick={save} disabled={isBrowsing} color="green">Salvar</Button>
+        <Button onClick={cancel} disabled={isBrowsing} variant="subtle">Cancelar</Button>
+        <Button onClick={remove} disabled={!isBrowsing || isEmpty} color="red">Excluir</Button>
+      </Group>
+
+      {/* Navegação */}
+      <Group>
+        <Button size="xs" onClick={first} disabled={!isBrowsing}>Primeiro</Button>
+        <Button size="xs" onClick={prior} disabled={!isBrowsing}>Anterior</Button>
+        <Button size="xs" onClick={next} disabled={!isBrowsing}>Próximo</Button>
+        <Button size="xs" onClick={last} disabled={!isBrowsing}>Último</Button>
+      </Group>
+
+      {/* Formulário */}
+      <ArchbaseEdit
+        dataSource={dataSource}
+        dataField="nome"
+        label="Nome do Produto"
+        disabled={isBrowsing}
+      />
+
+      <ArchbaseEdit
+        dataSource={dataSource}
+        dataField="preco"
+        label="Preço"
+        disabled={isBrowsing}
+      />
+
+      <ArchbaseSelect
+        dataSource={dataSource}
+        dataField="categoria"
+        label="Categoria"
+        data={[
+          { value: 'eletronicos', label: 'Eletrônicos' },
+          { value: 'perifericos', label: 'Periféricos' },
+        ]}
+        disabled={isBrowsing}
+      />
+    </Stack>
+  );
+}
+```
+
+## Integração com API
+
+Para integrar com uma API REST, use `ArchbaseRemoteDataSource`:
+
+```tsx
+import { useArchbaseRemoteServiceApi } from '@archbase/data';
+
+const pessoaService = useArchbaseRemoteServiceApi<Pessoa>({
+  baseUrl: '/api/pessoas',
+});
+
+// O service fornece métodos CRUD prontos
+await pessoaService.findAll();
+await pessoaService.findById(id);
+await pessoaService.save(pessoa);
+await pessoaService.delete(id);
+```
+
+## Próximos Passos
+
+- [Hooks](/core-concepts/hooks) - Outros hooks disponíveis
+- [Validação](/core-concepts/validation) - Sistema de validação
+- [Componentes de Formulário](/components/editors/text-inputs) - Componentes com binding

@@ -1,0 +1,386 @@
+---
+title: Estrutura de Pacotes
+sidebar_position: 3
+---
+
+# Estrutura de Pacotes
+
+O Archbase React é organizado como um **monorepo** com múltiplos pacotes NPM. Esta arquitetura permite que você instale apenas o que precisa.
+
+## Visão Geral dos Pacotes
+
+```
+@archbase/
+├── core          # Base: providers, hooks, validação, i18n
+├── data          # DataSource V2, serviços API, TanStack Query
+├── components    # 80+ componentes de formulário e UI
+├── template      # Templates prontos (Form, Grid, Modal)
+├── layout        # Sistema de layout (Card, Space, Container)
+├── admin         # Layout administrativo completo
+├── security      # Autenticação e autorização
+├── security-ui   # Modais de usuário, grupo, tokens
+├── advanced      # QueryBuilder, filtros avançados
+├── ssr           # Server-Side Rendering utilities
+└── tools         # CLI e ferramentas de desenvolvimento
+```
+
+## Diagrama de Dependências
+
+```
+                    ┌─────────────────┐
+                    │   @archbase/    │
+                    │      core       │
+                    └────────┬────────┘
+                             │
+              ┌──────────────┼──────────────┐
+              │              │              │
+              ▼              ▼              ▼
+        ┌──────────┐  ┌──────────┐  ┌──────────┐
+        │   data   │  │ security │  │  layout  │
+        └────┬─────┘  └────┬─────┘  └────┬─────┘
+             │              │              │
+             ▼              │              │
+        ┌──────────┐        │              │
+        │components│        │              │
+        └────┬─────┘        │              │
+             │              │              │
+    ┌────────┴────────┬─────┴──────┬───────┘
+    │                 │            │
+    ▼                 ▼            ▼
+┌──────────┐   ┌──────────┐  ┌──────────┐
+│ template │   │security- │  │  admin   │
+│          │   │   ui     │  │          │
+└──────────┘   └──────────┘  └──────────┘
+```
+
+## Detalhes de Cada Pacote
+
+### @archbase/core
+
+O pacote fundamental que todos os outros dependem.
+
+```bash
+pnpm add @archbase/core
+```
+
+**Principais exports:**
+
+| Export | Descrição |
+|--------|-----------|
+| `ArchbaseGlobalProvider` | Provider principal da aplicação |
+| `useArchbaseTheme` | Hook para tema e cores |
+| `useArchbaseAppContext` | Contexto global da aplicação |
+| `initArchbaseI18nEarly` | Inicialização de i18n |
+| `@IsRequired`, `@IsEmail`, etc. | Decorators de validação |
+| `ArchbaseError` | Classe de erro padrão |
+
+**Exemplo:**
+
+```tsx
+import { ArchbaseGlobalProvider, useArchbaseTheme } from '@archbase/core';
+
+function App() {
+  return (
+    <ArchbaseGlobalProvider>
+      <MeuApp />
+    </ArchbaseGlobalProvider>
+  );
+}
+```
+
+---
+
+### @archbase/data
+
+Gerenciamento de dados com DataSource V2 e integração TanStack Query.
+
+```bash
+pnpm add @archbase/data
+```
+
+**Principais exports:**
+
+| Export | Descrição |
+|--------|-----------|
+| `useArchbaseDataSourceV2` | Hook principal de DataSource |
+| `ArchbaseRemoteDataSource` | DataSource para APIs remotas |
+| `useArchbaseRemoteServiceApi` | Hook para serviços REST |
+| `ArchbaseQueryClient` | Cliente de query configurado |
+
+**Exemplo:**
+
+```tsx
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+function MeuFormulario() {
+  const { dataSource, edit, save, cancel, isEditing } = useArchbaseDataSourceV2<Pessoa>({
+    initialData: pessoas,
+    name: 'pessoas-ds',
+  });
+
+  return <ArchbaseEdit dataSource={dataSource} dataField="nome" />;
+}
+```
+
+---
+
+### @archbase/components
+
+Biblioteca com 80+ componentes de UI prontos para uso.
+
+```bash
+pnpm add @archbase/components
+```
+
+**Categorias de componentes:**
+
+| Categoria | Componentes |
+|-----------|-------------|
+| **Editores de Texto** | `ArchbaseEdit`, `ArchbaseTextArea`, `ArchbasePasswordEdit`, `ArchbaseMaskEdit` |
+| **Seleção** | `ArchbaseSelect`, `ArchbaseAsyncSelect`, `ArchbaseMultiSelect` |
+| **Números** | `ArchbaseNumberEdit`, `ArchbaseRating`, `ArchbaseCountdownTimer` |
+| **Data/Hora** | `ArchbaseDatePickerEdit`, `ArchbaseTimePicker`, `ArchbaseDateTimeRange` |
+| **Boolean** | `ArchbaseCheckbox`, `ArchbaseSwitch`, `ArchbaseRadioGroup` |
+| **DataGrid** | `ArchbaseDataGrid`, com formatters, toolbar e export |
+| **Upload** | `ArchbaseImageEdit`, `ArchbaseFileUpload`, `ArchbaseDropzone` |
+| **Visualização** | `ArchbaseJsonView`, `ArchbaseObjectInspector` |
+
+**Exemplo:**
+
+```tsx
+import {
+  ArchbaseEdit,
+  ArchbaseSelect,
+  ArchbaseDatePickerEdit,
+  ArchbaseDataGrid,
+} from '@archbase/components';
+```
+
+---
+
+### @archbase/template
+
+Templates prontos para acelerar o desenvolvimento.
+
+```bash
+pnpm add @archbase/template
+```
+
+**Templates disponíveis:**
+
+| Template | Descrição |
+|----------|-----------|
+| `ArchbaseFormTemplate` | Formulário completo com toolbar de ações |
+| `ArchbaseGridTemplate` | Grid com CRUD integrado |
+| `ArchbaseModalTemplate` | Modal para edição de registros |
+| `ArchbaseMasonryTemplate` | Layout masonry para cards |
+| `ArchbaseSpaceTemplate` | Template com posicionamento via drag |
+
+**Exemplo:**
+
+```tsx
+import { ArchbaseFormTemplate } from '@archbase/template';
+
+function PessoaForm() {
+  return (
+    <ArchbaseFormTemplate
+      dataSource={dataSource}
+      title="Cadastro de Pessoas"
+      onNew={handleNew}
+      onSave={handleSave}
+      onCancel={handleCancel}
+    >
+      <ArchbaseEdit dataSource={dataSource} dataField="nome" label="Nome" />
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+---
+
+### @archbase/layout
+
+Sistema de layout e containers.
+
+```bash
+pnpm add @archbase/layout
+```
+
+**Componentes:**
+
+| Componente | Descrição |
+|------------|-----------|
+| `ArchbaseCard` | Card com header, body, footer |
+| `ArchbaseContainer` | Container responsivo |
+| `ArchbaseSpace` | Sistema de posicionamento flexível |
+| `ArchbaseFloatingWindow` | Janela flutuante arrastável |
+| `ArchbaseDockableContainer` | Container com docking |
+
+---
+
+### @archbase/admin
+
+Layout administrativo completo com navegação.
+
+```bash
+pnpm add @archbase/admin
+```
+
+**Componentes:**
+
+| Componente | Descrição |
+|------------|-----------|
+| `ArchbaseAdminMainLayout` | Layout principal com header, sidebar, conteúdo |
+| `ArchbaseAdvancedSidebar` | Sidebar com grupos e navegação |
+| `ArchbaseTabContainer` | Container de abas com keep-alive |
+| `ArchbaseNavigationDrawer` | Drawer de navegação |
+| `ArchbaseUserDropdown` | Menu do usuário logado |
+
+**Exemplo:**
+
+```tsx
+import { ArchbaseAdminMainLayout, ArchbaseAdvancedSidebar } from '@archbase/admin';
+
+function AdminApp() {
+  return (
+    <ArchbaseAdminMainLayout
+      sidebar={<ArchbaseAdvancedSidebar links={menuItems} />}
+      header={<Header />}
+    >
+      <Outlet />
+    </ArchbaseAdminMainLayout>
+  );
+}
+```
+
+---
+
+### @archbase/security
+
+Sistema completo de autenticação e autorização.
+
+```bash
+pnpm add @archbase/security
+```
+
+**Exports:**
+
+| Export | Descrição |
+|--------|-----------|
+| `ArchbaseSecurityProvider` | Provider de segurança |
+| `ArchbaseAuthenticator` | Serviço de autenticação |
+| `useArchbaseSecurity` | Hook de segurança |
+| `ProtectedComponent` | Componente protegido por permissão |
+| `SecureButton` | Botão com verificação de permissão |
+
+---
+
+### @archbase/security-ui
+
+Componentes de UI para gerenciamento de segurança.
+
+```bash
+pnpm add @archbase/security-ui
+```
+
+**Componentes:**
+
+| Componente | Descrição |
+|------------|-----------|
+| `ArchbaseUserModal` | Modal de cadastro de usuário |
+| `ArchbaseGroupModal` | Modal de cadastro de grupo |
+| `ArchbaseTokenModal` | Modal de gerenciamento de tokens |
+| `ArchbaseLoginForm` | Formulário de login |
+| `ArchbasePermissionTree` | Árvore de permissões |
+
+---
+
+### @archbase/advanced
+
+Componentes avançados para consultas e filtros.
+
+```bash
+pnpm add @archbase/advanced
+```
+
+**Componentes:**
+
+| Componente | Descrição |
+|------------|-----------|
+| `ArchbaseQueryBuilder` | Construtor visual de queries |
+| `ArchbaseAdvancedFilter` | Filtro avançado com múltiplos campos |
+| `QueryFields` | Definição de campos para filtro |
+
+---
+
+### @archbase/ssr
+
+Utilitários para Server-Side Rendering.
+
+```bash
+pnpm add @archbase/ssr
+```
+
+**Exports:**
+
+| Export | Descrição |
+|--------|-----------|
+| `ArchbaseSSRProvider` | Provider para SSR |
+| `createSSRDataSource` | Criar DataSource no servidor |
+| `hydrateDataSource` | Hidratar DataSource no cliente |
+
+---
+
+## Instalação Recomendada
+
+### Projeto Básico (Formulários)
+
+```bash
+pnpm add @archbase/core @archbase/data @archbase/components
+```
+
+### Projeto com Templates
+
+```bash
+pnpm add @archbase/core @archbase/data @archbase/components @archbase/template
+```
+
+### Projeto Administrativo Completo
+
+```bash
+pnpm add @archbase/core @archbase/data @archbase/components \
+         @archbase/template @archbase/layout @archbase/admin \
+         @archbase/security @archbase/security-ui
+```
+
+### Com Filtros Avançados
+
+```bash
+pnpm add @archbase/core @archbase/data @archbase/components @archbase/advanced
+```
+
+---
+
+## Peer Dependencies
+
+Todos os pacotes requerem estas dependências instaladas:
+
+```bash
+pnpm add react react-dom @mantine/core @mantine/hooks @tanstack/react-query
+```
+
+| Dependência | Versão Mínima |
+|-------------|---------------|
+| `react` | ^18.3.0 ou ^19.0.0 |
+| `react-dom` | ^18.3.0 ou ^19.0.0 |
+| `@mantine/core` | ^8.0.0 |
+| `@mantine/hooks` | ^8.0.0 |
+| `@tanstack/react-query` | ^5.0.0 |
+
+---
+
+## Próximos Passos
+
+- [DataSource V2](/core-concepts/datasource-v2) - Aprenda sobre gerenciamento de dados
+- [Componentes](/components/overview) - Explore todos os componentes disponíveis
+- [Templates](/templates/overview) - Use templates prontos para acelerar

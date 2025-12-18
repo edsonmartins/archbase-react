@@ -1,0 +1,294 @@
+
+# ArchbaseDataGrid
+
+O DataGrid é um componente avançado para exibição e manipulação de dados tabulares.
+
+## Exemplo Básico
+
+```tsx
+import { ArchbaseDataGrid } from '@archbase/components';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+interface Pessoa {
+  id: number;
+  nome: string;
+  email: string;
+  idade: number;
+}
+
+function PessoasGrid() {
+  const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+    initialData: pessoas,
+    name: 'pessoas-grid-ds',
+  });
+
+  return (
+    <ArchbaseDataGrid
+      dataSource={dataSource}
+      columns={[
+        { field: 'id', header: 'ID', width: 80 },
+        { field: 'nome', header: 'Nome', width: 200 },
+        { field: 'email', header: 'E-mail', width: 250 },
+        { field: 'idade', header: 'Idade', width: 100 },
+      ]}
+      height={400}
+    />
+  );
+}
+```
+
+## Props Principais
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados |
+| `columns` | `Column[]` | - | Definição das colunas |
+| `height` | `number \| string` | `'auto'` | Altura do grid |
+| `width` | `number \| string` | `'100%'` | Largura do grid |
+| `selectable` | `boolean` | `true` | Permite seleção de linhas |
+| `multiSelect` | `boolean` | `false` | Seleção múltipla |
+| `striped` | `boolean` | `false` | Linhas zebradas |
+| `highlightOnHover` | `boolean` | `true` | Destaca linha no hover |
+
+## Definição de Colunas
+
+```tsx
+const columns = [
+  {
+    field: 'id',
+    header: 'ID',
+    width: 80,
+    align: 'center',
+    sortable: true,
+  },
+  {
+    field: 'nome',
+    header: 'Nome',
+    width: 200,
+    sortable: true,
+    filterable: true,
+  },
+  {
+    field: 'preco',
+    header: 'Preço',
+    width: 120,
+    align: 'right',
+    formatter: (value) => `R$ ${value.toFixed(2)}`,
+  },
+  {
+    field: 'status',
+    header: 'Status',
+    width: 100,
+    render: (record) => (
+      <Badge color={record.status === 'ativo' ? 'green' : 'red'}>
+        {record.status}
+      </Badge>
+    ),
+  },
+  {
+    field: 'acoes',
+    header: 'Ações',
+    width: 100,
+    render: (record) => (
+      <Group>
+        <ActionIcon onClick={() => handleEdit(record)}>
+          <IconEdit size={16} />
+        </ActionIcon>
+        <ActionIcon color="red" onClick={() => handleDelete(record)}>
+          <IconTrash size={16} />
+        </ActionIcon>
+      </Group>
+    ),
+  },
+];
+```
+
+## Propriedades de Coluna
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `field` | `string` | Nome do campo no objeto |
+| `header` | `string` | Título da coluna |
+| `width` | `number` | Largura em pixels |
+| `minWidth` | `number` | Largura mínima |
+| `maxWidth` | `number` | Largura máxima |
+| `align` | `'left' \| 'center' \| 'right'` | Alinhamento |
+| `sortable` | `boolean` | Permite ordenação |
+| `filterable` | `boolean` | Permite filtro |
+| `resizable` | `boolean` | Permite redimensionar |
+| `visible` | `boolean` | Visibilidade |
+| `formatter` | `(value) => string` | Formatador de valor |
+| `render` | `(record) => ReactNode` | Renderização customizada |
+
+## Funcionalidades
+
+### Ordenação
+
+```tsx
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  columns={columns}
+  defaultSortField="nome"
+  defaultSortDirection="asc"
+  onSort={(field, direction) => {
+    console.log(`Ordenar por ${field} ${direction}`);
+  }}
+/>
+```
+
+### Filtro
+
+```tsx
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  columns={columns}
+  showFilter
+  filterDelay={300}
+  onFilter={(filters) => {
+    console.log('Filtros aplicados:', filters);
+  }}
+/>
+```
+
+### Paginação
+
+```tsx
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  columns={columns}
+  paginated
+  pageSize={10}
+  pageSizeOptions={[10, 25, 50, 100]}
+  onPageChange={(page, pageSize) => {
+    console.log(`Página ${page}, ${pageSize} registros`);
+  }}
+/>
+```
+
+### Seleção
+
+```tsx
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  columns={columns}
+  selectable
+  multiSelect
+  selectedRows={selectedIds}
+  onSelectionChange={(selected) => {
+    setSelectedIds(selected);
+  }}
+/>
+```
+
+### Exportação
+
+```tsx
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  columns={columns}
+  exportable
+  exportFormats={['csv', 'excel', 'pdf']}
+  exportFilename="relatorio-pessoas"
+/>
+```
+
+## Toolbar Customizada
+
+```tsx
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  columns={columns}
+  toolbar={
+    <Group>
+      <Button onClick={handleNovo}>Novo</Button>
+      <Button onClick={handleRefresh}>Atualizar</Button>
+      <TextInput placeholder="Buscar..." />
+    </Group>
+  }
+/>
+```
+
+## Exemplo Completo
+
+```tsx
+import { ArchbaseDataGrid } from '@archbase/components';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { Badge, ActionIcon, Group } from '@mantine/core';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
+
+function ProdutosGrid() {
+  const { dataSource, remove, goTo } = useArchbaseDataSourceV2<Produto>({
+    initialData: produtos,
+    name: 'produtos-ds',
+  });
+
+  const handleEdit = (record: Produto) => {
+    const index = dataSource.data.findIndex(p => p.id === record.id);
+    goTo(index);
+    // Abrir modal de edição
+  };
+
+  const handleDelete = (record: Produto) => {
+    if (confirm('Excluir este produto?')) {
+      const index = dataSource.data.findIndex(p => p.id === record.id);
+      goTo(index);
+      remove();
+    }
+  };
+
+  const columns = [
+    { field: 'id', header: 'ID', width: 80, sortable: true },
+    { field: 'nome', header: 'Nome', width: 200, sortable: true, filterable: true },
+    {
+      field: 'preco',
+      header: 'Preço',
+      width: 120,
+      align: 'right' as const,
+      formatter: (value: number) => `R$ ${value.toFixed(2)}`,
+    },
+    {
+      field: 'status',
+      header: 'Status',
+      width: 100,
+      render: (record: Produto) => (
+        <Badge color={record.status === 'disponivel' ? 'green' : 'red'}>
+          {record.status}
+        </Badge>
+      ),
+    },
+    {
+      field: 'acoes',
+      header: 'Ações',
+      width: 100,
+      render: (record: Produto) => (
+        <Group gap="xs">
+          <ActionIcon variant="subtle" onClick={() => handleEdit(record)}>
+            <IconEdit size={16} />
+          </ActionIcon>
+          <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(record)}>
+            <IconTrash size={16} />
+          </ActionIcon>
+        </Group>
+      ),
+    },
+  ];
+
+  return (
+    <ArchbaseDataGrid
+      dataSource={dataSource}
+      columns={columns}
+      height={500}
+      paginated
+      pageSize={10}
+      striped
+      highlightOnHover
+      exportable
+    />
+  );
+}
+```
+
+## Próximos Passos
+
+- [Listas](/components/data-display/lists) - TreeView, Masonry
+- [Templates](/templates/grid-template) - Grid Template

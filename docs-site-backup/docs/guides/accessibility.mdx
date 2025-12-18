@@ -1,0 +1,71 @@
+---
+title: Acessibilidade
+sidebar_position: 3
+---
+
+# Acessibilidade (A11y)
+
+Diretrizes para tornar sua aplicação acessível.
+
+## Navegação por Teclado
+
+Todos os componentes Archbase suportam navegação por teclado:
+
+- `Tab` - Navegar entre campos
+- `Enter` - Ativar botões/links
+- `Escape` - Fechar modais/menus
+- `Arrow keys` - Navegar em listas/menus
+
+## Labels e ARIA
+
+### Sempre use labels
+
+```tsx
+<ArchbaseEdit
+  dataSource={dataSource}
+  dataField="nome"
+  label="Nome completo"  // Sempre forneça um label
+  aria-describedby="nome-help"
+/>
+<Text id="nome-help" size="sm">Digite seu nome completo</Text>
+```
+
+### Indicar campos obrigatórios
+
+```tsx
+<ArchbaseEdit
+  dataSource={dataSource}
+  dataField="email"
+  label="E-mail"
+  required  // Adiciona aria-required
+/>
+```
+
+## Cores e Contraste
+
+### Use cores do tema
+
+```tsx
+// Bom - usa cores do sistema
+<Button color="blue">Ação</Button>
+
+// Evite cores hardcoded de baixo contraste
+```
+
+## Screen Readers
+
+### Anuncie mudanças de estado
+
+```tsx
+<ArchbaseAlert
+  role="alert"
+  aria-live="polite"
+>
+  Registro salvo com sucesso
+</ArchbaseAlert>
+```
+
+## Próximos Passos
+
+- [Testes](/guides/testing) - Testes unitários
+- [Theming](/guides/theming) - Customização

@@ -1,0 +1,67 @@
+---
+title: Performance
+sidebar_position: 2
+---
+
+# Otimização de Performance
+
+Técnicas para melhorar a performance da aplicação.
+
+## DataGrid
+
+### Virtualização
+
+```tsx
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  columns={columns}
+  virtualized  // Ativa virtualização para grandes volumes
+  height={500}
+/>
+```
+
+### Paginação Server-Side
+
+```tsx
+const { data, isLoading } = useQuery({
+  queryKey: ['produtos', page, pageSize],
+  queryFn: () => fetchProdutos({ page, pageSize }),
+});
+```
+
+## React Query
+
+### Stale Time
+
+```tsx
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutos
+    },
+  },
+});
+```
+
+## Memoization
+
+### useMemo para cálculos pesados
+
+```tsx
+const totais = useMemo(() => {
+  return data.reduce((acc, item) => acc + item.valor, 0);
+}, [data]);
+```
+
+### memo para componentes
+
+```tsx
+const MeuComponente = memo(function MeuComponente(props) {
+  return <div>{props.valor}</div>;
+});
+```
+
+## Próximos Passos
+
+- [Acessibilidade](/guides/accessibility) - A11y
+- [Testes](/guides/testing) - Testes

@@ -1,0 +1,30 @@
+{
+  "id": "components/editors/date-time",
+  "title": "Data e Hora",
+  "description": "Componentes para seleção de datas e horários.",
+  "source": "@site/docs/components/editors/date-time.mdx",
+  "sourceDirName": "components/editors",
+  "slug": "/components/editors/date-time",
+  "permalink": "/docs/components/editors/date-time",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/editors/date-time.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "title": "Data e Hora",
+    "sidebar_position": 4
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Campos Numéricos",
+    "permalink": "/docs/components/editors/number-inputs"
+  },
+  "next": {
+    "title": "Campos Boolean",
+    "permalink": "/docs/components/editors/boolean-inputs"
+  }
+}

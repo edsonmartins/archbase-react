@@ -1,0 +1,30 @@
+{
+  "id": "guides/theming",
+  "title": "Theming",
+  "description": "Como personalizar a aparência dos componentes.",
+  "source": "@site/docs/guides/theming.mdx",
+  "sourceDirName": "guides",
+  "slug": "/guides/theming",
+  "permalink": "/docs/guides/theming",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/guides/theming.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "title": "Theming",
+    "sidebar_position": 5
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Testes",
+    "permalink": "/docs/guides/testing"
+  },
+  "next": {
+    "title": "Migração v2 → v3",
+    "permalink": "/docs/guides/migration-v2-v3"
+  }
+}

@@ -1,0 +1,101 @@
+---
+title: Gráficos
+sidebar_position: 3
+---
+
+# Gráficos
+
+Componentes para visualização de dados em gráficos.
+
+## ArchbaseChart
+
+Componente base para gráficos usando Chart.js/Recharts.
+
+### Exemplo de Linha
+
+```tsx
+import { ArchbaseChart } from '@archbase/components';
+
+const dados = {
+  labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+  datasets: [
+    {
+      label: 'Vendas 2024',
+      data: [65, 59, 80, 81, 56, 55],
+      borderColor: '#228be6',
+      fill: false,
+    },
+  ],
+};
+
+<ArchbaseChart
+  type="line"
+  data={dados}
+  height={300}
+/>
+```
+
+### Exemplo de Barras
+
+```tsx
+const dadosBarras = {
+  labels: ['Produto A', 'Produto B', 'Produto C'],
+  datasets: [
+    {
+      label: 'Vendas',
+      data: [300, 450, 200],
+      backgroundColor: ['#228be6', '#40c057', '#fab005'],
+    },
+  ],
+};
+
+<ArchbaseChart
+  type="bar"
+  data={dadosBarras}
+  height={300}
+/>
+```
+
+### Exemplo de Pizza
+
+```tsx
+const dadosPizza = {
+  labels: ['Desktop', 'Mobile', 'Tablet'],
+  datasets: [
+    {
+      data: [55, 35, 10],
+      backgroundColor: ['#228be6', '#40c057', '#fab005'],
+    },
+  ],
+};
+
+<ArchbaseChart
+  type="pie"
+  data={dadosPizza}
+  height={300}
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `type` | `'line' \| 'bar' \| 'pie' \| 'doughnut' \| 'radar'` | - | Tipo do gráfico |
+| `data` | `ChartData` | - | Dados do gráfico |
+| `options` | `ChartOptions` | - | Opções do Chart.js |
+| `height` | `number` | `300` | Altura em pixels |
+| `width` | `number` | - | Largura (auto por padrão) |
+
+## Tipos de Gráfico
+
+- **line**: Gráfico de linhas
+- **bar**: Gráfico de barras
+- **pie**: Gráfico de pizza
+- **doughnut**: Gráfico de rosca
+- **radar**: Gráfico de radar
+- **area**: Gráfico de área
+
+## Próximos Passos
+
+- [Listas](/components/data-display/lists) - TreeView, Masonry
+- [DataGrid](/components/data-display/datagrid) - Grid de dados

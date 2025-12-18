@@ -1,0 +1,30 @@
+{
+  "id": "admin/overview",
+  "title": "Visão Geral",
+  "description": "O pacote @archbase/admin fornece componentes para construção de painéis administrativos.",
+  "source": "@site/docs/admin/overview.mdx",
+  "sourceDirName": "admin",
+  "slug": "/admin/overview",
+  "permalink": "/docs/admin/overview",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/admin/overview.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Visão Geral",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Dockable",
+    "permalink": "/docs/layout/dockable"
+  },
+  "next": {
+    "title": "MainLayout",
+    "permalink": "/docs/admin/main-layout"
+  }
+}

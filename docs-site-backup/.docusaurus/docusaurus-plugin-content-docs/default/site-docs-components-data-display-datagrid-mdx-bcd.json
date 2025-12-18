@@ -1,0 +1,30 @@
+{
+  "id": "components/data-display/datagrid",
+  "title": "DataGrid",
+  "description": "O DataGrid é um componente avançado para exibição e manipulação de dados tabulares.",
+  "source": "@site/docs/components/data-display/datagrid.mdx",
+  "sourceDirName": "components/data-display",
+  "slug": "/components/data-display/datagrid",
+  "permalink": "/docs/components/data-display/datagrid",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/data-display/datagrid.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "DataGrid",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Especializados",
+    "permalink": "/docs/components/editors/specialized"
+  },
+  "next": {
+    "title": "Listas",
+    "permalink": "/docs/components/data-display/lists"
+  }
+}

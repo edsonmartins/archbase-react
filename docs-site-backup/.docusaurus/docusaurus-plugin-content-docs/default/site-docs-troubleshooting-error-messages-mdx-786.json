@@ -1,0 +1,26 @@
+{
+  "id": "troubleshooting/error-messages",
+  "title": "Mensagens de Erro",
+  "description": "DataSource Errors",
+  "source": "@site/docs/troubleshooting/error-messages.mdx",
+  "sourceDirName": "troubleshooting",
+  "slug": "/troubleshooting/error-messages",
+  "permalink": "/docs/troubleshooting/error-messages",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/troubleshooting/error-messages.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "Mensagens de Erro",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Problemas Comuns",
+    "permalink": "/docs/troubleshooting/common-issues"
+  }
+}

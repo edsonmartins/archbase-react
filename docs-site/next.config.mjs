@@ -1,0 +1,71 @@
+import createMDX from '@next/mdx';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import remarkGfm from 'remark-gfm';
+import remarkSlug from 'remark-slug';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [remarkGfm, remarkSlug],
+  },
+});
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  output: 'export',
+  basePath: process.env.NODE_ENV === 'production' ? '/docs' : undefined,
+  pageExtensions: ['ts', 'tsx', 'mdx'],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  transpilePackages: [
+    '@archbase/core',
+    '@archbase/components',
+    '@archbase/data',
+    '@archbase/layout',
+    '@archbase/admin',
+    '@archbase/security',
+    '@archbase/template',
+    '@archbase/advanced',
+    '@archbase/ssr',
+  ],
+  webpack: (config, { isServer }) => {
+    // Resolve workspace packages to source directory
+    const packagesPath = path.resolve(__dirname, '../packages');
+
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@archbase/core': path.join(packagesPath, 'core/src'),
+      '@archbase/components': path.join(packagesPath, 'components/src'),
+      '@archbase/data': path.join(packagesPath, 'data/src'),
+      '@archbase/layout': path.join(packagesPath, 'layout/src'),
+      '@archbase/admin': path.join(packagesPath, 'admin/src'),
+      '@archbase/security': path.join(packagesPath, 'security/src'),
+      '@archbase/template': path.join(packagesPath, 'template/src'),
+      '@archbase/advanced': path.join(packagesPath, 'advanced/src'),
+      '@archbase/ssr': path.join(packagesPath, 'ssr/src'),
+    };
+
+    // Add raw-loader for demo code imports
+    config.module.rules.push({
+      test: /\.tsx?$/,
+      resourceQuery: /raw/,
+      type: 'asset/source',
+    });
+
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
+
+    return config;
+  },
+};
+
+export default withMDX(nextConfig);

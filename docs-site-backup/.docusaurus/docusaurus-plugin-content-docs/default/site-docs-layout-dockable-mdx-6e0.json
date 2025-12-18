@@ -1,0 +1,30 @@
+{
+  "id": "layout/dockable",
+  "title": "Dockable",
+  "description": "Componentes para janelas flutuantes e docking.",
+  "source": "@site/docs/layout/dockable.mdx",
+  "sourceDirName": "layout",
+  "slug": "/layout/dockable",
+  "permalink": "/docs/layout/dockable",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/layout/dockable.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "title": "Dockable",
+    "sidebar_position": 4
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Space System",
+    "permalink": "/docs/layout/space-system"
+  },
+  "next": {
+    "title": "Visão Geral",
+    "permalink": "/docs/admin/overview"
+  }
+}

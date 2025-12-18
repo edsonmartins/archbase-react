@@ -1,0 +1,112 @@
+
+# Data e Hora
+
+Componentes para seleção de datas e horários.
+
+## ArchbaseDatePickerEdit
+
+Seleção de data com calendário.
+
+### Exemplo
+
+```tsx
+import { ArchbaseDatePickerEdit } from '@archbase/components';
+
+<ArchbaseDatePickerEdit
+  dataSource={dataSource}
+  dataField="dataNascimento"
+  label="Data de Nascimento"
+  placeholder="Selecione a data"
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados |
+| `dataField` | `string` | - | Campo do objeto |
+| `label` | `string` | - | Rótulo do campo |
+| `placeholder` | `string` | - | Texto placeholder |
+| `minDate` | `Date` | - | Data mínima permitida |
+| `maxDate` | `Date` | - | Data máxima permitida |
+| `locale` | `string` | `'pt-BR'` | Localidade |
+| `firstDayOfWeek` | `number` | `0` | Primeiro dia da semana (0=Dom) |
+| `clearable` | `boolean` | `true` | Permite limpar data |
+| `valueFormat` | `string` | `'DD/MM/YYYY'` | Formato de exibição |
+
+---
+
+## ArchbaseTimePicker
+
+Seleção de horário.
+
+### Exemplo
+
+```tsx
+import { ArchbaseTimePicker } from '@archbase/components';
+
+<ArchbaseTimePicker
+  dataSource={dataSource}
+  dataField="horaInicio"
+  label="Hora de Início"
+  format="24"
+  disabled={isBrowsing}
+/>
+```
+
+### Props Específicas
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `format` | `'12' \| '24'` | `'24'` | Formato de hora |
+| `withSeconds` | `boolean` | `false` | Incluir segundos |
+
+---
+
+## ArchbaseDateTimeRange
+
+Seleção de intervalo de datas.
+
+### Exemplo
+
+```tsx
+import { ArchbaseDateTimeRange } from '@archbase/components';
+
+<ArchbaseDateTimeRange
+  dataSource={dataSource}
+  startField="dataInicio"
+  endField="dataFim"
+  label="Período"
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `startField` | `string` | - | Campo da data inicial |
+| `endField` | `string` | - | Campo da data final |
+| `allowSingleDateInRange` | `boolean` | `true` | Permite mesma data |
+
+---
+
+## Formatos de Data
+
+Os componentes de data suportam os seguintes formatos:
+
+| Formato | Exemplo |
+|---------|---------|
+| `DD/MM/YYYY` | 25/12/2024 |
+| `YYYY-MM-DD` | 2024-12-25 |
+| `DD MMM YYYY` | 25 Dez 2024 |
+| `MMMM YYYY` | Dezembro 2024 |
+
+---
+
+## Próximos Passos
+
+- [Campos Boolean](/components/editors/boolean-inputs) - Checkbox, Switch
+- [Conteúdo Rico](/components/editors/rich-content) - RichText, JSON

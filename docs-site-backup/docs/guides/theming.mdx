@@ -1,0 +1,68 @@
+---
+title: Theming
+sidebar_position: 5
+---
+
+# Customização de Temas
+
+Como personalizar a aparência dos componentes.
+
+## Tema do Mantine
+
+```tsx
+import { MantineProvider, createTheme } from '@mantine/core';
+
+const theme = createTheme({
+  primaryColor: 'blue',
+  fontFamily: 'Inter, sans-serif',
+  defaultRadius: 'md',
+  colors: {
+    brand: [
+      '#e6f7ff',
+      '#bae7ff',
+      '#91d5ff',
+      '#69c0ff',
+      '#40a9ff',
+      '#1890ff',
+      '#096dd9',
+      '#0050b3',
+      '#003a8c',
+      '#002766',
+    ],
+  },
+});
+
+<MantineProvider theme={theme}>
+  <App />
+</MantineProvider>
+```
+
+## Variáveis CSS
+
+```css
+:root {
+  --archbase-primary-color: #1890ff;
+  --archbase-border-radius: 8px;
+  --archbase-spacing: 16px;
+}
+```
+
+## Tema Escuro
+
+```tsx
+import { useArchbaseTheme } from '@archbase/core';
+
+function ThemeToggle() {
+  const { colorScheme, toggleColorScheme } = useArchbaseTheme();
+
+  return (
+    <Button onClick={toggleColorScheme}>
+      {colorScheme === 'dark' ? 'Claro' : 'Escuro'}
+    </Button>
+  );
+}
+```
+
+## Próximos Passos
+
+- [Migração](/guides/migration-v2-v3) - Migração de versão

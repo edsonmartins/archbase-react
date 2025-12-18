@@ -1,0 +1,30 @@
+{
+  "id": "admin/drawers",
+  "title": "Drawers",
+  "description": "Painéis laterais deslizantes.",
+  "source": "@site/docs/admin/drawers.mdx",
+  "sourceDirName": "admin",
+  "slug": "/admin/drawers",
+  "permalink": "/docs/admin/drawers",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/admin/drawers.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "title": "Drawers",
+    "sidebar_position": 6
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Tabs",
+    "permalink": "/docs/admin/tabs"
+  },
+  "next": {
+    "title": "Visão Geral",
+    "permalink": "/docs/security/overview"
+  }
+}

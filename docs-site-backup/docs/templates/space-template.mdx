@@ -1,0 +1,78 @@
+---
+title: SpaceTemplate
+sidebar_position: 6
+---
+
+# ArchbaseSpaceTemplate
+
+Template com sistema de posicionamento livre via drag and drop.
+
+## Exemplo
+
+```tsx
+import { ArchbaseSpaceTemplate, ArchbaseSpaceItem } from '@archbase/template';
+
+function CustomLayout() {
+  return (
+    <ArchbaseSpaceTemplate
+      width="100%"
+      height="600px"
+      gridSize={20}
+      showGrid
+    >
+      <ArchbaseSpaceItem
+        id="item1"
+        x={0}
+        y={0}
+        width={200}
+        height={100}
+        draggable
+        resizable
+      >
+        <Card>Componente 1</Card>
+      </ArchbaseSpaceItem>
+
+      <ArchbaseSpaceItem
+        id="item2"
+        x={220}
+        y={0}
+        width={300}
+        height={200}
+        draggable
+        resizable
+      >
+        <Card>Componente 2</Card>
+      </ArchbaseSpaceItem>
+    </ArchbaseSpaceTemplate>
+  );
+}
+```
+
+## Props do SpaceTemplate
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `width` | `string \| number` | `'100%'` | Largura do container |
+| `height` | `string \| number` | `'100%'` | Altura do container |
+| `gridSize` | `number` | `10` | Tamanho da grade em pixels |
+| `showGrid` | `boolean` | `false` | Mostra grade de fundo |
+| `snapToGrid` | `boolean` | `true` | Encaixa na grade |
+
+## Props do SpaceItem
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `id` | `string` | - | Identificador único |
+| `x` | `number` | - | Posição X |
+| `y` | `number` | - | Posição Y |
+| `width` | `number` | - | Largura |
+| `height` | `number` | - | Altura |
+| `draggable` | `boolean` | `true` | Permite arrastar |
+| `resizable` | `boolean` | `true` | Permite redimensionar |
+| `minWidth` | `number` | `50` | Largura mínima |
+| `minHeight` | `number` | `50` | Altura mínima |
+
+## Próximos Passos
+
+- [Layout](/layout/overview) - Sistema de layout
+- [Admin](/admin/overview) - Layout administrativo

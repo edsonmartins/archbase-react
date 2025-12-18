@@ -1,0 +1,41 @@
+
+# Integração com TanStack
+
+Integração com TanStack Query para SSR.
+
+## Prefetch no Servidor
+
+```tsx
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+
+export async function loader() {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['pessoas'],
+    queryFn: fetchPessoas,
+  });
+
+  return {
+    dehydratedState: dehydrate(queryClient),
+  };
+}
+```
+
+## Hydrate no Cliente
+
+```tsx
+import { HydrationBoundary } from '@tanstack/react-query';
+
+function App({ dehydratedState }) {
+  return (
+    <HydrationBoundary state={dehydratedState}>
+      <MyApp />
+    </HydrationBoundary>
+  );
+}
+```
+
+## Próximos Passos
+
+- [Guias](/guides/best-practices) - Boas práticas

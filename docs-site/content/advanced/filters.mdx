@@ -1,0 +1,61 @@
+
+# Sistema de Filtros
+
+Filtros avançados para busca de dados.
+
+## ArchbaseAdvancedFilter
+
+```tsx
+import { ArchbaseAdvancedFilter } from '@archbase/advanced';
+
+<ArchbaseAdvancedFilter
+  fields={filterFields}
+  onApply={handleApplyFilter}
+  onClear={handleClearFilter}
+/>
+```
+
+## Definição de Campos
+
+```tsx
+const filterFields = [
+  {
+    name: 'nome',
+    label: 'Nome',
+    type: 'text',
+    operator: 'contains',
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'ativo', label: 'Ativo' },
+      { value: 'inativo', label: 'Inativo' },
+    ],
+  },
+  {
+    name: 'dataCadastro',
+    label: 'Data de Cadastro',
+    type: 'dateRange',
+  },
+];
+```
+
+## Conversão para API
+
+```tsx
+import { filterToRSQL, filterToSQL } from '@archbase/advanced';
+
+// Converter para RSQL
+const rsql = filterToRSQL(filter);
+// nome=contains="João";status==ativo
+
+// Converter para SQL WHERE
+const sql = filterToSQL(filter);
+// nome LIKE '%João%' AND status = 'ativo'
+```
+
+## Próximos Passos
+
+- [SSR](/ssr/overview) - Server-Side Rendering

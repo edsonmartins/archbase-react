@@ -1,0 +1,30 @@
+{
+  "id": "components/navigation/buttons",
+  "title": "Botões",
+  "description": "Componentes para ações do usuário.",
+  "source": "@site/docs/components/navigation/buttons.mdx",
+  "sourceDirName": "components/navigation",
+  "slug": "/components/navigation/buttons",
+  "permalink": "/docs/components/navigation/buttons",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/navigation/buttons.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Botões",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Modais",
+    "permalink": "/docs/components/feedback/modals"
+  },
+  "next": {
+    "title": "Inspector",
+    "permalink": "/docs/components/debug/inspector"
+  }
+}

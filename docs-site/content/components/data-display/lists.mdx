@@ -1,0 +1,128 @@
+
+# Listas e Árvores
+
+Componentes para exibição de dados em formato de lista ou árvore.
+
+## ArchbaseTreeView
+
+Componente de árvore hierárquica.
+
+### Exemplo
+
+```tsx
+import { ArchbaseTreeView } from '@archbase/components';
+
+const dados = [
+  {
+    id: '1',
+    label: 'Documentos',
+    children: [
+      { id: '1.1', label: 'Relatórios' },
+      { id: '1.2', label: 'Planilhas' },
+    ],
+  },
+  {
+    id: '2',
+    label: 'Imagens',
+    children: [
+      { id: '2.1', label: 'Fotos' },
+      { id: '2.2', label: 'Screenshots' },
+    ],
+  },
+];
+
+<ArchbaseTreeView
+  data={dados}
+  onSelect={(node) => console.log('Selecionado:', node)}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `data` | `TreeNode[]` | - | Dados da árvore |
+| `onSelect` | `(node) => void` | - | Callback de seleção |
+| `expandedKeys` | `string[]` | - | Nós expandidos |
+| `selectedKey` | `string` | - | Nó selecionado |
+| `checkable` | `boolean` | `false` | Mostra checkboxes |
+| `draggable` | `boolean` | `false` | Permite arrastar nós |
+| `showIcon` | `boolean` | `true` | Mostra ícones |
+
+---
+
+## ArchbaseMasonryList
+
+Lista em formato masonry (cards de tamanhos variados).
+
+### Exemplo
+
+```tsx
+import { ArchbaseMasonryList } from '@archbase/components';
+
+const items = [
+  { id: 1, titulo: 'Item 1', descricao: 'Descrição curta' },
+  { id: 2, titulo: 'Item 2', descricao: 'Descrição um pouco mais longa para demonstrar o masonry' },
+  { id: 3, titulo: 'Item 3', descricao: 'Texto médio aqui' },
+];
+
+<ArchbaseMasonryList
+  data={items}
+  columns={3}
+  gap={16}
+  renderItem={(item) => (
+    <Card>
+      <Text fw={500}>{item.titulo}</Text>
+      <Text size="sm">{item.descricao}</Text>
+    </Card>
+  )}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `data` | `T[]` | - | Array de dados |
+| `columns` | `number` | `3` | Número de colunas |
+| `gap` | `number` | `16` | Espaçamento em pixels |
+| `renderItem` | `(item) => ReactNode` | - | Render function |
+
+---
+
+## ArchbaseVirtualList
+
+Lista virtualizada para grandes volumes de dados.
+
+### Exemplo
+
+```tsx
+import { ArchbaseVirtualList } from '@archbase/components';
+
+<ArchbaseVirtualList
+  data={milharesDeDados}
+  itemHeight={50}
+  height={400}
+  renderItem={(item, index) => (
+    <div style={{ height: 50, padding: 10 }}>
+      {item.nome}
+    </div>
+  )}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `data` | `T[]` | - | Array de dados |
+| `itemHeight` | `number` | - | Altura de cada item |
+| `height` | `number` | - | Altura do container |
+| `overscan` | `number` | `5` | Itens extras renderizados |
+
+---
+
+## Próximos Passos
+
+- [Gráficos](/components/data-display/charts) - Charts
+- [DataGrid](/components/data-display/datagrid) - Grid de dados

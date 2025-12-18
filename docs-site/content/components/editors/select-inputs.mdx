@@ -1,0 +1,140 @@
+
+# Campos de Seleção
+
+Componentes para seleção de opções com binding ao DataSource.
+
+## ArchbaseSelect
+
+Select simples para seleção de uma opção.
+
+### Exemplo Básico
+
+```tsx
+import { ArchbaseSelect } from '@archbase/components';
+
+const opcoesStatus = [
+  { value: 'ativo', label: 'Ativo' },
+  { value: 'inativo', label: 'Inativo' },
+  { value: 'pendente', label: 'Pendente' },
+];
+
+<ArchbaseSelect
+  dataSource={dataSource}
+  dataField="status"
+  label="Status"
+  data={opcoesStatus}
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados |
+| `dataField` | `string` | - | Campo do objeto |
+| `data` | `Array<{value, label}>` | - | Opções disponíveis |
+| `label` | `string` | - | Rótulo do campo |
+| `placeholder` | `string` | - | Texto placeholder |
+| `searchable` | `boolean` | `false` | Permite busca nas opções |
+| `clearable` | `boolean` | `false` | Permite limpar seleção |
+| `disabled` | `boolean` | `false` | Desabilita o campo |
+
+---
+
+## ArchbaseAsyncSelect
+
+Select com carregamento assíncrono de opções.
+
+### Exemplo
+
+```tsx
+import { ArchbaseAsyncSelect } from '@archbase/components';
+
+const buscarCidades = async (query: string) => {
+  const response = await fetch(`/api/cidades?q=${query}`);
+  const data = await response.json();
+  return data.map(cidade => ({
+    value: cidade.id,
+    label: cidade.nome,
+  }));
+};
+
+<ArchbaseAsyncSelect
+  dataSource={dataSource}
+  dataField="cidadeId"
+  label="Cidade"
+  loadOptions={buscarCidades}
+  placeholder="Digite para buscar..."
+  disabled={isBrowsing}
+/>
+```
+
+### Props Específicas
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `loadOptions` | `(query: string) => Promise<Option[]>` | - | Função de busca assíncrona |
+| `debounceTime` | `number` | `300` | Tempo de debounce em ms |
+| `minChars` | `number` | `2` | Caracteres mínimos para busca |
+
+---
+
+## ArchbaseMultiSelect
+
+Seleção de múltiplas opções.
+
+### Exemplo
+
+```tsx
+import { ArchbaseMultiSelect } from '@archbase/components';
+
+const tags = [
+  { value: 'react', label: 'React' },
+  { value: 'typescript', label: 'TypeScript' },
+  { value: 'node', label: 'Node.js' },
+  { value: 'python', label: 'Python' },
+];
+
+<ArchbaseMultiSelect
+  dataSource={dataSource}
+  dataField="tags"
+  label="Tecnologias"
+  data={tags}
+  placeholder="Selecione as tecnologias"
+  disabled={isBrowsing}
+/>
+```
+
+### Props Específicas
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `maxSelectedValues` | `number` | - | Máximo de valores selecionados |
+| `hidePickedOptions` | `boolean` | `true` | Esconde opções já selecionadas |
+
+---
+
+## ArchbaseLookupEdit
+
+Campo de lookup para busca em entidades relacionadas.
+
+### Exemplo
+
+```tsx
+<ArchbaseLookupEdit
+  dataSource={dataSource}
+  dataField="clienteId"
+  label="Cliente"
+  lookupDataSource={clientesDataSource}
+  lookupField="nome"
+  placeholder="Buscar cliente..."
+/>
+```
+
+---
+
+## Próximos Passos
+
+- [Campos Numéricos](/components/editors/number-inputs) - NumberEdit, Rating
+- [Data e Hora](/components/editors/date-time) - DatePicker, TimePicker

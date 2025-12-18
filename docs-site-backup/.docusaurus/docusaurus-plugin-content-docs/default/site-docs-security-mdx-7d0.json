@@ -1,0 +1,24 @@
+{
+  "id": "security",
+  "title": "Security",
+  "description": "Para equipes de segurança, enfatize ArchbaseSecurityView, ArchbaseSecurityProvider e ArchbaseApiTokenView. Acompanhe os modais (UserModal, ApiTokenModal, GroupModal) para flows completos.",
+  "source": "@site/docs/security.mdx",
+  "sourceDirName": ".",
+  "slug": "/security",
+  "permalink": "/docs/security",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/docs/security.mdx",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docs",
+  "previous": {
+    "title": "Templates",
+    "permalink": "/docs/templates"
+  },
+  "next": {
+    "title": "Migração",
+    "permalink": "/docs/migration"
+  }
+}

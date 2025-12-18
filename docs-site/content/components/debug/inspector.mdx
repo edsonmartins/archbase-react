@@ -1,0 +1,123 @@
+
+# Ferramentas de Debug
+
+Componentes para visualização e debug de dados.
+
+## ArchbaseJsonView
+
+Visualizador de JSON formatado.
+
+### Exemplo
+
+```tsx
+import { ArchbaseJsonView } from '@archbase/components';
+
+const dados = {
+  nome: 'João',
+  idade: 30,
+  endereco: {
+    rua: 'Av. Principal',
+    numero: 123,
+  },
+  tags: ['dev', 'react'],
+};
+
+<ArchbaseJsonView
+  data={dados}
+  collapsed={false}
+  theme="rjv-default"
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `data` | `object` | - | Objeto a ser exibido |
+| `collapsed` | `boolean \| number` | `false` | Nível de colapso |
+| `theme` | `string` | `'rjv-default'` | Tema de cores |
+| `displayDataTypes` | `boolean` | `true` | Mostra tipos de dados |
+| `displayObjectSize` | `boolean` | `true` | Mostra tamanho do objeto |
+| `enableClipboard` | `boolean` | `true` | Permite copiar valores |
+| `indentWidth` | `number` | `4` | Largura da indentação |
+
+### Temas Disponíveis
+
+- `rjv-default` - Tema padrão
+- `monokai` - Tema escuro
+- `ocean` - Tons de azul
+- `apathy` - Minimalista
+
+---
+
+## ArchbaseObjectInspector
+
+Inspector interativo de objetos (estilo DevTools).
+
+### Exemplo
+
+```tsx
+import { ArchbaseObjectInspector } from '@archbase/components';
+
+<ArchbaseObjectInspector
+  data={meuObjeto}
+  expandLevel={2}
+  showNonenumerable={false}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `data` | `any` | - | Dados a inspecionar |
+| `expandLevel` | `number` | `1` | Níveis expandidos por padrão |
+| `showNonenumerable` | `boolean` | `false` | Mostra props não-enumeráveis |
+| `sortObjectKeys` | `boolean` | `false` | Ordena chaves alfabeticamente |
+| `nodeRenderer` | `function` | - | Render customizado de nós |
+
+---
+
+## ArchbaseDataSourceInspector
+
+Inspector específico para DataSource.
+
+### Exemplo
+
+```tsx
+import { ArchbaseDataSourceInspector } from '@archbase/components';
+
+<ArchbaseDataSourceInspector
+  dataSource={dataSource}
+  showState
+  showCurrentRecord
+  showData
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | DataSource a inspecionar |
+| `showState` | `boolean` | `true` | Mostra estado atual |
+| `showCurrentRecord` | `boolean` | `true` | Mostra registro atual |
+| `showData` | `boolean` | `true` | Mostra todos os dados |
+
+---
+
+## Uso em Desenvolvimento
+
+```tsx
+// Mostrar apenas em desenvolvimento
+{process.env.NODE_ENV === 'development' && (
+  <ArchbaseDataSourceInspector dataSource={dataSource} />
+)}
+```
+
+---
+
+## Próximos Passos
+
+- [Templates](/templates/overview) - Templates prontos
+- [Guias](/guides/best-practices) - Boas práticas

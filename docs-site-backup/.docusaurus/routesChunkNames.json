@@ -1,0 +1,295 @@
+{
+  "/docs/-70e": {
+    "__comp": "5e95c892",
+    "__context": {
+      "plugin": "aba21aa0"
+    }
+  },
+  "/docs/-534": {
+    "__comp": "a7bd4aaa",
+    "__props": "11b43341"
+  },
+  "/docs/-756": {
+    "__comp": "a94703ab"
+  },
+  "/docs/admin/drawers-3a2": {
+    "__comp": "17896441",
+    "content": "ab39b5c1"
+  },
+  "/docs/admin/main-layout-557": {
+    "__comp": "17896441",
+    "content": "5d94d054"
+  },
+  "/docs/admin/navigation-171": {
+    "__comp": "17896441",
+    "content": "15440bdb"
+  },
+  "/docs/admin/overview-b4e": {
+    "__comp": "17896441",
+    "content": "9a415880"
+  },
+  "/docs/admin/sidebar-e74": {
+    "__comp": "17896441",
+    "content": "b5d38e88"
+  },
+  "/docs/admin/tabs-aee": {
+    "__comp": "17896441",
+    "content": "1e2c38dc"
+  },
+  "/docs/advanced/filters-8be": {
+    "__comp": "17896441",
+    "content": "a4431e8c"
+  },
+  "/docs/advanced/query-builder-60c": {
+    "__comp": "17896441",
+    "content": "27cb14b7"
+  },
+  "/docs/api-reference/admin-315": {
+    "__comp": "17896441",
+    "content": "9208d94d"
+  },
+  "/docs/api-reference/advanced-dd5": {
+    "__comp": "17896441",
+    "content": "9f9314c3"
+  },
+  "/docs/api-reference/components-e58": {
+    "__comp": "17896441",
+    "content": "e8cdd85b"
+  },
+  "/docs/api-reference/core-2cf": {
+    "__comp": "17896441",
+    "content": "6cad6786"
+  },
+  "/docs/api-reference/data-771": {
+    "__comp": "17896441",
+    "content": "ae104918"
+  },
+  "/docs/api-reference/layout-d70": {
+    "__comp": "17896441",
+    "content": "6ca3a498"
+  },
+  "/docs/api-reference/security-711": {
+    "__comp": "17896441",
+    "content": "d11b7986"
+  },
+  "/docs/api-reference/ssr-004": {
+    "__comp": "17896441",
+    "content": "361c4ea4"
+  },
+  "/docs/api-reference/template-350": {
+    "__comp": "17896441",
+    "content": "e93766c5"
+  },
+  "/docs/components/data-display/charts-e5b": {
+    "__comp": "17896441",
+    "content": "787b64e5"
+  },
+  "/docs/components/data-display/datagrid-397": {
+    "__comp": "17896441",
+    "content": "bcd87cf6"
+  },
+  "/docs/components/data-display/lists-be8": {
+    "__comp": "17896441",
+    "content": "2edbd562"
+  },
+  "/docs/components/debug/inspector-2a4": {
+    "__comp": "17896441",
+    "content": "9485eddd"
+  },
+  "/docs/components/editors/boolean-inputs-013": {
+    "__comp": "17896441",
+    "content": "3ff5ae06"
+  },
+  "/docs/components/editors/date-time-3a5": {
+    "__comp": "17896441",
+    "content": "e098d02f"
+  },
+  "/docs/components/editors/number-inputs-3d3": {
+    "__comp": "17896441",
+    "content": "e3bf9b46"
+  },
+  "/docs/components/editors/rich-content-2f0": {
+    "__comp": "17896441",
+    "content": "0d95bec6"
+  },
+  "/docs/components/editors/select-inputs-13d": {
+    "__comp": "17896441",
+    "content": "09a8da61"
+  },
+  "/docs/components/editors/specialized-c84": {
+    "__comp": "17896441",
+    "content": "b87cf31d"
+  },
+  "/docs/components/editors/text-inputs-be0": {
+    "__comp": "17896441",
+    "content": "125c6bda"
+  },
+  "/docs/components/feedback/modals-e95": {
+    "__comp": "17896441",
+    "content": "3181591c"
+  },
+  "/docs/components/feedback/notifications-1a3": {
+    "__comp": "17896441",
+    "content": "09c41668"
+  },
+  "/docs/components/navigation/buttons-70e": {
+    "__comp": "17896441",
+    "content": "33d0d9dd"
+  },
+  "/docs/components/overview-cc4": {
+    "__comp": "17896441",
+    "content": "64543f01"
+  },
+  "/docs/core-concepts/datasource-v2-fa4": {
+    "__comp": "17896441",
+    "content": "2b295a34"
+  },
+  "/docs/core-concepts/hooks-c38": {
+    "__comp": "17896441",
+    "content": "416ba70a"
+  },
+  "/docs/core-concepts/i18n-a6c": {
+    "__comp": "17896441",
+    "content": "e3cd54cd"
+  },
+  "/docs/core-concepts/providers-46d": {
+    "__comp": "17896441",
+    "content": "6e2180fc"
+  },
+  "/docs/core-concepts/validation-469": {
+    "__comp": "17896441",
+    "content": "0e4bdbb2"
+  },
+  "/docs/getting-started/installation-4da": {
+    "__comp": "17896441",
+    "content": "6459b84b"
+  },
+  "/docs/getting-started/project-structure-367": {
+    "__comp": "17896441",
+    "content": "36785c73"
+  },
+  "/docs/getting-started/quick-start-936": {
+    "__comp": "17896441",
+    "content": "053d6f47"
+  },
+  "/docs/guides/accessibility-2c2": {
+    "__comp": "17896441",
+    "content": "aee6b3a1"
+  },
+  "/docs/guides/best-practices-38d": {
+    "__comp": "17896441",
+    "content": "5a948150"
+  },
+  "/docs/guides/migration-v2-v3-162": {
+    "__comp": "17896441",
+    "content": "6dd1bcac"
+  },
+  "/docs/guides/performance-779": {
+    "__comp": "17896441",
+    "content": "45d7d954"
+  },
+  "/docs/guides/testing-db7": {
+    "__comp": "17896441",
+    "content": "183ed9a2"
+  },
+  "/docs/guides/theming-597": {
+    "__comp": "17896441",
+    "content": "7ff5da52"
+  },
+  "/docs/layout/containers-1cb": {
+    "__comp": "17896441",
+    "content": "a42ed379"
+  },
+  "/docs/layout/dockable-fb4": {
+    "__comp": "17896441",
+    "content": "6e0ad502"
+  },
+  "/docs/layout/overview-9cd": {
+    "__comp": "17896441",
+    "content": "051054a8"
+  },
+  "/docs/layout/space-system-db6": {
+    "__comp": "17896441",
+    "content": "8875e2b9"
+  },
+  "/docs/security/authentication-a71": {
+    "__comp": "17896441",
+    "content": "568e42b9"
+  },
+  "/docs/security/authorization-7e4": {
+    "__comp": "17896441",
+    "content": "3ffc09c4"
+  },
+  "/docs/security/components-e78": {
+    "__comp": "17896441",
+    "content": "f999d34c"
+  },
+  "/docs/security/overview-b99": {
+    "__comp": "17896441",
+    "content": "4ddadfbe"
+  },
+  "/docs/security/providers-124": {
+    "__comp": "17896441",
+    "content": "c90b86fe"
+  },
+  "/docs/security/ui-components-de6": {
+    "__comp": "17896441",
+    "content": "0fd121ee"
+  },
+  "/docs/ssr/datasource-ssr-90d": {
+    "__comp": "17896441",
+    "content": "78a4d1de"
+  },
+  "/docs/ssr/overview-262": {
+    "__comp": "17896441",
+    "content": "018ebeb7"
+  },
+  "/docs/ssr/providers-e51": {
+    "__comp": "17896441",
+    "content": "c5be4f72"
+  },
+  "/docs/ssr/tanstack-integration-974": {
+    "__comp": "17896441",
+    "content": "28941963"
+  },
+  "/docs/templates/form-template-942": {
+    "__comp": "17896441",
+    "content": "528774c1"
+  },
+  "/docs/templates/grid-template-b36": {
+    "__comp": "17896441",
+    "content": "72a7104f"
+  },
+  "/docs/templates/masonry-template-d00": {
+    "__comp": "17896441",
+    "content": "44e8d477"
+  },
+  "/docs/templates/modal-template-11a": {
+    "__comp": "17896441",
+    "content": "df1af2ca"
+  },
+  "/docs/templates/overview-c89": {
+    "__comp": "17896441",
+    "content": "5b3aa12b"
+  },
+  "/docs/templates/space-template-235": {
+    "__comp": "17896441",
+    "content": "8610829c"
+  },
+  "/docs/troubleshooting/common-issues-2d3": {
+    "__comp": "17896441",
+    "content": "a60f6838"
+  },
+  "/docs/troubleshooting/error-messages-a62": {
+    "__comp": "17896441",
+    "content": "78603c2e"
+  },
+  "/docs/troubleshooting/faq-bb2": {
+    "__comp": "17896441",
+    "content": "c83967f7"
+  },
+  "/docs/-098": {
+    "__comp": "17896441",
+    "content": "f8409a7e"
+  }
+}

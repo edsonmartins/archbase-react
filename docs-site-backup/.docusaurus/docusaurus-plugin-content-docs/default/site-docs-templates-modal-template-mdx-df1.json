@@ -1,0 +1,30 @@
+{
+  "id": "templates/modal-template",
+  "title": "ModalTemplate",
+  "description": "Template de modal para edição de registros.",
+  "source": "@site/docs/templates/modal-template.mdx",
+  "sourceDirName": "templates",
+  "slug": "/templates/modal-template",
+  "permalink": "/docs/templates/modal-template",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/templates/modal-template.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "title": "ModalTemplate",
+    "sidebar_position": 4
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "GridTemplate",
+    "permalink": "/docs/templates/grid-template"
+  },
+  "next": {
+    "title": "MasonryTemplate",
+    "permalink": "/docs/templates/masonry-template"
+  }
+}

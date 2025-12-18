@@ -1,0 +1,152 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseEdit` é um campo de texto otimizado para uso com o DataSource. Pode ser usado de forma controlada (com `value` e `onChangeValue`) ou vinculado automaticamente a um DataSource.
+
+<Demo data={demos.usage} />
+
+## Com DataSource
+
+A integração com o DataSource é o principal diferencial. O componente detecta automaticamente se está usando DataSource V1 ou V2 e otimiza os re-renders.
+
+<Demo data={demos.withDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseEdit
+  dataSource={dataSource}  // Fonte de dados (V1 ou V2)
+  dataField="nome"         // Campo do objeto
+  label="Nome"
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite edição
+- **Sincroniza**: valor bidirecional com o DataSource
+- **Valida**: erros são exibidos automaticamente
+
+## Validação
+
+Use decorators do `@archbase/core` para validação automática:
+
+<Demo data={demos.withValidation} />
+
+### Decorators disponíveis
+
+| Decorator | Descrição |
+|-----------|-----------|
+| `@IsNotEmpty()` | Campo não pode ser vazio |
+| `@IsEmail()` | Deve ser um e-mail válido |
+| `@MinLength(n)` | Mínimo de n caracteres |
+| `@MaxLength(n)` | Máximo de n caracteres |
+| `@Matches(regex)` | Deve corresponder ao padrão |
+
+## Botão de Busca
+
+Adicione um botão de busca para abrir modais de lookup:
+
+<Demo data={demos.withSearch} />
+
+## Tamanhos
+
+O componente suporta os mesmos tamanhos do Mantine:
+
+<Demo data={demos.sizes} />
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuário:
+
+<Demo data={demos.states} />
+
+## Integração com Formulários
+
+### Com ArchbaseFormTemplate
+
+```tsx
+import { ArchbaseFormTemplate, ArchbaseFormFieldPanel } from '@archbase/template';
+import { ArchbaseEdit } from '@archbase/components';
+
+function MeuFormulario() {
+  return (
+    <ArchbaseFormTemplate
+      dataSource={dataSource}
+      onSave={handleSave}
+      onCancel={handleCancel}
+    >
+      <ArchbaseFormFieldPanel>
+        <ArchbaseEdit dataSource={dataSource} dataField="nome" label="Nome" />
+        <ArchbaseEdit dataSource={dataSource} dataField="email" label="E-mail" />
+      </ArchbaseFormFieldPanel>
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+### Com React Hook Form
+
+```tsx
+import { useForm, Controller } from 'react-hook-form';
+import { ArchbaseEdit } from '@archbase/components';
+
+function MeuFormulario() {
+  const { control, handleSubmit } = useForm();
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="nome"
+        control={control}
+        render={({ field }) => (
+          <ArchbaseEdit
+            label="Nome"
+            value={field.value}
+            onChangeValue={field.onChange}
+          />
+        )}
+      />
+    </form>
+  );
+}
+```
+
+## Acessibilidade
+
+O `ArchbaseEdit` segue as melhores práticas de acessibilidade:
+
+- Labels associadas corretamente via `htmlFor`
+- Suporte completo a navegação por teclado
+- Erros anunciados via `aria-describedby`
+- Campos obrigatórios indicados via `aria-required`
+- Compatível com screen readers
+
+## Dicas de Performance
+
+### DataSource V2
+
+O DataSource V2 oferece otimizações de performance:
+
+```tsx
+// V2 detectado automaticamente
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+  initialData: pessoas,
+  name: 'dsPessoas',
+});
+
+// O componente usa re-renders otimizados internamente
+<ArchbaseEdit dataSource={dataSource} dataField="nome" />
+```
+
+### Evite re-renders desnecessários
+
+```tsx
+// Ruim: cria nova função a cada render
+<ArchbaseEdit onChangeValue={(v) => setValue(v)} />
+
+// Bom: callback estável
+const handleChange = useCallback((v) => setValue(v), []);
+<ArchbaseEdit onChangeValue={handleChange} />
+```

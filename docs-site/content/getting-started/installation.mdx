@@ -1,0 +1,229 @@
+
+# Instalação
+
+Este guia mostra como instalar e configurar o Archbase React em seu projeto.
+
+## Requisitos
+
+- **Node.js** 20.0 ou superior
+- **React** 18.3+ ou 19.0+
+- **TypeScript** 5.0+ (recomendado)
+
+## Gerenciadores de Pacotes
+
+### pnpm (Recomendado)
+
+```bash
+# Pacotes essenciais
+pnpm add @archbase/core @archbase/data @archbase/components
+
+# Pacotes adicionais (conforme necessidade)
+pnpm add @archbase/template @archbase/layout @archbase/admin
+pnpm add @archbase/security @archbase/security-ui
+pnpm add @archbase/advanced @archbase/ssr
+```
+
+### npm
+
+```bash
+npm install @archbase/core @archbase/data @archbase/components
+```
+
+### yarn
+
+```bash
+yarn add @archbase/core @archbase/data @archbase/components
+```
+
+## Dependências Peer
+
+O Archbase React requer algumas dependências que você precisa instalar manualmente:
+
+```bash
+pnpm add react react-dom @mantine/core @mantine/hooks @tanstack/react-query
+```
+
+### Lista completa de peer dependencies:
+
+| Pacote | Versão Mínima |
+|--------|---------------|
+| `react` | ^18.3.0 ou ^19.0.0 |
+| `react-dom` | ^18.3.0 ou ^19.0.0 |
+| `@mantine/core` | ^8.0.0 |
+| `@mantine/hooks` | ^8.0.0 |
+| `@tanstack/react-query` | ^5.0.0 |
+| `i18next` | ^23.0.0 |
+| `react-i18next` | ^14.0.0 |
+
+## Configuração Básica
+
+### 1. Configure o Provider Principal
+
+No arquivo raiz da sua aplicação (geralmente `App.tsx` ou `main.tsx`):
+
+```tsx title="src/App.tsx"
+import { ArchbaseGlobalProvider } from '@archbase/core';
+import { MantineProvider } from '@mantine/core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Importar estilos do Mantine
+import '@mantine/core/styles.css';
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider>
+        <ArchbaseGlobalProvider>
+          {/* Sua aplicação aqui */}
+        </ArchbaseGlobalProvider>
+      </MantineProvider>
+    </QueryClientProvider>
+  );
+}
+
+export default App;
+```
+
+### 2. Configure o i18n (Opcional)
+
+Se precisar de internacionalização:
+
+```tsx title="src/i18n.ts"
+import { initArchbaseI18nEarly } from '@archbase/core';
+
+// Chamar ANTES de renderizar a aplicação
+initArchbaseI18nEarly({
+  lng: 'pt-BR',
+  fallbackLng: 'en',
+  ns: ['archbase', 'common'],
+  defaultNS: 'common',
+});
+```
+
+```tsx title="src/main.tsx"
+import './i18n'; // Importar primeiro!
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+## Configuração com Vite
+
+```ts title="vite.config.ts"
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  optimizeDeps: {
+    include: [
+      '@archbase/core',
+      '@archbase/data',
+      '@archbase/components',
+    ],
+  },
+});
+```
+
+## Configuração com Next.js
+
+```tsx title="app/providers.tsx"
+'use client';
+
+import { ArchbaseGlobalProvider } from '@archbase/core';
+import { MantineProvider } from '@mantine/core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider>
+        <ArchbaseGlobalProvider>
+          {children}
+        </ArchbaseGlobalProvider>
+      </MantineProvider>
+    </QueryClientProvider>
+  );
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers';
+import '@mantine/core/styles.css';
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="pt-BR">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+## Verificando a Instalação
+
+Crie um componente simples para verificar se tudo está funcionando:
+
+```tsx title="src/TestComponent.tsx"
+import { ArchbaseEdit } from '@archbase/components';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+interface Pessoa {
+  id: number;
+  nome: string;
+}
+
+export function TestComponent() {
+  const { dataSource, edit, save, cancel, isEditing } = useArchbaseDataSourceV2<Pessoa>({
+    initialData: [{ id: 1, nome: 'Teste' }],
+    name: 'test-datasource',
+  });
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h2>Teste de Instalação</h2>
+      <ArchbaseEdit
+        dataSource={dataSource}
+        dataField="nome"
+        label="Nome"
+        disabled={!isEditing}
+      />
+      <div style={{ marginTop: 10 }}>
+        {isEditing ? (
+          <>
+            <button onClick={save}>Salvar</button>
+            <button onClick={cancel}>Cancelar</button>
+          </>
+        ) : (
+          <button onClick={edit}>Editar</button>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+Se o componente renderizar corretamente e você conseguir editar/salvar, a instalação está completa!
+
+## Próximos Passos
+
+- [Quick Start](/getting-started/quick-start) - Crie seu primeiro formulário completo
+- [Estrutura de Pacotes](/getting-started/project-structure) - Entenda a organização dos pacotes
+- [DataSource V2](/core-concepts/datasource-v2) - Aprenda sobre gerenciamento de dados

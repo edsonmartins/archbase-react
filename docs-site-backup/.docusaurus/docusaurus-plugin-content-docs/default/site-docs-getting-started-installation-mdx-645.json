@@ -1,0 +1,30 @@
+{
+  "id": "getting-started/installation",
+  "title": "Instalação",
+  "description": "Este guia mostra como instalar e configurar o Archbase React em seu projeto.",
+  "source": "@site/docs/getting-started/installation.mdx",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/installation",
+  "permalink": "/docs/getting-started/installation",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/getting-started/installation.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Instalação",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Archbase React",
+    "permalink": "/docs/"
+  },
+  "next": {
+    "title": "Quick Start",
+    "permalink": "/docs/getting-started/quick-start"
+  }
+}

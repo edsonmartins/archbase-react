@@ -1,0 +1,30 @@
+{
+  "id": "admin/main-layout",
+  "title": "MainLayout",
+  "description": "Layout principal para aplicações administrativas.",
+  "source": "@site/docs/admin/main-layout.mdx",
+  "sourceDirName": "admin",
+  "slug": "/admin/main-layout",
+  "permalink": "/docs/admin/main-layout",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/admin/main-layout.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "MainLayout",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Visão Geral",
+    "permalink": "/docs/admin/overview"
+  },
+  "next": {
+    "title": "Sidebar",
+    "permalink": "/docs/admin/sidebar"
+  }
+}

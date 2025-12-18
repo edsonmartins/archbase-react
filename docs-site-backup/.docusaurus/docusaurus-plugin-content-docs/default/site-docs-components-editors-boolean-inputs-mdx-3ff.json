@@ -1,0 +1,30 @@
+{
+  "id": "components/editors/boolean-inputs",
+  "title": "Campos Boolean",
+  "description": "Componentes para valores booleanos e opções.",
+  "source": "@site/docs/components/editors/boolean-inputs.mdx",
+  "sourceDirName": "components/editors",
+  "slug": "/components/editors/boolean-inputs",
+  "permalink": "/docs/components/editors/boolean-inputs",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/editors/boolean-inputs.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "title": "Campos Boolean",
+    "sidebar_position": 5
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Data e Hora",
+    "permalink": "/docs/components/editors/date-time"
+  },
+  "next": {
+    "title": "Conteúdo Rico",
+    "permalink": "/docs/components/editors/rich-content"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "guides/best-practices",
+  "title": "Boas Práticas",
+  "description": "Recomendações para desenvolvimento com Archbase React.",
+  "source": "@site/docs/guides/best-practices.mdx",
+  "sourceDirName": "guides",
+  "slug": "/guides/best-practices",
+  "permalink": "/docs/guides/best-practices",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/guides/best-practices.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Boas Práticas",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "TanStack Integration",
+    "permalink": "/docs/ssr/tanstack-integration"
+  },
+  "next": {
+    "title": "Performance",
+    "permalink": "/docs/guides/performance"
+  }
+}

@@ -1,0 +1,41 @@
+
+# Janelas Dockable
+
+Componentes para janelas flutuantes e docking.
+
+## ArchbaseFloatingWindow
+
+Janela flutuante arrastável.
+
+```tsx
+import { ArchbaseFloatingWindow } from '@archbase/layout';
+
+<ArchbaseFloatingWindow
+  title="Janela Flutuante"
+  defaultPosition={{ x: 100, y: 100 }}
+  defaultSize={{ width: 400, height: 300 }}
+>
+  Conteúdo da janela
+</ArchbaseFloatingWindow>
+```
+
+## ArchbaseDockableContainer
+
+Container com áreas de docking.
+
+```tsx
+import { ArchbaseDockableContainer, ArchbaseDockPanel } from '@archbase/layout';
+
+<ArchbaseDockableContainer>
+  <ArchbaseDockPanel position="left" size={250}>
+    <Sidebar />
+  </ArchbaseDockPanel>
+  <ArchbaseDockPanel position="center">
+    <MainContent />
+  </ArchbaseDockPanel>
+</ArchbaseDockableContainer>
+```
+
+## Próximos Passos
+
+- [Admin](/admin/overview) - Layout administrativo

@@ -1,0 +1,30 @@
+{
+  "id": "troubleshooting/faq",
+  "title": "FAQ",
+  "description": "Geral",
+  "source": "@site/docs/troubleshooting/faq.mdx",
+  "sourceDirName": "troubleshooting",
+  "slug": "/troubleshooting/faq",
+  "permalink": "/docs/troubleshooting/faq",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/troubleshooting/faq.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "FAQ",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "@archbase/ssr",
+    "permalink": "/docs/api-reference/ssr"
+  },
+  "next": {
+    "title": "Problemas Comuns",
+    "permalink": "/docs/troubleshooting/common-issues"
+  }
+}

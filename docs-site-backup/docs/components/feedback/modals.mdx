@@ -1,0 +1,184 @@
+---
+title: Modais
+sidebar_position: 2
+---
+
+# Modais e Diálogos
+
+Componentes para exibição de conteúdo modal.
+
+## ArchbaseModal
+
+Modal básico para exibição de conteúdo.
+
+### Exemplo
+
+```tsx
+import { ArchbaseModal } from '@archbase/components';
+import { useState } from 'react';
+import { Button } from '@mantine/core';
+
+function MeuComponente() {
+  const [opened, setOpened] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpened(true)}>Abrir Modal</Button>
+
+      <ArchbaseModal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title="Título do Modal"
+        size="md"
+      >
+        <p>Conteúdo do modal aqui.</p>
+      </ArchbaseModal>
+    </>
+  );
+}
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `opened` | `boolean` | - | Controla visibilidade |
+| `onClose` | `() => void` | - | Callback ao fechar |
+| `title` | `string` | - | Título do modal |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Tamanho |
+| `centered` | `boolean` | `false` | Centraliza verticalmente |
+| `withCloseButton` | `boolean` | `true` | Mostra botão X |
+| `closeOnClickOutside` | `boolean` | `true` | Fecha ao clicar fora |
+| `closeOnEscape` | `boolean` | `true` | Fecha com Escape |
+
+---
+
+## useArchbaseDialog
+
+Hook para diálogos de confirmação e prompt.
+
+### Confirm
+
+```tsx
+import { useArchbaseDialog } from '@archbase/core';
+
+function MeuComponente() {
+  const { confirm } = useArchbaseDialog();
+
+  const handleDelete = async () => {
+    const confirmed = await confirm({
+      title: 'Confirmar exclusão',
+      message: 'Deseja realmente excluir este registro?',
+      confirmLabel: 'Excluir',
+      cancelLabel: 'Cancelar',
+      confirmColor: 'red',
+    });
+
+    if (confirmed) {
+      // Executar exclusão
+    }
+  };
+
+  return <Button onClick={handleDelete}>Excluir</Button>;
+}
+```
+
+### Alert
+
+```tsx
+const { alert } = useArchbaseDialog();
+
+await alert({
+  title: 'Informação',
+  message: 'Operação concluída com sucesso!',
+});
+```
+
+### Prompt
+
+```tsx
+const { prompt } = useArchbaseDialog();
+
+const nome = await prompt({
+  title: 'Digite o nome',
+  message: 'Informe o nome do novo item:',
+  placeholder: 'Nome do item',
+  defaultValue: '',
+});
+
+if (nome) {
+  // Usar o nome digitado
+}
+```
+
+---
+
+## ArchbaseConfirmModal
+
+Modal de confirmação com botões de ação.
+
+### Exemplo
+
+```tsx
+import { ArchbaseConfirmModal } from '@archbase/components';
+
+<ArchbaseConfirmModal
+  opened={confirmOpened}
+  onClose={() => setConfirmOpened(false)}
+  onConfirm={handleConfirm}
+  title="Confirmar ação"
+  message="Tem certeza que deseja continuar?"
+  confirmLabel="Sim, continuar"
+  cancelLabel="Não, cancelar"
+  confirmColor="red"
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `opened` | `boolean` | - | Controla visibilidade |
+| `onClose` | `() => void` | - | Callback ao fechar |
+| `onConfirm` | `() => void` | - | Callback ao confirmar |
+| `title` | `string` | - | Título |
+| `message` | `string` | - | Mensagem |
+| `confirmLabel` | `string` | `'Confirmar'` | Texto do botão confirmar |
+| `cancelLabel` | `string` | `'Cancelar'` | Texto do botão cancelar |
+| `confirmColor` | `string` | `'blue'` | Cor do botão confirmar |
+
+---
+
+## ArchbaseDrawer
+
+Painel lateral deslizante.
+
+### Exemplo
+
+```tsx
+import { ArchbaseDrawer } from '@archbase/components';
+
+<ArchbaseDrawer
+  opened={drawerOpened}
+  onClose={() => setDrawerOpened(false)}
+  title="Filtros"
+  position="right"
+  size="md"
+>
+  <p>Conteúdo do drawer</p>
+</ArchbaseDrawer>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `position` | `'left' \| 'right' \| 'top' \| 'bottom'` | `'right'` | Posição |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Tamanho |
+
+---
+
+## Próximos Passos
+
+- [Notificações](/components/feedback/notifications) - Toast
+- [Botões](/components/navigation/buttons) - Botões de ação

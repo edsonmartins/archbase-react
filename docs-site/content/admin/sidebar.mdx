@@ -1,0 +1,52 @@
+
+# ArchbaseAdvancedSidebar
+
+Menu lateral com grupos e navegação.
+
+## Exemplo
+
+```tsx
+import { ArchbaseAdvancedSidebar } from '@archbase/admin';
+import { IconDashboard, IconUsers, IconSettings } from '@tabler/icons-react';
+
+const menuItems = [
+  {
+    label: 'Dashboard',
+    icon: IconDashboard,
+    link: '/dashboard',
+  },
+  {
+    label: 'Cadastros',
+    icon: IconUsers,
+    links: [
+      { label: 'Usuários', link: '/usuarios' },
+      { label: 'Grupos', link: '/grupos' },
+    ],
+  },
+  {
+    label: 'Configurações',
+    icon: IconSettings,
+    link: '/configuracoes',
+  },
+];
+
+<ArchbaseAdvancedSidebar
+  links={menuItems}
+  collapsed={false}
+  onCollapse={(collapsed) => setCollapsed(collapsed)}
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `links` | `MenuItem[]` | - | Itens do menu |
+| `collapsed` | `boolean` | `false` | Estado colapsado |
+| `onCollapse` | `(collapsed) => void` | - | Callback |
+| `activeLink` | `string` | - | Link ativo |
+
+## Próximos Passos
+
+- [Navigation](/admin/navigation) - Sistema de navegação
+- [Tabs](/admin/tabs) - Container de abas

@@ -1,0 +1,30 @@
+{
+  "id": "admin/sidebar",
+  "title": "Sidebar",
+  "description": "Menu lateral com grupos e navegação.",
+  "source": "@site/docs/admin/sidebar.mdx",
+  "sourceDirName": "admin",
+  "slug": "/admin/sidebar",
+  "permalink": "/docs/admin/sidebar",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/admin/sidebar.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "Sidebar",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "MainLayout",
+    "permalink": "/docs/admin/main-layout"
+  },
+  "next": {
+    "title": "Navigation",
+    "permalink": "/docs/admin/navigation"
+  }
+}

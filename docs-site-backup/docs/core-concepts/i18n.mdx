@@ -1,0 +1,78 @@
+---
+title: Internacionalização
+sidebar_position: 5
+---
+
+# Internacionalização (i18n)
+
+O Archbase React utiliza i18next para internacionalização.
+
+## Configuração Inicial
+
+```tsx title="src/i18n.ts"
+import { initArchbaseI18nEarly } from '@archbase/core';
+
+initArchbaseI18nEarly({
+  lng: 'pt-BR',
+  fallbackLng: 'en',
+  ns: ['archbase', 'common'],
+  defaultNS: 'common',
+});
+```
+
+```tsx title="src/main.tsx"
+import './i18n'; // Importar primeiro!
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+## Idiomas Suportados
+
+O Archbase React inclui traduções para:
+
+- Português (Brasil) - `pt-BR`
+- Inglês - `en`
+- Espanhol - `es`
+
+## Usando Traduções
+
+```tsx
+import { useTranslation } from 'react-i18next';
+
+function MeuComponente() {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <h1>{t('welcome')}</h1>
+      <p>{t('messages.success')}</p>
+    </div>
+  );
+}
+```
+
+## Adicionando Traduções Customizadas
+
+```tsx
+import i18n from 'i18next';
+
+i18n.addResourceBundle('pt-BR', 'common', {
+  welcome: 'Bem-vindo',
+  messages: {
+    success: 'Operação realizada com sucesso',
+    error: 'Ocorreu um erro',
+  },
+});
+```
+
+## Próximos Passos
+
+- [Providers](/core-concepts/providers) - Configuração de providers
+- [Componentes](/components/overview) - Componentes disponíveis

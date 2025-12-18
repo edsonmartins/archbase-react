@@ -1,0 +1,31 @@
+
+# Sistema de Espaçamento
+
+O ArchbaseSpace permite posicionamento flexível de componentes.
+
+## Exemplo
+
+```tsx
+import { ArchbaseSpace, ArchbaseSpaceItem } from '@archbase/layout';
+
+<ArchbaseSpace height={400}>
+  <ArchbaseSpaceItem x={0} y={0} width={200} height={100}>
+    <Card>Item 1</Card>
+  </ArchbaseSpaceItem>
+  <ArchbaseSpaceItem x={220} y={0} width={200} height={100}>
+    <Card>Item 2</Card>
+  </ArchbaseSpaceItem>
+</ArchbaseSpace>
+```
+
+## Props
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `gridSize` | `number` | Tamanho da grade |
+| `showGrid` | `boolean` | Mostrar grade |
+| `snapToGrid` | `boolean` | Encaixar na grade |
+
+## Próximos Passos
+
+- [Dockable](/layout/dockable) - Janelas flutuantes

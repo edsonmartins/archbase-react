@@ -1,0 +1,30 @@
+{
+  "id": "api-reference/admin",
+  "title": "@archbase/admin",
+  "description": "Sistema de layout administrativo.",
+  "source": "@site/docs/api-reference/admin.mdx",
+  "sourceDirName": "api-reference",
+  "slug": "/api-reference/admin",
+  "permalink": "/docs/api-reference/admin",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/api-reference/admin.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "title": "@archbase/admin",
+    "sidebar_position": 6
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "@archbase/layout",
+    "permalink": "/docs/api-reference/layout"
+  },
+  "next": {
+    "title": "@archbase/security",
+    "permalink": "/docs/api-reference/security"
+  }
+}

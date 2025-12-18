@@ -1,0 +1,29 @@
+
+# Server-Side Rendering
+
+Utilitários para SSR com TanStack Start/Router.
+
+## Instalação
+
+```bash
+pnpm add @archbase/ssr
+```
+
+## Configuração
+
+```tsx
+import { ArchbaseSSRProvider } from '@archbase/ssr';
+
+function App() {
+  return (
+    <ArchbaseSSRProvider>
+      <MyApp />
+    </ArchbaseSSRProvider>
+  );
+}
+```
+
+## Próximos Passos
+
+- [Providers](/ssr/providers) - Configuração de providers
+- [DataSource SSR](/ssr/datasource-ssr) - DataSource no servidor

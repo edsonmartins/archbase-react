@@ -1,0 +1,24 @@
+{
+  "id": "conventions",
+  "title": "Conventions",
+  "description": "Esses padrões servem para manter a API consistente (e o catálogo/llms alinhados):",
+  "source": "@site/docs/conventions.mdx",
+  "sourceDirName": ".",
+  "slug": "/conventions",
+  "permalink": "/docs/conventions",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/docs/conventions.mdx",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docs",
+  "previous": {
+    "title": "Getting Started",
+    "permalink": "/docs/"
+  },
+  "next": {
+    "title": "Arquitetura da UI",
+    "permalink": "/docs/architecture"
+  }
+}

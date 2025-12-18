@@ -1,0 +1,63 @@
+---
+title: Testes
+sidebar_position: 4
+---
+
+# Testes
+
+Guia para testar componentes Archbase.
+
+## Setup
+
+```bash
+pnpm add -D vitest @testing-library/react @testing-library/user-event
+```
+
+## Testando com DataSource
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+function TestWrapper({ children }) {
+  return (
+    <QueryClientProvider client={new QueryClient()}>
+      <MantineProvider>
+        {children}
+      </MantineProvider>
+    </QueryClientProvider>
+  );
+}
+
+test('deve editar registro', async () => {
+  render(<MeuFormulario />, { wrapper: TestWrapper });
+
+  await userEvent.click(screen.getByText('Editar'));
+
+  const input = screen.getByLabelText('Nome');
+  await userEvent.clear(input);
+  await userEvent.type(input, 'Novo Nome');
+
+  await userEvent.click(screen.getByText('Salvar'));
+
+  expect(screen.getByText('Registro salvo')).toBeInTheDocument();
+});
+```
+
+## Mocking
+
+```tsx
+vi.mock('@archbase/data', () => ({
+  useArchbaseDataSourceV2: vi.fn(() => ({
+    dataSource: mockDataSource,
+    isBrowsing: true,
+    isEditing: false,
+  })),
+}));
+```
+
+## Próximos Passos
+
+- [Theming](/guides/theming) - Customização
+- [Migração](/guides/migration-v2-v3) - Migração de versão

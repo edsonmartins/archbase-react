@@ -1,0 +1,50 @@
+
+# Autenticação
+
+Sistema de login e gerenciamento de tokens.
+
+## ArchbaseAuthenticator
+
+```tsx
+import { ArchbaseAuthenticator } from '@archbase/security';
+
+const authenticator = new ArchbaseAuthenticator({
+  loginUrl: '/api/auth/login',
+  logoutUrl: '/api/auth/logout',
+  refreshUrl: '/api/auth/refresh',
+  tokenStorage: 'localStorage',
+});
+```
+
+## Login
+
+```tsx
+const { login, logout, isAuthenticated, user } = useArchbaseSecurity();
+
+const handleLogin = async (credentials) => {
+  try {
+    await login(credentials);
+    navigate('/dashboard');
+  } catch (error) {
+    showError('Credenciais inválidas');
+  }
+};
+```
+
+## Token Management
+
+```tsx
+// Verificar token
+const isValid = authenticator.isTokenValid();
+
+// Refresh token
+await authenticator.refreshToken();
+
+// Obter token atual
+const token = authenticator.getAccessToken();
+```
+
+## Próximos Passos
+
+- [Autorização](/security/authorization) - Permissões
+- [Providers](/security/providers) - Configuração

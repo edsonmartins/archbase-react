@@ -1,0 +1,24 @@
+{
+  "id": "datagrid",
+  "title": "DataGrid",
+  "description": "Arquitetura do grid:",
+  "source": "@site/docs/datagrid.mdx",
+  "sourceDirName": ".",
+  "slug": "/datagrid",
+  "permalink": "/docs/datagrid",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/docs/datagrid.mdx",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docs",
+  "previous": {
+    "title": "Forms",
+    "permalink": "/docs/forms"
+  },
+  "next": {
+    "title": "Templates",
+    "permalink": "/docs/templates"
+  }
+}

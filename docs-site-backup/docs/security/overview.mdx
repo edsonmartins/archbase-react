@@ -1,0 +1,45 @@
+---
+title: Visão Geral
+sidebar_position: 1
+---
+
+# Sistema de Segurança
+
+O Archbase React fornece um sistema completo de autenticação e autorização.
+
+## Pacotes
+
+| Pacote | Descrição |
+|--------|-----------|
+| `@archbase/security` | Core de segurança (providers, hooks) |
+| `@archbase/security-ui` | Componentes de UI (modais, forms) |
+
+## Instalação
+
+```bash
+pnpm add @archbase/security @archbase/security-ui
+```
+
+## Configuração Básica
+
+```tsx
+import { ArchbaseSecurityProvider } from '@archbase/security';
+
+function App() {
+  return (
+    <ArchbaseSecurityProvider
+      authenticator={myAuthenticator}
+      onLoginSuccess={handleLoginSuccess}
+      onLogout={handleLogout}
+    >
+      <MyApp />
+    </ArchbaseSecurityProvider>
+  );
+}
+```
+
+## Próximos Passos
+
+- [Autenticação](/security/authentication) - Login, tokens
+- [Autorização](/security/authorization) - Permissões
+- [Providers](/security/providers) - Configuração

@@ -1,0 +1,30 @@
+{
+  "id": "security/overview",
+  "title": "Visão Geral",
+  "description": "O Archbase React fornece um sistema completo de autenticação e autorização.",
+  "source": "@site/docs/security/overview.mdx",
+  "sourceDirName": "security",
+  "slug": "/security/overview",
+  "permalink": "/docs/security/overview",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/security/overview.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Visão Geral",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Drawers",
+    "permalink": "/docs/admin/drawers"
+  },
+  "next": {
+    "title": "Autenticação",
+    "permalink": "/docs/security/authentication"
+  }
+}

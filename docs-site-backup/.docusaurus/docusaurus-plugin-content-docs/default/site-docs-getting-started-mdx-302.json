@@ -1,0 +1,25 @@
+{
+  "id": "getting-started",
+  "title": "Getting Started",
+  "description": "Para iniciar com Archbase React:",
+  "source": "@site/docs/getting-started.mdx",
+  "sourceDirName": ".",
+  "slug": "/",
+  "permalink": "/docs/",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/docs/getting-started.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "slug": "/",
+    "title": "Getting Started",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "next": {
+    "title": "Conventions",
+    "permalink": "/docs/conventions"
+  }
+}

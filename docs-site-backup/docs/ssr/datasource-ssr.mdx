@@ -1,0 +1,44 @@
+---
+title: DataSource SSR
+sidebar_position: 3
+---
+
+# DataSource com SSR
+
+Uso do DataSource em ambiente server-side.
+
+## createSSRDataSource
+
+```tsx
+import { createSSRDataSource } from '@archbase/ssr';
+
+// No servidor (loader)
+export async function loader() {
+  const data = await fetchPessoas();
+  const dehydrated = createSSRDataSource('pessoas', data);
+
+  return { dehydratedState: dehydrated };
+}
+```
+
+## hydrateDataSource
+
+```tsx
+import { hydrateDataSource } from '@archbase/ssr';
+
+// No cliente
+function PessoasPage() {
+  const { dehydratedState } = useLoaderData();
+
+  const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+    name: 'pessoas',
+    initialData: hydrateDataSource(dehydratedState),
+  });
+
+  return <DataGrid dataSource={dataSource} />;
+}
+```
+
+## Próximos Passos
+
+- [TanStack Integration](/ssr/tanstack-integration) - React Query

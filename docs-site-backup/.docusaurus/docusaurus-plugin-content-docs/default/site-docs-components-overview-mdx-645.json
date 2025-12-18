@@ -1,0 +1,30 @@
+{
+  "id": "components/overview",
+  "title": "Visão Geral",
+  "description": "O Archbase React oferece mais de 80 componentes prontos para uso em aplicações empresariais.",
+  "source": "@site/docs/components/overview.mdx",
+  "sourceDirName": "components",
+  "slug": "/components/overview",
+  "permalink": "/docs/components/overview",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/overview.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Visão Geral",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Internacionalização",
+    "permalink": "/docs/core-concepts/i18n"
+  },
+  "next": {
+    "title": "Campos de Texto",
+    "permalink": "/docs/components/editors/text-inputs"
+  }
+}

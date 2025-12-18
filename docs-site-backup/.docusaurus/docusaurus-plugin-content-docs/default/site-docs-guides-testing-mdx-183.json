@@ -1,0 +1,30 @@
+{
+  "id": "guides/testing",
+  "title": "Testes",
+  "description": "Guia para testar componentes Archbase.",
+  "source": "@site/docs/guides/testing.mdx",
+  "sourceDirName": "guides",
+  "slug": "/guides/testing",
+  "permalink": "/docs/guides/testing",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/guides/testing.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "title": "Testes",
+    "sidebar_position": 4
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Acessibilidade",
+    "permalink": "/docs/guides/accessibility"
+  },
+  "next": {
+    "title": "Theming",
+    "permalink": "/docs/guides/theming"
+  }
+}

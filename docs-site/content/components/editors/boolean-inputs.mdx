@@ -1,0 +1,131 @@
+
+# Campos Boolean
+
+Componentes para valores booleanos e opções.
+
+## ArchbaseCheckbox
+
+Checkbox para valores true/false.
+
+### Exemplo
+
+```tsx
+import { ArchbaseCheckbox } from '@archbase/components';
+
+<ArchbaseCheckbox
+  dataSource={dataSource}
+  dataField="ativo"
+  label="Usuário ativo"
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados |
+| `dataField` | `string` | - | Campo do objeto |
+| `label` | `string` | - | Rótulo do checkbox |
+| `description` | `string` | - | Descrição adicional |
+| `disabled` | `boolean` | `false` | Desabilita o checkbox |
+| `indeterminate` | `boolean` | `false` | Estado indeterminado |
+| `color` | `string` | `'blue'` | Cor quando marcado |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Tamanho |
+
+---
+
+## ArchbaseSwitch
+
+Switch para alternar entre estados.
+
+### Exemplo
+
+```tsx
+import { ArchbaseSwitch } from '@archbase/components';
+
+<ArchbaseSwitch
+  dataSource={dataSource}
+  dataField="notificacoesAtivas"
+  label="Receber notificações"
+  onLabel="ON"
+  offLabel="OFF"
+  disabled={isBrowsing}
+/>
+```
+
+### Props Específicas
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `onLabel` | `string` | - | Texto quando ligado |
+| `offLabel` | `string` | - | Texto quando desligado |
+| `thumbIcon` | `ReactNode` | - | Ícone no thumb |
+
+---
+
+## ArchbaseRadioGroup
+
+Grupo de opções mutuamente exclusivas.
+
+### Exemplo
+
+```tsx
+import { ArchbaseRadioGroup } from '@archbase/components';
+
+const opcoesSexo = [
+  { value: 'M', label: 'Masculino' },
+  { value: 'F', label: 'Feminino' },
+  { value: 'O', label: 'Outro' },
+];
+
+<ArchbaseRadioGroup
+  dataSource={dataSource}
+  dataField="sexo"
+  label="Sexo"
+  data={opcoesSexo}
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `data` | `Array<{value, label}>` | - | Opções disponíveis |
+| `orientation` | `'horizontal' \| 'vertical'` | `'vertical'` | Orientação |
+| `spacing` | `string` | `'md'` | Espaçamento entre opções |
+
+---
+
+## ArchbaseChipGroup
+
+Grupo de chips para seleção múltipla ou única.
+
+### Exemplo
+
+```tsx
+import { ArchbaseChipGroup } from '@archbase/components';
+
+const categorias = [
+  { value: 'tech', label: 'Tecnologia' },
+  { value: 'design', label: 'Design' },
+  { value: 'marketing', label: 'Marketing' },
+];
+
+<ArchbaseChipGroup
+  dataSource={dataSource}
+  dataField="categorias"
+  label="Categorias"
+  data={categorias}
+  multiple
+  disabled={isBrowsing}
+/>
+```
+
+---
+
+## Próximos Passos
+
+- [Conteúdo Rico](/components/editors/rich-content) - RichText, JSON
+- [Especializados](/components/editors/specialized) - Color, Avatar, Image

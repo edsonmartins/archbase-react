@@ -1,0 +1,30 @@
+{
+  "id": "api-reference/layout",
+  "title": "@archbase/layout",
+  "description": "Sistema de layout e containers.",
+  "source": "@site/docs/api-reference/layout.mdx",
+  "sourceDirName": "api-reference",
+  "slug": "/api-reference/layout",
+  "permalink": "/docs/api-reference/layout",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/api-reference/layout.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "title": "@archbase/layout",
+    "sidebar_position": 5
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "@archbase/template",
+    "permalink": "/docs/api-reference/template"
+  },
+  "next": {
+    "title": "@archbase/admin",
+    "permalink": "/docs/api-reference/admin"
+  }
+}

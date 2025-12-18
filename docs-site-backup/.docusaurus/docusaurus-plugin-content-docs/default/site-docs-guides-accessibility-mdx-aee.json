@@ -1,0 +1,30 @@
+{
+  "id": "guides/accessibility",
+  "title": "Acessibilidade",
+  "description": "Diretrizes para tornar sua aplicação acessível.",
+  "source": "@site/docs/guides/accessibility.mdx",
+  "sourceDirName": "guides",
+  "slug": "/guides/accessibility",
+  "permalink": "/docs/guides/accessibility",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/guides/accessibility.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "Acessibilidade",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Performance",
+    "permalink": "/docs/guides/performance"
+  },
+  "next": {
+    "title": "Testes",
+    "permalink": "/docs/guides/testing"
+  }
+}

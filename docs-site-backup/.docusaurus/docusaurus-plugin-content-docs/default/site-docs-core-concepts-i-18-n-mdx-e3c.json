@@ -1,0 +1,30 @@
+{
+  "id": "core-concepts/i18n",
+  "title": "Internacionalização",
+  "description": "O Archbase React utiliza i18next para internacionalização.",
+  "source": "@site/docs/core-concepts/i18n.mdx",
+  "sourceDirName": "core-concepts",
+  "slug": "/core-concepts/i18n",
+  "permalink": "/docs/core-concepts/i18n",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/core-concepts/i18n.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "title": "Internacionalização",
+    "sidebar_position": 5
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Validação",
+    "permalink": "/docs/core-concepts/validation"
+  },
+  "next": {
+    "title": "Visão Geral",
+    "permalink": "/docs/components/overview"
+  }
+}

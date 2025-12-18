@@ -1,0 +1,30 @@
+{
+  "id": "core-concepts/datasource-v2",
+  "title": "DataSource V2",
+  "description": "O DataSource V2 é o sistema central de gerenciamento de dados do Archbase React. Ele controla o estado dos registros, navegação, edição e sincronização com a interface.",
+  "source": "@site/docs/core-concepts/datasource-v2.mdx",
+  "sourceDirName": "core-concepts",
+  "slug": "/core-concepts/datasource-v2",
+  "permalink": "/docs/core-concepts/datasource-v2",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/core-concepts/datasource-v2.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "DataSource V2",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Providers",
+    "permalink": "/docs/core-concepts/providers"
+  },
+  "next": {
+    "title": "Hooks",
+    "permalink": "/docs/core-concepts/hooks"
+  }
+}

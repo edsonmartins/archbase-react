@@ -1,0 +1,103 @@
+
+# ArchbaseGridTemplate
+
+Template para grids de dados com funcionalidades CRUD integradas.
+
+## Exemplo
+
+```tsx
+import { ArchbaseGridTemplate } from '@archbase/template';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+function ProdutosGrid() {
+  const { dataSource, remove, goTo } = useArchbaseDataSourceV2<Produto>({
+    initialData: produtos,
+    name: 'produtos-grid-ds',
+  });
+
+  const columns = [
+    { field: 'id', header: 'ID', width: 80 },
+    { field: 'nome', header: 'Nome', width: 200 },
+    { field: 'preco', header: 'Preço', width: 120 },
+    { field: 'categoria', header: 'Categoria', width: 150 },
+  ];
+
+  return (
+    <ArchbaseGridTemplate
+      title="Produtos"
+      dataSource={dataSource}
+      columns={columns}
+      onNew={() => openModal('new')}
+      onEdit={(record) => openModal('edit', record)}
+      onDelete={(record) => {
+        const index = dataSource.data.findIndex(p => p.id === record.id);
+        goTo(index);
+        remove();
+      }}
+      height={500}
+      paginated
+      pageSize={10}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `title` | `string` | - | Título do grid |
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados |
+| `columns` | `Column[]` | - | Definição das colunas |
+| `onNew` | `() => void` | - | Callback para novo |
+| `onEdit` | `(record) => void` | - | Callback para editar |
+| `onDelete` | `(record) => void` | - | Callback para excluir |
+| `onRefresh` | `() => void` | - | Callback para atualizar |
+| `height` | `number` | `400` | Altura do grid |
+| `paginated` | `boolean` | `true` | Ativa paginação |
+| `pageSize` | `number` | `10` | Registros por página |
+| `exportable` | `boolean` | `true` | Permite exportação |
+
+## Com Modal de Edição
+
+```tsx
+function ProdutosPage() {
+  const [modalOpened, setModalOpened] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<Produto | null>(null);
+
+  const handleNew = () => {
+    setEditingRecord(null);
+    setModalOpened(true);
+  };
+
+  const handleEdit = (record: Produto) => {
+    setEditingRecord(record);
+    setModalOpened(true);
+  };
+
+  return (
+    <>
+      <ArchbaseGridTemplate
+        title="Produtos"
+        dataSource={dataSource}
+        columns={columns}
+        onNew={handleNew}
+        onEdit={handleEdit}
+      />
+
+      <ArchbaseModalTemplate
+        opened={modalOpened}
+        onClose={() => setModalOpened(false)}
+        title={editingRecord ? 'Editar Produto' : 'Novo Produto'}
+      >
+        <ProdutoForm record={editingRecord} />
+      </ArchbaseModalTemplate>
+    </>
+  );
+}
+```
+
+## Próximos Passos
+
+- [ModalTemplate](/templates/modal-template) - Modal de edição
+- [MasonryTemplate](/templates/masonry-template) - Layout masonry

@@ -1,0 +1,26 @@
+.info {
+  margin: var(--mantine-spacing-md) 0;
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+  border-radius: var(--mantine-radius-md);
+  border-left: rem(4px) solid var(--mantine-color-blue-6);
+  background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-blue-9));
+}
+
+.info p {
+  margin: 0;
+}
+
+.info[data-type='warning'] {
+  border-left-color: var(--mantine-color-yellow-6);
+  background-color: light-dark(var(--mantine-color-yellow-0), var(--mantine-color-yellow-9));
+}
+
+.info[data-type='danger'] {
+  border-left-color: var(--mantine-color-red-6);
+  background-color: light-dark(var(--mantine-color-red-0), var(--mantine-color-red-9));
+}
+
+.info[data-type='success'] {
+  border-left-color: var(--mantine-color-green-6);
+  background-color: light-dark(var(--mantine-color-green-0), var(--mantine-color-green-9));
+}

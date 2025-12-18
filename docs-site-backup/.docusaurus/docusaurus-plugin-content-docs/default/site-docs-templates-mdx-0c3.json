@@ -1,0 +1,24 @@
+{
+  "id": "templates",
+  "title": "Templates",
+  "description": "Templates CRUD (Form, Space, Grid) unem layout + data source + actions:",
+  "source": "@site/docs/templates.mdx",
+  "sourceDirName": ".",
+  "slug": "/templates",
+  "permalink": "/docs/templates",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/docs/templates.mdx",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docs",
+  "previous": {
+    "title": "DataGrid",
+    "permalink": "/docs/datagrid"
+  },
+  "next": {
+    "title": "Security",
+    "permalink": "/docs/security"
+  }
+}

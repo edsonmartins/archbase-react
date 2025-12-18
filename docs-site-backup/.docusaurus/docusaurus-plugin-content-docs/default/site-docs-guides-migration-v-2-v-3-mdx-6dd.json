@@ -1,0 +1,30 @@
+{
+  "id": "guides/migration-v2-v3",
+  "title": "Migração v2 → v3",
+  "description": "Guia para migrar do Archbase React v2 para v3.",
+  "source": "@site/docs/guides/migration-v2-v3.mdx",
+  "sourceDirName": "guides",
+  "slug": "/guides/migration-v2-v3",
+  "permalink": "/docs/guides/migration-v2-v3",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/guides/migration-v2-v3.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "title": "Migração v2 → v3",
+    "sidebar_position": 6
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Theming",
+    "permalink": "/docs/guides/theming"
+  },
+  "next": {
+    "title": "@archbase/core",
+    "permalink": "/docs/api-reference/core"
+  }
+}

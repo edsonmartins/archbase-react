@@ -13,13 +13,20 @@ import {
 } from './ArchbaseFilterCommons';
 import { ArchbaseQueryBuilder } from './ArchbaseQueryBuilder';
 
+// Mock do persistenceDelegator para o exemplo
+const mockPersistenceDelegator = {
+  getFilters: async () => [],
+  saveFilter: async () => {},
+  removeFilter: async () => {},
+};
+
 const ArchbaseQueryBuilderExample = () => {
   const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
     currentFilter: getDefaultEmptyFilter(),
     activeFilterIndex: -1,
     expandedFilter: false,
   });
-  const filterRef = useRef<any>();
+  const filterRef = useRef<any>(null);
 
   const handleFilterChanged = (filter: ArchbaseQueryFilter, activeFilterIndex: number) => {
     setFilterState({ ...filterState, currentFilter: filter, activeFilterIndex });
@@ -118,6 +125,8 @@ const ArchbaseQueryBuilderExample = () => {
               viewName={'ViewPessoa'}
               apiVersion="1.00"
               ref={filterRef}
+              persistenceDelegator={mockPersistenceDelegator as any}
+              userName="admin"
               expandedFilter={filterState.expandedFilter}
               currentFilter={filterState.currentFilter}
               activeFilterIndex={filterState.activeFilterIndex}

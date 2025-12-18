@@ -1,0 +1,30 @@
+{
+  "id": "templates/overview",
+  "title": "Visão Geral",
+  "description": "Os templates são componentes de alto nível que combinam múltiplos elementos para criar interfaces completas rapidamente.",
+  "source": "@site/docs/templates/overview.mdx",
+  "sourceDirName": "templates",
+  "slug": "/templates/overview",
+  "permalink": "/docs/templates/overview",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/templates/overview.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Visão Geral",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Inspector",
+    "permalink": "/docs/components/debug/inspector"
+  },
+  "next": {
+    "title": "FormTemplate",
+    "permalink": "/docs/templates/form-template"
+  }
+}

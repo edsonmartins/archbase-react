@@ -1,7 +1,7 @@
 import { ValidationOptions, isValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isMacAddressValidator from 'validator/lib/isMACAddress';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_MAC_ADDRESS = 'isMacAddress';
@@ -10,7 +10,7 @@ export const IS_MAC_ADDRESS = 'isMacAddress';
  * Check if the string is a MAC address.
  * If given value is not a string, then it returns false.
  */
-export function isMACAddress(value: unknown, options?: ValidatorJS.IsMACAddressOptions): boolean {
+export function isMACAddress(value: unknown, options?: validator.IsMACAddressOptions): boolean {
   return typeof value === 'string' && isMacAddressValidator(value, options);
 }
 
@@ -19,12 +19,12 @@ export function isMACAddress(value: unknown, options?: ValidatorJS.IsMACAddressO
  * If given value is not a string, then it returns false.
  */
 export function IsMACAddress(
-  optionsArg?: ValidatorJS.IsMACAddressOptions,
+  optionsArg?: validator.IsMACAddressOptions,
   validationOptionsArg?: ValidationOptions
 ): PropertyDecorator;
 export function IsMACAddress(validationOptionsArg?: ValidationOptions): PropertyDecorator;
 export function IsMACAddress(
-  optionsOrValidationOptionsArg?: ValidatorJS.IsMACAddressOptions | ValidationOptions,
+  optionsOrValidationOptionsArg?: validator.IsMACAddressOptions | ValidationOptions,
   validationOptionsArg?: ValidationOptions
 ): PropertyDecorator {
   const options = !isValidationOptions(optionsOrValidationOptionsArg) ? optionsOrValidationOptionsArg : undefined;

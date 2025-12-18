@@ -1,0 +1,30 @@
+{
+  "id": "components/editors/rich-content",
+  "title": "Conteúdo Rico",
+  "description": "Componentes para edição de conteúdo complexo.",
+  "source": "@site/docs/components/editors/rich-content.mdx",
+  "sourceDirName": "components/editors",
+  "slug": "/components/editors/rich-content",
+  "permalink": "/docs/components/editors/rich-content",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/editors/rich-content.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "title": "Conteúdo Rico",
+    "sidebar_position": 6
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Campos Boolean",
+    "permalink": "/docs/components/editors/boolean-inputs"
+  },
+  "next": {
+    "title": "Especializados",
+    "permalink": "/docs/components/editors/specialized"
+  }
+}

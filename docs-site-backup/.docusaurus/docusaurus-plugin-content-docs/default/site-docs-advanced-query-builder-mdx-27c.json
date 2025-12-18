@@ -1,0 +1,30 @@
+{
+  "id": "advanced/query-builder",
+  "title": "Query Builder",
+  "description": "Construtor visual de queries e filtros avançados.",
+  "source": "@site/docs/advanced/query-builder.mdx",
+  "sourceDirName": "advanced",
+  "slug": "/advanced/query-builder",
+  "permalink": "/docs/advanced/query-builder",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/advanced/query-builder.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Query Builder",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "UI Components",
+    "permalink": "/docs/security/ui-components"
+  },
+  "next": {
+    "title": "Filtros",
+    "permalink": "/docs/advanced/filters"
+  }
+}

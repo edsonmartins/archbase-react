@@ -1,0 +1,15 @@
+{
+  "id": "catalog-api",
+  "title": "Catalog API",
+  "description": "O component-catalog.json gerado por pnpm generate",
+  "source": "@site/docs/catalog-api.mdx",
+  "sourceDirName": ".",
+  "slug": "/catalog-api",
+  "permalink": "/docs/catalog-api",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/docs/catalog-api.mdx",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {}
+}

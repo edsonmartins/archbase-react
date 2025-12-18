@@ -1,0 +1,30 @@
+{
+  "id": "admin/tabs",
+  "title": "Tabs",
+  "description": "Container de abas com keep-alive.",
+  "source": "@site/docs/admin/tabs.mdx",
+  "sourceDirName": "admin",
+  "slug": "/admin/tabs",
+  "permalink": "/docs/admin/tabs",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/admin/tabs.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "title": "Tabs",
+    "sidebar_position": 5
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Navigation",
+    "permalink": "/docs/admin/navigation"
+  },
+  "next": {
+    "title": "Drawers",
+    "permalink": "/docs/admin/drawers"
+  }
+}

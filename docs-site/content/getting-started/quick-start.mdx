@@ -1,0 +1,319 @@
+
+# Quick Start
+
+Neste guia, vamos criar um formulário completo de cadastro de pessoas usando os principais componentes do Archbase React.
+
+## O que vamos construir
+
+Um formulário com:
+- Campos de texto (nome, email)
+- Seleção (status)
+- Data de nascimento
+- Botões de ação (Novo, Editar, Salvar, Cancelar)
+
+## Passo 1: Definir a Interface
+
+```tsx title="src/types/Pessoa.ts"
+export interface Pessoa {
+  id: number;
+  nome: string;
+  email: string;
+  status: 'ativo' | 'inativo' | 'pendente';
+  dataNascimento: Date | null;
+}
+```
+
+## Passo 2: Criar o Formulário
+
+```tsx title="src/components/PessoaForm.tsx"
+import { useEffect } from 'react';
+import { Stack, Group, Button, Title, Paper } from '@mantine/core';
+import {
+  ArchbaseEdit,
+  ArchbaseSelect,
+  ArchbaseDatePickerEdit,
+} from '@archbase/components';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+import type { Pessoa } from '../types/Pessoa';
+
+// Dados iniciais de exemplo
+const dadosIniciais: Pessoa[] = [
+  {
+    id: 1,
+    nome: 'João Silva',
+    email: 'joao@email.com',
+    status: 'ativo',
+    dataNascimento: new Date('1990-05-15'),
+  },
+  {
+    id: 2,
+    nome: 'Maria Santos',
+    email: 'maria@email.com',
+    status: 'pendente',
+    dataNascimento: new Date('1985-10-20'),
+  },
+];
+
+// Opções para o select de status
+const opcoesStatus = [
+  { value: 'ativo', label: 'Ativo' },
+  { value: 'inativo', label: 'Inativo' },
+  { value: 'pendente', label: 'Pendente' },
+];
+
+export function PessoaForm() {
+  // Hook do DataSource V2 - gerencia todo o estado dos dados
+  const {
+    dataSource,
+    insert,
+    edit,
+    save,
+    cancel,
+    remove,
+    isBrowsing,
+    isEditing,
+    isInserting,
+    isEmpty,
+    currentRecord,
+    first,
+    prior,
+    next,
+    last,
+  } = useArchbaseDataSourceV2<Pessoa>({
+    initialData: dadosIniciais,
+    name: 'pessoas-datasource',
+  });
+
+  // Navegar para o primeiro registro ao carregar
+  useEffect(() => {
+    if (!isEmpty) {
+      first();
+    }
+  }, []);
+
+  // Handler para criar novo registro
+  const handleNovo = () => {
+    insert({
+      id: Date.now(), // ID temporário
+      nome: '',
+      email: '',
+      status: 'pendente',
+      dataNascimento: null,
+    });
+  };
+
+  // Handler para salvar
+  const handleSalvar = async () => {
+    try {
+      await save();
+      console.log('Registro salvo:', currentRecord);
+    } catch (error) {
+      console.error('Erro ao salvar:', error);
+    }
+  };
+
+  // Handler para excluir
+  const handleExcluir = () => {
+    if (window.confirm('Deseja realmente excluir este registro?')) {
+      remove();
+    }
+  };
+
+  return (
+    <Paper shadow="sm" p="lg" radius="md" withBorder>
+      <Title order={3} mb="md">
+        Cadastro de Pessoas
+      </Title>
+
+      {/* Barra de ações */}
+      <Group mb="md">
+        <Button
+          variant="filled"
+          onClick={handleNovo}
+          disabled={!isBrowsing}
+        >
+          Novo
+        </Button>
+        <Button
+          variant="light"
+          onClick={edit}
+          disabled={!isBrowsing || isEmpty}
+        >
+          Editar
+        </Button>
+        <Button
+          variant="filled"
+          color="green"
+          onClick={handleSalvar}
+          disabled={isBrowsing}
+        >
+          Salvar
+        </Button>
+        <Button
+          variant="subtle"
+          onClick={cancel}
+          disabled={isBrowsing}
+        >
+          Cancelar
+        </Button>
+        <Button
+          variant="light"
+          color="red"
+          onClick={handleExcluir}
+          disabled={!isBrowsing || isEmpty}
+        >
+          Excluir
+        </Button>
+      </Group>
+
+      {/* Navegação entre registros */}
+      <Group mb="md">
+        <Button size="xs" variant="default" onClick={first} disabled={!isBrowsing}>
+          Primeiro
+        </Button>
+        <Button size="xs" variant="default" onClick={prior} disabled={!isBrowsing}>
+          Anterior
+        </Button>
+        <Button size="xs" variant="default" onClick={next} disabled={!isBrowsing}>
+          Próximo
+        </Button>
+        <Button size="xs" variant="default" onClick={last} disabled={!isBrowsing}>
+          Último
+        </Button>
+      </Group>
+
+      {/* Campos do formulário */}
+      <Stack gap="md">
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="nome"
+          label="Nome"
+          placeholder="Digite o nome completo"
+          required
+          disabled={isBrowsing}
+        />
+
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="email"
+          label="E-mail"
+          placeholder="Digite o e-mail"
+          disabled={isBrowsing}
+        />
+
+        <ArchbaseSelect
+          dataSource={dataSource}
+          dataField="status"
+          label="Status"
+          data={opcoesStatus}
+          disabled={isBrowsing}
+        />
+
+        <ArchbaseDatePickerEdit
+          dataSource={dataSource}
+          dataField="dataNascimento"
+          label="Data de Nascimento"
+          disabled={isBrowsing}
+        />
+      </Stack>
+
+      {/* Informações do estado atual */}
+      <Paper mt="lg" p="sm" bg="gray.0" radius="sm">
+        <pre style={{ margin: 0, fontSize: 12 }}>
+          {JSON.stringify(
+            {
+              estado: isInserting ? 'Inserindo' : isEditing ? 'Editando' : 'Navegando',
+              registroAtual: currentRecord,
+            },
+            null,
+            2
+          )}
+        </pre>
+      </Paper>
+    </Paper>
+  );
+}
+```
+
+## Passo 3: Integrar na Aplicação
+
+```tsx title="src/App.tsx"
+import { ArchbaseGlobalProvider } from '@archbase/core';
+import { MantineProvider, Container } from '@mantine/core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PessoaForm } from './components/PessoaForm';
+
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider>
+        <ArchbaseGlobalProvider>
+          <Container size="md" py="xl">
+            <PessoaForm />
+          </Container>
+        </ArchbaseGlobalProvider>
+      </MantineProvider>
+    </QueryClientProvider>
+  );
+}
+
+export default App;
+```
+
+## Entendendo o DataSource V2
+
+O `useArchbaseDataSourceV2` é o coração do Archbase React. Ele gerencia:
+
+### Estados
+
+| Estado | Descrição |
+|--------|-----------|
+| `isBrowsing` | Navegando pelos registros (modo leitura) |
+| `isEditing` | Editando um registro existente |
+| `isInserting` | Inserindo um novo registro |
+| `isEmpty` | Não há registros no DataSource |
+
+### Ações
+
+| Ação | Descrição |
+|------|-----------|
+| `insert(data)` | Inicia inserção de novo registro |
+| `edit()` | Inicia edição do registro atual |
+| `save()` | Salva as alterações |
+| `cancel()` | Cancela a operação atual |
+| `remove()` | Remove o registro atual |
+
+### Navegação
+
+| Ação | Descrição |
+|------|-----------|
+| `first()` | Vai para o primeiro registro |
+| `prior()` | Vai para o registro anterior |
+| `next()` | Vai para o próximo registro |
+| `last()` | Vai para o último registro |
+| `goTo(index)` | Vai para um índice específico |
+
+## Exemplo Interativo
+
+Veja o exemplo funcionando no Storybook:
+
+<iframe
+  src="http://localhost:6006/?path=/story/templates-archbaseformtemplate--basic"
+  width="100%"
+  height="600px"
+  style={{ border: '1px solid #dee2e6', borderRadius: '8px' }}
+/>
+
+[Abrir no Storybook →](http://localhost:6006/?path=/story/templates-archbaseformtemplate--basic)
+
+## Próximos Passos
+
+- [Estrutura de Pacotes](/getting-started/project-structure) - Entenda a organização
+- [DataSource V2](/core-concepts/datasource-v2) - Documentação completa
+- [Componentes de Formulário](/components/editors/text-inputs) - Todos os editores disponíveis
+- [ArchbaseFormTemplate](/templates/form-template) - Template pronto para formulários

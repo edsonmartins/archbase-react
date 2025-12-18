@@ -1,0 +1,30 @@
+{
+  "id": "advanced/filters",
+  "title": "Filtros",
+  "description": "Filtros avançados para busca de dados.",
+  "source": "@site/docs/advanced/filters.mdx",
+  "sourceDirName": "advanced",
+  "slug": "/advanced/filters",
+  "permalink": "/docs/advanced/filters",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/advanced/filters.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "Filtros",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Query Builder",
+    "permalink": "/docs/advanced/query-builder"
+  },
+  "next": {
+    "title": "Visão Geral",
+    "permalink": "/docs/ssr/overview"
+  }
+}

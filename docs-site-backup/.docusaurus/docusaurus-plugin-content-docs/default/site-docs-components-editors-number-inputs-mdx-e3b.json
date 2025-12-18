@@ -1,0 +1,30 @@
+{
+  "id": "components/editors/number-inputs",
+  "title": "Campos Numéricos",
+  "description": "Componentes para entrada de valores numéricos.",
+  "source": "@site/docs/components/editors/number-inputs.mdx",
+  "sourceDirName": "components/editors",
+  "slug": "/components/editors/number-inputs",
+  "permalink": "/docs/components/editors/number-inputs",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/editors/number-inputs.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "Campos Numéricos",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Campos de Seleção",
+    "permalink": "/docs/components/editors/select-inputs"
+  },
+  "next": {
+    "title": "Data e Hora",
+    "permalink": "/docs/components/editors/date-time"
+  }
+}

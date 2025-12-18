@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isISSNValidator from 'validator/lib/isISSN';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_ISSN = 'isISSN';
@@ -10,7 +10,7 @@ export const IS_ISSN = 'isISSN';
  * Checks if the string is a ISSN.
  * If given value is not a string, then it returns false.
  */
-export function isISSN(value: unknown, options?: ValidatorJS.IsISSNOptions): boolean {
+export function isISSN(value: unknown, options?: validator.IsISSNOptions): boolean {
   return typeof value === 'string' && isISSNValidator(value, options);
 }
 
@@ -18,7 +18,7 @@ export function isISSN(value: unknown, options?: ValidatorJS.IsISSNOptions): boo
  * Checks if the string is a ISSN.
  * If given value is not a string, then it returns false.
  */
-export function IsISSN(options?: ValidatorJS.IsISSNOptions, validationOptions?: ValidationOptions): PropertyDecorator {
+export function IsISSN(options?: validator.IsISSNOptions, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_ISSN,

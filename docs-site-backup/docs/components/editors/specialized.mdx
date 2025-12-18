@@ -1,0 +1,162 @@
+---
+title: Especializados
+sidebar_position: 7
+---
+
+# Componentes Especializados
+
+Componentes para casos de uso específicos.
+
+## ArchbaseColorEdit
+
+Seletor de cores.
+
+### Exemplo
+
+```tsx
+import { ArchbaseColorEdit } from '@archbase/components';
+
+<ArchbaseColorEdit
+  dataSource={dataSource}
+  dataField="corPrincipal"
+  label="Cor Principal"
+  format="hex"
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `format` | `'hex' \| 'rgb' \| 'rgba' \| 'hsl'` | `'hex'` | Formato da cor |
+| `swatches` | `string[]` | - | Cores predefinidas |
+| `withPicker` | `boolean` | `true` | Mostra color picker |
+
+---
+
+## ArchbaseAvatarEdit
+
+Upload e edição de avatar.
+
+### Exemplo
+
+```tsx
+import { ArchbaseAvatarEdit } from '@archbase/components';
+
+<ArchbaseAvatarEdit
+  dataSource={dataSource}
+  dataField="foto"
+  label="Foto do Perfil"
+  size={120}
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `size` | `number` | `100` | Tamanho em pixels |
+| `allowCrop` | `boolean` | `true` | Permite recorte |
+| `accept` | `string` | `'image/*'` | Tipos aceitos |
+
+---
+
+## ArchbaseImageEdit
+
+Upload de imagem com preview.
+
+### Exemplo
+
+```tsx
+import { ArchbaseImageEdit } from '@archbase/components';
+
+<ArchbaseImageEdit
+  dataSource={dataSource}
+  dataField="imagem"
+  label="Imagem do Produto"
+  maxWidth={800}
+  maxHeight={600}
+  disabled={isBrowsing}
+/>
+```
+
+---
+
+## ArchbaseFileUpload
+
+Upload de arquivos com progresso.
+
+### Exemplo
+
+```tsx
+import { ArchbaseFileUpload } from '@archbase/components';
+
+<ArchbaseFileUpload
+  dataSource={dataSource}
+  dataField="anexos"
+  label="Anexos"
+  multiple
+  maxSize={10 * 1024 * 1024} // 10MB
+  accept={['.pdf', '.doc', '.docx']}
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `multiple` | `boolean` | `false` | Múltiplos arquivos |
+| `maxSize` | `number` | - | Tamanho máximo em bytes |
+| `maxFiles` | `number` | - | Número máximo de arquivos |
+| `accept` | `string[]` | - | Extensões aceitas |
+
+---
+
+## ArchbaseDropzone
+
+Área de drop para arquivos.
+
+### Exemplo
+
+```tsx
+import { ArchbaseDropzone } from '@archbase/components';
+
+<ArchbaseDropzone
+  onDrop={(files) => console.log('Arquivos:', files)}
+  accept={['image/*']}
+  maxSize={5 * 1024 * 1024}
+>
+  <p>Arraste imagens aqui ou clique para selecionar</p>
+</ArchbaseDropzone>
+```
+
+---
+
+## ArchbaseSignatureEdit
+
+Captura de assinatura digital.
+
+### Exemplo
+
+```tsx
+import { ArchbaseSignatureEdit } from '@archbase/components';
+
+<ArchbaseSignatureEdit
+  dataSource={dataSource}
+  dataField="assinatura"
+  label="Assinatura"
+  width={400}
+  height={200}
+  disabled={isBrowsing}
+/>
+```
+
+---
+
+## Próximos Passos
+
+- [DataGrid](/components/data-display/datagrid) - Grid de dados
+- [Listas](/components/data-display/lists) - TreeView, Masonry

@@ -1,0 +1,30 @@
+{
+  "id": "security/ui-components",
+  "title": "UI Components",
+  "description": "Modais e formulários para gerenciamento de segurança.",
+  "source": "@site/docs/security/ui-components.mdx",
+  "sourceDirName": "security",
+  "slug": "/security/ui-components",
+  "permalink": "/docs/security/ui-components",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/security/ui-components.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "title": "UI Components",
+    "sidebar_position": 6
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Componentes",
+    "permalink": "/docs/security/components"
+  },
+  "next": {
+    "title": "Query Builder",
+    "permalink": "/docs/advanced/query-builder"
+  }
+}

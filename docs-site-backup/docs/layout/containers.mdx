@@ -1,0 +1,46 @@
+---
+title: Containers
+sidebar_position: 2
+---
+
+# Containers
+
+Componentes de container para estruturação de conteúdo.
+
+## ArchbaseCard
+
+Card com seções estruturadas.
+
+```tsx
+import { ArchbaseCard } from '@archbase/layout';
+
+<ArchbaseCard
+  title="Título do Card"
+  subtitle="Subtítulo opcional"
+  actions={<Button>Ação</Button>}
+>
+  Conteúdo do card
+</ArchbaseCard>
+```
+
+## ArchbaseContainer
+
+Container responsivo centralizado.
+
+```tsx
+import { ArchbaseContainer } from '@archbase/layout';
+
+<ArchbaseContainer size="md" padding="lg">
+  Conteúdo centralizado
+</ArchbaseContainer>
+```
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Largura máxima |
+| `padding` | `string` | `'md'` | Padding interno |
+
+## Próximos Passos
+
+- [Space System](/layout/space-system) - Posicionamento
+- [Dockable](/layout/dockable) - Janelas flutuantes

@@ -1,0 +1,30 @@
+{
+  "id": "components/data-display/charts",
+  "title": "Gráficos",
+  "description": "Componentes para visualização de dados em gráficos.",
+  "source": "@site/docs/components/data-display/charts.mdx",
+  "sourceDirName": "components/data-display",
+  "slug": "/components/data-display/charts",
+  "permalink": "/docs/components/data-display/charts",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/data-display/charts.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "Gráficos",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Listas",
+    "permalink": "/docs/components/data-display/lists"
+  },
+  "next": {
+    "title": "Notificações",
+    "permalink": "/docs/components/feedback/notifications"
+  }
+}

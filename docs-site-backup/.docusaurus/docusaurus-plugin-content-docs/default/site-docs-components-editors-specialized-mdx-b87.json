@@ -1,0 +1,30 @@
+{
+  "id": "components/editors/specialized",
+  "title": "Especializados",
+  "description": "Componentes para casos de uso específicos.",
+  "source": "@site/docs/components/editors/specialized.mdx",
+  "sourceDirName": "components/editors",
+  "slug": "/components/editors/specialized",
+  "permalink": "/docs/components/editors/specialized",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/editors/specialized.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "title": "Especializados",
+    "sidebar_position": 7
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Conteúdo Rico",
+    "permalink": "/docs/components/editors/rich-content"
+  },
+  "next": {
+    "title": "DataGrid",
+    "permalink": "/docs/components/data-display/datagrid"
+  }
+}

@@ -1,0 +1,29 @@
+.header {
+  background-color: var(--mantine-color-body);
+  border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.main {
+  padding-top: var(--mantine-spacing-xl);
+  padding-bottom: calc(var(--mantine-spacing-xl) * 4);
+}
+
+.title {
+  font-size: rem(20px);
+  font-weight: 700;
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+}

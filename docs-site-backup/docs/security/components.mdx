@@ -1,0 +1,50 @@
+---
+title: Componentes
+sidebar_position: 5
+---
+
+# Componentes de Segurança
+
+Componentes com verificação de permissão integrada.
+
+## SecureButton
+
+```tsx
+import { SecureButton } from '@archbase/security';
+
+<SecureButton
+  permission="USUARIO_CRIAR"
+  onClick={handleCreate}
+>
+  Criar Usuário
+</SecureButton>
+```
+
+## SecureMenuItem
+
+```tsx
+import { SecureMenuItem } from '@archbase/security';
+
+<Menu>
+  <SecureMenuItem permission="CONFIG_EDITAR" onClick={handleConfig}>
+    Configurações
+  </SecureMenuItem>
+</Menu>
+```
+
+## ProtectedComponent
+
+```tsx
+import { ProtectedComponent } from '@archbase/security';
+
+<ProtectedComponent
+  permission="RELATORIO_EXPORTAR"
+  fallback={<DisabledExport />}
+>
+  <ExportButton />
+</ProtectedComponent>
+```
+
+## Próximos Passos
+
+- [UI Components](/security/ui-components) - Modais de gerenciamento

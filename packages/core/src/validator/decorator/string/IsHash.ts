@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isHashValidator from 'validator/lib/isHash';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_HASH = 'isHash';
@@ -11,7 +11,7 @@ export const IS_HASH = 'isHash';
  * Algorithm is one of ['md4', 'md5', 'sha1', 'sha256', 'sha384', 'sha512', 'ripemd128', 'ripemd160', 'tiger128',
  * 'tiger160', 'tiger192', 'crc32', 'crc32b']
  */
-export function isHash(value: unknown, algorithm: ValidatorJS.HashAlgorithm): boolean {
+export function isHash(value: unknown, algorithm: validator.HashAlgorithm): boolean {
   return typeof value === 'string' && isHashValidator(value, algorithm);
 }
 

@@ -1,0 +1,69 @@
+
+# ArchbaseModalTemplate
+
+Template de modal para edição de registros.
+
+## Exemplo
+
+```tsx
+import { ArchbaseModalTemplate } from '@archbase/template';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { ArchbaseEdit } from '@archbase/components';
+
+function ProdutoModal({ opened, onClose, record }) {
+  const { dataSource, edit, save, cancel, isEditing } = useArchbaseDataSourceV2<Produto>({
+    initialData: record ? [record] : [],
+    name: 'produto-modal-ds',
+  });
+
+  const handleSave = async () => {
+    await save();
+    onClose();
+  };
+
+  return (
+    <ArchbaseModalTemplate
+      opened={opened}
+      onClose={onClose}
+      title={record ? 'Editar Produto' : 'Novo Produto'}
+      onSave={handleSave}
+      onCancel={() => {
+        cancel();
+        onClose();
+      }}
+      size="md"
+    >
+      <ArchbaseEdit
+        dataSource={dataSource}
+        dataField="nome"
+        label="Nome"
+      />
+      <ArchbaseEdit
+        dataSource={dataSource}
+        dataField="preco"
+        label="Preço"
+      />
+    </ArchbaseModalTemplate>
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `opened` | `boolean` | - | Controla visibilidade |
+| `onClose` | `() => void` | - | Callback ao fechar |
+| `title` | `string` | - | Título do modal |
+| `children` | `ReactNode` | - | Conteúdo do modal |
+| `onSave` | `() => void` | - | Callback para salvar |
+| `onCancel` | `() => void` | - | Callback para cancelar |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Tamanho |
+| `saveLabel` | `string` | `'Salvar'` | Texto do botão salvar |
+| `cancelLabel` | `string` | `'Cancelar'` | Texto do botão cancelar |
+| `showFooter` | `boolean` | `true` | Mostra footer com botões |
+
+## Próximos Passos
+
+- [MasonryTemplate](/templates/masonry-template) - Layout masonry
+- [SpaceTemplate](/templates/space-template) - Layout livre

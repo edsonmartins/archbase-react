@@ -1,0 +1,30 @@
+{
+  "id": "ssr/providers",
+  "title": "Providers",
+  "description": "Providers configurados para SSR.",
+  "source": "@site/docs/ssr/providers.mdx",
+  "sourceDirName": "ssr",
+  "slug": "/ssr/providers",
+  "permalink": "/docs/ssr/providers",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/ssr/providers.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "Providers",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Visão Geral",
+    "permalink": "/docs/ssr/overview"
+  },
+  "next": {
+    "title": "DataSource SSR",
+    "permalink": "/docs/ssr/datasource-ssr"
+  }
+}

@@ -1,0 +1,30 @@
+.sidebar {
+  height: calc(100vh - 60px);
+}
+
+.navLink {
+  border-radius: var(--mantine-radius-sm);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 500;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+}
+
+.navLink:hover {
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.navLinkActive {
+  background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-blue-9));
+  color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-1));
+}
+
+.categoryLabel {
+  font-weight: 700;
+  font-size: var(--mantine-font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-3));
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  margin-top: var(--mantine-spacing-md);
+}

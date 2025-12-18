@@ -1,0 +1,80 @@
+---
+title: Validação
+sidebar_position: 4
+---
+
+# Validação
+
+O Archbase React inclui um sistema de validação baseado em decorators TypeScript.
+
+## Decorators Disponíveis
+
+### Validações de String
+
+| Decorator | Descrição |
+|-----------|-----------|
+| `@IsRequired()` | Campo obrigatório |
+| `@IsEmail()` | Formato de e-mail válido |
+| `@MinLength(n)` | Comprimento mínimo |
+| `@MaxLength(n)` | Comprimento máximo |
+| `@IsURL()` | Formato de URL válido |
+| `@Matches(regex)` | Corresponde a expressão regular |
+
+### Validações Numéricas
+
+| Decorator | Descrição |
+|-----------|-----------|
+| `@Min(n)` | Valor mínimo |
+| `@Max(n)` | Valor máximo |
+| `@IsPositive()` | Número positivo |
+| `@IsNegative()` | Número negativo |
+| `@IsInt()` | Número inteiro |
+
+### Validações de Data
+
+| Decorator | Descrição |
+|-----------|-----------|
+| `@IsFuture()` | Data futura |
+| `@IsPast()` | Data passada |
+| `@IsAfter(date)` | Após data específica |
+| `@IsBefore(date)` | Antes de data específica |
+
+## Exemplo de Uso
+
+```tsx
+import { IsRequired, IsEmail, MinLength, Min } from '@archbase/core';
+
+class Pessoa {
+  @IsRequired({ message: 'Nome é obrigatório' })
+  @MinLength(3, { message: 'Nome deve ter no mínimo 3 caracteres' })
+  nome: string;
+
+  @IsRequired({ message: 'E-mail é obrigatório' })
+  @IsEmail({ message: 'E-mail inválido' })
+  email: string;
+
+  @Min(0, { message: 'Idade deve ser positiva' })
+  idade: number;
+}
+```
+
+## Validação Manual
+
+```tsx
+import { validate } from '@archbase/core';
+
+const pessoa = new Pessoa();
+pessoa.nome = 'Jo';
+pessoa.email = 'invalido';
+
+const errors = await validate(pessoa);
+// errors = [
+//   { field: 'nome', message: 'Nome deve ter no mínimo 3 caracteres' },
+//   { field: 'email', message: 'E-mail inválido' }
+// ]
+```
+
+## Próximos Passos
+
+- [Internacionalização](/core-concepts/i18n) - Configuração de i18n
+- [Componentes de Formulário](/components/editors/text-inputs) - Editores com validação

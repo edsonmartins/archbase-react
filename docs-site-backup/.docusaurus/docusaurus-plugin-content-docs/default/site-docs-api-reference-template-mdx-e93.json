@@ -1,0 +1,30 @@
+{
+  "id": "api-reference/template",
+  "title": "@archbase/template",
+  "description": "Templates prontos para acelerar desenvolvimento.",
+  "source": "@site/docs/api-reference/template.mdx",
+  "sourceDirName": "api-reference",
+  "slug": "/api-reference/template",
+  "permalink": "/docs/api-reference/template",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/api-reference/template.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "title": "@archbase/template",
+    "sidebar_position": 4
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "@archbase/components",
+    "permalink": "/docs/api-reference/components"
+  },
+  "next": {
+    "title": "@archbase/layout",
+    "permalink": "/docs/api-reference/layout"
+  }
+}

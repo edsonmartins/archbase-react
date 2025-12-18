@@ -1,0 +1,60 @@
+
+# Componentes de UI de Segurança
+
+Modais e formulários para gerenciamento de segurança.
+
+## ArchbaseLoginForm
+
+```tsx
+import { ArchbaseLoginForm } from '@archbase/security-ui';
+
+<ArchbaseLoginForm
+  onSubmit={handleLogin}
+  logo="/logo.png"
+  title="Bem-vindo"
+  showRememberMe
+  showForgotPassword
+/>
+```
+
+## ArchbaseUserModal
+
+```tsx
+import { ArchbaseUserModal } from '@archbase/security-ui';
+
+<ArchbaseUserModal
+  opened={userModalOpened}
+  onClose={() => setUserModalOpened(false)}
+  user={selectedUser}
+  onSave={handleSaveUser}
+/>
+```
+
+## ArchbaseGroupModal
+
+```tsx
+import { ArchbaseGroupModal } from '@archbase/security-ui';
+
+<ArchbaseGroupModal
+  opened={groupModalOpened}
+  onClose={() => setGroupModalOpened(false)}
+  group={selectedGroup}
+  onSave={handleSaveGroup}
+/>
+```
+
+## ArchbasePermissionTree
+
+```tsx
+import { ArchbasePermissionTree } from '@archbase/security-ui';
+
+<ArchbasePermissionTree
+  permissions={allPermissions}
+  selectedPermissions={userPermissions}
+  onChange={setUserPermissions}
+/>
+```
+
+## Próximos Passos
+
+- [Advanced](/advanced/query-builder) - QueryBuilder

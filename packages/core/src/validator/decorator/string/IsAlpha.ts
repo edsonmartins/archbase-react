@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isAlphaValidator from 'validator/lib/isAlpha';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_ALPHA = 'isAlpha';
@@ -10,7 +10,7 @@ export const IS_ALPHA = 'isAlpha';
  * Checks if the string contains only letters (a-zA-Z).
  * If given value is not a string, then it returns false.
  */
-export function isAlpha(value: unknown, locale?: ValidatorJS.AlphaLocale): boolean {
+export function isAlpha(value: unknown, locale?: validator.AlphaLocale): boolean {
   return typeof value === 'string' && isAlphaValidator(value, locale);
 }
 
@@ -18,7 +18,7 @@ export function isAlpha(value: unknown, locale?: ValidatorJS.AlphaLocale): boole
  * Checks if the string contains only letters (a-zA-Z).
  * If given value is not a string, then it returns false.
  */
-export function IsAlpha(locale?: ValidatorJS.AlphaLocale, validationOptions?: ValidationOptions): PropertyDecorator {
+export function IsAlpha(locale?: validator.AlphaLocale, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_ALPHA,

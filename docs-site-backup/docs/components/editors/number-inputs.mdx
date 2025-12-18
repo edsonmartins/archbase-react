@@ -1,0 +1,100 @@
+---
+title: Campos Numéricos
+sidebar_position: 3
+---
+
+# Campos Numéricos
+
+Componentes para entrada de valores numéricos.
+
+## ArchbaseNumberEdit
+
+Campo para entrada de números com formatação.
+
+### Exemplo
+
+```tsx
+import { ArchbaseNumberEdit } from '@archbase/components';
+
+<ArchbaseNumberEdit
+  dataSource={dataSource}
+  dataField="preco"
+  label="Preço"
+  decimalScale={2}
+  prefix="R$ "
+  thousandSeparator="."
+  decimalSeparator=","
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados |
+| `dataField` | `string` | - | Campo do objeto |
+| `decimalScale` | `number` | `2` | Casas decimais |
+| `prefix` | `string` | - | Prefixo (ex: "R$ ") |
+| `suffix` | `string` | - | Sufixo (ex: "%") |
+| `thousandSeparator` | `string` | `'.'` | Separador de milhar |
+| `decimalSeparator` | `string` | `','` | Separador decimal |
+| `min` | `number` | - | Valor mínimo |
+| `max` | `number` | - | Valor máximo |
+| `step` | `number` | `1` | Incremento |
+
+---
+
+## ArchbaseRating
+
+Componente de avaliação com estrelas.
+
+### Exemplo
+
+```tsx
+import { ArchbaseRating } from '@archbase/components';
+
+<ArchbaseRating
+  dataSource={dataSource}
+  dataField="avaliacao"
+  label="Avaliação"
+  count={5}
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `count` | `number` | `5` | Número de estrelas |
+| `fractions` | `number` | `1` | Frações permitidas (1, 2, 4) |
+| `size` | `string` | `'md'` | Tamanho das estrelas |
+| `color` | `string` | `'yellow'` | Cor das estrelas |
+| `emptySymbol` | `ReactNode` | - | Símbolo vazio customizado |
+| `fullSymbol` | `ReactNode` | - | Símbolo cheio customizado |
+
+---
+
+## ArchbaseCountdownTimer
+
+Timer com contagem regressiva.
+
+### Exemplo
+
+```tsx
+import { ArchbaseCountdownTimer } from '@archbase/components';
+
+<ArchbaseCountdownTimer
+  seconds={300}
+  onComplete={() => console.log('Tempo esgotado!')}
+  onTick={(remaining) => console.log(`Restam ${remaining} segundos`)}
+/>
+```
+
+---
+
+## Próximos Passos
+
+- [Data e Hora](/components/editors/date-time) - DatePicker, TimePicker
+- [Campos Boolean](/components/editors/boolean-inputs) - Checkbox, Switch

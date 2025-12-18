@@ -1,0 +1,121 @@
+
+# Conteúdo Rico
+
+Componentes para edição de conteúdo complexo.
+
+## ArchbaseRichTextEdit
+
+Editor de texto rico com formatação.
+
+### Exemplo
+
+```tsx
+import { ArchbaseRichTextEdit } from '@archbase/components';
+
+<ArchbaseRichTextEdit
+  dataSource={dataSource}
+  dataField="descricao"
+  label="Descrição"
+  disabled={isBrowsing}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados |
+| `dataField` | `string` | - | Campo do objeto |
+| `label` | `string` | - | Rótulo |
+| `minHeight` | `number` | `200` | Altura mínima em pixels |
+| `maxHeight` | `number` | - | Altura máxima |
+| `toolbar` | `string[]` | - | Botões da toolbar |
+
+### Toolbar Disponível
+
+- `bold`, `italic`, `underline`, `strike`
+- `h1`, `h2`, `h3`, `h4`
+- `bulletList`, `orderedList`
+- `link`, `image`
+- `blockquote`, `code`, `codeBlock`
+- `alignLeft`, `alignCenter`, `alignRight`
+
+---
+
+## ArchbaseJsonEdit
+
+Editor de JSON com syntax highlighting.
+
+### Exemplo
+
+```tsx
+import { ArchbaseJsonEdit } from '@archbase/components';
+
+<ArchbaseJsonEdit
+  dataSource={dataSource}
+  dataField="configuracoes"
+  label="Configurações JSON"
+  disabled={isBrowsing}
+/>
+```
+
+### Props Específicas
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `validateOnBlur` | `boolean` | `true` | Valida JSON ao sair do campo |
+| `formatOnBlur` | `boolean` | `true` | Formata JSON ao sair do campo |
+| `indentSize` | `number` | `2` | Tamanho da indentação |
+
+---
+
+## ArchbaseCronEdit
+
+Editor visual de expressões CRON.
+
+### Exemplo
+
+```tsx
+import { ArchbaseCronEdit } from '@archbase/components';
+
+<ArchbaseCronEdit
+  dataSource={dataSource}
+  dataField="agendamento"
+  label="Agendamento"
+  disabled={isBrowsing}
+/>
+```
+
+---
+
+## ArchbaseCodeEdit
+
+Editor de código com syntax highlighting.
+
+### Exemplo
+
+```tsx
+import { ArchbaseCodeEdit } from '@archbase/components';
+
+<ArchbaseCodeEdit
+  dataSource={dataSource}
+  dataField="codigo"
+  label="Código SQL"
+  language="sql"
+  disabled={isBrowsing}
+/>
+```
+
+### Linguagens Suportadas
+
+- `javascript`, `typescript`
+- `html`, `css`, `json`
+- `sql`, `python`, `java`
+- `markdown`
+
+---
+
+## Próximos Passos
+
+- [Especializados](/components/editors/specialized) - Color, Avatar, Image
+- [DataGrid](/components/data-display/datagrid) - Grid de dados

@@ -44,10 +44,11 @@ export function ArchbaseAdminTabContainer({
 	const { state, dispatch } = navigationContext;
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
 
-	const handleOnClose = useCallback((id: string) => {
+	const handleOnClose = useCallback((id: string, payload?: { redirectUrl?: string }) => {
 		const closedIndex = openedTabs.findIndex((tab) => tab.path === id);
-		let redirect: string | undefined;
-		if (closedIndex >= 0) {
+		// Prioridade: payload.redirectUrl > tab.redirect
+		let redirect: string | undefined = payload?.redirectUrl;
+		if (!redirect && closedIndex >= 0) {
 			redirect = openedTabs[closedIndex].redirect;
 		}
 		const tmpTabs = openedTabs.filter((f) => f.id !== id);
@@ -85,9 +86,9 @@ export function ArchbaseAdminTabContainer({
 
 	useEffect(() => {
 		if (state?.linkClosed) {
-			handleOnClose(state?.linkClosed);
+			handleOnClose(state?.linkClosed, state?.payload);
 		}
-	}, [state?.linkClosed, handleOnClose]);
+	}, [state?.linkClosed, state?.payload, handleOnClose]);
 
 	const getNavigationItemByLink = (link: string): ResultItem => {
 		const result: ResultItem = {

@@ -1,0 +1,45 @@
+---
+title: MainLayout
+sidebar_position: 2
+---
+
+# ArchbaseAdminMainLayout
+
+Layout principal para aplicações administrativas.
+
+## Exemplo
+
+```tsx
+import { ArchbaseAdminMainLayout } from '@archbase/admin';
+
+function AdminApp() {
+  return (
+    <ArchbaseAdminMainLayout
+      header={<AppHeader />}
+      sidebar={<AppSidebar />}
+      footer={<AppFooter />}
+    >
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/usuarios" element={<Usuarios />} />
+      </Routes>
+    </ArchbaseAdminMainLayout>
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `header` | `ReactNode` | - | Componente do header |
+| `sidebar` | `ReactNode` | - | Componente do sidebar |
+| `footer` | `ReactNode` | - | Componente do footer |
+| `children` | `ReactNode` | - | Conteúdo principal |
+| `sidebarWidth` | `number` | `250` | Largura do sidebar |
+| `sidebarCollapsed` | `boolean` | `false` | Sidebar colapsado |
+
+## Próximos Passos
+
+- [Sidebar](/admin/sidebar) - Menu lateral
+- [Navigation](/admin/navigation) - Navegação

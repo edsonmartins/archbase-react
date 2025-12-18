@@ -1,0 +1,65 @@
+
+# Referência de Erros
+
+## DataSource Errors
+
+### "DataSource is not in edit mode"
+
+O DataSource está em modo browsing. Chame `edit()` antes de modificar dados.
+
+```tsx
+// Antes de editar
+edit();
+
+// Depois de editar
+save();
+```
+
+### "Cannot save: no current record"
+
+Não há registro atual no DataSource. Verifique se `isEmpty` é `false`.
+
+### "Record not found at index X"
+
+O índice solicitado não existe no array de dados.
+
+## Validation Errors
+
+### "Field 'X' is required"
+
+O campo está marcado como obrigatório mas está vazio.
+
+### "Invalid email format"
+
+O valor não corresponde ao formato de e-mail esperado.
+
+## Component Errors
+
+### "dataSource prop is required"
+
+O componente precisa de um DataSource. Passe a prop `dataSource`.
+
+### "dataField prop is required"
+
+O componente precisa saber qual campo editar. Passe a prop `dataField`.
+
+## Provider Errors
+
+### "useArchbaseSecurity must be used within SecurityProvider"
+
+O hook está sendo usado fora do provider. Envolva com `ArchbaseSecurityProvider`.
+
+### "QueryClient not found"
+
+O `QueryClientProvider` do TanStack Query não está configurado.
+
+```tsx
+<QueryClientProvider client={queryClient}>
+  <App />
+</QueryClientProvider>
+```
+
+## Próximos Passos
+
+- [FAQ](/troubleshooting/faq)
+- [Problemas Comuns](/troubleshooting/common-issues)

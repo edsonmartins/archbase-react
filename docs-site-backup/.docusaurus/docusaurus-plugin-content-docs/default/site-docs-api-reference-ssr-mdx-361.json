@@ -1,0 +1,30 @@
+{
+  "id": "api-reference/ssr",
+  "title": "@archbase/ssr",
+  "description": "Utilitários para Server-Side Rendering.",
+  "source": "@site/docs/api-reference/ssr.mdx",
+  "sourceDirName": "api-reference",
+  "slug": "/api-reference/ssr",
+  "permalink": "/docs/api-reference/ssr",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/api-reference/ssr.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 9,
+  "frontMatter": {
+    "title": "@archbase/ssr",
+    "sidebar_position": 9
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "@archbase/advanced",
+    "permalink": "/docs/api-reference/advanced"
+  },
+  "next": {
+    "title": "FAQ",
+    "permalink": "/docs/troubleshooting/faq"
+  }
+}

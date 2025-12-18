@@ -1,0 +1,55 @@
+---
+title: Providers
+sidebar_position: 1
+---
+
+# Providers
+
+Os providers são a base da configuração do Archbase React. Eles fornecem contextos e configurações globais para toda a aplicação.
+
+## ArchbaseGlobalProvider
+
+O `ArchbaseGlobalProvider` é o provider principal que deve envolver toda a aplicação.
+
+```tsx
+import { ArchbaseGlobalProvider } from '@archbase/core';
+import { MantineProvider } from '@mantine/core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider>
+        <ArchbaseGlobalProvider>
+          {/* Sua aplicação */}
+        </ArchbaseGlobalProvider>
+      </MantineProvider>
+    </QueryClientProvider>
+  );
+}
+```
+
+## Contextos Disponíveis
+
+| Contexto | Hook | Descrição |
+|----------|------|-----------|
+| `ArchbaseAppContext` | `useArchbaseAppContext` | Contexto global da aplicação |
+| `ArchbaseThemeContext` | `useArchbaseTheme` | Configurações de tema |
+| `ArchbaseDialogContext` | `useArchbaseDialog` | Sistema de diálogos |
+
+## Configuração do Provider
+
+O `ArchbaseGlobalProvider` aceita as seguintes props:
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `children` | `ReactNode` | - | Componentes filhos |
+| `theme` | `ArchbaseTheme` | `defaultTheme` | Configurações de tema |
+| `locale` | `string` | `'pt-BR'` | Localidade para i18n |
+
+## Próximos Passos
+
+- [DataSource V2](/core-concepts/datasource-v2) - Gerenciamento de dados
+- [Hooks](/core-concepts/hooks) - Hooks disponíveis

@@ -1,0 +1,30 @@
+{
+  "id": "core-concepts/validation",
+  "title": "Validação",
+  "description": "O Archbase React inclui um sistema de validação baseado em decorators TypeScript.",
+  "source": "@site/docs/core-concepts/validation.mdx",
+  "sourceDirName": "core-concepts",
+  "slug": "/core-concepts/validation",
+  "permalink": "/docs/core-concepts/validation",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/core-concepts/validation.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "title": "Validação",
+    "sidebar_position": 4
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Hooks",
+    "permalink": "/docs/core-concepts/hooks"
+  },
+  "next": {
+    "title": "Internacionalização",
+    "permalink": "/docs/core-concepts/i18n"
+  }
+}

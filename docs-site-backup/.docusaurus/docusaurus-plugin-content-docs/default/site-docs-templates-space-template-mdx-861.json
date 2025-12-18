@@ -1,0 +1,30 @@
+{
+  "id": "templates/space-template",
+  "title": "SpaceTemplate",
+  "description": "Template com sistema de posicionamento livre via drag and drop.",
+  "source": "@site/docs/templates/space-template.mdx",
+  "sourceDirName": "templates",
+  "slug": "/templates/space-template",
+  "permalink": "/docs/templates/space-template",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/templates/space-template.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "title": "SpaceTemplate",
+    "sidebar_position": 6
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "MasonryTemplate",
+    "permalink": "/docs/templates/masonry-template"
+  },
+  "next": {
+    "title": "Visão Geral",
+    "permalink": "/docs/layout/overview"
+  }
+}

@@ -1,0 +1,125 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseSelect` é um componente de seleção otimizado para uso com o DataSource. Suporta opções estáticas, busca (searchable) e integração automática com DataSource V1/V2.
+
+<Demo data={demos.selectUsage} />
+
+## Com DataSource
+
+A integração com o DataSource permite binding bidirecional automático. O componente detecta o tipo de DataSource e otimiza os re-renders.
+
+<Demo data={demos.selectWithDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseSelect
+  dataSource={dataSource}    // Fonte de dados (V1 ou V2)
+  dataField="estadoId"       // Campo do objeto
+  label="Estado"
+  initialOptions={estados}   // Lista de opções
+  getOptionLabel={(e) => e.nome}
+  getOptionValue={(e) => e.sigla}
+  converter={(e) => e?.sigla} // Converte objeto para valor do dataField
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite seleção
+- **Sincroniza**: valor bidirecional com o DataSource
+- **Valida**: erros são exibidos automaticamente
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuário:
+
+<Demo data={demos.selectStates} />
+
+## Props Principais
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | Fonte de dados para binding |
+| `dataField` | `string` | Campo do objeto para vincular |
+| `initialOptions` | `O[]` | Lista de opções disponíveis |
+| `getOptionLabel` | `(option: O) => string` | Função para obter o label da opção |
+| `getOptionValue` | `(option: O) => V` | Função para obter o valor da opção |
+| `converter` | `(option: O) => V` | Converte a opção selecionada para o valor do dataField |
+| `searchable` | `boolean` | Permite busca nas opções |
+| `clearable` | `boolean` | Permite limpar a seleção |
+| `onSelectValue` | `(option: O) => void` | Callback quando uma opção é selecionada |
+
+## Tipos Genéricos
+
+O componente usa 3 tipos genéricos:
+
+```tsx
+ArchbaseSelect<T, V, O>
+```
+
+- `T`: Tipo da entidade no DataSource (ex: `Pessoa`)
+- `V`: Tipo do valor armazenado (ex: `string`)
+- `O`: Tipo do objeto de opção (ex: `Estado`)
+
+### Exemplo Completo
+
+```tsx
+interface Pessoa {
+  id: string;
+  nome: string;
+  estadoId: string;
+}
+
+interface Estado {
+  sigla: string;
+  nome: string;
+}
+
+<ArchbaseSelect<Pessoa, string, Estado>
+  dataSource={dataSource}
+  dataField="estadoId"
+  initialOptions={estados}
+  getOptionLabel={(e) => e.nome}
+  getOptionValue={(e) => e.sigla}
+  converter={(e) => e?.sigla}
+/>
+```
+
+## Integração com Formulários
+
+### Com ArchbaseFormTemplate
+
+```tsx
+import { ArchbaseFormTemplate, ArchbaseFormFieldPanel } from '@archbase/template';
+import { ArchbaseSelect } from '@archbase/components';
+
+function MeuFormulario() {
+  return (
+    <ArchbaseFormTemplate dataSource={dataSource}>
+      <ArchbaseFormFieldPanel>
+        <ArchbaseSelect
+          dataSource={dataSource}
+          dataField="status"
+          label="Status"
+          initialOptions={statusOptions}
+          getOptionLabel={(s) => s.label}
+          getOptionValue={(s) => s.value}
+        />
+      </ArchbaseFormFieldPanel>
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+## Acessibilidade
+
+O `ArchbaseSelect` segue as melhores práticas de acessibilidade:
+
+- Labels associadas corretamente via `htmlFor`
+- Suporte completo a navegação por teclado
+- Erros anunciados via `aria-describedby`
+- Campos obrigatórios indicados via `aria-required`
+- Dropdown acessível via ARIA combobox

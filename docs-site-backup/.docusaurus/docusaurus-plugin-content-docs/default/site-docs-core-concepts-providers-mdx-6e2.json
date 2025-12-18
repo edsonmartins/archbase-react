@@ -1,0 +1,30 @@
+{
+  "id": "core-concepts/providers",
+  "title": "Providers",
+  "description": "Os providers são a base da configuração do Archbase React. Eles fornecem contextos e configurações globais para toda a aplicação.",
+  "source": "@site/docs/core-concepts/providers.mdx",
+  "sourceDirName": "core-concepts",
+  "slug": "/core-concepts/providers",
+  "permalink": "/docs/core-concepts/providers",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/core-concepts/providers.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Providers",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Estrutura de Pacotes",
+    "permalink": "/docs/getting-started/project-structure"
+  },
+  "next": {
+    "title": "DataSource V2",
+    "permalink": "/docs/core-concepts/datasource-v2"
+  }
+}

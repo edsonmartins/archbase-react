@@ -1,0 +1,30 @@
+{
+  "id": "core-concepts/hooks",
+  "title": "Hooks",
+  "description": "O Archbase React oferece diversos hooks para facilitar o desenvolvimento de aplicações.",
+  "source": "@site/docs/core-concepts/hooks.mdx",
+  "sourceDirName": "core-concepts",
+  "slug": "/core-concepts/hooks",
+  "permalink": "/docs/core-concepts/hooks",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/core-concepts/hooks.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "Hooks",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "DataSource V2",
+    "permalink": "/docs/core-concepts/datasource-v2"
+  },
+  "next": {
+    "title": "Validação",
+    "permalink": "/docs/core-concepts/validation"
+  }
+}

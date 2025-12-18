@@ -1,0 +1,30 @@
+{
+  "id": "templates/form-template",
+  "title": "FormTemplate",
+  "description": "Template completo para formulários de cadastro com toolbar de ações e navegação.",
+  "source": "@site/docs/templates/form-template.mdx",
+  "sourceDirName": "templates",
+  "slug": "/templates/form-template",
+  "permalink": "/docs/templates/form-template",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/templates/form-template.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "FormTemplate",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Visão Geral",
+    "permalink": "/docs/templates/overview"
+  },
+  "next": {
+    "title": "GridTemplate",
+    "permalink": "/docs/templates/grid-template"
+  }
+}

@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isMobilePhoneValidator from 'validator/lib/isMobilePhone';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_MOBILE_PHONE = 'isMobilePhone';
@@ -20,8 +20,8 @@ export const IS_MOBILE_PHONE = 'isMobilePhone';
  */
 export function isMobilePhone(
   value: unknown,
-  locale?: ValidatorJS.MobilePhoneLocale,
-  options?: ValidatorJS.IsMobilePhoneOptions
+  locale?: validator.MobilePhoneLocale,
+  options?: validator.IsMobilePhoneOptions
 ): boolean {
   return typeof value === 'string' && isMobilePhoneValidator(value, locale, options);
 }
@@ -39,8 +39,8 @@ export function isMobilePhone(
  * If given value is not a string, then it returns false.
  */
 export function IsMobilePhone(
-  locale?: ValidatorJS.MobilePhoneLocale,
-  options?: ValidatorJS.IsMobilePhoneOptions,
+  locale?: validator.MobilePhoneLocale,
+  options?: validator.IsMobilePhoneOptions,
   validationOptions?: ValidationOptions
 ): PropertyDecorator {
   return ValidateBy(

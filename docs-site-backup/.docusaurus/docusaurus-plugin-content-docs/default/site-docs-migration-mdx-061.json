@@ -1,0 +1,24 @@
+{
+  "id": "migration",
+  "title": "Migração",
+  "description": "Documente as mudanças de versão no portal, destacando:",
+  "source": "@site/docs/migration.mdx",
+  "sourceDirName": ".",
+  "slug": "/migration",
+  "permalink": "/docs/migration",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/docs/migration.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 10,
+  "frontMatter": {
+    "title": "Migração",
+    "sidebar_position": 10
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Security",
+    "permalink": "/docs/security"
+  }
+}

@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isAlphanumericValidator from 'validator/lib/isAlphanumeric';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_ALPHANUMERIC = 'isAlphanumeric';
@@ -10,7 +10,7 @@ export const IS_ALPHANUMERIC = 'isAlphanumeric';
  * Checks if the string contains only letters and numbers.
  * If given value is not a string, then it returns false.
  */
-export function isAlphanumeric(value: unknown, locale?: ValidatorJS.AlphanumericLocale): boolean {
+export function isAlphanumeric(value: unknown, locale?: validator.AlphanumericLocale): boolean {
   return typeof value === 'string' && isAlphanumericValidator(value, locale);
 }
 
@@ -19,7 +19,7 @@ export function isAlphanumeric(value: unknown, locale?: ValidatorJS.Alphanumeric
  * If given value is not a string, then it returns false.
  */
 export function IsAlphanumeric(
-  locale?: ValidatorJS.AlphanumericLocale,
+  locale?: validator.AlphanumericLocale,
   validationOptions?: ValidationOptions
 ): PropertyDecorator {
   return ValidateBy(

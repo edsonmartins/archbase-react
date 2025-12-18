@@ -1,0 +1,30 @@
+{
+  "id": "getting-started/project-structure",
+  "title": "Estrutura de Pacotes",
+  "description": "O Archbase React é organizado como um monorepo com múltiplos pacotes NPM. Esta arquitetura permite que você instale apenas o que precisa.",
+  "source": "@site/docs/getting-started/project-structure.mdx",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/project-structure",
+  "permalink": "/docs/getting-started/project-structure",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/getting-started/project-structure.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "Estrutura de Pacotes",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Quick Start",
+    "permalink": "/docs/getting-started/quick-start"
+  },
+  "next": {
+    "title": "Providers",
+    "permalink": "/docs/core-concepts/providers"
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "ArchbaseEdit": {
+    "displayName": "ArchbaseEdit",
+    "description": "Campo de texto com integração automática ao DataSource v1/v2",
+    "props": {
+      "dataSource": {
+        "name": "dataSource",
+        "required": false,
+        "type": { "name": "IArchbaseDataSourceBase<T>" },
+        "description": "Fonte de dados onde será atribuído o valor do edit (V1 ou V2)"
+      },
+      "dataField": {
+        "name": "dataField",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Campo onde deverá ser atribuído o valor do edit na fonte de dados"
+      },
+      "disabled": {
+        "name": "disabled",
+        "required": false,
+        "type": { "name": "boolean" },
+        "defaultValue": { "value": "false" },
+        "description": "Indicador se o edit está desabilitado"
+      },
+      "readOnly": {
+        "name": "readOnly",
+        "required": false,
+        "type": { "name": "boolean" },
+        "defaultValue": { "value": "false" },
+        "description": "Indicador se o edit é somente leitura. Obs: usado em conjunto com o status da fonte de dados"
+      },
+      "required": {
+        "name": "required",
+        "required": false,
+        "type": { "name": "boolean" },
+        "defaultValue": { "value": "false" },
+        "description": "Indicador se o preenchimento do edit é obrigatório"
+      },
+      "value": {
+        "name": "value",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Valor inicial"
+      },
+      "style": {
+        "name": "style",
+        "required": false,
+        "type": { "name": "CSSProperties" },
+        "description": "Estilo do edit"
+      },
+      "size": {
+        "name": "size",
+        "required": false,
+        "type": { "name": "'xs' | 'sm' | 'md' | 'lg' | 'xl'" },
+        "description": "Tamanho do edit"
+      },
+      "width": {
+        "name": "width",
+        "required": false,
+        "type": { "name": "string | number" },
+        "description": "Largura do edit"
+      },
+      "icon": {
+        "name": "icon",
+        "required": false,
+        "type": { "name": "ReactNode" },
+        "description": "Ícone à direita"
+      },
+      "tooltipIconSearch": {
+        "name": "tooltipIconSearch",
+        "required": false,
+        "type": { "name": "ReactNode" },
+        "defaultValue": { "value": "'Clique aqui para Localizar'" },
+        "description": "Dica para botão localizar"
+      },
+      "onActionSearchExecute": {
+        "name": "onActionSearchExecute",
+        "required": false,
+        "type": { "name": "() => void" },
+        "description": "Evento ocorre quando clica no botão localizar"
+      },
+      "placeholder": {
+        "name": "placeholder",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Texto sugestão do edit"
+      },
+      "label": {
+        "name": "label",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Título do edit"
+      },
+      "description": {
+        "name": "description",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Descrição do edit"
+      },
+      "error": {
+        "name": "error",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Último erro ocorrido no edit"
+      },
+      "onFocusExit": {
+        "name": "onFocusExit",
+        "required": false,
+        "type": { "name": "FocusEventHandler<T>" },
+        "description": "Evento quando o foco sai do edit"
+      },
+      "onFocusEnter": {
+        "name": "onFocusEnter",
+        "required": false,
+        "type": { "name": "FocusEventHandler<T>" },
+        "description": "Evento quando o edit recebe o foco"
+      },
+      "onChangeValue": {
+        "name": "onChangeValue",
+        "required": false,
+        "type": { "name": "(value: any, event: any) => void" },
+        "description": "Evento quando o valor do edit é alterado"
+      },
+      "onKeyDown": {
+        "name": "onKeyDown",
+        "required": false,
+        "type": { "name": "(event: any) => void" },
+        "description": "Evento quando uma tecla é pressionada"
+      },
+      "onKeyUp": {
+        "name": "onKeyUp",
+        "required": false,
+        "type": { "name": "(event: any) => void" },
+        "description": "Evento quando uma tecla é solta"
+      },
+      "innerRef": {
+        "name": "innerRef",
+        "required": false,
+        "type": { "name": "React.RefObject<HTMLInputElement>" },
+        "description": "Referência para o componente interno"
+      },
+      "variant": {
+        "name": "variant",
+        "required": false,
+        "type": { "name": "ActionIconVariant" },
+        "description": "Variante visual do botão de ação"
+      },
+      "minLength": {
+        "name": "minLength",
+        "required": false,
+        "type": { "name": "number" },
+        "description": "Comprimento mínimo do texto"
+      },
+      "maxLength": {
+        "name": "maxLength",
+        "required": false,
+        "type": { "name": "number" },
+        "description": "Comprimento máximo do texto"
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "templates/masonry-template",
+  "title": "MasonryTemplate",
+  "description": "Template para layout masonry de cards.",
+  "source": "@site/docs/templates/masonry-template.mdx",
+  "sourceDirName": "templates",
+  "slug": "/templates/masonry-template",
+  "permalink": "/docs/templates/masonry-template",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/templates/masonry-template.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "title": "MasonryTemplate",
+    "sidebar_position": 5
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "ModalTemplate",
+    "permalink": "/docs/templates/modal-template"
+  },
+  "next": {
+    "title": "SpaceTemplate",
+    "permalink": "/docs/templates/space-template"
+  }
+}

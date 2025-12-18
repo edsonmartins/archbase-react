@@ -1,0 +1,38 @@
+
+# Sistema de Drawers
+
+Painéis laterais deslizantes.
+
+## ArchbaseNavigationDrawer
+
+Drawer para navegação mobile.
+
+```tsx
+import { ArchbaseNavigationDrawer } from '@archbase/admin';
+
+<ArchbaseNavigationDrawer
+  opened={drawerOpened}
+  onClose={() => setDrawerOpened(false)}
+  links={menuItems}
+/>
+```
+
+## ArchbaseFilterDrawer
+
+Drawer para filtros.
+
+```tsx
+import { ArchbaseFilterDrawer } from '@archbase/admin';
+
+<ArchbaseFilterDrawer
+  opened={filterOpened}
+  onClose={() => setFilterOpened(false)}
+  onApply={handleApplyFilters}
+>
+  {/* Campos de filtro */}
+</ArchbaseFilterDrawer>
+```
+
+## Próximos Passos
+
+- [Security](/security/overview) - Sistema de segurança

@@ -1,0 +1,166 @@
+
+# ArchbaseFormTemplate
+
+Template completo para formulários de cadastro com toolbar de ações e navegação.
+
+## Exemplo Completo
+
+```tsx
+import { ArchbaseFormTemplate } from '@archbase/template';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+import {
+  ArchbaseEdit,
+  ArchbaseSelect,
+  ArchbaseDatePickerEdit,
+} from '@archbase/components';
+import { Stack } from '@mantine/core';
+
+interface Produto {
+  id: number;
+  nome: string;
+  preco: number;
+  categoria: string;
+  dataCadastro: Date;
+}
+
+function ProdutoForm() {
+  const {
+    dataSource,
+    insert,
+    edit,
+    save,
+    cancel,
+    remove,
+    isBrowsing,
+    isEditing,
+    isEmpty,
+    first,
+    prior,
+    next,
+    last,
+  } = useArchbaseDataSourceV2<Produto>({
+    initialData: [],
+    name: 'produtos-ds',
+  });
+
+  const handleNew = () => {
+    insert({
+      id: Date.now(),
+      nome: '',
+      preco: 0,
+      categoria: '',
+      dataCadastro: new Date(),
+    });
+  };
+
+  return (
+    <ArchbaseFormTemplate
+      title="Cadastro de Produtos"
+      dataSource={dataSource}
+      onNew={handleNew}
+      onEdit={edit}
+      onSave={save}
+      onCancel={cancel}
+      onDelete={remove}
+      onFirst={first}
+      onPrior={prior}
+      onNext={next}
+      onLast={last}
+      isBrowsing={isBrowsing}
+      isEmpty={isEmpty}
+      showNavigation
+    >
+      <Stack gap="md">
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="nome"
+          label="Nome do Produto"
+          required
+          disabled={isBrowsing}
+        />
+
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="preco"
+          label="Preço"
+          disabled={isBrowsing}
+        />
+
+        <ArchbaseSelect
+          dataSource={dataSource}
+          dataField="categoria"
+          label="Categoria"
+          data={[
+            { value: 'eletronicos', label: 'Eletrônicos' },
+            { value: 'roupas', label: 'Roupas' },
+            { value: 'alimentos', label: 'Alimentos' },
+          ]}
+          disabled={isBrowsing}
+        />
+
+        <ArchbaseDatePickerEdit
+          dataSource={dataSource}
+          dataField="dataCadastro"
+          label="Data de Cadastro"
+          disabled={isBrowsing}
+        />
+      </Stack>
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `title` | `string` | - | Título do formulário |
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados |
+| `children` | `ReactNode` | - | Campos do formulário |
+| `onNew` | `() => void` | - | Callback para novo |
+| `onEdit` | `() => void` | - | Callback para editar |
+| `onSave` | `() => Promise<void>` | - | Callback para salvar |
+| `onCancel` | `() => void` | - | Callback para cancelar |
+| `onDelete` | `() => void` | - | Callback para excluir |
+| `onFirst` | `() => void` | - | Ir para primeiro |
+| `onPrior` | `() => void` | - | Ir para anterior |
+| `onNext` | `() => void` | - | Ir para próximo |
+| `onLast` | `() => void` | - | Ir para último |
+| `isBrowsing` | `boolean` | - | Estado de navegação |
+| `isEmpty` | `boolean` | - | Sem registros |
+| `showNavigation` | `boolean` | `true` | Mostra navegação |
+| `showActions` | `boolean` | `true` | Mostra botões de ação |
+| `customActions` | `ReactNode` | - | Ações customizadas |
+
+## Customização
+
+### Ações Extras
+
+```tsx
+<ArchbaseFormTemplate
+  title="Produtos"
+  {...props}
+  customActions={
+    <Button onClick={handleImport}>Importar</Button>
+  }
+>
+  {/* campos */}
+</ArchbaseFormTemplate>
+```
+
+### Sem Navegação
+
+```tsx
+<ArchbaseFormTemplate
+  title="Produtos"
+  {...props}
+  showNavigation={false}
+>
+  {/* campos */}
+</ArchbaseFormTemplate>
+```
+
+## Próximos Passos
+
+- [GridTemplate](/templates/grid-template) - Grid com CRUD
+- [ModalTemplate](/templates/modal-template) - Modal de edição

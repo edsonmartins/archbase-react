@@ -1,0 +1,30 @@
+{
+  "id": "components/data-display/lists",
+  "title": "Listas",
+  "description": "Componentes para exibição de dados em formato de lista ou árvore.",
+  "source": "@site/docs/components/data-display/lists.mdx",
+  "sourceDirName": "components/data-display",
+  "slug": "/components/data-display/lists",
+  "permalink": "/docs/components/data-display/lists",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/data-display/lists.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "Listas",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "DataGrid",
+    "permalink": "/docs/components/data-display/datagrid"
+  },
+  "next": {
+    "title": "Gráficos",
+    "permalink": "/docs/components/data-display/charts"
+  }
+}

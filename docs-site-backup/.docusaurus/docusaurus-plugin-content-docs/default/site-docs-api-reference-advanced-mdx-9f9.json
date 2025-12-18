@@ -1,0 +1,30 @@
+{
+  "id": "api-reference/advanced",
+  "title": "@archbase/advanced",
+  "description": "Componentes avançados de consulta e filtros.",
+  "source": "@site/docs/api-reference/advanced.mdx",
+  "sourceDirName": "api-reference",
+  "slug": "/api-reference/advanced",
+  "permalink": "/docs/api-reference/advanced",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/api-reference/advanced.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "title": "@archbase/advanced",
+    "sidebar_position": 8
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "@archbase/security",
+    "permalink": "/docs/api-reference/security"
+  },
+  "next": {
+    "title": "@archbase/ssr",
+    "permalink": "/docs/api-reference/ssr"
+  }
+}

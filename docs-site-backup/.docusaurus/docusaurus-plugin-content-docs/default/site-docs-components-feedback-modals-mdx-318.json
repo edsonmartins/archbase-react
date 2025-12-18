@@ -1,0 +1,30 @@
+{
+  "id": "components/feedback/modals",
+  "title": "Modais",
+  "description": "Componentes para exibição de conteúdo modal.",
+  "source": "@site/docs/components/feedback/modals.mdx",
+  "sourceDirName": "components/feedback",
+  "slug": "/components/feedback/modals",
+  "permalink": "/docs/components/feedback/modals",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/feedback/modals.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "Modais",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Notificações",
+    "permalink": "/docs/components/feedback/notifications"
+  },
+  "next": {
+    "title": "Botões",
+    "permalink": "/docs/components/navigation/buttons"
+  }
+}

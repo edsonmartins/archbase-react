@@ -1,0 +1,30 @@
+{
+  "id": "security/authentication",
+  "title": "Autenticação",
+  "description": "Sistema de login e gerenciamento de tokens.",
+  "source": "@site/docs/security/authentication.mdx",
+  "sourceDirName": "security",
+  "slug": "/security/authentication",
+  "permalink": "/docs/security/authentication",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/security/authentication.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "Autenticação",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Visão Geral",
+    "permalink": "/docs/security/overview"
+  },
+  "next": {
+    "title": "Autorização",
+    "permalink": "/docs/security/authorization"
+  }
+}

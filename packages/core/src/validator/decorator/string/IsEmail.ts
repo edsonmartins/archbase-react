@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isEmailValidator from 'validator/lib/isEmail';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_EMAIL = 'isEmail';
@@ -10,7 +10,7 @@ export const IS_EMAIL = 'isEmail';
  * Checks if the string is an email.
  * If given value is not a string, then it returns false.
  */
-export function isEmailValidate(value: unknown, options?: ValidatorJS.IsEmailOptions): boolean {
+export function isEmailValidate(value: unknown, options?: validator.IsEmailOptions): boolean {
   return typeof value === 'string' && isEmailValidator(value, options);
 }
 
@@ -19,7 +19,7 @@ export function isEmailValidate(value: unknown, options?: ValidatorJS.IsEmailOpt
  * If given value is not a string, then it returns false.
  */
 export function IsEmail(
-  options?: ValidatorJS.IsEmailOptions,
+  options?: validator.IsEmailOptions,
   validationOptions?: ValidationOptions
 ): PropertyDecorator {
   return ValidateBy(

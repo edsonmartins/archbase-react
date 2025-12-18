@@ -1,6 +1,6 @@
 {
   "name": "@archbase/data",
-  "version": "3.0.41",
+  "version": "3.0.42",
   "description": "Data management layer for Archbase React v3 - DataSource, hooks, and API services",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",

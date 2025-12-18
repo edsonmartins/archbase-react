@@ -1,0 +1,30 @@
+{
+  "id": "templates/grid-template",
+  "title": "GridTemplate",
+  "description": "Template para grids de dados com funcionalidades CRUD integradas.",
+  "source": "@site/docs/templates/grid-template.mdx",
+  "sourceDirName": "templates",
+  "slug": "/templates/grid-template",
+  "permalink": "/docs/templates/grid-template",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/templates/grid-template.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "GridTemplate",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "FormTemplate",
+    "permalink": "/docs/templates/form-template"
+  },
+  "next": {
+    "title": "ModalTemplate",
+    "permalink": "/docs/templates/modal-template"
+  }
+}

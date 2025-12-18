@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isUrlValidator from 'validator/lib/isURL';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_URL = 'isUrl';
@@ -10,7 +10,7 @@ export const IS_URL = 'isUrl';
  * Checks if the string is a url.
  * If given value is not a string, then it returns false.
  */
-export function isURL(value: string, options?: ValidatorJS.IsURLOptions): boolean {
+export function isURL(value: string, options?: validator.IsURLOptions): boolean {
   return typeof value === 'string' && isUrlValidator(value, options);
 }
 
@@ -18,7 +18,7 @@ export function isURL(value: string, options?: ValidatorJS.IsURLOptions): boolea
  * Checks if the string is a url.
  * If given value is not a string, then it returns false.
  */
-export function IsUrl(options?: ValidatorJS.IsURLOptions, validationOptions?: ValidationOptions): PropertyDecorator {
+export function IsUrl(options?: validator.IsURLOptions, validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_URL,

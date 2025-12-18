@@ -1,6 +1,6 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { isISO8601 } from './IsISO8601';
 import { t } from 'i18next';
 
@@ -9,7 +9,7 @@ export const IS_DATE_STRING = 'isDateString';
 /**
  * Alias for IsISO8601 validator
  */
-export function isDateString(value: unknown, options?: ValidatorJS.IsISO8601Options): boolean {
+export function isDateString(value: unknown, options?: validator.IsISO8601Options): boolean {
   return isISO8601(value, options);
 }
 
@@ -17,7 +17,7 @@ export function isDateString(value: unknown, options?: ValidatorJS.IsISO8601Opti
  * Alias for IsISO8601 validator
  */
 export function IsDateString(
-  options?: ValidatorJS.IsISO8601Options,
+  options?: validator.IsISO8601Options,
   validationOptions?: ValidationOptions
 ): PropertyDecorator {
   return ValidateBy(

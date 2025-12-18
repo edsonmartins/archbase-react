@@ -1,0 +1,52 @@
+---
+title: Tabs
+sidebar_position: 5
+---
+
+# TabContainer
+
+Container de abas com keep-alive.
+
+## Exemplo
+
+```tsx
+import { ArchbaseTabContainer } from '@archbase/admin';
+
+function AdminApp() {
+  const [tabs, setTabs] = useState([
+    { id: 'dashboard', title: 'Dashboard', component: <Dashboard /> },
+  ]);
+
+  const addTab = (tab) => {
+    setTabs([...tabs, tab]);
+  };
+
+  const removeTab = (id) => {
+    setTabs(tabs.filter(t => t.id !== id));
+  };
+
+  return (
+    <ArchbaseTabContainer
+      tabs={tabs}
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+      onTabClose={removeTab}
+      keepAlive
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `tabs` | `Tab[]` | - | Lista de abas |
+| `activeTab` | `string` | - | Aba ativa |
+| `onTabChange` | `(id) => void` | - | Callback de mudança |
+| `onTabClose` | `(id) => void` | - | Callback de fechar |
+| `keepAlive` | `boolean` | `true` | Mantém estado das abas |
+
+## Próximos Passos
+
+- [Drawers](/admin/drawers) - Painéis laterais

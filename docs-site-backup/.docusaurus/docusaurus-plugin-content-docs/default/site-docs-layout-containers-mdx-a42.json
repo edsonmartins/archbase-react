@@ -1,0 +1,30 @@
+{
+  "id": "layout/containers",
+  "title": "Containers",
+  "description": "Componentes de container para estruturação de conteúdo.",
+  "source": "@site/docs/layout/containers.mdx",
+  "sourceDirName": "layout",
+  "slug": "/layout/containers",
+  "permalink": "/docs/layout/containers",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/layout/containers.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "Containers",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Visão Geral",
+    "permalink": "/docs/layout/overview"
+  },
+  "next": {
+    "title": "Space System",
+    "permalink": "/docs/layout/space-system"
+  }
+}

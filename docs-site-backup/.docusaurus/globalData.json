@@ -1,0 +1,378 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docs/",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/docs/",
+          "mainDocId": "intro",
+          "docs": [
+            {
+              "id": "admin/drawers",
+              "path": "/docs/admin/drawers",
+              "sidebar": "docs"
+            },
+            {
+              "id": "admin/main-layout",
+              "path": "/docs/admin/main-layout",
+              "sidebar": "docs"
+            },
+            {
+              "id": "admin/navigation",
+              "path": "/docs/admin/navigation",
+              "sidebar": "docs"
+            },
+            {
+              "id": "admin/overview",
+              "path": "/docs/admin/overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "admin/sidebar",
+              "path": "/docs/admin/sidebar",
+              "sidebar": "docs"
+            },
+            {
+              "id": "admin/tabs",
+              "path": "/docs/admin/tabs",
+              "sidebar": "docs"
+            },
+            {
+              "id": "advanced/filters",
+              "path": "/docs/advanced/filters",
+              "sidebar": "docs"
+            },
+            {
+              "id": "advanced/query-builder",
+              "path": "/docs/advanced/query-builder",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api-reference/admin",
+              "path": "/docs/api-reference/admin",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api-reference/advanced",
+              "path": "/docs/api-reference/advanced",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api-reference/components",
+              "path": "/docs/api-reference/components",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api-reference/core",
+              "path": "/docs/api-reference/core",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api-reference/data",
+              "path": "/docs/api-reference/data",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api-reference/layout",
+              "path": "/docs/api-reference/layout",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api-reference/security",
+              "path": "/docs/api-reference/security",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api-reference/ssr",
+              "path": "/docs/api-reference/ssr",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api-reference/template",
+              "path": "/docs/api-reference/template",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/data-display/charts",
+              "path": "/docs/components/data-display/charts",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/data-display/datagrid",
+              "path": "/docs/components/data-display/datagrid",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/data-display/lists",
+              "path": "/docs/components/data-display/lists",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/debug/inspector",
+              "path": "/docs/components/debug/inspector",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/editors/boolean-inputs",
+              "path": "/docs/components/editors/boolean-inputs",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/editors/date-time",
+              "path": "/docs/components/editors/date-time",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/editors/number-inputs",
+              "path": "/docs/components/editors/number-inputs",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/editors/rich-content",
+              "path": "/docs/components/editors/rich-content",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/editors/select-inputs",
+              "path": "/docs/components/editors/select-inputs",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/editors/specialized",
+              "path": "/docs/components/editors/specialized",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/editors/text-inputs",
+              "path": "/docs/components/editors/text-inputs",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/feedback/modals",
+              "path": "/docs/components/feedback/modals",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/feedback/notifications",
+              "path": "/docs/components/feedback/notifications",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/navigation/buttons",
+              "path": "/docs/components/navigation/buttons",
+              "sidebar": "docs"
+            },
+            {
+              "id": "components/overview",
+              "path": "/docs/components/overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "core-concepts/datasource-v2",
+              "path": "/docs/core-concepts/datasource-v2",
+              "sidebar": "docs"
+            },
+            {
+              "id": "core-concepts/hooks",
+              "path": "/docs/core-concepts/hooks",
+              "sidebar": "docs"
+            },
+            {
+              "id": "core-concepts/i18n",
+              "path": "/docs/core-concepts/i18n",
+              "sidebar": "docs"
+            },
+            {
+              "id": "core-concepts/providers",
+              "path": "/docs/core-concepts/providers",
+              "sidebar": "docs"
+            },
+            {
+              "id": "core-concepts/validation",
+              "path": "/docs/core-concepts/validation",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/installation",
+              "path": "/docs/getting-started/installation",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/project-structure",
+              "path": "/docs/getting-started/project-structure",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/quick-start",
+              "path": "/docs/getting-started/quick-start",
+              "sidebar": "docs"
+            },
+            {
+              "id": "guides/accessibility",
+              "path": "/docs/guides/accessibility",
+              "sidebar": "docs"
+            },
+            {
+              "id": "guides/best-practices",
+              "path": "/docs/guides/best-practices",
+              "sidebar": "docs"
+            },
+            {
+              "id": "guides/migration-v2-v3",
+              "path": "/docs/guides/migration-v2-v3",
+              "sidebar": "docs"
+            },
+            {
+              "id": "guides/performance",
+              "path": "/docs/guides/performance",
+              "sidebar": "docs"
+            },
+            {
+              "id": "guides/testing",
+              "path": "/docs/guides/testing",
+              "sidebar": "docs"
+            },
+            {
+              "id": "guides/theming",
+              "path": "/docs/guides/theming",
+              "sidebar": "docs"
+            },
+            {
+              "id": "intro",
+              "path": "/docs/",
+              "sidebar": "docs"
+            },
+            {
+              "id": "layout/containers",
+              "path": "/docs/layout/containers",
+              "sidebar": "docs"
+            },
+            {
+              "id": "layout/dockable",
+              "path": "/docs/layout/dockable",
+              "sidebar": "docs"
+            },
+            {
+              "id": "layout/overview",
+              "path": "/docs/layout/overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "layout/space-system",
+              "path": "/docs/layout/space-system",
+              "sidebar": "docs"
+            },
+            {
+              "id": "security/authentication",
+              "path": "/docs/security/authentication",
+              "sidebar": "docs"
+            },
+            {
+              "id": "security/authorization",
+              "path": "/docs/security/authorization",
+              "sidebar": "docs"
+            },
+            {
+              "id": "security/components",
+              "path": "/docs/security/components",
+              "sidebar": "docs"
+            },
+            {
+              "id": "security/overview",
+              "path": "/docs/security/overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "security/providers",
+              "path": "/docs/security/providers",
+              "sidebar": "docs"
+            },
+            {
+              "id": "security/ui-components",
+              "path": "/docs/security/ui-components",
+              "sidebar": "docs"
+            },
+            {
+              "id": "ssr/datasource-ssr",
+              "path": "/docs/ssr/datasource-ssr",
+              "sidebar": "docs"
+            },
+            {
+              "id": "ssr/overview",
+              "path": "/docs/ssr/overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "ssr/providers",
+              "path": "/docs/ssr/providers",
+              "sidebar": "docs"
+            },
+            {
+              "id": "ssr/tanstack-integration",
+              "path": "/docs/ssr/tanstack-integration",
+              "sidebar": "docs"
+            },
+            {
+              "id": "templates/form-template",
+              "path": "/docs/templates/form-template",
+              "sidebar": "docs"
+            },
+            {
+              "id": "templates/grid-template",
+              "path": "/docs/templates/grid-template",
+              "sidebar": "docs"
+            },
+            {
+              "id": "templates/masonry-template",
+              "path": "/docs/templates/masonry-template",
+              "sidebar": "docs"
+            },
+            {
+              "id": "templates/modal-template",
+              "path": "/docs/templates/modal-template",
+              "sidebar": "docs"
+            },
+            {
+              "id": "templates/overview",
+              "path": "/docs/templates/overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "templates/space-template",
+              "path": "/docs/templates/space-template",
+              "sidebar": "docs"
+            },
+            {
+              "id": "troubleshooting/common-issues",
+              "path": "/docs/troubleshooting/common-issues",
+              "sidebar": "docs"
+            },
+            {
+              "id": "troubleshooting/error-messages",
+              "path": "/docs/troubleshooting/error-messages",
+              "sidebar": "docs"
+            },
+            {
+              "id": "troubleshooting/faq",
+              "path": "/docs/troubleshooting/faq",
+              "sidebar": "docs"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "docs": {
+              "link": {
+                "path": "/docs/",
+                "label": "intro"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

@@ -1,0 +1,66 @@
+---
+title: Migração v2 → v3
+sidebar_position: 6
+---
+
+# Migração do v2 para v3
+
+Guia para migrar do Archbase React v2 para v3.
+
+## Principais Mudanças
+
+### 1. Imports
+
+```tsx
+// v2
+import { ArchbaseEdit } from '@archbase/archbase-react-components';
+
+// v3
+import { ArchbaseEdit } from '@archbase/components';
+```
+
+### 2. DataSource V2
+
+O DataSource V2 é compatível com v2, mas com melhorias:
+
+```tsx
+// v2 e v3 - compatível
+const { dataSource, edit, save } = useArchbaseDataSourceV2<Pessoa>({
+  initialData: dados,
+  name: 'pessoas-ds',
+});
+```
+
+### 3. Mantine 8
+
+Atualização do Mantine 7 para 8:
+
+```tsx
+// v2 (Mantine 7)
+import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+
+// v3 (Mantine 8) - mesmo API
+import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+```
+
+## Checklist de Migração
+
+- [ ] Atualizar imports para novos pacotes
+- [ ] Verificar peer dependencies
+- [ ] Atualizar Mantine para v8
+- [ ] Testar componentes de formulário
+- [ ] Testar DataGrid
+- [ ] Testar sistema de segurança
+
+## Breaking Changes
+
+| Componente | Mudança |
+|------------|---------|
+| `ArchbaseSelect` | Prop `options` renomeada para `data` |
+| `ArchbaseModal` | Prop `visible` renomeada para `opened` |
+
+## Suporte
+
+Em caso de problemas, abra uma issue no GitHub.

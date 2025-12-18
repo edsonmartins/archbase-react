@@ -1,0 +1,80 @@
+
+# Templates
+
+Os templates são componentes de alto nível que combinam múltiplos elementos para criar interfaces completas rapidamente.
+
+## Templates Disponíveis
+
+| Template | Descrição | Uso |
+|----------|-----------|-----|
+| [FormTemplate](/templates/form-template) | Formulário completo com toolbar | Cadastros e edições |
+| [GridTemplate](/templates/grid-template) | Grid com CRUD integrado | Listagens com ações |
+| [ModalTemplate](/templates/modal-template) | Modal para edição | Edição em popup |
+| [MasonryTemplate](/templates/masonry-template) | Layout masonry | Dashboards e cards |
+| [SpaceTemplate](/templates/space-template) | Posicionamento livre | Layouts customizados |
+
+## Quando Usar Templates
+
+Templates são ideais quando você precisa:
+
+- Criar rapidamente uma tela de CRUD
+- Manter consistência visual entre telas
+- Reduzir código boilerplate
+- Seguir padrões estabelecidos
+
+## Exemplo Rápido
+
+```tsx
+import { ArchbaseFormTemplate } from '@archbase/template';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { ArchbaseEdit, ArchbaseSelect } from '@archbase/components';
+
+function PessoaForm() {
+  const {
+    dataSource,
+    insert,
+    edit,
+    save,
+    cancel,
+    remove,
+    isBrowsing,
+    isEmpty,
+  } = useArchbaseDataSourceV2<Pessoa>({
+    initialData: pessoas,
+    name: 'pessoas-ds',
+  });
+
+  return (
+    <ArchbaseFormTemplate
+      title="Cadastro de Pessoas"
+      dataSource={dataSource}
+      onNew={() => insert({ id: Date.now(), nome: '', email: '' })}
+      onEdit={edit}
+      onSave={save}
+      onCancel={cancel}
+      onDelete={remove}
+      isBrowsing={isBrowsing}
+      isEmpty={isEmpty}
+    >
+      <ArchbaseEdit
+        dataSource={dataSource}
+        dataField="nome"
+        label="Nome"
+        disabled={isBrowsing}
+      />
+      <ArchbaseEdit
+        dataSource={dataSource}
+        dataField="email"
+        label="E-mail"
+        disabled={isBrowsing}
+      />
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+## Próximos Passos
+
+- [FormTemplate](/templates/form-template) - Formulário completo
+- [GridTemplate](/templates/grid-template) - Grid com CRUD
+- [ModalTemplate](/templates/modal-template) - Modal de edição

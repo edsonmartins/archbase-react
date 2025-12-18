@@ -1,0 +1,30 @@
+{
+  "id": "ssr/tanstack-integration",
+  "title": "TanStack Integration",
+  "description": "Integração com TanStack Query para SSR.",
+  "source": "@site/docs/ssr/tanstack-integration.mdx",
+  "sourceDirName": "ssr",
+  "slug": "/ssr/tanstack-integration",
+  "permalink": "/docs/ssr/tanstack-integration",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/ssr/tanstack-integration.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "title": "TanStack Integration",
+    "sidebar_position": 4
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "DataSource SSR",
+    "permalink": "/docs/ssr/datasource-ssr"
+  },
+  "next": {
+    "title": "Boas Práticas",
+    "permalink": "/docs/guides/best-practices"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "api-reference/data",
+  "title": "@archbase/data",
+  "description": "Gerenciamento de dados com DataSource V2 e integração TanStack Query.",
+  "source": "@site/docs/api-reference/data.mdx",
+  "sourceDirName": "api-reference",
+  "slug": "/api-reference/data",
+  "permalink": "/docs/api-reference/data",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/api-reference/data.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "@archbase/data",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "@archbase/core",
+    "permalink": "/docs/api-reference/core"
+  },
+  "next": {
+    "title": "@archbase/components",
+    "permalink": "/docs/api-reference/components"
+  }
+}

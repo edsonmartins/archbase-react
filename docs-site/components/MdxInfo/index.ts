@@ -1,0 +1,1 @@
+export { MdxInfo } from './MdxInfo';

@@ -1,0 +1,79 @@
+
+# Hooks
+
+O Archbase React oferece diversos hooks para facilitar o desenvolvimento de aplicações.
+
+## Hooks de Contexto
+
+| Hook | Pacote | Descrição |
+|------|--------|-----------|
+| `useArchbaseAppContext` | `@archbase/core` | Acesso ao contexto global da aplicação |
+| `useArchbaseTheme` | `@archbase/core` | Configurações de tema e cores |
+| `useArchbaseDialog` | `@archbase/core` | Sistema de diálogos e confirmações |
+| `useArchbaseSecurity` | `@archbase/security` | Contexto de segurança e permissões |
+
+## Hooks de Dados
+
+| Hook | Pacote | Descrição |
+|------|--------|-----------|
+| `useArchbaseDataSourceV2` | `@archbase/data` | DataSource para gerenciamento de dados |
+| `useArchbaseRemoteServiceApi` | `@archbase/data` | Serviços REST com TanStack Query |
+| `useArchbaseLocalStorage` | `@archbase/core` | Persistência em localStorage |
+| `useArchbaseSessionStorage` | `@archbase/core` | Persistência em sessionStorage |
+
+## Hooks de UI
+
+| Hook | Pacote | Descrição |
+|------|--------|-----------|
+| `useArchbaseForceUpdate` | `@archbase/core` | Força re-renderização |
+| `useArchbaseDebounce` | `@archbase/core` | Debounce de valores |
+| `useArchbaseThrottle` | `@archbase/core` | Throttle de funções |
+| `useArchbaseMediaQuery` | `@archbase/core` | Detecção de media queries |
+
+## Exemplo: useArchbaseDataSourceV2
+
+```tsx
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+const {
+  dataSource,
+  insert,
+  edit,
+  save,
+  cancel,
+  isBrowsing,
+  isEditing,
+  currentRecord,
+} = useArchbaseDataSourceV2<Pessoa>({
+  initialData: pessoas,
+  name: 'meu-datasource',
+});
+```
+
+## Exemplo: useArchbaseDialog
+
+```tsx
+import { useArchbaseDialog } from '@archbase/core';
+
+function MeuComponente() {
+  const { confirm, alert, prompt } = useArchbaseDialog();
+
+  const handleDelete = async () => {
+    const confirmed = await confirm({
+      title: 'Confirmar exclusão',
+      message: 'Deseja realmente excluir este registro?',
+    });
+
+    if (confirmed) {
+      // excluir registro
+    }
+  };
+
+  return <Button onClick={handleDelete}>Excluir</Button>;
+}
+```
+
+## Próximos Passos
+
+- [Validação](/core-concepts/validation) - Sistema de validação
+- [Internacionalização](/core-concepts/i18n) - Configuração de i18n

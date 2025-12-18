@@ -1,0 +1,50 @@
+
+# ArchbaseMasonryTemplate
+
+Template para layout masonry de cards.
+
+## Exemplo
+
+```tsx
+import { ArchbaseMasonryTemplate } from '@archbase/template';
+import { Card, Text, Badge, Image } from '@mantine/core';
+
+function Dashboard() {
+  const items = [
+    { id: 1, titulo: 'Card 1', descricao: 'Descrição curta' },
+    { id: 2, titulo: 'Card 2', descricao: 'Descrição mais longa para demonstrar' },
+    { id: 3, titulo: 'Card 3', descricao: 'Texto médio aqui' },
+  ];
+
+  return (
+    <ArchbaseMasonryTemplate
+      title="Dashboard"
+      data={items}
+      columns={3}
+      gap={16}
+      renderItem={(item) => (
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Text fw={500}>{item.titulo}</Text>
+          <Text size="sm" c="dimmed">{item.descricao}</Text>
+        </Card>
+      )}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `title` | `string` | - | Título da seção |
+| `data` | `T[]` | - | Array de dados |
+| `columns` | `number` | `3` | Número de colunas |
+| `gap` | `number` | `16` | Espaçamento em pixels |
+| `renderItem` | `(item) => ReactNode` | - | Render function |
+| `toolbar` | `ReactNode` | - | Toolbar customizada |
+
+## Próximos Passos
+
+- [SpaceTemplate](/templates/space-template) - Layout livre
+- [Layout](/layout/overview) - Sistema de layout

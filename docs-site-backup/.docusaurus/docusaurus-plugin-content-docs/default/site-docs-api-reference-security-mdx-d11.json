@@ -1,0 +1,30 @@
+{
+  "id": "api-reference/security",
+  "title": "@archbase/security",
+  "description": "Sistema de autenticação e autorização.",
+  "source": "@site/docs/api-reference/security.mdx",
+  "sourceDirName": "api-reference",
+  "slug": "/api-reference/security",
+  "permalink": "/docs/api-reference/security",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/api-reference/security.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "title": "@archbase/security",
+    "sidebar_position": 7
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "@archbase/admin",
+    "permalink": "/docs/api-reference/admin"
+  },
+  "next": {
+    "title": "@archbase/advanced",
+    "permalink": "/docs/api-reference/advanced"
+  }
+}

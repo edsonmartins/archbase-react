@@ -1,0 +1,24 @@
+{
+  "id": "forms",
+  "title": "Forms",
+  "description": "Conecte ArchbaseEdit, ArchbaseMaskEdit, ArchbaseDatePickerEdit e ArchbaseActionButtons em um formulário data-aware.",
+  "source": "@site/docs/forms.mdx",
+  "sourceDirName": ".",
+  "slug": "/forms",
+  "permalink": "/docs/forms",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/docs/forms.mdx",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docs",
+  "previous": {
+    "title": "Arquitetura da UI",
+    "permalink": "/docs/architecture"
+  },
+  "next": {
+    "title": "DataGrid",
+    "permalink": "/docs/datagrid"
+  }
+}

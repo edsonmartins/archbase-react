@@ -1,0 +1,30 @@
+{
+  "id": "components/editors/text-inputs",
+  "title": "Campos de Texto",
+  "description": "Componentes para entrada de texto com binding ao DataSource.",
+  "source": "@site/docs/components/editors/text-inputs.mdx",
+  "sourceDirName": "components/editors",
+  "slug": "/components/editors/text-inputs",
+  "permalink": "/docs/components/editors/text-inputs",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/components/editors/text-inputs.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "title": "Campos de Texto",
+    "sidebar_position": 1
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Visão Geral",
+    "permalink": "/docs/components/overview"
+  },
+  "next": {
+    "title": "Campos de Seleção",
+    "permalink": "/docs/components/editors/select-inputs"
+  }
+}

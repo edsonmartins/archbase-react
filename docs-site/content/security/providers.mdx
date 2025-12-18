@@ -1,0 +1,41 @@
+
+# Security Providers
+
+Configuração dos providers de segurança.
+
+## ArchbaseSecurityProvider
+
+```tsx
+import { ArchbaseSecurityProvider } from '@archbase/security';
+
+<ArchbaseSecurityProvider
+  authenticator={authenticator}
+  onLoginSuccess={(user) => {
+    console.log('Usuário logado:', user);
+  }}
+  onLoginError={(error) => {
+    console.error('Erro no login:', error);
+  }}
+  onLogout={() => {
+    navigate('/login');
+  }}
+  sessionTimeout={30 * 60 * 1000} // 30 minutos
+>
+  <App />
+</ArchbaseSecurityProvider>
+```
+
+## Props
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `authenticator` | `ArchbaseAuthenticator` | Instância do autenticador |
+| `onLoginSuccess` | `(user) => void` | Callback de sucesso |
+| `onLoginError` | `(error) => void` | Callback de erro |
+| `onLogout` | `() => void` | Callback de logout |
+| `sessionTimeout` | `number` | Timeout de sessão (ms) |
+
+## Próximos Passos
+
+- [Componentes](/security/components) - Botões seguros
+- [UI Components](/security/ui-components) - Modais

@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isIdentityCardValidator from 'validator/lib/isIdentityCard';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_IDENTITY_CARD = 'isIdentityCard';
@@ -12,7 +12,7 @@ export const IS_IDENTITY_CARD = 'isIdentityCard';
  * Defaults to 'any'.
  * If given value is not a string, then it returns false.
  */
-export function isIdentityCard(value: unknown, locale: ValidatorJS.IdentityCardLocale): boolean {
+export function isIdentityCard(value: unknown, locale: validator.IdentityCardLocale): boolean {
   return typeof value === 'string' && isIdentityCardValidator(value, locale);
 }
 
@@ -23,7 +23,7 @@ export function isIdentityCard(value: unknown, locale: ValidatorJS.IdentityCardL
  * If given value is not a string, then it returns false.
  */
 export function IsIdentityCard(
-  locale?: ValidatorJS.IdentityCardLocale,
+  locale?: validator.IdentityCardLocale,
   validationOptions?: ValidationOptions
 ): PropertyDecorator {
   return ValidateBy(

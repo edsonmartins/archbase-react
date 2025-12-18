@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isNumericValidator from 'validator/lib/isNumeric';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_NUMBER_STRING = 'isNumberString';
@@ -10,7 +10,7 @@ export const IS_NUMBER_STRING = 'isNumberString';
  * Checks if the string is numeric.
  * If given value is not a string, then it returns false.
  */
-export function isNumberString(value: unknown, options?: ValidatorJS.IsNumericOptions): boolean {
+export function isNumberString(value: unknown, options?: validator.IsNumericOptions): boolean {
   return typeof value === 'string' && isNumericValidator(value, options);
 }
 
@@ -19,7 +19,7 @@ export function isNumberString(value: unknown, options?: ValidatorJS.IsNumericOp
  * If given value is not a string, then it returns false.
  */
 export function IsNumberString(
-  options?: ValidatorJS.IsNumericOptions,
+  options?: validator.IsNumericOptions,
   validationOptions?: ValidationOptions
 ): PropertyDecorator {
   return ValidateBy(

@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isDecimalValidator from 'validator/lib/isDecimal';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_DECIMAL = 'isDecimal';
@@ -10,7 +10,7 @@ export const IS_DECIMAL = 'isDecimal';
  * Checks if the string is a valid decimal.
  * If given value is not a string, then it returns false.
  */
-export function isDecimal(value: unknown, options?: ValidatorJS.IsDecimalOptions): boolean {
+export function isDecimal(value: unknown, options?: validator.IsDecimalOptions): boolean {
   return typeof value === 'string' && isDecimalValidator(value, options);
 }
 
@@ -19,7 +19,7 @@ export function isDecimal(value: unknown, options?: ValidatorJS.IsDecimalOptions
  * If given value is not a string, then it returns false.
  */
 export function IsDecimal(
-  options?: ValidatorJS.IsDecimalOptions,
+  options?: validator.IsDecimalOptions,
   validationOptions?: ValidationOptions
 ): PropertyDecorator {
   return ValidateBy(

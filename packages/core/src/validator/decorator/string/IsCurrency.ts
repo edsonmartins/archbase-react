@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isCurrencyValidator from 'validator/lib/isCurrency';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_CURRENCY = 'isCurrency';
@@ -10,7 +10,7 @@ export const IS_CURRENCY = 'isCurrency';
  * Checks if the string is a valid currency amount.
  * If given value is not a string, then it returns false.
  */
-export function isCurrency(value: unknown, options?: ValidatorJS.IsCurrencyOptions): boolean {
+export function isCurrency(value: unknown, options?: validator.IsCurrencyOptions): boolean {
   return typeof value === 'string' && isCurrencyValidator(value, options);
 }
 
@@ -19,7 +19,7 @@ export function isCurrency(value: unknown, options?: ValidatorJS.IsCurrencyOptio
  * If given value is not a string, then it returns false.
  */
 export function IsCurrency(
-  options?: ValidatorJS.IsCurrencyOptions,
+  options?: validator.IsCurrencyOptions,
   validationOptions?: ValidationOptions
 ): PropertyDecorator {
   return ValidateBy(

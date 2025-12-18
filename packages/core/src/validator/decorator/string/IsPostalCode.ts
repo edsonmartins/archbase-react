@@ -1,7 +1,7 @@
 import { ValidationOptions } from '../ValidationOptions';
 import { buildMessage, ValidateBy } from '../common/ValidateBy';
 import isPostalCodeValidator from 'validator/lib/isPostalCode';
-import ValidatorJS from 'validator';
+import validator from 'validator';
 import { t } from 'i18next';
 
 export const IS_POSTAL_CODE = 'isPostalCode';
@@ -10,7 +10,7 @@ export const IS_POSTAL_CODE = 'isPostalCode';
  * Check if the string is a postal code, in the specified locale.
  * If given value is not a string, then it returns false.
  */
-export function isPostalCode(value: unknown, locale: 'any' | ValidatorJS.PostalCodeLocale): boolean {
+export function isPostalCode(value: unknown, locale: 'any' | validator.PostalCodeLocale): boolean {
   return typeof value === 'string' && isPostalCodeValidator(value, locale);
 }
 
@@ -19,7 +19,7 @@ export function isPostalCode(value: unknown, locale: 'any' | ValidatorJS.PostalC
  * If given value is not a string, then it returns false.
  */
 export function IsPostalCode(
-  locale?: 'any' | ValidatorJS.PostalCodeLocale,
+  locale?: 'any' | validator.PostalCodeLocale,
   validationOptions?: ValidationOptions
 ): PropertyDecorator {
   return ValidateBy(

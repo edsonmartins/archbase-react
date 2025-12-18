@@ -1,0 +1,30 @@
+{
+  "id": "guides/performance",
+  "title": "Performance",
+  "description": "Técnicas para melhorar a performance da aplicação.",
+  "source": "@site/docs/guides/performance.mdx",
+  "sourceDirName": "guides",
+  "slug": "/guides/performance",
+  "permalink": "/docs/guides/performance",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/guides/performance.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "Performance",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Boas Práticas",
+    "permalink": "/docs/guides/best-practices"
+  },
+  "next": {
+    "title": "Acessibilidade",
+    "permalink": "/docs/guides/accessibility"
+  }
+}

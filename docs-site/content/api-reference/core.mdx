@@ -1,0 +1,43 @@
+
+# @archbase/core
+
+Pacote fundamental com providers, hooks e utilitários base.
+
+## Providers
+
+| Export | Descrição |
+|--------|-----------|
+| `ArchbaseGlobalProvider` | Provider principal da aplicação |
+
+## Hooks
+
+| Hook | Descrição |
+|------|-----------|
+| `useArchbaseAppContext` | Contexto global da aplicação |
+| `useArchbaseTheme` | Configurações de tema |
+| `useArchbaseDialog` | Sistema de diálogos |
+| `useArchbaseLocalStorage` | Persistência em localStorage |
+| `useArchbaseSessionStorage` | Persistência em sessionStorage |
+| `useArchbaseDebounce` | Debounce de valores |
+| `useArchbaseThrottle` | Throttle de funções |
+| `useArchbaseForceUpdate` | Força re-renderização |
+
+## Validação
+
+| Decorator | Descrição |
+|-----------|-----------|
+| `@IsRequired()` | Campo obrigatório |
+| `@IsEmail()` | Formato de e-mail |
+| `@MinLength(n)` | Comprimento mínimo |
+| `@MaxLength(n)` | Comprimento máximo |
+| `@Min(n)` | Valor mínimo |
+| `@Max(n)` | Valor máximo |
+| `@IsURL()` | Formato de URL |
+| `@Matches(regex)` | Expressão regular |
+
+## i18n
+
+| Export | Descrição |
+|--------|-----------|
+| `initArchbaseI18nEarly` | Inicialização de i18n |
+| `archbaseTranslations` | Traduções padrão |

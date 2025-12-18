@@ -1,0 +1,30 @@
+{
+  "id": "security/providers",
+  "title": "Providers",
+  "description": "Configuração dos providers de segurança.",
+  "source": "@site/docs/security/providers.mdx",
+  "sourceDirName": "security",
+  "slug": "/security/providers",
+  "permalink": "/docs/security/providers",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/security/providers.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "title": "Providers",
+    "sidebar_position": 4
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Autorização",
+    "permalink": "/docs/security/authorization"
+  },
+  "next": {
+    "title": "Componentes",
+    "permalink": "/docs/security/components"
+  }
+}

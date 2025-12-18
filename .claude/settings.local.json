@@ -39,7 +39,8 @@
       "Bash(npm run:*)",
       "Bash(npx eslint:*)",
       "Bash(diff:*)",
-      "Bash(do echo \"🗑️ Removendo @archbase/$pkg...\")"
+      "Bash(do echo \"🗑️ Removendo @archbase/$pkg...\")",
+      "Bash(timeout 30 pnpm dev:*)"
     ],
     "deny": []
   }

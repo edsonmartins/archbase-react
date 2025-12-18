@@ -1,0 +1,30 @@
+{
+  "id": "getting-started/quick-start",
+  "title": "Quick Start",
+  "description": "Neste guia, vamos criar um formulário completo de cadastro de pessoas usando os principais componentes do Archbase React.",
+  "source": "@site/docs/getting-started/quick-start.mdx",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/quick-start",
+  "permalink": "/docs/getting-started/quick-start",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/getting-started/quick-start.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "title": "Quick Start",
+    "sidebar_position": 2
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Instalação",
+    "permalink": "/docs/getting-started/installation"
+  },
+  "next": {
+    "title": "Estrutura de Pacotes",
+    "permalink": "/docs/getting-started/project-structure"
+  }
+}

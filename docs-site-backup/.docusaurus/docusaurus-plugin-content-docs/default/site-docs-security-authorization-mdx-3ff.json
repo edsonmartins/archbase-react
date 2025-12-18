@@ -1,0 +1,30 @@
+{
+  "id": "security/authorization",
+  "title": "Autorização",
+  "description": "Sistema de permissões e roles.",
+  "source": "@site/docs/security/authorization.mdx",
+  "sourceDirName": "security",
+  "slug": "/security/authorization",
+  "permalink": "/docs/security/authorization",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/security/authorization.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "Autorização",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Autenticação",
+    "permalink": "/docs/security/authentication"
+  },
+  "next": {
+    "title": "Providers",
+    "permalink": "/docs/security/providers"
+  }
+}

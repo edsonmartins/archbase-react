@@ -1,0 +1,42 @@
+
+# Sistema Admin
+
+O pacote `@archbase/admin` fornece componentes para construção de painéis administrativos.
+
+## Componentes
+
+| Componente | Descrição |
+|------------|-----------|
+| [MainLayout](/admin/main-layout) | Layout principal |
+| [Sidebar](/admin/sidebar) | Menu lateral |
+| [Navigation](/admin/navigation) | Sistema de navegação |
+| [Tabs](/admin/tabs) | Container de abas |
+| [Drawers](/admin/drawers) | Painéis laterais |
+
+## Instalação
+
+```bash
+pnpm add @archbase/admin
+```
+
+## Exemplo Rápido
+
+```tsx
+import { ArchbaseAdminMainLayout, ArchbaseAdvancedSidebar } from '@archbase/admin';
+
+function App() {
+  return (
+    <ArchbaseAdminMainLayout
+      sidebar={<ArchbaseAdvancedSidebar links={menuItems} />}
+      header={<Header />}
+    >
+      <Outlet />
+    </ArchbaseAdminMainLayout>
+  );
+}
+```
+
+## Próximos Passos
+
+- [MainLayout](/admin/main-layout) - Layout principal
+- [Sidebar](/admin/sidebar) - Menu lateral

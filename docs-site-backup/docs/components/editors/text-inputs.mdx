@@ -1,0 +1,168 @@
+---
+title: Campos de Texto
+sidebar_position: 1
+---
+
+# Campos de Texto
+
+Componentes para entrada de texto com binding ao DataSource.
+
+## ArchbaseEdit
+
+Campo de texto simples com binding automático ao DataSource.
+
+### Exemplo Básico
+
+```tsx
+import { ArchbaseEdit } from '@archbase/components';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+function MeuFormulario() {
+  const { dataSource, isEditing } = useArchbaseDataSourceV2<Pessoa>({
+    initialData: [{ id: 1, nome: 'João', email: 'joao@email.com' }],
+    name: 'pessoas-ds',
+  });
+
+  return (
+    <ArchbaseEdit
+      dataSource={dataSource}
+      dataField="nome"
+      label="Nome"
+      placeholder="Digite o nome"
+      disabled={!isEditing}
+    />
+  );
+}
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados (obrigatório) |
+| `dataField` | `string` | - | Campo do objeto a ser editado |
+| `label` | `string` | - | Rótulo do campo |
+| `placeholder` | `string` | - | Texto placeholder |
+| `description` | `string` | - | Descrição abaixo do campo |
+| `disabled` | `boolean` | `false` | Desabilita o campo |
+| `readOnly` | `boolean` | `false` | Somente leitura |
+| `required` | `boolean` | `false` | Campo obrigatório |
+| `error` | `string` | - | Mensagem de erro |
+| `variant` | `'default' \| 'filled' \| 'unstyled'` | `'default'` | Variante visual |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Tamanho do campo |
+| `w` | `string \| number` | - | Largura do campo |
+
+### Exemplo Interativo
+
+```tsx live
+<ArchbaseEdit
+  label="Nome Completo"
+  placeholder="Digite seu nome completo"
+  description="Este é um campo de exemplo"
+/>
+```
+
+---
+
+## ArchbaseTextArea
+
+Área de texto para conteúdo multilinha.
+
+### Exemplo
+
+```tsx
+<ArchbaseTextArea
+  dataSource={dataSource}
+  dataField="descricao"
+  label="Descrição"
+  placeholder="Digite a descrição"
+  minRows={3}
+  maxRows={6}
+  disabled={!isEditing}
+/>
+```
+
+### Props Específicas
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `minRows` | `number` | `3` | Número mínimo de linhas |
+| `maxRows` | `number` | `6` | Número máximo de linhas |
+| `autosize` | `boolean` | `true` | Ajusta altura automaticamente |
+
+---
+
+## ArchbasePasswordEdit
+
+Campo de senha com toggle de visibilidade.
+
+### Exemplo
+
+```tsx
+<ArchbasePasswordEdit
+  dataSource={dataSource}
+  dataField="senha"
+  label="Senha"
+  placeholder="Digite sua senha"
+  disabled={!isEditing}
+/>
+```
+
+### Props Específicas
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `visibilityToggleIcon` | `ReactNode` | - | Ícone customizado para toggle |
+
+---
+
+## ArchbaseMaskEdit
+
+Campo com máscara de formatação.
+
+### Exemplo
+
+```tsx
+<ArchbaseMaskEdit
+  dataSource={dataSource}
+  dataField="cpf"
+  label="CPF"
+  mask="000.000.000-00"
+  placeholder="000.000.000-00"
+  disabled={!isEditing}
+/>
+```
+
+### Máscaras Comuns
+
+| Máscara | Descrição |
+|---------|-----------|
+| `000.000.000-00` | CPF |
+| `00.000.000/0000-00` | CNPJ |
+| `(00) 00000-0000` | Telefone celular |
+| `(00) 0000-0000` | Telefone fixo |
+| `00000-000` | CEP |
+
+### Props Específicas
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `mask` | `string` | - | Padrão da máscara |
+| `placeholderChar` | `string` | `'_'` | Caractere placeholder |
+
+---
+
+## Acessibilidade
+
+Todos os campos de texto:
+
+- Suportam navegação por teclado (Tab, Enter)
+- Têm labels associadas corretamente via `htmlFor`
+- Anunciam erros para screen readers via `aria-describedby`
+- Indicam campos obrigatórios via `aria-required`
+
+## Próximos Passos
+
+- [Campos de Seleção](/components/editors/select-inputs) - Select, MultiSelect
+- [Campos Numéricos](/components/editors/number-inputs) - NumberEdit, Rating
+- [Data e Hora](/components/editors/date-time) - DatePicker, TimePicker

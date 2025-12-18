@@ -1,0 +1,68 @@
+
+# Problemas Comuns
+
+## Erro: Cannot find module '@archbase/...'
+
+**Causa:** Pacote não instalado ou node_modules corrompido.
+
+**Solução:**
+```bash
+rm -rf node_modules pnpm-lock.yaml
+pnpm install
+```
+
+## Erro: Invalid hook call
+
+**Causa:** Múltiplas versões do React ou hooks usados fora de componentes.
+
+**Solução:**
+```bash
+# Verificar versões
+npm ls react
+
+# Garantir apenas uma versão
+pnpm dedupe
+```
+
+## DataSource não atualiza a UI
+
+**Causa:** O componente não está recebendo o dataSource correto.
+
+**Solução:**
+```tsx
+// Certifique-se de passar o dataSource retornado pelo hook
+const { dataSource } = useArchbaseDataSourceV2(config);
+
+// Não crie uma nova referência
+<ArchbaseEdit dataSource={dataSource} ... />
+```
+
+## Campos não respondem à edição
+
+**Causa:** Estado de browsing ou disabled incorreto.
+
+**Solução:**
+```tsx
+// Verifique o estado
+console.log('isBrowsing:', isBrowsing);
+
+// Certifique-se de chamar edit() antes de editar
+onClick={() => edit()}
+```
+
+## Modal não abre
+
+**Causa:** Estado `opened` não está sendo atualizado.
+
+**Solução:**
+```tsx
+const [opened, setOpened] = useState(false);
+
+<Button onClick={() => setOpened(true)}>Abrir</Button>
+<Modal opened={opened} onClose={() => setOpened(false)}>
+```
+
+## Próximos Passos
+
+- [Mensagens de Erro](/troubleshooting/error-messages)
+- [FAQ](/troubleshooting/faq)

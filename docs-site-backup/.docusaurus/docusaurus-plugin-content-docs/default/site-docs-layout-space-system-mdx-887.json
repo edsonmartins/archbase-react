@@ -1,0 +1,30 @@
+{
+  "id": "layout/space-system",
+  "title": "Space System",
+  "description": "O ArchbaseSpace permite posicionamento flexível de componentes.",
+  "source": "@site/docs/layout/space-system.mdx",
+  "sourceDirName": "layout",
+  "slug": "/layout/space-system",
+  "permalink": "/docs/layout/space-system",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/layout/space-system.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "Space System",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Containers",
+    "permalink": "/docs/layout/containers"
+  },
+  "next": {
+    "title": "Dockable",
+    "permalink": "/docs/layout/dockable"
+  }
+}

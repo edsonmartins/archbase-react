@@ -1,0 +1,30 @@
+{
+  "id": "ssr/datasource-ssr",
+  "title": "DataSource SSR",
+  "description": "Uso do DataSource em ambiente server-side.",
+  "source": "@site/docs/ssr/datasource-ssr.mdx",
+  "sourceDirName": "ssr",
+  "slug": "/ssr/datasource-ssr",
+  "permalink": "/docs/ssr/datasource-ssr",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/ssr/datasource-ssr.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "DataSource SSR",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Providers",
+    "permalink": "/docs/ssr/providers"
+  },
+  "next": {
+    "title": "TanStack Integration",
+    "permalink": "/docs/ssr/tanstack-integration"
+  }
+}

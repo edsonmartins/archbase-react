@@ -1,0 +1,30 @@
+{
+  "id": "api-reference/components",
+  "title": "@archbase/components",
+  "description": "80+ componentes de UI para formulários e visualização de dados.",
+  "source": "@site/docs/api-reference/components.mdx",
+  "sourceDirName": "api-reference",
+  "slug": "/api-reference/components",
+  "permalink": "/docs/api-reference/components",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/edsonmartins/archbase-react/tree/main/docs-site/docs/api-reference/components.mdx",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": null,
+  "lastUpdatedAt": null,
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "title": "@archbase/components",
+    "sidebar_position": 3
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "@archbase/data",
+    "permalink": "/docs/api-reference/data"
+  },
+  "next": {
+    "title": "@archbase/template",
+    "permalink": "/docs/api-reference/template"
+  }
+}

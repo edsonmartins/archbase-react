@@ -1,0 +1,96 @@
+
+# Boas Práticas
+
+Recomendações para desenvolvimento com Archbase React.
+
+## Estrutura de Projeto
+
+```
+src/
+├── components/          # Componentes reutilizáveis
+├── features/            # Módulos de funcionalidade
+│   ├── usuarios/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types/
+│   └── produtos/
+├── hooks/               # Hooks globais
+├── services/            # Serviços de API
+├── types/               # Tipos TypeScript
+└── utils/               # Utilitários
+```
+
+## DataSource
+
+### Use um DataSource por formulário
+
+```tsx
+// Bom
+function PessoaForm() {
+  const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+    name: 'pessoa-form-ds',
+    initialData: [],
+  });
+}
+
+// Evite compartilhar DataSource entre componentes não relacionados
+```
+
+### Nomeie DataSources de forma descritiva
+
+```tsx
+// Bom
+name: 'pessoas-cadastro-ds'
+name: 'produtos-grid-ds'
+
+// Ruim
+name: 'ds1'
+name: 'data'
+```
+
+## Componentes
+
+### Desabilite campos no modo browsing
+
+```tsx
+<ArchbaseEdit
+  dataSource={dataSource}
+  dataField="nome"
+  disabled={isBrowsing}  // Sempre desabilite quando não estiver editando
+/>
+```
+
+### Use Templates para consistência
+
+```tsx
+// Use templates ao invés de construir do zero
+<ArchbaseFormTemplate
+  title="Cadastro"
+  dataSource={dataSource}
+  {...props}
+>
+  {/* campos */}
+</ArchbaseFormTemplate>
+```
+
+## Performance
+
+### Memoize callbacks
+
+```tsx
+const handleSave = useCallback(async () => {
+  await save();
+}, [save]);
+```
+
+### Use lazy loading para rotas
+
+```tsx
+const Usuarios = lazy(() => import('./features/usuarios/Usuarios'));
+```
+
+## Próximos Passos
+
+- [Performance](/guides/performance) - Otimização
+- [Acessibilidade](/guides/accessibility) - A11y

@@ -1,0 +1,87 @@
+---
+slug: /
+title: Archbase React
+sidebar_position: 1
+---
+
+# Archbase React v3
+
+Bem-vindo à documentação oficial do **Archbase React** - uma biblioteca completa de componentes React para construção de aplicações empresariais modernas.
+
+## O que é o Archbase React?
+
+O Archbase React é um ecossistema de componentes e utilitários que facilita o desenvolvimento de aplicações React com foco em:
+
+- **Formulários avançados** com binding automático via DataSource
+- **Grids de dados** poderosos com filtros, ordenação e exportação
+- **Sistema de segurança** completo com autenticação e autorização
+- **Templates prontos** para CRUD, modais e layouts administrativos
+- **Internacionalização** integrada com i18next
+- **Validação** com decorators TypeScript
+
+## Pacotes Disponíveis
+
+| Pacote | Descrição |
+|--------|-----------|
+| `@archbase/core` | Providers, hooks, validação, i18n e utilitários base |
+| `@archbase/data` | DataSource V2, integração TanStack Query, serviços API |
+| `@archbase/components` | 80+ componentes de formulário, DataGrid, gráficos |
+| `@archbase/template` | Templates prontos (Form, Grid, Modal, Masonry) |
+| `@archbase/layout` | Sistema de layout (Card, Container, Space) |
+| `@archbase/admin` | Layout administrativo com sidebar e navegação |
+| `@archbase/security` | Autenticação, tokens, permissões |
+| `@archbase/security-ui` | Modais de usuário, grupo, tokens |
+| `@archbase/advanced` | QueryBuilder, filtros avançados |
+| `@archbase/ssr` | Utilitários para Server-Side Rendering |
+| `@archbase/tools` | Ferramentas CLI e geradores |
+
+## Começando Rapidamente
+
+```bash
+# Instalar pacotes principais
+pnpm add @archbase/core @archbase/data @archbase/components
+```
+
+```tsx
+import { ArchbaseGlobalProvider } from '@archbase/core';
+import { ArchbaseEdit } from '@archbase/components';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+function App() {
+  const { dataSource } = useArchbaseDataSourceV2({
+    initialData: [{ id: 1, nome: 'João' }],
+    name: 'pessoas',
+  });
+
+  return (
+    <ArchbaseGlobalProvider>
+      <ArchbaseEdit
+        dataSource={dataSource}
+        dataField="nome"
+        label="Nome"
+      />
+    </ArchbaseGlobalProvider>
+  );
+}
+```
+
+## Tecnologias
+
+- **React** 18.3+ / 19.0+
+- **TypeScript** 5.7+
+- **Mantine** 8.x (UI Framework)
+- **TanStack Query** 5.x (Server State)
+- **Vite** 6.x (Build Tool)
+
+## Próximos Passos
+
+- [Instalação](/getting-started/installation) - Configure seu projeto
+- [Quick Start](/getting-started/quick-start) - Primeiro exemplo funcional
+- [DataSource V2](/core-concepts/datasource-v2) - Entenda o gerenciamento de dados
+- [Componentes](/components/overview) - Explore os componentes disponíveis
+
+## Links Úteis
+
+- [Storybook](http://localhost:6006) - Exemplos interativos
+- [GitHub](https://github.com/edsonmartins/archbase-react) - Código fonte
+- [Changelog](/guides/migration-v2-v3) - Histórico de mudanças
