@@ -1,0 +1,267 @@
+# ArchbaseVisTimeline
+
+Timeline interativa para visualização de eventos temporais, baseada em `vis-timeline` (MIT/Apache License).
+Ideal para visualizar cronogramas, agendas históricas, gantt charts e séries temporais.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseVisTimeline } from '@archbase/components';
+
+function App() {
+  const items = [
+    { id: 1, content: 'Projeto Alpha', start: '2024-01-01', end: '2024-01-15' },
+    { id: 2, content: 'Projeto Beta', start: '2024-01-10', end: '2024-01-25' },
+    { id: 3, content: 'Revisão', start: '2024-01-20', end: '2024-01-22' }
+  ];
+
+  return (
+    <ArchbaseVisTimeline
+      items={items}
+      height={400}
+    />
+  );
+}
+```
+
+## Grupos
+
+```tsx
+import { ArchbaseVisTimeline } from '@archbase/components';
+
+function App() {
+  const items = [
+    { id: 1, content: 'Tarefa 1', start: '2024-01-01', end: '2024-01-05', group: 1 },
+    { id: 2, content: 'Tarefa 2', start: '2024-01-03', end: '2024-01-08', group: 1 },
+    { id: 3, content: 'Tarefa 3', start: '2024-01-06', end: '2024-01-10', group: 2 }
+  ];
+
+  const groups = [
+    { id: 1, content: 'Sprint 1' },
+    { id: 2, content: 'Sprint 2' }
+  ];
+
+  return (
+    <ArchbaseVisTimeline
+      items={items}
+      groups={groups}
+      height={400}
+    />
+  );
+}
+```
+
+## Tipos de Itens
+
+```tsx
+import { ArchbaseVisTimeline } from '@archbase/components';
+
+function App() {
+  const items = [
+    { id: 1, content: 'Ponto', start: '2024-01-01', type: 'point' },
+    { id: 2, content: 'Range', start: '2024-01-05', end: '2024-01-10', type: 'range' },
+    { id: 3, content: 'Background', start: '2024-01-08', end: '2024-01-12', type: 'background' },
+    { id: 4, content: 'Box', start: '2024-01-03', end: '2024-01-07', type: 'box' }
+  ];
+
+  return <ArchbaseVisTimeline items={items} height={400} />;
+}
+```
+
+## Range Inicial Customizado
+
+```tsx
+import { ArchbaseVisTimeline } from '@archbase/components';
+
+function App() {
+  const items = [
+    { id: 1, content: 'Evento', start: '2024-01-15', end: '2024-01-20' }
+  ];
+
+  return (
+    <ArchbaseVisTimeline
+      items={items}
+      start="2024-01-01"
+      end="2024-01-31"
+      height={400}
+    />
+  );
+}
+```
+
+## Orientação
+
+```tsx
+import { ArchbaseVisTimeline } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseVisTimeline
+      items={items}
+      orientation="top"
+      height={400}
+    />
+  );
+}
+```
+
+### Opções de Orientação
+
+- `'bottom'` - Timeline na parte inferior (padrão)
+- `'top'` - Timeline na parte superior
+- `'none'` - Sem timeline
+- `'both'` - Timeline em ambas as partes
+
+## Eventos
+
+```tsx
+import { ArchbaseVisTimeline } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseVisTimeline
+      items={items}
+      onSelect={(selectedItems) => console.log('Selected:', selectedItems)}
+      onRangeChange={(start, end) => console.log('Range:', start, end)}
+      onItemClick={(item) => console.log('Clicked:', item)}
+      onItemDoubleClick={(item) => console.log('Double clicked:', item)}
+      height={400}
+    />
+  );
+}
+```
+
+## Cores Customizadas
+
+```tsx
+import { ArchbaseVisTimeline } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseVisTimeline
+      items={items}
+      itemColor="#4CAF50"
+      groupColor="#2196F3"
+      backgroundColor="#f5f5f5"
+      height={400}
+    />
+  );
+}
+```
+
+## Editável
+
+```tsx
+import { ArchbaseVisTimeline } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseVisTimeline
+      items={items}
+      editable
+      onItemUpdate={(item) => console.log('Updated:', item)}
+      onItemMove={(item, callback) => {
+        // Validar movimento
+        callback(item);
+      }}
+      height={400}
+    />
+  );
+}
+```
+
+## Zoom e Movimento
+
+```tsx
+import { ArchbaseVisTimeline } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseVisTimeline
+      items={items}
+      zoomable
+      moveable
+      zoomMin={1000 * 60 * 60} // 1 hora
+      zoomMax={1000 * 60 * 60 * 24 * 30} // 30 dias
+      height={400}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `items` | `TimelineItem[]` | `[]` | Itens da timeline |
+| `groups` | `TimelineGroup[]` | `[]` | Grupos dos itens |
+| `start` | `Date \| string \| number` | - | Data inicial do range |
+| `end` | `Date \| string \| number` | - | Data final do range |
+| `range` | `[Date, Date]` | - | Range completo |
+| `height` | `string \| number` | `'100%'` | Altura da timeline |
+| `width` | `string \| number` | `'100%'` | Largura da timeline |
+| `minHeight` | `string \| number` | `200` | Altura mínima |
+| `orientation` | `TimelineOrientation` | `'bottom'` | Orientação da timeline |
+| `editable` | `boolean` | `false` | Itens editáveis |
+| `selectable` | `boolean` | `true` | Itens selecionáveis |
+| `multiselect` | `boolean` | `true` | Seleção múltipla |
+| `zoomable` | `boolean` | `true` | Habilitar zoom |
+| `moveable` | `boolean` | `true` | Habilitar movimento |
+| `showCurrentTime` | `boolean` | `true` | Mostrar tempo atual |
+| `itemColor` | `string` | - | Cor dos itens |
+| `groupColor` | `string` | - | Cor dos grupos |
+| `backgroundColor` | `string` | - | Cor de fundo |
+| `disabled` | `boolean` | `false` | Desabilitar interações |
+| `noData` | `ReactNode` | - | Conteúdo quando não há itens |
+| `onSelect` | `function` | - | Callback ao selecionar itens |
+| `onRangeChange` | `function` | - | Callback ao mudar range |
+| `onItemClick` | `function` | - | Callback ao clicar item |
+| `onItemDoubleClick` | `function` | - | Callback ao duplo clique |
+| `onItemUpdate` | `function` | - | Callback ao atualizar item |
+| `timelineRef` | `function \| ref` | - | Ref da instância timeline |
+
+### TimelineItem
+
+```typescript
+interface TimelineItem {
+  id: string | number;
+  content: string | ReactNode;
+  start: Date | string | number;
+  end?: Date | string | number;
+  type?: 'box' | 'point' | 'range' | 'background';
+  group?: string | number;
+  className?: string;
+  style?: CSSProperties;
+  title?: string;
+  editable?: boolean;
+  data?: any;
+}
+```
+
+### TimelineGroup
+
+```typescript
+interface TimelineGroup {
+  id: string | number;
+  content: string | ReactNode;
+  order?: number;
+  className?: string;
+  style?: CSSProperties;
+  title?: string;
+}
+```
+
+## Acessibilidade
+
+- Navegação por teclado
+- Labels ARIA apropriados
+- Contraste adequado
+- Zoom acessível
+
+## Licença
+
+Este componente é um wrapper sobre `vis-timeline`, licenciado sob **MIT/Apache License**.
+
+## Referências
+
+- [vis-timeline documentation](https://visjs.github.io/vis-timeline/)

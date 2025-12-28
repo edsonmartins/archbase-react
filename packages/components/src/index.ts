@@ -18,6 +18,12 @@ export * from './viewers';
 export * from './spreadsheet';
 export * from './filters';
 
+// New Components
+export * from './markdown';
+export * from './video';
+export * from './printer';
+export * from './theme-editor';
+
 // Navigation Components
 export * from './navigation';
 

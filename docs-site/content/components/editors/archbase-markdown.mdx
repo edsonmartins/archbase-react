@@ -1,0 +1,205 @@
+# ArchbaseMarkdown
+
+Componente de renderização Markdown completo para aplicações React, criado como wrapper sobre `react-markdown` (MIT License).
+Oferece suporte a sintaxe GFM (GitHub Flavored Markdown), highlight de sintaxe, tabelas, links externos e mais.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseMarkdown } from '@archbase/components';
+
+function App() {
+  const markdown = `
+# Título
+
+Este é um **parágrafo** com ênfase e um `código inline`.
+
+- Item 1
+- Item 2
+- Item 3
+
+\`\`\`typescript
+const greeting = "Hello, World!";
+console.log(greeting);
+\`\`\`
+`;
+
+  return <ArchbaseMarkdown>{markdown}</ArchbaseMarkdown>;
+}
+```
+
+## Syntax Highlighting
+
+O componente inclui suporte a highlight de sintaxe para múltiplas linguagens:
+
+```tsx
+import { ArchbaseMarkdown } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseMarkdown
+      codeOptions={{
+        showLineNumbers: true,
+        highlightTheme: 'github-dark'
+      }}
+    >
+      {markdown}
+    </ArchbaseMarkdown>
+  );
+}
+```
+
+### Temas Disponíveis
+
+- `github-light` - Tema claro do GitHub
+- `github-dark` - Tema escuro do GitHub (padrão)
+- `monokai` - Tema Monokai
+- `dracula` - Tema Dracula
+- `nord` - Tema Nord
+- `vscode-light` - Tema claro VS Code
+- `vscode-dark` - Tema escuro VS Code
+
+## Tabelas Customizadas
+
+```tsx
+import { ArchbaseMarkdown } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseMarkdown
+      tableOptions={{
+        striped: true,
+        hover: true,
+        bordered: true,
+        headerClassName: 'custom-header',
+        bodyClassName: 'custom-body'
+      }}
+    >
+      {markdown}
+    </ArchbaseMarkdown>
+  );
+}
+```
+
+## Links Externos
+
+Links externos são automaticamente detectados e abertos em nova aba com atributos de segurança:
+
+```tsx
+import { ArchbaseMarkdown } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseMarkdown
+      linkOptions={{
+        openInNewTab: true,
+        addRef: true
+      }}
+    >
+      {markdown}
+    </ArchbaseMarkdown>
+  );
+}
+```
+
+## Componentes Customizados
+
+Você pode substituir os componentes padrão de renderização:
+
+```tsx
+import { ArchbaseMarkdown } from '@archbase/components';
+import { Button } from '@mantine/core';
+
+function App() {
+  return (
+    <ArchbaseMarkdown
+      components={{
+        h1: ({ children }) => (
+          <h1 style={{ color: 'blue' }}>{children}</h1>
+        ),
+        a: ({ href, children }) => (
+          <Button component="a" href={href} variant="light">
+            {children}
+          </Button>
+        )
+      }}
+    >
+      {markdown}
+    </ArchbaseMarkdown>
+  );
+}
+```
+
+## Plugins
+
+O componente usa os seguintes plugins por padrão:
+
+- `remark-gfm` - GitHub Flavored Markdown (tabelas, strikethrough, tasklists)
+- `rehype-raw` - Permite HTML inline no markdown
+- `rehype-external-links` - Adiciona atributos em links externos
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `children` | `string` | - | Conteúdo Markdown a ser renderizado |
+| `codeOptions` | `CodeOptions` | - | Opções de renderização de código |
+| `linkOptions` | `LinkOptions` | - | Opções de renderização de links |
+| `tableOptions` | `TableOptions` | - | Opções de renderização de tabelas |
+| `listOptions` | `ListOptions` | - | Opções de renderização de listas |
+| `pluginOptions` | `PluginOptions` | - | Opções de plugins remark/rehype |
+| `components` | `CustomComponents` | - | Componentes customizados |
+| `disabled` | `boolean` | `false` | Desabilitar renderização |
+| `loading` | `ReactNode` | - | Elemento de carregamento |
+| `error` | `ReactNode` | - | Elemento de erro |
+| `onLoadStart` | `function` | - | Callback ao iniciar carregamento |
+| `onLoadEnd` | `function` | - | Callback ao finalizar carregamento |
+| `onError` | `function` | - | Callback ao ocorrer erro |
+| `onLinkClick` | `function` | - | Callback ao clicar em link |
+| `className` | `string` | - | Classe CSS customizada |
+| `contentClassName` | `string` | - | Classe CSS do conteúdo |
+| `style` | `CSSProperties` | - | Estilo inline |
+| `skipHtml` | `boolean` | `false` | Pular HTML inline |
+| `unwrapDisallowed` | `boolean` | `false` | Desempacotar elementos não permitidos |
+
+### CodeOptions
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `showLineNumbers` | `boolean` | `true` | Mostrar números de linha |
+| `highlightTheme` | `string` | `'github-dark'` | Tema de syntax highlighting |
+
+### LinkOptions
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `openInNewTab` | `boolean` | `true` | Abrir links externos em nova aba |
+| `addRef` | `boolean` | `true` | Adicionar atributo rel="noopener" |
+
+### TableOptions
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `striped` | `boolean` | `true` | Tabelas zebradas |
+| `hover` | `boolean` | `true` | Efeito hover nas linhas |
+| `bordered` | `boolean` | `true` | Tabelas com borda |
+| `tableClassName` | `string` | - | Classe da tabela |
+| `headerClassName` | `string` | - | Classe do cabeçalho |
+| `bodyClassName` | `string` | - | Classe do corpo |
+
+## Acessibilidade
+
+- Suporte a screen readers via HTML semântico
+- Links externos com atributos de segurança
+- Tabelas com headers apropriados
+- Código com cópia disponível
+
+## Licença
+
+Este componente é um wrapper sobre `react-markdown`, licenciado sob **MIT License**.
+
+## Referências
+
+- [react-markdown documentation](https://github.com/remarkjs/react-markdown)
+- [remark-gfm](https://github.com/remarkjs/remark-gfm)
+- [rehype-raw](https://github.com/rehypejs/rehype-raw)

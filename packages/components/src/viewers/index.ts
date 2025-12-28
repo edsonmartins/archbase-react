@@ -12,3 +12,6 @@ export type {
   PDFTextLayerMode,
   PDFToolbarActions,
 } from './ArchbasePDFViewer.types';
+
+// File Previewer
+export * from './file-preview';

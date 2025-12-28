@@ -1,0 +1,300 @@
+# ArchbaseThermalPrinter
+
+Componente de impressão térmica para impressoras de recibo ESC/POS. Gera comandos de impressão para impressoras térmicas comuns em PDV, impressoras de ticket e recibos.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseThermalPrinter } from '@archbase/components';
+
+function App() {
+  const receipt = {
+    title: "Minha Loja",
+    items: [
+      { name: "Produto A", qty: 2, price: 10.50 },
+      { name: "Produto B", qty: 1, price: 25.00 }
+    ],
+    payments: [
+      { method: "credit", amount: 46.00 }
+    ],
+    footer: "Obrigado pela preferência!"
+  };
+
+  return (
+    <ArchbaseThermalPrinter
+      data={receipt}
+      paperWidth={58}
+      onPrint={() => console.log('Impresso!')}
+    />
+  );
+}
+```
+
+## Estrutura de Dados
+
+```typescript
+interface ReceiptData {
+  title?: string;
+  subtitle?: string;
+  items?: ReceiptItem[];
+  payments?: PaymentData[];
+  taxes?: TaxData[];
+  footer?: string;
+  barcode?: string;
+  qrCode?: string;
+  customLines?: string[];
+}
+
+interface ReceiptItem {
+  name: string;
+  qty: number;
+  price: number;
+  unit?: string;
+}
+
+interface PaymentData {
+  method: string;
+  amount: number;
+}
+
+interface TaxData {
+  name: string;
+  amount: number;
+}
+```
+
+## Configurações de Impressão
+
+```tsx
+import { ArchbaseThermalPrinter } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseThermalPrinter
+      data={receipt}
+      paperWidth={58}
+      paperHeight={0}
+      characterSet="PC860"
+      codePage="CP850"
+      density={8}
+      onPrint={handlePrint}
+    />
+  );
+}
+```
+
+### Larguras de Papel Suportadas
+
+- `58` - 58mm (recibo padrão)
+- `80` - 80mm (recibo maior)
+- `112` - 112mm (recibo A4 parcial)
+
+## Corte Automático
+
+```tsx
+import { ArchbaseThermalPrinter } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseThermalPrinter
+      data={receipt}
+      paperWidth={58}
+      cutPaper="full"
+      feedLines={3}
+    />
+  );
+}
+```
+
+### Modos de Corte
+
+- `'none'` - Sem corte
+- `'full'` - Corte completo
+- `'partial'` - Corte parcial
+
+## Barcode e QR Code
+
+```tsx
+import { ArchbaseThermalPrinter } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseThermalPrinter
+      data={{
+        ...receipt,
+        barcode: "123456789012",
+        qrCode: "https://example.com/receipt/123"
+      }}
+      barcodeOptions={{
+        type: 'EAN13',
+        width: 2,
+        height: 100,
+        textPosition: 'below'
+      }}
+      qrCodeOptions={{
+        size: 8,
+        errorCorrection: 'M'
+      }}
+      paperWidth={58}
+    />
+  );
+}
+```
+
+## Preview Visual
+
+```tsx
+import { ArchbaseThermalPrinter } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseThermalPrinter
+      data={receipt}
+      paperWidth={58}
+      showPreview
+      previewActions
+      onDownload={() => console.log('Baixando...')}
+    />
+  );
+}
+```
+
+## Alinhamento e Estilo
+
+```tsx
+import { ArchbaseThermalPrinter } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseThermalPrinter
+      data={receipt}
+      paperWidth={58}
+      textAlign="left"
+      titleAlign="center"
+      footerAlign="center"
+      titleStyle="bold"
+    />
+  );
+}
+```
+
+## Moeda Customizada
+
+```tsx
+import { ArchbaseThermalPrinter } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseThermalPrinter
+      data={receipt}
+      paperWidth={58}
+      currency="R$"
+      locale="pt-BR"
+      dateFormat="dd/MM/yyyy HH:mm"
+    />
+  );
+}
+```
+
+## Botão de Impressão Rápida
+
+```tsx
+import { QuickPrintButton } from '@archbase/components';
+
+function App() {
+  return (
+    <QuickPrintButton
+      data={receipt}
+      paperWidth={58}
+      onPrint={() => console.log('Recibo impresso!')}
+    />
+  );
+}
+```
+
+## Funções de Exportação
+
+```tsx
+import { exportToBase64, exportToHex, exportToFile } from '@archbase/components';
+
+function App() {
+  const handleExport = async () => {
+    // Exportar como Base64
+    const base64 = await exportToBase64(receipt, 58);
+    console.log('Base64:', base64);
+
+    // Exportar como Hex
+    const hex = await exportToHex(receipt, 58);
+    console.log('Hex:', hex);
+
+    // Exportar como arquivo
+    await exportToFile(receipt, 58, 'receipt.bin');
+  };
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `data` | `ReceiptData` | - | Dados do recibo |
+| `paperWidth` | `number` | `58` | Largura do papel em mm |
+| `paperHeight` | `number` | `0` | Altura do papel em mm (0 = auto) |
+| `characterSet` | `string` | `'PC860'` | Conjunto de caracteres |
+| `codePage` | `string` | `'CP850'` | Code page |
+| `density` | `number` | `8` | Densidade de impressão (0-18) |
+| `textAlign` | `string` | `'left'` | Alinhamento do texto |
+| `titleAlign` | `string` | `'center'` | Alinhamento do título |
+| `footerAlign` | `string` | `'center'` | Alinhamento do rodapé |
+| `titleStyle` | `string` | `'bold'` | Estilo do título |
+| `currency` | `string` | `'R$'` | Símbolo da moeda |
+| `locale` | `string` | `'pt-BR'` | Localização |
+| `dateFormat` | `string` | - | Formato da data |
+| `showPreview` | `boolean` | `true` | Mostrar preview |
+| `previewActions` | `boolean` | `true` | Ações de preview |
+| `cutPaper` | `CutMode` | `'none'` | Modo de corte |
+| `feedLines` | `number` | `3` | Linhas de feed após impressão |
+| `barcodeOptions` | `BarcodeOptions` | - | Opções de barcode |
+| `qrCodeOptions` | `QRCodeOptions` | - | Opções de QR Code |
+| `disabled` | `boolean` | `false` | Desabilitar impressão |
+| `autoPrint` | `boolean` | `false` | Imprimir automaticamente |
+| `onPrint` | `function` | - | Callback ao imprimir |
+| `onError` | `function` | - | Callback ao ocorrer erro |
+| `title` | `string` | - | Título do componente |
+
+## Impressoras Compatíveis
+
+Este componente usa o protocolo ESC/POS e é compatível com:
+
+- Epson TM-T20, TM-T80, TM-T88
+- Star TSP, SPRT series
+- Custom (VR8300 e similares)
+- XPrinter (XP series)
+- Posiflex (PP series)
+- E outras impressoras térmicas ESC/POS
+
+## Protocolo ESC/POS
+
+O componente gera comandos ESC/POS incluindo:
+
+- **Comandos de texto** - Formatação, alinhamento, tamanho
+- **Barcode** - EAN8, EAN13, CODE128, CODE39, ITF, CODABAR
+- **QR Code** - ISO 18004 compliant
+- **Corte** - Full e partial cut
+- **Feed** - Linhas em branco
+- **Imagens** - Gráficos mono-8-bit
+
+## Acessibilidade
+
+- Preview visual para verificação
+- Mensagens de erro claras
+- Feedback de status de impressão
+
+## Licença
+
+Este componente utiliza `react-thermal-printer` (MIT License).
+
+## Referências
+
+- [react-thermal-printer](https://github.com/gioblu/react-thermal-printer)
+- [ESC/POS Reference](https://reference.epson-biz.com/modules/ref_escpos/index.html)

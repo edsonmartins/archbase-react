@@ -1,0 +1,291 @@
+# ArchbaseThemeColorEditor
+
+Editor visual de temas Mantine para criar e customizar temas em tempo de execução.
+Permite editar cores, tipografia, espaçamento e bordas com preview ao vivo.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseThemeColorEditor } from '@archbase/components';
+
+function App() {
+  const [theme, setTheme] = useState({});
+
+  return (
+    <ArchbaseThemeColorEditor
+      theme={theme}
+      onChange={setTheme}
+      onApply={(newTheme) => console.log('Tema aplicado:', newTheme)}
+    />
+  );
+}
+```
+
+## Tema Inicial
+
+```tsx
+import { ArchbaseThemeColorEditor } from '@archbase/components';
+
+function App() {
+  const [theme, setTheme] = useState({
+    colors: {
+      primary: '#3B82F6',
+      secondary: '#8B5CF6',
+      success: '#10B981',
+      warning: '#F59E0B',
+      error: '#EF4444'
+    }
+  });
+
+  return (
+    <ArchbaseThemeColorEditor
+      theme={theme}
+      onChange={setTheme}
+    />
+  );
+}
+```
+
+## Preview Ao Vivo
+
+```tsx
+import { ArchbaseThemeColorEditor } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseThemeColorEditor
+      theme={theme}
+      onChange={setTheme}
+      showPreview
+      previewPosition="right"
+    />
+  );
+}
+```
+
+## Sem Header/Actions
+
+```tsx
+import { ArchbaseThemeColorEditor } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseThemeColorEditor
+      theme={theme}
+      onChange={setTheme}
+      header={null}
+      actions={null}
+    />
+  );
+}
+```
+
+## Seções Customizadas
+
+```tsx
+import { ArchbaseThemeColorEditor } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseThemeColorEditor
+      theme={theme}
+      onChange={setTheme}
+      sections={['colors', 'typography', 'spacing']}
+      defaultSection="colors"
+    />
+  );
+}
+```
+
+### Seções Disponíveis
+
+- `'colors'` - Editor de cores
+- `'typography'` - Editor de tipografia
+- `'spacing'` - Editor de espaçamento
+- `'borders'` - Editor de bordas
+
+## Apenas Leitura
+
+```tsx
+import { ArchbaseThemeColorEditor } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseThemeColorEditor
+      theme={theme}
+      onChange={undefined}
+      readOnly
+    />
+  );
+}
+```
+
+## Exportação de Tema
+
+```tsx
+import { ArchbaseThemeColorEditor, type ExportFormat } from '@archbase/components';
+
+function App() {
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('json');
+
+  return (
+    <ArchbaseThemeColorEditor
+      theme={theme}
+      onChange={setTheme}
+      exportFormat={exportFormat}
+      onExport={(data) => {
+        console.log('Tema exportado:', data);
+      }}
+    />
+  );
+}
+```
+
+### Formatos de Exportação
+
+- `'json'` - Objeto JSON
+- `'typescript'` - Definição de tipo TypeScript
+- `'css'` - Variáveis CSS
+- `'mantine'` - Configuração Mantine completa
+
+## Presets
+
+```tsx
+import { ArchbaseThemeColorEditor } from '@archbase/components';
+
+function App() {
+  const presets = {
+    light: { colors: { primary: '#3B82F6' } },
+    dark: { colors: { primary: '#60A5FA' } },
+    forest: { colors: { primary: '#059669' } }
+  };
+
+  return (
+    <ArchbaseThemeColorEditor
+      theme={theme}
+      onChange={setTheme}
+      presets={presets}
+      presetLabels={{
+        light: 'Claro',
+        dark: 'Escuro',
+        forest: 'Floresta'
+      }}
+    />
+  );
+}
+```
+
+## Funções Auxiliares
+
+```tsx
+import {
+  generateThemeFromColors,
+  getDefaultMantineTheme,
+  mergeWithDefaultTheme
+} from '@archbase/components';
+
+function App() {
+  // Gerar tema completo a partir de cores primárias
+  const theme = generateThemeFromColors({
+    primary: '#3B82F6',
+    secondary: '#8B5CF6'
+  });
+
+  // Obter tema padrão do Mantine
+  const defaultTheme = getDefaultMantineTheme();
+
+  // Mesclar com tema padrão
+  const mergedTheme = mergeWithDefaultTheme(theme);
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `theme` | `MantineThemeOverride` | - | Tema atual |
+| `onChange` | `function` | - | Callback ao alterar tema |
+| `onApply` | `function` | - | Callback ao aplicar tema |
+| `onExport` | `function` | - | Callback ao exportar tema |
+| `onReset` | `function` | - | Callback ao resetar tema |
+| `showPreview` | `boolean` | `true` | Mostrar preview ao vivo |
+| `previewPosition` | `'left' \| 'right'` | `'right'` | Posição do preview |
+| `readOnly` | `boolean` | `false` | Modo apenas leitura |
+| `sections` | `string[]` | `all` | Seções a mostrar |
+| `defaultSection` | `string` | `'colors'` | Seção inicial |
+| `exportFormat` | `ExportFormat` | `'json'` | Formato de exportação |
+| `presets` | `object` | - | Presets de tema |
+| `presetLabels` | `object` | - | Labels dos presets |
+| `width` | `string \| number` | `'100%'` | Largura do editor |
+| `height` | `string \| number` | `'600px'` | Altura do editor |
+| `header` | `ReactNode` | - | Header customizado |
+| `footer` | `ReactNode` | - | Footer customizado |
+| `actions` | `ReactNode` | - | Actions customizadas |
+| `title` | `string` | `'Theme Editor'` | Título do editor |
+| `themeName` | `string` | `'my-theme'` | Nome do tema |
+| `disabled` | `boolean` | `false` | Desabilitar editor |
+
+### ExportFormat
+
+```typescript
+type ExportFormat = 'json' | 'typescript' | 'css' | 'mantine';
+```
+
+## Estrutura de Tema
+
+O editor trabalha com a estrutura de tema do Mantine v7+:
+
+```typescript
+interface MantineThemeOverride {
+  colors?: Record<string, string | Record<string, string>>;
+  fontFamily?: string;
+  fontSize?: string;
+  lineHeight?: string;
+  spacing?: Record<string, string>;
+  radius?: Record<string, string>;
+  // ... mais opções do Mantine
+}
+```
+
+## Exemplo de Exportação
+
+### JSON
+```json
+{
+  "colors": {
+    "primary": "#3B82F6",
+    "secondary": "#8B5CF6"
+  }
+}
+```
+
+### TypeScript
+```typescript
+export const myTheme: MantineThemeOverride = {
+  colors: {
+    primary: '#3B82F6',
+    secondary: '#8B5CF6'
+  }
+};
+```
+
+### CSS
+```css
+:root {
+  --mantine-color-primary: #3B82F6;
+  --mantine-color-secondary: #8B5CF6;
+}
+```
+
+## Acessibilidade
+
+- Preview ao vivo para verificação
+- Contrast checker para cores
+- Feedback visual de alterações
+- Navegação por teclado
+
+## Referências
+
+- [Mantine Theming](https://mantine.dev/theming/theming-functions/)
+- [Mantine Colors](https://mantine.dev/theming/colors/)
+- [Mantine Spacing](https://mantine.dev/theming/spacing/)
