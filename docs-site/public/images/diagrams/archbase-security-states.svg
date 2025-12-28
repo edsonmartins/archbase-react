@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100">
+  <!-- Background -->
+  <rect width="1600" height="1100" fill="#f8f9fa"/>
+
+  <!-- Title -->
+  <text x="800" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#212529">
+    Estados de Segurança - Máquina de Estados
+  </text>
+
+  <!-- States - Diamond Layout -->
+  <!-- Top: Initialising -->
+  <rect x="650" y="100" width="300" height="100" rx="15" fill="#fff9c4" stroke="#f9a825" stroke-width="3"/>
+  <text x="800" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">
+    INITIALISING
+  </text>
+  <text x="800" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#555">
+    Carregando tokens armazenados
+  </text>
+
+  <!-- Middle Left: Authenticating -->
+  <rect x="150" y="350" width="300" height="120" rx="15" fill="#bbdefb" stroke="#1976d2" stroke-width="3"/>
+  <text x="300" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">
+    AUTHENTICATING
+  </text>
+  <text x="300" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#555">
+    Processando login
+  </text>
+  <text x="300" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#1976d2">
+    login() | loginWithContext()
+  </text>
+
+  <!-- Middle Right: Authenticated -->
+  <rect x="1150" y="350" width="300" height="120" rx="15" fill="#c8e6c9" stroke="#388e3c" stroke-width="3"/>
+  <text x="1300" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">
+    AUTHENTICATED
+  </text>
+  <text x="1300" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#555">
+    Usuário autenticado
+  </text>
+  <text x="1300" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#388e3c">
+    Acesso liberado
+  </text>
+
+  <!-- Bottom: Error -->
+  <rect x="650" y="600" width="300" height="100" rx="15" fill="#ffcdd2" stroke="#c62828" stroke-width="3"/>
+  <text x="800" y="640" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">
+    ERROR
+  </text>
+  <text x="800" y="670" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#555">
+    Erro na autenticação
+  </text>
+
+  <!-- Transitions -->
+  <!-- Initialising -> Authenticating -->
+  <path d="M700 200 Q500 280 350 340" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <rect x="440" y="235" width="120" height="30" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="500" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#333">login()</text>
+
+  <!-- Initialising -> Authenticated (has token) -->
+  <path d="M900 200 Q1100 280 1250 340" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <rect x="1020" y="235" width="140" height="30" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="1090" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#333">token válido</text>
+
+  <!-- Authenticating -> Authenticated -->
+  <path d="M450 410 L1140 410" stroke="#388e3c" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <rect x="720" y="385" width="160" height="30" rx="4" fill="#c8e6c9" stroke="#388e3c" stroke-width="1"/>
+  <text x="800" y="405" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2e7d32">Login Success</text>
+
+  <!-- Authenticating -> Error -->
+  <path d="M280 470 Q400 540 680 630" stroke="#c62828" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <rect x="400" y="525" width="140" height="30" rx="4" fill="#fff" stroke="#c62828" stroke-width="1"/>
+  <text x="470" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#c62828">Credenciais inválidas</text>
+
+  <!-- Authenticated -> Error (token expired) -->
+  <path d="M1300 470 Q1200 540 920 630" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <rect x="1050" y="525" width="120" height="30" rx="4" fill="#fff" stroke="#ff9800" stroke-width="1"/>
+  <text x="1110" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ff9800">Token expirado</text>
+
+  <!-- Error -> Authenticating (retry) -->
+  <path d="M650 650 Q400 650 400 480" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  <rect x="470" y="580" width="80" height="25" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="510" y="597" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">clearError()</text>
+
+  <!-- Authenticated -> Initialising (logout) -->
+  <path d="M1300 350 Q1450 250 1000 150" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  <rect x="1150" y="210" width="80" height="25" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="1190" y="227" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">logout()</text>
+
+  <!-- State Properties Table -->
+  <rect x="100" y="750" width="1400" height="280" rx="15" fill="#fafafa" stroke="#ddd" stroke-width="2"/>
+  <text x="800" y="790" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#333">
+    Propriedades por Estado
+  </text>
+
+  <!-- Table Header -->
+  <rect x="150" y="820" width="200" height="40" fill="#eee" stroke="#ddd"/>
+  <text x="250" y="845" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">Estado</text>
+
+  <rect x="350" y="820" width="300" height="40" fill="#eee" stroke="#ddd"/>
+  <text x="500" y="845" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">isAuthenticating</text>
+
+  <rect x="650" y="820" width="300" height="40" fill="#eee" stroke="#ddd"/>
+  <text x="800" y="845" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">isAuthenticated</text>
+
+  <rect x="950" y="820" width="500" height="40" fill="#eee" stroke="#ddd"/>
+  <text x="1200" y="845" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">Descrição</text>
+
+  <!-- Row 1: Initialising -->
+  <rect x="150" y="860" width="200" height="50" fill="#fff9c4" stroke="#ddd"/>
+  <text x="250" y="890" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#333">INITIALISING</text>
+
+  <rect x="350" y="860" width="300" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="500" y="890" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">false</text>
+
+  <rect x="650" y="860" width="300" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="800" y="890" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">false</text>
+
+  <rect x="950" y="860" width="500" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="1200" y="890" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">Carregando tokens do localStorage</text>
+
+  <!-- Row 2: Authenticating -->
+  <rect x="150" y="910" width="200" height="50" fill="#bbdefb" stroke="#ddd"/>
+  <text x="250" y="940" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#333">AUTHENTICATING</text>
+
+  <rect x="350" y="910" width="300" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="500" y="940" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#1976d2">true</text>
+
+  <rect x="650" y="910" width="300" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="800" y="940" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">false</text>
+
+  <rect x="950" y="910" width="500" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="1200" y="940" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">Processando requisição de login</text>
+
+  <!-- Row 3: Authenticated -->
+  <rect x="150" y="960" width="200" height="50" fill="#c8e6c9" stroke="#ddd"/>
+  <text x="250" y="990" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#333">AUTHENTICATED</text>
+
+  <rect x="350" y="960" width="300" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="500" y="990" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">false</text>
+
+  <rect x="650" y="960" width="300" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="800" y="990" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#388e3c">true</text>
+
+  <rect x="950" y="960" width="500" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="1200" y="990" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">Usuário logado, tokens válidos</text>
+
+  <!-- Row 4: Error -->
+  <rect x="150" y="1010" width="200" height="50" fill="#ffcdd2" stroke="#ddd"/>
+  <text x="250" y="1040" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#333">ERROR</text>
+
+  <rect x="350" y="1010" width="300" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="500" y="1040" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">false</text>
+
+  <rect x="650" y="1010" width="300" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="800" y="1040" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">false</text>
+
+  <rect x="950" y="1010" width="500" height="50" fill="#fff" stroke="#ddd"/>
+  <text x="1200" y="1040" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">Falha: isAuthenticating=false, isError=true, error definido</text>
+
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+</svg>

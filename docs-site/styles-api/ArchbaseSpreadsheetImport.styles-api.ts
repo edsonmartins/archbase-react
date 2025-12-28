@@ -1,6 +1,6 @@
-import type { StylesApi } from '@mantinex/demo';
+import type { StylesApiData } from '../components/StylesApiTable';
 
-export const ArchbaseSpreadsheetImportStylesApi: StylesApi = {
+export const ArchbaseSpreadsheetImportStylesApi: StylesApiData = {
   selectors: {
     root: 'Container do Modal de importação',
     content: 'Conteúdo interno do modal',
@@ -18,7 +18,10 @@ export const ArchbaseSpreadsheetImportStylesApi: StylesApi = {
     progress: 'Barra de progresso',
   },
   vars: {
-    modalSize: 'Tamanho do modal (md, xl, full)',
+    modalSize: {
+      md: 'Tamanho médio',
+      xl: 'Tamanho extra grande',
+      full: 'Tamanho completo',
+    },
   },
-  staticSelectors: [],
 };

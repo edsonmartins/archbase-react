@@ -1,0 +1,341 @@
+import * as demos from '../../../demos/components/filters';
+
+# ArchbaseCompositeFilters
+
+Componente de filtros compostos com interface interativa e saída em formato RSQL para integração com APIs REST.
+
+## Import
+
+```tsx
+import {
+  ArchbaseCompositeFilters,
+  type ArchbaseFilterDefinition,
+  type ArchbaseActiveFilter,
+} from '@archbase/components';
+```
+
+## Uso Básico
+
+<Demo data={demos.ArchbaseCompositeFiltersUsage} />
+
+### Como Funciona
+
+O componente utiliza um fluxo em 3 passos para adicionar filtros:
+1. **Seleção do campo** - Usuário escolhe qual campo deseja filtrar
+2. **Seleção do operador** - Dependendo do tipo de dado, diferentes operadores são disponíveis
+3. **Digitação do valor** - Usuário informa o valor para o filtro
+
+Os filtros são exibidos visualmente como "pills" e podem ser removidos individualmente.
+
+## Com ArchbaseDataGrid
+
+O `ArchbaseCompositeFilters` pode ser integrado diretamente ao `ArchbaseDataGrid` através da prop `useCompositeFilters`:
+
+```tsx
+import { ArchbaseDataGrid } from '@archbase/components';
+
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  useCompositeFilters={true}
+  filterDefinitions={filterDefinitions}
+  activeFilters={activeFilters}
+  onFiltersChange={(filters, rsql) => {
+    console.log('RSQL:', rsql);
+  }}
+/>
+```
+
+Veja a [documentação do ArchbaseDataGrid](/components/data-display/datagrid) para mais detalhes sobre a integração.
+
+## Definição de Campos
+
+### Tipos de Dados Suportados
+
+```tsx
+import type { ArchbaseFilterDefinition } from '@archbase/components';
+
+const filterDefinitions: ArchbaseFilterDefinition[] = [
+  /* Texto */
+  { key: 'nome', label: 'Nome', type: 'text' },
+
+  /* Numérico */
+  { key: 'idade', label: 'Idade', type: 'integer', min: 0, max: 120 },
+  { key: 'salario', label: 'Salário', type: 'currency', currencySymbol: 'R$' },
+
+  /* Booleano */
+  { key: 'ativo', label: 'Ativo', type: 'boolean' },
+
+  /* Enum/Select */
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'enum',
+    options: [
+      { value: 'ativo', label: 'Ativo' },
+      { value: 'inativo', label: 'Inativo' },
+      { value: 'pendente', label: 'Pendente' },
+    ],
+  },
+
+  /* Data */
+  { key: 'dataCriacao', label: 'Data de Criação', type: 'date' },
+  { key: 'dataHora', label: 'Data/Hora', type: 'datetime' },
+
+  /* UUID */
+  { key: 'id', label: 'ID', type: 'uuid' },
+];
+```
+
+### Operadores por Tipo
+
+**Operadores disponíveis por tipo de dado:**
+
+- **text** - `contains`, `starts_with`, `ends_with`, `=`, `!=`, `is_null`, `is_not_null`
+- **integer** - `=`, `!=`, `>`, `<`, `>=`, `<=`, `between`, `is_null`, `is_not_null`
+- **float** - `=`, `!=`, `>`, `<`, `>=`, `<=`, `between`, `is_null`, `is_not_null`
+- **currency** - `=`, `!=`, `>`, `<`, `>=`, `<=`, `between`, `is_null`, `is_not_null`
+- **boolean** - `=`, `!=`
+- **date** - `=`, `!=`, `>`, `<`, `>=`, `<=`, `date_before`, `date_after`, `date_between`
+- **datetime** - `=`, `!=`, `>`, `<`, `>=`, `<=`, `date_before`, `date_after`
+- **time** - `=`, `!=`, `>`, `<`, `>=`, `<=`
+- **enum** - `=`, `!=`, `in`, `not_in`
+- **uuid** - `=`, `!=`, `is_null`, `is_not_null`
+
+### Operadores Customizados
+
+Você pode customizar os operadores disponíveis para cada campo:
+
+```tsx
+const customField: ArchbaseFilterDefinition = {
+  key: 'preco',
+  label: 'Preço',
+  type: 'currency',
+  operators: ['=', '>', '<', '>=', '<=', 'between'],
+  defaultOperator: '=',
+};
+```
+
+## RSQL
+
+### Formato de Saída
+
+O componente gera RSQL automaticamente. O RSQL é uma linguagem de consulta usada para filtrar dados em APIs REST:
+
+```tsx
+<ArchbaseCompositeFilters
+  filters={filterDefinitions}
+  value={filters}
+  onChange={(filters, rsql) => {
+    /* Exemplo de RSQL gerado: */
+    /* "nome=like=*João*;idade>18;status==ativo" */
+    console.log('RSQL:', rsql);
+  }}
+/>
+```
+
+### Operadores RSQL
+
+O componente gera RSQL automaticamente. O RSQL é uma linguagem de consulta usada para filtrar dados em APIs REST:
+
+**Operadores RSQL gerados:**
+
+- `contains` → `=like=*valor*` → Exemplo: `nome=like=*João*`
+- `starts_with` → `=like=valor*` → Exemplo: `nome=like=João*`
+- `ends_with` → `=like=*valor` → Exemplo: `nome=like=*Silva`
+- `=` → `==valor` → Exemplo: `status==ativo`
+- `!=` → `!=valor` → Exemplo: `status!=inativo`
+- `>` → `>valor` → Exemplo: `idade>18`
+- `<` → `<valor` → Exemplo: `idade<65`
+- `>=` → `>=valor` → Exemplo: `salario>=1500`
+- `<=` → `<=valor` → Exemplo: `salario<=5000`
+- `is_null` → `=null=true` → Exemplo: `telefone=null=true`
+- `is_not_null` → `=null=false` → Exemplo: `telefone=null=false`
+
+## Quick Filters
+
+Filtros rápidos predefinidos para consultas comuns:
+
+```tsx
+import type { QuickFilterPreset } from '@archbase/components';
+
+const quickFilters: QuickFilterPreset[] = [
+  {
+    id: 'ativos',
+    name: 'Usuários Ativos',
+    filters: [
+      {
+        key: 'ativo',
+        label: 'Status',
+        type: 'enum',
+        operator: '=',
+        value: 'ativo',
+      },
+    ],
+  },
+  {
+    id: 'maiores-30',
+    name: 'Maiores de 30 anos',
+    filters: [
+      {
+        key: 'idade',
+        label: 'Idade',
+        type: 'integer',
+        operator: '>',
+        value: 30,
+      },
+    ],
+  },
+];
+
+<ArchbaseCompositeFilters
+  filters={filterDefinitions}
+  quickFilters={quickFilters}
+/>
+```
+
+## Presets e Histórico
+
+O componente possui recursos para salvar e carregar filtros:
+
+```tsx
+<ArchbaseCompositeFilters
+  filters={filterDefinitions}
+  enablePresets      // Salvar/carregar presets de filtros (localStorage)
+  enableHistory      // Histórico de filtros usados (localStorage)
+  enableQuickFilters // Quick filters
+  quickFilters={quickFilters}
+  storageKeyPrefix="meu-app-filters" // Prefixo para localStorage
+/>
+```
+
+## Variantes Visuais
+
+```tsx
+<ArchbaseCompositeFilters
+  filters={filterDefinitions}
+  variant="default"    // 'default' | 'compact' | 'minimal'
+/>
+```
+
+- **default**: Layout completo com todas as funcionalidades
+- **compact**: Layout mais compacto, ideal para toolbars
+- **minimal**: Layout mínimo, apenas campo de entrada
+
+## Props Principais
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `filters` | `ArchbaseFilterDefinition[]` | **Required** | Definição dos campos filtráveis |
+| `value` | `ArchbaseActiveFilter[]` | `[]` | Filtros ativos (controlado) |
+| `onChange` | `(filters, rsql?) => void` | - | Callback quando filtros mudam |
+| `placeholder` | `string` | `"Adicionar filtro..."` | Placeholder do input |
+| `maxFilters` | `number` | `10` | Máximo de filtros simultâneos |
+| `variant` | `'default' \| 'compact' \| 'minimal'` | `'default'` | Variante visual |
+| `enablePresets` | `boolean` | `true` | Habilita salvar presets |
+| `enableHistory` | `boolean` | `true` | Habilita histórico |
+| `enableQuickFilters` | `boolean` | `true` | Habilita quick filters |
+| `quickFilters` | `QuickFilterPreset[]` | `[]` | Filtros rápidos predefinidos |
+| `rsqlOutput` | `'controlled' \| 'uncontrolled'` | `'controlled'` | Modo de saída RSQL |
+| `onRSQLChange` | `(rsql?: string) => void` | - | Callback específico para RSQL (uncontrolled) |
+| `storageKeyPrefix` | `string` | `'archbase-filters'` | Prefixo para localStorage |
+
+## Modos de Saída RSQL
+
+### Controlled (padrão)
+
+O RSQL é retornado através da prop `onChange`:
+
+```tsx
+<ArchbaseCompositeFilters
+  filters={filterDefinitions}
+  value={filters}
+  onChange={(filters, rsql) => {
+    console.log('RSQL:', rsql);
+  }}
+/>
+```
+
+### Uncontrolled
+
+Use `onRSQLChange` para receber apenas o RSQL:
+
+```tsx
+<ArchbaseCompositeFilters
+  filters={filterDefinitions}
+  rsqlOutput="uncontrolled"
+  onRSQLChange={(rsql) => {
+    console.log('RSQL:', rsql);
+  }}
+/>
+```
+
+## TypeScript
+
+```tsx
+import type {
+  ArchbaseFilterDefinition,
+  ArchbaseActiveFilter,
+  ArchbaseFieldDataType,
+  ArchbaseFilterOperator,
+  QuickFilterPreset,
+  FilterOption,
+} from '@archbase/components';
+```
+
+## Integração com API REST
+
+Exemplo completo de integração com uma API REST:
+
+```tsx
+import { useState, useEffect } from 'react';
+import { ArchbaseCompositeFilters } from '@archbase/components';
+import type { ArchbaseFilterDefinition, ArchbaseActiveFilter } from '@archbase/components';
+
+const filterDefinitions: ArchbaseFilterDefinition[] = [
+  { key: 'nome', label: 'Nome', type: 'text' },
+  { key: 'email', label: 'E-mail', type: 'text' },
+  { key: 'ativo', label: 'Ativo', type: 'boolean' },
+];
+
+function GridComAPI() {
+  const [filters, setFilters] = useState<ArchbaseActiveFilter[]>([]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      /* Construir URL com RSQL */
+      const rsql = filters
+        .map(f => {
+          if (f.operator === 'contains') return `${f.key}=like=*${f.value}*`;
+          if (f.operator === '=') return `${f.key}==${f.value}`;
+          return `${f.key}${f.operator}${f.value}`;
+        })
+        .join(';');
+
+      const url = rsql ? `/api/users?filter=${encodeURIComponent(rsql)}` : '/api/users';
+
+      const response = await fetch(url);
+      setData(await response.json());
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [filters]);
+
+  return (
+    <>
+      <ArchbaseCompositeFilters
+        filters={filterDefinitions}
+        value={filters}
+        onChange={setFilters}
+      />
+      {loading ? <p>Carregando...</p> : <pre>{JSON.stringify(data, null, 2)}</pre>}
+    </>
+  );
+}
+```

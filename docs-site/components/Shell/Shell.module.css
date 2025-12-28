@@ -8,6 +8,8 @@
   align-items: center;
   justify-content: space-between;
   height: 100%;
+  padding-left: var(--mantine-spacing-md);
+  padding-right: var(--mantine-spacing-md);
 }
 
 .logo {

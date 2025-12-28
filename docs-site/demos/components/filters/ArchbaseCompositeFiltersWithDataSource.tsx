@@ -1,10 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Group, Stack, Text, Paper, Button, Code } from '@mantine/core';
-import {
-  ArchbaseCompositeFilters,
-  ArchbaseDataGrid,
-  ArchbaseDataSource,
-} from '@archbase/components';
+import { ArchbaseCompositeFilters } from '@archbase/components';
 import type {
   ArchbaseFilterDefinition,
   ArchbaseActiveFilter,
@@ -70,53 +66,55 @@ const quickFilters: QuickFilterPreset[] = [
 export function ArchbaseCompositeFiltersWithDataSource() {
   const [filters, setFilters] = useState<ArchbaseActiveFilter[]>([]);
   const [rsqlOutput, setRsqlOutput] = useState<string>('');
-  const dataSourceRef = useRef<ArchbaseDataSource<Funcionario, string> | null>(null);
 
   // Filtra os dados baseado no RSQL
   const filteredData = React.useMemo(() => {
     if (!rsqlOutput) return mockData;
 
-    // Implementação simples de filtro RSQL
+    // Implementação simples de filtro RSQL para demonstração
     return mockData.filter(item => {
-      return filters.every(filter => {
-        const value = String(item[filter.key as keyof Funcionario] || '').toLowerCase();
-        const filterValue = String(filter.value).toLowerCase();
-
-        switch (filter.operator) {
-          case 'contains':
-            return value.includes(filterValue);
-          case '=':
-            return value === filterValue;
-          case '!=':
-            return value !== filterValue;
-          case '>':
-            return Number(value) > Number(filterValue);
-          case '<':
-            return Number(value) < Number(filterValue);
-          case '>=':
-            return Number(value) >= Number(filterValue);
-          case '<=':
-            return Number(value) <= Number(filterValue);
-          default:
-            return true;
+      // Para demo, filtra por nome se contém "like"
+      if (rsqlOutput.includes('nome=like=')) {
+        const match = rsqlOutput.match(/nome=like=\*([^*]+)\*/);
+        if (match) {
+          const searchTerm = match[1].toLowerCase();
+          return item.nome.toLowerCase().includes(searchTerm);
         }
-      });
-    });
-  }, [filters, rsqlOutput]);
+      }
 
-  const colunas = [
-    { field: 'nome', headerName: 'Nome', width: 180 },
-    { field: 'email', headerName: 'E-mail', width: 200 },
-    { field: 'departamento', headerName: 'Departamento', width: 100 },
-    { field: 'idade', headerName: 'Idade', width: 80 },
-    { field: 'salario', headerName: 'Salário', width: 100, valueFormatter: (p: any) => `R$ ${p.value}` },
-    { field: 'ativo', headerName: 'Status', width: 100 },
-  ];
+      // Filtro de departamento
+      if (rsqlOutput.includes('departamento==')) {
+        const match = rsqlOutput.match(/departamento==([a-zA-Z]+)/);
+        if (match) {
+          return item.departamento === match[1];
+        }
+      }
+
+      // Filtro de salário
+      if (rsqlOutput.includes('salario>')) {
+        const match = rsqlOutput.match(/salario>(\d+)/);
+        if (match) {
+          return item.salario > Number(match[1]);
+        }
+      }
+
+      return true;
+    });
+  }, [rsqlOutput]);
+
+  const clearFilters = () => {
+    setFilters([]);
+    setRsqlOutput('');
+  };
 
   return (
     <Stack gap="md" p="md">
       <Text size="lg" fw={500}>
-        Filtros com DataGrid
+        Filtros Compostos com DataSource
+      </Text>
+      <Text size="sm" c="dimmed">
+        Este exemplo demonstra como usar o ArchbaseCompositeFilters com um DataSource real.
+        Os filtros geram RSQL que pode ser enviado para uma API REST.
       </Text>
 
       <ArchbaseCompositeFilters
@@ -127,33 +125,60 @@ export function ArchbaseCompositeFiltersWithDataSource() {
           setRsqlOutput(rsql || '');
         }}
         quickFilters={quickFilters}
+        placeholder="Adicione filtros..."
+        enablePresets
+        enableHistory
         enableQuickFilters
       />
 
-      <Paper withBorder p="xs" radius="md">
-        <Group justify="space-between">
-          <Text size="sm">
-            {filteredData.length} registros encontrados
+      {rsqlOutput && (
+        <Paper withBorder p="md" radius="md">
+          <Stack gap="xs">
+            <Group justify="space-between">
+              <Text size="sm" fw={500} c="dimmed">
+                RSQL gerado ({filters.length} filtro{filters.length !== 1 ? 's' : ''})
+              </Text>
+              <Button size="xs" variant="light" onClick={clearFilters}>
+                Limpar
+              </Button>
+            </Group>
+            <Code block style={{ fontSize: 12 }}>
+              {rsqlOutput}
+            </Code>
+          </Stack>
+        </Paper>
+      )}
+
+      <Paper withBorder p="md" radius="md">
+        <Stack gap="xs">
+          <Text size="sm" fw={500} c="dimmed">
+            Resultados ({filteredData.length} registro{filteredData.length !== 1 ? 's' : ''})
           </Text>
-          {rsqlOutput && (
-            <Code style={{ fontSize: 11 }}>{rsqlOutput}</Code>
-          )}
-        </Group>
+          <Text size="sm" c="dimmed">
+            Em uma aplicação real, o RSQL seria enviado para a API:
+          </Text>
+          <Code block style={{ fontSize: 11 }}>
+            {`GET /api/funcionarios?filter=${encodeURIComponent(rsqlOutput || '')}`}
+          </Code>
+        </Stack>
       </Paper>
 
-      <Paper withBorder p="0" radius="md" style={{ height: 300 }}>
-        <ArchbaseDataGrid<Funcionario, string>
-          dataSource={{
-            records: filteredData,
-            grandTotalRecords: filteredData.length,
-            currentPage: 1,
-            totalPages: 1,
-            pageSize: 10,
-          }}
-          columns={colunas}
-          height={300}
-          hideFooter
-        />
+      <Paper withBorder p="md" radius="md">
+        <Stack gap="xs">
+          <Text size="sm" fw={500}>Dados Filtrados:</Text>
+          {filteredData.length === 0 ? (
+            <Text size="sm" c="dimmed">Nenhum resultado encontrado</Text>
+          ) : (
+            filteredData.map(item => (
+              <Paper key={item.id} withBorder p="xs" radius="sm">
+                <Group justify="space-between">
+                  <Text size="sm">{item.nome}</Text>
+                  <Text size="xs" c="dimmed">{item.departamento} - R$ {item.salario}</Text>
+                </Group>
+              </Paper>
+            ))
+          )}
+        </Stack>
       </Paper>
     </Stack>
   );

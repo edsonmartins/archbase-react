@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1200">
+  <!-- Background -->
+  <rect width="1800" height="1200" fill="#f8f9fa"/>
+
+  <!-- Title -->
+  <text x="900" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#212529">
+    Fluxo de Autenticação - OAuth2 Authorization Code Flow com PKCE
+  </text>
+
+  <!-- Three columns: Cliente, Backend, OAuth2 -->
+  <rect x="100" y="100" width="500" height="1000" rx="15" fill="#e3f2fd" stroke="#1976d2" stroke-width="3"/>
+  <text x="350" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1976d2">
+    Cliente React
+  </text>
+
+  <rect x="650" y="100" width="500" height="1000" rx="15" fill="#fff3e0" stroke="#f57c00" stroke-width="3"/>
+  <text x="900" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#f57c00">
+    Backend API
+  </text>
+
+  <rect x="1200" y="100" width="500" height="1000" rx="15" fill="#e8f5e9" stroke="#388e3c" stroke-width="3"/>
+  <text x="1450" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#388e3c">
+    OAuth2 Server
+  </text>
+
+  <!-- Step 1: Login Request -->
+  <rect x="130" y="180" width="440" height="90" rx="8" fill="#fff" stroke="#1976d2" stroke-width="2"/>
+  <text x="350" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    1. User Click Login
+  </text>
+  <text x="350" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    loginWithContext({ email, password, context })
+  </text>
+  <text x="350" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    context: 'WEB_ADMIN' | 'STORE_APP' | ...
+  </text>
+
+  <!-- Arrow 1 -> 2 -->
+  <path d="M570 225 L630 225" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <rect x="580" y="190" width="80" height="25" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="620" y="207" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">POST</text>
+
+  <!-- Step 2: Validate Credentials -->
+  <rect x="680" y="180" width="440" height="90" rx="8" fill="#fff" stroke="#f57c00" stroke-width="2"/>
+  <text x="900" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    2. Validate Credentials
+  </text>
+  <text x="900" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Verify email/password
+  </text>
+  <text x="900" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Check X-TENANT-ID header
+  </text>
+
+  <!-- Arrow 2 -> 3 -->
+  <path d="M1120 225 L1180 225" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <rect x="1130" y="190" width="80" height="25" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="1170" y="207" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">POST</text>
+
+  <!-- Step 3: Generate Tokens -->
+  <rect x="1230" y="180" width="440" height="90" rx="8" fill="#fff" stroke="#388e3c" stroke-width="2"/>
+  <text x="1450" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    3. Generate Tokens
+  </text>
+  <text x="1450" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Access Token (JWT)
+  </text>
+  <text x="1450" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Refresh Token
+  </text>
+
+  <!-- Arrow 3 -> 2 -->
+  <path d="M1450 270 L1450 310 L920 310 L920 330" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <rect x="1050" y="298" width="200" height="25" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="1150" y="315" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">Tokens + Context + User</text>
+
+  <!-- Step 4: Load Context Data -->
+  <rect x="680" y="340" width="440" height="120" rx="8" fill="#fff" stroke="#f57c00" stroke-width="2"/>
+  <text x="900" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    4. Load Context Data
+  </text>
+  <text x="900" y="400" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Load user groups and permissions
+  </text>
+  <text x="900" y="420" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Build ContextObject with:
+  </text>
+  <text x="900" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">
+    type, role, status, permissions, modules
+  </text>
+
+  <!-- Arrow 2 -> 1 -->
+  <path d="M680 400 L590 400" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <rect x="600" y="365" width="60" height="25" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="630" y="382" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">200</text>
+
+  <!-- Step 5: Store Tokens -->
+  <rect x="130" y="370" width="440" height="150" rx="8" fill="#fff" stroke="#1976d2" stroke-width="2"/>
+  <text x="350" y="405" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    5. Store Response
+  </text>
+  <text x="350" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    localStorage.setItem('accessToken', token)
+  </text>
+  <text x="350" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    localStorage.setItem('refreshToken', refresh)
+  </text>
+  <text x="350" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    localStorage.setItem('userContext', context)
+  </text>
+  <text x="350" y="495" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    isAuthenticated = true
+  </text>
+
+  <!-- Authentication State Box -->
+  <rect x="150" y="570" width="400" height="80" rx="8" fill="#c8e6c9" stroke="#388e3c" stroke-width="2"/>
+  <text x="350" y="600" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#2e7d32">
+    Authenticated State
+  </text>
+  <text x="350" y="625" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#333">
+    User can now access protected resources
+  </text>
+
+  <!-- Refresh Flow Section -->
+  <text x="900" y="680" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">
+    Automatic Token Refresh
+  </text>
+
+  <!-- Step 6: Check Expiration -->
+  <rect x="130" y="720" width="440" height="100" rx="8" fill="#fff" stroke="#1976d2" stroke-width="2"/>
+  <text x="350" y="755" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    6. Periodic Check (30s)
+  </text>
+  <text x="350" y="780" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    isTokenExpired(token, 5min before expiry)
+  </text>
+  <text x="350" y="800" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    If expiring soon → trigger refresh
+  </text>
+
+  <!-- Arrow 6 -> 7 -->
+  <path d="M570 770 L630 770" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <rect x="575" y="735" width="90" height="25" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="620" y="752" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">refresh</text>
+
+  <!-- Step 7: Refresh Token -->
+  <rect x="680" y="720" width="440" height="100" rx="8" fill="#fff" stroke="#f57c00" stroke-width="2"/>
+  <text x="900" y="755" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    7. POST /auth/refresh
+  </text>
+  <text x="900" y="780" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Validate refresh_token
+  </text>
+  <text x="900" y="800" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Generate new access_token
+  </text>
+
+  <!-- Arrow 7 -> 8 -->
+  <path d="M1120 770 L1180 770" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Step 8: OAuth2 Validation -->
+  <rect x="1230" y="720" width="440" height="100" rx="8" fill="#fff" stroke="#388e3c" stroke-width="2"/>
+  <text x="1450" y="755" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    8. Validate &amp; Sign
+  </text>
+  <text x="1450" y="780" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Verify refresh token is valid
+  </text>
+  <text x="1450" y="800" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Issue new JWT access token
+  </text>
+
+  <!-- Return path -->
+  <path d="M1450 820 L1450 860 L920 860 L920 880" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Step 9: New Token -->
+  <rect x="680" y="890" width="440" height="90" rx="8" fill="#fff" stroke="#f57c00" stroke-width="2"/>
+  <text x="900" y="925" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    9. Return New Access Token
+  </text>
+  <text x="900" y="950" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    { access_token, expires_in }
+  </text>
+
+  <!-- Arrow 9 -> 10 -->
+  <path d="M680 935 L590 935" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <rect x="600" y="900" width="60" height="25" rx="4" fill="#fff" stroke="#333" stroke-width="1"/>
+  <text x="630" y="917" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#333">200</text>
+
+  <!-- Step 10: Update Storage -->
+  <rect x="130" y="890" width="440" height="90" rx="8" fill="#fff" stroke="#1976d2" stroke-width="2"/>
+  <text x="350" y="925" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    10. Update Token Storage
+  </text>
+  <text x="350" y="950" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    localStorage.setItem('accessToken', newToken)
+  </text>
+
+  <!-- Logout Flow -->
+  <text x="900" y="1020" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">
+    Logout Flow
+  </text>
+
+  <rect x="130" y="1050" width="1540" height="80" rx="8" fill="#ffebee" stroke="#c62828" stroke-width="2"/>
+  <text x="900" y="1080" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    logout() → POST /auth/logout → Clear localStorage → Set isAuthenticated = false
+  </text>
+  <text x="900" y="1105" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    Optionally: clearUsernameAndPassword() for &quot;forget me&quot; behavior
+  </text>
+
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+</svg>

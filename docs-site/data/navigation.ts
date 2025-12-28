@@ -19,6 +19,7 @@ export const NAVIGATION_DATA: NavItem[] = [
     children: [
       { label: 'Providers', href: '/core-concepts/providers' },
       { label: 'DataSource v2', href: '/core-concepts/datasource-v2' },
+      { label: 'Fluxo de Aprendizado', href: '/core-concepts/datasource-learning-path' },
       { label: 'Hooks', href: '/core-concepts/hooks' },
       { label: 'Validação', href: '/core-concepts/validation' },
       { label: 'i18n', href: '/core-concepts/i18n' },
@@ -99,6 +100,8 @@ export const NAVIGATION_DATA: NavItem[] = [
   {
     label: 'Security',
     children: [
+      { label: 'Security & Authentication', href: '/security/security' },
+      { label: 'Fluxo de Aprendizado', href: '/security/security-learning-path' },
       { label: 'Visão Geral', href: '/security/overview' },
       { label: 'Authentication', href: '/security/authentication' },
       { label: 'Authorization', href: '/security/authorization' },

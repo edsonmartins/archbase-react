@@ -26,6 +26,8 @@ import { ArchbaseRatingStylesApi } from './ArchbaseRating.styles-api';
 import { ArchbaseJsonEditStylesApi } from './ArchbaseJsonEdit.styles-api';
 import { ArchbaseOperationHoursEditorStylesApi } from './ArchbaseOperationHoursEditor.styles-api';
 import { ArchbaseCronExpressionEditStylesApi } from './ArchbaseCronExpressionEdit.styles-api';
+import { ArchbaseSpreadsheetImportStylesApi } from './ArchbaseSpreadsheetImport.styles-api';
+import { ArchbaseCompositeFiltersStylesApi } from './ArchbaseCompositeFilters.styles-api';
 
 // Exporta todas as Styles API
 export { ArchbaseEditStylesApi } from './ArchbaseEdit.styles-api';

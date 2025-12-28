@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ArchbaseDataGrid, Columns, ArchbaseDataGridColumn } from '@archbase/components';
-import { ArchbaseRemoteDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 import { Button, Group, Stack, Text, Code, Card, Box } from '@mantine/core';
 
 /**
@@ -75,21 +75,11 @@ const dadosExemplo: Funcionario[] = [
   },
 ];
 
-// Criar DataSource V2
-const createDataSource = () => {
-  const dataSource = new ArchbaseRemoteDataSourceV2<Funcionario>({
-    initialData: dadosExemplo,
-    keyField: 'id',
-  });
-
-  // Configurar paginação
-  dataSource.setPageSize(10);
-
-  return dataSource;
-};
-
 export function ArchbaseDataGridWithCompositeFilters() {
-  const [dataSource] = useState(() => createDataSource());
+  const { dataSource } = useArchbaseDataSource<Funcionario, string>({
+    initialData: dadosExemplo,
+    name: 'dsFuncionarioGrid',
+  });
   const [activeFilters, setActiveFilters] = useState<any[]>([]);
   const [currentRSQL, setCurrentRSQL] = useState<string>('');
 

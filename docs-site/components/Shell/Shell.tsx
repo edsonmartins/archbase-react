@@ -10,10 +10,10 @@ import {
   RemoveScroll,
   Text,
   useMantineColorScheme,
+  Image,
 } from '@mantine/core';
 import { useDisclosure, useHotkeys } from '@mantine/hooks';
 import { ColorSchemeControl, HeaderControls } from '@mantinex/mantine-header';
-import { MantineLogo } from '@mantinex/mantine-logo';
 import { meta } from '@mantinex/mantine-meta';
 import { Sidebar } from '../Sidebar/Sidebar';
 import classes from './Shell.module.css';
@@ -40,16 +40,19 @@ export function Shell({ children, currentPath }: ShellProps) {
       padding="md"
     >
       <AppShell.Header className={cx(RemoveScroll.classNames.zeroRight, classes.header)}>
-        <Container size="xl" px="md" className={classes.inner}>
+        <div className={classes.inner}>
           <Group>
             <Burger opened={opened} onClick={toggle} hiddenFrom="md" size="sm" />
             <a
-              href="https://mantine.dev/"
-              target="_blank"
+              href="/"
               className={cx('mantine-focus-auto', classes.logo)}
-              rel="noreferrer"
             >
-              <MantineLogo size={30} type="mark" />
+              <Image
+                src="/images/logo_archbase_single.png"
+                alt="Archbase React"
+                height={42}
+                fit="contain"
+              />
             </a>
             <Text className={classes.title}>Archbase React</Text>
           </Group>
@@ -66,7 +69,7 @@ export function Shell({ children, currentPath }: ShellProps) {
           <Group hiddenFrom="sm">
             <ColorSchemeControl />
           </Group>
-        </Container>
+        </div>
       </AppShell.Header>
 
       <AppShell.Navbar p="md">

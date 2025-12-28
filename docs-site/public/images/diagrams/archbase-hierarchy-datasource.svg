@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1980 1100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" style="stop-color:#0066CC;stop-opacity:1"/>
+      <stop offset="1" style="stop-color:#0099FF;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="gradCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" style="stop-color:#00BCD4;stop-opacity:1"/>
+      <stop offset="1" style="stop-color:#26C6DA;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3"/>
+    </filter>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#7CB342"/>
+    </marker>
+    <style>
+      @keyframes flow {
+        0% { stroke-dashoffset: 1000; }
+        100% { stroke-dashoffset: 0; }
+      }
+      .flow-line {
+        stroke-dasharray: 10 5;
+        animation: flow 3s linear infinite;
+      }
+    </style>
+  </defs>
+  <rect width="1800" height="1000" fill="#f0f4f8"/>
+  <text x="900" y="60" text-anchor="middle" font-size="48" font-weight="700" fill="#1e40af" font-family="system-ui" style="white-space: pre;">
+    GERENCIANDO HIERARQUIA DE DADOS COM DATASOURCE
+  </text>
+  <text x="900" y="95" text-anchor="middle" font-size="18" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    Master-Detail com Arrays Aninhados - DataSource V2
+  </text>
+  <line x1="300" y1="110" x2="1500" y2="110" stroke="url(#gradBlue)" stroke-width="3" opacity="0.3"/>
+  <g>
+    <rect x="30" y="150" width="420" height="800" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="30" y="150" width="420" height="50" rx="16" fill="url(#gradBlue)"/>
+    <text x="240" y="185" text-anchor="middle" font-size="22" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      📊 Estrutura Hierárquica
+    </text>
+    <g font-family="monospace" font-size="12">
+      <text x="50" y="230" fill="#1e293b" font-weight="700" style="white-space: pre;">□ { } 0</text>
+      <line x1="60" y1="235" x2="60" y2="430" stroke="#ef4444" stroke-width="3"/>
+      <text x="80" y="250" fill="#1e293b" font-weight="700" style="white-space: pre;">□ { } 0</text>
+      <text x="100" y="270" fill="#64748b" style="white-space: pre;">• id: 1</text>
+      <text x="100" y="290" fill="#64748b" style="white-space: pre;">• cliente: Cliente A</text>
+      <text x="100" y="310" fill="#64748b" style="white-space: pre;">• dataPedido: 2023-10-06T14:30:00</text>
+      <text x="100" y="335" fill="#f59e0b" font-weight="700" style="white-space: pre;">□ [ ] itensPedido</text>
+      <line x1="110" y1="340" x2="110" y2="410" stroke="#ef4444" stroke-width="2"/>
+      <text x="120" y="355" fill="#1e293b" font-weight="600" style="white-space: pre;">□ { } 0</text>
+      <text x="140" y="375" fill="#64748b" style="white-space: pre;">• idItem: 101</text>
+      <text x="140" y="390" fill="#64748b" style="white-space: pre;">• produto: Produto 1</text>
+      <text x="140" y="405" fill="#64748b" style="white-space: pre;">• quantidade: 3</text>
+      <text x="140" y="420" fill="#64748b" style="white-space: pre;">• precoUnitario: 10</text>
+      <text x="120" y="440" fill="#1e293b" font-weight="600" style="white-space: pre;">□ { } 1</text>
+      <text x="140" y="460" fill="#64748b" style="white-space: pre;">• idItem: 102</text>
+      <text x="140" y="475" fill="#64748b" style="white-space: pre;">• produto: Produto 2</text>
+      <text x="140" y="490" fill="#64748b" style="white-space: pre;">• quantidade: 2</text>
+      <text x="140" y="505" fill="#64748b" style="white-space: pre;">• precoUnitario: 15</text>
+      <text x="100" y="530" fill="#f59e0b" font-weight="700" style="white-space: pre;">□ [ ] parcelas</text>
+      <line x1="110" y1="535" x2="110" y2="605" stroke="#ef4444" stroke-width="2"/>
+      <text x="120" y="550" fill="#1e293b" font-weight="600" style="white-space: pre;">□ { } 0</text>
+      <text x="140" y="570" fill="#64748b" style="white-space: pre;">• numeroParcela: 1</text>
+      <text x="140" y="585" fill="#64748b" style="white-space: pre;">• valorParcela: 20</text>
+      <text x="140" y="600" fill="#64748b" style="white-space: pre;">• dataVencimento: 2023-11-06</text>
+      <text x="120" y="620" fill="#1e293b" font-weight="600" style="white-space: pre;">□ { } 1</text>
+      <text x="140" y="640" fill="#64748b" style="white-space: pre;">• numeroParcela: 2</text>
+      <text x="140" y="655" fill="#64748b" style="white-space: pre;">• valorParcela: 20</text>
+      <text x="140" y="670" fill="#64748b" style="white-space: pre;">• dataVencimento: 2023-12-06</text>
+      <text x="100" y="695" fill="#64748b" style="white-space: pre;">• totalPedido: 60</text>
+      <text x="50" y="730" fill="#1e293b" font-weight="700" style="white-space: pre;">□ { } 1</text>
+      <line x1="60" y1="735" x2="60" y2="910" stroke="#ef4444" stroke-width="3"/>
+      <text x="80" y="750" fill="#1e293b" font-weight="700" style="white-space: pre;">□ { } 0</text>
+      <text x="100" y="770" fill="#64748b" style="white-space: pre;">• id: 2</text>
+      <text x="100" y="790" fill="#64748b" style="white-space: pre;">• cliente: Cliente B</text>
+      <text x="100" y="810" fill="#64748b" style="white-space: pre;">• dataPedido: 2023-10-06T15:45:00</text>
+      <text x="100" y="835" fill="#f59e0b" font-weight="700" style="white-space: pre;">□ [ ] itensPedido</text>
+      <text x="100" y="860" fill="#f59e0b" font-weight="700" style="white-space: pre;">□ [ ] parcelas</text>
+      <text x="100" y="885" fill="#64748b" style="white-space: pre;">• totalPedido: 73</text>
+    </g>
+  </g>
+  <g transform="matrix(1, 0, 0, 1, 0, -30)">
+    <circle cx="900" cy="250" r="100" fill="url(#gradBlue)" filter="url(#shadow)"/>
+    <circle cx="900" cy="250" r="105" fill="none" stroke="#0066CC" stroke-width="2" opacity="0.3"/>
+    <text x="900" y="230" text-anchor="middle" font-size="13" fill="white" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      Archbase Remote
+    </text>
+    <text x="900" y="250" text-anchor="middle" font-size="13" fill="white" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      DataSource
+    </text>
+    <text x="900" y="275" text-anchor="middle" font-size="22" fill="#FFD700" font-weight="700" font-family="monospace" style="white-space: pre;">
+      dsPedidos
+    </text>
+    <rect x="850" y="305" width="100" height="24" rx="12" fill="rgba(255,255,255,0.3)"/>
+    <text x="900" y="322" text-anchor="middle" font-size="11" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      👑 MASTER
+    </text>
+  </g>
+  <g>
+    <rect x="500" y="400" width="1250" height="520" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="520" y="420" width="1210" height="40" rx="8" fill="#f1f5f9"/>
+    <line x1="620" y1="420" x2="620" y2="900" stroke="#cbd5e1" stroke-width="2"/>
+    <line x1="750" y1="420" x2="750" y2="900" stroke="#cbd5e1" stroke-width="2"/>
+    <line x1="850" y1="420" x2="850" y2="900" stroke="#ef4444" stroke-width="3"/>
+    <line x1="950" y1="460" x2="950" y2="680" stroke="#cbd5e1" stroke-width="1"/>
+    <line x1="1050" y1="460" x2="1050" y2="680" stroke="#cbd5e1" stroke-width="1"/>
+    <line x1="1150" y1="460" x2="1150" y2="680" stroke="#cbd5e1" stroke-width="1"/>
+    <line x1="1250" y1="420" x2="1250" y2="900" stroke="#ef4444" stroke-width="3"/>
+    <line x1="1350" y1="460" x2="1350" y2="680" stroke="#cbd5e1" stroke-width="1"/>
+    <line x1="1500" y1="460" x2="1500" y2="680" stroke="#cbd5e1" stroke-width="1"/>
+    <line x1="1650" y1="420" x2="1650" y2="900" stroke="#cbd5e1" stroke-width="2"/>
+    <line x1="520" y1="460" x2="1730" y2="460" stroke="#cbd5e1" stroke-width="2"/>
+    <line x1="520" y1="570" x2="1730" y2="570" stroke="#cbd5e1" stroke-width="1"/>
+    <line x1="520" y1="680" x2="1730" y2="680" stroke="#cbd5e1" stroke-width="2"/>
+    <line x1="520" y1="790" x2="1730" y2="790" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="570" y="445" text-anchor="middle" font-size="13" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      id
+    </text>
+    <text x="685" y="435" text-anchor="middle" font-size="13" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      cliente
+    </text>
+    <text x="685" y="455" text-anchor="middle" font-size="13" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      dataPedido
+    </text>
+    <text x="1050" y="445" text-anchor="middle" font-size="13" fill="#f59e0b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      itensPedido
+    </text>
+    <text x="900" y="485" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      idItem
+    </text>
+    <text x="1000" y="485" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      produto
+    </text>
+    <text x="1100" y="485" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      quantidade
+    </text>
+    <text x="1200" y="485" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      precoUnitario
+    </text>
+    <text x="1450" y="445" text-anchor="middle" font-size="13" fill="#f59e0b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      parcelas
+    </text>
+    <text x="1300" y="485" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      numeroParcela
+    </text>
+    <text x="1425" y="485" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      valorParcela
+    </text>
+    <text x="1575" y="485" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      dataVencimento
+    </text>
+    <text x="1690" y="445" text-anchor="middle" font-size="13" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      totalPedido
+    </text>
+    <text x="570" y="525" text-anchor="middle" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">1</text>
+    <text x="660" y="515" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">Cliente</text>
+    <text x="660" y="530" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">A</text>
+    <text x="760" y="515" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">2023-10-</text>
+    <text x="760" y="530" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">06T14:30:00</text>
+    <text x="900" y="515" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">101</text>
+    <text x="1000" y="505" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">Produto</text>
+    <text x="1000" y="520" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">1</text>
+    <text x="1100" y="515" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">3</text>
+    <text x="1200" y="515" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">10</text>
+    <text x="900" y="625" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">102</text>
+    <text x="1000" y="615" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">Produto</text>
+    <text x="1000" y="630" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">2</text>
+    <text x="1100" y="625" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">2</text>
+    <text x="1200" y="625" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">15</text>
+    <text x="1300" y="515" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">1</text>
+    <text x="1425" y="515" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">20</text>
+    <text x="1575" y="515" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">2023-11-06</text>
+    <text x="1300" y="625" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">2</text>
+    <text x="1425" y="625" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">20</text>
+    <text x="1575" y="625" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">2023-12-06</text>
+    <text x="1690" y="525" text-anchor="middle" font-size="12" fill="#0066CC" font-weight="700" font-family="system-ui" style="white-space: pre;">60</text>
+    <text x="570" y="735" text-anchor="middle" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">2</text>
+    <text x="660" y="725" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">Cliente</text>
+    <text x="660" y="740" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">B</text>
+    <text x="760" y="725" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">2023-10-</text>
+    <text x="760" y="740" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">06T15:45:00</text>
+    <text x="900" y="725" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">201</text>
+    <text x="1000" y="715" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">Produto</text>
+    <text x="1000" y="730" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">3</text>
+    <text x="1100" y="725" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">4</text>
+    <text x="1200" y="725" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">12</text>
+    <text x="900" y="835" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">202</text>
+    <text x="1000" y="825" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">Produto</text>
+    <text x="1000" y="840" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">4</text>
+    <text x="1100" y="835" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">1</text>
+    <text x="1200" y="835" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">25</text>
+    <text x="1300" y="725" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">1</text>
+    <text x="1425" y="725" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">30</text>
+    <text x="1575" y="725" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">2023-11-06</text>
+    <text x="1300" y="835" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">2</text>
+    <text x="1425" y="835" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">43</text>
+    <text x="1575" y="835" text-anchor="middle" font-size="11" fill="#64748b" font-family="system-ui" style="white-space: pre;">2023-12-06</text>
+    <text x="1690" y="735" text-anchor="middle" font-size="12" fill="#0066CC" font-weight="700" font-family="system-ui" style="white-space: pre;">73</text>
+    <rect x="850" y="380" width="150" height="30" rx="15" fill="#ef4444"/>
+    <text x="925" y="400" text-anchor="middle" font-size="13" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      itensPedido
+    </text>
+    <rect x="1250" y="380" width="120" height="30" rx="15" fill="#ef4444"/>
+    <text x="1310" y="400" text-anchor="middle" font-size="13" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      parcelas
+    </text>
+  </g>
+  <g>
+    <circle cx="900" cy="750" r="90" fill="url(#gradCyan)" filter="url(#shadow)"/>
+    <circle cx="900" cy="750" r="95" fill="none" stroke="#00BCD4" stroke-width="2" opacity="0.3"/>
+    <text x="900" y="735" text-anchor="middle" font-size="12" fill="white" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      Archbase
+    </text>
+    <text x="900" y="753" text-anchor="middle" font-size="12" fill="white" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      DataSource
+    </text>
+    <text x="900" y="775" text-anchor="middle" font-size="18" fill="#FFD700" font-weight="700" font-family="monospace" style="white-space: pre;">
+      dsPedidoItens
+    </text>
+    <rect x="855" y="800" width="90" height="22" rx="11" fill="rgba(255,255,255,0.3)"/>
+    <text x="900" y="815" text-anchor="middle" font-size="10" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      📋 DETAIL
+    </text>
+  </g>
+  <g>
+    <circle cx="1400" cy="750" r="90" fill="url(#gradCyan)" filter="url(#shadow)"/>
+    <circle cx="1400" cy="750" r="95" fill="none" stroke="#00BCD4" stroke-width="2" opacity="0.3"/>
+    <text x="1400" y="735" text-anchor="middle" font-size="12" fill="white" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      Archbase
+    </text>
+    <text x="1400" y="753" text-anchor="middle" font-size="12" fill="white" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      DataSource
+    </text>
+    <text x="1400" y="775" text-anchor="middle" font-size="17" fill="#FFD700" font-weight="700" font-family="monospace" style="white-space: pre;">
+      dsPedidoParcelas
+    </text>
+    <rect x="1350" y="800" width="100" height="22" rx="11" fill="rgba(255,255,255,0.3)"/>
+    <text x="1400" y="815" text-anchor="middle" font-size="10" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      📋 DETAIL
+    </text>
+  </g>
+  <path d="M 900 329 C 900 345.667 900 362.333 900 379" fill="none" stroke="#7CB342" stroke-width="6" marker-end="url(#arrowGreen)" class="flow-line"/>
+  <path d="M 900 660 Q 900 620 920 570" fill="none" stroke="#7CB342" stroke-width="5" marker-end="url(#arrowGreen)" class="flow-line"/>
+  <path d="M 850 460 Q 850 570 850 680" fill="none" stroke="#7CB342" stroke-width="4" opacity="0.6"/>
+  <path d="M 1250 460 Q 1250 570 1250 680" fill="none" stroke="#7CB342" stroke-width="4" opacity="0.6"/>
+  <path d="M 1400 660 Q 1400 620 1420 570" fill="none" stroke="#7CB342" stroke-width="5" marker-end="url(#arrowGreen)" class="flow-line"/>
+  <path d="M 1250 460 Q 1250 570 1250 680" fill="none" stroke="#7CB342" stroke-width="4" opacity="0.6"/>
+  <path d="M 1650 460 Q 1650 570 1650 680" fill="none" stroke="#7CB342" stroke-width="4" opacity="0.6"/>
+  <g>
+    <rect x="30" y="150" width="420" height="800" rx="16" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  </g>
+  <rect x="1450" y="150" width="320" height="220" rx="16" fill="white" filter="url(#shadow)"/>
+  <rect x="1450" y="150" width="320" height="45" rx="16" fill="url(#gradBlue)"/>
+  <text x="1610" y="180" text-anchor="middle" font-size="18" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    💡 Conceitos
+  </text>
+  <text x="1470" y="215" font-size="14" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    Master-Detail:
+  </text>
+  <text x="1480" y="238" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    • dsPedidos (master)
+  </text>
+  <text x="1480" y="258" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    • dsPedidoItens (detail array)
+  </text>
+  <text x="1480" y="278" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    • dsPedidoParcelas (detail array)
+  </text>
+  <text x="1470" y="308" font-size="14" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    Arrays Aninhados:
+  </text>
+  <text x="1480" y="331" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    • Operações type-safe V2
+  </text>
+  <text x="1480" y="351" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    • Sincronização automática
+  </text>
+</svg>

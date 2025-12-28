@@ -150,6 +150,102 @@ const columns = [
 />
 ```
 
+### Filtros Compostos (ArchbaseCompositeFilters)
+
+O ArchbaseDataGrid suporta filtros compostos avançados através do `ArchbaseCompositeFilters`, gerando saída RSQL para integração com APIs REST.
+
+```tsx
+import { ArchbaseDataGrid } from '@archbase/components';
+import type { ArchbaseFilterDefinition } from '@archbase/components';
+
+const filterDefinitions: ArchbaseFilterDefinition[] = [
+  { key: 'nome', label: 'Nome', type: 'text' },
+  { key: 'idade', label: 'Idade', type: 'integer' },
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'enum',
+    options: [
+      { value: 'ativo', label: 'Ativo' },
+      { value: 'inativo', label: 'Inativo' },
+    ],
+  },
+  { key: 'dataAdmissao', label: 'Data de Admissão', type: 'date' },
+];
+
+function GridComFiltros() {
+  const [activeFilters, setActiveFilters] = useState([]);
+
+  return (
+    <ArchbaseDataGrid
+      dataSource={dataSource}
+      columns={columns}
+      useCompositeFilters={true}
+      filterDefinitions={filterDefinitions}
+      activeFilters={activeFilters}
+      onFiltersChange={(filters, rsql) => {
+        setActiveFilters(filters);
+        console.log('RSQL gerado:', rsql);
+        /* Exemplo: "nome=like=*João*;idade>18;status==ativo" */
+      }}
+      hideMuiFilters={true}
+    />
+  );
+}
+```
+
+#### Tipos de Dados Suportados
+
+**Tipos de dados suportados pelo sistema de filtros:**
+
+- **text** - Texto simples: `contains`, `starts_with`, `ends_with`, `=`, `!=`
+- **integer** - Números inteiros: `=`, `!=`, `>`, `<`, `>=`, `<=`, `between`
+- **float** - Números decimais: `=`, `!=`, `>`, `<`, `>=`, `<=`, `between`
+- **currency** - Valores monetários: `=`, `!=`, `>`, `<`, `>=`, `<=`, `between`
+- **boolean** - Verdadeiro/Falso: `=`, `!=`
+- **date** - Data: `=`, `!=`, `>`, `<`, `>=`, `<=`, `date_before`, `date_after`
+- **datetime** - Data e hora: `=`, `!=`, `>`, `<`, `>=`, `<=`, `date_before`, `date_after`
+- **time** - Horário: `=`, `!=`, `>`, `<`, `>=`, `<=`
+- **enum** - Lista de opções: `=`, `!=`, `in`, `not_in`
+- **uuid** - Identificador único: `=`, `!=`
+
+#### Auto-geração de Filtros
+
+Se você não fornecer `filterDefinitions`, o DataGrid gera automaticamente a partir das colunas:
+
+```tsx
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  columns={columns}
+  useCompositeFilters={true}
+  // filterDefinitions será gerado automaticamente das colunas
+/>
+```
+
+#### Quick Filters
+
+Filtros pré-definidos podem ser configurados:
+
+```tsx
+const quickFilters = [
+  {
+    id: 'ativos',
+    name: 'Usuários Ativos',
+    filters: [
+      { key: 'ativo', label: 'Status', type: 'boolean', operator: '=', value: true },
+    ],
+  },
+];
+
+<ArchbaseDataGrid
+  useCompositeFilters={true}
+  filterDefinitions={filterDefinitions}
+  quickFilters={quickFilters}
+/>
+```
+
+Veja a documentação completa de [ArchbaseCompositeFilters](/components/filters/archbase-composite-filters).
+
 ### Paginação
 
 ```tsx

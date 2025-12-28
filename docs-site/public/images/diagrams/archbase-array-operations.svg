@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1760 1100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradArray" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" style="stop-color:#9C27B0;stop-opacity:1"/>
+      <stop offset="1" style="stop-color:#BA68C8;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="gradCode" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0" style="stop-color:#263238;stop-opacity:1"/>
+      <stop offset="1" style="stop-color:#37474F;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1000" fill="#f8fafc"/>
+  <text x="800" y="60" text-anchor="middle" font-size="48" font-weight="700" fill="#1e293b" font-family="system-ui" style="white-space: pre;">
+    Operações em Arrays - DataSource V2
+  </text>
+  <text x="800" y="100" text-anchor="middle" font-size="20" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    Type-Safe Array Operations com Imutabilidade Garantida
+  </text>
+  <rect x="650" y="115" width="300" height="40" rx="20" fill="#9C27B0" filter="url(#shadow)"/>
+  <text x="800" y="143" text-anchor="middle" font-size="16" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    🆕 EXCLUSIVE V2 FEATURE
+  </text>
+  <g>
+    <rect x="50" y="180" width="600" height="780" rx="20" fill="white" filter="url(#shadow)"/>
+    <rect x="50" y="180" width="600" height="60" rx="20" fill="url(#gradArray)"/>
+    <text x="350" y="220" text-anchor="middle" font-size="24" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      📦 Estrutura de Dados
+    </text>
+    <rect x="70" y="260" width="560" height="680" rx="12" fill="url(#gradCode)"/>
+    <text x="90" y="290" font-size="14" fill="#7CB342" font-weight="600" font-family="monospace" style="white-space: pre;">
+      interface Pedido {
+    </text>
+    <text x="110" y="315" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      id: number;
+    </text>
+    <text x="110" y="340" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      cliente: string;
+    </text>
+    <text x="110" y="365" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      dataPedido: Date;
+    </text>
+    <text x="110" y="395" font-size="13" fill="#FFD54F" font-weight="600" font-family="monospace" style="white-space: pre;">
+      itens: ItemPedido[];     // 🎯 Array
+    </text>
+    <text x="110" y="420" font-size="13" fill="#FFD54F" font-weight="600" font-family="monospace" style="white-space: pre;">
+      parcelas: Parcela[];     // 🎯 Array
+    </text>
+    <text x="110" y="445" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      totalPedido: number;
+    </text>
+    <text x="90" y="470" font-size="14" fill="#7CB342" font-weight="600" font-family="monospace" style="white-space: pre;">
+      }
+    </text>
+    <text x="90" y="510" font-size="14" fill="#7CB342" font-weight="600" font-family="monospace" style="white-space: pre;">
+      interface ItemPedido {
+    </text>
+    <text x="110" y="535" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      id: number;
+    </text>
+    <text x="110" y="560" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      produto: string;
+    </text>
+    <text x="110" y="585" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      quantidade: number;
+    </text>
+    <text x="110" y="610" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      precoUnitario: number;
+    </text>
+    <text x="110" y="635" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      subtotal: number;
+    </text>
+    <text x="90" y="660" font-size="14" fill="#7CB342" font-weight="600" font-family="monospace" style="white-space: pre;">
+      }
+    </text>
+    <text x="90" y="700" font-size="14" fill="#7CB342" font-weight="600" font-family="monospace" style="white-space: pre;">
+      interface Parcela {
+    </text>
+    <text x="110" y="725" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      numeroParcela: number;
+    </text>
+    <text x="110" y="750" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      valorParcela: number;
+    </text>
+    <text x="110" y="775" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      dataVencimento: Date;
+    </text>
+    <text x="110" y="800" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      pago: boolean;
+    </text>
+    <text x="90" y="825" font-size="14" fill="#7CB342" font-weight="600" font-family="monospace" style="white-space: pre;">
+      }
+    </text>
+    <rect x="81" y="860" width="540" height="60" rx="8" fill="rgba(156, 39, 176, 0.1)" stroke="#9C27B0" stroke-width="2"/>
+    <text x="360" y="883" text-anchor="middle" font-size="13" fill="#9C27B0" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      💡 Campos do tipo Array podem ser manipulados
+    </text>
+    <text x="360" y="905" text-anchor="middle" font-size="13" fill="#9C27B0" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      com type-safety usando operações específicas V2
+    </text>
+  </g>
+  <g>
+    <rect x="700" y="180" width="850" height="185" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="700" y="180" width="850" height="50" rx="16" fill="#9C27B0"/>
+    <text x="1125" y="213" text-anchor="middle" font-size="20" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      1️⃣ appendToFieldArray()
+    </text>
+    <rect x="720" y="250" width="400" height="95" rx="10" fill="url(#gradCode)"/>
+    <text x="740" y="275" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
+      dsPedidos.appendToFieldArray(
+    </text>
+    <text x="750" y="295" font-size="13" fill="#FFD54F" font-family="monospace" style="white-space: pre;">
+      'itens',
+    </text>
+    <text x="750" y="315" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      { produto: 'Item X', quantidade: 1 }
+    </text>
+    <text x="740" y="335" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
+      );
+    </text>
+    <rect x="1140" y="250" width="390" height="95" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="1160" y="275" font-size="14" fill="#1e293b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      📌 Adiciona item ao final
+    </text>
+    <text x="1160" y="300" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Type-safe: item deve ser ItemPedido
+    </text>
+    <text x="1160" y="320" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Imutável: novo array criado
+    </text>
+    <text x="1160" y="340" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Emite: fieldChanged event
+    </text>
+  </g>
+  <g>
+    <rect x="700" y="385" width="850" height="185" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="700" y="385" width="850" height="50" rx="16" fill="#9C27B0"/>
+    <text x="1125" y="418" text-anchor="middle" font-size="20" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      2️⃣ updateFieldArrayItem()
+    </text>
+    <rect x="720" y="455" width="400" height="95" rx="10" fill="url(#gradCode)"/>
+    <text x="740" y="480" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
+      dsPedidos.updateFieldArrayItem(
+    </text>
+    <text x="750" y="500" font-size="13" fill="#FFD54F" font-family="monospace" style="white-space: pre;">
+      'itens', 0, draft =&gt; {
+    </text>
+    <text x="760" y="520" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      draft.quantidade = 5;
+    </text>
+    <text x="750" y="540" font-size="13" fill="#FFD54F" font-family="monospace" style="white-space: pre;">
+      });
+    </text>
+    <rect x="1140" y="455" width="390" height="95" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="1160" y="480" font-size="14" fill="#1e293b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      📌 Atualiza item por índice
+    </text>
+    <text x="1160" y="505" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Updater com Immer draft
+    </text>
+    <text x="1160" y="525" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Mutação segura do draft
+    </text>
+    <text x="1160" y="545" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Original permanece imutável
+    </text>
+  </g>
+  <g>
+    <rect x="700" y="590" width="850" height="165" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="700" y="590" width="850" height="50" rx="16" fill="#9C27B0"/>
+    <text x="1125" y="623" text-anchor="middle" font-size="20" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      3️⃣ removeFromFieldArray()
+    </text>
+    <rect x="720" y="660" width="400" height="75" rx="10" fill="url(#gradCode)"/>
+    <text x="740" y="685" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
+      dsPedidos.removeFromFieldArray(
+    </text>
+    <text x="750" y="705" font-size="13" fill="#FFD54F" font-family="monospace" style="white-space: pre;">
+      'itens', 0
+    </text>
+    <text x="740" y="725" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
+      );
+    </text>
+    <rect x="1140" y="660" width="390" height="75" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="1160" y="685" font-size="14" fill="#1e293b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      📌 Remove item por índice
+    </text>
+    <text x="1160" y="710" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Splice com imutabilidade
+    </text>
+    <text x="1160" y="730" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Índice ajustado automaticamente
+    </text>
+  </g>
+  <g>
+    <rect x="700" y="775" width="850" height="185" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="700" y="775" width="850" height="50" rx="16" fill="#9C27B0"/>
+    <text x="1125" y="808" text-anchor="middle" font-size="20" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      4️⃣ insertIntoFieldArray()
+    </text>
+    <rect x="720" y="845" width="400" height="95" rx="10" fill="url(#gradCode)"/>
+    <text x="740" y="870" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
+      dsPedidos.insertIntoFieldArray(
+    </text>
+    <text x="750" y="890" font-size="13" fill="#FFD54F" font-family="monospace" style="white-space: pre;">
+      'itens', 2,
+    </text>
+    <text x="750" y="910" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      { produto: 'Item Y', quantidade: 3 }
+    </text>
+    <text x="740" y="930" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
+      );
+    </text>
+    <rect x="1140" y="845" width="390" height="95" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="1160" y="870" font-size="14" fill="#1e293b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+      📌 Insere em posição específica
+    </text>
+    <text x="1160" y="895" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Item inserido no índice especificado
+    </text>
+    <text x="1160" y="915" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Itens posteriores deslocados
+    </text>
+    <text x="1160" y="935" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Type-safe e imutável
+    </text>
+  </g>
+  <rect x="50" y="980" width="1500" height="2" fill="#cbd5e1"/>
+</svg>

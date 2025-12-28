@@ -1,11 +1,10 @@
-
 # DataSource V2
 
-O DataSource V2 é o sistema central de gerenciamento de dados do Archbase React. Ele controla o estado dos registros, navegação, edição e sincronização com a interface.
+O DataSource V2 é o sistema central de gerenciamento de dados do Archbase React. Ele controla o estado dos registros, navegação, edição e sincronização com a interface, proporcionando uma experiência de desenvolvimento produtiva para aplicações empresariais.
 
-## Conceito
+## O Que é DataSource?
 
-O DataSource V2 funciona como uma camada de abstração entre seus dados e os componentes de UI. Ele gerencia:
+DataSource é uma **camada de abstração entre seus dados e os componentes de UI** que gerencia automaticamente:
 
 - **Estado dos dados** (browsing, editing, inserting)
 - **Navegação** entre registros
@@ -13,9 +12,117 @@ O DataSource V2 funciona como uma camada de abstração entre seus dados e os co
 - **Validação** de dados
 - **Eventos** de mudança de estado
 
+### Por Que Usar DataSource?
+
+O DataSource resolve um problema fundamental em aplicações empresariais: **como gerenciar estado complexo de formulários de forma consistente e produtiva**.
+
+```tsx
+// Sem DataSource - código manual repetitivo
+const [nome, setNome] = useState('');
+const [email, setEmail] = useState('');
+const [idade, setIdade] = useState('');
+// ... getters/setters para cada campo
+// Validação manual
+// Sincronização manual entre componentes
+
+// Com DataSource - zero boilerplate
+<ArchbaseEdit dataSource={ds} dataField="nome" />
+<ArchbaseEdit dataSource={ds} dataField="email" />
+<ArchbaseNumberEdit dataSource={ds} dataField="idade" />
+// Tudo sincronizado automaticamente!
+```
+
+## Arquitetura
+
+O DataSource segue uma arquitetura de **três camadas** que separa responsabilidades de forma clara:
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Componentes   │◄───┤   DataSource     │◄───┤    Service      │
+│ (Apresentação)  │    │ (Lógica/Estado)  │    │ (Comunicação)   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
+
+![Arquitetura Completa](/images/diagrams/archbase-complete-architecture.png)
+
+- **Componentes**: Focam apenas em apresentação
+- **DataSource**: Centraliza lógica de negócio e estado
+- **Service**: Isola comunicação com APIs
+
+Esta separação proporciona:
+- **Maior testabilidade** - Cada camada pode ser testada independentemente
+- **Melhor manutenibilidade** - Mudanças em uma camada não afetam as outras
+- **Reutilização** - DataSource pode ser usado por diferentes componentes
+
+## Comparação com Alternativas
+
+| Biblioteca | Foco Principal | Navegação | Estados Edição | Validação | Master-Detail |
+|------------|----------------|-----------|----------------|-----------|---------------|
+| React Query | Cache/Fetch | ❌ | ❌ | ❌ | ❌ |
+| Zustand | Estado Global | ❌ | ❌ | ❌ | ❌ |
+| Redux Toolkit | Estado + Cache | ❌ | ❌ | ❌ | ❌ |
+| SWR | Cache/Fetch | ❌ | ❌ | ❌ | ❌ |
+| **DataSource V2** | **Forms Enterprise** | ✅ | ✅ | ✅ | ✅ |
+
+O DataSource se destaca em **cenários empresariais** onde formulários complexos, navegação entre registros e estados de edição são requisitos comuns.
+
+## Comparação DataSource V1 vs V2
+
+O DataSource V2 mantém compatibilidade com V1, mas adiciona recursos significativos:
+
+| Aspecto | V1 | V2 |
+|---------|----|----|
+| **Imutabilidade** | Manual (devolver novo objeto) | Automática (Immer) |
+| **Arrays** | `setFieldValue()` | Operações type-safe específicas |
+| **Estados** | Implícito | Explícito (browse/edit/insert) |
+| **Performance** | Boa | Otimizada (memoização, refs) |
+| **Type Safety** | Parcial | Completa com generics |
+| **Hooks** | Básico | Completo com otimizações |
+| **Remote** | Básico | Avançado (paginação, filtros) |
+| **Backup** | Manual | Automático no modo edit |
+
+### Migrando de V1 para V2
+
+```tsx
+// V1 - modo antigo
+const dataSource = new ArchbaseDataSource<Pessoa>({ ... });
+// Manual: precisa devolver novo objeto em callbacks
+
+// V2 - modo recomendado
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({ ... });
+// Automático: Immer garante imutabilidade
+```
+
+## Estados do DataSource
+
+O DataSource possui três estados principais que controlam como os dados podem ser manipulados:
+
+![Estados do DataSource](/images/diagrams/archbase-datasource-states.png)
+
+| Estado | Descrição | Operações Permitidas |
+|--------|-----------|----------------------|
+| `isBrowsing` | Navegando pelos registros (modo leitura) | Navegação, iniciar edição/inserção |
+| `isEditing` | Editando um registro existente | Alterar campos, salvar, cancelar |
+| `isInserting` | Inserindo um novo registro | Alterar campos, salvar, cancelar |
+| `isEmpty` | Não há registros no DataSource | - |
+
+```tsx
+if (dataSource.isBrowsing()) {
+  // Mostrar botões de Editar/Excluir
+  // Campos desabilitados (somente leitura)
+}
+
+if (dataSource.isEditing() || dataSource.isInserting()) {
+  // Mostrar botões de Salvar/Cancelar
+  // Campos habilitados para edição
+}
+```
+
 ## Hook useArchbaseDataSourceV2
 
 O hook `useArchbaseDataSourceV2` é a forma principal de criar e usar um DataSource.
+
+### Uso Básico
 
 ```tsx
 import { useArchbaseDataSourceV2 } from '@archbase/data';
@@ -45,7 +152,7 @@ function MeuFormulario() {
     last,
     goTo,
   } = useArchbaseDataSourceV2<Pessoa>({
-    initialData: [],
+    initialData: pessoas,
     name: 'pessoas-datasource',
   });
 
@@ -60,30 +167,107 @@ function MeuFormulario() {
 }
 ```
 
-## Estados do DataSource
+### Opções de Configuração
 
-| Estado | Descrição |
-|--------|-----------|
-| `isBrowsing` | Navegando pelos registros (modo leitura) |
-| `isEditing` | Editando um registro existente |
-| `isInserting` | Inserindo um novo registro |
-| `isEmpty` | Não há registros no DataSource |
+```tsx
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+  // Dados iniciais
+  initialData: pessoas,
+
+  // Nome único do DataSource (para debugging e store)
+  name: 'pessoas-datasource',
+
+  // Campo que identifica o registro (opcional)
+  primaryKey: 'id',
+
+  // Índice inicial (padrão: 0)
+  initialIndex: 0,
+
+  // Callbacks de eventos
+  onDataChanged: (data) => console.log('Dados alterados', data),
+  onStateChanged: (state) => console.log('Estado alterado', state),
+  onError: (error) => console.error('Erro', error),
+});
+```
+
+### Variações de Hooks
+
+O DataSource V2 oferece hooks especializados para diferentes casos de uso.
+
+#### Hooks por Cenário de Uso
+
+| Hook | Descrição | Quando Usar |
+|------|-----------|-------------|
+| `useArchbaseDataSourceV2` | Hook completo | Casos gerais, CRUD completo |
+| `useArchbaseDataSourceV2ReadOnly` | Apenas leitura | Telas de visualização, relatórios |
+| `useArchbaseDataSourceV2Editor` | Focado em edição | Formulários de edição/criação |
+
+```tsx
+// Hook completo - todas as operações
+const { dataSource, edit, save, cancel } = useArchbaseDataSourceV2<Pessoa>({
+  name: 'pessoas',
+  initialData: pessoas,
+});
+
+// Hook apenas leitura - otimizado para visualização
+const { dataSource, currentRecord } = useArchbaseDataSourceV2ReadOnly<Pessoa>({
+  name: 'pessoas-readonly',
+  initialData: pessoas,
+});
+
+// Hook para edição - focado em operações de modificação
+const { dataSource, insert, edit, save } = useArchbaseDataSourceV2Editor<Pessoa>({
+  name: 'pessoas-editor',
+  initialData: pessoas,
+});
+```
+
+#### Hooks Remotos
+
+Para trabalhar com dados do backend, use os hooks remotos:
+
+| Hook | Descrição |
+|------|-----------|
+| `useArchbaseRemoteDataSourceV2` | Remote completo |
+| `useArchbaseRemoteDataSourceV2ReadOnly` | Remote apenas leitura |
+| `useArchbaseRemoteDataSourceV2Editor` | Remote para edição |
+
+```tsx
+import { useArchbaseRemoteDataSourceV2 } from '@archbase/data';
+
+// Remote completo - com paginação e filtros
+const { dataSource } = useArchbaseRemoteDataSourceV2<Pessoa, string>({
+  name: 'pessoas-remote',
+  apiService: pessoaApiService,      // Serviço de API
+  initialPageSize: 50,                // Tamanho da página
+  autoLoad: true,                     // Carregar dados automaticamente
+});
+
+// Remote apenas leitura - otimizado para listas
+const { dataSource } = useArchbaseRemoteDataSourceV2ReadOnly<Pessoa, string>({
+  name: 'pessoas-list',
+  apiService: pessoaApiService,
+  initialPageSize: 100,
+});
+```
 
 ## Ações Disponíveis
 
 ### Manipulação de Registros
 
-| Ação | Descrição |
-|------|-----------|
-| `insert(data)` | Inicia inserção de novo registro |
-| `edit()` | Inicia edição do registro atual |
-| `save()` | Salva as alterações (retorna Promise) |
-| `cancel()` | Cancela a operação atual |
-| `remove()` | Remove o registro atual |
+| Método | Descrição | Retorno |
+|--------|-----------|---------|
+| `insert(data)` | Inicia inserção de novo registro | `void` |
+| `edit()` | Inicia edição do registro atual | `void` |
+| `save()` | Salva as alterações | `Promise<void>` |
+| `cancel()` | Cancela a operação atual | `void` |
+| `remove()` | Remove o registro atual | `Promise<void>` |
+| `getFieldValue(field)` | Obtém valor de um campo | `T[key]` |
+| `setFieldValue(field, value)` | Define valor de um campo | `void` |
 
 ### Navegação
 
-| Ação | Descrição |
+| Método | Descrição |
 |------|-----------|
 | `first()` | Vai para o primeiro registro |
 | `prior()` | Vai para o registro anterior |
@@ -91,32 +275,129 @@ function MeuFormulario() {
 | `last()` | Vai para o último registro |
 | `goTo(index)` | Vai para um índice específico |
 
-## Opções de Configuração
+### Consultas
+
+| Método | Descrição |
+|------|-----------|
+| `getCurrentRecord()` | Obtém o registro atual |
+| `getCurrentIndex()` | Obtém o índice atual |
+| `getData()` | Obtém todos os registros |
+| `getTotalRecords()` | Obtém total de registros |
+| `isBOF()` | Verifica se está no início |
+| `isEOF()` | Verifica se está no fim |
+
+## Local vs Remote DataSource
+
+O DataSource V2 possui duas implementações para diferentes cenários de uso.
+
+### ArchbaseDataSourceV2 - Local
+
+O `ArchbaseDataSourceV2` (Local) mantém todos os dados em memória.
+
+**Ideal para:**
+- Formulários simples com dados já carregados
+- Edição de registros individuais
+- Operações CRUD em memória
+- Dados que não mudam frequentemente
+
+**Características:**
+- Dados mantidos inteiramente em memória
+- Sem paginação (todos os registros disponíveis)
+- Operações síncronas
+- Performance máxima
+- Menor complexidade
 
 ```tsx
 const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
-  // Dados iniciais
-  initialData: pessoas,
-
-  // Nome único do DataSource
-  name: 'pessoas-datasource',
-
-  // Campo que identifica o registro
-  primaryKey: 'id',
-
-  // Índice inicial
-  initialIndex: 0,
-
-  // Callbacks
-  onDataChanged: (data) => console.log('Dados alterados', data),
-  onStateChanged: (state) => console.log('Estado alterado', state),
-  onError: (error) => console.error('Erro', error),
+  name: 'pessoas-local',
+  initialData: [
+    { id: 1, nome: 'João', email: 'joao@example.com' },
+    { id: 2, nome: 'Maria', email: 'maria@example.com' },
+  ],
 });
+```
+
+### ArchbaseRemoteDataSourceV2 - Remote
+
+O `ArchbaseRemoteDataSourceV2` (Remote) conecta-se a um backend via API.
+
+**Ideal para:**
+- Listas grandes (milhares ou milhões de registros)
+- CRUD completo com backend
+- Filtros complexos no servidor
+- Dados que mudam frequentemente
+
+**Características:**
+- Dados do backend via `ArchbaseRemoteApiService`
+- Paginação completa (currentPage, pageSize, grandTotalRecords)
+- Filtragem RSQL no servidor
+- Cache otimizado com `records` e `filteredRecords`
+- Operações assíncronas
+
+```tsx
+const { dataSource } = useArchbaseRemoteDataSourceV2<Pessoa, string>({
+  name: 'pessoas-remote',
+  apiService: pessoaApiService,
+  initialPageSize: 50,
+});
+```
+
+### Comparação Resumida
+
+| Característica | Local | Remote |
+|----------------|-------|--------|
+| **Dados** | Memória | Backend API |
+| **Paginação** | Não | Sim |
+| **Filtros** | Local (em memória) | RSQL no servidor |
+| **Operações** | Síncronas | Assíncronas (Promises) |
+| **Performance** | Máximo | Otimizado com cache |
+| **Complexidade** | Simples | Requer service |
+
+## Paginação e Filtragem (Remote)
+
+### Paginação
+
+O `ArchbaseRemoteDataSourceV2` gerencia paginação automaticamente:
+
+```tsx
+// Propriedades de paginação
+dataSource.currentPage         // Página atual (1-based)
+dataSource.pageSize            // Registros por página
+dataSource.grandTotalRecords   // Total no servidor
+dataSource.totalRecords        // Total na página atual
+
+// Métodos de paginação
+dataSource.setPageSize(100);              // Define tamanho da página
+dataSource.goToPage(5);                   // Vai para página específica
+dataSource.refreshData();                 // Recarrega página atual
+```
+
+### Filtragem
+
+O RemoteDataSource suporta três tipos de filtro RSQL:
+
+| Tipo | Uso | Exemplo |
+|------|-----|---------|
+| **QUICK** | Busca rápida por texto | `nome=like=*João*` |
+| **NORMAL** | Filtros estruturados | `idade>18;status==ativo` |
+| **ADVANCED** | RSQL completo | `data>=2023-01-01;valor=in=(100,200,300)` |
+
+```tsx
+// Aplicar filtro
+dataSource.applyRemoteFilter(
+  { filterType: 'QUICK', value: 'João' },
+  1,  // voltar para página 1
+  () => console.log('Filtro aplicado')
+);
+
+// Obter dados filtrados
+const filtered = dataSource.getDataWithFilter();
+const rsql = dataSource.getDataWithRsqlFilter();
 ```
 
 ## Binding com Componentes
 
-Todos os componentes de formulário do Archbase aceitam `dataSource` e `dataField`:
+Todos os componentes de formulário do Archbase aceitam `dataSource` e `dataField` para binding automático:
 
 ```tsx
 <ArchbaseEdit
@@ -137,14 +418,554 @@ Todos os componentes de formulário do Archbase aceitam `dataSource` e `dataFiel
   dataField="dataNascimento"
   label="Data de Nascimento"
 />
+
+<ArchbaseNumberEdit
+  dataSource={dataSource}
+  dataField="salario"
+  label="Salário"
+/>
+
+<ArchbaseCheckbox
+  dataSource={dataSource}
+  dataField="ativo"
+  label="Ativo"
+/>
 ```
+
+### Componentes Habilitados/Desabilitados por Estado
+
+```tsx
+<ArchbaseEdit
+  dataSource={dataSource}
+  dataField="nome"
+  // Quando isBrowsing: desabilitado automaticamente
+  // Quando isEditing/isInserting: habilitado automaticamente
+/>
+
+<ArchbaseDatePickerEdit
+  dataSource={dataSource}
+  dataField="dataNascimento"
+  disabled={isBrowsing}  // Controle manual se necessário
+/>
+```
+
+## Sistema de Eventos
+
+O DataSource emite eventos que podem ser monitorados para adicionar lógica customizada:
+
+```tsx
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+  onBeforeSave: (record) => {
+    console.log('Antes de salvar:', record);
+    // Retornar false para cancelar o save
+    return true;
+  },
+  onAfterSave: (record) => {
+    console.log('Depois de salvar:', record);
+    toast.success('Registro salvo!');
+  },
+  onBeforeEdit: (record) => {
+    console.log('Antes de editar:', record);
+  },
+  onAfterEdit: (record) => {
+    console.log('Depois de editar:', record);
+  },
+  onBeforeRemove: (record) => {
+    console.log('Antes de remover:', record);
+    // Retornar false para cancelar a remoção
+    return confirm('Deseja remover este registro?');
+  },
+  onAfterRemove: () => {
+    console.log('Depois de remover');
+    toast.success('Registro removido!');
+  },
+  onRecordChanged: (record) => {
+    console.log('Registro atual mudou:', record);
+  },
+  onFieldChanged: (field, value) => {
+    console.log('Campo alterado:', field, '=', value);
+  },
+});
+```
+
+### Eventos do Ciclo de Vida
+
+| Evento | Quando Disparado | Parâmetros | Cancelável |
+|--------|-----------------|------------|------------|
+| `onBeforeEdit` | Antes de iniciar edição | `(record)` | Sim (return false) |
+| `onAfterEdit` | Após entrar em modo edição | `(record)` | Não |
+| `onBeforeInsert` | Antes de iniciar inserção | `(record)` | Sim (return false) |
+| `onAfterInsert` | Após entrar em modo inserção | `(record)` | Não |
+| `onBeforeSave` | Antes de salvar | `(record)` | Sim (return false) |
+| `onAfterSave` | Após salvar com sucesso | `(record)` | Não |
+| `onBeforeRemove` | Antes de remover | `(record)` | Sim (return false) |
+| `onAfterRemove` | Após remover com sucesso | `()` | Não |
+| `onAfterCancel` | Após cancelar operação | `()` | Não |
+
+### Eventos de Dados
+
+| Evento | Quando Disparado | Parâmetros |
+|--------|-----------------|------------|
+| `onDataChanged` | Quando os registros mudam | `(data: T[])` |
+| `onRecordChanged` | Quando o registro atual muda | `(record: T \| null)` |
+| `onFieldChanged` | Quando um campo é alterado | `(field: string, value: any)` |
+| `onAfterScroll` | Após navegar para outro registro | `(index: number)` |
+| `onRefreshData` | Após recarregar dados | `()` |
+
+### Eventos de Erro
+
+| Evento | Quando Disparado | Parâmetros |
+|--------|-----------------|------------|
+| `onError` | Erro geral de operação | `(message: string, originalError?: any)` |
+| `onFieldError` | Erro de validação de campo | `(field: string, message: string)` |
+
+```tsx
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+  // Eventos de erro
+  onError: (message, originalError) => {
+    console.error('Erro:', message, originalError);
+    toast.error(message);
+  },
+  onFieldError: (field, message) => {
+    console.error(`Erro em ${field}:`, message);
+    // Mostrar erro no campo específico
+  },
+
+  // Eventos de dados
+  onAfterScroll: (index) => {
+    console.log('Navegou para índice:', index);
+  },
+  onRefreshData: () => {
+    console.log('Dados recarregados');
+  },
+});
+```
+
+## Operações em Arrays
+
+O DataSource V2 oferece operações **type-safe** para manipular campos que são arrays - um recurso exclusivo que facilita trabalhar com estruturas de dados aninhadas.
+
+![Operações em Arrays](/images/diagrams/archbase-array-operations.png)
+
+### Métodos Disponíveis
+
+| Método | Descrição |
+|--------|-----------|
+| `appendToFieldArray(field, item)` | Adiciona um item ao final do array |
+| `updateFieldArrayItem(field, index, updater)` | Atualiza um item específico usando Immer |
+| `removeFromFieldArray(field, index)` | Remove um item por índice |
+| `insertIntoFieldArray(field, index, item)` | Insere um item em uma posição específica |
+| `getFieldArray(field)` | Retorna o array completo |
+| `isFieldArray(field)` | Verifica se um campo é um array |
+
+### Exemplo Prático
+
+```tsx
+interface Pedido {
+  id: number;
+  cliente: string;
+  itens: ItemPedido[];
+  total: number;
+}
+
+interface ItemPedido {
+  produto: string;
+  quantidade: number;
+  preco: number;
+}
+
+function PedidoForm() {
+  const { dataSource } = useArchbaseDataSourceV2<Pedido>({
+    initialData: [{ id: 1, cliente: '', itens: [], total: 0 }],
+    name: 'pedidos-ds',
+  });
+
+  // Adicionar novo item
+  const adicionarItem = () => {
+    dataSource.appendToFieldArray('itens', {
+      produto: '',
+      quantidade: 1,
+      preco: 0,
+    });
+  };
+
+  // Atualizar item (com Immer - mutabilidade aparente)
+  const atualizarQuantidade = (index: number, novaQtd: number) => {
+    dataSource.updateFieldArrayItem('itens', index, (draft) => {
+      draft.quantidade = novaQtd;
+      draft.preco = draft.quantidade * 10; // Recalcula preço
+    });
+  };
+
+  // Remover item
+  const removerItem = (index: number) => {
+    dataSource.removeFromFieldArray('itens', index);
+  };
+
+  return (
+    <>
+      <Button onClick={adicionarItem}>Adicionar Item</Button>
+
+      {dataSource.getFieldArray('itens')?.map((item, index) => (
+        <Group key={index}>
+          <Text>{item.produto}</Text>
+          <Text>{item.quantidade}</Text>
+          <Button onClick={() => atualizarQuantidade(index, 5)}>Qtd: 5</Button>
+          <Button onClick={() => removerItem(index)}>Remover</Button>
+        </Group>
+      ))}
+    </>
+  );
+}
+```
+
+### Benefícios
+
+- **Type-Safe**: TypeScript valida os tipos em tempo de compilação
+- **Imutabilidade**: Usa Immer internamente para garantir estado imutável
+- **Eventos**: Emite `fieldChanged` automaticamente após cada operação
+- **Reativo**: Componentes são renderizados novamente automaticamente
+
+## Sistema de Validação
+
+O DataSource V2 integra validação automática no salvamento, permitindo garantir que os dados estão corretos antes de persisti-los.
+
+### Interface IDataSourceValidator
+
+```typescript
+interface IDataSourceValidator<T> {
+  validateEntity(entity: T): FieldError[];
+}
+
+interface FieldError {
+  fieldName: string;
+  errorMessage: string;
+}
+```
+
+### Implementando um Validator
+
+```typescript
+class PessoaValidator implements IDataSourceValidator<Pessoa> {
+  validateEntity(pessoa: Pessoa): FieldError[] {
+    const errors: FieldError[] = [];
+
+    if (!pessoa.nome || pessoa.nome.trim().length < 3) {
+      errors.push({
+        fieldName: 'nome',
+        errorMessage: 'Nome deve ter pelo menos 3 caracteres',
+      });
+    }
+
+    if (!pessoa.email || !this.isValidEmail(pessoa.email)) {
+      errors.push({
+        fieldName: 'email',
+        errorMessage: 'Email inválido',
+      });
+    }
+
+    if (pessoa.idade && pessoa.idade < 18) {
+      errors.push({
+        fieldName: 'idade',
+        errorMessage: 'Idade mínima é 18 anos',
+      });
+    }
+
+    return errors;
+  }
+
+  private isValidEmail(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+}
+```
+
+### Usando o Validator
+
+```tsx
+function PessoaForm() {
+  const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+    name: 'pessoas',
+    initialData: [{ id: 1, nome: '', email: '', idade: 0 }],
+    validator: new PessoaValidator(),
+    onFieldError: (field, message) => {
+      // Chamado para cada campo com erro
+      console.error(`Erro em ${field}: ${message}`);
+      toast.error(`${field}: ${message}`);
+    },
+    onError: (message) => {
+      // Chamado com o primeiro erro encontrado
+      toast.error(message);
+    },
+  });
+
+  const handleSave = async () => {
+    try {
+      await dataSource.save();
+      toast.success('Registro salvo!');
+    } catch (error) {
+      // Se houver erros de validação, o save lança exceção
+      console.error('Erro ao salvar:', error);
+    }
+  };
+
+  return (
+    <>
+      <ArchbaseEdit dataSource={dataSource} dataField="nome" label="Nome" />
+      <ArchbaseEdit dataSource={dataSource} dataField="email" label="Email" />
+      <ArchbaseNumberEdit dataSource={dataSource} dataField="idade" label="Idade" />
+      <Button onClick={handleSave}>Salvar</Button>
+    </>
+  );
+}
+```
+
+### Fluxo de Validação
+
+1. Usuário clica em salvar
+2. `save()` chama o validator (se configurado)
+3. Se houver erros:
+   - `onFieldError` é chamado para cada erro
+   - `onError` é chamado com o primeiro erro
+   - Uma exceção é lançada
+4. Se não houver erros:
+   - O registro é salvo
+   - `onAfterSave` é chamado
+
+## Master-Detail
+
+O padrão **Master-Detail** permite relacionar múltiplos DataSources, onde um DataSource "mestre" controla o estado de DataSources "detalhe".
+
+![Hierarquia Master-Detail](/images/diagrams/archbase-hierarchy-datasource.png)
+
+### Conceito
+
+No padrão Master-Detail:
+- **DataSource Master**: Contém os registros principais (ex: Pedidos)
+- **DataSource Detail**: Contém registros relacionados (ex: Itens do Pedido)
+
+Quando o Master navega para um registro diferente, os Details são automaticamente atualizados.
+
+### Exemplo Completo: Sistema de Pedidos
+
+```tsx
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useEffect } from 'react';
+
+interface Pedido {
+  id: number;
+  cliente: string;
+  data: Date;
+  itens: ItemPedido[];
+  parcelas: Parcela[];
+  total: number;
+}
+
+interface ItemPedido {
+  id: number;
+  produto: string;
+  quantidade: number;
+  preco: number;
+}
+
+interface Parcela {
+  numero: number;
+  valor: number;
+  vencimento: Date;
+}
+
+function SistemaPedidos() {
+  // DataSource Master - Pedidos
+  const dsPedidos = useArchbaseDataSourceV2<Pedido>({
+    name: 'dsPedidos',
+    initialData: [
+      {
+        id: 1,
+        cliente: 'Cliente A',
+        data: new Date(),
+        itens: [
+          { id: 1, produto: 'Produto 1', quantidade: 2, preco: 100 },
+          { id: 2, produto: 'Produto 2', quantidade: 1, preco: 50 },
+        ],
+        parcelas: [
+          { numero: 1, valor: 150, vencimento: new Date() },
+          { numero: 2, valor: 100, vencimento: new Date() },
+        ],
+        total: 250,
+      },
+    ],
+  });
+
+  // DataSource Detail 1 - Itens do Pedido
+  const dsPedidoItens = useArchbaseDataSourceV2<ItemPedido>({
+    name: 'dsPedidoItens',
+    initialData: [],
+  });
+
+  // DataSource Detail 2 - Parcelas do Pedido
+  const dsPedidoParcelas = useArchbaseDataSourceV2<Parcela>({
+    name: 'dsPedidoParcelas',
+    initialData: [],
+  });
+
+  // Sincronizar: quando o pedido mudar, atualizar itens e parcelas
+  useEffect(() => {
+    const pedidoAtual = dsPedidos.getCurrentRecord();
+    if (pedidoAtual) {
+      // Atualizar DataSource de itens
+      dsPedidoItens.loadData(pedidoAtual.itens || []);
+
+      // Atualizar DataSource de parcelas
+      dsPedidoParcelas.loadData(pedidoAtual.parcelas || []);
+    }
+  }, [dsPedidos.getCurrentRecord()]);
+
+  return (
+    <div>
+      {/* Navegação do Master */}
+      <Group>
+        <Button onClick={() => dsPedidos.prior()}>Anterior</Button>
+        <Button onClick={() => dsPedidos.next()}>Próximo</Button>
+      </Group>
+
+      {/* Formulário do Pedido Master */}
+      <ArchbaseEdit dataSource={dsPedidos} dataField="cliente" label="Cliente" />
+      <ArchbaseEdit dataSource={dsPedidos} dataField="total" label="Total" />
+
+      {/* Grid de Itens (Detail) */}
+      <h3>Itens do Pedido</h3>
+      <ArchbaseDataGrid dataSource={dsPedidoItens}>
+        {/* Colunas do grid de itens */}
+      </ArchbaseDataGrid>
+
+      {/* Grid de Parcelas (Detail) */}
+      <h3>Parcelas</h3>
+      <ArchbaseDataGrid dataSource={dsPedidoParcelas}>
+        {/* Colunas do grid de parcelas */}
+      </ArchbaseDataGrid>
+    </div>
+  );
+}
+```
+
+### Eventos para Sincronização
+
+Você pode usar o evento `afterScroll` para sincronizar automaticamente:
+
+```tsx
+const dsPedidos = useArchbaseDataSourceV2<Pedido>({
+  name: 'dsPedidos',
+  initialData: pedidos,
+  onAfterScroll: (record) => {
+    // Atualizar Details quando navegar no Master
+    dsPedidoItens.loadData(record.itens || []);
+    dsPedidoParcelas.loadData(record.parcelas || []);
+  },
+});
+```
+
+## Cache e Performance
+
+O DataSource V2 possui várias otimizações de performance para garantir que aplicações com grandes volumes de dados permaneçam responsivas.
+
+### Dois Arrays para Performance
+
+O `ArchbaseRemoteDataSourceV2` mantém dois arrays internos para otimizar operações:
+
+```typescript
+private records: T[] = [];           // Todos os registros carregados
+private filteredRecords: T[] = [];   // Registros após filtros (usado em operações)
+```
+
+- **`records`**: Contém todos os dados carregados do servidor
+- **`filteredRecords`**: Apenas registros após filtros serem aplicados
+
+Esta separação permite:
+- Operações de navegação e edição mais rápidas
+- Menor uso de memória em filtros complexos
+- Re-cálculo de filtros apenas quando necessário
+
+### Timestamps para Cache
+
+O DataSource mantém timestamps para controlar a obsolescência dos dados:
+
+```typescript
+lastDataChangedAt: number   // Timestamp da última modificação de dados
+lastDataBrowsingOn: number  // Timestamp da última navegação
+```
+
+**Benefícios:**
+- Detectar dados obsoletos automaticamente
+- Implementar cache inteligente
+- Evitar recarregamentos desnecessários
+- Otimizar re-renders no React
+
+```tsx
+// Verificar se os dados estão obsoletos
+const ageInMs = Date.now() - dataSource.lastDataChangedAt;
+const FIVE_MINUTES = 5 * 60 * 1000;
+
+if (ageInMs > FIVE_MINUTES) {
+  dataSource.refreshData(); // Recarregar dados
+}
+```
+
+### Memoização no Hook
+
+O hook `useArchbaseDataSourceV2` usa memoização extensiva para evitar re-renders desnecessários:
+
+```tsx
+const {
+  dataSource,              // Instância estável (não muda)
+  currentRecord,           // Memoizado, muda apenas quando o registro muda
+  isBrowsing,              // Memoizado
+  isEditing,               // Memoizado
+  isInserting,             // Memoizado
+  edit,                    // Memoizado (referência estável)
+  save,                    // Memoizado (referência estável)
+  cancel,                  // Memoizado (referência estável)
+} = useArchbaseDataSourceV2<Pessoa>({ ... });
+```
+
+### Boas Práticas de Performance
+
+1. **Usar `initialData` para carregamento inicial**
+   ```tsx
+   // Evita estado vazio inicial
+   const { dataSource } = useArchbaseDataSourceV2({
+     initialData: dadosCarregados,
+   });
+   ```
+
+2. **Evitar chamadas desnecessárias a `getData()`**
+   ```tsx
+   // Ruim - causa re-render em cada mudança
+   const todosOsDados = dataSource.getData();
+
+   // Bom - o hook já expõe o que você precisa
+   const registroAtual = dataSource.getCurrentRecord();
+   ```
+
+3. **Usar `filteredRecords` para grids grandes**
+   ```tsx
+   // No RemoteDataSource, use o array otimizado
+   const dadosParaGrid = dataSource.filteredRecords || dataSource.records;
+   ```
+
+4. **Paginar dados remotos**
+   ```tsx
+   // Carregar apenas página atual
+   const { dataSource } = useArchbaseRemoteDataSourceV2({
+     initialPageSize: 50,  // 50 registros por página
+   });
+   ```
 
 ## Exemplo Completo
 
 ```tsx
 import { useArchbaseDataSourceV2 } from '@archbase/data';
-import { ArchbaseEdit, ArchbaseSelect } from '@archbase/components';
-import { Button, Stack, Group } from '@mantine/core';
+import { ArchbaseEdit, ArchbaseSelect, ArchbaseNumberEdit } from '@archbase/components';
+import { Button, Stack, Group, Paper, Text } from '@mantine/core';
 
 interface Produto {
   id: number;
@@ -156,6 +977,7 @@ interface Produto {
 const dadosIniciais: Produto[] = [
   { id: 1, nome: 'Notebook', preco: 3500, categoria: 'eletronicos' },
   { id: 2, nome: 'Mouse', preco: 150, categoria: 'perifericos' },
+  { id: 3, nome: 'Teclado', preco: 200, categoria: 'perifericos' },
 ];
 
 function ProdutoForm() {
@@ -168,27 +990,49 @@ function ProdutoForm() {
     remove,
     isBrowsing,
     isEditing,
+    isInserting,
     isEmpty,
     first,
     prior,
     next,
     last,
+    getCurrentRecord,
+    getCurrentIndex,
+    getTotalRecords,
   } = useArchbaseDataSourceV2<Produto>({
     initialData: dadosIniciais,
     name: 'produtos-ds',
   });
+
+  const record = getCurrentRecord();
+  const currentIndex = getCurrentIndex();
+  const total = getTotalRecords();
 
   const handleNovo = () => {
     insert({
       id: Date.now(),
       nome: '',
       preco: 0,
-      categoria: '',
+      categoria: 'eletronicos',
     });
   };
 
   return (
-    <Stack>
+    <Stack gap="md">
+      {/* Barra de Status */}
+      <Paper p="xs" withBorder>
+        <Group justify="space-between">
+          <Text size="sm">
+            Registro {currentIndex + 1} de {total}
+          </Text>
+          <Text size="sm" c="dimmed">
+            {isBrowsing && 'Navegando'}
+            {isEditing && 'Editando'}
+            {isInserting && 'Inserindo'}
+          </Text>
+        </Group>
+      </Paper>
+
       {/* Toolbar */}
       <Group>
         <Button onClick={handleNovo} disabled={!isBrowsing}>Novo</Button>
@@ -200,62 +1044,276 @@ function ProdutoForm() {
 
       {/* Navegação */}
       <Group>
-        <Button size="xs" onClick={first} disabled={!isBrowsing}>Primeiro</Button>
-        <Button size="xs" onClick={prior} disabled={!isBrowsing}>Anterior</Button>
-        <Button size="xs" onClick={next} disabled={!isBrowsing}>Próximo</Button>
-        <Button size="xs" onClick={last} disabled={!isBrowsing}>Último</Button>
+        <Button size="xs" onClick={first} disabled={!isBrowsing || isEmpty}>
+          «« Primeiro
+        </Button>
+        <Button size="xs" onClick={prior} disabled={!isBrowsing || isEmpty}>
+          « Anterior
+        </Button>
+        <Button size="xs" onClick={next} disabled={!isBrowsing || isEmpty}>
+          Próximo »
+        </Button>
+        <Button size="xs" onClick={last} disabled={!isBrowsing || isEmpty}>
+          Último »»
+        </Button>
       </Group>
 
       {/* Formulário */}
-      <ArchbaseEdit
-        dataSource={dataSource}
-        dataField="nome"
-        label="Nome do Produto"
-        disabled={isBrowsing}
-      />
+      <Stack>
+        <ArchbaseEdit
+          dataSource={dataSource}
+          dataField="nome"
+          label="Nome do Produto"
+          disabled={isBrowsing}
+        />
 
-      <ArchbaseEdit
-        dataSource={dataSource}
-        dataField="preco"
-        label="Preço"
-        disabled={isBrowsing}
-      />
+        <ArchbaseNumberEdit
+          dataSource={dataSource}
+          dataField="preco"
+          label="Preço"
+          disabled={isBrowsing}
+        />
 
-      <ArchbaseSelect
-        dataSource={dataSource}
-        dataField="categoria"
-        label="Categoria"
-        data={[
-          { value: 'eletronicos', label: 'Eletrônicos' },
-          { value: 'perifericos', label: 'Periféricos' },
-        ]}
-        disabled={isBrowsing}
-      />
+        <ArchbaseSelect
+          dataSource={dataSource}
+          dataField="categoria"
+          label="Categoria"
+          data={[
+            { value: 'eletronicos', label: 'Eletrônicos' },
+            { value: 'perifericos', label: 'Periféricos' },
+            { value: 'acessorios', label: 'Acessórios' },
+          ]}
+          disabled={isBrowsing}
+        />
+      </Stack>
     </Stack>
   );
 }
 ```
 
+## Casos de Uso
+
+### 1. Formulários Empresariais Complexos
+
+Formulários com múltiplos campos, validações e estados de edição:
+
+```tsx
+function PedidoForm() {
+  const { dataSource } = useArchbaseDataSourceV2<Pedido>({
+    initialData: pedidoData,
+    name: 'pedido-ds',
+  });
+
+  return (
+    <>
+      <ArchbaseEdit dataSource={dataSource} dataField="cliente" />
+      <ArchbaseDatePickerEdit dataSource={dataSource} dataField="dataEmissao" />
+      <ArchbaseSelect dataSource={dataSource} dataField="status" />
+      {/* Campos sincronizados automaticamente */}
+    </>
+  );
+}
+```
+
+### 2. Master-Detail (Lista + Formulário)
+
+O DataSource é ideal para cenários master-detail:
+
+```tsx
+function PedidoMasterDetail() {
+  const { dataSource } = useArchbaseDataSourceV2<Pedido>({
+    initialData: pedidos,
+    name: 'pedidos-ds',
+  });
+
+  return (
+    <Group>
+      {/* Lista de pedidos */}
+      <ArchbaseDataGrid dataSource={pedidosDS} />
+
+      {/* Formulário do pedido atual */}
+      <PedidoDetailForm dataSource={dataSource} />
+    </Group>
+  );
+}
+```
+
+### 3. Navegação Entre Registros
+
+Permite navegar entre registros sem precisar de reload:
+
+```tsx
+function PessoaNavigation() {
+  const { dataSource, next, prior, getCurrentRecord } = useArchbaseDataSourceV2<Pessoa>({
+    initialData: pessoas,
+    name: 'pessoas-ds',
+  });
+
+  return (
+    <>
+      <Button onClick={() => { prior(); }}>Anterior</Button>
+      <Button onClick={() => { next(); }}>Próximo</Button>
+      <PessoaCard pessoa={getCurrentRecord()} />
+    </>
+  );
+}
+```
+
+### 4. Validação Integrada
+
+```tsx
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+  initialData: pessoas,
+  name: 'pessoas-ds',
+  onBeforeSave: (record) => {
+    // Validação customizada antes de salvar
+    if (!record.email?.includes('@')) {
+      toast.error('Email inválido');
+      return false; // Cancela o save
+    }
+    return true; // Permite o save
+  },
+});
+```
+
 ## Integração com API
 
-Para integrar com uma API REST, use `ArchbaseRemoteDataSource`:
+### Usando useArchbaseRemoteServiceApi
+
+Para integração com APIs REST, use o service helper:
 
 ```tsx
 import { useArchbaseRemoteServiceApi } from '@archbase/data';
+
+interface Pessoa {
+  id: number;
+  nome: string;
+  email: string;
+}
 
 const pessoaService = useArchbaseRemoteServiceApi<Pessoa>({
   baseUrl: '/api/pessoas',
 });
 
-// O service fornece métodos CRUD prontos
-await pessoaService.findAll();
-await pessoaService.findById(id);
-await pessoaService.save(pessoa);
-await pessoaService.delete(id);
+// Na sua aplicação:
+async function loadPessoas() {
+  const pessoas = await pessoaService.findAll();
+  // GET /api/pessoas
+}
+
+async function salvarPessoa(pessoa: Pessoa) {
+  const salva = await pessoaService.save(pessoa);
+  // POST /api/pessoas (novo) ou PUT /api/pessoas/{id} (edição)
+}
+
+async function excluirPessoa(id: number) {
+  await pessoaService.delete(id);
+  // DELETE /api/pessoas/{id}
+}
 ```
+
+### Com ArchbaseRemoteDataSourceV2
+
+Para DataSource remoto com cache automático:
+
+```tsx
+import { ArchbaseRemoteDataSourceV2, ArchbaseRemoteApiService } from '@archbase/data';
+
+const pessoaService = new ArchbaseRemoteApiService<Pessoa>({
+  baseUrl: '/api/pessoas',
+  primaryKey: 'id',
+});
+
+const dataSource = new ArchbaseRemoteDataSourceV2<Pessoa>({
+  name: 'pessoas-remote',
+  service: pessoaService,
+  pageSize: 20,
+});
+```
+
+## Boas Práticas
+
+### 1. Nome Sempre Único
+
+Sempre forneça um nome único para cada DataSource:
+
+```tsx
+// ✅ Bom - nome descritivo e único
+const pessoasDS = useArchbaseDataSourceV2<Pessoa>({ name: 'pessoas-form-ds' });
+const pedidosDS = useArchbaseDataSourceV2<Pedido>({ name: 'pedidos-lista-ds' });
+
+// ❌ Ruim - nome genérico ou duplicado
+const ds1 = useArchbaseDataSourceV2<Pessoa>({ name: 'ds' });
+const ds2 = useArchbaseDataSourceV2<Pedido>({ name: 'ds' });
+```
+
+### 2. Usar TypeScript
+
+Sempre defina interfaces para seus dados:
+
+```tsx
+interface Produto {
+  id: number;
+  nome: string;
+  preco: number;
+  categoria: string;
+}
+
+const { dataSource } = useArchbaseDataSourceV2<Produto>({...});
+// ✅ Type-safe - autocomplete e validação de tipos
+```
+
+### 3. Tratamento de Erros
+
+Use os callbacks de erro:
+
+```tsx
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+  initialData: pessoas,
+  name: 'pessoas-ds',
+  onError: (error, field) => {
+    if (field) {
+      toast.error(`Erro no campo ${field}: ${error}`);
+    } else {
+      toast.error(`Erro: ${error}`);
+    }
+  },
+});
+```
+
+### 4. Estados Iniciais
+
+Configure o estado inicial apropriado:
+
+```tsx
+// Para formulários que iniciam em modo de navegação
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+  initialData: pessoas,
+  name: 'pessoas-ds',
+});
+
+// Para formulários que iniciam em modo de inserção
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+  initialData: [],
+  name: 'pessoas-ds',
+});
+// Depois chame insert() para começar a editar um novo registro
+```
+
+## Vantagens do DataSource V2
+
+- **Zero Boilerplate** - Componentes conectados sem código adicional
+- **Sincronização Automática** - Campos sincronizados automaticamente
+- **Type-Safe** - TypeScript completo com generics
+- **Previsível** - Comportamento consistente em todos os componentes
+- **Produtivo** - Menos código, mais funcionalidade
+- **Testável** - Separação clara de responsabilidades
+- **Escalável** - Funciona bem em aplicações enterprise
 
 ## Próximos Passos
 
+- [Diagramas Visuais](/core-concepts/datasource-diagrams) - Diagramas interativos e fluxo de aprendizado
 - [Hooks](/core-concepts/hooks) - Outros hooks disponíveis
 - [Validação](/core-concepts/validation) - Sistema de validação
 - [Componentes de Formulário](/components/editors/text-inputs) - Componentes com binding
+- [DataGrid](/components/data-display/datagrid) - Grid integrado com DataSource

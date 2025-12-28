@@ -1,0 +1,242 @@
+# Fluxo de Aprendizado - Security & Authentication
+
+Este guia apresenta uma ordem recomendada para aprender o sistema de Security & Authentication do Archbase React, do nível iniciante ao avançado. Siga o caminho sugerido para construir uma compreensão sólida e progressiva.
+
+## Nível Iniciante
+
+Comece aqui se você é novo no sistema de segurança do Archbase React.
+
+### 1. O Que é Security?
+
+Entenda o problema que o Security resolve e por que usá-lo.
+
+**Leia:** [O Que é Security?](/security/security#o-que-%C3%A9-security)
+
+**Você aprenderá:**
+- O que é o sistema de segurança
+- Quais problemas ele resolve
+- Quando usar Security vs autenticação manual
+
+### 2. Arquitetura do Sistema de Segurança
+
+Compreenda as quatro camadas do sistema de segurança.
+
+**Leia:** [Arquitetura](/security/security#arquitetura-do-sistema-de-seguran%C3%A7a)
+
+**Você aprenderá:**
+- Como React Components, Hooks, Managers e Backend trabalham juntos
+- Responsabilidades de cada camada
+- Diferença entre @archbase/security e @archbase/security-ui
+
+### 3. Fluxo de Autenticação
+
+Entenda como o OAuth2 Authorization Code Flow funciona.
+
+**Leia:** [Fluxo de Autenticação](/security/security#fluxo-de-autentica%C3%A7%C3%A3o)
+
+**Você aprenderá:**
+- Como funciona o OAuth2 com PKCE
+- Estados da autenticação (initialising, authenticating, authenticated, error)
+- Como o refresh de token funciona
+
+### 4. Hook Básico
+
+Pratique com o hook principal `useArchbaseAuthenticationManager`.
+
+**Leia:** [Hook useArchbaseAuthenticationManager](/security/security#hook-usearchbaseauthenticationmanager)
+
+**Exemplo prático:**
+```tsx
+import { useArchbaseAuthenticationManager } from '@archbase/security';
+
+function MeuFormulario() {
+  const { login, logout, isAuthenticated, isAuthenticating, error } =
+    useArchbaseAuthenticationManager();
+
+  return (
+    <>
+      {isAuthenticated ? (
+        <button onClick={() => logout()}>Sair</button>
+      ) : (
+        <button onClick={() => login('user@example.com', 'password', true)}>
+          Entrar
+        </button>
+      )}
+      {error && <p className="error">{error}</p>}
+    </>
+  );
+}
+```
+
+## Nível Intermediário
+
+Depois de dominar os conceitos básicos, explore recursos mais avançados.
+
+### 5. Providers de Segurança
+
+Aprenda a configurar os providers para envolver sua aplicação.
+
+**Leia:** [Providers de Segurança](/security/security#providers-de-seguran%C3%A7a)
+
+**Você aprenderá:**
+- Como usar ArchbaseSecurityProvider
+- Como usar ArchbaseViewSecurityProvider
+- Diferença entre provider global e por view
+
+### 6. Autorização e Permissões
+
+Domine o sistema de permissões baseado em recursos e ações.
+
+**Leia:** [Autorização e Permissões](/security/security#autoriza%C3%A7%C3%A3o-e-permiss%C3%B5es)
+
+**Exemplo prático:**
+```tsx
+// Nomenclatura de permissões
+`{modulo}.{entidade}:{acao}`
+
+// Exemplos
+'tms.mecanico:create'   // Pode criar mecânicos
+'tms.mecanico:view'      // Pode ver mecânicos
+'tms.mecanico:edit'      // Pode editar mecânicos
+'tms.mecanico:delete'    // Pode excluir mecânicos
+```
+
+### 7. Hook useArchbaseSecureForm
+
+Aprenda o hook especializado para formulários com permissões CRUD.
+
+**Leia:** [Hook useArchbaseSecureForm](/security/security#hook-usearchbasesecureform)
+
+**Você aprenderá:**
+- Permissões pré-registradas (canCreate, canEdit, canDelete, canView, canList)
+- Verificação manual de permissões
+- Verificação múltipla (hasAnyPermission, hasAllPermissions)
+
+### 8. Componentes de Segurança
+
+Conheça os componentes de UI prontos para usar.
+
+**Leia:** [Componentes de Segurança](/security/security#componentes-de-seguran%C3%A7a)
+
+**Você aprenderá:**
+- ArchbaseLogin - formulário de login completo
+- ProtectedComponent - envolve componentes que requerem permissão
+- SecureButton - botão com controle de permissão integrado
+- Modais de gestão (UserModal, GroupModal, PermissionsSelectorModal)
+
+## Nível Avançado
+
+Recursos avançados para aplicações empresariais complexas.
+
+### 9. Contextual Authentication
+
+Entenda como autenticar em diferentes contextos de aplicação.
+
+**Leia:** [Contextual Authentication](/security/security#contextual-authentication)
+
+**Você aprenderá:**
+- O que são contextos (WEB_ADMIN, STORE_APP, CUSTOMER_APP, etc.)
+- Como usar loginWithContext
+- ContextObject e dados específicos por contexto
+- Casos de uso real (Gestor-RQ)
+
+### 10. Multi-Tenant Support
+
+Aprenda a isolar dados por tenant.
+
+**Leia:** [Multi-Tenant Support](/security/security#multi-tenant-support)
+
+**Você aprenderá:**
+- ArchbaseTenantManager singleton
+- Header X-TENANT-ID
+- Seleção de tenant
+- Integração com login contextual
+
+### 11. Serviços de Segurança
+
+Conheça os serviços disponíveis para gerenciar usuários, grupos e permissões.
+
+**Leia:** [Serviços de Segurança](/security/security#servi%C3%A7os-de-seguran%C3%A7a)
+
+**Você aprenderá:**
+- ArchbaseUserService - gerenciamento de usuários
+- ArchbaseGroupService - gerenciamento de grupos/perfis
+- ArchbaseResourceService - gerenciamento de recursos e permissões
+- ArchbaseAccessTokenService - gerenciamento de tokens de API
+
+### 12. Integração com DataSource
+
+Veja como integrar segurança com DataSource V2.
+
+**Leia:** [Integração com DataSource](/security/security#integra%C3%A7%C3%A3o-com-datasource)
+
+**Você aprenderá:**
+- Como controlar operações do DataSource com permissões
+- Desabilitar campos baseado em permissões
+- Botões condicionais em grids
+
+## Recursos Adicionais
+
+### Exemplo Completo
+
+[Exemplo Completo (Gestor-RQ)](/security/security#exemplo-completo-gestor-rq) - Implementação completa do sistema de segurança com:
+- App.tsx com configuração de providers
+- useGestorRQSecurity - hook customizado
+- PneuListView - view com segurança
+- GestorRQAuthenticator - autenticador customizado
+
+### Casos de Uso
+
+[Casos de Uso](/security/security#casos-de-uso) - Exemplos reais de aplicação:
+- Login com contexto e multi-tenant
+- Proteção de rotas
+- Botões condicionais
+- Grid com permissões
+
+### Boas Práticas
+
+[Boas Práticas](/security/security#boas-pr%C3%A1ticas) - Padrões recomendados para produção:
+- Nomenclatura de recursos
+- Constantes para recursos
+- Hook customizado por projeto
+- Provider no nível correto
+- Tratamento de erros
+- Verificação de capacidades
+
+## Checklist de Aprendizagem
+
+Use este checklist para acompanhar seu progresso:
+
+### Iniciante
+- [ ] Entendi o que é o sistema de Security
+- [ ] Compreendi a arquitetura de 4 camadas
+- [ ] Sei diferenciar os estados de autenticação
+- [ ] Consigo fazer login básico com useArchbaseAuthenticationManager
+- [ ] Entendi como funciona o refresh de token
+
+### Intermediário
+- [ ] Consigo configurar ArchbaseSecurityProvider
+- [ ] Sei usar ArchbaseViewSecurityProvider em views
+- [ ] Entendo a nomenclatura de permissões `{modulo}.{entidade}:{acao}`
+- [ ] Uso useArchbaseSecureForm para controle CRUD
+- [ ] Sei proteger componentes com ProtectedComponent
+
+### Avançado
+- [ ] Implementei login com contexto
+- [ ] Sei trabalhar com multi-tenant
+- [ ] Uso os serviços de segurança (UserService, GroupService, etc.)
+- [ ] Integrei segurança com DataSource V2
+- [ ] Criei um autenticador customizado implementando ArchbaseAuthenticator
+
+## Próximos Passos
+
+Após completar este fluxo de aprendizado:
+
+1. **Pratique com exemplos reais** - Crie formulários para casos de uso reais do seu projeto
+2. **Explore os componentes** - Conheça todos os componentes de segurança do Archbase
+3. **Integre com sua API** - Implemente ArchbaseAuthenticator com seu backend OAuth2
+4. **Contribua** - Considere contribuir com a documentação ou exemplos
+
+---
+
+**Dica:** Salve este guia nos favoritos e consulte sempre que precisar de uma referência rápida sobre Security & Authentication!

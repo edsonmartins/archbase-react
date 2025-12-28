@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1400">
+  <!-- Background -->
+  <rect width="1800" height="1400" fill="#f8f9fa"/>
+
+  <!-- Title -->
+  <text x="900" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#212529">
+    Arquitetura do Sistema de Segurança
+  </text>
+
+  <!-- Layer 1: React Components -->
+  <rect x="100" y="100" width="1600" height="200" rx="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+  <text x="900" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1976d2">
+    Camada 1: React Components (UI)
+  </text>
+  <text x="900" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#555">
+    ArchbaseLogin • UserModal • GroupModal • ProtectedComponent • SecureButton
+  </text>
+  <rect x="200" y="190" width="200" height="80" rx="8" fill="#fff" stroke="#1976d2" stroke-width="1"/>
+  <text x="300" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">ArchbaseLogin</text>
+
+  <rect x="450" y="190" width="200" height="80" rx="8" fill="#fff" stroke="#1976d2" stroke-width="1"/>
+  <text x="550" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">UserModal</text>
+  <text x="550" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">GroupModal</text>
+
+  <rect x="700" y="190" width="200" height="80" rx="8" fill="#fff" stroke="#1976d2" stroke-width="1"/>
+  <text x="800" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">Protected</text>
+  <text x="800" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">Component</text>
+
+  <rect x="950" y="190" width="200" height="80" rx="8" fill="#fff" stroke="#1976d2" stroke-width="1"/>
+  <text x="1050" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">SecureButton</text>
+
+  <rect x="1200" y="190" width="200" height="80" rx="8" fill="#fff" stroke="#1976d2" stroke-width="1"/>
+  <text x="1300" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">Permission</text>
+  <text x="1300" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">Selector</text>
+
+  <!-- Arrow -->
+  <path d="M900 300 L900 340" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Layer 2: Hooks & Providers -->
+  <rect x="100" y="340" width="1600" height="250" rx="10" fill="#fff3e0" stroke="#f57c00" stroke-width="2"/>
+  <text x="900" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#f57c00">
+    Camada 2: Hooks &amp; Providers
+  </text>
+
+  <rect x="150" y="400" width="400" height="160" rx="8" fill="#fff" stroke="#f57c00" stroke-width="1"/>
+  <text x="350" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">Providers</text>
+  <text x="350" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">ArchbaseSecurityProvider</text>
+  <text x="350" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">ArchbaseViewSecurityProvider</text>
+  <text x="350" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">ArchbaseAuthenticationProvider</text>
+
+  <rect x="600" y="400" width="500" height="160" rx="8" fill="#fff" stroke="#f57c00" stroke-width="1"/>
+  <text x="850" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">Hooks</text>
+  <text x="850" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">useArchbaseAuthenticationManager</text>
+  <text x="850" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">useArchbaseSecurity</text>
+  <text x="850" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">useArchbaseSecureForm</text>
+  <text x="850" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">useArchbasePermissionCheck</text>
+
+  <rect x="1150" y="400" width="500" height="160" rx="8" fill="#fff" stroke="#f57c00" stroke-width="1"/>
+  <text x="1400" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">Context</text>
+  <text x="1400" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">ArchbaseSecurityContext</text>
+  <text x="1400" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">ArchbaseViewSecurityContext</text>
+  <text x="1400" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">User: UserDto | null</text>
+  <text x="1400" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">isAuthenticated, isAdmin</text>
+
+  <!-- Arrow -->
+  <path d="M900 590 L900 630" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Layer 3: Services & Managers -->
+  <rect x="100" y="630" width="1600" height="280" rx="10" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2"/>
+  <text x="900" y="670" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#7b1fa2">
+    Camada 3: Serviços &amp; Managers
+  </text>
+
+  <rect x="150" y="700" width="350" height="180" rx="8" fill="#fff" stroke="#7b1fa2" stroke-width="1"/>
+  <text x="325" y="730" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#333">Authenticator</text>
+  <text x="325" y="760" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">ArchbaseAuthenticator (interface)</text>
+  <text x="325" y="790" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">login()</text>
+  <text x="325" y="810" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">loginWithContext()</text>
+  <text x="325" y="830" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">refreshToken()</text>
+
+  <rect x="530" y="700" width="350" height="180" rx="8" fill="#fff" stroke="#7b1fa2" stroke-width="1"/>
+  <text x="705" y="730" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#333">Security Manager</text>
+  <text x="705" y="760" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">ArchbaseSecurityManager</text>
+  <text x="705" y="790" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">hasPermission()</text>
+  <text x="705" y="810" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">registerAction()</text>
+  <text x="705" y="830" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">getPermissions()</text>
+
+  <rect x="910" y="700" width="350" height="180" rx="8" fill="#fff" stroke="#7b1fa2" stroke-width="1"/>
+  <text x="1085" y="730" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#333">Token Manager</text>
+  <text x="1085" y="760" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">ArchbaseTokenManager</text>
+  <text x="1085" y="790" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">saveToken()</text>
+  <text x="1085" y="810" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">getToken()</text>
+  <text x="1085" y="830" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">isTokenExpired()</text>
+
+  <rect x="1290" y="700" width="350" height="180" rx="8" fill="#fff" stroke="#7b1fa2" stroke-width="1"/>
+  <text x="1465" y="730" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#333">Tenant Manager</text>
+  <text x="1465" y="760" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">ArchbaseTenantManager</text>
+  <text x="1465" y="790" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">currentTenant</text>
+  <text x="1465" y="810" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">getHeaders()</text>
+  <text x="1465" y="830" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">X-TENANT-ID</text>
+
+  <!-- Arrow -->
+  <path d="M900 910 L900 950" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Layer 4: Backend API -->
+  <rect x="100" y="950" width="1600" height="200" rx="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+  <text x="900" y="990" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#388e3c">
+    Camada 4: Backend API (OAuth2)
+  </text>
+
+  <rect x="200" y="1020" width="250" height="100" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1"/>
+  <text x="325" y="1055" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">/auth/login</text>
+  <text x="325" y="1080" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">POST - Login com contexto</text>
+
+  <rect x="500" y="1020" width="250" height="100" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1"/>
+  <text x="625" y="1055" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">/auth/refresh</text>
+  <text x="625" y="1080" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">POST - Renovar token</text>
+
+  <rect x="800" y="1020" width="250" height="100" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1"/>
+  <text x="925" y="1055" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">/auth/logout</text>
+  <text x="925" y="1080" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">POST - Logout</text>
+
+  <rect x="1100" y="1020" width="250" height="100" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1"/>
+  <text x="1225" y="1055" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">/permissions</text>
+  <text x="1225" y="1080" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">GET - Listar permissões</text>
+
+  <rect x="1400" y="1020" width="250" height="100" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1"/>
+  <text x="1525" y="1055" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">/users</text>
+  <text x="1525" y="1080" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">CRUD - Usuários</text>
+
+  <!-- Legend -->
+  <rect x="100" y="1200" width="1600" height="150" rx="10" fill="#fafafa" stroke="#ddd" stroke-width="1"/>
+  <text x="900" y="1240" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#333">
+    Pacotes
+  </text>
+
+  <rect x="200" y="1260" width="250" height="60" rx="6" fill="#e3f2fd" stroke="#1976d2" stroke-width="1"/>
+  <text x="325" y="1295" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">@archbase/security-ui</text>
+
+  <rect x="500" y="1260" width="300" height="60" rx="6" fill="#fff3e0" stroke="#f57c00" stroke-width="1"/>
+  <text x="650" y="1280" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">@archbase/security</text>
+  <text x="650" y="1300" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">Core: providers, hooks, managers</text>
+
+  <rect x="850" y="1260" width="300" height="60" rx="6" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1"/>
+  <text x="1000" y="1280" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">@archbase/security</text>
+  <text x="1000" y="1300" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">Services &amp; Managers</text>
+
+  <rect x="1200" y="1260" width="300" height="60" rx="6" fill="#e8f5e9" stroke="#388e3c" stroke-width="1"/>
+  <text x="1350" y="1280" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">Backend OAuth2</text>
+  <text x="1350" y="1300" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">Sua API REST</text>
+
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+</svg>

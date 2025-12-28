@@ -41,7 +41,8 @@
       "Bash(diff:*)",
       "Bash(do echo \"🗑️ Removendo @archbase/$pkg...\")",
       "Bash(timeout 30 pnpm dev:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=8192\" pnpm build:*)"
     ],
     "deny": []
   }

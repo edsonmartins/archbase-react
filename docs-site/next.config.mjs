@@ -7,6 +7,18 @@ import remarkSlug from 'remark-slug';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Polyfill for Promise.withResolvers (Node.js < 20.10.0)
+if (typeof Promise.withResolvers === 'undefined') {
+  Promise.withResolvers = function() {
+    let resolve, reject;
+    const promise = new Promise((res, rej) => {
+      resolve = res;
+      reject = rej;
+    });
+    return { promise, resolve, reject };
+  };
+}
+
 const withMDX = createMDX({
   extension: /\.mdx?$/,
   options: {

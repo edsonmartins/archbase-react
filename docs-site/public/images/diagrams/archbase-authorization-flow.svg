@@ -1,0 +1,210 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1300">
+  <!-- Background -->
+  <rect width="1800" height="1300" fill="#f8f9fa"/>
+
+  <!-- Title -->
+  <text x="900" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#212529">
+    Fluxo de Autorização - Permissões e Recursos
+  </text>
+
+  <!-- Section 1: Permission Structure -->
+  <rect x="100" y="100" width="700" height="280" rx="15" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+  <text x="450" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1976d2">
+    Estrutura de Permissões
+  </text>
+
+  <!-- Permission Format -->
+  <rect x="150" y="170" width="600" height="80" rx="10" fill="#fff" stroke="#1976d2" stroke-width="1"/>
+  <text x="450" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">
+    {modulo}.{entidade}:{acao}
+  </text>
+  <text x="450" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#555">
+    tms.mecanico:create  →  Pode criar mecânicos
+  </text>
+
+  <!-- CRUD Actions -->
+  <rect x="150" y="270" width="130" height="80" rx="8" fill="#c8e6c9" stroke="#388e3c" stroke-width="1"/>
+  <text x="215" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">CREATE</text>
+  <text x="215" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">Criar registro</text>
+
+  <rect x="300" y="270" width="130" height="80" rx="8" fill="#c8e6c9" stroke="#388e3c" stroke-width="1"/>
+  <text x="365" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">READ/VIEW</text>
+  <text x="365" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">Visualizar</text>
+
+  <rect x="450" y="270" width="130" height="80" rx="8" fill="#c8e6c9" stroke="#388e3c" stroke-width="1"/>
+  <text x="515" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">UPDATE/EDIT</text>
+  <text x="515" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">Editar</text>
+
+  <rect x="600" y="270" width="130" height="80" rx="8" fill="#c8e6c9" stroke="#388e3c" stroke-width="1"/>
+  <text x="665" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">DELETE</text>
+  <text x="665" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">Excluir</text>
+
+  <!-- List Action -->
+  <rect x="150" y="360" width="600" height="50" rx="8" fill="#fff9c4" stroke="#f9a825" stroke-width="1"/>
+  <text x="450" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">
+    LIST - Listar registros (comum para grids)
+  </text>
+
+  <!-- Section 2: Authorization Flow -->
+  <rect x="900" y="100" width="800" height="280" rx="15" fill="#fff3e0" stroke="#f57c00" stroke-width="2"/>
+  <text x="1300" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#f57c00">
+    Fluxo de Verificação
+  </text>
+
+  <!-- Flow Steps -->
+  <rect x="950" y="170" width="180" height="60" rx="8" fill="#fff" stroke="#f57c00" stroke-width="1"/>
+  <text x="1040" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">1. Component Render</text>
+  <text x="1040" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#555">ViewSecurityProvider</text>
+
+  <path d="M1130 200 L1170 200" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <rect x="1170" y="170" width="180" height="60" rx="8" fill="#fff" stroke="#f57c00" stroke-width="1"/>
+  <text x="1260" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">2. Load Permissions</text>
+  <text x="1260" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#555">ResourceService</text>
+
+  <path d="M1350 200 L1390 200" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <rect x="1390" y="170" width="180" height="60" rx="8" fill="#fff" stroke="#f57c00" stroke-width="1"/>
+  <text x="1480" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">3. Check Admin</text>
+  <text x="1480" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#555">isAdmin = true?</text>
+
+  <rect x="950" y="260" width="180" height="60" rx="8" fill="#c8e6c9" stroke="#388e3c" stroke-width="1"/>
+  <text x="1040" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">4a. Yes → Allow</text>
+  <text x="1040" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#555">All permissions granted</text>
+
+  <rect x="1170" y="260" width="180" height="60" rx="8" fill="#ffcdd2" stroke="#c62828" stroke-width="1"/>
+  <text x="1260" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">4b. No → Check</text>
+  <text x="1260" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#555">Has permission?</text>
+
+  <rect x="1390" y="260" width="180" height="60" rx="8" fill="#fff" stroke="#f57c00" stroke-width="1"/>
+  <text x="1480" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">5. Grant/Deny</text>
+  <text x="1480" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#555">Return boolean</text>
+
+  <!-- Section 3: useArchbaseSecureForm -->
+  <rect x="100" y="420" width="800" height="350" rx="15" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2"/>
+  <text x="500" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#7b1fa2">
+    Hook useArchbaseSecureForm
+  </text>
+
+  <!-- Code Example -->
+  <rect x="150" y="490" width="700" height="250" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="1"/>
+  <text x="180" y="520" font-family="monospace" font-size="13" fill="#d4d4d4">
+    <tspan fill="#569cd6">const</tspan> { canCreate, canEdit, canDelete, canView } =
+  </text>
+  <text x="180" y="545" font-family="monospace" font-size="13" fill="#d4d4d4">
+    &nbsp;&nbsp;<tspan fill="#dcdcaa">useArchbaseSecureForm</tspan>(<tspan fill="#ce9178">'tms.mecanico'</tspan>, <tspan fill="#ce9178">'Mecânicos'</tspan>);
+  </text>
+  <text x="180" y="585" font-family="monospace" font-size="13" fill="#6a9955">
+    // Permissões pré-registradas automaticamente:
+  </text>
+  <text x="180" y="610" font-family="monospace" font-size="13" fill="#d4d4d4">
+    &nbsp;- create → tms.mecanico:create
+  </text>
+  <text x="180" y="635" font-family="monospace" font-size="13" fill="#d4d4d4">
+    &nbsp;- edit → tms.mecanico:edit
+  </text>
+  <text x="180" y="660" font-family="monospace" font-size="13" fill="#d4d4d4">
+    &nbsp;- delete → tms.mecanico:delete
+  </text>
+  <text x="180" y="685" font-family="monospace" font-size="13" fill="#d4d4d4">
+    &nbsp;- view → tms.mecanico:view
+  </text>
+  <text x="180" y="710" font-family="monospace" font-size="13" fill="#d4d4d4">
+    &nbsp;- list → tms.mecanico:list
+  </text>
+
+  <!-- Section 4: ProtectedComponent -->
+  <rect x="1000" y="420" width="700" height="350" rx="15" fill="#e0f2f1" stroke="#00695c" stroke-width="2"/>
+  <text x="1350" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#00695c">
+    Componentes de Proteção
+  </text>
+
+  <!-- ProtectedComponent Example -->
+  <rect x="1050" y="490" width="600" height="100" rx="8" fill="#fff" stroke="#00695c" stroke-width="1"/>
+  <text x="1350" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    ProtectedComponent
+  </text>
+  <text x="1350" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    &lt;ProtectedComponent permission="tms.mecanico:delete"&gt;
+  </text>
+  <text x="1350" y="565" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    &nbsp;&nbsp;&lt;button&gt;Excluir&lt;/button&gt;
+  </text>
+
+  <!-- SecureButton Example -->
+  <rect x="1050" y="610" width="600" height="100" rx="8" fill="#fff" stroke="#00695c" stroke-width="1"/>
+  <text x="1350" y="640" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    SecureButton
+  </text>
+  <text x="1350" y="665" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    &lt;SecureButton permission="tms.mecanico:create"
+  </text>
+  <text x="1350" y="685" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">
+    &nbsp;&nbsp;onClick={handleCreate} label="Novo Mecânico" /&gt;
+  </text>
+
+  <!-- Section 5: Constants Pattern -->
+  <rect x="100" y="820" width="1600" height="200" rx="15" fill="#fafafa" stroke="#ddd" stroke-width="2"/>
+  <text x="900" y="860" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">
+    Padrao Recomendado: Constantes para Recursos
+  </text>
+
+  <rect x="150" y="890" width="700" height="100" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="1"/>
+  <text x="180" y="920" font-family="monospace" font-size="13" fill="#d4d4d4">
+    <tspan fill="#569cd6">export const</tspan> TMS_SECURITY_RESOURCES = {
+  </text>
+  <text x="200" y="945" font-family="monospace" font-size="13" fill="#d4d4d4">
+    MECANICO: { <tspan fill="#ce9178">name</tspan>: <tspan fill="#ce9178">'tms.mecanico'</tspan>, <tspan fill="#ce9178">description</tspan>: <tspan fill="#ce9178">'Mecânicos'</tspan> },
+  </text>
+  <text x="200" y="970" font-family="monospace" font-size="13" fill="#d4d4d4">
+    ORDEM_SERVICO: { <tspan fill="#ce9178">name</tspan>: <tspan fill="#ce9178">'tms.ordemservico'</tspan>, <tspan fill="#ce9178">description</tspan>: <tspan fill="#ce9178">'Ordens de Serviço'</tspan> },
+  </text>
+
+  <rect x="900" y="890" width="700" height="100" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="1"/>
+  <text x="930" y="920" font-family="monospace" font-size="13" fill="#d4d4d4">
+    <tspan fill="#569cd6">function</tspan> <tspan fill="#dcdcaa">useGestorRQSecurity</tspan>({ module, entity }) {
+  </text>
+  <text x="930" y="945" font-family="monospace" font-size="13" fill="#d4d4d4">
+    &nbsp;&nbsp;<tspan fill="#569cd6">const</tspan> resourceName = <tspan fill="#ce9178">`\${module}.\${entity}`</tspan>;
+  </text>
+  <text x="930" y="970" font-family="monospace" font-size="13" fill="#d4d4d4">
+    &nbsp;&nbsp;<tspan fill="#569cd6">return</tspan> <tspan fill="#dcdcaa">useArchbaseSecureForm</tspan>(resourceName);
+  </text>
+
+  <!-- Section 6: Admin Override -->
+  <rect x="100" y="1070" width="700" height="150" rx="15" fill="#c8e6c9" stroke="#388e3c" stroke-width="2"/>
+  <text x="450" y="1110" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#2e7d32">
+    Administrador (isAdmin = true)
+  </text>
+  <text x="450" y="1145" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">
+    Usuários administradores têm acesso total
+  </text>
+  <text x="450" y="1170" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">
+    hasPermission() sempre retorna true
+  </text>
+  <text x="450" y="1195" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">
+    Definido em UserDto.isAdministrator
+  </text>
+
+  <!-- Section 7: Permission Storage -->
+  <rect x="900" y="1070" width="800" height="150" rx="15" fill="#fff9c4" stroke="#f9a825" stroke-width="2"/>
+  <text x="1300" y="1110" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#333">
+    Armazenamento de Permissões
+  </text>
+  <text x="1300" y="1145" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">
+    User → Groups → Resources → Actions
+  </text>
+  <text x="1300" y="1170" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#333">
+    Backend carrega permissões no login e armazena no SecurityManager
+  </text>
+  <text x="1300" y="1195" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">
+    ArchbaseSecurityManager.permissions: string[]
+  </text>
+
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+</svg>

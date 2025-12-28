@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hierarquia de Dados com DataSource - Archbase React V3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e0e7ef 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .info-panel {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #0066CC;
+        }
+
+        .info-panel h3 {
+            color: #0066CC;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .info-panel p {
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .concept-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .concept-card:hover {
+            border-color: #0066CC;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.15);
+        }
+
+        .concept-card h4 {
+            color: #1e293b;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .concept-card .icon {
+            font-size: 1.5rem;
+        }
+
+        .concept-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .concept-card li {
+            color: #64748b;
+            padding: 0.5rem 0;
+            padding-left: 1.8rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .concept-card li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #0066CC;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .badge.master {
+            background: #0066CC;
+            color: white;
+        }
+
+        .badge.detail {
+            background: #00BCD4;
+            color: white;
+        }
+
+        .badge.array {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .code-example {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .code-example .keyword {
+            color: #7CB342;
+        }
+
+        .code-example .string {
+            color: #FFD54F;
+        }
+
+        .code-example .comment {
+            color: #90CAF9;
+            font-style: italic;
+        }
+
+        iframe {
+            width: 100%;
+            height: 1050px;
+            border: none;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #0066CC;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .highlight-box h3 {
+            color: #0066CC;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .highlight-box li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: #1e40af;
+            font-weight: 500;
+        }
+
+        .highlight-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #7CB342;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Gerenciando Hierarquia de Dados</h1>
+        <p class="subtitle">Master-Detail com Arrays Aninhados usando DataSource V2</p>
+        
+        <div class="info-panel">
+            <h3>💡 Sobre a Hierarquia Master-Detail</h3>
+            <p>
+                O Archbase React V3 suporta nativamente estruturas hierárquicas complexas através do padrão 
+                <strong>Master-Detail</strong>. Você pode ter um DataSource principal (Master) contendo arrays 
+                de objetos que são gerenciados por DataSources secundários (Detail), mantendo sincronização 
+                automática e operações type-safe em toda a hierarquia.
+            </p>
+        </div>
+
+        <div class="concepts-grid">
+            <div class="concept-card">
+                <h4><span class="icon">👑</span> Master DataSource</h4>
+                <div class="badge master">dsPedidos</div>
+                <ul>
+                    <li>Gerencia o registro principal (Pedido)</li>
+                    <li>Contém campos escalares (id, cliente, data)</li>
+                    <li>Possui arrays aninhados (itens, parcelas)</li>
+                    <li>Controla o estado master da hierarquia</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <h4><span class="icon">📋</span> Detail DataSources</h4>
+                <div class="badge detail">dsPedidoItens</div>
+                <div class="badge detail">dsPedidoParcelas</div>
+                <ul>
+                    <li>Gerenciam arrays do master</li>
+                    <li>Sincronizam automaticamente</li>
+                    <li>Operações independentes</li>
+                    <li>Type-safe garantido</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <h4><span class="icon">🎯</span> Operações V2</h4>
+                <div class="badge array">Array Operations</div>
+                <ul>
+                    <li>appendToFieldArray()</li>
+                    <li>updateFieldArrayItem()</li>
+                    <li>removeFromFieldArray()</li>
+                    <li>insertIntoFieldArray()</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🔑 Vantagens do Padrão Master-Detail</h3>
+            <ul>
+                <li>Sincronização automática entre master e details</li>
+                <li>Operações isoladas em cada nível da hierarquia</li>
+                <li>Type-safety completo em toda a estrutura</li>
+                <li>Performance otimizada com imutabilidade</li>
+                <li>UI responsiva e reativa</li>
+                <li>Validação em cascata</li>
+            </ul>
+        </div>
+
+        <div class="code-example">
+<span class="keyword">// Definindo a estrutura hierárquica</span>
+<span class="keyword">interface</span> Pedido {
+  id: <span class="string">number</span>;
+  cliente: <span class="string">string</span>;
+  dataPedido: <span class="string">Date</span>;
+  itensPedido: ItemPedido[];  <span class="comment">// Array detail</span>
+  parcelas: Parcela[];        <span class="comment">// Array detail</span>
+  totalPedido: <span class="string">number</span>;
+}
+
+<span class="keyword">// Master DataSource</span>
+<span class="keyword">const</span> dsPedidos = <span class="keyword">new</span> ArchbaseRemoteDataSourceV2&lt;Pedido&gt;({
+  name: <span class="string">'dsPedidos'</span>,
+  service: pedidosService
+});
+
+<span class="keyword">// Detail DataSources conectados aos arrays</span>
+<span class="keyword">const</span> dsPedidoItens = <span class="keyword">new</span> ArchbaseDataSourceV2&lt;ItemPedido&gt;({
+  name: <span class="string">'dsPedidoItens'</span>,
+  records: dsPedidos.getFieldArray(<span class="string">'itensPedido'</span>)
+});
+
+<span class="keyword">const</span> dsPedidoParcelas = <span class="keyword">new</span> ArchbaseDataSourceV2&lt;Parcela&gt;({
+  name: <span class="string">'dsPedidoParcelas'</span>,
+  records: dsPedidos.getFieldArray(<span class="string">'parcelas'</span>)
+});
+
+<span class="keyword">// Operações type-safe no master</span>
+dsPedidos.edit();
+dsPedidos.setFieldValue(<span class="string">'cliente'</span>, <span class="string">'Cliente A'</span>);
+
+<span class="keyword">// Adicionar item usando operação V2</span>
+dsPedidos.appendToFieldArray(<span class="string">'itensPedido'</span>, {
+  idItem: <span class="string">101</span>,
+  produto: <span class="string">'Produto 1'</span>,
+  quantidade: <span class="string">3</span>,
+  precoUnitario: <span class="string">10</span>
+});
+
+<span class="keyword">// Adicionar parcela</span>
+dsPedidos.appendToFieldArray(<span class="string">'parcelas'</span>, {
+  numeroParcela: <span class="string">1</span>,
+  valorParcela: <span class="string">20</span>,
+  dataVencimento: <span class="keyword">new</span> Date(<span class="string">'2023-11-06'</span>)
+});
+
+<span class="keyword">await</span> dsPedidos.save();
+        </div>
+
+        <iframe src="archbase-hierarchy-datasource.svg"></iframe>
+
+        <div class="info-panel">
+            <h3>📚 Documentação Relacionada</h3>
+            <p>
+                <strong>archbase-array-operations.svg</strong> - Operações detalhadas em arrays<br>
+                <strong>archbase-datasource-states.svg</strong> - Estados do DataSource<br>
+                <strong>archbase-complete-architecture.svg</strong> - Arquitetura completa<br>
+                <strong>DATASOURCE_V2_ANALYSIS.md</strong> - Análise técnica profunda
+            </p>
+        </div>
+    </div>
+</body>
+</html>

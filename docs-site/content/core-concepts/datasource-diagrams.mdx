@@ -1,0 +1,174 @@
+# Diagramas do DataSource V2
+
+Esta página contém diagramas visuais que ajudam a entender a arquitetura e funcionamento do DataSource V2 do Archbase React.
+
+## Fluxo de Aprendizado Recomendado
+
+Para entender completamente o DataSource V2, recomendamos seguir esta ordem:
+
+1. **Arquitetura Completa** - Visão geral de todas as camadas
+2. **Binding Bidirecional** - Como os dados fluem entre componentes
+3. **Estados do DataSource** - Máquina de estados (BROWSE, EDIT, INSERT)
+4. **Operações em Arrays** - Recurso exclusivo V2 para manipular arrays
+5. **Hierarquia Master-Detail** - Padrão para relacionamentos entre DataSources
+
+---
+
+## 1. Arquitetura Completa
+
+![Arquitetura Completa](/images/diagrams/archbase-complete-architecture.png)
+
+### O que este diagrama mostra:
+
+- **Camada 1: React Components** - Componentes de UI que consomem o DataSource
+- **Camada 2: React Hooks** - Hooks que conectam React ao DataSource (`useArchbaseDataSourceV2`)
+- **Camada 3: DataSources** - Local (dados em memória) vs Remote (API backend)
+- **Camada 4: Immer** - Garante imutabilidade do estado
+
+### Diferenças: Local vs Remote
+
+| Característica | Local DataSource | Remote DataSource |
+|----------------|------------------|-------------------|
+| **Dados** | Memória | Backend API |
+| **Paginação** | Não | Sim |
+| **Filtragem** | Local | RSQL no servidor |
+| **Ideal para** | Formulários simples | Listas grandes, CRUD completo |
+
+---
+
+## 2. Estados do DataSource
+
+![Estados do DataSource](/images/diagrams/archbase-datasource-states.png)
+
+### Máquina de Estados
+
+O DataSource possui três estados principais:
+
+| Estado | Descrição | Operações Permitidas |
+|--------|-----------|----------------------|
+| **BROWSE** | Navegação e leitura | `edit()`, `insert()`, navegação |
+| **EDIT** | Editando registro existente | `setFieldValue()`, `save()`, `cancel()` |
+| **INSERT** | Inserindo novo registro | `setFieldValue()`, `save()`, `cancel()` |
+
+### Transições
+
+```
+BROWSE ──edit()──→ EDIT ──save()──→ BROWSE
+  ↑                  ↓
+  └────cancel()──────┘
+
+BROWSE ──insert()──→ INSERT ──save()──→ BROWSE
+  ↑                      ↓
+  └──────cancel()────────┘
+```
+
+### Backup Automático
+
+Ao entrar em modo **EDIT**, o DataSource cria automaticamente um backup do registro original (`originalRecord`), permitindo cancelar as alterações com `cancel()`.
+
+---
+
+## 3. Operações em Arrays
+
+![Operações em Arrays](/images/diagrams/archbase-array-operations.png)
+
+### Recurso Exclusivo V2
+
+O DataSource V2 oferece operações type-safe para manipular campos que são arrays:
+
+```typescript
+// Adicionar item ao final do array
+dsPedidos.appendToFieldArray('itens', novoItem);
+
+// Atualizar item específico
+dsPedidos.updateFieldArrayItem('itens', 0, draft => {
+  draft.quantidade = 5;
+  draft.precoUnitario = 10;
+});
+
+// Remover item por índice
+dsPedidos.removeFromFieldArray('itens', 0);
+
+// Inserir em posição específica
+dsPedidos.insertIntoFieldArray('itens', 1, novoItem);
+
+// Obter array completo
+const itens = dsPedidos.getFieldArray('itens');
+
+// Verificar se campo é array
+if (dsPedidos.isFieldArray('itens')) {
+  // ...
+}
+```
+
+### Benefícios
+
+- **Type-Safe** - TypeScript valida os tipos em tempo de compilação
+- **Imutabilidade** - Usa Immer internamente para garantir estado imutável
+- **Eventos** - Emite `fieldChanged` automaticamente após cada operação
+- **Reativo** - Componentes são atualizados automaticamente
+
+---
+
+## 4. Hierarquia Master-Detail
+
+![Hierarquia Master-Detail](/images/diagrams/archbase-hierarchy-datasource.png)
+
+### Padrão Master-Detail
+
+O padrão Master-Detail permite relacionar múltiplos DataSources, onde um DataSource "mestre" controla o estado de DataSources "detalhe".
+
+### Exemplo: Sistema de Pedidos
+
+```typescript
+// DataSource Master - Pedido
+const dsPedidos = useArchbaseDataSourceV2<Pedido>({
+  name: 'dsPedidos',
+  initialData: pedidos,
+});
+
+// DataSource Detail - Itens do Pedido
+const dsPedidoItens = useArchbaseDataSourceV2<ItemPedido>({
+  name: 'dsPedidoItens',
+  initialData: [], // Será preenchido baseado no pedido atual
+});
+
+// Quando o pedido muda, atualizar os itens
+useEffect(() => {
+  const pedidoAtual = dsPedidos.getCurrentRecord();
+  if (pedidoAtual) {
+    dsPedidoItens.loadData(pedidoAtual.itens || []);
+  }
+}, [dsPedidos.getCurrentRecord()]);
+```
+
+### Três DataSources Relacionados
+
+No diagrama acima, temos:
+
+- **dsPedidos (Master)** - Contém os dados principais do pedido
+- **dsPedidoItens (Detail)** - Itens do pedido (array)
+- **dsPedidoParcelas (Detail)** - Parcelas do pedido (array)
+
+### Sincronização Automática
+
+Quando o DataSource Master navega para um registro diferente:
+1. Evento `afterScroll` é disparado
+2. DataSources Detail são automaticamente atualizados
+3. Componentes vinculados são renderizados novamente
+
+---
+
+## Versões Interativas
+
+Alguns diagramas possuem versões interativas em HTML que você pode abrir diretamente no navegador:
+
+- [Hierarquia Master-Detail Interativa](/interactive/archbase-hierarchy-datasource.html)
+
+---
+
+## Próximos Passos
+
+- [DataSource V2 - Conceitos](/core-concepts/datasource-v2) - Documentação completa do DataSource
+- [Hooks](/core-concepts/hooks) - Hooks disponíveis no Archbase
+- [Exemplos](/examples) - Exemplos práticos de uso

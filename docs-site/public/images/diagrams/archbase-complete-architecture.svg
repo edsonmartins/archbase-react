@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1980 1320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradReact" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" style="stop-color:#61DAFB;stop-opacity:1"/>
+      <stop offset="1" style="stop-color:#21A0C8;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="gradHooks" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" style="stop-color:#7B68EE;stop-opacity:1"/>
+      <stop offset="1" style="stop-color:#9370DB;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="gradLocal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" style="stop-color:#0066CC;stop-opacity:1"/>
+      <stop offset="1" style="stop-color:#00A3E0;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="gradRemote" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" style="stop-color:#00BCD4;stop-opacity:1"/>
+      <stop offset="1" style="stop-color:#26C6DA;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="gradImmer" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" style="stop-color:#7CB342;stop-opacity:1"/>
+      <stop offset="1" style="stop-color:#9CCC65;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#0066CC"/>
+    </marker>
+    <marker id="arrowCyan" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#00BCD4"/>
+    </marker>
+    <style>
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+      }
+      @keyframes flow {
+        0% { stroke-dashoffset: 1000; }
+        100% { stroke-dashoffset: 0; }
+      }
+      .pulse { animation: pulse 2s ease-in-out infinite; }
+      .flow {
+        stroke-dasharray: 10 5;
+        animation: flow 2s linear infinite;
+      }
+    </style>
+  </defs>
+  <rect width="1800" height="1200" fill="#f8fafc"/>
+  <text x="900" y="60" text-anchor="middle" font-size="52" font-weight="700" fill="#1e293b" font-family="system-ui" style="white-space: pre;">
+    Archbase React V3 - Arquitetura Completa
+  </text>
+  <text x="900" y="105" text-anchor="middle" font-size="22" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    DataSource V2 com Imutabilidade, Type-Safety e Operações Avançadas
+  </text>
+  <line x1="300" y1="125" x2="1500" y2="125" stroke="url(#gradLocal)" stroke-width="4" opacity="0.3"/>
+  <g>
+    <rect x="50" y="160" width="1700" height="140" rx="20" fill="url(#gradReact)" filter="url(#shadow)"/>
+    <text x="900" y="210" text-anchor="middle" font-size="32" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      ⚛️ REACT COMPONENTS
+    </text>
+    <text x="900" y="245" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)" font-family="system-ui" style="white-space: pre;">
+      Forms • Tables • Inputs • Selects • Custom Components
+    </text>
+    <text x="900" y="275" text-anchor="middle" font-size="14" fill="rgba(255,255,255,0.8)" font-family="system-ui" style="white-space: pre;">
+      Componentes UI conectados via props: dataSource, field, value, onChange
+    </text>
+  </g>
+  <path d="M 900 300 L 900 340" fill="none" stroke="#61DAFB" stroke-width="6" marker-end="url(#arrowCyan)" class="flow"/>
+  <text x="920" y="325" font-size="14" fill="#61DAFB" font-weight="600" font-family="system-ui" style="white-space: pre;">
+    Props binding
+  </text>
+  <g>
+    <rect x="50" y="350" width="1700" height="180" rx="20" fill="white" filter="url(#shadow)"/>
+    <rect x="50" y="350" width="1700" height="60" rx="20" fill="url(#gradHooks)"/>
+    <text x="900" y="390" text-anchor="middle" font-size="28" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      🪝 REACT HOOKS LAYER
+    </text>
+    <rect x="80" y="430" width="530" height="80" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="345" y="455" text-anchor="middle" font-size="16" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      useArchbaseDataSourceV2
+    </text>
+    <text x="100" y="480" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Estado reativo (currentRecord, isLoading)
+    </text>
+    <text x="100" y="500" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Callbacks memoizados (edit, save, cancel)
+    </text>
+    <rect x="635" y="430" width="530" height="80" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="900" y="455" text-anchor="middle" font-size="16" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      useArchbaseRemoteDataSourceV2
+    </text>
+    <text x="655" y="480" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Estado reativo + remote (grandTotalRecords)
+    </text>
+    <text x="655" y="500" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Ops remotas (applyFilter, refreshData, setPageSize)
+    </text>
+    <rect x="1190" y="430" width="530" height="80" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="1455" y="455" text-anchor="middle" font-size="16" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      Variações Especializadas
+    </text>
+    <text x="1210" y="480" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • ReadOnly: otimizado para leitura
+    </text>
+    <text x="1210" y="500" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Editor: todas ops de modificação
+    </text>
+  </g>
+  <path d="M 345 530 L 345 590" fill="none" stroke="#7B68EE" stroke-width="5" marker-end="url(#arrowBlue)" class="flow"/>
+  <path d="M 900 530 L 900 590" fill="none" stroke="#7B68EE" stroke-width="5" marker-end="url(#arrowCyan)" class="flow"/>
+  <text x="365" y="565" font-size="14" fill="#7B68EE" font-weight="600" font-family="system-ui" style="white-space: pre;">
+    Event listeners
+  </text>
+  <text x="920" y="565" font-size="14" fill="#7B68EE" font-weight="600" font-family="system-ui" style="white-space: pre;">
+    Event listeners
+  </text>
+  <g>
+    <rect x="80" y="600" width="750" height="320" rx="20" fill="white" filter="url(#shadow)"/>
+    <rect x="80" y="600" width="750" height="60" rx="20" fill="url(#gradLocal)"/>
+    <text x="455" y="640" text-anchor="middle" font-size="26" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      💾 ArchbaseDataSourceV2 (Local)
+    </text>
+    <rect x="100" y="680" width="710" height="220" rx="12" fill="#f8fafc"/>
+    <text x="120" y="710" font-size="15" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      Características:
+    </text>
+    <text x="130" y="735" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      🔒 Imutabilidade com Immer
+    </text>
+    <text x="130" y="755" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      🎯 Operações em arrays type-safe
+    </text>
+    <text x="130" y="775" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      📡 Sistema completo de eventos
+    </text>
+    <text x="130" y="795" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      🔄 Estados: browse/edit/insert
+    </text>
+    <text x="130" y="815" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      💾 Backup automático no edit
+    </text>
+    <text x="130" y="835" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      ✅ Validação integrada
+    </text>
+    <text x="130" y="855" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      ⚡ Performance otimizada
+    </text>
+    <text x="130" y="880" font-size="13" fill="#0066CC" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      💡 Ideal para: dados já carregados, formulários
+    </text>
+    <rect x="870" y="600" width="850" height="320" rx="20" fill="white" filter="url(#shadow)"/>
+    <rect x="870" y="600" width="850" height="60" rx="20" fill="url(#gradRemote)"/>
+    <text x="1295" y="640" text-anchor="middle" font-size="26" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      ☁️ ArchbaseRemoteDataSourceV2 (Remote)
+    </text>
+    <rect x="890" y="680" width="810" height="220" rx="12" fill="#f8fafc"/>
+    <text x="910" y="710" font-size="15" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      Características Local + Remote:
+    </text>
+    <text x="920" y="735" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      🌐 CRUD remoto via ArchbaseRemoteApiService
+    </text>
+    <text x="920" y="755" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      📄 Paginação completa (currentPage, pageSize, grandTotal)
+    </text>
+    <text x="920" y="775" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      🔍 Filtragem RSQL (QUICK, NORMAL, ADVANCED)
+    </text>
+    <text x="920" y="795" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      🔄 refreshData mantém estado de página/filtro
+    </text>
+    <text x="920" y="815" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      📊 records vs filteredRecords (performance)
+    </text>
+    <text x="920" y="835" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      🔌 Preparado para TanStack Query integration
+    </text>
+    <text x="920" y="855" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      ⚡ Cache timestamps (lastDataChangedAt, lastDataBrowsingOn)
+    </text>
+    <text x="920" y="880" font-size="13" fill="#00BCD4" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      💡 Ideal para: grandes volumes, backend APIs, filtros complexos
+    </text>
+  </g>
+  <g>
+    <rect x="80" y="950" width="1640" height="220" rx="20" fill="white" filter="url(#shadow)"/>
+    <rect x="80" y="950" width="1640" height="60" rx="20" fill="url(#gradImmer)"/>
+    <text x="900" y="990" text-anchor="middle" font-size="28" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      🔒 IMMER - Imutabilidade Automática
+    </text>
+    <rect x="110" y="1030" width="500" height="120" rx="12" fill="#263238"/>
+    <text x="130" y="1055" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
+      this.records = produce(
+    </text>
+    <text x="140" y="1075" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
+      this.records,
+    </text>
+    <text x="140" y="1095" font-size="13" fill="#FFD54F" font-family="monospace" style="white-space: pre;">
+      draft =&gt; {
+    </text>
+    <text x="150" y="1115" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      // Mutate draft safely
+    </text>
+    <text x="150" y="1135" font-size="13" fill="#90CAF9" font-family="monospace" style="white-space: pre;">
+      draft[index].field = value;
+    </text>
+    <rect x="640" y="1030" width="520" height="120" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="660" y="1055" font-size="14" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      ✓ Vantagens da Imutabilidade:
+    </text>
+    <text x="670" y="1080" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Previne bugs de mutação acidental
+    </text>
+    <text x="670" y="1100" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Facilita time-travel debugging
+    </text>
+    <text x="670" y="1120" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Otimiza re-renders do React
+    </text>
+    <text x="670" y="1140" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • Simplifica controle de mudanças
+    </text>
+    <rect x="1190" y="1030" width="500" height="120" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="1210" y="1055" font-size="14" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+      🆕 V2 Operations (Type-Safe):
+    </text>
+    <text x="1220" y="1080" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • appendToFieldArray(field, item)
+    </text>
+    <text x="1220" y="1100" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • updateFieldArrayItem(field, idx, updater)
+    </text>
+    <text x="1220" y="1120" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • removeFromFieldArray(field, idx)
+    </text>
+    <text x="1220" y="1140" font-size="13" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+      • insertIntoFieldArray(field, idx, item)
+    </text>
+  </g>
+  <g>
+    <rect x="1750" y="200" width="35" height="150" rx="17" fill="#9C27B0"/>
+    <text x="1767" y="240" text-anchor="middle" font-size="20" fill="white" font-weight="700" transform="matrix(0, 1, -1, 0, 1999, -1495)" style="white-space: pre; font-size: 20px;">
+      V2
+    </text>
+  </g>
+</svg>

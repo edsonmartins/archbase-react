@@ -1,6 +1,6 @@
-import type { StylesApi } from '@mantinex/demo';
+import type { StylesApiData } from '../components/StylesApiTable';
 
-export const ArchbaseCompositeFiltersStylesApi: StylesApi = {
+export const ArchbaseCompositeFiltersStylesApi: StylesApiData = {
   selectors: {
     root: 'Container do componente',
     container: 'Contêiner principal com borda',
@@ -9,7 +9,10 @@ export const ArchbaseCompositeFiltersStylesApi: StylesApi = {
     rsqlOutput: 'Área de exibição do RSQL gerado',
   },
   vars: {
-    variant: 'Variante visual: default, compact, minimal',
+    variant: {
+      default: 'Variante padrão',
+      compact: 'Variante compacta',
+      minimal: 'Variante mínima',
+    },
   },
-  staticSelectors: [],
 };

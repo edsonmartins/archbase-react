@@ -1,0 +1,242 @@
+# Fluxo de Aprendizado - DataSource V2
+
+Este guia apresenta uma ordem recomendada para aprender o DataSource V2, do nível iniciante ao avançado. Siga o caminho sugerido para construir uma compreensão sólida e progressiva.
+
+## 🎓 Nível Iniciante
+
+Comece aqui se você é novo no DataSource V2 ou no Archbase React.
+
+### 1. O Que é DataSource?
+
+Entenda o problema que o DataSource resolve e por que usá-lo.
+
+**Leia:** [Introdução ao DataSource V2](/core-concepts/datasource-v2#o-que-%C3%A9-datasource)
+
+**Você aprenderá:**
+- O que é um DataSource
+- Quais problemas ele resolve
+- Quando usar DataSource vs estado manual
+
+### 2. Arquitetura
+
+Compreenda a arquitetura de três camadas do DataSource.
+
+**Leia:** [Arquitetura](/core-concepts/datasource-v2#arquitetura)
+
+**Você aprenderá:**
+- Como Componentes, DataSource e Service trabalham juntos
+- Responsabilidades de cada camada
+- Benefícios da separação de responsabilidades
+
+### 3. Estados do DataSource
+
+Aprenda os três estados fundamentais: browse, edit e insert.
+
+**Leia:** [Estados do DataSource](/core-concepts/datasource-v2#estados-do-datasource)
+
+**Você aprenderá:**
+- Diferença entre browse, edit e insert
+- Transições entre estados
+- Quais operações são permitidas em cada estado
+
+### 4. Hook Básico
+
+Pratique com o hook principal `useArchbaseDataSourceV2`.
+
+**Leia:** [Hook useArchbaseDataSourceV2](/core-concepts/datasource-v2#hook-usearchbasedatasourcev2)
+
+**Exemplo prático:**
+```tsx
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+function MeuFormulario() {
+  const { dataSource, edit, save, cancel } = useArchbaseDataSourceV2({
+    name: 'meu-ds',
+    initialData: [{ id: 1, nome: 'João' }],
+  });
+
+  return (
+    <>
+      <ArchbaseEdit dataSource={dataSource} dataField="nome" />
+      <Button onClick={edit}>Editar</Button>
+      <Button onClick={save}>Salvar</Button>
+    </>
+  );
+}
+```
+
+## 🔧 Nível Intermediário
+
+Depois de dominar os conceitos básicos, explore recursos mais avançados.
+
+### 5. Binding com Componentes
+
+Aprenda a conectar componentes de formulário ao DataSource.
+
+**Leia:** [Binding com Componentes](/core-concepts/datasource-v2#binding-com-componentes)
+
+**Você aprenderá:**
+- Como usar `dataSource` e `dataField`
+- Controle automático de habilitado/desabilitado
+- Binding bidirecional
+
+### 6. Operações em Arrays
+
+Domine as operações type-safe para manipular arrays aninhados.
+
+**Leia:** [Operações em Arrays](/core-concepts/datasource-v2#opera%C3%A7%C3%B5es-em-arrays)
+
+**Exemplo prático:**
+```tsx
+// Adicionar item ao array
+dataSource.appendToFieldArray('itens', { produto: 'X', quantidade: 1 });
+
+// Atualizar item específico
+dataSource.updateFieldArrayItem('itens', 0, draft => {
+  draft.quantidade = 5;
+});
+
+// Remover item
+dataSource.removeFromFieldArray('itens', 0);
+```
+
+### 7. Master-Detail
+
+Aprenda o padrão Master-Detail para relacionar DataSources.
+
+**Leia:** [Master-Detail](/core-concepts/datasource-v2#master-detail)
+
+**Você aprenderá:**
+- Como criar hierarquias de DataSources
+- Sincronização automática entre Master e Detail
+- Casos de uso comuns (pedido/itens, cliente/endereços)
+
+### 8. Sistema de Eventos
+
+Entenda o sistema completo de eventos do DataSource.
+
+**Leia:** [Sistema de Eventos](/core-concepts/datasource-v2#sistema-de-eventos)
+
+**Você aprenderá:**
+- Eventos do ciclo de vida (before/after)
+- Eventos de dados
+- Eventos de erro
+
+## 🚀 Nível Avançado
+
+Recursos avançados para aplicações empresariais complexas.
+
+### 9. Local vs Remote DataSource
+
+Compare as duas implementações e saiba quando usar cada uma.
+
+**Leia:** [Local vs Remote DataSource](/core-concepts/datasource-v2#local-vs-remote-datasource)
+
+**Você aprenderá:**
+- Diferenças entre ArchbaseDataSourceV2 e ArchbaseRemoteDataSourceV2
+- Quando usar cada implementação
+- Trade-offs de performance
+
+### 10. Paginação e Filtragem
+
+Aprenda a trabalhar com grandes volumes de dados.
+
+**Leia:** [Paginação e Filtragem](/core-concepts/datasource-v2#pagina%C3%A7%C3%A3o-e-filtragem-remote)
+
+**Você aprenderá:**
+- Paginação no RemoteDataSource
+- Filtros RSQL (QUICK, NORMAL, ADVANCED)
+- Otimizações para grandes listas
+
+### 11. Sistema de Validação
+
+Domine a validação integrada do DataSource.
+
+**Leia:** [Sistema de Validação](/core-concepts/datasource-v2#sistema-de-valida%C3%A7%C3%A3o)
+
+**Exemplo prático:**
+```typescript
+class PessoaValidator implements IDataSourceValidator<Pessoa> {
+  validateEntity(pessoa: Pessoa): FieldError[] {
+    const errors: FieldError[] = [];
+
+    if (!pessoa.nome || pessoa.nome.length < 3) {
+      errors.push({
+        fieldName: 'nome',
+        errorMessage: 'Nome deve ter pelo menos 3 caracteres',
+      });
+    }
+
+    return errors;
+  }
+}
+```
+
+### 12. Cache e Performance
+
+Entenda as otimizações de performance do DataSource V2.
+
+**Leia:** [Cache e Performance](/core-concepts/datasource-v2#cache-e-performance)
+
+**Você aprenderá:**
+- Dois arrays para performance
+- Timestamps para cache
+- Memoização no hook
+- Boas práticas de performance
+
+## 📚 Recursos Adicionais
+
+### Diagramas Visuais
+
+[Diagramas Interativos](/core-concepts/datasource-diagrams) - Visualize a arquitetura e fluxos do DataSource.
+
+### Exemplos Completos
+
+[Exemplo Completo](/core-concepts/datasource-v2#exemplo-completo) - Formulário completo com todas as funcionalidades.
+
+### Casos de Uso
+
+[Casos de Uso](/core-concepts/datasource-v2#casos-de-uso) - Exemplos reais de aplicação.
+
+### Boas Práticas
+
+[Boas Práticas](/core-concepts/datasource-v2#boas-pr%C3%A1ticas) - Padrões recomendados para produção.
+
+## 🎯 Checklist de Aprendizagem
+
+Use este checklist para acompanhar seu progresso:
+
+### Iniciante
+- [ ] Entendi o que é DataSource
+- [ ] Compreendi a arquitetura de 3 camadas
+- [ ] Sei diferenciar browse, edit e insert
+- [ ] Consigo criar um DataSource básico
+- [ ] Sei fazer binding de componentes
+
+### Intermediário
+- [ ] Consigo manipular arrays com type-safety
+- [ ] Implementei um padrão Master-Detail
+- [ ] Uso eventos do ciclo de vida
+- [ ] Trato erros com onError e onFieldError
+- [ ] Criei um formulário completo
+
+### Avançado
+- [ ] Sei quando usar Local vs Remote
+- [ ] Implementei paginação com RemoteDataSource
+- [ ] Criei filtros RSQL
+- [ ] Implementei validação customizada
+- [ ] Apliquei otimizações de performance
+- [ ] Entendi as variações de hooks
+
+## 🚀 Próximos Passos
+
+Após completar este fluxo de aprendizado:
+
+1. **Pratique com exemplos reais** - Crie formulários para casos de uso reais do seu projeto
+2. **Explore os componentes** - Conheça todos os componentes de formulário do Archbase
+3. **Integre com sua API** - Implemente ArchbaseRemoteDataSourceV2 com seu backend
+4. **Contribua** - Considere contribuir com a documentação ou exemplos
+
+---
+
+**Dica:** Salve este guia nos favoritos e consulte sempre que precisar de uma referência rápida sobre DataSource V2!

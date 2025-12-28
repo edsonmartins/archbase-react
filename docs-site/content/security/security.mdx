@@ -1,0 +1,1426 @@
+# Security & Authentication
+
+Sistema completo de autenticação, autorização e gerenciamento de usuários para aplicações empresariais com suporte a múltiplos contextos, multi-tenant e OAuth2.
+
+---
+
+## O Que é Security?
+
+O **Archbase Security** é um sistema de segurança completo que fornece:
+
+- **Autenticação OAuth2** com PKCE (Authorization Code Flow)
+- **Autorização baseada em permissões** por recurso e ação
+- **Contextual Authentication** - diferentes contextos de aplicação (WEB_ADMIN, STORE_APP, CUSTOMER_APP, etc.)
+- **Multi-Tenant Support** - isolamento de dados por tenant
+- **Token Management** - refresh automático e armazenamento seguro
+- **Componentes de UI** - modais e formulários de segurança prontos
+
+### Problemas que Resolve
+
+| Problema | Solução Archbase |
+|----------|------------------|
+| Login em diferentes contextos | `loginWithContext()` com contexto específico |
+| Controle de acesso granular | Permissões por recurso/ação (CRUD) |
+| Múltiplos tenants em um sistema | `ArchbaseTenantManager` |
+| Refresh de token transparente | Renovação automática antes da expiração |
+| UI de segurança | Modais e componentes prontos |
+
+### Quando Usar
+
+- Aplicações com múltiplos contextos (admin web, app loja, app cliente)
+- Sistemas multi-tenant
+- Aplicações com controle de acesso granular
+- Quando precisa de UI de login/segurança pronta
+- Integração com backend OAuth2
+
+---
+
+## Arquitetura do Sistema de Segurança
+
+![Arquitetura do Sistema de Segurança](/images/diagrams/archbase-security-architecture.png)
+
+### Três Camadas
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Camada 1: React Components (UI)                             │
+│  - ArchbaseLogin, UserModal, ProtectedComponent              │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Camada 2: Hooks & Providers                                 │
+│  - useArchbaseAuthenticationManager                          │
+│  - useArchbaseSecurity, useArchbaseSecureForm               │
+│  - ArchbaseSecurityProvider, ArchbaseViewSecurityProvider   │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Camada 3: Serviços & Managers                               │
+│  - ArchbaseAuthenticator (interface)                        │
+│  - ArchbaseSecurityManager                                   │
+│  - ArchbaseTokenManager                                      │
+│  - ArchbaseTenantManager                                     │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Camada 4: Backend API (OAuth2)                              │
+│  - /auth/login, /auth/refresh, /auth/logout                 │
+│  - /users, /permissions, /resources                         │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Pacotes
+
+| Pacote | Descrição |
+|--------|-----------|
+| `@archbase/security` | Core - providers, hooks, managers |
+| `@archbase/security-ui` | Componentes de UI - modais, formulários |
+
+---
+
+## Fluxo de Autenticação
+
+![Fluxo de Autenticação](/images/diagrams/archbase-auth-flow.png)
+
+### OAuth2 Authorization Code Flow com PKCE
+
+```
+┌─────────┐                    ┌─────────┐                    ┌──────────┐
+│ Cliente │                    │  Backend │                    │ OAuth2   │
+└────┬────┘                    └────┬────┘                    └────┬─────┘
+     │                              │                              │
+     │  1. loginWithContext()       │                              │
+     │─────────────────────────────>│                              │
+     │   {email, password, context} │                              │
+     │                              │                              │
+     │                              │  2. Valida credenciais       │
+     │                              │─────────────────────────────>│
+     │                              │                              │
+     │                              │  3. Access + Refresh Token   │
+     │                              │<─────────────────────────────│
+     │                              │                              │
+     │  4. Tokens + Context + User  │                              │
+     │<─────────────────────────────│                              │
+     │                              │                              │
+     │  5. Armazena tokens          │                              │
+     │  (localStorage)              │                              │
+     │                              │                              │
+     ────►Authenticated◄────────────┴──────────────────────────────┘
+```
+
+### Estados da Autenticação
+
+| Estado | Descrição |
+|--------|-----------|
+| `initialising` | Carregando tokens armazenados |
+| `authenticating` | Processando login |
+| `authenticated` | Usuário autenticado |
+| `error` | Erro na autenticação |
+
+### Token Management
+
+```typescript
+// Refresh automático antes de expirar
+const checkInterval = 30000;  // 30 segundos
+const expirationThreshold = 300;  // 5 minutos antes
+
+// Se token vai expirar em 5 min, renova automaticamente
+```
+
+---
+
+## Hook useArchbaseAuthenticationManager
+
+Hook principal para gerenciar autenticação.
+
+### Retorno
+
+```typescript
+interface AuthenticationManagerReturnType {
+  // Métodos básicos
+  login: (username: string, password: string, rememberMe: boolean) => void
+  logout: (clearRememberMe?: boolean) => void
+  username: string
+  isAuthenticating: boolean
+  isInitializing: boolean
+  isAuthenticated: boolean
+  isError: boolean
+  error: any
+  clearError: () => void
+  accessToken: string | null
+
+  // Autenticação contextual
+  loginWithContext?: (request: ContextualAuthenticationRequest, rememberMe?: boolean) => Promise<void>
+  loginFlexible?: (request: FlexibleLoginRequest, rememberMe?: boolean) => Promise<void>
+  loginSocial?: (request: SocialLoginRequest) => Promise<void>
+
+  // Informações de contexto
+  context?: ContextObject | null
+
+  // Detecção de capacidades
+  capabilities: {
+    hasContextualLogin: boolean
+    hasFlexibleLogin: boolean
+    hasSocialLogin: boolean
+    hasRegistration: boolean
+    hasContextSupport: boolean
+  }
+}
+```
+
+### Exemplo Básico
+
+```tsx
+import { useArchbaseAuthenticationManager } from '@archbase/security';
+
+function LoginForm() {
+  const { login, logout, isAuthenticated, isAuthenticating, error } =
+    useArchbaseAuthenticationManager();
+
+  const handleLogin = async () => {
+    try {
+      await login('user@example.com', 'password', true);
+    } catch (err) {
+      console.error('Login failed:', err);
+    }
+  };
+
+  return (
+    <>
+      {isAuthenticated ? (
+        <button onClick={() => logout()}>Sair</button>
+      ) : (
+        <button onClick={handleLogin} disabled={isAuthenticating}>
+          {isAuthenticating ? 'Entrando...' : 'Entrar'}
+        </button>
+      )}
+      {error && <p className="error">{error}</p>}
+    </>
+  );
+}
+```
+
+### Login com Contexto
+
+```tsx
+import { useArchbaseAuthenticationManager } from '@archbase/security';
+import type { ContextualAuthenticationRequest } from '@archbase/security';
+
+function ContextualLogin() {
+  const { loginWithContext, capabilities } = useArchbaseAuthenticationManager();
+
+  const handleLogin = async () => {
+    if (!capabilities.hasContextualLogin) {
+      console.error('Contextual login not supported');
+      return;
+    }
+
+    const request: ContextualAuthenticationRequest = {
+      email: 'admin@company.com',
+      password: 'password',
+      context: 'WEB_ADMIN'  // ou 'STORE_APP', 'CUSTOMER_APP', etc.
+    };
+
+    try {
+      await loginWithContext(request, true);  // rememberMe = true
+      console.log('Login successful!');
+    } catch (err) {
+      console.error('Login failed:', err);
+    }
+  };
+
+  return <button onClick={handleLogin}>Entrar como Admin</button>;
+}
+```
+
+---
+
+## Hook useArchbaseSecurity
+
+Hook para controle de autorização e permissões.
+
+### Retorno
+
+```typescript
+interface ArchbaseSecurityContextType {
+  user: UserDto | null
+  isLoading: boolean
+  hasGlobalPermission: (actionName: string) => boolean
+  hasAnyGlobalPermission: (actions: string[]) => boolean
+  hasAllGlobalPermissions: (actions: string[]) => boolean
+  isAdmin: boolean
+  error: string | null
+  setError: (error: string | null) => void
+}
+```
+
+### Exemplo
+
+```tsx
+import { useArchbaseSecurity } from '@archbase/security';
+
+function AdminPanel() {
+  const { isAdmin, hasGlobalPermission, user } = useArchbaseSecurity();
+
+  if (!isAdmin && !hasGlobalPermission('ADMIN_ACCESS')) {
+    return <AccessDenied />;
+  }
+
+  return (
+    <div>
+      <h1>Painel Administrativo</h1>
+      <p>Bem-vindo, {user?.name}</p>
+
+      {hasGlobalPermission('USER_MANAGEMENT') && (
+        <UserManagementPanel />
+      )}
+
+      {hasGlobalPermission('SYSTEM_CONFIG') && (
+        <SystemConfigPanel />
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+## Hook useArchbaseSecureForm
+
+Hook especializado para formulários com controle de permissões CRUD.
+
+### Retorno
+
+```typescript
+interface UseArchbaseSecureFormReturn {
+  hasPermission: (actionName: string) => boolean
+  hasAnyPermission: (actions: string[]) => boolean
+  hasAllPermissions: (actions: string[]) => boolean
+  registerAction: (actionName: string, actionDescription: string) => void
+  securityManager: ArchbaseSecurityManager
+
+  // Permissões CRUD pré-registradas
+  canCreate: boolean
+  canEdit: boolean
+  canDelete: boolean
+  canView: boolean
+  canList: boolean
+
+  isLoading: boolean
+  error: string | null
+}
+```
+
+### Exemplo com ArchbaseViewSecurityProvider
+
+```tsx
+import { ArchbaseViewSecurityProvider, useArchbaseSecureForm } from '@archbase/security';
+
+function ProductForm() {
+  const { canCreate, canEdit, canDelete, canView } = useArchbaseSecureForm();
+
+  return (
+    <form>
+      <input name="name" disabled={!canEdit} />
+
+      {canCreate && (
+        <button type="submit">Salvar</button>
+      )}
+
+      {canDelete && (
+        <button type="button">Excluir</button>
+      )}
+    </form>
+  );
+}
+
+// Wrapper com provider
+function SecuredProductForm() {
+  return (
+    <ArchbaseViewSecurityProvider
+      resourceName="tms.produto"
+      resourceDescription="Produtos"
+    >
+      <ProductForm />
+    </ArchbaseViewSecurityProvider>
+  );
+}
+```
+
+### Hook Customizado (Padrão Recomendado)
+
+```tsx
+import { useArchbaseSecureForm } from '@archbase/security';
+
+// Hook customizado para padronizar nomenclatura
+export function useGestorRQSecurity({ module, entity, description }) {
+  const resourceName = `${module}.${entity}`;
+  const resourceDescription = description || entity;
+
+  return useArchbaseSecureForm(resourceName, resourceDescription);
+}
+
+// Uso
+function MecanicoForm() {
+  const { canCreate, canEdit, canDelete } = useGestorRQSecurity({
+    module: 'tms',
+    entity: 'mecanico',
+    description: 'Mecânicos'
+  });
+
+  return (
+    <>
+      {canEdit && <button>Salvar</button>}
+      {canDelete && <button>Excluir</button>}
+    </>
+  );
+}
+```
+
+---
+
+## Providers de Segurança
+
+### ArchbaseSecurityProvider
+
+Provider global de segurança - deve envolver toda a aplicação.
+
+```tsx
+import { ArchbaseSecurityProvider } from '@archbase/security';
+import { ArchbaseAuthenticationProvider } from '@archbase/security';
+
+function App() {
+  return (
+    <ArchbaseAuthenticationProvider
+      authenticator={myAuthenticator}
+      onLoginSuccess={() => console.log('Login success')}
+      onLogout={() => console.log('Logout')}
+    >
+      <ArchbaseSecurityProvider user={currentUser}>
+        <MyApp />
+      </ArchbaseSecurityProvider>
+    </ArchbaseAuthenticationProvider>
+  );
+}
+```
+
+### ArchbaseViewSecurityProvider
+
+Provider específico para views/formulários - controla permissões por recurso.
+
+```tsx
+<ArchbaseViewSecurityProvider
+  resourceName="tms.ordemservico"
+  resourceDescription="Ordens de Serviço"
+  requiredPermissions={['view', 'list']}  // Permissões obrigatórias
+  fallbackComponent={<AccessDenied />}
+  onSecurityReady={(manager) => console.log('Security ready', manager)}
+>
+  <OrderServiceList />
+</ArchbaseViewSecurityProvider>
+```
+
+#### Props
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `resourceName` | `string` | Nome do recurso (ex: `tms.mecanico`) |
+| `resourceDescription` | `string` | Descrição amigável |
+| `requiredPermissions` | `string[]` | Permissões obrigatórias para acesso |
+| `fallbackComponent` | `ReactNode` | Componente exibido sem acesso |
+| `onSecurityReady` | `(manager) => void` | Callback quando segurança carregada |
+
+---
+
+## Contextual Authentication
+
+A **Autenticação Contextual** permite que um mesmo usuário faça login em diferentes contextos de aplicação, com dados específicos para cada contexto.
+
+### O Que é Contexto?
+
+Contexto representa a **aplicação ou tipo de acesso** que o usuário está utilizando:
+
+| Contexto | Descrição | Exemplo de Uso |
+|----------|-----------|----------------|
+| `WEB_ADMIN` | Painel administrativo web | Gestão geral do sistema |
+| `STORE_APP` | Aplicativo da loja | Lojistas gerenciando sua loja |
+| `CUSTOMER_APP` | App do cliente | Clientes fazendo pedidos |
+| `DRIVER_APP` | App do motorista | Motoristas entregando |
+| `VENDAX_APP` | App de vendas | Vendedores em campo |
+
+### ContextObject
+
+```typescript
+interface ContextObject {
+  type: string              // Tipo do contexto
+  adminId?: string          // ID do admin
+  storeId?: string          // ID da loja (para STORE_APP)
+  customerId?: string       // ID do cliente
+  driverId?: string         // ID do motorista
+  name?: string             // Nome do usuário no contexto
+  email?: string            // Email
+  profilePicture?: string   // Foto
+  accessLevel?: string      // Nível de acesso
+  availableModules?: string[]  // Módulos disponíveis
+  status?: string           // Status do usuário
+  [key: string]: any        // Dados adicionais
+}
+```
+
+### Exemplo do Gestor-RQ
+
+```typescript
+interface GestoRQUserContext {
+  type: 'VENDAX_APP' | 'WEB_ADMIN'
+  userId: string
+  fullName: string
+  email: string
+  role: 'PRE_VENDEDOR' | 'VENDEDOR' | 'COORDENADOR' | 'SUPERVISOR' | 'GERENTE' | 'ADMIN'
+  status: 'ONLINE' | 'OFFLINE' | 'ABSENT' | 'AFTER_HOURS' | 'BREAK' | 'BUSY'
+
+  // Território e equipe
+  territoryId?: string
+  teamId?: string
+  supervisorId?: string
+
+  // WhatsApp
+  whatsappNumber?: string
+  whatsappConnected: boolean
+
+  // Horário de trabalho
+  enforceWorkingHours: boolean
+  workingHoursStart?: string
+  workingHoursEnd?: string
+
+  // Permissões específicas
+  permissions: string[]
+
+  // Flags
+  isActive: boolean
+  canAccessWhatsApp: boolean
+  isInWorkingHours: boolean
+}
+```
+
+### Implementando Contextual Authentication
+
+```typescript
+@injectable()
+export class GestorRQAuthenticator implements ArchbaseAuthenticator {
+  public async loginWithContext(
+    request: ContextualAuthenticationRequest
+  ): Promise<GestorRQLoginResponse> {
+    // Obtém tenant selecionado
+    const tenantManager = ArchbaseTenantManager.getInstance();
+    const tenantId = tenantManager.currentTenant?.id;
+
+    // Header multi-tenant
+    const headers: Record<string, string> = {};
+    if (tenantId) {
+      headers['X-TENANT-ID'] = tenantId;
+    }
+
+    // Contexto vai no body da requisição
+    return this.client.post<LoginRequest, GestorRQLoginResponse>(
+      '/api/v1/auth/login',
+      request,  // { email, password, context: 'WEB_ADMIN' }
+      headers,
+      true  // withoutToken
+    );
+  }
+}
+```
+
+### Usando Contexto no Frontend
+
+```tsx
+import { useArchbaseAuthenticationManager } from '@archbase/security';
+
+function LoginWithContext() {
+  const { loginWithContext, context } = useArchbaseAuthenticationManager();
+
+  const loginAsAdmin = async () => {
+    await loginWithContext({
+      email: 'admin@company.com',
+      password: 'password',
+      context: 'WEB_ADMIN'
+    });
+  };
+
+  const loginAsStore = async () => {
+    await loginWithContext({
+      email: 'lojista@company.com',
+      password: 'password',
+      context: 'STORE_APP'
+    });
+  };
+
+  return (
+    <div>
+      <button onClick={loginAsAdmin}>Entrar como Admin</button>
+      <button onClick={loginAsStore}>Entrar como Lojista</button>
+
+      {context && (
+        <div>
+          <p>Contexto: {context.type}</p>
+          <p>Nome: {context.name}</p>
+          <p>Status: {context.status}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+## Autorização e Permissões
+
+### Sistema de Permissões
+
+As permissões são organizadas por **recurso** e **ação**:
+
+A nomenclatura de permissões segue o formato: `` `{modulo}.{entidade}:{acao}` ``
+
+#### Nomenclatura
+
+| Formato | Exemplo | Significado |
+|---------|---------|-------------|
+| `{modulo}.{entidade}` | `tms.mecanico` | Recurso (Mecânicos do TMS) |
+| `create` | `tms.mecanico:create` | Pode criar mecânicos |
+| `read` / `view` | `tms.mecanico:view` | Pode ver mecânicos |
+| `update` / `edit` | `tms.mecanico:edit` | Pode editar mecânicos |
+| `delete` | `tms.mecanico:delete` | Pode excluir mecânicos |
+| `list` | `tms.mecanico:list` | Pode listar mecânicos |
+
+### Constantes de Recursos
+
+```typescript
+// Padrao recomendado: constantes para evitar typos
+export const TMS_SECURITY_RESOURCES = {
+  MECANICO: { name: 'tms.mecanico', description: 'Mecânicos' },
+  PECA_MATERIAL: { name: 'tms.pecamaterial', description: 'Peças e Materiais' },
+  ORDEM_SERVICO: { name: 'tms.ordemservico', description: 'Ordens de Serviço' },
+  VEICULO: { name: 'tms.veiculo', description: 'Veículos' },
+  PNEU: { name: 'tms.pneu', description: 'Pneus' },
+} as const;
+```
+
+### Verificação Manual de Permissões
+
+```tsx
+import { useArchbaseViewSecurity } from '@archbase/security';
+
+function ProductGrid() {
+  const { hasPermission } = useArchbaseViewSecurity();
+
+  const canCreateProduct = hasPermission('tms.produto:create');
+  const canEditProduct = hasPermission('tms.produto:edit');
+  const canDeleteProduct = hasPermission('tms.produto:delete');
+
+  return (
+    <div>
+      {canCreateProduct && <button>Novo Produto</button>}
+
+      <table>
+        <tbody>
+          {products.map(product => (
+            <tr key={product.id}>
+              <td>{product.name}</td>
+              <td>
+                {canEditProduct && <button>Editar</button>}
+                {canDeleteProduct && <button>Excluir</button>}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+```
+
+### Verificação Múltipla
+
+```tsx
+const { hasAnyPermission, hasAllPermissions } = useArchbaseViewSecurity();
+
+// Tem PELO MENOS UMA destas permissões
+const canModify = hasAnyPermission(['produto:edit', 'produto:delete']);
+
+// Tem TODAS estas permissões
+const canFullAccess = hasAllPermissions(['produto:create', 'produto:edit', 'produto:delete']);
+```
+
+---
+
+## Componentes de Segurança
+
+### ArchbaseLogin
+
+Componente de login completo.
+
+```tsx
+import { ArchbaseLogin } from '@archbase/security';
+
+<ArchbaseLogin
+  logo="/logo.png"
+  title="Sistema TMS"
+  onLoginSuccess={() => navigate('/dashboard')}
+  context="WEB_ADMIN"
+/>
+```
+
+### ProtectedComponent
+
+Envolve componentes que requerem permissão.
+
+```tsx
+import { ProtectedComponent } from '@archbase/security';
+
+<ProtectedComponent
+  permission="tms.mecanico:delete"
+  fallback={<span>Você não pode excluir mecânicos</span>}
+>
+  <button onClick={handleDelete}>Excluir Mecânico</button>
+</ProtectedComponent>
+```
+
+### SecureButton
+
+Botão com controle de permissão integrado.
+
+```tsx
+import { SecureButton } from '@archbase/security';
+
+<SecureButton
+  permission="tms.ordemservico:create"
+  onClick={handleCreate}
+  label="Nova OS"
+  color="blue"
+/>
+
+<SecureButton
+  permission="tms.ordemservico:edit"
+  onClick={handleEdit}
+  label="Editar"
+  color="green"
+/>
+
+<SecureButton
+  permission="tms.ordemservico:delete"
+  onClick={handleDelete}
+  label="Excluir"
+  color="red"
+/>
+```
+
+### Modais de Gestão
+
+```tsx
+import { UserModal, GroupModal, PermissionsSelectorModal } from '@archbase/security-ui';
+
+// Modal de usuário
+<UserModal
+  opened={userModalOpen}
+  onClose={() => setUserModalOpen(false)}
+  userId={selectedUserId}
+/>
+
+// Modal de grupo
+<GroupModal
+  opened={groupModalOpen}
+  onClose={() => setGroupModalOpen(false)}
+  groupId={selectedGroupId}
+/>
+
+// Seletor de permissões
+<PermissionsSelectorModal
+  opened={permissionsOpen}
+  onClose={() => setPermissionsOpen(false)}
+  resourceName="tms.mecanico"
+  onSelect={(permissions) => console.log(permissions)}
+/>
+```
+
+---
+
+## Serviços de Segurança
+
+### ArchbaseUserService
+
+Gerenciamento de usuários.
+
+```typescript
+class ArchbaseUserService {
+  findAll(): Promise<UserDto[]>
+  findById(id: string): Promise<UserDto>
+  create(user: UserDto): Promise<UserDto>
+  update(user: UserDto): Promise<UserDto>
+  delete(id: string): Promise<void>
+  findByEmail(email: string): Promise<UserDto | null>
+  changePassword(userId: string, oldPassword: string, newPassword: string): Promise<void>
+}
+```
+
+### ArchbaseGroupService
+
+Gerenciamento de grupos/perfis.
+
+```typescript
+class ArchbaseGroupService {
+  findAll(): Promise<GroupDto[]>
+  findById(id: string): Promise<GroupDto>
+  create(group: GroupDto): Promise<GroupDto>
+  update(group: GroupDto): Promise<GroupDto>
+  delete(id: string): Promise<void>
+  addPermission(groupId: string, permission: string): Promise<void>
+  removePermission(groupId: string, permission: string): Promise<void>
+}
+```
+
+### ArchbaseResourceService
+
+Gerenciamento de recursos e permissões.
+
+```typescript
+class ArchbaseResourceService {
+  // Registra recurso e suas ações
+  registerResource(request: {
+    resource: SimpleResourceDto
+    actions: SimpleActionDto[]
+  }): Promise<ResourcePermissionsDto>
+
+  // Lista permissões de um usuário
+  getUserPermissions(userId: string): Promise<string[]>
+
+  // Verifica permissão
+  checkPermission(userId: string, resource: string, action: string): Promise<boolean>
+}
+```
+
+### ArchbaseAccessTokenService
+
+Gerenciamento de tokens de API.
+
+```typescript
+class ArchbaseAccessTokenService {
+  create(userId: string, name: string): Promise<ApiTokenDto>
+  findAll(userId: string): Promise<ApiTokenDto[]>
+  revoke(tokenId: string): Promise<void>
+  validate(token: string): Promise<boolean>
+}
+```
+
+---
+
+## Multi-Tenant Support
+
+O Archbase suporta **multi-tenancy** através do `ArchbaseTenantManager`.
+
+### ArchbaseTenantManager
+
+Singleton que gerencia o tenant atual.
+
+```typescript
+interface ArchbaseTenantInfo {
+  id: string
+  code?: string
+  descricao: string
+  imagemApresentacao?: string
+}
+
+class ArchbaseTenantManager {
+  static getInstance(): ArchbaseTenantManager
+
+  get currentTenant(): ArchbaseTenantInfo | null
+  set currentTenant(tenant: ArchbaseTenantInfo | null)
+
+  get availableTenants(): ArchbaseTenantInfo[]
+  setAvailableTenants(tenants: ArchbaseTenantInfo[]): void
+
+  // Helper para headers de API
+  getHeaders(): Record<string, string>  // { 'X-TENANT-ID': '...' }
+
+  clear(): void
+}
+```
+
+### Seleção de Tenant
+
+```tsx
+import { ArchbaseTenantManager } from '@archbase/security';
+
+function TenantSelector() {
+  const tenantManager = ArchbaseTenantManager.getInstance();
+  const [currentTenant, setCurrentTenant] = useState(tenantManager.currentTenant);
+
+  const handleTenantChange = (tenantId: string) => {
+    const tenant = tenantManager.availableTenants.find(t => t.id === tenantId);
+    if (tenant) {
+      tenantManager.setCurrentTenant(tenant);
+      setCurrentTenant(tenant);
+      // Fazer logout para reautenticar no novo tenant
+      logout();
+    }
+  };
+
+  return (
+    <select value={currentTenant?.id} onChange={(e) => handleTenantChange(e.target.value)}>
+      {tenantManager.availableTenants.map(tenant => (
+        <option key={tenant.id} value={tenant.id}>
+          {tenant.descricao}
+        </option>
+      ))}
+    </select>
+  );
+}
+```
+
+### Header X-TENANT-ID
+
+O tenant selecionado é automaticamente incluído nas requisições:
+
+```typescript
+// No seu ArchbaseAuthenticator
+public async loginWithContext(request: ContextualAuthenticationRequest) {
+  const tenantManager = ArchbaseTenantManager.getInstance();
+  const tenantId = tenantManager.currentTenant?.id;
+
+  const headers: Record<string, string> = {};
+  if (tenantId) {
+    headers['X-TENANT-ID'] = tenantId;  // ← Backend usa este header
+  }
+
+  return this.client.post('/api/v1/auth/login', request, headers, true);
+}
+```
+
+---
+
+## Exemplo Completo (Gestor-RQ)
+
+Este exemplo demonstra uma implementação completa do sistema de segurança.
+
+### 1. App.tsx - Configuração de Providers
+
+```tsx
+import { ArchbaseSecurityProvider } from '@archbase/security';
+import { ArchbaseAuthenticationProvider } from '@archbase/security';
+import { GestorRQAuthenticator } from './auth/GestorRQAuthenticator';
+import { IOCContainer } from 'inversify-orchestrator';
+
+const authenticator = new GestorRQAuthenticator(apiClient);
+IOCContainer.getContainer().bind<ArchbaseAuthenticator>(ARCHBASE_IOC_API_TYPE.Authenticator).toConstantValue(authenticator);
+
+function App() {
+  const [currentUser, setCurrentUser] = useState<UserDto | null>(null);
+
+  return (
+    <ArchbaseAuthenticationProvider
+      authenticator={authenticator}
+      onLoginSuccess={(user) => setCurrentUser(user)}
+      onLogout={() => setCurrentUser(null)}
+    >
+      <ArchbaseSecurityProvider user={currentUser}>
+        <MainApp />
+      </ArchbaseSecurityProvider>
+    </ArchbaseAuthenticationProvider>
+  );
+}
+```
+
+### 2. useGestorRQSecurity - Hook Customizado
+
+```tsx
+import { useArchbaseSecureForm } from '@archbase/security';
+
+export type GestorRQModule = 'tms' | 'checklist' | 'viagem' | 'ticket' | 'reversa' | 'frota';
+
+interface UseGestorRQSecurityOptions {
+  module: GestorRQModule;
+  entity: string;
+  description?: string;
+}
+
+export function useGestorRQSecurity({ module, entity, description }: UseGestorRQSecurityOptions) {
+  const resourceName = `${module}.${entity}`;
+  const resourceDescription = description || entity.charAt(0).toUpperCase() + entity.slice(1);
+
+  return useArchbaseSecureForm(resourceName, resourceDescription);
+}
+
+export const TMS_SECURITY_RESOURCES = {
+  MECANICO: { name: 'tms.mecanico', description: 'Mecânicos' },
+  PECA_MATERIAL: { name: 'tms.pecamaterial', description: 'Peças e Materiais' },
+  ORDEM_SERVICO: { name: 'tms.ordemservico', description: 'Ordens de Serviço' },
+  VEICULO: { name: 'tms.veiculo', description: 'Veículos' },
+  MOTORISTA: { name: 'tms.motorista', description: 'Motoristas' },
+  PNEU: { name: 'tms.pneu', description: 'Pneus' },
+} as const;
+```
+
+### 3. PneuListView - View com Segurança
+
+```tsx
+import { ArchbaseViewSecurityProvider } from '@archbase/security';
+import { useGestorRQSecurity, TMS_SECURITY_RESOURCES } from './useGestorRQSecurity';
+
+function PneuListViewContent() {
+  const { canCreate, canEdit, canDelete, canView, canList } = useGestorRQSecurity({
+    module: 'tms',
+    entity: 'pneu',
+    description: 'Pneus'
+  });
+
+  const { dataSource } = useArchbaseDataSourceV2({
+    name: 'dsPneus',
+    initialData: pneusData,
+  });
+
+  if (!canView) {
+    return <AccessDenied message="Você não tem permissão para visualizar pneus" />;
+  }
+
+  return (
+    <div>
+      <PageHeader
+        title="Pneus"
+        actions={
+          canCreate && (
+            <Button onClick={() => dataSource.insert()}>Novo Pneu</Button>
+          )
+        }
+      />
+
+      <ArchbaseDataGrid
+        dataSource={dataSource}
+        columns={[
+          { field: 'codigo', header: 'Código' },
+          { field: 'marca', header: 'Marca' },
+          {
+            field: 'actions',
+            header: 'Ações',
+            render: (record) => (
+              <>
+                {canEdit && <button onClick={() => dataSource.edit(record)}>Editar</button>}
+                {canDelete && <button onClick={() => dataSource.delete(record)}>Excluir</button>}
+              </>
+            )
+          }
+        ]}
+      />
+    </div>
+  );
+}
+
+export default function PneuListView() {
+  return (
+    <ArchbaseViewSecurityProvider
+      resourceName={TMS_SECURITY_RESOURCES.PNEU.name}
+      resourceDescription={TMS_SECURITY_RESOURCES.PNEU.description}
+      requiredPermissions={['view', 'list']}
+      fallbackComponent={<AccessDenied />}
+    >
+      <PneuListViewContent />
+    </ArchbaseViewSecurityProvider>
+  );
+}
+```
+
+### 4. GestorRQAuthenticator - Autenticador Customizado
+
+```tsx
+@injectable()
+export class GestorRQAuthenticator implements ArchbaseAuthenticator {
+  constructor(@inject(ARCHBASE_IOC_API_TYPE.ApiClient) client: ArchbaseRemoteApiClient) {
+    this.client = client;
+  }
+
+  public async loginWithContext(
+    request: ContextualAuthenticationRequest | LoginRequest
+  ): Promise<GestorRQLoginResponse> {
+    const tenantManager = ArchbaseTenantManager.getInstance();
+    const tenantId = tenantManager.currentTenant?.id;
+
+    const headers: Record<string, string> = {};
+    if (tenantId) {
+      headers['X-TENANT-ID'] = tenantId;
+    }
+
+    return this.client.post<LoginRequest, GestorRQLoginResponse>(
+      '/api/v1/auth/login',
+      request as LoginRequest,
+      headers,
+      true  // withoutToken
+    );
+  }
+
+  public async refreshToken(refresh_token: string): Promise<ArchbaseAccessToken> {
+    return this.client.post<RefreshToken, ArchbaseAccessToken>(
+      '/api/v1/auth/refresh',
+      { token: refresh_token },
+      {},
+      true  // withoutToken
+    );
+  }
+
+  public async logout(): Promise<void> {
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (accessToken) {
+      await this.client.post<{}, void>(
+        '/api/v1/auth/logout',
+        {},
+        { 'Authorization': `Bearer ${accessToken}` },
+        false
+      );
+    }
+
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userContext');
+  }
+
+  // Métodos obrigatórios da interface
+  async login(username: string, password: string): Promise<ArchbaseAccessToken> {
+    return this.loginWithContext({ email: username, password });
+  }
+
+  sendResetPasswordEmail(email: string): Promise<void> {
+    // Implementação...
+  }
+
+  resetPassword(email: string, passwordResetToken: string, newPassword: string): Promise<void> {
+    // Implementação...
+  }
+}
+```
+
+---
+
+## Casos de Uso
+
+### Caso 1: Login com Contexto e Multi-Tenant
+
+```tsx
+import { useArchbaseAuthenticationManager } from '@archbase/security';
+import { ArchbaseTenantManager } from '@archbase/security';
+
+function TenantLogin() {
+  const { loginWithContext } = useArchbaseAuthenticationManager();
+  const tenantManager = ArchbaseTenantManager.getInstance();
+
+  const handleLogin = async () => {
+    // Primeiro seleciona o tenant
+    const selectedTenant = tenantManager.availableTenants[0];
+    tenantManager.setCurrentTenant(selectedTenant);
+
+    // Depois faz login com contexto
+    await loginWithContext({
+      email: 'user@company.com',
+      password: 'password',
+      context: 'WEB_ADMIN'
+    });
+  };
+
+  return (
+    <div>
+      <select onChange={(e) => {
+        const tenant = tenantManager.availableTenants.find(t => t.id === e.target.value);
+        if (tenant) tenantManager.setCurrentTenant(tenant);
+      }}>
+        {tenantManager.availableTenants.map(t => (
+          <option key={t.id} value={t.id}>{t.descricao}</option>
+        ))}
+      </select>
+      <button onClick={handleLogin}>Entrar</button>
+    </div>
+  );
+}
+```
+
+### Caso 2: Proteção de Rotas
+
+```tsx
+import { useArchbaseAuthenticationManager } from '@archbase/security';
+import { ArchbaseViewSecurityProvider } from '@archbase/security';
+
+function ProtectedRoute({ children, requiredPermission }) {
+  const { isAuthenticated, isInitializing } = useArchbaseAuthenticationManager();
+
+  if (isInitializing) {
+    return <div>Carregando...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
+
+  return (
+    <ArchbaseViewSecurityProvider
+      resourceName="app.route"
+      resourceDescription="Rota"
+      requiredPermissions={requiredPermission ? [requiredPermission] : []}
+      fallbackComponent={<AccessDenied />}
+    >
+      {children}
+    </ArchbaseViewSecurityProvider>
+  );
+}
+
+// Uso
+<Route path="/admin" element={
+  <ProtectedRoute requiredPermission="admin:access">
+    <AdminPanel />
+  </ProtectedRoute>
+} />
+```
+
+### Caso 3: Botões Condicionais
+
+```tsx
+import { useArchbaseSecureForm } from '@archbase/security';
+
+function OrderActions({ order }) {
+  const { hasPermission } = useArchbaseSecureForm('tms.ordemservico', 'Ordens de Serviço');
+
+  return (
+    <div className="actions">
+      {hasPermission('tms.ordemservico:edit') && (
+        <button onClick={() => editOrder(order)}>Editar</button>
+      )}
+
+      {hasPermission('tms.ordemservico:delete') && order.status === 'DRAFT' && (
+        <button onClick={() => deleteOrder(order)}>Excluir</button>
+      )}
+
+      {hasPermission('tms.ordemservico:approve') && order.status === 'PENDING' && (
+        <button onClick={() => approveOrder(order)}>Aprovar</button>
+      )}
+
+      {hasPermission('tms.ordemservico:cancel') && order.status !== 'CANCELLED' && (
+        <button onClick={() => cancelOrder(order)}>Cancelar</button>
+      )}
+    </div>
+  );
+}
+```
+
+### Caso 4: Grid com Permissões
+
+```tsx
+function SecureGrid() {
+  const { canCreate, canEdit, canDelete, canView } = useGestorRQSecurity({
+    module: 'tms',
+    entity: 'veiculo',
+    description: 'Veículos'
+  });
+
+  if (!canView) {
+    return <AccessDenied message="Sem permissão para visualizar veículos" />;
+  }
+
+  return (
+    <>
+      {canCreate && (
+        <Button onClick={handleNew}>Novo Veículo</Button>
+      )}
+
+      <ArchbaseDataGrid
+        dataSource={dataSource}
+        columns={[
+          { field: 'placa', header: 'Placa' },
+          { field: 'modelo', header: 'Modelo' },
+          {
+            field: 'actions',
+            header: 'Ações',
+            render: (record) => (
+              <div>
+                {canEdit && (
+                  <ActionIcon onClick={() => edit(record)}>
+                    <IconEdit />
+                  </ActionIcon>
+                )}
+                {canDelete && (
+                  <ActionIcon onClick={() => deleteRecord(record)}>
+                    <IconTrash />
+                  </ActionIcon>
+                )}
+              </div>
+            )
+          }
+        ]}
+      />
+    </>
+  );
+}
+```
+
+---
+
+## Boas Práticas
+
+### 1. Nomenclatura de Recursos
+
+Use um padrão consistente:
+
+```typescript
+// ✅ BOM - {modulo}.{entidade}
+'tms.mecanico'
+'tms.ordemservico'
+'checklist.inspecao'
+
+// ❌ RUIM - inconsistente
+'mecanico_tms'
+'ordem-servico'
+'inspecaoChecklist'
+```
+
+### 2. Constantes para Recursos
+
+Evite strings soltas:
+
+```typescript
+// ✅ BOM - constantes
+export const RESOURCES = {
+  MECANICO: 'tms.mecanico',
+  ORDEM_SERVICO: 'tms.ordemservico',
+} as const;
+
+// ❌ RUIM - strings soltas
+const resource = 'tms.mecanico';  // erro de digitação fácil
+```
+
+### 3. Hook Customizado por Projeto
+
+Crie um hook padronizado:
+
+```typescript
+// hooks/useProjectSecurity.ts
+export function useProjectSecurity({ module, entity, description }) {
+  const resourceName = `${module}.${entity}`;
+  return useArchbaseSecureForm(resourceName, description);
+}
+```
+
+### 4. Provider no Nível Correto
+
+```tsx
+// ✅ BOM - Provider específico por view
+function OrdersPage() {
+  return (
+    <ArchbaseViewSecurityProvider resourceName="tms.ordemservico" resourceDescription="Ordens de Serviço">
+      <OrderList />
+    </ArchbaseViewSecurityProvider>
+  );
+}
+
+// ❌ RUIM - Provider global genérico
+function App() {
+  return (
+    <ArchbaseViewSecurityProvider resourceName="app" resourceDescription="App">
+      {/* Todas as views */}
+    </ArchbaseViewSecurityProvider>
+  );
+}
+```
+
+### 5. Tratamento de Erros
+
+```tsx
+const { login, error, clearError } = useArchbaseAuthenticationManager();
+
+const handleLogin = async () => {
+  clearError();
+  try {
+    await login(email, password, true);
+    navigate('/dashboard');
+  } catch (err) {
+    if (err.message.includes('invalid_credentials')) {
+      showError('Email ou senha incorretos');
+    } else if (err.message.includes('account_locked')) {
+      showError('Conta bloqueada. Contate o administrador.');
+    } else {
+      showError('Erro ao fazer login. Tente novamente.');
+    }
+  }
+};
+```
+
+### 6. Verificação de Capacidades
+
+Antes de usar métodos opcionais:
+
+```tsx
+const { loginWithContext, capabilities } = useArchbaseAuthenticationManager();
+
+// Verifica se o método está disponível
+if (capabilities.hasContextualLogin) {
+  await loginWithContext({ email, password, context: 'WEB_ADMIN' });
+} else {
+  // Fallback para login básico
+  await login(email, password, true);
+}
+```
+
+---
+
+## Integração com DataSource
+
+O sistema de segurança integra perfeitamente com DataSource V2:
+
+```tsx
+import { ArchbaseViewSecurityProvider } from '@archbase/security';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+function SecuredDataSourceView() {
+  const { canCreate, canEdit, canDelete } = useArchbaseSecureForm('tms.produto', 'Produtos');
+
+  const { dataSource, create, edit, save, cancel } = useArchbaseDataSourceV2({
+    name: 'dsProdutos',
+    initialData: produtos,
+  });
+
+  return (
+    <>
+      {canCreate && (
+        <Button onClick={() => dataSource.insert()}>Novo Produto</Button>
+      )}
+
+      <ArchbaseEdit
+        dataSource={dataSource}
+        dataField="nome"
+        disabled={!canEdit}
+      />
+
+      <ArchbaseEdit
+        dataSource={dataSource}
+        dataField="preco"
+        disabled={!canEdit}
+      />
+
+      {canEdit && (
+        <Button onClick={save}>Salvar</Button>
+      )}
+
+      {canDelete && dataSource.getState() !== 'INSERT' && (
+        <Button onClick={() => dataSource.delete()}>Excluir</Button>
+      )}
+    </>
+  );
+}
+```
+
+---
+
+## Próximos Passos
+
+- [Fluxo de Aprendizado](/security/security-learning-path) - Guia estruturado para aprender Security
+- [Hooks](/core-concepts/hooks) - Todos os hooks disponíveis
+- [DataSource V2](/core-concepts/datasource-v2) - Integração com DataSource
+- [Exemplos](/examples) - Exemplos práticos de uso
+
+---
+
+**Dica:** O sistema de segurança é modular e extensível. Implemente a interface `ArchbaseAuthenticator` para integrar com qualquer backend OAuth2.
