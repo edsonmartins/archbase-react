@@ -1,0 +1,196 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseChipGroup` é um grupo de chips para seleção única ou múltipla de valores, ideal para categorias e filtros.
+
+<Demo data={demos.chipGroupUsage} />
+
+## Modos de Seleção
+
+### Seleção Múltipla (padrão)
+
+```tsx
+<ArchbaseChipGroup
+  label="Categorias"
+  initialOptions={categorias}
+  getOptionLabel={(opt) => opt.label}
+  getOptionValue={(opt) => opt.value}
+  multiple={true}
+  onSelectValue={(values) => console.log(values)}
+/>
+```
+
+### Seleção Única
+
+```tsx
+<ArchbaseChipGroup
+  label="Status"
+  initialOptions={statuses}
+  getOptionLabel={(opt) => opt.label}
+  getOptionValue={(opt) => opt.value}
+  multiple={false}
+  onSelectValue={(value) => console.log(value)}
+/>
+```
+
+## Com DataSource
+
+### Seleção Múltipla
+
+```tsx
+interface Produto {
+  id: string;
+  nome: string;
+  categorias: string[];
+}
+
+<ArchbaseChipGroup<Produto, string[], Categoria>
+  dataSource={dataSource}
+  dataField="categorias"
+  label="Categorias"
+  initialOptions={todasCategorias}
+  getOptionLabel={(cat) => cat.nome}
+  getOptionValue={(cat) => cat.id}
+  converter={(categorias) => categorias.map(c => c.id)}
+  getConvertedOptions={(ids) => ids.map(id => todasCategorias.find(c => c.id === id))}
+  multiple
+/>
+```
+
+### Seleção Única
+
+```tsx
+interface Produto {
+  id: string;
+  nome: string;
+  categoriaId: string;
+}
+
+<ArchbaseChipGroup<Produto, string, Categoria>
+  dataSource={dataSource}
+  dataField="categoriaId"
+  label="Categoria"
+  initialOptions={todasCategorias}
+  getOptionLabel={(cat) => cat.nome}
+  getOptionValue={(cat) => cat.id}
+  converter={(categoria) => categoria?.id}
+  getConvertedOption={(id) => todasCategorias.find(c => c.id === id)}
+  multiple={false}
+/>
+```
+
+## Estados
+
+```tsx
+// Com valor inicial selecionado
+<ArchbaseChipGroup
+  defaultValue={['opcao1', 'opcao2']}
+  multiple
+/>
+
+// Desabilitado
+<ArchbaseChipGroup disabled />
+
+// Com erro
+<ArchbaseChipGroup error="Selecione ao menos uma opção" />
+
+// Readonly
+<ArchbaseChipGroup readOnly />
+```
+
+## Orientação
+
+### Vertical (padrão)
+
+```tsx
+<ArchbaseChipGroup
+  direction="vertical"
+  multiple
+/>
+```
+
+### Horizontal
+
+```tsx
+<ArchbaseChipGroup
+  direction="horizontal"
+  multiple
+/>
+```
+
+## Layout
+
+### Wrap (quebra de linha)
+
+```tsx
+<ArchbaseChipGroup
+  wrap="wrap"
+  multiple
+/>
+```
+
+### Nowrap (sem quebra)
+
+```tsx
+<ArchbaseChipGroup
+  wrap="nowrap"
+  multiple
+/>
+```
+
+## Exemplo Prático: Filtros
+
+```tsx
+function FiltroProdutos() {
+  const [filtros, setFiltros] = useState({
+    categorias: [],
+    marcas: [],
+    tamanhos: [],
+  });
+
+  return (
+    <Stack>
+      <ArchbaseChipGroup
+        label="Categorias"
+        initialOptions={categorias}
+        getOptionLabel={(o) => o.label}
+        getOptionValue={(o) => o.value}
+        multiple
+        onSelectValue={(values) =>
+          setFiltros({ ...filtros, categorias: values })
+        }
+      />
+
+      <ArchbaseChipGroup
+        label="Marcas"
+        initialOptions={marcas}
+        getOptionLabel={(o) => o.label}
+        getOptionValue={(o) => o.value}
+        multiple
+        onSelectValue={(values) =>
+          setFiltros({ ...filtros, marcas: values })
+        }
+      />
+
+      <ArchbaseChipGroup
+        label="Tamanhos"
+        initialOptions={tamanhos}
+        getOptionLabel={(o) => o.label}
+        getOptionValue={(o) => o.value}
+        multiple
+        onSelectValue={(values) =>
+          setFiltros({ ...filtros, tamanhos: values })
+        }
+      />
+    </Stack>
+  );
+}
+```
+
+## Acessibilidade
+
+- Grupo label associado via `aria-labelledby`
+- Anúncio de seleção via `aria-selected`
+- Navegação completa por teclado
+- Suporte a screen readers

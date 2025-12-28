@@ -524,5 +524,11 @@
   "My Profile": "Mi Perfil",
   "Rotation": "Rotación",
   "Image max size": "Tamaño máximo de la imagen",
-  "erro_avatar_crop": "El tamaño de la imagen {{imageSize}}KB excede el límite máximo ({{maxImageSize}}KB)."
+  "erro_avatar_crop": "El tamaño de la imagen {{imageSize}}KB excede el límite máximo ({{maxImageSize}}KB).",
+  "tabs": {
+    "closeAll": "Cerrar todas",
+    "closeLeft": "Cerrar a la izquierda",
+    "closeRight": "Cerrar a la derecha",
+    "closeOthers": "Cerrar otras"
+  }
 }

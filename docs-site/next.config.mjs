@@ -8,8 +8,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const withMDX = createMDX({
+  extension: /\.mdx?$/,
   options: {
     remarkPlugins: [remarkGfm, remarkSlug],
+    rehypePlugins: [],
   },
 });
 
@@ -18,10 +20,9 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'export',
   basePath: process.env.NODE_ENV === 'production' ? '/docs' : undefined,
-  pageExtensions: ['ts', 'tsx', 'mdx'],
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'mdx'],
+  // Set workspace root to avoid warning about multiple lockfiles
+  outputFileTracingRoot: path.resolve(__dirname, '..'),
   transpilePackages: [
     '@archbase/core',
     '@archbase/components',
@@ -32,6 +33,8 @@ const nextConfig = {
     '@archbase/template',
     '@archbase/advanced',
     '@archbase/ssr',
+    'suneditor',
+    'suneditor-react',
   ],
   webpack: (config, { isServer }) => {
     // Resolve workspace packages to source directory

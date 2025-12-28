@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { IconAdjustments, IconCode, IconFileText } from '@tabler/icons-react';
 import { Container, Tabs } from '@mantine/core';
 import { PropsTablesList } from '../PropsTable';
@@ -24,7 +23,6 @@ export function DocsTabs({
   componentsStyles,
   stylesApiData,
 }: DocsTabsProps) {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState('docs');
   const hasProps = Array.isArray(componentsProps) && componentsProps.length > 0 && docgen;
   const hasStyles = Array.isArray(componentsStyles) && componentsStyles.length > 0 && stylesApiData;
@@ -59,7 +57,10 @@ export function DocsTabs({
       keepMounted={false}
       radius="md"
       onChange={(value) => {
-        router.replace(value === 'docs' ? router.pathname : `${router.pathname}?t=${value}`, undefined, { shallow: true });
+        if (typeof window !== 'undefined') {
+          const pathname = window.location.pathname;
+          window.history.replaceState(null, '', value === 'docs' ? pathname : `${pathname}?t=${value}`);
+        }
         setActiveTab(value!);
       }}
     >

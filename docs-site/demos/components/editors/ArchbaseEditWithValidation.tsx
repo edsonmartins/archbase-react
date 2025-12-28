@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Stack, Text, Code, Card, Button, Group, Alert } from '@mantine/core';
 import { IconAlertCircle, IconCheck } from '@tabler/icons-react';
 import { ArchbaseEdit } from '@archbase/components';
-import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 
 // Interface simples para o demo (sem decorators)
 interface Cadastro {
@@ -11,15 +11,25 @@ interface Cadastro {
   email: string;
 }
 
+const initialData: Cadastro[] = [{ id: '1', nome: 'João Silva', email: 'joao@email.com' }];
+
 export function ArchbaseEditWithValidation() {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const [initialized, setInitialized] = useState(false);
 
-  const { dataSource, current, edit, save, cancel, isBrowsing, isEditing } = useArchbaseDataSourceV2<Cadastro>({
-    initialData: [{ id: '1', nome: 'João Silva', email: 'joao@email.com' }],
+  const { dataSource } = useArchbaseDataSource<Cadastro, string>({
+    initialData,
     name: 'dsCadastroValidation',
   });
+
+  const currentRecord = dataSource.getCurrentRecord();
+  const isBrowsing = dataSource.isBrowsing();
+  const isEditing = dataSource.isEditing();
+
+  const edit = () => dataSource.edit();
+  const save = () => dataSource.save();
+  const cancel = () => dataSource.cancel();
 
   // Inicializa em modo de edição após o mount
   useEffect(() => {
@@ -31,11 +41,11 @@ export function ArchbaseEditWithValidation() {
         // Ignorar se não conseguir editar no primeiro render
       }
     }
-  }, [initialized, dataSource, isBrowsing, edit]);
+  }, [initialized, dataSource, isBrowsing]);
 
   const validateForm = (): string[] => {
     const errors: string[] = [];
-    const data = current;
+    const data = currentRecord;
 
     if (!data) return errors;
 
@@ -131,7 +141,7 @@ export function ArchbaseEditWithValidation() {
           Dados atuais ({isBrowsing ? 'Navegando' : 'Editando'}):
         </Text>
         <Code block style={{ fontSize: 12 }}>
-          {JSON.stringify(current, null, 2)}
+          {JSON.stringify(currentRecord, null, 2)}
         </Code>
       </Card>
     </Stack>

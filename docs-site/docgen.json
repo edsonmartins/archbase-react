@@ -158,5 +158,31 @@
         "description": "Comprimento máximo do texto"
       }
     }
-  }
+  },
+  "ArchbaseMaskEdit": { "displayName": "ArchbaseMaskEdit", "description": "Campo de texto com máscaras", "props": {} },
+  "ArchbasePasswordEdit": { "displayName": "ArchbasePasswordEdit", "description": "Campo de senha", "props": {} },
+  "ArchbaseTextArea": { "displayName": "ArchbaseTextArea", "description": "Campo de texto multilinha", "props": {} },
+  "ArchbaseSelect": { "displayName": "ArchbaseSelect", "description": "Campo de seleção", "props": {} },
+  "ArchbaseAsyncSelect": { "displayName": "ArchbaseAsyncSelect", "description": "Campo de seleção assíncrona", "props": {} },
+  "ArchbaseRadioGroup": { "displayName": "ArchbaseRadioGroup", "description": "Grupo de radio buttons", "props": {} },
+  "ArchbaseAsyncMultiSelect": { "displayName": "ArchbaseAsyncMultiSelect", "description": "Seleção múltipla assíncrona", "props": {} },
+  "ArchbaseTreeSelect": { "displayName": "ArchbaseTreeSelect", "description": "Seleção hierárquica", "props": {} },
+  "ArchbaseLookupSelect": { "displayName": "ArchbaseLookupSelect", "description": "Select com lookup", "props": {} },
+  "ArchbaseNumberEdit": { "displayName": "ArchbaseNumberEdit", "description": "Campo numérico", "props": {} },
+  "ArchbaseLookupNumber": { "displayName": "ArchbaseLookupNumber", "description": "Campo numérico com lookup", "props": {} },
+  "ArchbaseCheckbox": { "displayName": "ArchbaseCheckbox", "description": "Checkbox", "props": {} },
+  "ArchbaseSwitch": { "displayName": "ArchbaseSwitch", "description": "Switch toggle", "props": {} },
+  "ArchbaseChip": { "displayName": "ArchbaseChip", "description": "Chip toggle", "props": {} },
+  "ArchbaseChipGroup": { "displayName": "ArchbaseChipGroup", "description": "Grupo de chips", "props": {} },
+  "ArchbaseDatePickerEdit": { "displayName": "ArchbaseDatePickerEdit", "description": "Seletor de data", "props": {} },
+  "ArchbaseTimeEdit": { "displayName": "ArchbaseTimeEdit", "description": "Seletor de hora", "props": {} },
+  "ArchbaseImageEdit": { "displayName": "ArchbaseImageEdit", "description": "Editor de imagem", "props": {} },
+  "ArchbaseFileAttachment": { "displayName": "ArchbaseFileAttachment", "description": "Anexo de arquivos", "props": {} },
+  "ArchbaseRichTextEdit": { "displayName": "ArchbaseRichTextEdit", "description": "Editor de texto rico", "props": {} },
+  "ArchbaseKeyValueEditor": { "displayName": "ArchbaseKeyValueEditor", "description": "Editor chave-valor", "props": {} },
+  "ArchbaseLookupEdit": { "displayName": "ArchbaseLookupEdit", "description": "Campo com botão de busca", "props": {} },
+  "ArchbaseRating": { "displayName": "ArchbaseRating", "description": "Componente de avaliação", "props": {} },
+  "ArchbaseJsonEdit": { "displayName": "ArchbaseJsonEdit", "description": "Editor de JSON", "props": {} },
+  "ArchbaseOperationHoursEditor": { "displayName": "ArchbaseOperationHoursEditor", "description": "Editor de horários", "props": {} },
+  "ArchbaseCronExpressionEdit": { "displayName": "ArchbaseCronExpressionEdit", "description": "Editor de expressões cron", "props": {} }
 }

@@ -38,23 +38,6 @@ export function ArchbaseChipGroupStates() {
         multiple
       />
 
-      <Text size="sm" fw={500}>Desabilitado:</Text>
-      <ArchbaseChipGroup
-        label="Grupo desabilitado"
-        initialOptions={opcoes}
-        getOptionLabel={(opt) => opt.label}
-        getOptionValue={(opt) => opt.value}
-        disabled
-      />
-
-      <Text size="sm" fw={500}>Obrigatorio:</Text>
-      <ArchbaseChipGroup
-        label="Campo obrigatorio"
-        initialOptions={opcoes}
-        getOptionLabel={(opt) => opt.label}
-        getOptionValue={(opt) => opt.value}
-        required
-      />
     </Stack>
   );
 }

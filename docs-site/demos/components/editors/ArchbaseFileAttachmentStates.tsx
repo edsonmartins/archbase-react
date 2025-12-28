@@ -1,71 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Text } from '@mantine/core';
-import { ArchbaseFileAttachment } from '@archbase/components';
+import { ArchbaseFileAttachment, Attachment } from '@archbase/components';
 
 export function ArchbaseFileAttachmentStates() {
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+
+  const handleAdd = (newAttachment: Attachment) => {
+    setAttachments(prev => [...prev, newAttachment]);
+  };
+
+  const handleRemove = (removedAttachment: Attachment) => {
+    setAttachments(prev => prev.filter(a => a.name !== removedAttachment.name));
+  };
+
   return (
     <Stack gap="md" p="md">
-      <Text size="sm" fw={500}>Estados e configuracoes:</Text>
+      <Text size="sm" fw={500}>Componente de anexos:</Text>
 
-      {/* Normal */}
       <ArchbaseFileAttachment
-        label="Normal"
-        accept="*"
-        multiple
+        attachments={attachments}
+        accept={['image/*', 'application/pdf', '.doc', '.docx']}
+        acceptDescription="Imagens, PDFs e documentos Word"
+        onAttachmentAdd={handleAdd}
+        onAttachmentRemove={handleRemove}
+        height={200}
       />
 
-      {/* Arquivo unico */}
-      <ArchbaseFileAttachment
-        label="Arquivo unico"
-        accept="*"
-        multiple={false}
-      />
-
-      {/* Apenas imagens */}
-      <ArchbaseFileAttachment
-        label="Apenas imagens"
-        accept="image/*"
-        multiple
-        description="Aceita apenas arquivos de imagem"
-      />
-
-      {/* Apenas PDF */}
-      <ArchbaseFileAttachment
-        label="Apenas PDF"
-        accept=".pdf"
-        multiple
-        description="Aceita apenas arquivos PDF"
-      />
-
-      {/* Com limite de tamanho */}
-      <ArchbaseFileAttachment
-        label="Limite 2MB"
-        accept="*"
-        maxSize={2 * 1024 * 1024}
-        multiple
-        description="Maximo 2MB por arquivo"
-      />
-
-      {/* Desabilitado */}
-      <ArchbaseFileAttachment
-        label="Desabilitado"
-        accept="*"
-        disabled
-      />
-
-      {/* Obrigatorio */}
-      <ArchbaseFileAttachment
-        label="Obrigatorio"
-        accept="*"
-        required
-      />
-
-      {/* Com erro */}
-      <ArchbaseFileAttachment
-        label="Com erro"
-        accept="*"
-        error="Anexe pelo menos um arquivo"
-      />
+      <Text size="sm" c="dimmed">
+        Arquivos anexados: {attachments.length}
+      </Text>
     </Stack>
   );
 }

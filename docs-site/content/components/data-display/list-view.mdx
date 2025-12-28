@@ -1,0 +1,198 @@
+# ArchbaseListViewTable
+
+Tabela no estilo Finder do macOS, criada como wrapper sobre `@gfazioli/mantine-list-view-table` (MIT License).
+Oferece uma experiência familiar de exploração de dados com suporte a ordenação, redimensionamento de colunas e mais.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseListViewTable } from '@archbase/components';
+
+interface FileSystemItem {
+  id: string;
+  name: string;
+  size: number;
+  type: 'file' | 'folder';
+}
+
+const data: FileSystemItem[] = [
+  { id: '1', name: 'Documents', size: 0, type: 'folder' },
+  { id: '2', name: 'report.pdf', size: 2456000, type: 'file' },
+];
+
+const columns = [
+  { key: 'name' as const, title: 'Nome', width: 300 },
+  { key: 'size' as const, title: 'Tamanho', width: 100 },
+];
+
+function App() {
+  return (
+    <ArchbaseListViewTable
+      data={data}
+      columns={columns}
+      rowKey="id"
+      height={400}
+    />
+  );
+}
+```
+
+## Renderização Customizada
+
+Customize o conteúdo das células usando `renderCell`:
+
+```tsx
+import { Badge } from '@mantine/core';
+
+const columns = [
+  {
+    key: 'stock',
+    title: 'Estoque',
+    renderCell: (product: Product) => (
+      <Badge color={product.stock < 10 ? 'red' : 'green'}>
+        {product.stock}
+      </Badge>
+    ),
+  },
+];
+
+<ArchbaseListViewTable data={data} columns={columns} />
+```
+
+## Props
+
+### ArchbaseListViewTable
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `data` | `T[]` | - | Dados a serem exibidos (obrigatório) |
+| `columns` | `ArchbaseListViewColumn[]` | - | Colunas da tabela (obrigatório) |
+| `rowKey` | `keyof T \| function` | - | Chave única para identificar linhas |
+| `height` | `number \| string` | - | Altura da tabela |
+| `width` | `number \| string` | - | Largura da tabela |
+| `withTableBorder` | `boolean` | `true` | Borda ao redor da tabela |
+| `withColumnBorders` | `boolean` | `true` | Bordas nas colunas |
+| `withRowBorders` | `boolean` | `false` | Bordas nas linhas |
+| `onRowClick` | `function` | - | Callback ao clicar em uma linha |
+| `onRowDoubleClick` | `function` | - | Callback ao clicar duas vezes em uma linha |
+| `style` | `CSSProperties` | - | Estilos adicionais |
+| `className` | `string` | - | Classes CSS adicionais |
+
+### ArchbaseListViewColumn
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `key` | `keyof T \| string` | Chave da propriedade (obrigatório) |
+| `title` | `ReactNode` | Título da coluna |
+| `width` | `number \| string` | Largura da coluna |
+| `textAlign` | `'left' \| 'center' \| 'right'` | Alinhamento do texto |
+| `sortable` | `boolean` | Se a coluna é ordenável |
+| `resizable` | `boolean` | Se a coluna é redimensionável |
+| `renderCell` | `function` | Renderizador customizado |
+
+## Casos de Uso
+
+### Sistema de Arquivos
+
+```tsx
+interface File {
+  id: string;
+  name: string;
+  size: number;
+  type: 'file' | 'folder';
+  modified: string;
+}
+
+const columns = [
+  { key: 'name', title: 'Nome', width: 300 },
+  { key: 'size', title: 'Tamanho', width: 100, textAlign: 'right' },
+  { key: 'type', title: 'Tipo', width: 100 },
+  { key: 'modified', title: 'Modificado', width: 150 },
+];
+
+<ArchbaseListViewTable
+  data={files}
+  columns={columns}
+  rowKey="id"
+  onRowDoubleClick={(file) => openFile(file)}
+  height={500}
+/>
+```
+
+### Lista de Produtos
+
+```tsx
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+}
+
+const columns = [
+  { key: 'name', title: 'Produto' },
+  {
+    key: 'price',
+    title: 'Preço',
+    textAlign: 'right',
+    renderCell: (product) => formatCurrency(product.price),
+  },
+  {
+    key: 'stock',
+    title: 'Estoque',
+    renderCell: (product) => (
+      <Badge color={product.stock < 10 ? 'red' : 'green'}>
+        {product.stock}
+      </Badge>
+    ),
+  },
+];
+```
+
+### Estrutura Organizacional
+
+```tsx
+interface Employee {
+  id: string;
+  name: string;
+  department: string;
+  role: string;
+}
+
+const columns = [
+  { key: 'name', title: 'Nome', width: 250 },
+  { key: 'department', title: 'Departamento', width: 200 },
+  { key: 'role', title: 'Cargo', width: 200 },
+];
+
+<ArchbaseListViewTable
+  data={employees}
+  columns={columns}
+  rowKey="id"
+  onRowClick={(employee) => showDetails(employee)}
+  withRowBorders={true}
+/>
+```
+
+## Acessibilidade
+
+- Suporte completo a navegação por teclado
+- Headers de tabela semânticos
+- Ordenação via teclado
+- Compatível com screen readers
+
+## Dicas
+
+- **Altura fixa**: Defina sempre uma altura para enable virtualização e scroll
+- **Row key**: Use sempre uma propriedade única como `rowKey` para performance
+- **Largura das colunas**: Defina larguras fixas para colunas importantes
+- **Render customizado**: Use `renderCell` para formatação complexa de dados
+
+## Licença
+
+Este componente é um wrapper sobre `@gfazioli/mantine-list-view-table`, licenciado sob **MIT License**.
+
+## Referências
+
+- [ListViewTable documentation](https://github.com/gfazioli/mantine-list-view-table)
+- [ArchbaseDataGrid](/components/data-display/datagrid) - Grade de dados completa

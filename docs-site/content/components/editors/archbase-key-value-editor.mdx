@@ -1,0 +1,105 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Basico
+
+`ArchbaseKeyValueEditor` e um componente para edicao de pares chave-valor com suporte a DataSource. Ideal para configuracoes, variaveis de ambiente e metadados.
+
+<Demo data={demos.keyValueEditorUsage} />
+
+## Com DataSource
+
+A integracao com o DataSource permite binding bidirecional automatico. Os dados sao armazenados como objeto JSON.
+
+<Demo data={demos.keyValueEditorWithDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseKeyValueEditor
+  dataSource={dataSource}       // Fonte de dados (V1 ou V2)
+  dataField="parametros"        // Campo do objeto
+  label="Parametros"
+  keyPlaceholder="Chave"        // Placeholder do input de chave
+  valuePlaceholder="Valor"      // Placeholder do input de valor
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite adicionar/remover/editar pares
+- **Sincroniza**: objeto de pares bidirecional com o DataSource
+- **Suporta**: adicao dinamica, remocao, edicao inline
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuario:
+
+<Demo data={demos.keyValueEditorStates} />
+
+## Props Principais
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados para binding |
+| `dataField` | `string` | - | Campo do objeto para vincular |
+| `label` | `string` | - | Label do campo |
+| `value` | `Record<string, string>` | `{}` | Valor controlado |
+| `onChange` | `(value: Record<string, string>) => void` | - | Callback quando muda |
+| `keyPlaceholder` | `string` | `Chave` | Placeholder do input de chave |
+| `valuePlaceholder` | `string` | `Valor` | Placeholder do input de valor |
+| `disabled` | `boolean` | `false` | Desabilita o campo |
+| `readOnly` | `boolean` | `false` | Somente leitura |
+
+## Casos de Uso
+
+### Variaveis de Ambiente
+
+```tsx
+<ArchbaseKeyValueEditor
+  label="Variaveis de Ambiente"
+  value={{
+    API_URL: 'https://api.example.com',
+    API_KEY: 'abc123',
+    DEBUG: 'true',
+  }}
+  onChange={setEnvVars}
+/>
+```
+
+### Configuracoes de Sistema
+
+```tsx
+<ArchbaseKeyValueEditor
+  label="Configuracoes"
+  value={{
+    tema: 'escuro',
+    idioma: 'pt-BR',
+    notificacoes: 'ativadas',
+  }}
+  onChange={setConfig}
+/>
+```
+
+### Metadados
+
+```tsx
+<ArchbaseKeyValueEditor
+  label="Metadados"
+  value={{
+    autor: 'Joao Silva',
+    versao: '1.0.0',
+    tags: 'react,typescript',
+  }}
+  onChange={setMetadata}
+/>
+```
+
+## Acessibilidade
+
+O `ArchbaseKeyValueEditor` segue as melhores praticas de acessibilidade:
+
+- Labels associadas corretamente via `htmlFor`
+- Suporte a navegacao por teclado entre campos
+- Botoes com tooltips descritivos
+- Feedback visual para estados de hover e focus
+- Ordem de tabulacao logica

@@ -1,0 +1,173 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseAsyncSelect` é um campo de seleção com busca assíncrona, paginação e debounce automático. Ideal para grandes volumes de dados onde as opções são carregadas sob demanda de uma API.
+
+<Demo data={demos.asyncSelectUsage} />
+
+## Funções de Busca
+
+O componente espera uma função que retorne opções paginadas:
+
+```tsx
+interface OptionsResult<T> {
+  options: T[];
+  page: number;
+  totalPages: number;
+}
+
+const searchOptions = async (
+  page: number,
+  query: string
+): Promise<OptionsResult<Tipo>> => {
+  // Sua lógica de busca aqui
+  const response = await fetch(`/api/search?q=${query}&page=${page}`);
+  const data = await response.json();
+
+  return {
+    options: data.items,
+    page: data.page,
+    totalPages: data.totalPages,
+  };
+};
+```
+
+## Com DataSource
+
+A integração com DataSource requer funções adicionais para conversão:
+
+<Demo data={demos.asyncSelectWithDataSource} />
+
+### Funções de Conversão
+
+Quando usando DataSource, você precisa fornecer:
+
+- **converter**: Converte o objeto selecionado para o valor que será salvo
+- **getConvertedOption**: Recupera o objeto completo a partir do valor salvo
+
+```tsx
+<ArchbaseAsyncSelect<Cliente, string, Cidade>
+  dataSource={dataSource}
+  dataField="cidadeId"
+  getOptions={searchCidades}
+  getOptionLabel={(cidade) => cidade.nome}
+  getOptionValue={(cidade) => cidade.id}
+  // Salva apenas o ID
+  converter={(cidade) => cidade?.id}
+  // Recupera a cidade completa pelo ID
+  getConvertedOption={getCidadeById}
+/>
+```
+
+## Configurações
+
+### Mínimo de Caracteres
+
+Define o número mínimo de caracteres antes de iniciar a busca:
+
+```tsx
+<ArchbaseAsyncSelect
+  minCharsToSearch={2}
+  placeholder="Digite pelo menos 2 caracteres..."
+  getOptions={searchOptions}
+/>
+```
+
+### Debounce
+
+Atraso em milissegundos após o usuário parar de digitar:
+
+```tsx
+<ArchbaseAsyncSelect
+  debounceTime={500} // espera 500ms
+  getOptions={searchOptions}
+/>
+```
+
+### Paginação
+
+O componente lida com paginação automaticamente. Apenas retorne os metadados corretos:
+
+```tsx
+const searchOptions = async (page: number, query: string) => {
+  const pageSize = 20;
+  const response = await api.search(query, page * pageSize, pageSize);
+
+  return {
+    options: response.data,
+    page,
+    totalPages: Math.ceil(response.total / pageSize),
+  };
+};
+```
+
+## Acessibilidade
+
+O `ArchbaseAsyncSelect` segue as melhores práticas:
+
+- Labels associadas corretamente
+- Indicador de carregamento durante busca
+- Mensagem de "nenhuma opção encontrada"
+- Suporte completo a teclado
+- Screen reader announcements para estados de loading
+
+## Exemplos Práticos
+
+### Busca de CEP
+
+```tsx
+interface Endereco {
+  cep: string;
+  logradouro: string;
+  bairro: string;
+  cidade: string;
+  uf: string;
+}
+
+const searchCEP = async (page: number, query: string) => {
+  const response = await fetch(`https://viacep.com.br/ws/${query}/json/`);
+  const data = await response.json();
+
+  return {
+    options: data.erro ? [] : [data],
+    page: 0,
+    totalPages: 1,
+  };
+};
+
+<ArchbaseAsyncSelect
+  label="CEP"
+  placeholder="Digite o CEP (somente números)..."
+  minCharsToSearch={8}
+  maxCharsToSearch={8}
+  getOptions={searchCEP}
+  getOptionLabel={(endereco) => `${endereco.logradouro}, ${endereco.bairro}`}
+  getOptionValue={(endereco) => endereco.cep}
+/>
+```
+
+### Busca de E-mails
+
+```tsx
+const searchUsers = async (page: number, query: string) => {
+  const response = await fetch(`/api/users/search?q=${query}&page=${page}`);
+  const data = await response.json();
+
+  return {
+    options: data.users,
+    page,
+    totalPages: data.totalPages,
+  };
+};
+
+<ArchbaseAsyncSelect
+  label="Usuário"
+  placeholder="Digite o nome ou e-mail..."
+  getOptions={searchUsers}
+  getOptionLabel={(user) => `${user.name} (${user.email})`}
+  getOptionValue={(user) => user.id}
+  onSelectValue={(user) => console.log('Usuário selecionado:', user)}
+  clearable
+/>
+```

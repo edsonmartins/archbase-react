@@ -1,29 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Text, Code, Card, Button, Group } from '@mantine/core';
 import { ArchbaseKeyValueEditor, ArchbaseEdit } from '@archbase/components';
-import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 
 interface Configuracao {
   id: string;
   nome: string;
-  parametros: Record<string, string>;
+  parametros: string; // Formato: chave,valor;chave,valor
 }
+
+const initialData: Configuracao[] = [{
+  id: '1',
+  nome: 'Configuracao Producao',
+  parametros: 'DATABASE_URL,postgresql://localhost:5432/app;REDIS_URL,redis://localhost:6379;LOG_LEVEL,info'
+}];
 
 export function ArchbaseKeyValueEditorWithDataSource() {
   const [initialized, setInitialized] = useState(false);
 
-  const { dataSource, current, edit, save, cancel, isBrowsing, isEditing } = useArchbaseDataSourceV2<Configuracao>({
-    initialData: [{
-      id: '1',
-      nome: 'Configuracao Producao',
-      parametros: {
-        DATABASE_URL: 'postgresql://localhost:5432/app',
-        REDIS_URL: 'redis://localhost:6379',
-        LOG_LEVEL: 'info'
-      }
-    }],
+  const { dataSource } = useArchbaseDataSource<Configuracao, string>({
+    initialData,
     name: 'dsConfigKV',
   });
+
+  const currentRecord = dataSource.getCurrentRecord();
+  const isBrowsing = dataSource.isBrowsing();
+  const isEditing = dataSource.isEditing();
+
+  const edit = () => dataSource.edit();
+  const save = () => dataSource.save();
+  const cancel = () => dataSource.cancel();
 
   useEffect(() => {
     if (!initialized && dataSource && isBrowsing) {
@@ -34,7 +40,11 @@ export function ArchbaseKeyValueEditorWithDataSource() {
         // Ignorar
       }
     }
-  }, [initialized, dataSource, isBrowsing, edit]);
+  }, [initialized, dataSource, isBrowsing]);
+
+  const handleChangeKeyValue = (value: string) => {
+    dataSource.setFieldValue('parametros', value);
+  };
 
   return (
     <Stack gap="md" p="md">
@@ -42,7 +52,7 @@ export function ArchbaseKeyValueEditorWithDataSource() {
         <Button size="xs" onClick={edit} disabled={isEditing} color="blue">
           Editar
         </Button>
-        <Button size="xs" onClick={() => save()} disabled={isBrowsing} color="green">
+        <Button size="xs" onClick={save} disabled={isBrowsing} color="green">
           Salvar
         </Button>
         <Button size="xs" onClick={cancel} disabled={isBrowsing} color="red">
@@ -57,11 +67,12 @@ export function ArchbaseKeyValueEditorWithDataSource() {
       />
 
       <ArchbaseKeyValueEditor
-        dataSource={dataSource}
-        dataField="parametros"
         label="Parametros"
-        keyPlaceholder="Chave"
-        valuePlaceholder="Valor"
+        initialValue={currentRecord?.parametros || ''}
+        keyLabel="Chave"
+        valueLabel="Valor"
+        onChangeKeyValue={handleChangeKeyValue}
+        readOnly={isBrowsing}
       />
 
       <Card withBorder p="sm" radius="md">
@@ -69,7 +80,7 @@ export function ArchbaseKeyValueEditorWithDataSource() {
           Registro atual ({isBrowsing ? 'Navegando' : 'Editando'}):
         </Text>
         <Code block style={{ fontSize: 12 }}>
-          {JSON.stringify(current, null, 2)}
+          {JSON.stringify(currentRecord, null, 2)}
         </Code>
       </Card>
     </Stack>

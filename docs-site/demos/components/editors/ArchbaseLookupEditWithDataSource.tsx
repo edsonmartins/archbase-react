@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Stack, Text, Code, Card, Modal, Table, Button, Group, TextInput } from '@mantine/core';
 import { ArchbaseLookupEdit, ArchbaseEdit } from '@archbase/components';
-import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 
 interface Cliente {
   id: string;
@@ -22,20 +22,36 @@ const clientes: Cliente[] = [
   { id: '3', nome: 'Pedro Oliveira', email: 'pedro@email.com' },
 ];
 
+const initialData: Pedido[] = [{
+  id: '1',
+  descricao: 'Pedido de Notebooks',
+  clienteId: '1',
+  clienteNome: 'João Silva'
+}];
+
+// Simula lookup por ID
+const lookupCliente = async (value: string): Promise<Cliente> => {
+  const found = clientes.find(c => c.id === value);
+  return found || { id: '', nome: '', email: '' };
+};
+
 export function ArchbaseLookupEditWithDataSource() {
   const [initialized, setInitialized] = useState(false);
   const [modalOpened, setModalOpened] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { dataSource, current, edit, save, cancel, isBrowsing, isEditing } = useArchbaseDataSourceV2<Pedido>({
-    initialData: [{
-      id: '1',
-      descricao: 'Pedido de Notebooks',
-      clienteId: '1',
-      clienteNome: 'João Silva'
-    }],
+  const { dataSource } = useArchbaseDataSource<Pedido, string>({
+    initialData,
     name: 'dsPedido',
   });
+
+  const currentRecord = dataSource.getCurrentRecord();
+  const isBrowsing = dataSource.isBrowsing();
+  const isEditing = dataSource.isEditing();
+
+  const edit = () => dataSource.edit();
+  const save = () => dataSource.save();
+  const cancel = () => dataSource.cancel();
 
   useEffect(() => {
     if (!initialized && dataSource && isBrowsing) {
@@ -46,7 +62,7 @@ export function ArchbaseLookupEditWithDataSource() {
         // Ignorar
       }
     }
-  }, [initialized, dataSource, isBrowsing, edit]);
+  }, [initialized, dataSource, isBrowsing]);
 
   const handleSelectCliente = useCallback((cliente: Cliente) => {
     if (dataSource) {
@@ -66,7 +82,7 @@ export function ArchbaseLookupEditWithDataSource() {
         <Button size="xs" onClick={edit} disabled={isEditing} color="blue">
           Editar
         </Button>
-        <Button size="xs" onClick={() => save()} disabled={isBrowsing} color="green">
+        <Button size="xs" onClick={save} disabled={isBrowsing} color="green">
           Salvar
         </Button>
         <Button size="xs" onClick={cancel} disabled={isBrowsing} color="red">
@@ -83,18 +99,13 @@ export function ArchbaseLookupEditWithDataSource() {
       <ArchbaseLookupEdit
         dataSource={dataSource}
         dataField="clienteNome"
+        lookupField="clienteNome"
         label="Cliente"
         placeholder="Clique no icone para buscar cliente..."
         readOnly
         onActionSearchExecute={() => setModalOpened(true)}
         tooltipIconSearch="Buscar cliente"
-        clearable
-        onClear={() => {
-          if (dataSource) {
-            dataSource.setFieldValue('clienteId', '');
-            dataSource.setFieldValue('clienteNome', '');
-          }
-        }}
+        lookupValueDelegator={lookupCliente}
       />
 
       <Card withBorder p="sm" radius="md">
@@ -102,7 +113,7 @@ export function ArchbaseLookupEditWithDataSource() {
           Registro atual ({isBrowsing ? 'Navegando' : 'Editando'}):
         </Text>
         <Code block style={{ fontSize: 12 }}>
-          {JSON.stringify(current, null, 2)}
+          {JSON.stringify(currentRecord, null, 2)}
         </Code>
       </Card>
 

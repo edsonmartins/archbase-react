@@ -2,20 +2,45 @@
  * ArchbaseRichTextEdit — editor rich text (SunEditor) com binding opcional ao dataSource.
  * @status stable
  */
-import { Input } from '@mantine/core';
+import { Input, Skeleton } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import { useArchbaseTranslation } from '@archbase/core';
-import SunEditor from 'suneditor-react';
-import { UploadBeforeHandler, UploadBeforeReturn, UploadInfo } from 'suneditor-react/dist/types/upload';
-import 'suneditor/dist/css/suneditor.min.css';
-import en from 'suneditor/src/lang/en';
-import es from 'suneditor/src/lang/es';
-import ptBR from 'suneditor/src/lang/pt_br';
+import type { UploadBeforeHandler, UploadBeforeReturn, UploadInfo } from 'suneditor-react/dist/types/upload';
 import { isBase64 } from '@archbase/core';
 import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames, useArchbaseDidUpdate, useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
+
+// Storage para componente e langs carregados dinamicamente
+let SunEditorComponent: React.ComponentType<any> | null = null;
+let langModules: { en: any; es: any; ptBR: any } = { en: {}, es: {}, ptBR: {} };
+let loadPromise: Promise<void> | null = null;
+
+// Função para carregar suneditor e dependências
+async function loadSunEditor(): Promise<void> {
+	if (loadPromise) return loadPromise;
+	if (SunEditorComponent) return Promise.resolve();
+
+	loadPromise = (async () => {
+		const [sunEditorModule, cssModule, enModule, esModule, ptBRModule] = await Promise.all([
+			import('suneditor-react'),
+			// @ts-ignore - CSS import
+			import('suneditor/dist/css/suneditor.min.css'),
+			import('suneditor/src/lang/en'),
+			import('suneditor/src/lang/es'),
+			import('suneditor/src/lang/pt_br'),
+		]);
+		SunEditorComponent = sunEditorModule.default;
+		langModules = {
+			en: enModule.default,
+			es: esModule.default,
+			ptBR: ptBRModule.default,
+		};
+	})();
+
+	return loadPromise;
+}
 
 function getInitialValue<T>(
 	value: any,
@@ -333,6 +358,32 @@ export function ArchbaseRichTextEdit<T, ID>({
 
 	// Erro a ser exibido: local ou do contexto
 	const displayError = internalError || contextError;
+
+	// Estado para verificar se estamos no cliente e se o editor foi carregado
+	const [isLoaded, setIsLoaded] = useState(false);
+	const [, forceRender] = useState({});
+
+	useEffect(() => {
+		// Não carregar no servidor
+		if (typeof window === 'undefined') return;
+
+		loadSunEditor().then(() => {
+			setIsLoaded(true);
+			forceRender({});
+		});
+	}, []);
+
+	// Renderizar skeleton no SSR ou enquanto não está carregado
+	if (!isLoaded || !SunEditorComponent) {
+		return (
+			<Input.Wrapper withAsterisk={required} label={label} description={description} error={displayError}>
+				<Skeleton height={height || 200} width={width || '100%'} />
+			</Input.Wrapper>
+		);
+	}
+
+	const SunEditor = SunEditorComponent;
+	const { en, es, ptBR } = langModules;
 
 	return (
 		<Input.Wrapper withAsterisk={required} label={label} description={description} error={displayError}>

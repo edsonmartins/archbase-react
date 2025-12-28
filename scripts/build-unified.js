@@ -32,7 +32,8 @@ function parseArgs() {
   return {
     debug: args.includes('--debug'),
     publish: args.includes('--publish'),
-    verdaccio: args.includes('--verdaccio')
+    verdaccio: args.includes('--verdaccio'),
+    noDocs: args.includes('--no-docs')
   };
 }
 
@@ -44,16 +45,21 @@ function configureMode(isDebug) {
   log(`📝 Modo configurado: ${mode}`, BLUE);
 }
 
-function buildWithTurbo(isDebug) {
+function buildWithTurbo(isDebug, noDocs = false) {
   const mode = isDebug ? 'DEBUG' : 'PRODUCTION';
   log(`🚀 Build ${mode} com Turbo...`, BLUE);
-  
+
   const env = {
     ...process.env,
     NODE_ENV: isDebug ? 'development' : 'production'
   };
-  
-  execSync('turbo build', { stdio: 'inherit', env });
+
+  const filter = noDocs ? " --filter='!archbase-react-docs'" : '';
+  if (noDocs) {
+    log(`📝 Excluindo docs-site do build`, YELLOW);
+  }
+
+  execSync(`turbo build${filter}`, { stdio: 'inherit', env });
   log(`✅ Build ${mode} concluído!`, GREEN);
 }
 
@@ -71,17 +77,17 @@ function publishPackages(isDebug) {
 }
 
 function main() {
-  const { debug, publish, verdaccio } = parseArgs();
+  const { debug, publish, verdaccio, noDocs } = parseArgs();
   const isDebug = debug || verdaccio;
-  
+
   log(`🎯 Iniciando build Archbase React v3...`, BLUE);
-  
+
   try {
     // 1. Configurar modo
     configureMode(isDebug);
-    
+
     // 2. Build com Turbo
-    buildWithTurbo(isDebug);
+    buildWithTurbo(isDebug, noDocs);
     
     // 3. Publicar se solicitado
     if (publish || verdaccio) {

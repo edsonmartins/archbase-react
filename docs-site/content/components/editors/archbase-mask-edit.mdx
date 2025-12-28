@@ -1,0 +1,196 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseMaskEdit` é um campo de texto com máscaras predefinidas para formatação automática de dados como CPF, CNPJ, CEP, telefone e placa de veículo. Também suporta máscaras customizadas.
+
+<Demo data={demos.maskEditUsage} />
+
+## Máscaras Predefinidas
+
+O componente inclui várias máscaras prontas para uso através do enum `MaskPattern`:
+
+<Demo data={demos.maskEditPatterns} />
+
+### Padrões Disponíveis
+
+| Padrão | Formato | Exemplo |
+|--------|---------|---------|
+| `MaskPattern.CPF` | `000.000.000-00` | `123.456.789-01` |
+| `MaskPattern.CNPJ` | `00.000.000/0000-00` | `12.345.678/0001-90` |
+| `MaskPattern.CEP` | `00.000-000` | `12.345-678` |
+| `MaskPattern.PHONE` | `(00) 00000-0000` | `(11) 98765-4321` |
+| `MaskPattern.PLACA` | `AAA-0X00` | `ABC-1D23` |
+
+## Máscara Customizada
+
+Você pode criar sua própria máscara usando uma string com os seguintes caracteres:
+
+- `A` - Letra maiúscula (A-Z)
+- `a` - Letra minúscula (a-z)
+- `0` - Dígito (0-9)
+- Outros caracteres são tratados como literais
+
+```tsx
+import { ArchbaseMaskEdit } from '@archbase/components';
+
+<ArchbaseMaskEdit
+  label="Código do Produto"
+  mask="AAA-0000-AA"
+  placeholder="XXX-0000-XX"
+/>
+```
+
+## Com DataSource
+
+A integração com DataSource funciona automaticamente:
+
+<Demo data={demos.maskEditWithDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseMaskEdit
+  dataSource={dataSource}
+  dataField="cpf"
+  label="CPF"
+  mask={MaskPattern.CPF}
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite edição com máscara aplicada
+- **Salva dados**: sem formatação (apenas números) por padrão
+- **Suporta saveWithMask**: para salvar com a máscara aplicada
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuário:
+
+<Demo data={demos.maskEditStates} />
+
+## Comportamento de Salvamento
+
+Por padrão, o `ArchbaseMaskEdit` remove a máscara ao salvar o valor, mantendo apenas os caracteres digitados. Isso é útil para salvar CPFs, CNPJs e outros dados sem formatação no banco de dados.
+
+### Salvar com máscara
+
+Use a prop `saveWithMask` para salvar o valor com a formatação aplicada:
+
+```tsx
+<ArchbaseMaskEdit
+  label="CPF (salva com máscara)"
+  mask={MaskPattern.CPF}
+  saveWithMask={true}
+  // Valor salvo: "123.456.789-01"
+/>
+
+<ArchbaseMaskEdit
+  label="CPF (salva sem máscara)"
+  mask={MaskPattern.CPF}
+  saveWithMask={false}
+  // Valor salvo: "12345678901"
+/>
+```
+
+## Integração com Formulários
+
+### Com ArchbaseFormTemplate
+
+```tsx
+import { ArchbaseFormTemplate, ArchbaseFormFieldPanel } from '@archbase/template';
+import { ArchbaseMaskEdit, MaskPattern } from '@archbase/components';
+
+function MeuFormulario() {
+  return (
+    <ArchbaseFormTemplate
+      dataSource={dataSource}
+      onSave={handleSave}
+      onCancel={handleCancel}
+    >
+      <ArchbaseFormFieldPanel>
+        <ArchbaseMaskEdit
+          dataSource={dataSource}
+          dataField="cpf"
+          label="CPF"
+          mask={MaskPattern.CPF}
+        />
+        <ArchbaseMaskEdit
+          dataSource={dataSource}
+          dataField="telefone"
+          label="Telefone"
+          mask={MaskPattern.PHONE}
+        />
+      </ArchbaseFormFieldPanel>
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+### Com React Hook Form
+
+```tsx
+import { useForm, Controller } from 'react-hook-form';
+import { ArchbaseMaskEdit, MaskPattern } from '@archbase/components';
+
+function MeuFormulario() {
+  const { control, handleSubmit } = useForm();
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="cpf"
+        control={control}
+        render={({ field }) => (
+          <ArchbaseMaskEdit
+            label="CPF"
+            mask={MaskPattern.CPF}
+            value={field.value}
+            onChangeValue={field.onChange}
+          />
+        )}
+      />
+    </form>
+  );
+}
+```
+
+## Acessibilidade
+
+O `ArchbaseMaskEdit` segue as melhores práticas de acessibilidade:
+
+- Labels associadas corretamente via `htmlFor`
+- Placeholder visível para formato esperado
+- Suporte completo a navegação por teclado
+- Erros anunciados via `aria-describedby`
+- Campos obrigatórios indicados via `aria-required`
+- Compatível com screen readers
+
+## Dicas de Performance
+
+### DataSource V2
+
+O DataSource V2 oferece otimizações de performance:
+
+```tsx
+// V2 detectado automaticamente
+const { dataSource } = useArchbaseDataSourceV2<Pessoa>({
+  initialData: pessoas,
+  name: 'dsPessoas',
+});
+
+// O componente usa re-renders otimizados internamente
+<ArchbaseMaskEdit dataSource={dataSource} dataField="cpf" mask={MaskPattern.CPF} />
+```
+
+### Evite re-renders desnecessários
+
+```tsx
+// Ruim: cria nova função a cada render
+<ArchbaseMaskEdit onChangeValue={(v) => setValue(v)} />
+
+// Bom: callback estável
+const handleChange = useCallback((v) => setValue(v), []);
+<ArchbaseMaskEdit onChangeValue={handleChange} />
+```

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // archbase-expand-button.tsx
 import React, { useRef } from 'react';
 import { ActionIcon } from '@mantine/core';

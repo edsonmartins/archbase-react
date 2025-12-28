@@ -1,0 +1,212 @@
+# Dock Layout
+
+ArchbaseDockLayout is a flexible layout manager built on top of [dockview](https://dockview.dev/),
+a zero-dependency docking library. It allows you to create complex, IDE-like layouts with
+drag-and-drop panels, splitters, and flexible resize behavior.
+
+## Import
+
+```tsx
+import { ArchbaseDockLayout, ArchbaseDockLayoutPreset } from '@archbase/layout';
+import type { DockPanelComponent, DockLayoutPreset } from '@archbase/layout';
+```
+
+## Usage
+
+ArchbaseDockLayout uses a component-based approach where you define panels that can be
+docked, undocked, and rearranged by users.
+
+### Basic Usage
+
+```tsx
+import { ArchbaseDockLayout } from '@archbase/layout';
+import type { DockPanelComponent } from '@archbase/layout';
+
+function Demo() {
+  const components: Record<string, DockPanelComponent> = {
+    overview: {
+      id: 'overview',
+      title: 'Overview',
+      component: () => (
+        <div style={{ padding: 20, height: '100%' }}>
+          <h3>Overview</h3>
+          <p>Welcome to the Dashboard!</p>
+        </div>
+      ),
+    },
+    charts: {
+      id: 'charts',
+      title: 'Charts',
+      component: () => (
+        <div style={{ padding: 20, height: '100%' }}>
+          <h3>Charts</h3>
+          <p>Visualizations will appear here.</p>
+        </div>
+      ),
+    },
+  };
+
+  return (
+    <ArchbaseDockLayout
+      components={components}
+      height={600}
+    />
+  );
+}
+```
+
+### Preset Layouts
+
+ArchbaseDockLayoutPreset provides pre-configured layouts for common use cases.
+
+| Preset | Description | Use Case |
+| :--- | :--- | :--- |
+| **dashboard** | Corporate dashboard with sidebar, main content, and activity panel | Business applications, admin panels |
+| **ide** | VS Code-style layout with explorer, editor, terminal, and output panels | Development tools, code editors |
+| **explorer** | Simple two-panel file explorer layout | File managers, tree views |
+| **analytics** | Analytics dashboard with filters, data sources, metrics, and reports | Data visualization, BI tools |
+
+```tsx
+import { ArchbaseDockLayoutPreset } from '@archbase/layout';
+import type { DockPanelComponent } from '@archbase/layout';
+
+function Demo() {
+  const [preset, setPreset] = React.useState<'dashboard' | 'ide' | 'analytics'>('dashboard');
+
+  const components: Record<string, DockPanelComponent> = {
+    overview: {
+      id: 'overview',
+      title: 'Overview',
+      component: () => <div style={{ padding: 20 }}>Overview Panel</div>,
+    },
+    // ... mais componentes
+  };
+
+  return (
+    <>
+      <div style={{ marginBottom: 20, display: 'flex', gap: 10 }}>
+        <button onClick={() => setPreset('dashboard')}>Dashboard</button>
+        <button onClick={() => setPreset('ide')}>IDE</button>
+        <button onClick={() => setPreset('analytics')}>Analytics</button>
+      </div>
+
+      <ArchbaseDockLayoutPreset
+        preset={preset}
+        components={components}
+        height={600}
+      />
+    </>
+  );
+}
+```
+
+## Component Definition
+
+Panels are defined using the `DockPanelComponent` interface:
+
+```tsx
+import type { DockPanelComponent } from '@archbase/layout';
+
+const overviewPanel: DockPanelComponent = {
+  id: 'overview',
+  title: 'Overview',
+  component: () => (
+    <div style={{ padding: 20, height: '100%' }}>
+      <h3>Overview Panel</h3>
+      <p>Panel content goes here</p>
+    </div>
+  ),
+  // Optional props
+  minimumSize: 200,
+  maximumSize: 800,
+  isClosable: true,
+};
+```
+
+## Props
+
+### ArchbaseDockLayout
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| **components** | `Record<string, DockPanelComponent>` | **Required** | Object containing all available panels |
+| **height** | `string \| number` | `'600px'` | Container height |
+| **watermark** | `string \| ReactNode` | `undefined` | Watermark text or element to display |
+| **hideBorders** | `boolean` | `false` | Hide panel borders |
+| **onLayoutChange** | `(layout: object) => void` | `undefined` | Callback when layout changes |
+| **onPanelClose** | `(panelId: string) => void` | `undefined` | Callback when panel is closed |
+| **onPanelOpen** | `(panelId: string) => void` | `undefined` | Callback when panel is opened |
+| **disabled** | `boolean** | `false` | Disable panel dragging/resizing |
+| **style** | `CSSProperties` | `undefined` | Custom container styles |
+| **className** | `string` | `undefined` | Custom container class name |
+
+### ArchbaseDockLayoutPreset
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| **preset** | `DockLayoutPreset` | **Required** | Preset name: `'dashboard' \| 'ide' \| 'explorer' \| 'analytics'` |
+| **components** | `Record<string, DockPanelComponent>` | `{}` | Custom component definitions (overrides defaults) |
+| **height** | `string \| number` | `undefined` | Container height |
+| **onPanelClose** | `(panelId: string) => void` | `undefined` | Callback when panel is closed |
+| **onPanelOpen** | `(panelId: string) => void` | `undefined` | Callback when panel is opened |
+| **style** | `CSSProperties` | `undefined` | Custom container styles |
+| **className** | `string` | `undefined` | Custom container class name |
+
+## TypeScript
+
+```tsx
+import type { DockPanelComponent, DockLayoutPreset } from '@archbase/layout';
+
+interface MyComponentProps {
+  preset: DockLayoutPreset;
+}
+
+function MyComponent({ preset }: MyComponentProps) {
+  const components: Record<string, DockPanelComponent> = {
+    // ...
+  };
+
+  return <ArchbaseDockLayoutPreset preset={preset} components={components} />;
+}
+```
+
+## Examples
+
+### Integration with ArchbaseDataGrid
+
+```tsx
+import { ArchbaseDockLayout } from '@archbase/layout';
+import { ArchbaseDataGrid } from '@archbase/components';
+
+function DashboardWithGrid() {
+  const components: Record<string, DockPanelComponent> = {
+    grid: {
+      id: 'grid',
+      title: 'Data Grid',
+      component: () => (
+        <ArchbaseDataGrid
+          dataSource={dataSource}
+          height="100%"
+        />
+      ),
+    },
+    filters: {
+      id: 'filters',
+      title: 'Filters',
+      component: () => <FilterPanel />,
+    },
+  };
+
+  return (
+    <ArchbaseDockLayout
+      components={components}
+      height={800}
+    />
+  );
+}
+```
+
+## Resources
+
+- [dockview Documentation](https://dockview.dev/)
+- [dockview GitHub](https://github.com/mathuo/dockview)

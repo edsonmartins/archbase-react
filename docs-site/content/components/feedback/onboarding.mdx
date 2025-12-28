@@ -1,0 +1,156 @@
+# ArchbaseOnboardingTour
+
+Componente de tour interativo para onboarding de usuários, criado como wrapper sobre `@gfazioli/mantine-onboarding-tour` (MIT License).
+Ideal para introduzir novos usuários às funcionalidades do sistema com guias passo-a-passo interativos.
+
+## Uso Básico
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseOnboardingTour, ArchbaseOnboardingTourStep } from '@archbase/components';
+
+function App() {
+  const [started, setStarted] = useState(false);
+
+  const steps: ArchbaseOnboardingTourStep[] = [
+    {
+      id: 'welcome',
+      target: '#welcome-element',
+      title: 'Bem-vindo!',
+      content: 'Este é o primeiro passo do tour.',
+    },
+    {
+      id: 'feature',
+      target: '#feature-element',
+      title: 'Funcionalidade',
+      content: 'Esta é uma funcionalidade importante.',
+    },
+  ];
+
+  return (
+    <ArchbaseOnboardingTour
+      steps={steps}
+      autoStart={started}
+      onEnd={() => setStarted(false)}
+    >
+      <Button onClick={() => setStarted(true)}>
+        Iniciar Tour
+      </Button>
+      {/* Seu conteúdo aqui com elementos que correspondem aos targets */}
+    </ArchbaseOnboardingTour>
+  );
+}
+```
+
+## Callbacks
+
+Acompanhe o progresso do tour com callbacks:
+
+```tsx
+<ArchbaseOnboardingTour
+  steps={steps}
+  onStart={() => console.log('Tour iniciado')}
+  onChange={(step) => console.log('Passo atual:', step.id)}
+  onEnd={() => console.log('Tour finalizado')}
+>
+  <AppContent />
+</ArchbaseOnboardingTour>
+```
+
+## Props
+
+### ArchbaseOnboardingTour
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `steps` | `ArchbaseOnboardingTourStep[]` | - | Array de passos do tour (obrigatório) |
+| `autoStart` | `boolean` | `false` | Inicia o tour automaticamente ao montar |
+| `loop` | `boolean` | `false` | Se o tour deve reiniciar ao finalizar |
+| `onStart` | `() => void` | - | Callback quando o tour inicia |
+| `onEnd` | `() => void` | - | Callback quando o tour finaliza |
+| `onChange` | `(step: OnboardingTourStep) => void` | - | Callback quando o passo muda |
+| `children` | `ReactNode` | - | Conteúdo da aplicação (obrigatório) |
+
+### ArchbaseOnboardingTourStep
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `id` | `string` | ID único do passo (obrigatório) |
+| `target` | `string` | Seletor CSS do elemento a destacar |
+| `title` | `ReactNode` | Título do passo |
+| `content` | `ReactNode` | Conteúdo/descrição do passo |
+
+## Casos de Uso
+
+### Onboarding de Novos Usuários
+
+```tsx
+const onboardingSteps: ArchbaseOnboardingTourStep[] = [
+  {
+    id: 'dashboard',
+    target: '#dashboard',
+    title: 'Bem-vindo ao Dashboard',
+    content: 'Aqui você pode ver todas as suas métricas em um só lugar.',
+  },
+  {
+    id: 'reports',
+    target: '#reports',
+    title: 'Relatórios',
+    content: 'Acesse relatórios detalhados clicando aqui.',
+  },
+  {
+    id: 'settings',
+    target: '#settings',
+    title: 'Configurações',
+    content: 'Personalize sua experiência nas configurações.',
+  },
+];
+
+<ArchbaseOnboardingTour
+  steps={onboardingSteps}
+  autoStart={true}
+  onEnd={() => localStorage.setItem('tourCompleted', 'true')}
+>
+  <AppContent />
+</ArchbaseOnboardingTour>
+```
+
+### Tour de Nova Funcionalidade
+
+```tsx
+const featureTourSteps: ArchbaseOnboardingTourStep[] = [
+  {
+    id: 'new-feature',
+    target: '#new-feature-button',
+    title: 'Nova Funcionalidade!',
+    content: 'Experimente nossa nova funcionalidade que acaba de ser lançada.',
+  },
+];
+
+<ArchbaseOnboardingTour steps={featureTourSteps}>
+  <YourApp />
+</ArchbaseOnboardingTour>
+```
+
+## Dicas
+
+- **Seletor CSS válido**: Certifique-se de que o `target` é um seletor CSS válido e que o elemento existe no DOM
+- **AutoStart**: Use `autoStart` com cuidado - é melhor iniciar o tour através de uma ação do usuário
+- **Persistência**: Salve no localStorage se o usuário já completou o tour para não mostrá-lo novamente
+- **Teste os targets**: Sempre teste se os seletores CSS estão funcionando corretamente
+- **Conteúdo conciso**: Mantenha títulos e descrições curtos e objetivos
+
+## Acessibilidade
+
+- O tour pode ser navegado por teclado
+- Usa elementos ARIA apropriados
+- Botões de navegação claros (Próximo/Anterior)
+- Pode ser fechado a qualquer momento
+
+## Licença
+
+Este componente é um wrapper sobre `@gfazioli/mantine-onboarding-tour`, licenciado sob **MIT License**.
+
+## Referências
+
+- [OnboardingTour documentation](https://github.com/gfazioli/mantine-onboarding-tour)

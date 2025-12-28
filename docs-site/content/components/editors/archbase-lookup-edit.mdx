@@ -1,0 +1,126 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Basico
+
+`ArchbaseLookupEdit` e um campo de texto com botao de busca para selecao de registros atraves de um modal ou popup de pesquisa.
+
+<Demo data={demos.lookupEditUsage} />
+
+## Com DataSource
+
+A integracao com o DataSource permite binding bidirecional automatico. O campo exibe o valor selecionado e armazena a referencia no DataSource.
+
+<Demo data={demos.lookupEditWithDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseLookupEdit
+  dataSource={dataSource}           // Fonte de dados (V1 ou V2)
+  dataField="clienteNome"           // Campo para exibicao
+  label="Cliente"
+  readOnly                          // Campo de exibicao somente leitura
+  onActionSearchExecute={() => {    // Callback do botao de busca
+    setModalOpened(true);
+  }}
+  clearable                         // Permite limpar a selecao
+  onClear={() => {                  // Callback ao limpar
+    dataSource.setFieldValue('clienteId', '');
+    dataSource.setFieldValue('clienteNome', '');
+  }}
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite abrir busca e limpar selecao
+- **Sincroniza**: valor de exibicao bidirecional com o DataSource
+- **Delega**: busca para um modal/popup externo
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuario:
+
+<Demo data={demos.lookupEditStates} />
+
+## Props Principais
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados para binding |
+| `dataField` | `string` | - | Campo do objeto para vincular |
+| `label` | `string` | - | Label do campo |
+| `value` | `string` | - | Valor de exibicao controlado |
+| `readOnly` | `boolean` | `true` | Campo somente leitura (recomendado) |
+| `onActionSearchExecute` | `() => void` | - | Callback ao clicar no botao de busca |
+| `tooltipIconSearch` | `string` | `Buscar` | Tooltip do botao de busca |
+| `clearable` | `boolean` | `false` | Permite limpar a selecao |
+| `onClear` | `() => void` | - | Callback ao limpar |
+| `disabled` | `boolean` | `false` | Desabilita o campo |
+
+## Padrao de Uso
+
+### Com Modal de Busca
+
+```tsx
+function PedidoForm() {
+  const [modalOpened, setModalOpened] = useState(false);
+  const { dataSource } = useArchbaseDataSourceV2({...});
+
+  const handleSelectCliente = (cliente) => {
+    dataSource.setFieldValue('clienteId', cliente.id);
+    dataSource.setFieldValue('clienteNome', cliente.nome);
+    setModalOpened(false);
+  };
+
+  return (
+    <>
+      <ArchbaseLookupEdit
+        dataSource={dataSource}
+        dataField="clienteNome"
+        label="Cliente"
+        readOnly
+        onActionSearchExecute={() => setModalOpened(true)}
+        clearable
+        onClear={() => {
+          dataSource.setFieldValue('clienteId', '');
+          dataSource.setFieldValue('clienteNome', '');
+        }}
+      />
+
+      <Modal opened={modalOpened} onClose={() => setModalOpened(false)}>
+        <ClienteSearchList onSelect={handleSelectCliente} />
+      </Modal>
+    </>
+  );
+}
+```
+
+### Campos Relacionados
+
+E comum usar o `ArchbaseLookupEdit` junto com um campo hidden para armazenar o ID:
+
+```tsx
+<>
+  {/* Campo oculto para o ID */}
+  <input type="hidden" value={dataSource.getFieldValue('clienteId')} />
+
+  {/* Campo de exibicao */}
+  <ArchbaseLookupEdit
+    dataSource={dataSource}
+    dataField="clienteNome"
+    label="Cliente"
+    // ...
+  />
+</>
+```
+
+## Acessibilidade
+
+O `ArchbaseLookupEdit` segue as melhores praticas de acessibilidade:
+
+- Labels associadas corretamente via `htmlFor`
+- Botao de busca com tooltip descritivo
+- Suporte a navegacao por teclado
+- Campo de exibicao anunciado corretamente
+- Botao de limpar com feedback visual

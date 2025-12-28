@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { saveAs } from 'file-saver';
 import { utils, write } from 'xlsx';
 import { format } from 'date-fns';

@@ -4,6 +4,7 @@ import { Children, isValidElement } from 'react';
 import debounce from 'lodash/debounce';
 import GridToolbar from '../components/toolbar/grid-toolbar';
 import GlobalSearchInput from '../components/toolbar/global-search-input';
+import { ArchbaseCompositeFilters } from '../../filters';
 import { ArchbaseDataGridToolbarProps } from './archbase-data-grid-types';
 
 /**
@@ -27,7 +28,13 @@ export const ArchbaseDataGridToolbar = React.memo<ArchbaseDataGridToolbarProps>(
   onExport,
   onPrint,
   apiRef,
-  children
+  children,
+  // Props para ArchbaseCompositeFilters
+  useCompositeFilters = false,
+  filterDefinitions,
+  activeFilters,
+  onFiltersChange,
+  hideMuiFilters = false,
 }) => {
   // Estado local para o filtro global para manter o valor entre re-renderizações
   const [globalFilterValue, setGlobalFilterValue] = useState(filterModel.quickFilterValues?.[0] || '');
@@ -101,8 +108,18 @@ export const ArchbaseDataGridToolbar = React.memo<ArchbaseDataGridToolbarProps>(
       <Box
         style={{ display: 'flex', gap: '12px', alignItems: 'center', justifyContent: 'flex-end' }}
       >
-        {/* Pesquisa global à direita */}
-        {enableGlobalFilter && (
+        {/* ArchbaseCompositeFilters ou Pesquisa global */}
+        {useCompositeFilters && filterDefinitions ? (
+          <ArchbaseCompositeFilters
+            filters={filterDefinitions}
+            value={activeFilters}
+            onChange={onFiltersChange}
+            variant="compact"
+            enablePresets={true}
+            enableHistory={true}
+            enableQuickFilters={true}
+          />
+        ) : !hideMuiFilters && enableGlobalFilter ? (
           <GlobalSearchInput
             value={globalFilterValue}
             onChange={(value) => {
@@ -114,7 +131,7 @@ export const ArchbaseDataGridToolbar = React.memo<ArchbaseDataGridToolbarProps>(
               applyGlobalFilter(null);
             }}
           />
-        )}
+        ) : null}
 
         {/* Botões de ação à direita */}
         {enableTopToolbarActions ? (

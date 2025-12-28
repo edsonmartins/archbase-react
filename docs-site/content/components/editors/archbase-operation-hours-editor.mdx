@@ -1,0 +1,313 @@
+import * as demos from '../../../demos/components/editors';
+
+# ArchbaseOperationHoursEditor
+
+O `ArchbaseOperationHoursEditor` é um componente especializado para edição de horários de funcionamento, permitindo configurar horários para múltiplos dias da semana com interface intuitiva.
+
+## Importação
+
+```tsx
+import { ArchbaseOperatingHoursEditor } from '@archbase/components';
+```
+
+## Uso Básico
+
+Editor de horários de funcionamento com seleção de dias e intervalos de horário.
+
+<Demo data={demos.operationHoursEditorUsage} />
+
+### Como funciona
+
+O componente gerencia horários de funcionamento através de:
+- **Seleção múltipla de dias**: MultiSelect para escolher os dias da semana
+- **Intervalo de horário**: TimeInput para hora de início e término
+- **Lista de horários**: Exibe os horários configurados com opção de remoção
+- **Formatação automática**: Gera string no formato `dias|inicio-fim;...`
+
+```tsx
+const [value, setValue] = useState<string>('');
+
+<ArchbaseOperatingHoursEditor
+  label="Horário de Funcionamento"
+  initialValue={value}
+  onChange={setValue}
+/>
+
+// Valor gerado: "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY|09:00-18:00;SATURDAY,SUNDAY|10:00-14:00"
+```
+
+## Estados
+
+Diferentes estados visuais do componente.
+
+<Demo data={demos.operationHoursEditorStates} />
+
+### Valores preenchidos
+
+```tsx
+const [value, setValue] = useState<string>(
+  'MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY|09:00-18:00;SATURDAY,SUNDAY|10:00-14:00'
+);
+
+<ArchbaseOperatingHoursEditor
+  label="Horário de Funcionamento"
+  initialValue={value}
+  onChange={setValue}
+/>
+```
+
+### Somente leitura
+
+```tsx
+<ArchbaseOperatingHoursEditor
+  label="Horário de Funcionamento"
+  initialValue={value}
+  onChange={setValue}
+  readOnly
+/>
+```
+
+## Formato da String
+
+### Estrutura
+
+```
+dia1,dia2,...|inicio-fim;dia3,dia4|inicio-fim;...
+```
+
+### Componentes
+
+- **Dias**: Nomes dos dias em inglês separados por vírgula (MONDAY, TUESDAY, etc.)
+- **Separador de dias**: Pipe `|`
+- **Horário**: Formato HH:MM (24h)
+- **Separador de intervalos**: Hífen `-`
+- **Separador de regras**: Ponto e vírgula `;`
+
+### Exemplos
+
+```tsx
+// Segunda a sexta, 9h às 18h
+"MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY|09:00-18:00"
+
+// Segunda a sexta, 9h às 18h; Sábado e domingo, 10h às 14h
+"MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY|09:00-18:00;SATURDAY,SUNDAY|10:00-14:00"
+
+// Apenas terça e quinta, 8h às 12h e 14h às 18h
+"TUESDAY,THURSDAY|08:00-12:00;TUESDAY,THURSDAY|14:00-18:00"
+```
+
+## Casos de Uso
+
+### Restaurante
+
+```tsx
+function RestauranteForm() {
+  const [horarioFuncionamento, setHorarioFuncionamento] = useState<string>(
+    'MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY|11:00-22:00;SATURDAY,SUNDAY|12:00-23:00'
+  );
+
+  return (
+    <ArchbaseOperatingHoursEditor
+      label="Horário de Atendimento"
+      initialValue={horarioFuncionamento}
+      onChange={setHorarioFuncionamento}
+    />
+  );
+}
+```
+
+### E-commerce
+
+```tsx
+function EcommerceConfig() {
+  const [horarioAtendimento, setHorarioAtendimento] = useState<string>(
+    'MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY|08:00-18:00'
+  );
+
+  return (
+    <ArchbaseOperatingHoursEditor
+      label="Horário de Atendimento ao Cliente"
+      initialValue={horarioAtendimento}
+      onChange={setHorarioAtendimento}
+    />
+  );
+}
+```
+
+### Banco
+
+```tsx
+function BancoHorarios() {
+  const [horarioCaixa, setHorarioCaixa] = useState<string>(
+    'MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY|10:00-16:00'
+  );
+
+  return (
+    <Stack>
+      <ArchbaseOperatingHoursEditor
+        label="Horário do Caixa"
+        initialValue={horarioCaixa}
+        onChange={setHorarioCaixa}
+      />
+    </Stack>
+  );
+}
+```
+
+## Integração com Formulários
+
+### Com React Hook Form
+
+```tsx
+import { useForm, Controller } from 'react-hook-form';
+
+function EstabelecimentoForm() {
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      nome: '',
+      horarioFuncionamento: ''
+    },
+  });
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="horarioFuncionamento"
+        control={control}
+        render={({ field }) => (
+          <ArchbaseOperatingHoursEditor
+            label="Horário de Funcionamento"
+            initialValue={field.value}
+            onChange={field.onChange}
+          />
+        )}
+      />
+    </form>
+  );
+}
+```
+
+## Validação
+
+### Verificar se há horários configurados
+
+```tsx
+function ComValidacao() {
+  const [value, setValue] = useState<string>('');
+  const [error, setError] = useState<string>();
+
+  const validar = () => {
+    if (!value || value.trim() === '') {
+      setError('Defina pelo menos um horário de funcionamento');
+      return false;
+    }
+    setError(undefined);
+    return true;
+  };
+
+  return (
+    <ArchbaseOperatingHoursEditor
+      label="Horário de Funcionamento"
+      initialValue={value}
+      onChange={setValue}
+      error={error}
+    />
+  );
+}
+```
+
+### Validar sobreposição de horários
+
+```tsx
+function validarSobreposicao(valor: string): boolean {
+  if (!valor) return true;
+
+  const partes = valor.split(';');
+  const horarios = [];
+
+  for (const parte of partes) {
+    const [diasStr, horarioStr] = parte.split('|');
+    if (!horarioStr) continue;
+
+    const [inicio, fim] = horarioStr.split('-');
+    const dias = diasStr.split(',');
+
+    for (const dia of dias) {
+      const conflito = horarios.some(h =>
+        h.dia === dia &&
+        ((inicio >= h.inicio && inicio < h.fim) ||
+         (fim > h.inicio && fim <= h.fim) ||
+         (inicio <= h.inicio && fim >= h.fim))
+      );
+
+      if (conflito) return false;
+
+      horarios.push({ dia, inicio, fim });
+    }
+  }
+
+  return true;
+}
+```
+
+## Acessibilidade
+
+O componente segue as melhores práticas de acessibilidade:
+- Labels associados corretamente aos campos
+- Suporte a navegação por teclado
+- Compatível com screen readers
+- Feedback visual de estados
+
+### Navegação por teclado
+
+- `Tab`: Navega entre os campos
+- `Espaço`: Abre/fecha o MultiSelect
+- `Setas`: Navega nas opções do MultiSelect
+- `Enter`: Confirma seleção
+
+## API
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `initialValue` | `string` | **Obrigatório** | Valor inicial formatado |
+| `onChange` | `(value: string) => void` | **Obrigatório** | Callback quando valor muda |
+| `label` | `string` | - | Label do componente |
+| `readOnly` | `boolean` | `false` | Desabilita edição |
+| `error` | `string` | - | Mensagem de erro |
+
+### Formato do Valor
+
+```typescript
+type OperatingHoursValue = string;
+// Formato: "MONDAY,TUESDAY|09:00-18:00;WEDNESDAY|10:00-14:00"
+```
+
+## Dicas
+
+### Adicionar horário padrão
+
+```tsx
+const horarioPadrao = 'MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY|09:00-18:00';
+
+<ArchbaseOperatingHoursEditor
+  label="Horário Comercial"
+  initialValue={horarioPadrao}
+  onChange={setValue}
+/>
+```
+
+### Formato de 24 horas
+
+```tsx
+// O componente usa formato 24h automaticamente
+// Exemplos válidos: 00:00, 09:30, 14:45, 23:59
+```
+
+### Múltiplos intervalos por dia
+
+```tsx
+// Manhã e tarde na segunda e quarta
+const valor = 'MONDAY,WEDNESDAY|08:00-12:00;MONDAY,WEDNESDAY|14:00-18:00';
+```

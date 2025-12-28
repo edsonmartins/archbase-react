@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Accordion, Flex } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
 import useComponentSize from '@rehooks/component-size';

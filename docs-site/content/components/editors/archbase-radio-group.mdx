@@ -1,0 +1,168 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseRadioGroup` é um grupo de opções de seleção exclusiva (radio buttons), com suporte a DataSource e múltiplas orientações.
+
+<Demo data={demos.radioGroupUsage} />
+
+## Orientação
+
+O componente pode ser exibido verticalmente ou horizontalmente:
+
+<Demo data={demos.radioGroupDirections} />
+
+### Vertical (padrão)
+
+```tsx
+<ArchbaseRadioGroup
+  label="Selecione uma opção"
+  direction="vertical"
+  initialOptions={opcoes}
+  getOptionLabel={(o) => o.label}
+  getOptionValue={(o) => o.value}
+/>
+```
+
+### Horizontal
+
+```tsx
+<ArchbaseRadioGroup
+  label="Selecione uma opção"
+  direction="horizontal"
+  initialOptions={opcoes}
+  getOptionLabel={(o) => o.label}
+  getOptionValue={(o) => o.value}
+/>
+```
+
+## Com DataSource
+
+```tsx
+<ArchbaseRadioGroup<Pessoa, string, Opcao>
+  dataSource={dataSource}
+  dataField="tamanho"
+  label="Tamanho"
+  initialOptions={opcoes}
+  getOptionLabel={(o) => o.label}
+  getOptionValue={(o) => o.value}
+  converter={(opcao) => opcao?.value}
+  getConvertedOption={(value) => opcoes.find(o => o.value === value)}
+/>
+```
+
+## Estados
+
+O componente suporta todos os estados padrão:
+
+```tsx
+// Desabilitado
+<ArchbaseRadioGroup disabled />
+
+// Somente leitura
+<ArchbaseRadioGroup readOnly />
+
+// Com erro
+<ArchbaseRadioGroup error="Selecione uma opção" />
+
+// Obrigatório
+<ArchbaseRadioGroup required />
+```
+
+## Integração com Formulários
+
+### Com ArchbaseFormTemplate
+
+```tsx
+import { ArchbaseFormTemplate, ArchbaseFormFieldPanel } from '@archbase/template';
+import { ArchbaseRadioGroup } from '@archbase/components';
+
+function MeuFormulario() {
+  return (
+    <ArchbaseFormTemplate
+      dataSource={dataSource}
+      onSave={handleSave}
+    >
+      <ArchbaseFormFieldPanel>
+        <ArchbaseRadioGroup
+          dataSource={dataSource}
+          dataField="tamanho"
+          label="Tamanho"
+          initialOptions={tamanhos}
+          getOptionLabel={(o) => o.label}
+          getOptionValue={(o) => o.value}
+        />
+      </ArchbaseFormFieldPanel>
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+### Com React Hook Form
+
+```tsx
+import { useForm, Controller } from 'react-hook-form';
+
+function MeuFormulario() {
+  const { control, handleSubmit } = useForm();
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="tamanho"
+        control={control}
+        rules={{ required: 'Selecione um tamanho' }}
+        render={({ field }) => (
+          <ArchbaseRadioGroup
+            label="Tamanho"
+            initialOptions={tamanhos}
+            getOptionLabel={(o) => o.label}
+            getOptionValue={(o) => o.value}
+            onSelectValue={field.onChange}
+            value={field.value}
+          />
+        )}
+      />
+    </form>
+  );
+}
+```
+
+## Acessibilidade
+
+O `ArchbaseRadioGroup` segue as melhores práticas:
+
+- Todos os radio buttons compartilham o mesmo `name`
+- Labels associadas corretamente
+- Navegação por setas do teclado
+- Suporte a screen readers
+- `aria-required` para campos obrigatórios
+
+## Dicas
+
+### Opções Condicionais
+
+```tsx
+const [outrasOpcoes, setOutrasOpcoes] = useState(false);
+
+<ArchbaseRadioGroup
+  label="Tipo"
+  initialOptions={tiposBasicos}
+  getOptionLabel={(o) => o.label}
+  getOptionValue={(o) => o.value}
+  onSelectValue={(value) => {
+    if (value === 'outro') {
+      setOutrasOpcoes(true);
+    }
+  }}
+/>
+
+{outrasOpcoes && (
+  <ArchbaseRadioGroup
+    label="Subtipo"
+    initialOptions={subtipos}
+    getOptionLabel={(o) => o.label}
+    getOptionValue={(o) => o.value}
+  />
+)}
+```

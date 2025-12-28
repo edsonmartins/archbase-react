@@ -15,7 +15,6 @@ export function ArchbaseNumberEditFormats() {
         decimalSeparator=","
         thousandSeparator="."
         prefix="R$ "
-        description="Formato de moeda brasileira"
       />
 
       {/* Dolar */}
@@ -26,7 +25,6 @@ export function ArchbaseNumberEditFormats() {
         decimalSeparator="."
         thousandSeparator=","
         prefix="$ "
-        description="Formato de dolar americano"
       />
 
       {/* Inteiro */}
@@ -35,7 +33,6 @@ export function ArchbaseNumberEditFormats() {
         value={1000}
         integer
         thousandSeparator="."
-        description="Numero inteiro sem decimais"
       />
 
       {/* Percentual */}
@@ -45,7 +42,6 @@ export function ArchbaseNumberEditFormats() {
         precision={2}
         decimalSeparator=","
         suffix=" %"
-        description="Formato percentual"
       />
 
       {/* Com negativos */}
@@ -56,7 +52,6 @@ export function ArchbaseNumberEditFormats() {
         decimalSeparator=","
         thousandSeparator="."
         allowNegative
-        description="Pressione - para valores negativos"
       />
 
       {/* Com limites */}
@@ -66,7 +61,6 @@ export function ArchbaseNumberEditFormats() {
         precision={0}
         minValue={0}
         maxValue={100}
-        description="Valor limitado entre 0 e 100"
       />
     </Stack>
   );

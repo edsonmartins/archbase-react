@@ -1,0 +1,81 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Basico
+
+`ArchbaseImageEdit` e um componente para upload e edicao de imagens com suporte a DataSource. Permite arrastar e soltar, visualizacao previa e conversao automatica para base64.
+
+<Demo data={demos.imageEditUsage} />
+
+## Com DataSource
+
+A integracao com o DataSource permite binding bidirecional automatico. A imagem e armazenada como string base64.
+
+<Demo data={demos.imageEditWithDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseImageEdit
+  dataSource={dataSource}    // Fonte de dados (V1 ou V2)
+  dataField="foto"           // Campo do objeto
+  label="Foto do Produto"
+  width={200}                // Largura em pixels
+  height={200}               // Altura em pixels
+  allowClear                 // Permite remover a imagem
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite upload e edicao
+- **Sincroniza**: imagem em base64 bidirecional com o DataSource
+- **Suporta**: drag and drop, click para upload, preview
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuario:
+
+<Demo data={demos.imageEditStates} />
+
+## Props Principais
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados para binding |
+| `dataField` | `string` | - | Campo do objeto para vincular |
+| `label` | `string` | - | Label do campo |
+| `width` | `number` | `150` | Largura da imagem em pixels |
+| `height` | `number` | `150` | Altura da imagem em pixels |
+| `allowClear` | `boolean` | `false` | Permite remover a imagem |
+| `onChangeImage` | `(base64: string) => void` | - | Callback quando a imagem muda |
+| `accept` | `string` | `image/*` | Tipos de arquivo aceitos |
+| `maxSize` | `number` | - | Tamanho maximo em bytes |
+| `disabled` | `boolean` | `false` | Desabilita o campo |
+| `readOnly` | `boolean` | `false` | Somente leitura |
+
+## Formatos Suportados
+
+O componente aceita os seguintes formatos por padrao:
+- JPEG/JPG
+- PNG
+- GIF
+- WebP
+- SVG
+
+```tsx
+// Aceitar apenas JPEG e PNG
+<ArchbaseImageEdit
+  accept="image/jpeg,image/png"
+  // ...
+/>
+```
+
+## Acessibilidade
+
+O `ArchbaseImageEdit` segue as melhores praticas de acessibilidade:
+
+- Labels associadas corretamente via `htmlFor`
+- Suporte a navegacao por teclado
+- Area de drop acessivel via ARIA
+- Botoes com tooltips descritivos
+- Feedback visual para estados de hover e focus

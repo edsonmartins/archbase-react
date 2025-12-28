@@ -47,7 +47,6 @@ export function ArchbaseMaskEditStates() {
         label="Salva com máscara"
         mask={MaskPattern.CPF}
         saveWithMask
-        description="Quando habilitado, salva o valor com a máscara aplicada"
       />
     </Stack>
   );

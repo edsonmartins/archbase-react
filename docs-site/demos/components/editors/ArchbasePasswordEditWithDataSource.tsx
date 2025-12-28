@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Text, Code, Card, Button, Group } from '@mantine/core';
 import { ArchbasePasswordEdit } from '@archbase/components';
-import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 
 interface Usuario {
   id: string;
@@ -12,7 +12,7 @@ interface Usuario {
 export function ArchbasePasswordEditWithDataSource() {
   const [initialized, setInitialized] = useState(false);
 
-  const { dataSource, current, edit, save, cancel, isBrowsing, isEditing } = useArchbaseDataSourceV2<Usuario>({
+  const { dataSource } = useArchbaseDataSource<Usuario, string>({
     initialData: [{
       id: '1',
       email: 'usuario@email.com',
@@ -20,6 +20,14 @@ export function ArchbasePasswordEditWithDataSource() {
     }],
     name: 'dsUsuarioPassword',
   });
+  const currentRecord = dataSource.getCurrentRecord();
+  const isBrowsing = dataSource.isBrowsing();
+  const isEditing = dataSource.isEditing();
+
+  const edit = () => dataSource.edit();
+  const save = () => dataSource.save();
+  const cancel = () => dataSource.cancel();
+
 
   // Inicializa em modo de edição após o mount
   useEffect(() => {
@@ -61,7 +69,7 @@ export function ArchbasePasswordEditWithDataSource() {
         </Text>
         <Code block style={{ fontSize: 12 }}>
           {JSON.stringify(
-            current ? { ...current, senha: '*'.repeat(current.senha?.length || 0) } : null,
+            currentRecord ? { ...currentRecord, senha: '*'.repeat(currentRecord.senha?.length || 0) } : null,
             null,
             2
           )}

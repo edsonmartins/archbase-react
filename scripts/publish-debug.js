@@ -191,20 +191,30 @@ function cleanupAllVerdaccioPackages() {
   log(`✅ Limpeza completa do Verdaccio concluída`, GREEN);
 }
 
+function parseArgs() {
+  const args = process.argv.slice(2);
+  return {
+    noDocs: args.includes('--no-docs')
+  };
+}
+
 function main() {
+  const { noDocs } = parseArgs();
+
   log(`🚀 Iniciando publicação DEBUG no Verdaccio...`, BLUE);
-  
+
   // Verificar Verdaccio
   if (!checkVerdaccioConnection()) {
     process.exit(1);
   }
-  
+
   // Limpar Verdaccio completamente
   cleanupAllVerdaccioPackages();
-  
+
   // Build em modo debug
   log(`🔧 Fazendo build debug...`, YELLOW);
-  execSync(`node ${path.join(__dirname, 'build-unified.js')} --debug`, { stdio: 'inherit' });
+  const noDocsFlag = noDocs ? ' --no-docs' : '';
+  execSync(`node ${path.join(__dirname, 'build-unified.js')} --debug${noDocsFlag}`, { stdio: 'inherit' });
   
   const packages = getAllPackages();
   const publishOrder = [

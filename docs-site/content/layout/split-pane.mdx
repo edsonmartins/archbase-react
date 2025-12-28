@@ -1,0 +1,179 @@
+import * as demos from '../../demos/components/layout';
+
+# ArchbaseSplitPane
+
+Componente de layout com painéis redimensionáveis, criado como wrapper sobre `@gfazioli/mantine-split-pane` (MIT License).
+Permite criar layouts flexíveis com barras divisórias arrastáveis, ideal para master-detail views, editores com preview, e dashboards corporativos.
+
+## Uso Básico
+
+<Demo data={demos.usage} />
+
+### Estrutura Básica
+
+```tsx
+import { ArchbaseSplitPane, ArchbaseSplitPanePane, ArchbaseSplitPaneResizer } from '@archbase/layout';
+
+<ArchbaseSplitPane>
+  <ArchbaseSplitPanePane>
+    {/* Primeiro painel */}
+  </ArchbaseSplitPanePane>
+  <ArchbaseSplitPaneResizer />
+  <ArchbaseSplitPanePane>
+    {/* Segundo painel */}
+  </ArchbaseSplitPanePane>
+</ArchbaseSplitPane>
+```
+
+**Importante**: Sempre adicione um `ArchbaseSplitPaneResizer` entre cada `ArchbaseSplitPanePane`.
+
+## Tamanhos e Limites
+
+Controle o tamanho de cada painel individualmente:
+
+<Demo data={demos.sizes} />
+
+### Configuração de Tamanhos
+
+```tsx
+<ArchbaseSplitPane>
+  <ArchbaseSplitPanePane defaultSize="20%" minSize={150} maxSize={400}>
+    {/* Painel 1: 20% inicial, pode ir de 150px a 400px */}
+  </ArchbaseSplitPanePane>
+  <ArchbaseSplitPaneResizer />
+  <ArchbaseSplitPanePane defaultSize="50%" minSize={300} maxSize={600}>
+    {/* Painel 2: 50% inicial, pode ir de 300px a 600px */}
+  </ArchbaseSplitPanePane>
+  <ArchbaseSplitPaneResizer />
+  <ArchbaseSplitPanePane defaultSize="30%" minSize={150} maxSize={400}>
+    {/* Painel 3: 30% inicial, pode ir de 150px a 400px */}
+  </ArchbaseSplitPanePane>
+</ArchbaseSplitPane>
+```
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `defaultSize` | `number \| string` | Tamanho inicial (ex: `300`, `'50%'`, `'300px'`) |
+| `minSize` | `number \| string` | Tamanho mínimo permitido |
+| `maxSize` | `number \| string` | Tamanho máximo permitido |
+
+## Direção Vertical
+
+Use `direction="column"` para painéis empilhados verticalmente:
+
+<Demo data={demos.vertical} />
+
+## Props
+
+### ArchbaseSplitPane
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `children` | `ReactNode` | - | Deve conter `ArchbaseSplitPanePane` e `ArchbaseSplitPaneResizer` |
+| `direction` | `'row' \| 'column'` | `'row'` | Direção dos painéis (horizontal ou vertical) |
+| `splitterSize` | `number` | `4` | Largura da barra divisória (px) |
+| `splitterColor` | `string` | - | Cor da barra divisória |
+| `id` | `string` | - | ID único para o container |
+
+### ArchbaseSplitPanePane
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `children` | `ReactNode` | - | Conteúdo do painel |
+| `defaultSize` | `number \| string` | - | Tamanho inicial (ex: `300`, `'50%'`, `'300px'`) |
+| `minSize` | `number \| string` | - | Tamanho mínimo |
+| `maxSize` | `number \| string` | - | Tamanho máximo |
+| `className` | `string` | - | Classes CSS adicionais |
+| `style` | `CSSProperties` | - | Estilos adicionais |
+
+### ArchbaseSplitPaneResizer
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `className` | `string` | - | Classes CSS adicionais |
+| `style` | `CSSProperties` | - | Estilos adicionais |
+
+## Casos de Uso
+
+### Master-Detail View
+
+```tsx
+<ArchbaseSplitPane>
+  <ArchbaseSplitPanePane defaultSize="40%">
+    <ArchbaseDataGrid dataSource={dataSource} />
+  </ArchbaseSplitPanePane>
+  <ArchbaseSplitPaneResizer />
+  <ArchbaseSplitPanePane>
+    <DetailsPanel dataSource={dataSource} />
+  </ArchbaseSplitPanePane>
+</ArchbaseSplitPane>
+```
+
+### Editor com Preview
+
+```tsx
+<ArchbaseSplitPane direction="column">
+  <ArchbaseSplitPanePane defaultSize="50%">
+    <MonacoEditor value={code} onChange={setCode} />
+  </ArchbaseSplitPanePane>
+  <ArchbaseSplitPaneResizer />
+  <ArchbaseSplitPanePane>
+    <Preview content={code} />
+  </ArchbaseSplitPanePane>
+</ArchbaseSplitPane>
+```
+
+### Filtros + Grade
+
+```tsx
+<ArchbaseSplitPane>
+  <ArchbaseSplitPanePane defaultSize="25%" minSize={200}>
+    <FiltersPanel onFilterChange={handleFilter} />
+  </ArchbaseSplitPanePane>
+  <ArchbaseSplitPaneResizer />
+  <ArchbaseSplitPanePane>
+    <ArchbaseDataGrid dataSource={dataSource} />
+  </ArchbaseSplitPanePane>
+</ArchbaseSplitPane>
+```
+
+## Layout com 3 Painéis
+
+```tsx
+<ArchbaseSplitPane>
+  <ArchbaseSplitPanePane defaultSize="20%" minSize={150} maxSize={300}>
+    <Sidebar />
+  </ArchbaseSplitPanePane>
+  <ArchbaseSplitPaneResizer />
+  <ArchbaseSplitPanePane defaultSize="50%">
+    <MainContent />
+  </ArchbaseSplitPanePane>
+  <ArchbaseSplitPaneResizer />
+  <ArchbaseSplitPanePane defaultSize="30%" minSize={200} maxSize={400}>
+    <DetailsPanel />
+  </ArchbaseSplitPanePane>
+</ArchbaseSplitPane>
+```
+
+## Acessibilidade
+
+- Barras divisórias são arrastáveis via mouse
+- Suporte a teclado para ajuste fino (setas)
+- Roles e atributos ARIA aplicados automaticamente
+- Navegação por teclado entre painéis
+
+## Dicas
+
+- **Sempre use Resizers**: Cada `ArchbaseSplitPanePane` deve ter um `ArchbaseSplitPaneResizer` entre eles (exceto após o último)
+- **Unidades de tamanho**: Use porcentagens (`'50%'`) para layouts responsivos ou pixels (`300`) para tamanhos fixos
+- **Limites**: Defina `minSize` e `maxSize` para evitar que painéis fiquem muito pequenos ou grandes
+- **Altura container**: O componente pai deve ter altura definida para que o split funcione corretamente
+
+## Licença
+
+Este componente é um wrapper sobre `@gfazioli/mantine-split-pane`, licenciado sob **MIT License**.
+
+## Referências
+
+- [SplitPane documentation](https://gfazioli.github.io/mantine-split-pane/)
+- [ArchbaseDataGrid](/components/data-display/datagrid) - Grade de dados comum para usar com SplitPane

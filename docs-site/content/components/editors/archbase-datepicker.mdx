@@ -1,0 +1,93 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseDatePickerEdit` é um seletor de data otimizado para uso com o DataSource. Suporta múltiplos formatos de data e integração automática com DataSource V1/V2.
+
+<Demo data={demos.datePickerUsage} />
+
+## Com DataSource
+
+A integração com o DataSource permite binding bidirecional automático. O componente detecta o tipo de DataSource e otimiza os re-renders.
+
+<Demo data={demos.datePickerWithDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseDatePickerEdit
+  dataSource={dataSource}    // Fonte de dados (V1 ou V2)
+  dataField="dataNascimento" // Campo do objeto
+  label="Data de Nascimento"
+  dateFormat="DD/MM/YYYY"    // Formato de exibição
+  clearable                  // Permite limpar
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite seleção de data
+- **Sincroniza**: valor bidirecional com o DataSource
+- **Formata**: exibe a data no formato especificado
+
+## Formatos de Data
+
+Suporta diversos formatos de data:
+
+<Demo data={demos.datePickerFormats} />
+
+### Formatos Suportados
+
+| Formato | Exemplo |
+|---------|---------|
+| `DD/MM/YYYY` | 25/12/2024 |
+| `DD-MM-YYYY` | 25-12-2024 |
+| `YYYY/MM/DD` | 2024/12/25 |
+| `YYYY-MM-DD` | 2024-12-25 |
+| `DD/MM/YY` | 25/12/24 |
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuário:
+
+<Demo data={demos.datePickerStates} />
+
+## Props Principais
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados para binding |
+| `dataField` | `string` | - | Campo do objeto para vincular |
+| `label` | `string` | - | Label do campo |
+| `dateFormat` | `string` | `DD/MM/YYYY` | Formato da data |
+| `value` | `Date` | - | Valor controlado |
+| `onChange` | `(date: Date) => void` | - | Callback quando a data muda |
+| `clearable` | `boolean` | `false` | Permite limpar a data |
+| `minDate` | `Date` | - | Data mínima selecionável |
+| `maxDate` | `Date` | - | Data máxima selecionável |
+| `disabled` | `boolean` | `false` | Desabilita o campo |
+| `readOnly` | `boolean` | `false` | Somente leitura |
+
+## Limites de Data
+
+Restrinja a seleção com datas mínimas e máximas:
+
+```tsx
+<ArchbaseDatePickerEdit
+  dataSource={dataSource}
+  dataField="dataContrato"
+  label="Data do Contrato"
+  minDate={new Date(2020, 0, 1)}  // A partir de 01/01/2020
+  maxDate={new Date(2025, 11, 31)} // Até 31/12/2025
+/>
+```
+
+## Acessibilidade
+
+O `ArchbaseDatePickerEdit` segue as melhores práticas de acessibilidade:
+
+- Labels associadas corretamente via `htmlFor`
+- Suporte completo a navegação por teclado no calendário
+- Erros anunciados via `aria-describedby`
+- Campos obrigatórios indicados via `aria-required`
+- Calendário acessível via ARIA

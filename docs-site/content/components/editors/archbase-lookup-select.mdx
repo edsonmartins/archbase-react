@@ -1,0 +1,503 @@
+import * as demos from '../../../demos/components/editors';
+
+# ArchbaseLookupSelect
+
+O `ArchbaseLookupSelect` é um componente de seleção com capacidade de lookup (busca) em fontes de dados externas ou internas.
+Ideal para cenários onde você precisa buscar dados relacionados através de uma chave ou código.
+
+## Importação
+
+```tsx
+import { ArchbaseLookupSelect } from '@archbase/components';
+```
+
+## Uso Básico
+
+Seleção de tipo de cliente com dados iniciais.
+
+<Demo data={demos.lookupSelectUsage} />
+
+### Como funciona
+
+O componente opera como um select convencional, mas com capacidade de lookup:
+- **Dados iniciais**: Recebe opções iniciais para exibir
+- **Lookup delegator**: Função opcional para buscar dados externos
+- **Busca incremental**: Filtra opções conforme usuário digita
+- **Converter funções**: Transforma dados entre formatos
+
+```tsx
+interface Cliente {
+  id: string;
+  nome: string;
+  tipoClienteId: string;
+}
+
+interface TipoCliente {
+  id: string;
+  descricao: string;
+}
+
+const tiposClienteData: TipoCliente[] = [
+  { id: '1', descricao: 'Pessoa Física' },
+  { id: '2', descricao: 'Pessoa Jurídica' },
+  { id: '3', descricao: 'Governamental' },
+];
+
+<ArchbaseLookupSelect<Cliente, string, TipoCliente>
+  dataSource={dataSource}
+  dataField="tipoClienteId"
+  label="Tipo de Cliente"
+  placeholder="Selecione o tipo..."
+  initialOptions={tiposClienteData}
+  getOptionLabel={(tipo) => tipo.descricao}
+  getOptionValue={(tipo) => tipo.id}
+  onSelectValue={(tipo) => setValue(tipo)}
+  clearable
+/>
+```
+
+## Com DataSource
+
+Integração completa com DataSource para formulários com estado.
+
+```tsx
+interface Produto {
+  id: string;
+  nome: string;
+  categoriaId: string;
+}
+
+interface Categoria {
+  id: string;
+  nome: string;
+}
+
+const { dataSource } = useArchbaseDataSource<Produto, string>({
+  initialData: produtoData,
+  name: 'dsProduto',
+});
+
+const categorias: Categoria[] = await fetch('/api/categorias').then(r => r.json());
+
+<ArchbaseLookupSelect<Produto, string, Categoria>
+  dataSource={dataSource}
+  dataField="categoriaId"
+  label="Categoria"
+  initialOptions={categorias}
+  getOptionLabel={(cat) => cat.nome}
+  getOptionValue={(cat) => cat.id}
+/>
+```
+
+## Lookup Delegator
+
+Busca dinâmica de dados baseada em valor informado.
+
+```tsx
+const lookupTipoCliente = async (id: string): Promise<TipoCliente> => {
+  const response = await fetch(`/api/tipos-cliente/${id}`);
+  return response.json();
+};
+
+<ArchbaseLookupSelect<Cliente, string, TipoCliente>
+  dataSource={dataSource}
+  dataField="tipoClienteId"
+  label="Tipo de Cliente"
+  initialOptions={tiposClienteData}
+  getOptionLabel={(tipo) => tipo.descricao}
+  getOptionValue={(tipo) => tipo.id}
+  lookupDataSource={lookupTipoCliente}
+  onLookupResult={(result) => {
+    console.log('Tipo encontrado:', result);
+  }}
+/>
+```
+
+## Configurações Avançadas
+
+### Busca com debounce
+
+```tsx
+<ArchbaseLookupSelect
+  initialOptions={options}
+  getOptionLabel={(opt) => opt.label}
+  getOptionValue={(opt) => opt.value}
+  debounceTime={300} // aguarda 300ms após digitação
+  searchable
+/>
+```
+
+### Opções limitadas
+
+```tsx
+<ArchbaseLookupSelect
+  initialOptions={largeOptionsArray}
+  getOptionLabel={(opt) => opt.label}
+  getOptionValue={(opt) => opt.value}
+  maxDropdownHeight={200}
+  limit={10} // limita a 10 opções visíveis
+/>
+```
+
+### Renderização customizada
+
+```tsx
+<ArchbaseLookupSelect
+  initialOptions={users}
+  getOptionLabel={(user) => user.name}
+  getOptionValue={(user) => user.id}
+  renderOption={(user) => (
+    <Group>
+      <Avatar src={user.avatar} radius="xl" size="sm" />
+      <div>
+        <Text size="sm">{user.name}</Text>
+        <Text size="xs" c="dimmed">{user.email}</Text>
+      </div>
+    </Group>
+  )}
+/>
+```
+
+## Casos de Uso
+
+### Seleção de categoria de produto
+
+```tsx
+interface Produto {
+  id: string;
+  nome: string;
+  categoriaId: string;
+}
+
+interface Categoria {
+  id: string;
+  nome: string;
+  nivel: number;
+}
+
+const categorias: Categoria[] = [
+  { id: '1', nome: 'Eletrônicos', nivel: 1 },
+  { id: '1-1', nome: 'Celulares', nivel: 2 },
+  { id: '1-2', nome: 'Notebooks', nivel: 2 },
+];
+
+<ArchbaseLookupSelect<Produto, string, Categoria>
+  dataSource={dataSource}
+  dataField="categoriaId"
+  label="Categoria"
+  initialOptions={categorias}
+  getOptionLabel={(cat) => `${'  '.repeat(cat.nivel - 1)}${cat.nome}`}
+  getOptionValue={(cat) => cat.id}
+  converter={(cat) => cat.id}
+/>
+```
+
+### Lookup de estado civil
+
+```tsx
+interface EstadoCivil {
+  id: string;
+  sigla: string;
+  descricao: string;
+}
+
+const estadosCivis: EstadoCivil[] = [
+  { id: '1', sigla: 'S', descricao: 'Solteiro(a)' },
+  { id: '2', sigla: 'C', descricao: 'Casado(a)' },
+  { id: '3', sigla: 'D', descricao: 'Divorciado(a)' },
+  { id: '4', sigla: 'V', descricao: 'Viúvo(a)' },
+];
+
+<ArchbaseLookupSelect<Pessoa, string, EstadoCivil>
+  dataSource={dataSource}
+  dataField="estadoCivilId"
+  label="Estado Civil"
+  initialOptions={estadosCivis}
+  getOptionLabel={(ec) => `${ec.sigla} - ${ec.descricao}`}
+  getOptionValue={(ec) => ec.id}
+/>
+```
+
+### Seleção de moeda
+
+```tsx
+interface Moeda {
+  codigo: string;
+  simbolo: string;
+  nome: string;
+}
+
+const moedas: Moeda[] = [
+  { codigo: 'BRL', simbolo: 'R$', nome: 'Real Brasileiro' },
+  { codigo: 'USD', simbolo: '$', nome: 'Dólar Americano' },
+  { codigo: 'EUR', simbolo: '€', nome: 'Euro' },
+];
+
+<ArchbaseLookupSelect<Produto, string, Moeda>
+  dataSource={dataSource}
+  dataField="moeda"
+  label="Moeda"
+  initialOptions={moedas}
+  getOptionLabel={(moeda) => `${moeda.simbolo} ${moeda.codigo} - ${moeda.nome}`}
+  getOptionValue={(moeda) => moeda.codigo}
+/>
+```
+
+## Integração com Formulários
+
+### Com ArchbaseFormTemplate
+
+```tsx
+import { ArchbaseFormTemplate } from '@archbase/template';
+
+function ClienteForm() {
+  return (
+    <ArchbaseFormTemplate dataSource={dataSource} onSave={handleSave}>
+      <ArchbaseLookupSelect<Cliente, string, TipoCliente>
+        dataSource={dataSource}
+        dataField="tipoClienteId"
+        label="Tipo de Cliente"
+        initialOptions={tiposClienteData}
+        getOptionLabel={(tipo) => tipo.descricao}
+        getOptionValue={(tipo) => tipo.id}
+      />
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+### Com React Hook Form
+
+```tsx
+import { useForm, Controller } from 'react-hook-form';
+
+function MeuFormulario() {
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      tipoCliente: null,
+    },
+  });
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="tipoCliente"
+        control={control}
+        render={({ field }) => (
+          <ArchbaseLookupSelect<Cliente, string, TipoCliente>
+            label="Tipo de Cliente"
+            value={field.value}
+            onChangeValue={field.onChange}
+            initialOptions={tiposClienteData}
+            getOptionLabel={(tipo) => tipo.descricao}
+            getOptionValue={(tipo) => tipo.id}
+          />
+        )}
+      />
+    </form>
+  );
+}
+```
+
+## Validação
+
+### Campo obrigatório
+
+```tsx
+<ArchbaseLookupSelect
+  dataSource={dataSource}
+  dataField="tipoClienteId"
+  label="Tipo de Cliente *"
+  required
+  initialOptions={tiposClienteData}
+  getOptionLabel={(tipo) => tipo.descricao}
+  getOptionValue={(tipo) => tipo.id}
+  error={!dataSource.field.tipoClienteId ? 'Campo obrigatório' : undefined}
+/>
+```
+
+### Validação customizada
+
+```tsx
+<ArchbaseLookupSelect
+  dataSource={dataSource}
+  dataField="categoriaId"
+  label="Categoria"
+  initialOptions={categorias}
+  getOptionLabel={(cat) => cat.nome}
+  getOptionValue={(cat) => cat.id}
+  error={
+    dataSource.field.categoriaId === 'special' && dataSource.field.preco === 0
+      ? 'Categoria especial requer preço maior que zero'
+      : undefined
+  }
+/>
+```
+
+## Performance
+
+### Otimização com useMemo
+
+```tsx
+// ✅ Bom: memoizar opções estáticas
+const options = useMemo(() => [
+  { id: '1', nome: 'Opção 1' },
+  { id: '2', nome: 'Opção 2' },
+], []);
+
+<ArchbaseLookupSelect initialOptions={options} />
+
+// ✅ Bom: memoizar funções de extração
+const getOptionLabel = useCallback((opt: Option) => opt.nome, []);
+const getOptionValue = useCallback((opt: Option) => opt.id, []);
+```
+
+### DataSource V2
+
+```tsx
+// DataSource V2 otimiza automaticamente os re-renders
+const { dataSource } = useArchbaseDataSource<Produto, string>({
+  initialData: produtoData,
+  name: 'dsProduto',
+});
+
+<ArchbaseLookupSelect
+  dataSource={dataSource} // V2 detectado automaticamente
+  dataField="categoriaId"
+/>
+```
+
+## Acessibilidade
+
+O componente segue as melhores práticas de acessibilidade:
+- Labels associadas corretamente
+- Suporte a navegação por teclado
+- Compatível com screen readers
+- Estados visuais claros
+
+### Atalhos de teclado
+
+| Tecla | Ação |
+|-------|------|
+| `↑` `↓` | Navegar entre opções |
+| `Enter` | Selecionar opção |
+| `Escape` | Fechar dropdown |
+| `Home` `End` | Primeira/Última opção |
+
+## API
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T, ID>` | - | DataSource V1/V2 para integração |
+| `dataField` | `keyof T` | - | Campo do DataSource a ser vinculado |
+| `initialOptions` | `O[]` | `[]` | Opções iniciais para seleção |
+| `getOptionLabel` | `(option: O) => string` | **Obrigatório** | Extrai o label da opção |
+| `getOptionValue` | `(option: O) => string` | **Obrigatório** | Extrai o valor da opção |
+| `onSelectValue` | `(value: O) => void` | - | Callback ao selecionar opção |
+| `lookupDataSource` | `(id: string) => Promise<O>` | - | Função para buscar dados externos |
+| `onLookupResult` | `(result: O) => void` | - | Callback quando lookup retorna |
+| `converter` | `(value: O) => any` | - | Converte objeto para formato do DataSource |
+| `clearable` | `boolean` | `false` | Permite limpar seleção |
+| `searchable` | `boolean` | `false` | Habilita busca |
+| `debounceTime` | `number` | `300` | Tempo de debounce em ms |
+| `disabled` | `boolean` | `false` | Desabilita o componente |
+| `label` | `string` | - | Label do campo |
+| `placeholder` | `string` | - | Placeholder do campo |
+| `required` | `boolean` | `false` | Campo obrigatório |
+| `error` | `string` | - | Mensagem de erro |
+
+## Exemplos Avançados
+
+### Select com agrupamento
+
+```tsx
+const opcoesAgrupadas = [
+  {
+    group: 'Eletrônicos',
+    items: [
+      { id: '1', nome: 'Celulares' },
+      { id: '2', nome: 'Notebooks' },
+    ],
+  },
+  {
+    group: 'Roupas',
+    items: [
+      { id: '3', nome: 'Masculino' },
+      { id: '4', nome: 'Feminino' },
+    ],
+  },
+];
+
+<ArchbaseLookupSelect
+  initialOptions={opcoesAgrupadas.flatMap(g => g.items)}
+  getOptionLabel={(opt) => opt.nome}
+  getOptionValue={(opt) => opt.id}
+  renderOption={(opt) => (
+    <Group>
+      <Text>{opt.nome}</Text>
+      <Badge size="xs" color="blue">
+        {opcoesAgrupadas.find(g => g.items.includes(opt))?.group}
+      </Badge>
+    </Group>
+  )}
+/>
+```
+
+### Select com filtro de categoria
+
+```tsx
+function SelectComFiltro() {
+  const [categoria, setCategoria] = useState<string>('');
+
+  const opcoesFiltradas = useMemo(() => {
+    if (!categoria) return todasOpcoes;
+    return todasOpcoes.filter(opt => opt.categoria === categoria);
+  }, [categoria]);
+
+  return (
+    <Stack>
+      <SegmentedControl
+        data={['Todos', 'Eletrônicos', 'Roupas']}
+        onChange={(value) => setCategoria(value === 'Todos' ? '' : value)}
+      />
+      <ArchbaseLookupSelect
+        initialOptions={opcoesFiltradas}
+        getOptionLabel={(opt) => opt.nome}
+        getOptionValue={(opt) => opt.id}
+      />
+    </Stack>
+  );
+}
+```
+
+### Seleção múltipla simulada
+
+```tsx
+function MultiSelect() {
+  const [selecionados, setSelecionados] = useState<TipoCliente[]>([]);
+
+  return (
+    <Stack>
+      {selecionados.map((sel) => (
+        <Badge
+          key={sel.id}
+          onRemove={() => setSelecionados(prev => prev.filter(s => s.id !== sel.id))}
+        >
+          {sel.descricao}
+        </Badge>
+      ))}
+      <ArchbaseLookupSelect
+        label="Adicionar tipo"
+        initialOptions={tiposClienteData.filter(
+          t => !selecionados.some(s => s.id === t.id)
+        )}
+        getOptionLabel={(tipo) => tipo.descricao}
+        getOptionValue={(tipo) => tipo.id}
+        onSelectValue={(tipo) => setSelecionados(prev => [...prev, tipo])}
+      />
+    </Stack>
+  );
+}
+```

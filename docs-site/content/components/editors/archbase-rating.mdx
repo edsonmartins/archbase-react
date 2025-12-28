@@ -1,0 +1,73 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseRating` é um componente de avaliação com estrelas, suporte a frações e integração com DataSource.
+
+<Demo data={demos.ratingUsage} />
+
+## Quantidade de Estrelas
+
+```tsx
+// 5 estrelas (padrão)
+<ArchbaseRating count={5} />
+
+// 10 estrelas
+<ArchbaseRating count={10} />
+
+// 3 estrelas
+<ArchbaseRating count={3} />
+```
+
+## Frações
+
+O componente suporta valores fracionários para avaliações mais precisas:
+
+```tsx
+<ArchbaseRating
+  count={5}
+  fractions={2} // Meia estrela
+  value={3.5}
+/>
+
+<ArchbaseRating
+  count={5}
+  fractions={4} // Quartos de estrela
+  value={4.25}
+/>
+```
+
+## Estados
+
+```tsx
+// Com valor inicial
+<ArchbaseRating value={4} />
+
+// Desabilitado
+<ArchbaseRating disabled value={3} />
+
+// Somente leitura
+<ArchbaseRating readOnly value={4} />
+
+// Com erro
+<ArchbaseRating error="Avaliação obrigatória" />
+```
+
+## Com DataSource
+
+```tsx
+<ArchbaseRating<Produto, number>
+  dataSource={dataSource}
+  dataField="avaliacao"
+  label="Avaliação"
+  count={5}
+/>
+```
+
+## Acessibilidade
+
+- Labels associadas corretamente
+- Suporte a navegação por teclado
+- Anúncio do valor atual via `aria-valuenow`
+- `aria-label` em cada estrela
+- Compatível com screen readers

@@ -10,7 +10,7 @@ import useArchbasePassiveLayoutEffect from './useArchbasePassiveLayoutEffect'
  * @param options Configura a largura inicial e a altura inicial do estado do gancho
  */
 export const useArchbaseSize = <T extends HTMLElement>(
-  target: React.RefObject<T> | T | null,
+  target: React.RefObject<T | null> | T | null,
   options?: UseSizeOptions
 ): [number, number] => {
   const [size, setSize] = React.useState<[number, number]>(() => {

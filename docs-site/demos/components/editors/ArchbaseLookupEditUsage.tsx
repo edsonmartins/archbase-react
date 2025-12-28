@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stack, Text, Code, Card, Modal, Table, Button, Group } from '@mantine/core';
+import { Stack, Text, Code, Card, Modal, Table, Button } from '@mantine/core';
 import { ArchbaseLookupEdit } from '@archbase/components';
 
 interface Cliente {
@@ -16,6 +16,12 @@ const clientes: Cliente[] = [
   { id: '4', nome: 'Ana Costa', email: 'ana@email.com', cidade: 'Curitiba' },
 ];
 
+// Simula lookup por ID
+const lookupCliente = async (value: string): Promise<Cliente> => {
+  const found = clientes.find(c => c.id === value);
+  return found || { id: '', nome: '', email: '', cidade: '' };
+};
+
 export function ArchbaseLookupEditUsage() {
   const [selectedCliente, setSelectedCliente] = useState<Cliente | null>(null);
   const [modalOpened, setModalOpened] = useState(false);
@@ -30,12 +36,11 @@ export function ArchbaseLookupEditUsage() {
       <ArchbaseLookupEdit
         label="Cliente"
         placeholder="Clique no icone para buscar..."
-        value={selectedCliente?.nome || ''}
         readOnly
         onActionSearchExecute={() => setModalOpened(true)}
         tooltipIconSearch="Buscar cliente"
-        clearable
-        onClear={() => setSelectedCliente(null)}
+        lookupValueDelegator={lookupCliente}
+        onLookupResult={(cliente) => setSelectedCliente(cliente)}
       />
 
       <Card withBorder p="sm" radius="md">

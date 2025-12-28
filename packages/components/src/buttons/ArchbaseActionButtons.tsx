@@ -233,8 +233,8 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 	const isLarge = useMediaQuery(`(min-width: ${_largerBreakPoint})`);
 	const isSmall = useMediaQuery(`(max-width: ${_smallerBreakPoint})`);
 
-	const largerSpacingPx = options && options.largerSpacing ? px(options.largerSpacing) : px('1rem');
-	const smallerSpacingPx = options && options.smallerSpacing ? px(options.smallerSpacing) : px('0.25rem');
+	const largerSpacingPx = Number(options && options.largerSpacing ? px(options.largerSpacing) : px('1rem'));
+	const smallerSpacingPx = Number(options && options.smallerSpacing ? px(options.smallerSpacing) : px('0.25rem'));
 	const spacingPx = isLarge ? largerSpacingPx : smallerSpacingPx;
 
 	const _menuPosition = options && options.menuPosition ? options.menuPosition : 'right';
@@ -260,7 +260,7 @@ export function ArchbaseActionButtons({ actions, variant, customComponents, opti
 				});
 			}
 
-			currentButtonWidthRef.current.forEach((buttonWidth, index) => {
+			currentButtonWidthRef.current.forEach((buttonWidth: number, index: number) => {
 				totalWidth += buttonWidth + (isLastElementOfArray(actions, index) ? 0 : spacingPx);
 
 				if (totalWidth <= containerWidth - (menuWidth + Number(spacingPx))) {

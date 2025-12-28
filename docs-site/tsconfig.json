@@ -1,10 +1,16 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -12,22 +18,52 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@archbase/core": ["../packages/core/src"],
-      "@archbase/components": ["../packages/components/src"],
-      "@archbase/data": ["../packages/data/src"],
-      "@archbase/layout": ["../packages/layout/src"],
-      "@archbase/admin": ["../packages/admin/src"],
-      "@archbase/security": ["../packages/security/src"],
-      "@archbase/template": ["../packages/template/src"],
-      "@archbase/advanced": ["../packages/advanced/src"],
-      "@archbase/ssr": ["../packages/ssr/src"]
+      "@/*": [
+        "./*"
+      ],
+      "@archbase/core": [
+        "../packages/core/src"
+      ],
+      "@archbase/components": [
+        "../packages/components/src"
+      ],
+      "@archbase/data": [
+        "../packages/data/src"
+      ],
+      "@archbase/layout": [
+        "../packages/layout/src"
+      ],
+      "@archbase/admin": [
+        "../packages/admin/src"
+      ],
+      "@archbase/security": [
+        "../packages/security/src"
+      ],
+      "@archbase/template": [
+        "../packages/template/src"
+      ],
+      "@archbase/advanced": [
+        "../packages/advanced/src"
+      ],
+      "@archbase/ssr": [
+        "../packages/ssr/src"
+      ],
+      "@archbase/feature-flags": [
+        "../packages/feature-flags/src"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mdx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mdx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

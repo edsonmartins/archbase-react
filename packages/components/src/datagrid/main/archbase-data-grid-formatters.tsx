@@ -9,7 +9,60 @@ import { ArchbaseMasker, MaskOptions, convertISOStringToDate } from '@archbase/c
  */
 
 /**
- * Renderiza texto com máscara opcional
+ * Verifica se uma string é base64 válida
+ */
+const isBase64 = (str: string): boolean => {
+  if (!str || typeof str !== 'string') {
+    return false;
+  }
+
+  // Base64 deve ter comprimento múltiplo de 4 (pode ter padding com =)
+  if (str.length < 4) {
+    return false;
+  }
+
+  // Regex para validar caracteres base64
+  const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
+  if (!base64Regex.test(str)) {
+    return false;
+  }
+
+  // Tenta decodificar para verificar se é válido
+  try {
+    const decoded = atob(str);
+    // Verifica se o resultado decodificado contém caracteres imprimíveis
+    // (evita falsos positivos com strings que parecem base64 mas não são)
+    const printableRatio = decoded.split('').filter(c => {
+      const code = c.charCodeAt(0);
+      return (code >= 32 && code <= 126) || code === 10 || code === 13 || code === 9;
+    }).length / decoded.length;
+
+    // Se mais de 90% dos caracteres são imprimíveis, provavelmente é texto codificado
+    return printableRatio > 0.9;
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * Decodifica uma string base64 para texto UTF-8
+ */
+const decodeBase64 = (str: string): string => {
+  try {
+    // Decodifica base64 e converte para UTF-8
+    const binaryString = atob(str);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return new TextDecoder('utf-8').decode(bytes);
+  } catch {
+    return str;
+  }
+};
+
+/**
+ * Renderiza texto com máscara opcional e decodificação automática de base64
  */
 export const renderText = (cell: any, maskOptions?: MaskOptions): ReactNode => {
   const value = cell.getValue();
@@ -18,6 +71,11 @@ export const renderText = (cell: any, maskOptions?: MaskOptions): ReactNode => {
   }
 
   let displayValue = String(value);
+
+  // Verifica se é base64 e decodifica automaticamente
+  if (isBase64(displayValue)) {
+    displayValue = decodeBase64(displayValue);
+  }
 
   if (maskOptions) {
     displayValue = ArchbaseMasker.toPattern(displayValue, maskOptions);

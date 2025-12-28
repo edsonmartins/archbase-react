@@ -40,7 +40,8 @@
       "Bash(npx eslint:*)",
       "Bash(diff:*)",
       "Bash(do echo \"🗑️ Removendo @archbase/$pkg...\")",
-      "Bash(timeout 30 pnpm dev:*)"
+      "Bash(timeout 30 pnpm dev:*)",
+      "WebSearch"
     ],
     "deny": []
   }

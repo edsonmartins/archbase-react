@@ -12,7 +12,6 @@ export function ArchbaseTimeEditUsage() {
         placeholder="Selecione o horario..."
         value={value}
         onChangeValue={(newValue) => setValue(newValue || '')}
-        clearable
       />
 
       <Card withBorder p="sm" radius="md">

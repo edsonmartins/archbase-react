@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Text, Code, Card, Button, Group } from '@mantine/core';
 import { ArchbaseSwitch } from '@archbase/components';
-import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 
 interface Usuario {
   id: string;
@@ -14,7 +14,7 @@ interface Usuario {
 export function ArchbaseSwitchWithDataSource() {
   const [initialized, setInitialized] = useState(false);
 
-  const { dataSource, current, edit, save, cancel, isBrowsing, isEditing } = useArchbaseDataSourceV2<Usuario>({
+  const { dataSource } = useArchbaseDataSource<Usuario, string>({
     initialData: [{
       id: '1',
       nome: 'Joao Silva',
@@ -24,6 +24,14 @@ export function ArchbaseSwitchWithDataSource() {
     }],
     name: 'dsUsuarioSwitch',
   });
+  const currentRecord = dataSource.getCurrentRecord();
+  const isBrowsing = dataSource.isBrowsing();
+  const isEditing = dataSource.isEditing();
+
+  const edit = () => dataSource.edit();
+  const save = () => dataSource.save();
+  const cancel = () => dataSource.cancel();
+
 
   useEffect(() => {
     if (!initialized && dataSource && isBrowsing) {
@@ -77,7 +85,7 @@ export function ArchbaseSwitchWithDataSource() {
           Registro atual ({isBrowsing ? 'Navegando' : 'Editando'}):
         </Text>
         <Code block style={{ fontSize: 12 }}>
-          {JSON.stringify(current, null, 2)}
+          {JSON.stringify(currentRecord, null, 2)}
         </Code>
       </Card>
     </Stack>

@@ -1,12 +1,10 @@
 'use client';
 
-import { useRouter } from 'next/router';
 import { Box, ScrollArea, Space, Text } from '@mantine/core';
 import { useScrollSpy } from '@mantine/hooks';
 import classes from './TableOfContents.module.css';
 
 export function TableOfContents() {
-  const router = useRouter();
   const spy = useScrollSpy({
     selector: '#mdx [data-heading]',
     getDepth: (element) => Number(element.getAttribute('data-order')),
@@ -29,7 +27,10 @@ export function TableOfContents() {
       __vars={{ '--toc-link-offset': `${heading.depth - 2}` }}
       onClick={(event) => {
         event.preventDefault();
-        router.replace(`${router.pathname}#${heading.id}`, undefined, { shallow: true });
+        if (typeof window !== 'undefined') {
+          const pathname = window.location.pathname;
+          window.history.replaceState(null, '', `${pathname}#${heading.id}`);
+        }
         document.getElementById(heading.id)?.scrollIntoView({ behavior: 'smooth' });
       }}
     >

@@ -1,0 +1,89 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseChip` é um componente de toggle que representa um valor booleano (ativo/inativo), semelhante a um checkbox mas com visual de chip/badge.
+
+<Demo data={demos.chipUsage} />
+
+## Estados
+
+O componente pode ser usado em diferentes estados:
+
+```tsx
+// Checked (selecionado)
+<ArchbaseChip
+  label="Ativo"
+  isChecked={true}
+  onChangeValue={(value) => console.log(value)}
+/>
+
+// Unchecked (não selecionado)
+<ArchbaseChip
+  label="Inativo"
+  isChecked={false}
+  onChangeValue={(value) => console.log(value)}
+/>
+
+// Disabled (desabilitado)
+<ArchbaseChip
+  label="Desabilitado"
+  isChecked={false}
+  disabled
+/>
+
+// Readonly
+<ArchbaseChip
+  label="Somente leitura"
+  isChecked={true}
+  readOnly
+/>
+```
+
+## Com DataSource
+
+```tsx
+<ArchbaseChip<Pessoa, boolean>
+  dataSource={dataSource}
+  dataField="ativo"
+  label="Ativo"
+  trueValue={true}
+  falseValue={false}
+/>
+```
+
+## Variantes
+
+O componente suporta diferentes variantes visuais:
+
+```tsx
+<ArchbaseChip variant="light" label="Light" />
+<ArchbaseChip variant="filled" label="Filled" />
+<ArchbaseChip variant="outline" label="Outline" />
+```
+
+## Cores
+
+```tsx
+<ArchbaseChip color="blue" label="Azul" />
+<ArchbaseChip color="green" label="Verde" />
+<ArchbaseChip color="red" label="Vermelho" />
+<ArchbaseChip color="gray" label="Cinza" />
+```
+
+## Tamanhos
+
+```tsx
+<ArchbaseChip size="xs" label="Extra Small" />
+<ArchbaseChip size="sm" label="Small" />
+<ArchbaseChip size="md" label="Medium" />
+<ArchbaseChip size="lg" label="Large" />
+<ArchbaseChip size="xl" label="Extra Large" />
+```
+
+## Acessibilidade
+
+- Labels associadas corretamente
+- Suporte a navegação por teclado
+- Toggle anunciado via `aria-pressed`
+- Compatível com screen readers

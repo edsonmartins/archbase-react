@@ -1,0 +1,74 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseTimeEdit` é um seletor de hora com formato 12h ou 24h, integração com DataSource e suporte a segundos.
+
+<Demo data={demos.timeEditUsage} />
+
+## Formato
+
+### 24 Horas (padrão)
+
+```tsx
+<ArchbaseTimeEdit
+  label="Horário"
+  format="24"
+  placeholder="00:00"
+/>
+```
+
+### 12 Horas
+
+```tsx
+<ArchbaseTimeEdit
+  label="Horário"
+  format="12"
+  placeholder="12:00 AM"
+/>
+```
+
+## Com Segundos
+
+```tsx
+<ArchbaseTimeEdit
+  label="Horário com segundos"
+  withSeconds
+  format="24"
+  placeholder="00:00:00"
+/>
+```
+
+## Com DataSource
+
+```tsx
+<ArchbaseTimeEdit<Agendamento, string>
+  dataSource={dataSource}
+  dataField="horario"
+  label="Horário"
+  format="24"
+/>
+```
+
+## Estados
+
+```tsx
+// Com valor
+<ArchbaseTimeEdit value="14:30" />
+
+// Desabilitado
+<ArchbaseTimeEdit disabled />
+
+// Com erro
+<ArchbaseTimeEdit error="Horário inválido" />
+
+// Somente leitura
+<ArchbaseTimeEdit readOnly value="14:30" />
+```
+
+## Acessibilidade
+
+- Labels associadas corretamente
+- Navegação completa por teclado
+- Formato anunciado via `aria-describedby`
+- Compatível com screen readers

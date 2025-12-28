@@ -1,0 +1,134 @@
+# ArchbasePDFViewer
+
+Visualizador de PDF completo para aplicações React, criado como wrapper sobre `react-pdf` (MIT License).
+Oferece visualização de PDFs com suporte a anotações, navegação, zoom, rotação e mais.
+
+## Uso Básico
+
+```tsx
+import { ArchbasePDFViewer } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbasePDFViewer
+      file="/path/to/document.pdf"
+      height={700}
+      toolbar
+      textLayer
+    />
+  );
+}
+```
+
+## Sistema de Anotações
+
+O visualizador inclui um sistema completo de anotações com suporte a:
+
+- **Destaques** - Marcar regiões do PDF
+- **Comentários** - Adicionar notas textuais
+- **Marcadores** - Marcar páginas importantes
+
+```tsx
+import { ArchbasePDFViewer } from '@archbase/components';
+import type { PDFAnnotation } from '@archbase/components';
+import { useState } from 'react';
+
+function App() {
+  const [annotations, setAnnotations] = useState<PDFAnnotation[]>([]);
+
+  return (
+    <ArchbasePDFViewer
+      file="/path/to/document.pdf"
+      enableAnnotations
+      showAnnotationsList
+      annotations={annotations}
+      onAnnotationAdd={(annotation) => setAnnotations([...annotations, annotation])}
+      onAnnotationRemove={(id) => setAnnotations(annotations.filter(a => a.id !== id))}
+      height={700}
+    />
+  );
+}
+```
+
+## Integração com DataSource
+
+O componente suporta integração com DataSource V1/V2:
+
+```tsx
+import { ArchbasePDFViewer } from '@archbase/components';
+import { ArchbaseDataSource } from '@archbase/data';
+
+interface Document {
+  id: string;
+  name: string;
+  url: string;
+}
+
+function App() {
+  const dataSource = new ArchbaseDataSource<Document, string>({
+    initialData: [{ id: '1', name: 'Doc', url: '/doc.pdf' }],
+    idField: 'id',
+  });
+
+  return (
+    <ArchbasePDFViewer
+      dataSource={dataSource}
+      dataField="url"
+      height={700}
+    />
+  );
+}
+```
+
+## Props
+
+### ArchbasePDFViewer
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `file` | `PDFSource` | - | Caminho do PDF (string, URL, Uint8Array, ou objeto) |
+| `width` | `string \| number` | `'100%'` | Largura do visualizador |
+| `height` | `string \| number` | `700` | Altura do visualizador |
+| `page` | `number` | `1` | Página inicial |
+| `scale` | `number` | `1.0` | Zoom inicial |
+| `rotation` | `number` | `0` | Rotação inicial (0, 90, 180, 270) |
+| `toolbar` | `boolean \| object` | `true` | Mostrar toolbar |
+| `toolbarPosition` | `'top' \| 'bottom' \| 'both'` | `'top'` | Posição da toolbar |
+| `textLayer` | `boolean` | `true` | Mostrar camada de texto (acessibilidade) |
+| `enableAnnotations` | `boolean` | `false` | Habilitar sistema de anotações |
+| `showAnnotationsList` | `boolean` | `false` | Mostrar lista de anotações |
+| `annotations` | `PDFAnnotation[]` | `[]` | Anotações existentes |
+| `onAnnotationAdd` | `function` | - | Callback ao adicionar anotação |
+| `onAnnotationRemove` | `function` | - | Callback ao remover anotação |
+| `dataSource` | `IArchbaseDataSourceBase` | - | DataSource para integração |
+| `dataField` | `string` | - | Campo do DataSource com URL do PDF |
+| `onPageChange` | `function` | - | Callback ao mudar de página |
+| `onZoomChange` | `function` | - | Callback ao mudar zoom |
+| `disabled` | `boolean` | `false` | Desabilitar interações |
+
+### PDFAnnotation
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `id` | `string` | Identificador único |
+| `type` | `'highlight' \| 'comment' \| 'bookmark'` | Tipo da anotação |
+| `pageIndex` | `number` | Índice da página (0-based) |
+| `rect` | `object` | Posição e tamanho `{x, y, width, height}` |
+| `content` | `string` | Conteúdo do comentário |
+| `color` | `string` | Cor da anotação (hex) |
+
+## Acessibilidade
+
+- Suporte a navegação por teclado
+- Camada de texto para screen readers
+- Toolbar com tooltips descritivos
+- Labels ARIA apropriados
+
+## Licença
+
+Este componente é um wrapper sobre `react-pdf`, licenciado sob **MIT License**.
+
+## Referências
+
+- [react-pdf documentation](https://github.com/wojtekmaj/react-pdf)
+- [ArchbaseDataGrid](/components/data-display/datagrid) - Grade de dados completa

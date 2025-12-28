@@ -1,4 +1,10 @@
-import { GridFilterModel, GridRowId, GridSortModel } from '@mui/x-data-grid';
+import { GridFilterModel, GridRowId, GridSortModel, GridFilterItem, GridColDef } from '@mui/x-data-grid';
+import type {
+  ArchbaseFilterDefinition,
+  ArchbaseActiveFilter,
+  ArchbaseFieldDataType,
+  ArchbaseFilterOperator,
+} from '../../filters/ArchbaseCompositeFilters.types';
 
 /**
  * Obtém o ID de uma linha de forma segura
@@ -207,4 +213,282 @@ export const getInitialSortModel = (dataSource: any): GridSortModel => {
   }
 
   return [];
+};
+
+/**
+ * Converte RSQL para GridFilterModel do MUI X DataGrid
+ * Permite compatibilidade entre ArchbaseCompositeFilters e o sistema nativo do MUI
+ */
+export const convertRSQLToFilterModel = (
+  rsql: string | undefined,
+  columns: GridColDef[]
+): GridFilterModel => {
+  if (!rsql) {
+    return { items: [] };
+  }
+
+  const items: GridFilterItem[] = [];
+
+  try {
+    // RSQL usa ; como AND e , como OR
+    // Vamos processar filtros separados por ; (AND)
+    const filters = rsql.split(';');
+
+    for (const filter of filters) {
+      const trimmed = filter.trim();
+      if (!trimmed) continue;
+
+      // Parse do operador RSQL
+      let field: string = '';
+      let operator: string = '';
+      let value: string = '';
+
+      // Operadores em ordem de complexidade (mais complexos primeiro)
+      const operators = [
+        { rsql: '=like=', mui: 'contains', pattern: /=(like)=/ },
+        { rsql: '>=', mui: '>=', pattern: />=/ },
+        { rsql: '<=', mui: '<=', pattern: /<=/ },
+        { rsql: '>', mui: '>', pattern: />/ },
+        { rsql: '<', mui: '<', pattern: /</ },
+        { rsql: '!=', mui: 'not', pattern: /!=/ },
+        { rsql: '==', mui: 'equals', pattern: /==/ },
+      ];
+
+      let matchedOp: typeof operators[0] | null = null;
+      let matchIndex = -1;
+
+      // Encontrar qual operador está presente na expressão
+      for (const op of operators) {
+        const match = trimmed.match(op.pattern);
+        if (match) {
+          matchedOp = op;
+          matchIndex = match.index!;
+          break;
+        }
+      }
+
+      if (matchedOp && matchIndex >= 0) {
+        field = trimmed.substring(0, matchIndex).trim();
+        const opValue = trimmed.substring(matchIndex + matchedOp.rsql.length).trim();
+
+        // Tratar wildcards do RSQL (*)
+        if (matchedOp.rsql === '=like=') {
+          if (opValue.startsWith('*') && opValue.endsWith('*')) {
+            operator = 'contains';
+            value = opValue.slice(1, -1);
+          } else if (opValue.startsWith('*')) {
+            operator = 'endsWith';
+            value = opValue.slice(1);
+          } else if (opValue.endsWith('*')) {
+            operator = 'startsWith';
+            value = opValue.slice(0, -1);
+          } else {
+            operator = 'contains';
+            value = opValue;
+          }
+        } else {
+          operator = matchedOp.mui;
+          value = opValue;
+        }
+
+        // Tratar null checks
+        if (value === 'null=true') {
+          operator = 'isEmpty';
+          value = '';
+        } else if (value === 'null=false') {
+          operator = 'isNotEmpty';
+          value = '';
+        }
+
+        items.push({
+          id: Math.random().toString(36),
+          field,
+          operator,
+          value,
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Erro ao converter RSQL para FilterModel:', error);
+  }
+
+  return { items };
+};
+
+/**
+ * Converte ArchbaseActiveFilter[] para GridFilterModel
+ */
+export const convertActiveFiltersToFilterModel = (
+  activeFilters: ArchbaseActiveFilter[]
+): GridFilterModel => {
+  if (!activeFilters || activeFilters.length === 0) {
+    return { items: [] };
+  }
+
+  const items: GridFilterItem[] = [];
+
+  for (const filter of activeFilters) {
+    let muiOperator: string = 'equals';
+
+    // Mapeamento de operadores ArchbaseCompositeFilters -> MUI DataGrid
+    const operatorMap: Record<ArchbaseFilterOperator, string> = {
+      'contains': 'contains',
+      'starts_with': 'startsWith',
+      'ends_with': 'endsWith',
+      '=': 'equals',
+      '!=': 'not',
+      '>': '>',
+      '<': '<',
+      '>=': '>=',
+      '<=': '<=',
+      'is_null': 'isEmpty',
+      'is_not_null': 'isNotEmpty',
+      'between': 'equals', // MUI não tem between nativo
+      'date_before': '<',
+      'date_after': '>',
+      'date_between': 'equals',
+      'in': 'isAnyOf',
+      'not_in': 'isNoneOf',
+    };
+
+    muiOperator = operatorMap[filter.operator] || 'equals';
+
+    items.push({
+      id: filter.id,
+      field: filter.key,
+      operator: muiOperator,
+      value: filter.value,
+    });
+  }
+
+  return { items };
+};
+
+/**
+ * Converte FieldDataType para o tipo de coluna do MUI
+ */
+const mapDataTypeToFieldType = (dataType: ArchbaseFieldDataType): 'string' | 'number' | 'boolean' | 'date' | 'dateTime' | 'singleSelect' => {
+  const typeMap: Record<ArchbaseFieldDataType, 'string' | 'number' | 'boolean' | 'date' | 'dateTime' | 'singleSelect'> = {
+    'text': 'string',
+    'integer': 'number',
+    'float': 'number',
+    'currency': 'number',
+    'boolean': 'boolean',
+    'date': 'date',
+    'datetime': 'dateTime',
+    'time': 'dateTime',
+    'enum': 'singleSelect',
+    'image': 'string',
+    'uuid': 'string',
+  };
+  return typeMap[dataType] || 'string';
+};
+
+/**
+ * Converte colunas do Grid para ArchbaseFilterDefinition[]
+ * Permite gerar automaticamente as definições de filtro a partir das colunas
+ */
+export const convertColumnsToFilterDefinitions = (
+  columns: GridColDef[],
+  options?: {
+    includeColumns?: string[]; // Colunas específicas para incluir
+    excludeColumns?: string[]; // Colunas para excluir
+    onlyFilterable?: boolean; // Apenas colunas com filterable=true
+  }
+): ArchbaseFilterDefinition[] => {
+  const {
+    includeColumns,
+    excludeColumns = ['actions', 'id'],
+    onlyFilterable = true,
+  } = options || {};
+
+  const definitions: ArchbaseFilterDefinition[] = [];
+
+  for (const col of columns) {
+    // Pular coluna actions
+    if (col.field === 'actions') continue;
+
+    // Verificar se deve incluir esta coluna
+    if (includeColumns && includeColumns.length > 0 && !includeColumns.includes(col.field)) {
+      continue;
+    }
+
+    // Verificar se deve excluir esta coluna
+    if (excludeColumns && excludeColumns.includes(col.field)) {
+      continue;
+    }
+
+    // Verificar se é filtrável
+    if (onlyFilterable && col.filterable === false) {
+      continue;
+    }
+
+    // Determinar o tipo de dado
+    let dataType: ArchbaseFieldDataType = 'text';
+    if (col.type) {
+      const muiTypeToArchbase: Record<string, ArchbaseFieldDataType> = {
+        'string': 'text',
+        'number': 'float',
+        'boolean': 'boolean',
+        'date': 'date',
+        'dateTime': 'datetime',
+        'singleSelect': 'enum',
+      };
+      dataType = muiTypeToArchbase[col.type] || 'text';
+    }
+
+    const definition: ArchbaseFilterDefinition = {
+      key: col.field,
+      label: col.headerName || col.field,
+      type: dataType,
+    };
+
+    // Se for singleSelect, adicionar opções
+    if (col.type === 'singleSelect' && (col as any).valueOptions) {
+      const valueOptions = (col as any).valueOptions;
+      if (Array.isArray(valueOptions)) {
+        definition.options = valueOptions.map((opt: any) => ({
+          value: typeof opt === 'string' ? opt : opt.value,
+          label: typeof opt === 'string' ? opt : opt.label,
+        }));
+      }
+    }
+
+    definitions.push(definition);
+  }
+
+  return definitions;
+};
+
+/**
+ * Converte ArchbaseFilterDefinition para GridColDef[]
+ * Útil para criar colunas automaticamente a partir de definições de filtro
+ */
+export const convertFilterDefinitionsToColumns = (
+  definitions: ArchbaseFilterDefinition[]
+): GridColDef[] => {
+  const columns: GridColDef[] = [];
+
+  for (const def of definitions) {
+    const col: GridColDef = {
+      field: def.key,
+      headerName: def.label,
+      type: mapDataTypeToFieldType(def.type),
+      filterable: true,
+      sortable: true,
+    };
+
+    // Se tiver opções, adicionar valueOptions (usando type assertion)
+    if (def.options && def.options.length > 0) {
+      (col as any).valueOptions = def.options.map(opt => opt.value);
+      (col as any).valueFormatter = (value: any) => {
+        const option = def.options!.find(o => o.value === value);
+        return option ? option.label : value;
+      };
+    }
+
+    columns.push(col);
+  }
+
+  return columns;
 };

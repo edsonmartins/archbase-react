@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { NavLink, ScrollArea, Text } from '@mantine/core';
 import { NAVIGATION_DATA, NavItem } from '@/data/navigation';
 import classes from './Sidebar.module.css';
@@ -13,8 +12,15 @@ interface SidebarProps {
 }
 
 export function Sidebar({ currentPath, onNavigate }: SidebarProps) {
-  const router = useRouter();
-  const activePath = currentPath || router.pathname;
+  const [clientPath, setClientPath] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setClientPath(window.location.pathname);
+    }
+  }, []);
+
+  const activePath = currentPath || clientPath;
 
   const isActive = (href: string) => activePath === href;
 

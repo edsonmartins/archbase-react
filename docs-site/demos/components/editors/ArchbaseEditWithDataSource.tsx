@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Stack, Text, Code, Card, Button, Group } from '@mantine/core';
 import { ArchbaseEdit } from '@archbase/components';
-import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 
 interface Person {
   id: string;
@@ -17,12 +17,22 @@ const initialData: Person[] = [
 ];
 
 export function ArchbaseEditWithDataSource() {
-  const { dataSource, current, edit, save, cancel, next, prior, isBrowsing, isEditing } = useArchbaseDataSourceV2<Person>({
+  const { dataSource } = useArchbaseDataSource<Person, string>({
     initialData,
     name: 'dsPessoas',
   });
+  const currentRecord = dataSource.getCurrentRecord();
+  const isBrowsing = dataSource.isBrowsing();
+  const isEditing = dataSource.isEditing();
 
-  const currentRecord = current;
+  const edit = () => dataSource.edit();
+  const save = () => dataSource.save();
+  const cancel = () => dataSource.cancel();
+  const next = () => dataSource.next();
+  const prior = () => dataSource.prior();
+
+
+  
 
   return (
     <Stack gap="md" p="md">

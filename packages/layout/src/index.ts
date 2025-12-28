@@ -9,6 +9,9 @@ export * from './ArchbaseStack';
 // Container components
 export * from './containers';
 
+// Dock layout system
+export * from './dock';
+
 // Space/Grid layout system
 export * from './spaces';import './advancedtabs.scss';
 import './spaces.css';

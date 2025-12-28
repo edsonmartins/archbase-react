@@ -387,7 +387,7 @@ function Demo() {
 }
 `;
 
-export const passwordUsage: MantineDemo = {
+export const passwordEditUsage: MantineDemo = {
   type: 'code',
   component: ArchbasePasswordEditUsage,
   code: passwordUsageCode,
@@ -426,7 +426,7 @@ function Demo() {
 }
 `;
 
-export const passwordWithDataSource: MantineDemo = {
+export const passwordEditWithDataSource: MantineDemo = {
   type: 'code',
   component: ArchbasePasswordEditWithDataSource,
   code: passwordWithDataSourceCode,
@@ -449,7 +449,7 @@ function Demo() {
 }
 `;
 
-export const passwordStates: MantineDemo = {
+export const passwordEditStates: MantineDemo = {
   type: 'code',
   component: ArchbasePasswordEditStates,
   code: passwordStatesCode,
@@ -491,7 +491,7 @@ function Demo() {
 }
 `;
 
-export const maskUsage: MantineDemo = {
+export const maskEditUsage: MantineDemo = {
   type: 'code',
   component: ArchbaseMaskEditUsage,
   code: maskUsageCode,
@@ -528,7 +528,7 @@ function Demo() {
 }
 `;
 
-export const maskWithDataSource: MantineDemo = {
+export const maskEditWithDataSource: MantineDemo = {
   type: 'code',
   component: ArchbaseMaskEditWithDataSource,
   code: maskWithDataSourceCode,
@@ -551,7 +551,7 @@ function Demo() {
 }
 `;
 
-export const maskPatterns: MantineDemo = {
+export const maskEditPatterns: MantineDemo = {
   type: 'code',
   component: ArchbaseMaskEditPatterns,
   code: maskPatternsCode,
@@ -574,7 +574,7 @@ function Demo() {
 }
 `;
 
-export const maskStates: MantineDemo = {
+export const maskEditStates: MantineDemo = {
   type: 'code',
   component: ArchbaseMaskEditStates,
   code: maskStatesCode,
@@ -607,7 +607,7 @@ function Demo() {
 }
 `;
 
-export const jsonUsage: MantineDemo = {
+export const jsonEditUsage: MantineDemo = {
   type: 'code',
   component: ArchbaseJsonEditUsage,
   code: jsonUsageCode,
@@ -649,7 +649,7 @@ function Demo() {
 }
 `;
 
-export const jsonWithDataSource: MantineDemo = {
+export const jsonEditWithDataSource: MantineDemo = {
   type: 'code',
   component: ArchbaseJsonEditWithDataSource,
   code: jsonWithDataSourceCode,
@@ -673,7 +673,7 @@ function Demo() {
 }
 `;
 
-export const jsonStates: MantineDemo = {
+export const jsonEditStates: MantineDemo = {
   type: 'code',
   component: ArchbaseJsonEditStates,
   code: jsonStatesCode,
@@ -711,7 +711,7 @@ function Demo() {
       initialOptions={estados}
       getOptionLabel={(estado) => estado.nome}
       getOptionValue={(estado) => estado.sigla}
-      onSelectValue={(estado) => setValue(estado)}
+      onChangeValues={(estado) => setValue(estado)}
       searchable
       clearable
     />
@@ -820,7 +820,7 @@ function Demo() {
       getOptions={searchCidades}
       getOptionLabel={(c) => \`\${c.nome} - \${c.estado}\`}
       getOptionValue={(c) => c.id}
-      onSelectValue={(c) => setValue(c)}
+      onChangeValues={(c) => setValue(c)}
       minCharsToSearch={2}
       clearable
     />
@@ -896,7 +896,7 @@ function Demo() {
       initialOptions={opcoes}
       getOptionLabel={(o) => o.label}
       getOptionValue={(o) => o.value}
-      onSelectValue={(v) => setValue(v)}
+      onChangeValues={(v) => setValue(v)}
     />
   );
 }
@@ -1964,7 +1964,7 @@ function Demo() {
       initialOptions={categorias}
       getOptionLabel={(opt) => opt.label}
       getOptionValue={(opt) => opt.value}
-      onSelectValue={(values) => setSelectedValues(values)}
+      onChangeValues={(values) => setSelectedValues(values)}
       multiple
     />
   );
@@ -2214,4 +2214,745 @@ export const fileAttachmentStates: MantineDemo = {
   type: 'code',
   component: ArchbaseFileAttachmentStates,
   code: fileAttachmentStatesCode,
+};
+
+// ============================================================================
+// ArchbaseRichTextEdit Demos
+// ============================================================================
+import { ArchbaseRichTextEditUsage } from './ArchbaseRichTextEditUsage';
+import { ArchbaseRichTextEditWithDataSource } from './ArchbaseRichTextEditWithDataSource';
+import { ArchbaseRichTextEditStates } from './ArchbaseRichTextEditStates';
+
+const richTextEditUsageCode = `
+import { useState } from 'react';
+import { ArchbaseRichTextEdit } from '@archbase/components';
+
+function Demo() {
+  const [content, setContent] = useState<string>('');
+
+  return (
+    <ArchbaseRichTextEdit
+      label="Descricao"
+      placeholder="Digite o texto rico..."
+      value={content}
+      onChangeValue={(newValue) => setContent(newValue || '')}
+      height={300}
+    />
+  );
+}
+`;
+
+export const richTextEditUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseRichTextEditUsage,
+  code: richTextEditUsageCode,
+};
+
+const richTextEditWithDataSourceCode = `
+import { ArchbaseRichTextEdit, ArchbaseEdit } from '@archbase/components';
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+interface Artigo {
+  id: string;
+  titulo: string;
+  conteudo: string;
+}
+
+function Demo() {
+  const { dataSource, edit, save, cancel, isBrowsing } = useArchbaseDataSourceV2<Artigo>({
+    initialData: [{ id: '1', titulo: 'Meu Artigo', conteudo: '' }],
+    name: 'dsArtigo',
+  });
+
+  return (
+    <>
+      <Button onClick={edit} disabled={!isBrowsing}>Editar</Button>
+      <Button onClick={() => save()} disabled={isBrowsing}>Salvar</Button>
+
+      <ArchbaseEdit dataSource={dataSource} dataField="titulo" label="Titulo" />
+      <ArchbaseRichTextEdit dataSource={dataSource} dataField="conteudo" label="Conteudo" height={300} />
+    </>
+  );
+}
+`;
+
+export const richTextEditWithDataSource: MantineDemo = {
+  type: 'code',
+  component: ArchbaseRichTextEditWithDataSource,
+  code: richTextEditWithDataSourceCode,
+};
+
+const richTextEditStatesCode = `
+import { ArchbaseRichTextEdit } from '@archbase/components';
+
+function Demo() {
+  return (
+    <>
+      <ArchbaseRichTextEdit label="Normal" height={200} />
+      <ArchbaseRichTextEdit label="Com conteudo" value="<p>Texto <b>negrito</b></p>" height={200} />
+      <ArchbaseRichTextEdit label="Obrigatorio" height={200} required />
+      <ArchbaseRichTextEdit label="Desabilitado" height={200} disabled />
+      <ArchbaseRichTextEdit label="Somente leitura" value="<p>Nao editavel</p>" height={200} readOnly />
+      <ArchbaseRichTextEdit label="Com erro" height={200} error="Conteudo obrigatorio" />
+    </>
+  );
+}
+`;
+
+export const richTextEditStates: MantineDemo = {
+  type: 'code',
+  component: ArchbaseRichTextEditStates,
+  code: richTextEditStatesCode,
+};
+
+// ============================================================================
+// ArchbaseAsyncMultiSelect Demos
+// ============================================================================
+import { ArchbaseAsyncMultiSelectUsage } from './ArchbaseAsyncMultiSelectUsage';
+import { ArchbaseAsyncMultiSelectWithDataSource } from './ArchbaseAsyncMultiSelectWithDataSource';
+
+const asyncMultiSelectUsageCode = `
+import { useState } from 'react';
+import { ArchbaseAsyncMultiSelect, OptionsResult } from '@archbase/components';
+
+interface Tag {
+  id: string;
+  nome: string;
+}
+
+const mockTags: Tag[] = [
+  { id: '1', nome: 'React' },
+  { id: '2', nome: 'Vue' },
+  { id: '3', nome: 'Angular' },
+];
+
+const searchTags = async (page: number, query: string): Promise<OptionsResult<Tag>> => {
+  await new Promise(resolve => setTimeout(resolve, 500));
+  const filtered = mockTags.filter(t => t.nome.toLowerCase().includes(query.toLowerCase()));
+  return { options: filtered, page: 0, totalPages: 1 };
+};
+
+function Demo() {
+  const [values, setValues] = useState<Tag[]>([]);
+
+  return (
+    <ArchbaseAsyncMultiSelect
+      label="Tecnologias"
+      placeholder="Digite para buscar tecnologias..."
+      getOptions={searchTags}
+      getOptionLabel={(tag) => tag.nome}
+      getOptionValue={(tag) => tag.id}
+      onChangeValues={(selected) => setValues(selected)}
+      minCharsToSearch={1}
+      clearable
+      searchable
+    />
+  );
+}
+`;
+
+export const asyncMultiSelectUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseAsyncMultiSelectUsage,
+  code: asyncMultiSelectUsageCode,
+};
+
+const asyncMultiSelectWithDataSourceCode = `
+import { ArchbaseAsyncMultiSelect, OptionsResult } from '@archbase/components';
+import { useArchbaseDataSource } from '@archbase/data';
+
+interface Produto {
+  id: string;
+  nome: string;
+  tags: string[];
+}
+
+interface Tag {
+  id: string;
+  nome: string;
+}
+
+const mockTags: Tag[] = [
+  { id: '1', nome: 'Eletronicos' },
+  { id: '2', nome: 'Roupas' },
+];
+
+const searchTags = async (page: number, query: string): Promise<OptionsResult<Tag>> => {
+  await new Promise(resolve => setTimeout(resolve, 300));
+  const filtered = mockTags.filter(t => t.nome.toLowerCase().includes(query.toLowerCase()));
+  return { options: filtered, page: 0, totalPages: 1 };
+};
+
+const getTagsByIds = async (ids: string[]): Promise<Tag[]> => {
+  return mockTags.filter(t => ids.includes(t.id));
+};
+
+function Demo() {
+  const produtoData: Produto = {
+    id: '1',
+    nome: 'Notebook Dell',
+    tags: ['1', '2'],
+  };
+
+  const { dataSource } = useArchbaseDataSource<Produto, string>({
+    initialData: [produtoData],
+    name: 'dsProdutoAsyncMultiSelect',
+  });
+
+  return (
+    <>
+      <Button onClick={() => dataSource.edit()}>Editar</Button>
+      <Button onClick={() => dataSource.save()}>Salvar</Button>
+
+      <ArchbaseAsyncMultiSelect<Produto, string, Tag>
+        dataSource={dataSource}
+        dataField="tags"
+        label="Tags"
+        placeholder="Selecione as tags..."
+        getOptions={searchTags}
+        getOptionLabel={(tag) => tag.nome}
+        getOptionValue={(tag) => tag.id}
+        converter={(tags) => tags.map(t => t.id)}
+        getConvertedOptions={getTagsByIds}
+        minCharsToSearch={0}
+        searchable
+      />
+    </>
+  );
+}
+`;
+
+export const asyncMultiSelectWithDataSource: MantineDemo = {
+  type: 'code',
+  component: ArchbaseAsyncMultiSelectWithDataSource,
+  code: asyncMultiSelectWithDataSourceCode,
+};
+
+// ============================================================================
+// ArchbaseTreeSelect Demos
+// ============================================================================
+import { ArchbaseTreeSelectUsage } from './ArchbaseTreeSelectUsage';
+
+const treeSelectUsageCode = `
+import { useState } from 'react';
+import { ArchbaseTreeSelect, ArchbaseTreeNode } from '@archbase/components';
+
+const treeData: ArchbaseTreeNode[] = [
+  {
+    id: '1',
+    label: 'Eletronicos',
+    value: 'eletronicos',
+    children: [
+      {
+        id: '1-1',
+        label: 'Celulares',
+        value: 'celulares',
+        children: [
+          { id: '1-1-1', label: 'iPhone', value: 'iphone' },
+          { id: '1-1-2', label: 'Samsung', value: 'samsung' },
+        ],
+      },
+    ],
+  },
+];
+
+function Demo() {
+  const [value, setValue] = useState<ArchbaseTreeNode | null>(null);
+
+  return (
+    <ArchbaseTreeSelect
+      label="Categoria"
+      placeholder="Selecione uma categoria..."
+      options={treeData}
+      getOptionLabel={(node) => node.label}
+      getOptionValue={(node) => node.value}
+      onChangeValues={(node) => setValue(node)}
+    />
+  );
+}
+`;
+
+export const treeSelectUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseTreeSelectUsage,
+  code: treeSelectUsageCode,
+};
+
+// ============================================================================
+// ArchbaseLookupSelect Demos
+// ============================================================================
+import { ArchbaseLookupSelectUsage } from './ArchbaseLookupSelectUsage';
+
+const lookupSelectUsageCode = `
+import { useState } from 'react';
+import { ArchbaseLookupSelect } from '@archbase/components';
+
+interface Cliente {
+  id: string;
+  nome: string;
+  tipoClienteId: string;
+}
+
+interface TipoCliente {
+  id: string;
+  descricao: string;
+}
+
+const tiposClienteData: TipoCliente[] = [
+  { id: '1', descricao: 'Pessoa Fisica' },
+  { id: '2', descricao: 'Pessoa Juridica' },
+  { id: '3', descricao: 'Governamental' },
+];
+
+function Demo() {
+  const [value, setValue] = useState<TipoCliente | null>(null);
+
+  return (
+    <ArchbaseLookupSelect<Cliente, string, TipoCliente>
+      label="Tipo de Cliente"
+      placeholder="Selecione o tipo..."
+      value={value}
+      onChangeValue={setValue}
+      initialOptions={tiposClienteData}
+      getOptionLabel={(tipo) => tipo.descricao}
+      getOptionValue={(tipo) => tipo.id}
+      onChangeValues={(tipo) => setValue(tipo)}
+      clearable
+    />
+  );
+}
+`;
+
+export const lookupSelectUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseLookupSelectUsage,
+  code: lookupSelectUsageCode,
+};
+
+// ============================================================================
+// ArchbaseLookupNumber Demos
+// ============================================================================
+import { ArchbaseLookupNumberUsage } from './ArchbaseLookupNumberUsage';
+
+const lookupNumberUsageCode = `
+import { useState } from 'react';
+import { ArchbaseLookupNumber } from '@archbase/components';
+
+interface Produto {
+  id: string;
+  nome: string;
+  precoUnitario: number;
+}
+
+interface ProdutoPreco {
+  id: string;
+  nome: string;
+  preco: number;
+}
+
+const lookupProdutoPreco = async (codigo: string): Promise<ProdutoPreco> => {
+  await new Promise(resolve => setTimeout(resolve, 300));
+  return {
+    id: codigo,
+    nome: 'Notebook Dell',
+    preco: 3500.50,
+  };
+};
+
+function Demo() {
+  const [value, setValue] = useState<number>(0);
+
+  return (
+    <ArchbaseLookupNumber<Produto, string, ProdutoPreco>
+      label="Preco Unitario"
+      placeholder="Digite o codigo..."
+      value={value}
+      onChangeValue={setValue}
+      lookupValueDelegator={lookupProdutoPreco}
+      onLookupResult={(result) => {
+        setValue(result.preco);
+      }}
+      decimalSeparator=","
+      thousandSeparator="."
+      precision={2}
+      allowNegative={false}
+    />
+  );
+}
+`;
+
+export const lookupNumberUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseLookupNumberUsage,
+  code: lookupNumberUsageCode,
+};
+
+// ============================================================================
+// ArchbaseOperationHoursEditor Demos
+// ============================================================================
+import { ArchbaseOperationHoursEditorUsage } from './ArchbaseOperationHoursEditorUsage';
+import { ArchbaseOperationHoursEditorStates } from './ArchbaseOperationHoursEditorStates';
+
+const operationHoursEditorUsageCode = `
+import { useState } from 'react';
+import { ArchbaseOperatingHoursEditor } from '@archbase/components';
+
+function Demo() {
+  const [value, setValue] = useState<string>('');
+
+  return (
+    <ArchbaseOperatingHoursEditor
+      label="Horário de Funcionamento"
+      initialValue={value}
+      onChange={setValue}
+    />
+  );
+}
+`;
+
+export const operationHoursEditorUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseOperationHoursEditorUsage,
+  code: operationHoursEditorUsageCode,
+};
+
+const operationHoursEditorStatesCode = `
+import { useState } from 'react';
+import { ArchbaseOperatingHoursEditor } from '@archbase/components';
+
+function Demo() {
+  const [preFilledValue, setPreFilledValue] = useState<string>(
+    'MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY|09:00-18:00;SATURDAY,SUNDAY|10:00-14:00'
+  );
+
+  return (
+    <>
+      <ArchbaseOperatingHoursEditor
+        label="Normal"
+        initialValue={''}
+        onChange={() => {}}
+      />
+      <ArchbaseOperatingHoursEditor
+        label="Com valores preenchidos"
+        initialValue={preFilledValue}
+        onChange={setPreFilledValue}
+      />
+      <ArchbaseOperatingHoursEditor
+        label="Somente leitura"
+        initialValue={preFilledValue}
+        onChange={() => {}}
+        readOnly
+      />
+    </>
+  );
+}
+`;
+
+export const operationHoursEditorStates: MantineDemo = {
+  type: 'code',
+  component: ArchbaseOperationHoursEditorStates,
+  code: operationHoursEditorStatesCode,
+};
+
+// ============================================================================
+// ArchbaseCronExpressionEdit Demos
+// ============================================================================
+import { ArchbaseCronExpressionEditUsage } from './ArchbaseCronExpressionEditUsage';
+import { ArchbaseCronExpressionEditStates } from './ArchbaseCronExpressionEditStates';
+
+const cronExpressionEditUsageCode = `
+import { useState } from 'react';
+import { ArchbaseCronExpressionEdit } from '@archbase/components';
+
+function Demo() {
+  const [value, setValue] = useState<string>('0 0 * * *');
+
+  return (
+    <ArchbaseCronExpressionEdit
+      label="Expressão Cron"
+      value={value}
+      onChange={setValue}
+      placeholder="Digite a expressão cron..."
+    />
+  );
+}
+`;
+
+export const cronExpressionEditUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseCronExpressionEditUsage,
+  code: cronExpressionEditUsageCode,
+};
+
+const cronExpressionEditStatesCode = `
+import { useState } from 'react';
+import { ArchbaseCronExpressionEdit } from '@archbase/components';
+
+function Demo() {
+  const [dailyValue, setDailyValue] = useState<string>('0 0 * * *');
+  const [weeklyValue, setWeeklyValue] = useState<string>('0 0 * * 0');
+  const [hourlyValue, setHourlyValue] = useState<string>('0 * * * *');
+
+  return (
+    <>
+      <ArchbaseCronExpressionEdit
+        label="Diariamente (meia-noite)"
+        value={dailyValue}
+        onChange={setDailyValue}
+      />
+      <ArchbaseCronExpressionEdit
+        label="Semanalmente (domingo à meia-noite)"
+        value={weeklyValue}
+        onChange={setWeeklyValue}
+      />
+      <ArchbaseCronExpressionEdit
+        label="A cada hora"
+        value={hourlyValue}
+        onChange={setHourlyValue}
+      />
+      <ArchbaseCronExpressionEdit
+        label="Somente leitura"
+        value={dailyValue}
+        onChange={() => {}}
+        readOnly
+      />
+    </>
+  );
+}
+`;
+
+export const cronExpressionEditStates: MantineDemo = {
+  type: 'code',
+  component: ArchbaseCronExpressionEditStates,
+  code: cronExpressionEditStatesCode,
+};
+
+// ============================================================================
+// ArchbaseSpreadsheetImport Demos
+// ============================================================================
+import { ArchbaseSpreadsheetImportUsage } from './ArchbaseSpreadsheetImportUsage';
+import { ArchbaseSpreadsheetImportWithDataSource } from './ArchbaseSpreadsheetImportWithDataSource';
+
+const spreadsheetImportUsageCode = `
+import { useState } from 'react';
+import { ArchbaseSpreadsheetImport } from '@archbase/components';
+
+interface Produto {
+  id: string;
+  nome: string;
+  preco: number;
+  categoria: string;
+}
+
+function Demo() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const campos = [
+    { key: 'nome', label: 'Nome do Produto', required: true },
+    { key: 'preco', label: 'Preço', fieldType: 'number' as const, required: true },
+    { key: 'categoria', label: 'Categoria', fieldType: 'select' as const, options: ['Eletrônicos', 'Roupas', 'Alimentos'] },
+    { key: 'ativo', label: 'Ativo', fieldType: 'boolean' as const },
+  ];
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Importar Planilha</button>
+
+      <ArchbaseSpreadsheetImport<Produto>
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Importar Produtos"
+        fields={campos}
+        maxRows={500}
+        onDataLoaded={(data) => console.log('Importados:', data)}
+        mapRows={(rows) =>
+          rows.map((row) => ({
+            id: crypto.randomUUID(),
+            nome: row.nome || '',
+            preco: parseFloat(row.preco) || 0,
+            categoria: row.categoria || 'Geral',
+            ativo: row.ativo === true || row.ativo === 'sim',
+          }))
+        }
+      />
+    </>
+  );
+}
+`;
+
+export const spreadsheetImportUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseSpreadsheetImportUsage,
+  code: spreadsheetImportUsageCode,
+};
+
+const spreadsheetImportWithDataSourceCode = `
+import { useState } from 'react';
+import { ArchbaseSpreadsheetImport, ArchbaseDataGrid } from '@archbase/components';
+import { ArchbaseDataSource } from '@archbase/data';
+
+interface Funcionario {
+  id: string;
+  nome: string;
+  email: string;
+  departamento: string;
+  salario: number;
+}
+
+function Demo() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [dataSource, setDataSource] = useState<ArchbaseDataSource<Funcionario, string> | null>(null);
+
+  const campos = [
+    { key: 'nome', label: 'Nome Completo', required: true },
+    { key: 'email', label: 'E-mail', fieldType: 'email' as const, required: true },
+    { key: 'departamento', label: 'Departamento', fieldType: 'select' as const, options: ['TI', 'RH', 'Financeiro', 'Vendas'] },
+    { key: 'salario', label: 'Salário', fieldType: 'number' as const, required: true },
+  ];
+
+  const handleOpenImport = () => {
+    const ds = new ArchbaseDataSource<Funcionario, string>(
+      'funcionarios-import',
+      new MockDelegate(),
+      { records: [], grandTotalRecords: 0, currentPage: 1, totalPages: 1, pageSize: 50 }
+    );
+    setDataSource(ds);
+    setIsOpen(true);
+  };
+
+  return (
+    <>
+      <button onClick={handleOpenImport}>Importar Funcionários</button>
+
+      {dataSource && (
+        <ArchbaseSpreadsheetImport<Funcionario>
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          title="Importar Funcionários"
+          fields={campos}
+          maxRows={1000}
+          dataSource={dataSource}
+          onDataLoaded={async (data) => {
+            await dataSource.load();
+          }}
+          onRowAdded={async (row) => {
+            await dataSource.create(row);
+          }}
+        />
+      )}
+
+      {dataSource && (
+        <ArchbaseDataGrid<Funcionario, string>
+          dataSource={dataSource}
+          columns={colunas}
+          height={300}
+        />
+      )}
+    </>
+  );
+}
+`;
+
+export const spreadsheetImportWithDataSource: MantineDemo = {
+  type: 'code',
+  component: ArchbaseSpreadsheetImportWithDataSource,
+  code: spreadsheetImportWithDataSourceCode,
+};
+
+// ============================================================================
+// ArchbaseCompositeFilters Demos
+// ============================================================================
+import { ArchbaseCompositeFiltersUsage } from '../filters/ArchbaseCompositeFiltersUsage';
+import { ArchbaseCompositeFiltersWithDataSource } from '../filters/ArchbaseCompositeFiltersWithDataSource';
+
+const compositeFiltersUsageCode = `
+import { useState } from 'react';
+import { ArchbaseCompositeFilters } from '@archbase/components';
+
+const filterDefinitions = [
+  { key: 'nome', label: 'Nome', type: 'text' },
+  { key: 'idade', label: 'Idade', type: 'integer' },
+  { key: 'ativo', label: 'Status', type: 'enum', options: [
+    { value: 'ativo', label: 'Ativo' },
+    { value: 'inativo', label: 'Inativo' },
+  ]},
+];
+
+function Demo() {
+  const [filters, setFilters] = useState([]);
+
+  return (
+    <ArchbaseCompositeFilters
+      filters={filterDefinitions}
+      value={filters}
+      onChange={(filters, rsql) => {
+        console.log('RSQL:', rsql); // "nome=like=*João*;idade>18"
+        setFilters(filters);
+      }}
+    />
+  );
+}
+`;
+
+export const compositeFiltersUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseCompositeFiltersUsage,
+  code: compositeFiltersUsageCode,
+};
+
+const compositeFiltersWithDataSourceCode = `
+import { useState } from 'react';
+import { ArchbaseCompositeFilters, ArchbaseDataGrid } from '@archbase/components';
+
+const quickFilters = [
+  {
+    id: 'ativos',
+    name: 'Usuários Ativos',
+    filters: [
+      {
+        key: 'ativo',
+        label: 'Status',
+        type: 'enum',
+        operator: '=',
+        value: 'ativo',
+        displayValue: 'Ativo',
+      },
+    ],
+  },
+];
+
+function Demo() {
+  const [filters, setFilters] = useState([]);
+  const [rsql, setRsql] = useState('');
+
+  // Filtra dados baseado no RSQL
+  const filteredData = data.filter(item => {
+    // Aplicar filtros...
+  });
+
+  return (
+    <>
+      <ArchbaseCompositeFilters
+        filters={filterDefinitions}
+        value={filters}
+        onChange={(newFilters, rsql) => {
+          setFilters(newFilters);
+          setRsql(rsql);
+        }}
+        quickFilters={quickFilters}
+      />
+
+      <ArchbaseDataGrid
+        dataSource={{ records: filteredData }}
+        columns={colunas}
+      />
+    </>
+  );
+}
+`;
+
+export const compositeFiltersWithDataSource: MantineDemo = {
+  type: 'code',
+  component: ArchbaseCompositeFiltersWithDataSource,
+  code: compositeFiltersWithDataSourceCode,
 };

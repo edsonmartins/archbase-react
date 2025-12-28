@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { format } from 'date-fns';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Text, Code, Card, Button, Group } from '@mantine/core';
 import { ArchbaseTextArea } from '@archbase/components';
-import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 
 interface Produto {
   id: string;
@@ -12,7 +12,7 @@ interface Produto {
 export function ArchbaseTextAreaWithDataSource() {
   const [initialized, setInitialized] = useState(false);
 
-  const { dataSource, current, edit, save, cancel, isBrowsing, isEditing } = useArchbaseDataSourceV2<Produto>({
+  const { dataSource } = useArchbaseDataSource<Produto, string>({
     initialData: [{
       id: '1',
       nome: 'Produto Premium',
@@ -20,6 +20,14 @@ export function ArchbaseTextAreaWithDataSource() {
     }],
     name: 'dsProdutoTextArea',
   });
+  const currentRecord = dataSource.getCurrentRecord();
+  const isBrowsing = dataSource.isBrowsing();
+  const isEditing = dataSource.isEditing();
+
+  const edit = () => dataSource.edit();
+  const save = () => dataSource.save();
+  const cancel = () => dataSource.cancel();
+
 
   // Inicializa em modo de edição após o mount
   useEffect(() => {
@@ -63,7 +71,7 @@ export function ArchbaseTextAreaWithDataSource() {
           Registro atual ({isBrowsing ? 'Navegando' : 'Editando'}):
         </Text>
         <Code block style={{ fontSize: 12 }}>
-          {JSON.stringify(current, null, 2)}
+          {JSON.stringify(currentRecord, null, 2)}
         </Code>
       </Card>
     </Stack>

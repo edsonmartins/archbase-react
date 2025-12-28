@@ -2,6 +2,10 @@ import React from 'react'
 import { Fragment, MutableRefObject, ReactNode, RefObject } from 'react';
 import { GridRowId, GridSortModel, GridFilterModel, GridPaginationModel } from '@mui/x-data-grid';
 import { ArchbaseDataSource, IArchbaseDataSourceBase } from '@archbase/data';
+import type {
+  ArchbaseFilterDefinition,
+  ArchbaseActiveFilter,
+} from '../../filters/ArchbaseCompositeFilters.types';
 
 /**
  * DataGrid Types - V1/V2 Compatible
@@ -69,6 +73,13 @@ export interface ArchbaseDataGridToolbarProps {
   onPrint: () => void;
   apiRef: any;
   children: ReactNode;
+
+  // Props para ArchbaseCompositeFilters
+  useCompositeFilters?: boolean;
+  filterDefinitions?: ArchbaseFilterDefinition[];
+  activeFilters?: ArchbaseActiveFilter[];
+  onFiltersChange?: (filters: ArchbaseActiveFilter[], rsql?: string) => void;
+  hideMuiFilters?: boolean;
 }
 
 // Props para o componente ArchbaseDataGridPagination
@@ -208,6 +219,13 @@ export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
   allowColumnFilters?: boolean;
   allowExportData?: boolean;
   allowPrintData?: boolean;
+
+  // Propriedades de filtros compostos (ArchbaseCompositeFilters)
+  useCompositeFilters?: boolean;
+  filterDefinitions?: ArchbaseFilterDefinition[];
+  activeFilters?: ArchbaseActiveFilter[];
+  onFiltersChange?: (filters: ArchbaseActiveFilter[], rsql?: string) => void;
+  hideMuiFilters?: boolean;
 
   // Propriedades de aparência
   withBorder?: boolean;

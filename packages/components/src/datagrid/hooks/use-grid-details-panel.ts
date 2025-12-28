@@ -158,7 +158,7 @@ export function useDetailPanelAutoClose({
   detailPanelRefs,
   closeAllDetailPanels
 }: {
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef: React.RefObject<HTMLElement | null>;
   expandedRowIds: Set<GridRowId>;
   detailPanelRefs: React.MutableRefObject<Map<GridRowId, HTMLDivElement>>;
   closeAllDetailPanels: () => void;
@@ -271,7 +271,7 @@ export function useAvailableSpace<T extends object = any>({
   rowHeight = 52,
   detailPanelMinHeight = 200
 }: {
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef: React.RefObject<HTMLElement | null>;
   rows: T[];
   getRowId?: (row: T) => any;
   safeGetRowId: (row: T, getRowId?: any) => any;

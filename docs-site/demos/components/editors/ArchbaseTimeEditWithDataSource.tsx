@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Text, Code, Card, Button, Group } from '@mantine/core';
 import { ArchbaseTimeEdit } from '@archbase/components';
-import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 
 interface Agendamento {
   id: string;
@@ -13,7 +13,7 @@ interface Agendamento {
 export function ArchbaseTimeEditWithDataSource() {
   const [initialized, setInitialized] = useState(false);
 
-  const { dataSource, current, edit, save, cancel, isBrowsing, isEditing } = useArchbaseDataSourceV2<Agendamento>({
+  const { dataSource } = useArchbaseDataSource<Agendamento, string>({
     initialData: [{
       id: '1',
       descricao: 'Reuniao',
@@ -22,6 +22,14 @@ export function ArchbaseTimeEditWithDataSource() {
     }],
     name: 'dsAgendamentoTime',
   });
+  const currentRecord = dataSource.getCurrentRecord();
+  const isBrowsing = dataSource.isBrowsing();
+  const isEditing = dataSource.isEditing();
+
+  const edit = () => dataSource.edit();
+  const save = () => dataSource.save();
+  const cancel = () => dataSource.cancel();
+
 
   useEffect(() => {
     if (!initialized && dataSource && isBrowsing) {
@@ -52,14 +60,12 @@ export function ArchbaseTimeEditWithDataSource() {
         dataSource={dataSource}
         dataField="horarioInicio"
         label="Horario de Inicio"
-        clearable
       />
 
       <ArchbaseTimeEdit
         dataSource={dataSource}
         dataField="horarioFim"
         label="Horario de Fim"
-        clearable
       />
 
       <Card withBorder p="sm" radius="md">
@@ -67,7 +73,7 @@ export function ArchbaseTimeEditWithDataSource() {
           Registro atual ({isBrowsing ? 'Navegando' : 'Editando'}):
         </Text>
         <Code block style={{ fontSize: 12 }}>
-          {JSON.stringify(current, null, 2)}
+          {JSON.stringify(currentRecord, null, 2)}
         </Code>
       </Card>
     </Stack>

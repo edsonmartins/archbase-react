@@ -9,7 +9,6 @@ export function ArchbaseTimeEditStates() {
       <ArchbaseTimeEdit
         label="Campo normal"
         placeholder="Selecione o horario..."
-        clearable
       />
 
       {/* Com valor */}

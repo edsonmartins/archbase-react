@@ -10,7 +10,7 @@ export function ArchbaseChipUsage() {
       <Group>
         <ArchbaseChip
           label="Ativo"
-          checked={checked}
+          isChecked={checked}
           onChangeValue={(value) => setChecked(value)}
         />
       </Group>

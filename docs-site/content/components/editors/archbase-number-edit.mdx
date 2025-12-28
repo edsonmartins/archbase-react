@@ -1,0 +1,116 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseNumberEdit` é um campo numérico otimizado para uso com o DataSource. Suporta formatação com separadores de milhar/decimal, prefixo/sufixo e integração automática com DataSource V1/V2.
+
+<Demo data={demos.numberEditUsage} />
+
+## Com DataSource
+
+A integração com o DataSource permite binding bidirecional automático. O componente detecta o tipo de DataSource e otimiza os re-renders.
+
+<Demo data={demos.numberEditWithDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseNumberEdit
+  dataSource={dataSource}    // Fonte de dados (V1 ou V2)
+  dataField="preco"          // Campo do objeto
+  label="Preço"
+  precision={2}              // Casas decimais
+  decimalSeparator=","       // Separador decimal
+  thousandSeparator="."      // Separador de milhar
+  prefix="R$ "               // Prefixo
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite edição do valor
+- **Sincroniza**: valor numérico bidirecional com o DataSource
+- **Formata**: exibe o valor com a formatação especificada
+
+## Formatos de Número
+
+Suporta diversos formatos de número:
+
+<Demo data={demos.numberEditFormats} />
+
+### Exemplos de Formatação
+
+| Tipo | Configuração | Resultado |
+|------|--------------|-----------|
+| Moeda BRL | `prefix="R$ "`, `precision={2}`, `decimalSeparator=","`, `thousandSeparator="."` | R$ 1.234,56 |
+| Moeda USD | `prefix="$ "`, `precision={2}`, `decimalSeparator="."`, `thousandSeparator=","` | $ 1,234.56 |
+| Percentual | `suffix=" %"`, `precision={2}` | 25,50 % |
+| Inteiro | `integer={true}` | 1.000 |
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuário:
+
+<Demo data={demos.numberEditStates} />
+
+## Props Principais
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados para binding |
+| `dataField` | `string` | - | Campo do objeto para vincular |
+| `label` | `string` | - | Label do campo |
+| `precision` | `number` | `2` | Casas decimais |
+| `decimalSeparator` | `string` | `,` | Separador decimal |
+| `thousandSeparator` | `string` | `.` | Separador de milhar |
+| `prefix` | `string` | - | Prefixo (ex: "R$ ") |
+| `suffix` | `string` | - | Sufixo (ex: " %") |
+| `integer` | `boolean` | `false` | Apenas números inteiros |
+| `allowNegative` | `boolean` | `false` | Permite valores negativos |
+| `minValue` | `number` | - | Valor mínimo |
+| `maxValue` | `number` | - | Valor máximo |
+| `onChangeValue` | `(masked: string, value: number) => void` | - | Callback com valor formatado e numérico |
+
+## Limites de Valor
+
+Restrinja a entrada com valores mínimos e máximos:
+
+```tsx
+<ArchbaseNumberEdit
+  dataSource={dataSource}
+  dataField="quantidade"
+  label="Quantidade"
+  integer
+  minValue={0}
+  maxValue={1000}
+/>
+```
+
+## Inteiros vs Decimais
+
+```tsx
+// Número inteiro
+<ArchbaseNumberEdit
+  label="Quantidade"
+  integer
+  thousandSeparator="."
+/>
+
+// Número decimal
+<ArchbaseNumberEdit
+  label="Preço"
+  precision={2}
+  decimalSeparator=","
+  thousandSeparator="."
+/>
+```
+
+## Acessibilidade
+
+O `ArchbaseNumberEdit` segue as melhores práticas de acessibilidade:
+
+- Labels associadas corretamente via `htmlFor`
+- Suporte a navegação por teclado
+- Erros anunciados via `aria-describedby`
+- Campos obrigatórios indicados via `aria-required`
+- Entrada numérica anunciada via `inputmode="decimal"`

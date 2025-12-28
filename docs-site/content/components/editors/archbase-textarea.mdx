@@ -1,0 +1,294 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseTextArea` é um campo de texto multilinha com suporte a autosize, integração automática ao DataSource e múltiplos tamanhos.
+
+<Demo data={demos.textAreaUsage} />
+
+## Autosize
+
+O componente pode crescer automaticamente conforme o conteúdo digitado:
+
+```tsx
+<ArchbaseTextArea
+  label="Descrição"
+  autosize
+  minRows={3}
+  maxRows={6}
+  placeholder="Digite algo..."
+/>
+```
+
+- **minRows**: Número mínimo de linhas visíveis
+- **maxRows**: Número máximo de linhas antes de aparecer a barra de rolagem
+- **autosize**: Habilita o crescimento automático
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuário:
+
+<Demo data={demos.textAreaStates} />
+
+## Tamanhos
+
+O componente suporta os mesmos tamanhos do Mantine:
+
+<Demo data={demos.textAreaSizes} />
+
+| Tamanho | Altura do input | Tamanho da fonte |
+|---------|-----------------|------------------|
+| `xs` | 30px | 12px |
+| `sm` | 36px | 13px |
+| `md` | 42px | 14px (padrão) |
+| `lg` | 50px | 16px |
+| `xl` | 60px | 18px |
+
+## Com DataSource
+
+A integração com DataSource funciona automaticamente:
+
+<Demo data={demos.textAreaWithDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseTextArea
+  dataSource={dataSource}
+  dataField="descricao"
+  label="Descrição"
+  minRows={3}
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite edição
+- **Sincroniza**: valor bidirecional com o DataSource
+- **Valida**: erros são exibidos automaticamente
+
+## Limitação de Caracteres
+
+### Com contador
+
+```tsx
+import { ArchbaseTextArea } from '@archbase/components';
+
+<ArchbaseTextArea
+  label="Descrição (máx. 200 caracteres)"
+  maxLength={200}
+  showCounter
+  placeholder="Digite até 200 caracteres..."
+  minRows={3}
+/>
+```
+
+### Sem counter visual
+
+```tsx
+<ArchbaseTextArea
+  label="Resumo"
+  maxLength={500}
+  placeholder="Máximo 500 caracteres..."
+  minRows={3}
+/>
+```
+
+## Integração com Formulários
+
+### Com ArchbaseFormTemplate
+
+```tsx
+import { ArchbaseFormTemplate, ArchbaseFormFieldPanel } from '@archbase/template';
+import { ArchbaseTextArea } from '@archbase/components';
+
+function MeuFormulario() {
+  return (
+    <ArchbaseFormTemplate
+      dataSource={dataSource}
+      onSave={handleSave}
+      onCancel={handleCancel}
+    >
+      <ArchbaseFormFieldPanel>
+        <ArchbaseTextArea
+          dataSource={dataSource}
+          dataField="titulo"
+          label="Título"
+          minRows={1}
+          maxRows={2}
+        />
+        <ArchbaseTextArea
+          dataSource={dataSource}
+          dataField="descricao"
+          label="Descrição"
+          minRows={4}
+          maxRows={8}
+        />
+        <ArchbaseTextArea
+          dataSource={dataSource}
+          dataField="observacoes"
+          label="Observações"
+          minRows={3}
+        />
+      </ArchbaseFormFieldPanel>
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+### Com React Hook Form
+
+```tsx
+import { useForm, Controller } from 'react-hook-form';
+import { ArchbaseTextArea } from '@archbase/components';
+
+function MeuFormulario() {
+  const { control, handleSubmit } = useForm();
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="descricao"
+        control={control}
+        rules={{ required: 'Descrição é obrigatória', minLength: 10 }}
+        render={({ field }) => (
+          <ArchbaseTextArea
+            label="Descrição"
+            placeholder="Digite uma descrição detalhada..."
+            value={field.value}
+            onChangeValue={field.onChange}
+            minRows={4}
+            error={errors.descricao?.message}
+          />
+        )}
+      />
+    </form>
+  );
+}
+```
+
+## Acessibilidade
+
+O `ArchbaseTextArea` segue as melhores práticas de acessibilidade:
+
+- Labels associadas corretamente via `htmlFor`
+- Suporte completo a navegação por teclado
+- Erros anunciados via `aria-describedby`
+- Campos obrigatórios indicados via `aria-required`
+- `aria-label` em áreas de texto sem label
+- Compatível com screen readers
+- Suporte a `aria-rowcount` para número de linhas
+
+## Dicas de Performance
+
+### DataSource V2
+
+O DataSource V2 oferece otimizações de performance:
+
+```tsx
+// V2 detectado automaticamente
+const { dataSource } = useArchbaseDataSourceV2<Artigo>({
+  initialData: artigos,
+  name: 'dsArtigos',
+});
+
+// O componente usa re-renders otimizados internamente
+<ArchbaseTextArea dataSource={dataSource} dataField="conteudo" minRows={5} />
+```
+
+### Evite re-renders desnecessários
+
+```tsx
+// Ruim: cria nova função a cada render
+<ArchbaseTextArea onChangeValue={(e, v) => setValue(v)} />
+
+// Bom: callback estável
+const handleChange = useCallback((e, v) => setValue(v), []);
+<ArchbaseTextArea onChangeValue={handleChange} />
+```
+
+### Desative autosize quando não necessário
+
+```tsx
+// Ruim: autosize com minRows e maxRows iguais
+<ArchbaseTextArea autosize minRows={5} maxRows={5} />
+
+// Bom: use rows fixo quando não precisa crescer
+<ArchbaseTextArea rows={5} />
+```
+
+## Exemplos Práticos
+
+### Campo de Observações
+
+```tsx
+<ArchbaseTextArea
+  label="Observações"
+  placeholder="Adicione observações importantes sobre este registro..."
+  minRows={3}
+  description="Use para registrar informações complementares"
+/>
+```
+
+### Editor de Markdown Simples
+
+```tsx
+import { Box } from '@mantine/core';
+
+function MarkdownEditor() {
+  const [content, setContent] = useState('');
+
+  return (
+    <Stack>
+      <ArchbaseTextArea
+        label="Conteúdo Markdown"
+        placeholder="Digite seu markdown aqui..."
+        value={content}
+        onChangeValue={(e, v) => setContent(v)}
+        autosize
+        minRows={10}
+        maxRows={20}
+        monospace
+      />
+      <Box p="md" bg="gray.0" style={{ minHeight: 100 }}>
+        <Text size="sm" color="dimmed">Preview:</Text>
+        <div dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
+      </Box>
+    </Stack>
+  );
+}
+```
+
+### Campo com Validação em Tempo Real
+
+```tsx
+function TextAreaComValidacao() {
+  const [value, setValue] = useState('');
+  const [error, setError] = useState('');
+
+  const handleChange = (newValue: string) => {
+    setValue(newValue);
+
+    if (newValue.length > 500) {
+      setError('Máximo 500 caracteres permitidos');
+    } else if (newValue.length < 50 && newValue.length > 0) {
+      setError('Mínimo 50 caracteres');
+    } else {
+      setError('');
+    }
+  };
+
+  return (
+    <ArchbaseTextArea
+      label="Descrição Detalhada"
+      value={value}
+      onChangeValue={(e, v) => handleChange(v)}
+      error={error}
+      minRows={5}
+      maxLength={500}
+      showCounter
+      description="Mínimo 50, máximo 500 caracteres"
+    />
+  );
+}
+```

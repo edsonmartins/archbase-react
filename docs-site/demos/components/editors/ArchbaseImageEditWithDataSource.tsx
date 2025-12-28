@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Text, Code, Card, Button, Group } from '@mantine/core';
 import { ArchbaseImageEdit, ArchbaseEdit } from '@archbase/components';
-import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 
 interface Produto {
   id: string;
@@ -12,7 +12,7 @@ interface Produto {
 export function ArchbaseImageEditWithDataSource() {
   const [initialized, setInitialized] = useState(false);
 
-  const { dataSource, current, edit, save, cancel, isBrowsing, isEditing } = useArchbaseDataSourceV2<Produto>({
+  const { dataSource } = useArchbaseDataSource<Produto, string>({
     initialData: [{
       id: '1',
       nome: 'Notebook',
@@ -20,6 +20,14 @@ export function ArchbaseImageEditWithDataSource() {
     }],
     name: 'dsProdutoImagem',
   });
+  const currentRecord = dataSource.getCurrentRecord();
+  const isBrowsing = dataSource.isBrowsing();
+  const isEditing = dataSource.isEditing();
+
+  const edit = () => dataSource.edit();
+  const save = () => dataSource.save();
+  const cancel = () => dataSource.cancel();
+
 
   useEffect(() => {
     if (!initialized && dataSource && isBrowsing) {
@@ -58,7 +66,6 @@ export function ArchbaseImageEditWithDataSource() {
         label="Foto do Produto"
         width={200}
         height={200}
-        allowClear
       />
 
       <Card withBorder p="sm" radius="md">
@@ -67,8 +74,8 @@ export function ArchbaseImageEditWithDataSource() {
         </Text>
         <Code block style={{ fontSize: 12 }}>
           {JSON.stringify({
-            ...current,
-            foto: current?.foto ? `${current.foto.substring(0, 50)}...` : ''
+            ...currentRecord,
+            foto: currentRecord?.foto ? `${currentRecord.foto.substring(0, 50)}...` : ''
           }, null, 2)}
         </Code>
       </Card>

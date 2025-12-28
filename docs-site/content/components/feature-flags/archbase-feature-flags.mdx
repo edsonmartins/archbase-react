@@ -1,0 +1,210 @@
+# ArchbaseFeatureFlags
+
+Integração completa com **Unleash** para gerenciamento de Feature Flags em aplicações React.
+Permite rollouts graduais, A/B testing, e kill switches para funcionalidades.
+
+## Configuração do Provider
+
+```tsx
+import {
+  ArchbaseFeatureFlagsProvider,
+  useArchbaseFeatureFlag,
+} from '@archbase/feature-flags';
+
+function App() {
+  return (
+    <ArchbaseFeatureFlagsProvider
+      config={{
+        url: 'https://app.unleash-hosted.com',
+        clientKey: 'your-api-key',
+        appName: 'my-app',
+        environment: 'production',
+      }}
+    >
+      <YourApp />
+    </ArchbaseFeatureFlagsProvider>
+  );
+}
+```
+
+## Uso Básico
+
+Verificar se uma feature flag está ativada:
+
+```tsx
+function MyComponent() {
+  const { enabled, loading } = useArchbaseFeatureFlag('new-dashboard');
+
+  if (loading) return <div>Loading...</div>;
+
+  return enabled ? <NewDashboard /> : <OldDashboard />;
+}
+```
+
+## A/B Testing com Variantes
+
+Testar diferentes variantes de uma feature:
+
+```tsx
+function PricingComponent() {
+  const { variant } = useArchbaseVariant('pricing-strategy');
+
+  return (
+    <div>
+      {variant?.name === 'discount' && <DiscountPricing />}
+      {variant?.name === 'premium' && <PremiumPricing />}
+      {!variant && <StandardPricing />}
+    </div>
+  );
+}
+```
+
+## Contexto Customizado
+
+Enviar informações de contexto para targeting:
+
+```tsx
+function App() {
+  const [userId] = useState('user-123');
+
+  return (
+    <ArchbaseFeatureFlagsProvider
+      config={{
+        url: 'https://app.unleash-hosted.com',
+        clientKey: 'your-api-key',
+        appName: 'my-app',
+        context: {
+          userId,
+          sessionId: 'session-456',
+          properties: {
+            plan: 'premium',
+            region: 'us-east-1',
+          },
+        },
+      }}
+    >
+      <YourApp />
+    </ArchbaseFeatureFlagsProvider>
+  );
+}
+```
+
+## Listar Todas as Flags
+
+Obter todas as flags disponíveis:
+
+```tsx
+function AllFlags() {
+  const { flags, loading } = useArchbaseFeatureFlags();
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <ul>
+      {Object.entries(flags).map(([name, enabled]) => (
+        <li key={name}>
+          {name}: {enabled ? 'ON' : 'OFF'}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+## Self-Hosted (Docker)
+
+Execute o Unleash localmente com Docker:
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+services:
+  unleash:
+    image: unleashorg/unleash-server:latest
+    ports:
+      - "4242:4242"
+    environment:
+      - DATABASE_URL=postgres://postgres:unleash@db:5432/unleash
+      - INIT_CLIENT_API_TOKENS=default:development.token
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=unleash
+      - POSTGRES_DB=unleash
+    volumes:
+      - unleash-db:/var/lib/postgresql/data
+
+volumes:
+  unleash-db:
+```
+
+## Props
+
+### ArchbaseFeatureFlagsProvider
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `config` | `UnleashConfig` | - | Configuração do Unleash (obrigatório) |
+| `config.url` | `string` | - | URL do servidor Unleash |
+| `config.clientKey` | `string` | - | API key do cliente |
+| `config.appName` | `string` | - | Nome da aplicação |
+| `config.environment` | `string` | `'production'` | Ambiente |
+| `config.context` | `object` | - | Contexto do usuário |
+| `config.refreshInterval` | `number` | `30000` | Intervalo de refresh (ms) |
+| `startClient` | `boolean` | `true` | Iniciar cliente automaticamente |
+| `loadingComponent` | `ReactNode` | - | Componente de loading |
+| `errorComponent` | `ReactNode` | - | Componente de erro |
+
+### useArchbaseFeatureFlag
+
+| Retorno | Tipo | Descrição |
+|---------|------|-----------|
+| `enabled` | `boolean` | Se a flag está ativa |
+| `loading` | `boolean` | Se está carregando |
+| `error` | `Error` | Erro se houver |
+
+### useArchbaseVariant
+
+| Retorno | Tipo | Descrição |
+|---------|------|-----------|
+| `variant` | `object \| undefined` | Variante da flag |
+| `variant.name` | `string` | Nome da variante |
+| `variant.enabled` | `boolean` | Se está ativa |
+| `variant.payload` | `object` | Payload da variante |
+| `loading` | `boolean` | Se está carregando |
+
+### useArchbaseFeatureFlags
+
+| Retorno | Tipo | Descrição |
+|---------|------|-----------|
+| `flags` | `Record<string, boolean>` | Todas as flags |
+| `loading` | `boolean` | Se está carregando |
+| `error` | `Error` | Erro se houver |
+
+## Estratégias de Rollout
+
+### 1. Progressive Rollout
+Liberar gradualmente para percentuais da base de usuários.
+
+### 2. Canary Release
+Liberar primeiro para um grupo pequeno de usuários internos.
+
+### 3. A/B Testing
+Testar diferentes variantes para otimizar conversão.
+
+### 4. Kill Switch
+Desativar features problemáticas instantaneamente.
+
+## Licença
+
+Este componente integra `@unleash/proxy-client-react`, licenciado sob **Apache 2.0 License**.
+
+## Referências
+
+- [Unleash Documentation](https://docs.getunleash.io/)
+- [Unleash GitHub](https://github.com/Unleash/unleash)
+- [Feature Flags Best Practices](https://docs.getunleash.io/s/strategies)

@@ -1,0 +1,319 @@
+import * as demos from '../../../demos/components/editors';
+
+# ArchbaseAsyncMultiSelect
+
+O `ArchbaseAsyncMultiSelect` é um componente de seleção múltipla com busca assíncrona, paginação e suporte a DataSource.
+Ideal para seleção de múltiplos itens de grandes conjuntos de dados com lazy loading.
+
+## Importação
+
+```tsx
+import { ArchbaseAsyncMultiSelect } from '@archbase/components';
+```
+
+## Uso Básico
+
+Seleção múltipla de tecnologias com busca assíncrona e paginação.
+
+<Demo data={demos.asyncMultiSelectUsage} />
+
+### Como funciona
+
+O componente realiza buscas assíncronas conforme o usuário digita, com suporte a:
+- **Paginação**: Carrega os dados progressivamente
+- **Debounce**: Aguarda a cessação da digitação antes de buscar
+- **Mínimo de caracteres**: Configurável para iniciar a busca
+- **Multipla seleção**: Permite selecionar vários itens
+
+```tsx
+interface Tag {
+  id: string;
+  nome: string;
+}
+
+const searchTags = async (page: number, query: string): Promise<OptionsResult<Tag>> => {
+  const filtered = mockTags.filter(t =>
+    t.nome.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const pageSize = 5;
+  const start = page * pageSize;
+  const paged = filtered.slice(start, start + pageSize);
+
+  return {
+    options: paged,
+    page,
+    totalPages: Math.ceil(filtered.length / pageSize),
+  };
+};
+
+<ArchbaseAsyncMultiSelect<any, any, Tag>
+  label="Tecnologias"
+  placeholder="Digite para buscar tecnologias..."
+  getOptions={searchTags}
+  getOptionLabel={(tag) => tag.nome}
+  getOptionValue={(tag) => tag.id}
+  onSelectValue={(selected) => setValues(selected)}
+  minCharsToSearch={1}
+  debounceTime={300}
+  clearable
+  searchable
+/>
+```
+
+## Com DataSource
+
+Integração completa com DataSource V2 para formulários com estado.
+
+<Demo data={demos.asyncMultiSelectWithDataSource} />
+
+### Padrão de conversão
+
+Ao usar com DataSource, frequentemente é necessário converter entre os objetos selecionados e seus IDs:
+
+```tsx
+<ArchbaseAsyncMultiSelect<Produto, string, Tag>
+  dataSource={dataSource}
+  dataField="tags"
+  label="Tags"
+  getOptions={searchTags}
+  getOptionLabel={(tag) => tag.nome}
+  getOptionValue={(tag) => tag.id}
+  // Converte array de objetos para array de IDs (para salvar no registro)
+  converter={(tags) => tags.map(t => t.id)}
+  // Converte array de IDs para array de objetos (para exibir no componente)
+  getConvertedOptions={getTagsByIds}
+  minCharsToSearch={0}
+  searchable
+/>
+```
+
+## Exemplo Prático: Busca de CEP
+
+Implementação de busca de CEP com múltiplos resultados:
+
+```tsx
+const searchCEP = async (page: number, query: string): Promise<OptionsResult<Endereco>> => {
+  const response = await fetch(
+    `https://viacep.com.br/ws/${query}/json/`
+  );
+  const data = await response.json();
+
+  return {
+    options: [data],
+    page: 0,
+    totalPages: 1,
+  };
+};
+
+<ArchbaseAsyncMultiSelect
+  label="Endereços"
+  getOptions={searchCEP}
+  getOptionLabel={(endereco) => `${endereco.logradouro}, ${endereco.localidade}`}
+  getOptionValue={(endereco) => endereco.cep}
+/>
+```
+
+## Configurações Avançadas
+
+### Debounce personalizado
+
+```tsx
+<ArchbaseAsyncMultiSelect
+  debounceTime={500} // aguarda 500ms após o usuário parar de digitar
+  getOptions={searchFn}
+/>
+```
+
+### Mínimo de caracteres
+
+```tsx
+<ArchbaseAsyncMultiSelect
+  minCharsToSearch={3} // só inicia busca após 3 caracteres
+  getOptions={searchFn}
+/>
+```
+
+### Limite de seleção
+
+```tsx
+const [values, setValues] = useState<Tag[]>([]);
+
+<ArchbaseAsyncMultiSelect
+  onSelectValue={(selected) => {
+    if (selected.length <= 5) {
+      setValues(selected);
+    }
+  }}
+/>
+```
+
+## Integração com Formulários
+
+### Com ArchbaseFormTemplate
+
+```tsx
+import { ArchbaseFormTemplate } from '@archbase/template';
+import { ArchbaseAsyncMultiSelect } from '@archbase/components';
+
+function ProdutoForm() {
+  return (
+    <ArchbaseFormTemplate dataSource={dataSource} onSave={handleSave}>
+      <ArchbaseAsyncMultiSelect<Produto, string, Tag>
+        dataSource={dataSource}
+        dataField="tags"
+        label="Tags do Produto"
+        getOptions={searchTags}
+        getOptionLabel={(tag) => tag.nome}
+        getOptionValue={(tag) => tag.id}
+        converter={(tags) => tags.map(t => t.id)}
+        getConvertedOptions={getTagsByIds}
+      />
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+### Com React Hook Form
+
+```tsx
+import { useForm, Controller } from 'react-hook-form';
+
+function MeuFormulario() {
+  const { control, handleSubmit } = useForm<{
+    tags: Tag[];
+  }>();
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="tags"
+        control={control}
+        render={({ field }) => (
+          <ArchbaseAsyncMultiSelect<any, any, Tag>
+            label="Tags"
+            value={field.value}
+            onChangeValue={field.onChange}
+            getOptions={searchTags}
+            getOptionLabel={(tag) => tag.nome}
+            getOptionValue={(tag) => tag.id}
+          />
+        )}
+      />
+    </form>
+  );
+}
+```
+
+## Acessibilidade
+
+O componente segue as melhores práticas de acessibilidade:
+- Labels associadas corretamente ao campo
+- Suporte a navegação por teclado
+- Compatível com screen readers
+- Feedback visual durante carregamento
+
+## Performance
+
+### Otimizações automáticas
+
+- **DataSource V2**: Detecta automaticamente e otimiza re-renders
+- **Debounce**: Reduz chamadas à API durante digitação
+- **Paginação**: Carrega apenas os itens necessários
+- **Lazy loading**: Busca dados sob demanda
+
+### Dicas de performance
+
+```tsx
+// ✅ Bom: useMemo para funções de conversão estáveis
+const getConvertedOptions = useCallback(async (ids: string[]) => {
+  return mockTags.filter(t => ids.includes(t.id));
+}, []);
+
+// ✅ Bom: debounce apropriado
+debounceTime={300}
+
+// ❌ Evitar: minCharsToSearch muito baixo com API pesada
+minCharsToSearch={0} // pode causar muitas requisições
+```
+
+## API
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T, ID>` | - | DataSource V1/V2 para integração |
+| `dataField` | `keyof T` | - | Campo do DataSource a ser vinculado |
+| `getOptions` | `(page: number, query: string) => Promise<OptionsResult<O>>` | **Obrigatório** | Função para buscar opções |
+| `getOptionLabel` | `(option: O) => string` | **Obrigatório** | Extrai o label da opção |
+| `getOptionValue` | `(option: O) => string` | **Obrigatório** | Extrai o valor da opção |
+| `onSelectValue` | `(value: O[]) => void` | - | Callback quando seleção muda (modo controlado) |
+| `converter` | `(value: O[]) => any` | - | Converte objetos para formato do DataSource |
+| `getConvertedOptions` | `(value: any) => Promise<O[]>` | - | Converte valor do DataSource para objetos |
+| `minCharsToSearch` | `number` | `3` | Mínimo de caracteres para iniciar busca |
+| `debounceTime` | `number` | `300` | Tempo de debounce em ms |
+| `searchable` | `boolean` | `true` | Habilita busca |
+| `clearable` | `boolean` | `true` | Permite limpar seleção |
+| `disabled` | `boolean` | `false` | Desabilita o componente |
+| `label` | `string` | - | Label do campo |
+| `placeholder` | `string` | - | Placeholder do campo |
+| `required` | `boolean` | `false` | Campo obrigatório |
+| `error` | `string` | - | Mensagem de erro |
+
+### OptionsResult
+
+```typescript
+interface OptionsResult<T> {
+  options: T[];
+  page: number;
+  totalPages: number;
+}
+```
+
+## Exemplos de Uso
+
+### Filtro de produtos por categorias
+
+```tsx
+const searchCategorias = async (page: number, query: string) => {
+  const response = await fetch(
+    `/api/categorias?page=${page}&q=${query}`
+  );
+  const data = await response.json();
+
+  return {
+    options: data.items,
+    page,
+    totalPages: data.totalPages,
+  };
+};
+
+<ArchbaseAsyncMultiSelect<Produto, string, Categoria>
+  dataSource={dataSource}
+  dataField="categorias"
+  label="Categorias"
+  getOptions={searchCategorias}
+  getOptionLabel={(cat) => cat.nome}
+  getOptionValue={(cat) => cat.id}
+  converter={(cats) => cats.map(c => c.id)}
+  getConvertedOptions={getCategoriasByIds}
+/>
+```
+
+### Seleção de usuários com avatar
+
+```tsx
+<ArchbaseAsyncMultiSelect
+  label="Participantes"
+  getOptions={searchUsuarios}
+  getOptionLabel={(user) => user.name}
+  getOptionValue={(user) => user.id}
+  renderOption={(user) => (
+    <Group>
+      <Avatar src={user.avatar} radius="xl" size="sm" />
+      <div>{user.name}</div>
+    </Group>
+  )}
+/>
+```

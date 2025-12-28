@@ -31,7 +31,7 @@ export function PageHeader({ data }: PageHeaderProps) {
         <div className={classes.links}>
           {data.version && (
             <PageHeaderLink label="Version" icon={<IconPackage size={18} stroke={1.5} />}>
-              <Badge size="sm" variant="light">v{data.version}</Badge>
+              <Badge size="sm" variant="light" suppressHydrationWarning>v{data.version}</Badge>
             </PageHeaderLink>
           )}
 

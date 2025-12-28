@@ -1,0 +1,472 @@
+import * as demos from '../../../demos/components/editors';
+
+# ArchbaseTreeSelect
+
+O `ArchbaseTreeSelect` é um componente de seleção hierárquica que permite ao usuário escolher itens de uma estrutura de árvore.
+Ideal para categorias aninhadas, departamentos, sistemas de arquivos e outras estruturas recursivas.
+
+## Importação
+
+```tsx
+import { ArchbaseTreeSelect, ArchbaseTreeNode } from '@archbase/components';
+```
+
+## Uso Básico
+
+Seleção de categoria com estrutura hierárquica de múltiplos níveis.
+
+<Demo data={demos.treeSelectUsage} />
+
+### Como funciona
+
+O componente utiliza uma estrutura de nós em árvore com suporte a:
+- **Múltiplos níveis**: Profundidade ilimitada de aninhamento
+- **Expansão/colapso**: Nós pais podem ser expandidos para mostrar filhos
+- **Navegação por teclado**: Setas, Enter, Escape
+- **Label e valor separados**: Flexibilidade na representação
+
+```tsx
+const treeData: ArchbaseTreeNode[] = [
+  {
+    id: '1',
+    label: 'Eletrônicos',
+    value: 'eletronicos',
+    children: [
+      {
+        id: '1-1',
+        label: 'Celulares',
+        value: 'celulares',
+        children: [
+          { id: '1-1-1', label: 'iPhone', value: 'iphone' },
+          { id: '1-1-2', label: 'Samsung', value: 'samsung' },
+        ],
+      },
+    ],
+  },
+];
+
+<ArchbaseTreeSelect
+  label="Categoria"
+  placeholder="Selecione uma categoria..."
+  options={treeData}
+  getOptionLabel={(node) => node.label}
+  getOptionValue={(node) => node.value}
+  onSelectValue={(node) => setValue(node)}
+/>
+```
+
+## Estrutura de Dados
+
+### ArchbaseTreeNode
+
+```typescript
+interface ArchbaseTreeNode {
+  id: string;
+  label: string;
+  value: string;
+  children?: ArchbaseTreeNode[];
+  disabled?: boolean;
+  [key: string]: any;
+}
+```
+
+### Árvore dinâmica
+
+```tsx
+const buildTree = (categorias: Categoria[]): ArchbaseTreeNode[] => {
+  const map = new Map<string, ArchbaseTreeNode>();
+
+  categorias.forEach(cat => {
+    map.set(cat.id, { ...cat, children: [] });
+  });
+
+  const root: ArchbaseTreeNode[] = [];
+  categorias.forEach(cat => {
+    const node = map.get(cat.id)!;
+    if (cat.parentId) {
+      const parent = map.get(cat.parentId);
+      parent?.children?.push(node);
+    } else {
+      root.push(node);
+    }
+  });
+
+  return root;
+};
+```
+
+## Com DataSource
+
+Integração com DataSource para formulários.
+
+```tsx
+<ArchbaseTreeSelect<Produto, string, ArchbaseTreeNode>
+  dataSource={dataSource}
+  dataField="categoriaId"
+  label="Categoria"
+  options={treeData}
+  getOptionLabel={(node) => node.label}
+  getOptionValue={(node) => node.value}
+/>
+```
+
+## Configurações Avançadas
+
+### Nós desabilitados
+
+```tsx
+const treeWithDisabled: ArchbaseTreeNode[] = [
+  {
+    id: '1',
+    label: 'Categoria Principal',
+    value: 'principal',
+    children: [
+      { id: '1-1', label: 'Opção Disponível', value: 'disponivel' },
+      { id: '1-2', label: 'Opção Desabilitada', value: 'desabilitada', disabled: true },
+    ],
+  },
+];
+
+<ArchbaseTreeSelect options={treeWithDisabled} />
+```
+
+### Dados adicionais no nó
+
+```tsx
+const treeWithExtraData: ArchbaseTreeNode[] = [
+  {
+    id: '1',
+    label: 'Produtos',
+    value: 'produtos',
+    count: 150, // campo extra
+    icon: '📦',
+    children: [
+      { id: '1-1', label: 'Eletrônicos', value: 'eletronicos', count: 75 },
+    ],
+  },
+];
+
+<ArchbaseTreeSelect
+  getOptionLabel={(node) => `${node.label} (${node.count})`}
+/>
+```
+
+### Renderização customizada
+
+```tsx
+<ArchbaseTreeSelect
+  options={treeData}
+  getOptionLabel={(node) => node.label}
+  getOptionValue={(node) => node.value}
+  renderOption={(node) => (
+    <Group>
+      <ThemeIcon color="blue" variant="light">
+        {node.icon}
+      </ThemeIcon>
+      <Text>{node.label}</Text>
+      {node.count && (
+        <Badge size="xs">{node.count}</Badge>
+      )}
+    </Group>
+  )}
+/>
+```
+
+## Casos de Uso
+
+### Sistema de departamentos
+
+```tsx
+const departamentos: ArchbaseTreeNode[] = [
+  {
+    id: '1',
+    label: 'Engenharia',
+    value: 'engenharia',
+    children: [
+      { id: '1-1', label: 'Frontend', value: 'frontend' },
+      { id: '1-2', label: 'Backend', value: 'backend' },
+      { id: '1-3', label: 'DevOps', value: 'devops' },
+    ],
+  },
+  {
+    id: '2',
+    label: 'Negócios',
+    value: 'negocios',
+    children: [
+      { id: '2-1', label: 'Vendas', value: 'vendas' },
+      { id: '2-2', label: 'Marketing', value: 'marketing' },
+    ],
+  },
+];
+
+<ArchbaseTreeSelect
+  dataSource={dataSource}
+  dataField="departamento"
+  label="Departamento"
+  options={departamentos}
+  getOptionLabel={(dept) => dept.label}
+  getOptionValue={(dept) => dept.value}
+/>
+```
+
+### Categorias de produtos
+
+```tsx
+const categoriaTree = await fetch('/api/categorias/tree').then(r => r.json());
+
+<ArchbaseTreeSelect
+  dataSource={dataSource}
+  dataField="categoriaId"
+  label="Categoria"
+  options={categoriaTree}
+  getOptionLabel={(cat) => cat.nome}
+  getOptionValue={(cat) => cat.id}
+  converter={(node) => node.id}
+/>
+```
+
+### Localização geográfica
+
+```tsx
+const locations: ArchbaseTreeNode[] = [
+  {
+    id: 'br',
+    label: 'Brasil',
+    value: 'br',
+    children: [
+      {
+        id: 'br-sp',
+        label: 'São Paulo',
+        value: 'br-sp',
+        children: [
+          { id: 'br-sp-camp', label: 'Campinas', value: 'br-sp-camp' },
+          { id: 'br-sp-saopaulo', label: 'São Paulo', value: 'br-sp-saopaulo' },
+        ],
+      },
+    ],
+  },
+];
+
+<ArchbaseTreeSelect
+  label="Localização"
+  options={locations}
+  getOptionLabel={(loc) => loc.label}
+  getOptionValue={(loc) => loc.value}
+/>
+```
+
+## Integração com Formulários
+
+### Com ArchbaseFormTemplate
+
+```tsx
+import { ArchbaseFormTemplate } from '@archbase/template';
+
+function ProdutoForm() {
+  return (
+    <ArchbaseFormTemplate dataSource={dataSource} onSave={handleSave}>
+      <ArchbaseTreeSelect<Produto, string, ArchbaseTreeNode>
+        dataSource={dataSource}
+        dataField="categoriaId"
+        label="Categoria"
+        options={categoriaTree}
+        getOptionLabel={(node) => node.label}
+        getOptionValue={(node) => node.value}
+      />
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+### Com React Hook Form
+
+```tsx
+import { useForm, Controller } from 'react-hook-form';
+
+function MeuFormulario() {
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      categoria: null,
+    },
+  });
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="categoria"
+        control={control}
+        render={({ field }) => (
+          <ArchbaseTreeSelect
+            label="Categoria"
+            value={field.value}
+            onChangeValue={field.onChange}
+            options={treeData}
+            getOptionLabel={(node) => node.label}
+            getOptionValue={(node) => node.value}
+          />
+        )}
+      />
+    </form>
+  );
+}
+```
+
+## Busca em árvore
+
+### Filtro de nós
+
+```tsx
+const filterTree = (
+  nodes: ArchbaseTreeNode[],
+  query: string
+): ArchbaseTreeNode[] => {
+  const filtered: ArchbaseTreeNode[] = [];
+
+  nodes.forEach(node => {
+    const matches = node.label.toLowerCase().includes(query.toLowerCase());
+    const hasMatchingChildren = node.children?.length > 0 &&
+      filterTree(node.children, query).length > 0;
+
+    if (matches || hasMatchingChildren) {
+      filtered.push({
+        ...node,
+        children: node.children
+          ? filterTree(node.children, query)
+          : [],
+      });
+    }
+  });
+
+  return filtered;
+};
+
+function TreeWithSearch() {
+  const [query, setQuery] = useState('');
+  const filteredTree = useMemo(
+    () => query ? filterTree(treeData, query) : treeData,
+    [query]
+  );
+
+  return (
+    <Stack>
+      <TextInput
+        placeholder="Buscar categoria..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <ArchbaseTreeSelect options={filteredTree} />
+    </Stack>
+  );
+}
+```
+
+## Acessibilidade
+
+O componente segue as melhores práticas de acessibilidade:
+- Navegação completa por teclado
+- Labels associadas corretamente
+- Suporte a screen readers
+- Indicadores visuais de expansão
+- Estrutura semântica de árvore
+
+### Atalhos de teclado
+
+| Tecla | Ação |
+|-------|------|
+| `↑` `↓` | Navegar entre opções |
+| `→` | Expandir nó pai |
+| `←` | Colapsar nó pai / voltar |
+| `Enter` | Selecionar nó |
+| `Escape` | Fechar dropdown |
+
+## Performance
+
+### Dicas para árvores grandes
+
+```tsx
+// ✅ Usar IDs simples ao invés de objetos complexos
+getOptionValue={(node) => node.id}
+
+// ✅ Memoizar árvore estática
+const treeData = useMemo(() => buildTree(rawData), []);
+
+// ✅ Lazy loading para subárvores
+const loadChildren = async (node: ArchbaseTreeNode) => {
+  const children = await fetch(`/api/categories/${node.id}/children`);
+  return children.json();
+};
+```
+
+## API
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T, ID>` | - | DataSource V1/V2 para integração |
+| `dataField` | `keyof T` | - | Campo do DataSource a ser vinculado |
+| `options` | `ArchbaseTreeNode[]` | **Obrigatório** | Array de nós da árvore |
+| `getOptionLabel` | `(node: ArchbaseTreeNode) => string` | **Obrigatório** | Extrai o label do nó |
+| `getOptionValue` | `(node: ArchbaseTreeNode) => string` | **Obrigatório** | Extrai o valor do nó |
+| `onSelectValue` | `(node: ArchbaseTreeNode) => void` | - | Callback ao selecionar nó |
+| `disabled` | `boolean` | `false` | Desabilita o componente |
+| `label` | `string` | - | Label do campo |
+| `placeholder` | `string` | - | Placeholder do campo |
+| `required` | `boolean` | `false` | Campo obrigatório |
+| `error` | `string` | - | Mensagem de erro |
+| `clearable` | `boolean` | `true` | Permite limpar seleção |
+| `searchable` | `boolean` | `false` | Habilita busca |
+| `nothingFound` | `ReactNode` | "Nenhum resultado" | Mensagem quando busca não retorna resultados |
+
+## Exemplos Avançados
+
+### Árvore com checkboxes
+
+```tsx
+<ArchbaseTreeSelect
+  multiple
+  options={treeData}
+  getOptionLabel={(node) => node.label}
+  getOptionValue={(node) => node.value}
+  onSelectValue={(nodes) => setSelectedNodes(nodes)}
+/>
+```
+
+### Árvore recarregável
+
+```tsx
+function ReloadableTree() {
+  const [tree, setTree] = useState<ArchbaseTreeNode[]>([]);
+
+  const reload = async () => {
+    const data = await fetch('/api/categories/tree').then(r => r.json());
+    setTree(data);
+  };
+
+  return (
+    <Stack>
+      <Button onClick={reload}>Recarregar</Button>
+      <ArchbaseTreeSelect options={tree} />
+    </Stack>
+  );
+}
+```
+
+### Árvore com indicadores
+
+```tsx
+<ArchbaseTreeSelect
+  options={treeData}
+  getOptionLabel={(node) => (
+    <Group>
+      <Text>{node.label}</Text>
+      {node.children?.length > 0 && (
+        <Badge size="xs" color="blue">
+          {node.children.length}
+        </Badge>
+      )}
+      {node.disabled && <Text c="red">✕</Text>}
+    </Group>
+  )}
+/>
+```

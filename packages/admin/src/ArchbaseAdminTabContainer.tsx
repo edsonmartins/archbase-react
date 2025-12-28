@@ -186,6 +186,80 @@ export function ArchbaseAdminTabContainer({
 		}
 	};
 
+	// Funções para fechar múltiplas abas
+	const handleCloseAllTabs = useCallback(() => {
+		setOpenedTabs([]);
+		onChangeOpenedTabs && onChangeOpenedTabs([]);
+		setActiveTabId(undefined);
+		onChangeActiveTabId && onChangeActiveTabId(undefined);
+		navigate(adminLayoutContextValue.navigationRootLink!);
+	}, [navigate, adminLayoutContextValue.navigationRootLink, onChangeOpenedTabs, onChangeActiveTabId]);
+
+	const handleCloseLeftTabs = useCallback((tabId: string) => {
+		const currentIndex = openedTabs.findIndex((tab) => tab.id === tabId);
+		if (currentIndex <= 0) return; // Não há abas à esquerda
+
+		const tabsToKeep = openedTabs.slice(currentIndex);
+		const tmpCurrent = tabsToKeep.find((tab) => tab.id === activeTabId)?.id || tabsToKeep[0]?.id;
+
+		const nextTabs = tabsToKeep.map((tab) => ({
+			...tab,
+			active: tab.id === tmpCurrent,
+		}));
+
+		setOpenedTabs(nextTabs);
+		onChangeOpenedTabs && onChangeOpenedTabs(nextTabs);
+
+		if (tmpCurrent) {
+			setActiveTabId(tmpCurrent);
+			onChangeActiveTabId && onChangeActiveTabId(tmpCurrent);
+			const targetTab = nextTabs.find((t) => t.id === tmpCurrent);
+			if (targetTab && currentLocation.pathname !== targetTab.path) {
+				navigate(targetTab.path);
+			}
+		}
+	}, [openedTabs, activeTabId, navigate, currentLocation.pathname, onChangeOpenedTabs, onChangeActiveTabId]);
+
+	const handleCloseRightTabs = useCallback((tabId: string) => {
+		const currentIndex = openedTabs.findIndex((tab) => tab.id === tabId);
+		if (currentIndex === -1 || currentIndex >= openedTabs.length - 1) return; // Não há abas à direita
+
+		const tabsToKeep = openedTabs.slice(0, currentIndex + 1);
+		const tmpCurrent = tabsToKeep.find((tab) => tab.id === activeTabId)?.id || tabsToKeep[tabsToKeep.length - 1]?.id;
+
+		const nextTabs = tabsToKeep.map((tab) => ({
+			...tab,
+			active: tab.id === tmpCurrent,
+		}));
+
+		setOpenedTabs(nextTabs);
+		onChangeOpenedTabs && onChangeOpenedTabs(nextTabs);
+
+		if (tmpCurrent) {
+			setActiveTabId(tmpCurrent);
+			onChangeActiveTabId && onChangeActiveTabId(tmpCurrent);
+			const targetTab = nextTabs.find((t) => t.id === tmpCurrent);
+			if (targetTab && currentLocation.pathname !== targetTab.path) {
+				navigate(targetTab.path);
+			}
+		}
+	}, [openedTabs, activeTabId, navigate, currentLocation.pathname, onChangeOpenedTabs, onChangeActiveTabId]);
+
+	const handleCloseOtherTabs = useCallback((tabId: string) => {
+		const currentTab = openedTabs.find((tab) => tab.id === tabId);
+		if (!currentTab) return;
+
+		const nextTabs = [{ ...currentTab, active: true }];
+		setOpenedTabs(nextTabs);
+		onChangeOpenedTabs && onChangeOpenedTabs(nextTabs);
+		setActiveTabId(tabId);
+		onChangeActiveTabId && onChangeActiveTabId(tabId);
+
+		if (currentLocation.pathname !== currentTab.path) {
+			navigate(currentTab.path);
+		}
+	}, [openedTabs, navigate, currentLocation.pathname, onChangeOpenedTabs, onChangeActiveTabId]);
+
 	const buildAdvancedTabs = (openedTabs: ArchbaseTabItem[]): ArchbaseAdvancedTabItem[] => {
 		return openedTabs.map((tab) => {
 			const result: ArchbaseAdvancedTabItem = {
@@ -207,6 +281,10 @@ export function ArchbaseAdminTabContainer({
 				onTabChange={(_tabs: ArchbaseAdvancedTabItem[]) => {
 					return null;
 				}}
+				onCloseAllTabs={handleCloseAllTabs}
+				onCloseLeftTabs={handleCloseLeftTabs}
+				onCloseRightTabs={handleCloseRightTabs}
+				onCloseOtherTabs={handleCloseOtherTabs}
 				currentTabs={buildAdvancedTabs(openedTabs)}
 				activeTab={activeTabId}
 				dark={colorScheme === 'dark'}

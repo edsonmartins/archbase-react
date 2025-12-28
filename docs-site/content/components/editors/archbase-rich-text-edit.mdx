@@ -1,0 +1,185 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseRichTextEdit` é um editor de texto rico baseado no SunEditor, com suporte a formatação, listas, tabelas, imagens e muito mais.
+
+<Demo data={demos.richTextEditUsage} />
+
+## Estados
+
+Diferentes estados do editor:
+
+<Demo data={demos.richTextEditStates} />
+
+## Funcionalidades
+
+O editor suporta uma ampla gama de funcionalidades:
+
+### Formatação de Texto
+- **Negrito**, *itálico*, <u>sublinhado</u>
+- ~~Tachado~~
+- Fontes e tamanhos customizados
+- Cores de texto e fundo
+- Alinhamento (esquerda, centro, direita, justificado)
+
+### Listas
+- Listas numeradas
+- Listas com marcadores
+- Listas aninhadas
+
+### Mídia
+- Upload de imagens
+- Upload de vídeos
+- Links e âncoras
+- Iframes
+
+### Estrutura
+- Tabelas
+- Cabeçalhos (H1-H6)
+- Blocos de código
+- Citações
+
+## Com DataSource
+
+A integração com DataSource é automática:
+
+<Demo data={demos.richTextEditWithDataSource} />
+
+### Conversão Base64
+
+Por padrão, o conteúdo é convertido para Base64 antes de salvar no DataSource. Para desabilitar:
+
+```tsx
+<ArchbaseRichTextEdit
+  dataSource={dataSource}
+  dataField="conteudo"
+  disabledBase64Convertion={true}
+/>
+```
+
+## Configurações
+
+### Altura e Largura
+
+```tsx
+<ArchbaseRichTextEdit
+  label="Conteúdo"
+  height="400px"
+  width="100%"
+/>
+```
+
+### Toolbar
+
+```tsx
+// Esconder toolbar
+<ArchbaseRichTextEdit
+  label="Sem toolbar"
+  hideToolbar
+/>
+
+// Desabilitar toolbar (modo leitura)
+<ArchbaseRichTextEdit
+  label="Toolbar desabilitada"
+  disableToolbar
+/>
+```
+
+### Placeholder
+
+```tsx
+<ArchbaseRichTextEdit
+  label="Artigo"
+  placeholder="Comece a escrever seu artigo aqui..."
+/>
+```
+
+## Personalização
+
+O editor SunEditor oferece diversas opções de personalização. Consulte a [documentação do SunEditor](https://suneditor.github.io/) para mais detalhes.
+
+### Botões da Toolbar
+
+Você pode customizar os botões disponíveis na toolbar através das props do componente.
+
+## Acessibilidade
+
+- Labels associadas corretamente
+- Suporte a navegação por teclado
+- Compatível com screen readers
+- Atalhos de teclado para formatação (Ctrl+B, Ctrl+I, etc.)
+
+## Dicas de Performance
+
+### Desabilite Recursos Não Usados
+
+```tsx
+<ArchbaseRichTextEdit
+  hideToolbar
+  // Melhor performance sem toolbar
+/>
+```
+
+### Use DataSource V2
+
+```tsx
+const { dataSource } = useArchbaseDataSourceV2<Artigo>({
+  initialData: artigos,
+  name: 'dsArtigos',
+});
+
+// Otimização automática de re-renders
+<ArchbaseRichTextEdit
+  dataSource={dataSource}
+  dataField="conteudo"
+/>
+```
+
+### Evite Re-renders Desnecessários
+
+```tsx
+// Ruim
+<ArchbaseRichTextEdit onChangeValue={(v) => setContent(v)} />
+
+// Bom
+const handleChange = useCallback((v) => setContent(v), []);
+<ArchbaseRichTextEdit onChangeValue={handleChange} />
+```
+
+## Exemplos Práticos
+
+### Blog Post Editor
+
+```tsx
+function BlogEditor() {
+  const [content, setContent] = useState('');
+
+  return (
+    <Stack>
+      <ArchbaseRichTextEdit
+        label="Conteúdo do Post"
+        placeholder="Escreva seu artigo..."
+        value={content}
+        onChangeValue={setContent}
+        height="500px"
+      />
+    </Stack>
+  );
+}
+```
+
+### Email Template Editor
+
+```tsx
+function EmailTemplateEditor() {
+  return (
+    <ArchbaseRichTextEdit
+      label="Template de Email"
+      placeholder="<p>Olá {{nome}},</p>..."
+      height="400px"
+      // Incluir botões específicos para email
+    />
+  );
+}
+```

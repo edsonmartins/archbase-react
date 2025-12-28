@@ -12,7 +12,6 @@ export function ArchbaseImageEditUsage() {
         width={200}
         height={200}
         onChangeImage={(base64) => setImageBase64(base64 || '')}
-        allowClear
       />
 
       <Card withBorder p="sm" radius="md">

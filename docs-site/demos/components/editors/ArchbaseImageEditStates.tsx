@@ -11,7 +11,6 @@ export function ArchbaseImageEditStates() {
           label="Normal"
           width={120}
           height={120}
-          allowClear
         />
 
         {/* Obrigatorio */}
@@ -53,7 +52,6 @@ export function ArchbaseImageEditStates() {
           label="Tamanho maior"
           width={180}
           height={180}
-          allowClear
         />
       </Group>
     </Stack>

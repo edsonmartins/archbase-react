@@ -1,0 +1,96 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Basico
+
+`ArchbaseFileAttachment` e um componente para upload de multiplos arquivos com suporte a DataSource. Permite arrastar e soltar, visualizacao de lista e validacao de tipos/tamanhos.
+
+<Demo data={demos.fileAttachmentUsage} />
+
+## Com DataSource
+
+A integracao com o DataSource permite binding bidirecional automatico. Os arquivos sao armazenados como JSON stringificado.
+
+<Demo data={demos.fileAttachmentWithDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseFileAttachment
+  dataSource={dataSource}    // Fonte de dados (V1 ou V2)
+  dataField="anexos"         // Campo do objeto
+  label="Anexos"
+  accept=".pdf,.doc,.docx"   // Tipos aceitos
+  maxSize={5 * 1024 * 1024}  // 5MB maximo
+  multiple                   // Permite multiplos arquivos
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite upload e remocao de arquivos
+- **Sincroniza**: lista de arquivos bidirecional com o DataSource
+- **Suporta**: drag and drop, click para upload, lista de arquivos
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuario:
+
+<Demo data={demos.fileAttachmentStates} />
+
+## Props Principais
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados para binding |
+| `dataField` | `string` | - | Campo do objeto para vincular |
+| `label` | `string` | - | Label do campo |
+| `accept` | `string` | `*` | Tipos de arquivo aceitos |
+| `maxSize` | `number` | - | Tamanho maximo por arquivo em bytes |
+| `multiple` | `boolean` | `false` | Permite multiplos arquivos |
+| `onFilesChange` | `(files: File[]) => void` | - | Callback quando arquivos mudam |
+| `disabled` | `boolean` | `false` | Desabilita o campo |
+| `readOnly` | `boolean` | `false` | Somente leitura |
+
+## Tipos de Arquivo
+
+Exemplos de configuracao para diferentes tipos:
+
+```tsx
+// Apenas imagens
+<ArchbaseFileAttachment accept="image/*" />
+
+// Apenas PDFs
+<ArchbaseFileAttachment accept=".pdf" />
+
+// Documentos Office
+<ArchbaseFileAttachment accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" />
+
+// Multiplos tipos especificos
+<ArchbaseFileAttachment accept="image/*,.pdf,.doc,.docx" />
+```
+
+## Limite de Tamanho
+
+```tsx
+// Limite de 2MB
+<ArchbaseFileAttachment
+  maxSize={2 * 1024 * 1024}
+  // ...
+/>
+
+// Limite de 10MB
+<ArchbaseFileAttachment
+  maxSize={10 * 1024 * 1024}
+  // ...
+/>
+```
+
+## Acessibilidade
+
+O `ArchbaseFileAttachment` segue as melhores praticas de acessibilidade:
+
+- Labels associadas corretamente via `htmlFor`
+- Suporte a navegacao por teclado
+- Area de drop acessivel via ARIA
+- Lista de arquivos com botoes de remocao acessiveis
+- Feedback visual para estados de arrastar

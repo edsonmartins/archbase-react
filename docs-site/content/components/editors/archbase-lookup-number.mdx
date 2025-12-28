@@ -1,0 +1,677 @@
+import * as demos from '../../../demos/components/editors';
+
+# ArchbaseLookupNumber
+
+O `ArchbaseLookupNumber` é um componente de entrada numérica com capacidade de lookup (busca) de informações relacionadas.
+Ideal para cenários onde você precisa informar um código/valor e buscar dados relacionados automaticamente.
+
+## Importação
+
+```tsx
+import { ArchbaseLookupNumber } from '@archbase/components';
+```
+
+## Uso Básico
+
+Campo numérico com lookup de preço de produto.
+
+<Demo data={demos.lookupNumberUsage} />
+
+### Como funciona
+
+O componente combina entrada numérica com busca de dados relacionados:
+- **Entrada numérica**: Formatação automática de números
+- **Lookup delegator**: Função para buscar dados relacionados ao valor
+- **Resultado do lookup**: Callback com dados encontrados
+- **Formatação flexível**: Separadores decimais e de milhar customizáveis
+
+```tsx
+interface Produto {
+  id: string;
+  nome: string;
+  precoUnitario: number;
+}
+
+interface ProdutoPreco {
+  id: string;
+  nome: string;
+  preco: number;
+}
+
+const lookupProdutoPreco = async (codigo: string): Promise<ProdutoPreco> => {
+  const response = await fetch(`/api/produtos/${codigo}/preco`);
+  return response.json();
+};
+
+<ArchbaseLookupNumber<Produto, string, ProdutoPreco>
+  label="Preço Unitário"
+  placeholder="Digite o código..."
+  value={value}
+  onChangeValue={setValue}
+  lookupValueDelegator={lookupProdutoPreco}
+  onLookupResult={(result) => {
+    setFoundValue(result);
+    setValue(result.preco);
+  }}
+  decimalSeparator=","
+  thousandSeparator="."
+  precision={2}
+  allowNegative={false}
+/>
+```
+
+## Com DataSource
+
+Integração com DataSource para formulários.
+
+```tsx
+interface Produto {
+  id: string;
+  nome: string;
+  precoUnitario: number;
+}
+
+interface ProdutoInfo {
+  id: string;
+  nome: string;
+  preco: number;
+  estoque: number;
+}
+
+const lookupProdutoInfo = async (codigo: number): Promise<ProdutoInfo> => {
+  const response = await fetch(`/api/produtos/${codigo}`);
+  return response.json();
+};
+
+const { dataSource } = useArchbaseDataSource<Produto, string>({
+  initialData: produtoData,
+  name: 'dsProduto',
+});
+
+<ArchbaseLookupNumber<Produto, string, ProdutoInfo>
+  dataSource={dataSource}
+  dataField="precoUnitario"
+  label="Preço Unitário"
+  placeholder="Digite o código do produto..."
+  lookupValueDelegator={lookupProdutoInfo}
+  onLookupResult={(result) => {
+    // Atualiza outros campos do registro
+    dataSource.updateField('nome', result.nome);
+    dataSource.updateField('estoque', result.estoque);
+  }}
+  decimalSeparator=","
+  thousandSeparator="."
+  precision={2}
+/>
+```
+
+## Configurações de Formatação
+
+### Precisão decimal
+
+```tsx
+<ArchbaseLookupNumber
+  label="Valor"
+  precision={2} // 2 casas decimais (padrão: 2)
+  decimalSeparator=","
+  thousandSeparator="."
+/>
+```
+
+### Sem decimais
+
+```tsx
+<ArchbaseLookupNumber
+  label="Quantidade"
+  precision={0} // apenas inteiros
+  thousandSeparator="."
+/>
+```
+
+### Moeda estrangeira
+
+```tsx
+<ArchbaseLookupNumber
+  label="Price (USD)"
+  decimalSeparator="."
+  thousandSeparator=","
+  precision={2}
+  prefix="$"
+/>
+```
+
+### Precisão variável
+
+```tsx
+<ArchbaseLookupNumber
+  label="Taxa de Juros"
+  precision={4} // 0.0001
+  decimalSeparator=","
+  suffix="%"
+/>
+```
+
+## Lookup Delegator
+
+### Busca por código
+
+```tsx
+const buscarProduto = async (codigo: string): Promise<ProdutoInfo> => {
+  await new Promise(resolve => setTimeout(resolve, 300));
+
+  const produtos: Record<string, ProdutoInfo> = {
+    '1001': { id: '1001', nome: 'Notebook Dell', preco: 3500.50, estoque: 10 },
+    '1002': { id: '1002', nome: 'Mouse Logitech', preco: 89.90, estoque: 50 },
+  };
+
+  return produtos[codigo] || null;
+};
+
+<ArchbaseLookupNumber
+  label="Código do Produto"
+  placeholder="Digite o código..."
+  lookupValueDelegator={buscarProduto}
+  onLookupResult={(result) => {
+    if (result) {
+      setValue(result.preco);
+      setNomeProduto(result.nome);
+    }
+  }}
+/>
+```
+
+### Busca com validação
+
+```tsx
+const lookupComValidacao = async (valor: number): Promise<Resultado> => {
+  const response = await fetch(`/api/validar/${valor}`);
+
+  if (!response.ok) {
+    throw new Error('Valor não encontrado');
+  }
+
+  return response.json();
+};
+
+<ArchbaseLookupNumber
+  label="Valor"
+  lookupValueDelegator={lookupComValidacao}
+  onLookupResult={(result) => {
+    showMessage(`Encontrado: ${result.descricao}`);
+  }}
+  onLookupError={(error) => {
+    showError(error.message);
+  }}
+/>
+```
+
+### Lookup em lote
+
+```tsx
+const lookupLote = async (codigoLote: number): Promise<InfoLote> => {
+  const response = await fetch(`/api/lotes/${codigoLote}`);
+  const lote = await response.json();
+
+  return {
+    codigo: lote.codigo,
+    quantidade: lote.quantidade,
+    validade: lote.validade,
+    produto: lote.produto,
+  };
+};
+
+<ArchbaseLookupNumber
+  dataSource={dataSource}
+  dataField="loteId"
+  label="Lote"
+  lookupValueDelegator={lookupLote}
+  onLookupResult={(lote) => {
+    dataSource.updateField('validade', lote.validade);
+    dataSource.updateField('produtoId', lote.produto.id);
+  }}
+/>
+```
+
+## Casos de Uso
+
+### Cálculo de impostos
+
+```tsx
+interface ImpostoInfo {
+  aliquota: number;
+  nome: string;
+  tipo: string;
+}
+
+const lookupImposto = async (codigo: number): Promise<ImpostoInfo> => {
+  const response = await fetch(`/api/impostos/${codigo}`);
+  return response.json();
+};
+
+<ArchbaseLookupNumber<NotaFiscal, string, ImpostoInfo>
+  dataSource={dataSource}
+  dataField="impostoCodigo"
+  label="Código do Imposto"
+  lookupValueDelegator={lookupImposto}
+  onLookupResult={(imposto) => {
+    // Calcula valor do imposto automaticamente
+    const base = dataSource.getField('valorBase');
+    const valorImposto = base * (imposto.aliquota / 100);
+    dataSource.updateField('valorImposto', valorImposto);
+    dataSource.updateField('impostoNome', imposto.nome);
+  }}
+  precision={0}
+/>
+```
+
+### Busca de CEP
+
+```tsx
+interface CepInfo {
+  cep: string;
+  logradouro: string;
+  bairro: string;
+  cidade: string;
+  uf: string;
+}
+
+const buscarCep = async (cep: number): Promise<CepInfo> => {
+  // Remove formatação para a API
+  const cepString = cep.toString().padStart(8, '0');
+  const response = await fetch(`https://viacep.com.br/ws/${cepString}/json/`);
+  return response.json();
+};
+
+<ArchbaseLookupNumber<Endereco, string, CepInfo>
+  dataSource={dataSource}
+  dataField="cep"
+  label="CEP"
+  placeholder="Digite apenas números..."
+  lookupValueDelegator={buscarCep}
+  onLookupResult={(info) => {
+    dataSource.updateField('logradouro', info.logradouro);
+    dataSource.updateField('bairro', info.bairro);
+    dataSource.updateField('cidade', info.cidade);
+    dataSource.updateField('uf', info.uf);
+  }}
+  precision={0}
+  thousandSeparator=""
+/>
+```
+
+### Consulta de saldo bancário
+
+```tsx
+interface SaldoInfo {
+  conta: string;
+  saldo: number;
+  limite: number;
+  disponivel: number;
+}
+
+const consultarSaldo = async (agenciaConta: number): Promise<SaldoInfo> => {
+  const response = await fetch(`/api/contas/saldo/${agenciaConta}`);
+  return response.json();
+};
+
+<ArchbaseLookupNumber
+  label="Agência + Conta"
+  placeholder="Digite agência e conta juntos..."
+  lookupValueDelegator={consultarSaldo}
+  onLookupResult={(info) => {
+    setSaldo(info.saldo);
+    setLimite(info.limite);
+    setDisponivel(info.disponivel);
+  }}
+  precision={0}
+  thousandSeparator=""
+/>
+```
+
+## Integração com Formulários
+
+### Com ArchbaseFormTemplate
+
+```tsx
+import { ArchbaseFormTemplate } from '@archbase/template';
+
+function ProdutoForm() {
+  return (
+    <ArchbaseFormTemplate dataSource={dataSource} onSave={handleSave}>
+      <ArchbaseLookupNumber<Produto, string, ProdutoInfo>
+        dataSource={dataSource}
+        dataField="codigo"
+        label="Código do Produto"
+        placeholder="Digite o código..."
+        lookupValueDelegator={buscarProduto}
+        onLookupResult={(info) => {
+          dataSource.updateField('descricao', info.descricao);
+          dataSource.updateField('preco', info.preco);
+        }}
+        precision={0}
+      />
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+### Com React Hook Form
+
+```tsx
+import { useForm, Controller } from 'react-hook-form';
+
+function MeuFormulario() {
+  const { control, handleSubmit, setValue } = useForm();
+
+  const lookupProduto = async (codigo: number) => {
+    const info = await fetchProdutoInfo(codigo);
+    setValue('descricao', info.descricao);
+    setValue('preco', info.preco);
+    return info;
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="codigo"
+        control={control}
+        render={({ field }) => (
+          <ArchbaseLookupNumber<any, any, ProdutoInfo>
+            label="Código"
+            value={field.value}
+            onChangeValue={field.onChange}
+            lookupValueDelegator={lookupProduto}
+            precision={0}
+          />
+        )}
+      />
+    </form>
+  );
+}
+```
+
+## Validação
+
+### Valor mínimo e máximo
+
+```tsx
+<ArchbaseLookupNumber
+  label="Percentual"
+  value={value}
+  onChangeValue={setValue}
+  precision={2}
+  min={0}
+  max={100}
+  suffix="%"
+  error={value < 0 || value > 100 ? 'Valor deve estar entre 0 e 100' : undefined}
+/>
+```
+
+### Validação de lookup
+
+```tsx
+function ComLookupValidado() {
+  const [lookupError, setLookupError] = useState<string>();
+  const [encontrado, setEncontrado] = useState(false);
+
+  return (
+    <ArchbaseLookupNumber
+      label="Código"
+      lookupValueDelegator={async (codigo) => {
+        try {
+          const result = await buscarCodigo(codigo);
+          setLookupError(undefined);
+          setEncontrado(true);
+          return result;
+        } catch (err) {
+          setLookupError('Código não encontrado');
+          setEncontrado(false);
+          throw err;
+        }
+      }}
+      error={lookupError}
+    />
+  );
+}
+```
+
+## Estados
+
+### Desabilitado
+
+```tsx
+<ArchbaseLookupNumber
+  label="Valor (Somente Leitura)"
+  value={valor}
+  disabled
+/>
+```
+
+### Carregando
+
+```tsx
+function ComLoading() {
+  const [loading, setLoading] = useState(false);
+
+  const lookupComLoading = async (valor: number) => {
+    setLoading(true);
+    try {
+      const result = await fetchApi(valor);
+      return result;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <ArchbaseLookupNumber
+      label="Valor"
+      lookupValueDelegator={lookupComLoading}
+      disabled={loading}
+      rightSection={loading ? <Loader size="xs" /> : null}
+    />
+  );
+}
+```
+
+## Performance
+
+### Debounce no lookup
+
+```tsx
+import { useDebouncedValue } from '@mantine/hooks';
+
+function LookupComDebounce() {
+  const [codigo, setCodigo] = useState<number>();
+  const [debounced] = useDebouncedValue(codigo, 500);
+
+  useEffect(() => {
+    if (debounced) {
+      performLookup(debounced);
+    }
+  }, [debounced]);
+
+  return (
+    <ArchbaseLookupNumber
+      label="Código"
+      value={codigo}
+      onChangeValue={setCodigo}
+    />
+  );
+}
+```
+
+## Acessibilidade
+
+O componente segue as melhores práticas de acessibilidade:
+- Labels associadas corretamente
+- Suporte a navegação por teclado
+- Compatível com screen readers
+- Feedback visual de estados
+
+### Formatação e acessibilidade
+
+```tsx
+// ✅ Bom: formato claro
+<ArchbaseLookupNumber
+  label="Preço (R$)"
+  decimalSeparator=","
+  thousandSeparator="."
+  precision={2}
+/>
+
+// ✅ Bom: sufixo para unidade
+<ArchbaseLookupNumber
+  label="Peso"
+  precision={3}
+  suffix=" kg"
+/>
+```
+
+## API
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T, ID>` | - | DataSource V1/V2 para integração |
+| `dataField` | `keyof T` | - | Campo do DataSource a ser vinculado |
+| `value` | `number` | `0` | Valor controlado |
+| `onChangeValue` | `(value: number) => void` | - | Callback quando valor muda |
+| `lookupValueDelegator` | `(value: number) => Promise<R>` | - | Função para buscar dados relacionados |
+| `onLookupResult` | `(result: R) => void` | - | Callback quando lookup retorna |
+| `onLookupError` | `(error: Error) => void` | - | Callback quando lookup falha |
+| `decimalSeparator` | `string` | `","` | Separador decimal |
+| `thousandSeparator` | `string` | `"."` | Separador de milhar |
+| `precision` | `number` | `2` | Número de casas decimais |
+| `allowNegative` | `boolean` | `true` | Permite valores negativos |
+| `min` | `number` | - | Valor mínimo |
+| `max` | `number` | - | Valor máximo |
+| `prefix` | `string` | - | Prefixo (ex: "R$") |
+| `suffix` | `string` | - | Sufixo (ex: "%", "kg") |
+| `disabled` | `boolean` | `false` | Desabilita o componente |
+| `label` | `string` | - | Label do campo |
+| `placeholder` | `string` | - | Placeholder do campo |
+| `required` | `boolean` | `false` | Campo obrigatório |
+| `error` | `string` | - | Mensagem de erro |
+
+## Exemplos Avançados
+
+### Lookup com múltiplos campos
+
+```tsx
+<ArchbaseLookupNumber<Produto, string, ProdutoCompleto>
+  dataSource={dataSource}
+  dataField="codigo"
+  label="Código do Produto"
+  lookupValueDelegator={buscarProdutoCompleto}
+  onLookupResult={(produto) => {
+    // Atualiza múltiplos campos
+    dataSource.updateField('descricao', produto.descricao);
+    dataSource.updateField('preco', produto.precoVenda);
+    dataSource.updateField('custo', produto.precoCusto);
+    dataSource.updateField('estoque', produto.estoqueAtual);
+    dataSource.updateField('unidade', produto.unidadeMedida);
+  }}
+/>
+```
+
+### Consulta de taxa de câmbio
+
+```tsx
+interface TaxaCambio {
+  moeda: string;
+  taxa: number;
+  data: string;
+}
+
+const consultarTaxa = async (codigoMoeda: number): Promise<TaxaCambio> => {
+  const response = await fetch(`/api/cambio/${codigoMoeda}`);
+  return response.json();
+};
+
+<ArchbaseLookupNumber
+  label="Código da Moeda"
+  placeholder="Digite o código (ex: 986 para BRL)..."
+  lookupValueDelegator={consultarTaxa}
+  onLookupResult={(taxa) => {
+    setNomeMoeda(taxa.moeda);
+    setTaxa(taxa.taxa);
+    setDataTaxa(taxa.data);
+  }}
+  precision={0}
+/>
+```
+
+### Validação de CNPJ
+
+```tsx
+const consultarCNPJ = async (cnpj: number): Promise<Empresa> => {
+  const cnpjString = cnpj.toString().padStart(14, '0');
+  const response = await fetch(`/api/empresas/${cnpjString}`);
+  return response.json();
+};
+
+<ArchbaseLookupNumber<Empresa, string, Empresa>
+  dataSource={dataSource}
+  dataField="cnpj"
+  label="CNPJ (apenas números)"
+  placeholder="Digite os 14 números do CNPJ..."
+  lookupValueDelegator={consultarCNPJ}
+  onLookupResult={(empresa) => {
+    dataSource.updateField('razaoSocial', empresa.razaoSocial);
+    dataSource.updateField('nomeFantasia', empresa.nomeFantasia);
+  }}
+  precision={0}
+  thousandSeparator=""
+  min={14}
+/>
+```
+
+### Cálculo de juros compostos
+
+```tsx
+function CalculadoraJuros() {
+  const [principal, setPrincipal] = useState<number>(0);
+  const [taxa, setTaxa] = useState<number>(0);
+  const [tempo, setTempo] = useState<number>(0);
+  const [resultado, setResultado] = useState<number>(0);
+
+  useEffect(() => {
+    if (principal && taxa && tempo) {
+      const juros = principal * Math.pow(1 + taxa / 100, tempo) - principal;
+      setResultado(juros);
+    }
+  }, [principal, taxa, tempo]);
+
+  return (
+    <Stack>
+      <ArchbaseLookupNumber
+        label="Valor Principal (R$)"
+        value={principal}
+        onChangeValue={setPrincipal}
+        precision={2}
+      />
+      <ArchbaseLookupNumber
+        label="Taxa de Juros (%)"
+        value={taxa}
+        onChangeValue={setTaxa}
+        precision={4}
+        suffix="%"
+      />
+      <ArchbaseLookupNumber
+        label="Período (meses)"
+        value={tempo}
+        onChangeValue={setTempo}
+        precision={0}
+      />
+      <NumberInput
+        label="Juros Totais (R$)"
+        value={resultado}
+        readOnly
+        precision={2}
+      />
+    </Stack>
+  );
+}
+```

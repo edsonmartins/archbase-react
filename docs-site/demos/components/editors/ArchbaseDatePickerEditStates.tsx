@@ -50,7 +50,6 @@ export function ArchbaseDatePickerEditStates() {
         dateFormat="DD/MM/YYYY"
         minDate={new Date(2020, 0, 1)}
         maxDate={new Date(2025, 11, 31)}
-        description="De 01/01/2020 a 31/12/2025"
         clearable
       />
     </Stack>

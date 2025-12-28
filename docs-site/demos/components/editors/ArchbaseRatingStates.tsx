@@ -9,12 +9,14 @@ export function ArchbaseRatingStates() {
       <ArchbaseRating
         label="Campo normal"
         value={0}
+        count={5}
       />
 
       {/* Com valor */}
       <ArchbaseRating
         label="Com valor"
         value={4}
+        count={5}
       />
 
       {/* Com contagem customizada */}
@@ -28,6 +30,7 @@ export function ArchbaseRatingStates() {
       <ArchbaseRating
         label="Com fracao (permite meia estrela)"
         value={3.5}
+        count={5}
         fractions={2}
       />
 
@@ -35,6 +38,7 @@ export function ArchbaseRatingStates() {
       <ArchbaseRating
         label="Campo desabilitado"
         value={3}
+        count={5}
         disabled
       />
 
@@ -42,6 +46,7 @@ export function ArchbaseRatingStates() {
       <ArchbaseRating
         label="Somente leitura"
         value={5}
+        count={5}
         readOnly
       />
     </Stack>

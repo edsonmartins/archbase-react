@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Text, Code, Card, Button, Group } from '@mantine/core';
 import { ArchbaseMaskEdit, MaskPattern } from '@archbase/components';
-import { useArchbaseDataSourceV2 } from '@archbase/data';
+import { useArchbaseDataSource } from '@archbase/data';
 
 interface Pessoa {
   id: string;
@@ -14,7 +14,7 @@ interface Pessoa {
 export function ArchbaseMaskEditWithDataSource() {
   const [initialized, setInitialized] = useState(false);
 
-  const { dataSource, current, edit, save, cancel, isBrowsing, isEditing } = useArchbaseDataSourceV2<Pessoa>({
+  const { dataSource } = useArchbaseDataSource<Pessoa, string>({
     initialData: [{
       id: '1',
       nome: 'Maria Santos',
@@ -24,6 +24,14 @@ export function ArchbaseMaskEditWithDataSource() {
     }],
     name: 'dsPessoaMask',
   });
+  const currentRecord = dataSource.getCurrentRecord();
+  const isBrowsing = dataSource.isBrowsing();
+  const isEditing = dataSource.isEditing();
+
+  const edit = () => dataSource.edit();
+  const save = () => dataSource.save();
+  const cancel = () => dataSource.cancel();
+
 
   // Inicializa em modo de edição após o mount
   useEffect(() => {
@@ -80,7 +88,7 @@ export function ArchbaseMaskEditWithDataSource() {
           Registro atual ({isBrowsing ? 'Navegando' : 'Editando'}):
         </Text>
         <Code block style={{ fontSize: 12 }}>
-          {JSON.stringify(current, null, 2)}
+          {JSON.stringify(currentRecord, null, 2)}
         </Code>
       </Card>
     </Stack>

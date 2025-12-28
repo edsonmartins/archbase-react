@@ -1,0 +1,78 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseJsonEdit` é um editor de JSON com syntax highlighting, validação e formatação automática.
+
+<Demo data={demos.jsonEditUsage} />
+
+## Validação
+
+O componente valida automaticamente o JSON e exibe erros de sintaxe:
+
+```tsx
+<ArchbaseJsonEdit
+  label="Configuração"
+  onChangeValue={(value) => {
+    try {
+      JSON.parse(value);
+      console.log('JSON válido');
+    } catch (error) {
+      console.log('JSON inválido:', error.message);
+    }
+  }}
+/>
+```
+
+## Formatação
+
+### Auto Formatação
+
+```tsx
+<ArchbaseJsonEdit
+  formatOnBlur
+  label="JSON Formatado"
+  placeholder="Digite o JSON..."
+/>
+```
+
+### Indentação Customizada
+
+```tsx
+<ArchbaseJsonEdit
+  formatOnBlur
+  tabSize={4}
+  label="JSON com 4 espaços"
+/>
+```
+
+## Com DataSource
+
+```tsx
+<ArchbaseJsonEdit<Configuracao, string>
+  dataSource={dataSource}
+  dataField="configJson"
+  label="Configuração"
+  autosize
+  minRows={5}
+  maxRows={15}
+/>
+```
+
+## Syntax Highlighting
+
+O componente inclui syntax highlighting para melhor legibilidade:
+
+- Strings em verde
+- Números em azul
+- Booleanos em laranja
+- Null em cinza
+- Chaves e colchetes destacados
+
+## Acessibilidade
+
+- Labels associadas corretamente
+- Monospace para melhor leitura
+- Suporte a navegação por teclado
+- Mensagens de erro claras
+- Compatível com screen readers

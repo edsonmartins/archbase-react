@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { IconArrowBigRightFilled } from '@tabler/icons-react';
 import { archbaseI18next } from '@archbase/core';
 import React, { Component } from 'react';

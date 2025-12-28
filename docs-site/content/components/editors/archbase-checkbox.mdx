@@ -1,0 +1,115 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseCheckbox` é um componente de checkbox otimizado para uso com o DataSource. Suporta valores customizados (trueValue/falseValue) e integração automática com DataSource V1/V2.
+
+<Demo data={demos.checkboxUsage} />
+
+## Com DataSource
+
+A integração com o DataSource permite binding bidirecional automático. O componente detecta o tipo de DataSource e otimiza os re-renders.
+
+<Demo data={demos.checkboxWithDataSource} />
+
+### Como funciona
+
+```tsx
+<ArchbaseCheckbox
+  dataSource={dataSource}    // Fonte de dados (V1 ou V2)
+  dataField="ativo"          // Campo do objeto
+  label="Usuário ativo"
+  trueValue={true}           // Valor quando marcado (opcional)
+  falseValue={false}         // Valor quando desmarcado (opcional)
+/>
+```
+
+O componente:
+- **Em modo browse**: fica somente leitura automaticamente
+- **Em modo edit/insert**: permite alteração
+- **Sincroniza**: valor bidirecional com o DataSource
+- **Suporta**: valores customizados (ex: "S"/"N", 1/0, true/false)
+
+## Estados
+
+Diferentes estados visuais para feedback ao usuário:
+
+<Demo data={demos.checkboxStates} />
+
+## Props Principais
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados para binding |
+| `dataField` | `string` | - | Campo do objeto para vincular |
+| `label` | `string` | - | Label do checkbox |
+| `isChecked` | `boolean` | `false` | Valor controlado |
+| `onChangeValue` | `(value: V) => void` | - | Callback quando o valor muda |
+| `trueValue` | `V` | `true` | Valor quando marcado |
+| `falseValue` | `V` | `false` | Valor quando desmarcado |
+| `disabled` | `boolean` | `false` | Desabilita o checkbox |
+| `required` | `boolean` | `false` | Marca como obrigatório |
+| `error` | `string` | - | Mensagem de erro |
+
+## Valores Customizados
+
+Use `trueValue` e `falseValue` para trabalhar com diferentes tipos de dados:
+
+```tsx
+// Valores string
+<ArchbaseCheckbox
+  dataSource={dataSource}
+  dataField="ativo"
+  label="Ativo"
+  trueValue="S"
+  falseValue="N"
+/>
+
+// Valores numéricos
+<ArchbaseCheckbox
+  dataSource={dataSource}
+  dataField="status"
+  label="Status"
+  trueValue={1}
+  falseValue={0}
+/>
+```
+
+## Integração com Formulários
+
+### Com ArchbaseFormTemplate
+
+```tsx
+import { ArchbaseFormTemplate, ArchbaseFormFieldPanel } from '@archbase/template';
+import { ArchbaseCheckbox } from '@archbase/components';
+
+function MeuFormulario() {
+  return (
+    <ArchbaseFormTemplate dataSource={dataSource}>
+      <ArchbaseFormFieldPanel>
+        <ArchbaseCheckbox
+          dataSource={dataSource}
+          dataField="receberEmails"
+          label="Receber e-mails promocionais"
+        />
+        <ArchbaseCheckbox
+          dataSource={dataSource}
+          dataField="aceitouTermos"
+          label="Aceito os termos de uso"
+          required
+        />
+      </ArchbaseFormFieldPanel>
+    </ArchbaseFormTemplate>
+  );
+}
+```
+
+## Acessibilidade
+
+O `ArchbaseCheckbox` segue as melhores práticas de acessibilidade:
+
+- Labels associadas corretamente
+- Suporte completo a navegação por teclado (Space para toggle)
+- Erros anunciados via `aria-describedby`
+- Campos obrigatórios indicados via `aria-required`
+- Estado checked anunciado via `aria-checked`

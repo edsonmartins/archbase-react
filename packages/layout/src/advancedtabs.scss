@@ -189,6 +189,20 @@
   background-repeat: no-repeat;
   background-size: 8px 8px;
 }
+.archbase_tabs .archbase_tab .archbase_tab-dropdown {
+  flex-grow: 0;
+  flex-shrink: 0;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='rgba(0, 0, 0, .65)'><path d='M4 6 L8 10 L12 6 Z'/></svg>");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  cursor: pointer;
+  margin-right: 4px;
+}
 @media (hover: hover) {
   .archbase_tabs .archbase_tab .archbase_tab-close:hover {
     background-color: #e8eaed;
@@ -196,14 +210,26 @@
   .archbase_tabs .archbase_tab .archbase_tab-close:hover:tab-active {
     background-color: #dadce0;
   }
+  .archbase_tabs .archbase_tab .archbase_tab-dropdown:hover {
+    background-color: #e8eaed;
+  }
+  .archbase_tabs .archbase_tab .archbase_tab-dropdown:hover:tab-active {
+    background-color: #dadce0;
+  }
 }
 @media not all and (hover: hover) {
   .archbase_tabs .archbase_tab .archbase_tab-close:tab-active {
     background-color: #dadce0;
   }
+  .archbase_tabs .archbase-tab .archbase_tab-dropdown:tab-active {
+    background-color: #dadce0;
+  }
 }
 @media (hover: hover) {
   .archbase_tabs .archbase_tab:not([tab-active]) .archbase_tab-close:not(:hover):not(:tab-active) {
+    opacity: 0.8;
+  }
+  .archbase_tabs .archbase_tab:not([tab-active]) .archbase_tab-dropdown:not(:hover):not(:tab-active) {
     opacity: 0.8;
   }
 }
@@ -293,13 +319,24 @@
 .archbase_tabs.archbase_tabs-dark-theme .archbase_tab .archbase_tab-close {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path stroke='rgba(154, 160, 166, .8)' stroke-linecap='square' stroke-width='1.5' d='M0 0 L8 8 M8 0 L0 8'></path></svg>");
 }
+.archbase_tabs.archbase_tabs-dark-theme .archbase_tab .archbase_tab-dropdown {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='rgba(154, 160, 166, .8)'><path d='M4 6 L8 10 L12 6 Z'/></svg>");
+}
 .archbase_tabs.archbase_tabs-dark-theme .archbase_tab .archbase_tab-close:hover {
   background-color: #5f6368;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path stroke='rgba(255, 255, 255, .7)' stroke-linecap='square' stroke-width='1.5' d='M0 0 L8 8 M8 0 L0 8'></path></svg>");
 }
+.archbase_tabs.archbase_tabs-dark-theme .archbase_tab .archbase_tab-dropdown:hover {
+  background-color: #5f6368;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='rgba(255, 255, 255, .7)'><path d='M4 6 L8 10 L12 6 Z'/></svg>");
+}
 .archbase_tabs.archbase_tabs-dark-theme .archbase_tab .archbase_tab-close:hover:tab-active {
   background-color: #80868b;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path stroke='rgba(255, 255, 255, .9)' stroke-linecap='square' stroke-width='1.5' d='M0 0 L8 8 M8 0 L0 8'></path></svg>");
+}
+.archbase_tabs.archbase_tabs-dark-theme .archbase_tab .archbase_tab-dropdown:hover:tab-active {
+  background-color: #80868b;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='rgba(255, 255, 255, .9)'><path d='M4 6 L8 10 L12 6 Z'/></svg>");
 }
 .archbase_tabs.archbase_tabs-dark-theme .archbase_tabs-bottom-bar {
   background: #323639;

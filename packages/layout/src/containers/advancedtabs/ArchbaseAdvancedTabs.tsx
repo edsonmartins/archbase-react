@@ -1,6 +1,8 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect, CSSProperties, ReactNode } from 'react';
-import { useWindowSize } from 'usehooks-ts'
+import { useWindowSize } from 'usehooks-ts';
+import { Menu } from '@mantine/core';
+import { useArchbaseTranslation } from '@archbase/core';
 
 
 export interface ArchbaseAdvancedTabItem {
@@ -15,7 +17,7 @@ export interface ArchbaseAdvancedTabProps {
   title : string;
   /** Título customizado que aparecerá na aba. Pode ser utilizado $title para interpolar o valor na string do customTitle */
   customTitle?: string;
-  activeTab : boolean; 
+  activeTab : boolean;
   position : number;
   contentWidth : number;
   onClick : (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -28,17 +30,25 @@ export interface ArchbaseAdvancedTabProps {
   index : number;
   sorting : boolean;
   showButtonClose: boolean;
+  // Novas props para menu de contexto e dropdown
+  onCloseAllTabs?: () => void;
+  onCloseLeftTabs?: (tabId: string) => void;
+  onCloseRightTabs?: (tabId: string) => void;
+  onCloseOtherTabs?: (tabId: string) => void;
+  totalTabs?: number;
 }
 
 const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 	const { favicon, title, customTitle, activeTab, position, contentWidth, onClick, onClose, setDragging, tabsContentWidth, animateTabMove,
-		isDragging, index, sorting, showButtonClose } = props;
+		isDragging, index, sorting, showButtonClose, onCloseAllTabs, onCloseLeftTabs, onCloseRightTabs, onCloseOtherTabs, totalTabs } = props;
+	const { t } = useArchbaseTranslation();
 	const [width, setWidth] = useState(0);
 	const [isAdded, setAdd] = useState(false);
 	const [movePosition, setMovePosition] = useState<Number|null>(null);
 	const [startX, setStartX] = useState(null);
 	const [_dragEnd, setDragEnd] = useState(false);
 	const [tmpPosition, setTmpPosition] = useState<number>(0);
+	const [dropdownOpened, setDropdownOpened] = useState(false);
 	const tabEl = useRef(null);
 
 	const TAB_CONTENT_MARGIN = 9
@@ -94,9 +104,47 @@ const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 		}
 	}
 	const [tmp, setTmp] = useState(position - TAB_CONTENT_MARGIN);
-	useEffect(() => { 
+	useEffect(() => {
 		setTmp(!!position ? position - TAB_CONTENT_MARGIN : 0)
 	}, [index, position])
+
+	// Handlers para o menu de contexto e dropdown
+	const handleCloseOthers = () => {
+		if (onCloseOtherTabs) {
+			onCloseOtherTabs(props.id);
+		}
+		setDropdownOpened(false);
+	};
+
+	const handleCloseLeft = () => {
+		if (onCloseLeftTabs) {
+			onCloseLeftTabs(props.id);
+		}
+		setDropdownOpened(false);
+	};
+
+	const handleCloseRight = () => {
+		if (onCloseRightTabs) {
+			onCloseRightTabs(props.id);
+		}
+		setDropdownOpened(false);
+	};
+
+	const handleCloseAll = () => {
+		if (onCloseAllTabs) {
+			onCloseAllTabs();
+		}
+		setDropdownOpened(false);
+	};
+
+	const handleContextMenu = (e: React.MouseEvent) => {
+		e.preventDefault();
+		setDropdownOpened(true);
+	};
+
+	const hasLeftTabs = index > 0;
+	const hasRightTabs = totalTabs !== undefined && index < totalTabs - 1;
+	const hasOtherTabs = (totalTabs || 0) > 1;
 
 	return (
 		<div
@@ -104,10 +152,11 @@ const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 			style={{
 				transform: `translate3d(${movePosition == null ? tmp : movePosition}px, 0, 0)`, width: `${width}px`
 			}}
-			tab-active={activeTab !== false ? "" : null} 
+			tab-active={activeTab !== false ? "" : null}
       		is-small={contentWidth < TAB_SIZE_SMALL ? "" : null}
 			is-smaller={contentWidth < TAB_SIZE_SMALLER ? "" : null} is-mini={contentWidth < TAB_SIZE_MINI ? "" : null}
 			ref={tabEl}
+			onContextMenu={handleContextMenu}
 		>
 			<div className="archbase_tab-dividers"></div>
 			<div className="archbase_tab-background">
@@ -129,6 +178,37 @@ const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 				{!!favicon && <div className="archbase_tab-favicon" style={{ "backgroundImage": `url(${favicon})` }}></div>}
 				<div className="archbase_tab-title">{customTitle ?? title}</div>
 				<div className="archbase_tab-drag-handle" title={customTitle ?? title} onClick={onClick} onPointerDown={e => (onClick(e))} onMouseUp={onDragEnd} onMouseMove={onDragMove} onMouseDown={onDragStart}></div>
+				{(onCloseAllTabs || onCloseLeftTabs || onCloseRightTabs || onCloseOtherTabs) && (
+					<Menu shadow="md" width={200} opened={dropdownOpened} onChange={setDropdownOpened} position="bottom-end">
+						<Menu.Target>
+							<div className="archbase_tab-dropdown" onClick={(e) => {
+								e.stopPropagation();
+								setDropdownOpened(!dropdownOpened);
+							}}></div>
+						</Menu.Target>
+						<Menu.Dropdown>
+							{hasOtherTabs && (
+								<Menu.Item onClick={handleCloseOthers}>
+									{String(t('tabs.closeOthers'))}
+								</Menu.Item>
+							)}
+							{hasLeftTabs && (
+								<Menu.Item onClick={handleCloseLeft}>
+									{String(t('tabs.closeLeft'))}
+								</Menu.Item>
+							)}
+							{hasRightTabs && (
+								<Menu.Item onClick={handleCloseRight}>
+									{String(t('tabs.closeRight'))}
+								</Menu.Item>
+							)}
+							{(hasOtherTabs || hasLeftTabs || hasRightTabs) && <Menu.Divider />}
+							<Menu.Item onClick={handleCloseAll}>
+								{String(t('tabs.closeAll'))}
+							</Menu.Item>
+						</Menu.Dropdown>
+					</Menu>
+				)}
 				{showButtonClose?<div className="archbase_tab-close" onClick={(e) => {
 					onClose(e);
 				}}></div>:null}
@@ -147,10 +227,15 @@ export interface ArchbaseAdvancedTabsProps {
   style?: CSSProperties,
   dark: boolean,
   onClick: Function,
+  // Novas props para fechar múltiplas abas
+  onCloseAllTabs?: () => void;
+  onCloseLeftTabs?: (tabId: string) => void;
+  onCloseRightTabs?: (tabId: string) => void;
+  onCloseOtherTabs?: (tabId: string) => void;
 }
 
 export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props) => {
-	const { currentTabs, onTabChange: onChange, activeTab, onTabClose: onClose, className, style, dark, onClick, buttonCloseOnlyActiveTab = false } = props;
+	const { currentTabs, onTabChange: onChange, activeTab, onTabClose: onClose, className, style, dark, onClick, buttonCloseOnlyActiveTab = false, onCloseAllTabs, onCloseLeftTabs, onCloseRightTabs, onCloseOtherTabs } = props;
 	const [tabContentWidths, setTabContentWidths] = useState<number[]>([]);
 	const [positions, setPositions] = useState<number[]>([]);
 	const [tabs, setTabs] = useState(currentTabs || []);
@@ -295,6 +380,11 @@ export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props)
 								id={m.key}
 								index={index}
 								sorting={sorting}
+								onCloseAllTabs={onCloseAllTabs}
+								onCloseLeftTabs={onCloseLeftTabs}
+								onCloseRightTabs={onCloseRightTabs}
+								onCloseOtherTabs={onCloseOtherTabs}
+								totalTabs={tabs.length}
 							/>)
 					}
 				</div>

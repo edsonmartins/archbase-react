@@ -1,55 +1,47 @@
 import React from 'react';
-import { Stack } from '@mantine/core';
+import { Stack, Text } from '@mantine/core';
 import { ArchbaseKeyValueEditor } from '@archbase/components';
 
 export function ArchbaseKeyValueEditorStates() {
   return (
     <Stack gap="md" p="md">
-      {/* Normal */}
+      <Text size="sm" fw={500}>Estados:</Text>
+
       <ArchbaseKeyValueEditor
         label="Normal"
-        value={{}}
-        onChange={() => {}}
-        keyPlaceholder="Chave"
-        valuePlaceholder="Valor"
+        initialValue=""
+        keyLabel="Chave"
+        valueLabel="Valor"
+        onChangeKeyValue={(value) => console.log('Changed:', value)}
       />
 
-      {/* Com valores */}
       <ArchbaseKeyValueEditor
-        label="Com valores"
-        value={{
-          chave1: 'valor1',
-          chave2: 'valor2'
-        }}
-        onChange={() => {}}
+        label="Com valores iniciais"
+        initialValue="nome,Joao;idade,30"
+        keyLabel="Propriedade"
+        valueLabel="Valor"
+        onChangeKeyValue={(value) => console.log('Changed:', value)}
       />
 
-      {/* Obrigatorio */}
-      <ArchbaseKeyValueEditor
-        label="Obrigatorio"
-        value={{}}
-        onChange={() => {}}
-        required
-      />
-
-      {/* Desabilitado */}
-      <ArchbaseKeyValueEditor
-        label="Desabilitado"
-        value={{
-          API_KEY: 'secret123'
-        }}
-        onChange={() => {}}
-        disabled
-      />
-
-      {/* Somente leitura */}
       <ArchbaseKeyValueEditor
         label="Somente leitura"
-        value={{
-          DATABASE: 'production'
-        }}
-        onChange={() => {}}
+        initialValue="chave1,valor1;chave2,valor2"
         readOnly
+        onChangeKeyValue={(value) => console.log('Changed:', value)}
+      />
+
+      <ArchbaseKeyValueEditor
+        label="Com erro"
+        initialValue=""
+        error="Campo obrigatorio"
+        onChangeKeyValue={(value) => console.log('Changed:', value)}
+      />
+
+      <ArchbaseKeyValueEditor
+        label="Layout vertical"
+        initialValue=""
+        layout="vertical"
+        onChangeKeyValue={(value) => console.log('Changed:', value)}
       />
     </Stack>
   );

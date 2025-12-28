@@ -10,6 +10,7 @@ export function ArchbaseRatingUsage() {
       <ArchbaseRating
         label="Avaliacao"
         value={value}
+        count={5}
         onChangeValue={(newValue) => setValue(newValue || 0)}
       />
 

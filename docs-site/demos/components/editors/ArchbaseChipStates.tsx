@@ -11,27 +11,13 @@ export function ArchbaseChipStates() {
         {/* Normal */}
         <ArchbaseChip
           label="Normal"
-          checked={false}
+          isChecked={false}
         />
 
         {/* Selecionado */}
         <ArchbaseChip
           label="Selecionado"
-          checked={true}
-        />
-
-        {/* Desabilitado */}
-        <ArchbaseChip
-          label="Desabilitado"
-          checked={false}
-          disabled
-        />
-
-        {/* Desabilitado selecionado */}
-        <ArchbaseChip
-          label="Desabilitado selecionado"
-          checked={true}
-          disabled
+          isChecked={true}
         />
       </Group>
 
@@ -43,16 +29,6 @@ export function ArchbaseChipStates() {
         <ArchbaseChip label="Medium" size="md" />
         <ArchbaseChip label="Large" size="lg" />
         <ArchbaseChip label="Extra large" size="xl" />
-      </Group>
-
-      <Text size="sm" fw={500}>Cores:</Text>
-
-      <Group>
-        <ArchbaseChip label="Blue" color="blue" checked />
-        <ArchbaseChip label="Green" color="green" checked />
-        <ArchbaseChip label="Red" color="red" checked />
-        <ArchbaseChip label="Orange" color="orange" checked />
-        <ArchbaseChip label="Violet" color="violet" checked />
       </Group>
     </Stack>
   );
