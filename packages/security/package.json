@@ -1,6 +1,6 @@
 {
   "name": "@archbase/security",
-  "version": "3.0.44",
+  "version": "3.0.45",
   "description": "Security and authentication components for Archbase React",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -63,11 +63,11 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
-    "@mantine/core": "8.3.6",
-    "@mantine/dates": "8.3.6",
-    "@mantine/hooks": "8.3.6",
-    "@mantine/modals": "8.3.6",
-    "@mantine/notifications": "8.3.6",
+    "@mantine/core": "8.3.10",
+    "@mantine/dates": "8.3.10",
+    "@mantine/hooks": "8.3.10",
+    "@mantine/modals": "8.3.10",
+    "@mantine/notifications": "8.3.10",
     "@tabler/icons-react": "^3.27.0"
   }
 }
