@@ -420,3 +420,27 @@ export const ARCHBASE_FEATURE_FLAGS_DATA: PageHeaderData = {
   license: 'MIT',
   version: '3.0.44',
 };
+
+export const INFOGRAPHIC_RENDERER_DATA: PageHeaderData = {
+  title: 'InfographicRenderer',
+  description: 'Componente para renderizar infográficos utilizando @antv/infographic com suporte a 200+ templates DSL.',
+  source: '@archbase/graphics/components/InfographicRenderer',
+  package: '@archbase/graphics',
+  docsLink: '/components/graphics/infographic',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/graphics',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/graphics/src/components/InfographicRenderer.tsx',
+  license: 'MIT',
+  version: '3.0.45',
+};
+
+export const USE_INFOGRAPHIC_DATA: PageHeaderData = {
+  title: 'useInfographic',
+  description: 'Hook para gerenciar instâncias de infográficos com suporte a renderização programática e streaming.',
+  source: '@archbase/graphics/hooks/useInfographic',
+  package: '@archbase/graphics',
+  docsLink: '/components/graphics/hooks',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/graphics',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/graphics/src/hooks/useInfographic.ts',
+  license: 'MIT',
+  version: '3.0.45',
+};

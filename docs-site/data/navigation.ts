@@ -64,6 +64,14 @@ export const NAVIGATION_DATA: NavItem[] = [
         label: 'Debug',
         children: [{ label: 'Inspector', href: '/components/debug/inspector' }],
       },
+      {
+        label: 'Graphics',
+        children: [
+          { label: 'InfographicRenderer', href: '/components/graphics/infographic' },
+          { label: 'Hooks', href: '/components/graphics/hooks' },
+          { label: 'Galeria de Exemplos', href: '/components/graphics/gallery' },
+        ],
+      },
     ],
   },
   {

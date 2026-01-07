@@ -1,0 +1,178 @@
+import * as demos from '../../../demos/components/graphics';
+
+## Hooks do pacote Graphics
+
+O pacote `@archbase/graphics` fornece hooks customizados para gerenciar infográficos de forma programática.
+
+## useInfographic
+
+Hook principal para gerenciar instâncias de infográficos.
+
+<Demo data={demos.hookUsage} />
+
+### Retorno
+
+| Propriedade | Tipo | Descrição |
+|-------------|------|-----------|
+| `infographic` | `Infographic \| null` | A instância do infográfico |
+| `isLoading` | `boolean` | Se está carregando |
+| `error` | `Error \| null` | Erro ocorrido |
+| `render` | `(spec: string) => void` | Renderiza uma nova especificação |
+| `destroy` | `() => void` | Destrói a instância |
+| `updateTheme` | `(theme: string) => void` | Atualiza o tema |
+
+### Parâmetros
+
+```tsx
+interface UseInfographicOptions {
+  width?: string | number;
+  height?: string | number;
+  editable?: boolean;
+  specification?: string;
+  theme?: string;
+  onReady?: (infographic: Infographic) => void;
+  onRenderComplete?: () => void;
+  onError?: (error: Error) => void;
+}
+```
+
+### Exemplo Avançado
+
+```tsx
+import { useInfographic } from '@archbase/graphics';
+
+function AdvancedInfographic() {
+  const [currentSpec, setCurrentSpec] = useState('');
+  const { infographic, render, isLoading, error } = useInfographic({
+    width: '100%',
+    height: '400px',
+    editable: true,
+    onReady: (instance) => {
+      console.log('Infográfico pronto!', instance);
+    },
+    onRenderComplete: () => {
+      console.log('Renderização concluída');
+    },
+    onError: (err) => {
+      console.error('Erro:', err);
+    },
+  });
+
+  const handleUpdate = () => {
+    const newSpec = \`infographic timeline-simple-vertical
+data
+  items:
+    - label: Q1
+      desc: Novo item 1
+    - label: Q2
+      desc: Novo item 2
+  \`;
+    render(newSpec);
+  };
+
+  return (
+    <div>
+      <button onClick={handleUpdate}>Atualizar Infográfico</button>
+      {isLoading && <p>Carregando...</p>}
+      {error && <p>Erro: {error.message}</p>}
+      <div ref={containerRef} style={{ width: '100%', height: '400px' }} />
+    </div>
+  );
+}
+```
+
+## useInfographicContainer
+
+Variação do hook que fornece um callback para ref do container:
+
+```tsx
+const { containerRef, infographic, render } = useInfographicContainer({
+  width: '100%',
+  height: '300px',
+});
+
+return <div ref={containerRef} />;
+```
+
+## Renderização Progressiva
+
+Você pode renderizar o infográfico progressivamente (útil para streaming de IA):
+
+```tsx
+function StreamingInfographic() {
+  const { infographic } = useInfographic();
+
+  const streamSpec = async () => {
+    const chunks = [
+      'infographic ',
+      'list-row-simple-horizontal-arrow\n',
+      'data\n  items:\n',
+      '    - label: ',
+      'Passo 1\n      desc: Início\n',
+      '    - label: Passo 2\n      desc: Meio\n',
+      '    - label: Passo 3\n      desc: Fim\n',
+    ];
+
+    let buffer = '';
+    for (const chunk of chunks) {
+      buffer += chunk;
+      if (infographic) {
+        infographic.render(buffer);
+      }
+      await new Promise(resolve => setTimeout(resolve, 300));
+    }
+  };
+
+  useEffect(() => {
+    if (infographic) {
+      streamSpec();
+    }
+  }, [infographic]);
+
+  return <div ref={containerRef} />;
+}
+```
+
+## Integração com React State
+
+```tsx
+function ControlledInfographic() {
+  const { infographic, render } = useInfographic();
+  const [items, setItems] = useState([
+    { label: 'A', desc: 'Item A' },
+    { label: 'B', desc: 'Item B' },
+  ]);
+
+  const addItem = () => {
+    const newItems = [...items, { label: `Item ${items.length + 1}`, desc: 'Novo' }];
+    setItems(newItems);
+  };
+
+  useEffect(() => {
+    if (infographic) {
+      const spec = generateInfographicSpec('list-row-simple-horizontal-arrow', items);
+      render(spec);
+    }
+  }, [infographic, items]);
+
+  return (
+    <div>
+      <button onClick={addItem}>Adicionar Item</button>
+      <div ref={containerRef} />
+    </div>
+  );
+}
+```
+
+## Limpeza de Recursos
+
+O hook gerencia automaticamente a limpeza da instância do infográfico quando o componente é desmontado. Você também pode destruí-lo manualmente:
+
+```tsx
+const { destroy } = useInfographic();
+
+// Destrói manualmente
+const handleDestroy = () => {
+  destroy();
+};
+```

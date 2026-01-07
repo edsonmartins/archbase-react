@@ -121,6 +121,7 @@
     "rehype-external-links": "^3.0.0",
     "react-thermal-printer": "^0.22.0",
     "react-file-previewer": "^0.4.2",
+    "md-editor-rt": "^4.15.0",
     "@datou/react-vis-timeline": "^1.4.0",
     "vis-timeline": "^7.7.3",
     "suneditor": "^2.46.3",

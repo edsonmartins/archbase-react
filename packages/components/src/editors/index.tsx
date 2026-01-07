@@ -73,6 +73,9 @@ export type { ArchbaseRatingProps } from './ArchbaseRating';
 export { ArchbaseRichTextEdit } from './ArchbaseRichTextEdit';
 export type { ArchbaseRichTextEditProps } from './ArchbaseRichTextEdit';
 
+export { ArchbaseMarkdownEdit } from './ArchbaseMarkdownEdit';
+export type { ArchbaseMarkdownEditProps, ToolbarItem } from './ArchbaseMarkdownEdit';
+
 export { ArchbaseSelect } from './ArchbaseSelect';
 export type { ArchbaseSelectProps } from './ArchbaseSelect';
 
