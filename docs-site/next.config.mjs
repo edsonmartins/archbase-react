@@ -53,6 +53,12 @@ const nextConfig = {
     'suneditor-react',
   ],
   webpack: (config, { isServer }) => {
+    // Prevent next/document from being bundled outside of _document
+    config.externals = config.externals || [];
+    config.externals.push({
+      'next/document': 'next/document',
+    });
+
     // Resolve workspace packages to source directory
     const packagesPath = path.resolve(__dirname, '../packages');
 

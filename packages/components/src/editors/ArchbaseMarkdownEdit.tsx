@@ -1,5 +1,5 @@
 /**
- * ArchbaseMarkdownEdit — editor Markdown (md-editor-rt) com binding opcional ao dataSource.
+ * ArchbaseMarkdownEdit — editor Markdown (react-markdown-editor-lite) com binding opcional ao dataSource.
  * @status stable
  */
 import { Input, Skeleton } from '@mantine/core';
@@ -9,54 +9,27 @@ import type { DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames, useArchbaseDidUpdate, useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
 
-// Storage para componente carregado dinamicamente
-let MdEditorComponent: React.ComponentType<any> | null = null;
+// Armazenamento para componentes carregados dinamicamente
+let EditorComponent: React.ComponentType<any> | null = null;
+let MarkdownItType: any = null;
 let loadPromise: Promise<void> | null = null;
 
-// Tipos de toolbar do md-editor-rt
-export type ToolbarItem =
-  | 'bold'
-  | 'underline'
-  | 'italic'
-  | 'strikeThrough'
-  | '-'
-  | 'heading'
-  | 'moreMark'
-  | 'title'
-  | 'sub'
-  | 'sup'
-  | 'quote'
-  | 'unorderedList'
-  | 'orderedList'
-  | 'task'
-  | '-'
-  | 'codeRow'
-  | 'code'
-  | 'link'
-  | 'image'
-  | 'table'
-  | '-'
-  | 'revoke'
-  | 'next'
-  | 'save'
-  | '='
-  | 'pageFullscreen'
-  | 'fullscreen'
-  | 'preview'
-  | 'htmlPreview'
-  | 'catalog'
-  | 'github';
-
-// Função para carregar md-editor-rt
-async function loadMdEditor(): Promise<void> {
+// Função para carregar react-markdown-editor-lite e markdown-it
+async function loadMarkdownEditor(): Promise<void> {
 	if (loadPromise) return loadPromise;
-	if (MdEditorComponent) return Promise.resolve();
+	if (EditorComponent && MarkdownItType) return Promise.resolve();
 
 	loadPromise = (async () => {
-		const mdModule = await import('md-editor-rt');
+		// Carregar markdown-it primeiro
+		const markdownItModule = await import('markdown-it');
+		MarkdownItType = markdownItModule.default;
+
+		// Carregar o editor
+		const editorModule = await import('react-markdown-editor-lite');
+		EditorComponent = editorModule.default;
+
 		// @ts-ignore - CSS import
-		await import('md-editor-rt/lib/style.css');
-		MdEditorComponent = mdModule.MdEditor;
+		await import('react-markdown-editor-lite/lib/index.css');
 	})();
 
 	return loadPromise;
@@ -108,28 +81,10 @@ export interface ArchbaseMarkdownEditProps<T, ID> {
 	value?: string;
 	/** Texto de espaço reservado quando vazio */
 	placeholder?: string;
-	/** Tema do editor (light/dark) */
-	theme?: 'light' | 'dark';
-	/** Tema do preview (default, github, vuepress, etc.) */
-	previewTheme?: string;
-	/** Tema do código (atom, github, etc.) */
-	codeTheme?: string;
-	/** Idioma da interface (en, zh-CN) */
-	language?: string;
-	/** Largura da tabulação em espaços */
-	tabWidth?: number;
-	/** Mostrar toolbar */
-	showToolbar?: boolean;
-	/** Esconder toolbar (alias para showToolbar) */
-	hideToolbar?: boolean;
-	/** Configuração da toolbar */
-	toolbars?: ToolbarItem[][];
+	/** Habilitar visualização em tempo real */
+	enablePreview?: boolean;
 	/** Sanitização HTML */
 	sanitize?: ((html: string) => string) | boolean;
-	/** Habilitar upload de imagens */
-	enableImageUpload?: boolean;
-	/** Handler customizado para upload de imagens */
-	onUploadImg?: (files: File[]) => Promise<string[]>;
 	/** Evento quando o valor do editor é alterado */
 	onChangeValue?: (value: string) => void;
 	/** Evento quando o editor é salvo (Ctrl+S) */
@@ -157,18 +112,9 @@ export function ArchbaseMarkdownEdit<T, ID>({
 	width,
 	height,
 	minHeight,
-	placeholder,
-	theme = 'light',
-	previewTheme = 'default',
-	codeTheme = 'atom',
-	language = 'en',
-	tabWidth = 2,
-	showToolbar = true,
-	hideToolbar,
-	toolbars,
+	placeholder = 'Enter markdown content...',
+	enablePreview = true,
 	sanitize,
-	enableImageUpload = false,
-	onUploadImg,
 	onChangeValue,
 	onSave,
 	onFocusExit,
@@ -176,6 +122,7 @@ export function ArchbaseMarkdownEdit<T, ID>({
 	onHtmlChanged,
 	previewOnly = false,
 	value,
+	style,
 }: ArchbaseMarkdownEditProps<T, ID>) {
 	// Hook de compatibilidade V1/V2
 	const v1v2Compatibility = useArchbaseV1V2Compatibility<string>(
@@ -299,12 +246,6 @@ export function ArchbaseMarkdownEdit<T, ID>({
 		}
 	};
 
-	const handleSave = (content: string) => {
-		if (onSave) {
-			onSave(content);
-		}
-	};
-
 	const handleFocus = (event: FocusEvent) => {
 		if (onFocusEnter) {
 			onFocusEnter(event);
@@ -323,22 +264,6 @@ export function ArchbaseMarkdownEdit<T, ID>({
 		}
 	};
 
-	const handleUploadImg = async (files: File[]): Promise<string[]> => {
-		if (enableImageUpload && onUploadImg) {
-			return onUploadImg(files);
-		}
-		// Default behavior: converter para base64
-		return Promise.all(
-			files.map((file) => {
-				return new Promise<string>((resolve) => {
-					const reader = new FileReader();
-					reader.onload = (e) => resolve(e.target?.result as string);
-					reader.readAsDataURL(file);
-				});
-			})
-		);
-	};
-
 	const isReadOnlyValue = () => {
 		return readOnly || v1v2Compatibility.isReadOnly || previewOnly;
 	};
@@ -354,14 +279,14 @@ export function ArchbaseMarkdownEdit<T, ID>({
 		// Não carregar no servidor
 		if (typeof window === 'undefined') return;
 
-		loadMdEditor().then(() => {
+		loadMarkdownEditor().then(() => {
 			setIsLoaded(true);
 			forceRender({});
 		});
 	}, []);
 
 	// Renderizar skeleton no SSR ou enquanto não está carregado
-	if (!isLoaded || !MdEditorComponent) {
+	if (!isLoaded || !EditorComponent || !MarkdownItType) {
 		return (
 			<Input.Wrapper withAsterisk={required} label={label} description={description} error={displayError}>
 				<Skeleton height={height || 400} width={width || '100%'} />
@@ -369,57 +294,74 @@ export function ArchbaseMarkdownEdit<T, ID>({
 		);
 	}
 
-	const MdEditor = MdEditorComponent;
+	const MarkdownEditor = EditorComponent;
+	const MdParser = MarkdownItType;
+
+	// Configurar estilo do container
+	const containerStyle: CSSProperties = {
+		width: width || '100%',
+		...(height && { height }),
+		...(minHeight && { minHeight }),
+		...style,
+	};
 
 	// Props do editor
 	const editorProps: Record<string, any> = {
-		modelValue: currentValue || '',
+		value: currentValue || '',
+		style: containerStyle,
 		onChange: handleChange,
-		onSave: handleSave,
-		onFocus: handleFocus,
-		onBlur: handleBlur,
-		onHtmlChanged: handleHtmlChanged,
-		theme,
-		previewTheme,
-		codeTheme,
-		language,
-		tabWidth,
+		renderHTML: (text: string) => MdParser({ html: true }).render(text),
+		sanitize: sanitize ?? ((html: string) => html),
 		placeholder,
-		sanitize,
-		autoFocus,
+		canView: enablePreview ? {
+			menu: true,
+			md: true,
+			html: true,
+			fullScreen: true,
+			hideMenu: false,
+		} : {
+			menu: false,
+			md: true,
+			html: false,
+			fullScreen: false,
+			hideMenu: true,
+		},
 	};
 
-	// Props de upload
-	if (enableImageUpload) {
-		editorProps.onUploadImg = handleUploadImg;
+	if (autoFocus) {
+		editorProps.autoFocus = true;
 	}
 
-	// Props de toolbar
-	if (hideToolbar || !showToolbar) {
-		editorProps.toolbars = [];
-	} else if (toolbars) {
-		editorProps.toolbars = toolbars;
+	if (onSave) {
+		editorProps.onSave = onSave;
 	}
 
-	// Props de altura
-	if (height) {
-		editorProps.height = height;
-	}
-	if (minHeight) {
-		editorProps.minHeights = minHeight;
+	if (onFocusEnter) {
+		editorProps.onFocus = handleFocus;
 	}
 
-	// Readonly
+	if (onFocusExit) {
+		editorProps.onBlur = handleBlur;
+	}
+
+	if (onHtmlChanged) {
+		editorProps.onHTMLChange = handleHtmlChanged;
+	}
+
 	if (isReadOnlyValue()) {
 		editorProps.readOnly = true;
 	}
 
+	if (disabled) {
+		editorProps.disabled = true;
+	}
+
 	return (
 		<Input.Wrapper withAsterisk={required} label={label} description={description} error={displayError}>
-			<MdEditor {...editorProps} />
+			<MarkdownEditor {...editorProps} />
 		</Input.Wrapper>
 	);
 }
 
-// Re-exportar tipos do md-editor-rt para conveniência
-export type { ToolbarNames } from 'md-editor-rt';
+// Re-exportar tipo para compatibilidade
+export type { default as MarkdownEditorLite } from 'react-markdown-editor-lite';

@@ -24,7 +24,7 @@ import React from 'react';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { CodeHighlightAdapterProvider, createShikiAdapter } from '@mantine/code-highlight';
-import { MantineProvider } from '@mantine/core';
+import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { theme } from '../theme';
 
 async function loadShiki() {
@@ -41,8 +41,9 @@ const shikiAdapter = createShikiAdapter(loadShiki);
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <MantineProvider theme={theme}>
+    <>
       <Head>
+        <ColorSchemeScript defaultColorScheme="auto" />
         <title>Archbase React - Documentação</title>
         <meta
           name="viewport"
@@ -50,9 +51,11 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <meta name="description" content="Biblioteca completa de componentes React para aplicações empresariais" />
       </Head>
-      <CodeHighlightAdapterProvider adapter={shikiAdapter}>
-        <Component {...pageProps} />
-      </CodeHighlightAdapterProvider>
-    </MantineProvider>
+      <MantineProvider theme={theme}>
+        <CodeHighlightAdapterProvider adapter={shikiAdapter}>
+          <Component {...pageProps} />
+        </CodeHighlightAdapterProvider>
+      </MantineProvider>
+    </>
   );
 }
