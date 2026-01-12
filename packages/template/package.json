@@ -31,10 +31,10 @@
   "peerDependencies": {
     "react": "^18.3.0 || ^19.0.0",
     "react-dom": "^18.3.0 || ^19.0.0",
-    "@mantine/core": "8.3.10",
-    "@mantine/dates": "8.3.10",
-    "@mantine/hooks": "8.3.10",
-    "@mantine/modals": "8.3.10",
+    "@mantine/core": "8.3.12",
+    "@mantine/dates": "8.3.12",
+    "@mantine/hooks": "8.3.12",
+    "@mantine/modals": "8.3.12",
     "@tabler/icons-react": "^3.26.0"
   },
   "dependencies": {

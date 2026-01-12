@@ -39,12 +39,12 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "peerDependencies": {
-    "@mantine/core": "8.3.10",
-    "@mantine/dates": "8.3.10",
-    "@mantine/hooks": "8.3.10",
-    "@mantine/modals": "8.3.10",
-    "@mantine/notifications": "8.3.10",
-    "@mantine/spotlight": "8.3.10",
+    "@mantine/core": "8.3.12",
+    "@mantine/dates": "8.3.12",
+    "@mantine/hooks": "8.3.12",
+    "@mantine/modals": "8.3.12",
+    "@mantine/notifications": "8.3.12",
+    "@mantine/spotlight": "8.3.12",
     "react": "^18.3.0 || ^19.0.0",
     "react-dom": "^18.3.0 || ^19.0.0"
   },
