@@ -1,6 +1,6 @@
 {
   "name": "@archbase/tools",
-  "version": "3.0.45",
+  "version": "3.0.46",
   "description": "Archbase React Tools - CLI, Development Tools, Generators",
   "type": "module",
   "main": "./dist/index.js",

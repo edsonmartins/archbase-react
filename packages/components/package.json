@@ -1,6 +1,6 @@
 {
   "name": "@archbase/components",
-  "version": "3.0.45",
+  "version": "3.0.46",
   "description": "UI Components for Archbase React v3 - Form editors, data visualization, and business components",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
