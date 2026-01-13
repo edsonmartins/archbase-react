@@ -31,7 +31,9 @@ const withMDX = createMDX({
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
-  basePath: process.env.NODE_ENV === 'production' ? '/docs' : undefined,
+  // basePath removido para deploy em subdomínio dedicado (react.archbase.dev)
+  // Se precisar usar subpath, descomente a linha abaixo:
+  // basePath: process.env.NODE_ENV === 'production' ? '/docs' : undefined,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'mdx'],
   // Set workspace root to avoid warning about multiple lockfiles
   outputFileTracingRoot: path.resolve(__dirname, '..'),

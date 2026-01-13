@@ -1,0 +1,83 @@
+# Docker Compose para deploy da documentação Archbase React
+#
+# INSTRUÇÕES:
+# 1. Copie este arquivo para /opt/archbase-infrastructure/docker-compose.yml no VPS
+# 2. A rede "traefik-network" deve existir (criada pelo traefik-stack.yml)
+# 3. Execute: docker stack deploy -c docker-compose.yml archbase-react
+#
+# O Traefik irá detectar automaticamente as labels e configurar:
+# - Host: react.archbase.dev
+# - HTTPS com Let's Encrypt
+# - Porta 80 interna
+
+version: '3.9'
+
+x-default-opts:
+  &default-opts
+  logging:
+    options:
+      max-size: "10m"
+
+networks:
+  traefik-network:
+    external: true
+
+services:
+  # Documentação Archbase React
+  react-docs:
+    <<: *default-opts
+    image: nginx:alpine
+    networks:
+      - traefik-network
+    volumes:
+      # Arquivos estáticos gerados pelo Next.js
+      - /srv/archbase-react-docs:/usr/share/nginx/html:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        order: start-first
+      labels:
+        # Habilitar Traefik para este serviço
+        - "traefik.enable=true"
+
+        # Router - Regra de roteamento
+        - "traefik.http.routers.react-docs.rule=Host(`react.archbase.dev`)"
+        - "traefik.http.routers.react-docs.entrypoints=websecure"
+        - "traefik.http.routers.react-docs.tls=true"
+        - "traefik.http.routers.react-docs.tls.certresolver=letsencrypt"
+
+        # Service - Balanceamento de carga
+        - "traefik.http.services.react-docs.loadbalancer.server.port=80"
+
+        # HTTP to HTTPS redirect
+        - "traefik.http.routers.react-docs-http.rule=Host(`react.archbase.dev`)"
+        - "traefik.http.routers.react-docs-http.entrypoints=web"
+        - "traefik.http.routers.react-docs-http.middlewares=redirect-to-https"
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+# Notas:
+# - A rede "traefik-network" é criada pelo traefik-stack.yml
+# - O certresolver "letsencrypt" deve estar configurado no Traefik
+# - Os arquivos estáticos devem ser gerados em /srv/archbase-react-docs
+# - O workflow deploy-docs-vps.yml copia os arquivos automaticamente
+# - Para deploy: docker stack deploy -c docker-compose.yml archbase-react
+# - Para remover: docker stack rm archbase-react
+#
+# Extendendo para outras tecnologias:
+# - Java: copiar este serviço, mudar nome para "java-docs" e Host para "java.archbase.dev"
+# - Flutter: copiar este serviço, mudar nome para "flutter-docs" e Host para "flutter.archbase.dev"
