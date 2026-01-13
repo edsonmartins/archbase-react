@@ -316,29 +316,52 @@ services:
 
 ### 4.4 Dar permissão de sudo sem senha para o runner
 
-O runner precisa de sudo para copiar arquivos e gerenciar Docker:
+O runner precisa de sudo para copiar arquivos, gerenciar Docker e salvar logs.
+
+**Opção 1: Usar o script automatizado (RECOMENDADO)**
 
 ```bash
-# Criar arquivo de regras sudo
-sudo visudo
+# Clonar repositório ou copiar o script
+cd /tmp
+git clone https://github.com/edsonmartins/archbase-react.git
+cd archbase-react
 
-# Se usar ec2-user, adicionar:
-ec2-user ALL=(ALL) NOPASSWD: /bin/mkdir, /bin/chown, /bin/chmod, /bin/cp, /bin/rm, /usr/bin/docker
+# Executar script de setup (detecta automaticamente o usuário)
+sudo bash scripts/setup-sudoers.sh
 
-# Se usar actions-runner, adicionar:
-# actions-runner ALL=(ALL) NOPASSWD: /bin/mkdir, /bin/chown, /bin/chmod, /bin/cp, /bin/rm, /usr/bin/docker
+# Ou especificar o usuário manualmente
+sudo bash scripts/setup-sudoers.sh <nome_do_usuario>
 ```
 
-Ou criar um arquivo específico:
+**Opção 2: Configuração manual**
 
 ```bash
-# Se usar ec2-user:
-echo "ec2-user ALL=(ALL) NOPASSWD: /srv/archbase-react-docs*, /opt/archbase-infrastructure/docker-compose.yml, /usr/bin/docker" | sudo tee /etc/sudoers.d/actions-runner
+# Descobrir o usuário do Actions Runner
+ps aux | grep -E 'actions-runner.*run' | grep -v grep | awk '{print $1}' | head -1
+
+# Criar arquivo de regras sudo
+sudo tee /etc/sudoers.d/actions-runner << 'EOF'
+# Substitua <USUARIO> pelo usuário correto (ec2-user, actions-runner, etc)
+<USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/mkdir, /bin/mkdir
+<USUARIO> ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln, /bin/tee
+<USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/journalctl
+<USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/docker
+<USUARIO> ALL=(ALL) NOPASSWD: /bin/df, /usr/bin/tail, /usr/bin/xargs
+EOF
+
+# Definir permissões corretas
 sudo chmod 0440 /etc/sudoers.d/actions-runner
 
-# Se usar actions-runner:
-# echo "actions-runner ALL=(ALL) NOPASSWD: /srv/archbase-react-docs*, /opt/archbase-infrastructure/docker-compose.yml, /usr/bin/docker" | sudo tee /etc/sudoers.d/actions-runner
-# sudo chmod 0440 /etc/sudoers.d/actions-runner
+# Validar configuração
+sudo visudo -c /etc/sudoers.d/actions-runner
+```
+
+**Testar configuração:**
+
+```bash
+# Substitua <USUARIO> pelo usuário correto
+sudo -u <USUARIO> sudo whoami
+# Deve retornar "root" sem pedir senha
 ```
 
 ## Passo 5: Deploy Inicial
@@ -575,6 +598,36 @@ docker logs archbase-react_react-docs.1
 # Entrar no container para debug
 docker exec -it $(docker ps -q -f name=react-docs) sh
 ls -la /usr/share/nginx/html/
+```
+
+### Erro "sudo: a password is required" no workflow
+
+Se o workflow falhar com erro de senha do sudo:
+
+```
+sudo: a terminal is required to read the password
+sudo: a password is required
+```
+
+**Solução:**
+
+```bash
+# 1. Descobrir o usuário do Actions Runner
+ps aux | grep -E 'actions-runner.*run' | grep -v grep | awk '{print $1}' | head -1
+
+# 2. Usar o script automatizado
+cd /tmp
+git clone https://github.com/edsonmartins/archbase-react.git
+cd archbase-react
+sudo bash scripts/setup-sudoers.sh
+
+# 3. Testar (substitua <USUARIO> pelo usuário encontrado)
+sudo -u <USUARIO> sudo whoami
+# Deve retornar "root" sem pedir senha
+
+# 4. Se ainda falhar, verificar o arquivo sudoers
+sudo cat /etc/sudoers.d/actions-runner
+sudo visudo -c /etc/sudoers.d/actions-runner
 ```
 
 ## Passo 8: Monitoramento e Visualização de Logs
