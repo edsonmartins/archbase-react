@@ -4,7 +4,8 @@ Guia passo a passo para configurar o deployment automatizado da documentação A
 
 ## Pré-requisitos
 
-- VPS com Docker Swarm instalado
+- VPS com **Amazon Linux 2023**
+- Docker Swarm instalado
 - Traefik configurado com rede `traefik-network`
 - Acesso SSH ao VPS com sudo
 - Domínio archbase.dev configurado
@@ -44,17 +45,21 @@ Guia passo a passo para configurar o deployment automatizado da documentação A
 
 ## Passo 1: Preparar o VPS
 
-### 1.1 Atualizar sistema
+### 1.1 Atualizar sistema (Amazon Linux 2023)
 
 ```bash
 # Conectar ao VPS
-ssh usuario@seu-vps
+ssh ec2-user@seu-vps  # ou seu usuário
 
 # Atualizar pacotes
-sudo apt update && sudo apt upgrade -y
+sudo dnf update -y
 
 # Instalar dependências básicas
-sudo apt install -y curl git wget
+sudo dnf install -y curl git wget
+
+# Verificar versão do Amazon Linux
+cat /etc/os-release
+# Deve mostrar: Amazon Linux 2023
 ```
 
 ### 1.2 Verificar Docker Swarm
@@ -85,12 +90,12 @@ docker network ls | grep traefik
 
 ## Passo 2: Instalar Node.js e pnpm
 
-### 2.1 Instalar Node.js 20
+### 2.1 Instalar Node.js 20 (Amazon Linux 2023)
 
 ```bash
-# Usar o script de instalação do Node.js
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
+# Amazon Linux 2023 - usar NodeSource com RPM
+curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+sudo dnf install -y nodejs
 
 # Verificar versões
 node --version  # deve ser v20.x.x
@@ -115,16 +120,26 @@ pnpm --version  # deve ser 9.x.x
 ### 3.1 Criar usuário para o runner
 
 ```bash
-# Criar usuário dedicado
+# Na Amazon Linux, o usuário padrão é ec2-user
+# Você pode usar ec2-user ou criar um usuário dedicado
+
+# Opção 1: Usar ec2-user existente (mais simples)
+sudo usermod -aG docker ec2-user
+
+# Opção 2: Criar usuário dedicado actions-runner
 sudo useradd -m -s /bin/bash actions-runner
 sudo passwd actions-runner  # opcional, para login direto
-
-# Adicionar ao grupo docker
 sudo usermod -aG docker actions-runner
 
 # Verificar se consegue usar docker sem sudo
+# Se usar ec2-user:
+sudo -u ec2-user docker ps
+
+# Se usar actions-runner:
 sudo -u actions-runner docker ps
 ```
+
+> **Nota**: Nos exemplos abaixo, substitua `actions-runner` por `ec2-user` se decidir usar o usuário padrão da Amazon.
 
 ### 3.2 Obter token do GitHub
 
@@ -139,10 +154,17 @@ sudo -u actions-runner docker ps
 ```bash
 # Criar diretório
 sudo mkdir -p /opt/actions-runner
-sudo chown actions-runner:actions-runner /opt/actions-runner
 
-# Trocar para usuário actions-runner
-sudo su - actions-runner
+# Se usar ec2-user:
+sudo chown ec2-user:ec2-user /opt/actions-runner
+
+# Se usar actions-runner:
+# sudo chown actions-runner:actions-runner /opt/actions-runner
+
+# Trocar para usuário (usar ec2-user ou actions-runner)
+sudo su - ec2-user
+# ou
+# sudo su - actions-runner
 
 # Ir para o diretório
 cd /opt/actions-runner
@@ -154,7 +176,11 @@ curl -o actions-runner-linux-x64-<version>.tar.gz -L <DOWNLOAD_URL>
 # Extrair
 tar xzf ./actions-runner-linux-x64-*.tar.gz
 
-# Instalar dependências
+# Instalar dependências do Actions Runner
+# No Amazon Linux 2023, pode ser necessário instalar algumas dependências manualmente
+sudo dnf install -y openssl-devel zlib-devel
+
+# Rodar script de dependências
 ./bin/installdependencies.sh
 
 # Configurar (SUBSTITUA pelo token)
@@ -199,7 +225,11 @@ sudo journalctl -u actions-runner.* -f
 sudo mkdir -p /srv/archbase-react-docs
 
 # Ajustar permissões para o runner poder escrever
-sudo chown -R actions-runner:actions-runner /srv/archbase-react-docs
+# Se usar ec2-user:
+sudo chown -R ec2-user:ec2-user /srv/archbase-react-docs
+
+# Se usar actions-runner:
+# sudo chown -R actions-runner:actions-runner /srv/archbase-react-docs
 ```
 
 ### 4.2 Criar diretório de infraestrutura
@@ -277,15 +307,23 @@ O runner precisa de sudo para copiar arquivos e gerenciar Docker:
 # Criar arquivo de regras sudo
 sudo visudo
 
-# Adicionar a seguinte linha:
-actions-runner ALL=(ALL) NOPASSWD: /bin/mkdir, /bin/chown, /bin/chmod, /bin/cp, /bin/rm, /usr/bin/docker
+# Se usar ec2-user, adicionar:
+ec2-user ALL=(ALL) NOPASSWD: /bin/mkdir, /bin/chown, /bin/chmod, /bin/cp, /bin/rm, /usr/bin/docker
+
+# Se usar actions-runner, adicionar:
+# actions-runner ALL=(ALL) NOPASSWD: /bin/mkdir, /bin/chown, /bin/chmod, /bin/cp, /bin/rm, /usr/bin/docker
 ```
 
 Ou criar um arquivo específico:
 
 ```bash
-echo "actions-runner ALL=(ALL) NOPASSWD: /srv/archbase-react-docs*, /opt/archbase-infrastructure/docker-compose.yml, /usr/bin/docker" | sudo tee /etc/sudoers.d/actions-runner
+# Se usar ec2-user:
+echo "ec2-user ALL=(ALL) NOPASSWD: /srv/archbase-react-docs*, /opt/archbase-infrastructure/docker-compose.yml, /usr/bin/docker" | sudo tee /etc/sudoers.d/actions-runner
 sudo chmod 0440 /etc/sudoers.d/actions-runner
+
+# Se usar actions-runner:
+# echo "actions-runner ALL=(ALL) NOPASSWD: /srv/archbase-react-docs*, /opt/archbase-infrastructure/docker-compose.yml, /usr/bin/docker" | sudo tee /etc/sudoers.d/actions-runner
+# sudo chmod 0440 /etc/sudoers.d/actions-runner
 ```
 
 ## Passo 5: Deploy Inicial
@@ -472,16 +510,42 @@ docker stack deploy -c docker-compose.yml archbase-react
 
 ## Manutenção
 
-### Verificar espaço em disco
+### Gerenciamento de Espaço em Disco
+
+Após muitos builds, o disco pode encher. O workflow de deploy já faz limpeza automática, mas você pode executar manualmente:
 
 ```bash
+# Verificar espaço em disco
 df -h
 
-# Limpar builds antigos
+# Verificar uso do Docker
+docker system df
+
+# Limpar imagens não usadas (mantendo imagens dos últimos 3 dias)
+docker image prune -a -f --filter "until=72h"
+
+# Limpar containers parados, redes não usadas e imagens dangling
+docker system prune -f
+
+# Limpar tudo (cuidado - remove todas as imagens não usadas)
+# docker system prune -a -f
+
+# Verificar espaço após limpeza
+df -h /var/lib/docker
+```
+
+### Limpar builds antigos do projeto
+
+```bash
+# Ver backups existentes
 ls -la /srv/archbase-react-docs.backup/
+
 # Manter apenas últimos 5
 cd /srv/archbase-react-docs.backup
 ls -t | tail -n +6 | xargs -I {} rm -rf {}
+
+# Ou limpar todos os backups (apenas em emergência)
+# sudo rm -rf /srv/archbase-react-docs.backup/*
 ```
 
 ### Atualizar runner

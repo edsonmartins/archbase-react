@@ -43,7 +43,17 @@
       "Bash(timeout 30 pnpm dev:*)",
       "WebSearch",
       "Bash(NODE_OPTIONS=\"--max-old-space-size=8192\" pnpm build:*)",
-      "Bash(do sed:*)"
+      "Bash(do sed:*)",
+      "Bash(npm view:*)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=16384\" tsc:*)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=16384\" pnpm exec tsc:*)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=16384\" pnpm build:*)",
+      "Bash(echo:*)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=16384\" pnpm run build:dev:*)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)"
     ],
     "deny": []
   }

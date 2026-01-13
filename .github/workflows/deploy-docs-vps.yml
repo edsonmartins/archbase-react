@@ -66,3 +66,13 @@ jobs:
           # Manter apenas últimos 5 builds
           cd /srv/archbase-react-docs.backup 2>/dev/null || exit 0
           ls -t | tail -n +6 | xargs -I {} rm -rf {}
+
+      - name: Docker system prune
+        run: |
+          # Remover imagens não usadas e cache de build para liberar espaço
+          # -a: remover imagens dangling não usadas
+          # --filter: manter imagens dos últimos 7 dias
+          docker image prune -a -f --filter "until=72h"
+          docker system prune -f
+          # Exibir uso de disco após limpeza
+          df -h /var/lib/docker
