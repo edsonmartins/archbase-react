@@ -176,12 +176,19 @@ curl -o actions-runner-linux-x64-<version>.tar.gz -L <DOWNLOAD_URL>
 # Extrair
 tar xzf ./actions-runner-linux-x64-*.tar.gz
 
-# Instalar dependências do Actions Runner
-# No Amazon Linux 2023, pode ser necessário instalar algumas dependências manualmente
-sudo dnf install -y openssl-devel zlib-devel
+# Instalar dependências do Actions Runner manualmente
+# O script installdependencies.sh pode não reconhecer Amazon Linux 2023
+sudo dnf install -y \
+  openssl-devel \
+  zlib-devel \
+  libicu-devel \
+  tar \
+  curl \
+  git \
+  jq
 
-# Rodar script de dependências
-./bin/installdependencies.sh
+# Tentar rodar o script (pode falhar, mas dependências já estão instaladas)
+./bin/installdependencies.sh || echo "Script falhou, mas dependências foram instaladas manualmente"
 
 # Configurar (SUBSTITUA pelo token)
 ./config.sh \
@@ -401,6 +408,25 @@ Acesse: https://react.archbase.dev
 Se tudo estiver correto, você deve ver a documentação do Archbase React.
 
 ## Troubleshooting
+
+### Amazon Linux 2023 - installdependencies.sh falha
+
+Se o script não reconhecer Amazon Linux 2023:
+
+```bash
+# Instalar dependências manualmente
+sudo dnf install -y \
+  openssl-devel \
+  zlib-devel \
+  libicu-devel \
+  tar \
+  curl \
+  git \
+  jq
+
+# Continuar com a configuração (o script falhou, mas é OK)
+./config.sh --url https://github.com/edsonmartins/archbase-react --token <TOKEN>
+```
 
 ### Runner não aparece no GitHub
 
