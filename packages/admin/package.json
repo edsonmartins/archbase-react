@@ -1,6 +1,6 @@
 {
   "name": "@archbase/admin",
-  "version": "3.0.46",
+  "version": "3.0.0",
   "description": "Admin interface components for Archbase React",
   "main": "dist/index.js",
   "module": "dist/index.js",
