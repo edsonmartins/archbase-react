@@ -20,13 +20,13 @@
       ]
     },
     "outDir": "dist",
+    "declarationDir": "dist",
     "declaration": true,
     "strict": false,
     "noImplicitAny": false,
     "strictNullChecks": false,
     "skipLibCheck": true,
     "declarationMap": false,
-    "composite": true,
     "tsBuildInfoFile": "./.tsbuildinfo"
   },
   "include": [

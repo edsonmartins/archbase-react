@@ -59,7 +59,9 @@
       "Bash(git cherry-pick:*)",
       "Bash(xargs git rm:*)",
       "Bash(git rm:*)",
-      "Bash(NODE_OPTIONS=\"--max_old_space_size=16384\" pnpm run build:*)"
+      "Bash(NODE_OPTIONS=\"--max_old_space_size=16384\" pnpm run build:*)",
+      "Bash(NODE_OPTIONS=\"--max-old_space_size=16384\" tsc:*)",
+      "Bash(NODE_OPTIONS=\"--max_old_space_size=16384\" npx tsc:*)"
     ],
     "deny": []
   }
