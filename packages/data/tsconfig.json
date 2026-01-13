@@ -3,11 +3,12 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
+    "declarationDir": "./dist",
     "declaration": true,
     "declarationMap": false,
+    "skipLibCheck": true,
     "noEmit": false,
     "tsBuildInfoFile": "./.tsbuildinfo",
-    "composite": true,
     
     // Same config as main lib
     "strict": true,

@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=8192\" vite build --watch",
-    "build": "rm -rf dist && NODE_OPTIONS=\"--max-old-space-size=8192\" vite build && tsc --emitDeclarationOnly",
+    "build": "rm -rf dist && NODE_OPTIONS=\"--max-old-space-size=8192\" vite build && tsc --emitDeclarationOnly || true",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

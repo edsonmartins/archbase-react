@@ -3,11 +3,12 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
+    "declarationDir": "./dist",
     "declaration": true,
     "declarationMap": false,
+    "skipLibCheck": true,
     "noEmit": false,
     "tsBuildInfoFile": "./.tsbuildinfo",
-    "composite": true,
     
     // Same config as main lib
     "strict": true,
@@ -21,17 +22,12 @@
   },
   "include": ["src/**/*"],
   "exclude": [
-    "node_modules", 
-    "dist", 
-    "test", 
-    "**/*.test.ts", 
+    "node_modules",
+    "dist",
+    "test",
+    "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "src/context/ArchbaseAppContext.tsx",
-    "src/context/ArchbaseGlobalProvider.tsx", 
-    "src/helper/ArchbaseClickOutside.tsx",
-    "src/patterns/ArchbaseV1V2CompatibilityPattern.tsx",
-    "src/fallback/ArchbaseSafeMigrationWrapper.tsx"
+    "**/*.spec.tsx"
   ]
 }

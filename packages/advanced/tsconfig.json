@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
+    "declarationDir": "./dist",
     "rootDir": "./src",
     "declaration": true,
     "emitDeclarationOnly": false,
@@ -17,6 +18,7 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

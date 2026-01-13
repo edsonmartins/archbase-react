@@ -8,11 +8,13 @@
       "@archbase/components": ["../components/src"]
     },
     "outDir": "dist",
+    "declarationDir": "dist",
     "declaration": true,
     "strict": false,
     "noImplicitAny": false,
     "strictNullChecks": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "tsBuildInfoFile": "./.tsbuildinfo"
   },
   "include": [
     "src/**/*"

@@ -3,10 +3,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "dist",
+    "declarationDir": "dist",
     "declaration": true,
     "declarationMap": false,
     "emitDeclarationOnly": true,
     "skipLibCheck": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
     "paths": {
       "@archbase/core": ["../core/src"],
       "@archbase/data": ["../data/src"], 
