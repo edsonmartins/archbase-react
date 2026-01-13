@@ -1,5 +1,6 @@
 name: Deploy Docs to VPS
 
+# Workflow para deploy automatizado da documentação na VPS
 on:
   push:
     branches:
