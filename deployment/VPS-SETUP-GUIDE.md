@@ -579,51 +579,67 @@ ls -la /usr/share/nginx/html/
 
 ## Passo 8: Monitoramento e Visualização de Logs
 
-### 8.1 Instalar Dozzle (Visualizador de Logs Docker)
+### 8.1 Instalar Scripts de Log
 
-O Dozzle é uma interface web leve para visualizar logs de containers Docker:
-
-```bash
-# Adicionar serviço Dozzle ao docker-compose.yml
-sudo nano /opt/archbase-infrastructure/docker-compose.yml
-```
-
-Adicione o serviço:
-
-```yaml
-services:
-  # ... serviço react-docs existente ...
-
-  dozzle:
-    image: amir20/dozzle:latest
-    networks:
-      - traefik-network
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.dozzle.rule=Host(`logs.archbase.dev`)"
-        - "traefik.http.routers.dozzle.entrypoints=websecure"
-        - "traefik.http.routers.dozzle.tls=true"
-        - "traefik.http.routers.dozzle.tls.certresolver=letsencrypt"
-        - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
-```
-
-Recriar a stack:
+Copiar os scripts do repositório para o VPS:
 
 ```bash
+# Copiar scripts para o VPS (do repositório)
+cd /tmp
+git clone https://github.com/edsonmartins/archbase-react.git
+cd archbase-react
+
+# Instalar scripts
+sudo cp scripts/save-build-logs.sh /usr/local/bin/
+sudo cp scripts/view-logs.sh /usr/local/bin/
+sudo chmod +x /usr/local/bin/*.sh
+
+# Verificar
+ls -la /usr/local/bin/*-logs.sh
+```
+
+### 8.2 Instalar Servidor de Logs e Dozzle
+
+Usar o arquivo `docker-compose.logs.yml` do repositório:
+
+```bash
+# Copiar arquivo de configuração
 cd /opt/archbase-infrastructure
-docker stack deploy -c docker-compose.yml archbase-react
+cp /tmp/archbase-react/deployment/docker-compose.logs.yml .
+
+# Adicionar serviços ao stack existente
+docker stack deploy -c docker-compose.yml -c docker-compose.logs.yml archbase-react
 ```
 
-Acesse: https://logs.archbase.dev
+Serviços incluídos:
 
-### 8.2 Comandos úteis para visualizar logs
+| Serviço | URL | Descrição |
+|---------|-----|-----------|
+| **logs-server** | https://logs-internal.archbase.dev | Logs salvos em arquivo (nginx) |
+| **dozzle** | https://logs.archbase.dev | Visualizador de logs Docker em tempo real |
+
+> **Nota**: Configure o DNS para `logs-internal.archbase.dev` e `logs.archbase.dev` apontando para o IP do VPS.
+
+### 8.3 Usar o Script Helper
+
+```bash
+# Ver logs do GitHub Actions Runner
+view-logs.sh runner
+
+# Ver logs do container nginx
+view-logs.sh docs
+
+# Ver logs do Traefik
+view-logs.sh traefik
+
+# Ver último build salvo
+view-logs.sh build
+
+# Ver todos os logs (resumo)
+view-logs.sh all
+```
+
+### 8.4 Comandos úteis para visualizar logs
 
 ```bash
 # Logs do GitHub Actions Runner (tempo real)
@@ -643,50 +659,25 @@ docker stack ps archbase-react
 
 # Ver logs de todos os containers da stack
 docker service logs archbase-react_react-docs --tail 50
+
+# Ver logs salvos em arquivo
+cat /var/log/actions-runner/latest-build.log
+
+# Ver log específico por data
+ls -la /var/log/actions-runner/
+cat /var/log/actions-runner/build-20250113_143022.log
 ```
 
-### 8.3 Script para facilitar visualização
+### 8.5 Visualizar Logs via Web
 
-Criar script helper:
+Após configurar os serviços de log, você tem múltiplas opções:
 
-```bash
-sudo tee /usr/local/bin/view-logs.sh << 'EOF'
-#!/bin/bash
-case "$1" in
-  runner)
-    sudo journalctl -u actions-runner.* -f
-    ;;
-  docs)
-    docker logs -f archbase-react_react-docs.1
-    ;;
-  traefik)
-    docker logs -f $(docker ps -q -f name=traefik)
-    ;;
-  all)
-    echo "=== GitHub Runner ==="
-    sudo journalctl -u actions-runner.* -n 20 --no-pager
-    echo ""
-    echo "=== Container Docs ==="
-    docker logs archbase-react_react-docs.1 --tail 20
-    ;;
-  *)
-    echo "Uso: view-logs.sh {runner|docs|traefik|all}"
-    exit 1
-    ;;
-esac
-EOF
-
-sudo chmod +x /usr/local/bin/view-logs.sh
-```
-
-Uso:
-
-```bash
-view-logs.sh runner   # Logs do GitHub Actions
-view-logs.sh docs     # Logs do container nginx
-view-logs.sh traefik  # Logs do Traefik
-view-logs.sh all      # Resumo de todos
-```
+| Método | URL | Quando usar |
+|--------|-----|-------------|
+| **GitHub Actions** | https://github.com/edsonmartins/archbase-react/actions | Debug detalhado de cada step |
+| **Dozzle** | https://logs.archbase.dev | Visualizar logs de containers em tempo real |
+| **Logs Server** | https://logs-internal.archbase.dev | Ver builds salvos em arquivo |
+| **view-logs.sh** | Via SSH | Consulta rápida no terminal |
 
 ## Manutenção
 
