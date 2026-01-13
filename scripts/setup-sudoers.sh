@@ -22,20 +22,37 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Detectar usuário do Actions Runner
-ACTIONS_USER=$(ps aux | grep -E 'actions-runner.*run' | grep -v grep | awk '{print $1}' | head -1)
-
-if [ -z "$ACTIONS_USER" ]; then
-    # Tentar encontrar o usuário que owns o diretório do runner
-    RUNNER_DIR=${1:-/opt/actions-runner}
-    if [ -d "$RUNNER_DIR" ]; then
-        ACTIONS_USER=$(stat -c '%U' "$RUNNER_DIR" 2>/dev/null || stat -f '%Su' "$RUNNER_DIR" 2>/dev/null)
-    fi
+# Método 1: Verificar owner do diretório do runner (mais confiável)
+RUNNER_DIR="/opt/actions-runner"
+if [ -d "$RUNNER_DIR" ]; then
+    ACTIONS_USER=$(stat -c '%U' "$RUNNER_DIR" 2>/dev/null || stat -f '%Su' "$RUNNER_DIR" 2>/dev/null)
 fi
 
+# Método 2: Buscar processo do runner com nome completo
+if [ -z "$ACTIONS_USER" ]; then
+    ACTIONS_USER=$(ps -eo user=,comm= | grep -E 'actions.*runner' | grep -v grep | awk '{print $1}' | head -1)
+fi
+
+# Método 3: Listar usuários do sistema e procurar por "actions"
+if [ -z "$ACTIONS_USER" ]; then
+    ACTIONS_USER=$(getent passwd | grep -E 'actions' | cut -d: -f1 | head -1)
+fi
+
+# Se ainda não encontrou, pedir ao usuário
 if [ -z "$ACTIONS_USER" ]; then
     echo -e "${YELLOW}Não foi possível detectar o usuário do Actions Runner automaticamente.${NC}"
     echo "Digite o nome do usuário do Actions Runner (ex: actions-runner, ec2-user, admin):"
     read -r ACTIONS_USER
+fi
+
+# Verificar se o usuário existe
+if ! id "$ACTIONS_USER" &>/dev/null; then
+    echo -e "${RED}Erro: Usuário '$ACTIONS_USER' não encontrado no sistema.${NC}"
+    echo ""
+    echo "Usuários disponíveis:"
+    getent passwd | grep -E '(actions|ec2-user|admin)' | cut -d: -f1
+    echo ""
+    exit 1
 fi
 
 echo -e "${GREEN}Usuário do Actions Runner: $ACTIONS_USER${NC}"
@@ -52,10 +69,9 @@ cat > "$SUDOERS_FILE" << EOF
 
 # Permitir comandos específicos do workflow sem senha
 $ACTIONS_USER ALL=(ALL) NOPASSWD: /usr/bin/mkdir, /bin/mkdir
-$ACTIONS_USER ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln, /bin/tee
-$ACTIONS_USER ALL=(ALL) NOPASSWD: /usr/bin/journalctl
+$ACTIONS_USER ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln
 $ACTIONS_USER ALL=(ALL) NOPASSWD: /usr/bin/docker
-$ACTIONS_USER ALL=(ALL) NOPASSWD: /bin/df, /usr/bin/tail, /usr/bin/xargs, /usr/sbin/ls
+$ACTIONS_USER ALL=(ALL) NOPASSWD: /bin/df
 EOF
 
 # Definir permissões corretas
@@ -82,5 +98,5 @@ echo ""
 echo "O usuário $ACTIONS_USER agora pode executar os comandos do workflow sem senha."
 echo ""
 echo "Para testar:"
-echo "  sudo -u $ACTIONS_USER sudo mkdir -p /var/log/actions-runner"
+echo "  sudo -u $ACTIONS_USER sudo whoami"
 echo ""

@@ -4,22 +4,8 @@
 # Permissões: chmod 0440 /etc/sudoers.d/actions-runner
 
 # Usuário do Actions Runner (substitua pelo nome correto se necessário)
-actions-runner ALL=(ALL) NOPASSWD: /usr/bin/mkdir -p /var/log/actions-runner
-actions-runner ALL=(ALL) NOPASSWD: /usr/bin/journalctl -u actions-runner.* --since *
-actions-runner ALL=(ALL) NOPASSWD: /bin/tee /var/log/actions-runner/build-*.log
-actions-runner ALL=(ALL) NOPASSWD: /bin/ln -sf /var/log/actions-runner/build-*.log /var/log/actions-runner/latest-build.log
-actions-runner ALL=(ALL) NOPASSWD: /usr/bin/tail -n +21 /var/log/actions-runner/build-*.log
-actions-runner ALL=(ALL) NOPASSWD: /usr/bin/xargs -I {} rm -f {}
-actions-runner ALL=(ALL) NOPASSWD: /usr/bin/mkdir -p /srv/archbase-react-docs
-actions-runner ALL=(ALL) NOPASSWD: /bin/cp -r /srv/archbase-react-docs /srv/archbase-react-docs.backup/*
-actions-runner ALL=(ALL) NOPASSWD: /bin/rm -rf /srv/archbase-react-docs/*
-actions-runner ALL=(ALL) NOPASSWD: /bin/cp -r docs-site/out/* /srv/archbase-react-docs/
-actions-runner ALL=(ALL) NOPASSWD: /usr/bin/docker stack deploy -c docker-compose.yml archbase-react
-actions-runner ALL=(ALL) NOPASSWD: /bin/cp docs-site/out/* /srv/archbase-react-docs/
-actions-runner ALL=(ALL) NOPASSWD: /usr/bin/docker image prune -a -f --filter *
-actions-runner ALL=(ALL) NOPASSWD: /usr/bin/docker system prune -f
-actions-runner ALL=(ALL) NOPASSWD: /bin/df -h /var/lib/docker
-
-# Alternativa mais simples: permitir todos os comandos específicos do workflow
-# Descomente a linha abaixo para permitir mkdir, cp, rm, ln, docker, journalctl sem restrição de argumentos
-# actions-runner ALL=(ALL) NOPASSWD: /bin/mkdir, /bin/cp, /bin/rm, /bin/ln, /usr/bin/docker, /usr/bin/journalctl, /bin/tee, /bin/df, /usr/bin/tail, /usr/bin/xargs
+# Substitua <USUARIO> pelo usuário correto: actions-runner, ec2-user, etc
+<USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/mkdir, /bin/mkdir
+<USUARIO> ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln
+<USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/docker
+<USUARIO> ALL=(ALL) NOPASSWD: /bin/df

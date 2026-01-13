@@ -316,7 +316,7 @@ services:
 
 ### 4.4 Dar permissão de sudo sem senha para o runner
 
-O runner precisa de sudo para copiar arquivos, gerenciar Docker e salvar logs.
+O runner precisa de sudo para copiar arquivos e gerenciar Docker.
 
 **Opção 1: Usar o script automatizado (RECOMENDADO)**
 
@@ -337,16 +337,15 @@ sudo bash scripts/setup-sudoers.sh <nome_do_usuario>
 
 ```bash
 # Descobrir o usuário do Actions Runner
-ps aux | grep -E 'actions-runner.*run' | grep -v grep | awk '{print $1}' | head -1
+ls -la /opt/actions-runner | awk 'NR==2 {print $3}'
 
 # Criar arquivo de regras sudo
 sudo tee /etc/sudoers.d/actions-runner << 'EOF'
 # Substitua <USUARIO> pelo usuário correto (ec2-user, actions-runner, etc)
 <USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/mkdir, /bin/mkdir
-<USUARIO> ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln, /bin/tee
-<USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/journalctl
+<USUARIO> ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln
 <USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/docker
-<USUARIO> ALL=(ALL) NOPASSWD: /bin/df, /usr/bin/tail, /usr/bin/xargs
+<USUARIO> ALL=(ALL) NOPASSWD: /bin/df
 EOF
 
 # Definir permissões corretas
@@ -598,36 +597,6 @@ docker logs archbase-react_react-docs.1
 # Entrar no container para debug
 docker exec -it $(docker ps -q -f name=react-docs) sh
 ls -la /usr/share/nginx/html/
-```
-
-### Erro "sudo: a password is required" no workflow
-
-Se o workflow falhar com erro de senha do sudo:
-
-```
-sudo: a terminal is required to read the password
-sudo: a password is required
-```
-
-**Solução:**
-
-```bash
-# 1. Descobrir o usuário do Actions Runner
-ps aux | grep -E 'actions-runner.*run' | grep -v grep | awk '{print $1}' | head -1
-
-# 2. Usar o script automatizado
-cd /tmp
-git clone https://github.com/edsonmartins/archbase-react.git
-cd archbase-react
-sudo bash scripts/setup-sudoers.sh
-
-# 3. Testar (substitua <USUARIO> pelo usuário encontrado)
-sudo -u <USUARIO> sudo whoami
-# Deve retornar "root" sem pedir senha
-
-# 4. Se ainda falhar, verificar o arquivo sudoers
-sudo cat /etc/sudoers.d/actions-runner
-sudo visudo -c /etc/sudoers.d/actions-runner
 ```
 
 ## Passo 8: Monitoramento e Visualização de Logs
