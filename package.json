@@ -27,6 +27,7 @@
     "build:dev": "node scripts/build-unified.js --debug",
     "build:dev:no-docs": "node scripts/build-unified.js --debug --no-docs",
     "build:prod": "node scripts/build-unified.js --publish",
+    "build:prod-only": "node scripts/build-unified.js --no-docs",
     "pack": "node scripts/pack.js",
     "pack:dev": "node scripts/pack.js --debug",
     "publish:prod": "node scripts/publish.js",

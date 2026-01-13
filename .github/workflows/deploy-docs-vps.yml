@@ -33,7 +33,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm run build:prod
+        run: pnpm run build:prod-only
 
       - name: Build docs
         working-directory: ./docs-site
