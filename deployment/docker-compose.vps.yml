@@ -1,0 +1,48 @@
+version: '3.9'
+
+x-default-opts:
+  &default-opts
+  logging:
+    options:
+      max-size: "10m"
+
+networks:
+  traefik-network:
+    external: true
+
+services:
+  react-docs:
+    <<: *default-opts
+    image: nginx:alpine
+    networks:
+      - traefik-network
+    volumes:
+      - /srv/archbase-react-docs:/usr/share/nginx/html:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        order: start-first
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.react-docs.rule=Host(`react.archbase.dev`)"
+        - "traefik.http.routers.react-docs.entrypoints=websecure"
+        - "traefik.http.routers.react-docs.tls=true"
+        - "traefik.http.routers.react-docs.tls.certresolver=letsencrypt"
+        - "traefik.http.services.react-docs.loadbalancer.server.port=80"
+        - "traefik.http.routers.react-docs-http.rule=Host(`react.archbase.dev`)"
+        - "traefik.http.routers.react-docs-http.entrypoints=web"
+        - "traefik.http.routers.react-docs-http.middlewares=redirect-to-https"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
