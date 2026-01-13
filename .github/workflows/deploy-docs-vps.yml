@@ -45,19 +45,17 @@ jobs:
       - name: Salvar logs do build
         if: always()
         run: |
-          # Criar diretório de logs e ajustar permissões
-          sudo mkdir -p /var/log/actions-runner
-          sudo chown actions-runner:actions-runner /var/log/actions-runner
-          sudo chmod 755 /var/log/actions-runner
+          # Criar diretório de logs (apenas se não existir)
+          sudo mkdir -p /var/log/actions-runner || true
 
-          # Salvar logs do último job (sem sudo para criar arquivo)
-          journalctl -u actions-runner.* --since "1 hour ago" > /var/log/actions-runner/build-$(date +%Y%m%d_%H%M%S).log
+          # Salvar logs do último job
+          sudo journalctl -u actions-runner.* --since "1 hour ago" | sudo tee /var/log/actions-runner/build-$(date +%Y%m%d_%H%M%S).log > /dev/null
 
           # Criar link para o log mais recente
-          ln -sf /var/log/actions-runner/build-$(date +%Y%m%d_%H%M%S).log /var/log/actions-runner/latest-build.log
+          sudo ln -sf /var/log/actions-runner/build-$(date +%Y%m%d_%H%M%S).log /var/log/actions-runner/latest-build.log
 
           # Manter apenas últimos 20 logs
-          ls -t /var/log/actions-runner/build-*.log 2>/dev/null | tail -n +21 | xargs rm -f {}
+          ls -t /var/log/actions-runner/build-*.log 2>/dev/null | sudo tail -n +21 | sudo xargs -I {} rm -f {}
 
           echo "Logs salvos em /var/log/actions-runner/"
 
