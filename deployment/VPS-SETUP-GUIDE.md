@@ -178,14 +178,18 @@ tar xzf ./actions-runner-linux-x64-*.tar.gz
 
 # Instalar dependências do Actions Runner manualmente
 # O script installdependencies.sh pode não reconhecer Amazon Linux 2023
+# Nota: Não incluir curl (já está instalado como curl-minimal)
+# Importante: Instalar libicu (runtime) não libicu-devel (apenas headers)
 sudo dnf install -y \
   openssl-devel \
   zlib-devel \
-  libicu-devel \
+  libicu \
   tar \
-  curl \
   git \
   jq
+
+# Verificar se ICU foi instalado corretamente
+ldconfig -p | grep icu
 
 # Tentar rodar o script (pode falhar, mas dependências já estão instaladas)
 ./bin/installdependencies.sh || echo "Script falhou, mas dependências foram instaladas manualmente"
@@ -415,17 +419,40 @@ Se o script não reconhecer Amazon Linux 2023:
 
 ```bash
 # Instalar dependências manualmente
+# Nota: Pular curl (conflita com curl-minimal já instalado)
+# Importante: libicu (runtime) não libicu-devel
 sudo dnf install -y \
   openssl-devel \
   zlib-devel \
-  libicu-devel \
+  libicu \
   tar \
-  curl \
   git \
   jq
 
-# Continuar com a configuração (o script falhou, mas é OK)
+# Verificar ICU
+ldconfig -p | grep icu
+
+# Continuar com a configuração
 ./config.sh --url https://github.com/edsonmartins/archbase-react --token <TOKEN>
+```
+
+### Erro "Couldn't find a valid ICU package"
+
+Se aparecer o erro `Process terminated. Couldn't find a valid ICU package installed`:
+
+```bash
+# O pacote correto é libicu (runtime), não libicu-devel
+sudo dnf install -y libicu
+
+# Verificar se foi instalado
+ldconfig -p | grep libicu
+
+# Se ainda falhar, verificar bibliotecas disponíveis
+sudo dnf search libicu
+sudo dnf search icu
+
+# Em alguns casos pode ser necessário
+sudo dnf install -y libicu-${VERSION}  # ex: libicu-69.1
 ```
 
 ### Runner não aparece no GitHub
