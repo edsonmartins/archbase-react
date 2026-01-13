@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "jsx": "react-jsx",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": false,

@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "outDir": "dist",
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "emitDeclarationOnly": true,
     "skipLibCheck": true,
     "paths": {

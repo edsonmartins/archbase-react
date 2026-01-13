@@ -4,9 +4,10 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "noEmit": false,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "tsBuildInfoFile": "./.tsbuildinfo",
+    "composite": true,
     
     // Same config as main lib
     "strict": true,

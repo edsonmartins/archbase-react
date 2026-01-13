@@ -20,7 +20,7 @@
     "rootDir": "./src",
     "declaration": true,
     "emitDeclarationOnly": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "noEmit": false,
     
     /* Type Checking - Relaxed for legacy code */
