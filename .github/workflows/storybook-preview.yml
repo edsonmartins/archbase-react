@@ -10,7 +10,7 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     env:
-      STORYBOOK_DEPLOY_URL: ${{ steps.publish.outputs.url || 'https://storybook.preview' }}
+      STORYBOOK_DEPLOY_URL: 'https://storybook.preview'
     steps:
       - uses: actions/checkout@v4
       - name: setup node
