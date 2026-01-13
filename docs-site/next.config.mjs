@@ -45,10 +45,6 @@ const nextConfig = {
     'suneditor',
     'suneditor-react',
   ],
-  // Reduzir uso de memória no build
-  experimental: {
-    webpackMemoryOptimizations: true,
-  },
   webpack: (config, { isServer }) => {
     // Prevent next/document from being bundled outside of _document
     config.externals = config.externals || [];
