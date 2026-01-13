@@ -119,12 +119,13 @@ export function useForceUpdate() {
 
 export function useUniqueId() {
 	if (SSR_SUPPORT_ENABLED) {
-		if (React.version.startsWith("18")) {
+		// React 18+ tem useId nativo
+		if (React.version && React.version.startsWith("18")) {
 			return `s${React.useId().replace(/\:/g, "")}`;
 		}
-
-		if ((React as any).unstable_useOpaqueIdentifier) {
-			return `s${(React as any).unstable_useOpaqueIdentifier().replace(/\:/g, "")}`;
+		// React 19+ sempre tem useId
+		if (typeof React.useId === "function") {
+			return `s${React.useId().replace(/\:/g, "")}`;
 		}
 	}
 
