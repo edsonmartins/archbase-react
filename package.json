@@ -37,7 +37,8 @@
     "version:update": "node scripts/update-version.js",
     "clean": "node scripts/clean.js",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "generate:catalog": "node scripts/generate-component-catalog.js"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.5",
