@@ -35,25 +35,20 @@ const nextConfig = {
   // Se precisar usar subpath, descomente a linha abaixo:
   // basePath: process.env.NODE_ENV === 'production' ? '/docs' : undefined,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'mdx'],
-  // Set workspace root to avoid warning about multiple lockfiles
-  outputFileTracingRoot: path.resolve(__dirname, '..'),
+  // Otimizações para build estático
+  images: {
+    unoptimized: true,
+  },
+  // Transpilar apenas pacotes ESM que não podem ser usados diretamente
   transpilePackages: [
-    '@archbase/core',
-    '@archbase/components',
-    '@archbase/data',
-    '@archbase/layout',
-    '@archbase/admin',
-    '@archbase/security',
-    '@archbase/template',
-    '@archbase/advanced',
-    '@archbase/ssr',
     '@archbase/feature-flags',
-    '@mantine/core',
-    '@mantine/hooks',
-    '@mantinex/mantine-header',
     'suneditor',
     'suneditor-react',
   ],
+  // Reduzir uso de memória no build
+  experimental: {
+    webpackMemoryOptimizations: true,
+  },
   webpack: (config, { isServer }) => {
     // Prevent next/document from being bundled outside of _document
     config.externals = config.externals || [];
@@ -61,20 +56,23 @@ const nextConfig = {
       'next/document': 'next/document',
     });
 
-    // Resolve workspace packages to source directory
+    // Resolve workspace packages to dist directory (já buildados pelo Vite)
     const packagesPath = path.resolve(__dirname, '../packages');
 
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@archbase/core': path.join(packagesPath, 'core/src'),
-      '@archbase/components': path.join(packagesPath, 'components/src'),
-      '@archbase/data': path.join(packagesPath, 'data/src'),
-      '@archbase/layout': path.join(packagesPath, 'layout/src'),
-      '@archbase/admin': path.join(packagesPath, 'admin/src'),
-      '@archbase/security': path.join(packagesPath, 'security/src'),
-      '@archbase/template': path.join(packagesPath, 'template/src'),
-      '@archbase/advanced': path.join(packagesPath, 'advanced/src'),
+      '@archbase/core': path.join(packagesPath, 'core/dist'),
+      '@archbase/components': path.join(packagesPath, 'components/dist'),
+      '@archbase/data': path.join(packagesPath, 'data/dist'),
+      '@archbase/layout': path.join(packagesPath, 'layout/dist'),
+      '@archbase/admin': path.join(packagesPath, 'admin/dist'),
+      '@archbase/security': path.join(packagesPath, 'security/dist'),
+      '@archbase/template': path.join(packagesPath, 'template/dist'),
+      '@archbase/advanced': path.join(packagesPath, 'advanced/dist'),
+      '@archbase/security-ui': path.join(packagesPath, 'security-ui/dist'),
+      '@archbase/tools': path.join(packagesPath, 'tools/dist'),
       '@archbase/ssr': path.join(packagesPath, 'ssr/src'),
+      '@archbase/feature-flags': path.join(packagesPath, 'feature-flags/src'),
     };
 
     // Add raw-loader for demo code imports
