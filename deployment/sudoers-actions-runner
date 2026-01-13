@@ -6,6 +6,6 @@
 # Usuário do Actions Runner (substitua pelo nome correto se necessário)
 # Substitua <USUARIO> pelo usuário correto: actions-runner, ec2-user, etc
 <USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/mkdir, /bin/mkdir
-<USUARIO> ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln
+<USUARIO> ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln, /bin/tee
 <USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/docker
 <USUARIO> ALL=(ALL) NOPASSWD: /bin/df

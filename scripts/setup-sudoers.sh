@@ -69,7 +69,7 @@ cat > "$SUDOERS_FILE" << EOF
 
 # Permitir comandos específicos do workflow sem senha
 $ACTIONS_USER ALL=(ALL) NOPASSWD: /usr/bin/mkdir, /bin/mkdir
-$ACTIONS_USER ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln
+$ACTIONS_USER ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln, /bin/tee
 $ACTIONS_USER ALL=(ALL) NOPASSWD: /usr/bin/docker
 $ACTIONS_USER ALL=(ALL) NOPASSWD: /bin/df
 EOF

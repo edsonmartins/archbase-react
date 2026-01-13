@@ -254,14 +254,22 @@ sudo chown -R ec2-user:ec2-user /srv/archbase-react-docs
 sudo mkdir -p /opt/archbase-infrastructure
 ```
 
-### 4.3 Copiar docker-compose.yml
+### 4.3 docker-compose.yml (OPCIONAL)
+
+> **Nota**: O workflow de deploy cria automaticamente o `docker-compose.yml` e o diretório `/opt/archbase-infrastructure` se eles não existirem. Esta seção é apenas para referência ou se você quiser customizar a configuração.
 
 ```bash
-# Criar o arquivo
+# Criar diretório (opcional, o workflow cria se necessário)
+sudo mkdir -p /opt/archbase-infrastructure
+```
+
+Se preferir criar manualmente ou customizar:
+
+```bash
 sudo nano /opt/archbase-infrastructure/docker-compose.yml
 ```
 
-Copie o conteúdo de `deployment/docker-compose.example.yml`:
+Conteúdo de referência:
 
 ```yaml
 version: '3.9'
@@ -292,18 +300,18 @@ services:
         delay: 5s
         max_attempts: 3
       update_config:
-        parallelism:1
+        parallelism: 1
         delay: 10s
         failure_action: rollback
         order: start-first
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.react-docs.rule=Host(`react.archbase.dev`)"
+        - "traefik.http.routers.react-docs.rule=Host(\`react.archbase.dev\`)"
         - "traefik.http.routers.react-docs.entrypoints=websecure"
         - "traefik.http.routers.react-docs.tls=true"
         - "traefik.http.routers.react-docs.tls.certresolver=letsencrypt"
         - "traefik.http.services.react-docs.loadbalancer.server.port=80"
-        - "traefik.http.routers.react-docs-http.rule=Host(`react.archbase.dev`)"
+        - "traefik.http.routers.react-docs-http.rule=Host(\`react.archbase.dev\`)"
         - "traefik.http.routers.react-docs-http.entrypoints=web"
         - "traefik.http.routers.react-docs-http.middlewares=redirect-to-https"
     healthcheck:
@@ -316,7 +324,7 @@ services:
 
 ### 4.4 Dar permissão de sudo sem senha para o runner
 
-O runner precisa de sudo para copiar arquivos e gerenciar Docker.
+O runner precisa de sudo para copiar arquivos, criar configurações e gerenciar Docker.
 
 **Opção 1: Usar o script automatizado (RECOMENDADO)**
 
@@ -343,7 +351,7 @@ ls -la /opt/actions-runner | awk 'NR==2 {print $3}'
 sudo tee /etc/sudoers.d/actions-runner << 'EOF'
 # Substitua <USUARIO> pelo usuário correto (ec2-user, actions-runner, etc)
 <USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/mkdir, /bin/mkdir
-<USUARIO> ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln
+<USUARIO> ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/ln, /bin/tee
 <USUARIO> ALL=(ALL) NOPASSWD: /usr/bin/docker
 <USUARIO> ALL=(ALL) NOPASSWD: /bin/df
 EOF
