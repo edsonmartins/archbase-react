@@ -59,13 +59,6 @@ jobs:
           sudo rm -rf /srv/archbase-react-docs/*
           sudo cp -r docs-site/out/* /srv/archbase-react-docs/
 
-          # Criar diretório de infraestrutura e copiar docker-compose.yml se não existir
-          sudo mkdir -p /opt/archbase-infrastructure
-          if [ ! -f "/opt/archbase-infrastructure/docker-compose.yml" ]; then
-            echo "Copying docker-compose.yml..."
-            sudo cp deployment/docker-compose.vps.yml /opt/archbase-infrastructure/docker-compose.yml
-          fi
-
           # Recrear stack com nova versão (Docker Swarm)
           cd /opt/archbase-infrastructure
           docker stack deploy -c docker-compose.yml archbase-react
