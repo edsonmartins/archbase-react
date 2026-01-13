@@ -3,18 +3,31 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@archbase/core": ["../core/src"],
-      "@archbase/data": ["../data/src"],
-      "@archbase/components": ["../components/src"],
-      "@archbase/layout": ["../layout/src"],
-      "@archbase/security": ["../security/src"]
+      "@archbase/core": [
+        "../core/src"
+      ],
+      "@archbase/data": [
+        "../data/src"
+      ],
+      "@archbase/components": [
+        "../components/src"
+      ],
+      "@archbase/layout": [
+        "../layout/src"
+      ],
+      "@archbase/security": [
+        "../security/src"
+      ]
     },
     "outDir": "dist",
     "declaration": true,
     "strict": false,
     "noImplicitAny": false,
     "strictNullChecks": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declarationMap": false,
+    "composite": true,
+    "tsBuildInfoFile": "./.tsbuildinfo"
   },
   "include": [
     "src/**/*"
