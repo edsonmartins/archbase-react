@@ -53,7 +53,13 @@
       "Bash(git add:*)",
       "Bash(git reset:*)",
       "Bash(git commit:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(git checkout:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(xargs git rm:*)",
+      "Bash(git rm:*)",
+      "Bash(NODE_OPTIONS=\"--max_old_space_size=16384\" pnpm run build:*)"
     ],
     "deny": []
   }
