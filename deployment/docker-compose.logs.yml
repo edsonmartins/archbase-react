@@ -1,0 +1,54 @@
+version: '3.9'
+
+x-default-opts:
+  &default-opts
+  logging:
+    options:
+      max-size: "10m"
+
+networks:
+  traefik-network:
+    external: true
+
+services:
+  # Servidor nginx para visualizar logs salvos
+  logs-server:
+    <<: *default-opts
+    image: nginx:alpine
+    networks:
+      - traefik-network
+    volumes:
+      - /var/log/actions-runner:/usr/share/nginx/html:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.logs-internal.rule=Host(`logs-internal.archbase.dev`)"
+        - "traefik.http.routers.logs-internal.entrypoints=websecure"
+        - "traefik.http.routers.logs-internal.tls=true"
+        - "traefik.http.routers.logs-internal.tls.certresolver=letsencrypt"
+        - "traefik.http.services.logs-internal.loadbalancer.server.port=80"
+
+  # Dozzle - Visualizador de logs Docker em tempo real
+  dozzle:
+    <<: *default-opts
+    image: amir20/dozzle:latest
+    networks:
+      - traefik-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.dozzle.rule=Host(`logs.archbase.dev`)"
+        - "traefik.http.routers.dozzle.entrypoints=websecure"
+        - "traefik.http.routers.dozzle.tls=true"
+        - "traefik.http.routers.dozzle.tls.certresolver=letsencrypt"
+        - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
