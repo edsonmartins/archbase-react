@@ -4,11 +4,15 @@ Guia passo a passo para configurar o deployment automatizado da documentação A
 
 ## Pré-requisitos
 
-- VPS com **Amazon Linux 2023**
+- VPS com **Amazon Linux 2023** (2 vCPUs recomendado)
 - Docker Swarm instalado
 - Traefik configurado com rede `traefik-network`
 - Acesso SSH ao VPS com sudo
 - Domínio archbase.dev configurado
+
+**Especificações testadas:**
+- VPS: 2 vCPUs, 8GB RAM
+- Tempo de build: ~6m15s
 
 ## Visão Geral
 
@@ -405,11 +409,53 @@ ls -la /srv/archbase-react-docs/
 cat /srv/archbase-react-docs/index.html
 ```
 
-## Passo 8: Acessar Documentação
+## Passo 10: Acessar Documentação
 
 Acesse: https://react.archbase.dev
 
 Se tudo estiver correto, você deve ver a documentação do Archbase React.
+
+## Passo 11: Deploy Manual (Opcional)
+
+Caso precise fazer deploy manual sem passar pelo GitHub Actions:
+
+```bash
+# Clonar repositório
+cd /tmp
+git clone https://github.com/edsonmartins/archbase-react.git
+cd archbase-react
+
+# Instalar dependências
+pnpm install
+
+# Build dos pacotes
+pnpm run build:dev
+
+# Build da documentação (com otimizações)
+cd docs-site
+export NODE_OPTIONS=--max_old_space_size=8192
+export NEXT_PRIVATE_WORKER_THREADS=2
+pnpm run build
+
+# Copiar arquivos
+sudo rm -rf /srv/archbase-react-docs/*
+sudo cp -r out/* /srv/archbase-react-docs/
+
+# Recrear stack
+cd /opt/archbase-infrastructure
+docker stack deploy -c docker-compose.yml archbase-react
+```
+
+## Otimizações Aplicadas
+
+O build foi otimizado para reduzir o tempo de 10m35s para ~6m15s:
+
+| Otimização | Descrição |
+|------------|-----------|
+| `turbo.json: concurrency: 50` | Aumenta paralelismo do build |
+| `tsconfig: skipLibCheck: true` | Evita revalidar tipos |
+| `tsconfig: declarationMap: false` | Geração mais rápida de declarações |
+| `NEXT_PRIVATE_WORKER_THREADS=2` | Paraleliza geração de páginas estáticas |
 
 ## Troubleshooting
 
@@ -531,34 +577,115 @@ docker exec -it $(docker ps -q -f name=react-docs) sh
 ls -la /usr/share/nginx/html/
 ```
 
-## Deploy Manual (Opcional)
+## Passo 8: Monitoramento e Visualização de Logs
 
-Caso precise fazer deploy manual sem passar pelo GitHub Actions:
+### 8.1 Instalar Dozzle (Visualizador de Logs Docker)
+
+O Dozzle é uma interface web leve para visualizar logs de containers Docker:
 
 ```bash
-# Clonar repositório
-cd /tmp
-git clone https://github.com/edsonmartins/archbase-react.git
-cd archbase-react
+# Adicionar serviço Dozzle ao docker-compose.yml
+sudo nano /opt/archbase-infrastructure/docker-compose.yml
+```
 
-# Instalar dependências
-pnpm install
+Adicione o serviço:
 
-# Build dos pacotes
-pnpm run build:dev
+```yaml
+services:
+  # ... serviço react-docs existente ...
 
-# Build da documentação
-cd docs-site
-export NODE_OPTIONS=--max_old_space_size=8192
-pnpm run build
+  dozzle:
+    image: amir20/dozzle:latest
+    networks:
+      - traefik-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.dozzle.rule=Host(`logs.archbase.dev`)"
+        - "traefik.http.routers.dozzle.entrypoints=websecure"
+        - "traefik.http.routers.dozzle.tls=true"
+        - "traefik.http.routers.dozzle.tls.certresolver=letsencrypt"
+        - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+```
 
-# Copiar arquivos
-sudo rm -rf /srv/archbase-react-docs/*
-sudo cp -r out/* /srv/archbase-react-docs/
+Recriar a stack:
 
-# Recrear stack
+```bash
 cd /opt/archbase-infrastructure
 docker stack deploy -c docker-compose.yml archbase-react
+```
+
+Acesse: https://logs.archbase.dev
+
+### 8.2 Comandos úteis para visualizar logs
+
+```bash
+# Logs do GitHub Actions Runner (tempo real)
+sudo journalctl -u actions-runner.* -f
+
+# Logs específicos de um job
+sudo journalctl -u actions-runner.* --since "5 minutes ago"
+
+# Logs do container nginx
+docker logs -f archbase-react_react-docs.1
+
+# Logs do Traefik (para debug de certificados)
+docker logs $(docker ps -q -f name=traefik) -f
+
+# Ver todos os serviços da stack
+docker stack ps archbase-react
+
+# Ver logs de todos os containers da stack
+docker service logs archbase-react_react-docs --tail 50
+```
+
+### 8.3 Script para facilitar visualização
+
+Criar script helper:
+
+```bash
+sudo tee /usr/local/bin/view-logs.sh << 'EOF'
+#!/bin/bash
+case "$1" in
+  runner)
+    sudo journalctl -u actions-runner.* -f
+    ;;
+  docs)
+    docker logs -f archbase-react_react-docs.1
+    ;;
+  traefik)
+    docker logs -f $(docker ps -q -f name=traefik)
+    ;;
+  all)
+    echo "=== GitHub Runner ==="
+    sudo journalctl -u actions-runner.* -n 20 --no-pager
+    echo ""
+    echo "=== Container Docs ==="
+    docker logs archbase-react_react-docs.1 --tail 20
+    ;;
+  *)
+    echo "Uso: view-logs.sh {runner|docs|traefik|all}"
+    exit 1
+    ;;
+esac
+EOF
+
+sudo chmod +x /usr/local/bin/view-logs.sh
+```
+
+Uso:
+
+```bash
+view-logs.sh runner   # Logs do GitHub Actions
+view-logs.sh docs     # Logs do container nginx
+view-logs.sh traefik  # Logs do Traefik
+view-logs.sh all      # Resumo de todos
 ```
 
 ## Manutenção
