@@ -16,19 +16,19 @@ Uma biblioteca moderna de componentes React TypeScript com arquitetura modular p
 
 ```bash
 # Build produção
-npm run build
+pnpm run build
 
 # Build debug
-npm run build:debug
+pnpm run build:debug
 
 # Build + publicação (produção)
-npm run build:publish
+pnpm run build:publish
 
 # Build + publicação (debug no Verdaccio)
-npm run build:publish:debug
+pnpm run build:publish:debug
 
 # Limpar projeto
-npm run clean
+pnpm run clean
 ```
 
 > 📖 **Documentação completa**: [BUILD-DEBUG.md](./BUILD-DEBUG.md)
@@ -71,34 +71,34 @@ Todos os pacotes requerem React e Mantine como peer dependencies:
 
 ```bash
 # Instalar dependências base
-npm install react react-dom @mantine/core @mantine/hooks
+pnpm install react react-dom @mantine/core @mantine/hooks
 ```
 
 ### Instalação por Pacote
 
 ```bash
 # Pacote básico
-npm install @archbase/core
+pnpm install @archbase/core
 
 # Componentes com dependências específicas
-npm install @archbase/components @mantine/form @mantine/dates @mantine/notifications @mantine/modals @mantine/spotlight @mantine/dropzone @mantine/emotion @mantine/tiptap @tabler/icons-react
+pnpm install @archbase/components @mantine/form @mantine/dates @mantine/notifications @mantine/modals @mantine/spotlight @mantine/dropzone @mantine/emotion @mantine/tiptap @tabler/icons-react
 
 # Segurança
-npm install @archbase/security @mantine/modals @mantine/notifications @tabler/icons-react
+pnpm install @archbase/security @mantine/modals @mantine/notifications @tabler/icons-react
 
 # Layout
-npm install @archbase/layout @mantine/modals @mantine/notifications @tabler/icons-react
+pnpm install @archbase/layout @mantine/modals @mantine/notifications @tabler/icons-react
 
 # Administrativo
-npm install @archbase/admin @mantine/modals @mantine/notifications @tabler/icons-react
+pnpm install @archbase/admin @mantine/modals @mantine/notifications @tabler/icons-react
 ```
 
 ### Instalação Completa
 
 ```bash
 # Instalar todos os pacotes com dependências
-npm install @archbase/core @archbase/data @archbase/components @archbase/layout @archbase/security @archbase/security-ui @archbase/feature-flags @archbase/admin @archbase/advanced @archbase/template @archbase/tools @archbase/ssr
-npm install @mantine/core @mantine/hooks @mantine/form @mantine/dates @mantine/notifications @mantine/modals @mantine/spotlight @mantine/dropzone @mantine/emotion @mantine/tiptap @tabler/icons-react
+pnpm install @archbase/core @archbase/data @archbase/components @archbase/layout @archbase/security @archbase/security-ui @archbase/feature-flags @archbase/admin @archbase/advanced @archbase/template @archbase/tools @archbase/ssr
+pnpm install @mantine/core @mantine/hooks @mantine/form @mantine/dates @mantine/notifications @mantine/modals @mantine/spotlight @mantine/dropzone @mantine/emotion @mantine/tiptap @tabler/icons-react
 ```
 
 ## 📊 Performance dos Builds
@@ -651,41 +651,41 @@ O projeto foi completamente reorganizado com scripts modernos e simplificados:
 
 ```bash
 # Atualizar versão de todos os packages
-npm run version:update 3.0.12
+pnpm run version:update 3.0.12
 
 # Build de todos os packages
-npm run build              # Modo release
-npm run build:debug        # Modo debug (com timestamp)
+pnpm run build              # Modo release
+pnpm run build:debug        # Modo debug (com timestamp)
 
 # Empacotar packages
-npm run pack               # Modo release
-npm run pack:debug         # Modo debug
+pnpm run pack               # Modo release
+pnpm run pack:debug         # Modo debug
 
 # Publicar no Verdaccio
-npm run publish:verdaccio
+pnpm run publish:verdaccio
 
 # Limpar projeto
-npm run clean
+pnpm run clean
 
 # Outros comandos úteis
-npm run format             # Formatar código
-npm run lint               # Verificar código
+pnpm run format             # Formatar código
+pnpm run lint               # Verificar código
 ```
 
 ### 📋 Fluxo de Trabalho Completo
 
 ```bash
 # 1. Atualizar versão (quando necessário)
-npm run version:update 3.0.12
+pnpm run version:update 3.0.12
 
 # 2. Build completo
-npm run build
+pnpm run build
 
 # 3. Empacotar packages
-npm run pack
+pnpm run pack
 
 # 4. Publicar no Verdaccio
-npm run publish:verdaccio
+pnpm run publish:verdaccio
 ```
 
 ### 🎯 Como Funciona
@@ -716,7 +716,7 @@ Consulte [SCRIPTS.md](./SCRIPTS.md) para documentação completa de todos os scr
 ### Instalação e Configuração
 ```bash
 # Instalar Verdaccio globalmente
-npm install -g verdaccio
+pnpm install -g verdaccio
 
 # Iniciar Verdaccio
 verdaccio
@@ -731,7 +731,7 @@ pnpm config set @archbase:registry http://localhost:4873
 ### Publicação
 ```bash
 # Publicar todos os packages
-npm run publish:verdaccio
+pnpm run publish:verdaccio
 ```
 
 ## 📄 Licença
