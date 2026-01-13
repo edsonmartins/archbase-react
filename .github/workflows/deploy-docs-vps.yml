@@ -60,56 +60,13 @@ jobs:
           # Criar diretório de infraestrutura e docker-compose.yml se não existir
           sudo mkdir -p /opt/archbase-infrastructure
           if [ ! -f "/opt/archbase-infrastructure/docker-compose.yml" ]; then
-            sudo tee /opt/archbase-infrastructure/docker-compose.yml << 'EOF'
-          version: '3.9'
-
-          x-default-opts:
-            &default-opts
-            logging:
-              options:
-                max-size: "10m"
-
-          networks:
-            traefik-network:
-              external: true
-
-          services:
-            react-docs:
-              <<: *default-opts
-              image: nginx:alpine
-              networks:
-                - traefik-network
-              volumes:
-                - /srv/archbase-react-docs:/usr/share/nginx/html:ro
-              deploy:
-                mode: replicated
-                replicas: 1
-                restart_policy:
-                  condition: on-failure
-                  delay: 5s
-                  max_attempts: 3
-                update_config:
-                  parallelism: 1
-                  delay: 10s
-                  failure_action: rollback
-                  order: start-first
-                labels:
-                  - "traefik.enable=true"
-                  - "traefik.http.routers.react-docs.rule=Host(\`react.archbase.dev\`)"
-                  - "traefik.http.routers.react-docs.entrypoints=websecure"
-                  - "traefik.http.routers.react-docs.tls=true"
-                  - "traefik.http.routers.react-docs.tls.certresolver=letsencrypt"
-                  - "traefik.http.services.react-docs.loadbalancer.server.port=80"
-                  - "traefik.http.routers.react-docs-http.rule=Host(\`react.archbase.dev\`)"
-                  - "traefik.http.routers.react-docs-http.entrypoints=web"
-                  - "traefik.http.routers.react-docs-http.middlewares=redirect-to-https"
-              healthcheck:
-                test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
-                interval: 30s
-                timeout: 10s
-                retries: 3
-                start_period: 5s
-          EOF
+            echo "Creating docker-compose.yml from base64..."
+            sudo bash -c "$(cat <<'INNER_EOF'
+            base64 -d <<'EOF' > /opt/archbase-infrastructure/docker-compose.yml
+            dmVyc2lvbjogJzMuOScKCngtZGVmYXVsdC1vcHRzOgogICZkZWZhdWx0LW9wdHMKICBsb2dnaW5nOgogICAgb3B0aW9uczoKICAgICAgbWF4LXNpemU6ICIxMG0iCgpuZXR3b3JrczoKICB0cmFlZmlrLW5ldHdvcms6CiAgICBleHRlcm5hbDogdHJ1ZQoKc2VydmljZXM6CiAgcmVhY3QtZG9jczoKICAgIDw8OiAqZGVmYXVsdC1vcHRzCiAgICBpbWFnZTogbmdpbng6YWxwaW5lCiAgICBuZXR3b3JrczoKICAgICAgLSB0cmFlZmlrLW5ldHdvcmsKICAgIHZvbHVtZXM6CiAgICAgIC0gL3Nydi9hcmNoYmFzZS1yZWFjdC1kb2NzOi91c3Ivc2hhcmUvbmdpbngvaHRtbDpybwogICAgZGVwbG95OgogICAgICBtb2RlOiByZXBsaWNhdGVkCiAgICAgIHJlcGxpY2FzOiAxCiAgICAgIHJlc3RhcnRfcG9saWN5OgogICAgICAgIGNvbmRpdGlvbjogb24tZmFpbHVyZQogICAgICAgIGRlbGF5OiA1cwogICAgICAgIG1heF9hdHRlbXB0czogMwogICAgICB1cGRhdGVfY29uZmlnOgogICAgICAgIHBhcmFsbGVsaXNtOiAxCiAgICAgICAgZGVsYXk6IDEwcwogICAgICAgIGZhaWx1cmVfYWN0aW9uOiByb2xsYmFjawogICAgICAgIG9yZGVyOiBzdGFydC1maXJzdAogICAgICBsYWJlbHM6CiAgICAgICAgLSAidHJhZWZpay5lbmFibGU9dHJ1ZSIKICAgICAgICAtICJ0cmFlZmlrLmh0dHAucm91dGVycy5yZWFjdC1kb2NzLnJ1bGU9SG9zdChgcmVhY3QuYXJjaGJhc2UuZGV2YykiCiAgICAgICAgLSAidHJhZWZpay5odHRwLnJvdXRlcnMucmVhY3QtZG9jcy5lbnRyeXBvaW50cz13ZWJzZWN1cmUiCiAgICAgICAgLSAidHJhZWZpay5odHRwLnJvdXRlcnMucmVhY3QtZG9jcy50bHM9dHJ1ZSIKICAgICAgICAtICJ0cmFlZmlrLmh0dHAucm91dGVycy5yZWFjdC1kb2NzLnRscy5jZXJ0cmVzb2x2ZXI9bGV0c2VuY3J5cHQiCiAgICAgICAgLSAidHJhZWZpay5odHRwLnNlcnZpY2VzLnJlYWN0LWRvY3MubG9hZGJhbGFuY2VyLnNlcnZlci5wb3J0PTgwIgogICAgICAgIC0gInRyYWVmaWsuaHR0cC5yb3V0ZXJzLnJlYWN0LWRvY3MtaHR0cC5ydWxlPUhvc3QoYHJlYWN0LmFyY2hiYXNlLmRldmApIgogICAgICAgIC0gInRyYWVmaWsuaHR0cC5yb3V0ZXJzLnJlYWN0LWRvY3MtaHR0cC5lbnRyeXBvaW50cz13ZWIiCiAgICAgICAgLSAidHJhZWZpay5odHRwLnJvdXRlcnMucmVhY3QtZG9jcy1odHRwLm1pZGRsZXdhcmVzPXJlZGlyZWN0LXRvLWh0dHBzIgogICAgaGVhbHRoY2hlY2s6CiAgICAgIHRlc3Q6IFsiQ01EIiwgIndnZXQiLCAiLXF1aWV0IiwgIi0tdHJpZXMiLCAiMSIsICItLXNwaWRlciIsICJodHRwOi8vbG9jYWxob3N0OjgwIl0KICAgICAgIGludGVydmFsOiAzMHMKICAgICAgIHRpbWVvdXQ6IDEwcwogICAgICAgcmV0cmllczogMwogICAgICAgc3RhcnRfcGVyaW9kOiA1cw==
+EOF
+INNER_EOF
+            )"
           fi
 
           # Recrear stack com nova versão (Docker Swarm)
