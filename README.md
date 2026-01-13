@@ -5,7 +5,7 @@ Uma biblioteca moderna de componentes React TypeScript com arquitetura modular p
 ## ✨ Principais Melhorias
 
 - **🔧 Stack Moderna**: React 19, TypeScript 5.7+, Vite 6, Vitest
-- **📦 Arquitetura Modular**: 9 pacotes independentes com tree-shaking otimizado
+- **📦 Arquitetura Modular**: 12 pacotes independentes com tree-shaking otimizado
 - **⚡ Performance**: Build 5x mais rápido com Vite 6 e bundles otimizados
 - **🎯 Type Safety**: TypeScript rigoroso com inferência melhorada
 - **🧪 Testing**: Vitest nativo com cobertura completa
@@ -36,16 +36,18 @@ npm run clean
 ## 📁 Estrutura de Pacotes
 
 ```
-@archbase/core        # Fundação (contexts, error handling, IOC, validator)
-@archbase/data        # Camada de dados (datasource, service, hooks)
-@archbase/components  # Componentes base (editors, buttons, containers)
-@archbase/layout      # Layouts avançados (spaces, masonry, tabs)
-@archbase/security    # Sistema de segurança (auth, users, permissions)
-@archbase/admin       # Layout administrativo completo
-@archbase/advanced    # Componentes avançados (querybuilder, datagrid)
-@archbase/template    # Templates CRUD (form, panel, masonry, space)
-@archbase/tools       # Ferramentas para desenvolvedores (debug, performance, dev-utils)
-@archbase/ssr         # Utilitários SSR para TanStack Start e Next.js
+@archbase/core          # Fundação (contexts, error handling, IOC, validator)
+@archbase/data          # Camada de dados (datasource, service, hooks)
+@archbase/components    # Componentes base (editors, buttons, containers)
+@archbase/layout        # Layouts avançados (spaces, masonry, tabs)
+@archbase/security      # Sistema de segurança (auth, users, permissions)
+@archbase/security-ui   # Componentes UI de segurança (forms, modals, views)
+@archbase/feature-flags # Feature flags com Unleash
+@archbase/admin         # Layout administrativo completo
+@archbase/advanced      # Componentes avançados (querybuilder, datagrid)
+@archbase/template      # Templates CRUD (form, panel, masonry, space)
+@archbase/tools         # Ferramentas para desenvolvedores (debug, performance, dev-utils)
+@archbase/ssr           # Utilitários SSR para TanStack Start e Next.js
 ```
 
 ## 🛠️ Tecnologias
@@ -56,7 +58,7 @@ npm run clean
 - **Vitest** (testing framework)
 - **pnpm workspaces** (monorepo)
 - **Turbo** (build pipeline)
-- **Mantine 8.1.2** (UI components)
+- **Mantine 8.3.12** (UI components)
 - **TanStack Query v5** (data fetching)
 - **Zustand 5** (state management)
 - **i18next** (internacionalização)
@@ -95,7 +97,7 @@ npm install @archbase/admin @mantine/modals @mantine/notifications @tabler/icons
 
 ```bash
 # Instalar todos os pacotes com dependências
-npm install @archbase/core @archbase/data @archbase/components @archbase/layout @archbase/security @archbase/admin @archbase/advanced @archbase/template @archbase/tools
+npm install @archbase/core @archbase/data @archbase/components @archbase/layout @archbase/security @archbase/security-ui @archbase/feature-flags @archbase/admin @archbase/advanced @archbase/template @archbase/tools @archbase/ssr
 npm install @mantine/core @mantine/hooks @mantine/form @mantine/dates @mantine/notifications @mantine/modals @mantine/spotlight @mantine/dropzone @mantine/emotion @mantine/tiptap @tabler/icons-react
 ```
 
@@ -132,6 +134,8 @@ npm install @mantine/core @mantine/hooks @mantine/form @mantine/dates @mantine/n
 - ✅ Package @archbase/components com 80+ componentes
 - ✅ Package @archbase/layout com layouts avançados
 - ✅ Package @archbase/security com sistema de autenticação
+- ✅ Package @archbase/security-ui com componentes UI de segurança
+- ✅ Package @archbase/feature-flags com integração Unleash
 - ✅ Package @archbase/admin com layout administrativo
 - ✅ Package @archbase/advanced com componentes avançados
 - ✅ Package @archbase/template com templates CRUD
@@ -180,6 +184,8 @@ const apiService = container.get<ArchbaseRemoteApiService>(
 import { ArchbaseEdit, ArchbaseButton } from '@archbase/components';
 import { ArchbaseSpaceTemplate } from '@archbase/template';
 import { ArchbaseLogin } from '@archbase/security';
+import { UserModal, GroupModal } from '@archbase/security-ui';
+import { useFlag } from '@archbase/feature-flags';
 import { ArchbaseDebugPanel, logger } from '@archbase/tools';
 ```
 
@@ -307,6 +313,81 @@ function UsersPage() {
 - **Fallbacks automáticos** para ambientes sem SSR
 
 **📖 Documentação Completa**: [packages/ssr/README.md](./packages/ssr/README.md)
+
+## 🔐 @archbase/security-ui - Componentes UI de Segurança
+
+O pacote **@archbase/security-ui** oferece componentes de interface prontos para gestão de segurança:
+
+### 🚀 **Principais Recursos**
+
+- **UserModal**: Modal completo para criação/edição de usuários
+- **GroupModal**: Modal para gestão de grupos e permissões
+- **ArchbaseSecurityView**: Visualização de configurações de segurança
+- **Formulários validados**: Com integração automática com DataSource
+
+### 💡 **Exemplo de Uso**
+
+```typescript
+import { UserModal, GroupModal } from '@archbase/security-ui';
+
+function SecurityPage() {
+  const [isUserModalOpen, setUserModalOpen] = useState(false);
+  const [isGroupModalOpen, setGroupModalOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setUserModalOpen(true)}>Novo Usuário</Button>
+      <Button onClick={() => setGroupModalOpen(true)}>Novo Grupo</Button>
+
+      <UserModal
+        opened={isUserModalOpen}
+        onClose={() => setUserModalOpen(false)}
+        dataSource={userDataSource}
+      />
+
+      <GroupModal
+        opened={isGroupModalOpen}
+        onClose={() => setGroupModalOpen(false)}
+        dataSource={groupDataSource}
+      />
+    </>
+  );
+}
+```
+
+## 🚦 @archbase/feature-flags - Feature Flags com Unleash
+
+O pacote **@archbase/feature-flags** integra o sistema de feature flags **Unleash** ao Archbase React:
+
+### 🚀 **Principais Recursos**
+
+- **Integração Unleash**: Cliente proxy do Unleash para React
+- **Hooks otimizados**: `useFlag` e `useVariant` para feature flags
+- **Type-safe**: Tipagem completa para flags e variantes
+- **Performance otimizada**: Cache inteligente de flags
+
+### 💡 **Exemplo de Uso**
+
+```typescript
+import { useFlag, useVariant } from '@archbase/feature-flags';
+
+function NewFeature() {
+  const isEnabled = useFlag('new-feature');
+  const variant = useVariant('new-feature');
+
+  if (!isEnabled) {
+    return <LegacyFeature />;
+  }
+
+  return <ModernFeature variant={variant} />;
+}
+```
+
+### 🎯 **Vantagens**
+- **Rollout control**: Libere recursos gradualmente
+- **A/B testing**: Teste diferentes variantes
+- **Kill switch**: Desative recursos instantaneamente
+- **Targeting**: Habilite recursos para usuários específicos
 
 ## 🚀 DataSource v2 - Nova Geração
 
