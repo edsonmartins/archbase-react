@@ -66,8 +66,12 @@ jobs:
       - name: Cleanup old builds
         run: |
           # Manter apenas últimos 5 builds
-          cd /srv/archbase-react-docs.backup 2>/dev/null || exit 0
-          ls -t | tail -n +6 | sudo xargs -I {} rm -rf {}
+          if [ -d "/srv/archbase-react-docs.backup" ]; then
+            cd /srv/archbase-react-docs.backup
+            for dir in $(ls -t | tail -n +6); do
+              sudo rm -rf "$dir" 2>/dev/null || true
+            done
+          fi
 
       - name: Docker system prune
         run: |
