@@ -150,3 +150,10 @@ jobs:
 
           cd /opt/archbase-infrastructure || exit 0
           docker stack deploy -c docker-compose.yml archbase-react
+
+      - name: Docker system prune
+        run: |
+          # Remover imagens não usadas e cache de build para liberar espaço
+          docker image prune -a -f --filter "until=72h"
+          docker system prune -f
+          df -h /var/lib/docker
