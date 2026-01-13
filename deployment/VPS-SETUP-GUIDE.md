@@ -359,8 +359,9 @@ sudo visudo -c /etc/sudoers.d/actions-runner
 
 ```bash
 # Substitua <USUARIO> pelo usuário correto
-sudo -u <USUARIO> sudo whoami
-# Deve retornar "root" sem pedir senha
+sudo -u <USUARIO> sudo mkdir -p /tmp/test-sudo
+sudo rm -rf /tmp/test-sudo
+# Deve executar sem pedir senha
 ```
 
 ## Passo 5: Deploy Inicial
