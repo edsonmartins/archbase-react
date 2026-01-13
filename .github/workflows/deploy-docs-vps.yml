@@ -39,6 +39,7 @@ jobs:
         working-directory: ./docs-site
         run: |
           export NODE_OPTIONS=--max_old_space_size=8192
+          export NEXT_PRIVATE_WORKER_THREADS=2
           pnpm run build
 
       - name: Deploy to Docker container
