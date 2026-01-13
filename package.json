@@ -37,19 +37,11 @@
     "version:update": "node scripts/update-version.js",
     "clean": "node scripts/clean.js",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "lint": "turbo lint",
-    "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build -o storybook-static"
+    "lint": "turbo lint"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.5",
     "esbuild": "0.20.2",
-    "@storybook/addon-docs": "10.1.5",
-    "@storybook/addon-links": "10.1.5",
-    "@storybook/addon-themes": "10.1.5",
-    "@storybook/global": "^5.0.0",
-    "@storybook/react": "10.1.5",
-    "@storybook/react-vite": "10.1.5",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
@@ -68,7 +60,6 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "jsdom": "^26.1.0",
     "prettier": "^3.4.2",
-    "storybook": "10.1.5",
     "turbo": "^2.3.3",
     "typescript": "~5.7.2",
     "vite": "^6.0.3",
