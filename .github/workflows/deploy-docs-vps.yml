@@ -67,7 +67,7 @@ jobs:
         run: |
           # Manter apenas últimos 5 builds
           cd /srv/archbase-react-docs.backup 2>/dev/null || exit 0
-          ls -t | tail -n +6 | xargs -I {} rm -rf {}
+          ls -t | tail -n +6 | sudo xargs -I {} rm -rf {}
 
       - name: Docker system prune
         run: |
