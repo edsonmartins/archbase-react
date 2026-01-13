@@ -8,6 +8,7 @@ on:
     paths:
       - 'docs-site/**'
       - 'packages/**'
+      - 'deployment/**'
       - '.github/workflows/deploy-docs-vps.yml'
   workflow_dispatch:
 
