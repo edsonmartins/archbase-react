@@ -595,6 +595,54 @@ O workflow `.github/workflows/storybook-preview.yml` executa exatamente isso por
 
 Use o Playbook (`docs/storybook/StorybookPlaybook.md`) para entender as categorias IA e os links canônicos associados.
 
+## 🚀 Releases e Publicação
+
+### Criando um Release
+
+Existem duas formas de criar releases:
+
+#### Opção 1: Via Git Tag
+
+```bash
+# Criar e pushar tag (dispara workflow automático)
+git tag v3.0.47
+git push origin v3.0.47
+```
+
+#### Opção 2: Via GitHub Actions (Manual)
+
+1. Vá para: https://github.com/edsonmartins/archbase-react/actions/workflows/release.yml
+2. Clique em "Run workflow"
+3. Informe a versão (ex: 3.0.47)
+4. Selecione se é pre-release
+
+### O que acontece no Release
+
+O workflow `.github/workflows/release.yml` executa:
+
+1. **Build**: Compila todos os pacotes
+2. **Pack**: Gera arquivos `.tgz` de cada pacote
+3. **Release Notes**: Gera notas com commits desde a última versão
+4. **GitHub Release**: Cria release com artefatos
+5. **Deploy Docs**: Publica documentação em react.archbase.dev (apenas releases estáveis)
+
+### Estrutura de Versões
+
+- `v3.0.47` - Release estável
+- `v3.0.47-beta.1` - Pre-release (beta)
+- `v3.0.47-alpha.1` - Pre-release (alpha)
+
+### Deploy Automático da Documentação
+
+A cada push na branch `main` ou `archbase-react-develop`, o workflow `.github/workflows/deploy-docs-vps.yml`:
+
+1. Build dos pacotes
+2. Build da documentação Next.js
+3. Deploy no VPS via Self-Hosted Runner
+4. Atualização do container Docker Swarm
+
+**Documentação disponível em**: https://react.archbase.dev
+
 ## 🤝 Desenvolvimento
 
 ### 🔧 Scripts Simplificados

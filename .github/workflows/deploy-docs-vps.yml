@@ -1,0 +1,68 @@
+name: Deploy Docs to VPS
+
+on:
+  push:
+    branches:
+      - main
+      - archbase-react-develop
+    paths:
+      - 'docs-site/**'
+      - 'packages/**'
+      - '.github/workflows/deploy-docs-vps.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm run build:dev
+
+      - name: Build docs
+        working-directory: ./docs-site
+        run: |
+          export NODE_OPTIONS=--max_old_space_size=8192
+          pnpm run build
+
+      - name: Deploy to Docker container
+        run: |
+          # Criar/atualizar diretório de deploy
+          sudo mkdir -p /srv/archbase-react-docs
+
+          # Backup da versão anterior
+          if [ -d "/srv/archbase-react-docs" ] && [ "$(ls -A /srv/archbase-react-docs)" ]; then
+            sudo mkdir -p /srv/archbase-react-docs.backup
+            sudo cp -r /srv/archbase-react-docs /srv/archbase-react-docs.backup/$(date +%Y%m%d_%H%M%S)
+          fi
+
+          # Copiar arquivos buildados
+          sudo rm -rf /srv/archbase-react-docs/*
+          sudo cp -r docs-site/out/* /srv/archbase-react-docs/
+
+          # Recrear stack com nova versão (Docker Swarm)
+          cd /opt/archbase-infrastructure || exit 1
+          docker stack deploy -c docker-compose.yml archbase-react
+
+      - name: Cleanup old builds
+        run: |
+          # Manter apenas últimos 5 builds
+          cd /srv/archbase-react-docs.backup 2>/dev/null || exit 0
+          ls -t | tail -n +6 | xargs -I {} rm -rf {}
