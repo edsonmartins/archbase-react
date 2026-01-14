@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: self-hosted  # Roda na VPS usando login existente
@@ -44,3 +47,38 @@ jobs:
         run: pnpm publish -r --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: |
+            ## 🚀 Archbase React v${{ github.ref_name }}
+
+            ### Packages published
+
+            - @archbase/core
+            - @archbase/data
+            - @archbase/components
+            - @archbase/layout
+            - @archbase/admin
+            - @archbase/advanced
+            - @archbase/security
+            - @archbase/security-ui
+            - @archbase/template
+            - @archbase/tools
+            - @archbase/feature-flags
+            - @archbase/ssr
+
+            ### Installation
+
+            ```bash
+            npm install @archbase/core
+            ```
+
+            ### Documentation
+
+            Visit [https://react.archbase.dev](https://react.archbase.dev) for full documentation.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
