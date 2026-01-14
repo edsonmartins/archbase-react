@@ -25,6 +25,11 @@ jobs:
         with:
           version: 9
 
+      - name: Override .npmrc for NPM publish
+        run: |
+          echo "@archbase:registry=https://registry.npmjs.org/" > .npmrc
+          echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" >> .npmrc
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
