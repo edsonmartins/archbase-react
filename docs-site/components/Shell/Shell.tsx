@@ -52,7 +52,7 @@ export function Shell({ children, currentPath }: ShellProps) {
                   ? "/images/logo_com_texto_archbase_tema_dark.png"
                   : "/images/logo_com_texto_archbase_tema_light.png"}
                 alt="Archbase React"
-                height={42}
+                height={60}
                 fit="contain"
               />
             </a>
