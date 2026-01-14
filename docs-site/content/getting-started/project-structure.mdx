@@ -1,4 +1,6 @@
 
+import { DependencyDiagram } from '../../components/DependencyDiagram/DependencyDiagram';
+
 # Estrutura de Pacotes
 
 O Archbase React é organizado como um **monorepo** com múltiplos pacotes NPM. Esta arquitetura permite que você instale apenas o que precisa.
@@ -22,32 +24,7 @@ O Archbase React é organizado como um **monorepo** com múltiplos pacotes NPM. 
 
 ## Diagrama de Dependências
 
-```
-                    ┌─────────────────┐
-                    │   @archbase/    │
-                    │      core       │
-                    └────────┬────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              │              │              │
-              ▼              ▼              ▼
-        ┌──────────┐  ┌──────────┐  ┌──────────┐
-        │   data   │  │ security │  │  layout  │
-        └────┬─────┘  └────┬─────┘  └────┬─────┘
-             │              │              │
-             ▼              │              │
-        ┌──────────┐        │              │
-        │components│        │              │
-        └────┬─────┘        │              │
-             │              │              │
-    ┌────────┴────────┬─────┴──────┬───────┘
-    │                 │            │
-    ▼                 ▼            ▼
-┌──────────┐   ┌──────────┐  ┌──────────┐
-│ template │   │security- │  │  admin   │
-│          │   │   ui     │  │          │
-└──────────┘   └──────────┘  └──────────┘
-```
+<DependencyDiagram />
 
 ## Detalhes de Cada Pacote
 

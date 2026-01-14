@@ -1,0 +1,22 @@
+.grid {
+  margin: 1.5rem 0;
+}
+
+.feature {
+  transition: all 0.2s ease;
+  height: 100%;
+}
+
+.feature:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.feature.dark {
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+}
+
+.icon {
+  font-size: rem(32px);
+  line-height: 1;
+}

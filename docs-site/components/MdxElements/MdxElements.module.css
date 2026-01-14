@@ -50,11 +50,77 @@
   font-size: var(--mantine-font-size-sm);
 }
 
-.th {
+.table :global(tr:nth-child(even)) {
+  background-color: light-dark(var(--mantine-colors-gray-0), var(--mantine-colors-dark-8));
+}
+
+.table :global(tr:hover) {
+  background-color: light-dark(var(--mantine-colors-blue-0), var(--mantine-colors-dark-7));
+}
+
+.table :global(td:first-child) {
   font-weight: 600;
+  color: light-dark(var(--mantine-colors-blue-6), var(--mantine-colors-blue-4));
+  font-family: var(--mantine-font-family-monospace);
+}
+
+.table :global(td:nth-child(2)) {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: var(--mantine-font-size-xs);
+  color: light-dark(var(--mantine-colors-pink-6), var(--mantine-colors-pink-4));
+}
+
+.table :global(td:nth-child(3)) {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: var(--mantine-font-size-xs);
+  color: light-dark(var(--mantine-colors-green-6), var(--mantine-colors-green-4));
+}
+
+.th {
+  font-weight: 700;
   text-align: left;
+  background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-blue-9)) !important;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0)) !important;
+  font-size: var(--mantine-font-size-sm);
+  padding: rem(12px) rem(16px);
+}
+
+.table :global(th:first-child) {
+  color: light-dark(var(--mantine-colors-blue-6), var(--mantine-colors-blue-2));
+}
+
+.table :global(th:nth-child(2)) {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: var(--mantine-font-size-xs);
+  color: light-dark(var(--mantine-colors-pink-6), var(--mantine-colors-pink-2));
+}
+
+.table :global(th:nth-child(3)) {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: var(--mantine-font-size-xs);
+  color: light-dark(var(--mantine-colors-green-6), var(--mantine-colors-green-2));
 }
 
 .td {
   vertical-align: top;
+  padding: rem(10px) rem(16px);
+  border-bottom: 1px solid light-dark(var(--mantine-colors-gray-2), var(--mantine-colors-gray-8));
+}
+
+.tdFirstColumn {
+  font-weight: 600;
+  color: light-dark(var(--mantine-colors-blue-6), var(--mantine-colors-blue-4));
+  font-family: var(--mantine-font-family-monospace);
+  white-space: nowrap;
+}
+
+.codeCell {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: var(--mantine-font-size-xs);
+}
+
+/* Imagens de diagramas com largura total */
+.main :global(img) {
+  max-width: 100%;
+  height: auto;
 }

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1400">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1400" class="theme-svg">
   <!-- Background -->
   <rect width="1800" height="1400" fill="#f8f9fa"/>
 
@@ -150,7 +150,17 @@
   <text x="1350" y="1300" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#555">Sua API REST</text>
 
   <!-- Arrow marker -->
-  <defs>
+  <defs><style>
+@media (prefers-color-scheme: dark) {
+  .svg-bg { fill: #0f172a !important; }
+  .svg-text-primary { fill: #f1f5f9 !important; }
+  .svg-text-secondary { fill: #94a3b8 !important; }
+  .svg-card-bg { fill: #1e293b !important; }
+  .svg-code-bg { fill: #0f172a !important; }
+  .svg-border { stroke: #475569 !important; }
+  .svg-code-text { fill: #94a3b8 !important; }
+}
+</style>
     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
     </marker>

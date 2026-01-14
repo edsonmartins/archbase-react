@@ -1,0 +1,13 @@
+/* Estilos globais para diagramas SVG responsivos ao tema */
+
+/* Imagens de diagramas SVG - filtros para dark mode */
+.main img[src*="/diagrams/"],
+article img[src*="/diagrams/"] {
+  transition: filter 0.3s ease;
+}
+
+/* Dark mode - inverter cores levemente para diagramas */
+[data-mantine-color-scheme="dark"] .main img[src*="/diagrams/"],
+[data-mantine-color-scheme="dark"] article img[src*="/diagrams/"] {
+  filter: brightness(0.9) contrast(1.1);
+}

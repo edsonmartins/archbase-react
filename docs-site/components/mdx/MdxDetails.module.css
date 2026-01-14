@@ -1,0 +1,40 @@
+.wrapper {
+  margin: 1rem 0;
+  border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+}
+
+.button {
+  width: 100%;
+  cursor: pointer;
+  border-bottom: 0;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.button.dark {
+  border-bottom: 0;
+}
+
+.chevron {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.chevron.open {
+  transform: rotate(90deg);
+}
+
+.content {
+  padding: var(--mantine-spacing-md);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+  border-top: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.darkContent {
+  border-top-color: var(--mantine-color-dark-4);
+}

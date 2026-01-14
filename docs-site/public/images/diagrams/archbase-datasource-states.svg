@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 1540 990" xmlns="http://www.w3.org/2000/svg">
-  <defs>
+<svg viewBox="0 0 1540 990" xmlns="http://www.w3.org/2000/svg" class="theme-svg">
+  <defs><style>
+@media (prefers-color-scheme: dark) {
+  .svg-bg { fill: #0f172a !important; }
+  .svg-text-primary { fill: #f1f5f9 !important; }
+  .svg-text-secondary { fill: #94a3b8 !important; }
+  .svg-card-bg { fill: #1e293b !important; }
+  .svg-code-bg { fill: #0f172a !important; }
+  .svg-border { stroke: #475569 !important; }
+  .svg-code-text { fill: #94a3b8 !important; }
+}
+</style>
     <linearGradient id="gradBrowse" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0" style="stop-color:#0066CC;stop-opacity:1"/>
       <stop offset="1" style="stop-color:#0088FF;stop-opacity:1"/>
@@ -33,55 +43,55 @@
       .pulse { animation: pulse 2s ease-in-out infinite; }
     </style>
   </defs>
-  <rect width="1400" height="900" fill="#f8fafc" x="29.226" y="0.089"/>
-  <text x="700" y="60" text-anchor="middle" font-size="44" font-weight="700" fill="#1e293b" font-family="system-ui" style="white-space: pre;">
+  <rect width="1400" height="900" fill="transparent" x="29.226" y="0.089"/>
+  <text x="700" y="60" text-anchor="middle" font-size="44" font-weight="700" fill="currentColor" class="svg-text-primary" font-family="system-ui" style="white-space: pre;">
     DataSource V2 - Estados e Transições
   </text>
-  <text x="700" y="95" text-anchor="middle" font-size="18" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+  <text x="700" y="95" text-anchor="middle" font-size="18" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
     Máquina de Estados com Imutabilidade Garantida
   </text>
   <rect x="620" y="110" width="160" height="35" rx="18" fill="#9C27B0" filter="url(#shadow)"/>
-  <text x="700" y="133" text-anchor="middle" font-size="14" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+  <text x="700" y="133" text-anchor="middle" font-size="14" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
     🆕 NEW IN V2
   </text>
   <g id="state-browse">
     <rect x="150" y="250" width="300" height="200" rx="20" fill="url(#gradBrowse)" filter="url(#shadow)"/>
-    <text x="300" y="300" text-anchor="middle" font-size="36" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="300" y="300" text-anchor="middle" font-size="36" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
       BROWSE
     </text>
     <text x="300" y="335" text-anchor="middle" font-size="14" fill="#E3F2FD" font-family="system-ui" style="white-space: pre;">
       Estado Inicial / Navegação
     </text>
     <rect x="170" y="355" width="260" height="75" rx="8" fill="rgba(255,255,255,0.2)"/>
-    <text x="180" y="378" font-size="13" fill="white" font-family="system-ui" style="white-space: pre;">✓ first(), last(), next(), prior()</text>
-    <text x="180" y="398" font-size="13" fill="white" font-family="system-ui" style="white-space: pre;">✓ goToRecord(index)</text>
-    <text x="180" y="418" font-size="13" fill="white" font-family="system-ui" style="white-space: pre;">✓ getFieldValue()</text>
+    <text x="180" y="378" font-size="13" fill="currentColor" class="svg-card-bg" font-family="system-ui" style="white-space: pre;">✓ first(), last(), next(), prior()</text>
+    <text x="180" y="398" font-size="13" fill="currentColor" class="svg-card-bg" font-family="system-ui" style="white-space: pre;">✓ goToRecord(index)</text>
+    <text x="180" y="418" font-size="13" fill="currentColor" class="svg-card-bg" font-family="system-ui" style="white-space: pre;">✓ getFieldValue()</text>
   </g>
   <g id="state-edit">
     <rect x="650" y="250" width="300" height="200" rx="20" fill="url(#gradEdit)" filter="url(#shadow)"/>
-    <text x="800" y="300" text-anchor="middle" font-size="36" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="800" y="300" text-anchor="middle" font-size="36" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
       EDIT
     </text>
     <text x="800" y="335" text-anchor="middle" font-size="14" fill="#FFF3E0" font-family="system-ui" style="white-space: pre;">
       Edição de Registro Existente
     </text>
     <rect x="670" y="355" width="260" height="75" rx="8" fill="rgba(255,255,255,0.2)"/>
-    <text x="680" y="378" font-size="13" fill="white" font-family="system-ui" style="white-space: pre;">✓ setFieldValue()</text>
-    <text x="680" y="398" font-size="13" fill="white" font-family="system-ui" style="white-space: pre;">✓ Array operations (V2)</text>
-    <text x="680" y="418" font-size="13" fill="white" font-family="system-ui" style="white-space: pre;">💾 Original backup saved</text>
+    <text x="680" y="378" font-size="13" fill="currentColor" class="svg-card-bg" font-family="system-ui" style="white-space: pre;">✓ setFieldValue()</text>
+    <text x="680" y="398" font-size="13" fill="currentColor" class="svg-card-bg" font-family="system-ui" style="white-space: pre;">✓ Array operations (V2)</text>
+    <text x="680" y="418" font-size="13" fill="currentColor" class="svg-card-bg" font-family="system-ui" style="white-space: pre;">💾 Original backup saved</text>
   </g>
   <g id="state-insert">
     <rect x="950" y="550" width="300" height="200" rx="20" fill="url(#gradInsert)" filter="url(#shadow)"/>
-    <text x="1100" y="600" text-anchor="middle" font-size="36" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="1100" y="600" text-anchor="middle" font-size="36" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
       INSERT
     </text>
     <text x="1100" y="635" text-anchor="middle" font-size="14" fill="#E8F5E9" font-family="system-ui" style="white-space: pre;">
       Inserção de Novo Registro
     </text>
     <rect x="970" y="655" width="260" height="75" rx="8" fill="rgba(255,255,255,0.2)"/>
-    <text x="980" y="678" font-size="13" fill="white" font-family="system-ui" style="white-space: pre;">✓ setFieldValue()</text>
-    <text x="980" y="698" font-size="13" fill="white" font-family="system-ui" style="white-space: pre;">✓ Array operations (V2)</text>
-    <text x="980" y="718" font-size="13" fill="white" font-family="system-ui" style="white-space: pre;">📝 New record at end</text>
+    <text x="980" y="678" font-size="13" fill="currentColor" class="svg-card-bg" font-family="system-ui" style="white-space: pre;">✓ setFieldValue()</text>
+    <text x="980" y="698" font-size="13" fill="currentColor" class="svg-card-bg" font-family="system-ui" style="white-space: pre;">✓ Array operations (V2)</text>
+    <text x="980" y="718" font-size="13" fill="currentColor" class="svg-card-bg" font-family="system-ui" style="white-space: pre;">📝 New record at end</text>
   </g>
   <path d="M 450 350 L 650 350" fill="none" stroke="#FF9800" stroke-width="4" marker-end="url(#arrowOrange)"/>
   <text x="550" y="340" text-anchor="middle" font-size="16" fill="#FF9800" font-weight="700" font-family="monospace" style="white-space: pre;">
@@ -108,34 +118,34 @@
     cancel()
   </text>
   <g>
-    <rect x="50" y="550" width="350" height="320" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="50" y="550" width="350" height="320" rx="16" fill="currentColor" class="svg-card-bg" filter="url(#shadow)"/>
     <rect x="50" y="550" width="350" height="50" rx="16" fill="#7CB342"/>
-    <text x="225" y="583" text-anchor="middle" font-size="18" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="225" y="583" text-anchor="middle" font-size="18" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
       🔒 IMUTABILIDADE
     </text>
-    <text x="70" y="625" font-size="14" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="70" y="625" font-size="14" fill="currentColor" class="svg-text-primary" font-weight="700" font-family="system-ui" style="white-space: pre;">
       Todas as operações com Immer:
     </text>
-    <rect x="70" y="640" width="310" height="210" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-    <text x="85" y="665" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <rect x="70" y="640" width="310" height="210" rx="8" fill="transparent" stroke="currentColor" class="svg-border" stroke-width="2"/>
+    <text x="85" y="665" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       this.records = produce(
     </text>
-    <text x="95" y="685" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <text x="95" y="685" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       this.records,
     </text>
-    <text x="95" y="705" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <text x="95" y="705" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       draft =&gt; {
     </text>
     <text x="105" y="725" font-size="12" fill="#0066CC" font-weight="600" font-family="monospace" style="white-space: pre;">
       // Mutate draft safely
     </text>
-    <text x="105" y="745" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <text x="105" y="745" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       draft[index].field = value;
     </text>
-    <text x="95" y="765" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <text x="95" y="765" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       }
     </text>
-    <text x="85" y="785" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <text x="85" y="785" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       );
     </text>
     <text x="85" y="810" font-size="11" fill="#4CAF50" font-weight="600" font-family="system-ui" style="white-space: pre;">
@@ -146,28 +156,28 @@
     </text>
   </g>
   <g>
-    <rect x="500" y="550" width="350" height="320" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="500" y="550" width="350" height="320" rx="16" fill="currentColor" class="svg-card-bg" filter="url(#shadow)"/>
     <rect x="500" y="550" width="350" height="50" rx="16" fill="#F44336"/>
-    <text x="675" y="583" text-anchor="middle" font-size="18" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="675" y="583" text-anchor="middle" font-size="18" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
       ✅ VALIDAÇÃO
     </text>
-    <text x="520" y="625" font-size="14" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="520" y="625" font-size="14" fill="currentColor" class="svg-text-primary" font-weight="700" font-family="system-ui" style="white-space: pre;">
       Executada no save():
     </text>
-    <rect x="520" y="640" width="310" height="210" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-    <text x="535" y="665" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <rect x="520" y="640" width="310" height="210" rx="8" fill="transparent" stroke="currentColor" class="svg-border" stroke-width="2"/>
+    <text x="535" y="665" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       if (this.validator) {
     </text>
-    <text x="545" y="685" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <text x="545" y="685" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       const errors =
     </text>
-    <text x="555" y="705" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <text x="555" y="705" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       validator.validateEntity(
     </text>
-    <text x="565" y="725" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <text x="565" y="725" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       currentRecord
     </text>
-    <text x="555" y="745" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <text x="555" y="745" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       );
     </text>
     <text x="545" y="765" font-size="12" fill="#F44336" font-weight="600" font-family="monospace" style="white-space: pre;">
@@ -176,7 +186,7 @@
     <text x="555" y="785" font-size="12" fill="#F44336" font-weight="600" font-family="monospace" style="white-space: pre;">
       throw Error();
     </text>
-    <text x="535" y="805" font-size="12" fill="#64748b" font-family="monospace" style="white-space: pre;">
+    <text x="535" y="805" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="monospace" style="white-space: pre;">
       }
     </text>
     <text x="535" y="830" font-size="11" fill="#0066CC" font-weight="600" font-family="system-ui" style="white-space: pre;">
@@ -184,32 +194,32 @@
     </text>
   </g>
   <g transform="matrix(1, 0, 0, 1, 65, -43)">
-    <rect x="900" y="250" width="450" height="280" rx="16" fill="white" filter="url(#shadow)"/>
-    <text x="1125" y="285" text-anchor="middle" font-size="20" fill="#1e293b" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <rect x="900" y="250" width="450" height="280" rx="16" fill="currentColor" class="svg-card-bg" filter="url(#shadow)"/>
+    <text x="1125" y="285" text-anchor="middle" font-size="20" fill="currentColor" class="svg-text-primary" font-weight="700" font-family="system-ui" style="white-space: pre;">
       📋 Características do V2
     </text>
-    <text x="920" y="320" font-size="14" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="920" y="320" font-size="14" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       🔒 Imutabilidade automática com Immer
     </text>
-    <text x="920" y="345" font-size="14" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="920" y="345" font-size="14" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       🎯 Type-safe operations
     </text>
-    <text x="920" y="370" font-size="14" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="920" y="370" font-size="14" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       📡 Sistema completo de eventos
     </text>
-    <text x="920" y="395" font-size="14" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="920" y="395" font-size="14" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       🆕 Operações em arrays type-safe
     </text>
-    <text x="920" y="420" font-size="14" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="920" y="420" font-size="14" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       💾 Backup automático no edit
     </text>
-    <text x="920" y="445" font-size="14" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="920" y="445" font-size="14" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       ✅ Validação integrada
     </text>
-    <text x="920" y="470" font-size="14" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="920" y="470" font-size="14" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       ⚛️ React hooks otimizados
     </text>
-    <text x="920" y="495" font-size="14" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="920" y="495" font-size="14" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       ⚡ Performance otimizada
     </text>
   </g>

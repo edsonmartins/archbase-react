@@ -52,10 +52,11 @@ export function Shell({ children, currentPath }: ShellProps) {
                   ? "/images/logo_sem_texto_archbase_tema_dark.png"
                   : "/images/logo_sem_texto_archbase_tema_light.png"}
                 alt="Archbase React"
-                height={32}
+                h={42}
+                w="auto"
                 fit="contain"
               />
-              <Text className={classes.title} size="xl" fw={700}>Archbase React</Text>
+              <Text className={classes.title} ml="xs">Archbase React</Text>
             </a>
           </Group>
 
@@ -79,7 +80,7 @@ export function Shell({ children, currentPath }: ShellProps) {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <Container size="lg" px="md" className={classes.main}>
+        <Container size="1400" px="md" className={classes.main}>
           {children}
         </Container>
       </AppShell.Main>

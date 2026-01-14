@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 1760 1100" xmlns="http://www.w3.org/2000/svg">
-  <defs>
+<svg viewBox="0 0 1760 1100" xmlns="http://www.w3.org/2000/svg" class="theme-svg">
+  <defs><style>
+@media (prefers-color-scheme: dark) {
+  .svg-bg { fill: #0f172a !important; }
+  .svg-text-primary { fill: #f1f5f9 !important; }
+  .svg-text-secondary { fill: #94a3b8 !important; }
+  .svg-card-bg { fill: #1e293b !important; }
+  .svg-code-bg { fill: #0f172a !important; }
+  .svg-border { stroke: #475569 !important; }
+  .svg-code-text { fill: #94a3b8 !important; }
+}
+</style>
     <linearGradient id="gradArray" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0" style="stop-color:#9C27B0;stop-opacity:1"/>
       <stop offset="1" style="stop-color:#BA68C8;stop-opacity:1"/>
@@ -13,21 +23,21 @@
       <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3"/>
     </filter>
   </defs>
-  <rect width="1600" height="1000" fill="#f8fafc"/>
-  <text x="800" y="60" text-anchor="middle" font-size="48" font-weight="700" fill="#1e293b" font-family="system-ui" style="white-space: pre;">
+  <rect width="1600" height="1000" fill="transparent"/>
+  <text x="800" y="60" text-anchor="middle" font-size="48" font-weight="700" fill="currentColor" class="svg-text-primary" font-family="system-ui" style="white-space: pre;">
     Operações em Arrays - DataSource V2
   </text>
-  <text x="800" y="100" text-anchor="middle" font-size="20" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+  <text x="800" y="100" text-anchor="middle" font-size="20" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
     Type-Safe Array Operations com Imutabilidade Garantida
   </text>
   <rect x="650" y="115" width="300" height="40" rx="20" fill="#9C27B0" filter="url(#shadow)"/>
-  <text x="800" y="143" text-anchor="middle" font-size="16" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+  <text x="800" y="143" text-anchor="middle" font-size="16" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
     🆕 EXCLUSIVE V2 FEATURE
   </text>
   <g>
-    <rect x="50" y="180" width="600" height="780" rx="20" fill="white" filter="url(#shadow)"/>
+    <rect x="50" y="180" width="600" height="780" rx="20" fill="currentColor" class="svg-card-bg" filter="url(#shadow)"/>
     <rect x="50" y="180" width="600" height="60" rx="20" fill="url(#gradArray)"/>
-    <text x="350" y="220" text-anchor="middle" font-size="24" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="350" y="220" text-anchor="middle" font-size="24" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
       📦 Estrutura de Dados
     </text>
     <rect x="70" y="260" width="560" height="680" rx="12" fill="url(#gradCode)"/>
@@ -103,9 +113,9 @@
     </text>
   </g>
   <g>
-    <rect x="700" y="180" width="850" height="185" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="700" y="180" width="850" height="185" rx="16" fill="currentColor" class="svg-card-bg" filter="url(#shadow)"/>
     <rect x="700" y="180" width="850" height="50" rx="16" fill="#9C27B0"/>
-    <text x="1125" y="213" text-anchor="middle" font-size="20" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="1125" y="213" text-anchor="middle" font-size="20" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
       1️⃣ appendToFieldArray()
     </text>
     <rect x="720" y="250" width="400" height="95" rx="10" fill="url(#gradCode)"/>
@@ -121,24 +131,24 @@
     <text x="740" y="335" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
       );
     </text>
-    <rect x="1140" y="250" width="390" height="95" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-    <text x="1160" y="275" font-size="14" fill="#1e293b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+    <rect x="1140" y="250" width="390" height="95" rx="10" fill="transparent" stroke="currentColor" class="svg-border" stroke-width="2"/>
+    <text x="1160" y="275" font-size="14" fill="currentColor" class="svg-text-primary" font-weight="600" font-family="system-ui" style="white-space: pre;">
       📌 Adiciona item ao final
     </text>
-    <text x="1160" y="300" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="300" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Type-safe: item deve ser ItemPedido
     </text>
-    <text x="1160" y="320" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="320" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Imutável: novo array criado
     </text>
-    <text x="1160" y="340" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="340" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Emite: fieldChanged event
     </text>
   </g>
   <g>
-    <rect x="700" y="385" width="850" height="185" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="700" y="385" width="850" height="185" rx="16" fill="currentColor" class="svg-card-bg" filter="url(#shadow)"/>
     <rect x="700" y="385" width="850" height="50" rx="16" fill="#9C27B0"/>
-    <text x="1125" y="418" text-anchor="middle" font-size="20" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="1125" y="418" text-anchor="middle" font-size="20" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
       2️⃣ updateFieldArrayItem()
     </text>
     <rect x="720" y="455" width="400" height="95" rx="10" fill="url(#gradCode)"/>
@@ -154,24 +164,24 @@
     <text x="750" y="540" font-size="13" fill="#FFD54F" font-family="monospace" style="white-space: pre;">
       });
     </text>
-    <rect x="1140" y="455" width="390" height="95" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-    <text x="1160" y="480" font-size="14" fill="#1e293b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+    <rect x="1140" y="455" width="390" height="95" rx="10" fill="transparent" stroke="currentColor" class="svg-border" stroke-width="2"/>
+    <text x="1160" y="480" font-size="14" fill="currentColor" class="svg-text-primary" font-weight="600" font-family="system-ui" style="white-space: pre;">
       📌 Atualiza item por índice
     </text>
-    <text x="1160" y="505" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="505" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Updater com Immer draft
     </text>
-    <text x="1160" y="525" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="525" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Mutação segura do draft
     </text>
-    <text x="1160" y="545" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="545" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Original permanece imutável
     </text>
   </g>
   <g>
-    <rect x="700" y="590" width="850" height="165" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="700" y="590" width="850" height="165" rx="16" fill="currentColor" class="svg-card-bg" filter="url(#shadow)"/>
     <rect x="700" y="590" width="850" height="50" rx="16" fill="#9C27B0"/>
-    <text x="1125" y="623" text-anchor="middle" font-size="20" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="1125" y="623" text-anchor="middle" font-size="20" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
       3️⃣ removeFromFieldArray()
     </text>
     <rect x="720" y="660" width="400" height="75" rx="10" fill="url(#gradCode)"/>
@@ -184,21 +194,21 @@
     <text x="740" y="725" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
       );
     </text>
-    <rect x="1140" y="660" width="390" height="75" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-    <text x="1160" y="685" font-size="14" fill="#1e293b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+    <rect x="1140" y="660" width="390" height="75" rx="10" fill="transparent" stroke="currentColor" class="svg-border" stroke-width="2"/>
+    <text x="1160" y="685" font-size="14" fill="currentColor" class="svg-text-primary" font-weight="600" font-family="system-ui" style="white-space: pre;">
       📌 Remove item por índice
     </text>
-    <text x="1160" y="710" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="710" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Splice com imutabilidade
     </text>
-    <text x="1160" y="730" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="730" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Índice ajustado automaticamente
     </text>
   </g>
   <g>
-    <rect x="700" y="775" width="850" height="185" rx="16" fill="white" filter="url(#shadow)"/>
+    <rect x="700" y="775" width="850" height="185" rx="16" fill="currentColor" class="svg-card-bg" filter="url(#shadow)"/>
     <rect x="700" y="775" width="850" height="50" rx="16" fill="#9C27B0"/>
-    <text x="1125" y="808" text-anchor="middle" font-size="20" fill="white" font-weight="700" font-family="system-ui" style="white-space: pre;">
+    <text x="1125" y="808" text-anchor="middle" font-size="20" fill="currentColor" class="svg-card-bg" font-weight="700" font-family="system-ui" style="white-space: pre;">
       4️⃣ insertIntoFieldArray()
     </text>
     <rect x="720" y="845" width="400" height="95" rx="10" fill="url(#gradCode)"/>
@@ -214,17 +224,17 @@
     <text x="740" y="930" font-size="13" fill="#7CB342" font-family="monospace" style="white-space: pre;">
       );
     </text>
-    <rect x="1140" y="845" width="390" height="95" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-    <text x="1160" y="870" font-size="14" fill="#1e293b" font-weight="600" font-family="system-ui" style="white-space: pre;">
+    <rect x="1140" y="845" width="390" height="95" rx="10" fill="transparent" stroke="currentColor" class="svg-border" stroke-width="2"/>
+    <text x="1160" y="870" font-size="14" fill="currentColor" class="svg-text-primary" font-weight="600" font-family="system-ui" style="white-space: pre;">
       📌 Insere em posição específica
     </text>
-    <text x="1160" y="895" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="895" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Item inserido no índice especificado
     </text>
-    <text x="1160" y="915" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="915" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Itens posteriores deslocados
     </text>
-    <text x="1160" y="935" font-size="12" fill="#64748b" font-family="system-ui" style="white-space: pre;">
+    <text x="1160" y="935" font-size="12" fill="currentColor" class="svg-text-secondary" font-family="system-ui" style="white-space: pre;">
       • Type-safe e imutável
     </text>
   </g>

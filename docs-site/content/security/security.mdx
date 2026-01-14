@@ -1,3 +1,5 @@
+import { SecurityArchitectureDiagram, AuthFlowDiagram } from '../../components/Diagrams';
+
 # Security & Authentication
 
 Sistema completo de autenticação, autorização e gerenciamento de usuários para aplicações empresariais com suporte a múltiplos contextos, multi-tenant e OAuth2.
@@ -41,33 +43,7 @@ O **Archbase Security** é um sistema de segurança completo que fornece:
 
 ### Três Camadas
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  Camada 1: React Components (UI)                             │
-│  - ArchbaseLogin, UserModal, ProtectedComponent              │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│  Camada 2: Hooks & Providers                                 │
-│  - useArchbaseAuthenticationManager                          │
-│  - useArchbaseSecurity, useArchbaseSecureForm               │
-│  - ArchbaseSecurityProvider, ArchbaseViewSecurityProvider   │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│  Camada 3: Serviços & Managers                               │
-│  - ArchbaseAuthenticator (interface)                        │
-│  - ArchbaseSecurityManager                                   │
-│  - ArchbaseTokenManager                                      │
-│  - ArchbaseTenantManager                                     │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│  Camada 4: Backend API (OAuth2)                              │
-│  - /auth/login, /auth/refresh, /auth/logout                 │
-│  - /users, /permissions, /resources                         │
-└─────────────────────────────────────────────────────────────┘
-```
+<SecurityArchitectureDiagram />
 
 ### Pacotes
 
@@ -84,29 +60,7 @@ O **Archbase Security** é um sistema de segurança completo que fornece:
 
 ### OAuth2 Authorization Code Flow com PKCE
 
-```
-┌─────────┐                    ┌─────────┐                    ┌──────────┐
-│ Cliente │                    │  Backend │                    │ OAuth2   │
-└────┬────┘                    └────┬────┘                    └────┬─────┘
-     │                              │                              │
-     │  1. loginWithContext()       │                              │
-     │─────────────────────────────>│                              │
-     │   {email, password, context} │                              │
-     │                              │                              │
-     │                              │  2. Valida credenciais       │
-     │                              │─────────────────────────────>│
-     │                              │                              │
-     │                              │  3. Access + Refresh Token   │
-     │                              │<─────────────────────────────│
-     │                              │                              │
-     │  4. Tokens + Context + User  │                              │
-     │<─────────────────────────────│                              │
-     │                              │                              │
-     │  5. Armazena tokens          │                              │
-     │  (localStorage)              │                              │
-     │                              │                              │
-     ────►Authenticated◄────────────┴──────────────────────────────┘
-```
+<AuthFlowDiagram />
 
 ### Estados da Autenticação
 

@@ -5,6 +5,7 @@ import { CodeHighlight } from '@mantine/code-highlight';
 import { Anchor, Code, Image, Table, Title } from '@mantine/core';
 import { Demo as MantineDemo } from '@mantinex/demo';
 import { MdxInfo } from '../MdxInfo/MdxInfo';
+import { MdxCodeGroup, MdxCard, MdxDetails, MdxFeatureList, MdxComparison } from '../mdx';
 import classes from './MdxElements.module.css';
 
 export function MdxTitle({
@@ -67,7 +68,14 @@ export function MdxLink({ href, ...others }: React.ComponentPropsWithoutRef<'a'>
 export function MdxTable(props: React.ComponentPropsWithoutRef<'table'>) {
   return (
     <Table.ScrollContainer minWidth={500} className={classes.tableContainer}>
-      <Table className={classes.table} {...props} />
+      <Table
+        className={classes.table}
+        striped
+        highlightOnHover
+        withTableBorder
+        withColumnBorders
+        {...props}
+      />
     </Table.ScrollContainer>
   );
 }
@@ -121,6 +129,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     td: MdxTd,
     Demo,
     MdxInfo,
+    CodeGroup: MdxCodeGroup,
+    Card: MdxCard,
+    Details: MdxDetails,
+    FeatureList: MdxFeatureList,
+    Comparison: MdxComparison,
+    CodeTab: MdxCodeGroup.Tab,
     ...components,
   };
 }

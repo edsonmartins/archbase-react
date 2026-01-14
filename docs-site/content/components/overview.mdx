@@ -2,83 +2,168 @@
 
 O Archbase React oferece mais de 80 componentes prontos para uso em aplicações empresariais.
 
-## Categorias
+## Visão Geral
+
+<FeatureList
+  features={[
+    {
+      icon: '✏️',
+      title: 'Editores de Texto',
+      description: 'Campos de texto, textarea, senha, máscaras e markdown editor.',
+    },
+    {
+      icon: '🔽',
+      title: 'Seleção',
+      description: 'Select simples, async e multi-select com busca avançada.',
+    },
+    {
+      icon: '🔢',
+      title: 'Números',
+      description: 'Campos numéricos, rating, countdown e contadores.',
+    },
+    {
+      icon: '📅',
+      title: 'Data e Hora',
+      description: 'Date picker, time picker e intervalos de datas.',
+    },
+    {
+      icon: '☑️',
+      title: 'Boolean',
+      description: 'Checkbox, switch e radio buttons.',
+    },
+    {
+      icon: '🖼️',
+      title: 'Media',
+      description: 'Player de vídeo, visualizador de PDF e preview de arquivos.',
+    },
+    {
+      icon: '📊',
+      title: 'Data Display',
+      description: 'DataGrid, TreeView, Masonry e Timeline.',
+    },
+    {
+      icon: '🔔',
+      title: 'Feedback',
+      description: 'Notificações, modais e diálogos.',
+    },
+  ]}
+/>
+
+## Categorias Detalhadas
 
 ### Editores de Texto
 
 Componentes para entrada de texto com binding ao DataSource.
 
-- [ArchbaseEdit](/components/editors/text-inputs#archbaseedit) - Campo de texto simples
-- [ArchbaseTextArea](/components/editors/text-inputs#archbasetextarea) - Área de texto multilinha
-- [ArchbasePasswordEdit](/components/editors/text-inputs#archbasepasswordedit) - Campo de senha
-- [ArchbaseMaskEdit](/components/editors/text-inputs#archbasemaskedit) - Campo com máscara
-- [ArchbaseMarkdown](/components/editors/archbase-markdown) - **Renderizador de Markdown** 🆕
+<Card icon="✏️" title="Editores de Texto" color="blue">
+  Componentes para entrada de texto com integração direta ao DataSource:
+  <ul>
+    <li><a href="/components/editors/text-inputs#archbaseedit">ArchbaseEdit</a> - Campo de texto simples</li>
+    <li><a href="/components/editors/text-inputs#archbasetextarea">ArchbaseTextArea</a> - Área de texto multilinha</li>
+    <li><a href="/components/editors/text-inputs#archbasepasswordedit">ArchbasePasswordEdit</a> - Campo de senha</li>
+    <li><a href="/components/editors/text-inputs#archbasemaskedit">ArchbaseMaskEdit</a> - Campo com máscara</li>
+    <li><a href="/components/editors/archbase-markdown">ArchbaseMarkdown</a> - <strong>Renderizador de Markdown</strong> 🆕</li>
+  </ul>
+</Card>
 
 ### Seleção
 
 Componentes para seleção de opções.
 
-- [ArchbaseSelect](/components/editors/select-inputs#archbaseselect) - Select simples
-- [ArchbaseAsyncSelect](/components/editors/select-inputs#archbaseasyncselect) - Select com busca assíncrona
-- [ArchbaseMultiSelect](/components/editors/select-inputs#archbasemultiselect) - Seleção múltipla
+<Card icon="🔽" title="Seleção" color="green">
+  <ul>
+    <li><a href="/components/editors/select-inputs#archbaseselect">ArchbaseSelect</a> - Select simples</li>
+    <li><a href="/components/editors/select-inputs#archbaseasyncselect">ArchbaseAsyncSelect</a> - Select com busca assíncrona</li>
+    <li><a href="/components/editors/select-inputs#archbasemultiselect">ArchbaseMultiSelect</a> - Seleção múltipla</li>
+  </ul>
+</Card>
 
 ### Números
 
 Componentes para entrada numérica.
 
-- [ArchbaseNumberEdit](/components/editors/number-inputs#archbasenumberedit) - Campo numérico
-- [ArchbaseRating](/components/editors/number-inputs#archbaserating) - Avaliação com estrelas
-- [ArchbaseCountdownTimer](/components/editors/number-inputs#archbasecountdowntimer) - Timer com contagem regressiva
+<Card icon="🔢" title="Números" color="orange">
+  <ul>
+    <li><a href="/components/editors/number-inputs#archbasenumberedit">ArchbaseNumberEdit</a> - Campo numérico</li>
+    <li><a href="/components/editors/number-inputs#archbaserating">ArchbaseRating</a> - Avaliação com estrelas</li>
+    <li><a href="/components/editors/number-inputs#archbasecountdowntimer">ArchbaseCountdownTimer</a> - Timer com contagem regressiva</li>
+  </ul>
+</Card>
 
 ### Data e Hora
 
 Componentes para seleção de datas e horários.
 
-- [ArchbaseDatePickerEdit](/components/editors/date-time#archbasedatepickeredit) - Seleção de data
-- [ArchbaseTimePicker](/components/editors/date-time#archbasetimepicker) - Seleção de horário
-- [ArchbaseDateTimeRange](/components/editors/date-time#archbasedatetimerange) - Intervalo de datas
+<Card icon="📅" title="Data e Hora" color="purple">
+  <ul>
+    <li><a href="/components/editors/date-time#archbasedatepickeredit">ArchbaseDatePickerEdit</a> - Seleção de data</li>
+    <li><a href="/components/editors/date-time#archbasetimepicker">ArchbaseTimePicker</a> - Seleção de horário</li>
+    <li><a href="/components/editors/date-time#archbasedatetimerange">ArchbaseDateTimeRange</a> - Intervalo de datas</li>
+  </ul>
+</Card>
 
 ### Boolean
 
 Componentes para valores booleanos.
 
-- [ArchbaseCheckbox](/components/editors/boolean-inputs#archbasecheckbox) - Checkbox
-- [ArchbaseSwitch](/components/editors/boolean-inputs#archbaseswitch) - Switch on/off
-- [ArchbaseRadioGroup](/components/editors/boolean-inputs#archbaseradiogroup) - Grupo de radio buttons
+<Card icon="☑️" title="Boolean" color="red">
+  <ul>
+    <li><a href="/components/editors/boolean-inputs#archbasecheckbox">ArchbaseCheckbox</a> - Checkbox</li>
+    <li><a href="/components/editors/boolean-inputs#archbaseswitch">ArchbaseSwitch</a> - Switch on/off</li>
+    <li><a href="/components/editors/boolean-inputs#archbaseradiogroup">ArchbaseRadioGroup</a> - Grupo de radio buttons</li>
+  </ul>
+</Card>
 
 ### Media
 
 Componentes para mídia e visualização de arquivos.
 
-- [ArchbaseVideoPlayer](/components/editors/archbase-video-player) - **Player de vídeo completo** 🆕
-- [ArchbasePDFViewer](/components/viewers/archbase-pdf-viewer) - Visualizador de PDF
-- [ArchbaseFilePreviewer](/components/viewers/archbase-file-previewer) - **Visualizador universal de arquivos** 🆕
+<Card icon="🖼️" title="Media" color="cyan">
+  <ul>
+    <li><a href="/components/editors/archbase-video-player">ArchbaseVideoPlayer</a> - <strong>Player de vídeo completo</strong> 🆕</li>
+    <li><a href="/components/viewers/archbase-pdf-viewer">ArchbasePDFViewer</a> - Visualizador de PDF</li>
+    <li><a href="/components/viewers/archbase-file-previewer">ArchbaseFilePreviewer</a> - <strong>Visualizador universal de arquivos</strong> 🆕</li>
+  </ul>
+</Card>
 
 ### Data Display
 
 Componentes para exibição de dados.
 
-- [ArchbaseDataGrid](/components/data-display/datagrid) - Grid de dados avançado
-- [ArchbaseTreeView](/components/data-display/lists#archbasetreeview) - Árvore hierárquica
-- [ArchbaseMasonryList](/components/data-display/lists#archbasemasonrylist) - Lista em formato masonry
-- [ArchbaseVisTimeline](/components/data-display/archbase-vis-timeline) - **Timeline interativa** 🆕
+<Card icon="📊" title="Data Display" color="indigo">
+  <ul>
+    <li><a href="/components/data-display/datagrid">ArchbaseDataGrid</a> - Grid de dados avançado</li>
+    <li><a href="/components/data-display/lists#archbasetreeview">ArchbaseTreeView</a> - Árvore hierárquica</li>
+    <li><a href="/components/data-display/lists#archbasemasonrylist">ArchbaseMasonryList</a> - Lista em formato masonry</li>
+    <li><a href="/components/data-display/archbase-vis-timeline">ArchbaseVisTimeline</a> - <strong>Timeline interativa</strong> 🆕</li>
+  </ul>
+</Card>
 
 ### Feedback
 
 Componentes de feedback ao usuário.
 
-- [ArchbaseNotifications](/components/feedback/notifications) - Sistema de notificações
-- [ArchbaseModal](/components/feedback/modals) - Modais e diálogos
+<Card icon="🔔" title="Feedback" color="pink">
+  <ul>
+    <li><a href="/components/feedback/notifications">ArchbaseNotifications</a> - Sistema de notificações</li>
+    <li><a href="/components/feedback/modals">ArchbaseModal</a> - Modais e diálogos</li>
+  </ul>
+</Card>
 
 ### Tools
 
 Ferramentas utilitárias.
 
-- [ArchbaseThermalPrinter](/components/editors/archbase-thermal-printer) - **Impressão térmica ESC/POS** 🆕
-- [ArchbaseThemeColorEditor](/components/feedback/archbase-theme-color-editor) - **Editor de temas Mantine** 🆕
+<Card icon="🛠️" title="Tools" color="gray">
+  <ul>
+    <li><a href="/components/editors/archbase-thermal-printer">ArchbaseThermalPrinter</a> - <strong>Impressão térmica ESC/POS</strong> 🆕</li>
+    <li><a href="/components/feedback/archbase-theme-color-editor">ArchbaseThemeColorEditor</a> - <strong>Editor de temas Mantine</strong> 🆕</li>
+  </ul>
+</Card>
 
 ## Padrão de Uso
 
+<Details summary="Ver padrão de props dos componentes">
 Todos os componentes seguem um padrão consistente de props:
 
 ```tsx
@@ -106,6 +191,7 @@ Todos os componentes seguem um padrão consistente de props:
   w="100%"
 />
 ```
+</Details>
 
 ## Próximos Passos
 

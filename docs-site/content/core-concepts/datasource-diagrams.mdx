@@ -1,3 +1,5 @@
+import { DataSourceStateDiagram } from '../../components/Diagrams';
+
 # Diagramas do DataSource V2
 
 Esta página contém diagramas visuais que ajudam a entender a arquitetura e funcionamento do DataSource V2 do Archbase React.
@@ -16,7 +18,7 @@ Para entender completamente o DataSource V2, recomendamos seguir esta ordem:
 
 ## 1. Arquitetura Completa
 
-![Arquitetura Completa](/images/diagrams/archbase-complete-architecture.png)
+![Arquitetura Completa](/images/diagrams/archbase-complete-architecture.svg)
 
 ### O que este diagrama mostra:
 
@@ -52,15 +54,7 @@ O DataSource possui três estados principais:
 
 ### Transições
 
-```
-BROWSE ──edit()──→ EDIT ──save()──→ BROWSE
-  ↑                  ↓
-  └────cancel()──────┘
-
-BROWSE ──insert()──→ INSERT ──save()──→ BROWSE
-  ↑                      ↓
-  └──────cancel()────────┘
-```
+<DataSourceStateDiagram />
 
 ### Backup Automático
 

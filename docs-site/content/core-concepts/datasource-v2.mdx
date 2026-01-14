@@ -1,3 +1,5 @@
+import { DataSourceStateDiagram, DataSourceArchitectureDiagram } from '../../components/Diagrams';
+
 # DataSource V2
 
 O DataSource V2 é o sistema central de gerenciamento de dados do Archbase React. Ele controla o estado dos registros, navegação, edição e sincronização com a interface, proporcionando uma experiência de desenvolvimento produtiva para aplicações empresariais.
@@ -36,14 +38,7 @@ const [idade, setIdade] = useState('');
 
 O DataSource segue uma arquitetura de **três camadas** que separa responsabilidades de forma clara:
 
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Componentes   │◄───┤   DataSource     │◄───┤    Service      │
-│ (Apresentação)  │    │ (Lógica/Estado)  │    │ (Comunicação)   │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-```
-
-![Arquitetura Completa](/images/diagrams/archbase-complete-architecture.png)
+![Arquitetura Completa](/images/diagrams/archbase-complete-architecture.svg)
 
 - **Componentes**: Focam apenas em apresentação
 - **DataSource**: Centraliza lógica de negócio e estado

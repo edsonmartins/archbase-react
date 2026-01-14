@@ -5,43 +5,58 @@ Este guia mostra como instalar e configurar o Archbase React em seu projeto.
 
 ## Requisitos
 
-- **Node.js** 20.0 ou superior
-- **React** 18.3+ ou 19.0+
-- **TypeScript** 5.0+ (recomendado)
+<Card icon="⚙️" title="Requisitos do Sistema" color="blue">
+  Antes de instalar, certifique-se de que seu ambiente atende aos seguintes requisitos:
+  <ul>
+    <li><strong>Node.js</strong> 20.0 ou superior</li>
+    <li><strong>React</strong> 18.3+ ou 19.0+</li>
+    <li><strong>TypeScript</strong> 5.0+ (recomendado)</li>
+  </ul>
+</Card>
 
-## Gerenciadores de Pacotes
+## Instalação dos Pacotes
 
-### pnpm (Recomendado)
+<CodeGroup>
+  <CodeTab label="pnpm">pnpm add @archbase/core @archbase/data @archbase/components</CodeTab>
+  <CodeTab label="npm">npm install @archbase/core @archbase/data @archbase/components</CodeTab>
+  <CodeTab label="yarn">yarn add @archbase/core @archbase/data @archbase/components</CodeTab>
+</CodeGroup>
 
-```bash
-# Pacotes essenciais
-pnpm add @archbase/core @archbase/data @archbase/components
+## Pacotes Adicionais
 
-# Pacotes adicionais (conforme necessidade)
+<Details summary="Pacotes adicionais disponíveis">
+Conforme sua necessidade, você pode instalar outros pacotes do ecossistema Archbase:
+
+<CodeGroup>
+  <CodeTab label="pnpm">
 pnpm add @archbase/template @archbase/layout @archbase/admin
 pnpm add @archbase/security @archbase/security-ui
 pnpm add @archbase/advanced @archbase/ssr
-```
-
-### npm
-
-```bash
-npm install @archbase/core @archbase/data @archbase/components
-```
-
-### yarn
-
-```bash
-yarn add @archbase/core @archbase/data @archbase/components
-```
+  </CodeTab>
+  <CodeTab label="npm">
+npm install @archbase/template @archbase/layout @archbase/admin
+npm install @archbase/security @archbase/security-ui
+npm install @archbase/advanced @archbase/ssr
+  </CodeTab>
+  <CodeTab label="yarn">
+yarn add @archbase/template @archbase/layout @archbase/admin
+yarn add @archbase/security @archbase/security-ui
+yarn add @archbase/advanced @archbase/ssr
+  </CodeTab>
+</CodeGroup>
+</Details>
 
 ## Dependências Peer
 
 O Archbase React requer algumas dependências que você precisa instalar manualmente:
 
-```bash
-pnpm add react react-dom @mantine/core @mantine/hooks @tanstack/react-query
-```
+<Card icon="📦" title="Dependências Necessárias" color="orange">
+  <CodeGroup>
+    <CodeTab label="pnpm">pnpm add react react-dom @mantine/core @mantine/hooks @tanstack/react-query</CodeTab>
+    <CodeTab label="npm">npm install react react-dom @mantine/core @mantine/hooks @tanstack/react-query</CodeTab>
+    <CodeTab label="yarn">yarn add react react-dom @mantine/core @mantine/hooks @tanstack/react-query</CodeTab>
+  </CodeGroup>
+</Card>
 
 ### Lista completa de peer dependencies:
 
@@ -88,6 +103,7 @@ export default App;
 
 ### 2. Configure o i18n (Opcional)
 
+<Details summary="Configuração de internacionalização">
 Se precisar de internacionalização:
 
 ```tsx title="src/i18n.ts"
@@ -114,6 +130,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>
 );
 ```
+</Details>
 
 ## Configuração com Vite
 
@@ -135,6 +152,7 @@ export default defineConfig({
 
 ## Configuração com Next.js
 
+<Details summary="Ver configuração Next.js">
 ```tsx title="app/providers.tsx"
 'use client';
 
@@ -176,6 +194,7 @@ export default function RootLayout({
   );
 }
 ```
+</Details>
 
 ## Verificando a Instalação
 
@@ -220,7 +239,9 @@ export function TestComponent() {
 }
 ```
 
-Se o componente renderizar corretamente e você conseguir editar/salvar, a instalação está completa!
+<Card icon="✅" title="Sucesso!" color="green">
+  Se o componente renderizar corretamente e você conseguir editar/salvar, a instalação está completa!
+</Card>
 
 ## Próximos Passos
 

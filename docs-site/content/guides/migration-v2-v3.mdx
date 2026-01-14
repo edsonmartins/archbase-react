@@ -3,9 +3,51 @@
 
 Guia para migrar do Archbase React v2 para v3.
 
+## Visão Geral
+
+<Card icon="🚀" title="Novidades do v3" color="blue">
+  <strong>Archbase React v3</strong> traz uma arquitetura modular aprimorada, melhor performance e uma experiência de desenvolvimento ainda melhor.
+  <ul>
+    <li>Pacotes independentes para instalação sob demanda</li>
+    <li>Mantine 8 com suporte a React 19</li>
+    <li>DataSource V2 com Immer para imutabilidade automática</li>
+    <li>Typescript aprimorado em todo o ecossistema</li>
+  </ul>
+</Card>
+
 ## Principais Mudanças
 
-### 1. Imports
+### 1. Pacotes Modulares
+
+<Comparison left="v2 (Monolítico)" right="v3 (Modular)">
+  <Comparison.Row label="Estrutura" left="@archbase/archbase-react-components" right="@archbase/components, @archbase/data, etc." highlight="right" />
+  <Comparison.Row label="Instalação" left="Tudo junto" left="Apenas o necessário" highlight="right" />
+  <Comparison.Row label="Bundle Size" left="Maior" right="Menor (tree-shaking)" highlight="right" />
+  <Comparison.Row label="Manutenção" left="Complexo" right="Simplificado" highlight="right" />
+</Comparison>
+
+### 2. Imports Atualizados
+
+<Comparison left="v2" right="v3">
+  <Comparison.Row
+    label="Componentes"
+    left="@archbase/archbase-react-components"
+    right="@archbase/components"
+    highlight="both"
+  />
+  <Comparison.Row
+    label="DataSource"
+    left="@archbase/archbase-react-data"
+    right="@archbase/data"
+    highlight="both"
+  />
+  <Comparison.Row
+    label="Layout"
+    left="@archbase/archbase-react-layout"
+    right="@archbase/layout"
+    highlight="both"
+  />
+</Comparison>
 
 ```tsx
 // v2
@@ -15,48 +57,168 @@ import { ArchbaseEdit } from '@archbase/archbase-react-components';
 import { ArchbaseEdit } from '@archbase/components';
 ```
 
-### 2. DataSource V2
+### 3. DataSource V2
 
-O DataSource V2 é compatível com v2, mas com melhorias:
+O DataSource V2 é totalmente compatível com v2, mas com melhorias significativas:
+
+<Card icon="🔄" title="DataSource V2" color="green">
+  <strong>Imutabilidade Automática:</strong> O V2 usa Immer internamente, garantindo que o estado nunca seja mutado acidentalmente.
+</Card>
 
 ```tsx
-// v2 e v3 - compatível
+// v2 e v3 - API compatível
 const { dataSource, edit, save } = useArchbaseDataSourceV2<Pessoa>({
   initialData: dados,
   name: 'pessoas-ds',
 });
 ```
 
-### 3. Mantine 8
+<Details summary="Novidades do DataSource V2">
+  <ul>
+    <li><strong>Imutabilidade automática</strong> com Immer</li>
+    <li><strong>Operações type-safe</strong> para arrays</li>
+    <li><strong>Estados explícitos</strong> (BROWSE, EDIT, INSERT)</li>
+    <li><strong>Backup automático</strong> ao entrar em modo de edição</li>
+    <li><strong>Performance otimizada</strong> com memoização</li>
+  </ul>
+</Details>
+
+### 4. Mantine 8
 
 Atualização do Mantine 7 para 8:
 
-```tsx
-// v2 (Mantine 7)
+<CodeGroup>
+  <CodeTab label="v2">
+// Mantine 7
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
+  </CodeTab>
+  <CodeTab label="v3">
+// Mantine 8 - mesmo API!
+import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+  </CodeTab>
+</CodeGroup>
 
-// v3 (Mantine 8) - mesmo API
-import { MantineProvider } from '@mantine/core';
-import '@mantine/core/styles.css';
-```
+<Card icon="✨" title="Mantine 8" color="purple">
+  A migração é transparente! A API do Mantine 8 é praticamente idêntica à do 7.
+  <br /><br />
+  Principais novidades:
+  <ul>
+    <li>Suporte nativo a React 19</li>
+    <li>Performance melhorada</li>
+    <li>Novos componentes</li>
+    <li>Typescript aprimorado</li>
+  </ul>
+</Card>
 
 ## Checklist de Migração
 
-- [ ] Atualizar imports para novos pacotes
-- [ ] Verificar peer dependencies
-- [ ] Atualizar Mantine para v8
-- [ ] Testar componentes de formulário
-- [ ] Testar DataGrid
-- [ ] Testar sistema de segurança
+<Card icon="✅" title="Checklist" color="green">
+  Siga este checklist para garantir uma migração tranquila:
+  <ol>
+    <li>Atualizar imports para novos pacotes</li>
+    <li>Verificar peer dependencies</li>
+    <li>Atualizar Mantine para v8</li>
+    <li>Testar componentes de formulário</li>
+    <li>Testar DataGrid</li>
+    <li>Testar sistema de segurança</li>
+  </ol>
+</Card>
 
 ## Breaking Changes
 
-| Componente | Mudança |
-|------------|---------|
-| `ArchbaseSelect` | Prop `options` renomeada para `data` |
-| `ArchbaseModal` | Prop `visible` renomeada para `opened` |
+<Details summary="Ver breaking changes detalhados">
+  <table>
+    <thead>
+      <tr>
+        <th>Componente</th>
+        <th>Mudança</th>
+        <th>Ação Necessária</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>ArchbaseSelect</code></td>
+        <td>Prop <code>options</code> renomeada para <code>data</code></td>
+        <td>Renomear a prop</td>
+      </tr>
+      <tr>
+        <td><code>ArchbaseModal</code></td>
+        <td>Prop <code>visible</code> renomeada para <code>opened</code></td>
+        <td>Renomear a prop</td>
+      </tr>
+      <tr>
+        <td><code>ArchbaseAsyncSelect</code></td>
+        <td>Prop <code>options</code> renomeada para <code>data</code></td>
+        <td>Renomear a prop</td>
+      </tr>
+    </tbody>
+  </table>
+</Details>
+
+## Exemplo Completo de Migração
+
+<Details summary="Ver exemplo de migração">
+  <strong>Antes (v2):</strong>
+  ```tsx
+  import { ArchbaseEdit } from '@archbase/archbase-react-components';
+  import { ArchbaseSelect } from '@archbase/archbase-react-components';
+  import { useArchbaseDataSourceV2 } from '@archbase/archbase-react-data';
+
+  function PessoaForm() {
+    const { dataSource, edit, save } = useArchbaseDataSourceV2<Pessoa>({
+      initialData: dados,
+      name: 'pessoas-ds',
+    });
+
+    return (
+      <>
+        <ArchbaseEdit dataSource={dataSource} dataField="nome" />
+        <ArchbaseSelect
+          dataSource={dataSource}
+          dataField="cidade"
+          options={cidades}
+        />
+      </>
+    );
+  }
+  ```
+
+  <strong>Depois (v3):</strong>
+  ```tsx
+  import { ArchbaseEdit } from '@archbase/components';
+  import { ArchbaseSelect } from '@archbase/components';
+  import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+  function PessoaForm() {
+    const { dataSource, edit, save } = useArchbaseDataSourceV2<Pessoa>({
+      initialData: dados,
+      name: 'pessoas-ds',
+    });
+
+    return (
+      <>
+        <ArchbaseEdit dataSource={dataSource} dataField="nome" />
+        <ArchbaseSelect
+          dataSource={dataSource}
+          dataField="cidade"
+          data={cidades}  // Renomeado de 'options'
+        />
+      </>
+    );
+  }
+  ```
+</Details>
 
 ## Suporte
 
-Em caso de problemas, abra uma issue no GitHub.
+Em caso de problemas durante a migração:
+
+<Card icon="💬" title="Precisa de Ajuda?" color="orange">
+  <ul>
+    <li>Abra uma <a href="https://github.com/edsonmartins/archbase-react/issues" target="_blank">issue no GitHub</a></li>
+    <li>Consulte a <a href="/">documentação completa</a></li>
+    <li>Veja os <a href="/components/overview">exemplos de componentes</a></li>
+  </ul>
+</Card>

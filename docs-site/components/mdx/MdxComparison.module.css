@@ -1,0 +1,71 @@
+.comparison {
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.comparison.dark {
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.header {
+  border-bottom: rem(2px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.darkHeader {
+  border-bottom-color: var(--mantine-color-dark-4);
+}
+
+.headerCell {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  text-align: left;
+  font-weight: 700;
+  font-size: rem(13px);
+  text-transform: uppercase;
+  letter-spacing: rem(0.5px);
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
+}
+
+.row {
+  border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.darkRow {
+  border-bottom-color: var(--mantine-color-dark-5);
+}
+
+.labelCell {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  width: 25%;
+}
+
+.valueCell {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  width: 35%;
+}
+
+.highlightLeft {
+  background-color: rgba(64, 192, 87, 0.1);
+}
+
+.highlightRight {
+  background-color: rgba(64, 192, 87, 0.1);
+}
+
+.highlightBoth {
+  background-color: rgba(34, 139, 230, 0.1);
+}
+
+.badgeCell {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  width: 5%;
+  text-align: center;
+}
