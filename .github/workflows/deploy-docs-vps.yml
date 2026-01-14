@@ -69,6 +69,10 @@ jobs:
           sudo rm -rf /srv/archbase-react-docs/*
           sudo cp -r docs-site/out/* /srv/archbase-react-docs/
 
+          # Copiar docker-compose para local persistente
+          sudo mkdir -p /opt/archbase-infrastructure
+          sudo cp deployment/docker-compose.vps.yml /opt/archbase-infrastructure/docker-compose.yml
+
           # Recrear stack com nova versão (Docker Swarm)
           cd /opt/archbase-infrastructure
           docker stack deploy -c docker-compose.yml archbase-react
