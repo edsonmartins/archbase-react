@@ -25,10 +25,11 @@ jobs:
         with:
           version: 9
 
-      - name: Override .npmrc for NPM publish
+      - name: Remove local .npmrc and configure NPM registry
         run: |
-          echo "@archbase:registry=https://registry.npmjs.org/" > .npmrc
-          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          rm -f .npmrc
+          pnpm config set registry https://registry.npmjs.org/
+          pnpm config set @archbase:registry https://registry.npmjs.org/
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
