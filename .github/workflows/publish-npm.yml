@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted  # Roda na VPS usando login existente
     timeout-minutes: 30
 
     steps:
@@ -25,11 +25,6 @@ jobs:
         with:
           version: 9
 
-      - name: Override .npmrc for NPM publish
-        run: |
-          echo "@archbase:registry=https://registry.npmjs.org/" > .npmrc
-          echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" >> .npmrc
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -41,5 +36,3 @@ jobs:
 
       - name: Publish to NPM
         run: pnpm publish -r --no-git-checks --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
