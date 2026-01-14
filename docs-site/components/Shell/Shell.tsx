@@ -49,12 +49,13 @@ export function Shell({ children, currentPath }: ShellProps) {
             >
               <Image
                 src={colorScheme === 'dark'
-                  ? "/images/logo_com_texto_archbase_tema_dark.png"
-                  : "/images/logo_com_texto_archbase_tema_light.png"}
+                  ? "/images/logo_sem_texto_archbase_tema_dark.png"
+                  : "/images/logo_sem_texto_archbase_tema_light.png"}
                 alt="Archbase React"
-                height={60}
+                height={32}
                 fit="contain"
               />
+              <Text className={classes.title} size="xl" fw={700}>Archbase React</Text>
             </a>
           </Group>
 
