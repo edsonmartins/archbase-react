@@ -6,6 +6,10 @@ Core utilities and foundation for Archbase React v3.
 
 ```bash
 npm install @archbase/core
+# or
+pnpm add @archbase/core
+# or
+yarn add @archbase/core
 ```
 
 ## Features
@@ -19,11 +23,11 @@ npm install @archbase/core
 ## Usage
 
 ```typescript
-import { 
+import {
   ArchbaseError,
   ArchbaseErrorBoundary,
   ArchbaseAppContext,
-  withArchbaseErrorBoundary 
+  withArchbaseErrorBoundary
 } from '@archbase/core';
 
 // Error Boundary
@@ -37,6 +41,10 @@ import {
 </ArchbaseAppContext.Provider>
 ```
 
-## API Documentation
+## License
 
-Detailed API documentation coming soon...
+MIT © Edson Martins
+
+## Documentation
+
+For full documentation, visit [https://react.archbase.dev](https://react.archbase.dev)

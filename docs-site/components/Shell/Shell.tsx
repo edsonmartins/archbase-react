@@ -24,7 +24,7 @@ interface ShellProps {
 }
 
 export function Shell({ children, currentPath }: ShellProps) {
-  const { toggleColorScheme } = useMantineColorScheme();
+  const { toggleColorScheme, colorScheme } = useMantineColorScheme();
   const [opened, { toggle }] = useDisclosure();
 
   useHotkeys([['mod + J', toggleColorScheme]]);
@@ -48,13 +48,14 @@ export function Shell({ children, currentPath }: ShellProps) {
               className={cx('mantine-focus-auto', classes.logo)}
             >
               <Image
-                src="/images/logo_archbase_single.png"
+                src={colorScheme === 'dark'
+                  ? "/images/logo_com_texto_archbase_tema_dark.png"
+                  : "/images/logo_com_texto_archbase_tema_light.png"}
                 alt="Archbase React"
                 height={42}
                 fit="contain"
               />
             </a>
-            <Text className={classes.title}>Archbase React</Text>
           </Group>
 
           <HeaderControls

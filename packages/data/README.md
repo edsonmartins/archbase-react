@@ -6,6 +6,10 @@ Data management layer for Archbase React v3 - DataSource, hooks, and API service
 
 ```bash
 npm install @archbase/data @archbase/core
+# or
+pnpm add @archbase/data @archbase/core
+# or
+yarn add @archbase/data @archbase/core
 ```
 
 ## Features
@@ -23,9 +27,9 @@ npm install @archbase/data @archbase/core
 ### DataSource v2 (TanStack Query)
 
 ```typescript
-import { 
+import {
   useArchbaseRemoteDataSourceV2,
-  ArchbaseDataSourceProvider 
+  ArchbaseDataSourceProvider
 } from '@archbase/data';
 
 // Remote data source with TanStack Query
@@ -52,6 +56,10 @@ const dataSource = useArchbaseLocalDataSource({
 });
 ```
 
-## API Documentation
+## License
 
-Detailed API documentation coming soon...
+MIT © Edson Martins
+
+## Documentation
+
+For full documentation, visit [https://react.archbase.dev](https://react.archbase.dev)
