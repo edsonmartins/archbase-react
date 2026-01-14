@@ -86,7 +86,7 @@ echo "  3. Criar tag 'v$NEW_VERSION'"
 echo "  4. Push para origin"
 echo "  5. Push da tag (dispara publicação no NPM)"
 echo ""
-read -p "$(echo -e ${YELLOW}Continuar? (y/N): ${NC})" -n 1 -r
+read -p "Continuar? (y/N): " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo -e "${RED}Cancelado.${NC}"
