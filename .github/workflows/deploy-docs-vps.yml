@@ -54,21 +54,28 @@ jobs:
           export NEXT_PRIVATE_WORKER_THREADS=2
           pnpm run build
 
-      - name: Deploy to Docker container
+      - name: Prepare Docker build context
         run: |
-          # Criar/atualizar diretório de deploy
-          sudo mkdir -p /srv/archbase-react-docs
-
-          # Backup da versão anterior
-          if [ -d "/srv/archbase-react-docs" ] && [ "$(ls -A /srv/archbase-react-docs)" ]; then
-            sudo mkdir -p /srv/archbase-react-docs.backup
-            sudo cp -r /srv/archbase-react-docs /srv/archbase-react-docs.backup/$(date +%Y%m%d_%H%M%S)
-          fi
-
+          # Criar diretório temporário para o build
+          mkdir -p docker-build-context
           # Copiar arquivos buildados
-          sudo rm -rf /srv/archbase-react-docs/*
-          sudo cp -r docs-site/out/* /srv/archbase-react-docs/
+          cp -r docs-site/out/* docker-build-context/
+          # Copiar nginx.conf
+          cp deployment/docs/nginx.conf docker-build-context/
 
+      - name: Build Docker image
+        run: |
+          # Build da imagem com timestamp para forçar atualização
+          TIMESTAMP=$(date +%s)
+          docker build \
+            --build-arg BUILD_DATE=$TIMESTAMP \
+            -t archbase-react-docs:latest \
+            -t archbase-react-docs:$TIMESTAMP \
+            -f deployment/docs/Dockerfile \
+            docker-build-context
+
+      - name: Deploy to Docker Swarm
+        run: |
           # Copiar docker-compose para local persistente
           sudo mkdir -p /opt/archbase-infrastructure
           sudo cp deployment/docker-compose.vps.yml /opt/archbase-infrastructure/docker-compose.yml
@@ -77,15 +84,17 @@ jobs:
           cd /opt/archbase-infrastructure
           docker stack deploy -c docker-compose.yml archbase-react
 
-      - name: Cleanup old builds
+          # Forçar atualização do serviço
+          docker service update archbase-react_react-docs --force
+
+      - name: Cleanup old Docker images
         run: |
-          # Manter apenas últimos 5 builds
-          if [ -d "/srv/archbase-react-docs.backup" ]; then
-            cd /srv/archbase-react-docs.backup
-            for dir in $(ls -t | tail -n +6); do
-              sudo rm -rf "$dir" 2>/dev/null || true
-            done
-          fi
+          # Remover imagens antigas da documentação (manter apenas latest + 2 anteriores)
+          docker images archbase-react-docs --format "{{.ID}} {{.Tag}}" | \
+            grep -v "latest" | \
+            tail -n +3 | \
+            awk '{print $1}' | \
+            xargs -r docker rmi -f 2>/dev/null || true
 
       - name: Docker system prune
         run: |

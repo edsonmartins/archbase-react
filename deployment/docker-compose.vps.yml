@@ -13,11 +13,9 @@ networks:
 services:
   react-docs:
     <<: *default-opts
-    image: nginx:alpine
+    image: archbase-react-docs:latest
     networks:
       - traefik-network
-    volumes:
-      - /srv/archbase-react-docs:/usr/share/nginx/html:ro
     deploy:
       mode: replicated
       replicas: 1
