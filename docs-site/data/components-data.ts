@@ -228,18 +228,6 @@ export const ARCHBASE_JSON_EDIT_DATA: PageHeaderData = {
   version: '3.0.0',
 };
 
-export const ARCHBASE_SPREADSHEET_IMPORT_DATA: PageHeaderData = {
-  title: 'ArchbaseSpreadsheetImport',
-  description: 'Importação de dados de arquivos CSV, XLSX e XLS com validação, mapeamento de colunas e integração com DataSource.',
-  source: '@archbase/components/spreadsheet/ArchbaseSpreadsheetImport',
-  package: '@archbase/components',
-  docsLink: '/components/editors/spreadsheet-import',
-  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
-  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/spreadsheet/ArchbaseSpreadsheetImport.tsx',
-  license: 'MIT',
-  version: '3.0.0',
-};
-
 export const ARCHBASE_COMPOSITE_FILTERS_DATA: PageHeaderData = {
   title: 'ArchbaseCompositeFilters',
   description: 'Componente de filtros compostos com interface interativa e saída em formato RSQL para integração com APIs.',

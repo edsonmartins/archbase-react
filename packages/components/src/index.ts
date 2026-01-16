@@ -15,7 +15,6 @@ export * from './masonry';
 export * from './notification';
 export * from './onboarding';
 export * from './viewers';
-export * from './spreadsheet';
 export * from './filters';
 
 // New Components

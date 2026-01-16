@@ -26,7 +26,6 @@ import { ArchbaseRatingStylesApi } from './ArchbaseRating.styles-api';
 import { ArchbaseJsonEditStylesApi } from './ArchbaseJsonEdit.styles-api';
 import { ArchbaseOperationHoursEditorStylesApi } from './ArchbaseOperationHoursEditor.styles-api';
 import { ArchbaseCronExpressionEditStylesApi } from './ArchbaseCronExpressionEdit.styles-api';
-import { ArchbaseSpreadsheetImportStylesApi } from './ArchbaseSpreadsheetImport.styles-api';
 import { ArchbaseCompositeFiltersStylesApi } from './ArchbaseCompositeFilters.styles-api';
 
 // Exporta todas as Styles API
@@ -57,7 +56,6 @@ export { ArchbaseRatingStylesApi } from './ArchbaseRating.styles-api';
 export { ArchbaseJsonEditStylesApi } from './ArchbaseJsonEdit.styles-api';
 export { ArchbaseOperationHoursEditorStylesApi } from './ArchbaseOperationHoursEditor.styles-api';
 export { ArchbaseCronExpressionEditStylesApi } from './ArchbaseCronExpressionEdit.styles-api';
-export { ArchbaseSpreadsheetImportStylesApi } from './ArchbaseSpreadsheetImport.styles-api';
 export { ArchbaseCompositeFiltersStylesApi } from './ArchbaseCompositeFilters.styles-api';
 
 // Dados consolidados para uso nas páginas
@@ -89,6 +87,5 @@ export const STYLES_API_DATA: Record<string, StylesApiData> = {
   ArchbaseJsonEdit: ArchbaseJsonEditStylesApi,
   ArchbaseOperationHoursEditor: ArchbaseOperationHoursEditorStylesApi,
   ArchbaseCronExpressionEdit: ArchbaseCronExpressionEditStylesApi,
-  ArchbaseSpreadsheetImport: ArchbaseSpreadsheetImportStylesApi,
   ArchbaseCompositeFilters: ArchbaseCompositeFiltersStylesApi,
 };
