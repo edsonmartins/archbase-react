@@ -1,6 +1,6 @@
 {
   "name": "@archbase/feature-flags",
-  "version": "3.0.2",
+  "version": "3.0.14",
   "description": "Feature flags integration for Archbase React v3 using Unleash",
   "license": "MIT",
   "type": "module",
