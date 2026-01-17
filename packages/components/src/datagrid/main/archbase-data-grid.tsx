@@ -868,7 +868,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         type: 'string' as const,
         sortable: false,
         filterable: false,
-        width: 120,
+        width: 60,
         renderCell: (params) => renderRowActions(params.row as T)
       }
 

@@ -42,16 +42,16 @@
     "i18next": "^25.3.1",
     "lodash": "4.17.21",
     "prop-types": "15.8.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "react-i18next": "^15.1.2",
     "usehooks-ts": "^2.16.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.200",
     "@types/prop-types": "^15.7.12",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "^19.0.6",
+    "@types/react-dom": "^19.0.2",
     "typescript": "^5.7.0",
     "vite": "^6.3.5",
     "vitest": "^2.0.0"

@@ -1,4 +1,4 @@
-import React, { ReactElement, useLayoutEffect, useState } from 'react';
+import React, { Activity, ReactElement, useLayoutEffect, useState } from 'react';
 import type { RouteProps, RoutesProps } from 'react-router';
 import { Route, Routes } from 'react-router-dom';
 
@@ -32,14 +32,16 @@ type DisplayRouteProps = RouteProps & {
 };
 
 const DisplayRoute = ({ element, routesProps, ...props }: DisplayRouteProps) => {
-	const [show, setShow] = useState(false);
+	const [isActive, setIsActive] = useState(false);
 
 	return (
 		<>
-			<div style={{ display: show ? 'unset' : 'none' }}>{element}</div>
+			<Activity mode={isActive ? 'visible' : 'hidden'}>
+				{element}
+			</Activity>
 
 			<Routes {...routesProps}>
-				<Route {...(props as any)} element={<RouteMatchInformant onRouteMatchChange={setShow} />} />
+				<Route {...(props as any)} element={<RouteMatchInformant onRouteMatchChange={setIsActive} />} />
 			</Routes>
 		</>
 	);

@@ -22,8 +22,8 @@
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "@mantine/core": "8.3.12",
     "@mantine/hooks": "8.3.12",
     "@mantine/dates": "8.3.12",
@@ -49,7 +49,7 @@
     "date-fns": "^2.30.0"
   },
   "devDependencies": {
-    "@types/react": "^19.0.2",
+    "@types/react": "^19.0.6",
     "@types/react-dom": "^19.0.2",
     "@types/lodash": "^4.17.13",
     "@types/react-addons-shallow-compare": "^0.14.22",
