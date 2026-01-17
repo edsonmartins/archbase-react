@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactElement, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, ReactElement, ReactNode, useLayoutEffect, useRef, useState } from 'react';
 import type { RouteProps, RoutesProps } from 'react-router';
 import { Route, Routes } from 'react-router-dom';
 
@@ -10,8 +10,7 @@ interface KeepAliveCacheContextValue {
 	cache: Map<string, ReactNode>;
 	register: (path: string, component: ReactNode) => void;
 	unregister: (path: string) => void;
-	activePaths: Set<string>;
-	setActive: (path: string, active: boolean) => void;
+	requestUnregister: (path: string) => void; // Solicita remoção (quando aba fecha)
 }
 
 const KeepAliveCacheContext = createContext<KeepAliveCacheContextValue | null>(null);
@@ -34,15 +33,17 @@ export const ArchbaseKeepAliveRoute = (props: ArchbaseKeepAliveRouteProps) => nu
 
 export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => {
 	const [cache, setCache] = useState<Map<string, ReactNode>>(new Map());
-	const [activePaths, setActivePaths] = useState<Set<string>>(new Set());
+	const [requestedUnregister, setRequestedUnregister] = useState<Set<string>>(new Set());
 
 	// Registra um componente no cache (lazy loading)
 	const register = (path: string, component: ReactNode) => {
 		setCache((prev) => {
-			const next = new Map(prev);
-			if (!next.has(path)) {
-				next.set(path, component);
+			// Só atualizar se realmente não existe no cache
+			if (prev.has(path)) {
+				return prev;
 			}
+			const next = new Map(prev);
+			next.set(path, component);
 			return next;
 		});
 	};
@@ -54,22 +55,18 @@ export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => 
 			next.delete(path);
 			return next;
 		});
-		setActivePaths((prev) => {
+		setRequestedUnregister((prev) => {
 			const next = new Set(prev);
 			next.delete(path);
 			return next;
 		});
 	};
 
-	// Marca uma rota como ativa ou inativa
-	const setActive = (path: string, active: boolean) => {
-		setActivePaths((prev) => {
+	// Solicita remoção (chamado pelo TabContainer ao fechar aba)
+	const requestUnregister = (path: string) => {
+		setRequestedUnregister((prev) => {
 			const next = new Set(prev);
-			if (active) {
-				next.add(path);
-			} else {
-				next.delete(path);
-			}
+			next.add(path);
 			return next;
 		});
 	};
@@ -90,8 +87,7 @@ export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => 
 		cache,
 		register,
 		unregister,
-		activePaths,
-		setActive
+		requestUnregister
 	};
 
 	return (
@@ -113,33 +109,30 @@ type DisplayRouteProps = ArchbaseKeepAliveRouteProps & {
 };
 
 const DisplayRoute = ({ component, routesProps, ...props }: DisplayRouteProps) => {
-	const { cache, register, unregister, activePaths, setActive } = useKeepAliveCache()!;
+	const { cache, register, unregister, requestUnregister } = useKeepAliveCache()!;
 	const [isActive, setIsActive] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
+	const isInitializedRef = useRef(false);
 
 	// Lazy loading: criar componente apenas quando a rota fica ativa pela primeira vez
 	useLayoutEffect(() => {
-		if (isActive && component && props.path) {
+		if (isActive && component && props.path && !isInitializedRef.current) {
 			// Se component é uma função, instanciar; caso contrário, usar diretamente
 			const element = typeof component === 'function'
 				? React.createElement(component as React.ComponentType)
 				: component;
 			register(props.path, element);
+			isInitializedRef.current = true;
 		}
-		return () => {
-			// Cleanup: remover do cache se a rota não está mais ativa
-			if (props.path && !activePaths.has(props.path)) {
-				unregister(props.path);
-			}
-		};
-	}, [isActive, component, props.path, register, unregister, activePaths]);
+	}, [isActive, component, props.path, register]);
 
-	// Sincronizar isActive com o estado global
-	useEffect(() => {
-		if (props.path) {
-			setActive(props.path, isActive);
+	// Verificar se foi solicitada a remoção do cache
+	useLayoutEffect(() => {
+		if (props.path && requestUnregister.has(props.path)) {
+			unregister(props.path);
+			isInitializedRef.current = false;
 		}
-	}, [isActive, props.path, setActive]);
+	}, [props.path, requestUnregister, unregister]);
 
 	// Obter o componente do cache
 	const cachedElement = props.path ? cache.get(props.path) : null;
