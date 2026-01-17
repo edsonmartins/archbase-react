@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2025-12-10",
+  "generatedAt": "2026-01-16",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -26,7 +26,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/abbreviate"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "ADVANCED",
@@ -36,7 +36,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/advanced"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "AnchorType",
@@ -48,7 +48,7 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/anchor-type"
+      "canonicalUrl": "packages/layout/src/spaces/core-types"
     },
     {
       "name": "ApiError",
@@ -58,7 +58,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/api-error"
+      "canonicalUrl": "packages/core/src/exceptions/ApiError"
     },
     {
       "name": "ApiSubError",
@@ -68,7 +68,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/api-sub-error"
+      "canonicalUrl": "packages/core/src/exceptions/ApiError"
     },
     {
       "name": "ApiTokenModal",
@@ -117,7 +117,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/api-token-modal"
+      "canonicalUrl": "packages/security-ui/src/ApiTokenModal"
     },
     {
       "name": "ApiValidationError",
@@ -127,7 +127,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/api-validation-error"
+      "canonicalUrl": "packages/core/src/exceptions/ApiError"
     },
     {
       "name": "applyFontFamily",
@@ -137,7 +137,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/apply-font-family"
+      "canonicalUrl": "packages/core/src/utils/dom"
     },
     {
       "name": "ARCHBASE_IOC_API_TYPE",
@@ -147,7 +147,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-ioc-api-type"
+      "canonicalUrl": "packages/core/src/ioc/ArchbaseIOCTypes"
     },
     {
       "name": "ARCHBASE_QUERY_DEFAULTS",
@@ -157,7 +157,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-query-defaults"
+      "canonicalUrl": "packages/data/src/datasource/v2/ArchbaseQueryIntegration"
     },
     {
       "name": "ArchbaseActionButtons",
@@ -192,7 +192,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-action-buttons"
+      "canonicalUrl": "packages/components/src/buttons/ArchbaseActionButtons"
     },
     {
       "name": "ArchbaseAdminLayoutContext",
@@ -272,7 +272,7 @@
         "provider",
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-admin-layout-context"
+      "canonicalUrl": "packages/admin/src/ArchbaseAdminLayout.context"
     },
     {
       "name": "ArchbaseAdminLayoutFooter",
@@ -291,7 +291,7 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-admin-layout-footer"
+      "canonicalUrl": "packages/admin/src/ArchbaseAdminLayoutFooter"
     },
     {
       "name": "ArchbaseAdminLayoutHeader",
@@ -303,7 +303,7 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-admin-layout-header"
+      "canonicalUrl": "packages/admin/src/ArchbaseAdminLayoutHeader"
     },
     {
       "name": "ArchbaseAdminLayoutProvider",
@@ -316,7 +316,7 @@
         "provider",
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-admin-layout-provider"
+      "canonicalUrl": "packages/admin/src/ArchbaseAdminLayout.context"
     },
     {
       "name": "ArchbaseAdminMainLayout",
@@ -605,7 +605,7 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-admin-main-layout"
+      "canonicalUrl": "packages/admin/src/ArchbaseAdminMainLayout"
     },
     {
       "name": "ArchbaseAdminTabContainer",
@@ -646,7 +646,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-admin-tab-container"
+      "canonicalUrl": "packages/admin/src/ArchbaseAdminTabContainer"
     },
     {
       "name": "ArchbaseAdvancedFilter",
@@ -765,7 +765,216 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-advanced-filter"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseAdvancedFilter"
+    },
+    {
+      "name": "ArchbaseAdvancedSidebar",
+      "description": "ArchbaseAdvancedSidebar — componente Archbase focado em advanced sidebar.",
+      "sourcePath": "packages/admin/src/ArchbaseAdvancedSidebar",
+      "exportsFrom": "@archbase/admin",
+      "props": [
+        {
+          "name": "navigationData",
+          "type": "ArchbaseNavigationItem[]",
+          "required": true,
+          "description": "Define navigation data. (ArchbaseNavigationItem[])"
+        },
+        {
+          "name": "sidebarWidth",
+          "type": "string | number",
+          "required": false,
+          "description": "Define sidebar width. (string | number)"
+        },
+        {
+          "name": "sidebarHeight",
+          "type": "string | number",
+          "required": false,
+          "description": "Define sidebar height. (string | number)"
+        },
+        {
+          "name": "sidebarCollapsedWidth",
+          "type": "string | number",
+          "required": false,
+          "description": "Define sidebar collapsed width. (string | number)"
+        },
+        {
+          "name": "sidebarGroupWidth",
+          "type": "string | number",
+          "required": false,
+          "description": "Define sidebar group width. (string | number)"
+        },
+        {
+          "name": "onMenuItemClick",
+          "type": "(item: ArchbaseNavigationItem) => void",
+          "required": false,
+          "description": "Callback acionado quando menu item click. ((item: ArchbaseNavigationItem) => void)"
+        },
+        {
+          "name": "onClickActionIcon",
+          "type": "(previousActiveGroupName: string, currentActiveGroupName: string) => void",
+          "required": false,
+          "description": "Callback acionado quando click action icon. ((previousActiveGroupName: string, currentActiveGroupName: string) => void)"
+        },
+        {
+          "name": "selectedGroupColor",
+          "type": "string",
+          "required": false,
+          "description": "Define selected group color. (string)"
+        },
+        {
+          "name": "groupColor",
+          "type": "string",
+          "required": false,
+          "description": "Define group color. (string)"
+        },
+        {
+          "name": "groupLabelDarkColor",
+          "type": "string",
+          "required": false,
+          "description": "Define group label dark color. (string)"
+        },
+        {
+          "name": "groupLabelLightColor",
+          "type": "string",
+          "required": false,
+          "description": "Define group label light color. (string)"
+        },
+        {
+          "name": "backgroundGroupColor",
+          "type": "string",
+          "required": false,
+          "description": "Define background group color. (string)"
+        },
+        {
+          "name": "isHidden",
+          "type": "boolean",
+          "required": false,
+          "description": "Indica se is hidden está habilitado. (boolean)"
+        },
+        {
+          "name": "sideBarFooterHeight",
+          "type": "string | number | undefined",
+          "required": false,
+          "description": "Define side bar footer height. (string | number | undefined)"
+        },
+        {
+          "name": "sideBarFooterContent",
+          "type": "ReactNode | undefined",
+          "required": false,
+          "description": "Define side bar footer content. (ReactNode | undefined)"
+        },
+        {
+          "name": "collapsed",
+          "type": "boolean",
+          "required": false,
+          "description": "Define collapsed. (boolean)"
+        },
+        {
+          "name": "withBorder",
+          "type": "boolean",
+          "required": false,
+          "description": "Define with border. (boolean)"
+        },
+        {
+          "name": "showGroupLabels",
+          "type": "boolean",
+          "required": false,
+          "description": "Define show group labels. (boolean)"
+        },
+        {
+          "name": "theme",
+          "type": "MantineTheme",
+          "required": true,
+          "description": "Objeto MantineThemeOverride para personalizar tema."
+        },
+        {
+          "name": "sidebarRef",
+          "type": "React.Ref<HTMLHtmlElement> | undefined",
+          "required": false,
+          "description": "Define sidebar ref. (React.Ref<HTMLHtmlElement> | undefined)"
+        },
+        {
+          "name": "defaultGroupIcon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Define default group icon. (ReactNode)"
+        },
+        {
+          "name": "selectedGroupName",
+          "type": "string",
+          "required": false,
+          "description": "Define selected group name. (string)"
+        },
+        {
+          "name": "sideBarHeaderContent",
+          "type": "ReactNode | undefined",
+          "required": false,
+          "description": "Define side bar header content. (ReactNode | undefined)"
+        },
+        {
+          "name": "iconsWithBackground",
+          "type": "boolean",
+          "required": false,
+          "description": "Define icons with background. (boolean)"
+        },
+        {
+          "name": "menuItemHeight",
+          "type": "string | number",
+          "required": false,
+          "description": "Define menu item height. (string | number)"
+        },
+        {
+          "name": "highlightActiveMenuItem",
+          "type": "boolean",
+          "required": false,
+          "description": "Define highlight active menu item. (boolean)"
+        },
+        {
+          "name": "backgroundDarkColor",
+          "type": "string",
+          "required": false,
+          "description": "Define background dark color. (string)"
+        },
+        {
+          "name": "backgroundLightColor",
+          "type": "string",
+          "required": false,
+          "description": "Define background light color. (string)"
+        },
+        {
+          "name": "textDarkColor",
+          "type": "string",
+          "required": false,
+          "description": "Define text dark color. (string)"
+        },
+        {
+          "name": "textLightColor",
+          "type": "string",
+          "required": false,
+          "description": "Define text light color. (string)"
+        },
+        {
+          "name": "iconDarkColor",
+          "type": "string",
+          "required": false,
+          "description": "Define icon dark color. (string)"
+        },
+        {
+          "name": "iconLightColor",
+          "type": "string",
+          "required": false,
+          "description": "Define icon light color. (string)"
+        },
+        {
+          "name": "collapsedSubmenuWidth",
+          "type": "string | number",
+          "required": false,
+          "description": "Define collapsed submenu width. (string | number)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/ArchbaseAdvancedSidebar"
     },
     {
       "name": "ArchbaseAdvancedTabs",
@@ -826,13 +1035,37 @@
           "type": "Function",
           "required": true,
           "description": "Callback acionado quando click. (Function)"
+        },
+        {
+          "name": "onCloseAllTabs",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback acionado quando close all tabs. (() => void)"
+        },
+        {
+          "name": "onCloseLeftTabs",
+          "type": "(tabId: string) => void",
+          "required": false,
+          "description": "Callback acionado quando close left tabs. ((tabId: string) => void)"
+        },
+        {
+          "name": "onCloseRightTabs",
+          "type": "(tabId: string) => void",
+          "required": false,
+          "description": "Callback acionado quando close right tabs. ((tabId: string) => void)"
+        },
+        {
+          "name": "onCloseOtherTabs",
+          "type": "(tabId: string) => void",
+          "required": false,
+          "description": "Callback acionado quando close other tabs. ((tabId: string) => void)"
         }
       ],
       "examples": [],
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-advanced-tabs"
+      "canonicalUrl": "packages/layout/src/containers/advancedtabs/ArchbaseAdvancedTabs"
     },
     {
       "name": "ArchbaseAlert",
@@ -921,7 +1154,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-alert"
+      "canonicalUrl": "packages/components/src/notification/ArchbaseAlert"
     },
     {
       "name": "ArchbaseAliveAbleRoutes",
@@ -931,7 +1164,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-alive-able-routes"
+      "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
     },
     {
       "name": "ArchbaseApiTokenView",
@@ -956,7 +1189,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-api-token-view"
+      "canonicalUrl": "packages/security-ui/src/ArchbaseApiTokenView"
     },
     {
       "name": "ArchbaseAppContext",
@@ -968,7 +1201,7 @@
       "tags": [
         "provider"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-app-context"
+      "canonicalUrl": "packages/core/src/context/ArchbaseAppContext"
     },
     {
       "name": "ArchbaseAppProvider",
@@ -1053,7 +1286,7 @@
       "tags": [
         "provider"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-app-provider"
+      "canonicalUrl": "packages/core/src/context/ArchbaseAppContext"
     },
     {
       "name": "ArchbaseAsyncMultiSelect",
@@ -1306,7 +1539,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-async-multi-select"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseAsyncMultiSelect"
     },
     {
       "name": "ArchbaseAsyncSelect",
@@ -1559,7 +1792,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-async-select"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseAsyncSelect"
     },
     {
       "name": "ArchbaseAsyncSelectContext",
@@ -1572,7 +1805,7 @@
         "provider",
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-async-select-context"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseAsyncSelect.context"
     },
     {
       "name": "ArchbaseAsyncSelectProvider",
@@ -1585,7 +1818,7 @@
         "provider",
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-async-select-provider"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseAsyncSelect.context"
     },
     {
       "name": "ArchbaseAuthContext",
@@ -1598,7 +1831,7 @@
         "provider",
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-auth-context"
+      "canonicalUrl": "packages/security/src/oauth2/AuthContext"
     },
     {
       "name": "ArchbaseAuthProvider",
@@ -1611,7 +1844,7 @@
         "provider",
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-auth-provider"
+      "canonicalUrl": "packages/security/src/oauth2/AuthContext"
     },
     {
       "name": "ArchbaseAvatarEdit",
@@ -1750,7 +1983,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-avatar-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseAvatarEdit"
     },
     {
       "name": "ArchbaseAxiosRemoteApiClient",
@@ -1760,7 +1993,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-axios-remote-api-client"
+      "canonicalUrl": "packages/data/src/service/ArchbaseRemoteApiService"
     },
     {
       "name": "ArchbaseChangeLanguageAction",
@@ -1770,7 +2003,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-change-language-action"
+      "canonicalUrl": "packages/admin/src/ArchbaseChangeLanguageAction"
     },
     {
       "name": "ArchbaseCheckbox",
@@ -1897,7 +2130,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-checkbox"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseCheckbox"
     },
     {
       "name": "ArchbaseChip",
@@ -2018,7 +2251,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-chip"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseChip"
     },
     {
       "name": "ArchbaseChipGroup",
@@ -2139,7 +2372,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-chip-group"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseChipGroup"
     },
     {
       "name": "ArchbaseChipItem",
@@ -2182,7 +2415,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-chip-item"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseChipItem"
     },
     {
       "name": "ArchbaseClickOutside",
@@ -2217,7 +2450,17 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-click-outside"
+      "canonicalUrl": "packages/core/src/helper/ArchbaseClickOutside"
+    },
+    {
+      "name": "ArchbaseCodeBlock",
+      "description": "Mapeamento de temas para cores",
+      "sourcePath": "packages/components/src/markdown/components/CodeBlock",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/markdown/components/CodeBlock"
     },
     {
       "name": "ArchbaseColorPicker",
@@ -2229,7 +2472,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-color-picker"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseColorPicker"
     },
     {
       "name": "ArchbaseColorSchemeAction",
@@ -2258,7 +2501,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-color-scheme-action"
+      "canonicalUrl": "packages/admin/src/ArchbaseColorSchemeAction"
     },
     {
       "name": "ArchbaseCompositeFilter",
@@ -2359,7 +2602,17 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-composite-filter"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseCompositeFilter"
+    },
+    {
+      "name": "ArchbaseCompositeFilters",
+      "description": "Componente principal de filtros compostos com saída RSQL\n@example\n```tsx\nconst filters: ArchbaseFilterDefinition[] = [\n  { key: 'nome', label: 'Nome', type: 'text' },\n  { key: 'idade', label: 'Idade', type: 'integer' },\n  { key: 'ativo', label: 'Ativo', type: 'boolean' }\n];\n<ArchbaseCompositeFilters\n  filters={filters}\n  value={activeFilters}\n  onChange={(filters, rsql) => {\n    console.log('RSQL:', rsql); // \"nome=like=*João*;idade>18\"\n  }}\n/>\n```",
+      "sourcePath": "packages/components/src/filters/ArchbaseCompositeFilters",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/filters/ArchbaseCompositeFilters"
     },
     {
       "name": "ArchbaseConsoleLogger",
@@ -2371,7 +2624,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-console-logger"
+      "canonicalUrl": "packages/tools/src/debug/ArchbaseConsoleLogger"
     },
     {
       "name": "ArchbaseCountdownProgress",
@@ -2396,7 +2649,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-countdown-progress"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseCountdownProgress"
     },
     {
       "name": "ArchbaseCronExpressionEdit",
@@ -2445,7 +2698,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-cron-expression-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseCronExpressionEdit"
     },
     {
       "name": "ArchbaseCronExpressionEditor",
@@ -2457,11 +2710,11 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-cron-expression-editor"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseCronExpressionEditor"
     },
     {
       "name": "ArchbaseDataGrid",
-      "description": "ArchbaseDataGrid.tsx - Implementação completa com Detail Panel",
+      "description": "@ts-nocheck",
       "sourcePath": "packages/components/src/datagrid/main/archbase-data-grid",
       "exportsFrom": "@archbase/components",
       "props": [],
@@ -2469,7 +2722,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-data-grid"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid"
     },
     {
       "name": "ArchbaseDataGridColumn",
@@ -2632,7 +2885,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-data-grid-column"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-types"
     },
     {
       "name": "ArchbaseDataGridPagination",
@@ -2644,7 +2897,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-data-grid-pagination"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-pagination"
     },
     {
       "name": "ArchbaseDataGridToolbar",
@@ -2656,7 +2909,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-data-grid-toolbar"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-toolbar"
     },
     {
       "name": "ArchbaseDataSource",
@@ -2666,7 +2919,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-data-source"
+      "canonicalUrl": "packages/data/src/datasource/ArchbaseDataSource"
     },
     {
       "name": "ArchbaseDataSourceError",
@@ -2676,7 +2929,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-data-source-error"
+      "canonicalUrl": "packages/core/src/exceptions/ArchbaseException"
     },
     {
       "name": "ArchbaseDataSourceInspector",
@@ -2725,7 +2978,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-data-source-inspector"
+      "canonicalUrl": "packages/tools/src/dev-utils/ArchbaseDataSourceInspector"
     },
     {
       "name": "ArchbaseDataSourceV2",
@@ -2735,7 +2988,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-data-source-v2"
+      "canonicalUrl": "packages/data/src/datasource/v2/ArchbaseDataSourceV2"
     },
     {
       "name": "ArchbaseDatePickerEdit",
@@ -2928,7 +3181,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-date-picker-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseDatePickerEdit"
     },
     {
       "name": "ArchbaseDatePickerRange",
@@ -3067,7 +3320,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-date-picker-range"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseDatePickerRange"
     },
     {
       "name": "ArchbaseDateTimePickerEdit",
@@ -3176,7 +3429,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-date-time-picker-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseDateTimePickerEdit"
     },
     {
       "name": "ArchbaseDateTimePickerRange",
@@ -3333,11 +3586,11 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-date-time-picker-range"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseDateTimePickerRange"
     },
     {
       "name": "ArchbaseDebugInspector",
-      "description": "Título a ser exibido",
+      "description": "@ts-nocheck",
       "sourcePath": "packages/components/src/debug/objectinspector/ArchbaseDebugInspector",
       "exportsFrom": "@archbase/components",
       "props": [
@@ -3388,7 +3641,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-debug-inspector"
+      "canonicalUrl": "packages/components/src/debug/objectinspector/ArchbaseDebugInspector"
     },
     {
       "name": "ArchbaseDebugPanel",
@@ -3419,7 +3672,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-debug-panel"
+      "canonicalUrl": "packages/tools/src/debug/ArchbaseDebugPanel"
     },
     {
       "name": "ArchbaseDetailDrawer",
@@ -3431,7 +3684,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-detail-drawer"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-detail-panel-component"
     },
     {
       "name": "ArchbaseDetailedFilter",
@@ -3532,7 +3785,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-detailed-filter"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseCompositeFilter"
     },
     {
       "name": "ArchbaseDetailHoverCard",
@@ -3544,7 +3797,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-detail-hover-card"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-grid-popover"
     },
     {
       "name": "ArchbaseDetailModal",
@@ -3556,7 +3809,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-detail-modal"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-detail-panel-component"
     },
     {
       "name": "ArchbaseDetailPanel",
@@ -3568,7 +3821,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-detail-panel"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-detail-panel-component"
     },
     {
       "name": "ArchbaseDetailPopover",
@@ -3580,7 +3833,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-detail-popover"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-grid-popover"
     },
     {
       "name": "ArchbaseDialog",
@@ -3590,7 +3843,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-dialog"
+      "canonicalUrl": "packages/components/src/notification/ArchbaseDialog"
     },
     {
       "name": "ArchbaseDockableContainer",
@@ -3681,7 +3934,31 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-dockable-container"
+      "canonicalUrl": "packages/layout/src/containers/ArchbaseDockableContainer"
+    },
+    {
+      "name": "ArchbaseDockLayout",
+      "description": "ArchbaseDockLayout — layout estrutural focado em dock layout.",
+      "sourcePath": "packages/layout/src/dock/ArchbaseDockLayout",
+      "exportsFrom": "@archbase/layout",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "layout"
+      ],
+      "canonicalUrl": "packages/layout/src/dock/ArchbaseDockLayout"
+    },
+    {
+      "name": "ArchbaseDockLayoutPreset",
+      "description": "Preset de layouts para casos de uso comuns",
+      "sourcePath": "packages/layout/src/dock/ArchbaseDockLayoutPreset",
+      "exportsFrom": "@archbase/layout",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "layout"
+      ],
+      "canonicalUrl": "packages/layout/src/dock/ArchbaseDockLayoutPreset"
     },
     {
       "name": "ArchbaseDrawerContent",
@@ -3722,7 +3999,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-drawer-content"
+      "canonicalUrl": "packages/admin/src/drawer/DrawerContent"
     },
     {
       "name": "ArchbaseDrawerTrigger",
@@ -3732,7 +4009,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-drawer-trigger"
+      "canonicalUrl": "packages/admin/src/drawer/DrawerTrigger"
     },
     {
       "name": "ArchbaseDualListSelector",
@@ -3811,7 +4088,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-dual-list-selector"
+      "canonicalUrl": "packages/security-ui/src/ArchbaseDualListSelector"
     },
     {
       "name": "ArchbaseEdit",
@@ -3974,7 +4251,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseEdit"
     },
     {
       "name": "ArchbaseError",
@@ -3984,7 +4261,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-error"
+      "canonicalUrl": "packages/core/src/exceptions/ArchbaseException"
     },
     {
       "name": "ArchbaseErrorBoundary",
@@ -3996,11 +4273,11 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-error-boundary"
+      "canonicalUrl": "packages/tools/src/dev-utils/ArchbaseErrorBoundary"
     },
     {
       "name": "ArchbaseExpandButton",
-      "description": "archbase-expand-button.tsx",
+      "description": "@ts-nocheck",
       "sourcePath": "packages/components/src/datagrid/main/archbase-expand-button",
       "exportsFrom": "@archbase/components",
       "props": [],
@@ -4008,7 +4285,19 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-expand-button"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-expand-button"
+    },
+    {
+      "name": "ArchbaseFeatureFlagsProvider",
+      "description": "ArchbaseFeatureFlagsProvider — provider de contexto focado em feature flags provider.",
+      "sourcePath": "packages/feature-flags/src/providers/ArchbaseFeatureFlagsProvider",
+      "exportsFrom": "@archbase/feature-flags",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider"
+      ],
+      "canonicalUrl": "packages/feature-flags/src/providers/ArchbaseFeatureFlagsProvider"
     },
     {
       "name": "ArchbaseFeedback",
@@ -4085,7 +4374,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-feedback"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFeedback"
     },
     {
       "name": "ArchbaseFileAttachment",
@@ -4140,7 +4429,17 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-file-attachment"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseFileAttachment"
+    },
+    {
+      "name": "ArchbaseFilePreviewer",
+      "description": "Renderizador de PDF (usando react-pdf)",
+      "sourcePath": "packages/components/src/viewers/file-preview/ArchbaseFilePreviewer",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/file-preview/ArchbaseFilePreviewer"
     },
     {
       "name": "ArchbaseFilterDSL",
@@ -4150,7 +4449,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-filter-dsl"
+      "canonicalUrl": "packages/core/src/utils/ArchbaseFilterDSL"
     },
     {
       "name": "ArchbaseFilterSelectFields",
@@ -4227,7 +4526,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-filter-select-fields"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterSelectFields"
     },
     {
       "name": "ArchbaseFilterSelectRange",
@@ -4280,7 +4579,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-filter-select-range"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterSelectRange"
     },
     {
       "name": "ArchbaseFloatingWindow",
@@ -4353,7 +4652,7 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-floating-window"
+      "canonicalUrl": "packages/layout/src/containers/window/ArchbaseFloatingWindow"
     },
     {
       "name": "ArchbaseForm",
@@ -4373,7 +4672,7 @@
         "form",
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-form"
+      "canonicalUrl": "packages/layout/src/containers/form/ArchbaseForm"
     },
     {
       "name": "ArchbaseGlobalFilter",
@@ -4408,7 +4707,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-global-filter"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseGlobalFilter"
     },
     {
       "name": "ArchbaseGlobalProvider",
@@ -4420,7 +4719,7 @@
       "tags": [
         "provider"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-global-provider"
+      "canonicalUrl": "packages/core/src/context/ArchbaseGlobalProvider"
     },
     {
       "name": "ArchbaseGridRowActions",
@@ -4475,7 +4774,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-grid-row-actions"
+      "canonicalUrl": "packages/components/src/datagrid/main/grid-row-actions"
     },
     {
       "name": "ArchbaseHeaderNavAction",
@@ -4492,7 +4791,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-header-nav-action"
+      "canonicalUrl": "packages/admin/src/ArchbaseHeaderNavAction"
     },
     {
       "name": "archbaseI18next",
@@ -4502,7 +4801,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-i18next"
+      "canonicalUrl": "packages/core/src/context/ArchbaseGlobalProvider"
     },
     {
       "name": "ArchbaseImage",
@@ -4597,7 +4896,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-image"
+      "canonicalUrl": "packages/components/src/image/ArchbaseImage"
     },
     {
       "name": "ArchbaseImageEdit",
@@ -4754,7 +5053,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-image-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseImageEdit"
     },
     {
       "name": "ArchbaseImagePickerEditor",
@@ -4764,7 +5063,17 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-image-picker-editor"
+      "canonicalUrl": "packages/components/src/image/editor"
+    },
+    {
+      "name": "ArchbaseInlineCode",
+      "description": "Mapeamento de temas para cores",
+      "sourcePath": "packages/components/src/markdown/components/CodeBlock",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/markdown/components/CodeBlock"
     },
     {
       "name": "ArchbaseInputSearch",
@@ -4805,7 +5114,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-input-search"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseInputSearch"
     },
     {
       "name": "ArchbaseItemRender",
@@ -4830,7 +5139,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-item-render"
+      "canonicalUrl": "packages/components/src/datagrid/components/render/archbase-data-grid-item-renderer"
     },
     {
       "name": "ArchbaseJacksonParser",
@@ -4840,7 +5149,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-jackson-parser"
+      "canonicalUrl": "packages/core/src/json/ArchbaseJacksonParser"
     },
     {
       "name": "ArchbaseJsonEdit",
@@ -4979,11 +5288,11 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-json-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseJsonEdit"
     },
     {
       "name": "ArchbaseJsonPathPicker",
-      "description": "ArchbaseJsonPathPicker — ferramenta devtools focado em json path picker.",
+      "description": "@ts-nocheck",
       "sourcePath": "packages/components/src/debug/jsonpathpicker/ArchbaseJsonPathPicker",
       "exportsFrom": "@archbase/components",
       "props": [
@@ -5010,7 +5319,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-json-path-picker"
+      "canonicalUrl": "packages/components/src/debug/jsonpathpicker/ArchbaseJsonPathPicker"
     },
     {
       "name": "ArchbaseJsonSchemaEditor",
@@ -5047,7 +5356,7 @@
       "tags": [
         "json"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-json-schema-editor"
+      "canonicalUrl": "packages/components/src/jsonschema/JsonSchemaEditor/ArchbaseJsonSchemaEditor"
     },
     {
       "name": "ArchbaseJsonView",
@@ -5078,7 +5387,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-json-view"
+      "canonicalUrl": "packages/components/src/debug/jsonview/index"
     },
     {
       "name": "ArchbaseKeepAliveRoute",
@@ -5088,7 +5397,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-keep-alive-route"
+      "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
     },
     {
       "name": "ArchbaseKeyValueEditor",
@@ -5191,7 +5500,17 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-key-value-editor"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseKeyValueEditor"
+    },
+    {
+      "name": "ArchbaseLinkRenderer",
+      "description": "Verifica se uma URL é externa ao domínio atual",
+      "sourcePath": "packages/components/src/markdown/components/LinkRenderer",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/markdown/components/LinkRenderer"
     },
     {
       "name": "ArchbaseList",
@@ -5442,7 +5761,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-list"
+      "canonicalUrl": "packages/components/src/list/ArchbaseList"
     },
     {
       "name": "ArchbaseListItem",
@@ -5591,7 +5910,17 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-list-item"
+      "canonicalUrl": "packages/components/src/list/ArchbaseListItem"
+    },
+    {
+      "name": "ArchbaseListViewTable",
+      "description": "Identificador único da coluna (key)",
+      "sourcePath": "packages/components/src/list-view/ArchbaseListViewTable",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/list-view/ArchbaseListViewTable"
     },
     {
       "name": "ArchbaseLocalFilterDataSource",
@@ -5601,7 +5930,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-local-filter-data-source"
+      "canonicalUrl": "packages/data/src/datasource/ArchbaseLocalFilterDataSource"
     },
     {
       "name": "ArchbaseLocalStorageViewer",
@@ -5632,7 +5961,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-local-storage-viewer"
+      "canonicalUrl": "packages/tools/src/dev-utils/ArchbaseLocalStorageViewer"
     },
     {
       "name": "archbaseLogo",
@@ -5642,7 +5971,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-logo"
+      "canonicalUrl": "packages/core/src/utils/archbaseLogo"
     },
     {
       "name": "archbaseLogo2",
@@ -5652,7 +5981,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-logo2"
+      "canonicalUrl": "packages/core/src/utils/archbaseLogo"
     },
     {
       "name": "archbaseLogo3",
@@ -5662,7 +5991,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-logo3"
+      "canonicalUrl": "packages/core/src/utils/archbaseLogo"
     },
     {
       "name": "ArchbaseLookupEdit",
@@ -5825,7 +6154,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-lookup-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseLookupEdit"
     },
     {
       "name": "ArchbaseLookupNumber",
@@ -6024,7 +6353,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-lookup-number"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseLookupNumber"
     },
     {
       "name": "ArchbaseLookupSelect",
@@ -6061,7 +6390,168 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-lookup-select"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseLookupSelect"
+    },
+    {
+      "name": "ArchbaseMarkdown",
+      "description": "Tema padrão para syntax highlighting",
+      "sourcePath": "packages/components/src/markdown/ArchbaseMarkdown",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/markdown/ArchbaseMarkdown"
+    },
+    {
+      "name": "ArchbaseMarkdownEdit",
+      "description": "ArchbaseMarkdownEdit — editor Markdown (react-markdown-editor-lite) com binding opcional ao dataSource.\n@status stable",
+      "sourcePath": "packages/components/src/editors/ArchbaseMarkdownEdit",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "autoFocus",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o editor recebe o foco automaticamente"
+        },
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde será atribuido o valor do editor (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo onde deverá ser atribuido o valor do editor na fonte de dados"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o editor está desabilitado"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o editor é somente leitura. Obs: usado em conjunto com o status da fonte de dados"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o preenchimento do editor é obrigatório"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo do editor"
+        },
+        {
+          "name": "width",
+          "type": "string | number | undefined",
+          "required": false,
+          "description": "Largura do editor"
+        },
+        {
+          "name": "height",
+          "type": "string | number | undefined",
+          "required": false,
+          "description": "Altura do editor"
+        },
+        {
+          "name": "minHeight",
+          "type": "string | number | undefined",
+          "required": false,
+          "description": "Altura mínima do editor"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Título do editor"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descrição do editor"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Último erro ocorrido no editor"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Valor inicial do markdown"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": "Texto de espaço reservado quando vazio"
+        },
+        {
+          "name": "enablePreview",
+          "type": "boolean",
+          "required": false,
+          "description": "Habilitar visualização em tempo real"
+        },
+        {
+          "name": "sanitize",
+          "type": "((html: string) => string) | boolean",
+          "required": false,
+          "description": "Sanitização HTML"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Evento quando o valor do editor é alterado"
+        },
+        {
+          "name": "onSave",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Evento quando o editor é salvo (Ctrl+S)"
+        },
+        {
+          "name": "onFocusExit",
+          "type": "(event: FocusEvent) => void",
+          "required": false,
+          "description": "Evento quando o foco sai do editor"
+        },
+        {
+          "name": "onFocusEnter",
+          "type": "(event: FocusEvent) => void",
+          "required": false,
+          "description": "Evento quando o editor recebe o foco"
+        },
+        {
+          "name": "onHtmlChanged",
+          "type": "(html: string) => void",
+          "required": false,
+          "description": "Evento quando HTML é gerado"
+        },
+        {
+          "name": "previewOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Modo de edição (live, preview, readonly, etc.)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseMarkdownEdit"
     },
     {
       "name": "ArchbaseMaskEdit",
@@ -6224,7 +6714,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-mask-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseMaskEdit"
     },
     {
       "name": "ArchbaseMasonry",
@@ -6265,7 +6755,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-masonry"
+      "canonicalUrl": "packages/components/src/masonry/ArchbaseMasonry"
     },
     {
       "name": "ArchbaseMasonryResponsive",
@@ -6300,7 +6790,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-masonry-responsive"
+      "canonicalUrl": "packages/components/src/masonry/ArchbaseMasonry"
     },
     {
       "name": "ArchbaseMemoryLeakDetector",
@@ -6312,7 +6802,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-memory-leak-detector"
+      "canonicalUrl": "packages/tools/src/dev-utils/ArchbaseMemoryLeakDetector"
     },
     {
       "name": "ArchbaseMicrosoftAvatar",
@@ -6335,7 +6825,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-microsoft-avatar"
+      "canonicalUrl": "packages/components/src/image/ArchbaseMicrosoftAvatar"
     },
     {
       "name": "ArchbaseMyProfileModal",
@@ -6376,7 +6866,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-my-profile-modal"
+      "canonicalUrl": "packages/admin/src/ArchbaseMyProfileModal"
     },
     {
       "name": "ArchbaseNavigationContext",
@@ -6388,7 +6878,7 @@
       "tags": [
         "provider"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-navigation-context"
+      "canonicalUrl": "packages/admin/src/ArchbaseNavigation.context"
     },
     {
       "name": "ArchbaseNavigationProvider",
@@ -6407,7 +6897,7 @@
       "tags": [
         "provider"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-navigation-provider"
+      "canonicalUrl": "packages/admin/src/ArchbaseNavigation.context"
     },
     {
       "name": "ArchbaseNetworkMonitor",
@@ -6438,7 +6928,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-network-monitor"
+      "canonicalUrl": "packages/tools/src/dev-utils/ArchbaseNetworkMonitor"
     },
     {
       "name": "ArchbaseNotifications",
@@ -6448,7 +6938,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-notifications"
+      "canonicalUrl": "packages/components/src/notification/ArchbaseNotifications"
     },
     {
       "name": "ArchbaseNumberEdit",
@@ -6623,7 +7113,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-number-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseNumberEdit"
     },
     {
       "name": "ArchbaseObjectHelper",
@@ -6633,7 +7123,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-object-helper"
+      "canonicalUrl": "packages/core/src/helper/ArchbaseObjectHelper"
     },
     {
       "name": "ArchbaseObjectInspector",
@@ -6658,7 +7148,61 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-object-inspector"
+      "canonicalUrl": "packages/components/src/debug/objectinspector/ArchbaseObjectInspector"
+    },
+    {
+      "name": "ArchbaseOnboardingTour",
+      "description": "ID único do step",
+      "sourcePath": "packages/components/src/onboarding/ArchbaseOnboardingTour",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "steps",
+          "type": "ArchbaseOnboardingTourStep[]",
+          "required": true,
+          "description": "Array de steps do tour"
+        },
+        {
+          "name": "onStart",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback quando o tour é iniciado"
+        },
+        {
+          "name": "onEnd",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback quando o tour é finalizado"
+        },
+        {
+          "name": "onChange",
+          "type": "(step: OnboardingTourStep) => void",
+          "required": false,
+          "description": "Callback quando o step muda"
+        },
+        {
+          "name": "autoStart",
+          "type": "boolean",
+          "required": false,
+          "description": "Iniciar o tour automaticamente ao montar o componente\n@default false",
+          "default": "false"
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "required": false,
+          "description": "Se o tour deve ser repetido (loop)"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Conteúdo da aplicação (children é obrigatório no componente base)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/onboarding/ArchbaseOnboardingTour"
     },
     {
       "name": "ArchbaseOperatingHoursEditor",
@@ -6670,7 +7214,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-operating-hours-editor"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseOperationHoursEditor"
     },
     {
       "name": "ArchbasePasswordEdit",
@@ -6803,7 +7347,212 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-password-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbasePasswordEdit"
+    },
+    {
+      "name": "ArchbasePDFAnnotations",
+      "description": "ArchbasePDFAnnotations — componente Archbase focado em pdfannotations.",
+      "sourcePath": "packages/components/src/viewers/ArchbasePDFViewer.annotations",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "annotations",
+          "type": "PDFAnnotation[]",
+          "required": true,
+          "description": "Define annotations. (PDFAnnotation[])"
+        },
+        {
+          "name": "onAnnotationAdd",
+          "type": "(annotation: PDFAnnotation) => void",
+          "required": false,
+          "description": "Callback acionado quando annotation add. ((annotation: PDFAnnotation) => void)"
+        },
+        {
+          "name": "onAnnotationRemove",
+          "type": "(annotationId: string) => void",
+          "required": false,
+          "description": "Callback acionado quando annotation remove. ((annotationId: string) => void)"
+        },
+        {
+          "name": "onAnnotationUpdate",
+          "type": "(annotationId: string, updates: Partial<PDFAnnotation>) => void",
+          "required": false,
+          "description": "Callback acionado quando annotation update. ((annotationId: string, updates: Partial<PDFAnnotation>) => void)"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Bloqueia interações quando verdadeiro."
+        },
+        {
+          "name": "pageIndex",
+          "type": "number",
+          "required": true,
+          "description": "Define page index. (number)"
+        },
+        {
+          "name": "pageWidth",
+          "type": "number",
+          "required": true,
+          "description": "Define page width. (number)"
+        },
+        {
+          "name": "pageHeight",
+          "type": "number",
+          "required": true,
+          "description": "Define page height. (number)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/ArchbasePDFViewer.annotations"
+    },
+    {
+      "name": "ArchbasePDFAnnotationsList",
+      "description": "ArchbasePDFAnnotationsList — componente Archbase focado em pdfannotations list.",
+      "sourcePath": "packages/components/src/viewers/ArchbasePDFViewer.annotations",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "annotations",
+          "type": "PDFAnnotation[]",
+          "required": true,
+          "description": "Define annotations. (PDFAnnotation[])"
+        },
+        {
+          "name": "onAnnotationRemove",
+          "type": "(annotationId: string) => void",
+          "required": false,
+          "description": "Callback acionado quando annotation remove. ((annotationId: string) => void)"
+        },
+        {
+          "name": "onAnnotationClick",
+          "type": "(annotation: PDFAnnotation) => void",
+          "required": false,
+          "description": "Callback acionado quando annotation click. ((annotation: PDFAnnotation) => void)"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Bloqueia interações quando verdadeiro."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/ArchbasePDFViewer.annotations"
+    },
+    {
+      "name": "ArchbasePDFViewer",
+      "description": "ArchbasePDFViewer — componente Archbase focado em pdfviewer.",
+      "sourcePath": "packages/components/src/viewers/ArchbasePDFViewer",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/ArchbasePDFViewer"
+    },
+    {
+      "name": "ArchbasePDFViewerToolbar",
+      "description": "ArchbasePDFViewerToolbar — componente Archbase focado em pdfviewer toolbar.",
+      "sourcePath": "packages/components/src/viewers/ArchbasePDFViewer.toolbar",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "currentPage",
+          "type": "number",
+          "required": true,
+          "description": "Define current page. (number)"
+        },
+        {
+          "name": "totalPages",
+          "type": "number",
+          "required": true,
+          "description": "Define total pages. (number)"
+        },
+        {
+          "name": "scale",
+          "type": "number",
+          "required": true,
+          "description": "Define scale. (number)"
+        },
+        {
+          "name": "rotation",
+          "type": "number",
+          "required": true,
+          "description": "Define rotation. (number)"
+        },
+        {
+          "name": "toolbarActions",
+          "type": "PDFToolbarActions",
+          "required": false,
+          "description": "Define toolbar actions. (PDFToolbarActions)"
+        },
+        {
+          "name": "onZoomIn",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando zoom in. (() => void)"
+        },
+        {
+          "name": "onZoomOut",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando zoom out. (() => void)"
+        },
+        {
+          "name": "onNextPage",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando next page. (() => void)"
+        },
+        {
+          "name": "onPreviousPage",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando previous page. (() => void)"
+        },
+        {
+          "name": "onFirstPage",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando first page. (() => void)"
+        },
+        {
+          "name": "onLastPage",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando last page. (() => void)"
+        },
+        {
+          "name": "onRotate",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando rotate. (() => void)"
+        },
+        {
+          "name": "onDownload",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback acionado quando download. (() => void)"
+        },
+        {
+          "name": "onPrint",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback acionado quando print. (() => void)"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Bloqueia interações quando verdadeiro."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/ArchbasePDFViewer.toolbar"
     },
     {
       "name": "ArchbasePerformanceMonitor",
@@ -6815,7 +7564,7 @@
       "tags": [
         "form"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-performance-monitor"
+      "canonicalUrl": "packages/tools/src/performance/ArchbasePerformanceMonitor"
     },
     {
       "name": "ArchbaseProtectedComponent",
@@ -6870,7 +7619,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-protected-component"
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityComponents"
     },
     {
       "name": "ArchbaseQueryBuilder",
@@ -6880,7 +7629,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-query-builder"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseQueryBuilder"
     },
     {
       "name": "ArchbaseQueryUtils",
@@ -6890,7 +7639,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-query-utils"
+      "canonicalUrl": "packages/data/src/datasource/v2/ArchbaseQueryIntegration"
     },
     {
       "name": "ArchbaseRadioGroup",
@@ -7017,7 +7766,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-radio-group"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseRadioGroup"
     },
     {
       "name": "ArchbaseRadioItem",
@@ -7048,7 +7797,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-radio-item"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseRadioItem"
     },
     {
       "name": "ArchbaseRating",
@@ -7193,7 +7942,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-rating"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseRating"
     },
     {
       "name": "ArchbaseRemoteApiService",
@@ -7203,7 +7952,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-remote-api-service"
+      "canonicalUrl": "packages/data/src/service/ArchbaseRemoteApiService"
     },
     {
       "name": "ArchbaseRemoteDataSource",
@@ -7213,7 +7962,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-remote-data-source"
+      "canonicalUrl": "packages/data/src/datasource/ArchbaseRemoteDataSource"
     },
     {
       "name": "ArchbaseRemoteDataSourceV2",
@@ -7223,7 +7972,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-remote-data-source-v2"
+      "canonicalUrl": "packages/data/src/datasource/v2/ArchbaseRemoteDataSourceV2"
     },
     {
       "name": "ArchbaseRemoteFilterDataSource",
@@ -7233,7 +7982,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-remote-filter-data-source"
+      "canonicalUrl": "packages/data/src/datasource/ArchbaseRemoteFilterDataSource"
     },
     {
       "name": "ArchbaseRichTextEdit",
@@ -7528,7 +8277,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-rich-text-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseRichTextEdit"
     },
     {
       "name": "ArchbaseSaveFilter",
@@ -7581,7 +8330,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-save-filter"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseSaveFilter"
     },
     {
       "name": "ArchbaseSecureActionButton",
@@ -7654,7 +8403,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-secure-action-button"
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityComponents"
     },
     {
       "name": "ArchbaseSecureFormField",
@@ -7709,7 +8458,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-secure-form-field"
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityComponents"
     },
     {
       "name": "ArchbaseSecurityProvider",
@@ -7741,7 +8490,7 @@
         "provider",
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-security-provider"
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityContext"
     },
     {
       "name": "ArchbaseSecurityView",
@@ -7753,7 +8502,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-security-view"
+      "canonicalUrl": "packages/security-ui/src/ArchbaseSecurityView"
     },
     {
       "name": "ArchbaseSelect",
@@ -8030,7 +8779,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-select"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseSelect"
     },
     {
       "name": "ArchbaseSelectContext",
@@ -8043,7 +8792,7 @@
         "provider",
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-select-context"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseSelect.context"
     },
     {
       "name": "ArchbaseSelectItem",
@@ -8074,7 +8823,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-select-item"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseSelectItem"
     },
     {
       "name": "ArchbaseSelectProvider",
@@ -8087,7 +8836,7 @@
         "provider",
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-select-provider"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseSelect.context"
     },
     {
       "name": "ArchbaseServiceError",
@@ -8097,7 +8846,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-service-error"
+      "canonicalUrl": "packages/core/src/exceptions/ArchbaseException"
     },
     {
       "name": "ArchbaseSimpleFilter",
@@ -8186,7 +8935,156 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-simple-filter"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseSimpleFilter"
+    },
+    {
+      "name": "ArchbaseSplitPane",
+      "description": "Direção do split\n@default 'row'",
+      "sourcePath": "packages/layout/src/containers/split-pane/ArchbaseSplitPane",
+      "exportsFrom": "@archbase/layout",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "direction",
+          "type": "'row' | 'column'",
+          "required": false,
+          "description": "Direção do split\n@default 'row'",
+          "default": "'row'"
+        },
+        {
+          "name": "splitterSize",
+          "type": "number | string",
+          "required": false,
+          "description": "Tamanho do separador em pixels\n@default 4",
+          "default": "4"
+        },
+        {
+          "name": "splitterColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor do separador"
+        },
+        {
+          "name": "splitterHoverColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor do separador em hover"
+        },
+        {
+          "name": "splitterRadius",
+          "type": "number | string",
+          "required": false,
+          "description": "Raio da barra divisória"
+        },
+        {
+          "name": "withKnob",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibe knob na barra divisória"
+        },
+        {
+          "name": "opacity",
+          "type": "number | string",
+          "required": false,
+          "description": "Opacidade da barra divisória"
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": "Estilo adicional do container"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "ClassName adicional"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "layout"
+      ],
+      "canonicalUrl": "packages/layout/src/containers/split-pane/ArchbaseSplitPane"
+    },
+    {
+      "name": "ArchbaseSplitPanePane",
+      "description": "Direção do split\n@default 'row'",
+      "sourcePath": "packages/layout/src/containers/split-pane/ArchbaseSplitPane",
+      "exportsFrom": "@archbase/layout",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "minSize",
+          "type": "number | string",
+          "required": false,
+          "description": "Tamanho mínimo do painel em pixels"
+        },
+        {
+          "name": "maxSize",
+          "type": "number | string",
+          "required": false,
+          "description": "Tamanho máximo do painel em pixels"
+        },
+        {
+          "name": "defaultSize",
+          "type": "number | string",
+          "required": false,
+          "description": "Tamanho padrão do painel em pixels ou porcentagem"
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": "Estilo adicional do painel"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "ClassName adicional"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "layout"
+      ],
+      "canonicalUrl": "packages/layout/src/containers/split-pane/ArchbaseSplitPane"
+    },
+    {
+      "name": "ArchbaseSplitPaneResizer",
+      "description": "Direção do split\n@default 'row'",
+      "sourcePath": "packages/layout/src/containers/split-pane/ArchbaseSplitPane",
+      "exportsFrom": "@archbase/layout",
+      "props": [
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": "Estilo adicional do resizer"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "ClassName adicional"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "layout"
+      ],
+      "canonicalUrl": "packages/layout/src/containers/split-pane/ArchbaseSplitPane"
     },
     {
       "name": "ArchbaseSSRDataSource",
@@ -8198,7 +9096,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-ssrdata-source"
+      "canonicalUrl": "packages/ssr/src/datasource/ArchbaseSSRDataSource"
     },
     {
       "name": "ArchbaseSSRProvider",
@@ -8236,7 +9134,7 @@
         "provider",
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-ssrprovider"
+      "canonicalUrl": "packages/ssr/src/providers/ArchbaseSSRProvider"
     },
     {
       "name": "ArchbaseStateInspector",
@@ -8261,7 +9159,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-state-inspector"
+      "canonicalUrl": "packages/tools/src/dev-utils/ArchbaseStateInspector"
     },
     {
       "name": "ArchbaseSwitch",
@@ -8412,7 +9310,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-switch"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseSwitch"
     },
     {
       "name": "ArchbaseTanStackProvider",
@@ -8456,7 +9354,7 @@
         "provider",
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-tan-stack-provider"
+      "canonicalUrl": "packages/ssr/src/tanstack/ArchbaseTanStackIntegration"
     },
     {
       "name": "ArchbaseTextArea",
@@ -8589,7 +9487,17 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-text-area"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseTextArea"
+    },
+    {
+      "name": "ArchbaseThemeColorEditor",
+      "description": "Editor de cores do tema",
+      "sourcePath": "packages/components/src/theme-editor/ArchbaseThemeEditor",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/ArchbaseThemeEditor"
     },
     {
       "name": "ArchbaseThemeEditor",
@@ -8732,7 +9640,17 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-theme-editor"
+      "canonicalUrl": "packages/components/src/themes/ArchbaseThemeEditor"
+    },
+    {
+      "name": "ArchbaseThermalPrinter",
+      "description": "Componente Receipt - Renderiza visualmente um receipt",
+      "sourcePath": "packages/components/src/printer/ArchbaseThermalPrinter",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/ArchbaseThermalPrinter"
     },
     {
       "name": "ArchbaseTimeEdit",
@@ -8889,11 +9807,11 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-time-edit"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseTimeEdit"
     },
     {
       "name": "ArchbaseTimeline",
-      "description": "ArchbaseTimeline — timeline simples baseada em Mantine Timeline.\n@status experimental",
+      "description": "@ts-nocheck",
       "sourcePath": "packages/components/src/charts/ArchbaseTimeline",
       "exportsFrom": "@archbase/components",
       "props": [
@@ -8998,7 +9916,7 @@
       "tags": [
         "chart"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-timeline"
+      "canonicalUrl": "packages/components/src/charts/ArchbaseTimeline"
     },
     {
       "name": "ArchbaseTimeRangeSelector",
@@ -9010,7 +9928,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-time-range-selector"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseTimeRangeSelector"
     },
     {
       "name": "ArchbaseTreeSelect",
@@ -9191,7 +10109,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-tree-select"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseTreeSelect"
     },
     {
       "name": "ArchbaseTreeView",
@@ -9436,7 +10354,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-tree-view"
+      "canonicalUrl": "packages/components/src/list/treeview/ArchbaseTreeView"
     },
     {
       "name": "ArchbaseTreeViewItem",
@@ -9531,7 +10449,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-tree-view-item"
+      "canonicalUrl": "packages/components/src/list/treeview/ArchbaseTreeViewItem"
     },
     {
       "name": "ArchbaseValidator",
@@ -9541,7 +10459,17 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-validator"
+      "canonicalUrl": "packages/core/src/validator/ArchbaseValidator"
+    },
+    {
+      "name": "ArchbaseVideoPlayer",
+      "description": "Formata tempo em segundos para MM:SS ou HH:MM:SS",
+      "sourcePath": "packages/components/src/video/ArchbaseVideoPlayer",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/video/ArchbaseVideoPlayer"
     },
     {
       "name": "ArchbaseViewSecurityProvider",
@@ -9597,7 +10525,19 @@
         "provider",
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/archbase-view-security-provider"
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityContext"
+    },
+    {
+      "name": "ArchbaseVisTimeline",
+      "description": "Componente wrapper para vis-timeline\nImplementação leve usando vis-timeline diretamente",
+      "sourcePath": "packages/components/src/charts/vis-timeline/ArchbaseVisTimeline",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/vis-timeline/ArchbaseVisTimeline"
     },
     {
       "name": "buildFilterExpression",
@@ -9609,7 +10549,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/build-filter-expression"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-utils"
     },
     {
       "name": "buildFrom",
@@ -9619,7 +10559,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/build-from"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterRSQL"
     },
     {
       "name": "buildGlobalFilterExpression",
@@ -9631,7 +10571,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/build-global-filter-expression"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-utils"
     },
     {
       "name": "camelCase",
@@ -9641,7 +10581,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/camel-case"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "canUseDOM",
@@ -9653,7 +10593,17 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/can-use-dom"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
+    },
+    {
+      "name": "centerText",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
     },
     {
       "name": "CenterType",
@@ -9665,7 +10615,7 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/center-type"
+      "canonicalUrl": "packages/layout/src/spaces/core-types"
     },
     {
       "name": "childToString",
@@ -9675,7 +10625,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/child-to-string"
+      "canonicalUrl": "packages/core/src/utils/onlyText"
     },
     {
       "name": "clientOnly",
@@ -9687,7 +10637,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/client-only"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "ClientOnly",
@@ -9712,7 +10662,17 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/client-only"
+      "canonicalUrl": "packages/ssr/src/providers/ArchbaseSSRProvider"
+    },
+    {
+      "name": "COLOR_PRESETS",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
       "name": "Columns",
@@ -9724,7 +10684,17 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/columns"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-types"
+    },
+    {
+      "name": "combineCommands",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
     },
     {
       "name": "CommandPaletteButton",
@@ -9747,7 +10717,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/command-palette-button"
+      "canonicalUrl": "packages/admin/src/CommandPaletteButton"
     },
     {
       "name": "compressString",
@@ -9757,7 +10727,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/compress-string"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "convertDateToISOString",
@@ -9767,7 +10737,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/convert-date-to-isostring"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "convertImageToBase64",
@@ -9777,7 +10747,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/convert-image-to-base64"
+      "canonicalUrl": "packages/core/src/utils/convertImageToBase64"
     },
     {
       "name": "convertISOStringToDate",
@@ -9787,7 +10757,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/convert-isostring-to-date"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "convertQueryFields",
@@ -9797,7 +10767,37 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/convert-query-fields"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
+    },
+    {
+      "name": "convertToApiFormatList",
+      "description": "Mapeamento de operadores do ArchbaseCompositeFilters para operadores RSQL",
+      "sourcePath": "packages/components/src/filters/ArchbaseCompositeFilters.utils",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/filters/ArchbaseCompositeFilters.utils"
+    },
+    {
+      "name": "convertToRSQL",
+      "description": "Mapeamento de operadores do ArchbaseCompositeFilters para operadores RSQL",
+      "sourcePath": "packages/components/src/filters/ArchbaseCompositeFilters.utils",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/filters/ArchbaseCompositeFilters.utils"
+    },
+    {
+      "name": "copyThemeToClipboard",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
       "name": "createDataTableRowActions",
@@ -9809,7 +10809,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/create-data-table-row-actions"
+      "canonicalUrl": "packages/components/src/datagrid/main/grid-row-actions"
     },
     {
       "name": "createElementFromHTML",
@@ -9819,11 +10819,11 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/create-element-from-html"
+      "canonicalUrl": "packages/core/src/utils/dom"
     },
     {
       "name": "createExpandColumn",
-      "description": "archbase-expand-button.tsx",
+      "description": "@ts-nocheck",
       "sourcePath": "packages/components/src/datagrid/main/archbase-expand-button",
       "exportsFrom": "@archbase/components",
       "props": [],
@@ -9831,7 +10831,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/create-expand-column"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-expand-button"
     },
     {
       "name": "createHydrationSafeValue",
@@ -9843,7 +10843,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/create-hydration-safe-value"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "createInternalConfig",
@@ -9855,7 +10855,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/create-internal-config"
+      "canonicalUrl": "packages/security/src/oauth2/authConfig"
     },
     {
       "name": "createSSRId",
@@ -9867,7 +10867,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/create-ssrid"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "crop",
@@ -9877,7 +10877,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/crop"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "CustomSelectScrollArea",
@@ -9889,7 +10889,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/custom-select-scroll-area"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseAsyncSelect"
     },
     {
       "name": "CustomShowErrorModal",
@@ -9899,7 +10899,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/custom-show-error-modal"
+      "canonicalUrl": "packages/components/src/notification/ArchbaseDialog"
     },
     {
       "name": "CustomSortItem",
@@ -9964,7 +10964,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/custom-sort-item"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseAdvancedFilter"
     },
     {
       "name": "DataSourceEventNames",
@@ -9974,7 +10974,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/data-source-event-names"
+      "canonicalUrl": "packages/data/src/datasource/ArchbaseDataSource"
     },
     {
       "name": "decodeJWT",
@@ -9986,7 +10986,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/decode-jwt"
+      "canonicalUrl": "packages/security/src/oauth2/decodeJWT"
     },
     {
       "name": "decompressString",
@@ -9996,7 +10996,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/decompress-string"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "deepFilter",
@@ -10006,7 +11006,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/deep-filter"
+      "canonicalUrl": "packages/core/src/utils/deepFilter"
     },
     {
       "name": "deepFind",
@@ -10016,7 +11016,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/deep-find"
+      "canonicalUrl": "packages/core/src/utils/deepFind"
     },
     {
       "name": "deepForEach",
@@ -10026,7 +11026,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/deep-for-each"
+      "canonicalUrl": "packages/core/src/utils/deepForEach"
     },
     {
       "name": "deepMap",
@@ -10036,7 +11036,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/deep-map"
+      "canonicalUrl": "packages/core/src/utils/deepMap"
     },
     {
       "name": "DEFAULT_AVATAR",
@@ -10046,7 +11046,19 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/default-avatar"
+      "canonicalUrl": "packages/components/src/image/ArchbaseMicrosoftAvatar"
+    },
+    {
+      "name": "DEFAULT_TIMELINE_OPTIONS",
+      "description": "Opções padrão para a timeline",
+      "sourcePath": "packages/components/src/charts/vis-timeline/utils/timelineOptions",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
     },
     {
       "name": "defaultAvatar",
@@ -10058,7 +11070,7 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/default-avatar"
+      "canonicalUrl": "packages/admin/src/ArchbaseAdminLayoutHeader"
     },
     {
       "name": "defaultConditions",
@@ -10068,7 +11080,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/default-conditions"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "defaultMyProfileModalOptions",
@@ -10078,7 +11090,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/default-my-profile-modal-options"
+      "canonicalUrl": "packages/admin/src/ArchbaseMyProfileModal"
     },
     {
       "name": "defaultOperators",
@@ -10088,7 +11100,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/default-operators"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "DefaultPage",
@@ -10098,7 +11110,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/default-page"
+      "canonicalUrl": "packages/data/src/service/ArchbaseRemoteApiService"
     },
     {
       "name": "deserializeFromSSR",
@@ -10110,7 +11122,67 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/deserialize-from-ssr"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
+    },
+    {
+      "name": "detectFileType",
+      "description": "Extensões de arquivo por categoria",
+      "sourcePath": "packages/components/src/viewers/file-preview/utils/fileTypeDetector",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
+    },
+    {
+      "name": "detectFileTypeByContent",
+      "description": "Extensões de arquivo por categoria",
+      "sourcePath": "packages/components/src/viewers/file-preview/utils/fileTypeDetector",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
+    },
+    {
+      "name": "detectFileTypeByExtension",
+      "description": "Extensões de arquivo por categoria",
+      "sourcePath": "packages/components/src/viewers/file-preview/utils/fileTypeDetector",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
+    },
+    {
+      "name": "detectFileTypeByMimeType",
+      "description": "Extensões de arquivo por categoria",
+      "sourcePath": "packages/components/src/viewers/file-preview/utils/fileTypeDetector",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
+    },
+    {
+      "name": "divider",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "downloadTheme",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
       "name": "emitDebugInfo",
@@ -10122,7 +11194,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/emit-debug-info"
+      "canonicalUrl": "packages/tools/src/debug/ArchbaseDebugPanel"
     },
     {
       "name": "enabledSsrSupport",
@@ -10134,7 +11206,7 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/enabled-ssr-support"
+      "canonicalUrl": "packages/layout/src/spaces/core-react"
     },
     {
       "name": "epochAtSecondsFromNow",
@@ -10146,7 +11218,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/epoch-at-seconds-from-now"
+      "canonicalUrl": "packages/security/src/oauth2/timeUtils"
     },
     {
       "name": "epochTimeIsPast",
@@ -10158,7 +11230,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/epoch-time-is-past"
+      "canonicalUrl": "packages/security/src/oauth2/timeUtils"
     },
     {
       "name": "escapeHtml",
@@ -10168,7 +11240,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/escape-html"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "escapeRegExp",
@@ -10178,7 +11250,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/escape-reg-exp"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "escapeUnicode",
@@ -10188,11 +11260,121 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/escape-unicode"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
+    },
+    {
+      "name": "escposAlign",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "escposBarcode",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "escposBold",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "escposCut",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "escposFeed",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "escposFinalize",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "escposFontSize",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "escposInit",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "escposOpenCashDrawer",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "escposQRCode",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "escposUnderline",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
     },
     {
       "name": "exportData",
-      "description": "exportData — componente de visualização de dados focado em export data.",
+      "description": "@ts-nocheck",
       "sourcePath": "packages/components/src/datagrid/modals/export-data",
       "exportsFrom": "@archbase/components",
       "props": [],
@@ -10200,7 +11382,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/export-data"
+      "canonicalUrl": "packages/components/src/datagrid/modals/export-data"
     },
     {
       "name": "ExportModal",
@@ -10243,7 +11425,67 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/export-modal"
+      "canonicalUrl": "packages/components/src/datagrid/modals/export-modal"
+    },
+    {
+      "name": "exportTheme",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
+    },
+    {
+      "name": "exportThemeAsCSS",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
+    },
+    {
+      "name": "exportThemeAsJSON",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
+    },
+    {
+      "name": "exportThemeAsTypeScript",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
+    },
+    {
+      "name": "exportThemeForMantine",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
+    },
+    {
+      "name": "extractColorPalette",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
       "name": "FetchError",
@@ -10255,7 +11497,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/fetch-error"
+      "canonicalUrl": "packages/security/src/oauth2/errors"
     },
     {
       "name": "fetchTokens",
@@ -10267,7 +11509,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/fetch-tokens"
+      "canonicalUrl": "packages/security/src/oauth2/authentication"
     },
     {
       "name": "fetchWithRefreshToken",
@@ -10279,7 +11521,17 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/fetch-with-refresh-token"
+      "canonicalUrl": "packages/security/src/oauth2/authentication"
+    },
+    {
+      "name": "fileSourceToUrl",
+      "description": "Extensões de arquivo por categoria",
+      "sourcePath": "packages/components/src/viewers/file-preview/utils/fileTypeDetector",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
     },
     {
       "name": "filter",
@@ -10289,7 +11541,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/filter"
+      "canonicalUrl": "packages/core/src/utils/filter"
     },
     {
       "name": "FilterField",
@@ -10336,7 +11588,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/filter-field"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "FilterFields",
@@ -10353,7 +11605,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/filter-fields"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "FilterFieldValue",
@@ -10376,7 +11628,49 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/filter-field-value"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
+    },
+    {
+      "name": "FilterPill",
+      "description": "Componente que exibe um filtro ativo como uma pill removível",
+      "sourcePath": "packages/components/src/filters/components/FilterPill",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/filters/components/FilterPill"
+    },
+    {
+      "name": "formatCurrencyReceipt",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "formatDateReceipt",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "formatDuration",
+      "description": "Opções padrão para a timeline",
+      "sourcePath": "packages/components/src/charts/vis-timeline/utils/timelineOptions",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
     },
     {
       "name": "formatStr",
@@ -10386,7 +11680,19 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/format-str"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
+    },
+    {
+      "name": "formatTimelineDate",
+      "description": "Opções padrão para a timeline",
+      "sourcePath": "packages/components/src/charts/vis-timeline/utils/timelineOptions",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
     },
     {
       "name": "generateCodeChallenge",
@@ -10398,7 +11704,27 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/generate-code-challenge"
+      "canonicalUrl": "packages/security/src/oauth2/pkceUtils"
+    },
+    {
+      "name": "generateColorScale",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
+    },
+    {
+      "name": "generateFilterId",
+      "description": "Mapeamento de operadores do ArchbaseCompositeFilters para operadores RSQL",
+      "sourcePath": "packages/components/src/filters/ArchbaseCompositeFilters.utils",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/filters/ArchbaseCompositeFilters.utils"
     },
     {
       "name": "generateRandomString",
@@ -10410,7 +11736,17 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/generate-random-string"
+      "canonicalUrl": "packages/security/src/oauth2/pkceUtils"
+    },
+    {
+      "name": "generateReceiptEscpos",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
     },
     {
       "name": "getAlignmentByDataType",
@@ -10423,7 +11759,17 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-alignment-by-data-type"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
+    },
+    {
+      "name": "getCharsWidth",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
     },
     {
       "name": "getDefaultEmptyFilter",
@@ -10433,7 +11779,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-default-empty-filter"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "getDefaultFilter",
@@ -10443,7 +11789,27 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-default-filter"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
+    },
+    {
+      "name": "getDefaultOperatorForType",
+      "description": "Mapeamento de operadores do ArchbaseCompositeFilters para operadores RSQL",
+      "sourcePath": "packages/components/src/filters/ArchbaseCompositeFilters.utils",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/filters/ArchbaseCompositeFilters.utils"
+    },
+    {
+      "name": "getDisplayValue",
+      "description": "Mapeamento de operadores do ArchbaseCompositeFilters para operadores RSQL",
+      "sourcePath": "packages/components/src/filters/ArchbaseCompositeFilters.utils",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/filters/ArchbaseCompositeFilters.utils"
     },
     {
       "name": "getDocument",
@@ -10455,7 +11821,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-document"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "getElementName",
@@ -10465,7 +11831,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-element-name"
+      "canonicalUrl": "packages/core/src/utils/getElementName"
     },
     {
       "name": "getFields",
@@ -10475,7 +11841,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-fields"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "getFieldSql",
@@ -10485,7 +11851,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-field-sql"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "getFieldValues",
@@ -10495,7 +11861,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-field-values"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "getI18nextInstance",
@@ -10505,7 +11871,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-i18next-instance"
+      "canonicalUrl": "packages/core/src/context/ArchbaseGlobalProvider"
     },
     {
       "name": "getInitialSortModel",
@@ -10517,7 +11883,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-initial-sort-model"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-utils"
     },
     {
       "name": "getKeyByEnumValue",
@@ -10527,7 +11893,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-key-by-enum-value"
+      "canonicalUrl": "packages/core/src/utils/enum-utils"
     },
     {
       "name": "getMediaQuery",
@@ -10539,7 +11905,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-media-query"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "getNestedObjectValue",
@@ -10549,7 +11915,17 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-nested-object-value"
+      "canonicalUrl": "packages/core/src/utils/nestedObject"
+    },
+    {
+      "name": "getOperatorsForType",
+      "description": "Mapeamento de operadores do ArchbaseCompositeFilters para operadores RSQL",
+      "sourcePath": "packages/components/src/filters/ArchbaseCompositeFilters.utils",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/filters/ArchbaseCompositeFilters.utils"
     },
     {
       "name": "getPathDepthLevel",
@@ -10559,7 +11935,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-path-depth-level"
+      "canonicalUrl": "packages/core/src/utils/nestedObject"
     },
     {
       "name": "getPropertyValue",
@@ -10569,7 +11945,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-property-value"
+      "canonicalUrl": "packages/core/src/utils/propertyUtils"
     },
     {
       "name": "getQuickFields",
@@ -10579,7 +11955,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-quick-fields"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "getQuickFieldsSort",
@@ -10589,7 +11965,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-quick-fields-sort"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "getQuickFilterFields",
@@ -10599,7 +11975,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-quick-filter-fields"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "getQuickFilterSort",
@@ -10609,7 +11985,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-quick-filter-sort"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "getQuickFilterSortBySelectedFields",
@@ -10619,7 +11995,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-quick-filter-sort-by-selected-fields"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "getRandomInteger",
@@ -10631,7 +12007,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-random-integer"
+      "canonicalUrl": "packages/security/src/oauth2/pkceUtils"
     },
     {
       "name": "getRefreshExpiresIn",
@@ -10643,7 +12019,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-refresh-expires-in"
+      "canonicalUrl": "packages/security/src/oauth2/timeUtils"
     },
     {
       "name": "getRendererByDataType",
@@ -10656,7 +12032,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-renderer-by-data-type"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "getRgbValues",
@@ -10668,7 +12044,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-rgb-values"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-utils"
     },
     {
       "name": "getSortString",
@@ -10678,7 +12054,17 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-sort-string"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
+    },
+    {
+      "name": "getUnsupportedMessage",
+      "description": "Extensões de arquivo por categoria",
+      "sourcePath": "packages/components/src/viewers/file-preview/utils/fileTypeDetector",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
     },
     {
       "name": "getWindow",
@@ -10690,7 +12076,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/get-window"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "GlobalSearchInput",
@@ -10727,7 +12113,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/global-search-input"
+      "canonicalUrl": "packages/components/src/datagrid/components/toolbar/global-search-input"
     },
     {
       "name": "GridPagination",
@@ -10739,7 +12125,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/grid-pagination"
+      "canonicalUrl": "packages/components/src/datagrid/components/pagination/grid-pagination"
     },
     {
       "name": "GridToolbar",
@@ -10818,7 +12204,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/grid-toolbar"
+      "canonicalUrl": "packages/components/src/datagrid/components/toolbar/grid-toolbar"
     },
     {
       "name": "GridToolBarActions",
@@ -10837,7 +12223,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/grid-tool-bar-actions"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-types"
     },
     {
       "name": "groupByType",
@@ -10847,7 +12233,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/group-by-type"
+      "canonicalUrl": "packages/core/src/utils/groupByType"
     },
     {
       "name": "GroupModal",
@@ -10914,7 +12300,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/group-modal"
+      "canonicalUrl": "packages/security-ui/src/GroupModal"
     },
     {
       "name": "hasChildren",
@@ -10924,7 +12310,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/has-children"
+      "canonicalUrl": "packages/core/src/utils/hasChildren"
     },
     {
       "name": "hasComplexChildren",
@@ -10934,7 +12320,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/has-complex-children"
+      "canonicalUrl": "packages/core/src/utils/hasComplexChildren"
     },
     {
       "name": "hasFeature",
@@ -10946,7 +12332,17 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/has-feature"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
+    },
+    {
+      "name": "hexToRgb",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
       "name": "hyphenate",
@@ -10956,7 +12352,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/hyphenate"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "initArchbaseI18nEarly",
@@ -10966,7 +12362,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/init-archbase-i18n-early"
+      "canonicalUrl": "packages/core/src/context/ArchbaseGlobalProvider"
     },
     {
       "name": "initArchbaseTranslation",
@@ -10976,7 +12372,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/init-archbase-translation"
+      "canonicalUrl": "packages/core/src/context/ArchbaseGlobalProvider"
     },
     {
       "name": "interpolate",
@@ -10986,7 +12382,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/interpolate"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "IOCContainer",
@@ -10996,7 +12392,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/ioccontainer"
+      "canonicalUrl": "packages/core/src/ioc/ArchbaseIOCHelper"
     },
     {
       "name": "isBase64",
@@ -11006,7 +12402,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/is-base64"
+      "canonicalUrl": "packages/core/src/utils/isBase64"
     },
     {
       "name": "isClient",
@@ -11018,7 +12414,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/is-client"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "isEmail",
@@ -11028,7 +12424,17 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/is-email"
+      "canonicalUrl": "packages/core/src/utils/isEmail"
+    },
+    {
+      "name": "isFileTypeSupported",
+      "description": "Extensões de arquivo por categoria",
+      "sourcePath": "packages/components/src/viewers/file-preview/utils/fileTypeDetector",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
     },
     {
       "name": "isLastElementOfArray",
@@ -11038,7 +12444,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/is-last-element-of-array"
+      "canonicalUrl": "packages/core/src/utils/array"
     },
     {
       "name": "isServer",
@@ -11050,7 +12456,17 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/is-server"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
+    },
+    {
+      "name": "isValidColor",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
       "name": "languages",
@@ -11060,7 +12476,17 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/languages"
+      "canonicalUrl": "packages/components/src/image/languages"
+    },
+    {
+      "name": "line",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
     },
     {
       "name": "LocalFilter",
@@ -11070,7 +12496,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/local-filter"
+      "canonicalUrl": "packages/data/src/datasource/ArchbaseLocalFilterDataSource"
     },
     {
       "name": "logger",
@@ -11082,7 +12508,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/logger"
+      "canonicalUrl": "packages/tools/src/debug/ArchbaseConsoleLogger"
     },
     {
       "name": "lowerCase",
@@ -11092,7 +12518,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/lower-case"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "lpad",
@@ -11102,7 +12528,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/lpad"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "ltrim",
@@ -11112,7 +12538,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/ltrim"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "MaskPattern",
@@ -11124,7 +12550,7 @@
       "tags": [
         "editor"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/mask-pattern"
+      "canonicalUrl": "packages/components/src/editors/ArchbaseMaskEdit"
     },
     {
       "name": "memoryLeakDetector",
@@ -11136,7 +12562,7 @@
       "tags": [
         "devtools"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/memory-leak-detector"
+      "canonicalUrl": "packages/tools/src/dev-utils/ArchbaseMemoryLeakDetector"
     },
     {
       "name": "mergeSortWithFields",
@@ -11146,7 +12572,29 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/merge-sort-with-fields"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
+    },
+    {
+      "name": "mergeTheme",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
+    },
+    {
+      "name": "mergeTimelineOptions",
+      "description": "Opções padrão para a timeline",
+      "sourcePath": "packages/components/src/charts/vis-timeline/utils/timelineOptions",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
     },
     {
       "name": "navigationDataSample",
@@ -11156,7 +12604,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/navigation-data-sample"
+      "canonicalUrl": "packages/admin/src/navigationData"
     },
     {
       "name": "NEW_FILTER_INDEX",
@@ -11166,7 +12614,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/new-filter-index"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "NORMAL",
@@ -11176,7 +12624,19 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/normal"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
+    },
+    {
+      "name": "normalizeDate",
+      "description": "Opções padrão para a timeline",
+      "sourcePath": "packages/components/src/charts/vis-timeline/utils/timelineOptions",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
     },
     {
       "name": "normalizeLineBreaks",
@@ -11186,7 +12646,43 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/normalize-line-breaks"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
+    },
+    {
+      "name": "normalizeRange",
+      "description": "Opções padrão para a timeline",
+      "sourcePath": "packages/components/src/charts/vis-timeline/utils/timelineOptions",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
+    },
+    {
+      "name": "normalizeTimelineGroups",
+      "description": "Opções padrão para a timeline",
+      "sourcePath": "packages/components/src/charts/vis-timeline/utils/timelineOptions",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
+    },
+    {
+      "name": "normalizeTimelineItems",
+      "description": "Opções padrão para a timeline",
+      "sourcePath": "packages/components/src/charts/vis-timeline/utils/timelineOptions",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
     },
     {
       "name": "onlyText",
@@ -11196,7 +12692,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/only-text"
+      "canonicalUrl": "packages/core/src/utils/onlyText"
     },
     {
       "name": "onlyValid",
@@ -11206,7 +12702,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/only-valid"
+      "canonicalUrl": "packages/core/src/utils/onlyValid"
     },
     {
       "name": "OP_BETWEEN",
@@ -11216,7 +12712,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-between"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_CONTAINS",
@@ -11226,7 +12722,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-contains"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_ENDSWITH",
@@ -11236,7 +12732,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-endswith"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_EQUALS",
@@ -11246,7 +12742,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-equals"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_GREATER",
@@ -11256,7 +12752,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-greater"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_GREATER_OR_EQUAL",
@@ -11266,7 +12762,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-greater-or-equal"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_IN_LIST",
@@ -11276,7 +12772,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-in-list"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_LESS",
@@ -11286,7 +12782,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-less"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_LESS_OR_EQUAL",
@@ -11296,7 +12792,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-less-or-equal"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_NOT_EQUALS",
@@ -11306,7 +12802,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-not-equals"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_NOT_IN_LIST",
@@ -11316,7 +12812,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-not-in-list"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_NOT_NULL",
@@ -11326,7 +12822,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-not-null"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_NULL",
@@ -11336,7 +12832,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-null"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "OP_STARTSWITH",
@@ -11346,7 +12842,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/op-startswith"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "pascalCase",
@@ -11356,7 +12852,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/pascal-case"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "performanceMonitor",
@@ -11368,7 +12864,7 @@
       "tags": [
         "form"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/performance-monitor"
+      "canonicalUrl": "packages/tools/src/performance/ArchbasePerformanceMonitor"
     },
     {
       "name": "PermissionsSelectorModal",
@@ -11380,7 +12876,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/permissions-selector-modal"
+      "canonicalUrl": "packages/security-ui/src/PermissionsSelectorModal"
     },
     {
       "name": "postWithXForm",
@@ -11392,7 +12888,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/post-with-xform"
+      "canonicalUrl": "packages/security/src/oauth2/httpUtils"
     },
     {
       "name": "prepareServerQueries",
@@ -11404,11 +12900,11 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/prepare-server-queries"
+      "canonicalUrl": "packages/ssr/src/tanstack/ArchbaseTanStackIntegration"
     },
     {
       "name": "printData",
-      "description": "printData — componente de visualização de dados focado em print data.",
+      "description": "@ts-nocheck",
       "sourcePath": "packages/components/src/datagrid/modals/print-data",
       "exportsFrom": "@archbase/components",
       "props": [],
@@ -11416,7 +12912,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/print-data"
+      "canonicalUrl": "packages/components/src/datagrid/modals/print-data"
     },
     {
       "name": "PrintModal",
@@ -11459,7 +12955,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/print-modal"
+      "canonicalUrl": "packages/components/src/datagrid/modals/print-modal"
     },
     {
       "name": "processDetailErrorMessage",
@@ -11469,7 +12965,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/process-detail-error-message"
+      "canonicalUrl": "packages/core/src/exceptions/ArchbaseErrorHelper"
     },
     {
       "name": "processErrorMessage",
@@ -11479,7 +12975,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/process-error-message"
+      "canonicalUrl": "packages/core/src/exceptions/ArchbaseErrorHelper"
     },
     {
       "name": "ProfileModal",
@@ -11546,7 +13042,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/profile-modal"
+      "canonicalUrl": "packages/security-ui/src/ProfileModal"
     },
     {
       "name": "properCase",
@@ -11556,7 +13052,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/proper-case"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "QueryField",
@@ -11633,7 +13129,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/query-field"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "QueryFields",
@@ -11650,7 +13146,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/query-fields"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "QueryFieldValue",
@@ -11673,7 +13169,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/query-field-value"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "QueryFilterEntity",
@@ -11683,7 +13179,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/query-filter-entity"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "QUICK",
@@ -11693,7 +13189,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/quick"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
     },
     {
       "name": "QUICK_FILTER_INDEX",
@@ -11703,7 +13199,17 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/quick-filter-index"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseFilterCommons"
+    },
+    {
+      "name": "QuickPrintButton",
+      "description": "Componente Receipt - Renderiza visualmente um receipt",
+      "sourcePath": "packages/components/src/printer/ArchbaseThermalPrinter",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/ArchbaseThermalPrinter"
     },
     {
       "name": "redirectToLogin",
@@ -11715,7 +13221,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/redirect-to-login"
+      "canonicalUrl": "packages/security/src/oauth2/authentication"
     },
     {
       "name": "redirectToLogout",
@@ -11727,7 +13233,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/redirect-to-logout"
+      "canonicalUrl": "packages/security/src/oauth2/authentication"
     },
     {
       "name": "RemoteFilter",
@@ -11737,7 +13243,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/remote-filter"
+      "canonicalUrl": "packages/data/src/datasource/ArchbaseRemoteFilterDataSource"
     },
     {
       "name": "removeNonASCII",
@@ -11747,7 +13253,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/remove-non-ascii"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "removeNonWord",
@@ -11757,7 +13263,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/remove-non-word"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "renderBoolean",
@@ -11770,7 +13276,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-boolean"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "renderCurrency",
@@ -11783,7 +13289,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-currency"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "renderDate",
@@ -11796,7 +13302,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-date"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "renderDateTime",
@@ -11809,7 +13315,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-date-time"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "renderEnum",
@@ -11822,7 +13328,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-enum"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "renderFloat",
@@ -11835,7 +13341,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-float"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "renderInteger",
@@ -11848,7 +13354,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-integer"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "renderPercent",
@@ -11861,7 +13367,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-percent"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "RenderProfileUserItem",
@@ -11898,7 +13404,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-profile-user-item"
+      "canonicalUrl": "packages/security-ui/src/RenderProfileUserItem"
     },
     {
       "name": "renderText",
@@ -11911,7 +13417,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-text"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "renderTime",
@@ -11924,7 +13430,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-time"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "renderUUID",
@@ -11937,7 +13443,7 @@
         "form",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/render-uuid"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters"
     },
     {
       "name": "repeat",
@@ -11947,7 +13453,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/repeat"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "replaceAccents",
@@ -11957,7 +13463,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/replace-accents"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "resetSSRIdCounter",
@@ -11969,7 +13475,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/reset-ssrid-counter"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "ResizeHandlePlacement",
@@ -11981,7 +13487,7 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/resize-handle-placement"
+      "canonicalUrl": "packages/layout/src/spaces/core-types"
     },
     {
       "name": "ResizeType",
@@ -11993,7 +13499,37 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/resize-type"
+      "canonicalUrl": "packages/layout/src/spaces/core-types"
+    },
+    {
+      "name": "revokeFileUrl",
+      "description": "Extensões de arquivo por categoria",
+      "sourcePath": "packages/components/src/viewers/file-preview/utils/fileTypeDetector",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
+    },
+    {
+      "name": "rgbToHex",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
+    },
+    {
+      "name": "rightAlignText",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
     },
     {
       "name": "rpad",
@@ -12003,7 +13539,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/rpad"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "rtrim",
@@ -12013,7 +13549,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/rtrim"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "safeGetRowId",
@@ -12025,7 +13561,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/safe-get-row-id"
+      "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-utils"
     },
     {
       "name": "safeLocalStorage",
@@ -12037,7 +13573,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/safe-local-storage"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "safeSessionStorage",
@@ -12049,7 +13585,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/safe-session-storage"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "sentenceCase",
@@ -12059,7 +13595,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/sentence-case"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "serializeForSSR",
@@ -12071,7 +13607,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/serialize-for-ssr"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "serializeQueryClientState",
@@ -12083,7 +13619,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/serialize-query-client-state"
+      "canonicalUrl": "packages/ssr/src/tanstack/ArchbaseTanStackIntegration"
     },
     {
       "name": "serverOnly",
@@ -12095,7 +13631,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/server-only"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "ServerOnly",
@@ -12114,7 +13650,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/server-only"
+      "canonicalUrl": "packages/ssr/src/providers/ArchbaseSSRProvider"
     },
     {
       "name": "setNestedObjectValue",
@@ -12124,7 +13660,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/set-nested-object-value"
+      "canonicalUrl": "packages/core/src/utils/nestedObject"
     },
     {
       "name": "slugify",
@@ -12134,7 +13670,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/slugify"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "stringContains",
@@ -12144,7 +13680,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/string-contains"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "stringIsEmpty",
@@ -12154,7 +13690,27 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/string-is-empty"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
+    },
+    {
+      "name": "stringsToUint8Array",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "stringToUint8Array",
+      "description": "Comandos ESC/POS básicos",
+      "sourcePath": "packages/components/src/printer/utils/escpos",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/printer/utils/escpos"
     },
     {
       "name": "stripHtmlTags",
@@ -12164,7 +13720,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/strip-html-tags"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "syncSafeTranslate",
@@ -12174,7 +13730,17 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/sync-safe-translate"
+      "canonicalUrl": "packages/core/src/context/ArchbaseGlobalProvider"
+    },
+    {
+      "name": "themeFromPreset",
+      "description": "Presets de cores",
+      "sourcePath": "packages/components/src/theme-editor/utils/themeExport",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
       "name": "trim",
@@ -12184,7 +13750,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/trim"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "truncate",
@@ -12194,7 +13760,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/truncate"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "Type",
@@ -12206,7 +13772,7 @@
       "tags": [
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/type"
+      "canonicalUrl": "packages/layout/src/spaces/core-types"
     },
     {
       "name": "type ArchbaseGridState",
@@ -12218,7 +13784,7 @@
       "tags": [
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/type-archbase-grid-state"
+      "canonicalUrl": "packages/components/src/datagrid/hooks/use-grid-data"
     },
     {
       "name": "type MediaQueryResult",
@@ -12230,7 +13796,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/type-media-query-result"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
       "name": "unCamelCase",
@@ -12240,7 +13806,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/un-camel-case"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "underscore",
@@ -12250,7 +13816,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/underscore"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "unescapeHtml",
@@ -12260,7 +13826,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/unescape-html"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "unhyphenate",
@@ -12270,7 +13836,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/unhyphenate"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "upperCase",
@@ -12280,7 +13846,7 @@
       "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/upper-case"
+      "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
       "name": "useArchbaseAppContext",
@@ -12293,7 +13859,7 @@
         "hook",
         "provider"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-app-context"
+      "canonicalUrl": "packages/core/src/context/ArchbaseAppContext"
     },
     {
       "name": "useArchbaseContainerDimensions",
@@ -12305,7 +13871,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-container-dimensions"
+      "canonicalUrl": "packages/components/src/hooks/useArchbaseContainerDimensions"
     },
     {
       "name": "useArchbaseCurrentSpace",
@@ -12318,7 +13884,7 @@
         "hook",
         "layout"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-current-space"
+      "canonicalUrl": "packages/layout/src/spaces/core-react"
     },
     {
       "name": "useArchbaseDataGridStableRendering",
@@ -12331,7 +13897,7 @@
         "hook",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-data-grid-stable-rendering"
+      "canonicalUrl": "packages/components/src/datagrid/hooks/use-grid-data-stable-rendering"
     },
     {
       "name": "useArchbaseDataSourceDebug",
@@ -12345,7 +13911,7 @@
         "devtools"
       ],
       "status": "stable",
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-data-source-debug"
+      "canonicalUrl": "packages/tools/src/dev-utils/useArchbaseDataSourceDebug"
     },
     {
       "name": "useArchbaseDataSourceRegistry",
@@ -12359,7 +13925,7 @@
         "devtools"
       ],
       "status": "stable",
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-data-source-registry"
+      "canonicalUrl": "packages/tools/src/dev-utils/useArchbaseDataSourceDebug"
     },
     {
       "name": "useArchbaseDataSourceV2",
@@ -12371,7 +13937,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-data-source-v2"
+      "canonicalUrl": "packages/data/src/datasource/v2/useArchbaseDataSourceV2"
     },
     {
       "name": "useArchbaseDataSourceV2Editor",
@@ -12383,7 +13949,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-data-source-v2-editor"
+      "canonicalUrl": "packages/data/src/datasource/v2/useArchbaseDataSourceV2"
     },
     {
       "name": "useArchbaseDataSourceV2ReadOnly",
@@ -12395,7 +13961,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-data-source-v2-read-only"
+      "canonicalUrl": "packages/data/src/datasource/v2/useArchbaseDataSourceV2"
     },
     {
       "name": "useArchbaseDrawer",
@@ -12407,7 +13973,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-drawer"
+      "canonicalUrl": "packages/admin/src/drawer/useArchbaseDrawer"
     },
     {
       "name": "useArchbaseElementSizeArea",
@@ -12419,7 +13985,67 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-element-size-area"
+      "canonicalUrl": "packages/components/src/hooks/useArchbaseElementSizeArea"
+    },
+    {
+      "name": "useArchbaseFeatureFlag",
+      "description": "useArchbaseFeatureFlag — hook utilitário focado em use archbase feature flag.",
+      "sourcePath": "packages/feature-flags/src/hooks",
+      "exportsFrom": "@archbase/feature-flags",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/feature-flags/src/hooks"
+    },
+    {
+      "name": "useArchbaseFilterHistory",
+      "description": "Hook para gerenciar histórico de filtros aplicados\n@param activeFilters - Filtros atuais ativos\n@param options - Opções de configuração\n@returns Objeto com histórico e ações para gerenciá-lo\n@example\n```ts\nconst {\n  history,\n  recentHistory,\n  loadFromHistory,\n  clearHistory,\n  removeHistoryItem,\n  hasHistory\n} = useArchbaseFilterHistory(activeFilters, {\n  storageKey: 'my-app-filter-history',\n  maxHistory: 20\n});\n```",
+      "sourcePath": "packages/components/src/filters/hooks/useArchbaseFilterHistory",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/components/src/filters/hooks/useArchbaseFilterHistory"
+    },
+    {
+      "name": "useArchbaseFilterPresets",
+      "description": "Hook para gerenciar presets de filtros salvos no localStorage\n@param options - Opções de configuração\n@returns Objeto com presets e ações para gerenciá-los\n@example\n```ts\nconst {\n  presets,\n  sortedPresets,\n  savePreset,\n  loadPreset,\n  deletePreset,\n  toggleFavorite\n} = useArchbaseFilterPresets({\n  storageKey: 'my-app-filters',\n  onLoad: (filters) => console.log('Loaded', filters)\n});\n```",
+      "sourcePath": "packages/components/src/filters/hooks/useArchbaseFilterPresets",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/components/src/filters/hooks/useArchbaseFilterPresets"
+    },
+    {
+      "name": "useArchbaseFilters",
+      "description": "Hook principal para gerenciamento de filtros com conversão RSQL\n@param filterDefinitions - Definições dos campos filtráveis\n@param options - Opções de configuração\n@returns Objeto com estado e ações para gerenciar filtros\n@example\n```ts\nconst filters: ArchbaseFilterDefinition[] = [\n  { key: 'nome', label: 'Nome', type: 'text' },\n  { key: 'idade', label: 'Idade', type: 'integer' }\n];\nconst {\n  activeFilters,\n  rsqlQuery,\n  addFilter,\n  removeFilter,\n  clearFilters\n} = useArchbaseFilters(filters);\n```",
+      "sourcePath": "packages/components/src/filters/hooks/useArchbaseFilters",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/components/src/filters/hooks/useArchbaseFilters"
+    },
+    {
+      "name": "useArchbaseFiltersControlled",
+      "description": "Hook principal para gerenciamento de filtros com conversão RSQL\n@param filterDefinitions - Definições dos campos filtráveis\n@param options - Opções de configuração\n@returns Objeto com estado e ações para gerenciar filtros\n@example\n```ts\nconst filters: ArchbaseFilterDefinition[] = [\n  { key: 'nome', label: 'Nome', type: 'text' },\n  { key: 'idade', label: 'Idade', type: 'integer' }\n];\nconst {\n  activeFilters,\n  rsqlQuery,\n  addFilter,\n  removeFilter,\n  clearFilters\n} = useArchbaseFilters(filters);\n```",
+      "sourcePath": "packages/components/src/filters/hooks/useArchbaseFilters",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/components/src/filters/hooks/useArchbaseFilters"
     },
     {
       "name": "useArchbaseListContext",
@@ -12432,7 +14058,7 @@
         "hook",
         "provider"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-list-context"
+      "canonicalUrl": "packages/components/src/hooks/useArchbaseListContext"
     },
     {
       "name": "useArchbaseNavigateParams",
@@ -12444,7 +14070,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-navigate-params"
+      "canonicalUrl": "packages/components/src/hooks/useArchbaseNavigateParams"
     },
     {
       "name": "useArchbaseNavigationContext",
@@ -12457,7 +14083,7 @@
         "hook",
         "provider"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-navigation-context"
+      "canonicalUrl": "packages/admin/src/ArchbaseNavigation.context"
     },
     {
       "name": "useArchbaseNavigationListener",
@@ -12469,7 +14095,19 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-navigation-listener"
+      "canonicalUrl": "packages/admin/src/ArchbaseNavigation.context"
+    },
+    {
+      "name": "useArchbaseOnboarding",
+      "description": "ID único do step",
+      "sourcePath": "packages/components/src/onboarding/ArchbaseOnboardingTour",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/components/src/onboarding/ArchbaseOnboardingTour"
     },
     {
       "name": "useArchbasePermissionCheck",
@@ -12482,7 +14120,7 @@
         "hook",
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-permission-check"
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityHooks"
     },
     {
       "name": "useArchbaseQuery",
@@ -12495,7 +14133,19 @@
         "hook",
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-query"
+      "canonicalUrl": "packages/ssr/src/tanstack/ArchbaseTanStackIntegration"
+    },
+    {
+      "name": "useArchbaseQuickFilters",
+      "description": "Hook para gerenciar filtros rápidos predefinidos\n@param predefinedFilters - Filtros rápidos predefinidos\n@param onApply - Callback quando um filtro rápido é aplicado\n@returns Objeto com filtros rápidos e ações\n@example\n```ts\nconst quickFilters: QuickFilterPreset[] = [\n  {\n    id: 'active-users',\n    name: 'Active Users',\n    filters: [\n      { key: 'status', label: 'Status', type: 'text', operator: '=', value: 'active', displayValue: 'active' }\n    ]\n  }\n];\nconst { quickFilters, applyQuickFilter } = useArchbaseQuickFilters(quickFilters, (filters) => {\n  console.log('Applied:', filters);\n});\n```",
+      "sourcePath": "packages/components/src/filters/hooks/useArchbaseQuickFilters",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/components/src/filters/hooks/useArchbaseQuickFilters"
     },
     {
       "name": "useArchbaseRemoteDataSourceV2",
@@ -12507,7 +14157,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-remote-data-source-v2"
+      "canonicalUrl": "packages/data/src/datasource/v2/useArchbaseRemoteDataSourceV2"
     },
     {
       "name": "useArchbaseRemoteDataSourceV2Editor",
@@ -12519,7 +14169,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-remote-data-source-v2-editor"
+      "canonicalUrl": "packages/data/src/datasource/v2/useArchbaseRemoteDataSourceV2"
     },
     {
       "name": "useArchbaseRemoteDataSourceV2ReadOnly",
@@ -12531,7 +14181,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-remote-data-source-v2-read-only"
+      "canonicalUrl": "packages/data/src/datasource/v2/useArchbaseRemoteDataSourceV2"
     },
     {
       "name": "useArchbaseRenderTracker",
@@ -12544,7 +14194,7 @@
         "hook",
         "form"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-render-tracker"
+      "canonicalUrl": "packages/tools/src/performance/useArchbaseRenderTracker"
     },
     {
       "name": "useArchbaseSecureForm",
@@ -12557,7 +14207,7 @@
         "hook",
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-secure-form"
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityHooks"
     },
     {
       "name": "useArchbaseSecurity",
@@ -12570,7 +14220,7 @@
         "hook",
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-security"
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityHooks"
     },
     {
       "name": "useArchbaseSSR",
@@ -12583,7 +14233,7 @@
         "hook",
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-ssr"
+      "canonicalUrl": "packages/ssr/src/providers/ArchbaseSSRProvider"
     },
     {
       "name": "useArchbaseSSRDataSource",
@@ -12596,7 +14246,7 @@
         "hook",
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-ssrdata-source"
+      "canonicalUrl": "packages/ssr/src/hooks/useArchbaseSSRDataSource"
     },
     {
       "name": "useArchbaseSSRDataSources",
@@ -12609,7 +14259,7 @@
         "hook",
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-ssrdata-sources"
+      "canonicalUrl": "packages/ssr/src/hooks/useArchbaseSSRDataSource"
     },
     {
       "name": "useArchbaseTranslation",
@@ -12621,7 +14271,19 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-translation"
+      "canonicalUrl": "packages/core/src/context/ArchbaseGlobalProvider"
+    },
+    {
+      "name": "useArchbaseVariant",
+      "description": "useArchbaseVariant — hook utilitário focado em use archbase variant.",
+      "sourcePath": "packages/feature-flags/src/hooks",
+      "exportsFrom": "@archbase/feature-flags",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/feature-flags/src/hooks"
     },
     {
       "name": "useArchbaseViewSecurity",
@@ -12634,7 +14296,7 @@
         "hook",
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-view-security"
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityHooks"
     },
     {
       "name": "useArchbaseVisible",
@@ -12646,7 +14308,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-visible"
+      "canonicalUrl": "packages/components/src/hooks/useArchbaseVisible"
     },
     {
       "name": "useArchbaseWhyDidYouRender",
@@ -12659,7 +14321,7 @@
         "hook",
         "form"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-archbase-why-did-you-render"
+      "canonicalUrl": "packages/tools/src/performance/useArchbaseRenderTracker"
     },
     {
       "name": "useAvailableSpace",
@@ -12672,7 +14334,7 @@
         "hook",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-available-space"
+      "canonicalUrl": "packages/components/src/datagrid/hooks/use-grid-details-panel"
     },
     {
       "name": "useClientEffect",
@@ -12685,7 +14347,7 @@
         "hook",
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-client-effect"
+      "canonicalUrl": "packages/ssr/src/providers/ArchbaseSSRProvider"
     },
     {
       "name": "useDetailPanelAutoClose",
@@ -12698,7 +14360,7 @@
         "hook",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-detail-panel-auto-close"
+      "canonicalUrl": "packages/components/src/datagrid/hooks/use-grid-details-panel"
     },
     {
       "name": "useDetailPanelPositions",
@@ -12711,7 +14373,7 @@
         "hook",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-detail-panel-positions"
+      "canonicalUrl": "packages/components/src/datagrid/hooks/use-grid-details-panel"
     },
     {
       "name": "useDetailPanels",
@@ -12724,7 +14386,7 @@
         "hook",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-detail-panels"
+      "canonicalUrl": "packages/components/src/datagrid/hooks/use-grid-details-panel"
     },
     {
       "name": "useGridData",
@@ -12737,7 +14399,7 @@
         "hook",
         "data"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-grid-data"
+      "canonicalUrl": "packages/components/src/datagrid/hooks/use-grid-data"
     },
     {
       "name": "useHydrationSafeState",
@@ -12750,7 +14412,7 @@
         "hook",
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-hydration-safe-state"
+      "canonicalUrl": "packages/ssr/src/providers/ArchbaseSSRProvider"
     },
     {
       "name": "useRequiredValidationErrors",
@@ -12762,7 +14424,7 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-required-validation-errors"
+      "canonicalUrl": "packages/core/src/validation/ValidationErrorsContext"
     },
     {
       "name": "UserModal",
@@ -12818,7 +14480,7 @@
         "hook",
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/user-modal"
+      "canonicalUrl": "packages/security-ui/src/UserModal"
     },
     {
       "name": "useSSRSafeMediaQuery",
@@ -12831,7 +14493,7 @@
         "hook",
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-ssrsafe-media-query"
+      "canonicalUrl": "packages/ssr/src/providers/ArchbaseSSRProvider"
     },
     {
       "name": "useValidationErrors",
@@ -12843,7 +14505,19 @@
       "tags": [
         "hook"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/use-validation-errors"
+      "canonicalUrl": "packages/core/src/validation/ValidationErrorsContext"
+    },
+    {
+      "name": "useVideoPlayer",
+      "description": "Hook customizado para gerenciar estado e lógica do player de vídeo",
+      "sourcePath": "packages/components/src/video/hooks/useVideoPlayer",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/components/src/video/hooks/useVideoPlayer"
     },
     {
       "name": "validateConfig",
@@ -12855,7 +14529,17 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/validate-config"
+      "canonicalUrl": "packages/security/src/oauth2/authConfig"
+    },
+    {
+      "name": "validateFilterValue",
+      "description": "Mapeamento de operadores do ArchbaseCompositeFilters para operadores RSQL",
+      "sourcePath": "packages/components/src/filters/ArchbaseCompositeFilters.utils",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/filters/ArchbaseCompositeFilters.utils"
     },
     {
       "name": "validateState",
@@ -12867,7 +14551,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/validate-state"
+      "canonicalUrl": "packages/security/src/oauth2/authentication"
     },
     {
       "name": "ValidationErrorsProvider",
@@ -12879,7 +14563,7 @@
       "tags": [
         "provider"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/validation-errors-provider"
+      "canonicalUrl": "packages/core/src/validation/ValidationErrorsContext"
     },
     {
       "name": "ValueEditor",
@@ -12968,7 +14652,7 @@
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "https://docs.archbase.com/storybook/value-editor"
+      "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseAdvancedFilter"
     },
     {
       "name": "withArchbaseSecurity",
@@ -12980,7 +14664,7 @@
       "tags": [
         "security"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/with-archbase-security"
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityComponents"
     },
     {
       "name": "withArchbaseTanStack",
@@ -12992,7 +14676,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/with-archbase-tan-stack"
+      "canonicalUrl": "packages/ssr/src/tanstack/ArchbaseTanStackIntegration"
     },
     {
       "name": "withSSRFallback",
@@ -13004,7 +14688,7 @@
       "tags": [
         "ssr"
       ],
-      "canonicalUrl": "https://docs.archbase.com/storybook/with-ssrfallback"
+      "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     }
   ],
   "recipes": [

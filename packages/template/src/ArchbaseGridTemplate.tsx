@@ -447,7 +447,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
       onSecurityReady={securityOptions?.onSecurityReady}
       onAccessDenied={securityOptions?.onAccessDenied}
     >
-      <Paper withBorder={withBorder} ref={innerComponentRef} style={{ overflow: 'none', height: 'calc(100% - 4px)' }}>
+      <Paper withBorder={withBorder} ref={innerComponentRef} style={{ height: 'calc(100% - 4px)' }}>
         {isError ? (
           <ArchbaseAlert
             autoClose={20000}
