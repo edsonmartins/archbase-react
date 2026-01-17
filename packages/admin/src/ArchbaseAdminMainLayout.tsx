@@ -14,7 +14,7 @@ import {
 	ArchbaseAdminLayoutProvider,
 } from './ArchbaseAdminLayout.context';
 import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
-import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute } from './ArchbaseAliveAbleRoutes';
+import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute, type ArchbaseKeepAliveRouteProps } from './ArchbaseAliveAbleRoutes';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
 import { useArchbaseNavigateParams } from '@archbase/components';
@@ -178,7 +178,7 @@ function ArchbaseAdminMainLayoutContainer({
 				item.links.forEach((item2, indexSub) => {
 					if (item2.keepAlive) {
 						routeElements.push(
-							<ArchbaseKeepAliveRoute path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component as any} />
+							<ArchbaseKeepAliveRoute path={item2.link} key={`${item2.link}_${indexSub}`} component={item2.component} />
 						);
 					} else {
 						routeElements.push(<Route path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component as any} />);
@@ -187,7 +187,7 @@ function ArchbaseAdminMainLayoutContainer({
 			} else {
 				if (item.keepAlive) {
 					routeElements.push(
-						<ArchbaseKeepAliveRoute key={`${item.link}_${index}`} path={item.link} element={item.component as any} />
+						<ArchbaseKeepAliveRoute key={`${item.link}_${index}`} path={item.link} component={item.component} />
 					);
 				} else {
 					routeElements.push(
