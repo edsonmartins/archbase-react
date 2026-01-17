@@ -1,4 +1,4 @@
-import React, { Activity, ReactElement, useLayoutEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { RouteProps, RoutesProps } from 'react-router';
 import { Route, Routes } from 'react-router-dom';
 
@@ -33,12 +33,33 @@ type DisplayRouteProps = RouteProps & {
 
 const DisplayRoute = ({ element, routesProps, ...props }: DisplayRouteProps) => {
 	const [isActive, setIsActive] = useState(false);
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	// Quando não está ativo, pausar timers e animações
+	useEffect(() => {
+		if (!isActive && containerRef.current) {
+			// Pausar todos os vídeos e iframes
+			const mediaElements = containerRef.current.querySelectorAll('video, iframe, audio');
+			mediaElements.forEach((el) => {
+				if (el instanceof HTMLMediaElement) {
+					el.pause();
+				}
+			});
+		}
+	}, [isActive]);
 
 	return (
 		<>
-			<Activity mode={isActive ? 'visible' : 'hidden'}>
+			<div
+				ref={containerRef}
+				style={{
+					display: isActive ? 'block' : 'none',
+					height: isActive ? '100%' : '0',
+					overflow: isActive ? 'auto' : 'hidden'
+				}}
+			>
 				{element}
-			</Activity>
+			</div>
 
 			<Routes {...routesProps}>
 				<Route {...(props as any)} element={<RouteMatchInformant onRouteMatchChange={setIsActive} />} />
