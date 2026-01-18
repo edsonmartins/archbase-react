@@ -8,6 +8,7 @@ import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { ArchbaseAdminLayoutContext, ArchbaseAdminLayoutContextValue } from './ArchbaseAdminLayout.context';
 import { ArchbaseNavigationContext, useArchbaseNavigationContext } from './ArchbaseNavigation.context';
 import { ArchbaseNavigationItem, ArchbaseTabItem } from './types';
+import { useKeepAliveCache } from './ArchbaseAliveAbleRoutes';
 
 export interface ArchbaseAdminTabContainerProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -43,8 +44,16 @@ export function ArchbaseAdminTabContainer({
 	const navigationContext = useArchbaseNavigationContext();
 	const { state, dispatch } = navigationContext;
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
+	const keepAliveCache = useKeepAliveCache();
 
 	const handleOnClose = useCallback((id: string, payload?: { redirectUrl?: string }) => {
+		// Solicita remoção do cache keep-alive quando aba é fechada
+		if (!keepAliveCache) {
+			console.error('[ArchbaseAdminTabContainer] keepAliveCache context not available. Tab cache cleanup will not occur. This may cause memory leaks.');
+		} else {
+			keepAliveCache.requestUnregister(id);
+		}
+
 		const closedIndex = openedTabs.findIndex((tab) => tab.path === id);
 		// Prioridade: payload.redirectUrl > tab.redirect
 		let redirect: string | undefined = payload?.redirectUrl;
@@ -79,10 +88,14 @@ export function ArchbaseAdminTabContainer({
 		} else {
 			setActiveTabId(undefined);
 			onChangeActiveTabId && onChangeActiveTabId(undefined);
-			navigate(adminLayoutContextValue.navigationRootLink!);
+			if (!adminLayoutContextValue.navigationRootLink) {
+				console.error('[ArchbaseAdminTabContainer] navigationRootLink is not configured. Cannot navigate to root.');
+				return;
+			}
+			navigate(adminLayoutContextValue.navigationRootLink);
 		}
 		dispatch({ type: 'DONE', link: '' });
-	}, [openedTabs, activeTabId, navigate, adminLayoutContextValue.navigationRootLink, dispatch, onChangeOpenedTabs, onChangeActiveTabId]);
+	}, [openedTabs, activeTabId, navigate, adminLayoutContextValue.navigationRootLink, dispatch, onChangeOpenedTabs, onChangeActiveTabId, keepAliveCache]);
 
 	useEffect(() => {
 		if (state?.linkClosed) {
@@ -150,8 +163,8 @@ export function ArchbaseAdminTabContainer({
 						title: `${resultItem.title}`,
 						path: `${resultItem.link}`,
 						active: true,
-						content: resultItem.item!.component,
-						iconClass: resultItem.item!.icon,
+						content: resultItem.item.component,
+						iconClass: resultItem.item.icon,
 						closeButton: true,
 						redirect: resultItem.redirect,
 						customTitle: resultItem.customTitle,
@@ -192,7 +205,11 @@ export function ArchbaseAdminTabContainer({
 		onChangeOpenedTabs && onChangeOpenedTabs([]);
 		setActiveTabId(undefined);
 		onChangeActiveTabId && onChangeActiveTabId(undefined);
-		navigate(adminLayoutContextValue.navigationRootLink!);
+		if (!adminLayoutContextValue.navigationRootLink) {
+			console.error('[ArchbaseAdminTabContainer] navigationRootLink is not configured. Cannot navigate to root.');
+			return;
+		}
+		navigate(adminLayoutContextValue.navigationRootLink);
 	}, [navigate, adminLayoutContextValue.navigationRootLink, onChangeOpenedTabs, onChangeActiveTabId]);
 
 	const handleCloseLeftTabs = useCallback((tabId: string) => {

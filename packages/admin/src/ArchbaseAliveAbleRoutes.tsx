@@ -8,6 +8,7 @@ import { Route, Routes } from 'react-router-dom';
 
 interface KeepAliveCacheContextValue {
 	cache: Map<string, ReactNode>;
+	requestedUnregister: Set<string>; // Set com paths que devem ser removidos
 	register: (path: string, component: ReactNode) => void;
 	unregister: (path: string) => void;
 	requestUnregister: (path: string) => void; // Solicita remoção (quando aba fecha)
@@ -37,6 +38,14 @@ export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => 
 
 	// Registra um componente no cache (lazy loading)
 	const register = (path: string, component: ReactNode) => {
+		if (!path || typeof path !== 'string') {
+			console.error('[ArchbaseAliveAbleRoutes] Invalid path for component registration:', path);
+			return;
+		}
+		if (component === undefined) {
+			console.warn('[ArchbaseAliveAbleRoutes] Attempting to register undefined component for path:', path);
+			return;
+		}
 		setCache((prev) => {
 			// Só atualizar se realmente não existe no cache
 			if (prev.has(path)) {
@@ -50,7 +59,14 @@ export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => 
 
 	// Remove um componente do cache (quando aba é fechada)
 	const unregister = (path: string) => {
+		if (!path) {
+			console.error('[ArchbaseAliveAbleRoutes] Cannot unregister: invalid path');
+			return;
+		}
 		setCache((prev) => {
+			if (!prev.has(path)) {
+				console.warn('[ArchbaseAliveAbleRoutes] Attempting to unregister non-existent path:', path);
+			}
 			const next = new Map(prev);
 			next.delete(path);
 			return next;
@@ -85,6 +101,7 @@ export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => 
 
 	const contextValue: KeepAliveCacheContextValue = {
 		cache,
+		requestedUnregister,
 		register,
 		unregister,
 		requestUnregister
@@ -109,7 +126,11 @@ type DisplayRouteProps = ArchbaseKeepAliveRouteProps & {
 };
 
 const DisplayRoute = ({ component, routesProps, ...props }: DisplayRouteProps) => {
-	const { cache, register, unregister, requestUnregister } = useKeepAliveCache()!;
+	const contextValue = useKeepAliveCache();
+	if (!contextValue) {
+		throw new Error('DisplayRoute must be used within ArchbaseAliveAbleRoutes provider');
+	}
+	const { cache, requestedUnregister, register, unregister } = contextValue;
 	const [isActive, setIsActive] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const isInitializedRef = useRef(false);
@@ -128,11 +149,11 @@ const DisplayRoute = ({ component, routesProps, ...props }: DisplayRouteProps) =
 
 	// Verificar se foi solicitada a remoção do cache
 	useLayoutEffect(() => {
-		if (props.path && requestUnregister.has(props.path)) {
+		if (props.path && requestedUnregister.has(props.path)) {
 			unregister(props.path);
 			isInitializedRef.current = false;
 		}
-	}, [props.path, requestUnregister, unregister]);
+	}, [props.path, requestedUnregister, unregister]);
 
 	// Obter o componente do cache
 	const cachedElement = props.path ? cache.get(props.path) : null;

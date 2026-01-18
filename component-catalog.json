@@ -5394,7 +5394,14 @@
       "description": "ArchbaseKeepAliveRoute — componente Archbase focado em keep alive route.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
-      "props": [],
+      "props": [
+        {
+          "name": "component",
+          "type": "ReactNode | React.ComponentType",
+          "required": false,
+          "description": "Define component. (ReactNode | React.ComponentType)"
+        }
+      ],
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
