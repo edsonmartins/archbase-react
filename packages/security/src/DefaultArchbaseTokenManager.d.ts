@@ -4,6 +4,7 @@ export declare const ENCRYPTION_KEY = "YngzI1guK3dGaElFcFY9MywqK3xgPzg/Ojg7eD8xR
 export declare const TOKEN_COOKIE_NAME = "c1ab58e7-c113-4225-a190-a9e59d1207fc";
 export declare const USER_NAME_AND_PASSWORD = "6faf6932-a0b5-457b-83b1-8d89ddbd91fd";
 export declare const USER_NAME = "602b05c5-ec46-451e-aba6-187e463bc245";
+export declare const CONTEXT_STORAGE_KEY = "8b4a7c2d-9e5f-4163-b8a7-3f2c9d8e5a1b";
 export declare class DefaultArchbaseTokenManager implements ArchbaseTokenManager {
     getUsernameAndPassword(): ArchbaseUsernameAndPassword | null;
     saveUsernameAndPassword(username: string, password: string): void;
@@ -14,5 +15,7 @@ export declare class DefaultArchbaseTokenManager implements ArchbaseTokenManager
     clearUsernameAndPassword(): void;
     clearToken(): void;
     getToken(): ArchbaseAccessToken | null;
+    saveContext(context: string): void;
+    getContext(): string | null;
+    clearContext(): void;
 }
-//# sourceMappingURL=DefaultArchbaseTokenManager.d.ts.map

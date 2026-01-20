@@ -6,7 +6,7 @@ import { AlertVariant, Box, Button, ButtonVariant, Flex, Paper, useMantineColorS
 import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { IconPlus } from '@tabler/icons-react';
 import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
-import React, { Fragment, ReactNode, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
+import React, { Fragment, ReactNode, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import {
   ArchbaseDataGrid,
   ArchbaseDataGridRef,
@@ -103,6 +103,8 @@ export interface ArchbaseGridTemplateProps<T extends Object, ID> extends Archbas
   onSelectedRowsChanged?: (rows: T[]) => void;
   /** Função chamada quando ocorre duplo clique em uma célula */
   onCellDoubleClick?: (event: CellClickEvent) => void;
+  /** Função chamada quando o modelo de filtro da grid muda */
+  onFilterModelChange?: (filterModel: any) => void;
   /** Labels para paginação */
   paginationLabels?: {
     totalRecords?: string;
@@ -121,6 +123,7 @@ export interface ArchbaseGridTemplateRef {
   exportData: () => void;
   printData: () => void;
   getDataGridRef: () => React.RefObject<ArchbaseDataGridRef>;
+  getFilterModel: () => any;
 }
 
 const getFilter = (
@@ -192,6 +195,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     toolbarLeftContent,
     onSelectedRowsChanged,
     onCellDoubleClick,
+    onFilterModelChange,
     paginationLabels,
     // Props de segurança (opcionais)
     resourceName,
@@ -246,7 +250,10 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
         gridRef.current.printData();
       }
     },
-    getDataGridRef: () => gridRef
+    getDataGridRef: () => gridRef,
+    getFilterModel: () => {
+      return gridRef.current ? gridRef.current.getFilterModel() : { items: [], quickFilterValues: [] };
+    }
   }), [gridRef]);
 
   const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
@@ -286,6 +293,9 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
 
   const appContext = useArchbaseAppContext();
   const innerComponentRef = useRef<any>(null);
+
+  // 🔧 MEMOIZAÇÃO: Memoiza toolbarLeftContent para evitar re-renders da grid quando mudar
+  const memoizedToolbarLeftContent = useMemo(() => toolbarLeftContent, [toolbarLeftContent]);
 
   // 🔧 CORREÇÃO: Ref estável - sempre usa innerComponentRef interno para evitar loops
   // Se innerRef for fornecido, sincronizamos manualmente
@@ -488,10 +498,11 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
           allowPrintData={true}
           onSelectedRowsChanged={onSelectedRowsChanged}
           onCellDoubleClick={onCellDoubleClick}
+          onFilterModelChange={onFilterModelChange}
           renderRowActions={enableRowActions ? getRenderRowActions : undefined}
           positionActionsColumn={positionActionsColumn}
           toolbarAlignment={toolbarAlignment}
-          toolbarLeftContent={toolbarLeftContent}
+          toolbarLeftContent={memoizedToolbarLeftContent}
           renderToolbarActions={filterType === 'advanced' || filterType === 'none' ? buildInternalToolbarActionsFilter : undefined}
           paginationLabels={paginationLabels}
           cellPadding={cellPadding}

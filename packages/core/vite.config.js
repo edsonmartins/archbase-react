@@ -1,10 +1,21 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 import pkg from './package.json';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    dts({
+      include: ['src/**/*'],
+      outDir: 'dist',
+      insertTypesEntry: true,
+      compilerOptions: {
+        skipLibCheck: true
+      }
+    })
+  ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),

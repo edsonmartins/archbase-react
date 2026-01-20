@@ -12,4 +12,3 @@ export interface ArchbaseResetPasswordProps {
     style?: CSSProperties;
 }
 export declare function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onResetPassword, onClickBackToLogin, validatePassword, validateToken, initialEmail, description, style }: ArchbaseResetPasswordProps): import("react/jsx-runtime").JSX.Element;
-//# sourceMappingURL=ArchbaseResetPassword.d.ts.map

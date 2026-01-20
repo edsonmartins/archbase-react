@@ -1,6 +1,6 @@
 {
   "name": "@archbase/advanced",
-  "version": "3.0.20",
+  "version": "3.0.26",
   "description": "Archbase React Advanced Components - Charts, Kanban, QueryBuilder",
   "type": "module",
   "main": "./dist/index.js",
@@ -16,45 +16,46 @@
     "dist"
   ],
   "scripts": {
-    "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build && tsc --emitDeclarationOnly || true",
+    "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
     "@mantine/core": "8.3.12",
-    "@mantine/hooks": "8.3.12",
     "@mantine/dates": "8.3.12",
-    "@tabler/icons-react": "^3.29.0"
+    "@mantine/hooks": "8.3.12",
+    "@tabler/icons-react": "^3.29.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "dependencies": {
+    "@archbase/components": "workspace:*",
     "@archbase/core": "workspace:*",
     "@archbase/data": "workspace:*",
-    "@archbase/components": "workspace:*",
     "@archbase/layout": "workspace:*",
+    "date-fns": "^2.30.0",
+    "dayjs": "^1.11.10",
     "i18next": "^23.16.8",
     "lodash": "^4.17.21",
-    "react-addons-shallow-compare": "^15.6.3",
-    "react-select": "^5.8.0",
-    "react-multi-date-picker": "4.1.2",
-    "react-date-object": "^2.1.8",
     "react-accessible-accordion": "^5.0.0",
-    "uuid": "^9.0.1",
-    "react-use": "^17.5.0",
-    "dayjs": "^1.11.10",
+    "react-addons-shallow-compare": "^15.6.3",
+    "react-date-object": "^2.1.8",
     "react-i18next": "^13.5.0",
     "react-modal": "^3.16.1",
-    "date-fns": "^2.30.0"
+    "react-multi-date-picker": "4.1.2",
+    "react-select": "^5.8.0",
+    "react-use": "^17.5.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/react": "^19.0.6",
-    "@types/react-dom": "^19.0.2",
     "@types/lodash": "^4.17.13",
+    "@types/react": "^19.0.6",
     "@types/react-addons-shallow-compare": "^0.14.22",
+    "@types/react-dom": "^19.0.2",
     "typescript": "^5.7.2",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4"
   },
   "publishConfig": {
     "registry": "http://192.168.1.110:4873"

@@ -6,6 +6,8 @@ import { archbaseI18next } from '@archbase/core';
 export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, currentPathName, highlightActiveMenuItem, sidebarTextColor, collapsedSubmenuWidth) {
 	const iconsBackgroundColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][8] : theme.colors[theme.primaryColor][7]) : undefined;
 	const iconsColor = iconsWithBackground ? (theme.colorScheme === 'dark' ? theme.colors[theme.primaryColor][0] : theme.colors[theme.primaryColor][0]) : undefined;
+	const disabledColor = theme.colorScheme === 'dark' ? '#3e5e7e' : '#9fb6cf';
+	const disabledOpacity = '0.5';
 	if (item.links) {
 		if (!(item.disabled && item.hideDisabledItem)) {
 			return (
@@ -25,6 +27,15 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 							},
 							[`.${menuClasses.subMenuContent}`]: {
 								width: collapsed && collapsedSubmenuWidth
+							},
+							[`.${menuClasses.disabled}`]: {
+								opacity: disabledOpacity,
+								[`.${menuClasses.icon}`]: {
+									color: disabledColor + ' !important',
+								},
+								[`.${menuClasses.label}`]: {
+									color: disabledColor + ' !important',
+								},
 							},
 						}}
 						key={index}
@@ -58,6 +69,16 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 														color: "white",
 													},
 												}
+											},
+											[`.${menuClasses.disabled}`]: {
+												opacity: disabledOpacity,
+												[`.${menuClasses.icon}`]: {
+													background: (iconsBackgroundColor || '') + ' !important',
+													color: disabledColor + ' !important',
+												},
+												[`.${menuClasses.label}`]: {
+													color: disabledColor + ' !important',
+												},
 											},
 										}}
 										key={subIndex}
@@ -96,6 +117,16 @@ export function buildMenuItem(theme, collapsed, onMenuItemClick, item, index, ic
 							},
 							[`.${menuClasses.label}`]: {
 								color: highlightActiveMenuItem && item.link === currentPathName ? "white" : sidebarTextColor,
+							},
+							[`.${menuClasses.disabled}`]: {
+								opacity: disabledOpacity,
+								[`.${menuClasses.icon}`]: {
+									background: (iconsBackgroundColor || '') + ' !important',
+									color: disabledColor + ' !important',
+								},
+								[`.${menuClasses.label}`]: {
+									color: disabledColor + ' !important',
+								},
 							},
 						}}
 						key={index}

@@ -3,8 +3,9 @@
  * Este arquivo serve como documentação e referência para desenvolvedores.
  */
 
-import { 
+import {
   ArchbaseAuthenticator,
+  ArchbaseAccessToken,
   ContextualAuthenticationRequest,
   ContextualAuthenticationResponse,
   FlexibleLoginRequest,
@@ -18,14 +19,30 @@ import {
  */
 export class ExampleContextualAuthenticator implements ArchbaseAuthenticator {
   // Métodos básicos obrigatórios (compatibilidade)
-  async login(username: string, password: string) {
-    // Implementação básica existente - não muda
-    throw new Error('Implementar login básico')
+  async login(username: string, password: string): Promise<ArchbaseAccessToken> {
+    // Implementação básica existente - retorna token de acesso
+    return {
+      token_type: 'BEARER',
+      scope: 'all',
+      expires_in: Date.now() + (24 * 60 * 60 * 1000),
+      ext_expires_in: Date.now() + (24 * 60 * 60 * 1000),
+      access_token: 'eyJhbGciOiJIUzI1NiJ9...',
+      refresh_token: 'eyJhbGciOiJIUzI1NiJ9...',
+      id_token: 'ca22e694-d123-4449-a595-6cdec4339c3f'
+    };
   }
 
-  async refreshToken(refresh_token: string) {
-    // Implementação básica existente - não muda
-    throw new Error('Implementar refresh token')
+  async refreshToken(refresh_token: string): Promise<ArchbaseAccessToken> {
+    // Implementação básica existente - retorna token de acesso
+    return {
+      token_type: 'BEARER',
+      scope: 'all',
+      expires_in: Date.now() + (24 * 60 * 60 * 1000),
+      ext_expires_in: Date.now() + (24 * 60 * 60 * 1000),
+      access_token: 'eyJhbGciOiJIUzI1NiJ9...',
+      refresh_token: 'eyJhbGciOiJIUzI1NiJ9...',
+      id_token: 'ca22e694-d123-4449-a595-6cdec4339c3f'
+    };
   }
 
   async sendResetPasswordEmail(email: string) {
@@ -104,10 +121,47 @@ export class ExampleContextualAuthenticator implements ArchbaseAuthenticator {
     return this.loginWithContext(contextualRequest)
   }
 
-  async loginSocial(request: SocialLoginRequest) {
+  async loginSocial(request: SocialLoginRequest): Promise<ContextualAuthenticationResponse> {
     // Implementação que valida token do provedor social
     // e retorna objeto que pode ser desestruturado
-    throw new Error('Implementar login social - deve retornar { access_token, refresh_token, ..., user, context }')
+    return {
+      access_token: 'eyJhbGciOiJIUzI1NiJ9...',
+      refresh_token: 'eyJhbGciOiJIUzI1NiJ9...',
+      expires_in: Date.now() + (24 * 60 * 60 * 1000),
+      id_token: `${request.provider}-token-id`,
+      token_type: 'BEARER',
+      user: {
+        id: { identifier: 'd1167e22-04b1-411f-a4bc-eec5ae5389ac' },
+        name: 'Social Login User',
+        description: `Usuário ${request.provider} - Social Login User`,
+        userName: `${request.provider}-user@exemplo.com`,
+        email: `${request.provider}-user@exemplo.com`,
+        createEntityDate: new Date().toISOString(),
+        version: 1,
+        changePasswordOnNextLogin: false,
+        allowPasswordChange: true,
+        allowMultipleLogins: false,
+        passwordNeverExpires: true,
+        accountDeactivated: false,
+        accountLocked: false,
+        unlimitedAccessHours: false,
+        isAdministrator: false,
+        groups: [],
+        profile: null,
+        avatar: null,
+        nickname: null
+      },
+      context: {
+        type: request.context || 'CUSTOMER_APP',
+        adminId: '',
+        name: 'Social Login User',
+        email: `${request.provider}-user@exemplo.com`,
+        profilePicture: null,
+        accessLevel: 'STANDARD',
+        availableModules: ['DASHBOARD', 'SETTINGS'],
+        status: 'ACTIVE'
+      }
+    };
   }
 
   async register(request: RegisterUserRequest) {

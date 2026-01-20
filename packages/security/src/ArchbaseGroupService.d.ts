@@ -9,4 +9,3 @@ export declare class ArchbaseGroupService extends ArchbaseRemoteApiService<Group
     getId(entity: GroupDto): string;
     isNewRecord(entity: GroupDto): boolean;
 }
-//# sourceMappingURL=ArchbaseGroupService.d.ts.map

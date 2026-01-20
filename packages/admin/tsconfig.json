@@ -1,31 +1,17 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "rootDir": "./src",
     "baseUrl": ".",
-    "paths": {
-      "@archbase/core": [
-        "../core/src"
-      ],
-      "@archbase/data": [
-        "../data/src"
-      ],
-      "@archbase/components": [
-        "../components/src"
-      ],
-      "@archbase/layout": [
-        "../layout/src"
-      ],
-      "@archbase/security": [
-        "../security/src"
-      ]
-    },
     "outDir": "dist",
     "declarationDir": "dist",
     "declaration": true,
+    "emitDeclarationOnly": true,
     "strict": false,
     "noImplicitAny": false,
     "strictNullChecks": false,
     "skipLibCheck": true,
+    "noEmit": false,
     "declarationMap": false,
     "tsBuildInfoFile": "./.tsbuildinfo"
   },

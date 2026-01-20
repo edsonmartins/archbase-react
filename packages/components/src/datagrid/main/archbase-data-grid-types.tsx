@@ -42,6 +42,10 @@ export interface ArchbaseDataGridRef<T = any> {
   collapseRow: (rowId: GridRowId) => void;
   collapseAllRows: () => void;
   getExpandedRows: () => GridRowId[];
+  /**
+   * Obtém o modelo de filtro atual
+   */
+  getFilterModel: () => GridFilterModel;
 }
 
 // Props para o Toolbar
@@ -263,6 +267,7 @@ export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
   onCellDoubleClick?: (params: { id: any; columnName: string; rowData: T }) => void;
   onExport?: (callback: () => void) => void;
   onPrint?: (callback: () => void) => void;
+  onFilterModelChange?: (filterModel: any) => void;
 
   // Referência para o grid
   gridRef?: RefObject<ArchbaseDataGridRef<T>> | MutableRefObject<ArchbaseDataGridRef<T> | null>;

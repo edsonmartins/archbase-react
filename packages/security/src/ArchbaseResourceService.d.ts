@@ -14,4 +14,3 @@ export declare class ArchbaseResourceService extends ArchbaseRemoteApiService<Re
     deletePermission(permissionId: string): Promise<void>;
     registerResource(resourceRegister: ResourceRegisterDto): Promise<ResourcePermissionsDto>;
 }
-//# sourceMappingURL=ArchbaseResourceService.d.ts.map

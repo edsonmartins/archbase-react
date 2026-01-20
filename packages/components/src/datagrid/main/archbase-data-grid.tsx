@@ -162,6 +162,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     paginationLabels,
     onExport,
     onPrint,
+    onFilterModelChange,
     showProgressBars = true,
     variant = 'filled',
     fontSize,
@@ -567,6 +568,11 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     // Atualizar o estado do filtro primeiro
     setFilterModel(newFilterModel)
 
+    // Notificar callback externo (parent component) se fornecido
+    if (onFilterModelChange) {
+      onFilterModelChange(newFilterModel)
+    }
+
     // Certificar que estamos usando o valor mais recente
     console.log('[FILTER] Aplicando filtro:', newFilterModel)
 
@@ -727,9 +733,10 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       expandRow: (rowId: GridRowId) => expandDetailPanel(rowId),
       collapseRow: (rowId: GridRowId) => closeDetailPanel(rowId),
       collapseAllRows: closeAllDetailPanels,
-      getExpandedRows: () => Array.from(expandedRowIds)
+      getExpandedRows: () => Array.from(expandedRowIds),
+      getFilterModel: () => filterModel
     }),
-    [selectedRows, expandedRowIds, expandDetailPanel, closeDetailPanel, closeAllDetailPanels]
+    [selectedRows, expandedRowIds, expandDetailPanel, closeDetailPanel, closeAllDetailPanels, filterModel]
   )
 
   // Configurar estilos personalizados para o grid

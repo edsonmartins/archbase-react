@@ -17,5 +17,42 @@ export declare class ArchbaseSecurityManager implements ISecurityManager {
     hasPermission(actionName: string): boolean;
     isError(): boolean;
     getError(): string;
+    /**
+     * Retorna todas as permissões atuais
+     */
+    getPermissions(): string[];
+    /**
+     * Retorna o status de carregamento
+     */
+    isLoading(): boolean;
+    /**
+     * Verifica múltiplas permissões
+     */
+    hasAnyPermission(permissions: string[]): boolean;
+    /**
+     * Verifica se tem todas as permissões
+     */
+    hasAllPermissions(permissions: string[]): boolean;
+    /**
+     * Retorna informações detalhadas sobre uma permissão
+     */
+    getPermissionInfo(actionName: string): {
+        hasPermission: boolean;
+        isAdmin: boolean;
+        reason: string;
+    };
+    /**
+     * Registra múltiplas ações de uma vez
+     */
+    registerActions(actions: Array<{
+        actionName: string;
+        actionDescription: string;
+    }>): void;
+    /**
+     * Retorna todas as ações registradas
+     */
+    getRegisteredActions(): Array<{
+        actionName: string;
+        actionDescription: string;
+    }>;
 }
-//# sourceMappingURL=ArchbaseSecurityManager.d.ts.map

@@ -46,7 +46,20 @@ export function ArchbaseAdminTabContainer({
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
 	const keepAliveCache = useKeepAliveCache();
 
+	// Refs para os callbacks - evita dependências nos useEffects
+	const onChangeOpenedTabsRef = useRef(onChangeOpenedTabs);
+	const onChangeActiveTabIdRef = useRef(onChangeActiveTabId);
+
+	useEffect(() => {
+		onChangeOpenedTabsRef.current = onChangeOpenedTabs;
+		onChangeActiveTabIdRef.current = onChangeActiveTabId;
+	});
+
+	// Flag para rastrear se a mudança veio das props (externa) ou local
+	const isExternalUpdateRef = useRef(false);
+
 	const handleOnClose = useCallback((id: string, payload?: { redirectUrl?: string }) => {
+		console.log(`[TabContainer] handleOnClose called for: ${id}`);
 		// Solicita remoção do cache keep-alive quando aba é fechada
 		if (!keepAliveCache) {
 			console.error('[ArchbaseAdminTabContainer] keepAliveCache context not available. Tab cache cleanup will not occur. This may cause memory leaks.');
@@ -76,10 +89,8 @@ export function ArchbaseAdminTabContainer({
 			active: tmpCurrent === tab.id,
 		}));
 		setOpenedTabs(nextTabs);
-		onChangeOpenedTabs && onChangeOpenedTabs(nextTabs);
 		if (tmpCurrent && tmpCurrent != null) {
 			setActiveTabId(tmpCurrent);
-			onChangeActiveTabId && onChangeActiveTabId(tmpCurrent);
 			if (redirect) {
 				navigate(redirect);
 			} else {
@@ -87,7 +98,6 @@ export function ArchbaseAdminTabContainer({
 			}
 		} else {
 			setActiveTabId(undefined);
-			onChangeActiveTabId && onChangeActiveTabId(undefined);
 			if (!adminLayoutContextValue.navigationRootLink) {
 				console.error('[ArchbaseAdminTabContainer] navigationRootLink is not configured. Cannot navigate to root.');
 				return;
@@ -95,10 +105,11 @@ export function ArchbaseAdminTabContainer({
 			navigate(adminLayoutContextValue.navigationRootLink);
 		}
 		dispatch({ type: 'DONE', link: '' });
-	}, [openedTabs, activeTabId, navigate, adminLayoutContextValue.navigationRootLink, dispatch, onChangeOpenedTabs, onChangeActiveTabId, keepAliveCache]);
+	}, [openedTabs, activeTabId, navigate, adminLayoutContextValue.navigationRootLink, dispatch, keepAliveCache]);
 
 	useEffect(() => {
 		if (state?.linkClosed) {
+			console.log(`[TabContainer] useEffect - linkClosed: ${state?.linkClosed}`);
 			handleOnClose(state?.linkClosed, state?.payload);
 		}
 	}, [state?.linkClosed, state?.payload, handleOnClose]);
@@ -145,35 +156,81 @@ export function ArchbaseAdminTabContainer({
 
 	useEffect(() => {
 		setOpenedTabs(defaultOpenedTabs);
+		isExternalUpdateRef.current = true;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [JSON.stringify(defaultOpenedTabs)]);
 
+	// Efeito separado para notificar o pai quando openedTabs ou activeTabId mudam
+	// Usa setTimeout para evitar atualizar durante o render
+	const prevOpenedTabsRef = useRef<ArchbaseTabItem[]>(openedTabs);
+	const prevActiveTabIdRef = useRef<any>(activeTabId);
+
 	useEffect(() => {
+		// Se a mudança veio das props, não notificar de volta
+		if (isExternalUpdateRef.current) {
+			isExternalUpdateRef.current = false;
+			prevOpenedTabsRef.current = openedTabs;
+			prevActiveTabIdRef.current = activeTabId;
+			return;
+		}
+
+		// Só notificar se houver mudança real
+		const tabsChanged = JSON.stringify(prevOpenedTabsRef.current) !== JSON.stringify(openedTabs);
+		const activeTabChanged = prevActiveTabIdRef.current !== activeTabId;
+
+		if (tabsChanged || activeTabChanged) {
+			// Notificar o pai de forma assíncrona para evitar atualizar durante render
+			const timeoutId = setTimeout(() => {
+				onChangeOpenedTabsRef.current?.(openedTabs);
+				onChangeActiveTabIdRef.current?.(activeTabId);
+			}, 0);
+
+			prevOpenedTabsRef.current = openedTabs;
+			prevActiveTabIdRef.current = activeTabId;
+
+			return () => clearTimeout(timeoutId);
+		}
+	}, [openedTabs, activeTabId]);
+
+	// Ref para rastrear a última localização processada
+	const lastProcessedPathRef = useRef<string>(currentLocation.pathname);
+
+	useEffect(() => {
+		// Evita reprocessar a mesma localização
+		if (lastProcessedPathRef.current === currentLocation.pathname) {
+			return;
+		}
+
+		lastProcessedPathRef.current = currentLocation.pathname;
 		const resultItem: ResultItem = getNavigationItemByLink(currentLocation.pathname);
 		if (resultItem && resultItem.item) {
 			const index = openedTabs.findIndex((tab) => tab.path === resultItem.link);
 			if (index !== -1) {
-				openedTabs[index].title = resultItem.title!;
+				// Atualizar título da aba existente se mudou
+				if (openedTabs[index].title !== resultItem.title) {
+					const updatedTabs = [...openedTabs];
+					updatedTabs[index] = { ...updatedTabs[index], title: resultItem.title! };
+					setOpenedTabs(updatedTabs);
+				}
 				setActiveTabId(openedTabs[index].id);
-				onChangeActiveTabId && onChangeActiveTabId(openedTabs[index].id);
 			} else {
-				setOpenedTabs((prevTabs) => {
-					prevTabs.push({
-						id: `${resultItem.link}`,
-						title: `${resultItem.title}`,
-						path: `${resultItem.link}`,
-						active: true,
-						content: resultItem.item.component,
-						iconClass: resultItem.item.icon,
-						closeButton: true,
-						redirect: resultItem.redirect,
-						customTitle: resultItem.customTitle,
-					});
-					onChangeOpenedTabs && onChangeOpenedTabs(openedTabs);
-					setActiveTabId(`${resultItem.link}`);
+				// Criar nova aba
+				const newTab: ArchbaseTabItem = {
+					id: `${resultItem.link}`,
+					title: `${resultItem.title}`,
+					path: `${resultItem.link}`,
+					active: true,
+					content: resultItem.item.component,
+					iconClass: resultItem.item.icon,
+					closeButton: true,
+					redirect: resultItem.redirect,
+					customTitle: resultItem.customTitle,
+				};
 
-					return prevTabs;
-				});
+				// Desativar todas as abas existentes e adicionar a nova
+				const nextTabs = [...openedTabs.map((tab) => ({ ...tab, active: false })), newTab];
+				setOpenedTabs(nextTabs);
+				setActiveTabId(newTab.id);
 			}
 		}
 	}, [currentLocation.pathname]);
@@ -187,11 +244,11 @@ export function ArchbaseAdminTabContainer({
 		}
 		startTransition(() => {
 			setActiveTabId(id);
-			onChangeActiveTabId && onChangeActiveTabId(id);
 		});
 	};
 
 	const handleOnCloseRequest = (id: string) => {
+		console.log(`[TabContainer] handleOnCloseRequest - User clicked close on tab: ${id}`);
 		try {
 			dispatch({ type: 'USER_CLOSE_REQUEST', link: id });
 		} catch (error) {
@@ -202,15 +259,13 @@ export function ArchbaseAdminTabContainer({
 	// Funções para fechar múltiplas abas
 	const handleCloseAllTabs = useCallback(() => {
 		setOpenedTabs([]);
-		onChangeOpenedTabs && onChangeOpenedTabs([]);
 		setActiveTabId(undefined);
-		onChangeActiveTabId && onChangeActiveTabId(undefined);
 		if (!adminLayoutContextValue.navigationRootLink) {
 			console.error('[ArchbaseAdminTabContainer] navigationRootLink is not configured. Cannot navigate to root.');
 			return;
 		}
 		navigate(adminLayoutContextValue.navigationRootLink);
-	}, [navigate, adminLayoutContextValue.navigationRootLink, onChangeOpenedTabs, onChangeActiveTabId]);
+	}, [navigate, adminLayoutContextValue.navigationRootLink]);
 
 	const handleCloseLeftTabs = useCallback((tabId: string) => {
 		const currentIndex = openedTabs.findIndex((tab) => tab.id === tabId);
@@ -225,17 +280,15 @@ export function ArchbaseAdminTabContainer({
 		}));
 
 		setOpenedTabs(nextTabs);
-		onChangeOpenedTabs && onChangeOpenedTabs(nextTabs);
 
 		if (tmpCurrent) {
 			setActiveTabId(tmpCurrent);
-			onChangeActiveTabId && onChangeActiveTabId(tmpCurrent);
 			const targetTab = nextTabs.find((t) => t.id === tmpCurrent);
 			if (targetTab && currentLocation.pathname !== targetTab.path) {
 				navigate(targetTab.path);
 			}
 		}
-	}, [openedTabs, activeTabId, navigate, currentLocation.pathname, onChangeOpenedTabs, onChangeActiveTabId]);
+	}, [openedTabs, activeTabId, navigate, currentLocation.pathname]);
 
 	const handleCloseRightTabs = useCallback((tabId: string) => {
 		const currentIndex = openedTabs.findIndex((tab) => tab.id === tabId);
@@ -250,17 +303,15 @@ export function ArchbaseAdminTabContainer({
 		}));
 
 		setOpenedTabs(nextTabs);
-		onChangeOpenedTabs && onChangeOpenedTabs(nextTabs);
 
 		if (tmpCurrent) {
 			setActiveTabId(tmpCurrent);
-			onChangeActiveTabId && onChangeActiveTabId(tmpCurrent);
 			const targetTab = nextTabs.find((t) => t.id === tmpCurrent);
 			if (targetTab && currentLocation.pathname !== targetTab.path) {
 				navigate(targetTab.path);
 			}
 		}
-	}, [openedTabs, activeTabId, navigate, currentLocation.pathname, onChangeOpenedTabs, onChangeActiveTabId]);
+	}, [openedTabs, activeTabId, navigate, currentLocation.pathname]);
 
 	const handleCloseOtherTabs = useCallback((tabId: string) => {
 		const currentTab = openedTabs.find((tab) => tab.id === tabId);
@@ -268,14 +319,12 @@ export function ArchbaseAdminTabContainer({
 
 		const nextTabs = [{ ...currentTab, active: true }];
 		setOpenedTabs(nextTabs);
-		onChangeOpenedTabs && onChangeOpenedTabs(nextTabs);
 		setActiveTabId(tabId);
-		onChangeActiveTabId && onChangeActiveTabId(tabId);
 
 		if (currentLocation.pathname !== currentTab.path) {
 			navigate(currentTab.path);
 		}
-	}, [openedTabs, navigate, currentLocation.pathname, onChangeOpenedTabs, onChangeActiveTabId]);
+	}, [openedTabs, navigate, currentLocation.pathname]);
 
 	const buildAdvancedTabs = (openedTabs: ArchbaseTabItem[]): ArchbaseAdvancedTabItem[] => {
 		return openedTabs.map((tab) => {

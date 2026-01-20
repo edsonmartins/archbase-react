@@ -1,6 +1,6 @@
 {
   "name": "@archbase/feature-flags",
-  "version": "3.0.20",
+  "version": "3.0.26",
   "description": "Feature flags integration for Archbase React v3 using Unleash",
   "license": "MIT",
   "type": "module",
@@ -18,7 +18,7 @@
     "src"
   ],
   "scripts": {
-    "build": "vite build && tsc --emitDeclarationOnly || true",
+    "build": "vite build",
     "dev": "vite build --watch",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit"

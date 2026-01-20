@@ -1,6 +1,6 @@
 {
   "name": "@archbase/template",
-  "version": "3.0.20",
+  "version": "3.0.26",
   "description": "Template components for Archbase React v3 - High-level templates and layouts",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build --watch",
-    "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build && NODE_OPTIONS=\"--max-old-space-size=16384\" tsc --emitDeclarationOnly || true",
+    "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -29,27 +29,27 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "peerDependencies": {
-    "react": "^18.3.0 || ^19.2.0",
-    "react-dom": "^18.3.0 || ^19.2.0",
     "@mantine/core": "8.3.12",
     "@mantine/dates": "8.3.12",
     "@mantine/hooks": "8.3.12",
     "@mantine/modals": "8.3.12",
-    "@tabler/icons-react": "^3.26.0"
+    "@tabler/icons-react": "^3.26.0",
+    "react": "^18.3.0 || ^19.2.0",
+    "react-dom": "^18.3.0 || ^19.2.0"
   },
   "dependencies": {
+    "@archbase/advanced": "workspace:*",
+    "@archbase/components": "workspace:*",
     "@archbase/core": "workspace:*",
     "@archbase/data": "workspace:*",
     "@archbase/layout": "workspace:*",
-    "@archbase/advanced": "workspace:*",
-    "@archbase/components": "workspace:*",
     "@archbase/security": "workspace:*",
     "@archbase/security-ui": "workspace:*",
+    "@rehooks/component-size": "^1.0.3",
     "dayjs": "^1.11.13",
     "i18next": "^25.3.1",
-    "react-i18next": "^15.1.2",
     "lodash": "^4.17.21",
-    "@rehooks/component-size": "^1.0.3"
+    "react-i18next": "^15.1.2"
   },
   "devDependencies": {
     "@types/react": "^19.0.6",
@@ -59,6 +59,7 @@
     "react-dom": "^19.2.3",
     "typescript": "~5.7.2",
     "vite": "^6.0.3",
+    "vite-plugin-dts": "^4.5.4",
     "vitest": "^2.1.8"
   }
 }

@@ -9,4 +9,3 @@ export declare class ArchbaseProfileService extends ArchbaseRemoteApiService<Pro
     getId(entity: ProfileDto): string;
     isNewRecord(entity: ProfileDto): boolean;
 }
-//# sourceMappingURL=ArchbaseProfileService.d.ts.map

@@ -17,4 +17,3 @@ export declare class ArchbaseUsernameAndPasswordImpl implements IArchbaseUsernam
 }
 export { ArchbaseUsernameAndPasswordImpl as ArchbaseUsernameAndPassword };
 export type { ArchbaseUsernameAndPassword as IArchbaseUsernameAndPassword } from '@archbase/core';
-//# sourceMappingURL=ArchbaseUser.d.ts.map

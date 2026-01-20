@@ -1,6 +1,6 @@
 {
   "name": "@archbase/core",
-  "version": "3.0.20",
+  "version": "3.0.26",
   "description": "Core utilities and foundation for Archbase React v3",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -31,7 +31,7 @@
   ],
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build --watch",
-    "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build && tsc --emitDeclarationOnly || true",
+    "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -82,6 +82,7 @@
     "react-dom": "^19.2.3",
     "typescript": "~5.7.2",
     "vite": "^6.0.3",
+    "vite-plugin-dts": "^4.5.4",
     "vite-plugin-external": "^6.2.2",
     "vitest": "^2.1.8"
   }

@@ -10,4 +10,3 @@ export declare class ArchbaseApiTokenService extends ArchbaseRemoteApiService<Ap
     create(email: string, expirationDate: string, name: string, description: string): Promise<ApiTokenDto>;
     revoke(token: string): Promise<undefined>;
 }
-//# sourceMappingURL=ArchbaseApiTokenService.d.ts.map

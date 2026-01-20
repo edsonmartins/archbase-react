@@ -1,6 +1,6 @@
 {
   "name": "@archbase/tools",
-  "version": "3.0.20",
+  "version": "3.0.26",
   "description": "Archbase React Tools - CLI, Development Tools, Generators",
   "type": "module",
   "main": "./dist/index.js",
@@ -16,17 +16,17 @@
     "dist"
   ],
   "scripts": {
-    "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build && tsc --emitDeclarationOnly || true",
+    "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
     "@mantine/core": "8.3.12",
     "@mantine/hooks": "8.3.12",
-    "@tabler/icons-react": "^3.0.0"
+    "@tabler/icons-react": "^3.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "dependencies": {
     "@archbase/core": "workspace:*"
@@ -35,6 +35,7 @@
     "@types/react": "^19.0.6",
     "@types/react-dom": "^19.0.2",
     "typescript": "^5.7.2",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4"
   }
 }
