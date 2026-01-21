@@ -67,7 +67,8 @@
       "Bash(DEBUG=vite-plugin-dts:*)",
       "Bash(npx vite-plugin-dts --entry ./src/index.ts --outDir ./dist --include \"./src/**/*\")",
       "Bash(DEBUG=vite:*)",
-      "Bash(git ls-files:*)"
+      "Bash(git ls-files:*)",
+      "Bash(git tag:*)"
     ],
     "deny": []
   }
