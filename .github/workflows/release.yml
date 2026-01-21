@@ -57,7 +57,7 @@ jobs:
       - name: Build packages
         run: |
           echo "Building version ${{ env.VERSION }}"
-          pnpm run build:prod
+          pnpm run build
 
       - name: Pack packages
         run: pnpm run pack
