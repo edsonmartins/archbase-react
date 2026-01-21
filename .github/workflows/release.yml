@@ -120,11 +120,13 @@ jobs:
       - name: Publish to Registry (optional)
         if: ${{ !contains(env.VERSION, 'beta') && !contains(env.VERSION, 'alpha') && !inputs.prerelease }}
         run: |
-          # Remover configuração do Verdaccio do .npmrc
-          sed -i '/@archbase:registry/d' .npmrc
-          # Configurar registry npmjs.org
-          npm config set registry https://registry.npmjs.org/
-          pnpm config set registry https://registry.npmjs.org/
+          # Criar .npmrc limpo para CI (sem Verdaccio)
+          cat > .npmrc << 'EOF'
+          registry=https://registry.npmjs.org
+          node-linker=hoisted
+          shamefully-hoist=true
+          EOF
+          # Configurar auth token
           npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
           pnpm run publish:prod
 
