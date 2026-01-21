@@ -136,7 +136,6 @@ jobs:
       - name: Build and deploy docs
         run: |
           pnpm install --frozen-lockfile
-          pnpm run build:dev
           cd docs-site
           export NODE_OPTIONS=--max_old_space_size=8192
           pnpm run build
