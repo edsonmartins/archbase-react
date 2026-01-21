@@ -120,6 +120,8 @@ jobs:
       - name: Publish to Registry (optional)
         if: ${{ !contains(env.VERSION, 'beta') && !contains(env.VERSION, 'alpha') && !inputs.prerelease }}
         run: |
+          npm config set registry https://registry.npmjs.org/
+          pnpm config set registry https://registry.npmjs.org/
           npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
           pnpm run publish:prod
 
