@@ -120,11 +120,8 @@ jobs:
       - name: Publish to Registry (optional)
         if: ${{ !contains(env.VERSION, 'beta') && !contains(env.VERSION, 'alpha') && !inputs.prerelease }}
         run: |
-          # Configure o registry se desejar publicar automaticamente
-          # npm config set @archbase:registry ${{ secrets.NPM_REGISTRY_URL }}
-          # npm config set //registry.npmjs.org/_authToken ${{ secrets.NPM_TOKEN }}
-          # pnpm run publish:prod
-          echo "Auto-publish disabled - configure secrets to enable"
+          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
+          pnpm run publish:prod
 
   release-docs:
     needs: release
