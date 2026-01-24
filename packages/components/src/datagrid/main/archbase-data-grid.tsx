@@ -193,6 +193,11 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     activeFilters: externalActiveFilters,
     onFiltersChange: externalOnFiltersChange,
     hideMuiFilters = false,
+    // Props para controle de bordas internas
+    withToolbarBorder = true,
+    withPaginationBorder = true,
+    toolbarPadding,
+    paginationPadding,
   } = props
   const theme = useArchbaseTheme()
   const { colorScheme } = useMantineColorScheme();
@@ -743,6 +748,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   const getThemedStyles = () => {
     return {
       root: {
+        height: '100%', // Garante que o DataGrid ocupe toda a altura do container
         border: withBorder
           ? `1px solid ${theme.colors.gray[colorScheme === 'dark' ? 8 : 3]}`
           : '0',
@@ -750,6 +756,46 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         overflow: 'hidden', // Garante que o conteúdo respeite o border-radius
         backgroundColor: colorScheme === 'dark' ? theme.colors.dark[6] : theme.white,
         color: colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors.dark[9],
+
+        // Scrollbar customizada do MUI DataGrid - estilo Mantine (mais fina e elegante)
+        '& .MuiDataGrid-scrollbar': {
+          '&.MuiDataGrid-scrollbar--horizontal': {
+            height: '8px !important',
+          },
+          '&.MuiDataGrid-scrollbar--vertical': {
+            width: '8px !important',
+          },
+          backgroundColor: colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[1],
+          borderRadius: '4px',
+          '& .MuiDataGrid-scrollbarContent': {
+            borderRadius: '4px',
+          },
+        },
+
+        // Scrollbar nativa (fallback) - estilo Mantine
+        '& .MuiDataGrid-virtualScroller': {
+          '&::-webkit-scrollbar': {
+            width: '8px',
+            height: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[1],
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[4],
+            borderRadius: '4px',
+            '&:hover': {
+              backgroundColor: colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[5],
+            },
+          },
+          // Firefox
+          scrollbarWidth: 'thin',
+          scrollbarColor: colorScheme === 'dark'
+            ? `${theme.colors.dark[3]} ${theme.colors.dark[6]}`
+            : `${theme.colors.gray[4]} ${theme.colors.gray[1]}`,
+        },
+
         fontSize:
           typeof fontSize === 'string' &&
           ['xs', 'sm', 'md', 'lg', 'xl'].includes(fontSize as string)
@@ -1375,6 +1421,9 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
           activeFilters={activeFilters}
           onFiltersChange={handleCompositeFiltersChange}
           hideMuiFilters={hideMuiFilters}
+          // Props para controle de bordas
+          withBorder={withToolbarBorder}
+          padding={toolbarPadding}
         />
       )}
 
@@ -1384,7 +1433,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         renderFixedDetailPanel()}
 
       {/* Grid sem toolbar interna */}
-      <Box style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+      <Box style={{ flex: 1, overflow: 'hidden', position: 'relative', minHeight: 0 }}>
         <DataGrid
           apiRef={apiRef}
           rows={rows}
@@ -1434,6 +1483,9 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         paginationLabels={paginationLabels}
         bottomToolbarMinHeight={bottomToolbarMinHeight}
         theme={theme}
+        // Props para controle de bordas
+        withBorder={withPaginationBorder}
+        padding={paginationPadding}
       />:null}
 
       {/* Painéis de detalhes nos modos não-inline (modal/drawer) */}

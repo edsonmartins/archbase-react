@@ -112,7 +112,15 @@ export interface ArchbaseGridTemplateProps<T extends Object, ID> extends Archbas
     currentPage?: string;
     of?: string;
   };
-  customRenderRowActions?: (row: T) => ReactNode
+  customRenderRowActions?: (row: T) => ReactNode;
+  /** Exibir borda inferior da toolbar. Default: true */
+  withToolbarBorder?: boolean;
+  /** Exibir borda superior da paginação. Default: true */
+  withPaginationBorder?: boolean;
+  /** Padding da toolbar. Default: '8px 12px' */
+  toolbarPadding?: string | number;
+  /** Padding da paginação. Default: '8px 12px' */
+  paginationPadding?: string | number;
 }
 
 // Definimos a interface para os métodos públicos expostos via ref
@@ -203,6 +211,11 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     requiredPermissions,
     fallbackComponent,
     securityOptions,
+    // Props para controle de bordas internas
+    withToolbarBorder,
+    withPaginationBorder,
+    toolbarPadding,
+    paginationPadding,
   } = props;
 
   const filterRef = useRef<any>(null);
@@ -516,6 +529,10 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
           onExport={setExportFunc}
           onPrint={setPrintFunc}
           variant={variant as any}
+          withToolbarBorder={withToolbarBorder}
+          withPaginationBorder={withPaginationBorder}
+          toolbarPadding={toolbarPadding}
+          paginationPadding={paginationPadding}
         >
           {columns}
           {userActions?.visible ? (
