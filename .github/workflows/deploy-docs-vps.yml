@@ -44,35 +44,41 @@ jobs:
 
       - name: Salvar logs do build
         if: always()
+        continue-on-error: true
         run: |
-          # Criar diretório de logs (apenas se não existir)
-          sudo mkdir -p /var/log/actions-runner || true
+          # Criar diretório de logs no home do runner (sem sudo)
+          LOG_DIR="$HOME/actions-runner-logs"
+          mkdir -p "$LOG_DIR" || true
 
-          # Salvar logs do último job
-          sudo journalctl -u actions-runner.* --since "1 hour ago" | sudo tee /var/log/actions-runner/build-$(date +%Y%m%d_%H%M%S).log > /dev/null
-
-          # Criar link para o log mais recente
-          sudo ln -sf /var/log/actions-runner/build-$(date +%Y%m%d_%H%M%S).log /var/log/actions-runner/latest-build.log
+          # Salvar informações básicas do build
+          LOG_FILE="$LOG_DIR/build-$(date +%Y%m%d_%H%M%S).log"
+          echo "Build executado em: $(date)" > "$LOG_FILE"
+          echo "Branch: ${{ github.ref }}" >> "$LOG_FILE"
+          echo "Commit: ${{ github.sha }}" >> "$LOG_FILE"
 
           # Manter apenas últimos 20 logs
-          ls -t /var/log/actions-runner/build-*.log 2>/dev/null | sudo tail -n +21 | sudo xargs -I {} rm -f {}
+          ls -t "$LOG_DIR"/build-*.log 2>/dev/null | tail -n +21 | xargs -I {} rm -f {} || true
 
-          echo "Logs salvos em /var/log/actions-runner/"
+          echo "Logs salvos em $LOG_DIR"
 
       - name: Deploy to Docker container
         run: |
-          # Criar/atualizar diretório de deploy
-          sudo mkdir -p /srv/archbase-react-docs
+          # Diretório de deploy (deve ter permissões configuradas para o runner)
+          DEPLOY_DIR="/srv/archbase-react-docs"
+          BACKUP_DIR="/srv/archbase-react-docs.backup"
+
+          # Criar diretórios se não existirem (assumindo que /srv tem permissões corretas)
+          mkdir -p "$DEPLOY_DIR" || { echo "Erro: Sem permissão para criar $DEPLOY_DIR. Configure as permissões do runner."; exit 1; }
 
           # Backup da versão anterior
-          if [ -d "/srv/archbase-react-docs" ] && [ "$(ls -A /srv/archbase-react-docs)" ]; then
-            sudo mkdir -p /srv/archbase-react-docs.backup
-            sudo cp -r /srv/archbase-react-docs /srv/archbase-react-docs.backup/$(date +%Y%m%d_%H%M%S)
+          if [ -d "$DEPLOY_DIR" ] && [ "$(ls -A $DEPLOY_DIR 2>/dev/null)" ]; then
+            mkdir -p "$BACKUP_DIR"
+            cp -r "$DEPLOY_DIR" "$BACKUP_DIR/$(date +%Y%m%d_%H%M%S)" || true
           fi
 
           # Copiar arquivos buildados
-          sudo rm -rf /srv/archbase-react-docs/*
-          sudo cp -r docs-site/out/* /srv/archbase-react-docs/
+          rm -rf "$DEPLOY_DIR"/* 2>/dev/null || true
+          cp -r docs-site/out/* "$DEPLOY_DIR/"
 
           # Recrear stack com nova versão (Docker Swarm)
           cd /opt/archbase-infrastructure || exit 1
