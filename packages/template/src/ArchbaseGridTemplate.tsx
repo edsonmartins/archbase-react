@@ -89,6 +89,8 @@ export interface ArchbaseGridTemplateProps<T extends Object, ID> extends Archbas
   enableRowActions?: boolean;
   /** Posição da coluna de ações */
   positionActionsColumn: 'first' | 'last';
+  /** Largura da coluna de ações. Default: 60 */
+  actionsColumnWidth?: number;
   /** Padding da célula do cabeçalho da tabela */
   tableHeadCellPadding?: string;
   /** Função para renderizar o painel de detalhes */
@@ -121,6 +123,8 @@ export interface ArchbaseGridTemplateProps<T extends Object, ID> extends Archbas
   toolbarPadding?: string | number;
   /** Padding da paginação. Default: '8px 12px' */
   paginationPadding?: string | number;
+  /** Altura das linhas da grid. Default: 52 */
+  rowHeight?: number;
 }
 
 // Definimos a interface para os métodos públicos expostos via ref
@@ -196,6 +200,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     enableRowNumbers = true,
     enableRowActions = true,
     positionActionsColumn = 'first',
+    actionsColumnWidth,
     tableHeadCellPadding,
     renderDetailPanel,
     renderTopToolbar,
@@ -216,6 +221,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     withPaginationBorder,
     toolbarPadding,
     paginationPadding,
+    rowHeight,
   } = props;
 
   const filterRef = useRef<any>(null);
@@ -514,6 +520,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
           onFilterModelChange={onFilterModelChange}
           renderRowActions={enableRowActions ? getRenderRowActions : undefined}
           positionActionsColumn={positionActionsColumn}
+          actionsColumnWidth={actionsColumnWidth}
           toolbarAlignment={toolbarAlignment}
           toolbarLeftContent={memoizedToolbarLeftContent}
           renderToolbarActions={filterType === 'advanced' || filterType === 'none' ? buildInternalToolbarActionsFilter : undefined}
@@ -533,6 +540,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
           withPaginationBorder={withPaginationBorder}
           toolbarPadding={toolbarPadding}
           paginationPadding={paginationPadding}
+          rowHeight={rowHeight}
         >
           {columns}
           {userActions?.visible ? (

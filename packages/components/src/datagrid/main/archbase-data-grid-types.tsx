@@ -279,6 +279,7 @@ export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
   // Propriedades de layout
   toolbarAlignment?: 'left' | 'right' | 'center';
   positionActionsColumn?: 'first' | 'last';
+  actionsColumnWidth?: number;
   toolbarLeftContent?: ReactNode;
   bottomToolbarMinHeight?: string | number;
 

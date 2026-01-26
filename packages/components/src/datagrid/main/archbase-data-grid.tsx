@@ -156,6 +156,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     csvOptions,
     toolbarAlignment = 'right',
     positionActionsColumn = 'first',
+    actionsColumnWidth = 60,
     toolbarLeftContent,
     columnAutoWidth = false,
     rowHeight = 52,
@@ -921,7 +922,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         type: 'string' as const,
         sortable: false,
         filterable: false,
-        width: 60,
+        width: actionsColumnWidth,
         renderCell: (params) => renderRowActions(params.row as T)
       }
 
