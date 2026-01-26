@@ -36,6 +36,7 @@ const homeView: ArchbaseNavigationItem = {
 	color: 'teal',
 	component: <HomeView />,
 	showInSidebar: true,
+	keepAlive: true,
 };
 
 const pessoaConsultaView: ArchbaseNavigationItem = {
@@ -46,6 +47,7 @@ const pessoaConsultaView: ArchbaseNavigationItem = {
 	color: 'pink',
 	component: <PessoaView />,
 	showInSidebar: true,
+	keepAlive: true,
 };
 
 const pessoaNovaView: ArchbaseNavigationItem = {
@@ -56,6 +58,7 @@ const pessoaNovaView: ArchbaseNavigationItem = {
 	color: 'pink',
 	component: <PessoaForm />,
 	showInSidebar: true,
+	keepAlive: true,
 };
 
 const pessoasMenu: ArchbaseNavigationItem = {
@@ -75,6 +78,7 @@ const pedidoConsultaView: ArchbaseNavigationItem = {
 	color: 'yellow',
 	component: <PedidoView />,
 	showInSidebar: true,
+	keepAlive: true,
 };
 
 const pedidoNovoView: ArchbaseNavigationItem = {
@@ -85,6 +89,7 @@ const pedidoNovoView: ArchbaseNavigationItem = {
 	color: 'yellow',
 	component: <PedidoForm />,
 	showInSidebar: true,
+	keepAlive: true,
 };
 
 const pedidosMenu: ArchbaseNavigationItem = {

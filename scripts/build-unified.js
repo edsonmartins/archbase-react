@@ -31,7 +31,6 @@ function parseArgs() {
   const args = process.argv.slice(2);
   return {
     debug: args.includes('--debug'),
-    publish: args.includes('--publish'),
     verdaccio: args.includes('--verdaccio'),
     noDocs: args.includes('--no-docs')
   };
@@ -63,21 +62,8 @@ function buildWithTurbo(isDebug, noDocs = false) {
   log(`✅ Build ${mode} concluído!`, GREEN);
 }
 
-function publishPackages(isDebug) {
-  const mode = isDebug ? 'DEBUG (Verdaccio)' : 'PRODUCTION (NPM)';
-  log(`📦 Publicando ${mode}...`, BLUE);
-  
-  if (isDebug) {
-    execSync('node scripts/publish-debug.js', { stdio: 'inherit' });
-  } else {
-    execSync('node scripts/publish.js', { stdio: 'inherit' });
-  }
-  
-  log(`✅ Publicação ${mode} concluída!`, GREEN);
-}
-
 function main() {
-  const { debug, publish, verdaccio, noDocs } = parseArgs();
+  const { debug, verdaccio, noDocs } = parseArgs();
   const isDebug = debug || verdaccio;
 
   log(`🎯 Iniciando build Archbase React v3...`, BLUE);
@@ -88,20 +74,12 @@ function main() {
 
     // 2. Build com Turbo
     buildWithTurbo(isDebug, noDocs);
-    
-    // 3. Publicar se solicitado
-    if (publish || verdaccio) {
-      publishPackages(isDebug);
-    }
-    
-    // 4. Resumo
+
+    // 3. Resumo
     const mode = isDebug ? 'DEBUG' : 'PRODUCTION';
     log(`\n🎉 Processo ${mode} concluído com sucesso!`, GREEN);
-    
-    if (!publish && !verdaccio) {
-      log(`💡 Para publicar: npm run build:${isDebug ? 'publish:debug' : 'publish'}`, BLUE);
-    }
-    
+    log(`💡 Para publicar: npm run publish:${isDebug ? 'dev' : 'prod'}`, BLUE);
+
   } catch (error) {
     log(`❌ Erro no build: ${error.message}`, RED);
     process.exit(1);

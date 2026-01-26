@@ -3,5 +3,7 @@ export * from './ArchbaseContainer';
 export * from './ArchbaseGroup';
 export * from './ArchbaseStack';
 export * from './containers';
+export * from './dock';
 export * from './spaces';
-//# sourceMappingURL=index.d.ts.map
+import './advancedtabs.scss';
+import './spaces.css';

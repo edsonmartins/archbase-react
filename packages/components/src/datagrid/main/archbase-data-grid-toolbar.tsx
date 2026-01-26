@@ -35,6 +35,10 @@ export const ArchbaseDataGridToolbar = React.memo<ArchbaseDataGridToolbarProps>(
   activeFilters,
   onFiltersChange,
   hideMuiFilters = false,
+  // Props para controle de bordas e espaçamento
+  withBorder = true,
+  padding = '8px 12px',
+  borderRadius,
 }) => {
   // Estado local para o filtro global para manter o valor entre re-renderizações
   const [globalFilterValue, setGlobalFilterValue] = useState(filterModel.quickFilterValues?.[0] || '');
@@ -83,15 +87,22 @@ export const ArchbaseDataGridToolbar = React.memo<ArchbaseDataGridToolbarProps>(
   if (!toolbarLeftContent && !enableGlobalFilter && !enableTopToolbarActions) {
     return null;
   }
+  // Calcular o padding final
+  const finalPadding = typeof padding === 'number' ? `${padding}px` : padding;
+  // Calcular o border radius final
+  const finalBorderRadius = borderRadius !== undefined
+    ? (typeof borderRadius === 'number' ? `${borderRadius}px` : borderRadius)
+    : theme.radius.sm;
+
   return (
     <Paper
       style={{
         display: 'flex',
         justifyContent: 'space-between',
-        padding: '8px 16px',
-        borderBottom: `1px solid ${theme.colors.gray[theme.colorScheme === 'dark' ? 8 : 3]}`,
-        borderTopLeftRadius: theme.radius.sm,
-        borderTopRightRadius: theme.radius.sm
+        padding: finalPadding,
+        borderBottom: withBorder ? `1px solid ${theme.colors.gray[theme.colorScheme === 'dark' ? 8 : 3]}` : 'none',
+        borderTopLeftRadius: finalBorderRadius,
+        borderTopRightRadius: finalBorderRadius
       }}
     >
       {/* Lado esquerdo da toolbar */}

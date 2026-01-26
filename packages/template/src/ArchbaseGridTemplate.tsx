@@ -6,7 +6,7 @@ import { AlertVariant, Box, Button, ButtonVariant, Flex, Paper, useMantineColorS
 import { IconBug, IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { IconPlus } from '@tabler/icons-react';
 import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
-import React, { Fragment, ReactNode, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
+import React, { Fragment, ReactNode, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import {
   ArchbaseDataGrid,
   ArchbaseDataGridRef,
@@ -89,6 +89,8 @@ export interface ArchbaseGridTemplateProps<T extends Object, ID> extends Archbas
   enableRowActions?: boolean;
   /** Posição da coluna de ações */
   positionActionsColumn: 'first' | 'last';
+  /** Largura da coluna de ações. Default: 60 */
+  actionsColumnWidth?: number;
   /** Padding da célula do cabeçalho da tabela */
   tableHeadCellPadding?: string;
   /** Função para renderizar o painel de detalhes */
@@ -103,6 +105,8 @@ export interface ArchbaseGridTemplateProps<T extends Object, ID> extends Archbas
   onSelectedRowsChanged?: (rows: T[]) => void;
   /** Função chamada quando ocorre duplo clique em uma célula */
   onCellDoubleClick?: (event: CellClickEvent) => void;
+  /** Função chamada quando o modelo de filtro da grid muda */
+  onFilterModelChange?: (filterModel: any) => void;
   /** Labels para paginação */
   paginationLabels?: {
     totalRecords?: string;
@@ -110,7 +114,17 @@ export interface ArchbaseGridTemplateProps<T extends Object, ID> extends Archbas
     currentPage?: string;
     of?: string;
   };
-  customRenderRowActions?: (row: T) => ReactNode
+  customRenderRowActions?: (row: T) => ReactNode;
+  /** Exibir borda inferior da toolbar. Default: true */
+  withToolbarBorder?: boolean;
+  /** Exibir borda superior da paginação. Default: true */
+  withPaginationBorder?: boolean;
+  /** Padding da toolbar. Default: '8px 12px' */
+  toolbarPadding?: string | number;
+  /** Padding da paginação. Default: '8px 12px' */
+  paginationPadding?: string | number;
+  /** Altura das linhas da grid. Default: 52 */
+  rowHeight?: number;
 }
 
 // Definimos a interface para os métodos públicos expostos via ref
@@ -121,6 +135,7 @@ export interface ArchbaseGridTemplateRef {
   exportData: () => void;
   printData: () => void;
   getDataGridRef: () => React.RefObject<ArchbaseDataGridRef>;
+  getFilterModel: () => any;
 }
 
 const getFilter = (
@@ -185,6 +200,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     enableRowNumbers = true,
     enableRowActions = true,
     positionActionsColumn = 'first',
+    actionsColumnWidth,
     tableHeadCellPadding,
     renderDetailPanel,
     renderTopToolbar,
@@ -192,6 +208,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     toolbarLeftContent,
     onSelectedRowsChanged,
     onCellDoubleClick,
+    onFilterModelChange,
     paginationLabels,
     // Props de segurança (opcionais)
     resourceName,
@@ -199,6 +216,12 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     requiredPermissions,
     fallbackComponent,
     securityOptions,
+    // Props para controle de bordas internas
+    withToolbarBorder,
+    withPaginationBorder,
+    toolbarPadding,
+    paginationPadding,
+    rowHeight,
   } = props;
 
   const filterRef = useRef<any>(null);
@@ -246,7 +269,10 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
         gridRef.current.printData();
       }
     },
-    getDataGridRef: () => gridRef
+    getDataGridRef: () => gridRef,
+    getFilterModel: () => {
+      return gridRef.current ? gridRef.current.getFilterModel() : { items: [], quickFilterValues: [] };
+    }
   }), [gridRef]);
 
   const [filterState, setFilterState] = useState<ArchbaseQueryFilterState>({
@@ -286,6 +312,9 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
 
   const appContext = useArchbaseAppContext();
   const innerComponentRef = useRef<any>(null);
+
+  // 🔧 MEMOIZAÇÃO: Memoiza toolbarLeftContent para evitar re-renders da grid quando mudar
+  const memoizedToolbarLeftContent = useMemo(() => toolbarLeftContent, [toolbarLeftContent]);
 
   // 🔧 CORREÇÃO: Ref estável - sempre usa innerComponentRef interno para evitar loops
   // Se innerRef for fornecido, sincronizamos manualmente
@@ -447,7 +476,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
       onSecurityReady={securityOptions?.onSecurityReady}
       onAccessDenied={securityOptions?.onAccessDenied}
     >
-      <Paper withBorder={withBorder} ref={innerComponentRef} style={{ overflow: 'none', height: 'calc(100% - 4px)' }}>
+      <Paper withBorder={withBorder} ref={innerComponentRef} style={{ height: 'calc(100% - 4px)' }}>
         {isError ? (
           <ArchbaseAlert
             autoClose={20000}
@@ -488,10 +517,12 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
           allowPrintData={true}
           onSelectedRowsChanged={onSelectedRowsChanged}
           onCellDoubleClick={onCellDoubleClick}
+          onFilterModelChange={onFilterModelChange}
           renderRowActions={enableRowActions ? getRenderRowActions : undefined}
           positionActionsColumn={positionActionsColumn}
+          actionsColumnWidth={actionsColumnWidth}
           toolbarAlignment={toolbarAlignment}
-          toolbarLeftContent={toolbarLeftContent}
+          toolbarLeftContent={memoizedToolbarLeftContent}
           renderToolbarActions={filterType === 'advanced' || filterType === 'none' ? buildInternalToolbarActionsFilter : undefined}
           paginationLabels={paginationLabels}
           cellPadding={cellPadding}
@@ -505,6 +536,11 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
           onExport={setExportFunc}
           onPrint={setPrintFunc}
           variant={variant as any}
+          withToolbarBorder={withToolbarBorder}
+          withPaginationBorder={withPaginationBorder}
+          toolbarPadding={toolbarPadding}
+          paginationPadding={paginationPadding}
+          rowHeight={rowHeight}
         >
           {columns}
           {userActions?.visible ? (

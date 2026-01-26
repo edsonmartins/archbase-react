@@ -31,10 +31,6 @@ const withMDX = createMDX({
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
-  // Aumentar paralelismo para builds mais rápidos
-  experimental: {
-    // O Next.js detecta automaticamente, mas podemos forçar mais workers
-  },
   // basePath removido para deploy em subdomínio dedicado (react.archbase.dev)
   // Se precisar usar subpath, descomente a linha abaixo:
   // basePath: process.env.NODE_ENV === 'production' ? '/docs' : undefined,

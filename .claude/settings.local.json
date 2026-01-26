@@ -61,7 +61,14 @@
       "Bash(git rm:*)",
       "Bash(NODE_OPTIONS=\"--max_old_space_size=16384\" pnpm run build:*)",
       "Bash(NODE_OPTIONS=\"--max-old_space_size=16384\" tsc:*)",
-      "Bash(NODE_OPTIONS=\"--max_old_space_size=16384\" npx tsc:*)"
+      "Bash(NODE_OPTIONS=\"--max_old_space_size=16384\" npx tsc:*)",
+      "Bash(test:*)",
+      "Bash(do:*)",
+      "Bash(DEBUG=vite-plugin-dts:*)",
+      "Bash(npx vite-plugin-dts --entry ./src/index.ts --outDir ./dist --include \"./src/**/*\")",
+      "Bash(DEBUG=vite:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git tag:*)"
     ],
     "deny": []
   }

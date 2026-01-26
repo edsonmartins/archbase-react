@@ -42,6 +42,10 @@ export interface ArchbaseDataGridRef<T = any> {
   collapseRow: (rowId: GridRowId) => void;
   collapseAllRows: () => void;
   getExpandedRows: () => GridRowId[];
+  /**
+   * Obtém o modelo de filtro atual
+   */
+  getFilterModel: () => GridFilterModel;
 }
 
 // Props para o Toolbar
@@ -80,6 +84,14 @@ export interface ArchbaseDataGridToolbarProps {
   activeFilters?: ArchbaseActiveFilter[];
   onFiltersChange?: (filters: ArchbaseActiveFilter[], rsql?: string) => void;
   hideMuiFilters?: boolean;
+
+  // Props para controle de bordas e espaçamento
+  /** Exibir borda inferior da toolbar. Default: true */
+  withBorder?: boolean;
+  /** Padding da toolbar. Default: '8px 12px' */
+  padding?: string | number;
+  /** Border radius da toolbar. Default: theme.radius.sm */
+  borderRadius?: string | number;
 }
 
 // Props para o componente ArchbaseDataGridPagination
@@ -95,6 +107,14 @@ export interface ArchbaseDataGridPaginationProps {
   };
   bottomToolbarMinHeight?: string | number;
   theme: any;
+
+  // Props para controle de bordas e espaçamento
+  /** Exibir borda superior da paginação. Default: true */
+  withBorder?: boolean;
+  /** Padding da paginação. Default: '8px 12px' */
+  padding?: string | number;
+  /** Border radius da paginação. Default: theme.radius.sm */
+  borderRadius?: string | number;
 }
 
 /**
@@ -240,6 +260,16 @@ export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
   columnAutoWidth?: boolean;
   rowHeight?: number;
 
+  // Propriedades de controle de bordas internas
+  /** Exibir borda inferior da toolbar. Default: true */
+  withToolbarBorder?: boolean;
+  /** Exibir borda superior da paginação. Default: true */
+  withPaginationBorder?: boolean;
+  /** Padding da toolbar. Default: '8px 12px' */
+  toolbarPadding?: string | number;
+  /** Padding da paginação. Default: '8px 12px' */
+  paginationPadding?: string | number;
+
   // Propriedades de exportação e impressão
   printTitle?: string;
   logoPrint?: string;
@@ -249,6 +279,7 @@ export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
   // Propriedades de layout
   toolbarAlignment?: 'left' | 'right' | 'center';
   positionActionsColumn?: 'first' | 'last';
+  actionsColumnWidth?: number;
   toolbarLeftContent?: ReactNode;
   bottomToolbarMinHeight?: string | number;
 
@@ -263,6 +294,7 @@ export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
   onCellDoubleClick?: (params: { id: any; columnName: string; rowData: T }) => void;
   onExport?: (callback: () => void) => void;
   onPrint?: (callback: () => void) => void;
+  onFilterModelChange?: (filterModel: any) => void;
 
   // Referência para o grid
   gridRef?: RefObject<ArchbaseDataGridRef<T>> | MutableRefObject<ArchbaseDataGridRef<T> | null>;

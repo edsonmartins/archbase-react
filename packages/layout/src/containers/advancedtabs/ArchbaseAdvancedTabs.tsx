@@ -41,7 +41,7 @@ export interface ArchbaseAdvancedTabProps {
 const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 	const { favicon, title, customTitle, activeTab, position, contentWidth, onClick, onClose, setDragging, tabsContentWidth, animateTabMove,
 		isDragging, index, sorting, showButtonClose, onCloseAllTabs, onCloseLeftTabs, onCloseRightTabs, onCloseOtherTabs, totalTabs } = props;
-	const { t } = useArchbaseTranslation();
+	const { t } = useArchbaseTranslation('archbase');
 	const [width, setWidth] = useState(0);
 	const [isAdded, setAdd] = useState(false);
 	const [movePosition, setMovePosition] = useState<Number|null>(null);

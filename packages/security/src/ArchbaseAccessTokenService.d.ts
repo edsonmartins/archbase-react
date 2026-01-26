@@ -9,4 +9,3 @@ export declare class ArchbaseAccessTokenService extends ArchbaseRemoteApiService
     isNewRecord(entity: AccessTokenDto): boolean;
     revoke(token: string): Promise<undefined>;
 }
-//# sourceMappingURL=ArchbaseAccessTokenService.d.ts.map

@@ -50,3 +50,8 @@ storybook-static
 
 # Changesets
 .changeset/README.md
+
+# TypeScript
+*.tsbuildinfo
+src/**/*.d.ts
+**/src/**/*.d.ts

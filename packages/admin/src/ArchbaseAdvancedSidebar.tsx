@@ -295,7 +295,9 @@ export function ArchbaseAdvancedSidebar({
 									backgroundColor: calcBackgroundGroupColor,
 								}}
 							>
-								{groups.map((item) => item.component)}
+								{groups.map((item) => (
+									<React.Fragment key={item.name}>{item.component}</React.Fragment>
+								))}
 							</Stack>
 						}
 						{activeGroupName !== '' &&
@@ -324,9 +326,7 @@ export function ArchbaseAdvancedSidebar({
 									}}
 								>
 									<SidebarMenu rootStyles={{ background: sidebarBackgroundColor }} menuItemStyles={menuItemStyles} closeOnClick={true}>
-										{groups.find((item) => item.name === activeGroupName)?.links?.map((link, index) => (
-											<React.Fragment key={index}>{link}</React.Fragment>
-										)) || null}
+										{groups.find((item) => item.name === activeGroupName)?.links || null}
 									</SidebarMenu>
 								</ScrollArea>
 							</Sidebar>

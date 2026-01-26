@@ -3,4 +3,3 @@ export declare enum SecurityType {
     PROFILE = "profile",
     GROUP = "group"
 }
-//# sourceMappingURL=SecurityType.d.ts.map

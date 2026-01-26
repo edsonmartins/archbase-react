@@ -3,12 +3,14 @@ import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 
-export function createViteConfig(dirname: string, pkg: any) {
+const dtsPlugin = dts.default || dts;
+
+export function createViteConfig(dirname, pkg) {
   const isDebug = process.env.NODE_ENV === 'development';
 
   const plugins = [
     react(),
-    dts({
+    dtsPlugin({
       include: ['src/**/*'],
       outDir: 'dist',
       insertTypesEntry: true,
@@ -37,7 +39,7 @@ export function createViteConfig(dirname: string, pkg: any) {
               return true;
             }
           }
-          
+
           // Todas as dependências devem ser externas
           const deps = Object.keys(pkg.dependencies || {});
           for (const dep of deps) {
@@ -45,12 +47,12 @@ export function createViteConfig(dirname: string, pkg: any) {
               return true;
             }
           }
-          
+
           // Lodash paths
           if (id === 'lodash' || id.startsWith('lodash/')) {
             return true;
           }
-          
+
           return false;
         },
         output: {
@@ -72,7 +74,7 @@ export function createViteConfig(dirname: string, pkg: any) {
       target: 'esnext'
     },
     esbuild: {
-        "target": "esnext"
+      target: 'esnext'
     },
     mode: isDebug ? 'development' : 'production'
   });

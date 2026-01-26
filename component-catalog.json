@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-01-14",
+  "generatedAt": "2026-01-17",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -5394,7 +5394,14 @@
       "description": "ArchbaseKeepAliveRoute — componente Archbase focado em keep alive route.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
-      "props": [],
+      "props": [
+        {
+          "name": "component",
+          "type": "ReactNode | React.ComponentType",
+          "required": false,
+          "description": "Define component. (ReactNode | React.ComponentType)"
+        }
+      ],
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
@@ -9085,16 +9092,6 @@
         "layout"
       ],
       "canonicalUrl": "packages/layout/src/containers/split-pane/ArchbaseSplitPane"
-    },
-    {
-      "name": "ArchbaseSpreadsheetImport",
-      "description": "ArchbaseSpreadsheetImport — componente Archbase focado em spreadsheet import.",
-      "sourcePath": "packages/components/src/spreadsheet/ArchbaseSpreadsheetImport",
-      "exportsFrom": "@archbase/components",
-      "props": [],
-      "examples": [],
-      "tags": [],
-      "canonicalUrl": "packages/components/src/spreadsheet/ArchbaseSpreadsheetImport"
     },
     {
       "name": "ArchbaseSSRDataSource",

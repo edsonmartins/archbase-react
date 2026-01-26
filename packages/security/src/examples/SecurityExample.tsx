@@ -12,12 +12,14 @@ import { UserDto } from '../SecurityDomain';
 
 // Exemplo de uso básico
 export const SecurityExample: React.FC = () => {
-  const mockUser: UserDto = {
+  const mockUser: UserDto = new UserDto({
     id: '1',
+    name: 'Admin User',
+    description: 'Administrator user',
     userName: 'admin',
     email: 'admin@example.com',
+    password: '',
     isAdministrator: true,
-    active: true,
     changePasswordOnNextLogin: false,
     allowPasswordChange: true,
     allowMultipleLogins: true,
@@ -27,8 +29,12 @@ export const SecurityExample: React.FC = () => {
     unlimitedAccessHours: true,
     groups: [],
     profile: null,
-    accessSchedule: null
-  };
+    accessSchedule: null,
+    avatar: null,
+    nickname: 'Admin',
+    type: 'USER',
+    isNewUser: false
+  });
 
   return (
     <ArchbaseSecurityProvider user={mockUser}>

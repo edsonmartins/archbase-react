@@ -9,4 +9,3 @@ export declare class ArchbaseUserService extends ArchbaseRemoteApiService<UserDt
     isNewRecord(entity: UserDto): boolean;
     getUserByEmail(email: string): Promise<UserDto>;
 }
-//# sourceMappingURL=ArchbaseUserService.d.ts.map

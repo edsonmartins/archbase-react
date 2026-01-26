@@ -219,4 +219,3 @@ export interface ResourcePermissionsDto {
     resourceName: string;
     permissions: string[];
 }
-//# sourceMappingURL=SecurityDomain.d.ts.map

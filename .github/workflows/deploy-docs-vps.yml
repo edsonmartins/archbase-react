@@ -1,30 +1,18 @@
 name: Deploy Docs to VPS
 
-# Workflow para deploy automatizado da documentação na VPS
 on:
-  workflow_dispatch:  # Disparado manualmente
   push:
     branches:
       - main
     paths:
       - 'docs-site/**'
       - 'packages/**'
-      - 'deployment/**'
       - '.github/workflows/deploy-docs-vps.yml'
-  workflow_run:
-    workflows: ["Publish to NPM"]
-    types:
-      - completed
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: self-hosted
-    # Só roda se não for uma tag (para não duplicar em releases)
-    if: |
-      contains(github.event.head_commit.message, '[skip deploy]') == false ||
-      github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'workflow_run'
     timeout-minutes: 30
 
     steps:
@@ -45,7 +33,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm run build:prod-only
+        run: pnpm run build:dev
 
       - name: Build docs
         working-directory: ./docs-site
@@ -54,47 +42,47 @@ jobs:
           export NEXT_PRIVATE_WORKER_THREADS=2
           pnpm run build
 
-      - name: Prepare Docker build context
+      - name: Salvar logs do build
+        if: always()
         run: |
-          # Criar diretório temporário para o build
-          mkdir -p docker-build-context
+          # Criar diretório de logs (apenas se não existir)
+          sudo mkdir -p /var/log/actions-runner || true
+
+          # Salvar logs do último job
+          sudo journalctl -u actions-runner.* --since "1 hour ago" | sudo tee /var/log/actions-runner/build-$(date +%Y%m%d_%H%M%S).log > /dev/null
+
+          # Criar link para o log mais recente
+          sudo ln -sf /var/log/actions-runner/build-$(date +%Y%m%d_%H%M%S).log /var/log/actions-runner/latest-build.log
+
+          # Manter apenas últimos 20 logs
+          ls -t /var/log/actions-runner/build-*.log 2>/dev/null | sudo tail -n +21 | sudo xargs -I {} rm -f {}
+
+          echo "Logs salvos em /var/log/actions-runner/"
+
+      - name: Deploy to Docker container
+        run: |
+          # Criar/atualizar diretório de deploy
+          sudo mkdir -p /srv/archbase-react-docs
+
+          # Backup da versão anterior
+          if [ -d "/srv/archbase-react-docs" ] && [ "$(ls -A /srv/archbase-react-docs)" ]; then
+            sudo mkdir -p /srv/archbase-react-docs.backup
+            sudo cp -r /srv/archbase-react-docs /srv/archbase-react-docs.backup/$(date +%Y%m%d_%H%M%S)
+          fi
+
           # Copiar arquivos buildados
-          cp -r docs-site/out/* docker-build-context/
-          # Copiar nginx.conf
-          cp deployment/docs/nginx.conf docker-build-context/
-
-      - name: Build Docker image
-        run: |
-          # Build da imagem com timestamp para forçar atualização
-          TIMESTAMP=$(date +%s)
-          docker build \
-            --build-arg BUILD_DATE=$TIMESTAMP \
-            -t archbase-react-docs:latest \
-            -t archbase-react-docs:$TIMESTAMP \
-            -f deployment/docs/Dockerfile \
-            docker-build-context
-
-      - name: Deploy to Docker Swarm
-        run: |
-          # Copiar docker-compose para local persistente
-          sudo mkdir -p /opt/archbase-infrastructure
-          sudo cp deployment/docker-compose.vps.yml /opt/archbase-infrastructure/docker-compose.yml
+          sudo rm -rf /srv/archbase-react-docs/*
+          sudo cp -r docs-site/out/* /srv/archbase-react-docs/
 
           # Recrear stack com nova versão (Docker Swarm)
-          cd /opt/archbase-infrastructure
+          cd /opt/archbase-infrastructure || exit 1
           docker stack deploy -c docker-compose.yml archbase-react
 
-          # Forçar atualização do serviço
-          docker service update archbase-react_react-docs --force
-
-      - name: Cleanup old Docker images
+      - name: Cleanup old builds
         run: |
-          # Remover imagens antigas da documentação (manter apenas latest + 2 anteriores)
-          docker images archbase-react-docs --format "{{.ID}} {{.Tag}}" | \
-            grep -v "latest" | \
-            tail -n +3 | \
-            awk '{print $1}' | \
-            xargs -r docker rmi -f 2>/dev/null || true
+          # Manter apenas últimos 5 builds
+          cd /srv/archbase-react-docs.backup 2>/dev/null || exit 0
+          ls -t | tail -n +6 | xargs -I {} rm -rf {}
 
       - name: Docker system prune
         run: |
@@ -105,5 +93,3 @@ jobs:
           docker system prune -f
           # Exibir uso de disco após limpeza
           df -h /var/lib/docker
- 
-

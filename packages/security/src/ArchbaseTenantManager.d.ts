@@ -10,7 +10,7 @@ export declare class ArchbaseTenantManager {
     private _availableTenants;
     private constructor();
     static getInstance(): ArchbaseTenantManager;
-    get currentTenant$(): import("rxjs").Observable<ArchbaseTenantInfo>;
+    get currentTenant$(): import("rxjs").Observable<ArchbaseTenantInfo | null>;
     get currentTenant(): ArchbaseTenantInfo | null;
     get availableTenants$(): import("rxjs").Observable<ArchbaseTenantInfo[]>;
     get availableTenants(): ArchbaseTenantInfo[];
@@ -20,4 +20,3 @@ export declare class ArchbaseTenantManager {
     getHeaders(): Record<string, string>;
 }
 export declare function useArchbaseTenantManager(): ArchbaseTenantManager;
-//# sourceMappingURL=ArchbaseTenantManager.d.ts.map

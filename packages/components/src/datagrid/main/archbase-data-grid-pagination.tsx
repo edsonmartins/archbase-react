@@ -13,7 +13,11 @@ export const ArchbaseDataGridPagination = React.memo<ArchbaseDataGridPaginationP
   onPaginationModelChange,
   paginationLabels,
   bottomToolbarMinHeight,
-  theme
+  theme,
+  // Props para controle de bordas e espaçamento
+  withBorder = true,
+  padding = '8px 12px',
+  borderRadius,
 }) => {
   // Garantir que totalRecords seja um número válido e finito
   const safeTotalRecords = Number.isFinite(totalRecords) && !isNaN(totalRecords) && totalRecords >= 0
@@ -28,14 +32,21 @@ export const ArchbaseDataGridPagination = React.memo<ArchbaseDataGridPaginationP
       Math.max(1, paginationModel.pageSize) : 10
   };
 
+  // Calcular o padding final
+  const finalPadding = typeof padding === 'number' ? `${padding}px` : padding;
+  // Calcular o border radius final
+  const finalBorderRadius = borderRadius !== undefined
+    ? (typeof borderRadius === 'number' ? `${borderRadius}px` : borderRadius)
+    : theme.radius.sm;
+
   return (
     <Paper
       style={{
         minHeight: bottomToolbarMinHeight || 'auto',
-        padding: '8px 16px',
-        borderTop: `1px solid ${theme.colors.gray[theme.colorScheme === 'dark' ? 8 : 3]}`,
-        borderBottomLeftRadius: theme.radius.sm,
-        borderBottomRightRadius: theme.radius.sm
+        padding: finalPadding,
+        borderTop: withBorder ? `1px solid ${theme.colors.gray[theme.colorScheme === 'dark' ? 8 : 3]}` : 'none',
+        borderBottomLeftRadius: finalBorderRadius,
+        borderBottomRightRadius: finalBorderRadius
       }}
     >
       <GridPagination
