@@ -288,6 +288,8 @@ export interface ArchbaseDataGridProps<T extends object = any, ID = any> {
 
   // Flags de exibição
   showProgressBars?: boolean;
+  /** Oculta o footer interno do MUI DataGrid. Default: true (footer é gerenciado externamente) */
+  hideFooter?: boolean;
 
   // Callbacks
   onSelectedRowsChanged?: (rows: T[]) => void;

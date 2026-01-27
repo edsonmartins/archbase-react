@@ -165,6 +165,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     onPrint,
     onFilterModelChange,
     showProgressBars = true,
+    hideFooter = true,
     variant = 'filled',
     fontSize,
     cellPadding,
@@ -885,7 +886,19 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         },
         
         '& .MuiDataGrid-virtualScroller': {
-          paddingBottom: '14px !important'
+          paddingBottom: '0px !important',
+          display: 'flex',
+          flexDirection: 'column',
+        },
+
+        '& .MuiDataGrid-virtualScrollerContent': {
+          flexBasis: 'auto !important',
+          flexGrow: '1 !important',
+          flexShrink: '0 !important',
+        },
+
+        '& .MuiDataGrid-filler': {
+          display: 'none !important',
         }
       }
     }
@@ -1463,6 +1476,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
           sx={getThemedStyles().root}
           disableColumnFilter={!allowColumnFilters}
           disableColumnMenu={true}
+          hideFooter={hideFooter}
           slots={{
             // Removemos os slots de toolbar e paginação pois eles agora estão fora da grid
             toolbar: null,

@@ -32,6 +32,6 @@
     "incremental": true,
     "tsBuildInfoFile": ".tsbuildinfo"
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "css.d.ts"],
   "exclude": ["node_modules", "dist", "build", ".turbo"]
 }

@@ -125,6 +125,8 @@ export interface ArchbaseGridTemplateProps<T extends Object, ID> extends Archbas
   paginationPadding?: string | number;
   /** Altura das linhas da grid. Default: 52 */
   rowHeight?: number;
+  /** Oculta o footer interno do MUI DataGrid. Default: true */
+  hideFooter?: boolean;
 }
 
 // Definimos a interface para os métodos públicos expostos via ref
@@ -222,6 +224,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
     toolbarPadding,
     paginationPadding,
     rowHeight,
+    hideFooter = true,
   } = props;
 
   const filterRef = useRef<any>(null);
@@ -476,7 +479,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
       onSecurityReady={securityOptions?.onSecurityReady}
       onAccessDenied={securityOptions?.onAccessDenied}
     >
-      <Paper withBorder={withBorder} ref={innerComponentRef} style={{ height: 'calc(100% - 4px)' }}>
+      <Paper withBorder={withBorder} ref={innerComponentRef} style={{ height: '100%' }}>
         {isError ? (
           <ArchbaseAlert
             autoClose={20000}
@@ -497,7 +500,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
           logoPrint={logoPrint}
           width={width}
           height={height}
-          withBorder={withBorder}
+          withBorder={false}
           dataSource={dataSource}
           enableColumnResizing={true}
           enableRowNumbers={enableRowNumbers}
@@ -541,6 +544,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
           toolbarPadding={toolbarPadding}
           paginationPadding={paginationPadding}
           rowHeight={rowHeight}
+          hideFooter={hideFooter}
         >
           {columns}
           {userActions?.visible ? (
