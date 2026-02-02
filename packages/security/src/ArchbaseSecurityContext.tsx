@@ -3,8 +3,30 @@
  * @status stable
  */
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { Box, Stack, Group, Skeleton, Loader, Text } from '@mantine/core';
 import { ArchbaseSecurityManager } from './ArchbaseSecurityManager';
 import { UserDto } from './SecurityDomain';
+
+/**
+ * Componente de loading padrão para o carregamento de permissões.
+ * Exibe um skeleton animado enquanto as permissões são carregadas.
+ */
+export const DefaultSecurityLoading: React.FC = () => (
+	<Box p="xl" style={{ width: '100%', height: '100%' }}>
+		<Stack gap="md">
+			<Group gap="sm">
+				<Loader size="sm" />
+				<Text size="sm" c="dimmed">Carregando permissões...</Text>
+			</Group>
+			<Skeleton height={40} radius="sm" />
+			<Skeleton height={200} radius="sm" />
+			<Group gap="md">
+				<Skeleton height={36} width={100} radius="sm" />
+				<Skeleton height={36} width={100} radius="sm" />
+			</Group>
+		</Stack>
+	</Box>
+);
 
 // Tipos para o contexto de segurança global
 export interface ArchbaseSecurityContextType {
@@ -100,6 +122,8 @@ export interface ArchbaseViewSecurityProviderProps {
   resourceDescription: string;
   requiredPermissions?: string[];
   fallbackComponent?: ReactNode;
+  /** Componente customizado para exibir durante o carregamento de permissões */
+  loadingComponent?: ReactNode;
   onSecurityReady?: (manager: ArchbaseSecurityManager) => void;
   onError?: (error: string) => void;
 }
@@ -110,6 +134,7 @@ export const ArchbaseViewSecurityProvider: React.FC<ArchbaseViewSecurityProvider
   resourceDescription,
   requiredPermissions = [],
   fallbackComponent,
+  loadingComponent,
   onSecurityReady,
   onError
 }) => {
@@ -157,11 +182,7 @@ export const ArchbaseViewSecurityProvider: React.FC<ArchbaseViewSecurityProvider
 
   // Estados de carregamento e erro
   if (isViewLoading) {
-    return (
-      <div className="archbase-security-loading">
-        <div>Carregando permissões...</div>
-      </div>
-    );
+    return loadingComponent ? <>{loadingComponent}</> : <DefaultSecurityLoading />;
   }
 
   if (viewError) {

@@ -54,6 +54,18 @@ export interface ArchbaseAdvancedSidebarProps {
 	iconDarkColor?: string;
 	iconLightColor?: string;
 	collapsedSubmenuWidth?: string | number;
+	/** Indica se as permissões estão sendo carregadas (exibe skeleton na área do menu) */
+	isLoading?: boolean;
+	/** Mensagem de erro ao carregar permissões (exibe mensagem na área do menu) */
+	loadingError?: string | null;
+	/** Componente customizado para exibir durante o carregamento */
+	loadingComponent?: ReactNode;
+	/** Componente customizado para exibir quando ocorrer erro */
+	errorComponent?: ReactNode;
+	/** Número de itens no skeleton durante loading */
+	skeletonItemCount?: number;
+	/** Número de grupos no skeleton durante loading */
+	skeletonGroupCount?: number;
 }
 
 type GroupItemSidebar = {
@@ -97,6 +109,8 @@ export function ArchbaseAdvancedSidebar({
 	iconDarkColor,
 	iconLightColor,
 	collapsedSubmenuWidth,
+	// Props de skeleton desativadas temporariamente - funcionalidade não está funcionando corretamente
+	// isLoading, loadingError, loadingComponent, errorComponent, skeletonItemCount, skeletonGroupCount
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
 	const appContext = useArchbaseAppContext();
@@ -263,6 +277,70 @@ export function ArchbaseAdvancedSidebar({
 		}
 	}, [collapsed]);
 
+	// Função para renderizar o conteúdo do menu
+	const renderMenuContent = () => {
+		// Conteúdo normal do menu
+		if (activeGroupName !== '') {
+			return (
+				<Sidebar
+					ref={sidebarRef}
+					rootStyles={{
+						[`.${sidebarClasses.container}`]: {
+							background: sidebarBackgroundColor,
+							overflowX: 'hidden',
+							overflowY: 'hidden',
+							left: 0,
+							height: `${px(sidebarHeight)}px`,
+						},
+					}}
+					style={{ borderColor: colorScheme === 'dark' ? '#000' : '#efefef' }}
+					collapsed={collapsed}
+					width={`${px(sidebarWidthCalculated)}`}
+					collapsedWidth="0px"
+				>
+					<ScrollArea
+						style={{
+							overflowY: 'auto',
+							overflowX: 'hidden',
+							height: '100%',
+							width: sidebarWidthCalculated,
+						}}
+					>
+						<SidebarMenu rootStyles={{ background: sidebarBackgroundColor }} menuItemStyles={menuItemStyles} closeOnClick={true}>
+							{groups.find((item) => item.name === activeGroupName)?.links || null}
+						</SidebarMenu>
+					</ScrollArea>
+				</Sidebar>
+			);
+		}
+
+		return null;
+	};
+
+	// Função para renderizar os grupos
+	const renderGroups = () => {
+		// Grupos normais
+		if (groups.length !== 0) {
+			return (
+				<Stack
+					gap="4px"
+					style={{
+						height: sidebarHeight,
+						width: sidebarGroupWidth,
+						padding: '4px',
+						backgroundColor: calcBackgroundGroupColor,
+					}}
+				>
+					{groups.map((item) => (
+						<React.Fragment key={item.name}>{item.component}</React.Fragment>
+					))}
+				</Stack>
+			);
+		}
+
+		return null;
+	};
+
 	return (
 		<>
 			{groups.length == 1 ? (
@@ -285,52 +363,8 @@ export function ArchbaseAdvancedSidebar({
 				<Flex direction="column" w={collapsed ? sidebarCollapsedWidth : sidebarWidth}>
 					<div style={{ height: 'auto', width: '100%' }}>{sideBarHeaderContent}</div>
 					<Paper withBorder={withBorder} h={sidebarHeight} w={'100%'} display={'flex'}>
-						{groups.length !== 0 &&
-							<Stack
-								gap="4px"
-								style={{
-									height: sidebarHeight,
-									width: sidebarGroupWidth,
-									padding: '4px',
-									backgroundColor: calcBackgroundGroupColor,
-								}}
-							>
-								{groups.map((item) => (
-									<React.Fragment key={item.name}>{item.component}</React.Fragment>
-								))}
-							</Stack>
-						}
-						{activeGroupName !== '' &&
-							<Sidebar
-								ref={sidebarRef}
-								rootStyles={{
-									[`.${sidebarClasses.container}`]: {
-										background: sidebarBackgroundColor,
-										overflowX: 'hidden',
-										overflowY: 'hidden',
-										left: 0,
-										height: `${px(sidebarHeight)}px`,
-									},
-								}}
-								style={{ borderColor: colorScheme === 'dark' ? '#000' : '#efefef' }}
-								collapsed={collapsed}
-								width={`${px(sidebarWidthCalculated)}`}
-								collapsedWidth="0px"
-							>
-								<ScrollArea
-									style={{
-										overflowY: 'auto',
-										overflowX: 'hidden',
-										height: '100%',
-										width: sidebarWidthCalculated,
-									}}
-								>
-									<SidebarMenu rootStyles={{ background: sidebarBackgroundColor }} menuItemStyles={menuItemStyles} closeOnClick={true}>
-										{groups.find((item) => item.name === activeGroupName)?.links || null}
-									</SidebarMenu>
-								</ScrollArea>
-							</Sidebar>
-						}
+						{renderGroups()}
+						{renderMenuContent()}
 					</Paper>
 					<div style={{ height: 'auto', width: '100%' }}>{sideBarFooterContent}</div>
 				</Flex>

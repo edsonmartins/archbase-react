@@ -1,6 +1,6 @@
 {
   "name": "archbase-react",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "private": true,
   "type": "module",
   "description": "Monorepo for Archbase React v3 - Modern TypeScript React Component Library",
@@ -61,7 +61,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "jsdom": "^26.1.0",
     "prettier": "^3.4.2",
-    "turbo": "^2.3.3",
+    "turbo": "^2.8.0",
     "typescript": "~5.7.2",
     "vite": "^6.0.3",
     "vite-plugin-dts": "^4.3.0",

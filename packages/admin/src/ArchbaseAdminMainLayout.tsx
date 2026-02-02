@@ -280,6 +280,8 @@ function ArchbaseAdminMainLayoutContainer({
 							iconDarkColor={sideBarIconDarkColor}
 							iconLightColor={sideBarIconLightColor}
 							collapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
+							isLoading={adminLayoutContextValue.isLoadingPermissions}
+							loadingError={adminLayoutContextValue.permissionsError}
 						/>
 				) : undefined}
 			</AppShell.Navbar>
@@ -353,6 +355,8 @@ function ArchbaseAdminMainLayoutContainer({
 									iconDarkColor={sideBarIconDarkColor}
 									iconLightColor={sideBarIconLightColor}
 									collapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
+									isLoading={adminLayoutContextValue.isLoadingPermissions}
+									loadingError={adminLayoutContextValue.permissionsError}
 								/>
 						}
 					</Drawer>

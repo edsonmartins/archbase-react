@@ -1,6 +1,6 @@
 {
   "name": "@archbase/core",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "Core utilities and foundation for Archbase React v3",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",

@@ -37,9 +37,10 @@ export * from './SecurityDomain';
 export * from './hooks';
 
 // New Security Context System
-export { 
-  ArchbaseSecurityProvider, 
-  ArchbaseViewSecurityProvider 
+export {
+  ArchbaseSecurityProvider,
+  ArchbaseViewSecurityProvider,
+  DefaultSecurityLoading
 } from './ArchbaseSecurityContext';
 
 export { 

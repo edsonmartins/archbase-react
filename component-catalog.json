@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-01-26",
+  "generatedAt": "2026-01-30",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -196,7 +196,7 @@
     },
     {
       "name": "ArchbaseAdminLayoutContext",
-      "description": "ArchbaseAdminLayoutContext — provider de contexto focado em admin layout context.",
+      "description": "Indica se as permissões de navegação estão sendo carregadas",
       "sourcePath": "packages/admin/src/ArchbaseAdminLayout.context",
       "exportsFrom": "@archbase/admin",
       "props": [
@@ -307,7 +307,7 @@
     },
     {
       "name": "ArchbaseAdminLayoutProvider",
-      "description": "ArchbaseAdminLayoutProvider — provider de contexto focado em admin layout provider.",
+      "description": "Indica se as permissões de navegação estão sendo carregadas",
       "sourcePath": "packages/admin/src/ArchbaseAdminLayout.context",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -769,7 +769,7 @@
     },
     {
       "name": "ArchbaseAdvancedSidebar",
-      "description": "ArchbaseAdvancedSidebar — componente Archbase focado em advanced sidebar.",
+      "description": "Indica se as permissões estão sendo carregadas (exibe skeleton)",
       "sourcePath": "packages/admin/src/ArchbaseAdvancedSidebar",
       "exportsFrom": "@archbase/admin",
       "props": [
@@ -970,6 +970,24 @@
           "type": "string | number",
           "required": false,
           "description": "Define collapsed submenu width. (string | number)"
+        },
+        {
+          "name": "isLoading",
+          "type": "boolean",
+          "required": false,
+          "description": "Indica se as permissões estão sendo carregadas (exibe skeleton)"
+        },
+        {
+          "name": "skeletonItemCount",
+          "type": "number",
+          "required": false,
+          "description": "Número de itens no skeleton durante loading"
+        },
+        {
+          "name": "skeletonGroupCount",
+          "type": "number",
+          "required": false,
+          "description": "Número de grupos no skeleton durante loading"
         }
       ],
       "examples": [],
@@ -1158,7 +1176,7 @@
     },
     {
       "name": "ArchbaseAliveAbleRoutes",
-      "description": "ArchbaseAliveAbleRoutes — componente Archbase focado em alive able routes.",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -5391,7 +5409,7 @@
     },
     {
       "name": "ArchbaseKeepAliveRoute",
-      "description": "ArchbaseKeepAliveRoute — componente Archbase focado em keep alive route.",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [
@@ -10515,6 +10533,12 @@
           "description": "Define fallback component. (ReactNode)"
         },
         {
+          "name": "loadingComponent",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Componente customizado para exibir durante o carregamento de permissões"
+        },
+        {
           "name": "onSecurityReady",
           "type": "(manager: ArchbaseSecurityManager) => void",
           "required": false,
@@ -11118,6 +11142,18 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/data/src/service/ArchbaseRemoteApiService"
+    },
+    {
+      "name": "DefaultSecurityLoading",
+      "description": "ArchbaseSecurityProvider — provider de segurança com autenticação, tokens e permissões.\n@status stable",
+      "sourcePath": "packages/security/src/ArchbaseSecurityContext",
+      "exportsFrom": "@archbase/security",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityContext"
     },
     {
       "name": "deserializeFromSSR",
@@ -13670,6 +13706,77 @@
       "canonicalUrl": "packages/core/src/utils/nestedObject"
     },
     {
+      "name": "SidebarSkeleton",
+      "description": "SidebarSkeleton - Componente de skeleton loading para a sidebar.\nExibe placeholders animados enquanto as permissões de navegação são carregadas.",
+      "sourcePath": "packages/admin/src/SidebarSkeleton",
+      "exportsFrom": "@archbase/admin",
+      "props": [
+        {
+          "name": "itemCount",
+          "type": "number",
+          "required": false,
+          "description": "Número de itens de menu a exibir no skeleton"
+        },
+        {
+          "name": "groupCount",
+          "type": "number",
+          "required": false,
+          "description": "Número de grupos a exibir no skeleton"
+        },
+        {
+          "name": "sidebarWidth",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura da sidebar"
+        },
+        {
+          "name": "sidebarGroupWidth",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura da coluna de grupos"
+        },
+        {
+          "name": "sidebarHeight",
+          "type": "string | number",
+          "required": false,
+          "description": "Altura da sidebar"
+        },
+        {
+          "name": "collapsed",
+          "type": "boolean",
+          "required": false,
+          "description": "Se a sidebar está colapsada"
+        },
+        {
+          "name": "singleGroup",
+          "type": "boolean",
+          "required": false,
+          "description": "Se deve mostrar apenas um grupo (sem coluna de grupos)"
+        },
+        {
+          "name": "backgroundDarkColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor de fundo para tema escuro"
+        },
+        {
+          "name": "backgroundLightColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor de fundo para tema claro"
+        },
+        {
+          "name": "backgroundGroupColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor de fundo da área de grupos"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/SidebarSkeleton"
+    },
+    {
       "name": "slugify",
       "description": "eslint-disable",
       "sourcePath": "packages/core/src/utils/string-utils",
@@ -14204,6 +14311,18 @@
       "canonicalUrl": "packages/tools/src/performance/useArchbaseRenderTracker"
     },
     {
+      "name": "useArchbaseRouteParams",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
+      "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
+    },
+    {
       "name": "useArchbaseSecureForm",
       "description": "useArchbaseSecureForm — hook utilitário focado em use archbase secure form.",
       "sourcePath": "packages/security/src/ArchbaseSecurityHooks",
@@ -14420,6 +14539,42 @@
         "ssr"
       ],
       "canonicalUrl": "packages/ssr/src/providers/ArchbaseSSRProvider"
+    },
+    {
+      "name": "useKeepAliveCache",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
+      "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
+    },
+    {
+      "name": "useKeepAliveVisibility",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
+      "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
+    },
+    {
+      "name": "useParams",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
+      "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
     },
     {
       "name": "useRequiredValidationErrors",

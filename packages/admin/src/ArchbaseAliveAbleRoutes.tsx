@@ -1,17 +1,124 @@
-import React, { createContext, useContext, ReactElement, ReactNode, useLayoutEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, ReactElement, ReactNode, useLayoutEffect, useRef, useState, useMemo, useEffect } from 'react';
 import type { RouteProps, RoutesProps } from 'react-router';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation, matchPath, Params, useParams as useReactRouterParams } from 'react-router-dom';
+
+// ============================================================================
+// CONTEXTO PARA VISIBILIDADE (NOTIFICA COMPONENTES QUANDO TAB FICA VISÍVEL)
+// ============================================================================
+
+interface KeepAliveVisibilityContextValue {
+	isVisible: boolean;
+}
+
+const KeepAliveVisibilityContext = createContext<KeepAliveVisibilityContextValue>({
+	isVisible: true
+});
+
+/**
+ * Hook para acessar o estado de visibilidade do componente keep-alive.
+ * Use este hook quando precisar reagir a mudanças de visibilidade da tab,
+ * por exemplo, para recalcular dimensões de grids ou gráficos.
+ *
+ * @example
+ * import { useKeepAliveVisibility } from '@archbase/admin';
+ *
+ * function MeuGrid() {
+ *   const { isVisible } = useKeepAliveVisibility();
+ *   const gridRef = useRef();
+ *
+ *   useEffect(() => {
+ *     if (isVisible && gridRef.current) {
+ *       // Força recálculo de dimensões quando tab fica visível
+ *       gridRef.current.api?.sizeColumnsToFit();
+ *     }
+ *   }, [isVisible]);
+ *
+ *   return <DataGrid ref={gridRef} ... />;
+ * }
+ */
+export const useKeepAliveVisibility = (): KeepAliveVisibilityContextValue => {
+	return useContext(KeepAliveVisibilityContext);
+};
+
+// ============================================================================
+// CONTEXTO PARA PARÂMETROS DE ROTA (SUBSTITUI useParams para componentes keep-alive)
+// ============================================================================
+
+interface ArchbaseRouteParamsContextValue {
+	params: Params<string>;
+}
+
+const ArchbaseRouteParamsContext = createContext<ArchbaseRouteParamsContextValue>({ params: {} });
+
+/**
+ * Hook para acessar os parâmetros da rota atual.
+ * Este hook funciona tanto dentro quanto fora do contexto do React Router Routes,
+ * sendo essencial para componentes que usam keepAlive.
+ *
+ * @example
+ * // Dentro de um componente com keepAlive
+ * const { id } = useArchbaseRouteParams();
+ */
+export const useArchbaseRouteParams = <T extends Params<string> = Params<string>>(): T => {
+	const context = useContext(ArchbaseRouteParamsContext);
+	return context.params as T;
+};
+
+/**
+ * Hook de compatibilidade que funciona tanto com React Router quanto com keep-alive.
+ *
+ * Este hook tenta obter os parâmetros do React Router primeiro. Se não encontrar
+ * parâmetros (objeto vazio ou todos os valores undefined), usa o contexto do keep-alive.
+ *
+ * Use este hook como substituto direto do useParams do React Router para garantir
+ * compatibilidade com componentes que podem ou não usar keepAlive.
+ *
+ * @example
+ * // Substitui useParams do react-router-dom
+ * import { useParams } from '@archbase/admin';
+ * const { id } = useParams<{ id: string }>();
+ *
+ * @example
+ * // Funciona tanto com keepAlive: true quanto keepAlive: false
+ * const { id, slug } = useParams<{ id: string; slug: string }>();
+ */
+export const useParams = <T extends Params<string> = Params<string>>(): T => {
+	// Tenta obter do React Router primeiro
+	const routerParams = useReactRouterParams();
+
+	// Obtém do contexto keep-alive
+	const keepAliveContext = useContext(ArchbaseRouteParamsContext);
+	const keepAliveParams = keepAliveContext.params;
+
+	// Verifica se os parâmetros do React Router são válidos (não vazios e com valores definidos)
+	const hasValidRouterParams = useMemo(() => {
+		if (!routerParams) return false;
+		const keys = Object.keys(routerParams);
+		if (keys.length === 0) return false;
+		// Verifica se pelo menos um valor não é undefined
+		return keys.some(key => (routerParams as Record<string, string | undefined>)[key] !== undefined);
+	}, [routerParams]);
+
+	// Se o React Router tem parâmetros válidos, usa eles; senão, usa do keep-alive
+	return (hasValidRouterParams ? routerParams : keepAliveParams) as T;
+};
 
 // ============================================================================
 // CONTEXTO PARA GERENCIAR CACHE DE VIEWS (LAZY LOADING)
 // ============================================================================
 
+interface CachedComponent {
+	element: ReactNode;
+	params: Params<string>;
+}
+
 interface KeepAliveCacheContextValue {
-	cache: Map<string, ReactNode>;
-	requestedUnregister: Set<string>; // Set com paths que devem ser removidos
-	register: (path: string, component: ReactNode) => void;
-	unregister: (path: string) => void;
-	requestUnregister: (path: string) => void; // Solicita remoção (quando aba fecha)
+	cache: Map<string, CachedComponent>;
+	requestedUnregister: Set<string>;
+	register: (cacheKey: string, component: ReactNode, params: Params<string>) => void;
+	unregister: (cacheKey: string) => void;
+	updateParams: (cacheKey: string, params: Params<string>) => void;
+	requestUnregister: (path: string) => void;
 }
 
 const KeepAliveCacheContext = createContext<KeepAliveCacheContextValue | null>(null);
@@ -29,56 +136,99 @@ export interface ArchbaseKeepAliveRouteProps extends Omit<RouteProps, 'element'>
 export const ArchbaseKeepAliveRoute = (props: ArchbaseKeepAliveRouteProps) => null;
 
 // ============================================================================
+// UTILITÁRIOS
+// ============================================================================
+
+/**
+ * Verifica se um path contém parâmetros dinâmicos (ex: :id, :slug)
+ */
+const hasPathParams = (path: string): boolean => {
+	return path.includes(':');
+};
+
+/**
+ * Gera a chave de cache baseada no path e na URL atual.
+ * Para rotas com parâmetros dinâmicos, usa a URL real.
+ * Para rotas estáticas, usa o path pattern.
+ */
+const getCacheKey = (pathPattern: string, currentPathname: string): string => {
+	if (hasPathParams(pathPattern)) {
+		// Para rotas dinâmicas, usa a URL real como chave
+		return currentPathname;
+	}
+	// Para rotas estáticas, usa o path pattern
+	return pathPattern;
+};
+
+// ============================================================================
 // COMPONENTE PRINCIPAL
 // ============================================================================
 
 export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => {
-	const [cache, setCache] = useState<Map<string, ReactNode>>(new Map());
+	const [cache, setCache] = useState<Map<string, CachedComponent>>(new Map());
 	const [requestedUnregister, setRequestedUnregister] = useState<Set<string>>(new Set());
 
-	// Registra um componente no cache (lazy loading)
-	const register = (path: string, component: ReactNode) => {
-		if (!path || typeof path !== 'string') {
-			console.error('[ArchbaseAliveAbleRoutes] Invalid path for component registration:', path);
+	// Registra um componente no cache
+	const register = (cacheKey: string, component: ReactNode, params: Params<string>) => {
+		if (!cacheKey || typeof cacheKey !== 'string') {
+			console.error('[ArchbaseAliveAbleRoutes] Invalid cacheKey for component registration:', cacheKey);
 			return;
 		}
 		if (component === undefined) {
-			console.warn('[ArchbaseAliveAbleRoutes] Attempting to register undefined component for path:', path);
+			console.warn('[ArchbaseAliveAbleRoutes] Attempting to register undefined component for cacheKey:', cacheKey);
 			return;
 		}
 		setCache((prev) => {
-			// Só atualizar se realmente não existe no cache
-			if (prev.has(path)) {
+			if (prev.has(cacheKey)) {
 				return prev;
 			}
 			const next = new Map(prev);
-			next.set(path, component);
+			next.set(cacheKey, { element: component, params });
 			return next;
 		});
 	};
 
-	// Remove um componente do cache (quando aba é fechada)
-	const unregister = (path: string) => {
-		if (!path) {
-			console.error('[ArchbaseAliveAbleRoutes] Cannot unregister: invalid path');
+	// Atualiza os parâmetros de um componente no cache
+	const updateParams = (cacheKey: string, params: Params<string>) => {
+		setCache((prev) => {
+			const cached = prev.get(cacheKey);
+			if (!cached) {
+				return prev;
+			}
+			// Verifica se os parâmetros realmente mudaram
+			const paramsChanged = JSON.stringify(cached.params) !== JSON.stringify(params);
+			if (!paramsChanged) {
+				return prev;
+			}
+			const next = new Map(prev);
+			next.set(cacheKey, { ...cached, params });
+			return next;
+		});
+	};
+
+	// Remove um componente do cache
+	const unregister = (cacheKey: string) => {
+		if (!cacheKey) {
+			console.error('[ArchbaseAliveAbleRoutes] Cannot unregister: invalid cacheKey');
 			return;
 		}
 		setCache((prev) => {
-			if (!prev.has(path)) {
-				console.warn('[ArchbaseAliveAbleRoutes] Attempting to unregister non-existent path:', path);
+			if (!prev.has(cacheKey)) {
+				console.warn('[ArchbaseAliveAbleRoutes] Attempting to unregister non-existent cacheKey:', cacheKey);
 			}
 			const next = new Map(prev);
-			next.delete(path);
+			next.delete(cacheKey);
 			return next;
 		});
 		setRequestedUnregister((prev) => {
 			const next = new Set(prev);
-			next.delete(path);
+			next.delete(cacheKey);
 			return next;
 		});
 	};
 
 	// Solicita remoção (chamado pelo TabContainer ao fechar aba)
+	// Nota: O TabContainer usa a URL real como identificador da aba
 	const requestUnregister = (path: string) => {
 		setRequestedUnregister((prev) => {
 			const next = new Set(prev);
@@ -104,6 +254,7 @@ export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => 
 		requestedUnregister,
 		register,
 		unregister,
+		updateParams,
 		requestUnregister
 	};
 
@@ -130,71 +281,164 @@ const DisplayRoute = ({ component, routesProps, ...props }: DisplayRouteProps) =
 	if (!contextValue) {
 		throw new Error('DisplayRoute must be used within ArchbaseAliveAbleRoutes provider');
 	}
-	const { cache, requestedUnregister, register, unregister } = contextValue;
+	const { cache, requestedUnregister, register, unregister, updateParams } = contextValue;
 	const [isActive, setIsActive] = useState(false);
+	const [currentParams, setCurrentParams] = useState<Params<string>>({});
 	const containerRef = useRef<HTMLDivElement>(null);
-	const isInitializedRef = useRef(false);
+	const location = useLocation();
+
+	// Calcula a chave de cache baseada no path e URL atual
+	const cacheKey = useMemo(() => {
+		if (!props.path) return null;
+		return getCacheKey(props.path, location.pathname);
+	}, [props.path, location.pathname]);
+
+	// Extrai os parâmetros da URL atual
+	const extractedParams = useMemo(() => {
+		if (!props.path) return {};
+		const match = matchPath({ path: props.path, end: true }, location.pathname);
+		return match?.params || {};
+	}, [props.path, location.pathname]);
+
+	// Ref para rastrear se este cacheKey específico já foi inicializado
+	const initializedCacheKeysRef = useRef<Set<string>>(new Set());
 
 	// Lazy loading: criar componente apenas quando a rota fica ativa pela primeira vez
 	useLayoutEffect(() => {
-		if (isActive && component && props.path && !isInitializedRef.current) {
-			// Se component é uma função, instanciar; caso contrário, usar diretamente
+		if (isActive && component && cacheKey && !initializedCacheKeysRef.current.has(cacheKey)) {
 			const element = typeof component === 'function'
 				? React.createElement(component as React.ComponentType)
 				: component;
-			register(props.path, element);
-			isInitializedRef.current = true;
+			register(cacheKey, element, extractedParams);
+			initializedCacheKeysRef.current.add(cacheKey);
 		}
-	}, [isActive, component, props.path, register]);
+	}, [isActive, component, cacheKey, register, extractedParams]);
+
+	// Atualiza os parâmetros quando a URL muda (para a mesma rota)
+	useLayoutEffect(() => {
+		if (isActive && cacheKey && initializedCacheKeysRef.current.has(cacheKey)) {
+			updateParams(cacheKey, extractedParams);
+			setCurrentParams(extractedParams);
+		}
+	}, [isActive, cacheKey, extractedParams, updateParams]);
 
 	// Verificar se foi solicitada a remoção do cache
+	// O TabContainer usa a URL real como identificador, então verificamos com a URL
 	useLayoutEffect(() => {
-		if (props.path && requestedUnregister.has(props.path)) {
-			unregister(props.path);
-			isInitializedRef.current = false;
+		if (cacheKey && requestedUnregister.has(cacheKey)) {
+			unregister(cacheKey);
+			initializedCacheKeysRef.current.delete(cacheKey);
 		}
-	}, [props.path, requestedUnregister, unregister]);
+	}, [cacheKey, requestedUnregister, unregister]);
 
 	// Obter o componente do cache
-	const cachedElement = props.path ? cache.get(props.path) : null;
+	const cachedData = cacheKey ? cache.get(cacheKey) : null;
+
+	// Parâmetros a serem fornecidos via contexto
+	const paramsForContext = useMemo(() => {
+		// Se está ativo, usa os parâmetros extraídos da URL atual
+		if (isActive) {
+			return extractedParams;
+		}
+		// Se não está ativo mas tem dados em cache, usa os parâmetros do cache
+		if (cachedData) {
+			return cachedData.params;
+		}
+		return currentParams;
+	}, [isActive, extractedParams, cachedData, currentParams]);
+
+	// Ref para rastrear o estado anterior de isActive
+	const prevIsActiveRef = useRef(isActive);
+
+	// Dispara evento de resize quando tab fica visível
+	// Isso força componentes como grids e gráficos a recalcular suas dimensões
+	useEffect(() => {
+		const wasActive = prevIsActiveRef.current;
+		prevIsActiveRef.current = isActive;
+
+		// Só dispara quando a tab VOLTA a ficar ativa (de false para true)
+		if (isActive && !wasActive && containerRef.current) {
+			// Pequeno delay para garantir que o CSS foi aplicado
+			const timeoutId = setTimeout(() => {
+				// Dispara resize para componentes que escutam window.resize
+				window.dispatchEvent(new Event('resize'));
+
+				// Dispara evento customizado no container para componentes específicos
+				containerRef.current?.dispatchEvent(
+					new CustomEvent('keepalive:visible', { bubbles: true })
+				);
+			}, 50);
+
+			return () => clearTimeout(timeoutId);
+		}
+	}, [isActive]);
 
 	return (
 		<>
-			{cachedElement && (
-				<div
-					ref={containerRef}
-					style={{
-						display: isActive ? 'block' : 'none',
-						height: isActive ? '100%' : '0',
-						overflow: isActive ? 'auto' : 'hidden'
-					}}
-				>
-					{cachedElement}
-				</div>
+			{cachedData && (
+				<KeepAliveVisibilityContext.Provider value={{ isVisible: isActive }}>
+					<ArchbaseRouteParamsContext.Provider value={{ params: paramsForContext }}>
+						<div
+							ref={containerRef}
+							style={{
+								// Usa visibility + position ao invés de display:none
+								// para manter dimensões e permitir que ResizeObserver funcione
+								position: isActive ? 'relative' : 'absolute',
+								visibility: isActive ? 'visible' : 'hidden',
+								pointerEvents: isActive ? 'auto' : 'none',
+								width: '100%',
+								height: '100%',
+								top: isActive ? undefined : 0,
+								left: isActive ? undefined : 0,
+								zIndex: isActive ? 1 : -1,
+								overflow: isActive ? 'auto' : 'hidden'
+							}}
+						>
+							{cachedData.element}
+						</div>
+					</ArchbaseRouteParamsContext.Provider>
+				</KeepAliveVisibilityContext.Provider>
 			)}
 
 			<Routes {...routesProps}>
-				<Route {...(props as any)} element={<RouteMatchInformant onRouteMatchChange={setIsActive} />} />
+				<Route
+					{...(props as any)}
+					element={
+						<RouteMatchInformant
+							onRouteMatchChange={setIsActive}
+							onParamsChange={setCurrentParams}
+						/>
+					}
+				/>
 			</Routes>
 		</>
 	);
 };
 
 // ============================================================================
-// ROUTE MATCH INFORMANT - DETECTA QUANDO A ROTA FICA ATIVA
+// ROUTE MATCH INFORMANT - DETECTA QUANDO A ROTA FICA ATIVA E CAPTURA PARAMS
 // ============================================================================
 
 interface RouteMatchInformantProps {
 	onRouteMatchChange: (matches: boolean) => void;
+	onParamsChange: (params: Params<string>) => void;
 }
 
-const RouteMatchInformant = ({ onRouteMatchChange }: RouteMatchInformantProps) => {
+const RouteMatchInformant = ({ onRouteMatchChange, onParamsChange }: RouteMatchInformantProps) => {
+	const location = useLocation();
+
 	useLayoutEffect(() => {
 		onRouteMatchChange(true);
 		return () => {
 			onRouteMatchChange(false);
 		};
 	}, [onRouteMatchChange]);
+
+	// Notifica sobre mudanças na URL (que podem significar mudanças nos params)
+	useLayoutEffect(() => {
+		// Os params são extraídos no DisplayRoute usando matchPath
+		// Aqui apenas notificamos que a localização mudou
+	}, [location.pathname, onParamsChange]);
 
 	return null;
 };
