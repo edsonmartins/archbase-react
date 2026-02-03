@@ -51,6 +51,10 @@ export interface ArchbaseRemoteApiClient {
   delete<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<T>
   patch<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R>
   patchNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R>
+  /** Faz requisição GET e retorna Blob (para download de arquivos) */
+  getBlob(url: string, headers?: Record<string, string>, withoutToken?: boolean): Promise<Blob>
+  /** Faz requisição POST e retorna Blob (para download de arquivos) */
+  postBlob<T>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean): Promise<Blob>
 }
 
 export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
@@ -187,6 +191,40 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
       const response = await axios.patch(url, data, {
         headers: finalHeaders,
         ...options
+      })
+      return response.data
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  /**
+   * Faz requisição GET e retorna Blob (para download de arquivos).
+   * Útil para exportação de relatórios em PDF, Excel, CSV, etc.
+   */
+  async getBlob(url: string, headers?: Record<string, string>, withoutToken?: boolean): Promise<Blob> {
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      const response = await axios.get(url, {
+        headers: finalHeaders,
+        responseType: 'blob'
+      })
+      return response.data
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  /**
+   * Faz requisição POST e retorna Blob (para download de arquivos).
+   * Útil para exportação de relatórios que requerem parâmetros complexos no body.
+   */
+  async postBlob<T>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean): Promise<Blob> {
+    try {
+      const finalHeaders = this.prepareHeaders(headers, withoutToken);
+      const response = await axios.post(url, data, {
+        headers: finalHeaders,
+        responseType: 'blob'
       })
       return response.data
     } catch (error) {
