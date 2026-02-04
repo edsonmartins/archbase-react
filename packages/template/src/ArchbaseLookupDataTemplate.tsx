@@ -247,6 +247,20 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 		[useExternalDataSource, loadData, searchFields, pageSize, dataSource, onError]
 	);
 
+	// === HANDLER DE FILTRO DO GRID ===
+	const handleFilterModelChange = useCallback(
+		(filterModel: any) => {
+			// Captura o valor do filtro global (quickFilterValues)
+			const quickFilterValue = filterModel?.quickFilterValues?.[0] || '';
+
+			// Se loadData está disponível, fazer busca server-side
+			if (loadData && !useExternalDataSource) {
+				handleLoadData(quickFilterValue);
+			}
+		},
+		[loadData, useExternalDataSource, handleLoadData]
+	);
+
 	// === EFEITOS ===
 
 	// Carregar dados quando modal abre
@@ -520,9 +534,12 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 									enableRowSelection={selectionMode === 'multiple'}
 									enableRowNumbers
 									enableColumnFilterModes
+									enableTopToolbar
+									enableGlobalFilter
 									getRowId={getRowId}
 									onCellDoubleClick={handleCellDoubleClick}
 									onSelectedRowsChanged={selectionMode === 'multiple' ? handleRowSelection : undefined}
+									onFilterModelChange={handleFilterModelChange}
 								>
 									{children}
 								</ArchbaseDataGrid>
