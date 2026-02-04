@@ -1,0 +1,445 @@
+
+# ArchbaseLookupDataTemplate
+
+Template de modal para pesquisa e seleção de registros com grid de dados. Suporta seleção única e múltipla com integração ao DataSource.
+
+## Quando Usar
+
+- Seleção de registros relacionados (lookup)
+- Pesquisa avançada com filtros
+- Seleção única ou múltipla de itens
+- Integração com serviços remotos
+
+## Exemplo Básico - Seleção Única
+
+```tsx
+import { useCallback } from 'react'
+import { Badge, Text } from '@mantine/core'
+import { IconTool, IconCheckbox, IconSquare } from '@tabler/icons-react'
+import { useArchbaseRemoteServiceApi } from '@archbase/data'
+import { ArchbaseDataGridColumn, Columns } from '@archbase/components'
+import { ArchbaseLookupDataTemplate } from '@archbase/template'
+import { MecanicoDto } from '../domain/manutencao'
+import { MecanicoService } from '../services'
+import { API_TYPE } from '../ioc/IOCTypes'
+
+interface MecanicoLookupModalProps {
+  opened: boolean
+  onClose: () => void
+  onSelect: (mecanico: MecanicoDto) => void
+  title?: string
+}
+
+export function MecanicoLookupModal({
+  opened,
+  onClose,
+  onSelect,
+  title = 'Selecionar Mecânico'
+}: MecanicoLookupModalProps) {
+  // Service
+  const mecanicoService = useArchbaseRemoteServiceApi<MecanicoService>(API_TYPE.Mecanico)
+
+  // Função para carregar mecânicos
+  const loadMecanicos = useCallback(async (
+    searchValue?: string,
+    _searchFields?: string
+  ): Promise<MecanicoDto[]> => {
+    if (!mecanicoService) return []
+
+    try {
+      if (searchValue && searchValue.trim()) {
+        // Usar findAllWithFilter com filtro RSQL para busca em múltiplos campos
+        const escapedValue = searchValue.trim().toUpperCase().replace(/'/g, "''")
+        const rsqlFilter = `nome=like='%${escapedValue}%',matricula=like='%${escapedValue}%'`
+        const result = await mecanicoService.findAllWithFilter(rsqlFilter, 0, 100)
+        return result.content || []
+      } else {
+        return await mecanicoService.buscarAtivos()
+      }
+    } catch (error) {
+      console.error('Erro ao carregar mecânicos:', error)
+      return []
+    }
+  }, [mecanicoService])
+
+  // Formatar valor como moeda
+  const formatCurrency = (value?: number) => {
+    if (value === undefined || value === null) return '-'
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  }
+
+  // Renderizar especialidades como badges
+  const renderEspecialidades = (especialidades?: string[]) => {
+    if (!especialidades || especialidades.length === 0) return '-'
+    return especialidades.slice(0, 2).map((esp, index) => (
+      <Badge key={index} variant="light" color="grape" size="xs" mr={2}>
+        {esp}
+      </Badge>
+    ))
+  }
+
+  return (
+    <ArchbaseLookupDataTemplate<MecanicoDto>
+      opened={opened}
+      onClose={onClose}
+      onSelect={onSelect}
+      title={title}
+      icon={<IconTool size={20} />}
+      loadData={loadMecanicos}
+      idField="id"
+      displayField="nome"
+      displaySubField="matricula"
+      searchFields="nome,matricula,cpf"
+    >
+      <Columns>
+        <ArchbaseDataGridColumn
+          dataField="nome"
+          header="Nome"
+          size={200}
+          dataType="text"
+        />
+        <ArchbaseDataGridColumn
+          dataField="matricula"
+          header="Matrícula"
+          size={100}
+          dataType="text"
+          render={(data) => {
+            const row = data.row as MecanicoDto
+            return (
+              <Badge variant="light" color="blue" size="sm">
+                {row.matricula || '-'}
+              </Badge>
+            )
+          }}
+        />
+        <ArchbaseDataGridColumn
+          dataField="especialidades"
+          header="Especialidades"
+          size={180}
+          dataType="text"
+          render={(data) => {
+            const row = data.row as MecanicoDto
+            return renderEspecialidades(row.especialidades)
+          }}
+        />
+        <ArchbaseDataGridColumn
+          dataField="valorHora"
+          header="Valor/Hora"
+          size={110}
+          dataType="text"
+          render={(data) => {
+            const row = data.row as MecanicoDto
+            return (
+              <Text size="xs" fw={500}>
+                {formatCurrency(row.valorHora)}
+              </Text>
+            )
+          }}
+        />
+        <ArchbaseDataGridColumn
+          dataField="telefone"
+          header="Telefone"
+          size={130}
+          dataType="text"
+        />
+        <ArchbaseDataGridColumn
+          dataField="ativo"
+          header="Ativo"
+          size={70}
+          dataType="boolean"
+          render={(data) => {
+            const row = data.row as MecanicoDto
+            return row.ativo ? (
+              <IconCheckbox size={18} color="green" />
+            ) : (
+              <IconSquare size={18} color="gray" />
+            )
+          }}
+        />
+      </Columns>
+    </ArchbaseLookupDataTemplate>
+  )
+}
+```
+
+## Exemplo com Seleção Múltipla
+
+```tsx
+import { ArchbaseLookupDataTemplate } from '@archbase/template'
+import { ArchbaseDataGridColumn, Columns } from '@archbase/components'
+
+function ProdutosLookupModal({ opened, onClose, onSelectMultiple }) {
+  const loadProdutos = async (searchValue?: string) => {
+    // Carregar produtos do serviço
+    return await produtoService.findAll(searchValue)
+  }
+
+  return (
+    <ArchbaseLookupDataTemplate<ProdutoDto>
+      opened={opened}
+      onClose={onClose}
+      onSelectMultiple={onSelectMultiple}
+      title="Selecionar Produtos"
+      selectionMode="multiple"
+      maxSelections={10}
+      loadData={loadProdutos}
+      idField="id"
+      displayField="nome"
+    >
+      <Columns>
+        <ArchbaseDataGridColumn dataField="codigo" header="Código" size={100} />
+        <ArchbaseDataGridColumn dataField="nome" header="Nome" size={250} />
+        <ArchbaseDataGridColumn dataField="preco" header="Preço" size={100} />
+      </Columns>
+    </ArchbaseLookupDataTemplate>
+  )
+}
+```
+
+## Exemplo com DataSource Externo
+
+```tsx
+import { useArchbaseDataSource } from '@archbase/data'
+import { ArchbaseLookupDataTemplate } from '@archbase/template'
+
+function ClienteLookupModal({ opened, onClose, onSelect }) {
+  const { dataSource, loading } = useArchbaseDataSource<ClienteDto>({
+    name: 'dsClientes',
+    initialData: clientes
+  })
+
+  return (
+    <ArchbaseLookupDataTemplate<ClienteDto>
+      opened={opened}
+      onClose={onClose}
+      onSelect={onSelect}
+      title="Selecionar Cliente"
+      dataSource={dataSource}
+      isLoading={loading}
+      idField="id"
+      displayField="razaoSocial"
+      displaySubField="cnpj"
+    >
+      <Columns>
+        <ArchbaseDataGridColumn dataField="razaoSocial" header="Razão Social" size={250} />
+        <ArchbaseDataGridColumn dataField="cnpj" header="CNPJ" size={150} />
+        <ArchbaseDataGridColumn dataField="cidade" header="Cidade" size={150} />
+      </Columns>
+    </ArchbaseLookupDataTemplate>
+  )
+}
+```
+
+## Exemplo com Callbacks de Validação
+
+```tsx
+<ArchbaseLookupDataTemplate<FornecedorDto>
+  opened={opened}
+  onClose={onClose}
+  onSelect={onSelect}
+  title="Selecionar Fornecedor"
+  loadData={loadFornecedores}
+  idField="id"
+  displayField="nome"
+  onBeforeConfirm={async (items) => {
+    // Validar antes de confirmar
+    if (items[0].status === 'INATIVO') {
+      alert('Fornecedor inativo não pode ser selecionado')
+      return false // Cancela a seleção
+    }
+    return true
+  }}
+  onAfterConfirm={(items) => {
+    console.log('Selecionado:', items)
+  }}
+  onError={(error) => {
+    console.error('Erro no lookup:', error)
+  }}
+>
+  {/* Colunas */}
+</ArchbaseLookupDataTemplate>
+```
+
+## Exemplo com Renderização Customizada do Item Selecionado
+
+```tsx
+<ArchbaseLookupDataTemplate<VeiculoDto>
+  opened={opened}
+  onClose={onClose}
+  onSelect={onSelect}
+  title="Selecionar Veículo"
+  loadData={loadVeiculos}
+  idField="id"
+  displayField="placa"
+  renderSelectedItem={(veiculo) => (
+    <Paper withBorder p="sm" radius="md" bg="green.0">
+      <Group>
+        <IconCar size={20} />
+        <div>
+          <Text fw={600}>{veiculo.placa}</Text>
+          <Text size="xs" c="dimmed">
+            {veiculo.modelo} - {veiculo.ano}
+          </Text>
+        </div>
+      </Group>
+    </Paper>
+  )}
+>
+  {/* Colunas */}
+</ArchbaseLookupDataTemplate>
+```
+
+## Usando a Ref para Controle Programático
+
+```tsx
+import { useRef } from 'react'
+import { ArchbaseLookupDataTemplate, ArchbaseLookupDataTemplateRef } from '@archbase/template'
+
+function LookupComControle() {
+  const lookupRef = useRef<ArchbaseLookupDataTemplateRef<ProdutoDto>>(null)
+
+  const handleLimparSelecao = () => {
+    lookupRef.current?.clearSelection()
+  }
+
+  const handleRecarregar = () => {
+    lookupRef.current?.refreshData()
+  }
+
+  const handleConfirmarProgramaticamente = async () => {
+    await lookupRef.current?.confirmSelection()
+  }
+
+  return (
+    <ArchbaseLookupDataTemplate<ProdutoDto>
+      ref={lookupRef}
+      opened={opened}
+      onClose={onClose}
+      onSelect={onSelect}
+      title="Selecionar Produto"
+      loadData={loadProdutos}
+      idField="id"
+      displayField="nome"
+      userActions={
+        <Group>
+          <Button onClick={handleLimparSelecao}>Limpar</Button>
+          <Button onClick={handleRecarregar}>Recarregar</Button>
+        </Group>
+      }
+    >
+      {/* Colunas */}
+    </ArchbaseLookupDataTemplate>
+  )
+}
+```
+
+## Props
+
+### Props Obrigatórias
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `opened` | `boolean` | Estado de abertura do modal |
+| `title` | `string` | Título do modal |
+| `children` | `ReactNode` | Colunas do grid (`<Columns><ArchbaseDataGridColumn /></Columns>`) |
+| `onClose` | `() => void` | Callback quando o modal é fechado |
+| `idField` | `keyof T` | Campo usado como ID único |
+| `displayField` | `keyof T` | Campo principal para exibir no resumo do item selecionado |
+
+### Props de Seleção
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `selectionMode` | `'single' \| 'multiple'` | `'single'` | Modo de seleção |
+| `onSelect` | `(item: T) => void` | - | Callback quando um item é selecionado (seleção única) |
+| `onSelectMultiple` | `(items: T[]) => void` | - | Callback quando múltiplos itens são selecionados |
+| `initialSelectedItems` | `T[]` | - | Itens pré-selecionados |
+| `selectOnDoubleClick` | `boolean` | `true` | Seleção por duplo clique (apenas single) |
+| `onBeforeConfirm` | `(items: T[]) => boolean \| Promise<boolean>` | - | Callback antes de confirmar (retornar false cancela) |
+| `onAfterConfirm` | `(items: T[]) => void` | - | Callback após confirmar a seleção |
+
+### Props de DataSource
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `ArchbaseDataSource<T, ID>` | - | DataSource externo (quando fornecido, não cria interno) |
+| `loadData` | `(searchValue?: string, searchFields?: string) => Promise<T[]>` | - | Função para carregar dados |
+| `searchFields` | `string` | `''` | Campos para busca (separados por vírgula) |
+| `pageSize` | `number` | `100` | Tamanho da página para paginação |
+
+### Props de Aparência
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `displaySubField` | `keyof T` | - | Campo secundário para exibir no resumo |
+| `renderSelectedItem` | `(item: T) => ReactNode` | - | Função customizada para renderizar o item selecionado |
+| `renderSelectedItems` | `(items: T[]) => ReactNode` | - | Função customizada para renderizar lista de itens (múltipla) |
+| `icon` | `ReactNode` | - | Ícone do título |
+| `modalSize` | `string \| number` | `'70%'` | Tamanho do modal |
+| `modalHeight` | `string \| number` | `'600px'` | Altura do modal |
+| `gridHeight` | `number` | `400` | Altura do grid |
+| `rowHeight` | `number` | `52` | Altura das linhas do grid |
+| `selectionIndicatorColor` | `string` | `'blue.0'` | Cor de fundo do indicador de seleção |
+| `showSelectionIndicator` | `boolean` | `true` | Exibir indicador de seleção |
+
+### Props de Seleção Múltipla
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `maxSelections` | `number` | - | Máximo de itens selecionáveis |
+| `showSelectionCount` | `boolean` | `true` | Exibir contador de seleção |
+| `allowClearAll` | `boolean` | `true` | Permitir desmarcar todos |
+
+### Props de Estado
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `isLoading` | `boolean` | - | Indicador de carregamento externo |
+| `isError` | `boolean` | `false` | Indicador de erro |
+| `error` | `string` | `''` | Mensagem de erro |
+| `clearError` | `() => void` | - | Função para limpar erro |
+| `autoCloseAlertError` | `number` | `15000` | Tempo para auto-fechar alerta de erro (ms) |
+| `onError` | `(error: any) => void` | - | Callback quando ocorre erro |
+
+### Props de Customização
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `userActions` | `ReactNode` | Ações customizadas na toolbar |
+| `labels` | `LookupLabels` | Labels customizáveis |
+| `variant` | `string` | Variante de estilo |
+
+### Labels Customizáveis
+
+```tsx
+interface LookupLabels {
+  okButton?: string        // Default: 'Ok'
+  cancelButton?: string    // Default: 'Cancel'
+  clearButton?: string     // Default: 'Clear'
+  selectedLabel?: string   // Default: 'Selected'
+  doubleClickHint?: string // Default: 'Double click to select'
+  noItemSelected?: string  // Default: 'No item selected'
+  itemsSelected?: string   // Default: 'items selected'
+}
+```
+
+## Métodos da Ref
+
+| Método | Tipo | Descrição |
+|--------|------|-----------|
+| `getSelectedItems` | `() => T[]` | Obtém os itens atualmente selecionados |
+| `getSelectedItem` | `() => T \| null` | Obtém um único item selecionado (modo single) |
+| `clearSelection` | `() => void` | Limpa toda a seleção |
+| `selectItems` | `(items: T[]) => void` | Seleciona itens programaticamente |
+| `selectItem` | `(item: T) => void` | Seleciona um único item |
+| `deselectItem` | `(item: T) => void` | Remove um item da seleção |
+| `refreshData` | `() => void` | Atualiza/recarrega os dados do grid |
+| `getDataSource` | `() => ArchbaseDataSource<T, any> \| null` | Obtém o DataSource interno/externo |
+| `confirmSelection` | `() => Promise<void>` | Confirma a seleção (equivalente a clicar OK) |
+| `cancelSelection` | `() => void` | Cancela a seleção (equivalente a clicar Cancelar) |
+
+## Próximos Passos
+
+- [FormTemplate](/templates/form-template) - Template de formulário
+- [GridTemplate](/templates/grid-template) - Template de grid
+- [ModalTemplate](/templates/modal-template) - Template de modal simples

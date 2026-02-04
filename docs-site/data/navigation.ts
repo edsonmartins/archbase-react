@@ -72,6 +72,7 @@ export const NAVIGATION_DATA: NavItem[] = [
       { label: 'Visão Geral', href: '/templates/overview' },
       { label: 'Form Template', href: '/templates/form-template' },
       { label: 'Grid Template', href: '/templates/grid-template' },
+      { label: 'Lookup Template', href: '/templates/lookup-template' },
       { label: 'Modal Template', href: '/templates/modal-template' },
       { label: 'Masonry Template', href: '/templates/masonry-template' },
       { label: 'Space Template', href: '/templates/space-template' },
