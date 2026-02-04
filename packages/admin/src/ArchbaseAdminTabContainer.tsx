@@ -193,7 +193,8 @@ export function ArchbaseAdminTabContainer({
 	}, [openedTabs, activeTabId]);
 
 	// Ref para rastrear a última localização processada
-	const lastProcessedPathRef = useRef<string>(currentLocation.pathname);
+	// Inicializa com string vazia para garantir que a primeira navegação (acesso direto por URL) seja processada
+	const lastProcessedPathRef = useRef<string>('');
 
 	useEffect(() => {
 		// Evita reprocessar a mesma localização
