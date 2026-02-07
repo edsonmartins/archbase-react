@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactElement, ReactNode, useLayoutEffect, useRef, useState, useMemo, useEffect } from 'react';
+import React, { createContext, useContext, ReactElement, ReactNode, useLayoutEffect, useRef, useState, useMemo, useEffect, useCallback } from 'react';
 import type { RouteProps, RoutesProps } from 'react-router';
 import { Route, Routes, useLocation, matchPath, Params, useParams as useReactRouterParams } from 'react-router-dom';
 
@@ -110,6 +110,7 @@ export const useParams = <T extends Params<string> = Params<string>>(): T => {
 interface CachedComponent {
 	element: ReactNode;
 	params: Params<string>;
+	lastAccessedAt: number;
 }
 
 interface KeepAliveCacheContextValue {
@@ -119,6 +120,8 @@ interface KeepAliveCacheContextValue {
 	unregister: (cacheKey: string) => void;
 	updateParams: (cacheKey: string, params: Params<string>) => void;
 	requestUnregister: (path: string) => void;
+	touchAccess: (cacheKey: string) => void;
+	maxKeepAliveTabs: number;
 }
 
 const KeepAliveCacheContext = createContext<KeepAliveCacheContextValue | null>(null);
@@ -164,12 +167,40 @@ const getCacheKey = (pathPattern: string, currentPathname: string): string => {
 // COMPONENTE PRINCIPAL
 // ============================================================================
 
-export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => {
+export interface ArchbaseAliveAbleRoutesProps extends RoutesProps {
+	/** Número máximo de abas keepAlive mantidas em cache. Padrão: 10 */
+	maxKeepAliveTabs?: number;
+}
+
+export const ArchbaseAliveAbleRoutes = ({ children, maxKeepAliveTabs = 10, ...props }: ArchbaseAliveAbleRoutesProps) => {
 	const [cache, setCache] = useState<Map<string, CachedComponent>>(new Map());
 	const [requestedUnregister, setRequestedUnregister] = useState<Set<string>>(new Set());
 
-	// Registra um componente no cache
-	const register = (cacheKey: string, component: ReactNode, params: Params<string>) => {
+	/**
+	 * Encontra a entrada menos recentemente usada no cache,
+	 * excluindo a chave que está sendo adicionada (ativa atual)
+	 */
+	const findLeastRecentlyUsed = useCallback((
+		currentCache: Map<string, CachedComponent>,
+		excludeKey: string
+	): string | null => {
+		let lruKey: string | null = null;
+		let lruTime = Infinity;
+
+		currentCache.forEach((value, key) => {
+			if (key === excludeKey) return;
+
+			if (value.lastAccessedAt < lruTime) {
+				lruTime = value.lastAccessedAt;
+				lruKey = key;
+			}
+		});
+
+		return lruKey;
+	}, []);
+
+	// Registra um componente no cache com lógica LRU
+	const register = useCallback((cacheKey: string, component: ReactNode, params: Params<string>) => {
 		if (!cacheKey || typeof cacheKey !== 'string') {
 			console.error('[ArchbaseAliveAbleRoutes] Invalid cacheKey for component registration:', cacheKey);
 			return;
@@ -179,17 +210,53 @@ export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => 
 			return;
 		}
 		setCache((prev) => {
+			// Se já existe, apenas atualiza o timestamp
 			if (prev.has(cacheKey)) {
-				return prev;
+				const next = new Map(prev);
+				const existing = prev.get(cacheKey)!;
+				next.set(cacheKey, { ...existing, lastAccessedAt: Date.now() });
+				return next;
 			}
+
 			const next = new Map(prev);
-			next.set(cacheKey, { element: component, params });
+
+			// LRU: remover menos usada se atingiu limite
+			if (next.size >= maxKeepAliveTabs) {
+				const lruKey = findLeastRecentlyUsed(next, cacheKey);
+				if (lruKey) {
+					next.delete(lruKey);
+					console.log(`[ArchbaseAliveAbleRoutes] LRU eviction: removed "${lruKey}" (cache size: ${next.size}/${maxKeepAliveTabs})`);
+				}
+			}
+
+			next.set(cacheKey, {
+				element: component,
+				params,
+				lastAccessedAt: Date.now()
+			});
+
 			return next;
 		});
-	};
+	}, [maxKeepAliveTabs, findLeastRecentlyUsed]);
+
+	// Atualiza o timestamp de acesso quando uma aba fica ativa
+	const touchAccess = useCallback((cacheKey: string) => {
+		setCache((prev) => {
+			const cached = prev.get(cacheKey);
+			if (!cached) return prev;
+
+			// Threshold de 1s para evitar updates excessivos
+			const now = Date.now();
+			if (now - cached.lastAccessedAt < 1000) return prev;
+
+			const next = new Map(prev);
+			next.set(cacheKey, { ...cached, lastAccessedAt: now });
+			return next;
+		});
+	}, []);
 
 	// Atualiza os parâmetros de um componente no cache
-	const updateParams = (cacheKey: string, params: Params<string>) => {
+	const updateParams = useCallback((cacheKey: string, params: Params<string>) => {
 		setCache((prev) => {
 			const cached = prev.get(cacheKey);
 			if (!cached) {
@@ -201,13 +268,13 @@ export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => 
 				return prev;
 			}
 			const next = new Map(prev);
-			next.set(cacheKey, { ...cached, params });
+			next.set(cacheKey, { ...cached, params, lastAccessedAt: Date.now() });
 			return next;
 		});
-	};
+	}, []);
 
 	// Remove um componente do cache
-	const unregister = (cacheKey: string) => {
+	const unregister = useCallback((cacheKey: string) => {
 		if (!cacheKey) {
 			console.error('[ArchbaseAliveAbleRoutes] Cannot unregister: invalid cacheKey');
 			return;
@@ -225,17 +292,17 @@ export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => 
 			next.delete(cacheKey);
 			return next;
 		});
-	};
+	}, []);
 
 	// Solicita remoção (chamado pelo TabContainer ao fechar aba)
 	// Nota: O TabContainer usa a URL real como identificador da aba
-	const requestUnregister = (path: string) => {
+	const requestUnregister = useCallback((path: string) => {
 		setRequestedUnregister((prev) => {
 			const next = new Set(prev);
 			next.add(path);
 			return next;
 		});
-	};
+	}, []);
 
 	// Separar rotas keepAlive das rotas normais
 	const routes = React.Children.toArray(children);
@@ -249,14 +316,16 @@ export const ArchbaseAliveAbleRoutes = ({ children, ...props }: RoutesProps) => 
 		return route.type !== ArchbaseKeepAliveRoute;
 	}) as ReactElement[];
 
-	const contextValue: KeepAliveCacheContextValue = {
+	const contextValue: KeepAliveCacheContextValue = useMemo(() => ({
 		cache,
 		requestedUnregister,
 		register,
 		unregister,
 		updateParams,
-		requestUnregister
-	};
+		requestUnregister,
+		touchAccess,
+		maxKeepAliveTabs
+	}), [cache, requestedUnregister, register, unregister, updateParams, requestUnregister, touchAccess, maxKeepAliveTabs]);
 
 	return (
 		<KeepAliveCacheContext.Provider value={contextValue}>
@@ -281,7 +350,7 @@ const DisplayRoute = ({ component, routesProps, ...props }: DisplayRouteProps) =
 	if (!contextValue) {
 		throw new Error('DisplayRoute must be used within ArchbaseAliveAbleRoutes provider');
 	}
-	const { cache, requestedUnregister, register, unregister, updateParams } = contextValue;
+	const { cache, requestedUnregister, register, unregister, updateParams, touchAccess } = contextValue;
 	const [isActive, setIsActive] = useState(false);
 	const [currentParams, setCurrentParams] = useState<Params<string>>({});
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -321,6 +390,13 @@ const DisplayRoute = ({ component, routesProps, ...props }: DisplayRouteProps) =
 			setCurrentParams(extractedParams);
 		}
 	}, [isActive, cacheKey, extractedParams, updateParams]);
+
+	// LRU: Atualiza o timestamp de acesso quando a rota fica ativa
+	useEffect(() => {
+		if (isActive && cacheKey && cache.has(cacheKey)) {
+			touchAccess(cacheKey);
+		}
+	}, [isActive, cacheKey, touchAccess, cache]);
 
 	// Verificar se foi solicitada a remoção do cache
 	// O TabContainer usa a URL real como identificador, então verificamos com a URL

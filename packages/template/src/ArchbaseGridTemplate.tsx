@@ -316,6 +316,9 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
   const appContext = useArchbaseAppContext();
   const innerComponentRef = useRef<any>(null);
 
+  // 🔧 CORREÇÃO: Quando há erro, desativa loading para mostrar mensagem de erro
+  const effectiveIsLoading = isError ? false : isLoading;
+
   // 🔧 MEMOIZAÇÃO: Memoiza toolbarLeftContent para evitar re-renders da grid quando mudar
   const memoizedToolbarLeftContent = useMemo(() => toolbarLeftContent, [toolbarLeftContent]);
 
@@ -510,7 +513,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
           enableTopToolbarActions={enableTopToolbarActions}
           manualPagination={true}
           manualSorting={true}
-          isLoading={isLoading}
+          isLoading={effectiveIsLoading}
           pageSize={pageSize}
           pageIndex={pageIndex}
           allowColumnFilters={filterType !== 'none'}

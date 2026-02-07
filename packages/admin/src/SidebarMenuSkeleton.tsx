@@ -107,9 +107,10 @@ export function SidebarGroupsSkeleton({
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
 
+	// Usar tons de cinza neutros para o skeleton (não a cor primária)
 	const bgColor = backgroundColor ?? (colorScheme === 'dark'
-		? theme.colors[theme.primaryColor][6]
-		: theme.colors[theme.primaryColor][7]);
+		? theme.colors.dark[6]
+		: theme.colors.gray[2]);
 
 	return (
 		<Stack

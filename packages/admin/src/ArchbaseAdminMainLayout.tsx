@@ -79,6 +79,8 @@ export interface ArchbaseAdminMainLayoutProps {
 	sideBarIconDarkColor?: string;
 	sideBarIconLightColor?: string;
 	sideBarCollapsedSubmenuWidth?: string | number;
+	/** Número máximo de abas keepAlive mantidas em cache (LRU). Padrão: 10 */
+	maxKeepAliveTabs?: number;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -118,6 +120,7 @@ function ArchbaseAdminMainLayoutContainer({
 	sideBarIconDarkColor,
 	sideBarIconLightColor,
 	sideBarCollapsedSubmenuWidth,
+	maxKeepAliveTabs = 10,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -308,7 +311,7 @@ function ArchbaseAdminMainLayoutContainer({
 				>
 					{children}
 					<div style={{ width: '100%', height: 'calc(100% - 48px)' }}>
-						<ArchbaseAliveAbleRoutes>{...routes as any}</ArchbaseAliveAbleRoutes>
+						<ArchbaseAliveAbleRoutes maxKeepAliveTabs={maxKeepAliveTabs}>{...routes as any}</ArchbaseAliveAbleRoutes>
 					</div>
 				</div>
 				{showSideBar &&
@@ -415,6 +418,7 @@ export function ArchbaseAdminMainLayout({
 	sideBarIconDarkColor,
 	sideBarIconLightColor,
 	sideBarCollapsedSubmenuWidth,
+	maxKeepAliveTabs = 10,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -469,6 +473,7 @@ export function ArchbaseAdminMainLayout({
 				sideBarIconDarkColor={sideBarIconDarkColor}
 				sideBarIconLightColor={sideBarIconLightColor}
 				sideBarCollapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
+				maxKeepAliveTabs={maxKeepAliveTabs}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>

@@ -148,9 +148,16 @@ export const ArchbaseMasonryResponsive: React.FC<ArchbaseMasonryResponsiveProps>
 		return count;
 	}, [windowWidth, columnsCountBreakPoints]);
 
+	// Usa cloneElement para injetar columnsCount no componente filho (ArchbaseMasonry)
+	// Isso evita criar masonry aninhado e mantém compatibilidade com o template
 	return (
-		<ArchbaseMasonry className={className!} style={style!} columnsCount={columnsCount}>
-			{children}
-		</ArchbaseMasonry>
+		<div className={className!} style={style!}>
+			{React.Children.map(children, (child, index) =>
+				React.cloneElement(child as React.ReactElement<ArchbaseMasonryProps>, {
+					key: index,
+					columnsCount: columnsCount,
+				}),
+			)}
+		</div>
 	);
 };

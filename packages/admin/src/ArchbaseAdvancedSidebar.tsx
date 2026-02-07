@@ -19,6 +19,7 @@ import { buildMenuItemStyles } from './buildMenuItemStyles';
 import { buildNavbar } from './buildNavbar';
 import { ArchbaseNavigationItem } from './types';
 import { useLocation } from 'react-router';
+import { SidebarMenuSkeleton, SidebarGroupsSkeleton, SidebarErrorMessage } from './SidebarMenuSkeleton';
 
 export interface ArchbaseAdvancedSidebarProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -109,8 +110,12 @@ export function ArchbaseAdvancedSidebar({
 	iconDarkColor,
 	iconLightColor,
 	collapsedSubmenuWidth,
-	// Props de skeleton desativadas temporariamente - funcionalidade não está funcionando corretamente
-	// isLoading, loadingError, loadingComponent, errorComponent, skeletonItemCount, skeletonGroupCount
+	isLoading = false,
+	loadingError,
+	loadingComponent,
+	errorComponent,
+	skeletonItemCount = 8,
+	skeletonGroupCount = 3,
 }: ArchbaseAdvancedSidebarProps) {
 	const [activeGroupName, setActiveGroupName] = useState<string>('');
 	const appContext = useArchbaseAppContext();
@@ -279,6 +284,33 @@ export function ArchbaseAdvancedSidebar({
 
 	// Função para renderizar o conteúdo do menu
 	const renderMenuContent = () => {
+		// Se há erro de carregamento, exibe mensagem de erro
+		if (loadingError) {
+			if (errorComponent) {
+				return errorComponent;
+			}
+			return (
+				<SidebarErrorMessage
+					message={loadingError}
+					backgroundColor={sidebarBackgroundColor}
+				/>
+			);
+		}
+
+		// Se está carregando, exibe skeleton
+		if (isLoading) {
+			if (loadingComponent) {
+				return loadingComponent;
+			}
+			return (
+				<SidebarMenuSkeleton
+					itemCount={skeletonItemCount}
+					collapsed={collapsed}
+					backgroundColor={sidebarBackgroundColor}
+				/>
+			);
+		}
+
 		// Conteúdo normal do menu
 		if (activeGroupName !== '') {
 			return (
@@ -319,6 +351,17 @@ export function ArchbaseAdvancedSidebar({
 
 	// Função para renderizar os grupos
 	const renderGroups = () => {
+		// Se está carregando e não há grupos, exibe skeleton de grupos
+		if (isLoading && groups.length === 0) {
+			return (
+				<SidebarGroupsSkeleton
+					groupCount={skeletonGroupCount}
+					width={sidebarGroupWidth}
+					height={sidebarHeight}
+				/>
+			);
+		}
+
 		// Grupos normais
 		if (groups.length !== 0) {
 			return (
@@ -341,6 +384,41 @@ export function ArchbaseAdvancedSidebar({
 		return null;
 	};
 
+	// Renderiza conteúdo para sidebar com um único grupo (ou loading/error)
+	const renderSingleGroupContent = () => {
+		// Se há erro de carregamento
+		if (loadingError) {
+			if (errorComponent) {
+				return errorComponent;
+			}
+			return (
+				<SidebarErrorMessage
+					message={loadingError}
+					backgroundColor={sidebarBackgroundColor}
+				/>
+			);
+		}
+
+		// Se está carregando
+		if (isLoading) {
+			if (loadingComponent) {
+				return loadingComponent;
+			}
+			return (
+				<SidebarMenuSkeleton
+					itemCount={skeletonItemCount}
+					collapsed={collapsed}
+					backgroundColor={sidebarBackgroundColor}
+				/>
+			);
+		}
+
+		// Conteúdo normal
+		return navigationData.map((item, index) =>
+			buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem, sidebarTextColor, collapsedSubmenuWidth)
+		);
+	};
+
 	return (
 		<>
 			{groups.length == 1 ? (
@@ -351,7 +429,7 @@ export function ArchbaseAdvancedSidebar({
 						sidebarWidth,
 						sidebarCollapsedWidth,
 						menuItemStyles,
-						navigationData.map((item, index) => buildMenuItem(theme, collapsed, onMenuItemClick, item, index, iconsWithBackground, location.pathname, highlightActiveMenuItem, sidebarTextColor, collapsedSubmenuWidth)),
+						renderSingleGroupContent(),
 						isHidden,
 						sidebarHeight,
 						sideBarHeaderContent,

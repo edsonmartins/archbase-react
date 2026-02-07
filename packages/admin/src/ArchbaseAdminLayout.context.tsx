@@ -57,7 +57,9 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 }) => {
 	const [collapsed, setCollapsed] = useState<boolean>(initialSidebarCollapsed);
 	const [hidden, setHidden] = useState<boolean>(false);
-	const [isLoadingPermissions, setIsLoadingPermissions] = useState<boolean>(enableSecurity === true);
+	const [isLoadingPermissions, setIsLoadingPermissions] = useState<boolean>(() => {
+		return enableSecurity === true;
+	});
 	const [permissionsError, setPermissionsError] = useState<string | null>(null);
 
 	// Ref para evitar processamento duplicado das permissões

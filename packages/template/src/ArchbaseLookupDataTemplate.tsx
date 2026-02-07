@@ -7,13 +7,10 @@ import {
 	Button,
 	Flex,
 	Group,
-	LoadingOverlay,
 	Modal,
 	Paper,
 	Stack,
 	Text,
-	Center,
-	Loader,
 	useMantineColorScheme
 } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
@@ -494,7 +491,6 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 					opacity: 0.25
 				}}
 			>
-				<LoadingOverlay visible={isLoading} opacity={0.8} />
 				<ArchbaseSpaceFixed height={modalHeight}>
 					{hasError && (
 						<ArchbaseSpaceTop size="100px">
@@ -519,31 +515,26 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 							{userActions && <Group justify="flex-end">{userActions}</Group>}
 
 							{/* Grid de dados */}
-							{isLoading && !externalIsLoading ? (
-								<Center h={gridHeight}>
-									<Loader />
-								</Center>
-							) : (
-								<ArchbaseDataGrid<T, ID>
-									dataSource={dataSource}
-									height={gridHeight}
-									rowHeight={rowHeight}
-									withBorder
-									striped
-									highlightOnHover
-									enableRowSelection={selectionMode === 'multiple'}
-									enableRowNumbers
-									enableColumnFilterModes
-									enableTopToolbar
-									enableGlobalFilter
-									getRowId={getRowId}
-									onCellDoubleClick={handleCellDoubleClick}
-									onSelectedRowsChanged={selectionMode === 'multiple' ? handleRowSelection : undefined}
-									onFilterModelChange={handleFilterModelChange}
-								>
-									{children}
-								</ArchbaseDataGrid>
-							)}
+							<ArchbaseDataGrid<T, ID>
+								dataSource={dataSource}
+								height={gridHeight}
+								rowHeight={rowHeight}
+								withBorder
+								striped
+								highlightOnHover
+								isLoading={isLoading}
+								enableRowSelection={selectionMode === 'multiple'}
+								enableRowNumbers
+								enableColumnFilterModes
+								enableTopToolbar
+								enableGlobalFilter
+								getRowId={getRowId}
+								onCellDoubleClick={handleCellDoubleClick}
+								onSelectedRowsChanged={selectionMode === 'multiple' ? handleRowSelection : undefined}
+								onFilterModelChange={handleFilterModelChange}
+							>
+								{children}
+							</ArchbaseDataGrid>
 
 							{/* Indicador de seleção */}
 							{renderSelectionIndicatorContent()}

@@ -44,7 +44,7 @@ export {
 	useParams,
 	useKeepAliveCache
 } from './ArchbaseAliveAbleRoutes';
-export type { ArchbaseKeepAliveRouteProps } from './ArchbaseAliveAbleRoutes';
+export type { ArchbaseKeepAliveRouteProps, ArchbaseAliveAbleRoutesProps } from './ArchbaseAliveAbleRoutes';
 export type { CommandPaletteButtonProps, ArchbaseSpotlightActionData } from './CommandPaletteButton';
 export { CommandPaletteButton } from './CommandPaletteButton';
 

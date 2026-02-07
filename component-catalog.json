@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-01-30",
+  "generatedAt": "2026-02-06",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -769,7 +769,7 @@
     },
     {
       "name": "ArchbaseAdvancedSidebar",
-      "description": "Indica se as permissões estão sendo carregadas (exibe skeleton)",
+      "description": "Indica se as permissões estão sendo carregadas (exibe skeleton na área do menu)",
       "sourcePath": "packages/admin/src/ArchbaseAdvancedSidebar",
       "exportsFrom": "@archbase/admin",
       "props": [
@@ -975,7 +975,25 @@
           "name": "isLoading",
           "type": "boolean",
           "required": false,
-          "description": "Indica se as permissões estão sendo carregadas (exibe skeleton)"
+          "description": "Indica se as permissões estão sendo carregadas (exibe skeleton na área do menu)"
+        },
+        {
+          "name": "loadingError",
+          "type": "string | null",
+          "required": false,
+          "description": "Mensagem de erro ao carregar permissões (exibe mensagem na área do menu)"
+        },
+        {
+          "name": "loadingComponent",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Componente customizado para exibir durante o carregamento"
+        },
+        {
+          "name": "errorComponent",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Componente customizado para exibir quando ocorrer erro"
         },
         {
           "name": "skeletonItemCount",
@@ -13706,9 +13724,73 @@
       "canonicalUrl": "packages/core/src/utils/nestedObject"
     },
     {
-      "name": "SidebarSkeleton",
-      "description": "SidebarSkeleton - Componente de skeleton loading para a sidebar.\nExibe placeholders animados enquanto as permissões de navegação são carregadas.",
-      "sourcePath": "packages/admin/src/SidebarSkeleton",
+      "name": "SidebarErrorMessage",
+      "description": "SidebarMenuSkeleton - Componente de skeleton loading para a área de menu da sidebar.\nExibe placeholders animados enquanto as permissões de navegação são carregadas.\nEste componente deve ser usado apenas na área do menu, não sobrepondo header/footer.",
+      "sourcePath": "packages/admin/src/SidebarMenuSkeleton",
+      "exportsFrom": "@archbase/admin",
+      "props": [
+        {
+          "name": "message",
+          "type": "string",
+          "required": true,
+          "description": "Mensagem de erro a exibir"
+        },
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor de fundo"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Componente customizado para exibir o erro"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/SidebarMenuSkeleton"
+    },
+    {
+      "name": "SidebarGroupsSkeleton",
+      "description": "SidebarMenuSkeleton - Componente de skeleton loading para a área de menu da sidebar.\nExibe placeholders animados enquanto as permissões de navegação são carregadas.\nEste componente deve ser usado apenas na área do menu, não sobrepondo header/footer.",
+      "sourcePath": "packages/admin/src/SidebarMenuSkeleton",
+      "exportsFrom": "@archbase/admin",
+      "props": [
+        {
+          "name": "groupCount",
+          "type": "number",
+          "required": false,
+          "description": "Número de grupos a exibir no skeleton"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura da coluna de grupos"
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Altura da sidebar"
+        },
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor de fundo da área de grupos"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/SidebarMenuSkeleton"
+    },
+    {
+      "name": "SidebarMenuSkeleton",
+      "description": "SidebarMenuSkeleton - Componente de skeleton loading para a área de menu da sidebar.\nExibe placeholders animados enquanto as permissões de navegação são carregadas.\nEste componente deve ser usado apenas na área do menu, não sobrepondo header/footer.",
+      "sourcePath": "packages/admin/src/SidebarMenuSkeleton",
       "exportsFrom": "@archbase/admin",
       "props": [
         {
@@ -13718,63 +13800,21 @@
           "description": "Número de itens de menu a exibir no skeleton"
         },
         {
-          "name": "groupCount",
-          "type": "number",
-          "required": false,
-          "description": "Número de grupos a exibir no skeleton"
-        },
-        {
-          "name": "sidebarWidth",
-          "type": "string | number",
-          "required": false,
-          "description": "Largura da sidebar"
-        },
-        {
-          "name": "sidebarGroupWidth",
-          "type": "string | number",
-          "required": false,
-          "description": "Largura da coluna de grupos"
-        },
-        {
-          "name": "sidebarHeight",
-          "type": "string | number",
-          "required": false,
-          "description": "Altura da sidebar"
-        },
-        {
           "name": "collapsed",
           "type": "boolean",
           "required": false,
           "description": "Se a sidebar está colapsada"
         },
         {
-          "name": "singleGroup",
-          "type": "boolean",
-          "required": false,
-          "description": "Se deve mostrar apenas um grupo (sem coluna de grupos)"
-        },
-        {
-          "name": "backgroundDarkColor",
+          "name": "backgroundColor",
           "type": "string",
           "required": false,
-          "description": "Cor de fundo para tema escuro"
-        },
-        {
-          "name": "backgroundLightColor",
-          "type": "string",
-          "required": false,
-          "description": "Cor de fundo para tema claro"
-        },
-        {
-          "name": "backgroundGroupColor",
-          "type": "string",
-          "required": false,
-          "description": "Cor de fundo da área de grupos"
+          "description": "Cor de fundo"
         }
       ],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "packages/admin/src/SidebarSkeleton"
+      "canonicalUrl": "packages/admin/src/SidebarMenuSkeleton"
     },
     {
       "name": "slugify",
