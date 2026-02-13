@@ -1,6 +1,6 @@
 {
   "name": "@archbase/advanced",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "Archbase React Advanced Components - Charts, Kanban, QueryBuilder",
   "type": "module",
   "main": "./dist/index.js",
@@ -38,7 +38,6 @@
     "dayjs": "^1.11.10",
     "i18next": "^23.16.8",
     "lodash": "^4.17.21",
-    "react-accessible-accordion": "^5.0.0",
     "react-addons-shallow-compare": "^15.6.3",
     "react-date-object": "^2.1.8",
     "react-i18next": "^13.5.0",

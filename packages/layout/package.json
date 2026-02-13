@@ -1,6 +1,6 @@
 {
   "name": "@archbase/layout",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "Layout components for Archbase React",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -45,7 +45,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-i18next": "^15.1.2",
-    "usehooks-ts": "^2.16.0"
+    "usehooks-ts": "^3.1.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.200",

@@ -1,5 +1,6 @@
 /* eslint-disable */
 import {
+  Accordion,
   ActionIcon,
   Card,
   Checkbox,
@@ -15,18 +16,8 @@ import {
   Tooltip
 } from '@mantine/core'
 import { DatePickerInput, DatesRangeValue, DateValue, TimeInput } from '@mantine/dates'
-import { IconArrowDown, IconArrowUp, IconChevronDown, IconSearch } from '@tabler/icons-react'
-import { IconFilterSearch } from '@tabler/icons-react'
-import { IconChevronUp } from '@tabler/icons-react'
+import { IconArrowDown, IconArrowUp, IconSearch, IconFilterSearch } from '@tabler/icons-react'
 import React, { Component, CSSProperties, Fragment, ReactNode } from 'react'
-import {
-  Accordion,
-  AccordionItem,
-  AccordionItemButton,
-  AccordionItemHeading,
-  AccordionItemPanel,
-  AccordionItemState
-} from 'react-accessible-accordion'
 import shallowCompare from 'react-addons-shallow-compare'
 import { CustomSortItem } from './ArchbaseAdvancedFilter'
 import {
@@ -598,60 +589,54 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
       let textValue = rule.value && rule.value !== '' ? rule.value : null
       textValue = rule.value2 && rule.value2 !== '' ? `${textValue} a ${rule.value2}` : textValue
       result.push(
-        <AccordionItem
-          uuid={this.prefixId + '_' + index}
+        <Accordion.Item
+          value={this.prefixId + '_' + index}
           id={this.prefixId + '_' + index}
           key={'flk' + index}
-          dangerouslySetExpanded={!rule.disabled}
+          className={rule.disabled === true ? 'simple-filter-disabled' : 'simple-filter-enabled'}
         >
-          <AccordionItemHeading
+          <Accordion.Control
             className={rule.disabled === true ? 'simple-filter-disabled' : 'simple-filter-enabled'}
+            disabled={rule.disabled}
           >
-            <AccordionItemButton
-              className={
-                rule.disabled === true
-                  ? 'accordion__button simple-filter-disabled'
-                  : 'accordion__button simple-filter-enabled'
-              }
-            >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Checkbox
-                  checked={!rule.disabled}
-                  width="24px"
-                  style={{ margin: 0, cursor: 'pointer' }}
-                  onChange={(event) =>
-                    this.onDisabledChanged(
-                      event.currentTarget.checked,
-                      event.currentTarget.checked,
-                      rule,
-                      this.prefixId + '_' + index
-                    )
-                  }
-                />
-                <Space w={'sm'}></Space>
-                <Text c={this.props.colorScheme === 'dark' ? 'white' : 'black'}>
-                  {getI18nextInstance().t(child.label)}
-                </Text>
-                <SimpleValueSelector
-                  field={child.name}
-                  options={this.getOperators(child.name)}
-                  value={rule.operator}
-                  className="custom-select-operator"
-                  style={{
-                    color: this.props.theme!.colors.blue[5],
-                    backgroundColor: 'transparent'
-                  }}
-                  disabled={true}
-                  handleOnChange={(value) => this.onOperatorChanged(rule, value)}
-                  level={0}
-                />
-                <Text style={{ fontSize: '12px' }} c="blue">
-                  {textValue}
-                </Text>
-              </div>
-            </AccordionItemButton>
-          </AccordionItemHeading>
-          <AccordionItemPanel
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Checkbox
+                checked={!rule.disabled}
+                width="24px"
+                style={{ margin: 0, cursor: 'pointer' }}
+                onChange={(event) =>
+                  this.onDisabledChanged(
+                    event.currentTarget.checked,
+                    event.currentTarget.checked,
+                    rule,
+                    this.prefixId + '_' + index
+                  )
+                }
+                onClick={(e) => e.stopPropagation()}
+              />
+              <Space w={'sm'}></Space>
+              <Text c={this.props.colorScheme === 'dark' ? 'white' : 'black'}>
+                {getI18nextInstance().t(child.label)}
+              </Text>
+              <SimpleValueSelector
+                field={child.name}
+                options={this.getOperators(child.name)}
+                value={rule.operator}
+                className="custom-select-operator"
+                style={{
+                  color: this.props.theme!.colors.blue[5],
+                  backgroundColor: 'transparent'
+                }}
+                disabled={true}
+                handleOnChange={(value) => this.onOperatorChanged(rule, value)}
+                level={0}
+              />
+              <Text style={{ fontSize: '12px' }} c="blue">
+                {textValue}
+              </Text>
+            </div>
+          </Accordion.Control>
+          <Accordion.Panel
             className={rule.disabled === true ? 'simple-filter-disabled' : 'simple-filter-enabled'}
           >
             <div
@@ -712,8 +697,8 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 ''
               )}
             </div>
-          </AccordionItemPanel>
-        </AccordionItem>
+          </Accordion.Panel>
+        </Accordion.Item>
       )
     })
 
@@ -728,44 +713,39 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
 
     if (this.props.allowSort === true) {
       result.push(
-        <AccordionItem uuid={this.prefixId + '_' + 9999} key={'flk' + 9999}>
-          <AccordionItemHeading>
-            <AccordionItemButton>
-              <div
+        <Accordion.Item value={this.prefixId + '_sort'} key={'flk_sort'}>
+          <Accordion.Control>
+            <div
+              style={{
+                fontWeight: 'bold',
+                color: '#3d3d69',
+                marginTop: '10px',
+                display: 'flex',
+                padding: '4px'
+              }}
+            >
+              <IconFilterSearch size={30} color={this.getColor('green')} />
+              <Space w="md" />
+              {'Ordenação'}
+              <Space w="md" />
+              <Text
+                key={'txto_sort'}
+                truncate
+                c="blue"
                 style={{
-                  fontWeight: 'bold',
-                  color: '#3d3d69',
-                  marginTop: '10px',
-                  display: 'flex',
-                  padding: '4px'
+                  wordBreak: 'break-word',
+                  display: 'block',
+                  wordWrap: 'break-word',
+                  width: '100%',
+                  whiteSpace: 'normal',
+                  fontSize: '12px'
                 }}
               >
-                <IconFilterSearch size={30} color={this.getColor('green')} />
-                <Space w="md" />
-                {'Ordenação'}
-                <Space w="md" />
-                <Text
-                  key={'txto_' + 9999}
-                  truncate
-                  c="blue"
-                  style={{
-                    wordBreak: 'break-word',
-                    display: 'block',
-                    wordWrap: 'break-word',
-                    width: '100%',
-                    whiteSpace: 'normal',
-                    fontSize: '12px'
-                  }}
-                >
-                  {getSortString(currentFilter)}
-                </Text>
-                <AccordionItemState>
-                  {({ expanded }) => (expanded ? <IconChevronUp /> : <IconChevronDown />)}
-                </AccordionItemState>
-              </div>
-            </AccordionItemButton>
-          </AccordionItemHeading>
-          <AccordionItemPanel>
+                {getSortString(currentFilter)}
+              </Text>
+            </div>
+          </Accordion.Control>
+          <Accordion.Panel>
             <Grid>
               <Grid.Col span={12} style={{ padding: 13 }}>
                 <div
@@ -803,12 +783,12 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                             totalPages: 0,
                             pageSize: 999999
                           });
-                          
+
                           // Para V1, pode ser necessário forceUpdate (implementação funcional)
                           if (detectDataSourceVersion(dataSource) !== 'V2') {
                             // Componente funcional - V1 compatibilidade preservada
                           }
-                          
+
                           return dataSource;
                         })()
                       }
@@ -828,8 +808,8 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
                 </div>
               </Grid.Col>
             </Grid>
-          </AccordionItemPanel>
-        </AccordionItem>
+          </Accordion.Panel>
+        </Accordion.Item>
       )
     }
 
@@ -838,21 +818,31 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
 
   render = () => {
     const items: ReactNode[] = []
-    const preExpandedItems: string[] = []
+    const defaultExpandedItems: string[] = []
+
+    // Primeiro: itens não desabilitados (exceto sort)
     this.state.simpleFields.forEach((item: any) => {
-      if (item.props.dangerouslySetExpanded && item.props.uuid !== this.prefixId + '_' + 9999) {
+      const isDisabled = item.props.className?.includes('simple-filter-disabled')
+      const isSortItem = item.props.value === this.prefixId + '_sort'
+      if (!isDisabled && !isSortItem) {
         items.push(item)
-        preExpandedItems.push(item.props.uuid)
+        defaultExpandedItems.push(item.props.value)
       }
     })
+
+    // Segundo: item de ordenação (sort)
     this.state.simpleFields.forEach((item: any) => {
-      if (item.props.uuid === this.prefixId + '_' + 9999) {
+      if (item.props.value === this.prefixId + '_sort') {
         items.push(item)
-        preExpandedItems.push(item.props.uuid)
+        defaultExpandedItems.push(item.props.value)
       }
     })
+
+    // Terceiro: itens desabilitados
     this.state.simpleFields.forEach((item: any) => {
-      if (!item.props.dangerouslySetExpanded && item.props.uuid !== this.prefixId + '_' + 9999) {
+      const isDisabled = item.props.className?.includes('simple-filter-disabled')
+      const isSortItem = item.props.value === this.prefixId + '_sort'
+      if (isDisabled && !isSortItem) {
         items.push(item)
       }
     })
@@ -860,10 +850,10 @@ class ArchbaseSimpleFilter extends Component<ArchbaseSimpleFilterProps, Archbase
     return (
       <Fragment>
         <Accordion
-          allowZeroExpanded={true}
-          allowMultipleExpanded={true}
-          preExpanded={preExpandedItems}
+          multiple={true}
+          defaultValue={defaultExpandedItems}
           id="acc1"
+          variant="separated"
         >
           {items.map((item, index) => <Fragment key={index}>{item}</Fragment>)}
         </Accordion>
