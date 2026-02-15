@@ -1,52 +1,301 @@
 
-# ArchbaseAdvancedSidebar
+# Sidebar
 
-Menu lateral com grupos e navegação.
+O pacote `@archbase/admin` oferece componentes de sidebar para navegação lateral em aplicações administrativas.
 
-## Exemplo
+## Variantes Disponíveis
+
+A partir da versão 3.0.15, estão disponíveis **duas implementações** de sidebar:
+
+| Componente | Status | Descrição |
+|------------|--------|-----------|
+| `ArchbaseMantineSidebar` | ✅ **Recomendado** | Nova sidebar baseada em Mantine puro |
+| `ArchbaseAdvancedSidebar` | ⚠️ Deprecated | Sidebar legada baseada em react-pro-sidebar |
+
+---
+
+## ArchbaseMantineSidebar (Recomendado)
+
+Nova sidebar construída 100% com componentes Mantine, oferecendo 3 variantes visuais:
+
+### Variantes
+
+| Variante | Descrição | Inspiração |
+|----------|-----------|------------|
+| `standard` | Menu accordion com subitems aninhados | Notion, Slack |
+| `minimal` | Apenas ícones com tooltips e menus flutuantes | VSCode, Outlook |
+| `rail` | Painel duplo com coluna de grupos | Discord, Supabase |
+
+### Uso Básico
 
 ```tsx
-import { ArchbaseAdvancedSidebar } from '@archbase/admin';
-import { IconDashboard, IconUsers, IconSettings } from '@tabler/icons-react';
+import { ArchbaseMantineSidebar } from '@archbase/admin';
 
-const menuItems = [
+const navigationData = [
   {
     label: 'Dashboard',
-    icon: IconDashboard,
+    icon: <IconDashboard size={20} />,
     link: '/dashboard',
+    showInSidebar: true,
   },
   {
     label: 'Cadastros',
-    icon: IconUsers,
+    icon: <IconUsers size={20} />,
+    showInSidebar: true,
     links: [
-      { label: 'Usuários', link: '/usuarios' },
-      { label: 'Grupos', link: '/grupos' },
+      { label: 'Usuários', link: '/usuarios', showInSidebar: true },
+      { label: 'Grupos', link: '/grupos', showInSidebar: true },
     ],
-  },
-  {
-    label: 'Configurações',
-    icon: IconSettings,
-    link: '/configuracoes',
   },
 ];
 
-<ArchbaseAdvancedSidebar
-  links={menuItems}
-  collapsed={false}
-  onCollapse={(collapsed) => setCollapsed(collapsed)}
+<ArchbaseMantineSidebar
+  navigationData={navigationData}
+  variant="rail"
+  width={280}
+  collapsedWidth={60}
+  height="100%"
 />
 ```
 
-## Props
+### Uso com ArchbaseAdminMainLayout
+
+A forma mais comum de usar a sidebar é através do `ArchbaseAdminMainLayout`:
+
+```tsx
+import { ArchbaseAdminMainLayout } from '@archbase/admin';
+
+<ArchbaseAdminMainLayout
+  navigationData={navigationData}
+  sidebarVariant="rail"           // 'legacy' | 'standard' | 'minimal' | 'rail'
+  sidebarActiveColor="appPrimary" // Nome da cor do tema para hover/ativo
+  sideBarWidth="280px"
+  sideBarCollapsedWidth="60px"
+  sideBarBackgroundDarkColor={theme.colors.appPrimary[7]}
+  sideBarBackgroundLightColor={theme.colors.appPrimary[7]}
+  sideBarTextDarkColor="white"
+  sideBarTextLightColor="white"
+  sideBarIconDarkColor="white"
+  sideBarIconLightColor="white"
+  // ... outras props
+>
+  {/* conteúdo */}
+</ArchbaseAdminMainLayout>
+```
+
+### Props do ArchbaseMantineSidebar
 
 | Prop | Tipo | Padrão | Descrição |
 |------|------|--------|-----------|
-| `links` | `MenuItem[]` | - | Itens do menu |
-| `collapsed` | `boolean` | `false` | Estado colapsado |
-| `onCollapse` | `(collapsed) => void` | - | Callback |
-| `activeLink` | `string` | - | Link ativo |
+| `navigationData` | `ArchbaseNavigationItem[]` | **required** | Dados de navegação |
+| `variant` | `'standard' \| 'minimal' \| 'rail'` | `'standard'` | Variante visual |
+| `width` | `string \| number` | `300` | Largura expandida |
+| `collapsedWidth` | `string \| number` | `60` | Largura colapsada |
+| `height` | `string \| number` | `'100%'` | Altura do sidebar |
+| `collapsed` | `boolean` | `undefined` | Estado controlado de colapso |
+| `defaultCollapsed` | `boolean` | `false` | Estado inicial de colapso |
+| `onCollapsedChange` | `(collapsed: boolean) => void` | - | Callback ao mudar colapso |
+| `activeColor` | `string` | `theme.primaryColor` | Cor para hover/ativo (nome da cor) |
+| `backgroundDarkColor` | `string` | `theme.colors.dark[7]` | Cor de fundo (dark mode) |
+| `backgroundLightColor` | `string` | `theme.white` | Cor de fundo (light mode) |
+| `textDarkColor` | `string` | `theme.colors.gray[3]` | Cor do texto (dark mode) |
+| `textLightColor` | `string` | `theme.colors.gray[7]` | Cor do texto (light mode) |
+| `iconDarkColor` | `string` | - | Cor dos ícones (dark mode) |
+| `iconLightColor` | `string` | - | Cor dos ícones (light mode) |
+| `header` | `ReactNode` | - | Conteúdo do header |
+| `footer` | `ReactNode` | - | Conteúdo do footer |
+| `footerHeight` | `string \| number` | - | Altura do footer |
+| `showSearch` | `boolean` | `false` | Exibir campo de busca |
+| `searchPlaceholder` | `string` | `'Buscar...'` | Placeholder da busca |
+| `highlightActiveItem` | `boolean` | `true` | Destacar item ativo |
+| `showKeyboardShortcuts` | `boolean` | `false` | Exibir atalhos de teclado |
+| `isLoading` | `boolean` | `false` | Estado de carregamento |
+| `loadingError` | `string` | - | Mensagem de erro |
+| `withBorder` | `boolean` | `true` | Exibir borda |
+| `withShadow` | `boolean` | `false` | Exibir sombra |
+
+### Props específicas da variante `rail`
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `groupColumnWidth` | `string \| number` | `80` | Largura da coluna de grupos |
+| `defaultGroupIcon` | `ReactNode` | - | Ícone padrão para grupos |
+| `showGroupLabels` | `boolean` | `true` | Exibir labels dos grupos |
+| `activeGroup` | `string` | - | Grupo ativo (controlado) |
+| `defaultActiveGroup` | `string` | - | Grupo inicial |
+| `onActiveGroupChange` | `(groupName: string) => void` | - | Callback ao mudar grupo |
+| `groupBackgroundColor` | `string` | - | Cor de fundo da coluna de grupos |
+| `selectedGroupColor` | `string` | - | Cor do grupo selecionado |
+| `groupColor` | `string` | - | Cor dos grupos inativos |
+
+### Props do ArchbaseAdminMainLayout (Sidebar)
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `sidebarVariant` | `'legacy' \| 'standard' \| 'minimal' \| 'rail'` | `'legacy'` | Variante do sidebar |
+| `sidebarActiveColor` | `string` | - | Cor de destaque/hover (nome da cor do tema) |
+| `sidebarShowSearch` | `boolean` | `false` | Exibir busca (apenas variantes Mantine) |
+| `sideBarWidth` | `string` | `'360px'` | Largura expandida |
+| `sideBarCollapsedWidth` | `string \| number` | `'74px'` | Largura colapsada |
+| `sideBarBackgroundDarkColor` | `string` | - | Cor de fundo (dark) |
+| `sideBarBackgroundLightColor` | `string` | - | Cor de fundo (light) |
+| `sideBarTextDarkColor` | `string` | - | Cor do texto (dark) |
+| `sideBarTextLightColor` | `string` | - | Cor do texto (light) |
+| `sideBarIconDarkColor` | `string` | - | Cor dos ícones (dark) |
+| `sideBarIconLightColor` | `string` | - | Cor dos ícones (light) |
+
+---
+
+## Exemplos por Variante
+
+### Standard (Notion/Slack style)
+
+```tsx
+<ArchbaseAdminMainLayout
+  navigationData={navigationData}
+  sidebarVariant="standard"
+  sidebarActiveColor="blue"
+  sideBarWidth="280px"
+  sideBarCollapsedWidth="60px"
+  sideBarBackgroundLightColor="#ffffff"
+  sideBarBackgroundDarkColor="#1a1b1e"
+>
+  {children}
+</ArchbaseAdminMainLayout>
+```
+
+### Minimal (VSCode style)
+
+```tsx
+<ArchbaseAdminMainLayout
+  navigationData={navigationData}
+  sidebarVariant="minimal"
+  sidebarActiveColor="violet"
+  sideBarWidth="60px"
+  sideBarCollapsedWidth="60px"
+  sideBarBackgroundLightColor="#f8f9fa"
+  sideBarBackgroundDarkColor="#25262b"
+>
+  {children}
+</ArchbaseAdminMainLayout>
+```
+
+### Rail (Discord style)
+
+```tsx
+<ArchbaseAdminMainLayout
+  navigationData={navigationData}
+  sidebarVariant="rail"
+  sidebarActiveColor="appPrimary"
+  sideBarWidth="280px"
+  sideBarCollapsedWidth="60px"
+  sideBarBackgroundLightColor={theme.colors.appPrimary[7]}
+  sideBarBackgroundDarkColor={theme.colors.appPrimary[7]}
+  sideBarTextLightColor="white"
+  sideBarTextDarkColor="white"
+  sideBarIconLightColor="white"
+  sideBarIconDarkColor="white"
+>
+  {children}
+</ArchbaseAdminMainLayout>
+```
+
+---
+
+## Estrutura do NavigationItem
+
+```tsx
+interface ArchbaseNavigationItem {
+  // Identificação
+  label: string;                    // Texto exibido
+  link?: string;                    // URL de navegação
+
+  // Visual
+  icon?: ReactNode;                 // Ícone do item
+  showInSidebar?: boolean;          // Exibir no sidebar (default: true)
+
+  // Subitems
+  links?: ArchbaseNavigationItem[]; // Items filhos
+  initiallyOpened?: boolean;        // Iniciar expandido
+
+  // Estado
+  disabled?: boolean | (() => boolean); // Item desabilitado
+  hideDisabledItem?: boolean;       // Esconder se desabilitado
+
+  // Grupos (para variante rail)
+  group?: ArchbaseNavigationGroup;  // Grupo do item
+
+  // Keep Alive
+  keepAlive?: boolean;              // Manter tab em memória
+  component?: ComponentType;        // Componente da rota
+
+  // Extras
+  routeParams?: Record<string, any>; // Parâmetros da rota
+}
+
+interface ArchbaseNavigationGroup {
+  name: string;        // Identificador único
+  label: string;       // Texto exibido
+  icon?: ReactNode;    // Ícone do grupo
+  hint?: string;       // Tooltip
+  indexOrder: number;  // Ordem de exibição
+}
+```
+
+---
+
+## Migração do Legacy para Mantine
+
+### Antes (Legacy)
+
+```tsx
+<ArchbaseAdminMainLayout
+  navigationData={navigationData}
+  // sidebarVariant não especificado = 'legacy'
+  sideBarWidth="280px"
+  sideBarBackgroundDarkColor="#1a1b1e"
+>
+```
+
+### Depois (Mantine)
+
+```tsx
+<ArchbaseAdminMainLayout
+  navigationData={navigationData}
+  sidebarVariant="rail"              // Escolha a variante
+  sidebarActiveColor="appPrimary"    // IMPORTANTE: defina a cor de hover
+  sideBarWidth="280px"
+  sideBarBackgroundDarkColor={theme.colors.appPrimary[7]}
+>
+```
+
+### Checklist de Migração
+
+1. ✅ Adicione `sidebarVariant` com o valor desejado
+2. ✅ Adicione `sidebarActiveColor` com o nome da cor do tema (ex: `"appPrimary"`, `"blue"`)
+3. ✅ Verifique se as cores de fundo/texto/ícone estão configuradas
+4. ✅ Teste as 3 variantes para escolher a melhor para seu caso
+
+---
+
+## ArchbaseAdvancedSidebar (Deprecated)
+
+> ⚠️ **Deprecated**: Esta implementação será removida em versões futuras. Use `ArchbaseMantineSidebar` ou configure `sidebarVariant` diferente de `'legacy'` no `ArchbaseAdminMainLayout`.
+
+A sidebar legada baseada em `react-pro-sidebar` continua disponível para compatibilidade:
+
+```tsx
+<ArchbaseAdminMainLayout
+  navigationData={navigationData}
+  sidebarVariant="legacy"  // ou simplesmente não especificar
+  // ... outras props
+>
+```
+
+---
 
 ## Próximos Passos
 
 - [Navigation](/admin/navigation) - Sistema de navegação
 - [Tabs](/admin/tabs) - Container de abas
+- [Main Layout](/admin/main-layout) - Layout principal

@@ -11,7 +11,7 @@ export type { ArchbaseAdminLayoutFooterProps } from './ArchbaseAdminLayoutFooter
 export { ArchbaseAdminLayoutFooter } from './ArchbaseAdminLayoutFooter';
 export type { ArchbaseAdminLayoutHeaderProps } from './ArchbaseAdminLayoutHeader';
 export { ArchbaseAdminLayoutHeader, defaultAvatar } from './ArchbaseAdminLayoutHeader';
-export type { ArchbaseAdminMainLayoutProps } from './ArchbaseAdminMainLayout';
+export type { ArchbaseAdminMainLayoutProps, AdminSidebarVariant, ArchbaseCustomSidebarProps } from './ArchbaseAdminMainLayout';
 export { ArchbaseAdminMainLayout } from './ArchbaseAdminMainLayout';
 export type { ArchbaseAdminTabContainerProps } from './ArchbaseAdminTabContainer';
 export { ArchbaseAdminTabContainer } from './ArchbaseAdminTabContainer';
@@ -49,10 +49,59 @@ export type { CommandPaletteButtonProps, ArchbaseSpotlightActionData } from './C
 export { CommandPaletteButton } from './CommandPaletteButton';
 
 export type { ArchbaseAdvancedSidebarProps } from './ArchbaseAdvancedSidebar';
+/** @deprecated Use ArchbaseMantineSidebar instead */
 export { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 
 export type { SidebarMenuSkeletonProps, SidebarGroupsSkeletonProps, SidebarErrorMessageProps } from './SidebarMenuSkeleton';
 export { SidebarMenuSkeleton, SidebarGroupsSkeleton, SidebarErrorMessage } from './SidebarMenuSkeleton';
+
+// New Mantine-based Sidebar (replacement for ArchbaseAdvancedSidebar)
+export {
+	ArchbaseMantineSidebar,
+	StandardSidebar,
+	MinimalSidebar,
+	RailSidebar,
+	SidebarProvider,
+	useSidebar,
+	useSidebarOptional,
+	SidebarItem,
+	SidebarGroup,
+	SidebarSection,
+	SidebarGroupIcon,
+	SidebarSearch,
+	SidebarUserProfile,
+	SidebarBadge,
+	SidebarIndicator,
+	SidebarMenuSkeleton as MantineSidebarMenuSkeleton,
+	SidebarGroupsSkeleton as MantineSidebarGroupsSkeleton,
+	SidebarHeaderSkeleton,
+	SidebarUserProfileSkeleton,
+	SidebarErrorMessage as MantineSidebarErrorMessage,
+	useSidebarNavigation,
+	useSidebarSearch,
+	useSidebarKeyboard,
+} from './sidebar';
+export type {
+	SidebarVariant,
+	SidebarCollapsibleMode,
+	ExtendedNavigationItem,
+	ArchbaseMantineSidebarProps,
+	SidebarContextValue,
+	SidebarItemProps,
+	SidebarGroupProps,
+	SidebarSearchProps,
+	SidebarUserProfileProps,
+	SidebarGroupIconProps,
+	SidebarBadgeProps,
+	SidebarProviderProps,
+	SidebarSkeletonProps,
+	UseSidebarNavigationOptions,
+	UseSidebarNavigationReturn,
+	UseSidebarSearchOptions,
+	UseSidebarSearchReturn,
+	UseSidebarKeyboardOptions,
+	UseSidebarKeyboardReturn,
+} from './sidebar';
 
 export { ArchbaseDrawerContent } from './drawer/DrawerContent'
 export type { ArchbaseDrawerContentProps } from './drawer/DrawerContent'

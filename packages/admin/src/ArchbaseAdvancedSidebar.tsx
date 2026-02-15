@@ -21,6 +21,23 @@ import { ArchbaseNavigationItem } from './types';
 import { useLocation } from 'react-router';
 import { SidebarMenuSkeleton, SidebarGroupsSkeleton, SidebarErrorMessage } from './SidebarMenuSkeleton';
 
+/**
+ * @deprecated Use ArchbaseMantineSidebar with variant="rail" instead.
+ * This component uses react-pro-sidebar which is no longer maintained.
+ *
+ * Migration example:
+ * ```tsx
+ * // Before
+ * <ArchbaseAdvancedSidebar navigationData={data} theme={theme} />
+ *
+ * // After
+ * <ArchbaseMantineSidebar
+ *   navigationData={data}
+ *   variant="rail"
+ *   theme={theme}
+ * />
+ * ```
+ */
 export interface ArchbaseAdvancedSidebarProps {
 	navigationData: ArchbaseNavigationItem[];
 	sidebarWidth?: string | number;
@@ -76,6 +93,10 @@ type GroupItemSidebar = {
 	links?: ReactNode[] | undefined;
 };
 
+/**
+ * @deprecated Use ArchbaseMantineSidebar with variant="rail" instead.
+ * This component uses react-pro-sidebar which is no longer maintained.
+ */
 export function ArchbaseAdvancedSidebar({
 	navigationData,
 	sidebarGroupWidth = '80px',

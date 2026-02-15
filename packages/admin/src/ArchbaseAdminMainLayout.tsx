@@ -14,6 +14,7 @@ import {
 	ArchbaseAdminLayoutProvider,
 } from './ArchbaseAdminLayout.context';
 import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
+import { ArchbaseMantineSidebar, SidebarVariant } from './sidebar';
 import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute, type ArchbaseKeepAliveRouteProps } from './ArchbaseAliveAbleRoutes';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
@@ -29,6 +30,15 @@ export interface ArchbaseCustomSidebarProps {
 	height?: string | number,
 	isHidden?: boolean,
 }
+
+/**
+ * Variante do sidebar a ser usado no layout
+ * - 'legacy': ArchbaseAdvancedSidebar (react-pro-sidebar) - deprecated
+ * - 'standard': Menu com accordion e nested menus (Notion/Slack style)
+ * - 'minimal': Icon-only com tooltips (VSCode style)
+ * - 'rail': Double panel com grupos (Discord style) - similar ao legacy
+ */
+export type AdminSidebarVariant = 'legacy' | SidebarVariant;
 
 export interface ArchbaseAdminMainLayoutProps {
 	navigationData?: ArchbaseNavigationItem[];
@@ -79,8 +89,21 @@ export interface ArchbaseAdminMainLayoutProps {
 	sideBarIconDarkColor?: string;
 	sideBarIconLightColor?: string;
 	sideBarCollapsedSubmenuWidth?: string | number;
+	/** Cor de destaque/hover dos items do sidebar (nome da cor do tema, ex: 'blue', 'appPrimary') */
+	sidebarActiveColor?: string;
 	/** Número máximo de abas keepAlive mantidas em cache (LRU). Padrão: 10 */
 	maxKeepAliveTabs?: number;
+	/**
+	 * Variante do sidebar a ser usado.
+	 * - 'legacy': ArchbaseAdvancedSidebar (react-pro-sidebar) - deprecated
+	 * - 'standard': Menu com accordion e nested menus (Notion/Slack style)
+	 * - 'minimal': Icon-only com tooltips (VSCode style)
+	 * - 'rail': Double panel com grupos (Discord style) - similar ao legacy
+	 * @default 'legacy'
+	 */
+	sidebarVariant?: AdminSidebarVariant;
+	/** Mostrar campo de busca no sidebar (apenas para variantes Mantine) */
+	sidebarShowSearch?: boolean;
 }
 
 function ArchbaseAdminMainLayoutContainer({
@@ -120,7 +143,10 @@ function ArchbaseAdminMainLayoutContainer({
 	sideBarIconDarkColor,
 	sideBarIconLightColor,
 	sideBarCollapsedSubmenuWidth,
+	sidebarActiveColor,
 	maxKeepAliveTabs = 10,
+	sidebarVariant = 'legacy',
+	sidebarShowSearch = false,
 }: ArchbaseAdminMainLayoutProps) {
 	const theme = useMantineTheme();
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
@@ -150,15 +176,8 @@ function ArchbaseAdminMainLayoutContainer({
 	};
 
 	const getSideBarHeight = () => {
-		let headerHeight = 0;
-		let footerHeight = 0;
-		if (sideBarHeaderHeight) {
-			headerHeight = Number(px(sideBarHeaderHeight));
-		}
-		if (sideBarFooterHeight) {
-			footerHeight = Number(px(sideBarFooterHeight));
-		}
-		return `calc(100vh - var(--app-shell-header-offset, 0px) - ${headerHeight + footerHeight}px)`;
+		// Sidebar preenche 100% do navbar, layout interno é gerenciado pelo componente
+		return '100%';
 	};
 
 	const getSideBarDrawerHeight = () => {
@@ -223,14 +242,121 @@ function ArchbaseAdminMainLayoutContainer({
 	}, [adminLayoutContextValue.collapsed, onCollapsedSideBar]);
 
 	const currentSidebarWidth = adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth;
+
+	// Função para renderizar o sidebar baseado na variante
+	const renderSidebar = (height: string, forDrawer: boolean = false) => {
+		if (customRenderSidebar) {
+			return customRenderSidebar({ width: sideBarWidth, height, isHidden });
+		}
+
+		// Variante legacy (ArchbaseAdvancedSidebar com react-pro-sidebar)
+		if (sidebarVariant === 'legacy') {
+			return (
+				<ArchbaseAdvancedSidebar
+					navigationData={adminLayoutContextValue.navigationData}
+					sidebarHeight={height}
+					sidebarGroupWidth={sideBarCollapsedWidth}
+					sidebarCollapsedWidth={sideBarCollapsedWidth}
+					selectedGroupColor={selectedGroupColor}
+					groupColor={groupColor}
+					backgroundGroupColor={backgroundGroupColor}
+					groupLabelDarkColor={groupLabelDarkColor}
+					groupLabelLightColor={groupLabelLightColor}
+					showGroupLabels={false}
+					collapsed={forDrawer ? false : adminLayoutContextValue.collapsed}
+					sidebarWidth={sideBarWidth}
+					isHidden={isHidden}
+					onMenuItemClick={onMenuItemClick}
+					onClickActionIcon={onClickActionIcon}
+					sideBarFooterHeight={sideBarFooterHeight}
+					sideBarFooterContent={sideBarFooterContent}
+					sideBarHeaderContent={sideBarHeaderContent}
+					theme={theme}
+					sidebarRef={sidebarRef}
+					defaultGroupIcon={sidebarDefaultGroupIcon}
+					selectedGroupName={sidebarSelectedGroupName}
+					iconsWithBackground={iconsWithBackground}
+					menuItemHeight={menuItemHeight}
+					highlightActiveMenuItem={highlightActiveMenuItem}
+					backgroundDarkColor={sideBarBackgroundDarkColor}
+					backgroundLightColor={sideBarBackgroundLightColor}
+					textDarkColor={sideBarTextDarkColor}
+					textLightColor={sideBarTextLightColor}
+					iconDarkColor={sideBarIconDarkColor}
+					iconLightColor={sideBarIconLightColor}
+					collapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
+					isLoading={adminLayoutContextValue.isLoadingPermissions}
+					loadingError={adminLayoutContextValue.permissionsError}
+				/>
+			);
+		}
+
+		// Variantes Mantine (standard, minimal, rail)
+		return (
+			<ArchbaseMantineSidebar
+				navigationData={adminLayoutContextValue.navigationData}
+				variant={sidebarVariant as SidebarVariant}
+				width={sideBarWidth}
+				collapsedWidth={sideBarCollapsedWidth}
+				height={height}
+				groupColumnWidth={sideBarCollapsedWidth}
+				collapsed={forDrawer ? false : adminLayoutContextValue.collapsed}
+				onCollapsedChange={(collapsed) => adminLayoutContextValue.setCollapsed(collapsed)}
+				activeGroup={sidebarSelectedGroupName}
+				onActiveGroupChange={(groupName) => {
+					// Manter compatibilidade com onClickActionIcon se necessário
+				}}
+				defaultGroupIcon={sidebarDefaultGroupIcon}
+				showGroupLabels={false}
+				onMenuItemClick={onMenuItemClick}
+				showSearch={sidebarShowSearch}
+				header={sideBarHeaderContent}
+				footer={sideBarFooterContent}
+				footerHeight={sideBarFooterHeight}
+				isLoading={adminLayoutContextValue.isLoadingPermissions}
+				loadingError={adminLayoutContextValue.permissionsError}
+				theme={theme}
+				highlightActiveItem={highlightActiveMenuItem}
+				backgroundDarkColor={sideBarBackgroundDarkColor}
+				backgroundLightColor={sideBarBackgroundLightColor}
+				textDarkColor={sideBarTextDarkColor}
+				textLightColor={sideBarTextLightColor}
+				iconDarkColor={sideBarIconDarkColor}
+				iconLightColor={sideBarIconLightColor}
+				groupBackgroundColor={backgroundGroupColor}
+				selectedGroupColor={selectedGroupColor}
+				groupColor={groupColor}
+				groupLabelDarkColor={groupLabelDarkColor}
+				groupLabelLightColor={groupLabelLightColor}
+				activeColor={sidebarActiveColor}
+				withBorder={false}
+				sidebarRef={sidebarRef}
+			/>
+		);
+	};
+
+	// Background do navbar - usa a cor passada ou padrão do tema
+	const navbarBackground = colorScheme === 'dark'
+		? (sideBarBackgroundDarkColor ?? theme.colors.dark[7])
+		: (sideBarBackgroundLightColor ?? theme.white);
+
 	return (
 		<AppShell
 			header={{ height: '60px', collapsed: !showHeader }}
+			navbar={{
+				width: currentSidebarWidth,
+				breakpoint: 0, // nunca colapsar automaticamente
+				collapsed: { mobile: isHidden, desktop: !showSideBar },
+			}}
 			footer={{ height: footerHeight ? footerHeight : '0px' }}
 			styles={{
 				main: {
 					background: colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
 					overflow: 'hidden',
+				},
+				navbar: {
+					background: navbarBackground,
+					borderRight: 'none',
 				},
 			}}
 		>
@@ -248,45 +374,7 @@ function ArchbaseAdminMainLayoutContainer({
 				{header}
 			</AppShell.Header>
 			<AppShell.Navbar>
-				{!isHidden && showSideBar ? (
-					customRenderSidebar ? customRenderSidebar({ width: sideBarWidth, height: getSideBarHeight(), isHidden }) :
-						<ArchbaseAdvancedSidebar
-							navigationData={adminLayoutContextValue.navigationData}
-							sidebarHeight={getSideBarHeight()}
-							sidebarGroupWidth={sideBarCollapsedWidth}
-							sidebarCollapsedWidth={sideBarCollapsedWidth}
-							selectedGroupColor={selectedGroupColor}
-							groupColor={groupColor}
-							backgroundGroupColor={backgroundGroupColor}
-							groupLabelDarkColor={groupLabelDarkColor}
-							groupLabelLightColor={groupLabelLightColor}
-							showGroupLabels={false}
-							collapsed={adminLayoutContextValue.collapsed}
-							sidebarWidth={sideBarWidth}
-							isHidden={isHidden}
-							onMenuItemClick={onMenuItemClick}
-							onClickActionIcon={onClickActionIcon}
-							sideBarFooterHeight={sideBarFooterHeight}
-							sideBarFooterContent={sideBarFooterContent}
-							sideBarHeaderContent={sideBarHeaderContent}
-							theme={theme}
-							sidebarRef={sidebarRef}
-							defaultGroupIcon={sidebarDefaultGroupIcon}
-							selectedGroupName={sidebarSelectedGroupName}
-							iconsWithBackground={iconsWithBackground}
-							menuItemHeight={menuItemHeight}
-							highlightActiveMenuItem={highlightActiveMenuItem}
-							backgroundDarkColor={sideBarBackgroundDarkColor}
-							backgroundLightColor={sideBarBackgroundLightColor}
-							textDarkColor={sideBarTextDarkColor}
-							textLightColor={sideBarTextLightColor}
-							iconDarkColor={sideBarIconDarkColor}
-							iconLightColor={sideBarIconLightColor}
-							collapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
-							isLoading={adminLayoutContextValue.isLoadingPermissions}
-							loadingError={adminLayoutContextValue.permissionsError}
-						/>
-				) : undefined}
+				{!isHidden && showSideBar ? renderSidebar(getSideBarHeight(), false) : undefined}
 			</AppShell.Navbar>
 			<AppShell.Main bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}>
 				{!isHidden && showCollapsedButton &&
@@ -300,13 +388,11 @@ function ArchbaseAdminMainLayoutContainer({
 					)}
 				<div
 					style={{
-						height: `calc(100vh - var(--app-shell-header-offset, 0px) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding) - 1rem)`,
-						width: `calc(100vw - var(--app-shell-padding) - calc(${isHidden ? '0px' : currentSidebarWidth} + 1rem))`,
-						marginTop: '0.5rem',
-						marginLeft: `calc(${isHidden ? '0px' : currentSidebarWidth} + 0.5rem)`,
+						height: `calc(100vh - var(--app-shell-header-offset, 0px) - var(--app-shell-footer-offset, 0px) - 1rem)`,
+						margin: '0.5rem',
 						border: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : '#e4e9ef'}`,
 						borderRadius: '4px',
-						overflow: 'none',
+						overflow: 'hidden',
 					}}
 				>
 					{children}
@@ -324,44 +410,7 @@ function ArchbaseAdminMainLayoutContainer({
 							header: { minHeight: '10px' },
 						}}
 					>
-						{
-							customRenderSidebar ? customRenderSidebar({ width: sideBarWidth, height: getSideBarDrawerHeight(), isHidden }) :
-								<ArchbaseAdvancedSidebar
-									navigationData={adminLayoutContextValue.navigationData}
-									sidebarWidth={sideBarWidth}
-									sidebarHeight={getSideBarDrawerHeight()}
-									sidebarCollapsedWidth={sideBarCollapsedWidth}
-									sidebarGroupWidth={sideBarCollapsedWidth}
-									selectedGroupColor={selectedGroupColor}
-									groupColor={groupColor}
-									backgroundGroupColor={backgroundGroupColor}
-									groupLabelDarkColor={groupLabelDarkColor}
-									groupLabelLightColor={groupLabelLightColor}
-									showGroupLabels={false}
-									isHidden={isHidden}
-									onMenuItemClick={onMenuItemClick}
-									onClickActionIcon={onClickActionIcon}
-									theme={theme}
-									sidebarRef={sidebarRef}
-									defaultGroupIcon={sidebarDefaultGroupIcon}
-									selectedGroupName={sidebarSelectedGroupName}
-									iconsWithBackground={iconsWithBackground}
-									menuItemHeight={menuItemHeight}
-									sideBarHeaderContent={sideBarHeaderContent}
-									sideBarFooterContent={sideBarFooterContent}
-									sideBarFooterHeight={sideBarFooterHeight}
-									highlightActiveMenuItem={highlightActiveMenuItem}
-									backgroundDarkColor={sideBarBackgroundDarkColor}
-									backgroundLightColor={sideBarBackgroundLightColor}
-									textDarkColor={sideBarTextDarkColor}
-									textLightColor={sideBarTextLightColor}
-									iconDarkColor={sideBarIconDarkColor}
-									iconLightColor={sideBarIconLightColor}
-									collapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
-									isLoading={adminLayoutContextValue.isLoadingPermissions}
-									loadingError={adminLayoutContextValue.permissionsError}
-								/>
-						}
+						{renderSidebar(getSideBarDrawerHeight(), true)}
 					</Drawer>
 				}
 			</AppShell.Main>
@@ -418,7 +467,10 @@ export function ArchbaseAdminMainLayout({
 	sideBarIconDarkColor,
 	sideBarIconLightColor,
 	sideBarCollapsedSubmenuWidth,
+	sidebarActiveColor,
 	maxKeepAliveTabs = 10,
+	sidebarVariant = 'legacy',
+	sidebarShowSearch = false,
 }: ArchbaseAdminMainLayoutProps) {
 	return (
 		<ArchbaseAdminLayoutProvider
@@ -473,7 +525,10 @@ export function ArchbaseAdminMainLayout({
 				sideBarIconDarkColor={sideBarIconDarkColor}
 				sideBarIconLightColor={sideBarIconLightColor}
 				sideBarCollapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
+				sidebarActiveColor={sidebarActiveColor}
 				maxKeepAliveTabs={maxKeepAliveTabs}
+				sidebarVariant={sidebarVariant}
+				sidebarShowSearch={sidebarShowSearch}
 			>
 				{children}
 			</ArchbaseAdminMainLayoutContainer>
