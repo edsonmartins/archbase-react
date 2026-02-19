@@ -250,7 +250,8 @@ function StandardSidebarContent({
 					style={{
 						...styles,
 						width: px(currentWidth),
-						height: px(height),
+						height: typeof height === 'number' ? px(height) : height,
+						minHeight: typeof height === 'number' ? px(height) : height,
 						backgroundColor,
 						display: 'flex',
 						flexDirection: 'column',
@@ -289,18 +290,19 @@ function StandardSidebarContent({
 						</Box>
 					)}
 
-					{/* Menu Content */}
+					{/* Menu Content - ScrollArea ocupa todo espaço disponível */}
 					<ScrollArea
 						style={{ flex: 1 }}
 						scrollbarSize={6}
 						type="hover"
+						offsetScrollbars
 					>
 						<Box p="xs">
 							{renderMenuContent()}
 						</Box>
 					</ScrollArea>
 
-					{/* Footer */}
+					{/* Footer - sempre fixo na parte inferior */}
 					{footer && (
 						<Box
 							style={{

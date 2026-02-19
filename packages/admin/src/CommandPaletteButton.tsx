@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Button, Tooltip, Group, Badge, Center, Image, Text } from '@mantine/core';
+import { Button, Tooltip, Group, Badge, Center, Image, Text, ScrollArea } from '@mantine/core';
 import { IconTerminal, IconSearch } from '@tabler/icons-react';
 import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { spotlight, Spotlight, SpotlightActionData } from '@mantine/spotlight';
@@ -106,9 +106,11 @@ export const CommandPaletteButton = ({ navigationData, color }: CommandPaletteBu
                         query={query}
                     >
                         <Spotlight.Search placeholder={`${t('archbase:Localizar...')}`} leftSection={<IconSearch size="1.2rem" />} />
-                        <Spotlight.ActionsList>
-                            {filteredCommands.length > 0 ? filteredCommands : <Spotlight.Empty>{getI18nextInstance().t('archbase:Nenhum resultado...')}</Spotlight.Empty>}
-                        </Spotlight.ActionsList>
+                        <ScrollArea.Autosize mah="calc(100vh - 200px)" type="scroll" scrollbarSize={8}>
+                            <Spotlight.ActionsList>
+                                {filteredCommands.length > 0 ? filteredCommands : <Spotlight.Empty>{getI18nextInstance().t('archbase:Nenhum resultado...')}</Spotlight.Empty>}
+                            </Spotlight.ActionsList>
+                        </ScrollArea.Autosize>
                     </Spotlight.Root>
                 </>
                 : null

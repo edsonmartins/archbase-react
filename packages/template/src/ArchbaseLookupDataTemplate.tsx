@@ -129,7 +129,11 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 	const appContext = useArchbaseAppContext();
 	const theme = useArchbaseTheme();
 	const { colorScheme } = useMantineColorScheme();
+	const isDark = colorScheme === 'dark';
 	const forceUpdate = useForceUpdate();
+
+	// Cor do indicador de seleção com suporte a dark theme
+	const themeAwareSelectionColor = isDark ? 'dark.5' : selectionIndicatorColor;
 
 	// === ESTADOS ===
 	const [internalIsLoading, setInternalIsLoading] = useState(false);
@@ -414,7 +418,7 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 		if (selectionMode === 'single' && selectedItems.length > 0) {
 			const item = selectedItems[0];
 			return (
-				<Paper withBorder p="sm" radius="md" bg={selectionIndicatorColor}>
+				<Paper withBorder p="sm" radius="md" bg={themeAwareSelectionColor}>
 					<Group justify="space-between">
 						<Group gap="xs">
 							<IconCheck size={16} color="green" />
@@ -425,12 +429,12 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 								{String(item[displayField])}
 							</Text>
 							{displaySubField && (
-								<Text size="sm" c="dimmed">
+								<Text size="sm" c={isDark ? 'gray.4' : 'dimmed'}>
 									{String(item[displaySubField] || '')}
 								</Text>
 							)}
 						</Group>
-						<Text size="xs" c="dimmed">
+						<Text size="xs" c={isDark ? 'gray.4' : 'dimmed'}>
 							{labels.doubleClickHint}
 						</Text>
 					</Group>
@@ -441,7 +445,7 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 		// Render padrão para multiple
 		if (selectionMode === 'multiple' && selectedItems.length > 0) {
 			return (
-				<Paper withBorder p="sm" radius="md" bg={selectionIndicatorColor}>
+				<Paper withBorder p="sm" radius="md" bg={themeAwareSelectionColor}>
 					<Group justify="space-between">
 						<Group gap="xs">
 							<IconCheck size={16} color="green" />

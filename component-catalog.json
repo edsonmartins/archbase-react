@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-02-06",
+  "generatedAt": "2026-02-19",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -599,6 +599,31 @@
           "type": "string | number",
           "required": false,
           "description": "Define side bar collapsed submenu width. (string | number)"
+        },
+        {
+          "name": "sidebarActiveColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor de destaque/hover dos items do sidebar (nome da cor do tema, ex: 'blue', 'appPrimary')"
+        },
+        {
+          "name": "maxKeepAliveTabs",
+          "type": "number",
+          "required": false,
+          "description": "Número máximo de abas keepAlive mantidas em cache (LRU). Padrão: 10"
+        },
+        {
+          "name": "sidebarVariant",
+          "type": "AdminSidebarVariant",
+          "required": false,
+          "description": "Variante do sidebar a ser usado.\n- 'legacy': ArchbaseAdvancedSidebar (react-pro-sidebar) - deprecated\n- 'standard': Menu com accordion e nested menus (Notion/Slack style)\n- 'minimal': Icon-only com tooltips (VSCode style)\n- 'rail': Double panel com grupos (Discord style) - similar ao legacy\n@default 'legacy'",
+          "default": "'legacy'"
+        },
+        {
+          "name": "sidebarShowSearch",
+          "type": "boolean",
+          "required": false,
+          "description": "Mostrar campo de busca no sidebar (apenas para variantes Mantine)"
         }
       ],
       "examples": [],
@@ -769,7 +794,7 @@
     },
     {
       "name": "ArchbaseAdvancedSidebar",
-      "description": "Indica se as permissões estão sendo carregadas (exibe skeleton na área do menu)",
+      "description": "@deprecated Use ArchbaseMantineSidebar with variant=\"rail\" instead.\nThis component uses react-pro-sidebar which is no longer maintained.\nMigration example:\n```tsx\n// Before\n<ArchbaseAdvancedSidebar navigationData={data} theme={theme} />\n// After\n<ArchbaseMantineSidebar\n  navigationData={data}\n  variant=\"rail\"\n  theme={theme}\n/>\n```",
       "sourcePath": "packages/admin/src/ArchbaseAdvancedSidebar",
       "exportsFrom": "@archbase/admin",
       "props": [
@@ -1197,7 +1222,14 @@
       "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
-      "props": [],
+      "props": [
+        {
+          "name": "maxKeepAliveTabs",
+          "type": "number",
+          "required": false,
+          "description": "Número máximo de abas keepAlive mantidas em cache. Padrão: 10"
+        }
+      ],
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
@@ -6434,6 +6466,16 @@
         "editor"
       ],
       "canonicalUrl": "packages/components/src/editors/ArchbaseLookupSelect"
+    },
+    {
+      "name": "ArchbaseMantineSidebar",
+      "description": "ArchbaseMantineSidebar - Componente de sidebar moderno baseado em Mantine\nEste componente substitui o ArchbaseAdvancedSidebar (baseado em react-pro-sidebar)\noferecendo 3 variantes de design:\n- **standard**: Menu completo com accordion, nested menus, search integrado (Notion/Slack style)\n- **minimal**: Icon-only com tooltips e menus flutuantes (VSCode/Outlook style)\n- **rail**: Double panel com coluna de grupos e menu detalhado (Discord/Supabase style)\n@example\n```tsx\n// Variante Standard (padrão)\n<ArchbaseMantineSidebar\n  navigationData={navigationData}\n  variant=\"standard\"\n  showSearch\n  header={<Logo />}\n  footer={<UserProfile />}\n/>\n// Variante Minimal\n<ArchbaseMantineSidebar\n  navigationData={navigationData}\n  variant=\"minimal\"\n  width={60}\n/>\n// Variante Rail (similar ao ArchbaseAdvancedSidebar)\n<ArchbaseMantineSidebar\n  navigationData={navigationData}\n  variant=\"rail\"\n  groupColumnWidth={80}\n  showGroupLabels\n/>\n```",
+      "sourcePath": "packages/admin/src/sidebar/ArchbaseMantineSidebar",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/ArchbaseMantineSidebar"
     },
     {
       "name": "ArchbaseMarkdown",
@@ -12602,6 +12644,36 @@
       "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
+      "name": "MantineSidebarErrorMessage",
+      "description": "Types",
+      "sourcePath": "packages/admin/src/sidebar",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar"
+    },
+    {
+      "name": "MantineSidebarGroupsSkeleton",
+      "description": "Types",
+      "sourcePath": "packages/admin/src/sidebar",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar"
+    },
+    {
+      "name": "MantineSidebarMenuSkeleton",
+      "description": "Types",
+      "sourcePath": "packages/admin/src/sidebar",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar"
+    },
+    {
       "name": "MaskPattern",
       "description": "ArchbaseMaskEdit — input mascarado com padrões comuns e integração com dataSource.\n@status stable",
       "sourcePath": "packages/components/src/editors/ArchbaseMaskEdit",
@@ -12656,6 +12728,16 @@
         "chart"
       ],
       "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
+    },
+    {
+      "name": "MinimalSidebar",
+      "description": "Componente de item minimal (apenas ícone)",
+      "sourcePath": "packages/admin/src/sidebar/variants/MinimalSidebar",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/variants/MinimalSidebar"
     },
     {
       "name": "navigationDataSample",
@@ -13273,6 +13355,16 @@
       "canonicalUrl": "packages/components/src/printer/ArchbaseThermalPrinter"
     },
     {
+      "name": "RailSidebar",
+      "description": "Conteúdo interno do RailSidebar",
+      "sourcePath": "packages/admin/src/sidebar/variants/RailSidebar",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/variants/RailSidebar"
+    },
+    {
       "name": "redirectToLogin",
       "description": "eslint-disable",
       "sourcePath": "packages/security/src/oauth2/authentication",
@@ -13724,97 +13816,158 @@
       "canonicalUrl": "packages/core/src/utils/nestedObject"
     },
     {
-      "name": "SidebarErrorMessage",
-      "description": "SidebarMenuSkeleton - Componente de skeleton loading para a área de menu da sidebar.\nExibe placeholders animados enquanto as permissões de navegação são carregadas.\nEste componente deve ser usado apenas na área do menu, não sobrepondo header/footer.",
-      "sourcePath": "packages/admin/src/SidebarMenuSkeleton",
+      "name": "SidebarBadge",
+      "description": "Badge para exibir notificações/contadores em items do sidebar",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarBadge",
       "exportsFrom": "@archbase/admin",
-      "props": [
-        {
-          "name": "message",
-          "type": "string",
-          "required": true,
-          "description": "Mensagem de erro a exibir"
-        },
-        {
-          "name": "backgroundColor",
-          "type": "string",
-          "required": false,
-          "description": "Cor de fundo"
-        },
-        {
-          "name": "children",
-          "type": "ReactNode",
-          "required": false,
-          "description": "Componente customizado para exibir o erro"
-        }
-      ],
+      "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "packages/admin/src/SidebarMenuSkeleton"
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarBadge"
+    },
+    {
+      "name": "SidebarContext",
+      "description": "SidebarContext — provider de contexto focado em sidebar context.",
+      "sourcePath": "packages/admin/src/sidebar/context",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider"
+      ],
+      "canonicalUrl": "packages/admin/src/sidebar/context"
+    },
+    {
+      "name": "SidebarErrorMessage",
+      "description": "Número de items a exibir",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarSkeleton",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarSkeleton"
+    },
+    {
+      "name": "SidebarGroup",
+      "description": "Componente de grupo colapsável do sidebar\nAgrupa items relacionados com header clicável",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarGroup",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarGroup"
+    },
+    {
+      "name": "SidebarGroupIcon",
+      "description": "Componente de ícone de grupo para a variante Rail\nRenderiza um ícone clicável com label opcional",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarGroupIcon",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarGroupIcon"
     },
     {
       "name": "SidebarGroupsSkeleton",
-      "description": "SidebarMenuSkeleton - Componente de skeleton loading para a área de menu da sidebar.\nExibe placeholders animados enquanto as permissões de navegação são carregadas.\nEste componente deve ser usado apenas na área do menu, não sobrepondo header/footer.",
-      "sourcePath": "packages/admin/src/SidebarMenuSkeleton",
+      "description": "Número de items a exibir",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarSkeleton",
       "exportsFrom": "@archbase/admin",
-      "props": [
-        {
-          "name": "groupCount",
-          "type": "number",
-          "required": false,
-          "description": "Número de grupos a exibir no skeleton"
-        },
-        {
-          "name": "width",
-          "type": "string | number",
-          "required": false,
-          "description": "Largura da coluna de grupos"
-        },
-        {
-          "name": "height",
-          "type": "string | number",
-          "required": false,
-          "description": "Altura da sidebar"
-        },
-        {
-          "name": "backgroundColor",
-          "type": "string",
-          "required": false,
-          "description": "Cor de fundo da área de grupos"
-        }
-      ],
+      "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "packages/admin/src/SidebarMenuSkeleton"
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarSkeleton"
+    },
+    {
+      "name": "SidebarHeaderSkeleton",
+      "description": "Número de items a exibir",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarSkeleton",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarSkeleton"
+    },
+    {
+      "name": "SidebarIndicator",
+      "description": "Badge para exibir notificações/contadores em items do sidebar",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarBadge",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarBadge"
+    },
+    {
+      "name": "SidebarItem",
+      "description": "Componente de item de menu do sidebar\nUsa NavLink do Mantine com suporte a aninhamento",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarItem",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarItem"
     },
     {
       "name": "SidebarMenuSkeleton",
-      "description": "SidebarMenuSkeleton - Componente de skeleton loading para a área de menu da sidebar.\nExibe placeholders animados enquanto as permissões de navegação são carregadas.\nEste componente deve ser usado apenas na área do menu, não sobrepondo header/footer.",
-      "sourcePath": "packages/admin/src/SidebarMenuSkeleton",
+      "description": "Número de items a exibir",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarSkeleton",
       "exportsFrom": "@archbase/admin",
-      "props": [
-        {
-          "name": "itemCount",
-          "type": "number",
-          "required": false,
-          "description": "Número de itens de menu a exibir no skeleton"
-        },
-        {
-          "name": "collapsed",
-          "type": "boolean",
-          "required": false,
-          "description": "Se a sidebar está colapsada"
-        },
-        {
-          "name": "backgroundColor",
-          "type": "string",
-          "required": false,
-          "description": "Cor de fundo"
-        }
-      ],
+      "props": [],
       "examples": [],
       "tags": [],
-      "canonicalUrl": "packages/admin/src/SidebarMenuSkeleton"
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarSkeleton"
+    },
+    {
+      "name": "SidebarProvider",
+      "description": "SidebarProvider — provider de contexto focado em sidebar provider.",
+      "sourcePath": "packages/admin/src/sidebar/context",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider"
+      ],
+      "canonicalUrl": "packages/admin/src/sidebar/context"
+    },
+    {
+      "name": "SidebarSearch",
+      "description": "Campo de busca para o sidebar\nSuporta atalho de teclado e botão de limpar",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarSearch",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarSearch"
+    },
+    {
+      "name": "SidebarSection",
+      "description": "Componente de grupo colapsável do sidebar\nAgrupa items relacionados com header clicável",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarGroup",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarGroup"
+    },
+    {
+      "name": "SidebarUserProfile",
+      "description": "Componente de perfil do usuário para o footer do sidebar\nExibe avatar, nome e email do usuário",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarUserProfile",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarUserProfile"
+    },
+    {
+      "name": "SidebarUserProfileSkeleton",
+      "description": "Número de items a exibir",
+      "sourcePath": "packages/admin/src/sidebar/components/SidebarSkeleton",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/components/SidebarSkeleton"
     },
     {
       "name": "slugify",
@@ -13825,6 +13978,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/utils/string-utils"
+    },
+    {
+      "name": "StandardSidebar",
+      "description": "Conteúdo interno do StandardSidebar (dentro do Provider)",
+      "sourcePath": "packages/admin/src/sidebar/variants/StandardSidebar",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/admin/src/sidebar/variants/StandardSidebar"
     },
     {
       "name": "stringContains",
@@ -14683,6 +14846,66 @@
         "security"
       ],
       "canonicalUrl": "packages/security-ui/src/UserModal"
+    },
+    {
+      "name": "useSidebar",
+      "description": "useSidebar — hook utilitário focado em use sidebar.",
+      "sourcePath": "packages/admin/src/sidebar/context",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/admin/src/sidebar/context"
+    },
+    {
+      "name": "useSidebarKeyboard",
+      "description": "useSidebarKeyboard — hook utilitário focado em use sidebar keyboard.",
+      "sourcePath": "packages/admin/src/sidebar/hooks",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/admin/src/sidebar/hooks"
+    },
+    {
+      "name": "useSidebarNavigation",
+      "description": "useSidebarNavigation — hook utilitário focado em use sidebar navigation.",
+      "sourcePath": "packages/admin/src/sidebar/hooks",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/admin/src/sidebar/hooks"
+    },
+    {
+      "name": "useSidebarOptional",
+      "description": "useSidebarOptional — hook utilitário focado em use sidebar optional.",
+      "sourcePath": "packages/admin/src/sidebar/context",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/admin/src/sidebar/context"
+    },
+    {
+      "name": "useSidebarSearch",
+      "description": "useSidebarSearch — hook utilitário focado em use sidebar search.",
+      "sourcePath": "packages/admin/src/sidebar/hooks",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/admin/src/sidebar/hooks"
     },
     {
       "name": "useSSRSafeMediaQuery",

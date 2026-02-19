@@ -804,14 +804,55 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
             ? theme.fontSizes[fontSize as 'xs' | 'sm' | 'md' | 'lg' | 'xl']
             : theme.fontSizes.sm,
 
-        // Estilos dos cabeçalhos
+        // Estilos dos cabeçalhos - com !important para sobrescrever MUI
         '& .MuiDataGrid-columnHeaders': {
-          backgroundColor: colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-          color:
-            colorScheme === 'dark'
-              ? theme.colors.gray[0]
-              : theme.colors[theme.primaryColor][6],
-          fontWeight: 600
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors[theme.primaryColor][6]} !important`,
+          fontWeight: 600,
+          borderBottom: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]} !important`
+        },
+        '& .MuiDataGrid-columnHeader': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors[theme.primaryColor][6]} !important`,
+          '&:focus, &:focus-within': {
+            outline: 'none !important'
+          }
+        },
+        '& .MuiDataGrid-columnHeaderRow': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-columnHeaderTitle': {
+          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors[theme.primaryColor][6]} !important`,
+          fontWeight: '600 !important'
+        },
+        '& .MuiDataGrid-columnHeaderTitleContainer': {
+          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors[theme.primaryColor][6]} !important`,
+        },
+        '& .MuiDataGrid-columnHeaderTitleContainerContent': {
+          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors[theme.primaryColor][6]} !important`,
+        },
+        // Container geral do header
+        '& .MuiDataGrid-columnHeadersInner': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-pinnedColumnHeaders': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-columnSeparator': {
+          color: `${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]} !important`
+        },
+        '& .MuiDataGrid-menuIcon': {
+          color: `${colorScheme === 'dark' ? theme.colors.gray[4] : theme.colors.dark[5]} !important`
+        },
+        '& .MuiDataGrid-sortIcon': {
+          color: `${colorScheme === 'dark' ? theme.colors.gray[4] : theme.colors.dark[5]} !important`
+        },
+        '& .MuiDataGrid-iconButtonContainer': {
+          color: `${colorScheme === 'dark' ? theme.colors.gray[4] : theme.colors.dark[5]} !important`
+        },
+        // Checkbox do header
+        '& .MuiDataGrid-columnHeader .MuiCheckbox-root': {
+          color: `${colorScheme === 'dark' ? theme.colors.gray[3] : theme.colors.dark[6]} !important`
         },
 
         // Estilos das células
@@ -889,16 +930,110 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
           paddingBottom: '0px !important',
           display: 'flex',
           flexDirection: 'column',
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
         },
 
         '& .MuiDataGrid-virtualScrollerContent': {
           flexBasis: 'auto !important',
           flexGrow: '1 !important',
           flexShrink: '0 !important',
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+
+        '& .MuiDataGrid-virtualScrollerRenderZone': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+
+        '& .MuiDataGrid-main': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+
+        '& .MuiDataGrid-overlayWrapper': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+
+        '& .MuiDataGrid-overlayWrapperInner': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
         },
 
         '& .MuiDataGrid-filler': {
           display: 'none !important',
+        },
+
+        // Área de preenchimento do header (filler column)
+        '& .MuiDataGrid-filler--pinnedRight': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-filler--pinnedLeft': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-columnHeadersInner--scrollable': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+
+        // Footer container
+        '& .MuiDataGrid-footerContainer': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+          borderTop: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]} !important`,
+        },
+
+        // Scrollbar container area
+        '& .MuiDataGrid-scrollArea': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-scrollArea--right': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-scrollArea--left': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+
+        // Top and bottom containers
+        '& .MuiDataGrid-topContainer': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-bottomContainer': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+
+        // Área de pinned columns
+        '& .MuiDataGrid-pinnedColumns': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-pinnedColumns--right': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-pinnedColumns--left': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+
+        // Área de scroll além do conteúdo (corner filler)
+        '& .MuiDataGrid-scrollbarFiller': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-scrollbarFiller--header': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-scrollbarFiller--borderTop': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+
+        // Container wrapper
+        '& .MuiDataGrid-container--top': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+        '& .MuiDataGrid-container--bottom': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
+        },
+
+        // Área de detalhes vazios / empty state
+        '& .MuiDataGrid-overlay': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
+        },
+
+        // Catch-all para qualquer div interno com fundo branco
+        '& > div': {
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
         }
       }
     }

@@ -10,6 +10,7 @@ import {
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { SidebarGroupProps } from '../types';
+import { archbaseI18next } from '@archbase/core';
 
 /**
  * Componente de grupo colapsável do sidebar
@@ -88,7 +89,7 @@ export function SidebarGroup({
 							</Box>
 						)}
 						<Text size="sm" fw={600} c={textColor}>
-							{label}
+							{archbaseI18next.t(label)}
 						</Text>
 					</Group>
 					<IconChevronDown
@@ -141,7 +142,7 @@ export function SidebarSection({
 				py="xs"
 				style={{ letterSpacing: '0.5px' }}
 			>
-				{label}
+				{archbaseI18next.t(label)}
 			</Text>
 			{children}
 		</Box>

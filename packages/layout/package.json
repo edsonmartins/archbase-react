@@ -1,6 +1,6 @@
 {
   "name": "@archbase/layout",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "Layout components for Archbase React",
   "main": "dist/index.js",
   "module": "dist/index.js",

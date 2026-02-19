@@ -176,8 +176,15 @@ function ArchbaseAdminMainLayoutContainer({
 	};
 
 	const getSideBarHeight = () => {
-		// Sidebar preenche 100% do navbar, layout interno é gerenciado pelo componente
-		return '100%';
+		let headerHeight = 0;
+		let footerHeight = 0;
+		if (sideBarHeaderHeight) {
+			headerHeight = Number(px(sideBarHeaderHeight));
+		}
+		if (sideBarFooterHeight) {
+			footerHeight = Number(px(sideBarFooterHeight));
+		}
+		return `calc(100vh - var(--app-shell-header-offset, 0px) - ${headerHeight + footerHeight}px)`;
 	};
 
 	const getSideBarDrawerHeight = () => {
@@ -241,7 +248,10 @@ function ArchbaseAdminMainLayoutContainer({
 		}
 	}, [adminLayoutContextValue.collapsed, onCollapsedSideBar]);
 
-	const currentSidebarWidth = adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth;
+	// Para variante minimal, sempre usa a largura collapsed
+	const currentSidebarWidth = sidebarVariant === 'minimal'
+		? sideBarCollapsedWidth
+		: (adminLayoutContextValue.collapsed ? sideBarCollapsedWidth : sideBarWidth);
 
 	// Função para renderizar o sidebar baseado na variante
 	const renderSidebar = (height: string, forDrawer: boolean = false) => {
@@ -296,7 +306,7 @@ function ArchbaseAdminMainLayoutContainer({
 			<ArchbaseMantineSidebar
 				navigationData={adminLayoutContextValue.navigationData}
 				variant={sidebarVariant as SidebarVariant}
-				width={sideBarWidth}
+				width={currentSidebarWidth}
 				collapsedWidth={sideBarCollapsedWidth}
 				height={height}
 				groupColumnWidth={sideBarCollapsedWidth}
@@ -340,25 +350,57 @@ function ArchbaseAdminMainLayoutContainer({
 		? (sideBarBackgroundDarkColor ?? theme.colors.dark[7])
 		: (sideBarBackgroundLightColor ?? theme.white);
 
+	// Para variante legacy, não usar configuração navbar no AppShell (manter comportamento original)
+	const isLegacyVariant = sidebarVariant === 'legacy';
+
+	// Configuração do navbar apenas para variantes Mantine (não legacy)
+	const navbarConfig = isLegacyVariant ? undefined : {
+		width: { base: currentSidebarWidth },
+		breakpoint: 'sm',
+		collapsed: { mobile: isHidden || !showSideBar, desktop: !showSideBar },
+	};
+
+	// Estilos condicionais
+	const appShellStyles = isLegacyVariant ? {
+		main: {
+			background: colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+			overflow: 'hidden',
+		},
+	} : {
+		main: {
+			background: colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+			overflow: 'hidden',
+		},
+		navbar: {
+			background: navbarBackground,
+			border: 'none',
+		},
+	};
+
+	// Estilos do div principal - legacy usa cálculos manuais, Mantine usa 100%
+	const mainDivStyle: React.CSSProperties = isLegacyVariant ? {
+		height: `calc(100vh - var(--app-shell-header-offset, 0px) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding) - 1rem)`,
+		width: `calc(100vw - var(--app-shell-padding) - calc(${isHidden ? '0px' : currentSidebarWidth} + 1rem))`,
+		marginTop: '0.5rem',
+		marginLeft: `calc(${isHidden ? '0px' : currentSidebarWidth} + 0.5rem)`,
+		border: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : '#e4e9ef'}`,
+		borderRadius: '4px',
+		overflow: 'hidden',
+	} : {
+		height: 'calc(100vh - var(--app-shell-header-offset, 0px) - var(--app-shell-footer-offset, 0px) - 1rem)',
+		width: '100%',
+		marginTop: '0.5rem',
+		border: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : '#e4e9ef'}`,
+		borderRadius: '4px',
+		overflow: 'hidden',
+	};
+
 	return (
 		<AppShell
 			header={{ height: '60px', collapsed: !showHeader }}
-			navbar={{
-				width: currentSidebarWidth,
-				breakpoint: 0, // nunca colapsar automaticamente
-				collapsed: { mobile: isHidden, desktop: !showSideBar },
-			}}
+			navbar={navbarConfig}
 			footer={{ height: footerHeight ? footerHeight : '0px' }}
-			styles={{
-				main: {
-					background: colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-					overflow: 'hidden',
-				},
-				navbar: {
-					background: navbarBackground,
-					borderRight: 'none',
-				},
-			}}
+			styles={appShellStyles}
 		>
 			<AppShell.Header
 				p="xs"
@@ -386,15 +428,7 @@ function ArchbaseAdminMainLayoutContainer({
 						sideBarCollapsedWidth,
 						handleCollapseSidebar
 					)}
-				<div
-					style={{
-						height: `calc(100vh - var(--app-shell-header-offset, 0px) - var(--app-shell-footer-offset, 0px) - 1rem)`,
-						margin: '0.5rem',
-						border: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : '#e4e9ef'}`,
-						borderRadius: '4px',
-						overflow: 'hidden',
-					}}
-				>
+				<div style={mainDivStyle}>
 					{children}
 					<div style={{ width: '100%', height: 'calc(100% - 48px)' }}>
 						<ArchbaseAliveAbleRoutes maxKeepAliveTabs={maxKeepAliveTabs}>{...routes as any}</ArchbaseAliveAbleRoutes>
