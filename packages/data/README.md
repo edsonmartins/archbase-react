@@ -21,6 +21,7 @@ yarn add @archbase/data @archbase/core
 - 📄 **Pagination**: Built-in pagination support
 - 🔍 **Filtering**: Advanced filtering with RSQL
 - 📊 **Sorting**: Multi-column sorting support
+- 📤 **File Upload**: Multipart/form-data support for file uploads
 
 ## Usage
 
@@ -54,6 +55,22 @@ const dataSource = useArchbaseLocalDataSource({
   data: users,
   idField: 'id'
 });
+```
+
+### API Client - File Upload (Multipart)
+
+```typescript
+import { ArchbaseRemoteApiClient } from '@archbase/data';
+
+// Upload de arquivos usando multipart/form-data
+const formData = new FormData();
+formData.append('file', file);
+formData.append('description', 'My file');
+
+const response = await apiClient.postMultipart<UploadResponse>(
+  '/api/upload',
+  formData
+);
 ```
 
 ## License

@@ -55,6 +55,8 @@ export interface ArchbaseRemoteApiClient {
   getBlob(url: string, headers?: Record<string, string>, withoutToken?: boolean): Promise<Blob>
   /** Faz requisição POST e retorna Blob (para download de arquivos) */
   postBlob<T>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean): Promise<Blob>
+  /** Faz requisição POST com FormData (multipart/form-data) para upload de arquivos */
+  postMultipart<R>(url: string, data: FormData, headers?: Record<string, string>, withoutToken?: boolean): Promise<R>
 }
 
 export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
@@ -227,6 +229,28 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
         responseType: 'blob'
       })
       return response.data
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  /**
+   * Faz requisição POST com FormData (multipart/form-data) para upload de arquivos.
+   * Não define Content-Type manualmente para que o axios gere automaticamente com o boundary correto.
+   */
+  async postMultipart<R>(url: string, data: FormData, headers?: Record<string, string>, withoutToken?: boolean): Promise<R> {
+    try {
+      const finalHeaders: Record<string, string> = { ...headers };
+
+      if (!withoutToken) {
+        const token = this.tokenManager.getToken();
+        if (token) {
+          finalHeaders['Authorization'] = `Bearer ${token.access_token}`;
+        }
+      }
+
+      const response = await axios.post(url, data, { headers: finalHeaders });
+      return response.data;
     } catch (error) {
       return Promise.reject(error);
     }
