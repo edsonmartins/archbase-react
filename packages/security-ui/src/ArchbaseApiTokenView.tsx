@@ -13,13 +13,15 @@ import { useArchbaseTheme } from '@archbase/core';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { ArchbaseDialog, ArchbaseNotifications } from '@archbase/components';
 import {
-	Box,
 	Button,
 	Text,
 	Flex,
 	Group,
 	Paper,
 	useMantineColorScheme,
+	RingProgress,
+	Tooltip,
+	Badge,
 } from '@mantine/core';
 import {
 	IconPlus,
@@ -149,9 +151,72 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="expirationDate"
 				dataType="text"
-				size={300}
-				header="Expira em"
-				render={(data) => <Text>{data.row.expirationDate ? new Date(data.row.expirationDate).toLocaleDateString() : '-'}</Text>}
+				size={180}
+				header="Validade"
+				render={(data) => {
+					if (!data.row.expirationDate) {
+						return <Text c="dimmed">Sem expiração</Text>;
+					}
+
+					const today = new Date();
+					today.setHours(0, 0, 0, 0);
+					const expDate = new Date(data.row.expirationDate);
+					expDate.setHours(0, 0, 0, 0);
+
+					const diffTime = expDate.getTime() - today.getTime();
+					const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+					// Calcular porcentagem para o gauge (baseado em 365 dias)
+					const maxDays = 365;
+					let percentage = Math.max(0, Math.min(100, (diffDays / maxDays) * 100));
+
+					// Determinar cor baseado nos dias restantes
+					let color = 'green';
+					let label = '';
+
+					if (diffDays < 0) {
+						// Token vencido
+						color = 'red';
+						percentage = 100;
+						label = `Vencido há ${Math.abs(diffDays)} dia${Math.abs(diffDays) !== 1 ? 's' : ''}`;
+					} else if (diffDays === 0) {
+						color = 'red';
+						percentage = 5;
+						label = 'Vence hoje';
+					} else if (diffDays <= 7) {
+						color = 'red';
+						label = `${diffDays} dia${diffDays !== 1 ? 's' : ''}`;
+					} else if (diffDays <= 30) {
+						color = 'orange';
+						label = `${diffDays} dias`;
+					} else if (diffDays <= 90) {
+						color = 'yellow';
+						label = `${diffDays} dias`;
+					} else {
+						color = 'green';
+						label = `${diffDays} dias`;
+					}
+
+					const tooltipText = diffDays < 0
+						? `Vencido em ${expDate.toLocaleDateString()}`
+						: `Expira em ${expDate.toLocaleDateString()}`;
+
+					return (
+						<Tooltip label={tooltipText} withArrow>
+							<Group gap="xs" wrap="nowrap">
+								<RingProgress
+									size={36}
+									thickness={4}
+									roundCaps
+									sections={[{ value: diffDays < 0 ? 100 : percentage, color }]}
+								/>
+								<Text size="sm" c={diffDays < 0 ? 'red' : undefined} fw={diffDays <= 7 ? 600 : undefined}>
+									{label}
+								</Text>
+							</Group>
+						</Tooltip>
+					);
+				}}
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<ApiTokenDto>
@@ -285,12 +350,16 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 	};
 
 	return (
-		<Paper style={{ height: height }}>
-			<Box
+		<Paper p="md" style={{ height: height, display: 'flex', flexDirection: 'column' }}>
+			<Paper
+				withBorder
 				style={{
 					height: heightTab,
 					display: 'flex',
 					width: '100%',
+					flex: 1,
+					minHeight: 0,
+					overflow: 'auto'
 				}}
 			>
 				<ArchbaseDataGrid<ApiTokenDto, string>
@@ -313,7 +382,7 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 					toolbarLeftContent={renderToolbarActions()}
 					children={columns}
 				/>
-			</Box>
+			</Paper>
 			{openedModal === 'apiToken' ? (
 				<ApiTokenModal
 					onClickOk={handleCloseApiTokenModal}

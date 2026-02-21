@@ -18,7 +18,6 @@ import { ArchbaseDialog, ArchbaseNotifications } from '@archbase/components';
 import {
 	ActionIcon,
 	Badge,
-	Box,
 	Button,
 	Flex,
 	Group,
@@ -897,7 +896,7 @@ export function ArchbaseSecurityView({
 	};
 
 	return (
-		<Paper style={{ height: height }}>
+		<Paper p="md" style={{ height: height, display: 'flex', flexDirection: 'column' }}>
 			<Tabs variant='pills' value={activeTab} onChange={setActiveTab}>
 				<Tabs.List>
 					<Tabs.Tab value="users">{`${t('Usuários')}`}</Tabs.Tab>
@@ -907,11 +906,16 @@ export function ArchbaseSecurityView({
 					<Tabs.Tab value="accessTokens">{`${t('Tokens Acesso')}`}</Tabs.Tab>
 				</Tabs.List>
 			</Tabs>
-			<Box
+			<Paper
+				withBorder
+				mt="md"
 				style={{
 					height: heightTab,
 					display: activeTab === 'users' ? 'flex' : 'none',
 					width: '100%',
+					flex: 1,
+					minHeight: 0,
+					overflow: 'auto'
 				}}
 			>
 				<ArchbaseDataGrid<UserDto, string>
@@ -935,11 +939,16 @@ export function ArchbaseSecurityView({
 					renderRowActions={buildUserRowActions}
 					children={userColumns}
 				/>
-			</Box>
-			<Box
+			</Paper>
+			<Paper
+				withBorder
+				mt="md"
 				style={{
 					height: heightTab,
 					display: activeTab === 'groups' ? 'flex' : 'none',
+					flex: 1,
+					minHeight: 0,
+					overflow: 'auto'
 				}}
 			>
 				<ArchbaseDataGrid<GroupDto, string>
@@ -963,11 +972,16 @@ export function ArchbaseSecurityView({
 					children={groupColumns}
 					toolbarLeftContent={renderGroupsToolbarActions()}
 				/>
-			</Box>
-			<Box
+			</Paper>
+			<Paper
+				withBorder
+				mt="md"
 				style={{
 					height: heightTab,
 					display: activeTab === 'profiles' ? 'flex' : 'none',
+					flex: 1,
+					minHeight: 0,
+					overflow: 'auto'
 				}}
 			>
 				<ArchbaseDataGrid<ProfileDto, string>
@@ -991,11 +1005,16 @@ export function ArchbaseSecurityView({
 					renderRowActions={buildProfileRowActions}
 					children={profileColumns}
 				/>
-			</Box>
-			<Box
+			</Paper>
+			<Paper
+				withBorder
+				mt="md"
 				style={{
 					height: heightTab,
 					display: activeTab === 'resources' ? 'flex' : 'none',
+					flex: 1,
+					minHeight: 0,
+					overflow: 'auto'
 				}}
 			>
 				<ArchbaseDataGrid<ResourceDto, string>
@@ -1017,12 +1036,17 @@ export function ArchbaseSecurityView({
 					getRowId={getResourceRowId}
 					children={resourceColumns}
 				/>
-			</Box>
-			<Box
+			</Paper>
+			<Paper
+				withBorder
+				mt="md"
 				style={{
 					height: heightTab,
 					display: activeTab === 'accessTokens' ? 'flex' : 'none',
 					width: '100%',
+					flex: 1,
+					minHeight: 0,
+					overflow: 'auto'
 				}}
 			>
 				<ArchbaseDataGrid<AccessTokenDto, string>
@@ -1045,7 +1069,7 @@ export function ArchbaseSecurityView({
 					toolbarLeftContent={renderAccessTokensToolbarActions()}
 					children={accessTokenColumns}
 				/>
-			</Box>
+			</Paper>
 			{openedModal === SecurityType.USER ? (
 				<UserModal
 					onClickOk={handleCloseUserModal}

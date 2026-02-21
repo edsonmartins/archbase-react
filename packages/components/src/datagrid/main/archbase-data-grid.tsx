@@ -807,13 +807,13 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         // Estilos dos cabeçalhos - com !important para sobrescrever MUI
         '& .MuiDataGrid-columnHeaders': {
           backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
-          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors[theme.primaryColor][6]} !important`,
+          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors.dark[9]} !important`,
           fontWeight: 600,
           borderBottom: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]} !important`
         },
         '& .MuiDataGrid-columnHeader': {
           backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
-          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors[theme.primaryColor][6]} !important`,
+          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors.dark[9]} !important`,
           '&:focus, &:focus-within': {
             outline: 'none !important'
           }
@@ -822,14 +822,14 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
           backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[7] : theme.white} !important`,
         },
         '& .MuiDataGrid-columnHeaderTitle': {
-          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors[theme.primaryColor][6]} !important`,
+          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors.dark[9]} !important`,
           fontWeight: '600 !important'
         },
         '& .MuiDataGrid-columnHeaderTitleContainer': {
-          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors[theme.primaryColor][6]} !important`,
+          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors.dark[9]} !important`,
         },
         '& .MuiDataGrid-columnHeaderTitleContainerContent': {
-          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors[theme.primaryColor][6]} !important`,
+          color: `${colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors.dark[9]} !important`,
         },
         // Container geral do header
         '& .MuiDataGrid-columnHeadersInner': {
