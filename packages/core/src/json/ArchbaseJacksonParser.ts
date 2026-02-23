@@ -2,13 +2,15 @@
 import { cloneDeep } from 'lodash';
 
 export class ArchbaseJacksonParser {
-  // Helper para verificar se é um Map simples (string -> number/string)
+  // Helper para verificar se é um Map simples (string -> number/string/array de primitivos)
   private static isSimpleMap(obj: any): boolean {
-    if (!obj || typeof obj !== 'object') return false;
-    
-    return Object.entries(obj).every(([key, value]) => 
-      typeof key === 'string' && 
-      (typeof value === 'number' || typeof value === 'string')
+    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return false;
+
+    return Object.entries(obj).every(([key, value]) =>
+      typeof key === 'string' &&
+      (typeof value === 'number' ||
+       typeof value === 'string' ||
+       ArchbaseJacksonParser.isSimpleArray(value))
     );
   }
 
