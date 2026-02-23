@@ -68,7 +68,14 @@
       "Bash(npx vite-plugin-dts --entry ./src/index.ts --outDir ./dist --include \"./src/**/*\")",
       "Bash(DEBUG=vite:*)",
       "Bash(git ls-files:*)",
-      "Bash(git tag:*)"
+      "Bash(git tag:*)",
+      "Bash(git pull:*)",
+      "Bash(git merge:*)",
+      "Bash(du:*)",
+      "WebFetch(domain:www.navbar.gallery)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:mobbin.com)",
+      "WebFetch(domain:ui.mantine.dev)"
     ],
     "deny": []
   }
