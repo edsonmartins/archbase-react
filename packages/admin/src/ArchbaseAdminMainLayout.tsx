@@ -388,8 +388,10 @@ function ArchbaseAdminMainLayoutContainer({
 		overflow: 'hidden',
 	} : {
 		height: 'calc(100vh - var(--app-shell-header-offset, 0px) - var(--app-shell-footer-offset, 0px) - 1rem)',
-		width: '100%',
+		width: 'calc(100% - 1rem)',
 		marginTop: '0.5rem',
+		marginLeft: '0.5rem',
+		marginRight: '0.5rem',
 		border: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : '#e4e9ef'}`,
 		borderRadius: '4px',
 		overflow: 'hidden',

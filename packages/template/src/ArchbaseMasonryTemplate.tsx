@@ -4,13 +4,12 @@
  */
 import { useArchbaseDataSourceListener } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
-import { ButtonVariant, Pagination } from '@mantine/core';
+import { ButtonVariant, Flex, Pagination } from '@mantine/core';
 import useComponentSize from '@rehooks/component-size';
 import { IconEdit, IconEye, IconPlus, IconTrash } from '@tabler/icons-react';
 import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { uniqueId } from 'lodash';
-import React, { CSSProperties, Fragment, Profiler, ReactNode, useMemo, useRef, useState } from 'react';
-import { ArchbaseAction, ArchbaseActionButtons, ArchbaseActionButtonsOptions } from '@archbase/components';
+import React, { CSSProperties, Profiler, ReactNode, useMemo, useRef, useState } from 'react';
 import { ComponentDefinition, useArchbaseAppContext } from '@archbase/core';
 import { type ArchbaseDataSource, type DataSourceEvent, DataSourceEventNames } from '@archbase/data';
 import { ArchbaseMasonry, ArchbaseMasonryProvider, ArchbaseMasonryResponsive } from '@archbase/components';
@@ -22,11 +21,9 @@ import {
 	ArchbaseQueryBuilder,
 	FilterOptions,
 } from '@archbase/advanced';
-import { Field } from '@archbase/core';
 import { ArchbaseSpaceTemplate, ArchbaseSpaceTemplateOptions } from './ArchbaseSpaceTemplate';
 import { ArchbaseDebugOptions, ArchbaseTemplateSecurityProps } from './ArchbaseTemplateCommonTypes';
-import { ArchbaseConditionalSecurityWrapper } from './components';
-import { useOptionalTemplateSecurity } from './hooks';
+import { ArchbaseConditionalSecurityWrapper, ArchbaseSmartActionButton } from './components';
 
 export interface MasonryUserActionsOptions {
 	visible?: boolean;
@@ -42,18 +39,9 @@ export interface MasonryUserActionsOptions {
 	onEditExecute?: () => void;
 	onRemoveExecute?: () => void;
 	onViewExecute?: () => void;
-	customUserActions?: ArchbaseAction[];
-	positionCustomUserActions?: 'before' | 'after';
+	customUserActions?: ReactNode;
+	customUserActionsPosition?: 'left' | 'right';
 }
-
-const defaultUserActions: MasonryUserActionsOptions = {
-	visible: true,
-	allowAdd: true,
-	allowEdit: true,
-	allowView: true,
-	allowRemove: true,
-	positionCustomUserActions: 'after',
-};
 
 export interface MasonryUserRowActionsOptions<T> {
 	actions?: any;
@@ -103,7 +91,6 @@ export interface ArchbaseMasonryTemplateProps<T, ID> extends ArchbaseTemplateSec
 	/** Evento gerado quando o mouse sai de um item */
 	onItemLeave?: (event: React.MouseEvent, data: any) => void;
 	style?: CSSProperties;
-	actionsButtonsOptions?: ArchbaseActionButtonsOptions;
 	spaceOptions?: ArchbaseSpaceTemplateOptions;
 	debugOptions?: ArchbaseDebugOptions;
 }
@@ -151,7 +138,6 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 	onItemEnter,
 	onItemLeave,
 	style,
-	actionsButtonsOptions,
 	spaceOptions,
 	variant,
 	id = uniqueId('masonry'),
@@ -164,13 +150,6 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 	securityOptions,
 }: ArchbaseMasonryTemplateProps<T, ID>) {
 	const appContext = useArchbaseAppContext();
-
-	// 🔐 SEGURANÇA: Hook opcional de segurança (só ativa se resourceName fornecido)
-	const security = useOptionalTemplateSecurity({
-		resourceName,
-		resourceDescription,
-		autoRegisterActions: securityOptions?.autoRegisterActions ?? true
-	});
 
 	const [idMasonry] = useState(id);
 	const innerComponentRef = innerRef || useRef<any>(null);
@@ -207,102 +186,6 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 			}
 		},
 	});
-
-	const userActionsBuilded: ArchbaseAction[] = useMemo(() => {
-		const userActionsEnd = { ...defaultUserActions, ...userActions };
-		const defaultActions: ArchbaseAction[] = [];
-
-		// 🔐 SEGURANÇA: Função helper para verificar se tem permissão
-		const hasActionPermission = (actionName: string): boolean => {
-			if (!security.isAvailable) return true; // Sem contexto de segurança = permite tudo
-			// Por enquanto registra e permite - lógica completa será implementada posteriormente
-			security.registerAction();
-			return security.hasPermission();
-		};
-
-		if (userActionsEnd.allowAdd && userActionsEnd.onAddExecute) {
-			const hasPermission = hasActionPermission('add');
-			if (hasPermission) {
-				defaultActions.push({
-					id: 'actAdd',
-					icon: <IconPlus />,
-					color: 'green',
-					label: userActionsEnd.labelAdd ? userActionsEnd.labelAdd : getI18nextInstance().t('archbase:New'),
-					executeAction: () => {
-						if (userActionsEnd && userActionsEnd.onAddExecute) {
-							userActionsEnd.onAddExecute();
-						}
-					},
-					enabled: true,
-					hint: `${getI18nextInstance().t('archbase:Clique para criar um novo registro')}`,
-				});
-			}
-		}
-		if (userActionsEnd.allowEdit && userActionsEnd.onEditExecute) {
-			const hasPermission = hasActionPermission('edit');
-			if (hasPermission) {
-				defaultActions.push({
-					id: 'actEdit',
-					icon: <IconEdit />,
-					color: 'blue',
-					label: userActionsEnd.labelEdit ? userActionsEnd.labelEdit : getI18nextInstance().t('archbase:Edit'),
-					executeAction: () => {
-						if (userActionsEnd && userActionsEnd.onEditExecute) {
-							userActionsEnd.onEditExecute();
-						}
-					},
-					enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-					hint: `${getI18nextInstance().t('archbase:Clique para editar o registro')}`,
-				});
-			}
-		}
-		if (userActionsEnd.allowRemove && userActionsEnd.onRemoveExecute) {
-			const hasPermission = hasActionPermission('delete');
-			if (hasPermission) {
-				defaultActions.push({
-					id: 'actRemove',
-					icon: <IconTrash />,
-					color: 'red',
-					label: userActionsEnd.labelRemove ? userActionsEnd.labelRemove : getI18nextInstance().t('archbase:Remove'),
-					executeAction: () => {
-						if (userActionsEnd && userActionsEnd.onRemoveExecute) {
-							userActionsEnd.onRemoveExecute();
-						}
-					},
-					enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-					hint: `${getI18nextInstance().t('archbase:Clique para remover o registro')}`,
-				});
-			}
-		}
-
-		if (userActionsEnd.allowView && userActionsEnd.onViewExecute) {
-			const hasPermission = hasActionPermission('view');
-			if (hasPermission) {
-				defaultActions.push({
-					id: 'actView',
-					icon: <IconEye />,
-					label: userActionsEnd.labelView ? userActionsEnd.labelView : getI18nextInstance().t('archbase:View'),
-					executeAction: () => {
-						if (userActionsEnd && userActionsEnd.onViewExecute) {
-							userActionsEnd.onViewExecute();
-						}
-					},
-					enabled: !dataSource.isEmpty() && dataSource.isBrowsing(),
-					hint: `${getI18nextInstance().t('archbase:Clique para visualizar o registro')}`,
-				});
-			}
-		}
-
-		if (userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'before') {
-			return [...userActionsEnd.customUserActions, ...defaultActions];
-		}
-
-		if (userActionsEnd.customUserActions && userActionsEnd.positionCustomUserActions === 'after') {
-			return [...defaultActions, ...userActionsEnd.customUserActions];
-		}
-
-		return defaultActions;
-	}, [userActions, dataSource, security]);
 
 	const cards: ReactNode[] = useMemo(() => {
 		if (component) {
@@ -425,17 +308,11 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 		return <></>
 	};
 
-	const defaultActionsButtonsOptions: ArchbaseActionButtonsOptions = {
-		menuButtonColor: 'blue.5',
-		menuPosition: 'left',
-	};
-
 	const defaultSpaceTemplateOptions: ArchbaseSpaceTemplateOptions = {
 		headerFlexGrow: 'left',
 		footerGridColumns: {},
 	};
 
-	const _actionsButtonsOptions = { ...defaultActionsButtonsOptions, ...actionsButtonsOptions };
 	const _spaceTemplateOptions = { ...defaultSpaceTemplateOptions, ...spaceOptions };
 
 	// ✅ CORRIGIDO: Usando JSX inline em vez de componente função para evitar remontagem
@@ -463,7 +340,69 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 				debugOptions={debugOptions}
 				style={style}
 				options={_spaceTemplateOptions}
-				headerLeft={<ArchbaseActionButtons actions={userActionsBuilded} options={_actionsButtonsOptions} />}
+				headerLeft={
+					userActions?.visible !== false ? (
+						<Flex gap="8px" rowGap="8px">
+							{userActions?.customUserActions && userActions?.customUserActionsPosition === 'left'
+								? userActions.customUserActions
+								: null}
+							{userActions?.allowAdd !== false && userActions?.onAddExecute ? (
+								<ArchbaseSmartActionButton
+									actionName="add"
+									actionDescription={`Adicionar novo ${resourceDescription || 'registro'}`}
+									color="green"
+									variant={variant ?? appContext.variant}
+									leftSection={<IconPlus />}
+									onClick={() => userActions.onAddExecute!()}
+								>
+									{userActions.labelAdd || getI18nextInstance().t('archbase:New')}
+								</ArchbaseSmartActionButton>
+							) : null}
+							{userActions?.allowEdit !== false && userActions?.onEditExecute ? (
+								<ArchbaseSmartActionButton
+									actionName="edit"
+									actionDescription={`Editar ${resourceDescription || 'registro'}`}
+									color="blue"
+									leftSection={<IconEdit />}
+									disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
+									variant={variant ?? appContext.variant}
+									onClick={() => userActions.onEditExecute!()}
+								>
+									{userActions.labelEdit || getI18nextInstance().t('archbase:Edit')}
+								</ArchbaseSmartActionButton>
+							) : null}
+							{userActions?.allowRemove !== false && userActions?.onRemoveExecute ? (
+								<ArchbaseSmartActionButton
+									actionName="delete"
+									actionDescription={`Remover ${resourceDescription || 'registro'}`}
+									color="red"
+									leftSection={<IconTrash />}
+									disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
+									variant={variant ?? appContext.variant}
+									onClick={() => userActions.onRemoveExecute!()}
+								>
+									{userActions.labelRemove || getI18nextInstance().t('archbase:Remove')}
+								</ArchbaseSmartActionButton>
+							) : null}
+							{userActions?.allowView !== false && userActions?.onViewExecute ? (
+								<ArchbaseSmartActionButton
+									actionName="view"
+									actionDescription={`Visualizar ${resourceDescription || 'registro'}`}
+									color="gray.7"
+									leftSection={<IconEye />}
+									disabled={!dataSource.isBrowsing() || dataSource.isEmpty()}
+									variant={variant ?? appContext.variant}
+									onClick={() => userActions.onViewExecute!()}
+								>
+									{userActions.labelView || getI18nextInstance().t('archbase:View')}
+								</ArchbaseSmartActionButton>
+							) : null}
+							{userActions?.customUserActions && userActions?.customUserActionsPosition === 'right'
+								? userActions.customUserActions
+								: null}
+						</Flex>
+					) : undefined
+				}
 				headerRight={buildFilter()}
 				footerRight={
 					withPagination ? <Pagination total={dataSource.getTotalPages()} onChange={handlePageChange} /> : undefined

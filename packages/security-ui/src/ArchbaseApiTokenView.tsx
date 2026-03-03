@@ -290,6 +290,14 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 		if (apiToken) {
 			try {
 				dataSource.validate();
+				if (!apiToken.user || !apiToken.user.email) {
+					ArchbaseDialog.showErrorWithDetails(
+						`${getI18nextInstance().t('archbase:WARNING')}`,
+						`${getI18nextInstance().t('archbase:Selecione um usuário para o token de API')}`,
+						'',
+					);
+					return;
+				}
 				await apiTokenApi
 					.create(apiToken.user.email, apiToken.expirationDate, apiToken.name, apiToken.description)
 					.then(async (response: ApiTokenDto) => {
@@ -313,7 +321,7 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 							`${getI18nextInstance().t('mentors:Token de API gerado com sucesso!')}`,
 						);
 						if (callback) {
-							callback();
+							callback(true);
 						}
 					})
 					.catch((error) => {

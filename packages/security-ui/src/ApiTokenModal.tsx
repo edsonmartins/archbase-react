@@ -3,14 +3,14 @@
  * @status stable
  */
 import { ArchbaseDataSource } from '@archbase/data';
-import { ArchbaseSelect, ArchbaseEdit } from '@archbase/components';
+import { ArchbaseAsyncSelect, ArchbaseEdit, OptionsResult } from '@archbase/components';
 import { useArchbaseRemoteServiceApi } from '@archbase/data';
 import { Page } from '@archbase/data';
 import { Modal } from '@mantine/core';
 import { Grid, Group, Image, ScrollArea, Text, Button } from '@mantine/core';
 import { DateTimePicker, DateValue } from '@mantine/dates';
 import { useFocusTrap } from '@mantine/hooks';
-import { ARCHBASE_IOC_API_TYPE, builder, convertDateToISOString, emit, processErrorMessage, OptionsResult, isBase64Validate, getI18nextInstance } from '@archbase/core';
+import { ARCHBASE_IOC_API_TYPE, builder, convertDateToISOString, emit, processErrorMessage, isBase64Validate, getI18nextInstance } from '@archbase/core';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { useState } from 'react';
@@ -73,15 +73,15 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 		setValue(value);
 	};
 
-	const loadRemoteUsers = async (page, value): Promise<OptionsResult<UserDto>> => {
+	const loadRemoteUsers = async (page: number, value: string): Promise<OptionsResult<UserDto>> => {
 		return new Promise<OptionsResult<UserDto>>(async (resolve, reject) => {
 			try {
 				const filter = emit(builder.or(builder.eq('name', `^*${value.trim()}*`)));
 				const result: Page<UserDto> = await userApi.findAllWithFilter(filter, page, 20);
 				resolve({
-					data: result.content,
+					options: result.content,
 					page: result.pageable!.pageNumber,
-					total: result.totalElements,
+					totalPages: result.totalPages,
 				});
 			} catch (error) {
 				reject(processErrorMessage(error));
@@ -133,16 +133,17 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 					label="Data/hora expiração"
 					placeholder={'Selecione a data de expiração'}
 				/>
-				<ArchbaseSelect<any, string, UserDto>
+				<ArchbaseAsyncSelect<any, string, UserDto>
 					label={`${getI18nextInstance().t('archbase:Usuário')}`}
 					dataSource={props.dataSource}
 					dataField="user"
 					placeholder={`${getI18nextInstance().t('archbase:Digite aqui o nome do usuário')}`}
-					getOptionLabel={(option: UserDto) => option && option.email!}
-					getOptionValue={(option: UserDto) => option.id?.toString() || ''}
+					getOptionLabel={(option: UserDto) => option && option.email ? option.email : ''}
+					getOptionValue={(option: UserDto) => option && option.id ? option.id.toString() : ''}
+					getOptions={loadRemoteUsers}
 					debounceTime={500}
+					minCharsToSearch={1}
 					itemComponent={UserSelectItem}
-					options={[]}
 				/>
 			</ScrollArea>
 			

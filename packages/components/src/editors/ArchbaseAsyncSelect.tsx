@@ -473,8 +473,10 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 		  position={dropdownPosition}
 		  zIndex={zIndex}
 		  onOptionSubmit={(val) => {
-			handleChange(val);
-			handleSearchChange(getOptionLabel(val as O));
+			const selectedOption = options.find((opt) => opt.value === val);
+			const originalObject = selectedOption?.origin ?? val;
+			handleChange(originalObject);
+			setQueryValue(selectedOption?.label || '');
 			combobox.closeDropdown();
 		  }}
 		>
@@ -512,11 +514,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 					size="sm"
 					onMouseDown={(event) => event.preventDefault()}
 					onClick={() => {
+					  handleChange(null);
 					  setQueryValue('');
-					  setSelectedValue(null);
-						if(onSelectValue) {
-							onSelectValue(null)
-						}
 					}}
 					aria-label="Clear value"
 				  />
