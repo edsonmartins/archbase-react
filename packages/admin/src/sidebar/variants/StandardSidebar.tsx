@@ -195,7 +195,7 @@ function StandardSidebarContent({
 		// Se colapsado, não mostrar grupos
 		if (collapsed) {
 			return (
-				<Stack gap={2}>
+				<Stack gap={4}>
 					{groupedItems.ungrouped.map((item, index) => (
 						<SidebarItem
 							key={`item-${index}`}

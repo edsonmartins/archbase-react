@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { NavLink, Tooltip, Badge, Kbd, Box, Menu, useMantineTheme, useMantineColorScheme, Center } from '@mantine/core';
+import { NavLink, Tooltip, Badge, Kbd, Box, Menu, useMantineTheme, useMantineColorScheme, Center, Text, Stack } from '@mantine/core';
 import { IconChevronRight } from '@tabler/icons-react';
 import { ArchbaseNavigationItem } from '../../types';
 import { SidebarItemProps, ExtendedNavigationItem } from '../types';
@@ -112,19 +112,40 @@ export function SidebarItem({
 					closeDelay={200}
 				>
 					<Menu.Target>
-						<Center style={{ width: '100%', padding: '8px 0' }}>
+						<Center style={{ width: '100%', padding: '2px 0' }}>
 							<Tooltip label={translatedLabel} position="right" withArrow>
-								<Box
+								<Stack
+									gap={1}
+									align="center"
 									style={{
-										color: computedIconColor,
 										cursor: 'pointer',
-										display: 'flex',
-										alignItems: 'center',
-										justifyContent: 'center',
 									}}
 								>
-									{item.icon}
-								</Box>
+									<Box
+										style={{
+											color: computedIconColor,
+											display: 'flex',
+											alignItems: 'center',
+											justifyContent: 'center',
+										}}
+									>
+										{item.icon}
+									</Box>
+									<Text
+										size="8px"
+										ta="center"
+										style={{
+											color: computedIconColor,
+											lineHeight: 1,
+											maxWidth: 56,
+											overflow: 'hidden',
+											textOverflow: 'ellipsis',
+											whiteSpace: 'nowrap',
+										}}
+									>
+										{translatedLabel}
+									</Text>
+								</Stack>
 							</Tooltip>
 						</Center>
 					</Menu.Target>
@@ -215,11 +236,11 @@ export function SidebarItem({
 				<Center
 					style={{
 						width: '100%',
-						height: itemHeight,
 						cursor: isDisabled ? 'not-allowed' : 'pointer',
 						opacity: isDisabled ? 0.5 : 1,
 						backgroundColor: active ? hoverBgColor : 'transparent',
 						transition: 'background-color 150ms ease',
+						padding: '2px 0',
 					}}
 					onClick={handleClick}
 					onMouseEnter={(e) => {
@@ -233,9 +254,25 @@ export function SidebarItem({
 						e.currentTarget.style.backgroundColor = active ? hoverBgColor : 'transparent';
 					}}
 				>
-					<Box style={{ color: active ? theme.white : computedIconColor }}>
-						{item.icon}
-					</Box>
+					<Stack gap={1} align="center">
+						<Box style={{ color: active ? theme.white : computedIconColor }}>
+							{item.icon}
+						</Box>
+						<Text
+							size="8px"
+							ta="center"
+							style={{
+								color: active ? theme.white : computedIconColor,
+								lineHeight: 1,
+								maxWidth: 56,
+								overflow: 'hidden',
+								textOverflow: 'ellipsis',
+								whiteSpace: 'nowrap',
+							}}
+						>
+							{translatedLabel}
+						</Text>
+					</Stack>
 				</Center>
 			</Tooltip>
 		);

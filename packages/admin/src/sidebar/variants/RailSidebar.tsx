@@ -285,7 +285,7 @@ function RailSidebarContent({
 					<ScrollArea style={{ flex: 1 }} scrollbarSize={6} type="hover">
 						<Box p="xs">
 							{collapsed ? (
-								<Stack gap="xs" align="center">
+								<Stack gap={8} align="center">
 									{navigationData
 										.filter((item) => {
 											if (!item.showInSidebar) return false;

@@ -7,6 +7,7 @@ import {
 	Tooltip,
 	Menu,
 	Divider,
+	Text,
 	useMantineTheme,
 	useMantineColorScheme,
 	px,
@@ -74,19 +75,35 @@ function MinimalSidebarItem({
 			>
 				<Menu.Target>
 					<Tooltip label={translatedLabel} position="right" withArrow>
-						<ActionIcon
-							size="xl"
-							variant={active ? 'filled' : 'subtle'}
-							color={active ? activeColor : undefined}
-							disabled={isDisabled}
-							style={{
-								opacity: isDisabled ? 0.5 : 1,
-							}}
-						>
-							<Box style={{ color: active ? 'white' : iconColor }}>
-								{item.icon}
-							</Box>
-						</ActionIcon>
+						<Stack gap={1} align="center" style={{ cursor: 'pointer' }}>
+							<ActionIcon
+								size="xl"
+								variant={active ? 'filled' : 'subtle'}
+								color={active ? activeColor : undefined}
+								disabled={isDisabled}
+								style={{
+									opacity: isDisabled ? 0.5 : 1,
+								}}
+							>
+								<Box style={{ color: active ? 'white' : iconColor }}>
+									{item.icon}
+								</Box>
+							</ActionIcon>
+							<Text
+								size="8px"
+								ta="center"
+								style={{
+									color: active ? activeColor : iconColor,
+									lineHeight: 1,
+									maxWidth: 56,
+									overflow: 'hidden',
+									textOverflow: 'ellipsis',
+									whiteSpace: 'nowrap',
+								}}
+							>
+								{translatedLabel}
+							</Text>
+						</Stack>
 					</Tooltip>
 				</Menu.Target>
 				<Menu.Dropdown>
@@ -112,20 +129,36 @@ function MinimalSidebarItem({
 	// Item simples
 	return (
 		<Tooltip label={translatedLabel} position="right" withArrow>
-			<ActionIcon
-				size="xl"
-				variant={active ? 'filled' : 'subtle'}
-				color={active ? activeColor : undefined}
-				disabled={isDisabled}
-				onClick={() => onClick(item)}
-				style={{
-					opacity: isDisabled ? 0.5 : 1,
-				}}
-			>
-				<Box style={{ color: active ? 'white' : iconColor }}>
-					{item.icon}
-				</Box>
-			</ActionIcon>
+			<Stack gap={1} align="center" style={{ cursor: 'pointer' }}>
+				<ActionIcon
+					size="xl"
+					variant={active ? 'filled' : 'subtle'}
+					color={active ? activeColor : undefined}
+					disabled={isDisabled}
+					onClick={() => onClick(item)}
+					style={{
+						opacity: isDisabled ? 0.5 : 1,
+					}}
+				>
+					<Box style={{ color: active ? 'white' : iconColor }}>
+						{item.icon}
+					</Box>
+				</ActionIcon>
+				<Text
+					size="8px"
+					ta="center"
+					style={{
+						color: active ? activeColor : iconColor,
+						lineHeight: 1,
+						maxWidth: 56,
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+						whiteSpace: 'nowrap',
+					}}
+				>
+					{translatedLabel}
+				</Text>
+			</Stack>
 		</Tooltip>
 	);
 }
@@ -213,7 +246,7 @@ function MinimalSidebarContent({
 		}
 
 		return (
-			<Stack gap="xs" align="center">
+			<Stack gap={8} align="center">
 				{visibleItems.map((item, index) => (
 					<MinimalSidebarItem
 						key={index}
