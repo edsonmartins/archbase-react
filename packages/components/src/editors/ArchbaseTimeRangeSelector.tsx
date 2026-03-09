@@ -89,7 +89,22 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
   // Aceitar null explicitamente para o valor inicial
   const [selectedRange, setSelectedRange] = useState<string|null>(defaultRangeValue || null);
   const [customRange, setCustomRange] = useState<CustomRange>({ start: null, end: null });
-  const [dateRange, setDateRange] = useState<{ start: Date | null, end: Date | null }>({ start: null, end: null });
+  // Inicializar dateRange diretamente a partir das props para evitar estado null no primeiro render
+  const [dateRange, setDateRange] = useState<{ start: Date | null, end: Date | null }>(() => {
+    if (defaultRangeValue && defaultRangeValue !== 'custom') {
+      const range = ranges.find(r => r.value === defaultRangeValue);
+      if (range) {
+        return range.rangeFunction(new Date());
+      }
+    }
+    if (defaultDateRange && defaultDateRange.start && defaultDateRange.end) {
+      return {
+        start: new Date(defaultDateRange.start.getTime()),
+        end: new Date(defaultDateRange.end.getTime())
+      };
+    }
+    return { start: null, end: null };
+  });
   const [opened, setOpened] = useState(false);
 
   const startRef = useRef<HTMLInputElement>(null);
@@ -158,17 +173,6 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
       componentRef.current = internalRef.current;
     }
   }, [componentRef, internalRef.current]);
-
-  // Inicializar o estado com base nas props
-  useEffect(() => {
-    // Inicializar dateRange a partir de defaultDateRange se disponível
-    if (defaultDateRange && defaultDateRange.start && defaultDateRange.end) {
-      setDateRange({
-        start: new Date(defaultDateRange.start.getTime()),
-        end: new Date(defaultDateRange.end.getTime())
-      });
-    }
-  }, []);
 
   // Atualizar o estado quando o defaultRangeValue muda
   useEffect(() => {
