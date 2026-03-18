@@ -58,10 +58,10 @@
     "vitest": "^2.0.0"
   },
   "peerDependencies": {
-    "@mantine/core": "8.3.17",
-    "@mantine/dates": "8.3.17",
-    "@mantine/hooks": "8.3.17",
-    "@mantine/notifications": "8.3.17",
+    "@mantine/core": "8.3.18",
+    "@mantine/dates": "8.3.18",
+    "@mantine/hooks": "8.3.18",
+    "@mantine/notifications": "8.3.18",
     "@tabler/icons-react": "^3.27.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
