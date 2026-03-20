@@ -38,6 +38,7 @@ export function ArchbaseAdminTabContainer({
 	const { colorScheme } = useMantineColorScheme();
 	const [openedTabs, setOpenedTabs] = useState<ArchbaseTabItem[]>(defaultOpenedTabs);
 	const [activeTabId, setActiveTabId] = useState<any>(defaultActiveTabId);
+	const previousActiveTabIdRef = useRef<string | undefined>(undefined);
 	const currentLocation = useLocation();
 	const tabsRef = useRef<any>([]);
 	const size = useComponentSize(tabsRef);
@@ -55,6 +56,13 @@ export function ArchbaseAdminTabContainer({
 		onChangeActiveTabIdRef.current = onChangeActiveTabId;
 	});
 
+	// Rastrear aba anterior: guarda o id antes de mudar para o novo
+	const prevActiveForTrackingRef = useRef<string | undefined>(activeTabId);
+	useEffect(() => {
+		previousActiveTabIdRef.current = prevActiveForTrackingRef.current;
+		prevActiveForTrackingRef.current = activeTabId;
+	}, [activeTabId]);
+
 	// Flag para rastrear se a mudança veio das props (externa) ou local
 	const isExternalUpdateRef = useRef(false);
 
@@ -68,22 +76,33 @@ export function ArchbaseAdminTabContainer({
 		}
 
 		const closedIndex = openedTabs.findIndex((tab) => tab.path === id);
-		// Prioridade: payload.redirectUrl > tab.redirect
+		// Prioridade: payload.redirectUrl > aba anterior > tab.redirect > próxima aba
 		let redirect: string | undefined = payload?.redirectUrl;
 		if (!redirect && closedIndex >= 0) {
 			redirect = openedTabs[closedIndex].redirect;
 		}
 		const tmpTabs = openedTabs.filter((f) => f.id !== id);
-		let idx = -1;
-		tmpTabs.forEach((f, index) => f.id === activeTabId && (idx = index));
+
+		// Tentar navegar para a aba anterior (de onde o usuário veio)
 		let tmpCurrent: string | null = null;
-		if (tmpTabs.length > 0 && tmpTabs[idx]) {
-			tmpCurrent = tmpTabs[idx].id;
-		} else if (tmpTabs.length > 0) {
-			tmpCurrent = tmpTabs[tmpTabs.length - 1].id;
-		} else {
-			tmpCurrent = null;
+		if (previousActiveTabIdRef.current && previousActiveTabIdRef.current !== id) {
+			const prevTab = tmpTabs.find((t) => t.id === previousActiveTabIdRef.current);
+			if (prevTab) {
+				tmpCurrent = prevTab.id;
+			}
 		}
+
+		// Fallback: aba na mesma posição ou última aba
+		if (!tmpCurrent) {
+			let idx = -1;
+			tmpTabs.forEach((f, index) => f.id === activeTabId && (idx = index));
+			if (tmpTabs.length > 0 && tmpTabs[idx]) {
+				tmpCurrent = tmpTabs[idx].id;
+			} else if (tmpTabs.length > 0) {
+				tmpCurrent = tmpTabs[tmpTabs.length - 1].id;
+			}
+		}
+
 		const nextTabs = tmpTabs.map((tab) => ({
 			...tab,
 			active: tmpCurrent === tab.id,
