@@ -13,3 +13,43 @@
 }
 
 /* Adicione mais estilos específicos do admin aqui conforme necessário */
+
+/* Navigation Progress Bar */
+.archbase-nav-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.archbase-nav-progress[data-active="true"] {
+  opacity: 1;
+}
+
+.archbase-nav-progress-bar {
+  height: 100%;
+  background: var(--mantine-primary-color-filled, #228be6);
+  border-radius: 0 2px 2px 0;
+  animation: archbase-nav-progress-indeterminate 1.2s ease-in-out infinite;
+  transform-origin: left;
+}
+
+@keyframes archbase-nav-progress-indeterminate {
+  0% {
+    width: 0%;
+    margin-left: 0%;
+  }
+  50% {
+    width: 60%;
+    margin-left: 20%;
+  }
+  100% {
+    width: 0%;
+    margin-left: 100%;
+  }
+}

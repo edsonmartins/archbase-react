@@ -112,5 +112,8 @@ export { useArchbaseDrawer } from './drawer/useArchbaseDrawer'
 export { ArchbaseMyProfileModal, defaultMyProfileModalOptions } from './ArchbaseMyProfileModal'
 export type { ArchbaseMyProfileModalProps, MyProfileModalOptions } from './ArchbaseMyProfileModal'
 
+// Navigation Progress
+export { NavigationProgressProvider, useNavigationProgress } from './ArchbaseNavigationProgress';
+
 // Hooks
 export * from './hooks';

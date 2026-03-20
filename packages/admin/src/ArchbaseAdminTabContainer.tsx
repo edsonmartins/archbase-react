@@ -9,6 +9,7 @@ import { ArchbaseAdminLayoutContext, ArchbaseAdminLayoutContextValue } from './A
 import { ArchbaseNavigationContext, useArchbaseNavigationContext } from './ArchbaseNavigation.context';
 import { ArchbaseNavigationItem, ArchbaseTabItem } from './types';
 import { useKeepAliveCache } from './ArchbaseAliveAbleRoutes';
+import { useNavigationProgress } from './ArchbaseNavigationProgress';
 
 export interface ArchbaseAdminTabContainerProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -46,6 +47,7 @@ export function ArchbaseAdminTabContainer({
 	const { state, dispatch } = navigationContext;
 	const adminLayoutContextValue = useContext<ArchbaseAdminLayoutContextValue>(ArchbaseAdminLayoutContext);
 	const keepAliveCache = useKeepAliveCache();
+	const { start: startProgress, done: doneProgress } = useNavigationProgress();
 
 	// Refs para os callbacks - evita dependências nos useEffects
 	const onChangeOpenedTabsRef = useRef(onChangeOpenedTabs);
@@ -68,6 +70,7 @@ export function ArchbaseAdminTabContainer({
 
 	const handleOnClose = useCallback((id: string, payload?: { redirectUrl?: string }) => {
 		console.log(`[TabContainer] handleOnClose called for: ${id}`);
+		startProgress();
 		// Solicita remoção do cache keep-alive quando aba é fechada
 		if (!keepAliveCache) {
 			console.error('[ArchbaseAdminTabContainer] keepAliveCache context not available. Tab cache cleanup will not occur. This may cause memory leaks.');
@@ -125,7 +128,8 @@ export function ArchbaseAdminTabContainer({
 			navigate(adminLayoutContextValue.navigationRootLink);
 		}
 		dispatch({ type: 'DONE', link: '' });
-	}, [openedTabs, activeTabId, navigate, adminLayoutContextValue.navigationRootLink, dispatch, keepAliveCache]);
+		doneProgress();
+	}, [openedTabs, activeTabId, navigate, adminLayoutContextValue.navigationRootLink, dispatch, keepAliveCache, startProgress, doneProgress]);
 
 	useEffect(() => {
 		if (state?.linkClosed) {
@@ -260,7 +264,9 @@ export function ArchbaseAdminTabContainer({
 		const items = openedTabs.filter((item) => item.id === id);
 		if (items && items.length > 0) {
 			if (currentLocation.pathname !== items[0].path) {
+				startProgress();
 				navigate(items[0].path);
+				doneProgress();
 			}
 		}
 		startTransition(() => {

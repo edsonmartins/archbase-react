@@ -16,6 +16,7 @@ import {
 import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 import { ArchbaseMantineSidebar, SidebarVariant } from './sidebar';
 import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute, KeepAliveCacheProvider, type ArchbaseKeepAliveRouteProps } from './ArchbaseAliveAbleRoutes';
+import { NavigationProgressProvider } from './ArchbaseNavigationProgress';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
 import { useArchbaseNavigateParams } from '@archbase/components';
@@ -398,6 +399,7 @@ function ArchbaseAdminMainLayoutContainer({
 	};
 
 	return (
+		<NavigationProgressProvider>
 		<AppShell
 			header={{ height: '60px', collapsed: !showHeader }}
 			navbar={navbarConfig}
@@ -456,6 +458,7 @@ function ArchbaseAdminMainLayoutContainer({
 				{footer}
 			</AppShell.Footer>
 		</AppShell>
+		</NavigationProgressProvider>
 	);
 }
 
