@@ -15,7 +15,7 @@ import {
 } from './ArchbaseAdminLayout.context';
 import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 import { ArchbaseMantineSidebar, SidebarVariant } from './sidebar';
-import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute, type ArchbaseKeepAliveRouteProps } from './ArchbaseAliveAbleRoutes';
+import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute, KeepAliveCacheProvider, type ArchbaseKeepAliveRouteProps } from './ArchbaseAliveAbleRoutes';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
 import { useArchbaseNavigateParams } from '@archbase/components';
@@ -430,12 +430,14 @@ function ArchbaseAdminMainLayoutContainer({
 						sideBarCollapsedWidth,
 						handleCollapseSidebar
 					)}
+				<KeepAliveCacheProvider>
 				<div style={mainDivStyle}>
 					{children}
 					<div style={{ width: '100%', height: 'calc(100% - 48px)' }}>
 						<ArchbaseAliveAbleRoutes maxKeepAliveTabs={maxKeepAliveTabs}>{...routes as any}</ArchbaseAliveAbleRoutes>
 					</div>
 				</div>
+			</KeepAliveCacheProvider>
 				{showSideBar &&
 					<Drawer
 						opened={adminLayoutContextValue.hidden || false}

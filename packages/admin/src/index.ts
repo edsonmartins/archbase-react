@@ -39,6 +39,7 @@ export type {
 export {
 	ArchbaseKeepAliveRoute,
 	ArchbaseAliveAbleRoutes,
+	KeepAliveCacheProvider,
 	useKeepAliveVisibility,
 	useArchbaseRouteParams,
 	useParams,

@@ -72,7 +72,8 @@ export function ArchbaseAdminTabContainer({
 		if (!keepAliveCache) {
 			console.error('[ArchbaseAdminTabContainer] keepAliveCache context not available. Tab cache cleanup will not occur. This may cause memory leaks.');
 		} else {
-			keepAliveCache.requestUnregister(id);
+			console.log(`[TabContainer] Destroying keepAlive cache for: ${id}`);
+			keepAliveCache.destroy(id);
 		}
 
 		const closedIndex = openedTabs.findIndex((tab) => tab.path === id);
@@ -278,6 +279,7 @@ export function ArchbaseAdminTabContainer({
 
 	// Funções para fechar múltiplas abas
 	const handleCloseAllTabs = useCallback(() => {
+		keepAliveCache?.destroyAll();
 		setOpenedTabs([]);
 		setActiveTabId(undefined);
 		if (!adminLayoutContextValue.navigationRootLink) {
@@ -285,11 +287,15 @@ export function ArchbaseAdminTabContainer({
 			return;
 		}
 		navigate(adminLayoutContextValue.navigationRootLink);
-	}, [navigate, adminLayoutContextValue.navigationRootLink]);
+	}, [navigate, adminLayoutContextValue.navigationRootLink, keepAliveCache]);
 
 	const handleCloseLeftTabs = useCallback((tabId: string) => {
 		const currentIndex = openedTabs.findIndex((tab) => tab.id === tabId);
 		if (currentIndex <= 0) return; // Não há abas à esquerda
+
+		// Limpa cache das abas que serão removidas
+		const tabsToRemove = openedTabs.slice(0, currentIndex);
+		tabsToRemove.forEach((tab) => keepAliveCache?.destroy(tab.path));
 
 		const tabsToKeep = openedTabs.slice(currentIndex);
 		const tmpCurrent = tabsToKeep.find((tab) => tab.id === activeTabId)?.id || tabsToKeep[0]?.id;
@@ -308,11 +314,15 @@ export function ArchbaseAdminTabContainer({
 				navigate(targetTab.path);
 			}
 		}
-	}, [openedTabs, activeTabId, navigate, currentLocation.pathname]);
+	}, [openedTabs, activeTabId, navigate, currentLocation.pathname, keepAliveCache]);
 
 	const handleCloseRightTabs = useCallback((tabId: string) => {
 		const currentIndex = openedTabs.findIndex((tab) => tab.id === tabId);
 		if (currentIndex === -1 || currentIndex >= openedTabs.length - 1) return; // Não há abas à direita
+
+		// Limpa cache das abas que serão removidas
+		const tabsToRemove = openedTabs.slice(currentIndex + 1);
+		tabsToRemove.forEach((tab) => keepAliveCache?.destroy(tab.path));
 
 		const tabsToKeep = openedTabs.slice(0, currentIndex + 1);
 		const tmpCurrent = tabsToKeep.find((tab) => tab.id === activeTabId)?.id || tabsToKeep[tabsToKeep.length - 1]?.id;
@@ -331,11 +341,14 @@ export function ArchbaseAdminTabContainer({
 				navigate(targetTab.path);
 			}
 		}
-	}, [openedTabs, activeTabId, navigate, currentLocation.pathname]);
+	}, [openedTabs, activeTabId, navigate, currentLocation.pathname, keepAliveCache]);
 
 	const handleCloseOtherTabs = useCallback((tabId: string) => {
 		const currentTab = openedTabs.find((tab) => tab.id === tabId);
 		if (!currentTab) return;
+
+		// Limpa cache de todas as abas exceto a selecionada
+		keepAliveCache?.destroyOther(currentTab.path);
 
 		const nextTabs = [{ ...currentTab, active: true }];
 		setOpenedTabs(nextTabs);
@@ -344,7 +357,7 @@ export function ArchbaseAdminTabContainer({
 		if (currentLocation.pathname !== currentTab.path) {
 			navigate(currentTab.path);
 		}
-	}, [openedTabs, navigate, currentLocation.pathname]);
+	}, [openedTabs, navigate, currentLocation.pathname, keepAliveCache]);
 
 	const buildAdvancedTabs = (openedTabs: ArchbaseTabItem[]): ArchbaseAdvancedTabItem[] => {
 		return openedTabs.map((tab) => {
