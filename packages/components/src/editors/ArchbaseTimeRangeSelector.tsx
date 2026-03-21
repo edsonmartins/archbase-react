@@ -174,13 +174,24 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
     }
   }, [componentRef, internalRef.current]);
 
-  // Atualizar o estado quando o defaultRangeValue muda
+  // Sincronizar apenas quando defaultRangeValue realmente muda (controlado pelo pai)
+  // Ignora a primeira execução pois o useState já inicializa com o default
+  const isFirstRenderRef = useRef(true);
+  const prevDefaultRef = useRef(defaultRangeValue);
   useEffect(() => {
+    if (isFirstRenderRef.current) {
+      isFirstRenderRef.current = false;
+      return;
+    }
+    // Só atualiza se o valor realmente mudou (evita loop com re-renders do pai)
+    if (defaultRangeValue === prevDefaultRef.current) {
+      return;
+    }
+    prevDefaultRef.current = defaultRangeValue;
+
     if (defaultRangeValue !== undefined) {
-      // Atualizar o selectedRange
       setSelectedRange(defaultRangeValue);
 
-      // Se for um range predefinido
       if (defaultRangeValue && defaultRangeValue !== 'custom') {
         const range = ranges.find(r => r.value === defaultRangeValue);
         if (range) {
@@ -188,16 +199,12 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
           setDateRange(newRange);
         }
       }
-      // Se for custom e temos defaultDateRange disponível
       else if (defaultRangeValue === 'custom' && defaultDateRange &&
                defaultDateRange.start && defaultDateRange.end) {
-        // Criar novas instâncias para evitar problemas de referência
         setDateRange({
           start: new Date(defaultDateRange.start.getTime()),
           end: new Date(defaultDateRange.end.getTime())
         });
-
-        // Também atualizar o customRange para ficar sincronizado
         setCustomRange({
           start: new Date(defaultDateRange.start.getTime()),
           end: new Date(defaultDateRange.end.getTime())
