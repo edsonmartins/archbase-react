@@ -143,6 +143,7 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 
 	// === REFS ===
 	const internalDataSourceRef = useRef<ArchbaseDataSource<T, ID> | null>(null);
+	const cachedRecordsRef = useRef<T[]>([]);
 
 	// === DATASOURCE ===
 	const useExternalDataSource = !!externalDataSource;
@@ -220,6 +221,35 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 		...customLabels
 	};
 
+	// === LISTENER DE PAGINAÇÃO PARA DATASOURCE INTERNO ===
+	// Quando o grid muda de página, refreshData é chamado no DataSource.
+	// Para DataSource interno (sem remote), precisamos interceptar e re-abrir
+	// o DataSource com os metadados de paginação corretos.
+	useEffect(() => {
+		if (useExternalDataSource) return;
+
+		const handleRefreshData = (options: any) => {
+			const records = cachedRecordsRef.current;
+			if (records.length === 0) return;
+
+			const newPage = options?.currentPage ?? 0;
+			const newPageSize = options?.pageSize ?? pageSize;
+
+			dataSource.open({
+				records,
+				grandTotalRecords: records.length,
+				currentPage: newPage,
+				totalPages: Math.ceil(records.length / newPageSize),
+				pageSize: newPageSize
+			});
+		};
+
+		(dataSource as any).emitter.on('refreshData', handleRefreshData);
+		return () => {
+			(dataSource as any).emitter.off('refreshData', handleRefreshData);
+		};
+	}, [useExternalDataSource, dataSource, pageSize]);
+
 	// === CARREGAMENTO DE DADOS ===
 	const handleLoadData = useCallback(
 		async (search?: string) => {
@@ -230,6 +260,7 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 			setInternalIsLoading(true);
 			try {
 				const records = await loadData(search, searchFields);
+				cachedRecordsRef.current = records;
 				dataSource.open({
 					records,
 					grandTotalRecords: records.length,

@@ -176,7 +176,9 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
 
   // Atualizar o estado quando o defaultRangeValue muda
   useEffect(() => {
+    console.log('[TimeRangeSelector] useEffect defaultRangeValue=%s, selectedRange=%s', defaultRangeValue, selectedRange);
     if (defaultRangeValue !== undefined) {
+      console.log('[TimeRangeSelector] setSelectedRange(%s)', defaultRangeValue);
       // Atualizar o selectedRange
       setSelectedRange(defaultRangeValue);
 
@@ -234,6 +236,7 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
 
   // Manipular a mudança de range (predefinido ou customizado)
   const handleRangeChange = (value: string | null) => {
+    console.log('[TimeRangeSelector] handleRangeChange value=%s', value);
     setSelectedRange(value);
 
     // Se não for range customizado, aplicar imediatamente
