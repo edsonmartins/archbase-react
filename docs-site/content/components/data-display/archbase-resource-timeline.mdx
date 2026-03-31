@@ -1,0 +1,122 @@
+import * as demos from '../../../demos/components/data-display';
+
+# ArchbaseResourceTimeline
+
+Timeline de recursos para visualização de alocação de pessoas, equipamentos ou salas ao longo do tempo, baseada em `vis-timeline` (MIT/Apache License).
+Ideal para agendamento de equipes, reserva de salas, planejamento de capacidade e gestão de recursos.
+
+## Uso Básico
+
+<Demo data={demos.resourceTimelineUsage} />
+
+## Exemplo com DataSource
+
+```tsx
+import { ArchbaseResourceTimeline } from '@archbase/components';
+import { useDataSource } from '@archbase/core';
+
+interface Resource {
+  id: string;
+  label: string;
+}
+
+interface Event {
+  id: string;
+  resourceId: string;
+  label: string;
+  start: string;
+  end: string;
+}
+
+function TeamSchedule() {
+  const resources: Resource[] = [
+    { id: '1', label: 'Ana Silva - Desenvolvedora' },
+    { id: '2', label: 'Carlos Souza - Designer' },
+    { id: '3', label: 'Maria Oliveira - QA' },
+  ];
+
+  const events: Event[] = [
+    { id: 'e1', resourceId: '1', label: 'Sprint Planning', start: '2025-03-24 09:00', end: '2025-03-24 11:00' },
+    { id: 'e2', resourceId: '1', label: 'Desenvolvimento API', start: '2025-03-24 13:00', end: '2025-03-26 18:00' },
+    { id: 'e3', resourceId: '2', label: 'UI/UX Prototipação', start: '2025-03-24 09:00', end: '2025-03-25 18:00' },
+    { id: 'e4', resourceId: '2', label: 'Design Review', start: '2025-03-26 14:00', end: '2025-03-26 16:00' },
+    { id: 'e5', resourceId: '3', label: 'Testes Regressão', start: '2025-03-25 09:00', end: '2025-03-27 18:00' },
+    { id: 'e6', resourceId: '3', label: 'Relatório de Bugs', start: '2025-03-28 09:00', end: '2025-03-28 12:00' },
+  ];
+
+  const resourceDS = useDataSource({ records: resources, idField: 'id' });
+  const eventDS = useDataSource({ records: events, idField: 'id' });
+
+  return (
+    <ArchbaseResourceTimeline
+      resourceDataSource={resourceDS}
+      eventDataSource={eventDS}
+      resourceIdField="id"
+      resourceLabelField="label"
+      eventStartField="start"
+      eventEndField="end"
+      eventResourceIdField="resourceId"
+      eventLabelField="label"
+      viewMode="week"
+      editable
+      onEventClick={(event) => console.log('Evento clicado:', event)}
+      onEventMove={(event, newStart, newEnd, newResourceId) => {
+        console.log('Evento movido:', event, newStart, newEnd, newResourceId);
+      }}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `resourceDataSource` | `DataSource` | - | DataSource que fornece os recursos (obrigatório) |
+| `eventDataSource` | `DataSource` | - | DataSource que fornece os eventos (obrigatório) |
+| `resourceIdField` | `string` | `'id'` | Campo do recurso que contém o ID |
+| `resourceLabelField` | `string` | `'label'` | Campo do recurso que contém o rótulo exibido |
+| `eventStartField` | `string` | `'start'` | Campo do evento que contém a data/hora de início |
+| `eventEndField` | `string` | `'end'` | Campo do evento que contém a data/hora de fim |
+| `eventResourceIdField` | `string` | `'resourceId'` | Campo do evento que referencia o ID do recurso |
+| `eventLabelField` | `string` | `'label'` | Campo do evento que contém o rótulo exibido |
+| `viewMode` | `string` | `'week'` | Modo de visualização: `'day'`, `'week'`, `'month'` |
+| `editable` | `boolean` | `false` | Permite mover e redimensionar eventos |
+| `onEventClick` | `(event: T) => void` | - | Callback ao clicar em um evento |
+| `onEventMove` | `(event, newStart, newEnd, newResourceId) => void` | - | Callback ao mover um evento |
+
+## Integração com DataSource
+
+O `ArchbaseResourceTimeline` utiliza dois DataSources separados: um para recursos e outro para eventos.
+
+```tsx
+// Recurso no DataSource:
+{ id: '1', label: 'Ana Silva - Desenvolvedora' }
+
+// Evento no DataSource:
+{ id: 'e1', resourceId: '1', label: 'Sprint Planning', start: '2025-03-24 09:00', end: '2025-03-24 11:00' }
+
+// O campo eventResourceIdField vincula o evento ao recurso
+<ArchbaseResourceTimeline
+  resourceDataSource={resourceDS}
+  eventDataSource={eventDS}
+  resourceIdField="id"
+  resourceLabelField="label"
+  eventResourceIdField="resourceId"
+  eventStartField="start"
+  eventEndField="end"
+  eventLabelField="label"
+/>
+```
+
+Quando o usuário move ou redimensiona um evento, o DataSource de eventos é atualizado automaticamente com as novas datas e alocação de recurso.
+
+## Licença
+
+Este componente utiliza `vis-timeline`, licenciado sob **MIT/Apache License**.
+
+## Referências
+
+- [vis-timeline documentation](https://visjs.github.io/vis-timeline/)
+- [ArchbaseVisTimeline](/components/data-display/archbase-vis-timeline) - Timeline simples de eventos
+- [ArchbaseGantt](/components/data-display/advanced-data) - Gráfico de Gantt

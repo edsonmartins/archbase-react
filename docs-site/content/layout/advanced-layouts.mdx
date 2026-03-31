@@ -1,0 +1,151 @@
+import * as demos from '../../demos/components/layout';
+
+# Advanced Layouts
+
+Componentes avançados de layout para construir interfaces com painéis flexíveis, redimensionáveis e reorganizáveis.
+Estes componentes complementam o `ArchbaseSplitPane` e o `ArchbaseDockLayout`, oferecendo alternativas para diferentes cenários.
+
+---
+
+## ArchbaseMosaicLayout
+
+Layout em mosaico (tiling) baseado em `react-mosaic-component`. Permite criar layouts com painéis organizados em grade,
+onde cada painel pode ser redimensionado, reorganizado e fechado pelo usuário.
+
+### Uso Básico
+
+<Demo data={demos.mosaicLayoutUsage} />
+
+### Estrutura
+
+O `ArchbaseMosaicLayout` recebe um mapa de painéis e um layout inicial que define a disposição hierárquica dos painéis:
+
+```tsx
+import { ArchbaseMosaicLayout } from '@archbase/layout';
+
+const panels = {
+  editor: { id: 'editor', title: 'Editor', component: <EditorPanel />, closable: true },
+  preview: { id: 'preview', title: 'Preview', component: <PreviewPanel />, closable: true },
+  console: { id: 'console', title: 'Console', component: <ConsolePanel />, closable: false },
+};
+
+<ArchbaseMosaicLayout
+  panels={panels}
+  initialLayout={{
+    direction: 'row',
+    first: 'editor',
+    second: {
+      direction: 'column',
+      first: 'preview',
+      second: 'console',
+    },
+  }}
+  height="100%"
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `panels` | `Record<string, ArchbaseMosaicPanelDef>` | - | Mapa de definições de painéis |
+| `initialLayout` | `MosaicNode<string>` | - | Layout inicial da árvore de painéis |
+| `onChange` | `(layout: MosaicNode<string>) => void` | - | Callback quando o layout muda |
+| `onPanelClose` | `(panelId: string) => void` | - | Callback quando um painel é fechado |
+| `height` | `string \| number` | - | Altura do container |
+| `width` | `string \| number` | - | Largura do container |
+
+### ArchbaseMosaicPanelDef
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | `string` | Identificador único do painel |
+| `title` | `string` | Título exibido na barra do painel |
+| `component` | `ReactNode` | Conteúdo do painel |
+| `closable` | `boolean` | Se o painel pode ser fechado pelo usuário |
+
+### Casos de Uso
+
+- **IDE-like layouts**: Editor, terminal e file explorer em mosaico
+- **Dashboards analíticos**: Múltiplos gráficos organizados pelo usuário
+- **Ferramentas de monitoramento**: Painéis reorganizáveis para diferentes métricas
+
+---
+
+## ArchbaseResizableLayout
+
+Layout com painéis redimensionáveis baseado em `react-resizable-panels`. Oferece uma API declarativa simples
+para criar layouts com divisórias arrastáveis, suporte a persistência de estado e direção configurável.
+
+### Uso Básico
+
+<Demo data={demos.resizableLayoutUsage} />
+
+### Estrutura
+
+O `ArchbaseResizableLayout` recebe um array de definições de painéis com tamanhos proporcionais:
+
+```tsx
+import { ArchbaseResizableLayout } from '@archbase/layout';
+
+<ArchbaseResizableLayout
+  direction="horizontal"
+  panels={[
+    { id: 'sidebar', children: <Sidebar />, defaultSize: 25, minSize: 15 },
+    { id: 'main', children: <MainContent />, defaultSize: 50 },
+    { id: 'details', children: <DetailsPanel />, defaultSize: 25, minSize: 15 },
+  ]}
+  autoSaveId="my-layout"
+  height="100%"
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `direction` | `'horizontal' \| 'vertical'` | `'horizontal'` | Direção dos painéis |
+| `panels` | `ArchbaseResizablePanelDef[]` | - | Array de definições de painéis |
+| `onLayout` | `(sizes: number[]) => void` | - | Callback quando os tamanhos mudam |
+| `autoSaveId` | `string` | - | ID para salvar/restaurar layout automaticamente via localStorage |
+| `handleSize` | `number` | - | Tamanho da alça de redimensionamento (px) |
+| `showHandleGrip` | `boolean` | `true` | Exibir indicador visual na alça |
+| `height` | `string \| number` | - | Altura do container |
+| `width` | `string \| number` | - | Largura do container |
+
+### ArchbaseResizablePanelDef
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | `string` | Identificador único do painel |
+| `children` | `ReactNode` | Conteúdo do painel |
+| `defaultSize` | `number` | Tamanho inicial em porcentagem (0-100) |
+| `minSize` | `number` | Tamanho mínimo em porcentagem |
+| `maxSize` | `number` | Tamanho máximo em porcentagem |
+| `collapsible` | `boolean` | Se o painel pode ser recolhido |
+
+### Casos de Uso
+
+- **Master-detail views**: Lista + detalhes com divisória arrastável
+- **Editores com preview**: Código à esquerda, resultado à direita
+- **Layouts persistentes**: Com `autoSaveId`, o estado é salvo automaticamente
+
+---
+
+## Comparação entre Layouts
+
+| Feature | SplitPane | ResizableLayout | MosaicLayout | DockLayout |
+|---------|-----------|-----------------|--------------|------------|
+| Painéis redimensionáveis | Sim | Sim | Sim | Sim |
+| Drag-and-drop | Nao | Nao | Sim | Sim |
+| Fechamento de painéis | Nao | Nao | Sim | Sim |
+| Persistencia de estado | Nao | Sim (localStorage) | Manual | Sim |
+| Layout hierárquico | Nao | Nao | Sim | Sim |
+| Tabs | Nao | Nao | Nao | Sim |
+| Complexidade | Baixa | Baixa | Média | Alta |
+
+## Próximos Passos
+
+- [ArchbaseSplitPane](/layout/split-pane) - Layout simples com painéis redimensionáveis
+- [Dockable](/layout/dockable) - Layout dockável estilo IDE
+- [Containers](/layout/containers) - Containers de layout básicos

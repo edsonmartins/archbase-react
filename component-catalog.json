@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-03-20",
+  "generatedAt": "2026-03-31",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -1219,7 +1219,7 @@
     },
     {
       "name": "ArchbaseAliveAbleRoutes",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [
@@ -2064,6 +2064,169 @@
       "canonicalUrl": "packages/data/src/service/ArchbaseRemoteApiService"
     },
     {
+      "name": "ArchbaseBarcodeScanner",
+      "description": "ArchbaseBarcodeScanner — scanner de codigos de barras e QR codes usando a API nativa BarcodeDetector\ncom fallback para navegadores que nao suportam a API.\nIntegrado ao DataSource (v1/v2) com suporte a modo inline e modal.\n@status stable",
+      "sourcePath": "packages/components/src/editors/ArchbaseBarcodeScanner",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde sera atribuido o valor do scanner (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo onde devera ser atribuido o valor do scanner na fonte de dados"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Valor controlado (uso standalone)"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do campo"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descricao do campo"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Ultimo erro ocorrido"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o preenchimento e obrigatorio"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o scanner esta desabilitado"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se e somente leitura"
+        },
+        {
+          "name": "continuous",
+          "type": "boolean",
+          "required": false,
+          "description": "Continuar escaneando apos primeira leitura (default false)"
+        },
+        {
+          "name": "formats",
+          "type": "string[]",
+          "required": false,
+          "description": "Formatos de codigo aceitos"
+        },
+        {
+          "name": "scanInterval",
+          "type": "number",
+          "required": false,
+          "description": "Intervalo entre tentativas de deteccao em ms (default 500)"
+        },
+        {
+          "name": "onScan",
+          "type": "(code: string, format: string) => void",
+          "required": false,
+          "description": "Callback quando um codigo e escaneado"
+        },
+        {
+          "name": "onError",
+          "type": "(error: Error) => void",
+          "required": false,
+          "description": "Callback quando ocorre um erro"
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "required": false,
+          "description": "Largura do video (default 320)"
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "required": false,
+          "description": "Altura do video (default 240)"
+        },
+        {
+          "name": "showTorchButton",
+          "type": "boolean",
+          "required": false,
+          "description": "Mostrar botao de lanterna (default false)"
+        },
+        {
+          "name": "asModal",
+          "type": "boolean",
+          "required": false,
+          "description": "Renderizar como botao que abre modal (default false)"
+        },
+        {
+          "name": "modalTitle",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do modal (default 'Escanear codigo')"
+        },
+        {
+          "name": "buttonLabel",
+          "type": "string",
+          "required": false,
+          "description": "Label do botao (default 'Escanear')"
+        },
+        {
+          "name": "buttonIcon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Icone do botao"
+        },
+        {
+          "name": "overlay",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Overlay customizado sobre o video"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo do componente"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Evento quando o valor e alterado"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseBarcodeScanner"
+    },
+    {
       "name": "ArchbaseChangeLanguageAction",
       "description": "ArchbaseChangeLanguageAction — componente Archbase focado em change language action.",
       "sourcePath": "packages/admin/src/ArchbaseChangeLanguageAction",
@@ -2531,6 +2694,151 @@
       "canonicalUrl": "packages/components/src/markdown/components/CodeBlock"
     },
     {
+      "name": "ArchbaseCodeViewer",
+      "description": "ArchbaseCodeViewer — visualizador de codigo-fonte com syntax highlighting\nusando @mantine/code-highlight, com binding opcional ao dataSource.\n@status stable",
+      "sourcePath": "packages/components/src/display/ArchbaseCodeViewer",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde sera lido o valor do codigo (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo de onde sera lido o valor do codigo na fonte de dados"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Valor do codigo (standalone)"
+        },
+        {
+          "name": "code",
+          "type": "string",
+          "required": false,
+          "description": "Alias para value"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "required": false,
+          "description": "Linguagem para syntax highlighting @default 'typescript'",
+          "default": "'typescript'"
+        },
+        {
+          "name": "showLineNumbers",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir numeros de linha @default true",
+          "default": "true"
+        },
+        {
+          "name": "showCopyButton",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir botao de copiar @default true",
+          "default": "true"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Label do componente"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descricao do componente"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Mensagem de erro"
+        },
+        {
+          "name": "highlightLines",
+          "type": "Record<string, { color: string; label?: string }>",
+          "required": false,
+          "description": "Linhas destacadas"
+        },
+        {
+          "name": "maxHeight",
+          "type": "string | number",
+          "required": false,
+          "description": "Altura maxima com scroll"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo CSS"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do componente"
+        },
+        {
+          "name": "tabs",
+          "type": "ArchbaseCodeViewerTab[]",
+          "required": false,
+          "description": "Quando fornecido, renderiza CodeHighlightTabs em vez de CodeHighlight"
+        },
+        {
+          "name": "withBorder",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir borda ao redor do codigo @default false",
+          "default": "false"
+        },
+        {
+          "name": "radius",
+          "type": "string | number",
+          "required": false,
+          "description": "Border radius @default 'sm'",
+          "default": "'sm'"
+        },
+        {
+          "name": "copyLabel",
+          "type": "string",
+          "required": false,
+          "description": "Label do botao de copiar @default 'Copiar'",
+          "default": "'Copiar'"
+        },
+        {
+          "name": "copiedLabel",
+          "type": "string",
+          "required": false,
+          "description": "Label do botao apos copiar @default 'Copiado'",
+          "default": "'Copiado'"
+        },
+        {
+          "name": "withExpandButton",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir botao de expandir/colapsar @default false",
+          "default": "false"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/display/ArchbaseCodeViewer"
+    },
+    {
       "name": "ArchbaseColorPicker",
       "description": "ArchbaseColorPicker — editor de formulários focado em color picker.",
       "sourcePath": "packages/components/src/editors/ArchbaseColorPicker",
@@ -2570,6 +2878,77 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/admin/src/ArchbaseColorSchemeAction"
+    },
+    {
+      "name": "ArchbaseColumnSelector",
+      "description": "Lista de colunas com configuração de visibilidade e ordem",
+      "sourcePath": "packages/components/src/filters/ArchbaseColumnSelector",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "columns",
+          "type": "ArchbaseColumnItem[]",
+          "required": true,
+          "description": "Lista de colunas com configuração de visibilidade e ordem"
+        },
+        {
+          "name": "onChange",
+          "type": "(columns: Array<{ field: string; label: string; visible: boolean; order: number }>) => void",
+          "required": true,
+          "description": "Callback chamado quando a configuração de colunas muda"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Rótulo exibido no topo do componente"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descrição exibida abaixo do rótulo"
+        },
+        {
+          "name": "showSearch",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir campo de busca"
+        },
+        {
+          "name": "showSelectAll",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir botões Selecionar Todos / Desmarcar Todos"
+        },
+        {
+          "name": "maxHeight",
+          "type": "number",
+          "required": false,
+          "description": "Altura máxima da lista de colunas"
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": "Estilos inline"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS"
+        },
+        {
+          "name": "width",
+          "type": "number | string",
+          "required": false,
+          "description": "Largura do componente"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/filters/ArchbaseColumnSelector"
     },
     {
       "name": "ArchbaseCompositeFilter",
@@ -3914,6 +4293,119 @@
       "canonicalUrl": "packages/components/src/notification/ArchbaseDialog"
     },
     {
+      "name": "ArchbaseDiffViewer",
+      "description": "Texto original (lado esquerdo)",
+      "sourcePath": "packages/components/src/display/ArchbaseDiffViewer",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "oldValue",
+          "type": "string",
+          "required": true,
+          "description": "Texto original (lado esquerdo)"
+        },
+        {
+          "name": "newValue",
+          "type": "string",
+          "required": true,
+          "description": "Texto novo (lado direito)"
+        },
+        {
+          "name": "splitView",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir em modo split (lado a lado) ou unificado"
+        },
+        {
+          "name": "showDiffOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir apenas as diferenças"
+        },
+        {
+          "name": "leftTitle",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do painel esquerdo"
+        },
+        {
+          "name": "rightTitle",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do painel direito"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "required": false,
+          "description": "Linguagem para syntax highlighting"
+        },
+        {
+          "name": "compareMethod",
+          "type": "DiffMethod",
+          "required": false,
+          "description": "Metodo de comparacao"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do componente"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descricao do componente"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo do componente"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS do componente"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do componente"
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Altura maxima do componente (com scroll)"
+        },
+        {
+          "name": "useDarkTheme",
+          "type": "boolean",
+          "required": false,
+          "description": "Usar tema escuro (auto-detectado do Mantine se nao informado)"
+        },
+        {
+          "name": "hideLineNumbers",
+          "type": "boolean",
+          "required": false,
+          "description": "Ocultar numeros de linha"
+        },
+        {
+          "name": "extraLinesSurroundingDiff",
+          "type": "number",
+          "required": false,
+          "description": "Linhas de contexto ao redor das diferencas"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/display/ArchbaseDiffViewer"
+    },
+    {
       "name": "ArchbaseDockableContainer",
       "description": "ArchbaseDockableContainer — layout estrutural focado em dockable container.",
       "sourcePath": "packages/layout/src/containers/ArchbaseDockableContainer",
@@ -4029,6 +4521,110 @@
       "canonicalUrl": "packages/layout/src/dock/ArchbaseDockLayoutPreset"
     },
     {
+      "name": "ArchbaseDocViewer",
+      "description": "DataSource to read the URL or base64 value from",
+      "sourcePath": "packages/components/src/viewers/ArchbaseDocViewer",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "DataSource to read the URL or base64 value from"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Field name within the DataSource"
+        },
+        {
+          "name": "uri",
+          "type": "string",
+          "required": false,
+          "description": "Standalone URL string"
+        },
+        {
+          "name": "base64",
+          "type": "string",
+          "required": false,
+          "description": "Standalone base64 string (include the data URI prefix or provide mimeType)"
+        },
+        {
+          "name": "mimeType",
+          "type": "string",
+          "required": false,
+          "description": "Explicit MIME type – auto-detected from the URL extension when omitted"
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Height of the viewer @default '600px'",
+          "default": "'600px'"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Width of the viewer @default '100%'",
+          "default": "'100%'"
+        },
+        {
+          "name": "showToolbar",
+          "type": "boolean",
+          "required": false,
+          "description": "Show the toolbar with download / open-in-new-tab buttons @default true",
+          "default": "true"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Label for Input.Wrapper"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Description for Input.Wrapper"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Error message for Input.Wrapper"
+        },
+        {
+          "name": "onDocumentLoad",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback fired when the document finishes loading"
+        },
+        {
+          "name": "onDocumentError",
+          "type": "(error: Error) => void",
+          "required": false,
+          "description": "Callback fired when the document fails to load"
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": "Custom style applied to the outer container"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Custom class name"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/ArchbaseDocViewer"
+    },
+    {
       "name": "ArchbaseDrawerContent",
       "description": "ArchbaseDrawerContent — componente Archbase focado em drawer content.",
       "sourcePath": "packages/admin/src/drawer/DrawerContent",
@@ -4078,6 +4674,157 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/admin/src/drawer/DrawerTrigger"
+    },
+    {
+      "name": "ArchbaseDualListbox",
+      "description": "Fonte de dados onde sera atribuido o valor (V1 ou V2)",
+      "sourcePath": "packages/components/src/editors/ArchbaseDualListbox",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde sera atribuido o valor (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo onde devera ser atribuido o valor na fonte de dados"
+        },
+        {
+          "name": "value",
+          "type": "any[]",
+          "required": false,
+          "description": "Valor de entrada controlado"
+        },
+        {
+          "name": "defaultValue",
+          "type": "any[]",
+          "required": false,
+          "description": "Valor padrao de entrada nao controlado"
+        },
+        {
+          "name": "options",
+          "type": "ArchbaseDualListboxOption[]",
+          "required": true,
+          "description": "Opcoes disponiveis para selecao"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do componente"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descricao do componente"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Ultimo erro ocorrido"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o campo e obrigatorio"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o componente esta desabilitado"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o componente e somente leitura"
+        },
+        {
+          "name": "availableLabel",
+          "type": "string",
+          "required": false,
+          "description": "Titulo da lista de itens disponiveis"
+        },
+        {
+          "name": "selectedLabel",
+          "type": "string",
+          "required": false,
+          "description": "Titulo da lista de itens selecionados"
+        },
+        {
+          "name": "showSearch",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir campo de busca em cada lista"
+        },
+        {
+          "name": "showMoveAll",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir botoes para mover todos os itens"
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "required": false,
+          "description": "Altura das listas"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: any[]) => void",
+          "required": false,
+          "description": "Evento quando o valor muda"
+        },
+        {
+          "name": "onFocusEnter",
+          "type": "(event: React.FocusEvent) => void",
+          "required": false,
+          "description": "Evento quando o componente recebe o foco"
+        },
+        {
+          "name": "onFocusExit",
+          "type": "(event: React.FocusEvent) => void",
+          "required": false,
+          "description": "Evento quando o foco sai do componente"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo do componente"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS do componente"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do componente"
+        },
+        {
+          "name": "size",
+          "type": "MantineSize",
+          "required": false,
+          "description": "Tamanho do componente"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseDualListbox"
     },
     {
       "name": "ArchbaseDualListSelector",
@@ -4741,6 +5488,199 @@
         "layout"
       ],
       "canonicalUrl": "packages/layout/src/containers/form/ArchbaseForm"
+    },
+    {
+      "name": "ArchbaseGantt",
+      "description": "ArchbaseGantt — wrapper para gantt-task-react com suporte a DataSource.",
+      "sourcePath": "packages/components/src/charts/ArchbaseGantt",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "DataSource que fornece a coleção de tarefas"
+        },
+        {
+          "name": "idField",
+          "type": "string",
+          "required": false,
+          "description": "Campo que mapeia o id da tarefa"
+        },
+        {
+          "name": "nameField",
+          "type": "string",
+          "required": false,
+          "description": "Campo que mapeia o nome da tarefa"
+        },
+        {
+          "name": "startDateField",
+          "type": "string",
+          "required": false,
+          "description": "Campo que mapeia a data de início"
+        },
+        {
+          "name": "endDateField",
+          "type": "string",
+          "required": false,
+          "description": "Campo que mapeia a data de término"
+        },
+        {
+          "name": "progressField",
+          "type": "string",
+          "required": false,
+          "description": "Campo que mapeia o progresso (0-100)"
+        },
+        {
+          "name": "dependenciesField",
+          "type": "string",
+          "required": false,
+          "description": "Campo que mapeia dependências (array de IDs)"
+        },
+        {
+          "name": "typeField",
+          "type": "string",
+          "required": false,
+          "description": "Campo que mapeia o tipo ('task' | 'milestone' | 'project')"
+        },
+        {
+          "name": "parentIdField",
+          "type": "string",
+          "required": false,
+          "description": "Campo que mapeia o ID do registro pai"
+        },
+        {
+          "name": "tasks",
+          "type": "Task[]",
+          "required": false,
+          "description": "Tarefas standalone (quando não se usa dataSource)"
+        },
+        {
+          "name": "viewMode",
+          "type": "ViewMode",
+          "required": false,
+          "description": "Modo de visualização do gantt"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "Locale para formatação de datas"
+        },
+        {
+          "name": "listCellWidth",
+          "type": "string",
+          "required": false,
+          "description": "Largura das células da lista de tarefas"
+        },
+        {
+          "name": "columnWidth",
+          "type": "number",
+          "required": false,
+          "description": "Largura de cada coluna do gantt"
+        },
+        {
+          "name": "rowHeight",
+          "type": "number",
+          "required": false,
+          "description": "Altura de cada linha"
+        },
+        {
+          "name": "barFill",
+          "type": "number",
+          "required": false,
+          "description": "Percentual de preenchimento da barra"
+        },
+        {
+          "name": "showTaskList",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibe a lista de tarefas à esquerda"
+        },
+        {
+          "name": "onTaskChange",
+          "type": "(task: T) => void",
+          "required": false,
+          "description": "Callback quando uma tarefa é alterada (data arrastada)"
+        },
+        {
+          "name": "onTaskDelete",
+          "type": "(task: T) => void",
+          "required": false,
+          "description": "Callback quando uma tarefa é deletada"
+        },
+        {
+          "name": "onProgressChange",
+          "type": "(task: T, progress: number) => void",
+          "required": false,
+          "description": "Callback quando o progresso de uma tarefa é alterado"
+        },
+        {
+          "name": "onDoubleClick",
+          "type": "(task: T) => void",
+          "required": false,
+          "description": "Callback ao dar duplo clique em uma tarefa"
+        },
+        {
+          "name": "onClick",
+          "type": "(task: T) => void",
+          "required": false,
+          "description": "Callback ao clicar em uma tarefa"
+        },
+        {
+          "name": "onSelect",
+          "type": "(task: T, isSelected: boolean) => void",
+          "required": false,
+          "description": "Callback ao selecionar/deselecionar uma tarefa"
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Label do componente (usado com Input.Wrapper)"
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Descrição do componente (usado com Input.Wrapper)"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Somente leitura — desabilita edição por drag"
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": "Estilo inline do container"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS do container"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do container"
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Altura do container"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/ArchbaseGantt"
     },
     {
       "name": "ArchbaseGlobalFilter",
@@ -5427,6 +6367,95 @@
       "canonicalUrl": "packages/components/src/jsonschema/JsonSchemaEditor/ArchbaseJsonSchemaEditor"
     },
     {
+      "name": "ArchbaseJsonTree",
+      "description": "DataSource to read the JSON object/string from",
+      "sourcePath": "packages/components/src/display/ArchbaseJsonTree",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "DataSource to read the JSON object/string from"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Field name within the DataSource"
+        },
+        {
+          "name": "data",
+          "type": "object | string",
+          "required": false,
+          "description": "Standalone JSON data (object or JSON string)"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Label for Input.Wrapper"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Description for Input.Wrapper"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Error message for Input.Wrapper"
+        },
+        {
+          "name": "defaultExpanded",
+          "type": "boolean",
+          "required": false,
+          "description": "Whether nodes are expanded by default (default: true)"
+        },
+        {
+          "name": "maxDepth",
+          "type": "number",
+          "required": false,
+          "description": "Maximum depth to expand nodes"
+        },
+        {
+          "name": "clickToExpandNode",
+          "type": "boolean",
+          "required": false,
+          "description": "Whether clicking a node expands/collapses it (default: true)"
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": "Custom style"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Custom class name"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Width of the container"
+        },
+        {
+          "name": "maxHeight",
+          "type": "string | number",
+          "required": false,
+          "description": "Max height of the container (enables scroll)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/display/ArchbaseJsonTree"
+    },
+    {
       "name": "ArchbaseJsonView",
       "description": "ArchbaseJsonView — ferramenta devtools focado em json view.",
       "sourcePath": "packages/components/src/debug/jsonview/index",
@@ -5459,7 +6488,7 @@
     },
     {
       "name": "ArchbaseKeepAliveRoute",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [
@@ -5576,6 +6605,104 @@
         "editor"
       ],
       "canonicalUrl": "packages/components/src/editors/ArchbaseKeyValueEditor"
+    },
+    {
+      "name": "ArchbaseLightGrid",
+      "description": "ArchbaseLightGrid — grid leve baseado em sheet-happens com integração ao DataSource.\nIdeal para exibição e edição tabular de alto desempenho com milhares de linhas.\n@status experimental",
+      "sourcePath": "packages/components/src/editors/ArchbaseLightGrid",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados"
+        },
+        {
+          "name": "columns",
+          "type": "ArchbaseLightGridColumn<T>[]",
+          "required": true,
+          "description": "Definicao das colunas"
+        },
+        {
+          "name": "data",
+          "type": "T[]",
+          "required": false,
+          "description": "Dados standalone (usado quando nao ha dataSource)"
+        },
+        {
+          "name": "editable",
+          "type": "boolean",
+          "required": false,
+          "description": "Habilita edicao de celulas"
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Altura do grid"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do grid"
+        },
+        {
+          "name": "showRowNumbers",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibe numeracao de linhas"
+        },
+        {
+          "name": "onCellChange",
+          "type": "(record: T, field: string, oldValue: any, newValue: any) => void",
+          "required": false,
+          "description": "Callback quando uma celula e alterada"
+        },
+        {
+          "name": "onSelectionChange",
+          "type": "(selection: { row: number; col: number }[]) => void",
+          "required": false,
+          "description": "Callback quando a selecao muda"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Somente leitura (sobrescreve editable)"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Label exibido acima do grid"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descricao exibida abaixo do label"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo CSS do container"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS do container"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor",
+        "data"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseLightGrid"
     },
     {
       "name": "ArchbaseLinkRenderer",
@@ -6890,6 +8017,157 @@
       "canonicalUrl": "packages/tools/src/dev-utils/ArchbaseMemoryLeakDetector"
     },
     {
+      "name": "ArchbaseMentionInput",
+      "description": "ArchbaseMentionInput — input com suporte a mentions (@user, #tag, etc.) integrado ao DataSource (v1/v2).\nWrapper sobre react-mentions com tema Mantine e validacao.\n@status stable",
+      "sourcePath": "packages/components/src/editors/ArchbaseMentionInput",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde sera atribuido o valor (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo onde devera ser atribuido o valor na fonte de dados"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Valor controlado (standalone)"
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Valor padrao (standalone)"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do campo"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descricao do campo"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Ultimo erro ocorrido"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": "Texto sugestao"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o preenchimento e obrigatorio"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o campo esta desabilitado"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o campo e somente leitura"
+        },
+        {
+          "name": "mentions",
+          "type": "ArchbaseMentionConfig[]",
+          "required": true,
+          "description": "Configuracoes de mention (triggers, data, etc.)"
+        },
+        {
+          "name": "singleLine",
+          "type": "boolean",
+          "required": false,
+          "description": "Modo linha unica"
+        },
+        {
+          "name": "allowSuggestionsAboveCursor",
+          "type": "boolean",
+          "required": false,
+          "description": "Permitir sugestoes acima do cursor"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: string, event: any) => void",
+          "required": false,
+          "description": "Evento quando o valor e alterado"
+        },
+        {
+          "name": "onFocusEnter",
+          "type": "FocusEventHandler<HTMLTextAreaElement | HTMLInputElement>",
+          "required": false,
+          "description": "Evento quando o campo recebe foco"
+        },
+        {
+          "name": "onFocusExit",
+          "type": "FocusEventHandler<HTMLTextAreaElement | HTMLInputElement>",
+          "required": false,
+          "description": "Evento quando o foco sai do campo"
+        },
+        {
+          "name": "innerRef",
+          "type": "React.RefObject<HTMLTextAreaElement | HTMLInputElement>",
+          "required": false,
+          "description": "Referencia para o componente interno"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilos customizados"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classes CSS customizadas"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do campo"
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Altura do campo"
+        },
+        {
+          "name": "size",
+          "type": "MantineSize",
+          "required": false,
+          "description": "Tamanho do campo (Mantine)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseMentionInput"
+    },
+    {
       "name": "ArchbaseMicrosoftAvatar",
       "description": "ArchbaseMicrosoftAvatar — componente Archbase focado em microsoft avatar.",
       "sourcePath": "packages/components/src/image/ArchbaseMicrosoftAvatar",
@@ -6911,6 +8189,224 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/components/src/image/ArchbaseMicrosoftAvatar"
+    },
+    {
+      "name": "ArchbaseMosaicLayout",
+      "description": "Unique identifier for the panel",
+      "sourcePath": "packages/layout/src/containers/mosaic/ArchbaseMosaicLayout",
+      "exportsFrom": "@archbase/layout",
+      "props": [
+        {
+          "name": "panels",
+          "type": "Record<string, ArchbaseMosaicPanelDef>",
+          "required": true,
+          "description": "Map of panel definitions keyed by panel id"
+        },
+        {
+          "name": "initialLayout",
+          "type": "MosaicNode<string>",
+          "required": true,
+          "description": "The initial mosaic tree layout structure"
+        },
+        {
+          "name": "onChange",
+          "type": "(layout: MosaicNode<string> | null) => void",
+          "required": false,
+          "description": "Callback fired when the layout changes"
+        },
+        {
+          "name": "onPanelClose",
+          "type": "(panelId: string) => void",
+          "required": false,
+          "description": "Callback fired when a panel is closed"
+        },
+        {
+          "name": "zeroStateView",
+          "type": "ReactNode",
+          "required": false,
+          "description": "View shown when no panels are open"
+        },
+        {
+          "name": "resize",
+          "type": "{ minimumPaneSizePercentage?: number }",
+          "required": false,
+          "description": "Resize configuration"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Custom inline style"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Custom CSS class name"
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Height of the mosaic container"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Width of the mosaic container"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "layout"
+      ],
+      "canonicalUrl": "packages/layout/src/containers/mosaic/ArchbaseMosaicLayout"
+    },
+    {
+      "name": "ArchbaseMultiEmail",
+      "description": "ArchbaseMultiEmail — wrapper para react-multi-email integrado ao DataSource (v1/v2).\nPermite entrada de multiplos e-mails com validacao, exibidos como badges (pills).\n@status stable",
+      "sourcePath": "packages/components/src/editors/ArchbaseMultiEmail",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde sera atribuido o valor (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo onde devera ser atribuido o valor na fonte de dados"
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "required": false,
+          "description": "Valor controlado (array de emails)"
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "required": false,
+          "description": "Valor padrao nao controlado"
+        },
+        {
+          "name": "delimiter",
+          "type": "string",
+          "required": false,
+          "description": "Delimitador para converter string do datasource em array (padrao ';')"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do campo"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descricao do campo"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Ultimo erro ocorrido"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": "Texto de sugestao"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o preenchimento e obrigatorio"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o campo esta desabilitado"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o campo e somente leitura"
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "description": "Numero maximo de emails permitidos"
+        },
+        {
+          "name": "validateEmail",
+          "type": "(email: string) => boolean",
+          "required": false,
+          "description": "Funcao customizada de validacao de email"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(emails: string[]) => void",
+          "required": false,
+          "description": "Evento quando o valor e alterado"
+        },
+        {
+          "name": "onFocusEnter",
+          "type": "FocusEventHandler<HTMLInputElement> | undefined",
+          "required": false,
+          "description": "Evento quando o campo recebe o foco"
+        },
+        {
+          "name": "onFocusExit",
+          "type": "FocusEventHandler<HTMLInputElement> | undefined",
+          "required": false,
+          "description": "Evento quando o foco sai do campo"
+        },
+        {
+          "name": "innerRef",
+          "type": "React.RefObject<HTMLDivElement> | undefined",
+          "required": false,
+          "description": "Referencia para o componente interno"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo do componente"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do componente"
+        },
+        {
+          "name": "size",
+          "type": "MantineSize",
+          "required": false,
+          "description": "Tamanho do componente"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseMultiEmail"
     },
     {
       "name": "ArchbaseMyProfileModal",
@@ -7014,6 +8510,119 @@
         "devtools"
       ],
       "canonicalUrl": "packages/tools/src/dev-utils/ArchbaseNetworkMonitor"
+    },
+    {
+      "name": "ArchbaseNotificationCenter",
+      "description": "ArchbaseNotificationCenter — centro de notificacoes com icone de sino,\nbadge de nao-lidas e painel (Popover ou Drawer) com lista de notificacoes.\nImplementado com componentes Mantine puros, sem dependencias externas alem de date-fns.\n@status stable",
+      "sourcePath": "packages/components/src/notification/ArchbaseNotificationCenter",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "notifications",
+          "type": "ArchbaseNotificationItem[]",
+          "required": true,
+          "description": "Lista de notificacoes a exibir"
+        },
+        {
+          "name": "onMarkAsRead",
+          "type": "(id: string) => void",
+          "required": false,
+          "description": "Callback ao marcar uma notificacao como lida"
+        },
+        {
+          "name": "onMarkAllAsRead",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback ao marcar todas como lidas"
+        },
+        {
+          "name": "onRemove",
+          "type": "(id: string) => void",
+          "required": false,
+          "description": "Callback ao remover uma notificacao"
+        },
+        {
+          "name": "onClearAll",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback ao limpar todas as notificacoes"
+        },
+        {
+          "name": "onClick",
+          "type": "(notification: ArchbaseNotificationItem) => void",
+          "required": false,
+          "description": "Callback ao clicar em uma notificacao"
+        },
+        {
+          "name": "renderAs",
+          "type": "'drawer' | 'popover'",
+          "required": false,
+          "description": "Modo de renderizacao: popover ou drawer"
+        },
+        {
+          "name": "position",
+          "type": "FloatingPosition",
+          "required": false,
+          "description": "Posicao do popover (ignorado no modo drawer)"
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "required": false,
+          "description": "Largura do painel"
+        },
+        {
+          "name": "maxHeight",
+          "type": "number",
+          "required": false,
+          "description": "Altura maxima da area de scroll"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do painel"
+        },
+        {
+          "name": "emptyMessage",
+          "type": "string",
+          "required": false,
+          "description": "Mensagem quando nao ha notificacoes"
+        },
+        {
+          "name": "showBadge",
+          "type": "boolean",
+          "required": false,
+          "description": "Mostrar badge com contagem de nao-lidas"
+        },
+        {
+          "name": "buttonSize",
+          "type": "MantineSize",
+          "required": false,
+          "description": "Tamanho do botao"
+        },
+        {
+          "name": "buttonVariant",
+          "type": "string",
+          "required": false,
+          "description": "Variante do botao"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo customizado do wrapper"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS customizada"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/notification/ArchbaseNotificationCenter"
     },
     {
       "name": "ArchbaseNotifications",
@@ -7529,6 +9138,107 @@
       "canonicalUrl": "packages/components/src/viewers/ArchbasePDFViewer.annotations"
     },
     {
+      "name": "ArchbasePdfBuilder",
+      "description": "Generate a PDF from the current template + inputs and return its bytes.",
+      "sourcePath": "packages/components/src/viewers/ArchbasePdfBuilder",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "mode",
+          "type": "'designer' | 'form' | 'viewer'",
+          "required": false,
+          "description": "Which pdfme UI to render."
+        },
+        {
+          "name": "template",
+          "type": "Template",
+          "required": true,
+          "description": "The pdfme template object."
+        },
+        {
+          "name": "dataSource",
+          "type": "any",
+          "required": false,
+          "description": "Optional Archbase DataSource – used in `form` mode to populate inputs\nfrom the current record."
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Field path inside the data source record."
+        },
+        {
+          "name": "inputs",
+          "type": "Record<string, string>[]",
+          "required": false,
+          "description": "Standalone inputs for `form` / `viewer` mode.\nEach element maps schema field names to string values."
+        },
+        {
+          "name": "onTemplateChange",
+          "type": "(template: Template) => void",
+          "required": false,
+          "description": "Fired whenever the designer changes the template."
+        },
+        {
+          "name": "onGenerate",
+          "type": "(pdf: Uint8Array) => void",
+          "required": false,
+          "description": "Fired when `generatePdf` completes."
+        },
+        {
+          "name": "plugins",
+          "type": "Record<string, any>",
+          "required": false,
+          "description": "Additional pdfme schema plugins.\nDefaults to `[text, image, barcodes]`."
+        },
+        {
+          "name": "font",
+          "type": "Font",
+          "required": false,
+          "description": "Custom font configuration forwarded to pdfme."
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Container height."
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Container width."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Optional label rendered above the builder (uses Mantine Input.Wrapper)."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Optional description rendered below the label."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Extra inline styles applied to the outer wrapper."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Extra CSS class name applied to the outer wrapper."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/ArchbasePdfBuilder"
+    },
+    {
       "name": "ArchbasePDFViewer",
       "description": "ArchbasePDFViewer — componente Archbase focado em pdfviewer.",
       "sourcePath": "packages/components/src/viewers/ArchbasePDFViewer",
@@ -7652,6 +9362,145 @@
       "canonicalUrl": "packages/tools/src/performance/ArchbasePerformanceMonitor"
     },
     {
+      "name": "ArchbasePhoneInput",
+      "description": "ArchbasePhoneInput — input de telefone internacional integrado ao DataSource (v1/v2)\ncom suporte a validação, estado controlado e seleção de país.\n@status stable",
+      "sourcePath": "packages/components/src/editors/ArchbasePhoneInput",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde será atribuído o valor do phone input (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo onde deverá ser atribuído o valor do phone input na fonte de dados"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Valor controlado do phone input (modo standalone)"
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Valor padrão do phone input (modo standalone)"
+        },
+        {
+          "name": "defaultCountry",
+          "type": "CountryCode",
+          "required": false,
+          "description": "País padrão selecionado no seletor de bandeiras"
+        },
+        {
+          "name": "international",
+          "type": "boolean",
+          "required": false,
+          "description": "Se true, exibe o número em formato internacional (+55 ...)"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Título/label do phone input"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descrição exibida abaixo do label"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Mensagem de erro a ser exibida"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": "Texto de placeholder do phone input"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o preenchimento é obrigatório"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o phone input está desabilitado"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o phone input é somente leitura. Obs: usado em conjunto com o status da fonte de dados"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: string | undefined) => void",
+          "required": false,
+          "description": "Evento quando o valor do phone input é alterado"
+        },
+        {
+          "name": "onFocusEnter",
+          "type": "FocusEventHandler<HTMLInputElement> | undefined",
+          "required": false,
+          "description": "Evento quando o phone input recebe o foco"
+        },
+        {
+          "name": "onFocusExit",
+          "type": "FocusEventHandler<HTMLInputElement> | undefined",
+          "required": false,
+          "description": "Evento quando o foco sai do phone input"
+        },
+        {
+          "name": "innerRef",
+          "type": "React.RefObject<HTMLInputElement> | undefined",
+          "required": false,
+          "description": "Referência para o componente interno"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo CSS customizado aplicado ao wrapper"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS customizada aplicada ao wrapper"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do componente"
+        },
+        {
+          "name": "size",
+          "type": "MantineSize",
+          "required": false,
+          "description": "Tamanho do componente seguindo o padrão Mantine"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbasePhoneInput"
+    },
+    {
       "name": "ArchbaseProtectedComponent",
       "description": "ArchbaseProtectedComponent — componente de segurança focado em protected component.",
       "sourcePath": "packages/security/src/ArchbaseSecurityComponents",
@@ -7705,6 +9554,107 @@
         "security"
       ],
       "canonicalUrl": "packages/security/src/ArchbaseSecurityComponents"
+    },
+    {
+      "name": "ArchbaseQRCode",
+      "description": "DataSource to read the string value from",
+      "sourcePath": "packages/components/src/display/ArchbaseQRCode",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "DataSource to read the string value from"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Field name within the DataSource"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Standalone string value to encode"
+        },
+        {
+          "name": "renderAs",
+          "type": "'svg' | 'canvas'",
+          "required": false,
+          "description": "Render as SVG or Canvas"
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "required": false,
+          "description": "Size in pixels"
+        },
+        {
+          "name": "level",
+          "type": "'L' | 'M' | 'Q' | 'H'",
+          "required": false,
+          "description": "Error correction level"
+        },
+        {
+          "name": "bgColor",
+          "type": "string",
+          "required": false,
+          "description": "Background color (dark mode aware)"
+        },
+        {
+          "name": "fgColor",
+          "type": "string",
+          "required": false,
+          "description": "Foreground color (dark mode aware)"
+        },
+        {
+          "name": "includeMargin",
+          "type": "boolean",
+          "required": false,
+          "description": "Include margin around the QR code"
+        },
+        {
+          "name": "imageSettings",
+          "type": "ArchbaseQRCodeImageSettings",
+          "required": false,
+          "description": "Optional logo/image in the center of the QR code"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Label for Input.Wrapper"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Description for Input.Wrapper"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Error message for Input.Wrapper"
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": "Custom style"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Custom class name"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/display/ArchbaseQRCode"
     },
     {
       "name": "ArchbaseQueryBuilder",
@@ -8068,6 +10018,364 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/data/src/datasource/ArchbaseRemoteFilterDataSource"
+    },
+    {
+      "name": "ArchbaseResizableHandle",
+      "description": "Identificador único do painel",
+      "sourcePath": "packages/layout/src/containers/resizable/ArchbaseResizableLayout",
+      "exportsFrom": "@archbase/layout",
+      "props": [
+        {
+          "name": "direction",
+          "type": "'horizontal' | 'vertical'",
+          "required": false,
+          "description": "Direção do handle – define a orientação do grip"
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "required": false,
+          "description": "Tamanho do handle em pixels (default 4)"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "ClassName adicional"
+        },
+        {
+          "name": "showGrip",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibe indicador de grip (default true)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "layout"
+      ],
+      "canonicalUrl": "packages/layout/src/containers/resizable/ArchbaseResizableLayout"
+    },
+    {
+      "name": "ArchbaseResizableLayout",
+      "description": "Identificador único do painel",
+      "sourcePath": "packages/layout/src/containers/resizable/ArchbaseResizableLayout",
+      "exportsFrom": "@archbase/layout",
+      "props": [
+        {
+          "name": "direction",
+          "type": "'horizontal' | 'vertical'",
+          "required": false,
+          "description": "Direção do layout (default 'horizontal')"
+        },
+        {
+          "name": "panels",
+          "type": "ArchbaseResizablePanelDef[]",
+          "required": true,
+          "description": "Definições dos painéis"
+        },
+        {
+          "name": "onLayout",
+          "type": "(sizes: number[]) => void",
+          "required": false,
+          "description": "Callback quando o layout muda"
+        },
+        {
+          "name": "autoSaveId",
+          "type": "string",
+          "required": false,
+          "description": "Identificador para salvar o layout no localStorage"
+        },
+        {
+          "name": "handleSize",
+          "type": "number",
+          "required": false,
+          "description": "Tamanho da alça de redimensionamento em pixels (default 4)"
+        },
+        {
+          "name": "handleClassName",
+          "type": "string",
+          "required": false,
+          "description": "ClassName adicional para a alça"
+        },
+        {
+          "name": "showHandleGrip",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibe indicador de grip na alça (default true)"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo do container"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "ClassName do container"
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Altura do container"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do container"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "layout"
+      ],
+      "canonicalUrl": "packages/layout/src/containers/resizable/ArchbaseResizableLayout"
+    },
+    {
+      "name": "ArchbaseResizablePanel",
+      "description": "Identificador único do painel",
+      "sourcePath": "packages/layout/src/containers/resizable/ArchbaseResizableLayout",
+      "exportsFrom": "@archbase/layout",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Identificador único"
+        },
+        {
+          "name": "defaultSize",
+          "type": "number",
+          "required": false,
+          "description": "Tamanho padrão em porcentagem"
+        },
+        {
+          "name": "minSize",
+          "type": "number",
+          "required": false,
+          "description": "Tamanho mínimo em porcentagem"
+        },
+        {
+          "name": "maxSize",
+          "type": "number",
+          "required": false,
+          "description": "Tamanho máximo em porcentagem"
+        },
+        {
+          "name": "collapsible",
+          "type": "boolean",
+          "required": false,
+          "description": "Permite colapsar"
+        },
+        {
+          "name": "collapsedSize",
+          "type": "number",
+          "required": false,
+          "description": "Tamanho colapsado"
+        },
+        {
+          "name": "order",
+          "type": "number",
+          "required": false,
+          "description": "Ordem de renderização"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo do painel"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "ClassName do painel"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "layout"
+      ],
+      "canonicalUrl": "packages/layout/src/containers/resizable/ArchbaseResizableLayout"
+    },
+    {
+      "name": "ArchbaseResourceTimeline",
+      "description": "DataSource for resources (groups/rows).",
+      "sourcePath": "packages/components/src/charts/ArchbaseResourceTimeline",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "resourceDataSource",
+          "type": "IArchbaseDataSourceBase<TResource>",
+          "required": false,
+          "description": "DataSource for resources (groups/rows)."
+        },
+        {
+          "name": "resourceIdField",
+          "type": "string",
+          "required": false,
+          "description": "Field that holds the resource id."
+        },
+        {
+          "name": "resourceLabelField",
+          "type": "string",
+          "required": false,
+          "description": "Field that holds the resource display label."
+        },
+        {
+          "name": "eventDataSource",
+          "type": "IArchbaseDataSourceBase<TEvent>",
+          "required": false,
+          "description": "DataSource for events (items)."
+        },
+        {
+          "name": "eventStartField",
+          "type": "string",
+          "required": false,
+          "description": "Field that holds the event start date."
+        },
+        {
+          "name": "eventEndField",
+          "type": "string",
+          "required": false,
+          "description": "Field that holds the event end date."
+        },
+        {
+          "name": "eventResourceIdField",
+          "type": "string",
+          "required": false,
+          "description": "Field that links the event to a resource."
+        },
+        {
+          "name": "eventLabelField",
+          "type": "string",
+          "required": false,
+          "description": "Field that holds the event display label."
+        },
+        {
+          "name": "eventColorField",
+          "type": "string",
+          "required": false,
+          "description": "Optional field that holds a CSS color for the event."
+        },
+        {
+          "name": "resources",
+          "type": "TResource[]",
+          "required": false,
+          "description": "Standalone resource array (used when no resourceDataSource)."
+        },
+        {
+          "name": "events",
+          "type": "TEvent[]",
+          "required": false,
+          "description": "Standalone event array (used when no eventDataSource)."
+        },
+        {
+          "name": "startDate",
+          "type": "Date",
+          "required": false,
+          "description": "Visible range start."
+        },
+        {
+          "name": "endDate",
+          "type": "Date",
+          "required": false,
+          "description": "Visible range end."
+        },
+        {
+          "name": "viewMode",
+          "type": "ArchbaseResourceTimelineViewMode",
+          "required": false,
+          "description": "Zoom / time-axis granularity preset."
+        },
+        {
+          "name": "editable",
+          "type": "boolean",
+          "required": false,
+          "description": "Allow drag & resize of events."
+        },
+        {
+          "name": "onEventClick",
+          "type": "(event: TEvent) => void",
+          "required": false,
+          "description": "Fired when the user clicks an event."
+        },
+        {
+          "name": "onEventMove",
+          "type": "(event: TEvent, newStart: Date, newEnd: Date, newResourceId: any) => void",
+          "required": false,
+          "description": "Fired after an event is moved (drag)."
+        },
+        {
+          "name": "onEventResize",
+          "type": "(event: TEvent, newStart: Date, newEnd: Date) => void",
+          "required": false,
+          "description": "Fired after an event is resized."
+        },
+        {
+          "name": "onSlotClick",
+          "type": "(resourceId: any, date: Date) => void",
+          "required": false,
+          "description": "Fired when the user clicks on an empty slot."
+        },
+        {
+          "name": "onCreateEvent",
+          "type": "(resourceId: any, start: Date, end: Date) => void",
+          "required": false,
+          "description": "Fired when a new event range is selected via drag on an empty area."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Input.Wrapper label."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Input.Wrapper description."
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Height of the timeline container."
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": "Custom inline style for the outer wrapper."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Custom CSS class for the outer wrapper."
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Width of the outer wrapper."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/ArchbaseResourceTimeline"
     },
     {
       "name": "ArchbaseRichTextEdit",
@@ -8934,6 +11242,175 @@
       "canonicalUrl": "packages/core/src/exceptions/ArchbaseException"
     },
     {
+      "name": "ArchbaseSignaturePad",
+      "description": "ArchbaseSignaturePad — captura de assinatura integrada ao DataSource (v1/v2).\nArmazena a assinatura como string base64 (data URL).\n@status stable",
+      "sourcePath": "packages/components/src/editors/ArchbaseSignaturePad",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde sera atribuido o valor da assinatura (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo onde devera ser atribuido o valor da assinatura na fonte de dados"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Valor controlado (base64 data URL)"
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Valor padrao (base64 data URL)"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do campo"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descricao do campo"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Ultimo erro ocorrido"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o preenchimento e obrigatorio"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se esta desabilitado"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se e somente leitura"
+        },
+        {
+          "name": "penColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor da caneta"
+        },
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor de fundo do canvas"
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "required": false,
+          "description": "Largura do canvas"
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "required": false,
+          "description": "Altura do canvas"
+        },
+        {
+          "name": "showClearButton",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir botao limpar"
+        },
+        {
+          "name": "showConfirmButton",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibir botao confirmar"
+        },
+        {
+          "name": "clearLabel",
+          "type": "string",
+          "required": false,
+          "description": "Texto do botao limpar"
+        },
+        {
+          "name": "confirmLabel",
+          "type": "string",
+          "required": false,
+          "description": "Texto do botao confirmar"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: string | undefined) => void",
+          "required": false,
+          "description": "Evento quando o valor muda (retorna base64 data URL)"
+        },
+        {
+          "name": "onFocusEnter",
+          "type": "React.FocusEventHandler<any>",
+          "required": false,
+          "description": "Evento quando o foco entra"
+        },
+        {
+          "name": "onFocusExit",
+          "type": "React.FocusEventHandler<any>",
+          "required": false,
+          "description": "Evento quando o foco sai"
+        },
+        {
+          "name": "onConfirm",
+          "type": "(value: string | undefined) => void",
+          "required": false,
+          "description": "Evento quando o usuario confirma a assinatura"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo do componente"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS"
+        },
+        {
+          "name": "imageFormat",
+          "type": "'png' | 'jpeg' | 'svg'",
+          "required": false,
+          "description": "Formato da imagem gerada"
+        },
+        {
+          "name": "size",
+          "type": "MantineSize",
+          "required": false,
+          "description": "Tamanho do componente"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseSignaturePad"
+    },
+    {
       "name": "ArchbaseSimpleFilter",
       "description": "eslint-disable",
       "sourcePath": "packages/advanced/src/querybuilder/ArchbaseSimpleFilter",
@@ -9172,6 +11649,121 @@
       "canonicalUrl": "packages/layout/src/containers/split-pane/ArchbaseSplitPane"
     },
     {
+      "name": "ArchbaseSpreadsheet",
+      "description": "ArchbaseSpreadsheet — wrapper para fortune-sheet integrado ao DataSource.\nPermite exibir e editar dados tabulares em formato de planilha.\n@status experimental",
+      "sourcePath": "packages/components/src/editors/ArchbaseSpreadsheet",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados que fornece os registros"
+        },
+        {
+          "name": "columns",
+          "type": "ArchbaseColumnDef<T>[]",
+          "required": false,
+          "description": "Definição de colunas para mapeamento DataSource -> planilha"
+        },
+        {
+          "name": "data",
+          "type": "any[]",
+          "required": false,
+          "description": "Dados standalone no formato Sheet[] do fortune-sheet"
+        },
+        {
+          "name": "editable",
+          "type": "boolean",
+          "required": false,
+          "description": "Permite edição (default: true)"
+        },
+        {
+          "name": "showToolbar",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibe a toolbar (default: true)"
+        },
+        {
+          "name": "showFormulaBar",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibe a barra de fórmulas (default: true)"
+        },
+        {
+          "name": "showSheetTabs",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibe as abas de planilhas (default: true)"
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Altura do componente"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do componente"
+        },
+        {
+          "name": "onCellChange",
+          "type": "(row: number, col: number, oldValue: any, newValue: any) => void",
+          "required": false,
+          "description": "Callback quando uma célula é alterada"
+        },
+        {
+          "name": "onSelectionChange",
+          "type": "(ranges: any[]) => void",
+          "required": false,
+          "description": "Callback quando a seleção muda"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Rótulo (Input.Wrapper)"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descrição (Input.Wrapper)"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Somente leitura"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "Locale (default: 'pt-BR')"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo adicional do container"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicional"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseSpreadsheet"
+    },
+    {
       "name": "ArchbaseSSRDataSource",
       "description": "Interface for serializable DataSource state",
       "sourcePath": "packages/ssr/src/datasource/ArchbaseSSRDataSource",
@@ -9396,6 +11988,157 @@
         "editor"
       ],
       "canonicalUrl": "packages/components/src/editors/ArchbaseSwitch"
+    },
+    {
+      "name": "ArchbaseTagInput",
+      "description": "ArchbaseTagInput — editor de tags integrado ao DataSource (v1/v2) com suporte a validacao e estado controlado.\nUtiliza o componente TagsInput do Mantine internamente.\n@status stable",
+      "sourcePath": "packages/components/src/editors/ArchbaseTagInput",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde sera atribuido o valor das tags (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo onde devera ser atribuido o valor das tags na fonte de dados"
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "required": false,
+          "description": "Valor controlado (array de strings) quando usado sem dataSource"
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "required": false,
+          "description": "Valor padrao inicial (array de strings)"
+        },
+        {
+          "name": "delimiter",
+          "type": "string",
+          "required": false,
+          "description": "Delimitador usado para serializar/deserializar quando o campo no dataSource e uma string. Padrao: ','"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Titulo do campo"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Descricao do campo"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Ultimo erro ocorrido no campo"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": "Texto sugestao do campo"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o preenchimento e obrigatorio"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o campo esta desabilitado"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se o campo e somente leitura. Obs: usado em conjunto com o status da fonte de dados"
+        },
+        {
+          "name": "separators",
+          "type": "string[]",
+          "required": false,
+          "description": "Lista de caracteres que, ao serem digitados, criam uma nova tag. Ex: [',', ' ', 'Enter']"
+        },
+        {
+          "name": "maxTags",
+          "type": "number",
+          "required": false,
+          "description": "Numero maximo de tags permitidas"
+        },
+        {
+          "name": "allowDuplicates",
+          "type": "boolean",
+          "required": false,
+          "description": "Permite tags duplicadas"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: string[], event?: any) => void",
+          "required": false,
+          "description": "Evento quando o valor das tags e alterado"
+        },
+        {
+          "name": "onFocusEnter",
+          "type": "FocusEventHandler<HTMLInputElement>",
+          "required": false,
+          "description": "Evento quando o campo recebe o foco"
+        },
+        {
+          "name": "onFocusExit",
+          "type": "FocusEventHandler<HTMLInputElement>",
+          "required": false,
+          "description": "Evento quando o foco sai do campo"
+        },
+        {
+          "name": "innerRef",
+          "type": "React.RefObject<HTMLInputElement>",
+          "required": false,
+          "description": "Referencia para o componente interno"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo do campo"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicional"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Largura do campo"
+        },
+        {
+          "name": "size",
+          "type": "MantineSize",
+          "required": false,
+          "description": "Tamanho do campo (Mantine size)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseTagInput"
     },
     {
       "name": "ArchbaseTanStackProvider",
@@ -10631,6 +13374,104 @@
       "canonicalUrl": "packages/components/src/charts/vis-timeline/ArchbaseVisTimeline"
     },
     {
+      "name": "ArchbaseXmlViewer",
+      "description": "DataSource to read the XML string value from",
+      "sourcePath": "packages/components/src/viewers/ArchbaseXmlViewer",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "DataSource to read the XML string value from"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Field name within the DataSource"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Standalone XML string value"
+        },
+        {
+          "name": "xml",
+          "type": "string",
+          "required": false,
+          "description": "Alias for value - standalone XML string"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Label for Input.Wrapper"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Description for Input.Wrapper"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Error message for Input.Wrapper"
+        },
+        {
+          "name": "showLineNumbers",
+          "type": "boolean",
+          "required": false,
+          "description": "Whether to show line numbers @default true",
+          "default": "true"
+        },
+        {
+          "name": "showCopyButton",
+          "type": "boolean",
+          "required": false,
+          "description": "Whether to show the copy button @default true",
+          "default": "true"
+        },
+        {
+          "name": "formatXml",
+          "type": "boolean",
+          "required": false,
+          "description": "Whether to auto-format/indent the XML @default true",
+          "default": "true"
+        },
+        {
+          "name": "maxHeight",
+          "type": "string | number",
+          "required": false,
+          "description": "Max height - enables scroll area when set"
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "required": false,
+          "description": "Custom style"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Custom class name"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Width of the viewer"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/viewers/ArchbaseXmlViewer"
+    },
+    {
       "name": "buildFilterExpression",
       "description": "Obtém o ID de uma linha de forma segura",
       "sourcePath": "packages/components/src/datagrid/main/archbase-data-grid-utils",
@@ -11266,6 +14107,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
+    },
+    {
+      "name": "DiffMethod",
+      "description": "Texto original (lado esquerdo)",
+      "sourcePath": "packages/components/src/display/ArchbaseDiffViewer",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/display/ArchbaseDiffViewer"
     },
     {
       "name": "divider",
@@ -12572,6 +15423,18 @@
       "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
+      "name": "KeepAliveCacheProvider",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
+      "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider"
+      ],
+      "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
+    },
+    {
       "name": "languages",
       "description": "languages — componente Archbase focado em languages.",
       "sourcePath": "packages/components/src/image/languages",
@@ -12748,6 +15611,18 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/admin/src/navigationData"
+    },
+    {
+      "name": "NavigationProgressProvider",
+      "description": "NavigationProgressProvider — provider de contexto focado em navigation progress provider.",
+      "sourcePath": "packages/admin/src/ArchbaseNavigationProgress",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider"
+      ],
+      "canonicalUrl": "packages/admin/src/ArchbaseNavigationProgress"
     },
     {
       "name": "NEW_FILTER_INDEX",
@@ -14515,7 +17390,7 @@
     },
     {
       "name": "useArchbaseRouteParams",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -14745,7 +17620,7 @@
     },
     {
       "name": "useKeepAliveCache",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -14757,7 +17632,7 @@
     },
     {
       "name": "useKeepAliveVisibility",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -14768,8 +17643,20 @@
       "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
     },
     {
+      "name": "useNavigationProgress",
+      "description": "useNavigationProgress — hook utilitário focado em use navigation progress.",
+      "sourcePath": "packages/admin/src/ArchbaseNavigationProgress",
+      "exportsFrom": "@archbase/admin",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/admin/src/ArchbaseNavigationProgress"
+    },
+    {
       "name": "useParams",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.\nUse este hook quando precisar reagir a mudanças de visibilidade da tab,\npor exemplo, para recalcular dimensões de grids ou gráficos.\n@example\nimport { useKeepAliveVisibility } from '@archbase/admin';\nfunction MeuGrid() {\n  const { isVisible } = useKeepAliveVisibility();\n  const gridRef = useRef();\n  useEffect(() => {\n    if (isVisible && gridRef.current) {\n      // Força recálculo de dimensões quando tab fica visível\n      gridRef.current.api?.sizeColumnsToFit();\n    }\n  }, [isVisible]);\n  return <DataGrid ref={gridRef} ... />;\n}",
+      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -15078,6 +17965,18 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseAdvancedFilter"
+    },
+    {
+      "name": "ViewMode",
+      "description": "ArchbaseGantt — wrapper para gantt-task-react com suporte a DataSource.",
+      "sourcePath": "packages/components/src/charts/ArchbaseGantt",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/components/src/charts/ArchbaseGantt"
     },
     {
       "name": "withArchbaseSecurity",

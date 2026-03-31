@@ -1,0 +1,92 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseMentionInput` é um componente de entrada de texto com suporte a menções (@usuários, #tags, etc.) e integração com DataSource. Baseado no `react-mentions`.
+
+<Demo data={demos.mentionInputUsage} />
+
+## Configuração de Menções
+
+```tsx
+const mentions = [
+  {
+    trigger: '@',
+    data: [
+      { id: '1', display: 'João Silva' },
+      { id: '2', display: 'Maria Santos' },
+    ],
+  },
+  {
+    trigger: '#',
+    data: [
+      { id: 'bug', display: 'bug' },
+      { id: 'feature', display: 'feature' },
+      { id: 'melhoria', display: 'melhoria' },
+    ],
+  },
+];
+
+<ArchbaseMentionInput
+  label="Comentário"
+  mentions={mentions}
+  placeholder="Use @ para mencionar e # para tags..."
+/>
+```
+
+## Linha Única
+
+```tsx
+// Multilinha (padrão)
+<ArchbaseMentionInput
+  label="Comentário"
+  mentions={mentions}
+/>
+
+// Linha única
+<ArchbaseMentionInput
+  label="Buscar"
+  mentions={mentions}
+  singleLine
+/>
+```
+
+## Estados
+
+```tsx
+// Desabilitado
+<ArchbaseMentionInput label="Comentário" disabled mentions={mentions} />
+
+// Somente leitura
+<ArchbaseMentionInput label="Comentário" readOnly value="Olá @João!" mentions={mentions} />
+
+// Com erro
+<ArchbaseMentionInput label="Comentário" error="Campo obrigatório" mentions={mentions} />
+```
+
+## Com DataSource
+
+```tsx
+<ArchbaseMentionInput
+  dataSource={dataSource}
+  dataField="comentario"
+  label="Comentário"
+  mentions={mentions}
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| value | `string` | `''` | Texto com menções |
+| onChangeValue | `(value: string) => void` | - | Callback ao alterar valor |
+| label | `string` | - | Rótulo do campo |
+| mentions | `ArchbaseMentionConfig[]` | `[]` | Configuração de menções (trigger + data) |
+| singleLine | `boolean` | `false` | Modo linha única |
+| placeholder | `string` | - | Texto placeholder |
+| disabled | `boolean` | `false` | Desabilitar o campo |
+| readOnly | `boolean` | `false` | Somente leitura |
+| error | `string` | - | Mensagem de erro |
+| dataSource | `DataSource` | - | DataSource para binding |
+| dataField | `string` | - | Campo do DataSource |

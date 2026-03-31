@@ -2824,3 +2824,290 @@ export const compositeFiltersWithDataSource: MantineDemo = {
   component: ArchbaseCompositeFiltersWithDataSource,
   code: compositeFiltersWithDataSourceCode,
 };
+
+// ============================================================================
+// ArchbaseTagInput Demos
+// ============================================================================
+import { ArchbaseTagInputUsage } from './ArchbaseTagInputUsage';
+
+const tagInputUsageCode = `
+import { useState } from 'react';
+import { ArchbaseTagInput } from '@archbase/components';
+
+function Demo() {
+  const [value, setValue] = useState<string[]>(['React', 'TypeScript']);
+
+  return (
+    <ArchbaseTagInput
+      label="Tags"
+      placeholder="Digite e pressione Enter..."
+      value={value}
+      onChangeValue={(newValue) => setValue(newValue)}
+    />
+  );
+}
+`;
+
+export const tagInputUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseTagInputUsage,
+  code: tagInputUsageCode,
+};
+
+// ============================================================================
+// ArchbasePhoneInput Demos
+// ============================================================================
+import { ArchbasePhoneInputUsage } from './ArchbasePhoneInputUsage';
+
+const phoneInputUsageCode = `
+import { useState } from 'react';
+import { ArchbasePhoneInput } from '@archbase/components';
+
+function Demo() {
+  const [value, setValue] = useState<string>('');
+
+  return (
+    <ArchbasePhoneInput
+      label="Telefone"
+      placeholder="Digite o telefone..."
+      value={value}
+      onChangeValue={(newValue) => setValue(newValue)}
+      defaultCountry="BR"
+      international
+    />
+  );
+}
+`;
+
+export const phoneInputUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbasePhoneInputUsage,
+  code: phoneInputUsageCode,
+};
+
+// ============================================================================
+// ArchbaseMultiEmail Demos
+// ============================================================================
+import { ArchbaseMultiEmailUsage } from './ArchbaseMultiEmailUsage';
+
+const multiEmailUsageCode = `
+import { useState } from 'react';
+import { ArchbaseMultiEmail } from '@archbase/components';
+
+function Demo() {
+  const [value, setValue] = useState<string[]>([]);
+
+  return (
+    <ArchbaseMultiEmail
+      label="E-mails"
+      placeholder="Digite e-mails..."
+      value={value}
+      onChangeValue={(newValue) => setValue(newValue)}
+    />
+  );
+}
+`;
+
+export const multiEmailUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseMultiEmailUsage,
+  code: multiEmailUsageCode,
+};
+
+// ============================================================================
+// ArchbaseSignaturePad Demos
+// ============================================================================
+import { ArchbaseSignaturePadUsage } from './ArchbaseSignaturePadUsage';
+
+const signaturePadUsageCode = `
+import { useState } from 'react';
+import { ArchbaseSignaturePad } from '@archbase/components';
+
+function Demo() {
+  const [value, setValue] = useState<string>('');
+
+  return (
+    <ArchbaseSignaturePad
+      label="Assinatura"
+      value={value}
+      onChangeValue={(newValue) => setValue(newValue)}
+      width={500}
+      height={200}
+      penColor="black"
+      showClearButton
+    />
+  );
+}
+`;
+
+export const signaturePadUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseSignaturePadUsage,
+  code: signaturePadUsageCode,
+};
+
+// ============================================================================
+// ArchbaseMentionInput Demos
+// ============================================================================
+import { ArchbaseMentionInputUsage } from './ArchbaseMentionInputUsage';
+
+const mentionInputUsageCode = `
+import { useState } from 'react';
+import { ArchbaseMentionInput } from '@archbase/components';
+
+function Demo() {
+  const [value, setValue] = useState<string>('');
+
+  const mentions = [
+    {
+      trigger: '@',
+      data: [
+        { id: '1', display: 'João Silva' },
+        { id: '2', display: 'Maria Santos' },
+        { id: '3', display: 'Pedro Oliveira' },
+      ],
+    },
+  ];
+
+  return (
+    <ArchbaseMentionInput
+      label="Mensagem"
+      placeholder="Use @ para mencionar..."
+      value={value}
+      onChangeValue={(newValue) => setValue(newValue)}
+      mentions={mentions}
+    />
+  );
+}
+`;
+
+export const mentionInputUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseMentionInputUsage,
+  code: mentionInputUsageCode,
+};
+
+// ============================================================================
+// ArchbaseDualListbox Demos
+// ============================================================================
+import { ArchbaseDualListboxUsage } from './ArchbaseDualListboxUsage';
+
+const dualListboxUsageCode = `
+import { useState } from 'react';
+import { ArchbaseDualListbox } from '@archbase/components';
+
+function Demo() {
+  const [value, setValue] = useState<any[]>([]);
+
+  const options = [
+    { value: 'react', label: 'React' },
+    { value: 'angular', label: 'Angular' },
+    { value: 'vue', label: 'Vue' },
+    { value: 'svelte', label: 'Svelte' },
+    { value: 'nextjs', label: 'Next.js' },
+    { value: 'nuxt', label: 'Nuxt' },
+  ];
+
+  return (
+    <ArchbaseDualListbox
+      label="Tecnologias"
+      options={options}
+      value={value}
+      onChangeValue={(newValue) => setValue(newValue)}
+      availableLabel="Disponíveis"
+      selectedLabel="Selecionados"
+      showSearch
+    />
+  );
+}
+`;
+
+export const dualListboxUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseDualListboxUsage,
+  code: dualListboxUsageCode,
+};
+
+// ---------------------------------------------------------------------------
+// ArchbaseBarcodeScanner
+// ---------------------------------------------------------------------------
+
+import { ArchbaseBarcodeScannerUsage } from './ArchbaseBarcodeScannerUsage';
+
+const barcodeScannerUsageCode = `
+import { useState } from 'react';
+import { ArchbaseBarcodeScanner } from '@archbase/components';
+
+function Demo() {
+  const [scannedCode, setScannedCode] = useState('');
+
+  return (
+    <ArchbaseBarcodeScanner
+      asModal
+      buttonLabel="Escanear Codigo"
+      modalTitle="Escanear Codigo de Barras / QR Code"
+      label="Scanner de Codigos"
+      value={scannedCode}
+      onScan={(code, format) => {
+        setScannedCode(code);
+        console.log('Formato:', format);
+      }}
+    />
+  );
+}
+`;
+
+export const barcodeScannerUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseBarcodeScannerUsage,
+  code: barcodeScannerUsageCode,
+};
+
+// ---------------------------------------------------------------------------
+// ArchbaseLightGrid
+// ---------------------------------------------------------------------------
+
+import { ArchbaseLightGridUsage } from './ArchbaseLightGridUsage';
+
+const lightGridUsageCode = `
+import { ArchbaseLightGrid } from '@archbase/components';
+
+interface Produto {
+  id: string;
+  nome: string;
+  categoria: string;
+  preco: number;
+}
+
+const data: Produto[] = [
+  { id: '1', nome: 'Notebook Dell', categoria: 'Informatica', preco: 4599.90 },
+  { id: '2', nome: 'Mouse Logitech', categoria: 'Perifericos', preco: 189.90 },
+  { id: '3', nome: 'Teclado Mecanico', categoria: 'Perifericos', preco: 349.90 },
+  { id: '4', nome: 'Monitor 27"', categoria: 'Informatica', preco: 2199.00 },
+  { id: '5', nome: 'Webcam HD', categoria: 'Perifericos', preco: 299.90 },
+];
+
+const columns = [
+  { field: 'nome', header: 'Nome', width: 200, type: 'text' },
+  { field: 'categoria', header: 'Categoria', width: 150, type: 'text' },
+  { field: 'preco', header: 'Preco (R$)', width: 120, type: 'number', align: 'right' },
+];
+
+function Demo() {
+  return (
+    <ArchbaseLightGrid
+      data={data}
+      columns={columns}
+      height={300}
+      showRowNumbers
+      label="Lista de Produtos"
+    />
+  );
+}
+`;
+
+export const lightGridUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseLightGridUsage,
+  code: lightGridUsageCode,
+};

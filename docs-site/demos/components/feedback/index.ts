@@ -1,6 +1,7 @@
 import type { MantineDemo } from '@mantinex/demo';
 import { OnboardingTourUsage } from './OnboardingTourUsage';
 import { OnboardingTourCallbacks } from './OnboardingTourCallbacks';
+import { ArchbaseNotificationCenterUsage } from './ArchbaseNotificationCenterUsage';
 
 // Uso Básico
 const usageCode = `
@@ -77,4 +78,68 @@ export const callbacks: MantineDemo = {
   type: 'code',
   component: OnboardingTourCallbacks,
   code: callbacksCode,
+};
+
+// ---------------------------------------------------------------------------
+// ArchbaseNotificationCenter
+// ---------------------------------------------------------------------------
+
+const notificationCenterUsageCode = `
+import { useState } from 'react';
+import { ArchbaseNotificationCenter } from '@archbase/components';
+import type { ArchbaseNotificationItem } from '@archbase/components';
+
+const sampleNotifications: ArchbaseNotificationItem[] = [
+  {
+    id: '1',
+    title: 'Novo pedido recebido',
+    message: 'O pedido #1234 foi criado com sucesso.',
+    type: 'info',
+    read: false,
+    createdAt: new Date(),
+  },
+  {
+    id: '2',
+    title: 'Backup concluido',
+    message: 'O backup diario foi concluido com sucesso.',
+    type: 'success',
+    read: false,
+    createdAt: new Date(Date.now() - 30 * 60 * 1000),
+  },
+  {
+    id: '3',
+    title: 'Espaco em disco baixo',
+    message: 'Menos de 10% de espaco disponivel.',
+    type: 'warning',
+    read: true,
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+  },
+];
+
+function Demo() {
+  const [notifications, setNotifications] = useState(sampleNotifications);
+
+  return (
+    <ArchbaseNotificationCenter
+      notifications={notifications}
+      onMarkAsRead={(id) =>
+        setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)))
+      }
+      onMarkAllAsRead={() =>
+        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+      }
+      onRemove={(id) =>
+        setNotifications((prev) => prev.filter((n) => n.id !== id))
+      }
+      renderAs="popover"
+      showBadge
+    />
+  );
+}
+`;
+
+export const notificationCenterUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseNotificationCenterUsage,
+  code: notificationCenterUsageCode,
 };

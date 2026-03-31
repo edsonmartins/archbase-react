@@ -39,6 +39,8 @@ export const NAVIGATION_DATA: NavItem[] = [
           { label: 'Boolean Inputs', href: '/components/editors/boolean-inputs' },
           { label: 'Rich Content', href: '/components/editors/rich-content' },
           { label: 'Specialized', href: '/components/editors/specialized' },
+          { label: 'Advanced Inputs', href: '/components/editors/new-editors' },
+          { label: 'Scanner & Grid', href: '/components/editors/scanner-grid' },
         ],
       },
       {
@@ -47,12 +49,27 @@ export const NAVIGATION_DATA: NavItem[] = [
           { label: 'DataGrid', href: '/components/data-display/datagrid' },
           { label: 'Lists', href: '/components/data-display/lists' },
           { label: 'Charts', href: '/components/data-display/charts' },
+          { label: 'Display Tools', href: '/components/data-display/display-tools' },
+          { label: 'Advanced Data', href: '/components/data-display/advanced-data' },
+        ],
+      },
+      {
+        label: 'Viewers',
+        children: [
+          { label: 'Document Tools', href: '/components/viewers/document-tools' },
+        ],
+      },
+      {
+        label: 'Filters',
+        children: [
+          { label: 'Column Selector', href: '/components/filters/column-tools' },
         ],
       },
       {
         label: 'Feedback',
         children: [
           { label: 'Notifications', href: '/components/feedback/notifications' },
+          { label: 'Notification Center', href: '/components/feedback/notification-center' },
           { label: 'Modals', href: '/components/feedback/modals' },
         ],
       },
@@ -85,6 +102,7 @@ export const NAVIGATION_DATA: NavItem[] = [
       { label: 'Containers', href: '/layout/containers' },
       { label: 'Space System', href: '/layout/space-system' },
       { label: 'Dockable', href: '/layout/dockable' },
+      { label: 'Advanced Layouts', href: '/layout/advanced-layouts' },
     ],
   },
   {

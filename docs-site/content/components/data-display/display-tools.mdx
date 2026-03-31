@@ -1,0 +1,231 @@
+import * as demos from '../../../demos/components/data-display';
+
+# Display Tools
+
+Componentes utilitários para exibição e visualização de dados em diferentes formatos: QR codes, código-fonte, diffs, JSON e XML.
+
+---
+
+## ArchbaseQRCode
+
+Gerador de QR Code baseado na biblioteca `qrcode.react`. Permite criar QR codes customizáveis com controle de tamanho, nível de correção de erro e cores.
+
+### Uso Básico
+
+<Demo data={demos.qrCodeUsage} />
+
+### Exemplo de código
+
+```tsx
+import { ArchbaseQRCode } from '@archbase/components';
+
+// QR Code simples
+<ArchbaseQRCode value="https://archbase.com.br" size={200} />
+
+// QR Code com imagem central
+<ArchbaseQRCode
+  value="https://archbase.com.br"
+  size={256}
+  level="H"
+  imageSettings={{
+    src: '/logo.png',
+    height: 40,
+    width: 40,
+    excavate: true,
+  }}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `value` | `string` | - | Texto ou URL a ser codificado (obrigatório) |
+| `size` | `number` | `128` | Tamanho do QR code em pixels |
+| `level` | `'L' \| 'M' \| 'Q' \| 'H'` | `'L'` | Nível de correção de erro |
+| `renderAs` | `'canvas' \| 'svg'` | `'canvas'` | Método de renderização |
+| `bgColor` | `string` | `'#ffffff'` | Cor de fundo |
+| `fgColor` | `string` | `'#000000'` | Cor do QR code |
+| `imageSettings` | `object` | - | Configuração de imagem central (src, width, height, excavate) |
+
+---
+
+## ArchbaseCodeViewer
+
+Visualizador de código com syntax highlighting baseado no `@mantine/code-highlight`. Suporta múltiplas linguagens de programação, numeração de linhas e botão de copiar.
+
+### Uso Básico
+
+<Demo data={demos.codeViewerUsage} />
+
+### Exemplo de código
+
+```tsx
+import { ArchbaseCodeViewer } from '@archbase/components';
+
+// Visualizador simples
+<ArchbaseCodeViewer
+  code="const x = 42;"
+  language="typescript"
+  showLineNumbers
+  showCopyButton
+/>
+
+// Com abas para múltiplos arquivos
+<ArchbaseCodeViewer
+  tabs={[
+    { fileName: 'App.tsx', code: appCode, language: 'tsx' },
+    { fileName: 'styles.css', code: cssCode, language: 'css' },
+  ]}
+  showLineNumbers
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `code` | `string` | - | Código-fonte a ser exibido |
+| `language` | `string` | - | Linguagem para syntax highlighting (tsx, js, css, python, etc.) |
+| `showLineNumbers` | `boolean` | `false` | Exibir números das linhas |
+| `showCopyButton` | `boolean` | `true` | Exibir botão de copiar código |
+| `tabs` | `CodeTab[]` | - | Abas com múltiplos arquivos (fileName, code, language) |
+
+---
+
+## ArchbaseDiffViewer
+
+Visualizador de diferenças (diff) entre dois textos, baseado no `react-diff-viewer-continued`. Ideal para comparar versões de código, configurações ou documentos.
+
+### Uso Básico
+
+<Demo data={demos.diffViewerUsage} />
+
+### Exemplo de código
+
+```tsx
+import { ArchbaseDiffViewer } from '@archbase/components';
+
+// Visualização lado a lado
+<ArchbaseDiffViewer
+  oldValue={textoAntigo}
+  newValue={textoNovo}
+  splitView={true}
+  leftTitle="Original"
+  rightTitle="Modificado"
+/>
+
+// Visualização unificada
+<ArchbaseDiffViewer
+  oldValue={textoAntigo}
+  newValue={textoNovo}
+  splitView={false}
+  compareMethod="diffWords"
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `oldValue` | `string` | - | Texto original (obrigatório) |
+| `newValue` | `string` | - | Texto modificado (obrigatório) |
+| `splitView` | `boolean` | `true` | Exibir em modo lado a lado |
+| `leftTitle` | `string` | - | Título do painel esquerdo |
+| `rightTitle` | `string` | - | Título do painel direito |
+| `compareMethod` | `'diffChars' \| 'diffWords' \| 'diffLines' \| 'diffSentences'` | `'diffChars'` | Método de comparação |
+
+---
+
+## ArchbaseJsonTree
+
+Visualizador de dados JSON em formato de árvore expansível, baseado no `react-json-view-lite`. Permite navegar por estruturas JSON complexas de forma interativa.
+
+### Uso Básico
+
+<Demo data={demos.jsonTreeUsage} />
+
+### Exemplo de código
+
+```tsx
+import { ArchbaseJsonTree } from '@archbase/components';
+
+// Com objeto JavaScript
+<ArchbaseJsonTree
+  data={{ nome: 'Archbase', versao: '3.0.0' }}
+  defaultExpanded={true}
+  maxDepth={3}
+/>
+
+// Com string JSON
+<ArchbaseJsonTree
+  data='{"status": "ok", "total": 42}'
+  clickToExpandNode
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `data` | `object \| string` | - | Dados JSON a exibir (obrigatório) |
+| `defaultExpanded` | `boolean` | `false` | Se os nós devem iniciar expandidos |
+| `maxDepth` | `number` | - | Profundidade máxima de expansão |
+| `clickToExpandNode` | `boolean` | `true` | Permitir expandir/colapsar nós ao clicar |
+
+---
+
+## ArchbaseXmlViewer
+
+Visualizador de XML com syntax highlighting, formatação automática e numeração de linhas. Ideal para inspecionar payloads SOAP, configurações XML e documentos estruturados.
+
+### Uso Básico
+
+<Demo data={demos.xmlViewerUsage} />
+
+### Exemplo de código
+
+```tsx
+import { ArchbaseXmlViewer } from '@archbase/components';
+
+// Visualizador básico
+<ArchbaseXmlViewer
+  xml={xmlString}
+  formatXml
+  showLineNumbers
+/>
+
+// Com botão de copiar
+<ArchbaseXmlViewer
+  xml={soapPayload}
+  formatXml
+  showLineNumbers
+  showCopyButton
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `xml` | `string` | - | Conteúdo XML a ser exibido (obrigatório) |
+| `formatXml` | `boolean` | `false` | Formatar/indentar o XML automaticamente |
+| `showLineNumbers` | `boolean` | `false` | Exibir números das linhas |
+| `showCopyButton` | `boolean` | `true` | Exibir botão de copiar conteúdo |
+
+---
+
+## Casos de Uso Comuns
+
+- **ArchbaseQRCode**: Links de pagamento, URLs de compartilhamento, autenticação 2FA
+- **ArchbaseCodeViewer**: Documentação de APIs, exemplos de código, snippets
+- **ArchbaseDiffViewer**: Code review, comparação de configurações, auditoria de mudanças
+- **ArchbaseJsonTree**: Debug de APIs REST, inspeção de dados, configurações
+- **ArchbaseXmlViewer**: Payloads SOAP, arquivos de configuração, NF-e/NFS-e
+
+## Referências
+
+- [QR Code - qrcode.react](https://github.com/zpao/qrcode.react)
+- [Code Highlight - Mantine](https://mantine.dev/x/code-highlight/)
+- [Diff Viewer - react-diff-viewer-continued](https://github.com/aeolun/react-diff-viewer-continued)
+- [JSON View - react-json-view-lite](https://github.com/AnyRoad/react-json-view-lite)

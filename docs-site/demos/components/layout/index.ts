@@ -209,3 +209,73 @@ export const dockLayoutPreset: MantineDemo = {
   component: ArchbaseDockLayoutPresetDemo,
   code: dockLayoutPresetCode,
 };
+
+// --- Mosaic Layout ---
+
+import { ArchbaseMosaicLayoutUsage } from './ArchbaseMosaicLayoutUsage';
+
+const mosaicLayoutUsageCode = `
+import React from 'react';
+import { Box, Paper, Text } from '@mantine/core';
+import { ArchbaseMosaicLayout } from '@archbase/layout';
+
+function Demo() {
+  const panels = {
+    a: { id: 'a', title: 'Painel A', component: <Paper p="md" h="100%"><Text>Conteúdo A</Text></Paper>, closable: true },
+    b: { id: 'b', title: 'Painel B', component: <Paper p="md" h="100%"><Text>Conteúdo B</Text></Paper>, closable: true },
+    c: { id: 'c', title: 'Painel C', component: <Paper p="md" h="100%"><Text>Conteúdo C</Text></Paper>, closable: true },
+  };
+
+  return (
+    <Box h={400}>
+      <ArchbaseMosaicLayout
+        panels={panels}
+        initialLayout={{
+          direction: 'row',
+          first: 'a',
+          second: { direction: 'column', first: 'b', second: 'c' },
+        }}
+        height="100%"
+      />
+    </Box>
+  );
+}
+`;
+
+export const mosaicLayoutUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseMosaicLayoutUsage,
+  code: mosaicLayoutUsageCode,
+};
+
+// --- Resizable Layout ---
+
+import { ArchbaseResizableLayoutUsage } from './ArchbaseResizableLayoutUsage';
+
+const resizableLayoutUsageCode = `
+import React from 'react';
+import { Box, Paper, Text } from '@mantine/core';
+import { ArchbaseResizableLayout } from '@archbase/layout';
+
+function Demo() {
+  return (
+    <Box h={300}>
+      <ArchbaseResizableLayout
+        direction="horizontal"
+        panels={[
+          { id: 'left', children: <Paper p="md" h="100%"><Text>Esquerda</Text></Paper>, defaultSize: 30 },
+          { id: 'center', children: <Paper p="md" h="100%"><Text>Centro</Text></Paper>, defaultSize: 40 },
+          { id: 'right', children: <Paper p="md" h="100%"><Text>Direita</Text></Paper>, defaultSize: 30 },
+        ]}
+        height="100%"
+      />
+    </Box>
+  );
+}
+`;
+
+export const resizableLayoutUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseResizableLayoutUsage,
+  code: resizableLayoutUsageCode,
+};

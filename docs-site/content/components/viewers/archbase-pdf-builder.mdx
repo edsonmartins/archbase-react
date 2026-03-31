@@ -1,0 +1,140 @@
+# ArchbasePdfBuilder
+
+Designer visual de templates PDF baseado no [@pdfme/ui](https://pdfme.com/) (MIT License).
+Permite criar, editar e preencher templates PDF com campos de texto, imagem e codigos de barras.
+Suporta tres modos de operacao: designer, formulario e visualizador.
+
+## Import
+
+```tsx
+import { ArchbasePdfBuilder } from '@archbase/components';
+import type { ArchbasePdfBuilderRef } from '@archbase/components';
+```
+
+## Modos de Operacao
+
+### Designer
+
+Editor visual para criar e posicionar campos no template PDF:
+
+```tsx
+import { useRef, useState } from 'react';
+import { ArchbasePdfBuilder } from '@archbase/components';
+import type { Template } from '@pdfme/common';
+
+function App() {
+  const ref = useRef<ArchbasePdfBuilderRef>(null);
+  const [template, setTemplate] = useState<Template>({
+    basePdf: 'data:application/pdf;base64,...',
+    schemas: [[]],
+  });
+
+  return (
+    <ArchbasePdfBuilder
+      ref={ref}
+      mode="designer"
+      template={template}
+      height={700}
+      onTemplateChange={(t) => setTemplate(t)}
+    />
+  );
+}
+```
+
+### Form
+
+Formulario para preenchimento dos campos definidos no template:
+
+```tsx
+<ArchbasePdfBuilder
+  mode="form"
+  template={template}
+  inputs={[{ nome: 'Joao', cpf: '123.456.789-00' }]}
+  height={600}
+/>
+```
+
+### Viewer
+
+Visualizacao somente leitura do PDF preenchido:
+
+```tsx
+<ArchbasePdfBuilder
+  mode="viewer"
+  template={template}
+  inputs={[{ nome: 'Joao', cpf: '123.456.789-00' }]}
+  height={600}
+/>
+```
+
+## Geracao de PDF
+
+Use a ref para gerar o PDF a partir do template e dados preenchidos:
+
+```tsx
+const ref = useRef<ArchbasePdfBuilderRef>(null);
+
+async function handleGenerate() {
+  const pdfBytes = await ref.current?.generatePdf();
+  if (pdfBytes) {
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    window.open(url);
+  }
+}
+```
+
+## Integracao com DataSource
+
+No modo `form`, o componente pode popular os campos a partir de um DataSource:
+
+```tsx
+<ArchbasePdfBuilder
+  mode="form"
+  template={template}
+  dataSource={dataSource}
+  dataField="pdfData"
+  height={600}
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `mode` | `'designer' \| 'form' \| 'viewer'` | `'designer'` | Modo de operacao |
+| `template` | `Template` | **Required** | Template pdfme |
+| `inputs` | `Record<string, string>[]` | - | Dados para form/viewer |
+| `dataSource` | `IArchbaseDataSourceBase` | - | DataSource para integracao |
+| `dataField` | `string` | - | Campo do DataSource |
+| `onTemplateChange` | `(template: Template) => void` | - | Callback ao mudar template |
+| `onGenerate` | `(pdf: Uint8Array) => void` | - | Callback ao gerar PDF |
+| `plugins` | `Record<string, any>` | `[text, image, barcodes]` | Plugins pdfme adicionais |
+| `font` | `Font` | - | Configuracao de fontes |
+| `height` | `string \| number` | - | Altura do container |
+| `width` | `string \| number` | - | Largura do container |
+| `label` | `string` | - | Label acima do builder |
+| `description` | `string` | - | Descricao abaixo do label |
+| `style` | `CSSProperties` | - | Estilos inline |
+| `className` | `string` | - | Classe CSS |
+
+## Ref (ArchbasePdfBuilderRef)
+
+| Metodo | Retorno | Descricao |
+|--------|---------|-----------|
+| `generatePdf()` | `Promise<Uint8Array>` | Gera PDF a partir do template + inputs |
+| `getInstance()` | `Designer \| Form \| Viewer \| null` | Retorna a instancia pdfme atual |
+
+## Plugins Padrao
+
+O componente inclui por padrao os plugins de `text`, `image` e `barcodes` do @pdfme/schemas.
+Voce pode adicionar plugins customizados atraves da prop `plugins`.
+
+## Licenca
+
+Este componente utiliza `@pdfme/ui` e `@pdfme/generator`, licenciados sob **MIT License**.
+
+## Referencias
+
+- [pdfme documentation](https://pdfme.com/)
+- [ArchbasePDFViewer](/components/viewers/pdf-viewer) - Visualizador de PDF com anotacoes

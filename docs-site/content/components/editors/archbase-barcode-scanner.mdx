@@ -1,0 +1,128 @@
+# ArchbaseBarcodeScanner
+
+Scanner de codigos de barras e QR codes usando a API nativa [BarcodeDetector](https://developer.mozilla.org/en-US/docs/Web/API/BarcodeDetector)
+com fallback para navegadores que nao suportam a API.
+Integrado ao DataSource (v1/v2) com suporte a modo inline e modal.
+
+## Import
+
+```tsx
+import { ArchbaseBarcodeScanner } from '@archbase/components';
+```
+
+## Uso Basico (Inline)
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseBarcodeScanner } from '@archbase/components';
+
+function App() {
+  const [code, setCode] = useState('');
+
+  return (
+    <ArchbaseBarcodeScanner
+      label="Scanner"
+      value={code}
+      onScan={(value, format) => {
+        setCode(value);
+        console.log('Formato:', format);
+      }}
+      width={320}
+      height={240}
+    />
+  );
+}
+```
+
+## Modo Modal
+
+O scanner pode ser aberto em um modal atraves de um botao:
+
+```tsx
+<ArchbaseBarcodeScanner
+  asModal
+  buttonLabel="Escanear Codigo"
+  modalTitle="Escanear Codigo de Barras"
+  label="Codigo do Produto"
+  onScan={(code) => console.log('Escaneado:', code)}
+/>
+```
+
+## Escaneamento Continuo
+
+Por padrao, o scanner para apos a primeira leitura. Para continuar escaneando:
+
+```tsx
+<ArchbaseBarcodeScanner
+  continuous
+  scanInterval={300}
+  onScan={(code, format) => {
+    console.log('Novo codigo:', code, format);
+  }}
+/>
+```
+
+## Formatos Suportados
+
+O componente suporta diversos formatos de codigos de barras e QR codes:
+
+- **1D**: `code_128`, `code_39`, `ean_13`, `ean_8`, `upc_a`, `upc_e`, `itf`, `codabar`
+- **2D**: `qr_code`, `data_matrix`, `aztec`, `pdf417`
+
+```tsx
+<ArchbaseBarcodeScanner
+  formats={['qr_code', 'ean_13', 'code_128']}
+  onScan={(code, format) => console.log(code, format)}
+/>
+```
+
+## Integracao com DataSource
+
+```tsx
+<ArchbaseBarcodeScanner
+  dataSource={dataSource}
+  dataField="codigoBarras"
+  asModal
+  buttonLabel="Escanear"
+  label="Codigo de Barras"
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `value` | `string` | - | Valor controlado |
+| `dataSource` | `IArchbaseDataSourceBase` | - | DataSource para integracao |
+| `dataField` | `string` | - | Campo do DataSource |
+| `label` | `string` | - | Titulo do campo |
+| `description` | `string` | - | Descricao do campo |
+| `error` | `string` | - | Mensagem de erro |
+| `required` | `boolean` | `false` | Preenchimento obrigatorio |
+| `disabled` | `boolean` | `false` | Scanner desabilitado |
+| `readOnly` | `boolean` | `false` | Somente leitura |
+| `continuous` | `boolean` | `false` | Continuar apos primeira leitura |
+| `formats` | `string[]` | Todos | Formatos aceitos |
+| `scanInterval` | `number` | `500` | Intervalo entre deteccoes (ms) |
+| `onScan` | `(code: string, format: string) => void` | - | Callback ao escanear |
+| `onError` | `(error: Error) => void` | - | Callback de erro |
+| `width` | `number` | `320` | Largura do video |
+| `height` | `number` | `240` | Altura do video |
+| `showTorchButton` | `boolean` | `false` | Mostrar botao de lanterna |
+| `asModal` | `boolean` | `false` | Renderizar como botao + modal |
+| `modalTitle` | `string` | `'Escanear codigo'` | Titulo do modal |
+| `buttonLabel` | `string` | `'Escanear'` | Label do botao |
+| `buttonIcon` | `ReactNode` | - | Icone do botao |
+| `overlay` | `ReactNode` | - | Overlay sobre o video |
+| `onChangeValue` | `(value: string) => void` | - | Callback de alteracao de valor |
+
+## Compatibilidade
+
+A API `BarcodeDetector` e suportada nativamente no Chrome, Edge e Opera.
+Para outros navegadores, o componente utiliza um fallback automatico.
+
+## Acessibilidade
+
+- Botao com label descritivo
+- Modal com titulo e foco automatico
+- Feedback visual ao detectar codigo

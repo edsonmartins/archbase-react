@@ -1,0 +1,146 @@
+# ArchbaseNotificationCenter
+
+Centro de notificacoes com icone de sino, badge de nao-lidas e painel (Popover ou Drawer)
+com lista de notificacoes. Implementado com componentes Mantine puros e date-fns para
+formatacao de datas relativas.
+
+## Import
+
+```tsx
+import { ArchbaseNotificationCenter } from '@archbase/components';
+import type { ArchbaseNotificationItem } from '@archbase/components';
+```
+
+## Uso Basico
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseNotificationCenter } from '@archbase/components';
+import type { ArchbaseNotificationItem } from '@archbase/components';
+
+function App() {
+  const [notifications, setNotifications] = useState<ArchbaseNotificationItem[]>([
+    {
+      id: '1',
+      title: 'Novo pedido',
+      message: 'Pedido #1234 criado com sucesso.',
+      type: 'info',
+      read: false,
+      createdAt: new Date(),
+    },
+    {
+      id: '2',
+      title: 'Backup concluido',
+      message: 'Backup realizado com sucesso.',
+      type: 'success',
+      read: false,
+      createdAt: new Date(Date.now() - 60 * 60 * 1000),
+    },
+  ]);
+
+  return (
+    <ArchbaseNotificationCenter
+      notifications={notifications}
+      onMarkAsRead={(id) =>
+        setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)))
+      }
+      onMarkAllAsRead={() =>
+        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+      }
+      onRemove={(id) =>
+        setNotifications((prev) => prev.filter((n) => n.id !== id))
+      }
+      showBadge
+    />
+  );
+}
+```
+
+## Modo Drawer
+
+Por padrao o componente usa Popover. Para usar Drawer (melhor em mobile):
+
+```tsx
+<ArchbaseNotificationCenter
+  notifications={notifications}
+  renderAs="drawer"
+  width={400}
+  title="Minhas Notificacoes"
+/>
+```
+
+## Tipos de Notificacao
+
+O componente suporta 4 tipos visuais com icones e cores automaticos:
+
+```tsx
+const notifications: ArchbaseNotificationItem[] = [
+  { id: '1', title: 'Info', message: '...', type: 'info', read: false, createdAt: new Date() },
+  { id: '2', title: 'Sucesso', message: '...', type: 'success', read: false, createdAt: new Date() },
+  { id: '3', title: 'Alerta', message: '...', type: 'warning', read: true, createdAt: new Date() },
+  { id: '4', title: 'Erro', message: '...', type: 'error', read: false, createdAt: new Date() },
+];
+```
+
+## Acoes em Notificacoes
+
+Cada notificacao pode ter uma acao customizada:
+
+```tsx
+const notifications: ArchbaseNotificationItem[] = [
+  {
+    id: '1',
+    title: 'Novo pedido',
+    message: 'Pedido #1234 aguarda aprovacao.',
+    type: 'info',
+    read: false,
+    createdAt: new Date(),
+    action: {
+      label: 'Ver pedido',
+      onClick: () => navigate('/pedidos/1234'),
+    },
+  },
+];
+```
+
+## Props
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `notifications` | `ArchbaseNotificationItem[]` | **Required** | Lista de notificacoes |
+| `onMarkAsRead` | `(id: string) => void` | - | Callback ao marcar como lida |
+| `onMarkAllAsRead` | `() => void` | - | Callback ao marcar todas como lidas |
+| `onRemove` | `(id: string) => void` | - | Callback ao remover notificacao |
+| `onClearAll` | `() => void` | - | Callback ao limpar todas |
+| `onClick` | `(notification) => void` | - | Callback ao clicar em notificacao |
+| `renderAs` | `'drawer' \| 'popover'` | `'popover'` | Modo de renderizacao |
+| `position` | `FloatingPosition` | - | Posicao do popover |
+| `width` | `number` | - | Largura do painel |
+| `maxHeight` | `number` | - | Altura maxima da area de scroll |
+| `title` | `string` | - | Titulo do painel |
+| `emptyMessage` | `string` | - | Mensagem quando vazio |
+| `showBadge` | `boolean` | `true` | Mostrar badge com contagem |
+| `buttonSize` | `MantineSize` | - | Tamanho do botao |
+| `buttonVariant` | `string` | - | Variante do botao |
+| `style` | `CSSProperties` | - | Estilo customizado |
+| `className` | `string` | - | Classe CSS |
+
+## ArchbaseNotificationItem
+
+| Prop | Tipo | Descricao |
+|------|------|-----------|
+| `id` | `string` | Identificador unico |
+| `title` | `string` | Titulo da notificacao |
+| `message` | `string` | Mensagem/descricao |
+| `type` | `'info' \| 'success' \| 'warning' \| 'error'` | Tipo visual |
+| `read` | `boolean` | Se foi lida |
+| `createdAt` | `Date` | Data de criacao |
+| `icon` | `ReactNode` | Icone customizado |
+| `action` | `{ label: string; onClick: () => void }` | Acao customizada |
+| `metadata` | `Record<string, any>` | Metadados adicionais |
+
+## Dicas
+
+- Use `renderAs="drawer"` para interfaces mobile
+- A contagem do badge e calculada automaticamente com base nas notificacoes nao lidas
+- As datas sao exibidas em formato relativo (ex: "ha 5 minutos") usando date-fns

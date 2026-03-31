@@ -76,7 +76,7 @@ export const GridPagination: React.FC<PaginationProps> = ({
     <Group className="archbase-data-grid-pagination" gap="lg" justify="space-between">
       {/* Informações sobre registros */}
       {showRecordInfo && (
-        <Text size="sm" color="dimmed">
+        <Text size="sm" c="dimmed">
           {safeTotalRecords === 0 ? (
             tString('archbase:Nenhum registro')
           ) : (
@@ -89,7 +89,7 @@ export const GridPagination: React.FC<PaginationProps> = ({
         {/* Seletor de tamanho de página */}
         {showPageSizeSelector && (
           <Group gap="xs">
-            <Text size="sm" color="dimmed">{labels.pageSize || tString('archbase:Registros por página')}:</Text>
+            <Text size="sm" c="dimmed">{labels.pageSize || tString('archbase:Registros por página')}:</Text>
             <Select
               size="xs"
               value={safePageSize.toString()}

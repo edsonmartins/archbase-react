@@ -174,7 +174,7 @@ export function ArchbaseLogin({
               placeholder="Selecione um usuário mock"
               data={getGroupedMockUsers()}
               value={selectedMockUser}
-              onChange={setSelectedMockUser}
+              onChange={(value) => setSelectedMockUser(value ?? '')}
               searchable
               clearable
               style={{ flexGrow: 1 }}

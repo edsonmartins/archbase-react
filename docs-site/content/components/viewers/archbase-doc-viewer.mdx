@@ -1,0 +1,122 @@
+# ArchbaseDocViewer
+
+Visualizador universal de documentos para aplicacoes React, com suporte a PDFs, imagens (PNG, JPG, GIF, SVG, WebP),
+arquivos de texto e documentos Office (via iframe do Google Docs/Office Online).
+Integrado ao DataSource (v1/v2) e com toolbar para download e abertura em nova aba.
+
+## Import
+
+```tsx
+import { ArchbaseDocViewer } from '@archbase/components';
+```
+
+## Uso Basico
+
+```tsx
+import { ArchbaseDocViewer } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseDocViewer
+      uri="https://example.com/document.pdf"
+      height={600}
+      showToolbar
+    />
+  );
+}
+```
+
+## Visualizando Imagens
+
+O componente detecta automaticamente o tipo de documento pela extensao da URL:
+
+```tsx
+<ArchbaseDocViewer
+  uri="https://example.com/photo.jpg"
+  height={500}
+  label="Foto do Produto"
+/>
+```
+
+## Usando Base64
+
+Para documentos em base64, passe a string completa com prefixo data URI ou informe o mimeType:
+
+```tsx
+<ArchbaseDocViewer
+  base64="data:image/png;base64,iVBORw0KGgoAAAANS..."
+  height={400}
+/>
+
+{/* Ou com mimeType explicito */}
+<ArchbaseDocViewer
+  base64="iVBORw0KGgoAAAANS..."
+  mimeType="image/png"
+  height={400}
+/>
+```
+
+## Integracao com DataSource
+
+O componente suporta integracao com DataSource V1/V2:
+
+```tsx
+import { ArchbaseDocViewer } from '@archbase/components';
+import { ArchbaseDataSource } from '@archbase/data';
+
+interface Documento {
+  id: string;
+  nome: string;
+  url: string;
+}
+
+function App() {
+  const dataSource = new ArchbaseDataSource<Documento, string>({
+    initialData: [{ id: '1', nome: 'Foto', url: '/foto.jpg' }],
+    idField: 'id',
+  });
+
+  return (
+    <ArchbaseDocViewer
+      dataSource={dataSource}
+      dataField="url"
+      height={600}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `uri` | `string` | - | URL do documento |
+| `base64` | `string` | - | Documento em base64 |
+| `mimeType` | `string` | - | Tipo MIME explicito (auto-detectado quando omitido) |
+| `height` | `string \| number` | `'600px'` | Altura do visualizador |
+| `width` | `string \| number` | `'100%'` | Largura do visualizador |
+| `showToolbar` | `boolean` | `true` | Mostrar toolbar com acoes |
+| `label` | `string` | - | Label do Input.Wrapper |
+| `description` | `string` | - | Descricao do Input.Wrapper |
+| `error` | `string` | - | Mensagem de erro |
+| `dataSource` | `IArchbaseDataSourceBase` | - | DataSource para integracao |
+| `dataField` | `string` | - | Campo do DataSource com URL/base64 |
+| `onDocumentLoad` | `() => void` | - | Callback ao carregar documento |
+| `onDocumentError` | `(error: Error) => void` | - | Callback ao falhar carregamento |
+| `style` | `CSSProperties` | - | Estilo customizado |
+| `className` | `string` | - | Classe CSS |
+
+## Tipos de Documento Suportados
+
+| Tipo | Extensoes | Renderizacao |
+|------|-----------|-------------|
+| PDF | `.pdf` | iframe nativo |
+| Imagem | `.png`, `.jpg`, `.jpeg`, `.gif`, `.svg`, `.webp` | tag `<img>` |
+| Texto | `.txt` | iframe |
+| Office | `.doc`, `.docx`, `.xls`, `.xlsx`, `.ppt`, `.pptx` | Google Docs Viewer / Office Online |
+
+## Acessibilidade
+
+- Toolbar com tooltips descritivos
+- Botoes de download e abertura em nova aba
+- Labels ARIA para o container do documento

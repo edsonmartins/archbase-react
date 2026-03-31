@@ -856,7 +856,7 @@ export class CustomSortItem<T, ID> extends Component<
         key={key}
       >
         <Checkbox
-          label={<Text color={color}>{getI18nextInstance().t(this.props.recordData.label)}</Text>}
+          label={<Text c={color}>{getI18nextInstance().t(this.props.recordData.label)}</Text>}
           checked={this.state.selected}
           style={{ cursor: 'pointer' }}
           onChange={this.onCheckboxChange}

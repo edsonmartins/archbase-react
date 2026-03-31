@@ -1,6 +1,6 @@
 {
   "name": "@archbase/tools",
-  "version": "3.0.22",
+  "version": "3.0.67",
   "description": "Archbase React Tools - CLI, Development Tools, Generators",
   "type": "module",
   "main": "./dist/index.js",
@@ -22,8 +22,8 @@
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
-    "@mantine/core": "8.3.18",
-    "@mantine/hooks": "8.3.18",
+    "@mantine/core": "9.0.0",
+    "@mantine/hooks": "9.0.0",
     "@tabler/icons-react": "^3.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
