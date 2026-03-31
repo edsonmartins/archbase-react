@@ -315,7 +315,9 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		onChange: onDateChange,
 	});
 	const formatValue = (val: DateValue) => (val ? dateFormats[dateFormat!].format(val) : '');
-	const [inputValue, setInputValue] = useState(formatValue(_value));
+	const [inputValue, setInputValue] = useUncontrolled({
+		value: formatValue(_value),
+	});
 
 	const defaultDateParser = (val: string) => {
 		const parsedDate = dateFormats[dateFormat!].parse(val);
@@ -422,7 +424,7 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 	useEffect(() => {
 		setInputValue(formatValue(_value));
-	}, [ctx.locale, _value]);
+	}, [ctx.locale]);
 
 	const [dropdownOpened, setDropdownOpened] = useState(false);
 

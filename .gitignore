@@ -37,14 +37,3 @@ yarn-error.log*
 coverage
 storybook-static
 .pnpm-debug.log*
-
-# Claude Code
-.claude/
-
-# Monorepo dirs (branch de migração)
-docs-site/
-docs-site-backup/
-packages/
-patches/
-tools/
-.pnpm-store/
