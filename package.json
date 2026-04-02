@@ -71,9 +71,6 @@
   "pnpm": {
     "overrides": {
       "esbuild": "0.20.2"
-    },
-    "patchedDependencies": {
-      "@mantine/core@9.0.0": "patches/@mantine__core@9.0.0.patch"
     }
   }
 }

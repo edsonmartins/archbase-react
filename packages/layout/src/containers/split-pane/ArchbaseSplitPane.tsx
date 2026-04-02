@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
-import { Split } from '@gfazioli/mantine-split-pane';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Box, useMantineTheme, useComputedColorScheme } from '@mantine/core';
 
 export interface ArchbaseSplitPaneProps {
   children: ReactNode;
@@ -41,22 +42,30 @@ export interface ArchbaseSplitPaneProps {
    * ClassName adicional
    */
   className?: string;
+  /**
+   * Chave para persistir layout no localStorage
+   */
+  autoSaveId?: string;
 }
 
 export interface ArchbaseSplitPanePaneProps {
   children: ReactNode;
   /**
-   * Tamanho mínimo do painel em pixels
+   * Tamanho mínimo do painel em porcentagem
    */
   minSize?: number | string;
   /**
-   * Tamanho máximo do painel em pixels
+   * Tamanho máximo do painel em porcentagem
    */
   maxSize?: number | string;
   /**
-   * Tamanho padrão do painel em pixels ou porcentagem
+   * Tamanho padrão do painel em porcentagem
    */
   defaultSize?: number | string;
+  /**
+   * Permitir colapsar o painel
+   */
+  collapsible?: boolean;
   /**
    * Estilo adicional do painel
    */
@@ -81,18 +90,17 @@ export interface ArchbaseSplitPaneResizerProps {
 /**
  * Componente ArchbaseSplitPane
  *
- * Wrapper sobre @gfazioli/mantine-split-pane para criar layouts redimensionáveis
- * com painéis divisórios. Ideal para master-detail views, painéis laterais,
- * editores com preview, etc.
+ * Layout redimensionável com painéis divisórios baseado em react-resizable-panels.
+ * Ideal para master-detail views, painéis laterais, editores com preview, etc.
  *
  * @example
  * ```tsx
  * <ArchbaseSplitPane direction="row">
- *   <ArchbaseSplitPanePane>
+ *   <ArchbaseSplitPanePane defaultSize={30}>
  *     <FilterPanel />
  *   </ArchbaseSplitPanePane>
  *   <ArchbaseSplitPaneResizer />
- *   <ArchbaseSplitPanePane>
+ *   <ArchbaseSplitPanePane defaultSize={70}>
  *     <ArchbaseDataGrid />
  *   </ArchbaseSplitPanePane>
  * </ArchbaseSplitPane>
@@ -101,32 +109,36 @@ export interface ArchbaseSplitPaneResizerProps {
 export const ArchbaseSplitPane = ({
   children,
   direction = 'row',
-  splitterSize = 4,
+  splitterSize,
   splitterColor,
   splitterHoverColor,
-  splitterRadius,
-  withKnob = false,
-  opacity,
   style,
   className,
+  autoSaveId,
 }: ArchbaseSplitPaneProps) => {
-  // Create a context provider for Split that passes orientation to resizers
-  const orientation = direction === 'row' ? 'horizontal' : 'vertical';
+  const panelDirection = direction === 'row' ? 'horizontal' : 'vertical';
 
   return (
-    <Split
-      orientation={orientation}
-      size={splitterSize}
-      color={splitterColor}
-      hoverColor={splitterHoverColor}
-      radius={splitterRadius}
-      withKnob={withKnob}
-      opacity={opacity}
-      style={style}
+    <PanelGroup
+      direction={panelDirection}
+      autoSaveId={autoSaveId}
+      style={{ height: '100%', ...style }}
       className={className}
     >
-      {children}
-    </Split>
+      {React.Children.map(children, (child) => {
+        if (!React.isValidElement(child)) return child;
+        // Inject splitter props into Resizer children
+        if ((child.type as any) === ArchbaseSplitPaneResizer) {
+          return React.cloneElement(child as React.ReactElement<any>, {
+            _splitterSize: splitterSize,
+            _splitterColor: splitterColor,
+            _splitterHoverColor: splitterHoverColor,
+            _direction: panelDirection,
+          });
+        }
+        return child;
+      })}
+    </PanelGroup>
   );
 };
 
@@ -134,36 +146,32 @@ export const ArchbaseSplitPane = ({
  * Componente ArchbaseSplitPanePane
  *
  * Representa um painel individual dentro do ArchbaseSplitPane.
- * Deve ser usado como filho direto de ArchbaseSplitPane.
- *
- * @example
- * ```tsx
- * <ArchbaseSplitPanePane minSize={200} maxSize={600}>
- *   <Content />
- * </ArchbaseSplitPanePane>
- * ```
  */
 export const ArchbaseSplitPanePane = ({
   children,
   minSize,
   maxSize,
   defaultSize,
+  collapsible = false,
   style,
   className,
 }: ArchbaseSplitPanePaneProps) => {
+  const toNumber = (val: number | string | undefined): number | undefined => {
+    if (val === undefined) return undefined;
+    return typeof val === 'string' ? parseFloat(val) : val;
+  };
+
   return (
-    <Split.Pane
-      initialWidth={defaultSize}
-      initialHeight={defaultSize}
-      minWidth={minSize}
-      minHeight={minSize}
-      maxWidth={maxSize}
-      maxHeight={maxSize}
+    <Panel
+      defaultSize={toNumber(defaultSize)}
+      minSize={toNumber(minSize)}
+      maxSize={toNumber(maxSize)}
+      collapsible={collapsible}
       style={style}
       className={className}
     >
       {children}
-    </Split.Pane>
+    </Panel>
   );
 };
 
@@ -171,20 +179,46 @@ export const ArchbaseSplitPanePane = ({
  * Componente ArchbaseSplitPaneResizer
  *
  * Barra divisória arrastável entre painéis.
- * Deve ser usado entre ArchbaseSplitPanePane components.
- *
- * @example
- * ```tsx
- * <ArchbaseSplitPanePane>...</ArchbaseSplitPanePane>
- * <ArchbaseSplitPaneResizer />
- * <ArchbaseSplitPanePane>...</ArchbaseSplitPanePane>
- * ```
  */
 export const ArchbaseSplitPaneResizer = ({
   style,
   className,
-}: ArchbaseSplitPaneResizerProps) => {
+  ...props
+}: ArchbaseSplitPaneResizerProps & Record<string, any>) => {
+  const theme = useMantineTheme();
+  const colorScheme = useComputedColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const size = props._splitterSize ?? 4;
+  const color = props._splitterColor ?? (isDark ? theme.colors.dark[4] : theme.colors.gray[3]);
+  const hoverColor = props._splitterHoverColor ?? theme.colors.blue[5];
+  const direction = props._direction ?? 'horizontal';
+  const isHorizontal = direction === 'horizontal';
+
   return (
-    <Split.Resizer style={style} className={className} />
+    <PanelResizeHandle
+      className={className}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: color,
+        transition: 'background-color 150ms ease',
+        ...(isHorizontal
+          ? { width: Number(size), cursor: 'col-resize' }
+          : { height: Number(size), cursor: 'row-resize' }),
+        ...style,
+      }}
+      onDragging={() => {}}
+    >
+      <Box
+        style={{
+          ...(isHorizontal
+            ? { width: 2, height: 20, borderRadius: 1 }
+            : { width: 20, height: 2, borderRadius: 1 }),
+          backgroundColor: isDark ? theme.colors.dark[2] : theme.colors.gray[5],
+        }}
+      />
+    </PanelResizeHandle>
   );
 };

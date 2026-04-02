@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-03-31",
+  "generatedAt": "2026-04-02",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -8870,7 +8870,7 @@
         },
         {
           "name": "onChange",
-          "type": "(step: OnboardingTourStep) => void",
+          "type": "(step: ArchbaseOnboardingTourStep) => void",
           "required": false,
           "description": "Callback quando o step muda"
         },
@@ -8878,8 +8878,7 @@
           "name": "autoStart",
           "type": "boolean",
           "required": false,
-          "description": "Iniciar o tour automaticamente ao montar o componente\n@default false",
-          "default": "false"
+          "description": "Iniciar o tour automaticamente ao montar o componente"
         },
         {
           "name": "loop",
@@ -8891,7 +8890,37 @@
           "name": "children",
           "type": "ReactNode",
           "required": true,
-          "description": "Conteúdo da aplicação (children é obrigatório no componente base)"
+          "description": "Conteúdo da aplicação"
+        },
+        {
+          "name": "nextLabel",
+          "type": "string",
+          "required": false,
+          "description": "Label do botão próximo"
+        },
+        {
+          "name": "prevLabel",
+          "type": "string",
+          "required": false,
+          "description": "Label do botão anterior"
+        },
+        {
+          "name": "finishLabel",
+          "type": "string",
+          "required": false,
+          "description": "Label do botão finalizar"
+        },
+        {
+          "name": "skipLabel",
+          "type": "string",
+          "required": false,
+          "description": "Label do botão pular"
+        },
+        {
+          "name": "showSkip",
+          "type": "boolean",
+          "required": false,
+          "description": "Mostrar botão pular"
         }
       ],
       "examples": [],
@@ -11566,6 +11595,12 @@
           "type": "string",
           "required": false,
           "description": "ClassName adicional"
+        },
+        {
+          "name": "autoSaveId",
+          "type": "string",
+          "required": false,
+          "description": "Chave para persistir layout no localStorage"
         }
       ],
       "examples": [],
@@ -11590,19 +11625,25 @@
           "name": "minSize",
           "type": "number | string",
           "required": false,
-          "description": "Tamanho mínimo do painel em pixels"
+          "description": "Tamanho mínimo do painel em porcentagem"
         },
         {
           "name": "maxSize",
           "type": "number | string",
           "required": false,
-          "description": "Tamanho máximo do painel em pixels"
+          "description": "Tamanho máximo do painel em porcentagem"
         },
         {
           "name": "defaultSize",
           "type": "number | string",
           "required": false,
-          "description": "Tamanho padrão do painel em pixels ou porcentagem"
+          "description": "Tamanho padrão do painel em porcentagem"
+        },
+        {
+          "name": "collapsible",
+          "type": "boolean",
+          "required": false,
+          "description": "Permitir colapsar o painel"
         },
         {
           "name": "style",

@@ -1,94 +1,59 @@
-import React, { ReactNode, useState, useEffect } from 'react';
-import { OnboardingTour as MantineOnboardingTour } from '@gfazioli/mantine-onboarding-tour';
-import type { OnboardingTourStep } from '@gfazioli/mantine-onboarding-tour';
+import React, { ReactNode, useState, useEffect, useCallback, useRef } from 'react';
+import {
+  Box,
+  Button,
+  Group,
+  Overlay,
+  Paper,
+  Portal,
+  Text,
+  Title,
+  Transition,
+  useMantineTheme,
+} from '@mantine/core';
+import { IconArrowLeft, IconArrowRight, IconX } from '@tabler/icons-react';
 
 export interface ArchbaseOnboardingTourStep {
-  /**
-   * ID único do step
-   */
+  /** ID único do step */
   id: string;
-  /**
-   * Seletor CSS do elemento a ser destacado
-   */
+  /** Seletor CSS do elemento a ser destacado */
   target?: string;
-  /**
-   * Título do step
-   */
+  /** Título do step */
   title?: ReactNode;
-  /**
-   * Conteúdo/descrição do step
-   */
+  /** Conteúdo/descrição do step */
   content?: ReactNode;
 }
 
 export interface ArchbaseOnboardingTourProps {
-  /**
-   * Array de steps do tour
-   */
+  /** Array de steps do tour */
   steps: ArchbaseOnboardingTourStep[];
-  /**
-   * Callback quando o tour é iniciado
-   */
+  /** Callback quando o tour é iniciado */
   onStart?: () => void;
-  /**
-   * Callback quando o tour é finalizado
-   */
+  /** Callback quando o tour é finalizado */
   onEnd?: () => void;
-  /**
-   * Callback quando o step muda
-   */
-  onChange?: (step: OnboardingTourStep) => void;
-  /**
-   * Iniciar o tour automaticamente ao montar o componente
-   * @default false
-   */
+  /** Callback quando o step muda */
+  onChange?: (step: ArchbaseOnboardingTourStep) => void;
+  /** Iniciar o tour automaticamente ao montar o componente */
   autoStart?: boolean;
-  /**
-   * Se o tour deve ser repetido (loop)
-   */
+  /** Se o tour deve ser repetido (loop) */
   loop?: boolean;
-  /**
-   * Conteúdo da aplicação (children é obrigatório no componente base)
-   */
+  /** Conteúdo da aplicação */
   children: ReactNode;
+  /** Label do botão próximo */
+  nextLabel?: string;
+  /** Label do botão anterior */
+  prevLabel?: string;
+  /** Label do botão finalizar */
+  finishLabel?: string;
+  /** Label do botão pular */
+  skipLabel?: string;
+  /** Mostrar botão pular */
+  showSkip?: boolean;
 }
 
 /**
- * Componente ArchbaseOnboardingTour
- *
- * Wrapper sobre @gfazioli/mantine-onboarding-tour para criar tours interativos
- * de onboarding em aplicações React. Ideal para introduzir novos usuários às
- * funcionalidades do sistema.
- *
- * @example
- * ```tsx
- * function App() {
- *   const tourSteps: ArchbaseOnboardingTourStep[] = [
- *     {
- *       id: 'welcome',
- *       target: '#dashboard',
- *       title: 'Bem-vindo ao Dashboard',
- *       content: 'Aqui você pode ver todas as suas métricas.',
- *     },
- *     {
- *       id: 'settings',
- *       target: '#settings',
- *       title: 'Configurações',
- *       content: 'Ajuste suas preferências aqui.',
- *     },
- *   ];
- *
- *   return (
- *     <ArchbaseOnboardingTour
- *       steps={tourSteps}
- *       autoStart={true}
- *       onEnd={() => console.log('Tour finalizado!')}
- *     >
- *       <YourAppContent />
- *     </ArchbaseOnboardingTour>
- *   );
- * }
- * ```
+ * ArchbaseOnboardingTour — Tour interativo de onboarding sem dependências externas.
+ * Usa Mantine Overlay + Portal para destacar elementos e exibir tooltips.
  */
 export function ArchbaseOnboardingTour({
   steps,
@@ -98,50 +63,212 @@ export function ArchbaseOnboardingTour({
   autoStart = false,
   loop = false,
   children,
+  nextLabel = 'Próximo',
+  prevLabel = 'Anterior',
+  finishLabel = 'Finalizar',
+  skipLabel = 'Pular',
+  showSkip = true,
 }: ArchbaseOnboardingTourProps) {
-  const [started, setStarted] = useState(false);
+  const theme = useMantineTheme();
+  const [active, setActive] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
+  const rafRef = useRef<number>(0);
+
+  const currentStep = steps[currentIndex];
+  const isLast = currentIndex === steps.length - 1;
+  const isFirst = currentIndex === 0;
+
+  // Measure target element position
+  const measureTarget = useCallback(() => {
+    if (!active || !currentStep?.target) {
+      setTargetRect(null);
+      return;
+    }
+    const el = document.querySelector(currentStep.target);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      setTargetRect(rect);
+      // Scroll into view if needed
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+      setTargetRect(null);
+    }
+  }, [active, currentStep]);
 
   useEffect(() => {
-    if (autoStart) {
-      setStarted(true);
+    if (!active) return;
+    measureTarget();
+    // Re-measure on scroll/resize
+    const handler = () => {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(measureTarget);
+    };
+    window.addEventListener('scroll', handler, true);
+    window.addEventListener('resize', handler);
+    return () => {
+      window.removeEventListener('scroll', handler, true);
+      window.removeEventListener('resize', handler);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [active, currentIndex, measureTarget]);
+
+  useEffect(() => {
+    if (autoStart && steps.length > 0) {
+      setActive(true);
+      onStart?.();
     }
   }, [autoStart]);
 
-  // Converter steps para o formato esperado pelo mantine-onboarding-tour
-  const tourSteps: OnboardingTourStep[] = steps.map((step) => ({
-    id: step.id,
-    title: step.title,
-    content: step.content,
-  }));
+  const goNext = useCallback(() => {
+    if (isLast) {
+      if (loop) {
+        setCurrentIndex(0);
+        onChange?.(steps[0]);
+      } else {
+        setActive(false);
+        onEnd?.();
+      }
+    } else {
+      const next = currentIndex + 1;
+      setCurrentIndex(next);
+      onChange?.(steps[next]);
+    }
+  }, [currentIndex, isLast, loop, steps, onChange, onEnd]);
+
+  const goPrev = useCallback(() => {
+    if (!isFirst) {
+      const prev = currentIndex - 1;
+      setCurrentIndex(prev);
+      onChange?.(steps[prev]);
+    }
+  }, [currentIndex, isFirst, steps, onChange]);
+
+  const skip = useCallback(() => {
+    setActive(false);
+    onEnd?.();
+  }, [onEnd]);
+
+  // Tooltip position: below the target, or centered if no target
+  const getTooltipStyle = (): React.CSSProperties => {
+    if (!targetRect) {
+      return {
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 10001,
+      };
+    }
+    const top = targetRect.bottom + 12;
+    const left = targetRect.left + targetRect.width / 2;
+    // Clamp to viewport
+    return {
+      position: 'fixed',
+      top: Math.min(top, window.innerHeight - 220),
+      left: Math.min(Math.max(left - 175, 16), window.innerWidth - 366),
+      zIndex: 10001,
+      width: 350,
+    };
+  };
 
   return (
-    <MantineOnboardingTour
-      tour={tourSteps}
-      started={started}
-      onOnboardingTourStart={onStart}
-      onOnboardingTourEnd={onEnd}
-      onOnboardingTourChange={onChange}
-      loop={loop}
-    >
+    <>
       {children}
-    </MantineOnboardingTour>
+      {active && (
+        <Portal>
+          {/* Overlay */}
+          <Overlay fixed opacity={0.5} zIndex={9999} />
+
+          {/* Highlight cutout */}
+          {targetRect && (
+            <Box
+              style={{
+                position: 'fixed',
+                top: targetRect.top - 4,
+                left: targetRect.left - 4,
+                width: targetRect.width + 8,
+                height: targetRect.height + 8,
+                border: `2px solid ${theme.colors.blue[5]}`,
+                borderRadius: theme.radius.sm,
+                zIndex: 10000,
+                boxShadow: `0 0 0 9999px rgba(0, 0, 0, 0.5)`,
+                pointerEvents: 'none',
+                backgroundColor: 'transparent',
+              }}
+            />
+          )}
+
+          {/* Tooltip */}
+          <Transition mounted transition="pop" duration={200}>
+            {(transitionStyles) => (
+              <Paper
+                shadow="lg"
+                p="md"
+                radius="md"
+                style={{
+                  ...getTooltipStyle(),
+                  ...transitionStyles,
+                }}
+              >
+                {currentStep?.title && (
+                  <Title order={5} mb="xs">
+                    {currentStep.title}
+                  </Title>
+                )}
+                {currentStep?.content && (
+                  <Text size="sm" c="dimmed" mb="md">
+                    {currentStep.content}
+                  </Text>
+                )}
+                <Text size="xs" c="dimmed" mb="sm">
+                  {currentIndex + 1} / {steps.length}
+                </Text>
+                <Group justify="space-between">
+                  <Group gap="xs">
+                    {showSkip && (
+                      <Button variant="subtle" size="xs" onClick={skip}>
+                        {skipLabel}
+                      </Button>
+                    )}
+                  </Group>
+                  <Group gap="xs">
+                    {!isFirst && (
+                      <Button
+                        variant="default"
+                        size="xs"
+                        leftSection={<IconArrowLeft size={14} />}
+                        onClick={goPrev}
+                      >
+                        {prevLabel}
+                      </Button>
+                    )}
+                    <Button
+                      size="xs"
+                      rightSection={!isLast ? <IconArrowRight size={14} /> : undefined}
+                      onClick={goNext}
+                    >
+                      {isLast ? finishLabel : nextLabel}
+                    </Button>
+                  </Group>
+                </Group>
+              </Paper>
+            )}
+          </Transition>
+        </Portal>
+      )}
+    </>
   );
 }
 
 /**
- * Hook simplificado para controlar o tour programaticamente
- *
- * Para controle programático completo, use o hook `useOnboardingTour`
- * diretamente de @gfazioli/mantine-onboarding-tour
+ * Hook para controlar o tour programaticamente
  */
 export function useArchbaseOnboarding() {
-  // Hook simplificado - para controle completo, use o hook da biblioteca base
+  const [started, setStarted] = useState(false);
   return {
-    start: () => {
-      console.warn('Para controle completo do tour, use o hook useOnboardingTour de @gfazioli/mantine-onboarding-tour');
-    },
-    stop: () => {
-      console.warn('Para controle completo do tour, use o hook useOnboardingTour de @gfazioli/mantine-onboarding-tour');
-    },
+    started,
+    start: () => setStarted(true),
+    stop: () => setStarted(false),
   };
 }
