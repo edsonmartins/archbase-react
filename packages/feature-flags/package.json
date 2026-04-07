@@ -24,7 +24,7 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@mantine/core": "9.0.0",
+    "@mantine/core": "9.0.1",
     "react": "^18.3.0 || ^19.2.0",
     "react-dom": "^18.3.0 || ^19.2.0"
   },

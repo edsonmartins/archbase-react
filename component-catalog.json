@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-04-02",
+  "generatedAt": "2026-04-07",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
