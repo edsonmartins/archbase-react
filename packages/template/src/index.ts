@@ -9,6 +9,7 @@ export * from './ArchbaseMasonryTemplate';
 export * from './ArchbasePanelTemplate';
 export * from './ArchbaseSpaceTemplate';
 export * from './ArchbaseSearchTemplate';
+export * from './ArchbaseTwoColumnFormTemplate';
 export * from './ArchbaseLookupDataTemplate';
 export * from './ArchbaseLookupDataTemplate.types';
 
