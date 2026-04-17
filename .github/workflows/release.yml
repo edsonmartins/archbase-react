@@ -119,16 +119,17 @@ jobs:
         if: ${{ !contains(env.VERSION, 'beta') && !contains(env.VERSION, 'alpha') && !inputs.prerelease }}
         run: |
           # Criar .npmrc limpo para CI
-          cat > .npmrc << 'EOF'
-          registry=https://registry.npmjs.org
+          cat > .npmrc <<'NPMRC'
+          registry=https://registry.npmjs.org/
           @archbase:registry=https://registry.npmjs.org/
+          //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
           node-linker=hoisted
           shamefully-hoist=true
-          EOF
-          # Configurar auth
-          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-          echo "Registry configurado: $(npm config get registry)"
-          echo "@archbase registry: $(npm config get @archbase:registry)"
+          NPMRC
+          sed -i 's/^[[:space:]]*//' .npmrc
+          echo "=== .npmrc ==="
+          cat .npmrc
+          echo "==============="
           pnpm run publish:prod
 
   release-docs:
