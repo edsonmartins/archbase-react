@@ -540,7 +540,9 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 							{!hideLeftColumn && (
 								<Grid.Col span={{ base: 12, md: leftColumnSpan }}>
 									<ScrollArea style={{ height: '100%' }}>
-										{leftColumnContent}
+										<Stack gap="md">
+											{leftColumnContent}
+										</Stack>
 									</ScrollArea>
 								</Grid.Col>
 							)}
