@@ -222,7 +222,7 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 	statusBadge,
 	tabs,
 	defaultTab,
-	tabsVariant = 'default',
+	tabsVariant = 'outline',
 	children,
 
 	// Layout
