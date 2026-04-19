@@ -26,19 +26,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '20'
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
 
       - name: Get version
         id: get_version
@@ -95,7 +93,7 @@ jobs:
           echo "- @archbase/ssr" >> release_notes.md
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: packages-${{ env.VERSION }}
           path: |
@@ -104,7 +102,7 @@ jobs:
           retention-days: 90
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2.6.1
         with:
           tag_name: v${{ env.VERSION }}
           name: Release v${{ env.VERSION }}
@@ -121,16 +119,17 @@ jobs:
         if: ${{ !contains(env.VERSION, 'beta') && !contains(env.VERSION, 'alpha') && !inputs.prerelease }}
         run: |
           # Criar .npmrc limpo para CI
-          cat > .npmrc << 'EOF'
-          registry=https://registry.npmjs.org
+          cat > .npmrc <<'NPMRC'
+          registry=https://registry.npmjs.org/
           @archbase:registry=https://registry.npmjs.org/
+          //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
           node-linker=hoisted
           shamefully-hoist=true
-          EOF
-          # Configurar auth
-          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-          echo "Registry configurado: $(npm config get registry)"
-          echo "@archbase registry: $(npm config get @archbase:registry)"
+          NPMRC
+          sed -i 's/^[[:space:]]*//' .npmrc
+          echo "=== .npmrc ==="
+          cat .npmrc
+          echo "==============="
           pnpm run publish:prod
 
   release-docs:
@@ -141,7 +140,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Build and deploy docs
         run: |
