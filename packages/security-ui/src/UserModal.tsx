@@ -2,7 +2,7 @@
  * UserModal — modal de cadastro/edição de usuários com roles e ações.
  * @status stable
  */
-import { ARCHBASE_IOC_API_TYPE, getI18nextInstance } from '@archbase/core'
+import { ARCHBASE_IOC_API_TYPE, getI18nextInstance, builder, emit } from '@archbase/core'
 import { ArchbaseDataSource } from '@archbase/data'
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit, ArchbaseAvatarEdit } from '@archbase/components'
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@archbase/data'
@@ -47,9 +47,14 @@ export interface UserModalOptions {
   /** Configuração de permissão de edição de campos */
   allowEditEmail?: boolean;
 
-  customContentBefore?: React.ReactNode;
+  customContentBefore?: (user: UserDto) => React.ReactNode;
 
-  customContentAfter?: React.ReactNode;
+  customContentAfter?: (user: UserDto) => React.ReactNode;
+
+  /** Nome do perfil padrão que um novo usuário já virá pré-preenchido */
+  userDefaultProfile?: string;
+  /** Nome dos grupos padrões que um novo usuário já virá pré-preenchido */
+  userDefaultGroups?: string[];
 }
 
 export const defaultUserModalOptions: UserModalOptions = {
@@ -123,6 +128,31 @@ export const UserModal = (props: UserModalProps) => {
     setPasswordError("")
   }, [props.dataSource.getFieldValue("password")])
 
+  const setDefaultValues = async () => {
+    if (!props.dataSource.isInserting()) return;
+
+    if (options.userDefaultProfile) {
+      const filter = emit(builder.eq("name", options.userDefaultProfile))
+      const result = await profileApi.findAllWithFilter(filter, 0, 1)
+      if (result && result.content.length > 0) {
+        props.dataSource.setFieldValue("profile", result.content[0])
+      }
+    }
+    if (options.userDefaultGroups) {
+      const filter = emit(builder.in("name", options.userDefaultGroups))
+      const result = await groupApi.findAllWithFilter(filter, 0, 500)
+      if (result && result.content.length > 0) {
+        props.dataSource.setFieldValue("groups", result.content.map(group => UserGroupDto.newInstance(group)))
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (props.opened) {
+      setDefaultValues()
+    }
+  }, [props.opened])
+
   const handleSave = () => {
     const currentRecord = props.dataSource.current;
     if (!currentRecord.password && props.dataSource.isInserting()) {
@@ -158,7 +188,7 @@ export const UserModal = (props: UserModalProps) => {
         <Stack w={"98%"}>
           {options?.customContentBefore && (
             <>
-              {options.customContentBefore}
+              {options.customContentBefore(props.dataSource.current)}
             </>
           )}
           <Grid>
@@ -348,7 +378,7 @@ export const UserModal = (props: UserModalProps) => {
           )}
           {options?.customContentAfter && (
             <>
-              {options.customContentAfter}
+              {options.customContentAfter(props.dataSource.current)}
             </>
           )}
           <Space h={'12px'} />
