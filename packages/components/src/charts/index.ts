@@ -10,3 +10,15 @@ export type {ArchbaseResourceTimelineProps, ArchbaseResourceTimelineViewMode} fr
 
 // vis-timeline (alternative)
 export * from './vis-timeline'
+
+// Sparkline
+export { ArchbaseSparkline } from './ArchbaseSparkline'
+export type { ArchbaseSparklineProps, SparklineTrendDirection } from './ArchbaseSparkline'
+
+// Arc Gauge
+export { ArchbaseArcGauge } from './ArchbaseArcGauge'
+export type { ArchbaseArcGaugeProps, ArchbaseArcGaugeSegment } from './ArchbaseArcGauge'
+
+// Linear Gauge
+export { ArchbaseLinearGauge } from './ArchbaseLinearGauge'
+export type { ArchbaseLinearGaugeProps, ArchbaseLinearGaugeZone } from './ArchbaseLinearGauge'

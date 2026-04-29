@@ -1,0 +1,137 @@
+# ArchbaseArcGauge
+
+Componente de gauge circular (arco) para exibição de métricas e indicadores de performance. Ideal para mostrar valores percentuais ou comparações com metas.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseArcGauge } from '@archbase/components';
+
+function Demo() {
+  return (
+    <ArchbaseArcGauge
+      value={65}
+      size={200}
+      label="Performance"
+      showValue
+    />
+  );
+}
+```
+
+## Com Segmentos de Cor
+
+```tsx
+<ArchbaseArcGauge
+  value={65}
+  size={200}
+  label="Saúde do Sistema"
+  showValue
+  segments={[
+    { value: 33, color: 'red' },
+    { value: 66, color: 'yellow' },
+    { value: 100, color: 'green' },
+  ]}
+/>
+```
+
+## Configurações de Arco
+
+```tsx
+<Group>
+  <ArchbaseArcGauge
+    value={75}
+    size={150}
+    startAngle={-90}
+    endAngle={90}
+    label="Semi-círculo"
+  />
+  <ArchbaseArcGauge
+    value={75}
+    size={150}
+    startAngle={-135}
+    endAngle={135}
+    label="3/4 círculo"
+  />
+  <ArchbaseArcGauge
+    value={75}
+    size={150}
+    startAngle={0}
+    endAngle={360}
+    label="Círculo completo"
+  />
+</Group>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `value` | `number` | - | Valor atual (0-100) (obrigatório) |
+| `size` | `number` | `200` | Tamanho do gauge em pixels |
+| `thickness` | `number` | `12` | Espessura do arco |
+| `label` | `string` | - | Label exibido abaixo do valor |
+| `showValue` | `boolean` | `true` | Exibe o valor no centro |
+| `valueFormatter` | `(value: number) => string` | - | Formatador customizado para o valor |
+| `segments` | `{ value: number; color: string }[]` | - | Segmentos de cor do arco |
+| `startAngle` | `number` | `-135` | Ângulo inicial do arco (graus) |
+| `endAngle` | `number` | `135` | Ângulo final do arco (graus) |
+| `color` | `string` | `'blue'` | Cor do arco (se não usar segments) |
+| `backgroundColor` | `string` | `'gray.2'` | Cor do fundo do arco |
+
+## Casos de Uso
+
+### KPI Dashboard
+
+```tsx
+<Group>
+  <ArchbaseArcGauge
+    value={92}
+    size={180}
+    label="CPU"
+    showValue
+    segments={[
+      { value: 50, color: 'green' },
+      { value: 80, color: 'yellow' },
+      { value: 100, color: 'red' },
+    ]}
+  />
+  <ArchbaseArcGauge
+    value={45}
+    size={180}
+    label="Memória"
+    showValue
+    valueFormatter={(v) => `${v}%`}
+  />
+  <ArchbaseArcGauge
+    value={78}
+    size={180}
+    label="Disco"
+    showValue
+  />
+</Group>
+```
+
+### Indicador de Meta
+
+```tsx
+<ArchbaseArcGauge
+  value={(currentSales / targetSales) * 100}
+  size={200}
+  label="Meta de Vendas"
+  showValue
+  valueFormatter={(v) => `${v.toFixed(0)}%`}
+  segments={[
+    { value: 50, color: 'red' },
+    { value: 80, color: 'yellow' },
+    { value: 100, color: 'green' },
+  ]}
+/>
+```
+
+## Dicas
+
+- Use `segments` para criar indicadores visuais de status (ruim/médio/bom)
+- O `valueFormatter` permite personalizar a exibição (%, valores monetários, etc.)
+- Ajuste `thickness` para arcos mais finos ou grossos conforme o design
+- Valores acima de 100 serão limitados visualmente a 100

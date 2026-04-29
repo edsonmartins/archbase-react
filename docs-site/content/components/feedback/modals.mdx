@@ -109,6 +109,95 @@ if (nome) {
 
 ---
 
+## useArchbaseConfirm
+
+Hook moderno para diálogos de confirmação usando `@mantine/modals`. Retorna Promise para uso com async/await.
+
+### Confirm básico
+
+```tsx
+import { useArchbaseConfirm } from '@archbase/components';
+
+function MeuComponente() {
+  const { confirm, confirmDelete, alert, closeAll } = useArchbaseConfirm();
+
+  const handleAction = async () => {
+    const confirmed = await confirm({
+      title: 'Confirmar ação',
+      message: 'Deseja realmente continuar?',
+      confirmLabel: 'Sim, continuar',
+      cancelLabel: 'Cancelar',
+    });
+
+    if (confirmed) {
+      // Executar ação
+    }
+  };
+
+  return <Button onClick={handleAction}>Executar</Button>;
+}
+```
+
+### Confirm de exclusão
+
+```tsx
+const { confirmDelete } = useArchbaseConfirm();
+
+const handleDelete = async () => {
+  const confirmed = await confirmDelete({
+    itemName: 'Registro #1234',  // Opcional: nome do item
+    title: 'Excluir registro',   // Opcional: título customizado
+  });
+
+  if (confirmed) {
+    await deleteRecord();
+  }
+};
+```
+
+### Alert (apenas OK)
+
+```tsx
+const { alert } = useArchbaseConfirm();
+
+await alert({
+  title: 'Sucesso',
+  message: 'Operação realizada com sucesso!',
+});
+```
+
+### Funções Imperativas
+
+Para uso fora de componentes React:
+
+```tsx
+import { archbaseConfirm, archbaseConfirmDelete, archbaseAlert } from '@archbase/components';
+
+// Em qualquer lugar
+const confirmed = await archbaseConfirm({
+  title: 'Confirmar',
+  message: 'Continuar?',
+});
+
+await archbaseAlert({ message: 'Aviso!' });
+```
+
+### Opções
+
+| Opção | Tipo | Padrão | Descrição |
+|-------|------|--------|-----------|
+| `title` | `ReactNode` | `'Confirmação'` | Título do modal |
+| `message` | `ReactNode` | - | Mensagem/conteúdo |
+| `confirmLabel` | `string` | `'Confirmar'` | Texto do botão confirmar |
+| `cancelLabel` | `string` | `'Cancelar'` | Texto do botão cancelar |
+| `confirmColor` | `MantineColor` | `'blue'` | Cor do botão confirmar |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Tamanho do modal |
+| `centered` | `boolean` | `true` | Centralizar modal |
+| `closeOnClickOutside` | `boolean` | `false` | Fechar ao clicar fora |
+| `closeOnEscape` | `boolean` | `true` | Fechar com ESC |
+
+---
+
 ## ArchbaseConfirmModal
 
 Modal de confirmação com botões de ação.

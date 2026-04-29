@@ -32,16 +32,16 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "peerDependencies": {
-    "@mantine/carousel": "9.0.1",
-    "@mantine/charts": "9.0.1",
-    "@mantine/code-highlight": "9.0.1",
-    "@mantine/core": "9.0.1",
-    "@mantine/dates": "9.0.1",
-    "@mantine/dropzone": "9.0.1",
-    "@mantine/form": "9.0.1",
-    "@mantine/hooks": "9.0.1",
-    "@mantine/modals": "9.0.1",
-    "@mantine/notifications": "9.0.1",
+    "@mantine/carousel": "9.1.1",
+    "@mantine/charts": "9.1.1",
+    "@mantine/code-highlight": "9.1.1",
+    "@mantine/core": "9.1.1",
+    "@mantine/dates": "9.1.1",
+    "@mantine/dropzone": "9.1.1",
+    "@mantine/form": "9.1.1",
+    "@mantine/hooks": "9.1.1",
+    "@mantine/modals": "9.1.1",
+    "@mantine/notifications": "9.1.1",
     "@tabler/icons-react": "^3.26.0",
     "react": "^18.3.0 || ^19.2.0",
     "react-dom": "^18.3.0 || ^19.2.0"
@@ -60,6 +60,7 @@
     "@mui/x-data-grid": "^7.28.3",
     "@rehooks/component-size": "^1.0.3",
     "ajv": "^8.16.0",
+    "cep-promise": "^4.4.0",
     "chart.js": "^4.4.2",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
@@ -125,7 +126,11 @@
     "vis-timeline": "^7.7.3",
     "xlsx": "^0.18.5",
     "react-mentions": "^4.4.10",
-    "sheet-happens": "^0.0.57"
+    "sheet-happens": "^0.0.57",
+    "mantine-contextmenu": "^7.14.0",
+    "jsbarcode": "^3.11.6",
+    "yet-another-react-lightbox": "^3.21.0",
+    "react-photo-album": "^3.0.0"
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",

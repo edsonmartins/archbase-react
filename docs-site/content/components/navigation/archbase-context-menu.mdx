@@ -1,0 +1,127 @@
+# ArchbaseContextMenu
+
+Menu de contexto ativado por clique com botão direito. Suporta itens aninhados (submenus), ícones, divisores e ações destrutivas com destaque visual.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseContextMenu } from '@archbase/components';
+import { IconCopy, IconCut, IconClipboard, IconTrash } from '@tabler/icons-react';
+
+function Demo() {
+  return (
+    <ArchbaseContextMenu
+      items={[
+        { label: 'Copiar', icon: <IconCopy size={16} />, onClick: () => {} },
+        { label: 'Cortar', icon: <IconCut size={16} />, onClick: () => {} },
+        { label: 'Colar', icon: <IconClipboard size={16} />, onClick: () => {} },
+        { type: 'divider' },
+        { label: 'Excluir', icon: <IconTrash size={16} />, color: 'red', onClick: () => {} },
+      ]}
+    >
+      <Card withBorder p="xl" style={{ cursor: 'context-menu' }}>
+        <Text>Clique com botão direito</Text>
+      </Card>
+    </ArchbaseContextMenu>
+  );
+}
+```
+
+## Com Submenus
+
+```tsx
+<ArchbaseContextMenu
+  items={[
+    {
+      label: 'Arquivo',
+      children: [
+        { label: 'Novo', onClick: () => {} },
+        { label: 'Abrir', onClick: () => {} },
+        { label: 'Salvar', onClick: () => {} },
+      ],
+    },
+    {
+      label: 'Editar',
+      children: [
+        { label: 'Desfazer', onClick: () => {} },
+        { label: 'Refazer', onClick: () => {} },
+      ],
+    },
+  ]}
+>
+  <Card>Clique direito para menu</Card>
+</ArchbaseContextMenu>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `items` | `ContextMenuItem[]` | - | Array de itens do menu (obrigatório) |
+| `children` | `ReactNode` | - | Elemento que ativa o menu (obrigatório) |
+| `disabled` | `boolean` | `false` | Desativa o menu de contexto |
+
+### ContextMenuItem
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `label` | `string` | Texto do item |
+| `icon` | `ReactNode` | Ícone à esquerda |
+| `onClick` | `() => void` | Callback ao clicar |
+| `color` | `string` | Cor do item (ex: 'red' para ações destrutivas) |
+| `disabled` | `boolean` | Desativa o item |
+| `type` | `'divider'` | Renderiza como divisor |
+| `children` | `ContextMenuItem[]` | Itens do submenu |
+
+## Casos de Uso
+
+### Editor de Texto
+
+```tsx
+<ArchbaseContextMenu
+  items={[
+    { label: 'Copiar', icon: <IconCopy size={16} />, onClick: handleCopy },
+    { label: 'Colar', icon: <IconClipboard size={16} />, onClick: handlePaste },
+    { type: 'divider' },
+    { label: 'Formatar', children: [
+      { label: 'Negrito', onClick: () => format('bold') },
+      { label: 'Itálico', onClick: () => format('italic') },
+      { label: 'Sublinhado', onClick: () => format('underline') },
+    ]},
+    { type: 'divider' },
+    { label: 'Excluir', icon: <IconTrash size={16} />, color: 'red', onClick: handleDelete },
+  ]}
+>
+  <div className="editor-area">...</div>
+</ArchbaseContextMenu>
+```
+
+### Gerenciador de Arquivos
+
+```tsx
+<ArchbaseContextMenu
+  items={[
+    { label: 'Abrir', onClick: handleOpen },
+    { label: 'Abrir com...', children: applications.map(app => ({
+      label: app.name,
+      icon: app.icon,
+      onClick: () => openWith(app),
+    }))},
+    { type: 'divider' },
+    { label: 'Renomear', onClick: handleRename },
+    { label: 'Mover para...', onClick: handleMove },
+    { type: 'divider' },
+    { label: 'Excluir', color: 'red', onClick: handleDelete },
+  ]}
+>
+  <FileItem file={file} />
+</ArchbaseContextMenu>
+```
+
+## Dicas
+
+- Use `color: 'red'` para destacar ações destrutivas
+- Limite submenus a um nível para manter a usabilidade
+- Use divisores para agrupar itens relacionados
+- O cursor `context-menu` indica que há menu disponível
+- Teste em diferentes navegadores pois o comportamento pode variar

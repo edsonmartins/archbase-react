@@ -3111,3 +3111,120 @@ export const lightGridUsage: MantineDemo = {
   component: ArchbaseLightGridUsage,
   code: lightGridUsageCode,
 };
+
+// ---------------------------------------------------------------------------
+// ArchbaseNumberStepper
+// ---------------------------------------------------------------------------
+
+import { ArchbaseNumberStepperUsage } from './ArchbaseNumberStepperUsage';
+
+const numberStepperUsageCode = `
+import { useState } from 'react';
+import { ArchbaseNumberStepper } from '@archbase/components';
+
+function Demo() {
+  const [quantity, setQuantity] = useState(1);
+
+  return (
+    <ArchbaseNumberStepper
+      value={quantity}
+      onChangeValue={setQuantity}
+      min={1}
+      max={100}
+      step={1}
+      label="Quantidade"
+    />
+  );
+}
+`;
+
+export const numberStepperUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseNumberStepperUsage,
+  code: numberStepperUsageCode,
+};
+
+// ---------------------------------------------------------------------------
+// ArchbaseAIPromptInput
+// ---------------------------------------------------------------------------
+
+import { ArchbaseAIPromptInputUsage } from './ArchbaseAIPromptInputUsage';
+
+const aiPromptInputUsageCode = `
+import { useState } from 'react';
+import { ArchbaseAIPromptInput } from '@archbase/components';
+
+function Demo() {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = (prompt: string) => {
+    setLoading(true);
+    // Enviar para API de IA
+    console.log('Prompt:', prompt);
+    setTimeout(() => setLoading(false), 1500);
+  };
+
+  return (
+    <ArchbaseAIPromptInput
+      placeholder="Digite sua pergunta..."
+      onSubmit={handleSubmit}
+      loading={loading}
+      suggestions={[
+        'Explique o conceito de...',
+        'Como faço para...',
+        'Qual a diferença entre...',
+      ]}
+      showHistory
+      showVoiceInput
+    />
+  );
+}
+`;
+
+export const aiPromptInputUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseAIPromptInputUsage,
+  code: aiPromptInputUsageCode,
+};
+
+// ---------------------------------------------------------------------------
+// ArchbaseColorGradientPicker
+// ---------------------------------------------------------------------------
+
+import { ArchbaseColorGradientPickerUsage } from './ArchbaseColorGradientPickerUsage';
+
+const colorGradientPickerUsageCode = `
+import { useState } from 'react';
+import { ArchbaseColorGradientPicker, ArchbaseFlatColorPicker } from '@archbase/components';
+
+function Demo() {
+  const [color, setColor] = useState('#339af0');
+
+  return (
+    <>
+      <ArchbaseColorGradientPicker
+        value={color}
+        onChange={setColor}
+        swatches={['#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6']}
+        showEyeDropper
+        showAlpha
+      />
+
+      <ArchbaseFlatColorPicker
+        value={color}
+        onChange={setColor}
+        colors={[
+          ['#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5'],
+          ['#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e'],
+        ]}
+      />
+    </>
+  );
+}
+`;
+
+export const colorGradientPickerUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseColorGradientPickerUsage,
+  code: colorGradientPickerUsageCode,
+};

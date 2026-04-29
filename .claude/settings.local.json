@@ -75,7 +75,10 @@
       "WebFetch(domain:www.navbar.gallery)",
       "WebFetch(domain:ui.shadcn.com)",
       "WebFetch(domain:mobbin.com)",
-      "WebFetch(domain:ui.mantine.dev)"
+      "WebFetch(domain:ui.mantine.dev)",
+      "Bash(git ls-remote:*)",
+      "Bash(npx pnpm install)",
+      "Bash(npx pnpm --version)"
     ],
     "deny": []
   }

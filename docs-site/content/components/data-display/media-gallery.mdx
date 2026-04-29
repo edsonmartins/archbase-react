@@ -1,0 +1,253 @@
+import * as demos from '../../../demos/components/data-display';
+
+# Galeria de Mídia
+
+Componentes para exibição e navegação de imagens em galerias e lightboxes.
+
+---
+
+## ArchbaseLightbox
+
+Visualizador de imagens em tela cheia com zoom, navegação por teclado, thumbnails, slideshow e suporte a captions. Baseado na biblioteca `yet-another-react-lightbox`.
+
+### Uso Básico
+
+<Demo data={demos.lightboxUsage} />
+
+### Exemplo de código
+
+```tsx
+import { ArchbaseLightbox, useArchbaseLightbox, ArchbaseLightboxSlide } from '@archbase/components';
+
+const images: ArchbaseLightboxSlide[] = [
+  {
+    src: 'https://example.com/image1.jpg',
+    title: 'Montanhas',
+    description: 'Vista panorâmica das montanhas',
+  },
+  {
+    src: 'https://example.com/image2.jpg',
+    title: 'Floresta',
+  },
+];
+
+function Gallery() {
+  const lightbox = useArchbaseLightbox();
+
+  return (
+    <>
+      {/* Thumbnails clicáveis */}
+      {images.map((img, index) => (
+        <img
+          key={index}
+          src={img.src}
+          onClick={() => lightbox.open(images, index)}
+          style={{ cursor: 'pointer', width: 100 }}
+        />
+      ))}
+
+      {/* Lightbox */}
+      <ArchbaseLightbox
+        slides={images}
+        open={lightbox.isOpen}
+        index={lightbox.currentIndex}
+        onClose={lightbox.close}
+        onSlideChange={lightbox.goTo}
+        enableZoom
+        enableThumbnails
+        showCaptions
+      />
+    </>
+  );
+}
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `slides` | `ArchbaseLightboxSlide[]` | - | Array de imagens (obrigatório) |
+| `open` | `boolean` | - | Se o lightbox está aberto |
+| `index` | `number` | `0` | Índice do slide atual |
+| `onClose` | `() => void` | - | Callback ao fechar |
+| `onSlideChange` | `(index: number) => void` | - | Callback ao mudar de slide |
+| `enableZoom` | `boolean` | `true` | Habilita zoom |
+| `enableThumbnails` | `boolean` | `true` | Mostra thumbnails |
+| `enableSlideshow` | `boolean` | `false` | Habilita slideshow automático |
+| `enableFullscreen` | `boolean` | `true` | Habilita fullscreen |
+| `enableDownload` | `boolean` | `false` | Habilita download |
+| `showCounter` | `boolean` | `true` | Mostra contador (1/10) |
+| `showCaptions` | `boolean` | `true` | Mostra título/descrição |
+| `slideshowDelay` | `number` | `3000` | Intervalo do slideshow (ms) |
+| `maxZoomPixelRatio` | `number` | `4` | Nível máximo de zoom |
+
+### Hook useArchbaseLightbox
+
+Hook para controle imperativo do lightbox:
+
+```tsx
+const {
+  isOpen,         // Estado de visibilidade
+  currentIndex,   // Índice atual
+  slides,         // Slides configurados
+  open,           // Abre: open(slides, index?)
+  close,          // Fecha
+  goTo,           // Vai para slide: goTo(index)
+  lightboxProps,  // Props para passar ao componente
+} = useArchbaseLightbox();
+```
+
+### ArchbaseLightboxSlide
+
+```tsx
+interface ArchbaseLightboxSlide {
+  src: string;              // URL da imagem (obrigatório)
+  title?: string;           // Título
+  description?: string;     // Descrição
+  alt?: string;             // Texto alternativo
+  width?: number;           // Largura (otimização)
+  height?: number;          // Altura (otimização)
+  downloadUrl?: string;     // URL para download
+  downloadFilename?: string; // Nome do arquivo
+}
+```
+
+---
+
+## ArchbasePhotoAlbum
+
+Galeria de fotos responsiva com três layouts: `rows` (altura uniforme), `columns` (estilo Pinterest) e `masonry` (colunas balanceadas). Integração automática com lightbox.
+
+### Uso Básico
+
+<Demo data={demos.photoAlbumUsage} />
+
+### Com Ações
+
+<Demo data={demos.photoAlbumWithActions} />
+
+### Exemplo de código
+
+```tsx
+import { ArchbasePhotoAlbum, ArchbasePhotoAlbumPhoto } from '@archbase/components';
+
+const photos: ArchbasePhotoAlbumPhoto[] = [
+  {
+    src: 'https://example.com/photo1.jpg',
+    width: 800,   // Obrigatório para cálculo de layout
+    height: 600,  // Obrigatório para cálculo de layout
+    title: 'Paisagem',
+    description: 'Foto de paisagem',
+    badge: 'Destaque',
+    favorite: true,
+  },
+  {
+    src: 'https://example.com/photo2.jpg',
+    width: 800,
+    height: 1200,
+    title: 'Retrato',
+  },
+];
+
+function Gallery() {
+  const [photos, setPhotos] = useState(initialPhotos);
+
+  const handleFavorite = (photo, index) => {
+    setPhotos(prev => prev.map((p, i) =>
+      i === index ? { ...p, favorite: !p.favorite } : p
+    ));
+  };
+
+  return (
+    <ArchbasePhotoAlbum
+      photos={photos}
+      layout="rows"
+      targetRowHeight={200}
+      spacing={8}
+      withLightbox
+      showOverlay
+      showBadge
+      showFavorite
+      onFavorite={handleFavorite}
+      onDownload={(photo) => window.open(photo.src)}
+    />
+  );
+}
+```
+
+### Layout Masonry
+
+<Demo data={demos.photoAlbumMasonry} />
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `photos` | `ArchbasePhotoAlbumPhoto[]` | - | Array de fotos (obrigatório) |
+| `layout` | `'rows' \| 'columns' \| 'masonry'` | `'rows'` | Tipo de layout |
+| `spacing` | `number` | `8` | Espaçamento entre fotos (px) |
+| `padding` | `number` | `0` | Padding interno (px) |
+| `targetRowHeight` | `number` | `200` | Altura alvo das linhas (layout rows) |
+| `columns` | `number \| (width) => number` | `4` | Número de colunas (columns/masonry) |
+| `withLightbox` | `boolean` | `true` | Abre lightbox ao clicar |
+| `showOverlay` | `boolean` | `true` | Mostra overlay com ações ao hover |
+| `showBadge` | `boolean` | `true` | Mostra badges nas fotos |
+| `showFavorite` | `boolean` | `true` | Mostra indicador de favorito |
+| `onClick` | `(photo, index) => void` | - | Callback ao clicar |
+| `onFavorite` | `(photo, index) => void` | - | Callback ao favoritar |
+| `onDownload` | `(photo, index) => void` | - | Callback ao baixar |
+| `borderRadius` | `number` | `4` | Border radius das fotos |
+
+### ArchbasePhotoAlbumPhoto
+
+```tsx
+interface ArchbasePhotoAlbumPhoto {
+  src: string;              // URL da imagem (obrigatório)
+  width: number;            // Largura (obrigatório)
+  height: number;           // Altura (obrigatório)
+  title?: string;           // Título
+  description?: string;     // Descrição
+  alt?: string;             // Texto alternativo
+  id?: string | number;     // ID único
+  badge?: string;           // Texto do badge
+  badgeColor?: string;      // Cor do badge
+  favorite?: boolean;       // Se é favorito
+  data?: Record<string, unknown>; // Dados extras
+}
+```
+
+---
+
+## Layouts
+
+### Rows (Linhas)
+Organiza fotos em linhas com altura uniforme. Ideal para galerias horizontais.
+
+### Columns (Colunas)
+Distribui fotos em colunas de largura igual. Estilo Pinterest.
+
+### Masonry
+Similar a columns, mas balanceia a altura das colunas automaticamente.
+
+---
+
+## Casos de Uso Comuns
+
+- **ArchbaseLightbox**: Visualização detalhada de produtos, documentos, portfólios
+- **ArchbasePhotoAlbum**: Catálogos de produtos, galerias de clientes, anexos de pedidos
+
+## Recursos
+
+- Zoom com scroll e pinch (mobile)
+- Navegação por teclado (← → Esc)
+- Swipe em dispositivos móveis
+- Slideshow automático
+- Download de imagens
+- Thumbnails navegáveis
+- Contador de imagens
+- Captions (título/descrição)
+
+## Referências
+
+- [yet-another-react-lightbox](https://yet-another-react-lightbox.com/)
+- [react-photo-album](https://react-photo-album.com/)

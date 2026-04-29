@@ -1,0 +1,136 @@
+# ArchbaseBottomNavigation
+
+Barra de navegação fixa na parte inferior da tela, ideal para aplicações móveis (PWA) e interfaces touch-first. Suporta badges para notificações.
+
+## Uso Básico
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseBottomNavigation } from '@archbase/components';
+import { IconHome, IconSearch, IconBell, IconUser } from '@tabler/icons-react';
+
+function Demo() {
+  const [active, setActive] = useState('home');
+
+  return (
+    <ArchbaseBottomNavigation
+      value={active}
+      onChange={setActive}
+      items={[
+        { value: 'home', label: 'Início', icon: <IconHome size={20} /> },
+        { value: 'search', label: 'Buscar', icon: <IconSearch size={20} /> },
+        { value: 'notifications', label: 'Avisos', icon: <IconBell size={20} />, badge: 3 },
+        { value: 'profile', label: 'Perfil', icon: <IconUser size={20} /> },
+      ]}
+    />
+  );
+}
+```
+
+## Sem Labels
+
+```tsx
+<ArchbaseBottomNavigation
+  value={active}
+  onChange={setActive}
+  showLabels={false}
+  items={[
+    { value: 'home', label: 'Início', icon: <IconHome size={24} /> },
+    { value: 'search', label: 'Buscar', icon: <IconSearch size={24} /> },
+    { value: 'settings', label: 'Config', icon: <IconSettings size={24} /> },
+    { value: 'profile', label: 'Perfil', icon: <IconUser size={24} /> },
+  ]}
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `value` | `string` | - | Item ativo atual (obrigatório) |
+| `onChange` | `(value: string) => void` | - | Callback ao mudar item (obrigatório) |
+| `items` | `BottomNavItem[]` | - | Array de itens de navegação (obrigatório) |
+| `showLabels` | `boolean` | `true` | Exibe labels dos itens |
+| `fixed` | `boolean` | `true` | Fixa na parte inferior da tela |
+| `color` | `string` | `'blue'` | Cor do item ativo |
+
+### BottomNavItem
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `value` | `string` | Identificador único do item |
+| `label` | `string` | Texto do item |
+| `icon` | `ReactNode` | Ícone do item |
+| `badge` | `number` | Número exibido como badge |
+| `disabled` | `boolean` | Desativa o item |
+
+## Casos de Uso
+
+### App de E-commerce
+
+```tsx
+<ArchbaseBottomNavigation
+  value={currentTab}
+  onChange={setCurrentTab}
+  items={[
+    { value: 'home', label: 'Início', icon: <IconHome /> },
+    { value: 'categories', label: 'Categorias', icon: <IconCategory /> },
+    { value: 'cart', label: 'Carrinho', icon: <IconShoppingCart />, badge: cartCount },
+    { value: 'orders', label: 'Pedidos', icon: <IconPackage /> },
+    { value: 'profile', label: 'Perfil', icon: <IconUser /> },
+  ]}
+/>
+```
+
+### App de Mensagens
+
+```tsx
+<ArchbaseBottomNavigation
+  value={currentTab}
+  onChange={setCurrentTab}
+  items={[
+    { value: 'chats', label: 'Chats', icon: <IconMessages />, badge: unreadCount },
+    { value: 'status', label: 'Status', icon: <IconCircleDot /> },
+    { value: 'calls', label: 'Chamadas', icon: <IconPhone /> },
+    { value: 'settings', label: 'Config', icon: <IconSettings /> },
+  ]}
+/>
+```
+
+### Com Roteamento
+
+```tsx
+import { useNavigate, useLocation } from 'react-router-dom';
+
+function AppNavigation() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  return (
+    <ArchbaseBottomNavigation
+      value={location.pathname}
+      onChange={(path) => navigate(path)}
+      items={[
+        { value: '/', label: 'Início', icon: <IconHome /> },
+        { value: '/search', label: 'Buscar', icon: <IconSearch /> },
+        { value: '/notifications', label: 'Avisos', icon: <IconBell />, badge: 5 },
+        { value: '/profile', label: 'Perfil', icon: <IconUser /> },
+      ]}
+    />
+  );
+}
+```
+
+## Dicas
+
+- Limite a 3-5 itens para manter a usabilidade
+- Use ícones claros e reconhecíveis
+- Badges devem mostrar números significativos (evite "99+")
+- Em desktop, considere esconder ou usar navegação lateral
+- Combine com AppShell para layout responsivo completo
+
+## Acessibilidade
+
+- Navegável por teclado
+- Usa `role="navigation"` apropriado
+- Ícones devem ter aria-labels quando sem texto

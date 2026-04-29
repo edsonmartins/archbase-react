@@ -1,0 +1,160 @@
+# ArchbaseNumberStepper
+
+Campo numérico com botões de incremento/decremento (+/-). Ideal para quantidades, contadores e valores que precisam de ajuste rápido por clique ou toque.
+
+## Uso Básico
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseNumberStepper } from '@archbase/components';
+
+function Demo() {
+  const [quantity, setQuantity] = useState(1);
+
+  return (
+    <ArchbaseNumberStepper
+      value={quantity}
+      onChangeValue={setQuantity}
+      min={1}
+      max={100}
+      step={1}
+      label="Quantidade"
+    />
+  );
+}
+```
+
+## Com Decimais
+
+```tsx
+<ArchbaseNumberStepper
+  value={price}
+  onChangeValue={setPrice}
+  min={0}
+  step={0.5}
+  precision={2}
+  prefix="R$ "
+  label="Preço"
+/>
+```
+
+## Tamanhos
+
+```tsx
+<Group>
+  <ArchbaseNumberStepper value={5} size="xs" label="XS" />
+  <ArchbaseNumberStepper value={5} size="sm" label="SM" />
+  <ArchbaseNumberStepper value={5} size="md" label="MD" />
+  <ArchbaseNumberStepper value={5} size="lg" label="LG" />
+</Group>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `value` | `number` | - | Valor atual |
+| `onChangeValue` | `(value: number) => void` | - | Callback ao mudar valor |
+| `min` | `number` | - | Valor mínimo |
+| `max` | `number` | - | Valor máximo |
+| `step` | `number` | `1` | Incremento/decremento por clique |
+| `precision` | `number` | `0` | Casas decimais |
+| `prefix` | `string` | - | Prefixo (ex: "R$ ") |
+| `suffix` | `string` | - | Sufixo (ex: " kg") |
+| `label` | `string` | - | Label do campo |
+| `description` | `string` | - | Descrição abaixo do campo |
+| `error` | `string` | - | Mensagem de erro |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Tamanho do componente |
+| `disabled` | `boolean` | `false` | Desativa o componente |
+| `readOnly` | `boolean` | `false` | Somente leitura |
+| `hideControls` | `boolean` | `false` | Esconde botões +/- |
+
+## Com DataSource
+
+```tsx
+import { useArchbaseDataSourceV2 } from '@archbase/data';
+
+function Demo() {
+  const { dataSource } = useArchbaseDataSourceV2({
+    initialData: [{ id: '1', quantity: 1, price: 99.99 }],
+    name: 'dsProduct',
+  });
+
+  return (
+    <ArchbaseNumberStepper
+      dataSource={dataSource}
+      dataField="quantity"
+      min={1}
+      max={999}
+      label="Quantidade"
+    />
+  );
+}
+```
+
+## Casos de Uso
+
+### Carrinho de Compras
+
+```tsx
+<Stack>
+  {cartItems.map((item) => (
+    <Group key={item.id}>
+      <Text>{item.name}</Text>
+      <ArchbaseNumberStepper
+        value={item.quantity}
+        onChangeValue={(qty) => updateQuantity(item.id, qty)}
+        min={1}
+        max={item.stock}
+      />
+      <Text>R$ {(item.price * item.quantity).toFixed(2)}</Text>
+    </Group>
+  ))}
+</Stack>
+```
+
+### Configuração de Tempo
+
+```tsx
+<Group>
+  <ArchbaseNumberStepper
+    value={hours}
+    onChangeValue={setHours}
+    min={0}
+    max={23}
+    suffix=" h"
+    label="Horas"
+  />
+  <ArchbaseNumberStepper
+    value={minutes}
+    onChangeValue={setMinutes}
+    min={0}
+    max={59}
+    step={5}
+    suffix=" min"
+    label="Minutos"
+  />
+</Group>
+```
+
+### Ajuste de Preço
+
+```tsx
+<ArchbaseNumberStepper
+  value={discount}
+  onChangeValue={setDiscount}
+  min={0}
+  max={100}
+  step={5}
+  suffix="%"
+  label="Desconto"
+/>
+```
+
+## Dicas
+
+- Use `min` e `max` para validar limites
+- `step` define o incremento - use valores maiores para ajuste rápido
+- `precision` é importante para valores monetários
+- Combine `prefix` e `suffix` para unidades claras
+- O valor pode ser digitado diretamente além dos botões

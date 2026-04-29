@@ -32,6 +32,9 @@ export * from './feedback';
 // Display Components
 export * from './display';
 
+// Container Components
+export * from './containers';
+
 // Form Components
 export * from './forms';
 

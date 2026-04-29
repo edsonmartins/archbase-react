@@ -93,6 +93,89 @@ import { ArchbaseDateTimeRange } from '@archbase/components';
 
 ---
 
+## ArchbaseMultiViewCalendar
+
+Calendário multi-coluna para seleção de intervalos de datas com presets rápidos.
+
+### Exemplo Básico
+
+```tsx
+import { ArchbaseMultiViewCalendar } from '@archbase/components';
+import { useState } from 'react';
+
+function Demo() {
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+
+  return (
+    <ArchbaseMultiViewCalendar
+      label="Período do relatório"
+      value={dateRange}
+      onChange={setDateRange}
+      showQuickPresets
+      columns={2}
+    />
+  );
+}
+```
+
+### Com Presets Personalizados
+
+```tsx
+const customPresets = [
+  {
+    label: 'Trimestre atual',
+    getValue: () => {
+      const now = new Date();
+      const quarter = Math.floor(now.getMonth() / 3);
+      const start = new Date(now.getFullYear(), quarter * 3, 1);
+      const end = new Date(now.getFullYear(), (quarter + 1) * 3, 0);
+      return [start, end];
+    },
+  },
+  {
+    label: 'Ano fiscal',
+    getValue: () => {
+      const year = new Date().getFullYear();
+      return [new Date(year, 0, 1), new Date(year, 11, 31)];
+    },
+  },
+];
+
+<ArchbaseMultiViewCalendar
+  label="Período"
+  showQuickPresets
+  quickPresets={customPresets}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `value` | `[Date \| null, Date \| null]` | - | Intervalo selecionado |
+| `onChange` | `(value) => void` | - | Callback ao mudar |
+| `columns` | `number` | `2` | Número de meses visíveis |
+| `showQuickPresets` | `boolean` | `false` | Mostra presets rápidos |
+| `quickPresets` | `ArchbaseQuickDatePreset[]` | - | Presets personalizados |
+| `minDate` | `Date` | - | Data mínima selecionável |
+| `maxDate` | `Date` | - | Data máxima selecionável |
+| `clearable` | `boolean` | `true` | Permite limpar seleção |
+| `locale` | `string` | `'pt-BR'` | Localidade do calendário |
+
+### Presets Padrão
+
+Quando `showQuickPresets` está ativo:
+
+- Hoje
+- Ontem
+- Últimos 7 dias
+- Últimos 30 dias
+- Este mês
+- Mês passado
+- Este ano
+
+---
+
 ## Formatos de Data
 
 Os componentes de data suportam os seguintes formatos:

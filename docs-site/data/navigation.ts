@@ -51,6 +51,7 @@ export const NAVIGATION_DATA: NavItem[] = [
           { label: 'Charts', href: '/components/data-display/charts' },
           { label: 'Display Tools', href: '/components/data-display/display-tools' },
           { label: 'Advanced Data', href: '/components/data-display/advanced-data' },
+          { label: 'Media Gallery', href: '/components/data-display/media-gallery' },
         ],
       },
       {

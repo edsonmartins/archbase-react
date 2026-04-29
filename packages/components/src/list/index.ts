@@ -7,3 +7,6 @@ export type { ArchbaseListItemProps } from './ArchbaseListItem';
 export type { ArchbaseListContextValue } from './ArchbaseList.context';
 export { ArchbaseListContext };
 export * from './treeview';
+
+export { ArchbaseTreeList } from './ArchbaseTreeList';
+export type { ArchbaseTreeListProps, ArchbaseTreeListColumn } from './ArchbaseTreeList';

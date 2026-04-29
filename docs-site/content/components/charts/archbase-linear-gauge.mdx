@@ -1,0 +1,144 @@
+# ArchbaseLinearGauge
+
+Componente de gauge linear (barra) para exibição de métricas e indicadores. Suporta orientação horizontal e vertical com zonas de cor configuráveis.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseLinearGauge } from '@archbase/components';
+
+function Demo() {
+  return (
+    <ArchbaseLinearGauge
+      value={45}
+      size={250}
+      thickness={16}
+      label="Progresso"
+      showValue
+    />
+  );
+}
+```
+
+## Com Zonas de Cor
+
+```tsx
+<ArchbaseLinearGauge
+  value={65}
+  size={300}
+  label="Status"
+  showValue
+  zones={[
+    { from: 0, to: 30, color: 'red' },
+    { from: 30, to: 70, color: 'yellow' },
+    { from: 70, to: 100, color: 'green' },
+  ]}
+/>
+```
+
+## Orientação Vertical
+
+```tsx
+<ArchbaseLinearGauge
+  value={75}
+  size={200}
+  orientation="vertical"
+  thickness={20}
+  label="Nível"
+  showValue
+  showTicks
+  tickCount={5}
+  showTickLabels
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `value` | `number` | - | Valor atual (0-100) (obrigatório) |
+| `size` | `number` | `200` | Comprimento do gauge em pixels |
+| `thickness` | `number` | `12` | Espessura da barra |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Orientação do gauge |
+| `label` | `string` | - | Label do gauge |
+| `showValue` | `boolean` | `true` | Exibe o valor numérico |
+| `valueFormatter` | `(value: number) => string` | - | Formatador customizado |
+| `zones` | `{ from: number; to: number; color: string }[]` | - | Zonas de cor |
+| `showTicks` | `boolean` | `false` | Exibe marcas de escala |
+| `tickCount` | `number` | `5` | Número de marcas de escala |
+| `showTickLabels` | `boolean` | `false` | Exibe labels nas marcas |
+| `color` | `string` | `'blue'` | Cor da barra (se não usar zones) |
+
+## Casos de Uso
+
+### Indicador de Temperatura
+
+```tsx
+<ArchbaseLinearGauge
+  value={currentTemp}
+  size={200}
+  orientation="vertical"
+  label="Temperatura"
+  showValue
+  valueFormatter={(v) => `${v}°C`}
+  zones={[
+    { from: 0, to: 20, color: 'blue' },
+    { from: 20, to: 35, color: 'green' },
+    { from: 35, to: 100, color: 'red' },
+  ]}
+  showTicks
+  showTickLabels
+/>
+```
+
+### Barra de Progresso com Status
+
+```tsx
+<ArchbaseLinearGauge
+  value={projectProgress}
+  size={400}
+  thickness={24}
+  label="Progresso do Projeto"
+  showValue
+  valueFormatter={(v) => `${v}% concluído`}
+  zones={[
+    { from: 0, to: 25, color: 'red' },
+    { from: 25, to: 75, color: 'yellow' },
+    { from: 75, to: 100, color: 'green' },
+  ]}
+/>
+```
+
+### Dashboard de Métricas
+
+```tsx
+<Stack>
+  <ArchbaseLinearGauge
+    value={cpuUsage}
+    label="CPU"
+    showValue
+    zones={[
+      { from: 0, to: 50, color: 'green' },
+      { from: 50, to: 80, color: 'yellow' },
+      { from: 80, to: 100, color: 'red' },
+    ]}
+  />
+  <ArchbaseLinearGauge
+    value={memoryUsage}
+    label="Memória"
+    showValue
+    zones={[
+      { from: 0, to: 60, color: 'green' },
+      { from: 60, to: 85, color: 'yellow' },
+      { from: 85, to: 100, color: 'red' },
+    ]}
+  />
+</Stack>
+```
+
+## Dicas
+
+- Use orientação vertical para indicadores de nível (tanques, temperatura)
+- Configure `zones` para indicação visual de status
+- `showTicks` e `showTickLabels` são úteis para leitura precisa de valores
+- Combine com cards para criar dashboards de métricas

@@ -1,0 +1,130 @@
+# ArchbaseRipple
+
+Efeito de ondulação (ripple) estilo Material Design que pode ser aplicado a qualquer elemento clicável. Proporciona feedback visual imediato ao usuário quando interage com elementos da interface.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseRipple } from '@archbase/components';
+import { Card, Text } from '@mantine/core';
+
+function Demo() {
+  return (
+    <ArchbaseRipple color="blue">
+      <Card withBorder p="xl" style={{ cursor: 'pointer' }}>
+        <Text>Clique aqui</Text>
+      </Card>
+    </ArchbaseRipple>
+  );
+}
+```
+
+## Ripple Centralizado
+
+```tsx
+<ArchbaseRipple color="green" centered>
+  <Card withBorder p="xl" style={{ cursor: 'pointer' }}>
+    <Text>Ripple sempre do centro</Text>
+  </Card>
+</ArchbaseRipple>
+```
+
+## Duração Customizada
+
+```tsx
+<ArchbaseRipple color="violet" duration={800}>
+  <Card withBorder p="xl" style={{ cursor: 'pointer' }}>
+    <Text>Duração maior (800ms)</Text>
+  </Card>
+</ArchbaseRipple>
+```
+
+## Com Botões
+
+```tsx
+<ArchbaseRipple color="red">
+  <Button variant="filled" color="red" size="lg">
+    Botão com Ripple
+  </Button>
+</ArchbaseRipple>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `color` | `string` | `'blue'` | Cor do efeito ripple |
+| `duration` | `number` | `500` | Duração da animação em ms |
+| `centered` | `boolean` | `false` | Ripple sempre parte do centro |
+| `disabled` | `boolean` | `false` | Desativa o efeito |
+| `children` | `ReactNode` | - | Elemento filho (obrigatório) |
+
+## Casos de Uso
+
+### Cards Clicáveis
+
+```tsx
+<Group>
+  {products.map((product) => (
+    <ArchbaseRipple key={product.id} color="blue">
+      <Card
+        withBorder
+        p="md"
+        style={{ cursor: 'pointer' }}
+        onClick={() => selectProduct(product)}
+      >
+        <Text>{product.name}</Text>
+        <Text size="sm" c="dimmed">{product.price}</Text>
+      </Card>
+    </ArchbaseRipple>
+  ))}
+</Group>
+```
+
+### Lista Interativa
+
+```tsx
+<Stack gap={0}>
+  {items.map((item) => (
+    <ArchbaseRipple key={item.id}>
+      <Box
+        p="md"
+        style={{ cursor: 'pointer', borderBottom: '1px solid var(--mantine-color-gray-3)' }}
+        onClick={() => handleClick(item)}
+      >
+        <Text>{item.title}</Text>
+      </Box>
+    </ArchbaseRipple>
+  ))}
+</Stack>
+```
+
+### Menu de Navegação
+
+```tsx
+<Stack gap="xs">
+  {menuItems.map((item) => (
+    <ArchbaseRipple key={item.path}>
+      <NavLink
+        label={item.label}
+        leftSection={item.icon}
+        onClick={() => navigate(item.path)}
+      />
+    </ArchbaseRipple>
+  ))}
+</Stack>
+```
+
+## Dicas
+
+- Use cores que contrastem com o fundo do elemento
+- O `centered` é útil para elementos pequenos como ícones
+- Ajuste `duration` para animações mais lentas ou rápidas
+- Evite usar em elementos muito pequenos onde o efeito não seria visível
+- O ripple funciona melhor em elementos com `overflow: hidden`
+
+## Acessibilidade
+
+- O efeito é puramente visual e não afeta a navegação por teclado
+- Elementos devem ter `role` e `tabIndex` apropriados independentemente do ripple
+- Não substitui outros indicadores de foco (outline, etc.)

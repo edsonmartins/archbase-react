@@ -1,0 +1,141 @@
+# Skeleton Templates
+
+Coleção de componentes skeleton pré-configurados para diferentes layouts comuns. Exibe placeholders animados enquanto o conteúdo real está carregando, melhorando a experiência do usuário.
+
+## Componentes Disponíveis
+
+- `ArchbaseDataGridSkeleton` - Skeleton para tabelas/grids de dados
+- `ArchbaseFormSkeleton` - Skeleton para formulários
+- `ArchbaseCardSkeleton` - Skeleton para cards
+- `ArchbaseKanbanSkeleton` - Skeleton para quadros Kanban
+- `ArchbaseListSkeleton` - Skeleton para listas
+
+## ArchbaseDataGridSkeleton
+
+```tsx
+import { ArchbaseDataGridSkeleton } from '@archbase/components';
+
+<ArchbaseDataGridSkeleton rows={5} columns={4} />
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `rows` | `number` | `5` | Número de linhas |
+| `columns` | `number` | `4` | Número de colunas |
+| `showHeader` | `boolean` | `true` | Exibe header da tabela |
+| `showPagination` | `boolean` | `true` | Exibe paginação |
+
+## ArchbaseFormSkeleton
+
+```tsx
+import { ArchbaseFormSkeleton } from '@archbase/components';
+
+<ArchbaseFormSkeleton fields={6} columns={2} showActions />
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `fields` | `number` | `4` | Número de campos |
+| `columns` | `number` | `1` | Número de colunas |
+| `showActions` | `boolean` | `false` | Exibe botões de ação |
+
+## ArchbaseCardSkeleton
+
+```tsx
+import { ArchbaseCardSkeleton } from '@archbase/components';
+
+<Group>
+  <ArchbaseCardSkeleton showImage showActions />
+  <ArchbaseCardSkeleton showAvatar lines={4} />
+</Group>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `showImage` | `boolean` | `false` | Exibe placeholder de imagem |
+| `showAvatar` | `boolean` | `false` | Exibe placeholder de avatar |
+| `showActions` | `boolean` | `false` | Exibe botões de ação |
+| `lines` | `number` | `3` | Número de linhas de texto |
+
+## ArchbaseKanbanSkeleton
+
+```tsx
+import { ArchbaseKanbanSkeleton } from '@archbase/components';
+
+<ArchbaseKanbanSkeleton columns={3} cardsPerColumn={2} />
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `columns` | `number` | `3` | Número de colunas |
+| `cardsPerColumn` | `number` | `3` | Cards por coluna |
+
+## ArchbaseListSkeleton
+
+```tsx
+import { ArchbaseListSkeleton } from '@archbase/components';
+
+<ArchbaseListSkeleton items={5} showAvatar showDescription />
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `items` | `number` | `5` | Número de itens |
+| `showAvatar` | `boolean` | `false` | Exibe avatar |
+| `showDescription` | `boolean` | `false` | Exibe descrição |
+
+## Casos de Uso
+
+### Loading de Dashboard
+
+```tsx
+function Dashboard() {
+  const { data, isLoading } = useQuery(...);
+
+  if (isLoading) {
+    return (
+      <Stack>
+        <Group>
+          <ArchbaseCardSkeleton showImage />
+          <ArchbaseCardSkeleton showImage />
+          <ArchbaseCardSkeleton showImage />
+        </Group>
+        <ArchbaseDataGridSkeleton rows={10} columns={5} />
+      </Stack>
+    );
+  }
+
+  return <DashboardContent data={data} />;
+}
+```
+
+### Loading de Formulário
+
+```tsx
+function EditForm({ id }) {
+  const { data, isLoading } = useFetchRecord(id);
+
+  if (isLoading) {
+    return <ArchbaseFormSkeleton fields={8} columns={2} showActions />;
+  }
+
+  return <Form data={data} />;
+}
+```
+
+## Dicas
+
+- Use skeletons que correspondam ao layout real do conteúdo
+- Mantenha as dimensões similares ao conteúdo final para evitar "saltos"
+- Combine múltiplos skeletons para layouts complexos
+- Skeletons são animados por padrão com efeito de pulse

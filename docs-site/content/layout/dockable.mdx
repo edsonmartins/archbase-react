@@ -36,6 +36,71 @@ import { ArchbaseDockableContainer, ArchbaseDockPanel } from '@archbase/layout';
 </ArchbaseDockableContainer>
 ```
 
+## ArchbaseFloatingPanel
+
+Painel flutuante com suporte a arrastar, redimensionar, minimizar e maximizar.
+
+```tsx
+import { ArchbaseFloatingPanel, useArchbaseFloatingPanel } from '@archbase/components';
+
+function Demo() {
+  const { isOpen, open, close, panelProps } = useArchbaseFloatingPanel({
+    title: 'Meu Painel',
+    width: 400,
+    height: 300,
+  });
+
+  return (
+    <>
+      <Button onClick={open}>Abrir Painel</Button>
+
+      {isOpen && (
+        <ArchbaseFloatingPanel {...panelProps}>
+          <Text>Conteúdo do painel flutuante</Text>
+        </ArchbaseFloatingPanel>
+      )}
+    </>
+  );
+}
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `title` | `string` | `'Painel'` | Título do painel |
+| `icon` | `ReactNode` | - | Ícone do título |
+| `width` | `number` | `400` | Largura inicial |
+| `height` | `number` | `300` | Altura inicial |
+| `initialX` | `number` | `100` | Posição X inicial |
+| `initialY` | `number` | `100` | Posição Y inicial |
+| `resizable` | `boolean` | `true` | Permite redimensionar |
+| `minimizable` | `boolean` | `true` | Permite minimizar |
+| `maximizable` | `boolean` | `true` | Permite maximizar |
+| `closable` | `boolean` | `true` | Permite fechar |
+| `headerColor` | `string` | `blue.6` | Cor do cabeçalho |
+| `onClose` | `() => void` | - | Callback ao fechar |
+| `onMove` | `(x, y) => void` | - | Callback ao mover |
+| `onResize` | `(w, h) => void` | - | Callback ao redimensionar |
+
+### Hook useArchbaseFloatingPanel
+
+```tsx
+const {
+  isOpen,      // Estado de visibilidade
+  open,        // Abre o painel
+  close,       // Fecha o painel
+  toggle,      // Alterna visibilidade
+  panelProps,  // Props para passar ao componente
+} = useArchbaseFloatingPanel({
+  id: 'meu-painel',
+  title: 'Título',
+  width: 400,
+  height: 300,
+  initialPosition: { x: 100, y: 100 },
+});
+```
+
 ## Próximos Passos
 
 - [Admin](/admin/overview) - Layout administrativo

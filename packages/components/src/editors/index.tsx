@@ -146,3 +146,68 @@ export type { ArchbaseSpreadsheetProps, ArchbaseColumnDef, ArchbaseColumnType } 
 
 export { ArchbaseLightGrid } from './ArchbaseLightGrid'
 export type { ArchbaseLightGridProps, ArchbaseLightGridColumn } from './ArchbaseLightGrid'
+
+export { ArchbaseCurrencyInput } from './ArchbaseCurrencyInput'
+export type { ArchbaseCurrencyInputProps, CurrencyCode } from './ArchbaseCurrencyInput'
+
+export { ArchbaseCpfCnpjInput, validateCPF, validateCNPJ, formatCPF, formatCNPJ, detectDocumentType } from './ArchbaseCpfCnpjInput'
+export type { ArchbaseCpfCnpjInputProps, DocumentType } from './ArchbaseCpfCnpjInput'
+
+export { ArchbaseCepInput, formatCep } from './ArchbaseCepInput'
+export type { ArchbaseCepInputProps, CepAddress } from './ArchbaseCepInput'
+
+export { ArchbaseOTPInput } from './ArchbaseOTPInput'
+export type { ArchbaseOTPInputProps } from './ArchbaseOTPInput'
+
+export { ArchbaseRangeSlider } from './ArchbaseRangeSlider'
+export type { ArchbaseRangeSliderProps, RangeValue } from './ArchbaseRangeSlider'
+
+export { ArchbaseInPlaceEditor } from './ArchbaseInPlaceEditor'
+export type { ArchbaseInPlaceEditorProps, InPlaceEditorType, SelectOption } from './ArchbaseInPlaceEditor'
+
+export { ArchbaseNumberStepper } from './ArchbaseNumberStepper'
+export type { ArchbaseNumberStepperProps } from './ArchbaseNumberStepper'
+
+export { ArchbaseAIPromptInput, useArchbasePromptHistory } from './ArchbaseAIPromptInput'
+export type {
+  ArchbaseAIPromptInputProps,
+  ArchbaseAIPromptSuggestion,
+  UseArchbasePromptHistoryOptions,
+  UseArchbasePromptHistoryReturn,
+} from './ArchbaseAIPromptInput'
+
+export { ArchbaseColorGradientPicker, ArchbaseFlatColorPicker } from './ArchbaseColorGradientPicker'
+export type {
+  ArchbaseColorGradientPickerProps,
+  ArchbaseFlatColorPickerProps,
+  ArchbaseColorFormat,
+} from './ArchbaseColorGradientPicker'
+
+export {
+  useArchbaseSpeechToText,
+  ArchbaseSpeechToTextButton,
+  ArchbaseSpeechToTextInput,
+  ArchbaseSpeechToTextArea,
+} from './ArchbaseSpeechToTextInput'
+export type {
+  UseArchbaseSpeechToTextOptions,
+  UseArchbaseSpeechToTextReturn,
+  ArchbaseSpeechToTextButtonProps,
+  ArchbaseSpeechToTextInputProps,
+  ArchbaseSpeechToTextAreaProps,
+} from './ArchbaseSpeechToTextInput'
+
+export {
+  ArchbaseMultiViewCalendar,
+  ArchbaseMultiViewCalendarWithPresets,
+  ArchbaseDateRangeQuickPicker,
+  defaultDatePresets,
+  createDatePreset,
+} from './ArchbaseMultiViewCalendar'
+export type {
+  ArchbaseMultiViewCalendarProps,
+  ArchbaseMultiViewCalendarWithPresetsProps,
+  ArchbaseDateRangeQuickPickerProps,
+  DateRangePreset,
+} from './ArchbaseMultiViewCalendar'
+

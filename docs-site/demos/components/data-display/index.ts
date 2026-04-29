@@ -399,3 +399,132 @@ export const spreadsheetUsage: MantineDemo = {
   component: ArchbaseSpreadsheetUsage,
   code: spreadsheetUsageCode,
 };
+
+// =============================================
+// ArchbaseLightbox
+// =============================================
+import { ArchbaseLightboxUsage, ArchbaseLightboxWithButton, ArchbaseLightboxMinimal } from './ArchbaseLightboxUsage';
+
+const lightboxUsageCode = `
+import { ArchbaseLightbox, useArchbaseLightbox, ArchbaseLightboxSlide } from '@archbase/components';
+
+const images: ArchbaseLightboxSlide[] = [
+  {
+    src: 'https://example.com/image1.jpg',
+    title: 'Título da Imagem',
+    description: 'Descrição detalhada',
+  },
+  {
+    src: 'https://example.com/image2.jpg',
+    title: 'Segunda Imagem',
+  },
+];
+
+function Demo() {
+  const lightbox = useArchbaseLightbox();
+
+  return (
+    <>
+      <Button onClick={() => lightbox.open(images, 0)}>
+        Abrir Galeria
+      </Button>
+
+      <ArchbaseLightbox
+        slides={images}
+        open={lightbox.isOpen}
+        index={lightbox.currentIndex}
+        onClose={lightbox.close}
+        onSlideChange={lightbox.goTo}
+        enableZoom
+        enableThumbnails
+        showCaptions
+      />
+    </>
+  );
+}
+`;
+
+export const lightboxUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseLightboxUsage,
+  code: lightboxUsageCode,
+};
+
+export const lightboxWithButton: MantineDemo = {
+  type: 'code',
+  component: ArchbaseLightboxWithButton,
+  code: lightboxUsageCode,
+};
+
+export const lightboxMinimal: MantineDemo = {
+  type: 'code',
+  component: ArchbaseLightboxMinimal,
+  code: lightboxUsageCode,
+};
+
+// =============================================
+// ArchbasePhotoAlbum
+// =============================================
+import { ArchbasePhotoAlbumUsage, ArchbasePhotoAlbumWithActions, ArchbasePhotoAlbumMasonry, ArchbasePhotoAlbumSimple } from './ArchbasePhotoAlbumUsage';
+
+const photoAlbumUsageCode = `
+import { ArchbasePhotoAlbum, ArchbasePhotoAlbumPhoto } from '@archbase/components';
+
+const photos: ArchbasePhotoAlbumPhoto[] = [
+  {
+    src: 'https://example.com/photo1.jpg',
+    width: 800,
+    height: 600,
+    title: 'Foto 1',
+    description: 'Descrição da foto',
+  },
+  {
+    src: 'https://example.com/photo2.jpg',
+    width: 800,
+    height: 1200,
+    title: 'Foto 2',
+    badge: 'Novo',
+    favorite: true,
+  },
+];
+
+function Demo() {
+  return (
+    <ArchbasePhotoAlbum
+      photos={photos}
+      layout="rows"
+      targetRowHeight={200}
+      spacing={8}
+      withLightbox
+      showOverlay
+      showBadge
+      showFavorite
+      onFavorite={(photo, index) => console.log('Favoritou:', photo.title)}
+    />
+  );
+}
+`;
+
+export const photoAlbumUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbasePhotoAlbumUsage,
+  code: photoAlbumUsageCode,
+};
+
+export const photoAlbumWithActions: MantineDemo = {
+  type: 'code',
+  component: ArchbasePhotoAlbumWithActions,
+  code: photoAlbumUsageCode,
+};
+
+export const photoAlbumMasonry: MantineDemo = {
+  type: 'code',
+  component: ArchbasePhotoAlbumMasonry,
+  code: photoAlbumUsageCode,
+};
+
+export const photoAlbumSimple: MantineDemo = {
+  type: 'code',
+  component: ArchbasePhotoAlbumSimple,
+  code: photoAlbumUsageCode,
+};
