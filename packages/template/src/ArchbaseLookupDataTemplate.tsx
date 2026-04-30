@@ -42,7 +42,8 @@ import { useOptionalTemplateSecurity } from './hooks';
 import {
 	ArchbaseLookupDataTemplateProps,
 	ArchbaseLookupDataTemplateRef,
-	LookupLabels
+	LookupLabels,
+	PagedResult
 } from './ArchbaseLookupDataTemplate.types';
 
 // Labels padrão
@@ -84,6 +85,7 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 		// DataSource
 		dataSource: externalDataSource,
 		loadData,
+		loadDataPaged,
 		searchFields = '',
 		pageSize = 100,
 
@@ -140,10 +142,15 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 	const [selectedItems, setSelectedItems] = useState<T[]>(initialSelectedItems || []);
 	const [isInternalError, setIsInternalError] = useState(false);
 	const [internalError, setInternalError] = useState('');
+	const [currentPage, setCurrentPage] = useState(0);
+	const [currentSearchValue, setCurrentSearchValue] = useState<string>('');
 
 	// === REFS ===
 	const internalDataSourceRef = useRef<ArchbaseDataSource<T, ID> | null>(null);
 	const cachedRecordsRef = useRef<T[]>([]);
+
+	// Flag para indicar se estamos usando paginação remota
+	const useRemotePaging = !!loadDataPaged && !externalDataSource;
 
 	// === DATASOURCE ===
 	const useExternalDataSource = !!externalDataSource;
@@ -221,38 +228,43 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 		...customLabels
 	};
 
-	// === LISTENER DE PAGINAÇÃO PARA DATASOURCE INTERNO ===
-	// Quando o grid muda de página, refreshData é chamado no DataSource.
-	// Para DataSource interno (sem remote), precisamos interceptar e re-abrir
-	// o DataSource com os metadados de paginação corretos.
-	useEffect(() => {
-		if (useExternalDataSource) return;
+	// === CARREGAMENTO DE DADOS COM PAGINAÇÃO REMOTA ===
+	const handleLoadDataPaged = useCallback(
+		async (page: number, search?: string) => {
+			if (useExternalDataSource || !loadDataPaged) {
+				return;
+			}
 
-		const handleRefreshData = (options: any) => {
-			const records = cachedRecordsRef.current;
-			if (records.length === 0) return;
+			setInternalIsLoading(true);
+			try {
+				const result = await loadDataPaged(page, pageSize, search, searchFields);
+				dataSource.open({
+					records: result.content,
+					grandTotalRecords: result.totalElements,
+					currentPage: page,
+					totalPages: result.totalPages,
+					pageSize: pageSize
+				});
+				setCurrentPage(page);
+			} catch (err) {
+				setIsInternalError(true);
+				setInternalError(processErrorMessage(err));
+				onError?.(err);
+			} finally {
+				setInternalIsLoading(false);
+			}
+		},
+		[useExternalDataSource, loadDataPaged, searchFields, pageSize, dataSource, onError]
+	);
 
-			const newPage = options?.currentPage ?? 0;
-			const newPageSize = options?.pageSize ?? pageSize;
-
-			dataSource.open({
-				records,
-				grandTotalRecords: records.length,
-				currentPage: newPage,
-				totalPages: Math.ceil(records.length / newPageSize),
-				pageSize: newPageSize
-			});
-		};
-
-		(dataSource as any).emitter.on('refreshData', handleRefreshData);
-		return () => {
-			(dataSource as any).emitter.off('refreshData', handleRefreshData);
-		};
-	}, [useExternalDataSource, dataSource, pageSize]);
-
-	// === CARREGAMENTO DE DADOS ===
+	// === CARREGAMENTO DE DADOS (CLIENT-SIDE) ===
 	const handleLoadData = useCallback(
 		async (search?: string) => {
+			// Se temos paginação remota, usar handleLoadDataPaged
+			if (useRemotePaging) {
+				return handleLoadDataPaged(0, search);
+			}
+
 			if (useExternalDataSource || !loadData) {
 				return; // DataSource externo gerencia seus próprios dados
 			}
@@ -276,7 +288,7 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 				setInternalIsLoading(false);
 			}
 		},
-		[useExternalDataSource, loadData, searchFields, pageSize, dataSource, onError]
+		[useExternalDataSource, useRemotePaging, loadData, handleLoadDataPaged, searchFields, pageSize, dataSource, onError]
 	);
 
 	// === HANDLER DE FILTRO DO GRID ===
@@ -284,14 +296,57 @@ function ArchbaseLookupDataTemplateImpl<T extends object, ID = string>(
 		(filterModel: any) => {
 			// Captura o valor do filtro global (quickFilterValues)
 			const quickFilterValue = filterModel?.quickFilterValues?.[0] || '';
+			setCurrentSearchValue(quickFilterValue);
 
-			// Se loadData está disponível, fazer busca server-side
+			// Se loadDataPaged está disponível, fazer busca paginada (volta para página 0)
+			if (useRemotePaging) {
+				handleLoadDataPaged(0, quickFilterValue);
+				return;
+			}
+
+			// Se loadData está disponível, fazer busca client-side
 			if (loadData && !useExternalDataSource) {
 				handleLoadData(quickFilterValue);
 			}
 		},
-		[loadData, useExternalDataSource, handleLoadData]
+		[loadData, useRemotePaging, useExternalDataSource, handleLoadData, handleLoadDataPaged]
 	);
+
+	// === LISTENER DE PAGINAÇÃO PARA DATASOURCE INTERNO ===
+	// Quando o grid muda de página, refreshData é chamado no DataSource.
+	// Para paginação remota, chamamos handleLoadDataPaged com a nova página.
+	// Para paginação client-side, re-abrimos o DataSource com os metadados corretos.
+	useEffect(() => {
+		if (useExternalDataSource) return;
+
+		const handleRefreshData = (options: any) => {
+			const newPage = options?.currentPage ?? 0;
+			const newPageSize = options?.pageSize ?? pageSize;
+
+			// Se estamos usando paginação remota, carregar a nova página do servidor
+			if (useRemotePaging) {
+				handleLoadDataPaged(newPage, currentSearchValue);
+				return;
+			}
+
+			// Paginação client-side: re-abrir com dados em cache
+			const records = cachedRecordsRef.current;
+			if (records.length === 0) return;
+
+			dataSource.open({
+				records,
+				grandTotalRecords: records.length,
+				currentPage: newPage,
+				totalPages: Math.ceil(records.length / newPageSize),
+				pageSize: newPageSize
+			});
+		};
+
+		(dataSource as any).emitter.on('refreshData', handleRefreshData);
+		return () => {
+			(dataSource as any).emitter.off('refreshData', handleRefreshData);
+		};
+	}, [useExternalDataSource, useRemotePaging, dataSource, pageSize, currentSearchValue, handleLoadDataPaged]);
 
 	// === EFEITOS ===
 

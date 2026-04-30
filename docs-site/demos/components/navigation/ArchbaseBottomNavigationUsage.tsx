@@ -22,10 +22,10 @@ export function ArchbaseBottomNavigationUsage() {
             value={active}
             onChange={setActive}
             items={[
-              { value: 'home', label: 'Início', icon: <IconHome size={20} /> },
-              { value: 'search', label: 'Buscar', icon: <IconSearch size={20} /> },
-              { value: 'notifications', label: 'Avisos', icon: <IconBell size={20} />, badge: 3 },
-              { value: 'profile', label: 'Perfil', icon: <IconUser size={20} /> },
+              { key: 'home', label: 'Início', icon: <IconHome size={20} /> },
+              { key: 'search', label: 'Buscar', icon: <IconSearch size={20} /> },
+              { key: 'notifications', label: 'Avisos', icon: <IconBell size={20} />, badge: 3 },
+              { key: 'profile', label: 'Perfil', icon: <IconUser size={20} /> },
             ]}
           />
         </Box>
@@ -40,11 +40,11 @@ export function ArchbaseBottomNavigationUsage() {
             onChange={setActive}
             showLabels={false}
             items={[
-              { value: 'home', label: 'Início', icon: <IconHome size={24} /> },
-              { value: 'search', label: 'Buscar', icon: <IconSearch size={24} /> },
-              { value: 'notifications', label: 'Avisos', icon: <IconBell size={24} /> },
-              { value: 'settings', label: 'Config', icon: <IconSettings size={24} /> },
-              { value: 'profile', label: 'Perfil', icon: <IconUser size={24} /> },
+              { key: 'home', label: 'Início', icon: <IconHome size={24} /> },
+              { key: 'search', label: 'Buscar', icon: <IconSearch size={24} /> },
+              { key: 'notifications', label: 'Avisos', icon: <IconBell size={24} /> },
+              { key: 'settings', label: 'Config', icon: <IconSettings size={24} /> },
+              { key: 'profile', label: 'Perfil', icon: <IconUser size={24} /> },
             ]}
           />
         </Box>

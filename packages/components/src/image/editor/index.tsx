@@ -1,437 +1,351 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { ActionIcon, ActionIconVariant, rem, Text, Tooltip, useMantineColorScheme } from '@mantine/core';
-import {
-	IconCloudDownload,
-	IconCloudUpload,
-	IconPhotoDown,
-	IconPhotoEdit,
-	IconPhotoUp,
-	IconPhotoX,
-	IconTrash,
-} from '@tabler/icons-react';
+/**
+ * ArchbaseImagePickerEditor - Wrapper para react-image-picker-editor
+ * Componente para seleção, edição e compressão de imagens em png, jpeg e webp
+ *
+ * Funcionalidades:
+ * - Suporta diferentes tipos de entrada: URL, data URI (base64), blob URL
+ * - Debounce para evitar múltiplas chamadas do callback
+ * - Mantém compatibilidade total com a API anterior
+ */
+import { ActionIconVariant, Text, useMantineColorScheme } from '@mantine/core';
+import { useDebouncedCallback } from '@mantine/hooks';
 import { useArchbaseTranslation } from '@archbase/core';
-import React, { Fragment, memo, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useArchbaseTheme } from '@archbase/core';
-import ArchbaseEditImage from './components/EditImage/ArchbaseEditImage';
-import { convertImageUsingCanvas } from './functions/image-processing';
+import ReactImagePickerEditor, { ImagePickerConf } from 'react-image-picker-editor';
+import 'react-image-picker-editor/dist/index.css';
 import './image_editor_styles.scss';
-import { ArchbaseImagePickerConf, IState } from './models/index.models';
+import { ArchbaseImagePickerConf } from './models/index.models';
 
 export * from './models/index.models';
 
-const initialConfig: ArchbaseImagePickerConf = {
-	objectFit: 'cover',
-	hideDeleteBtn: false,
-	hideDownloadBtn: false,
-	hideEditBtn: false,
-	hideAddBtn: false,
-	compressInitial: null,
+// Mapeamento de idiomas para o react-image-picker-editor
+const LANGUAGE_MAP: Record<string, string> = {
+	'pt-BR': 'pt',
+	'pt': 'pt',
+	'en': 'en',
+	'en-US': 'en',
+	'es': 'es',
+	'es-ES': 'es',
+	'fr': 'fr',
+	'fr-FR': 'fr',
+	'de': 'de',
+	'de-DE': 'de',
+	'fa': 'fa',
 };
 
-const initialState: IState = {
-	maxHeight: 3000,
-	maxWidth: 3000,
-	cropHeight: 150,
-	cropWidth: 150,
-	maintainAspectRatio: true,
-	format: 'png',
-	arrayCopiedImages: [],
-	originImageSrc: '',
-	basicFilters: undefined,
-	quality: 100,
-};
+/**
+ * Verifica se uma string é um data URI válido (com prefixo data:image/...)
+ */
+function isDataUri(str: string | null | undefined): boolean {
+	if (!str) return false;
+	return str.startsWith('data:');
+}
 
+/**
+ * Verifica se uma string é um blob URL
+ */
+function isBlobUrl(str: string | null | undefined): boolean {
+	if (!str) return false;
+	return str.startsWith('blob:');
+}
+
+/**
+ * Verifica se uma string é uma URL externa (http/https)
+ */
+function isExternalUrl(str: string | null | undefined): boolean {
+	if (!str) return false;
+	return str.startsWith('http://') || str.startsWith('https://');
+}
+
+/**
+ * Verifica se uma string parece ser base64 puro (sem prefixo data:)
+ * Base64 válido contém apenas A-Z, a-z, 0-9, +, /, = e tem comprimento múltiplo de 4
+ */
+function isRawBase64(str: string | null | undefined): boolean {
+	if (!str || str.length < 100) return false; // Imagens base64 são geralmente grandes
+	// Verificar se não começa com prefixos conhecidos
+	if (isDataUri(str) || isBlobUrl(str) || isExternalUrl(str)) return false;
+	// Verificar padrão de base64
+	const base64Regex = /^[A-Za-z0-9+/]+=*$/;
+	// Verificar apenas os primeiros 100 caracteres para performance
+	return base64Regex.test(str.substring(0, 100));
+}
+
+/**
+ * Normaliza a imagem de entrada para um formato que o componente pode exibir
+ * Converte base64 puro para data URI se necessário
+ */
+function normalizeImageSrc(src: string | null | undefined): string | null {
+	if (!src) return null;
+
+	// Se já é um formato válido, retornar como está
+	if (isDataUri(src) || isBlobUrl(src) || isExternalUrl(src)) {
+		return src;
+	}
+
+	// Se parece ser base64 puro, converter para data URI
+	if (isRawBase64(src)) {
+		// Tentar detectar o tipo da imagem pelo header base64
+		// JPEG começa com /9j/
+		// PNG começa com iVBOR
+		// GIF começa com R0lGOD
+		// WebP começa com UklGR
+		let mimeType = 'image/jpeg'; // Padrão
+		if (src.startsWith('/9j/')) {
+			mimeType = 'image/jpeg';
+		} else if (src.startsWith('iVBOR')) {
+			mimeType = 'image/png';
+		} else if (src.startsWith('R0lGOD')) {
+			mimeType = 'image/gif';
+		} else if (src.startsWith('UklGR')) {
+			mimeType = 'image/webp';
+		}
+		return `data:${mimeType};base64,${src}`;
+	}
+
+	// Se não reconhecemos o formato, retornar como está (pode ser uma URL relativa)
+	return src;
+}
+
+/**
+ * Converte a configuração do Archbase para o formato do react-image-picker-editor
+ */
+function toImagePickerConf(
+	config: ArchbaseImagePickerConf,
+	colorScheme: 'light' | 'dark',
+	language: string
+): ImagePickerConf {
+	return {
+		width: typeof config.width === 'number' ? `${config.width}px` : (config.width as string),
+		height: typeof config.height === 'number' ? `${config.height}px` : (config.height as string),
+		borderRadius: typeof config.borderRadius === 'number' ? `${config.borderRadius}px` : (config.borderRadius as string),
+		aspectRatio: config.aspectRatio ?? undefined,
+		objectFit: config.objectFit,
+		compressInitial: config.compressInitial ?? undefined,
+		hideDeleteBtn: config.hideDeleteBtn,
+		hideDownloadBtn: config.hideDownloadBtn,
+		hideEditBtn: config.hideEditBtn,
+		hideAddBtn: config.hideAddBtn,
+		darkMode: colorScheme === 'dark',
+		language: LANGUAGE_MAP[language] || 'en',
+	};
+}
+
+/**
+ * Calcula o tamanho da imagem em KB a partir de uma string base64
+ */
+function calculateImageSize(dataUri: string | null | undefined): number | null {
+	if (!dataUri || !dataUri.length || !isDataUri(dataUri)) return null;
+	// Remove o header do data URI para calcular apenas o conteúdo base64
+	const base64 = dataUri.split(',')[1];
+	if (!base64) return null;
+	// Fórmula: (3/4) * length / 1024 para obter KB aproximado
+	return Math.ceil(((3 / 4) * base64.length) / 1024);
+}
+
+/**
+ * Extrai o formato da imagem do data URI
+ */
+function extractFormat(dataUri: string | null | undefined): string {
+	if (!dataUri || !isDataUri(dataUri)) return '';
+	const match = dataUri.match(/data:image\/([a-zA-Z]+);base64,/);
+	if (match && match[1]) {
+		return match[1] === 'jpeg' ? 'jpeg' : match[1];
+	}
+	return 'png';
+}
+
+/**
+ * Props do ArchbaseImagePickerEditor
+ * Mantém compatibilidade total com a versão anterior
+ */
+export interface ArchbaseImagePickerEditorProps {
+	/** Configuração do editor (interface ArchbaseImagePickerConf) */
+	config?: ArchbaseImagePickerConf;
+	/** Imagem inicial (data URI, URL externa ou blob URL) */
+	imageSrcProp?: string;
+	/** Cor de destaque */
+	color?: string;
+	/**
+	 * Callback quando a imagem é alterada
+	 * @deprecated Use config.onChangeImage ao invés
+	 */
+	imageChanged?: (newDataUri: string | undefined) => void;
+	/** Variante dos botões de ação */
+	variant?: ActionIconVariant;
+}
+
+/**
+ * ArchbaseImagePickerEditor - Componente de seleção e edição de imagens
+ *
+ * Funcionalidades:
+ * - Seleção de imagens (upload)
+ * - Edição com crop, redimensionamento
+ * - Compressão de qualidade (JPEG/WebP)
+ * - Conversão de formatos (PNG, JPEG, WebP)
+ * - Filtros (contraste, brilho, saturação, sépia, blur)
+ * - Suporte a dark mode
+ * - Suporte a URL externa, data URI e blob URL
+ *
+ * @example
+ * ```tsx
+ * <ArchbaseImagePickerEditor
+ *   imageSrcProp={imageValue}
+ *   config={{
+ *     width: 300,
+ *     height: 200,
+ *     compressInitial: 80,
+ *     objectFit: 'contain',
+ *     onChangeImage: (newImage) => setImageValue(newImage),
+ *   }}
+ * />
+ * ```
+ */
 export const ArchbaseImagePickerEditor = memo(
 	({
 		config = {},
 		imageSrcProp = '',
 		color = '#1e88e5',
-		imageChanged = () => {},
+		imageChanged,
 		variant = 'transparent',
-	}: {
-		config: ArchbaseImagePickerConf;
-		imageSrcProp?: string;
-		color?: string;
-		imageChanged?: Function;
-		variant?: ActionIconVariant
-	}) => {
+	}: ArchbaseImagePickerEditorProps) => {
 		const theme = useArchbaseTheme();
 		const { colorScheme } = useMantineColorScheme();
-		const { t } = useArchbaseTranslation();
-		const [state, setState] = useState<IState>({
-			...initialState,
-		});
-		const [imageSrc, setImageSrc] = useState<string | null>('');
-		const [loadImage, setLoadImage] = useState<boolean>(false);
-		const [showEditPanel, setShowEditPanel] = useState<boolean>(false);
-		const [configuration, setConfiguration] = useState<ArchbaseImagePickerConf>(initialConfig);
-		const imagePicker = useRef<any>(null);
-		const fileType = useRef('');
-		const urlImage = useRef('');
-		const uuidFilePicker = Date.now().toString(20);
+		const { t, i18n } = useArchbaseTranslation();
+
+		// Normalizar a imagem de entrada para formato suportado
+		const normalizedInitialSrc = useMemo(() => normalizeImageSrc(imageSrcProp), [imageSrcProp]);
+
+		const [imageSrc, setImageSrc] = useState<string | null>(normalizedInitialSrc);
+		const [loadImage, setLoadImage] = useState<boolean>(!!normalizedInitialSrc);
 		const imageName = useRef('download');
-		const mounted = useRef(false);
 
-		useEffect(() => {
-			processConfig();
-		}, [config]);
+		// Ref para rastrear a última imagem reportada (evitar callbacks duplicados)
+		const lastReportedImageRef = useRef<string | null | undefined>(undefined);
 
+		// Ref para a imagem original (antes de normalização) para comparação
+		const originalImagePropRef = useRef<string | undefined>(imageSrcProp);
+
+		// Ref para saber se é a primeira renderização
+		const isFirstRender = useRef(true);
+
+		// Configuração padrão
+		const defaultConfig: ArchbaseImagePickerConf = {
+			objectFit: 'cover',
+			hideDeleteBtn: false,
+			hideDownloadBtn: false,
+			hideEditBtn: false,
+			hideAddBtn: false,
+			compressInitial: null,
+			showImageSize: true,
+			width: 330,
+			height: 250,
+			borderRadius: '8px',
+		};
+
+		const mergedConfig = useMemo(() => ({ ...defaultConfig, ...config }), [config]);
+
+		// Converter para configuração do react-image-picker-editor
+		const pickerConfig = useMemo(
+			() => toImagePickerConf(mergedConfig, colorScheme as 'light' | 'dark', i18n.language),
+			[mergedConfig, colorScheme, i18n.language]
+		);
+
+		// Callback com debounce para evitar múltiplas chamadas rápidas
+		const debouncedOnChange = useDebouncedCallback((newDataUri: string | undefined) => {
+			// Verificar se a imagem realmente mudou
+			if (lastReportedImageRef.current === newDataUri) {
+				return;
+			}
+
+			lastReportedImageRef.current = newDataUri;
+
+			// Chamar callback do config (API principal)
+			if (mergedConfig.onChangeImage) {
+				mergedConfig.onChangeImage(newDataUri);
+			}
+
+			// Chamar callback legado (para compatibilidade)
+			if (imageChanged) {
+				imageChanged(newDataUri);
+			}
+		}, 300); // 300ms de debounce
+
+		// Sincronizar com prop externa
 		useEffect(() => {
-			loadImageFromProps();
+			// Só atualizar se a prop original realmente mudou
+			if (imageSrcProp !== originalImagePropRef.current) {
+				originalImagePropRef.current = imageSrcProp;
+
+				const normalizedSrc = normalizeImageSrc(imageSrcProp);
+				setImageSrc(normalizedSrc);
+				setLoadImage(!!normalizedSrc);
+
+				// Atualizar a referência sem disparar callback na sincronização inicial
+				if (isFirstRender.current) {
+					lastReportedImageRef.current = normalizedSrc;
+					isFirstRender.current = false;
+				}
+			}
 		}, [imageSrcProp]);
 
-		async function loadImageFromProps() {
-			if (imageSrcProp) {
-				const result = await parseToBase64(imageSrcProp);
-				const newState: IState = result.state;
-				newState.originImageSrc = imageSrcProp;
-				newState.arrayCopiedImages = [
-					{
-						lastImage: result.imageUri,
-						width: newState.maxWidth,
-						height: newState.maxHeight,
-						quality: newState.quality,
-						format: newState.format,
-						originImageSrc: imageSrcProp,
-					},
-				];
-				setImageSrc(result.imageUri);
-				setState(newState);
-				setLoadImage(true);
-			} else {
-				const newState = { ...state };
-				newState.originImageSrc = null;
-				newState.arrayCopiedImages = [];
-				setLoadImage(false);
-				setImageSrc(null);
-				setState(newState);
-			}
-		}
+		// Handler quando a imagem muda no editor
+		const handleImageChanged = useCallback((newDataUri: string) => {
+			const newValue = newDataUri || undefined;
 
-		useEffect(() => {
-			imageChanged(imageSrc);
-		}, [imageSrc]);
-
-		function processConfig() {
-			const dataConf = { ...configuration, ...config };
-			setConfiguration(dataConf);
-		}
-
-		function onUpload(event: any) {
-			event.preventDefault();
-			imagePicker?.current?.click();
-		}
-
-		function handleFileSelect(this: typeof handleFileSelect, event: any) {
-			const files = event.target?.files;
-			if (files) {
-				const file = files[0];
-				imageName.current = file.name.split('.')[0];
-				fileType.current = file.type;
-				if (!fileType.current.includes('image')) return;
-				urlImage.current = `data:${file.type};base64,`;
-				if (file) {
-					const reader = new FileReader();
-					reader.onload = handleReaderLoaded.bind(this);
-					reader.readAsBinaryString(file);
-				}
-			}
-		}
-
-		async function handleReaderLoaded(readerEvt: any) {
-			const binaryString = readerEvt.target.result;
-			const base64textString = btoa(binaryString);
-			let newState = { ...state };
-			const newImageSrc = urlImage.current + base64textString;
-			newState.originImageSrc = urlImage.current + base64textString;
-			newState.format = fileType.current.split('image/')[1];
-			if (configuration.compressInitial) {
-				newState = {
-					...newState,
-					quality: Math.min(configuration.compressInitial || 92, 100),
-					maintainAspectRatio: true,
-					format: newState.format ? newState.format : 'png',
-				};
-				const result = await convertImageUsingCanvas(newState.originImageSrc as string, false, newState, {
-					getDimFromImage: true,
-				});
-				setState(result.state);
-				setImageSrc(result.imageUri);
-				setLoadImage(true);
-				if (configuration.onChangeImage) {
-					configuration.onChangeImage(result.imageUri);
-				}
-			} else {
-				const img = document.createElement('img');
-				img.src = newImageSrc;
-				img.onload = () => {
-					newState.arrayCopiedImages = [];
-					newState.maxHeight = img.height;
-					newState.maxWidth = img.width;
-					newState.format = fileType.current.split('image/')[1];
-					newState.arrayCopiedImages.push({
-						lastImage: newImageSrc,
-						width: img.width,
-						height: img.height,
-						quality: newState.quality,
-						format: fileType.current.split('image/')[1],
-						originImageSrc: newState.originImageSrc as string,
-					});
-					setState(newState);
-					setImageSrc(newImageSrc);
-					setLoadImage(true);
-					if (configuration.onChangeImage) {
-						configuration.onChangeImage(newImageSrc);
-					}
-				};
-			}
-		}
-
-		const sizeImage = useMemo(() => {
-			if (imageSrc && imageSrc.length) {
-				return Math.ceil(((3 / 4) * imageSrc.length) / 1024);
-			} else {
-				return '';
-			}
-		}, [imageSrc]);
-
-		function parseToBase64(imageUrl: string): Promise<{ imageUri: string; state: IState }> {
-			let newState = { ...state };
-			let type: string;
-
-			// Verifica se a URL é base64
-			if (imageUrl.startsWith('data:image/')) {
-				// Extrai o tipo do formato 'data:image/png;base64,'
-				const matches = imageUrl.match(/data:image\/([a-zA-Z]+);base64,/);
-				if (matches && matches[1]) {
-					type = matches[1];
-				} else {
-					// Se não houver correspondência, define um tipo padrão
-					type = 'png'; // ou qualquer tipo padrão que você preferir
-				}
-			} else {
-				// Trata a URL como um caminho de arquivo
-				const types = imageUrl.split('.');
-				type = types[types.length - 1];
-				if (!['png', 'jpeg', 'webp'].includes(type)) {
-					type = 'png'; // ou qualquer tipo padrão que você preferir
-				}
+			// Só processa se for diferente do valor atual
+			if (imageSrc === newDataUri) {
+				return;
 			}
 
-			newState.format = type;
-			if (config.compressInitial != null) {
-				let quality = 1;
-				if (config.compressInitial >= 0 && config.compressInitial <= 100) {
-					quality = config.compressInitial;
-				}
-				newState.quality = quality;
-			}
+			setImageSrc(newDataUri || null);
+			setLoadImage(!!newDataUri);
 
-			return new Promise((resolve, reject) => {
-				const img = document.createElement('img');
-				img.crossOrigin = 'Anonymous';
-				newState.maxHeight = img.height;
-				newState.maxWidth = img.width;
+			// Usar callback com debounce
+			debouncedOnChange(newValue);
+		}, [imageSrc, debouncedOnChange]);
 
-				img.onload = () => {
-					const canvas = document.createElement('canvas');
-					const ctx: any = canvas.getContext('2d');
-					const ratio = 1.0;
-					canvas.width = img.width * ratio;
-					canvas.height = img.height * ratio;
-					ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-					const dataURI = canvas.toDataURL(`image/${type}`, newState.quality / 100);
-					return resolve({
-						dataUri: dataURI,
-						width: canvas.width,
-						height: canvas.height,
-					});
-				};
-				img.onerror = (e: any) => {
-					return reject(e.message || `Error loading the src = ${imageUrl}`);
-				};
-				img.src = imageUrl;
-			}).then((data: any) => {
-				newState = {
-					...newState,
-					maxHeight: data.height,
-					maxWidth: data.width,
-				};
-				return { imageUri: data.dataUri, state: newState };
-			});
-		}
+		// Calcular tamanho e formato da imagem (apenas para data URIs)
+		const sizeImage = useMemo(() => calculateImageSize(imageSrc), [imageSrc]);
+		const format = useMemo(() => extractFormat(imageSrc), [imageSrc]);
 
-		function onOpenEditPanel() {
-			setShowEditPanel(true);
-		}
+		// Verificar se deve mostrar informações de tamanho
+		const showSizeInfo = loadImage && sizeImage !== null && mergedConfig.showImageSize && isDataUri(imageSrc);
 
-		function onCloseEditPanel(data: any) {
-			setShowEditPanel(false);
-			if (data) {
-				setState(data.state);
-				setImageSrc(data.imageSrc);
-				if (configuration.onChangeImage) {
-					configuration.onChangeImage(data.imageSrc);
-				}
-			}
-		}
-
-		function onRemove() {
-			setImageSrc(null);
-			setLoadImage(false);
-			const newState: IState = {
-				...state,
-				...initialState,
-			};
-			setState(newState);
-			setShowEditPanel(false);
-			if (configuration.onChangeImage) {
-				configuration.onChangeImage(undefined);
-			}
-		}
+		// Estilo do container
+		const containerStyle = useMemo(() => ({
+			width: typeof mergedConfig.width === 'number' ? `${mergedConfig.width}px` : mergedConfig.width,
+			backgroundColor: mergedConfig.imageBackgroundColor ?? (colorScheme === 'dark' ? theme.colors.dark[7] : theme.white),
+		}), [mergedConfig.width, mergedConfig.imageBackgroundColor, colorScheme, theme]);
 
 		return (
-			<div className="ArchbaseImagePickerEditor">
-				{!loadImage && (
-					<div className="place-image">
-						<div
-							className="image-holder"
-							style={{
-								width: configuration.width,
-								height: configuration.height,
-								borderRadius: configuration.borderRadius,
-								aspectRatio: configuration.aspectRatio + '',
-								backgroundColor: config.imageBackgroundColor ?? (colorScheme === 'dark' ? theme.colors.dark[7] : theme.white),
-								border: `${rem(1)} solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-							}}
-						>
-							<Tooltip withinPortal withArrow label={`${t('archbase:Upload a image')}`}>
-								<ActionIcon component="button" color="blue" variant={variant} className="icon-btn image-upload-btn" onClick={onUpload}>
-									<IconCloudUpload color="purple" />
-								</ActionIcon>
-							</Tooltip>
-							<input
-								ref={imagePicker}
-								type="file"
-								style={{ display: 'none' }}
-								id={'filePicker-' + uuidFilePicker}
-								onChange={handleFileSelect}
-							/>
-						</div>
-					</div>
-				)}
-				{loadImage && (
-					<div className="place-image">
-						<div
-							className="image-holder-loaded"
-							style={{
-								width: configuration.width,
-								height: configuration.height,
-								borderRadius: configuration.borderRadius,
-								aspectRatio: configuration.aspectRatio + '',
-								background: colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-								border: `${rem(1)} solid ${colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-							}}
-						>
-							<img
-								src={imageSrc as string}
-								alt="image-loaded"
-								style={{
-									height: configuration.height,
-									borderRadius: configuration.borderRadius,
-									objectFit: configuration.objectFit,
-									backgroundColor: config.imageBackgroundColor ?? (colorScheme === 'dark' ? theme.colors.dark[7] : theme.white),
-								}}
-							/>
-							{!configuration.hideEditBtn && (
-								<Fragment>
-									<div className="curtain" onClick={onUpload}>
-										<Tooltip withinPortal withArrow label={`${t('archbase:Upload a image')}`}>
-											<ActionIcon component="button"  color="blue" variant={variant}>
-												<IconCloudUpload color="white" />
-											</ActionIcon>
-										</Tooltip>
-									</div>
-									<input
-										ref={imagePicker}
-										type="file"
-										style={{ display: 'none' }}
-										id={'filePicker-' + uuidFilePicker}
-										onChange={handleFileSelect}
-									/>
-								</Fragment>
-							)}
-						</div>
-						{sizeImage && configuration.showImageSize && (
-							<div
-								className="caption image-caption"
-								style={{
-									color: sizeImage > 120 ? '#f44336' : 'unset',
-									fontWeight: sizeImage > 120 ? '500' : 'unset',
-								}}
-							>
-								<Text>{`${t('archbase:size')}: ${sizeImage}Kb ${state.format}`}</Text>
-							</div>
-						)}
+			<div className="ArchbaseImagePickerEditor" style={containerStyle}>
+				{/* Componente react-image-picker-editor */}
+				<ReactImagePickerEditor
+					config={pickerConfig}
+					imageSrcProp={imageSrc || ''}
+					imageChanged={handleImageChanged}
+					color={color}
+				/>
 
-						<div
-							style={{
-								flexDirection: 'row',
-								boxSizing: 'border-box',
-								display: 'flex',
-								placeContent: 'flex-start',
-								alignItems: 'flex-start',
-							}}
-							className="editing-bar-btn"
-						>
-							{!configuration.hideAddBtn && (
-								<Tooltip withinPortal withArrow label={`${t('archbase:Upload a image')}`}>
-									<ActionIcon id="upload-img" color="blue" variant={variant} onClick={onUpload}>
-										<IconCloudUpload color="purple" />
-									</ActionIcon>
-								</Tooltip>
-							)}
-
-							{!configuration.hideEditBtn && (
-								<Tooltip withinPortal withArrow label={`${t('archbase:Open the editor panel')}`}>
-									<ActionIcon id="edit-img" color="blue" variant={variant} onClick={onOpenEditPanel}>
-										<IconPhotoEdit color="teal" />
-									</ActionIcon>
-								</Tooltip>
-							)}
-							{!configuration.hideDownloadBtn && (
-								<Tooltip withinPortal withArrow label={`${t('archbase:Download the image')}`}>
-									<ActionIcon
-										component="a"
-										id="download-img"
-										href={imageSrc as string}
-										color="green"
-										download={imageName.current}
-										variant={variant}
-									>
-										<IconCloudDownload color="green" />
-									</ActionIcon>
-								</Tooltip>
-							)}
-							{!configuration.hideDeleteBtn && (
-								<Tooltip withinPortal withArrow label={`${t('archbase:Remove')}`}>
-									<ActionIcon id="delete-img" color="red" variant={variant} onClick={() => onRemove()}>
-										<IconTrash color="#C91A25" />
-									</ActionIcon>
-								</Tooltip>
-							)}
-						</div>
+				{/* Informação de tamanho (quando habilitado, imagem carregada e é data URI) */}
+				{showSizeInfo && (
+					<div
+						className="caption image-caption"
+						style={{
+							color: sizeImage! > 120 ? '#f44336' : 'unset',
+							fontWeight: sizeImage! > 120 ? '500' : 'unset',
+							marginTop: '4px',
+							textAlign: 'center',
+						}}
+					>
+						<Text size="sm">{`${t('archbase:size')}: ${sizeImage}Kb ${format}`}</Text>
 					</div>
-				)}
-				{showEditPanel && (
-					<ArchbaseEditImage
-						saveUpdates={onCloseEditPanel}
-						color={color}
-						image={imageSrc}
-						initialState={state}
-					></ArchbaseEditImage>
 				)}
 			</div>
 		);
 	},
 );
+
+ArchbaseImagePickerEditor.displayName = 'ArchbaseImagePickerEditor';

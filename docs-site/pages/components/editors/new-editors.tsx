@@ -1,4 +1,5 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Shell } from '../../../components/Shell';
 import { PageHeader } from '../../../components/PageHeader';
 import { DocsTabs } from '../../../components/DocsTabs';
@@ -12,12 +13,36 @@ import {
 } from '../../../data/components-data';
 import docgen from '../../../docgen.json';
 import { STYLES_API_DATA } from '../../../styles-api';
-import ArchbaseTagInputDocs from '../../../content/components/editors/archbase-tag-input.mdx';
-import ArchbasePhoneInputDocs from '../../../content/components/editors/archbase-phone-input.mdx';
-import ArchbaseMultiEmailDocs from '../../../content/components/editors/archbase-multi-email.mdx';
-import ArchbaseSignaturePadDocs from '../../../content/components/editors/archbase-signature-pad.mdx';
-import ArchbaseMentionInputDocs from '../../../content/components/editors/archbase-mention-input.mdx';
-import ArchbaseDualListboxDocs from '../../../content/components/editors/archbase-dual-listbox.mdx';
+
+const ArchbaseTagInputDocs = dynamic(() => import('../../../content/components/editors/archbase-tag-input.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbasePhoneInputDocs = dynamic(() => import('../../../content/components/editors/archbase-phone-input.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseMultiEmailDocs = dynamic(() => import('../../../content/components/editors/archbase-multi-email.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseSignaturePadDocs = dynamic(() => import('../../../content/components/editors/archbase-signature-pad.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseMentionInputDocs = dynamic(() => import('../../../content/components/editors/archbase-mention-input.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseDualListboxDocs = dynamic(() => import('../../../content/components/editors/archbase-dual-listbox.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
 
 export default function NewEditorsPage() {
   return (

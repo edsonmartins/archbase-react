@@ -31,18 +31,21 @@ export function ArchbaseActionSheetUsage() {
         onClose={() => setOpened(false)}
         title="Compartilhar"
         description="Escolha como deseja compartilhar este item"
-        actions={[
+        items={[
           {
+            key: 'share',
             label: 'Compartilhar',
             icon: <IconShare size={20} />,
             onClick: () => handleAction('share'),
           },
           {
+            key: 'download',
             label: 'Download',
             icon: <IconDownload size={20} />,
             onClick: () => handleAction('download'),
           },
           {
+            key: 'bookmark',
             label: 'Salvar nos favoritos',
             icon: <IconBookmark size={20} />,
             onClick: () => handleAction('bookmark'),
@@ -54,13 +57,15 @@ export function ArchbaseActionSheetUsage() {
         opened={openedDestructive}
         onClose={() => setOpenedDestructive(false)}
         title="Editar item"
-        actions={[
+        items={[
           {
+            key: 'edit',
             label: 'Editar',
             icon: <IconEdit size={20} />,
             onClick: () => handleAction('edit'),
           },
           {
+            key: 'delete',
             label: 'Excluir permanentemente',
             icon: <IconTrash size={20} />,
             color: 'red',

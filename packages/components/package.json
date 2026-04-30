@@ -1,6 +1,6 @@
 {
   "name": "@archbase/components",
-  "version": "3.0.70",
+  "version": "3.0.73",
   "description": "UI Components for Archbase React v3 - Form editors, data visualization, and business components",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -130,7 +130,9 @@
     "mantine-contextmenu": "^7.14.0",
     "jsbarcode": "^3.11.6",
     "yet-another-react-lightbox": "^3.21.0",
-    "react-photo-album": "^3.0.0"
+    "react-photo-album": "^3.0.0",
+    "react-image-picker-editor": "^1.1.1",
+    "react-pro-sidebar": "^1.1.0"
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",

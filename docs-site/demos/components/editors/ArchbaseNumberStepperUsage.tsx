@@ -12,7 +12,7 @@ export function ArchbaseNumberStepperUsage() {
         <Text size="sm" mb="xs">Quantidade:</Text>
         <ArchbaseNumberStepper
           value={quantity}
-          onChangeValue={setQuantity}
+          onChange={(value) => setQuantity(Number(value))}
           min={1}
           max={100}
           step={1}
@@ -24,10 +24,10 @@ export function ArchbaseNumberStepperUsage() {
         <Text size="sm" mb="xs">Preço (com decimais):</Text>
         <ArchbaseNumberStepper
           value={price}
-          onChangeValue={setPrice}
+          onChange={(value) => setPrice(Number(value))}
           min={0}
           step={0.5}
-          precision={2}
+          decimalScale={2}
           prefix="R$ "
           label="Preço"
         />

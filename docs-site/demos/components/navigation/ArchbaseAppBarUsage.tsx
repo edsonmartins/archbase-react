@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stack, Card, Text, Box, Button } from '@mantine/core';
+import { Stack, Card, Text, Box, Button, Image } from '@mantine/core';
 import { IconBell, IconSearch, IconSettings, IconUser } from '@tabler/icons-react';
 import { ArchbaseAppBar } from '@archbase/components';
 
@@ -15,13 +15,13 @@ export function ArchbaseAppBarUsage() {
       <Card withBorder p={0} style={{ overflow: 'hidden' }}>
         <ArchbaseAppBar
           title="Meu Aplicativo"
-          logoSrc="/logo.png"
+          leftSection={<Image src="/logo.png" w={32} h={32} alt="Logo" />}
           onBurgerClick={() => setMenuOpened(!menuOpened)}
           burgerOpened={menuOpened}
           actions={[
-            { icon: <IconSearch size={20} />, onClick: () => console.log('search'), tooltip: 'Buscar' },
-            { icon: <IconBell size={20} />, onClick: () => console.log('notifications'), badge: 5, tooltip: 'Notificações' },
-            { icon: <IconUser size={20} />, onClick: () => console.log('profile'), tooltip: 'Perfil' },
+            { key: 'search', label: 'Buscar', icon: <IconSearch size={20} />, onClick: () => console.log('search') },
+            { key: 'notifications', label: 'Notificações', icon: <IconBell size={20} />, onClick: () => console.log('notifications') },
+            { key: 'profile', label: 'Perfil', icon: <IconUser size={20} />, onClick: () => console.log('profile') },
           ]}
         />
         <Box p="md" h={100}>
@@ -33,9 +33,10 @@ export function ArchbaseAppBarUsage() {
         <ArchbaseAppBar
           title="Dashboard"
           subtitle="Visão geral do sistema"
-          color="blue"
+          backgroundColor="var(--mantine-color-blue-6)"
+          textColor="white"
           actions={[
-            { icon: <IconSettings size={20} />, onClick: () => console.log('settings'), tooltip: 'Configurações' },
+            { key: 'settings', label: 'Configurações', icon: <IconSettings size={20} />, onClick: () => console.log('settings') },
           ]}
           rightSection={
             <Button variant="white" size="xs">
@@ -51,14 +52,13 @@ export function ArchbaseAppBarUsage() {
       <Card withBorder p={0} style={{ overflow: 'hidden' }}>
         <ArchbaseAppBar
           title="App Transparente"
-          variant="transparent"
           withBorder
           actions={[
-            { icon: <IconSearch size={20} />, onClick: () => console.log('search') },
+            { key: 'search', label: 'Buscar', icon: <IconSearch size={20} />, onClick: () => console.log('search') },
           ]}
         />
         <Box p="md" h={100}>
-          <Text size="sm">Variante transparente com borda.</Text>
+          <Text size="sm">AppBar com borda.</Text>
         </Box>
       </Card>
     </Stack>

@@ -93,5 +93,6 @@ export { ArchbasePhotoAlbum } from './ArchbasePhotoAlbum';
 export type {
   ArchbasePhotoAlbumProps,
   ArchbasePhotoAlbumPhoto,
+  ArchbasePhotoAlbumLayout,
 } from './ArchbasePhotoAlbum';
 

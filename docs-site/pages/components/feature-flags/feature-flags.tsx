@@ -1,11 +1,16 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Shell } from '../../../components/Shell';
 import { PageHeader } from '../../../components/PageHeader';
 import { DocsTabs } from '../../../components/DocsTabs';
 import { ARCHBASE_FEATURE_FLAGS_DATA } from '../../../data/components-data';
 import docgen from '../../../docgen.json';
 import { STYLES_API_DATA } from '../../../styles-api';
-import ArchbaseFeatureFlagsDocs from '../../../content/components/feature-flags/archbase-feature-flags.mdx';
+
+const ArchbaseFeatureFlagsDocs = dynamic(() => import('../../../content/components/feature-flags/archbase-feature-flags.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
 
 export default function FeatureFlagsPage() {
   return (

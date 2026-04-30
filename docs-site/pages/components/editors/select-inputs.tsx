@@ -1,4 +1,5 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Shell } from '../../../components/Shell';
 import { PageHeader } from '../../../components/PageHeader';
 import { DocsTabs } from '../../../components/DocsTabs';
@@ -11,12 +12,36 @@ import {
 } from '../../../data/components-data';
 import docgen from '../../../docgen.json';
 import { STYLES_API_DATA } from '../../../styles-api';
-import ArchbaseSelectDocs from '../../../content/components/editors/archbase-select.mdx';
-import ArchbaseAsyncSelectDocs from '../../../content/components/editors/archbase-async-select.mdx';
-import ArchbaseAsyncMultiSelectDocs from '../../../content/components/editors/archbase-async-multi-select.mdx';
-import ArchbaseTreeSelectDocs from '../../../content/components/editors/archbase-tree-select.mdx';
-import ArchbaseLookupSelectDocs from '../../../content/components/editors/archbase-lookup-select.mdx';
-import ArchbaseRadioGroupDocs from '../../../content/components/editors/archbase-radio-group.mdx';
+
+const ArchbaseSelectDocs = dynamic(() => import('../../../content/components/editors/archbase-select.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseAsyncSelectDocs = dynamic(() => import('../../../content/components/editors/archbase-async-select.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseAsyncMultiSelectDocs = dynamic(() => import('../../../content/components/editors/archbase-async-multi-select.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseTreeSelectDocs = dynamic(() => import('../../../content/components/editors/archbase-tree-select.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseLookupSelectDocs = dynamic(() => import('../../../content/components/editors/archbase-lookup-select.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseRadioGroupDocs = dynamic(() => import('../../../content/components/editors/archbase-radio-group.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
 
 export default function SelectInputsPage() {
   return (

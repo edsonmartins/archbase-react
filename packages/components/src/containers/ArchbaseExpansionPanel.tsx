@@ -102,20 +102,29 @@ export function ArchbaseExpansionPanel({
     </Accordion.Control>
   );
 
-  // Handle props based on multiple mode
-  const accordionProps = multiple
-    ? {
-        multiple: true as const,
-        defaultValue: defaultValue as string[] | undefined,
-        value: value as string[] | undefined,
-        onChange: onChange as ((value: string[]) => void) | undefined,
-      }
-    : {
-        multiple: false as const,
-        defaultValue: defaultValue as string | undefined,
-        value: value as string | null | undefined,
-        onChange: onChange as ((value: string | null) => void) | undefined,
-      };
+  // Render accordion based on multiple mode
+  if (multiple) {
+    return (
+      <Accordion
+        multiple
+        variant={variant}
+        chevronSize={chevronSize}
+        chevronPosition={chevronPosition}
+        transitionDuration={transitionDuration}
+        defaultValue={defaultValue as string[] | undefined}
+        value={value as string[] | undefined}
+        onChange={onChange as ((value: string[]) => void) | undefined}
+        {...mantineProps}
+      >
+        {panels.map((panel) => (
+          <Accordion.Item key={panel.id} value={panel.id}>
+            {renderControl(panel)}
+            <Accordion.Panel>{panel.content}</Accordion.Panel>
+          </Accordion.Item>
+        ))}
+      </Accordion>
+    );
+  }
 
   return (
     <Accordion
@@ -123,7 +132,9 @@ export function ArchbaseExpansionPanel({
       chevronSize={chevronSize}
       chevronPosition={chevronPosition}
       transitionDuration={transitionDuration}
-      {...accordionProps}
+      defaultValue={defaultValue as string | undefined}
+      value={value as string | null | undefined}
+      onChange={onChange as ((value: string | null) => void) | undefined}
       {...mantineProps}
     >
       {panels.map((panel) => (
@@ -187,7 +198,7 @@ export function ArchbaseExpansionPanelSingle({
     <ArchbaseExpansionPanel
       multiple={false}
       value={openPanel}
-      onChange={onOpenPanelChange}
+      onChange={onOpenPanelChange as ((value: string | string[] | null) => void) | undefined}
       defaultValue={defaultOpenPanel}
       {...props}
     />

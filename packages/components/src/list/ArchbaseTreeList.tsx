@@ -412,7 +412,7 @@ function ArchbaseTreeListInner<T extends object, ID>(
   );
 }
 
-export const ArchbaseTreeList = forwardRef(ArchbaseTreeListInner) as <
+export const ArchbaseTreeList = forwardRef(ArchbaseTreeListInner) as unknown as <
   T extends object = any,
   ID = string
 >(

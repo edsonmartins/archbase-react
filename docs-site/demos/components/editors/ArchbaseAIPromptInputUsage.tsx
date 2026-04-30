@@ -39,13 +39,13 @@ export function ArchbaseAIPromptInputUsage() {
           onSubmit={handleSubmit}
           loading={isLoading}
           suggestions={[
-            'Explique o conceito de...',
-            'Como faço para...',
-            'Qual a diferença entre...',
-            'Resuma o seguinte texto...',
+            { id: '1', text: 'Explique o conceito de...' },
+            { id: '2', text: 'Como faço para...' },
+            { id: '3', text: 'Qual a diferença entre...' },
+            { id: '4', text: 'Resuma o seguinte texto...' },
           ]}
-          showHistory
-          maxHistoryItems={10}
+          enableHistory
+          history={messages}
         />
       </Card>
 
@@ -54,8 +54,8 @@ export function ArchbaseAIPromptInputUsage() {
         <ArchbaseAIPromptInput
           placeholder="Pergunte algo..."
           onSubmit={(p) => console.log('Prompt:', p)}
-          compact
-          showVoiceInput
+          size="sm"
+          enableVoice
         />
       </Card>
     </Stack>

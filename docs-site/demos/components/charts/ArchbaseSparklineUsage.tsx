@@ -16,7 +16,7 @@ export function ArchbaseSparklineUsage() {
             label="Vendas"
             showValue
             showTrend
-            trendColors
+            autoTrendColors
             height={40}
           />
         </Card>
@@ -38,7 +38,7 @@ export function ArchbaseSparklineUsage() {
             label="Conversão (%)"
             showValue
             showTrend
-            trendColors
+            autoTrendColors
             valueFormat={(v) => `${v.toFixed(1)}%`}
             height={40}
           />
