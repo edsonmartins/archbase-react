@@ -10,3 +10,5 @@ export * from './utils';
 export * from './modals';
 // Exportar types
 export * from './types';
+// Exportar excel export
+export * from './export';

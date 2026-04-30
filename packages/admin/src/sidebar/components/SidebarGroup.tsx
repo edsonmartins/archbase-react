@@ -104,7 +104,7 @@ export function SidebarGroup({
 			</UnstyledButton>
 
 			{/* Conteúdo colapsável */}
-			<Collapse in={expanded}>
+			<Collapse expanded={expanded}>
 				<Box mt={4}>
 					{children}
 				</Box>

@@ -1,0 +1,92 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseTagInput` é um componente de entrada de tags com suporte a separadores, limite de tags e integração com DataSource.
+
+<Demo data={demos.tagInputUsage} />
+
+## Separadores
+
+Por padrão, pressionar Enter adiciona uma tag. Você pode configurar separadores adicionais:
+
+```tsx
+// Separar por vírgula e Enter
+<ArchbaseTagInput
+  label="Tags"
+  separators={[',', 'Enter']}
+/>
+
+// Separar por ponto-e-vírgula
+<ArchbaseTagInput
+  label="Tags"
+  delimiter=";"
+/>
+```
+
+## Limite de Tags
+
+```tsx
+<ArchbaseTagInput
+  label="Tags (máximo 5)"
+  maxTags={5}
+/>
+```
+
+## Duplicatas
+
+```tsx
+// Permitir duplicatas
+<ArchbaseTagInput
+  label="Tags"
+  allowDuplicates
+/>
+
+// Não permitir duplicatas (padrão)
+<ArchbaseTagInput
+  label="Tags"
+  allowDuplicates={false}
+/>
+```
+
+## Estados
+
+```tsx
+// Desabilitado
+<ArchbaseTagInput label="Tags" disabled />
+
+// Somente leitura
+<ArchbaseTagInput label="Tags" readOnly value={['React', 'Vue']} />
+
+// Com erro
+<ArchbaseTagInput label="Tags" error="Campo obrigatório" />
+```
+
+## Com DataSource
+
+```tsx
+<ArchbaseTagInput
+  dataSource={dataSource}
+  dataField="tags"
+  label="Tags"
+  separators={[',', 'Enter']}
+  maxTags={10}
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| value | `string[]` | `[]` | Lista de tags |
+| onChangeValue | `(value: string[]) => void` | - | Callback ao alterar tags |
+| label | `string` | - | Rótulo do campo |
+| delimiter | `string` | `','` | Delimitador para separação |
+| separators | `string[]` | `['Enter']` | Teclas que adicionam uma tag |
+| maxTags | `number` | - | Número máximo de tags |
+| allowDuplicates | `boolean` | `false` | Permitir tags duplicadas |
+| disabled | `boolean` | `false` | Desabilitar o campo |
+| readOnly | `boolean` | `false` | Somente leitura |
+| error | `string` | - | Mensagem de erro |
+| dataSource | `DataSource` | - | DataSource para binding |
+| dataField | `string` | - | Campo do DataSource |

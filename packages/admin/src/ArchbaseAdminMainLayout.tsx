@@ -358,7 +358,7 @@ function ArchbaseAdminMainLayoutContainer({
 	const navbarConfig = isLegacyVariant ? undefined : {
 		width: { base: currentSidebarWidth },
 		breakpoint: 'sm',
-		collapsed: { mobile: isHidden || !showSideBar, desktop: !showSideBar },
+		collapsed: { mobile: isHidden || !showSideBar, desktop: isHidden || !showSideBar },
 	};
 
 	// Estilos condicionais
@@ -419,9 +419,11 @@ function ArchbaseAdminMainLayoutContainer({
 			>
 				{header}
 			</AppShell.Header>
-			<AppShell.Navbar>
-				{!isHidden && showSideBar ? renderSidebar(getSideBarHeight(), false) : undefined}
-			</AppShell.Navbar>
+			{(!isHidden && showSideBar) && (
+				<AppShell.Navbar>
+					{renderSidebar(getSideBarHeight(), false)}
+				</AppShell.Navbar>
+			)}
 			<AppShell.Main bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}>
 				{!isHidden && showCollapsedButton &&
 					buildSetCollapsedButton(

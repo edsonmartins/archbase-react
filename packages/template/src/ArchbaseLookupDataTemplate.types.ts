@@ -13,6 +13,22 @@ import { ArchbaseTemplateSecurityProps } from './ArchbaseTemplateCommonTypes';
 export type LookupSelectionMode = 'single' | 'multiple';
 
 /**
+ * Resultado de uma busca paginada
+ */
+export interface PagedResult<T> {
+	/** Array de registros da página atual */
+	content: T[];
+	/** Total de elementos em todas as páginas */
+	totalElements: number;
+	/** Total de páginas */
+	totalPages: number;
+	/** Página atual (0-indexed) */
+	currentPage?: number;
+	/** Se é a última página */
+	last?: boolean;
+}
+
+/**
  * Labels customizáveis do componente
  */
 export interface LookupLabels {
@@ -83,11 +99,29 @@ export interface ArchbaseLookupDataTemplateProps<T extends object, ID = string>
 
 	/**
 	 * Função para carregar dados (usada quando dataSource não é fornecido)
+	 * Carrega TODOS os registros de uma vez (paginação client-side)
 	 * @param searchValue - Valor de busca
 	 * @param searchFields - Campos para busca
 	 * @returns Promise com array de registros
 	 */
 	loadData?: (searchValue?: string, searchFields?: string) => Promise<T[]>;
+
+	/**
+	 * Função para carregar dados COM PAGINAÇÃO REMOTA (server-side)
+	 * Quando fornecida, tem prioridade sobre loadData.
+	 * A paginação é feita no servidor, carregando apenas uma página por vez.
+	 * @param page - Número da página (0-indexed)
+	 * @param pageSize - Tamanho da página
+	 * @param searchValue - Valor de busca (opcional)
+	 * @param searchFields - Campos para busca (opcional)
+	 * @returns Promise com resultado paginado
+	 */
+	loadDataPaged?: (
+		page: number,
+		pageSize: number,
+		searchValue?: string,
+		searchFields?: string
+	) => Promise<PagedResult<T>>;
 
 	/** Campos para busca (separados por vírgula) */
 	searchFields?: string;

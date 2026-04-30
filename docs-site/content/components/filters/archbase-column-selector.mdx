@@ -1,0 +1,117 @@
+# ArchbaseColumnSelector
+
+Componente para configuracao de visibilidade e ordem de colunas em grids e tabelas.
+Permite ao usuario selecionar quais colunas exibir e reordena-las usando botoes de seta.
+
+## Import
+
+```tsx
+import { ArchbaseColumnSelector } from '@archbase/components';
+import type { ArchbaseColumnItem } from '@archbase/components';
+```
+
+## Uso Basico
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseColumnSelector } from '@archbase/components';
+import type { ArchbaseColumnItem } from '@archbase/components';
+
+const initialColumns: ArchbaseColumnItem[] = [
+  { field: 'nome', label: 'Nome', visible: true },
+  { field: 'email', label: 'E-mail', visible: true },
+  { field: 'telefone', label: 'Telefone', visible: false },
+  { field: 'cidade', label: 'Cidade', visible: true },
+  { field: 'status', label: 'Status', visible: true },
+];
+
+function App() {
+  const [columns, setColumns] = useState(initialColumns);
+
+  return (
+    <ArchbaseColumnSelector
+      columns={columns}
+      onChange={(updated) => setColumns(updated)}
+      label="Configurar Colunas"
+      showSearch
+      showSelectAll
+    />
+  );
+}
+```
+
+## Integracao com ArchbaseDataGrid
+
+O ArchbaseColumnSelector e ideal para controlar a visibilidade de colunas do ArchbaseDataGrid:
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseColumnSelector, ArchbaseDataGrid } from '@archbase/components';
+
+function App() {
+  const [columnConfig, setColumnConfig] = useState([
+    { field: 'nome', label: 'Nome', visible: true, order: 0 },
+    { field: 'email', label: 'E-mail', visible: true, order: 1 },
+    { field: 'telefone', label: 'Telefone', visible: false, order: 2 },
+  ]);
+
+  const visibleColumns = columnConfig
+    .filter((c) => c.visible)
+    .sort((a, b) => a.order - b.order);
+
+  return (
+    <>
+      <ArchbaseColumnSelector
+        columns={columnConfig}
+        onChange={setColumnConfig}
+        label="Colunas"
+      />
+      {/* Use visibleColumns para configurar o DataGrid */}
+    </>
+  );
+}
+```
+
+## Busca e Selecao em Massa
+
+```tsx
+<ArchbaseColumnSelector
+  columns={columns}
+  onChange={setColumns}
+  showSearch          // Campo de busca para filtrar colunas
+  showSelectAll       // Botoes "Selecionar Todos" / "Desmarcar Todos"
+  maxHeight={300}     // Altura maxima da lista com scroll
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `columns` | `ArchbaseColumnItem[]` | **Required** | Lista de colunas |
+| `onChange` | `(columns) => void` | **Required** | Callback quando configuracao muda |
+| `label` | `string` | - | Rotulo no topo |
+| `description` | `string` | - | Descricao abaixo do rotulo |
+| `showSearch` | `boolean` | `true` | Exibir campo de busca |
+| `showSelectAll` | `boolean` | `true` | Exibir botoes de selecao em massa |
+| `maxHeight` | `number` | `400` | Altura maxima da lista |
+| `width` | `number \| string` | - | Largura do componente |
+| `style` | `CSSProperties` | - | Estilos inline |
+| `className` | `string` | - | Classe CSS |
+
+## ArchbaseColumnItem
+
+| Prop | Tipo | Descricao |
+|------|------|-----------|
+| `field` | `string` | Identificador unico da coluna |
+| `label` | `string` | Texto exibido para o usuario |
+| `visible` | `boolean` | Se a coluna esta visivel |
+| `order` | `number` | Ordem de exibicao (opcional, gerado automaticamente) |
+
+## Funcionalidades
+
+- **Checkbox** por coluna para controlar visibilidade
+- **Botoes de seta** para reordenar colunas (mover para cima/baixo)
+- **Campo de busca** para localizar colunas rapidamente
+- **Selecionar/Desmarcar todos** para operacoes em massa
+- **Scroll** com altura maxima configuravel

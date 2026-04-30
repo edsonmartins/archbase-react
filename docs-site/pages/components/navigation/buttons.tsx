@@ -1,5 +1,10 @@
+import dynamic from 'next/dynamic';
 import { Shell } from '../../../components/Shell';
-import Content from '../../../content/components/navigation/buttons.mdx';
+
+const Content = dynamic(() => import('../../../content/components/navigation/buttons.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
 
 export default function Page() {
   return (

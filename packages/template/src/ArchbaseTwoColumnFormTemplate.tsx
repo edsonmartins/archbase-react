@@ -535,7 +535,7 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 					<Box style={{ flex: 1, minHeight: 0, padding: '24px' }}>
 						<LoadingOverlay visible={isLoading || isCanceling || isSaving} opacity={0.3} />
 
-						<Grid gutter="xl" style={{ height: '100%' }}>
+						<Grid gap="xl" style={{ height: '100%' }}>
 							{/* LEFT COLUMN: Media/Visual Content */}
 							{!hideLeftColumn && (
 								<Grid.Col span={{ base: 12, md: leftColumnSpan }}>
@@ -734,7 +734,7 @@ export function FormImageGallery({ images, onAddImage, onRemoveImage, onSetCover
 				</Box>
 			)}
 
-			<Grid gutter="sm">
+			<Grid gap="sm">
 				{thumbnails.map((img) => (
 					<Grid.Col span={4} key={img.id}>
 						<Box

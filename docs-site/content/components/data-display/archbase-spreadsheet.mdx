@@ -1,0 +1,119 @@
+import * as demos from '../../../demos/components/data-display';
+
+# ArchbaseSpreadsheet
+
+Componente de planilha interativa com suporte a fórmulas, formatação e edição, baseado em `@fortune-sheet/react` (MIT License).
+Ideal para entrada de dados tabulares, orçamentos, cotações, importação de dados e cenários onde o usuário precisa de uma experiência similar ao Excel.
+
+## Uso Básico
+
+<Demo data={demos.spreadsheetUsage} />
+
+## Exemplo com DataSource
+
+```tsx
+import { ArchbaseSpreadsheet } from '@archbase/components';
+import { useDataSource } from '@archbase/core';
+
+interface Product {
+  id: string;
+  produto: string;
+  quantidade: number;
+  precoUnitario: number;
+}
+
+function InventorySheet() {
+  const rows: Product[] = [
+    { id: '1', produto: 'Notebook Dell', quantidade: 10, precoUnitario: 4500.00 },
+    { id: '2', produto: 'Monitor LG 27"', quantidade: 15, precoUnitario: 1800.00 },
+    { id: '3', produto: 'Teclado Mecânico', quantidade: 30, precoUnitario: 350.00 },
+    { id: '4', produto: 'Mouse Wireless', quantidade: 50, precoUnitario: 120.00 },
+    { id: '5', produto: 'Webcam HD', quantidade: 20, precoUnitario: 280.00 },
+  ];
+
+  const columns: ArchbaseColumnDef[] = [
+    { field: 'produto', title: 'Produto', width: 200 },
+    { field: 'quantidade', title: 'Quantidade', width: 120 },
+    { field: 'precoUnitario', title: 'Preço Unitário', width: 150 },
+  ];
+
+  const dataSource = useDataSource({ records: rows, idField: 'id' });
+
+  return (
+    <ArchbaseSpreadsheet
+      dataSource={dataSource}
+      columns={columns}
+      editable
+      showToolbar
+      showFormulaBar
+      height={400}
+      locale="pt-BR"
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `DataSource` | - | DataSource que fornece as linhas de dados (obrigatório) |
+| `columns` | `ArchbaseColumnDef[]` | - | Definição das colunas da planilha (obrigatório) |
+| `editable` | `boolean` | `true` | Permite edição das células |
+| `showToolbar` | `boolean` | `true` | Exibe a barra de ferramentas de formatação |
+| `showFormulaBar` | `boolean` | `false` | Exibe a barra de fórmulas |
+| `height` | `number \| string` | `400` | Altura da planilha |
+| `locale` | `string` | `'pt-BR'` | Localização para formatação de números e datas |
+
+### ArchbaseColumnDef
+
+```typescript
+interface ArchbaseColumnDef {
+  field: string;        // Nome do campo no registro
+  title: string;        // Título exibido no cabeçalho
+  width?: number;       // Largura da coluna em pixels
+  type?: 'text' | 'number' | 'date' | 'boolean';  // Tipo do dado
+  format?: string;      // Formato de exibição (ex: '#,##0.00')
+  editable?: boolean;   // Se a coluna é editável
+}
+```
+
+## Integração com DataSource
+
+O `ArchbaseSpreadsheet` mapeia os registros do DataSource para linhas da planilha, usando as definições de colunas para determinar quais campos exibir:
+
+```tsx
+// Registro no DataSource:
+{ id: '1', produto: 'Notebook Dell', quantidade: 10, precoUnitario: 4500.00 }
+
+// Colunas mapeiam os campos para colunas da planilha:
+const columns = [
+  { field: 'produto', title: 'Produto', width: 200 },
+  { field: 'quantidade', title: 'Quantidade', width: 120 },
+  { field: 'precoUnitario', title: 'Preço Unitário', width: 150 },
+];
+
+<ArchbaseSpreadsheet
+  dataSource={dataSource}
+  columns={columns}
+/>
+```
+
+Quando o usuário edita uma célula, o valor correspondente no DataSource é atualizado automaticamente.
+
+## Recursos
+
+- **Fórmulas**: Suporte a fórmulas como SUM, AVERAGE, COUNT, IF, etc.
+- **Formatação**: Negrito, itálico, cores, bordas, alinhamento
+- **Redimensionamento**: Colunas e linhas redimensionáveis
+- **Seleção**: Seleção de células, linhas e colunas
+- **Copiar/Colar**: Suporte a Ctrl+C / Ctrl+V
+
+## Licença
+
+Este componente é um wrapper sobre `@fortune-sheet/react`, licenciado sob **MIT License**.
+
+## Referências
+
+- [FortuneSheet documentation](https://github.com/ruilisi/fortune-sheet)
+- [ArchbaseDataGrid](/components/data-display/datagrid) - Grid de dados com mais funcionalidades de DataSource

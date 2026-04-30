@@ -1,4 +1,5 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Shell } from '../../../components/Shell';
 import { PageHeader } from '../../../components/PageHeader';
 import { DocsTabs } from '../../../components/DocsTabs';
@@ -12,12 +13,36 @@ import {
 } from '../../../data/components-data';
 import docgen from '../../../docgen.json';
 import { STYLES_API_DATA } from '../../../styles-api';
-import ArchbaseKeyValueEditorDocs from '../../../content/components/editors/archbase-key-value-editor.mdx';
-import ArchbaseLookupEditDocs from '../../../content/components/editors/archbase-lookup-edit.mdx';
-import ArchbaseRatingDocs from '../../../content/components/editors/archbase-rating.mdx';
-import ArchbaseJsonEditDocs from '../../../content/components/editors/archbase-json-edit.mdx';
-import ArchbaseOperationHoursEditorDocs from '../../../content/components/editors/archbase-operation-hours-editor.mdx';
-import ArchbaseCronExpressionEditDocs from '../../../content/components/editors/archbase-cron-expression-edit.mdx';
+
+const ArchbaseKeyValueEditorDocs = dynamic(() => import('../../../content/components/editors/archbase-key-value-editor.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseLookupEditDocs = dynamic(() => import('../../../content/components/editors/archbase-lookup-edit.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseRatingDocs = dynamic(() => import('../../../content/components/editors/archbase-rating.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseJsonEditDocs = dynamic(() => import('../../../content/components/editors/archbase-json-edit.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseOperationHoursEditorDocs = dynamic(() => import('../../../content/components/editors/archbase-operation-hours-editor.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseCronExpressionEditDocs = dynamic(() => import('../../../content/components/editors/archbase-cron-expression-edit.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
 
 export default function SpecializedPage() {
   return (

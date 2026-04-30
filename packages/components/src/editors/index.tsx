@@ -26,6 +26,9 @@ export { ArchbaseChipItem } from './ArchbaseChipItem';
 export type { ArchbaseColorPickerProps } from './ArchbaseColorPicker';
 export { ArchbaseColorPicker } from './ArchbaseColorPicker';
 
+export { ArchbaseDualListbox } from './ArchbaseDualListbox';
+export type { ArchbaseDualListboxProps, ArchbaseDualListboxOption } from './ArchbaseDualListbox';
+
 export type { ArchbaseDatePickerRangeProps } from './ArchbaseDatePickerRange';
 export { ArchbaseDatePickerRange } from './ArchbaseDatePickerRange';
 
@@ -119,3 +122,92 @@ export type { ArchbaseTimeEditProps } from './ArchbaseTimeEdit'
 export { ArchbaseAvatarEdit } from './ArchbaseAvatarEdit'
 
 export type { ArchbaseAvatarEditProps } from './ArchbaseAvatarEdit'
+
+export { ArchbaseTagInput } from './ArchbaseTagInput'
+export type { ArchbaseTagInputProps } from './ArchbaseTagInput'
+
+export { ArchbasePhoneInput } from './ArchbasePhoneInput'
+export type { ArchbasePhoneInputProps } from './ArchbasePhoneInput'
+
+export { ArchbaseMultiEmail } from './ArchbaseMultiEmail'
+export type { ArchbaseMultiEmailProps } from './ArchbaseMultiEmail'
+
+export { ArchbaseMentionInput } from './ArchbaseMentionInput'
+export type { ArchbaseMentionInputProps, ArchbaseMentionConfig } from './ArchbaseMentionInput'
+
+export { ArchbaseSignaturePad } from './ArchbaseSignaturePad'
+export type { ArchbaseSignaturePadProps } from './ArchbaseSignaturePad'
+
+export { ArchbaseBarcodeScanner } from './ArchbaseBarcodeScanner'
+export type { ArchbaseBarcodeScannerProps } from './ArchbaseBarcodeScanner'
+
+export { ArchbaseSpreadsheet } from './ArchbaseSpreadsheet'
+export type { ArchbaseSpreadsheetProps, ArchbaseColumnDef, ArchbaseColumnType } from './ArchbaseSpreadsheet'
+
+export { ArchbaseLightGrid } from './ArchbaseLightGrid'
+export type { ArchbaseLightGridProps, ArchbaseLightGridColumn } from './ArchbaseLightGrid'
+
+export { ArchbaseCurrencyInput } from './ArchbaseCurrencyInput'
+export type { ArchbaseCurrencyInputProps, CurrencyCode } from './ArchbaseCurrencyInput'
+
+export { ArchbaseCpfCnpjInput, validateCPF, validateCNPJ, formatCPF, formatCNPJ, detectDocumentType } from './ArchbaseCpfCnpjInput'
+export type { ArchbaseCpfCnpjInputProps, DocumentType } from './ArchbaseCpfCnpjInput'
+
+export { ArchbaseCepInput, formatCep } from './ArchbaseCepInput'
+export type { ArchbaseCepInputProps, CepAddress } from './ArchbaseCepInput'
+
+export { ArchbaseOTPInput } from './ArchbaseOTPInput'
+export type { ArchbaseOTPInputProps } from './ArchbaseOTPInput'
+
+export { ArchbaseRangeSlider } from './ArchbaseRangeSlider'
+export type { ArchbaseRangeSliderProps, RangeValue } from './ArchbaseRangeSlider'
+
+export { ArchbaseInPlaceEditor } from './ArchbaseInPlaceEditor'
+export type { ArchbaseInPlaceEditorProps, InPlaceEditorType, SelectOption } from './ArchbaseInPlaceEditor'
+
+export { ArchbaseNumberStepper } from './ArchbaseNumberStepper'
+export type { ArchbaseNumberStepperProps } from './ArchbaseNumberStepper'
+
+export { ArchbaseAIPromptInput, useArchbasePromptHistory } from './ArchbaseAIPromptInput'
+export type {
+  ArchbaseAIPromptInputProps,
+  ArchbaseAIPromptSuggestion,
+  UseArchbasePromptHistoryOptions,
+  UseArchbasePromptHistoryReturn,
+} from './ArchbaseAIPromptInput'
+
+export { ArchbaseColorGradientPicker, ArchbaseFlatColorPicker } from './ArchbaseColorGradientPicker'
+export type {
+  ArchbaseColorGradientPickerProps,
+  ArchbaseFlatColorPickerProps,
+  ArchbaseColorFormat,
+} from './ArchbaseColorGradientPicker'
+
+export {
+  useArchbaseSpeechToText,
+  ArchbaseSpeechToTextButton,
+  ArchbaseSpeechToTextInput,
+  ArchbaseSpeechToTextArea,
+} from './ArchbaseSpeechToTextInput'
+export type {
+  UseArchbaseSpeechToTextOptions,
+  UseArchbaseSpeechToTextReturn,
+  ArchbaseSpeechToTextButtonProps,
+  ArchbaseSpeechToTextInputProps,
+  ArchbaseSpeechToTextAreaProps,
+} from './ArchbaseSpeechToTextInput'
+
+export {
+  ArchbaseMultiViewCalendar,
+  ArchbaseMultiViewCalendarWithPresets,
+  ArchbaseDateRangeQuickPicker,
+  defaultDatePresets,
+  createDatePreset,
+} from './ArchbaseMultiViewCalendar'
+export type {
+  ArchbaseMultiViewCalendarProps,
+  ArchbaseMultiViewCalendarWithPresetsProps,
+  ArchbaseDateRangeQuickPickerProps,
+  DateRangePreset,
+} from './ArchbaseMultiViewCalendar'
+

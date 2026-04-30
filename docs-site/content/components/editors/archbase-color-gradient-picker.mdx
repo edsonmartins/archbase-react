@@ -1,0 +1,174 @@
+# ArchbaseColorGradientPicker
+
+Seletor de cores avançado com suporte a paleta de swatches, eyedropper (conta-gotas), canal alpha e entrada hexadecimal. Inclui também o ArchbaseFlatColorPicker para seleção simplificada.
+
+## ArchbaseColorGradientPicker
+
+Seletor completo com todas as funcionalidades.
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseColorGradientPicker } from '@archbase/components';
+
+function Demo() {
+  const [color, setColor] = useState('#339af0');
+
+  return (
+    <ArchbaseColorGradientPicker
+      value={color}
+      onChange={setColor}
+      swatches={[
+        '#fa5252', '#e64980', '#be4bdb', '#7950f2',
+        '#4c6ef5', '#228be6', '#15aabf', '#12b886',
+      ]}
+      showEyeDropper
+      showAlpha
+    />
+  );
+}
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `value` | `string` | - | Cor atual em formato hex |
+| `onChange` | `(color: string) => void` | - | Callback ao mudar cor |
+| `swatches` | `string[]` | - | Paleta de cores pré-definidas |
+| `showEyeDropper` | `boolean` | `false` | Exibe botão eyedropper |
+| `showAlpha` | `boolean` | `false` | Permite ajuste de transparência |
+| `format` | `'hex' \| 'rgb' \| 'hsl'` | `'hex'` | Formato de saída |
+| `label` | `string` | - | Label do campo |
+| `disabled` | `boolean` | `false` | Desativa o componente |
+
+## ArchbaseFlatColorPicker
+
+Paleta de cores simples em grid.
+
+```tsx
+import { ArchbaseFlatColorPicker } from '@archbase/components';
+
+function Demo() {
+  const [color, setColor] = useState('#fa5252');
+
+  return (
+    <ArchbaseFlatColorPicker
+      value={color}
+      onChange={setColor}
+      colors={[
+        ['#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5'],
+        ['#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e'],
+        ['#fab005', '#fd7e14', '#868e96', '#495057', '#212529'],
+      ]}
+    />
+  );
+}
+```
+
+### Props FlatColorPicker
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `value` | `string` | - | Cor selecionada |
+| `onChange` | `(color: string) => void` | - | Callback ao selecionar |
+| `colors` | `string[][]` | - | Grid de cores (linhas x colunas) |
+| `allowCustom` | `boolean` | `false` | Permite cor customizada |
+
+## Casos de Uso
+
+### Editor de Tema
+
+```tsx
+function ThemeEditor() {
+  const [theme, setTheme] = useState({
+    primary: '#228be6',
+    secondary: '#12b886',
+    background: '#ffffff',
+  });
+
+  return (
+    <Stack>
+      <ArchbaseColorGradientPicker
+        value={theme.primary}
+        onChange={(c) => setTheme({ ...theme, primary: c })}
+        label="Cor Primária"
+        swatches={brandColors}
+        showEyeDropper
+      />
+      <ArchbaseColorGradientPicker
+        value={theme.secondary}
+        onChange={(c) => setTheme({ ...theme, secondary: c })}
+        label="Cor Secundária"
+        swatches={brandColors}
+      />
+      <ArchbaseColorGradientPicker
+        value={theme.background}
+        onChange={(c) => setTheme({ ...theme, background: c })}
+        label="Fundo"
+        showAlpha
+      />
+    </Stack>
+  );
+}
+```
+
+### Seletor de Categoria
+
+```tsx
+const categoryColors = [
+  ['#fa5252', '#e64980', '#be4bdb'],
+  ['#7950f2', '#4c6ef5', '#228be6'],
+  ['#15aabf', '#12b886', '#40c057'],
+];
+
+<ArchbaseFlatColorPicker
+  value={category.color}
+  onChange={(c) => updateCategory({ ...category, color: c })}
+  colors={categoryColors}
+/>
+```
+
+### Editor de Anotação
+
+```tsx
+<Popover>
+  <Popover.Target>
+    <ActionIcon style={{ backgroundColor: annotationColor }}>
+      <IconPalette />
+    </ActionIcon>
+  </Popover.Target>
+  <Popover.Dropdown>
+    <ArchbaseColorGradientPicker
+      value={annotationColor}
+      onChange={setAnnotationColor}
+      swatches={highlightColors}
+      showEyeDropper
+    />
+  </Popover.Dropdown>
+</Popover>
+```
+
+## Eyedropper (Conta-gotas)
+
+O eyedropper usa a EyeDropper API do navegador para capturar cores da tela.
+
+```tsx
+<ArchbaseColorGradientPicker
+  value={color}
+  onChange={setColor}
+  showEyeDropper
+  onEyeDropperPick={(pickedColor) => {
+    console.log('Cor capturada:', pickedColor);
+  }}
+/>
+```
+
+**Nota**: EyeDropper API tem suporte limitado. Verifique compatibilidade com o navegador.
+
+## Dicas
+
+- Use `swatches` para cores da marca/design system
+- `showAlpha` é útil para overlays e fundos transparentes
+- FlatColorPicker é mais rápido para seleções predefinidas
+- Eyedropper é útil para designers capturarem cores de referência
+- Combine com Popover para uso em toolbars compactas

@@ -1,0 +1,175 @@
+# ArchbaseAIPromptInput
+
+Campo de texto especializado para entrada de prompts de IA. Inclui histórico de prompts, sugestões, entrada por voz e indicador de carregamento.
+
+## Uso Básico
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseAIPromptInput } from '@archbase/components';
+
+function Demo() {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = (prompt: string) => {
+    setLoading(true);
+    // Enviar para API de IA
+    sendToAI(prompt).finally(() => setLoading(false));
+  };
+
+  return (
+    <ArchbaseAIPromptInput
+      placeholder="Digite sua pergunta..."
+      onSubmit={handleSubmit}
+      loading={loading}
+    />
+  );
+}
+```
+
+## Com Sugestões
+
+```tsx
+<ArchbaseAIPromptInput
+  placeholder="O que você gostaria de saber?"
+  onSubmit={handleSubmit}
+  suggestions={[
+    'Explique o conceito de...',
+    'Como faço para...',
+    'Qual a diferença entre...',
+    'Resuma o seguinte texto...',
+  ]}
+/>
+```
+
+## Com Histórico
+
+```tsx
+<ArchbaseAIPromptInput
+  placeholder="Digite sua pergunta..."
+  onSubmit={handleSubmit}
+  showHistory
+  maxHistoryItems={10}
+/>
+```
+
+## Modo Compacto
+
+```tsx
+<ArchbaseAIPromptInput
+  placeholder="Pergunte algo..."
+  onSubmit={handleSubmit}
+  compact
+  showVoiceInput
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `placeholder` | `string` | `'Digite seu prompt...'` | Placeholder do campo |
+| `onSubmit` | `(prompt: string) => void` | - | Callback ao enviar (obrigatório) |
+| `loading` | `boolean` | `false` | Estado de carregamento |
+| `suggestions` | `string[]` | - | Lista de sugestões de prompt |
+| `showHistory` | `boolean` | `false` | Exibe histórico de prompts |
+| `maxHistoryItems` | `number` | `5` | Máximo de itens no histórico |
+| `showVoiceInput` | `boolean` | `false` | Habilita entrada por voz |
+| `compact` | `boolean` | `false` | Modo compacto (uma linha) |
+| `disabled` | `boolean` | `false` | Desativa o componente |
+| `maxLength` | `number` | - | Limite de caracteres |
+
+## Casos de Uso
+
+### Chatbot
+
+```tsx
+function ChatInterface() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (prompt: string) => {
+    setMessages((prev) => [...prev, { role: 'user', content: prompt }]);
+    setLoading(true);
+
+    const response = await sendToAI(prompt);
+    setMessages((prev) => [...prev, { role: 'assistant', content: response }]);
+    setLoading(false);
+  };
+
+  return (
+    <Stack>
+      <ChatMessages messages={messages} />
+      <ArchbaseAIPromptInput
+        onSubmit={handleSubmit}
+        loading={loading}
+        showHistory
+        suggestions={[
+          'Explique isso de forma simples',
+          'Dê um exemplo prático',
+          'Quais são as alternativas?',
+        ]}
+      />
+    </Stack>
+  );
+}
+```
+
+### Gerador de Código
+
+```tsx
+<ArchbaseAIPromptInput
+  placeholder="Descreva o código que você precisa..."
+  onSubmit={generateCode}
+  loading={generating}
+  suggestions={[
+    'Crie uma função que...',
+    'Refatore este código para...',
+    'Adicione tratamento de erro em...',
+    'Converta para TypeScript...',
+  ]}
+/>
+```
+
+### Assistente de Escrita
+
+```tsx
+<ArchbaseAIPromptInput
+  placeholder="O que você gostaria de escrever?"
+  onSubmit={handleWrite}
+  suggestions={[
+    'Escreva um email formal sobre...',
+    'Crie um resumo executivo de...',
+    'Reescreva este texto de forma mais clara...',
+    'Traduza para inglês...',
+  ]}
+  showVoiceInput
+/>
+```
+
+## Entrada por Voz
+
+Quando `showVoiceInput` está ativo, um botão de microfone aparece. O componente usa a Web Speech API para transcrição.
+
+```tsx
+<ArchbaseAIPromptInput
+  onSubmit={handleSubmit}
+  showVoiceInput
+  onVoiceStart={() => console.log('Gravando...')}
+  onVoiceEnd={(transcript) => console.log('Transcrito:', transcript)}
+/>
+```
+
+## Dicas
+
+- Use sugestões para guiar usuários iniciantes
+- O histórico é armazenado localmente (localStorage)
+- Indique claramente o estado de loading
+- Limite `maxLength` para evitar prompts muito longos
+- Voice input requer HTTPS em produção
+
+## Acessibilidade
+
+- Suporta envio por Enter (Shift+Enter para nova linha)
+- Labels e ARIA attributes apropriados
+- Feedback visual e textual do estado de loading

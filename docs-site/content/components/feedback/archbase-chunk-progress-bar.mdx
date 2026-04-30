@@ -1,0 +1,111 @@
+# ArchbaseChunkProgressBar
+
+Barra de progresso segmentada que divide o progresso em "chunks" (pedaços) discretos. Ideal para visualizar etapas de processos, downloads em partes ou qualquer progresso que tenha divisões naturais.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseChunkProgressBar } from '@archbase/components';
+
+function Demo() {
+  return (
+    <ArchbaseChunkProgressBar
+      value={65}
+      chunkCount={10}
+      label="Progresso do Download"
+      showPercentage
+    />
+  );
+}
+```
+
+## Com Animação
+
+```tsx
+<ArchbaseChunkProgressBar
+  value={75}
+  chunkCount={5}
+  label="Etapas Concluídas"
+  showPercentage
+  animated
+  completedColor="green"
+/>
+```
+
+## Estilo Listrado
+
+```tsx
+<ArchbaseChunkProgressBar
+  value={80}
+  chunkCount={8}
+  label="Upload"
+  showPercentage
+  completedColor="violet"
+  striped
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `value` | `number` | - | Valor atual (0-100) (obrigatório) |
+| `chunkCount` | `number` | `10` | Número de segmentos |
+| `label` | `string` | - | Label exibido acima da barra |
+| `showPercentage` | `boolean` | `false` | Exibe percentual ao lado do label |
+| `completedColor` | `string` | `'blue'` | Cor dos segmentos completos |
+| `incompleteColor` | `string` | `'gray.3'` | Cor dos segmentos incompletos |
+| `animated` | `boolean` | `false` | Ativa animação nos segmentos |
+| `striped` | `boolean` | `false` | Aplica padrão listrado |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Tamanho da barra |
+| `gap` | `number` | `2` | Espaçamento entre chunks |
+
+## Casos de Uso
+
+### Download em Partes
+
+```tsx
+const [downloadProgress, setDownloadProgress] = useState(0);
+
+<ArchbaseChunkProgressBar
+  value={downloadProgress}
+  chunkCount={10}
+  label={`Download - Parte ${Math.ceil(downloadProgress / 10)} de 10`}
+  showPercentage
+  animated
+/>
+```
+
+### Wizard de Etapas
+
+```tsx
+<ArchbaseChunkProgressBar
+  value={(currentStep / totalSteps) * 100}
+  chunkCount={totalSteps}
+  label={`Etapa ${currentStep} de ${totalSteps}`}
+  showPercentage
+  completedColor="teal"
+/>
+```
+
+### Indicador de Força de Senha
+
+```tsx
+<ArchbaseChunkProgressBar
+  value={passwordStrength}
+  chunkCount={4}
+  label="Força da Senha"
+  completedColor={
+    passwordStrength < 25 ? 'red' :
+    passwordStrength < 50 ? 'orange' :
+    passwordStrength < 75 ? 'yellow' : 'green'
+  }
+/>
+```
+
+## Dicas
+
+- Use `chunkCount` igual ao número de etapas naturais do processo
+- `animated` é ideal para processos em andamento
+- Combine cores semânticas (verde para sucesso, vermelho para problemas)
+- O `gap` pode ser ajustado para espaçamento visual diferente

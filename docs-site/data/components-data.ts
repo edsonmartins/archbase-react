@@ -361,6 +361,30 @@ export const ARCHBASE_DOCK_LAYOUT_DATA: PageHeaderData = {
   version: '3.0.44',
 };
 
+export const ARCHBASE_MOSAIC_LAYOUT_DATA: PageHeaderData = {
+  title: 'ArchbaseMosaicLayout',
+  description: 'Layout em mosaico (tiling) com painéis reorganizáveis, redimensionáveis e fecháveis. Baseado em react-mosaic-component.',
+  source: '@archbase/layout/mosaic',
+  package: '@archbase/layout',
+  docsLink: '/layout/advanced-layouts',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/layout',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/layout/src/mosaic',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_RESIZABLE_LAYOUT_DATA: PageHeaderData = {
+  title: 'ArchbaseResizableLayout',
+  description: 'Layout com painéis redimensionáveis via divisórias arrastáveis, persistência de estado e direção configurável. Baseado em react-resizable-panels.',
+  source: '@archbase/layout/resizable',
+  package: '@archbase/layout',
+  docsLink: '/layout/advanced-layouts',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/layout',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/layout/src/resizable',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
 export const ARCHBASE_ONBOARDING_TOUR_DATA: PageHeaderData = {
   title: 'ArchbaseOnboardingTour',
   description: 'Tour interativo de onboarding para introduzir novos usuários às funcionalidades do sistema.',
@@ -397,6 +421,102 @@ export const ARCHBASE_PDF_VIEWER_DATA: PageHeaderData = {
   version: '3.0.44',
 };
 
+export const ARCHBASE_QRCODE_DATA: PageHeaderData = {
+  title: 'ArchbaseQRCode',
+  description: 'Gerador de QR Code customizável com controle de tamanho, cores e nível de correção de erro.',
+  source: '@archbase/components/viewers/ArchbaseQRCode',
+  package: '@archbase/components',
+  docsLink: '/components/data-display/display-tools',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/viewers/ArchbaseQRCode.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_CODE_VIEWER_DATA: PageHeaderData = {
+  title: 'ArchbaseCodeViewer',
+  description: 'Visualizador de código com syntax highlighting, numeração de linhas e botão de copiar.',
+  source: '@archbase/components/viewers/ArchbaseCodeViewer',
+  package: '@archbase/components',
+  docsLink: '/components/data-display/display-tools',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/viewers/ArchbaseCodeViewer.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_DIFF_VIEWER_DATA: PageHeaderData = {
+  title: 'ArchbaseDiffViewer',
+  description: 'Visualizador de diferenças entre dois textos com modo split e unificado.',
+  source: '@archbase/components/viewers/ArchbaseDiffViewer',
+  package: '@archbase/components',
+  docsLink: '/components/data-display/display-tools',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/viewers/ArchbaseDiffViewer.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_JSON_TREE_DATA: PageHeaderData = {
+  title: 'ArchbaseJsonTree',
+  description: 'Visualizador de JSON em formato de árvore expansível para inspeção interativa de dados.',
+  source: '@archbase/components/viewers/ArchbaseJsonTree',
+  package: '@archbase/components',
+  docsLink: '/components/data-display/display-tools',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/viewers/ArchbaseJsonTree.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_XML_VIEWER_DATA: PageHeaderData = {
+  title: 'ArchbaseXmlViewer',
+  description: 'Visualizador de XML com syntax highlighting, formatação automática e numeração de linhas.',
+  source: '@archbase/components/viewers/ArchbaseXmlViewer',
+  package: '@archbase/components',
+  docsLink: '/components/data-display/display-tools',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/viewers/ArchbaseXmlViewer.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_GANTT_DATA: PageHeaderData = {
+  title: 'ArchbaseGantt',
+  description: 'Gráfico de Gantt interativo para cronogramas de projetos com dependências, progresso e integração com DataSource.',
+  source: '@archbase/components/gantt',
+  package: '@archbase/components',
+  docsLink: '/components/data-display/advanced-data',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/gantt',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_RESOURCE_TIMELINE_DATA: PageHeaderData = {
+  title: 'ArchbaseResourceTimeline',
+  description: 'Timeline de recursos para alocação de pessoas, equipamentos e salas, baseada em vis-timeline.',
+  source: '@archbase/components/resource-timeline',
+  package: '@archbase/components',
+  docsLink: '/components/data-display/advanced-data',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/resource-timeline',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_SPREADSHEET_DATA: PageHeaderData = {
+  title: 'ArchbaseSpreadsheet',
+  description: 'Planilha interativa com fórmulas, formatação e edição, baseada em @fortune-sheet/react.',
+  source: '@archbase/components/spreadsheet',
+  package: '@archbase/components',
+  docsLink: '/components/data-display/advanced-data',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/spreadsheet',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
 export const ARCHBASE_FEATURE_FLAGS_DATA: PageHeaderData = {
   title: 'ArchbaseFeatureFlags',
   description: 'Integração com Unleash para feature flags, A/B testing e rollouts graduais de funcionalidades.',
@@ -407,4 +527,348 @@ export const ARCHBASE_FEATURE_FLAGS_DATA: PageHeaderData = {
   sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/feature-flags/src',
   license: 'MIT',
   version: '3.0.44',
+};
+
+export const ARCHBASE_TAG_INPUT_DATA: PageHeaderData = {
+  title: 'ArchbaseTagInput',
+  description: 'Componente de entrada de tags com separadores, limite de tags e integração com DataSource.',
+  source: '@archbase/components/editors/ArchbaseTagInput',
+  package: '@archbase/components',
+  docsLink: '/components/editors/new-editors',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbaseTagInput.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_PHONE_INPUT_DATA: PageHeaderData = {
+  title: 'ArchbasePhoneInput',
+  description: 'Componente para entrada de números de telefone com formatação internacional e seleção de país. Baseado no react-phone-number-input.',
+  source: '@archbase/components/editors/ArchbasePhoneInput',
+  package: '@archbase/components',
+  docsLink: '/components/editors/new-editors',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbasePhoneInput.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_MULTI_EMAIL_DATA: PageHeaderData = {
+  title: 'ArchbaseMultiEmail',
+  description: 'Componente para entrada de múltiplos endereços de e-mail com validação automática. Baseado no react-multi-email.',
+  source: '@archbase/components/editors/ArchbaseMultiEmail',
+  package: '@archbase/components',
+  docsLink: '/components/editors/new-editors',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbaseMultiEmail.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_SIGNATURE_PAD_DATA: PageHeaderData = {
+  title: 'ArchbaseSignaturePad',
+  description: 'Componente para captura de assinaturas digitais com exportação em base64. Baseado no react-signature-canvas.',
+  source: '@archbase/components/editors/ArchbaseSignaturePad',
+  package: '@archbase/components',
+  docsLink: '/components/editors/new-editors',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbaseSignaturePad.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_MENTION_INPUT_DATA: PageHeaderData = {
+  title: 'ArchbaseMentionInput',
+  description: 'Componente de entrada de texto com suporte a menções (@usuários, #tags). Baseado no react-mentions.',
+  source: '@archbase/components/editors/ArchbaseMentionInput',
+  package: '@archbase/components',
+  docsLink: '/components/editors/new-editors',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbaseMentionInput.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_DUAL_LISTBOX_DATA: PageHeaderData = {
+  title: 'ArchbaseDualListbox',
+  description: 'Componente de seleção com duas listas lado a lado para mover itens entre disponíveis e selecionados. Implementado com Mantine puro.',
+  source: '@archbase/components/editors/ArchbaseDualListbox',
+  package: '@archbase/components',
+  docsLink: '/components/editors/new-editors',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbaseDualListbox.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_DOC_VIEWER_DATA: PageHeaderData = {
+  title: 'ArchbaseDocViewer',
+  description: 'Visualizador universal de documentos com suporte a PDF, imagens, Office e texto.',
+  source: '@archbase/components/viewers/ArchbaseDocViewer',
+  package: '@archbase/components',
+  docsLink: '/components/viewers/document-tools',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/viewers/ArchbaseDocViewer.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_PDF_BUILDER_DATA: PageHeaderData = {
+  title: 'ArchbasePdfBuilder',
+  description: 'Designer de templates PDF com editor visual, formulários e geração de PDF. Baseado em @pdfme.',
+  source: '@archbase/components/viewers/ArchbasePdfBuilder',
+  package: '@archbase/components',
+  docsLink: '/components/viewers/document-tools',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/viewers/ArchbasePdfBuilder.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_BARCODE_SCANNER_DATA: PageHeaderData = {
+  title: 'ArchbaseBarcodeScanner',
+  description: 'Scanner de códigos de barras e QR codes usando a API nativa BarcodeDetector.',
+  source: '@archbase/components/editors/ArchbaseBarcodeScanner',
+  package: '@archbase/components',
+  docsLink: '/components/editors/scanner-grid',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbaseBarcodeScanner.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_LIGHT_GRID_DATA: PageHeaderData = {
+  title: 'ArchbaseLightGrid',
+  description: 'Grid leve de alta performance baseado em canvas. Baseado em sheet-happens.',
+  source: '@archbase/components/editors/ArchbaseLightGrid',
+  package: '@archbase/components',
+  docsLink: '/components/editors/scanner-grid',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbaseLightGrid.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_COLUMN_SELECTOR_DATA: PageHeaderData = {
+  title: 'ArchbaseColumnSelector',
+  description: 'Seletor de colunas com checkboxes e reordenação para configurar visibilidade.',
+  source: '@archbase/components/filters/ArchbaseColumnSelector',
+  package: '@archbase/components',
+  docsLink: '/components/filters/column-tools',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/filters/ArchbaseColumnSelector.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_NOTIFICATION_CENTER_DATA: PageHeaderData = {
+  title: 'ArchbaseNotificationCenter',
+  description: 'Centro de notificações com ícone de sino, badge e lista em popover/drawer.',
+  source: '@archbase/components/notification/ArchbaseNotificationCenter',
+  package: '@archbase/components',
+  docsLink: '/components/feedback/notification-center',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/notification/ArchbaseNotificationCenter.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+// =============================================
+// Charts / Gauges
+// =============================================
+
+export const ARCHBASE_SPARKLINE_DATA: PageHeaderData = {
+  title: 'ArchbaseSparkline',
+  description: 'Mini gráfico de linha compacto para exibição de tendências em espaços reduzidos.',
+  source: '@archbase/components/charts/ArchbaseSparkline',
+  package: '@archbase/components',
+  docsLink: '/components/charts/archbase-sparkline',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/charts/ArchbaseSparkline.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_ARC_GAUGE_DATA: PageHeaderData = {
+  title: 'ArchbaseArcGauge',
+  description: 'Gauge circular (arco) para exibição de métricas e indicadores de performance.',
+  source: '@archbase/components/charts/ArchbaseArcGauge',
+  package: '@archbase/components',
+  docsLink: '/components/charts/archbase-arc-gauge',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/charts/ArchbaseArcGauge.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_LINEAR_GAUGE_DATA: PageHeaderData = {
+  title: 'ArchbaseLinearGauge',
+  description: 'Gauge linear (barra) para exibição de métricas com zonas de cor configuráveis.',
+  source: '@archbase/components/charts/ArchbaseLinearGauge',
+  package: '@archbase/components',
+  docsLink: '/components/charts/archbase-linear-gauge',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/charts/ArchbaseLinearGauge.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+// =============================================
+// Feedback
+// =============================================
+
+export const ARCHBASE_CHUNK_PROGRESS_BAR_DATA: PageHeaderData = {
+  title: 'ArchbaseChunkProgressBar',
+  description: 'Barra de progresso segmentada em chunks para visualizar etapas de processos.',
+  source: '@archbase/components/feedback/ArchbaseChunkProgressBar',
+  package: '@archbase/components',
+  docsLink: '/components/feedback/archbase-chunk-progress-bar',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/feedback/ArchbaseChunkProgressBar.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_SKELETON_TEMPLATES_DATA: PageHeaderData = {
+  title: 'Skeleton Templates',
+  description: 'Coleção de skeletons pré-configurados para DataGrid, Form, Card, Kanban e List.',
+  source: '@archbase/components/feedback/skeletons',
+  package: '@archbase/components',
+  docsLink: '/components/feedback/archbase-skeleton-templates',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/feedback/skeletons',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_RIPPLE_DATA: PageHeaderData = {
+  title: 'ArchbaseRipple',
+  description: 'Efeito de ondulação (ripple) estilo Material Design para feedback visual.',
+  source: '@archbase/components/feedback/ArchbaseRipple',
+  package: '@archbase/components',
+  docsLink: '/components/feedback/archbase-ripple',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/feedback/ArchbaseRipple.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+// =============================================
+// Navigation
+// =============================================
+
+export const ARCHBASE_CONTEXT_MENU_DATA: PageHeaderData = {
+  title: 'ArchbaseContextMenu',
+  description: 'Menu de contexto ativado por clique direito com suporte a submenus e ícones.',
+  source: '@archbase/components/navigation/ArchbaseContextMenu',
+  package: '@archbase/components',
+  docsLink: '/components/navigation/archbase-context-menu',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/navigation/ArchbaseContextMenu.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_ACTION_SHEET_DATA: PageHeaderData = {
+  title: 'ArchbaseActionSheet',
+  description: 'Bottom sheet para mobile com opções de ação, adaptativo para desktop.',
+  source: '@archbase/components/navigation/ArchbaseActionSheet',
+  package: '@archbase/components',
+  docsLink: '/components/navigation/archbase-action-sheet',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/navigation/ArchbaseActionSheet.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_BOTTOM_NAVIGATION_DATA: PageHeaderData = {
+  title: 'ArchbaseBottomNavigation',
+  description: 'Barra de navegação fixa na parte inferior para apps mobile/PWA.',
+  source: '@archbase/components/navigation/ArchbaseBottomNavigation',
+  package: '@archbase/components',
+  docsLink: '/components/navigation/archbase-bottom-navigation',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/navigation/ArchbaseBottomNavigation.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_APP_BAR_DATA: PageHeaderData = {
+  title: 'ArchbaseAppBar',
+  description: 'Barra superior de aplicação responsiva com logo, título, ações e menu burger.',
+  source: '@archbase/components/navigation/ArchbaseAppBar',
+  package: '@archbase/components',
+  docsLink: '/components/navigation/archbase-app-bar',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/navigation/ArchbaseAppBar.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+// =============================================
+// Editors (novos)
+// =============================================
+
+export const ARCHBASE_NUMBER_STEPPER_DATA: PageHeaderData = {
+  title: 'ArchbaseNumberStepper',
+  description: 'Campo numérico com botões de incremento/decremento para quantidades e contadores.',
+  source: '@archbase/components/editors/ArchbaseNumberStepper',
+  package: '@archbase/components',
+  docsLink: '/components/editors/archbase-number-stepper',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbaseNumberStepper.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_AI_PROMPT_INPUT_DATA: PageHeaderData = {
+  title: 'ArchbaseAIPromptInput',
+  description: 'Campo de texto especializado para prompts de IA com histórico, sugestões e voz.',
+  source: '@archbase/components/editors/ArchbaseAIPromptInput',
+  package: '@archbase/components',
+  docsLink: '/components/editors/archbase-ai-prompt-input',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbaseAIPromptInput.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_COLOR_GRADIENT_PICKER_DATA: PageHeaderData = {
+  title: 'ArchbaseColorGradientPicker',
+  description: 'Seletor de cores avançado com swatches, eyedropper e suporte a alpha.',
+  source: '@archbase/components/editors/ArchbaseColorGradientPicker',
+  package: '@archbase/components',
+  docsLink: '/components/editors/archbase-color-gradient-picker',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbaseColorGradientPicker.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+// =============================================
+// Media Gallery
+// =============================================
+
+export const ARCHBASE_LIGHTBOX_DATA: PageHeaderData = {
+  title: 'ArchbaseLightbox',
+  description: 'Visualizador de imagens em tela cheia com zoom, navegação por teclado, thumbnails, slideshow e suporte a captions.',
+  source: '@archbase/components/display/ArchbaseLightbox',
+  package: '@archbase/components',
+  docsLink: '/components/data-display/media-gallery',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/display/ArchbaseLightbox.tsx',
+  license: 'MIT',
+  version: '3.0.0',
+};
+
+export const ARCHBASE_PHOTO_ALBUM_DATA: PageHeaderData = {
+  title: 'ArchbasePhotoAlbum',
+  description: 'Galeria de fotos responsiva com três layouts: rows (altura uniforme), columns (estilo Pinterest) e masonry (colunas balanceadas).',
+  source: '@archbase/components/display/ArchbasePhotoAlbum',
+  package: '@archbase/components',
+  docsLink: '/components/data-display/media-gallery',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/display/ArchbasePhotoAlbum.tsx',
+  license: 'MIT',
+  version: '3.0.0',
 };

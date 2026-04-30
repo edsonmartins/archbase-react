@@ -1,0 +1,158 @@
+# ArchbaseAppBar
+
+Barra superior de aplicação responsiva com suporte a logo, título, ações e menu burger para dispositivos móveis. Componente essencial para layouts de aplicação.
+
+## Uso Básico
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseAppBar } from '@archbase/components';
+import { IconBell, IconSearch, IconUser } from '@tabler/icons-react';
+
+function Demo() {
+  const [menuOpened, setMenuOpened] = useState(false);
+
+  return (
+    <ArchbaseAppBar
+      title="Meu Aplicativo"
+      logoSrc="/logo.png"
+      onBurgerClick={() => setMenuOpened(!menuOpened)}
+      burgerOpened={menuOpened}
+      actions={[
+        { icon: <IconSearch size={20} />, onClick: () => {}, tooltip: 'Buscar' },
+        { icon: <IconBell size={20} />, onClick: () => {}, badge: 5, tooltip: 'Notificações' },
+        { icon: <IconUser size={20} />, onClick: () => {}, tooltip: 'Perfil' },
+      ]}
+    />
+  );
+}
+```
+
+## Com Cor Customizada
+
+```tsx
+<ArchbaseAppBar
+  title="Dashboard"
+  subtitle="Visão geral do sistema"
+  color="blue"
+  actions={[
+    { icon: <IconSettings size={20} />, onClick: () => {}, tooltip: 'Configurações' },
+  ]}
+  rightSection={
+    <Button variant="white" size="xs">
+      Novo
+    </Button>
+  }
+/>
+```
+
+## Variante Transparente
+
+```tsx
+<ArchbaseAppBar
+  title="App Transparente"
+  variant="transparent"
+  withBorder
+  actions={[
+    { icon: <IconSearch size={20} />, onClick: () => {} },
+  ]}
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `title` | `string` | - | Título principal |
+| `subtitle` | `string` | - | Subtítulo abaixo do título |
+| `logoSrc` | `string` | - | URL da imagem do logo |
+| `logoAlt` | `string` | `'Logo'` | Alt text do logo |
+| `color` | `string` | - | Cor de fundo da barra |
+| `variant` | `'filled' \| 'transparent'` | `'filled'` | Estilo da barra |
+| `withBorder` | `boolean` | `false` | Adiciona borda inferior |
+| `actions` | `AppBarAction[]` | - | Array de ações à direita |
+| `rightSection` | `ReactNode` | - | Conteúdo customizado à direita |
+| `onBurgerClick` | `() => void` | - | Callback do botão burger |
+| `burgerOpened` | `boolean` | - | Estado do menu burger |
+| `height` | `number` | `60` | Altura da barra em pixels |
+
+### AppBarAction
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `icon` | `ReactNode` | Ícone da ação |
+| `onClick` | `() => void` | Callback ao clicar |
+| `tooltip` | `string` | Tooltip do botão |
+| `badge` | `number` | Badge numérico |
+| `disabled` | `boolean` | Desativa a ação |
+
+## Casos de Uso
+
+### Dashboard Administrativo
+
+```tsx
+<ArchbaseAppBar
+  title="Admin"
+  logoSrc="/logo.svg"
+  onBurgerClick={toggleSidebar}
+  burgerOpened={sidebarOpened}
+  actions={[
+    { icon: <IconSearch />, onClick: openSearch, tooltip: 'Buscar' },
+    { icon: <IconBell />, onClick: openNotifications, badge: unreadCount },
+    { icon: <IconHelp />, onClick: openHelp, tooltip: 'Ajuda' },
+  ]}
+  rightSection={
+    <Menu>
+      <Menu.Target>
+        <Avatar src={user.avatar} size="sm" />
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Menu.Item>Perfil</Menu.Item>
+        <Menu.Item>Sair</Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  }
+/>
+```
+
+### E-commerce
+
+```tsx
+<ArchbaseAppBar
+  title="Loja Online"
+  logoSrc="/store-logo.png"
+  color="dark"
+  actions={[
+    { icon: <IconSearch />, onClick: openSearch },
+    { icon: <IconHeart />, onClick: () => navigate('/wishlist'), badge: wishlistCount },
+    { icon: <IconShoppingCart />, onClick: () => navigate('/cart'), badge: cartCount },
+  ]}
+/>
+```
+
+### App Minimalista
+
+```tsx
+<ArchbaseAppBar
+  title="Notes"
+  variant="transparent"
+  withBorder
+  actions={[
+    { icon: <IconPlus />, onClick: createNote, tooltip: 'Nova Nota' },
+  ]}
+/>
+```
+
+## Responsividade
+
+- **Mobile**: Exibe burger menu, esconde algumas ações
+- **Tablet**: Mostra mais ações, burger ainda visível
+- **Desktop**: Todas as ações visíveis, burger opcional
+
+## Dicas
+
+- Use com `AppShell` do Mantine para layout completo
+- Limite ações a 3-4 para não sobrecarregar
+- Badges devem indicar ações pendentes importantes
+- O burger deve controlar uma sidebar ou drawer
+- Logos devem ter versão compacta para mobile

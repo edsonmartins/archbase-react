@@ -1,0 +1,119 @@
+import * as demos from '../../../demos/components/data-display';
+
+# ArchbaseGantt
+
+Componente de gráfico de Gantt interativo para visualização de cronogramas de projetos, baseado em `gantt-task-react` (MIT License).
+Ideal para planejamento de projetos, acompanhamento de tarefas, dependências entre atividades e progresso de execução.
+
+## Uso Básico
+
+<Demo data={demos.ganttUsage} />
+
+## Exemplo com DataSource
+
+```tsx
+import { ArchbaseGantt } from '@archbase/components';
+import { useDataSource } from '@archbase/core';
+
+interface ProjectTask {
+  id: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  progress: number;
+  dependencies: string[];
+}
+
+function ProjectTimeline() {
+  const tasks: ProjectTask[] = [
+    { id: '1', name: 'Levantamento de Requisitos', startDate: '2025-03-01', endDate: '2025-03-07', progress: 100, dependencies: [] },
+    { id: '2', name: 'Design de Interface', startDate: '2025-03-08', endDate: '2025-03-14', progress: 80, dependencies: ['1'] },
+    { id: '3', name: 'Desenvolvimento Backend', startDate: '2025-03-10', endDate: '2025-03-25', progress: 45, dependencies: ['1'] },
+    { id: '4', name: 'Desenvolvimento Frontend', startDate: '2025-03-15', endDate: '2025-03-28', progress: 30, dependencies: ['2'] },
+    { id: '5', name: 'Testes e QA', startDate: '2025-03-26', endDate: '2025-04-02', progress: 0, dependencies: ['3', '4'] },
+    { id: '6', name: 'Deploy em Produção', startDate: '2025-04-03', endDate: '2025-04-05', progress: 0, dependencies: ['5'] },
+  ];
+
+  const dataSource = useDataSource({ records: tasks, idField: 'id' });
+
+  return (
+    <ArchbaseGantt
+      dataSource={dataSource}
+      idField="id"
+      nameField="name"
+      startDateField="startDate"
+      endDateField="endDate"
+      progressField="progress"
+      dependenciesField="dependencies"
+      viewMode="Week"
+      locale="pt-BR"
+      showTaskList
+      onTaskChange={(task) => console.log('Tarefa alterada:', task)}
+      onClick={(task) => console.log('Clicou na tarefa:', task)}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `dataSource` | `DataSource` | - | DataSource que fornece as tarefas (obrigatório) |
+| `viewMode` | `ViewMode` | `'Day'` | Modo de visualização: `'Hour'`, `'Day'`, `'Week'`, `'Month'`, `'Year'` |
+| `idField` | `string` | `'id'` | Campo do registro que contém o ID da tarefa |
+| `nameField` | `string` | `'name'` | Campo do registro que contém o nome da tarefa |
+| `startDateField` | `string` | `'start'` | Campo do registro que contém a data de início |
+| `endDateField` | `string` | `'end'` | Campo do registro que contém a data de fim |
+| `progressField` | `string` | `'progress'` | Campo do registro que contém o progresso (0-100) |
+| `dependenciesField` | `string` | `'dependencies'` | Campo do registro que contém as dependências (array de IDs) |
+| `locale` | `string` | `'pt-BR'` | Localização para formatação de datas |
+| `showTaskList` | `boolean` | `true` | Exibe a lista de tarefas ao lado do gráfico |
+| `onTaskChange` | `(task: T) => void` | - | Callback ao alterar uma tarefa (mover, redimensionar) |
+| `onClick` | `(task: T) => void` | - | Callback ao clicar em uma tarefa |
+
+### ViewMode
+
+- `'Hour'` - Visualização por hora
+- `'Day'` - Visualização diária
+- `'Week'` - Visualização semanal
+- `'Month'` - Visualização mensal
+- `'Year'` - Visualização anual
+
+## Integração com DataSource
+
+O `ArchbaseGantt` mapeia os registros do DataSource para tarefas do Gantt usando os campos configuráveis:
+
+```tsx
+// Registro no DataSource:
+{
+  id: '1',
+  name: 'Levantamento de Requisitos',
+  startDate: '2025-03-01',
+  endDate: '2025-03-07',
+  progress: 100,
+  dependencies: []
+}
+
+// Mapeamento via props:
+<ArchbaseGantt
+  dataSource={dataSource}
+  idField="id"
+  nameField="name"
+  startDateField="startDate"
+  endDateField="endDate"
+  progressField="progress"
+  dependenciesField="dependencies"
+/>
+```
+
+Quando o usuário move ou redimensiona uma tarefa, o DataSource é atualizado automaticamente com as novas datas e progresso.
+
+## Licença
+
+Este componente é um wrapper sobre `gantt-task-react`, licenciado sob **MIT License**.
+
+## Referências
+
+- [gantt-task-react documentation](https://github.com/MaTeMaTuK/gantt-task-react)
+- [ArchbaseVisTimeline](/components/data-display/archbase-vis-timeline) - Timeline de eventos

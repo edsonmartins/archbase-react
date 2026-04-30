@@ -1,0 +1,81 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbasePhoneInput` é um componente para entrada de números de telefone com formatação internacional, seleção de país e integração com DataSource. Baseado no `react-phone-number-input`.
+
+<Demo data={demos.phoneInputUsage} />
+
+## País Padrão
+
+```tsx
+// Brasil como padrão
+<ArchbasePhoneInput
+  label="Telefone"
+  defaultCountry="BR"
+/>
+
+// Estados Unidos como padrão
+<ArchbasePhoneInput
+  label="Phone"
+  defaultCountry="US"
+/>
+```
+
+## Formato Internacional
+
+```tsx
+// Com formato internacional (com código do país)
+<ArchbasePhoneInput
+  label="Telefone"
+  defaultCountry="BR"
+  international
+/>
+
+// Formato nacional
+<ArchbasePhoneInput
+  label="Telefone"
+  defaultCountry="BR"
+  international={false}
+/>
+```
+
+## Estados
+
+```tsx
+// Desabilitado
+<ArchbasePhoneInput label="Telefone" disabled defaultCountry="BR" />
+
+// Somente leitura
+<ArchbasePhoneInput label="Telefone" readOnly value="+5511999999999" />
+
+// Com erro
+<ArchbasePhoneInput label="Telefone" error="Telefone inválido" defaultCountry="BR" />
+```
+
+## Com DataSource
+
+```tsx
+<ArchbasePhoneInput
+  dataSource={dataSource}
+  dataField="telefone"
+  label="Telefone"
+  defaultCountry="BR"
+  international
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| value | `string` | `''` | Número de telefone no formato E.164 |
+| onChangeValue | `(value: string) => void` | - | Callback ao alterar valor |
+| label | `string` | - | Rótulo do campo |
+| defaultCountry | `string` | `'BR'` | Código do país padrão (ISO 3166-1 alpha-2) |
+| international | `boolean` | `false` | Exibir formato internacional |
+| disabled | `boolean` | `false` | Desabilitar o campo |
+| readOnly | `boolean` | `false` | Somente leitura |
+| error | `string` | - | Mensagem de erro |
+| dataSource | `DataSource` | - | DataSource para binding |
+| dataField | `string` | - | Campo do DataSource |

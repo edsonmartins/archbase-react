@@ -1,0 +1,121 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseSignaturePad` é um componente para captura de assinaturas digitais com suporte a exportação em base64 e integração com DataSource. Baseado no `react-signature-canvas`.
+
+<Demo data={demos.signaturePadUsage} />
+
+## Dimensões
+
+```tsx
+// Tamanho personalizado
+<ArchbaseSignaturePad
+  label="Assinatura"
+  width={600}
+  height={250}
+/>
+
+// Tamanho compacto
+<ArchbaseSignaturePad
+  label="Rubrica"
+  width={300}
+  height={100}
+/>
+```
+
+## Cor da Caneta
+
+```tsx
+<ArchbaseSignaturePad
+  label="Assinatura"
+  penColor="black"
+/>
+
+<ArchbaseSignaturePad
+  label="Assinatura"
+  penColor="blue"
+/>
+
+<ArchbaseSignaturePad
+  label="Assinatura"
+  penColor="#1c7ed6"
+/>
+```
+
+## Formato de Imagem
+
+```tsx
+// PNG (padrão)
+<ArchbaseSignaturePad
+  label="Assinatura"
+  imageFormat="png"
+/>
+
+// JPEG
+<ArchbaseSignaturePad
+  label="Assinatura"
+  imageFormat="jpeg"
+/>
+```
+
+## Botão de Limpar
+
+```tsx
+// Com botão de limpar
+<ArchbaseSignaturePad
+  label="Assinatura"
+  showClearButton
+/>
+
+// Sem botão de limpar
+<ArchbaseSignaturePad
+  label="Assinatura"
+  showClearButton={false}
+/>
+```
+
+## Estados
+
+```tsx
+// Desabilitado
+<ArchbaseSignaturePad label="Assinatura" disabled />
+
+// Somente leitura
+<ArchbaseSignaturePad label="Assinatura" readOnly />
+
+// Com erro
+<ArchbaseSignaturePad label="Assinatura" error="Assinatura obrigatória" />
+```
+
+## Com DataSource
+
+```tsx
+<ArchbaseSignaturePad
+  dataSource={dataSource}
+  dataField="assinatura"
+  label="Assinatura"
+  width={500}
+  height={200}
+  penColor="black"
+  showClearButton
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| value | `string` | `''` | Imagem da assinatura em base64 |
+| onChangeValue | `(value: string) => void` | - | Callback ao alterar assinatura |
+| label | `string` | - | Rótulo do campo |
+| penColor | `string` | `'black'` | Cor da caneta |
+| width | `number` | `500` | Largura do pad em pixels |
+| height | `number` | `200` | Altura do pad em pixels |
+| showClearButton | `boolean` | `true` | Exibir botão de limpar |
+| imageFormat | `string` | `'png'` | Formato da imagem (png, jpeg) |
+| disabled | `boolean` | `false` | Desabilitar o campo |
+| readOnly | `boolean` | `false` | Somente leitura |
+| error | `string` | - | Mensagem de erro |
+| dataSource | `DataSource` | - | DataSource para binding |
+| dataField | `string` | - | Campo do DataSource |

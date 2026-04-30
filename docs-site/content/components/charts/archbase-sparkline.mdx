@@ -1,0 +1,134 @@
+# ArchbaseSparkline
+
+Mini gráfico de linha compacto para exibição de tendências em espaços reduzidos. Ideal para dashboards, tabelas e cards que precisam mostrar variação de dados de forma visual.
+
+## Uso Básico
+
+```tsx
+import { ArchbaseSparkline } from '@archbase/components';
+
+const salesData = [10, 20, 15, 40, 30, 50, 45, 60, 55, 70];
+
+function Demo() {
+  return (
+    <ArchbaseSparkline
+      data={salesData}
+      label="Vendas"
+      showValue
+      showTrend
+      height={40}
+    />
+  );
+}
+```
+
+## Com Cores de Tendência
+
+Exibe cores diferentes baseadas na tendência (subindo/descendo):
+
+```tsx
+<ArchbaseSparkline
+  data={[10, 20, 15, 40, 30, 50]}
+  label="Performance"
+  showValue
+  showTrend
+  trendColors
+  upColor="green"
+  downColor="red"
+/>
+```
+
+## Variantes de Preenchimento
+
+```tsx
+<Group>
+  <ArchbaseSparkline
+    data={data}
+    variant="line"
+    label="Linha"
+  />
+  <ArchbaseSparkline
+    data={data}
+    variant="area"
+    label="Área"
+  />
+  <ArchbaseSparkline
+    data={data}
+    variant="bars"
+    label="Barras"
+  />
+</Group>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `data` | `number[]` | - | Array de valores numéricos (obrigatório) |
+| `label` | `string` | - | Label exibido ao lado do sparkline |
+| `showValue` | `boolean` | `false` | Exibe o valor atual (último do array) |
+| `showTrend` | `boolean` | `false` | Exibe indicador de tendência (seta) |
+| `trendColors` | `boolean` | `false` | Aplica cores baseadas na tendência |
+| `upColor` | `string` | `'green'` | Cor quando tendência é positiva |
+| `downColor` | `string` | `'red'` | Cor quando tendência é negativa |
+| `height` | `number` | `32` | Altura do gráfico em pixels |
+| `width` | `number` | `100` | Largura do gráfico em pixels |
+| `variant` | `'line' \| 'area' \| 'bars'` | `'line'` | Estilo de visualização |
+| `color` | `string` | `'blue'` | Cor principal do gráfico |
+
+## Casos de Uso
+
+### Dashboard de Métricas
+
+```tsx
+<Group>
+  <Card withBorder p="sm">
+    <Text size="xs" c="dimmed">Vendas</Text>
+    <ArchbaseSparkline
+      data={salesData}
+      showValue
+      showTrend
+      trendColors
+    />
+  </Card>
+  <Card withBorder p="sm">
+    <Text size="xs" c="dimmed">Visitantes</Text>
+    <ArchbaseSparkline
+      data={visitorsData}
+      showValue
+      showTrend
+      trendColors
+    />
+  </Card>
+</Group>
+```
+
+### Em Tabelas
+
+```tsx
+<Table>
+  <Table.Thead>
+    <Table.Tr>
+      <Table.Th>Produto</Table.Th>
+      <Table.Th>Tendência</Table.Th>
+    </Table.Tr>
+  </Table.Thead>
+  <Table.Tbody>
+    {products.map((product) => (
+      <Table.Tr key={product.id}>
+        <Table.Td>{product.name}</Table.Td>
+        <Table.Td>
+          <ArchbaseSparkline data={product.sales} height={24} width={80} />
+        </Table.Td>
+      </Table.Tr>
+    ))}
+  </Table.Tbody>
+</Table>
+```
+
+## Dicas
+
+- Use dimensões pequenas (32-48px de altura) para manter a característica "spark"
+- Evite muitos pontos de dados - 10 a 20 valores são ideais
+- O `trendColors` calcula a tendência comparando primeiro e último valor
+- Para dados em tempo real, atualize o array de dados periodicamente

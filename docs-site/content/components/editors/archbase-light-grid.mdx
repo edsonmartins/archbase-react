@@ -1,0 +1,149 @@
+# ArchbaseLightGrid
+
+Grid leve e de alto desempenho baseado no [sheet-happens](https://github.com/nicbarker/sheet-happens),
+ideal para exibicao e edicao tabular com milhares de linhas.
+Integrado ao DataSource (v1/v2) com suporte a tipos de coluna, formatacao e edicao de celulas.
+
+## Import
+
+```tsx
+import { ArchbaseLightGrid } from '@archbase/components';
+import type { ArchbaseLightGridColumn } from '@archbase/components';
+```
+
+## Uso Basico
+
+```tsx
+import { ArchbaseLightGrid } from '@archbase/components';
+
+interface Produto {
+  id: string;
+  nome: string;
+  preco: number;
+}
+
+const data: Produto[] = [
+  { id: '1', nome: 'Notebook', preco: 4599.90 },
+  { id: '2', nome: 'Mouse', preco: 189.90 },
+];
+
+const columns = [
+  { field: 'nome', header: 'Nome', width: 200, type: 'text' },
+  { field: 'preco', header: 'Preco', width: 120, type: 'number', align: 'right' },
+];
+
+function App() {
+  return (
+    <ArchbaseLightGrid
+      data={data}
+      columns={columns}
+      height={400}
+    />
+  );
+}
+```
+
+## Tipos de Coluna
+
+O grid suporta varios tipos de dados com formatacao automatica:
+
+```tsx
+const columns: ArchbaseLightGridColumn<MyRecord>[] = [
+  { field: 'nome', header: 'Nome', type: 'text', width: 200 },
+  { field: 'quantidade', header: 'Qtd', type: 'number', width: 100, align: 'center' },
+  { field: 'preco', header: 'Preco', type: 'currency', format: 'R$ #.##0,00', width: 150 },
+  { field: 'dataCriacao', header: 'Data', type: 'date', format: 'DD/MM/YYYY', width: 120 },
+  { field: 'ativo', header: 'Ativo', type: 'boolean', width: 80 },
+];
+```
+
+## Edicao de Celulas
+
+Habilite a edicao de celulas globalmente ou por coluna:
+
+```tsx
+<ArchbaseLightGrid
+  data={data}
+  columns={[
+    { field: 'nome', header: 'Nome', editable: true },
+    { field: 'preco', header: 'Preco', editable: true },
+    { field: 'id', header: 'ID', editable: false },
+  ]}
+  editable
+  onCellChange={(record, field, oldValue, newValue) => {
+    console.log(\`\${field}: \${oldValue} -> \${newValue}\`);
+  }}
+  height={400}
+/>
+```
+
+## Colunas Fixas (Frozen)
+
+Fixe colunas a esquerda para manter visibilidade durante scroll horizontal:
+
+```tsx
+const columns = [
+  { field: 'id', header: 'ID', frozen: true, width: 80 },
+  { field: 'nome', header: 'Nome', frozen: true, width: 200 },
+  { field: 'campo1', header: 'Campo 1', width: 150 },
+  { field: 'campo2', header: 'Campo 2', width: 150 },
+  // ...mais colunas
+];
+```
+
+## Integracao com DataSource
+
+```tsx
+import { ArchbaseLightGrid } from '@archbase/components';
+
+<ArchbaseLightGrid
+  dataSource={dataSource}
+  columns={columns}
+  height={400}
+  editable
+  onCellChange={(record, field, oldValue, newValue) => {
+    dataSource.setFieldByName(field, newValue);
+  }}
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `columns` | `ArchbaseLightGridColumn<T>[]` | **Required** | Definicao das colunas |
+| `data` | `T[]` | - | Dados standalone |
+| `dataSource` | `IArchbaseDataSourceBase` | - | DataSource para integracao |
+| `editable` | `boolean` | `false` | Habilita edicao de celulas |
+| `readOnly` | `boolean` | `false` | Somente leitura |
+| `height` | `string \| number` | - | Altura do grid |
+| `width` | `string \| number` | - | Largura do grid |
+| `showRowNumbers` | `boolean` | `false` | Exibe numeracao de linhas |
+| `onCellChange` | `(record, field, oldValue, newValue) => void` | - | Callback de alteracao |
+| `onSelectionChange` | `(selection) => void` | - | Callback de selecao |
+| `label` | `string` | - | Label acima do grid |
+| `description` | `string` | - | Descricao abaixo do label |
+| `style` | `CSSProperties` | - | Estilo CSS |
+| `className` | `string` | - | Classe CSS |
+
+## ArchbaseLightGridColumn
+
+| Prop | Tipo | Padrao | Descricao |
+|------|------|--------|-----------|
+| `field` | `keyof T \| string` | **Required** | Campo do registro |
+| `header` | `string` | **Required** | Texto do cabecalho |
+| `width` | `number` | - | Largura em pixels |
+| `type` | `'text' \| 'number' \| 'date' \| 'boolean' \| 'currency' \| 'custom'` | `'text'` | Tipo de dado |
+| `format` | `string` | - | Formato de exibicao |
+| `editable` | `boolean` | - | Coluna editavel |
+| `frozen` | `boolean` | `false` | Coluna fixa a esquerda |
+| `align` | `'left' \| 'center' \| 'right'` | `'left'` | Alinhamento do texto |
+
+## Desempenho
+
+O ArchbaseLightGrid utiliza renderizacao canvas do sheet-happens, o que proporciona
+desempenho superior ao DOM para grandes volumes de dados (milhares de linhas).
+
+## Licenca
+
+Baseado em `sheet-happens`, licenciado sob **MIT License**.

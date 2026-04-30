@@ -152,6 +152,117 @@ import { ArchbaseSignatureEdit } from '@archbase/components';
 
 ---
 
+## ArchbaseSpeechToTextInput
+
+Input com reconhecimento de voz usando Web Speech API.
+
+### Exemplo Básico
+
+```tsx
+import { ArchbaseSpeechToTextInput } from '@archbase/components';
+
+<ArchbaseSpeechToTextInput
+  label="Descrição"
+  placeholder="Digite ou fale..."
+  value={description}
+  onChange={setDescription}
+/>
+```
+
+### Com DataSource
+
+```tsx
+<ArchbaseSpeechToTextInput
+  dataSource={dataSource}
+  dataField="observacoes"
+  label="Observações"
+  disabled={isBrowsing}
+/>
+```
+
+### TextArea com Voz
+
+```tsx
+import { ArchbaseSpeechToTextArea } from '@archbase/components';
+
+<ArchbaseSpeechToTextArea
+  label="Descrição detalhada"
+  value={text}
+  onChange={setText}
+  minRows={4}
+  maxRows={8}
+/>
+```
+
+### Hook useArchbaseSpeechToText
+
+Para uso customizado:
+
+```tsx
+import { useArchbaseSpeechToText } from '@archbase/components';
+
+function CustomVoiceInput() {
+  const {
+    isListening,       // Se está gravando
+    transcript,        // Texto reconhecido
+    isSupported,       // Se browser suporta
+    startListening,    // Inicia gravação
+    stopListening,     // Para gravação
+    resetTranscript,   // Limpa texto
+  } = useArchbaseSpeechToText({
+    language: 'pt-BR',
+    continuous: true,
+  });
+
+  return (
+    <div>
+      <Button onClick={isListening ? stopListening : startListening}>
+        {isListening ? 'Parar' : 'Gravar'}
+      </Button>
+      <Text>{transcript}</Text>
+    </div>
+  );
+}
+```
+
+### Botão de Gravação Standalone
+
+```tsx
+import { ArchbaseSpeechToTextButton } from '@archbase/components';
+
+<ArchbaseSpeechToTextButton
+  onTranscript={(text) => appendToNote(text)}
+  language="pt-BR"
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `language` | `string` | `'pt-BR'` | Idioma do reconhecimento |
+| `continuous` | `boolean` | `false` | Gravação contínua |
+| `interimResults` | `boolean` | `true` | Resultados parciais |
+| `onTranscriptChange` | `(text: string) => void` | - | Callback do texto |
+| `showButton` | `boolean` | `true` | Exibe botão de voz |
+| `buttonPosition` | `'left' \| 'right'` | `'right'` | Posição do botão |
+
+### Compatibilidade
+
+A Web Speech API tem suporte limitado. Verifique compatibilidade:
+
+```tsx
+const { isSupported } = useArchbaseSpeechToText();
+
+if (!isSupported) {
+  return <Text c="red">Seu navegador não suporta reconhecimento de voz.</Text>;
+}
+```
+
+**Navegadores suportados:** Chrome, Edge, Safari (parcial)
+
+---
+
 ## Próximos Passos
 
 - [DataGrid](/components/data-display/datagrid) - Grid de dados

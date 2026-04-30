@@ -1,6 +1,8 @@
 import type { MantineDemo } from '@mantinex/demo';
 import { ArchbasePDFViewerUsage } from './ArchbasePDFViewerUsage';
 import { ArchbasePDFViewerWithDataSource } from './ArchbasePDFViewerWithDataSource';
+import { ArchbaseDocViewerUsage } from './ArchbaseDocViewerUsage';
+import { ArchbasePdfBuilderUsage } from './ArchbasePdfBuilderUsage';
 
 // Usage Demo
 const usageCode = `
@@ -70,4 +72,68 @@ export const withDataSource: MantineDemo = {
   type: 'code',
   component: ArchbasePDFViewerWithDataSource,
   code: withDataSourceCode,
+};
+
+// ---------------------------------------------------------------------------
+// ArchbaseDocViewer
+// ---------------------------------------------------------------------------
+
+const docViewerUsageCode = `
+import { ArchbaseDocViewer } from '@archbase/components';
+
+function Demo() {
+  return (
+    <ArchbaseDocViewer
+      uri="https://example.com/image.jpg"
+      height={500}
+      showToolbar
+      label="Visualizador de Documentos"
+      onDocumentLoad={() => console.log('Documento carregado')}
+    />
+  );
+}
+`;
+
+export const docViewerUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbaseDocViewerUsage,
+  code: docViewerUsageCode,
+};
+
+// ---------------------------------------------------------------------------
+// ArchbasePdfBuilder
+// ---------------------------------------------------------------------------
+
+const pdfBuilderUsageCode = `
+import { useRef } from 'react';
+import { ArchbasePdfBuilder } from '@archbase/components';
+import type { ArchbasePdfBuilderRef } from '@archbase/components';
+import type { Template } from '@pdfme/common';
+
+const myTemplate: Template = {
+  basePdf: 'data:application/pdf;base64,...',
+  schemas: [[
+    { name: 'nome', type: 'text', position: { x: 20, y: 20 }, width: 100, height: 10 },
+  ]],
+};
+
+function Demo() {
+  const ref = useRef<ArchbasePdfBuilderRef>(null);
+
+  return (
+    <ArchbasePdfBuilder
+      ref={ref}
+      mode="designer"
+      template={myTemplate}
+      height={600}
+      onTemplateChange={(t) => console.log('Template atualizado:', t)}
+    />
+  );
+}
+`;
+
+export const pdfBuilderUsage: MantineDemo = {
+  type: 'code',
+  component: ArchbasePdfBuilderUsage,
+  code: pdfBuilderUsageCode,
 };

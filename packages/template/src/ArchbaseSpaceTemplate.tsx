@@ -126,7 +126,7 @@ function buildHeader(
 			: { xs: 'auto', sm: 'auto', md: 'auto', lg: 'auto' };
 
 		return (
-			<Grid m={0} gutter="xs" justify="center" align="center" grow>
+			<Grid m={0} gap="xs" justify="center" align="center" grow>
 				<Grid.Col
 					span={{
 						xs: headerGridColumnsLeft.xs,
@@ -229,7 +229,7 @@ function buildFooter(
 			: { xs: 'content', sm: 'content', md: 'content', lg: 'content' };
 
 		return (
-			<Grid m={0} gutter="xs" justify="center" align="center" grow>
+			<Grid m={0} gap="xs" justify="center" align="center" grow>
 				<Grid.Col
 					span={{
 						xs: headerGridColumnsLeft.xs,

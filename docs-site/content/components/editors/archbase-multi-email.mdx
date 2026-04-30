@@ -1,0 +1,81 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseMultiEmail` é um componente para entrada de múltiplos endereços de e-mail com validação automática e integração com DataSource. Baseado no `react-multi-email`.
+
+<Demo data={demos.multiEmailUsage} />
+
+## Limite de E-mails
+
+```tsx
+<ArchbaseMultiEmail
+  label="E-mails (máximo 5)"
+  max={5}
+/>
+```
+
+## Delimitador
+
+```tsx
+// Separar por vírgula (padrão)
+<ArchbaseMultiEmail
+  label="E-mails"
+  delimiter=","
+/>
+
+// Separar por ponto-e-vírgula
+<ArchbaseMultiEmail
+  label="E-mails"
+  delimiter=";"
+/>
+```
+
+## Validação Customizada
+
+```tsx
+<ArchbaseMultiEmail
+  label="E-mails corporativos"
+  validateEmail={(email) => email.endsWith('@empresa.com.br')}
+/>
+```
+
+## Estados
+
+```tsx
+// Desabilitado
+<ArchbaseMultiEmail label="E-mails" disabled />
+
+// Somente leitura
+<ArchbaseMultiEmail label="E-mails" readOnly value={['joao@email.com', 'maria@email.com']} />
+
+// Com erro
+<ArchbaseMultiEmail label="E-mails" error="Informe ao menos um e-mail" />
+```
+
+## Com DataSource
+
+```tsx
+<ArchbaseMultiEmail
+  dataSource={dataSource}
+  dataField="emails"
+  label="E-mails"
+  max={10}
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| value | `string[]` | `[]` | Lista de e-mails |
+| onChangeValue | `(value: string[]) => void` | - | Callback ao alterar e-mails |
+| label | `string` | - | Rótulo do campo |
+| delimiter | `string` | `','` | Delimitador para separação |
+| max | `number` | - | Número máximo de e-mails |
+| validateEmail | `(email: string) => boolean` | - | Função de validação customizada |
+| disabled | `boolean` | `false` | Desabilitar o campo |
+| readOnly | `boolean` | `false` | Somente leitura |
+| error | `string` | - | Mensagem de erro |
+| dataSource | `DataSource` | - | DataSource para binding |
+| dataField | `string` | - | Campo do DataSource |

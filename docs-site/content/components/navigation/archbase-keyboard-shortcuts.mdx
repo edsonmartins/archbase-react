@@ -1,0 +1,142 @@
+# ArchbaseKeyboardShortcuts
+
+Sistema de atalhos de teclado global para aplicações React. Permite registrar, gerenciar e exibir atalhos de forma organizada.
+
+## Configuração
+
+Envolva sua aplicação com o provider:
+
+```tsx
+import { ArchbaseKeyboardShortcutsProvider } from '@archbase/components';
+
+function App() {
+  return (
+    <ArchbaseKeyboardShortcutsProvider>
+      <YourApp />
+      <ArchbaseKeyboardShortcutsModal />
+    </ArchbaseKeyboardShortcutsProvider>
+  );
+}
+```
+
+## Registrar Atalhos
+
+Use o hook `useArchbaseRegisterShortcut` em qualquer componente:
+
+```tsx
+import { useArchbaseRegisterShortcut } from '@archbase/components';
+
+function EditorToolbar() {
+  useArchbaseRegisterShortcut({
+    keys: 'ctrl+s',
+    description: 'Salvar documento',
+    handler: () => saveDocument(),
+    category: 'Arquivo',
+  });
+
+  useArchbaseRegisterShortcut({
+    keys: 'ctrl+z',
+    description: 'Desfazer',
+    handler: () => undo(),
+    category: 'Edição',
+  });
+
+  return <Toolbar />;
+}
+```
+
+## Modal de Ajuda
+
+O modal de ajuda é exibido automaticamente com `Shift + ?`:
+
+```tsx
+import { ArchbaseKeyboardShortcutsModal } from '@archbase/components';
+
+// Adicione no root da aplicação
+<ArchbaseKeyboardShortcutsModal />
+```
+
+Os atalhos são agrupados por categoria no modal.
+
+## Escopos
+
+Limite atalhos a contextos específicos:
+
+```tsx
+// Registrar atalho com escopo
+useArchbaseRegisterShortcut({
+  keys: 'ctrl+e',
+  description: 'Editar item',
+  handler: handleEdit,
+  category: 'Editor',
+  scope: 'editor',  // Só funciona quando escopo 'editor' está ativo
+});
+
+// Definir escopo ativo
+useArchbaseShortcutScope('editor');
+```
+
+## Dicas de Atalho
+
+Mostre dicas de atalho em botões:
+
+```tsx
+import { ArchbaseShortcutHint } from '@archbase/components';
+
+<Button>
+  Salvar
+  <ArchbaseShortcutHint keys="ctrl+s" />
+</Button>
+
+<Button>
+  Novo
+  <ArchbaseShortcutHint keys="ctrl+n" />
+</Button>
+```
+
+## Props do Atalho
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `keys` | `string` | - | Combinação de teclas (ex: `'ctrl+s'`, `'ctrl+shift+p'`) |
+| `description` | `string` | - | Descrição exibida no modal de ajuda |
+| `handler` | `() => void` | - | Função executada ao pressionar |
+| `category` | `string` | `'Geral'` | Categoria para agrupamento |
+| `scope` | `string` | `'global'` | Escopo do atalho |
+| `preventDefault` | `boolean` | `true` | Previne comportamento padrão |
+| `enabled` | `boolean` | `true` | Se o atalho está ativo |
+
+## Teclas Suportadas
+
+Modificadores:
+- `ctrl` / `control`
+- `alt` / `option`
+- `shift`
+- `meta` / `cmd` / `command`
+
+Teclas especiais:
+- `enter`, `escape`, `space`, `tab`
+- `arrowup`, `arrowdown`, `arrowleft`, `arrowright`
+- `backspace`, `delete`
+- `f1` a `f12`
+
+## Exemplos de Combinações
+
+```tsx
+// Atalhos comuns
+'ctrl+s'        // Salvar
+'ctrl+shift+s'  // Salvar como
+'ctrl+z'        // Desfazer
+'ctrl+shift+z'  // Refazer
+'ctrl+f'        // Buscar
+'escape'        // Cancelar/Fechar
+'ctrl+enter'    // Enviar/Confirmar
+```
+
+## Boas Práticas
+
+- Use categorias consistentes (`'Arquivo'`, `'Edição'`, `'Navegação'`)
+- Evite conflitos com atalhos do navegador
+- Forneça descrições claras e concisas
+- Use escopos para contextos específicos (editor, modal, etc.)
+- Sempre inclua o `ArchbaseKeyboardShortcutsModal` para documentação

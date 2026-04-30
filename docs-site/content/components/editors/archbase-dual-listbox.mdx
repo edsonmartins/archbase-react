@@ -1,0 +1,80 @@
+import * as demos from '../../../demos/components/editors';
+
+## Uso Básico
+
+`ArchbaseDualListbox` é um componente de seleção com duas listas lado a lado (disponíveis e selecionados), permitindo mover itens entre elas. Implementado com Mantine puro, sem dependências externas.
+
+<Demo data={demos.dualListboxUsage} />
+
+## Labels Customizadas
+
+```tsx
+<ArchbaseDualListbox
+  label="Permissões"
+  options={permissoes}
+  availableLabel="Permissões Disponíveis"
+  selectedLabel="Permissões Atribuídas"
+/>
+```
+
+## Busca
+
+```tsx
+// Com busca habilitada
+<ArchbaseDualListbox
+  label="Itens"
+  options={itens}
+  showSearch
+/>
+
+// Sem busca
+<ArchbaseDualListbox
+  label="Itens"
+  options={itens}
+  showSearch={false}
+/>
+```
+
+## Estados
+
+```tsx
+// Desabilitado
+<ArchbaseDualListbox label="Itens" disabled options={options} />
+
+// Somente leitura
+<ArchbaseDualListbox label="Itens" readOnly options={options} value={['react']} />
+
+// Com erro
+<ArchbaseDualListbox label="Itens" error="Selecione ao menos um item" options={options} />
+```
+
+## Com DataSource
+
+```tsx
+<ArchbaseDualListbox
+  dataSource={dataSource}
+  dataField="tecnologias"
+  label="Tecnologias"
+  options={options}
+  availableLabel="Disponíveis"
+  selectedLabel="Selecionados"
+  showSearch
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| value | `any[]` | `[]` | Itens selecionados |
+| onChangeValue | `(value: any[]) => void` | - | Callback ao alterar seleção |
+| label | `string` | - | Rótulo do campo |
+| options | `{ value: any; label: string }[]` | `[]` | Opções disponíveis |
+| availableLabel | `string` | `'Disponíveis'` | Título da lista de disponíveis |
+| selectedLabel | `string` | `'Selecionados'` | Título da lista de selecionados |
+| showSearch | `boolean` | `false` | Exibir campo de busca |
+| disabled | `boolean` | `false` | Desabilitar o campo |
+| readOnly | `boolean` | `false` | Somente leitura |
+| error | `string` | - | Mensagem de erro |
+| dataSource | `DataSource` | - | DataSource para binding |
+| dataField | `string` | - | Campo do DataSource |

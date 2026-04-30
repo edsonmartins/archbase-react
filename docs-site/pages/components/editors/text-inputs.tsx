@@ -1,14 +1,31 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Shell } from '../../../components/Shell';
 import { PageHeader } from '../../../components/PageHeader';
 import { DocsTabs } from '../../../components/DocsTabs';
 import { ARCHBASE_EDIT_DATA, ARCHBASE_MASK_EDIT_DATA, ARCHBASE_PASSWORD_EDIT_DATA, ARCHBASE_TEXTAREA_DATA } from '../../../data/components-data';
 import docgen from '../../../docgen.json';
 import { STYLES_API_DATA } from '../../../styles-api';
-import ArchbaseEditDocs from '../../../content/components/editors/archbase-edit.mdx';
-import ArchbaseMaskEditDocs from '../../../content/components/editors/archbase-mask-edit.mdx';
-import ArchbasePasswordEditDocs from '../../../content/components/editors/archbase-password-edit.mdx';
-import ArchbaseTextAreaDocs from '../../../content/components/editors/archbase-textarea.mdx';
+
+const ArchbaseEditDocs = dynamic(() => import('../../../content/components/editors/archbase-edit.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseMaskEditDocs = dynamic(() => import('../../../content/components/editors/archbase-mask-edit.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbasePasswordEditDocs = dynamic(() => import('../../../content/components/editors/archbase-password-edit.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseTextAreaDocs = dynamic(() => import('../../../content/components/editors/archbase-textarea.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
 
 export default function TextInputsPage() {
   return (

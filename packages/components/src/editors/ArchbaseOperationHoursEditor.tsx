@@ -185,7 +185,7 @@ export function ArchbaseOperatingHoursEditor({
           <Group justify='space-between'>
             <Group wrap='nowrap'>
               <Text fw={700} size={"12px"}>{oh.days.map((day) => daysOfWeekTranslate.find((d) => d.value === day)?.label || 'Dia desconhecido').join(',')}</Text>
-              <Text size={"12px"} fw={700} color="blue">{oh.timeRange}</Text>
+              <Text size={"12px"} fw={700} c="blue">{oh.timeRange}</Text>
             </Group>
             <ActionIcon
               color="red"

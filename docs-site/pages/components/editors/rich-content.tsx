@@ -1,12 +1,21 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Shell } from '../../../components/Shell';
 import { PageHeader } from '../../../components/PageHeader';
 import { DocsTabs } from '../../../components/DocsTabs';
 import { ARCHBASE_IMAGE_EDIT_DATA, ARCHBASE_RICH_TEXT_EDIT_DATA } from '../../../data/components-data';
 import docgen from '../../../docgen.json';
 import { STYLES_API_DATA } from '../../../styles-api';
-import ArchbaseImageEditDocs from '../../../content/components/editors/archbase-image-edit.mdx';
-import ArchbaseRichTextEditDocs from '../../../content/components/editors/archbase-rich-text-edit.mdx';
+
+const ArchbaseImageEditDocs = dynamic(() => import('../../../content/components/editors/archbase-image-edit.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
+const ArchbaseRichTextEditDocs = dynamic(() => import('../../../content/components/editors/archbase-rich-text-edit.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
 
 export default function RichContentPage() {
   return (

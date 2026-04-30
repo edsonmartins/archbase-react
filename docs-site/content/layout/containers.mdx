@@ -36,6 +36,83 @@ import { ArchbaseContainer } from '@archbase/layout';
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Largura máxima |
 | `padding` | `string` | `'md'` | Padding interno |
 
+## ArchbaseExpansionPanel
+
+Accordion aprimorado com suporte a ícones, badges e descrições.
+
+```tsx
+import { ArchbaseExpansionPanel } from '@archbase/components';
+
+const panels = [
+  {
+    id: 'profile',
+    title: 'Perfil do Usuário',
+    description: 'Informações básicas',
+    icon: <IconUser size={18} />,
+    content: <ProfileForm />,
+  },
+  {
+    id: 'settings',
+    title: 'Configurações',
+    icon: <IconSettings size={18} />,
+    badge: 3,
+    badgeColor: 'blue',
+    content: <SettingsForm />,
+  },
+];
+
+<ArchbaseExpansionPanel
+  panels={panels}
+  multiple
+  defaultValue={['profile']}
+/>
+```
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `panels` | `ArchbaseExpansionPanelItem[]` | - | Array de painéis |
+| `multiple` | `boolean` | `false` | Permite múltiplos abertos |
+| `defaultValue` | `string \| string[]` | - | Painéis abertos por padrão |
+| `value` | `string \| string[]` | - | Painéis abertos (controlado) |
+| `onChange` | `(value) => void` | - | Callback ao mudar |
+| `variant` | `'default' \| 'contained' \| 'filled' \| 'separated'` | `'default'` | Variante visual |
+| `chevronPosition` | `'left' \| 'right'` | `'right'` | Posição do chevron |
+
+### ArchbaseExpansionPanelItem
+
+```tsx
+interface ArchbaseExpansionPanelItem {
+  id: string;              // ID único
+  title: string;           // Título do painel
+  description?: string;    // Descrição opcional
+  icon?: ReactNode;        // Ícone
+  badge?: string | number; // Badge
+  badgeColor?: string;     // Cor do badge
+  content: ReactNode;      // Conteúdo
+  disabled?: boolean;      // Desabilita o painel
+}
+```
+
+### Variantes Controladas
+
+```tsx
+// Múltiplos painéis controlados
+<ArchbaseExpansionPanelControlled
+  panels={panels}
+  openPanels={openPanels}
+  onOpenPanelsChange={setOpenPanels}
+/>
+
+// Painel único controlado
+<ArchbaseExpansionPanelSingle
+  panels={panels}
+  openPanel={openPanel}
+  onOpenPanelChange={setOpenPanel}
+/>
+```
+
 ## Próximos Passos
 
 - [Space System](/layout/space-system) - Posicionamento

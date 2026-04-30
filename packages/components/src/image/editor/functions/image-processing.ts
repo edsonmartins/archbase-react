@@ -43,7 +43,12 @@ export const convertImageUsingCanvas = (
         ctx.filter = processFilter(state.basicFilters);
       }
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      // Normalizar formato (jpg -> jpeg) para compatibilidade com canvas.toDataURL
       let type = state.format;
+      if (type === 'jpg') {
+        type = 'jpeg';
+      }
+      // Para JPEG e WEBP, usar a qualidade especificada; PNG ignora o parâmetro de qualidade
       var dataURI = canvas.toDataURL(`image/${type}`, quality);
       // console.log("🚀 ~ file: image-processing.ts ~ line 48 ~ returnnewPromise ~ quality", quality)
       resolve({

@@ -1,0 +1,136 @@
+# ArchbaseActionSheet
+
+Componente de ação modal que aparece na parte inferior da tela em dispositivos móveis (bottom sheet) e como dropdown em desktop. Ideal para apresentar opções de ação de forma contextual.
+
+## Uso Básico
+
+```tsx
+import { useState } from 'react';
+import { ArchbaseActionSheet } from '@archbase/components';
+import { IconShare, IconDownload, IconBookmark } from '@tabler/icons-react';
+
+function Demo() {
+  const [opened, setOpened] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpened(true)}>Abrir Ações</Button>
+
+      <ArchbaseActionSheet
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title="Compartilhar"
+        description="Escolha como deseja compartilhar"
+        actions={[
+          { label: 'Compartilhar', icon: <IconShare size={20} />, onClick: () => {} },
+          { label: 'Download', icon: <IconDownload size={20} />, onClick: () => {} },
+          { label: 'Favoritos', icon: <IconBookmark size={20} />, onClick: () => {} },
+        ]}
+        showCancel
+      />
+    </>
+  );
+}
+```
+
+## Com Ação Destrutiva
+
+```tsx
+<ArchbaseActionSheet
+  opened={opened}
+  onClose={() => setOpened(false)}
+  title="Gerenciar Item"
+  actions={[
+    { label: 'Editar', icon: <IconEdit size={20} />, onClick: handleEdit },
+    { label: 'Duplicar', icon: <IconCopy size={20} />, onClick: handleDuplicate },
+    { label: 'Excluir', icon: <IconTrash size={20} />, color: 'red', onClick: handleDelete },
+  ]}
+  showCancel
+  cancelLabel="Cancelar"
+/>
+```
+
+## Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `opened` | `boolean` | - | Controla visibilidade (obrigatório) |
+| `onClose` | `() => void` | - | Callback ao fechar (obrigatório) |
+| `title` | `string` | - | Título do ActionSheet |
+| `description` | `string` | - | Descrição abaixo do título |
+| `actions` | `ActionSheetItem[]` | - | Array de ações (obrigatório) |
+| `showCancel` | `boolean` | `false` | Exibe botão de cancelar |
+| `cancelLabel` | `string` | `'Cancelar'` | Texto do botão cancelar |
+
+### ActionSheetItem
+
+| Prop | Tipo | Descrição |
+|------|------|-----------|
+| `label` | `string` | Texto da ação |
+| `icon` | `ReactNode` | Ícone da ação |
+| `onClick` | `() => void` | Callback ao clicar |
+| `color` | `string` | Cor da ação |
+| `disabled` | `boolean` | Desativa a ação |
+
+## Casos de Uso
+
+### Compartilhamento
+
+```tsx
+<ArchbaseActionSheet
+  opened={shareOpened}
+  onClose={() => setShareOpened(false)}
+  title="Compartilhar"
+  actions={[
+    { label: 'WhatsApp', icon: <IconBrandWhatsapp />, onClick: shareWhatsApp },
+    { label: 'Email', icon: <IconMail />, onClick: shareEmail },
+    { label: 'Copiar Link', icon: <IconLink />, onClick: copyLink },
+    { label: 'QR Code', icon: <IconQrcode />, onClick: showQR },
+  ]}
+/>
+```
+
+### Opções de Foto
+
+```tsx
+<ArchbaseActionSheet
+  opened={photoOpened}
+  onClose={() => setPhotoOpened(false)}
+  title="Alterar Foto"
+  actions={[
+    { label: 'Tirar Foto', icon: <IconCamera />, onClick: takePhoto },
+    { label: 'Escolher da Galeria', icon: <IconPhoto />, onClick: selectPhoto },
+    { label: 'Remover Foto', icon: <IconTrash />, color: 'red', onClick: removePhoto },
+  ]}
+  showCancel
+/>
+```
+
+### Confirmação de Exclusão
+
+```tsx
+<ArchbaseActionSheet
+  opened={deleteOpened}
+  onClose={() => setDeleteOpened(false)}
+  title="Excluir Item"
+  description="Esta ação não pode ser desfeita"
+  actions={[
+    { label: 'Excluir Permanentemente', icon: <IconTrash />, color: 'red', onClick: confirmDelete },
+  ]}
+  showCancel
+  cancelLabel="Manter"
+/>
+```
+
+## Comportamento Responsivo
+
+- **Mobile**: Aparece como bottom sheet deslizante
+- **Desktop**: Aparece como dropdown menu centrado
+
+## Dicas
+
+- Use para ações contextuais que precisam de confirmação
+- Limite a 4-5 ações para manter a usabilidade
+- Sempre inclua opção de cancelar para ações importantes
+- Use `color: 'red'` para ações destrutivas
+- O ActionSheet fecha automaticamente ao clicar em uma ação

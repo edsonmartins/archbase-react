@@ -1,5 +1,7 @@
 // Componente principal
 export { ArchbaseCompositeFilters } from './ArchbaseCompositeFilters';
+export { ArchbaseColumnSelector } from './ArchbaseColumnSelector';
+export type { ArchbaseColumnSelectorProps, ArchbaseColumnItem } from './ArchbaseColumnSelector';
 
 // Componentes
 export { FilterPill } from './components/FilterPill';
