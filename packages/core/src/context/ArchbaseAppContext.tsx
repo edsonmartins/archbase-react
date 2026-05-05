@@ -15,7 +15,30 @@ import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import queryString from 'query-string';
 import { ArchbaseUser } from '../types';
-import { CustomShowErrorModal } from '@archbase/components';
+
+// Fallback CustomShowErrorModal to avoid circular dependency with @archbase/components.
+// Renders innerProps.message and innerProps.detailMessage correctly.
+const CustomShowErrorModal = (props: any) => {
+	const { context, id, innerProps } = props;
+	return (
+		<div>
+			<div style={{ color: 'red', fontWeight: 'bold', marginBottom: 8 }}>{innerProps?.message}</div>
+			{innerProps?.detailMessage && (
+				<div style={{ fontSize: '0.85em', color: '#666', marginBottom: 8 }}>{innerProps.detailMessage}</div>
+			)}
+			<button
+				type="button"
+				onClick={() => {
+					if (innerProps?.onConfirm) innerProps.onConfirm();
+					context?.closeModal?.(id);
+				}}
+				style={{ marginTop: 8 }}
+			>
+				Ok
+			</button>
+		</div>
+	);
+};
 
 // Default navigation provider that does nothing (will be replaced by actual provider)
 const DefaultNavigationProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
