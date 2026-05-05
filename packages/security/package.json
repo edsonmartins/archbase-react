@@ -1,6 +1,6 @@
 {
   "name": "@archbase/security",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Security and authentication components for Archbase React",
   "main": "dist/index.js",
   "module": "dist/index.js",

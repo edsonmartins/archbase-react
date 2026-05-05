@@ -15,9 +15,7 @@ import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import queryString from 'query-string';
 import { ArchbaseUser } from '../types';
-
-// Mock components for missing dependencies
-const CustomShowErrorModal = (props: any) => <div>{props.innerProps?.children}</div>;
+import { CustomShowErrorModal } from '@archbase/components';
 
 // Default navigation provider that does nothing (will be replaced by actual provider)
 const DefaultNavigationProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
