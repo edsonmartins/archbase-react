@@ -28,9 +28,9 @@ function getNewVersion() {
 }
 
 function validateVersion(version) {
-  const versionRegex = /^\d+\.\d+\.\d+$/;
+  const versionRegex = /^\d+\.\d+\.\d+(-[a-zA-Z0-9._-]+)?$/;
   if (!versionRegex.test(version)) {
-    log(`❌ Versão inválida: ${version}. Use formato semver (ex: 3.0.11)`, RED);
+    log(`❌ Versão inválida: ${version}. Use formato semver (ex: 3.0.11 ou 3.0.11-debug)`, RED);
     process.exit(1);
   }
 }
