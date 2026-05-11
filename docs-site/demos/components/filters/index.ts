@@ -65,3 +65,5 @@ export const columnSelectorUsage: MantineDemo = {
   component: ArchbaseColumnSelectorUsage,
   code: columnSelectorUsageCode,
 };
+
+export { compositeFiltersUsage as ArchbaseCompositeFiltersUsage };

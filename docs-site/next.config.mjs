@@ -44,6 +44,8 @@ const nextConfig = {
     '@archbase/feature-flags',
     'suneditor',
     'suneditor-react',
+    'react-mosaic-component',
+    'rdndmb-html5-to-touch',
   ],
   webpack: (config, { isServer }) => {
     // Prevent next/document from being bundled outside of _document
