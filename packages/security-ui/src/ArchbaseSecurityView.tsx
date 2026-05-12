@@ -425,6 +425,13 @@ export function ArchbaseSecurityView({
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<UserDto>
+				dataField="accountDeactivated"
+				dataType="boolean"
+				header={`${t('archbase:Desativado?')}`}
+				inputFilterType="checkbox"
+				size={120}
+			/>
+			<ArchbaseDataGridColumn<UserDto>
 				dataField="profile.name"
 				dataType="text"
 				header={`${t('archbase:Perfil')}`}
@@ -473,13 +480,6 @@ export function ArchbaseSecurityView({
 				dataField="passwordNeverExpires"
 				dataType="boolean"
 				header={`${t('archbase:Senha nunca expira?')}`}
-				inputFilterType="checkbox"
-				size={120}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="accountDeactivated"
-				dataType="boolean"
-				header={`${t('archbase:Desativado?')}`}
 				inputFilterType="checkbox"
 				size={120}
 			/>
