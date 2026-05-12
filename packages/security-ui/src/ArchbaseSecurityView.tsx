@@ -2,7 +2,7 @@
  * ArchbaseSecurityView — visão completa de usuários/grupos/permissões.
  * @status stable
  */
-import { ARCHBASE_IOC_API_TYPE, builder, emit, processDetailErrorMessage, processErrorMessage } from '@archbase/core';
+import { ARCHBASE_IOC_API_TYPE, builder, emit, processDetailErrorMessage, processErrorMessage, useValidationErrors } from '@archbase/core';
 import { ArchbaseDataSource } from '@archbase/data';
 // import { ArchbaseCountdownProgress } from '@archbase/components'; // Temporarily disabled
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
@@ -578,7 +578,9 @@ export function ArchbaseSecurityView({
 		if (!dsUsers.isEmpty()) {
 			const currentUser = dsUsers.gotoRecordByData(row);
 			if (currentUser) {
-				dsUsers.edit();
+				if (!dsUsers.isEditing()) {
+					dsUsers.edit();
+				}
 				
 				// 🔄 MIGRAÇÃO V1/V2: Edição com compatibilidade V1
 				if (!usersV1V2.isDataSourceV2) {
@@ -664,7 +666,9 @@ export function ArchbaseSecurityView({
 		if (!dsGroups.isEmpty()) {
 			const currentGroup = dsGroups.gotoRecordByData(row);
 			if (currentGroup) {
-				dsGroups.edit();
+				if (!dsGroups.isEditing()) {
+					dsGroups.edit();
+				}
 				setOpenedModal(SecurityType.GROUP);
 			}
 		}
@@ -718,16 +722,30 @@ export function ArchbaseSecurityView({
 		);
 	};
 
+	const validationContext = useValidationErrors();
+
 	const handleCloseUserModal = () => {
 		setOpenedModal('');
+		if (!dsUsers.isBrowsing()) {
+			dsUsers.cancel();
+		}
+		validationContext?.clearAll();
 	};
 
 	const handleCloseGroupModal = () => {
 		setOpenedModal('');
+		if (!dsGroups.isBrowsing()) {
+			dsGroups.cancel();
+		}
+		validationContext?.clearAll();
 	};
 
 	const handleCloseProfileModal = () => {
 		setOpenedModal('');
+		if (!dsProfiles.isBrowsing()) {
+			dsProfiles.cancel();
+		}
+		validationContext?.clearAll();
 	};
 
 	const handleAddProfileExecute = () => {
@@ -751,7 +769,9 @@ export function ArchbaseSecurityView({
 		if (!dsProfiles.isEmpty()) {
 			const currentProfile = dsProfiles.gotoRecordByData(row);
 			if (currentProfile) {
-				dsProfiles.edit();
+				if (!dsProfiles.isEditing()) {
+					dsProfiles.edit();
+				}
 				setOpenedModal(SecurityType.PROFILE);
 			}
 		}
