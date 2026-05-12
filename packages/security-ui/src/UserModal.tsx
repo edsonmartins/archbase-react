@@ -8,7 +8,6 @@ import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit, A
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@archbase/data'
 import { ArchbaseNotifications } from '@archbase/components'
 import { Grid, Group, Input, ScrollArea, Space, Stack, Text, Modal, Button } from '@mantine/core'
-import { useFocusTrap } from '@mantine/hooks'
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { useEffect, useState } from 'react'
 import { ArchbaseDualListSelector } from './ArchbaseDualListSelector'
@@ -96,7 +95,6 @@ export interface UserModalProps {
 }
 
 export const UserModal = (props: UserModalProps) => {
-  const focusTrapRef = useFocusTrap()
   const [passwordError, setPasswordError] = useState("")
   const options = { ...defaultUserModalOptions, ...(props.options ?? {}) }
 
@@ -186,7 +184,7 @@ export const UserModal = (props: UserModalProps) => {
       size="80%"
       styles={{ content: { maxWidth: 1000 } }}
     >
-      <ScrollArea ref={focusTrapRef} style={{ height: '500px' }}>
+      <ScrollArea style={{ height: '500px' }}>
         <Stack w={"98%"}>
           {options?.customContentBefore && (
             <>
