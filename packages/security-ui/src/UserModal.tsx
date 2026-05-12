@@ -154,7 +154,9 @@ export const UserModal = (props: UserModalProps) => {
   }, [props.opened])
 
   const handleSave = () => {
-    const currentRecord = props.dataSource.current;
+    const currentRecord = props.dataSource.getCurrentRecord();
+    if (!currentRecord) return;
+
     if (!currentRecord.password && props.dataSource.isInserting()) {
       setPasswordError(getI18nextInstance().t('archbase:Informe a senha'))
       return;
@@ -173,7 +175,7 @@ export const UserModal = (props: UserModalProps) => {
   };
 
   const handleCancel = () => {
-    props.onClickCancel(props.dataSource.current);
+    props.onClickCancel(props.dataSource.getCurrentRecord());
   };
 
   return (
@@ -188,7 +190,7 @@ export const UserModal = (props: UserModalProps) => {
         <Stack w={"98%"}>
           {options?.customContentBefore && (
             <>
-              {options.customContentBefore(props.dataSource.current)}
+              {options.customContentBefore(props.dataSource.getCurrentRecord()!)}
             </>
           )}
           <Grid>
@@ -378,7 +380,7 @@ export const UserModal = (props: UserModalProps) => {
           )}
           {options?.customContentAfter && (
             <>
-              {options.customContentAfter(props.dataSource.current)}
+              {options.customContentAfter(props.dataSource.getCurrentRecord()!)}
             </>
           )}
           <Space h={'12px'} />

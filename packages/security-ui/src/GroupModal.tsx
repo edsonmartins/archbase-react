@@ -11,9 +11,8 @@ import { ArchbaseDataSource } from '@archbase/data'
 import { ArchbaseEdit } from '@archbase/components'
 
 export interface GroupModalOptions {
-  customContentBefore?: React.ReactNode;
-
-  customContentAfter?: React.ReactNode;
+  customContentBefore?: (group: GroupDto) => React.ReactNode;
+  customContentAfter?: (group: GroupDto) => React.ReactNode;
 }
 
 export interface GroupModalProps {
@@ -23,8 +22,6 @@ export interface GroupModalProps {
   onClickCancel: (record?: GroupDto) => void
   onCustomSave?: (record?: GroupDto, callback?: Function) => void
   onAfterSave?: (record?: GroupDto) => void
-  customContentBefore?: React.ReactNode
-  customContentAfter?: React.ReactNode
   options?: GroupModalOptions
 }
 
@@ -34,19 +31,19 @@ export const GroupModal = (props: GroupModalProps) => {
   
   const handleSave = () => {
     if (props.onCustomSave) {
-      props.onCustomSave(props.dataSource.current, (success: boolean) => {
+      props.onCustomSave(props.dataSource.getCurrentRecord(), (success: boolean) => {
         if (success && props.onAfterSave) {
-          props.onAfterSave(props.dataSource.current);
+          props.onAfterSave(props.dataSource.getCurrentRecord());
         }
-        props.onClickOk(props.dataSource.current, success);
+        props.onClickOk(props.dataSource.getCurrentRecord(), success);
       });
     } else {
-      props.onClickOk(props.dataSource.current, true);
+      props.onClickOk(props.dataSource.getCurrentRecord(), true);
     }
   };
 
   const handleCancel = () => {
-    props.onClickCancel(props.dataSource.current);
+    props.onClickCancel(props.dataSource.getCurrentRecord());
   };
   
   return (
@@ -59,11 +56,7 @@ export const GroupModal = (props: GroupModalProps) => {
     >
       <ScrollArea style={{ height: '460px' }}>
         <Stack w={"98%"}>
-          {options?.customContentBefore && (
-            <>
-              {props.options.customContentBefore}
-            </>
-          )}
+          {options?.customContentBefore && options.customContentBefore(props.dataSource.getCurrentRecord()!)}
           <Grid>
             <Grid.Col span={{ base: 12 }}>
               <ArchbaseEdit
@@ -82,11 +75,7 @@ export const GroupModal = (props: GroupModalProps) => {
               />
             </Grid.Col>
           </Grid>
-          {options?.customContentAfter && (
-            <>
-              {props.options.customContentAfter}
-            </>
-          )}
+          {options?.customContentAfter && options.customContentAfter(props.dataSource.getCurrentRecord()!)}
           
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={handleCancel}>

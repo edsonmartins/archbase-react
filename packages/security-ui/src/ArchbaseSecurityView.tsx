@@ -46,6 +46,18 @@ import { SecurityType } from '@archbase/security';
 import { UserModal, UserModalOptions } from './UserModal';
 import { IconEye } from '@tabler/icons-react';
 
+export interface ArchbaseSecurityProps {
+	beforeDefaultUserActions?: (row: UserDto) => ReactNode;
+	afterDefaultUserActions?: (row: UserDto) => ReactNode;
+	beforeDefaultProfileActions?: (row: ProfileDto) => ReactNode;
+	afterDefaultProfileActions?: (row: ProfileDto) => ReactNode;
+	beforeDefaultGroupActions?: (row: GroupDto) => ReactNode;
+	afterDefaultGroupActions?: (row: GroupDto) => ReactNode;
+	userActionsColumnWidth?: number;
+	profileActionsColumnWidth?: number;
+	groupActionsColumnWidth?: number;
+}
+
 interface ArchbaseSecurityManagerProps {
 	height?: any;
 	width?: any;
@@ -54,6 +66,7 @@ interface ArchbaseSecurityManagerProps {
 	userModalOptions?: UserModalOptions;
 	groupModalOptions?: GroupModalOptions;
 	profileModalOptions?: ProfileModalOptions;
+	options?: ArchbaseSecurityProps;
 }
 
 export const NO_USER =
@@ -144,6 +157,7 @@ export function ArchbaseSecurityView({
 	userModalOptions,
 	profileModalOptions,
 	groupModalOptions,
+	options,
 }: ArchbaseSecurityManagerProps) {
 	const theme = useArchbaseTheme();
 	const templateStore = useArchbaseStore('securityStore');
@@ -609,6 +623,7 @@ export function ArchbaseSecurityView({
 	const buildUserRowActions = (row: UserDto): ReactNode => {
 		return (
 			<Group gap={1} wrap="nowrap">
+				{options?.beforeDefaultUserActions?.(row)}
 				<ActionIcon variant="transparent" onClick={() => handleUserViewRow(row)}>
 					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 				</ActionIcon>
@@ -623,6 +638,7 @@ export function ArchbaseSecurityView({
 						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
 				</Tooltip>
+				{options?.afterDefaultUserActions?.(row)}
 			</Group>
 		);
 	};
@@ -682,6 +698,7 @@ export function ArchbaseSecurityView({
 	const buildGroupRowActions = (row: GroupDto): ReactNode => {
 		return (
 			<Group gap={1} wrap="nowrap">
+				{options?.beforeDefaultGroupActions?.(row)}
 				<ActionIcon variant="transparent" onClick={() => handleGroupViewRow(row)}>
 					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 				</ActionIcon>
@@ -696,6 +713,7 @@ export function ArchbaseSecurityView({
 						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
 				</Tooltip>
+				{options?.afterDefaultGroupActions?.(row)}
 			</Group>
 		);
 	};
@@ -767,6 +785,7 @@ export function ArchbaseSecurityView({
 	const buildProfileRowActions = (row: ProfileDto): ReactNode => {
 		return (
 			<Group gap={1} wrap="nowrap">
+				{options?.beforeDefaultProfileActions?.(row)}
 				<ActionIcon variant="transparent" onClick={() => handleProfileViewRow(row)}>
 					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 				</ActionIcon>
@@ -781,36 +800,38 @@ export function ArchbaseSecurityView({
 						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
 				</Tooltip>
+				{options?.afterDefaultProfileActions?.(row)}
 			</Group>
 		);
 	};
 
 	const handleAccessTokenRevokeRow = () => {
-		if (dsAccessTokens.getCurrentRecord()) {
-			ArchbaseDialog.showConfirmDialogYesNo(
-				`${t('archbase:Confirme')}`,
-				`${t('archbase:Deseja revogar o token de Acesso do usuário ')}${dsAccessTokens.getCurrentRecord().user.name} ?`,
-				async () => {
-					await accessTokenApi
-						.revoke(dsAccessTokens.getCurrentRecord().token)
-						.then(async () => {
-							ArchbaseNotifications.showSuccess(
-								`${t('mentors:Informação')}`,
-								`${t('mentors:Token de Acesso revogado com sucesso!')}`,
-							);
-							dsAccessTokens.refreshData();
-						})
-						.catch((error) => {
-							ArchbaseDialog.showErrorWithDetails(
-								`${t('mentors:Atenção')}`,
-								processErrorMessage(error),
-								processDetailErrorMessage(error),
-							);
-						});
-				},
-				() => {},
-			);
-		}
+		const record = dsAccessTokens.getCurrentRecord();
+		if (!record) return;
+
+		ArchbaseDialog.showConfirmDialogYesNo(
+			`${t('archbase:Confirme')}`,
+			`${t('archbase:Deseja revogar o token de Acesso do usuário ')}${record.user.name} ?`,
+			async () => {
+				await accessTokenApi
+					.revoke(record.token)
+					.then(async () => {
+						ArchbaseNotifications.showSuccess(
+							`${t('mentors:Informação')}`,
+							`${t('mentors:Token de Acesso revogado com sucesso!')}`,
+						);
+						dsAccessTokens.refreshData();
+					})
+					.catch((error) => {
+						ArchbaseDialog.showErrorWithDetails(
+							`${t('mentors:Atenção')}`,
+							processErrorMessage(error),
+							processDetailErrorMessage(error),
+						);
+					});
+			},
+			() => {},
+		);
 	};
 
 	const handleOpenUserPermissionsModal = () => {
@@ -937,6 +958,7 @@ export function ArchbaseSecurityView({
 					getRowId={getUserRowId}
 					toolbarLeftContent={renderUsersToolbarActions()}
 					renderRowActions={buildUserRowActions}
+					actionsColumnWidth={options?.userActionsColumnWidth}
 					children={userColumns}
 				/>
 			</Paper>
@@ -969,6 +991,7 @@ export function ArchbaseSecurityView({
 					enableGlobalFilter={true}
 					getRowId={getGroupRowId}
 					renderRowActions={buildGroupRowActions}
+					actionsColumnWidth={options?.groupActionsColumnWidth}
 					children={groupColumns}
 					toolbarLeftContent={renderGroupsToolbarActions()}
 				/>
@@ -1003,6 +1026,7 @@ export function ArchbaseSecurityView({
 					getRowId={getProfileRowId}
 					toolbarLeftContent={renderProfilesToolbarActions()}
 					renderRowActions={buildProfileRowActions}
+					actionsColumnWidth={options?.profileActionsColumnWidth}
 					children={profileColumns}
 				/>
 			</Paper>
