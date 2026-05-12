@@ -329,10 +329,6 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		null
 	);
 
-	// 🔄 DEBUG: Log da versão detectada (apenas desenvolvimento)
-	if (process.env.NODE_ENV === 'development' && dataSource) {
-	}
-
 	// Contexto de validação (opcional - pode não existir)
 	const validationContext = useValidationErrors();
 
@@ -362,8 +358,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	};
 
 	const [_value, setValue, controlled] = useUncontrolled({
-		value: processValue(value),
-		defaultValue: processValue(defaultValue),
+		value: value !== undefined ? processValue(value) : undefined,
+		defaultValue: defaultValue !== undefined ? processValue(defaultValue) : undefined,
 		finalValue: null,
 		onChange,
 	});
