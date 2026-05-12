@@ -260,12 +260,15 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   });
 
   // Estado para paginação com limitação de tamanho de página (MIT version)
-  const [paginationModel, setPaginationModel] = useState({
-    page: Number.isFinite(getCurrentPageFromDataSource(dataSource)) ? getCurrentPageFromDataSource(dataSource) : pageIndex,
-    pageSize: Math.min(
-      Number.isFinite(dataSource?.getPageSize?.()) ? dataSource.getPageSize() : pageSize,
-      MAX_PAGE_SIZE_MIT
-    )
+  const [paginationModel, setPaginationModel] = useState(() => {
+    const page = getCurrentPageFromDataSource(dataSource);
+    return {
+      page: Number.isFinite(page) ? page : pageIndex,
+      pageSize: Math.min(
+        Number.isFinite(dataSource?.getPageSize?.()) ? dataSource.getPageSize() : pageSize,
+        MAX_PAGE_SIZE_MIT
+      )
+    };
   });
 
   const [sortModel, setSortModel] = useState(() => getInitialSortModel(dataSource))
@@ -1263,9 +1266,8 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         setRows(getRecordsFromDataSource<T>(dataSource));
 
       // Validar valores da paginação
-      const currentPage = Number.isFinite(getCurrentPageFromDataSource(dataSource))
-        ? getCurrentPageFromDataSource(dataSource)
-        : 0;
+      const rawPage = getCurrentPageFromDataSource(dataSource);
+      const currentPage = Number.isFinite(rawPage) ? rawPage : 0;
 
       const pageSize = Number.isFinite(dataSource.getPageSize?.())
         ? Math.min(Math.max(1, dataSource.getPageSize()), MAX_PAGE_SIZE_MIT)
@@ -1298,9 +1300,8 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         setRows(getRecordsFromDataSource<T>(dataSource));
 
       // Validar valores da paginação
-      const currentPage = Number.isFinite(getCurrentPageFromDataSource(dataSource))
-        ? getCurrentPageFromDataSource(dataSource)
-        : 0;
+      const rawPage = getCurrentPageFromDataSource(dataSource);
+      const currentPage = Number.isFinite(rawPage) ? rawPage : 0;
 
       const pageSize = Number.isFinite(dataSource.getPageSize?.())
         ? Math.min(Math.max(1, dataSource.getPageSize()), MAX_PAGE_SIZE_MIT)
