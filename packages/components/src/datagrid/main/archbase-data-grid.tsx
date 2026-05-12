@@ -314,7 +314,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   })
   // Ref que mantém sempre os valores mais recentes para uso no handler do DataSource.
   // Evita que o listener useEffect precise re-registrar o handler a cada mudança de deps instáveis.
-  const handlerDepsRef = useRef({ rows, getRowId, columns, apiRef, onSelectedRowsChanged, closeAllDetailPanels })
+  const handlerDepsRef = useRef<any>({})
   useEffect(() => {
     handlerDepsRef.current = { rows, getRowId, columns, apiRef, onSelectedRowsChanged, closeAllDetailPanels }
   })
