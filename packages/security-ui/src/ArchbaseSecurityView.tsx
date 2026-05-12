@@ -724,7 +724,17 @@ export function ArchbaseSecurityView({
 
 	const validationContext = useValidationErrors();
 
-	const handleCloseUserModal = () => {
+	const handleSaveUserModal = async () => {
+		try {
+			await dsUsers.save();
+		} catch (_error) {
+			return;
+		}
+		setOpenedModal('');
+		validationContext?.clearAll();
+	};
+
+	const handleCancelUserModal = () => {
 		setOpenedModal('');
 		if (!dsUsers.isBrowsing()) {
 			dsUsers.cancel();
@@ -732,7 +742,17 @@ export function ArchbaseSecurityView({
 		validationContext?.clearAll();
 	};
 
-	const handleCloseGroupModal = () => {
+	const handleSaveGroupModal = async () => {
+		try {
+			await dsGroups.save();
+		} catch (_error) {
+			return;
+		}
+		setOpenedModal('');
+		validationContext?.clearAll();
+	};
+
+	const handleCancelGroupModal = () => {
 		setOpenedModal('');
 		if (!dsGroups.isBrowsing()) {
 			dsGroups.cancel();
@@ -740,7 +760,17 @@ export function ArchbaseSecurityView({
 		validationContext?.clearAll();
 	};
 
-	const handleCloseProfileModal = () => {
+	const handleSaveProfileModal = async () => {
+		try {
+			await dsProfiles.save();
+		} catch (_error) {
+			return;
+		}
+		setOpenedModal('');
+		validationContext?.clearAll();
+	};
+
+	const handleCancelProfileModal = () => {
 		setOpenedModal('');
 		if (!dsProfiles.isBrowsing()) {
 			dsProfiles.cancel();
@@ -1116,28 +1146,28 @@ export function ArchbaseSecurityView({
 			</Paper>
 			{openedModal === SecurityType.USER ? (
 				<UserModal
-					onClickOk={handleCloseUserModal}
+					onClickOk={handleSaveUserModal}
 					opened={true}
 					dataSource={dsUsers}
-					onClickCancel={handleCloseUserModal}
+					onClickCancel={handleCancelUserModal}
 					options={userModalOptions}
 				/>
 			) : null}
 			{openedModal === SecurityType.GROUP ? (
 				<GroupModal
-					onClickOk={handleCloseGroupModal}
+					onClickOk={handleSaveGroupModal}
 					opened={true}
 					dataSource={dsGroups}
-					onClickCancel={handleCloseGroupModal}
+					onClickCancel={handleCancelGroupModal}
 					options={groupModalOptions}
 				/>
 			) : null}
 			{openedModal === SecurityType.PROFILE ? (
 				<ProfileModal
-					onClickOk={handleCloseProfileModal}
+					onClickOk={handleSaveProfileModal}
 					opened={true}
 					dataSource={dsProfiles}
-					onClickCancel={handleCloseProfileModal}
+					onClickCancel={handleCancelProfileModal}
 					options={profileModalOptions}
 				/>
 			) : null}
