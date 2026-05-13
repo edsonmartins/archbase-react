@@ -1,19 +1,16 @@
 /**
  * UserModal — modal de cadastro/edição de usuários com roles e ações.
  * @status stable
- *
- * PERFORMANCE FIX: Usa DataSource isolado para evitar re-renders do Grid
- * durante a digitação nos inputs da modal.
  */
 import { ARCHBASE_IOC_API_TYPE, getI18nextInstance, builder, emit } from '@archbase/core'
-import { ArchbaseDataSource, useArchbaseIsolatedDataSource } from '@archbase/data'
+import { ArchbaseDataSource } from '@archbase/data'
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit, ArchbaseAvatarEdit } from '@archbase/components'
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@archbase/data'
 import { ArchbaseNotifications } from '@archbase/components'
 import { Grid, Group, Input, ScrollArea, Space, Stack, Text, Modal, Button } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
 import { useArchbaseTranslation } from '@archbase/core';
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ArchbaseDualListSelector } from './ArchbaseDualListSelector'
 import { ArchbaseGroupService } from '@archbase/security'
 import { ArchbaseProfileService } from '@archbase/security'
@@ -103,20 +100,6 @@ export const UserModal = (props: UserModalProps) => {
   const [passwordError, setPasswordError] = useState("")
   const options = { ...defaultUserModalOptions, ...(props.options ?? {}) }
 
-  // PERFORMANCE FIX: Usar DataSource isolado para evitar re-renders do Grid
-  // durante a digitação. O DS isolado trabalha com uma cópia do registro.
-  const {
-    dataSource: isolatedDS,
-    applyChanges,
-    isInserting,
-    isEditing,
-    currentRecord,
-  } = useArchbaseIsolatedDataSource<UserDto>({
-    parentDataSource: props.dataSource,
-    opened: props.opened,
-    name: 'dsUserModal',
-  });
-
   const groupApi = useArchbaseRemoteServiceApi<ArchbaseGroupService>(ARCHBASE_IOC_API_TYPE.Group)
   const { dataSource: dsGroups } = useArchbaseRemoteDataSource<GroupDto, string>({
     name: `dsGroups`,
@@ -143,23 +126,23 @@ export const UserModal = (props: UserModalProps) => {
 
   useEffect(() => {
     setPasswordError("")
-  }, [isolatedDS.getFieldValue("password")])
+  }, [props.dataSource.getFieldValue("password")])
 
   const setDefaultValues = async () => {
-    if (!isInserting) return;
+    if (!props.dataSource.isInserting()) return;
 
     if (options.userDefaultProfile) {
       const filter = emit(builder.eq("name", options.userDefaultProfile))
       const result = await profileApi.findAllWithFilter(filter, 0, 1)
       if (result && result.content.length > 0) {
-        isolatedDS.setFieldValue("profile", result.content[0])
+        props.dataSource.setFieldValue("profile", result.content[0])
       }
     }
     if (options.userDefaultGroups) {
       const filter = emit(builder.in("name", options.userDefaultGroups))
       const result = await groupApi.findAllWithFilter(filter, 0, 500)
       if (result && result.content.length > 0) {
-        isolatedDS.setFieldValue("groups", result.content.map(group => UserGroupDto.newInstance(group)))
+        props.dataSource.setFieldValue("groups", result.content.map(group => UserGroupDto.newInstance(group)))
       }
     }
   }
@@ -171,32 +154,26 @@ export const UserModal = (props: UserModalProps) => {
   }, [props.opened])
 
   const handleSave = () => {
-    const record = currentRecord;
-    if (!record) return;
-
-    if (!record.password && isInserting) {
+    const currentRecord = props.dataSource.current;
+    if (!currentRecord.password && props.dataSource.isInserting()) {
       setPasswordError(getI18nextInstance().t('archbase:Informe a senha'))
       return;
     }
-
-    // Aplicar mudanças do DS isolado de volta ao DS principal
-    const savedRecord = applyChanges();
-
+    
     if (props.onCustomSave) {
-      props.onCustomSave(savedRecord, (success: boolean) => {
+      props.onCustomSave(currentRecord, (success: boolean) => {
         if (success && props.onAfterSave) {
-          props.onAfterSave(savedRecord);
+          props.onAfterSave(currentRecord);
         }
-        props.onClickOk(savedRecord, success);
+        props.onClickOk(currentRecord, success);
       });
     } else {
-      props.onClickOk(savedRecord, true);
+      props.onClickOk(currentRecord, true);
     }
   };
 
   const handleCancel = () => {
-    // Não aplicar mudanças - apenas fechar
-    props.onClickCancel(currentRecord);
+    props.onClickCancel(props.dataSource.current);
   };
 
   return (
@@ -211,7 +188,7 @@ export const UserModal = (props: UserModalProps) => {
         <Stack w={"98%"}>
           {options?.customContentBefore && (
             <>
-              {options.customContentBefore(currentRecord!)}
+              {options.customContentBefore(props.dataSource.current)}
             </>
           )}
           <Grid>
@@ -220,7 +197,7 @@ export const UserModal = (props: UserModalProps) => {
                 <ArchbaseEdit
                   label={`${getI18nextInstance().t('archbase:Nome completo')}`}
                   placeholder={`${getI18nextInstance().t('archbase:Informe o nome completo do usuário')}`}
-                  dataSource={isolatedDS}
+                  dataSource={props.dataSource}
                   dataField="name"
                   required
                   width={'calc(100% - 208px)'}
@@ -229,7 +206,7 @@ export const UserModal = (props: UserModalProps) => {
                   <ArchbaseEdit
                     label={`${getI18nextInstance().t('archbase:Apelido')}`}
                     placeholder={`${getI18nextInstance().t('archbase:Apelido')}`}
-                    dataSource={isolatedDS}
+                    dataSource={props.dataSource}
                     dataField="nickname"
                     required={options.requiredNickname}
                   />
@@ -240,7 +217,7 @@ export const UserModal = (props: UserModalProps) => {
               <ArchbaseEdit
                 label={`${getI18nextInstance().t('archbase:Descrição do usuário')}`}
                 placeholder={`${getI18nextInstance().t('archbase:Informe a descrição do usuário')}`}
-                dataSource={isolatedDS}
+                dataSource={props.dataSource}
                 dataField="description"
                 required
               />
@@ -251,20 +228,20 @@ export const UserModal = (props: UserModalProps) => {
               <ArchbaseEdit
                 label={`${getI18nextInstance().t('archbase:E-mail')}`}
                 placeholder={`${getI18nextInstance().t('archbase:Informe o e-mail do usuário')}`}
-                dataSource={isolatedDS}
-                onChangeValue={(value) => isolatedDS.setFieldValue("userName", value)}
+                dataSource={props.dataSource}
+                onChangeValue={(value) => props.dataSource.setFieldValue("userName", value)}
                 dataField="email"
-                readOnly={isEditing ? !options.allowEditEmail : false}
+                readOnly={props.dataSource.isEditing() ? !options.allowEditEmail : false}
                 required
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <ArchbasePasswordEdit
                 label={`${getI18nextInstance().t('archbase:Senha usuário')}`}
-                dataSource={isolatedDS}
+                dataSource={props.dataSource}
                 dataField="password"
                 error={passwordError}
-                required={isolatedDS.getFieldValue("isNewUser")}
+                required={props.dataSource.getFieldValue("isNewUser")}
               />
             </Grid.Col>
           </Grid>
@@ -273,7 +250,7 @@ export const UserModal = (props: UserModalProps) => {
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <ArchbaseSelect<UserDto, string, ProfileDto>
                   label={`${getI18nextInstance().t('archbase:Perfil do usuário')}`}
-                  dataSource={isolatedDS}
+                  dataSource={props.dataSource}
                   dataField="profile"
                   options={dsProfiles}
                   allowDeselect={true}
@@ -295,7 +272,7 @@ export const UserModal = (props: UserModalProps) => {
                 {options.showChangePasswordOnNextLogin && (
                   <Input.Wrapper label="">
                     <ArchbaseCheckbox
-                      dataSource={isolatedDS}
+                      dataSource={props.dataSource}
                       dataField="changePasswordOnNextLogin"
                       label={`${getI18nextInstance().t('archbase:Deve alterar senha próximo login ?')}`}
                     />
@@ -304,7 +281,7 @@ export const UserModal = (props: UserModalProps) => {
                 {options.showAllowPasswordChange && (
                   <Input.Wrapper label="">
                     <ArchbaseCheckbox
-                      dataSource={isolatedDS}
+                      dataSource={props.dataSource}
                       dataField="allowPasswordChange"
                       label={`${getI18nextInstance().t('archbase:Pode alterar a senha ?')}`}
                     />
@@ -313,7 +290,7 @@ export const UserModal = (props: UserModalProps) => {
                 {options.showPasswordNeverExpires && (
                   <Input.Wrapper label="">
                     <ArchbaseCheckbox
-                      dataSource={isolatedDS}
+                      dataSource={props.dataSource}
                       dataField="passwordNeverExpires"
                       label={`${getI18nextInstance().t('archbase:Senha nunca expira ?')}`}
                     />
@@ -326,7 +303,7 @@ export const UserModal = (props: UserModalProps) => {
                 {options.showAccountDeactivated && (
                   <Input.Wrapper label="">
                     <ArchbaseCheckbox
-                      dataSource={isolatedDS}
+                      dataSource={props.dataSource}
                       dataField="accountDeactivated"
                       label={`${getI18nextInstance().t('archbase:Conta desativada ?')}`}
                     />
@@ -335,7 +312,7 @@ export const UserModal = (props: UserModalProps) => {
                 {options.showAccountLocked && (
                   <Input.Wrapper label="">
                     <ArchbaseCheckbox
-                      dataSource={isolatedDS}
+                      dataSource={props.dataSource}
                       dataField="accountLocked"
                       label={`${getI18nextInstance().t('archbase:Conta bloqueada ?')}`}
                     />
@@ -344,7 +321,7 @@ export const UserModal = (props: UserModalProps) => {
                 {options.showIsAdministrator && (
                   <Input.Wrapper label="">
                     <ArchbaseCheckbox
-                      dataSource={isolatedDS}
+                      dataSource={props.dataSource}
                       dataField="isAdministrator"
                       label={`${getI18nextInstance().t('archbase:Administrador ?')}`}
                     />
@@ -356,7 +333,7 @@ export const UserModal = (props: UserModalProps) => {
               <Stack gap="lg">
                 <ArchbaseAvatarEdit
                   label={getI18nextInstance().t('archbase:Foto do usuário')}
-                  dataSource={isolatedDS}
+                  dataSource={props.dataSource}
                   dataField="avatar"
                   width={120}
                   height={120}
@@ -378,8 +355,8 @@ export const UserModal = (props: UserModalProps) => {
                   titleAssigned={getI18nextInstance().t('archbase:Selecionados')}
                   assignedItemsDS={
                     new ArchbaseDataSource('dsDualList', {
-                      records: isolatedDS.getFieldValue('groups') || [],
-                      grandTotalRecords: (isolatedDS.getFieldValue('groups') || []).length,
+                      records: props.dataSource.getFieldValue('groups'),
+                      grandTotalRecords: props.dataSource.getFieldValue('groups').length,
                       currentPage: 0,
                       totalPages: 0,
                       pageSize: 999999
@@ -401,7 +378,7 @@ export const UserModal = (props: UserModalProps) => {
           )}
           {options?.customContentAfter && (
             <>
-              {options.customContentAfter(currentRecord!)}
+              {options.customContentAfter(props.dataSource.current)}
             </>
           )}
           <Space h={'12px'} />
