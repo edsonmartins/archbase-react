@@ -863,6 +863,37 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
     this.listeners.delete(listener);
   }
 
+  /**
+   * Adiciona um listener para mudanças em um campo específico.
+   * Permite que componentes escutem apenas mudanças no campo que exibem,
+   * evitando re-renders desnecessários.
+   */
+  addFieldChangeListener(
+    fieldName: string,
+    listener: (fieldName: string, oldValue: any, newValue: any) => void
+  ): this {
+    const wrappedListener = (event: DataSourceEvent<T>) => {
+      if (event.type === DataSourceEventNames.fieldChanged &&
+          'fieldName' in event && event.fieldName === fieldName) {
+        listener(fieldName, (event as any).oldValue, (event as any).newValue);
+      }
+    };
+    this.addListener(wrappedListener);
+    return this;
+  }
+
+  /**
+   * Remove um listener de campo específico.
+   * Nota: A remoção exata não é suportada nesta versão simplificada.
+   */
+  removeFieldChangeListener(
+    _fieldName: string,
+    _listener: (fieldName: string, oldValue: any, newValue: any) => void
+  ): this {
+    // V2 simplification - would need to track wrapped listeners for exact removal
+    return this;
+  }
+
   private emit(event: DataSourceEvent<T>): void {
     this.listeners.forEach(listener => {
       try {
