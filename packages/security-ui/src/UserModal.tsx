@@ -96,7 +96,6 @@ export interface UserModalProps {
 }
 
 export const UserModal = (props: UserModalProps) => {
-  const focusTrapRef = useFocusTrap()
   const [passwordError, setPasswordError] = useState("")
   const options = { ...defaultUserModalOptions, ...(props.options ?? {}) }
 
@@ -111,6 +110,7 @@ export const UserModal = (props: UserModalProps) => {
       ArchbaseNotifications.showError(getI18nextInstance().t('archbase:WARNING'), error, origin)
     }
   })
+  console.log("versão 12/05/2026")
 
   const profileApi = useArchbaseRemoteServiceApi<ArchbaseProfileService>(ARCHBASE_IOC_API_TYPE.Profile)
   const { dataSource: dsProfiles } = useArchbaseRemoteDataSource<ProfileDto, string>({
@@ -184,7 +184,7 @@ export const UserModal = (props: UserModalProps) => {
       size="80%"
       styles={{ content: { maxWidth: 1000 } }}
     >
-      <ScrollArea ref={focusTrapRef} style={{ height: '500px' }}>
+      <ScrollArea style={{ height: '500px' }}>
         <Stack w={"98%"}>
           {options?.customContentBefore && (
             <>

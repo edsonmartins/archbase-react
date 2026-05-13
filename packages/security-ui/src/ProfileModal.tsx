@@ -4,7 +4,6 @@
  */
 import React from 'react'
 import { Grid, ScrollArea, Stack, Modal, Button, Group } from '@mantine/core'
-import { useFocusTrap } from '@mantine/hooks'
 import { IArchbaseDataSourceBase } from '@archbase/data'
 import { getI18nextInstance } from '@archbase/core';
 import { ProfileDto } from '@archbase/security'
@@ -26,7 +25,6 @@ export interface ProfileModalProps {
 }
 
 export const ProfileModal = (props: ProfileModalProps) => {
-  const focusTrapRef = useFocusTrap()
   const options = {...(props.options ?? {}) }
   
   const handleSave = () => {
