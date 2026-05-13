@@ -5,7 +5,6 @@ import { PageHeader } from '../../../components/PageHeader';
 import { DocsTabs } from '../../../components/DocsTabs';
 import {
   ARCHBASE_TAG_INPUT_DATA,
-  ARCHBASE_PHONE_INPUT_DATA,
   ARCHBASE_MULTI_EMAIL_DATA,
   ARCHBASE_SIGNATURE_PAD_DATA,
   ARCHBASE_MENTION_INPUT_DATA,
@@ -15,11 +14,6 @@ import docgen from '../../../docgen.json';
 import { STYLES_API_DATA } from '../../../styles-api';
 
 const ArchbaseTagInputDocs = dynamic(() => import('../../../content/components/editors/archbase-tag-input.mdx'), {
-  ssr: false,
-  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
-});
-
-const ArchbasePhoneInputDocs = dynamic(() => import('../../../content/components/editors/archbase-phone-input.mdx'), {
   ssr: false,
   loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
 });
@@ -52,7 +46,6 @@ export default function NewEditorsPage() {
         docgen={docgen}
         componentsProps={[
           'ArchbaseTagInput',
-          'ArchbasePhoneInput',
           'ArchbaseMultiEmail',
           'ArchbaseSignaturePad',
           'ArchbaseMentionInput',
@@ -60,7 +53,6 @@ export default function NewEditorsPage() {
         ]}
         componentsStyles={[
           'ArchbaseTagInput',
-          'ArchbasePhoneInput',
           'ArchbaseMultiEmail',
           'ArchbaseSignaturePad',
           'ArchbaseMentionInput',
@@ -69,7 +61,6 @@ export default function NewEditorsPage() {
         stylesApiData={STYLES_API_DATA}
       >
         <ArchbaseTagInputDocs />
-        <ArchbasePhoneInputDocs />
         <ArchbaseMultiEmailDocs />
         <ArchbaseSignaturePadDocs />
         <ArchbaseMentionInputDocs />
