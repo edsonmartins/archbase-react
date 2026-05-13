@@ -105,6 +105,11 @@ export const getAgGridMantineCssVars = (
 ): Record<string, string> => {
   const isDark = colorScheme === 'dark';
 
+  // Cell focus background color
+  const cellFocusBgColor = isDark
+    ? `rgba(${hexToRgb(theme.colors[theme.primaryColor][7])}, 0.3)`
+    : `rgba(${hexToRgb(theme.colors[theme.primaryColor][4])}, 0.25)`;
+
   return {
     '--ag-background-color': isDark ? theme.colors.dark[6] : theme.white,
     '--ag-foreground-color': isDark ? theme.colors.gray[0] : theme.colors.dark[9],
@@ -124,20 +129,45 @@ export const getAgGridMantineCssVars = (
     '--ag-checkbox-checked-color': theme.colors[theme.primaryColor][6],
     '--ag-checkbox-unchecked-color': isDark ? theme.colors.gray[5] : theme.colors.gray[4],
     '--ag-input-focus-border-color': theme.colors[theme.primaryColor][6],
-    // Cell selection - background color instead of border
+    // Cell selection/range - background color instead of border
     '--ag-range-selection-border-color': 'transparent',
     '--ag-range-selection-background-color': isDark
       ? `rgba(${hexToRgb(theme.colors[theme.primaryColor][7])}, 0.4)`
       : `rgba(${hexToRgb(theme.colors[theme.primaryColor][4])}, 0.3)`,
-    // Remove cell focus outline/border
-    '--ag-cell-focus-border': 'none',
-    '--ag-focus-shadow': 'none',
-    '--ag-input-focus-box-shadow': 'none',
-    // Selected cell background
     '--ag-range-selection-highlight-color': isDark
       ? `rgba(${hexToRgb(theme.colors[theme.primaryColor][7])}, 0.4)`
       : `rgba(${hexToRgb(theme.colors[theme.primaryColor][4])}, 0.3)`,
+    // Cell focus - custom variable for focused cell background
+    '--ag-input-focus-box-shadow': 'none',
+    '--archbase-cell-focus-bg': cellFocusBgColor,
   };
+};
+
+/**
+ * Get custom CSS styles for AG Grid cell focus
+ */
+export const getAgGridCustomStyles = (
+  theme: MantineTheme,
+  colorScheme: 'light' | 'dark'
+): string => {
+  const isDark = colorScheme === 'dark';
+  const cellFocusBgColor = isDark
+    ? `rgba(${hexToRgb(theme.colors[theme.primaryColor][7])}, 0.3)`
+    : `rgba(${hexToRgb(theme.colors[theme.primaryColor][4])}, 0.25)`;
+
+  return `
+    .ag-cell-focus:not(.ag-cell-range-selected) {
+      background-color: ${cellFocusBgColor} !important;
+      border: none !important;
+      outline: none !important;
+    }
+    .ag-cell-focus.ag-cell-range-selected {
+      background-color: ${cellFocusBgColor} !important;
+    }
+    .ag-row-selected .ag-cell-focus {
+      background-color: ${cellFocusBgColor} !important;
+    }
+  `;
 };
 
 /**

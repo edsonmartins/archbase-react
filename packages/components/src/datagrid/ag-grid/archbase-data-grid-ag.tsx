@@ -33,7 +33,7 @@ import { ActionIcon, Box, Group, Title, useMantineColorScheme } from '@mantine/c
 import { IconChevronDown, IconChevronRight, IconX } from '@tabler/icons-react';
 
 // Import theme and locale
-import { createArchbaseAgGridTheme, getAgGridMantineCssVars } from './ag-grid-mantine-theme';
+import { createArchbaseAgGridTheme, getAgGridMantineCssVars, getAgGridCustomStyles } from './ag-grid-mantine-theme';
 import { AG_GRID_LOCALE_PTBR } from './ag-grid-locale-ptbr';
 
 // Import types and utilities
@@ -997,6 +997,12 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
     [theme, colorScheme]
   );
 
+  // Custom CSS for cell focus styling
+  const customStyles = useMemo(
+    () => getAgGridCustomStyles(theme, colorScheme),
+    [theme, colorScheme]
+  );
+
   // Render fixed detail panel (inline mode)
   const renderFixedDetailPanel = () => {
     if (!renderDetailPanel || expandedRowIds.size === 0) return null;
@@ -1118,6 +1124,9 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
       ref={gridContainerRef}
       style={containerStyle}
     >
+      {/* Custom styles for cell focus */}
+      <style dangerouslySetInnerHTML={{ __html: customStyles }} />
+
       {/* Toolbar */}
       {enableTopToolbar && (
         <ArchbaseDataGridToolbar
