@@ -19,7 +19,7 @@ const YELLOW = '\x1b[33m';
 const RED = '\x1b[31m';
 const RESET = '\x1b[0m';
 
-const VERDACCIO_URL = 'http://192.168.1.110:4873';
+const VERDACCIO_URL = 'http://192.168.100.5:4873';
 
 function log(message, color = '') {
   console.log(`${color}${message}${RESET}`);

@@ -4,16 +4,14 @@
  */
 import React from 'react'
 import { Grid, ScrollArea, Stack, Modal, Button, Group } from '@mantine/core'
-import { useFocusTrap } from '@mantine/hooks'
 import { IArchbaseDataSourceBase } from '@archbase/data'
 import { getI18nextInstance } from '@archbase/core';
 import { ProfileDto } from '@archbase/security'
 import { ArchbaseEdit } from '@archbase/components'
 
 export interface ProfileModalOptions {
-  customContentBefore?: React.ReactNode;
-
-  customContentAfter?: React.ReactNode;
+  customContentBefore?: (profile: ProfileDto) => React.ReactNode;
+  customContentAfter?: (profile: ProfileDto) => React.ReactNode;
 }
 
 export interface ProfileModalProps {
@@ -23,13 +21,10 @@ export interface ProfileModalProps {
   onClickCancel: (record?: ProfileDto) => void
   onCustomSave?: (record?: ProfileDto, callback?: Function) => void
   onAfterSave?: (record?: ProfileDto) => void
-  customContentBefore?: React.ReactNode
-  customContentAfter?: React.ReactNode
   options?: ProfileModalOptions
 }
 
 export const ProfileModal = (props: ProfileModalProps) => {
-  const focusTrapRef = useFocusTrap()
   const options = {...(props.options ?? {}) }
   
   const handleSave = () => {
@@ -59,11 +54,7 @@ export const ProfileModal = (props: ProfileModalProps) => {
     >
       <ScrollArea style={{ height: '460px' }}>
         <Stack w={"98%"}>
-          {options?.customContentBefore && (
-            <>
-              {options.customContentBefore}
-            </>
-          )}
+          {options?.customContentBefore && options.customContentBefore(props.dataSource.getCurrentRecord()!)}
           <Grid>
             <Grid.Col span={{ base: 12, md: 12, lg: 12 }}>
               <ArchbaseEdit
@@ -82,11 +73,7 @@ export const ProfileModal = (props: ProfileModalProps) => {
               />
             </Grid.Col>
           </Grid>
-          {options?.customContentAfter && (
-            <>
-              {options.customContentAfter}
-            </>
-          )}
+          {options?.customContentAfter && options.customContentAfter(props.dataSource.getCurrentRecord()!)}
           
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={handleCancel}>

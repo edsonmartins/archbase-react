@@ -138,6 +138,12 @@ export type { ArchbaseMentionInputProps, ArchbaseMentionConfig } from './Archbas
 export { ArchbaseSignaturePad } from './ArchbaseSignaturePad'
 export type { ArchbaseSignaturePadProps } from './ArchbaseSignaturePad'
 
+export { ArchbaseMultiSelect, SelectItem, SelectedItem } from './ArchbaseMultiSelect'
+export type { ArchbaseMultiSelectProps } from './ArchbaseMultiSelect'
+
+export { ArchbaseTagInputEdit } from './ArchbaseTagInputEdit'
+export type { ArchbaseTagInputEditProps } from './ArchbaseTagInputEdit'
+
 export { ArchbaseBarcodeScanner } from './ArchbaseBarcodeScanner'
 export type { ArchbaseBarcodeScannerProps } from './ArchbaseBarcodeScanner'
 

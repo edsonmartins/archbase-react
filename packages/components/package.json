@@ -1,6 +1,6 @@
 {
   "name": "@archbase/components",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "UI Components for Archbase React v3 - Form editors, data visualization, and business components",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -152,6 +152,6 @@
     "@types/react-mentions": "^4.1.13"
   },
   "publishConfig": {
-    "registry": "http://192.168.1.110:4873"
+    "registry": "http://192.168.100.5:4873"
   }
 }

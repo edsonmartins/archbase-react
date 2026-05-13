@@ -44,6 +44,8 @@ const nextConfig = {
     '@archbase/feature-flags',
     'suneditor',
     'suneditor-react',
+    'react-mosaic-component',
+    'rdndmb-html5-to-touch',
   ],
   webpack: (config, { isServer }) => {
     // Prevent next/document from being bundled outside of _document
@@ -70,6 +72,16 @@ const nextConfig = {
       '@archbase/ssr': path.join(packagesPath, 'ssr/src'),
       '@archbase/feature-flags': path.join(packagesPath, 'feature-flags/src'),
     };
+
+    if (isServer) {
+      // react-mosaic-component (CJS) require()s ESM-only packages (react-dnd etc.)
+      // which causes Next.js server webpack to fail. Server gets an empty module;
+      // client bundle gets the real package (client webpack has no ESM restriction).
+      // Paired with ssr:false on the page, the empty module is never called at runtime.
+      // A regra do Node.js é: um arquivo CJS não pode require() um pacote que é ESM puro. Se tentar, o Node lança um erro em runtime. É por isso que o Next.js adicionou uma checagem estática no webpack server — ele detecta esse padrão durante o build e falha imediatamente em vez de deixar o servidor crashar em produção.
+      // O browser não tem esse sistema. Quando o webpack compila para o browser, ele pega todos os arquivos (sejam CJS ou ESM) e os transforma em um bundle JavaScript comum — uma função auto-executável ou similar. O browser não sabe, e não se importa, se o arquivo original era CJS ou ESM. O webpack resolve tudo durante a compilação e entrega JS puro para o browser executar.
+      config.resolve.alias['react-mosaic-component'] = false;
+    }
 
     // Add raw-loader for demo code imports
     config.module.rules.push({

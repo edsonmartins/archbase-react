@@ -329,10 +329,6 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 		null
 	);
 
-	// 🔄 DEBUG: Log da versão detectada (apenas desenvolvimento)
-	if (process.env.NODE_ENV === 'development' && dataSource) {
-	}
-
 	// Contexto de validação (opcional - pode não existir)
 	const validationContext = useValidationErrors();
 
@@ -362,8 +358,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	};
 
 	const [_value, setValue, controlled] = useUncontrolled({
-		value: processValue(value),
-		defaultValue: processValue(defaultValue),
+		value: value !== undefined ? processValue(value) : undefined,
+		defaultValue: defaultValue !== undefined ? processValue(defaultValue) : undefined,
 		finalValue: null,
 		onChange,
 	});
@@ -469,12 +465,23 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 
 	const setDataSourceFieldValue = useCallback((value: Date | undefined | null | string) => {
 		if (dataSource && dataField) {
-			// 🔄 MIGRAÇÃO V1/V2: Para compatibilidade V1, usar strings formatadas ao invés de ISO
 			let processedValue: any = value;
 
-			if (value && typeof value !== 'string') {
-				// Se for Date, converter para string formatada (formato do input)
-				processedValue = formatValue(value);
+			if (value && value !== '') {
+				if (typeof value === 'string') {
+					// Parsear string formatada (ex: "16/05/2026") e converter para ISO (yyyy-MM-dd)
+					try {
+						const parsedDate = dateFormats[dateFormat!].parse(value);
+						if (!isNaN(parsedDate.getTime())) {
+							processedValue = dayjs(parsedDate).format('YYYY-MM-DD');
+						}
+					} catch {
+						processedValue = value;
+					}
+				} else {
+					// Date object → ISO
+					processedValue = dayjs(value as Date).format('YYYY-MM-DD');
+				}
 			}
 
 			v1v2Compatibility.handleValueChange(processedValue);
@@ -645,7 +652,8 @@ export function ArchbaseDatePickerEdit<T, ID>(props: ArchbaseDatePickerEditProps
 	};
 
 	const _getDayProps = (dayString: DateStringValue) => {
-		const day = new Date(dayString);
+		const [y, m, d] = (dayString as string).split('-').map(Number);
+		const day = new Date(y, m - 1, d);
 		return {
 			...getDayProps?.(dayString),
 			selected: dayjs(_value).isSame(day, 'day'),

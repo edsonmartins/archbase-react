@@ -4,16 +4,14 @@
  */
 import React from 'react'
 import { Grid, ScrollArea, Stack, Modal, Button, Group } from '@mantine/core'
-import { useFocusTrap } from '@mantine/hooks'
 import { getI18nextInstance } from '@archbase/core';
 import { GroupDto } from '@archbase/security'
 import { IArchbaseDataSourceBase } from '@archbase/data'
 import { ArchbaseEdit } from '@archbase/components'
 
 export interface GroupModalOptions {
-  customContentBefore?: React.ReactNode;
-
-  customContentAfter?: React.ReactNode;
+  customContentBefore?: (group: GroupDto) => React.ReactNode;
+  customContentAfter?: (group: GroupDto) => React.ReactNode;
 }
 
 export interface GroupModalProps {
@@ -23,13 +21,10 @@ export interface GroupModalProps {
   onClickCancel: (record?: GroupDto) => void
   onCustomSave?: (record?: GroupDto, callback?: Function) => void
   onAfterSave?: (record?: GroupDto) => void
-  customContentBefore?: React.ReactNode
-  customContentAfter?: React.ReactNode
   options?: GroupModalOptions
 }
 
 export const GroupModal = (props: GroupModalProps) => {
-  const focusTrapRef = useFocusTrap()
   const options = {...(props.options ?? {}) }
   
   const handleSave = () => {
@@ -59,11 +54,7 @@ export const GroupModal = (props: GroupModalProps) => {
     >
       <ScrollArea style={{ height: '460px' }}>
         <Stack w={"98%"}>
-          {options?.customContentBefore && (
-            <>
-              {props.options.customContentBefore}
-            </>
-          )}
+          {options?.customContentBefore && options.customContentBefore(props.dataSource.getCurrentRecord()!)}
           <Grid>
             <Grid.Col span={{ base: 12 }}>
               <ArchbaseEdit
@@ -82,11 +73,7 @@ export const GroupModal = (props: GroupModalProps) => {
               />
             </Grid.Col>
           </Grid>
-          {options?.customContentAfter && (
-            <>
-              {props.options.customContentAfter}
-            </>
-          )}
+          {options?.customContentAfter && options.customContentAfter(props.dataSource.getCurrentRecord()!)}
           
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={handleCancel}>
