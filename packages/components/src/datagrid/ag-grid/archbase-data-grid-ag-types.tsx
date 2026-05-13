@@ -38,6 +38,10 @@ export interface ArchbaseDataGridAGRef<T = any> {
   getFilterModel: () => any;
   /** Get AG Grid API */
   getGridApi: () => GridApi | null;
+  /** Auto-size all columns to fit their content */
+  autoSizeAllColumns: (skipHeader?: boolean) => void;
+  /** Size columns to fit the grid width */
+  sizeColumnsToFit: () => void;
 }
 
 /**
@@ -301,8 +305,16 @@ export interface ArchbaseDataGridAGProps<T extends object = any, ID = any> {
   cellPadding?: string | number;
   /** Table head cell padding */
   tableHeadCellPadding?: string;
-  /** Auto column width */
+  /** Auto column width (flex: 1 for all columns) */
   columnAutoWidth?: boolean;
+  /**
+   * Auto-size strategy for columns
+   * - 'fitCellContents': Auto-size columns to fit their cell contents
+   * - 'fitGridWidth': Auto-size columns to fit the grid width
+   */
+  autoSizeStrategy?: 'fitCellContents' | 'fitGridWidth';
+  /** Skip header when calculating auto-size */
+  skipHeaderOnAutoSize?: boolean;
   /** Row height */
   rowHeight?: number;
 

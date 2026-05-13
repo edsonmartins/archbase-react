@@ -161,6 +161,8 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
     cellPadding,
     tableHeadCellPadding,
     columnAutoWidth = false,
+    autoSizeStrategy,
+    skipHeaderOnAutoSize = false,
     rowHeight = 40,
     withToolbarBorder = true,
     withPaginationBorder = true,
@@ -504,7 +506,19 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
         })),
       });
     }
-  }, [sortModel]);
+
+    // Apply auto-size strategy after grid is ready
+    if (autoSizeStrategy) {
+      // Use setTimeout to ensure data is rendered before auto-sizing
+      setTimeout(() => {
+        if (autoSizeStrategy === 'fitCellContents') {
+          event.api.autoSizeAllColumns(skipHeaderOnAutoSize);
+        } else if (autoSizeStrategy === 'fitGridWidth') {
+          event.api.sizeColumnsToFit();
+        }
+      }, 100);
+    }
+  }, [sortModel, autoSizeStrategy, skipHeaderOnAutoSize]);
 
   // Selection changed handler
   const onSelectionChanged = useCallback(
@@ -854,6 +868,12 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
       getExpandedRows: () => Array.from(expandedRowIds),
       getFilterModel: () => filterModel,
       getGridApi: () => gridApiRef.current,
+      autoSizeAllColumns: (skipHeader = false) => {
+        gridApiRef.current?.autoSizeAllColumns(skipHeader);
+      },
+      sizeColumnsToFit: () => {
+        gridApiRef.current?.sizeColumnsToFit();
+      },
     }),
     [
       selectedRows,
