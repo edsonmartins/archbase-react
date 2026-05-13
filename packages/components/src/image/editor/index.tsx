@@ -370,19 +370,29 @@ export const ArchbaseImagePickerEditor = memo(
 
 		// Sincronizar com prop externa
 		useEffect(() => {
-			// Só atualizar se a prop original realmente mudou
-			if (imageSrcProp !== originalImagePropRef.current) {
-				originalImagePropRef.current = imageSrcProp;
+			// Sempre atualizar quando a prop mudar (mesmo que seja a mesma do ref inicial)
+			const normalizedSrc = normalizeImageSrc(imageSrcProp);
 
-				const normalizedSrc = normalizeImageSrc(imageSrcProp);
+			console.log('[ImagePickerEditor] useEffect sync:', {
+				imageSrcProp: imageSrcProp?.substring(0, 50),
+				normalizedSrc: normalizedSrc?.substring(0, 50),
+				currentImageSrc: imageSrc?.substring(0, 50),
+				willUpdate: normalizedSrc !== imageSrc
+			});
+
+			// Só atualizar o estado se o valor normalizado for diferente do atual
+			if (normalizedSrc !== imageSrc) {
 				setImageSrc(normalizedSrc);
 				setLoadImage(!!normalizedSrc);
+			}
 
-				// Atualizar a referência sem disparar callback na sincronização inicial
-				if (isFirstRender.current) {
-					lastReportedImageRef.current = normalizedSrc;
-					isFirstRender.current = false;
-				}
+			// Atualizar a referência
+			originalImagePropRef.current = imageSrcProp;
+
+			// Atualizar a referência sem disparar callback na sincronização inicial
+			if (isFirstRender.current) {
+				lastReportedImageRef.current = normalizedSrc;
+				isFirstRender.current = false;
 			}
 		}, [imageSrcProp]);
 

@@ -132,9 +132,17 @@ export function ArchbaseImageEdit<T, ID>({
 			}
 		}
 
-		if (isBase64(initialValue) && !disabledBase64Convertion) {
+		const wasBase64 = isBase64(initialValue) && !disabledBase64Convertion;
+		if (wasBase64) {
 			initialValue = atob(initialValue);
 		}
+
+		console.log('[ArchbaseImageEdit] loadDataSourceFieldValue:', {
+			dataField,
+			rawValue: dataSource?.getFieldValue(dataField)?.substring(0, 50),
+			wasBase64,
+			finalValue: initialValue?.substring(0, 50)
+		});
 
 		setValue(initialValue);
 	};
