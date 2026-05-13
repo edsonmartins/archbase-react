@@ -898,6 +898,9 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
         setTotalRecords(grandTotal);
         setIsLoadingInternal(false);
         closeAllDetailPanels();
+      } else if (event.type === DataSourceEventNames.onError) {
+        // Reset loading state when an error occurs
+        setIsLoadingInternal(false);
       } else if (event.type === DataSourceEventNames.afterScroll) {
         if (syncInProgress.current) return;
 
