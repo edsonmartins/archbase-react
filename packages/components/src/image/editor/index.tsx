@@ -314,6 +314,10 @@ export const ArchbaseImagePickerEditor = memo(
 		// Ref para a imagem original (antes de normalização) para comparação
 		const originalImagePropRef = useRef<string | undefined>(imageSrcProp);
 
+		// Ref para onProcessingChange para evitar closure stale no debounce
+		const onProcessingChangeRef = useRef(onProcessingChange);
+		onProcessingChangeRef.current = onProcessingChange;
+
 		// Ref para saber se é a primeira renderização
 		const isFirstRender = useRef(true);
 
@@ -343,8 +347,8 @@ export const ArchbaseImagePickerEditor = memo(
 		const debouncedOnChange = useDebouncedCallback((newDataUri: string | undefined) => {
 			// Verificar se a imagem realmente mudou
 			if (lastReportedImageRef.current === newDataUri) {
-				// Notificar que o processamento terminou
-				onProcessingChange?.(false);
+				// Notificar que o processamento terminou (usando ref para evitar closure stale)
+				onProcessingChangeRef.current?.(false);
 				return;
 			}
 
@@ -360,8 +364,8 @@ export const ArchbaseImagePickerEditor = memo(
 				imageChanged(newDataUri);
 			}
 
-			// Notificar que o processamento terminou
-			onProcessingChange?.(false);
+			// Notificar que o processamento terminou (usando ref para evitar closure stale)
+			onProcessingChangeRef.current?.(false);
 		}, 300); // 300ms de debounce
 
 		// Sincronizar com prop externa
