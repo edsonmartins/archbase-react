@@ -46,36 +46,80 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          VERSION=${{ github.ref_name }}
+
+          # Tentar obter mensagem da tag anotada
+          TAG_MESSAGE=$(git tag -l --format='%(contents)' "$VERSION" 2>/dev/null || echo "")
+
+          # Se a tag tem mensagem (é anotada), usar ela
+          if [ -n "$TAG_MESSAGE" ] && [ "$TAG_MESSAGE" != "$VERSION" ]; then
+            echo "Using annotated tag message"
+            echo "$TAG_MESSAGE" > release_notes.md
+          else
+            echo "Generating release notes from commits"
+            # Obter commits desde a última tag
+            PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+            echo "## 🚀 Archbase React $VERSION" > release_notes.md
+            echo "" >> release_notes.md
+
+            if [ -n "$PREV_TAG" ]; then
+              echo "### Mudanças desde $PREV_TAG" >> release_notes.md
+              echo "" >> release_notes.md
+
+              # Agrupar por tipo de commit
+              echo "#### Performance" >> release_notes.md
+              git log ${PREV_TAG}..HEAD --pretty=format:"- %s" --grep="^perf" 2>/dev/null >> release_notes.md || true
+              echo "" >> release_notes.md
+
+              echo "#### Features" >> release_notes.md
+              git log ${PREV_TAG}..HEAD --pretty=format:"- %s" --grep="^feat" 2>/dev/null >> release_notes.md || true
+              echo "" >> release_notes.md
+
+              echo "#### Bug Fixes" >> release_notes.md
+              git log ${PREV_TAG}..HEAD --pretty=format:"- %s" --grep="^fix" 2>/dev/null >> release_notes.md || true
+              echo "" >> release_notes.md
+
+              echo "#### Other Changes" >> release_notes.md
+              git log ${PREV_TAG}..HEAD --pretty=format:"- %s" --invert-grep --grep="^perf" --grep="^feat" --grep="^fix" --grep="^chore" --grep="^Merge" 2>/dev/null >> release_notes.md || true
+              echo "" >> release_notes.md
+            fi
+          fi
+
+          # Adicionar seção de packages e instalação
+          echo "" >> release_notes.md
+          echo "### Packages" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "- @archbase/core" >> release_notes.md
+          echo "- @archbase/data" >> release_notes.md
+          echo "- @archbase/components" >> release_notes.md
+          echo "- @archbase/layout" >> release_notes.md
+          echo "- @archbase/admin" >> release_notes.md
+          echo "- @archbase/advanced" >> release_notes.md
+          echo "- @archbase/security" >> release_notes.md
+          echo "- @archbase/security-ui" >> release_notes.md
+          echo "- @archbase/template" >> release_notes.md
+          echo "- @archbase/tools" >> release_notes.md
+          echo "- @archbase/feature-flags" >> release_notes.md
+          echo "- @archbase/ssr" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### Installation" >> release_notes.md
+          echo "" >> release_notes.md
+          echo '```bash' >> release_notes.md
+          echo "npm install @archbase/core@${VERSION#v}" >> release_notes.md
+          echo '```' >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### Documentation" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "Visit [https://react.archbase.dev](https://react.archbase.dev) for full documentation." >> release_notes.md
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2.6.1
         with:
-          body: |
-            ## 🚀 Archbase React v${{ github.ref_name }}
-
-            ### Packages published
-
-            - @archbase/core
-            - @archbase/data
-            - @archbase/components
-            - @archbase/layout
-            - @archbase/admin
-            - @archbase/advanced
-            - @archbase/security
-            - @archbase/security-ui
-            - @archbase/template
-            - @archbase/tools
-            - @archbase/feature-flags
-            - @archbase/ssr
-
-            ### Installation
-
-            ```bash
-            npm install @archbase/core
-            ```
-
-            ### Documentation
-
-            Visit [https://react.archbase.dev](https://react.archbase.dev) for full documentation.
+          body_path: release_notes.md
           draft: false
           prerelease: false
         env:
