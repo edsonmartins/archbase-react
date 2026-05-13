@@ -8,13 +8,24 @@ import { themeQuartz, type Theme } from 'ag-grid-community';
 import type { MantineTheme } from '@mantine/core';
 
 /**
+ * Options for creating AG Grid theme
+ */
+export interface ArchbaseAgGridThemeOptions {
+  headerFontWeight?: number | 'normal' | 'bold';
+}
+
+/**
  * Creates an AG Grid theme integrated with Mantine's theming system
  */
 export const createArchbaseAgGridTheme = (
   theme: MantineTheme,
-  colorScheme: 'light' | 'dark'
+  colorScheme: 'light' | 'dark',
+  options?: ArchbaseAgGridThemeOptions
 ): Theme => {
   const isDark = colorScheme === 'dark';
+  const fontWeight = options?.headerFontWeight === 'normal' ? 400
+    : options?.headerFontWeight === 'bold' ? 700
+    : options?.headerFontWeight ?? 600;
 
   return themeQuartz.withParams({
     // Background colors
@@ -23,7 +34,7 @@ export const createArchbaseAgGridTheme = (
 
     // Header styling
     headerBackgroundColor: isDark ? theme.colors.dark[7] : theme.white,
-    headerFontWeight: 600,
+    headerFontWeight: fontWeight,
     headerTextColor: isDark ? theme.colors.gray[0] : theme.colors.dark[9],
 
     // Accent/Primary color

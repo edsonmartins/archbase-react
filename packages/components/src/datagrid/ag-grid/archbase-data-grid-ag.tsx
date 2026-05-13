@@ -164,6 +164,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
     autoSizeStrategy,
     skipHeaderOnAutoSize = false,
     rowHeight = 40,
+    headerFontWeight = 600,
     withToolbarBorder = true,
     withPaginationBorder = true,
     toolbarPadding,
@@ -284,8 +285,8 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
 
   // Create AG Grid theme
   const agGridTheme = useMemo(
-    () => createArchbaseAgGridTheme(theme, colorScheme),
-    [theme, colorScheme]
+    () => createArchbaseAgGridTheme(theme, colorScheme, { headerFontWeight }),
+    [theme, colorScheme, headerFontWeight]
   );
 
   // Create column definitions from children

@@ -317,6 +317,8 @@ export interface ArchbaseDataGridAGProps<T extends object = any, ID = any> {
   skipHeaderOnAutoSize?: boolean;
   /** Row height */
   rowHeight?: number;
+  /** Header font weight (default: 600 = bold) */
+  headerFontWeight?: number | 'normal' | 'bold';
 
   // Internal border controls
   /** Show toolbar border */
