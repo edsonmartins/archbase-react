@@ -2,16 +2,21 @@
  * AG Grid Implementation Exports
  *
  * Export all AG Grid related components, types, and utilities.
+ * Also exports with original names (ArchbaseDataGrid, etc.) to replace MUI DataGrid implementation.
  */
 
-// Main component
+// Main component - export as both ArchbaseDataGridAG and ArchbaseDataGrid
 export { default as ArchbaseDataGridAG } from './archbase-data-grid-ag';
+export { default as ArchbaseDataGrid } from './archbase-data-grid-ag';
 
-// Types
+// Types - export with AG suffix and original names for compatibility
 export type {
   ArchbaseDataGridAGProps,
+  ArchbaseDataGridAGProps as ArchbaseDataGridProps,
   ArchbaseDataGridAGRef,
+  ArchbaseDataGridAGRef as ArchbaseDataGridRef,
   ArchbaseDataGridAGColumnProps,
+  ArchbaseDataGridAGColumnProps as ArchbaseDataGridColumnProps,
   FieldDataType,
   CellClickEvent,
   GridToolBarActionsProps,
@@ -21,9 +26,13 @@ export type {
 
 export {
   ArchbaseDataGridAGColumn,
+  ArchbaseDataGridAGColumn as ArchbaseDataGridColumn,
   Columns as AGColumns,
+  Columns,
   GridToolBarActions as AGGridToolBarActions,
+  GridToolBarActions,
   defaultColumnProps as defaultAGColumnProps,
+  defaultColumnProps,
 } from './archbase-data-grid-ag-types';
 
 // Theme

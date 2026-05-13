@@ -187,7 +187,9 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
   } = props;
 
   const theme = useArchbaseTheme();
-  const { colorScheme } = useMantineColorScheme();
+  const { colorScheme: mantineColorScheme } = useMantineColorScheme();
+  // Normalizar colorScheme para "light" ou "dark" (tratar "auto" como "light")
+  const colorScheme: 'light' | 'dark' = mantineColorScheme === 'dark' ? 'dark' : 'light';
   const appContext = useArchbaseAppContext();
 
   // AG Grid API reference

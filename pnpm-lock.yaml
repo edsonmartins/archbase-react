@@ -509,6 +509,12 @@ importers:
       '@tabler/icons-react':
         specifier: ^3.26.0
         version: 3.36.0(react@19.2.3)
+      ag-grid-community:
+        specifier: ^35.2.1
+        version: 35.3.0
+      ag-grid-react:
+        specifier: ^35.2.1
+        version: 35.3.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       ajv:
         specifier: ^8.16.0
         version: 8.17.1
@@ -4477,6 +4483,18 @@ packages:
   adler-32@1.3.1:
     resolution: {integrity: sha512-ynZ4w/nUUv5rrsR8UUGoe1VC9hZj6V5hU9Qw1HlMDJGEJw5S7TfTErWTjMys6M7vr0YWcPqs3qAr4ss0nDfP+A==}
     engines: {node: '>=0.8'}
+
+  ag-charts-types@13.3.0:
+    resolution: {integrity: sha512-UMoAn908LC4ZIJSNfUckSBEFa79Mi1vFRA8qIRx+NusEuuFgXDioCZx4MxM7O3rDXlxTWH9DvQmcDjh7vyd89w==}
+
+  ag-grid-community@35.3.0:
+    resolution: {integrity: sha512-c9WQWB88J965IjBC/GPUX30aAZix10o6oYT86DWipcxgLZTIQlLSilJJEr1bno/245rPEAIMjhoU1gp9VIfURg==}
+
+  ag-grid-react@35.3.0:
+    resolution: {integrity: sha512-3c6YEFGQGNZxEi1PdK0b+WhKkKRJ7KxuYzsG4UmISyax5/J7N93f8B1TZK1pq+AgzPhdk/++vjZe3KhFdF3tog==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -14752,6 +14770,19 @@ snapshots:
       object-assign: 4.1.1
 
   adler-32@1.3.1: {}
+
+  ag-charts-types@13.3.0: {}
+
+  ag-grid-community@35.3.0:
+    dependencies:
+      ag-charts-types: 13.3.0
+
+  ag-grid-react@35.3.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+    dependencies:
+      ag-grid-community: 35.3.0
+      prop-types: 15.8.1
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
 
   agent-base@6.0.2:
     dependencies:
