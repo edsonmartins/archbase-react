@@ -324,6 +324,9 @@ export const ArchbaseImagePickerEditor = memo(
 		// Ref para saber se já recebemos a imagem inicial (evita que o picker zere antes de carregar)
 		const hasReceivedInitialImage = useRef(false);
 
+		// Timestamp de quando o componente foi montado (para ignorar valores vazios só no início)
+		const mountTimeRef = useRef(Date.now());
+
 		// Configuração padrão
 		const defaultConfig: ArchbaseImagePickerConf = {
 			objectFit: 'cover',
@@ -407,11 +410,14 @@ export const ArchbaseImagePickerEditor = memo(
 
 		// Handler quando a imagem muda no editor
 		const handleImageChanged = useCallback(async (newDataUri: string) => {
+			const timeSinceMount = Date.now() - mountTimeRef.current;
+
 			console.log('[ImagePickerEditor] handleImageChanged:', {
 				newDataUri: newDataUri?.substring(0, 50),
 				currentImageSrc: imageSrc?.substring(0, 50),
 				isDifferent: imageSrc !== newDataUri,
-				hasReceivedInitialImage: hasReceivedInitialImage.current
+				hasReceivedInitialImage: hasReceivedInitialImage.current,
+				timeSinceMount
 			});
 
 			// Só processa se for diferente do valor atual
@@ -419,16 +425,11 @@ export const ArchbaseImagePickerEditor = memo(
 				return;
 			}
 
-			// Ignorar valores vazios se ainda não recebemos a imagem inicial do DataSource
+			// Ignorar valores vazios APENAS nos primeiros 1000ms após montar
 			// Isso evita que o react-image-picker-editor zere a imagem antes de carregar
-			if (!newDataUri && !hasReceivedInitialImage.current) {
-				console.log('[ImagePickerEditor] Ignorando valor vazio - ainda aguardando imagem inicial');
-				return;
-			}
-
-			// Ignorar se o novo valor for vazio mas já temos uma imagem
-			if (!newDataUri && imageSrc) {
-				console.log('[ImagePickerEditor] Ignorando valor vazio - já temos imagem');
+			// Mas permite que o usuário remova a imagem depois
+			if (!newDataUri && timeSinceMount < 1000) {
+				console.log('[ImagePickerEditor] Ignorando valor vazio - componente ainda inicializando');
 				return;
 			}
 
