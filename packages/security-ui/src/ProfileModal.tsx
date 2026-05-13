@@ -1,11 +1,14 @@
 /**
  * ProfileModal — modal com dados da conta do usuário.
  * @status stable
+ *
+ * PERFORMANCE FIX: Usa DataSource isolado para evitar re-renders do Grid
+ * durante a digitação nos inputs da modal.
  */
 import React from 'react'
 import { Grid, ScrollArea, Stack, Modal, Button, Group } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
-import { ArchbaseDataSource } from '@archbase/data'
+import { ArchbaseDataSource, useArchbaseIsolatedDataSource } from '@archbase/data'
 import { getI18nextInstance } from '@archbase/core';
 import { ProfileDto } from '@archbase/security'
 import { ArchbaseEdit } from '@archbase/components'
@@ -31,24 +34,38 @@ export interface ProfileModalProps {
 export const ProfileModal = (props: ProfileModalProps) => {
   const focusTrapRef = useFocusTrap()
   const options = {...(props.options ?? {}) }
-  
+
+  // PERFORMANCE FIX: Usar DataSource isolado para evitar re-renders do Grid
+  const {
+    dataSource: isolatedDS,
+    applyChanges,
+    currentRecord,
+  } = useArchbaseIsolatedDataSource<ProfileDto>({
+    parentDataSource: props.dataSource,
+    opened: props.opened,
+    name: 'dsProfileModal',
+  });
+
   const handleSave = () => {
+    // Aplicar mudanças do DS isolado de volta ao DS principal
+    const savedRecord = applyChanges();
+
     if (props.onCustomSave) {
-      props.onCustomSave(props.dataSource.current, (success: boolean) => {
+      props.onCustomSave(savedRecord, (success: boolean) => {
         if (success && props.onAfterSave) {
-          props.onAfterSave(props.dataSource.current);
+          props.onAfterSave(savedRecord);
         }
-        props.onClickOk(props.dataSource.current, success);
+        props.onClickOk(savedRecord, success);
       });
     } else {
-      props.onClickOk(props.dataSource.current, true);
+      props.onClickOk(savedRecord, true);
     }
   };
 
   const handleCancel = () => {
-    props.onClickCancel(props.dataSource.current);
+    props.onClickCancel(currentRecord);
   };
-  
+
   return (
     <Modal
       opened={props.opened}
@@ -69,7 +86,7 @@ export const ProfileModal = (props: ProfileModalProps) => {
               <ArchbaseEdit
                 label={`${getI18nextInstance().t('archbase:Nome do perfil')}`}
                 placeholder={`${getI18nextInstance().t('archbase:Informe o nome do perfil')}`}
-                dataSource={props.dataSource}
+                dataSource={isolatedDS}
                 dataField="name"
               />
             </Grid.Col>
@@ -77,7 +94,7 @@ export const ProfileModal = (props: ProfileModalProps) => {
               <ArchbaseEdit
                 label={`${getI18nextInstance().t('archbase:Descrição do perfil')}`}
                 placeholder={`${getI18nextInstance().t('archbase:Informe a descrição do perfil')}`}
-                dataSource={props.dataSource}
+                dataSource={isolatedDS}
                 dataField="description"
               />
             </Grid.Col>
@@ -87,7 +104,7 @@ export const ProfileModal = (props: ProfileModalProps) => {
               {options.customContentAfter}
             </>
           )}
-          
+
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={handleCancel}>
               {getI18nextInstance().t('archbase:Cancelar')}
