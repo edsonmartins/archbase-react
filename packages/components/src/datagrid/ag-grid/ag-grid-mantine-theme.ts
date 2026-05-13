@@ -60,9 +60,9 @@ export const createArchbaseAgGridTheme = (
     // Column separator
     columnBorder: true,
 
-    // Wrapper border
-    wrapperBorder: true,
-    wrapperBorderRadius: parseInt(String(theme.radius.sm)) || 4,
+    // Wrapper border - disabled since container already has border
+    wrapperBorder: false,
+    wrapperBorderRadius: 0,
 
     // Spacing
     cellHorizontalPadding: 8,

@@ -45,8 +45,7 @@ export const ArchbaseDataGridPagination = React.memo<ArchbaseDataGridPaginationP
         minHeight: bottomToolbarMinHeight || 'auto',
         padding: finalPadding,
         borderTop: withBorder ? `1px solid ${theme.colors.gray[theme.colorScheme === 'dark' ? 8 : 3]}` : 'none',
-        borderBottomLeftRadius: finalBorderRadius,
-        borderBottomRightRadius: finalBorderRadius
+        borderRadius: 0,
       }}
     >
       <GridPagination
