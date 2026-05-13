@@ -28,8 +28,8 @@ import React, {
 	useRef,
 	useState
 } from 'react';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '../datasource';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/core';
 
 export interface ArchbaseMultiSelectProps<T, ID, O> {
   /** Permite ou não desselecionar um item */

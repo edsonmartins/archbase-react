@@ -2,12 +2,11 @@
  * ArchbaseSecurityView — visão completa de usuários/grupos/permissões.
  * @status stable
  */
-import { ARCHBASE_IOC_API_TYPE, builder, emit, processDetailErrorMessage, processErrorMessage } from '@archbase/core';
+import { ARCHBASE_IOC_API_TYPE, builder, emit, processDetailErrorMessage, processErrorMessage, useValidationErrors } from '@archbase/core';
 import { ArchbaseDataSource } from '@archbase/data';
 // import { ArchbaseCountdownProgress } from '@archbase/components'; // Temporarily disabled
-import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import {
-	useArchbaseRemoteDataSource,
+	useArchbaseRemoteDataSourceV2,
 	useArchbaseRemoteServiceApi,
 	useArchbaseStore,
 } from '@archbase/data';
@@ -32,7 +31,7 @@ import { IconEdit, IconPlus, IconShieldCheckered, IconTrashX } from '@tabler/ico
 import { ArchbaseDataGridColumn } from '@archbase/components';
 import { ArchbaseDataGrid, ArchbaseDataGridRef, Columns } from '@archbase/components';
 import { useArchbaseTranslation } from '@archbase/core';
-import React, { ReactNode, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { ArchbaseAccessTokenService } from '@archbase/security';
 import { ArchbaseGroupService } from '@archbase/security';
 import { ArchbaseProfileService } from '@archbase/security';
@@ -46,6 +45,18 @@ import { SecurityType } from '@archbase/security';
 import { UserModal, UserModalOptions } from './UserModal';
 import { IconEye } from '@tabler/icons-react';
 
+export interface ArchbaseSecurityProps {
+	beforeDefaultUserActions?: (row: UserDto) => ReactNode;
+	afterDefaultUserActions?: (row: UserDto) => ReactNode;
+	beforeDefaultProfileActions?: (row: ProfileDto) => ReactNode;
+	afterDefaultProfileActions?: (row: ProfileDto) => ReactNode;
+	beforeDefaultGroupActions?: (row: GroupDto) => ReactNode;
+	afterDefaultGroupActions?: (row: GroupDto) => ReactNode;
+	userActionsColumnWidth?: number;
+	profileActionsColumnWidth?: number;
+	groupActionsColumnWidth?: number;
+}
+
 interface ArchbaseSecurityManagerProps {
 	height?: any;
 	width?: any;
@@ -54,6 +65,7 @@ interface ArchbaseSecurityManagerProps {
 	userModalOptions?: UserModalOptions;
 	groupModalOptions?: GroupModalOptions;
 	profileModalOptions?: ProfileModalOptions;
+	options?: ArchbaseSecurityProps;
 }
 
 export const NO_USER =
@@ -144,6 +156,7 @@ export function ArchbaseSecurityView({
 	userModalOptions,
 	profileModalOptions,
 	groupModalOptions,
+	options,
 }: ArchbaseSecurityManagerProps) {
 	const theme = useArchbaseTheme();
 	const templateStore = useArchbaseStore('securityStore');
@@ -159,27 +172,6 @@ export function ArchbaseSecurityView({
 	const [openedPermissionsModal, setOpenedPermissionsModal] = useState<string>('');
 	const accessTokenApi = useArchbaseRemoteServiceApi<ArchbaseAccessTokenService>(ARCHBASE_IOC_API_TYPE.AccessToken);
 	const {t} = useArchbaseTranslation();
-	// 🔄 MIGRAÇÃO V1/V2: Compatibilidade para DataSources principais
-	const usersV1V2 = useArchbaseV1V2Compatibility<UserDto>(
-		'ArchbaseSecurityView-Users',
-		undefined, // Will be set when dsUsers is available
-		undefined,
-		undefined
-	);
-
-	const groupsV1V2 = useArchbaseV1V2Compatibility<GroupDto>(
-		'ArchbaseSecurityView-Groups',
-		undefined, // Will be set when dsGroups is available
-		undefined,
-		undefined
-	);
-
-	const profilesV1V2 = useArchbaseV1V2Compatibility<ProfileDto>(
-		'ArchbaseSecurityView-Profiles',
-		undefined, // Will be set when dsProfiles is available
-		undefined,
-		undefined
-	);
 
 	// Referências para os grids
 	const usersGridRef = useRef<ArchbaseDataGridRef | null>(null);
@@ -209,105 +201,92 @@ export function ArchbaseSecurityView({
 		return row.id;
 	};
 
-	const { dataSource: dsAccessTokens, isLoading: isLoadingAccessTokens } = useArchbaseRemoteDataSource<
-		AccessTokenDto,
-		string
-	>({
+	const {
+		dataSource: dsAccessTokens,
+		isLoading: isLoadingAccessTokens,
+		refreshData: refreshAccessTokens
+	} = useArchbaseRemoteDataSourceV2<AccessTokenDto>({
 		name: 'accessTokenApi',
 		service: accessTokenApi,
-		store: templateStore,
 		validator,
 		pageSize: 25,
-		loadOnStart: true,
-		filter: emit(builder.or(builder.eq('revoked', `false`))),
-		sort: ['user.email', 'expirationTime:desc'],
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
+		defaultSortFields: ['user.email', 'expirationTime:desc'],
 		onError: (error, origin) => {
 			setError(error);
 			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
-	const { dataSource: dsUsers, isLoading: isLoadingUsers } = useArchbaseRemoteDataSource<UserDto, string>({
+	const {
+		dataSource: dsUsers,
+		isLoading: isLoadingUsers,
+		refreshData: refreshUsers
+	} = useArchbaseRemoteDataSourceV2<UserDto>({
 		name: 'dsUsers',
 		service: userApi,
-		store: templateStore,
 		validator,
 		pageSize: 25,
-		loadOnStart: true,
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
 		onError: (error, origin) => {
 			setError(error);
 			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
-	const { dataSource: dsGroups, isLoading: isLoadingGroups } = useArchbaseRemoteDataSource<GroupDto, string>({
+	const {
+		dataSource: dsGroups,
+		isLoading: isLoadingGroups,
+		refreshData: refreshGroups
+	} = useArchbaseRemoteDataSourceV2<GroupDto>({
 		name: 'dsGroups',
 		service: groupApi,
-		store: templateStore,
 		validator,
 		pageSize: 25,
-		loadOnStart: true,
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
 		onError: (error, origin) => {
 			setError(error);
 			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
-	const { dataSource: dsProfiles, isLoading: isLoadingProfiles } = useArchbaseRemoteDataSource<ProfileDto, string>({
+	const {
+		dataSource: dsProfiles,
+		isLoading: isLoadingProfiles,
+		refreshData: refreshProfiles
+	} = useArchbaseRemoteDataSourceV2<ProfileDto>({
 		name: 'dsProfile',
 		service: profileApi,
-		store: templateStore,
 		validator,
 		pageSize: 25,
-		loadOnStart: true,
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
 		onError: (error, origin) => {
 			setError(error);
 			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
-	const { dataSource: dsResources, isLoading: isLoadingResources } = useArchbaseRemoteDataSource<ResourceDto, string>({
+	const {
+		dataSource: dsResources,
+		isLoading: isLoadingResources,
+		refreshData: refreshResources
+	} = useArchbaseRemoteDataSourceV2<ResourceDto>({
 		name: 'dsResources',
 		service: resourceApi,
-		store: templateStore,
 		validator,
 		pageSize: 25,
-		loadOnStart: true,
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
 		onError: (error, origin) => {
 			setError(error);
 			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
+
+	// Carregar dados iniciais
+	useEffect(() => {
+		// AccessTokens with filter
+		refreshAccessTokens({ filter: emit(builder.eq('revoked', 'false')) });
+		// Other data sources
+		refreshUsers();
+		refreshGroups();
+		refreshProfiles();
+		refreshResources();
+	}, []);
 
 	const heightTab = `calc(${height} - 40px)`;
 
@@ -411,6 +390,13 @@ export function ArchbaseSecurityView({
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<UserDto>
+				dataField="accountDeactivated"
+				dataType="boolean"
+				header={`${t('archbase:Desativado?')}`}
+				inputFilterType="checkbox"
+				size={120}
+			/>
+			<ArchbaseDataGridColumn<UserDto>
 				dataField="profile.name"
 				dataType="text"
 				header={`${t('archbase:Perfil')}`}
@@ -459,13 +445,6 @@ export function ArchbaseSecurityView({
 				dataField="passwordNeverExpires"
 				dataType="boolean"
 				header={`${t('archbase:Senha nunca expira?')}`}
-				inputFilterType="checkbox"
-				size={120}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="accountDeactivated"
-				dataType="boolean"
-				header={`${t('archbase:Desativado?')}`}
 				inputFilterType="checkbox"
 				size={120}
 			/>
@@ -546,17 +525,9 @@ export function ArchbaseSecurityView({
 	const handleAddUserExecute = () => {
 		const user = UserDto.newInstance();
 		if (!createEntitiesWithId) {
-			user.id = undefined;
+			(user as any).id = undefined;
 		}
-		
-		// 🔄 MIGRAÇÃO V1/V2: Inserção com compatibilidade
 		dsUsers.insert(user);
-		
-		// Se for V1, forçar atualização
-		if (dsUsers && !usersV1V2.isDataSourceV2) {
-			usersV1V2.v1State.forceUpdate();
-		}
-		
 		setOpenedModal(SecurityType.USER);
 	};
 
@@ -565,12 +536,6 @@ export function ArchbaseSecurityView({
 			const currentUser = dsUsers.gotoRecordByData(row);
 			if (currentUser) {
 				dsUsers.edit();
-				
-				// 🔄 MIGRAÇÃO V1/V2: Edição com compatibilidade V1
-				if (!usersV1V2.isDataSourceV2) {
-					usersV1V2.v1State.forceUpdate();
-				}
-				
 				setOpenedModal(SecurityType.USER);
 			}
 		}
@@ -585,11 +550,6 @@ export function ArchbaseSecurityView({
 					`${t('archbase:Deseja remover o usuário ')}${row.name} ?`,
 					() => {
 						dsUsers.remove();
-						
-						// 🔄 MIGRAÇÃO V1/V2: Remoção com compatibilidade V1
-						if (!usersV1V2.isDataSourceV2) {
-							usersV1V2.v1State.forceUpdate();
-						}
 					},
 					() => {},
 				);
@@ -609,6 +569,7 @@ export function ArchbaseSecurityView({
 	const buildUserRowActions = (row: UserDto): ReactNode => {
 		return (
 			<Group gap={1} wrap="nowrap">
+				{options?.beforeDefaultUserActions?.(row)}
 				<ActionIcon variant="transparent" onClick={() => handleUserViewRow(row)}>
 					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 				</ActionIcon>
@@ -623,6 +584,7 @@ export function ArchbaseSecurityView({
 						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
 				</Tooltip>
+				{options?.afterDefaultUserActions?.(row)}
 			</Group>
 		);
 	};
@@ -630,17 +592,9 @@ export function ArchbaseSecurityView({
 	const handleAddGroupExecute = () => {
 		const group = GroupDto.newInstance();
 		if (!createEntitiesWithId) {
-			group.id = undefined;
+			(group as any).id = undefined;
 		}
-		
-		// 🔄 MIGRAÇÃO V1/V2: Inserção com compatibilidade
 		dsGroups.insert(group);
-		
-		// Se for V1, forçar atualização
-		if (dsGroups && !groupsV1V2.isDataSourceV2) {
-			groupsV1V2.v1State.forceUpdate();
-		}
-		
 		setOpenedModal(SecurityType.GROUP);
 	};
 
@@ -648,7 +602,9 @@ export function ArchbaseSecurityView({
 		if (!dsGroups.isEmpty()) {
 			const currentGroup = dsGroups.gotoRecordByData(row);
 			if (currentGroup) {
-				dsGroups.edit();
+				if (!dsGroups.isEditing()) {
+					dsGroups.edit();
+				}
 				setOpenedModal(SecurityType.GROUP);
 			}
 		}
@@ -682,6 +638,7 @@ export function ArchbaseSecurityView({
 	const buildGroupRowActions = (row: GroupDto): ReactNode => {
 		return (
 			<Group gap={1} wrap="nowrap">
+				{options?.beforeDefaultGroupActions?.(row)}
 				<ActionIcon variant="transparent" onClick={() => handleGroupViewRow(row)}>
 					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 				</ActionIcon>
@@ -696,36 +653,73 @@ export function ArchbaseSecurityView({
 						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
 				</Tooltip>
+				{options?.afterDefaultGroupActions?.(row)}
 			</Group>
 		);
 	};
 
-	const handleCloseUserModal = () => {
+	const validationContext = useValidationErrors();
+
+	const handleSaveUserModal = async () => {
+		try {
+			await dsUsers.save();
+		} catch (_error) {
+			return;
+		}
 		setOpenedModal('');
+		validationContext?.clearAll();
 	};
 
-	const handleCloseGroupModal = () => {
+	const handleCancelUserModal = () => {
 		setOpenedModal('');
+		if (!dsUsers.isBrowsing()) {
+			dsUsers.cancel();
+		}
+		validationContext?.clearAll();
 	};
 
-	const handleCloseProfileModal = () => {
+	const handleSaveGroupModal = async () => {
+		try {
+			await dsGroups.save();
+		} catch (_error) {
+			return;
+		}
 		setOpenedModal('');
+		validationContext?.clearAll();
+	};
+
+	const handleCancelGroupModal = () => {
+		setOpenedModal('');
+		if (!dsGroups.isBrowsing()) {
+			dsGroups.cancel();
+		}
+		validationContext?.clearAll();
+	};
+
+	const handleSaveProfileModal = async () => {
+		try {
+			await dsProfiles.save();
+		} catch (_error) {
+			return;
+		}
+		setOpenedModal('');
+		validationContext?.clearAll();
+	};
+
+	const handleCancelProfileModal = () => {
+		setOpenedModal('');
+		if (!dsProfiles.isBrowsing()) {
+			dsProfiles.cancel();
+		}
+		validationContext?.clearAll();
 	};
 
 	const handleAddProfileExecute = () => {
 		const profile = ProfileDto.newInstance();
 		if (!createEntitiesWithId) {
-			profile.id = undefined;
+			(profile as any).id = undefined;
 		}
-		
-		// 🔄 MIGRAÇÃO V1/V2: Inserção com compatibilidade
 		dsProfiles.insert(profile);
-		
-		// Se for V1, forçar atualização
-		if (dsProfiles && !profilesV1V2.isDataSourceV2) {
-			profilesV1V2.v1State.forceUpdate();
-		}
-		
 		setOpenedModal(SecurityType.PROFILE);
 	};
 
@@ -733,7 +727,9 @@ export function ArchbaseSecurityView({
 		if (!dsProfiles.isEmpty()) {
 			const currentProfile = dsProfiles.gotoRecordByData(row);
 			if (currentProfile) {
-				dsProfiles.edit();
+				if (!dsProfiles.isEditing()) {
+					dsProfiles.edit();
+				}
 				setOpenedModal(SecurityType.PROFILE);
 			}
 		}
@@ -767,6 +763,7 @@ export function ArchbaseSecurityView({
 	const buildProfileRowActions = (row: ProfileDto): ReactNode => {
 		return (
 			<Group gap={1} wrap="nowrap">
+				{options?.beforeDefaultProfileActions?.(row)}
 				<ActionIcon variant="transparent" onClick={() => handleProfileViewRow(row)}>
 					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
 				</ActionIcon>
@@ -781,18 +778,20 @@ export function ArchbaseSecurityView({
 						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
 					</ActionIcon>
 				</Tooltip>
+				{options?.afterDefaultProfileActions?.(row)}
 			</Group>
 		);
 	};
 
 	const handleAccessTokenRevokeRow = () => {
-		if (dsAccessTokens.getCurrentRecord()) {
+		const currentAccessToken = dsAccessTokens.getCurrentRecord();
+		if (currentAccessToken) {
 			ArchbaseDialog.showConfirmDialogYesNo(
 				`${t('archbase:Confirme')}`,
-				`${t('archbase:Deseja revogar o token de Acesso do usuário ')}${dsAccessTokens.getCurrentRecord().user.name} ?`,
+				`${t('archbase:Deseja revogar o token de Acesso do usuário ')}${currentAccessToken.user.name} ?`,
 				async () => {
 					await accessTokenApi
-						.revoke(dsAccessTokens.getCurrentRecord().token)
+						.revoke(currentAccessToken.token)
 						.then(async () => {
 							ArchbaseNotifications.showSuccess(
 								`${t('mentors:Informação')}`,
@@ -937,6 +936,7 @@ export function ArchbaseSecurityView({
 					getRowId={getUserRowId}
 					toolbarLeftContent={renderUsersToolbarActions()}
 					renderRowActions={buildUserRowActions}
+					actionsColumnWidth={options?.userActionsColumnWidth}
 					children={userColumns}
 				/>
 			</Paper>
@@ -969,6 +969,7 @@ export function ArchbaseSecurityView({
 					enableGlobalFilter={true}
 					getRowId={getGroupRowId}
 					renderRowActions={buildGroupRowActions}
+					actionsColumnWidth={options?.groupActionsColumnWidth}
 					children={groupColumns}
 					toolbarLeftContent={renderGroupsToolbarActions()}
 				/>
@@ -1003,6 +1004,7 @@ export function ArchbaseSecurityView({
 					getRowId={getProfileRowId}
 					toolbarLeftContent={renderProfilesToolbarActions()}
 					renderRowActions={buildProfileRowActions}
+					actionsColumnWidth={options?.profileActionsColumnWidth}
 					children={profileColumns}
 				/>
 			</Paper>
@@ -1072,28 +1074,28 @@ export function ArchbaseSecurityView({
 			</Paper>
 			{openedModal === SecurityType.USER ? (
 				<UserModal
-					onClickOk={handleCloseUserModal}
+					onClickOk={handleSaveUserModal}
 					opened={true}
 					dataSource={dsUsers}
-					onClickCancel={handleCloseUserModal}
+					onClickCancel={handleCancelUserModal}
 					options={userModalOptions}
 				/>
 			) : null}
 			{openedModal === SecurityType.GROUP ? (
 				<GroupModal
-					onClickOk={handleCloseGroupModal}
+					onClickOk={handleSaveGroupModal}
 					opened={true}
 					dataSource={dsGroups}
-					onClickCancel={handleCloseGroupModal}
+					onClickCancel={handleCancelGroupModal}
 					options={groupModalOptions}
 				/>
 			) : null}
 			{openedModal === SecurityType.PROFILE ? (
 				<ProfileModal
-					onClickOk={handleCloseProfileModal}
+					onClickOk={handleSaveProfileModal}
 					opened={true}
 					dataSource={dsProfiles}
-					onClickCancel={handleCloseProfileModal}
+					onClickCancel={handleCancelProfileModal}
 					options={profileModalOptions}
 				/>
 			) : null}

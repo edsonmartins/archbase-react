@@ -260,12 +260,15 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   });
 
   // Estado para paginação com limitação de tamanho de página (MIT version)
-  const [paginationModel, setPaginationModel] = useState({
-    page: Number.isFinite(getCurrentPageFromDataSource(dataSource)) ? getCurrentPageFromDataSource(dataSource) : pageIndex,
-    pageSize: Math.min(
-      Number.isFinite(dataSource?.getPageSize?.()) ? dataSource.getPageSize() : pageSize,
-      MAX_PAGE_SIZE_MIT
-    )
+  const [paginationModel, setPaginationModel] = useState(() => {
+    const page = getCurrentPageFromDataSource(dataSource);
+    return {
+      page: Number.isFinite(page) ? page : pageIndex,
+      pageSize: Math.min(
+        Number.isFinite(dataSource?.getPageSize?.()) ? dataSource.getPageSize() : pageSize,
+        MAX_PAGE_SIZE_MIT
+      )
+    };
   });
 
   const [sortModel, setSortModel] = useState(() => getInitialSortModel(dataSource))
@@ -312,6 +315,13 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     rowHeight,
     detailPanelMinHeight
   })
+  // Ref que mantém sempre os valores mais recentes para uso no handler do DataSource.
+  // Evita que o listener useEffect precise re-registrar o handler a cada mudança de deps instáveis.
+  const handlerDepsRef = useRef<any>({})
+  useEffect(() => {
+    handlerDepsRef.current = { rows, getRowId, columns, apiRef, onSelectedRowsChanged, closeAllDetailPanels }
+  })
+
   // Refs para controle de operações internas
   const syncInProgress = useRef<boolean>(false)
   const keyboardNavDebounceTimer = useRef<NodeJS.Timeout | null>(null)
@@ -776,6 +786,10 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
 
         // Scrollbar nativa (fallback) - estilo Mantine
         '& .MuiDataGrid-virtualScroller': {
+          paddingBottom: '0px !important',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
           '&::-webkit-scrollbar': {
             width: '8px',
             height: '8px',
@@ -926,13 +940,6 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
           width: '100%'
         },
         
-        '& .MuiDataGrid-virtualScroller': {
-          paddingBottom: '0px !important',
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: `${colorScheme === 'dark' ? theme.colors.dark[6] : theme.white} !important`,
-        },
-
         '& .MuiDataGrid-virtualScrollerContent': {
           flexBasis: 'auto !important',
           flexGrow: '1 !important',
@@ -1259,9 +1266,8 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         setRows(getRecordsFromDataSource<T>(dataSource));
 
       // Validar valores da paginação
-      const currentPage = Number.isFinite(getCurrentPageFromDataSource(dataSource))
-        ? getCurrentPageFromDataSource(dataSource)
-        : 0;
+      const rawPage = getCurrentPageFromDataSource(dataSource);
+      const currentPage = Number.isFinite(rawPage) ? rawPage : 0;
 
       const pageSize = Number.isFinite(dataSource.getPageSize?.())
         ? Math.min(Math.max(1, dataSource.getPageSize()), MAX_PAGE_SIZE_MIT)
@@ -1281,7 +1287,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       setIsLoadingInternal(false);
 
       // Fechar todos os painéis quando os dados são atualizados
-      closeAllDetailPanels();
+      handlerDepsRef.current.closeAllDetailPanels();
       }
       // Quando os dados são modificados
       else if (
@@ -1294,9 +1300,8 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         setRows(getRecordsFromDataSource<T>(dataSource));
 
       // Validar valores da paginação
-      const currentPage = Number.isFinite(getCurrentPageFromDataSource(dataSource))
-        ? getCurrentPageFromDataSource(dataSource)
-        : 0;
+      const rawPage = getCurrentPageFromDataSource(dataSource);
+      const currentPage = Number.isFinite(rawPage) ? rawPage : 0;
 
       const pageSize = Number.isFinite(dataSource.getPageSize?.())
         ? Math.min(Math.max(1, dataSource.getPageSize()), MAX_PAGE_SIZE_MIT)
@@ -1316,7 +1321,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       setIsLoadingInternal(false);
 
       // Fechar todos os painéis quando os dados são modificados
-      closeAllDetailPanels();
+      handlerDepsRef.current.closeAllDetailPanels();
       }
       // Quando o registro atual do dataSource muda
       else if (event.type === DataSourceEventNames.afterScroll) {
@@ -1326,13 +1331,14 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         const currentRecord = dataSource.getCurrentRecord()
         if (currentRecord) {
           try {
-            const currentId = safeGetRowId(currentRecord, getRowId)
+            const { rows: currentRows, getRowId: currentGetRowId, columns: currentColumns, apiRef: currentApiRef, onSelectedRowsChanged: currentOnSelectedRowsChanged } = handlerDepsRef.current
+            const currentId = safeGetRowId(currentRecord, currentGetRowId)
 
             if (currentId !== undefined) {
               // Encontrar a primeira coluna disponível
-              const firstField = columns[0]?.field
+              const firstField = currentColumns[0]?.field
 
-              if (firstField && apiRef.current) {
+              if (firstField && currentApiRef.current) {
                 // Iniciar o processo de sincronização
                 syncInProgress.current = true
 
@@ -1342,27 +1348,28 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
                   setRowSelection(newSelection)
 
                   // Encontrar o objeto de linha e atualizá-lo na lista de linhas selecionadas
-                  const rowData = rows.find(
-                    (row) => String(safeGetRowId(row, getRowId)) === String(currentId)
+                  const rowData = currentRows.find(
+                    (row) => String(safeGetRowId(row, currentGetRowId)) === String(currentId)
                   )
 
                   if (rowData) {
                     setSelectedRows([rowData])
 
-                    if (onSelectedRowsChanged) {
-                      onSelectedRowsChanged([rowData])
+                    if (currentOnSelectedRowsChanged) {
+                      currentOnSelectedRowsChanged([rowData])
                     }
                   }
 
                   // Opcional: também atualizar o foco para a célula
                   setTimeout(() => {
                     try {
-                      apiRef.current.scrollToIndexes({
-                        rowIndex: rows.findIndex(
-                          (row) => String(safeGetRowId(row, getRowId)) === String(currentId)
+                      const { rows: latestRows, getRowId: latestGetRowId, apiRef: latestApiRef } = handlerDepsRef.current
+                      latestApiRef.current.scrollToIndexes({
+                        rowIndex: latestRows.findIndex(
+                          (row) => String(safeGetRowId(row, latestGetRowId)) === String(currentId)
                         )
                       })
-                      apiRef.current.setCellFocus(currentId, firstField)
+                      latestApiRef.current.setCellFocus(currentId, firstField)
                     } catch (error) {
                       console.error('[DATASOURCE] Erro ao ajustar foco:', error)
                     }
@@ -1391,7 +1398,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
     return () => {
       dataSource.removeListener(handleDataSourceEvent)
     }
-  }, [dataSource, getRowId, columns, rows, apiRef, onSelectedRowsChanged, closeAllDetailPanels])
+  }, [dataSource])
 
   // Criar os modais para exportação e impressão
   const modalColumns = useMemo(() => {

@@ -27,6 +27,8 @@ export interface ArchbaseRemoteDataSourceV2Config<T> {
   validator?: IDataSourceValidator;
   defaultSortFields?: string[];
   pageSize?: number;
+  id?: any;
+  loadOnStart?: boolean;
   onStateChange?: (prevRecords: T[], newRecords: T[]) => void;
   onFieldError?: (fieldName: string, error: string) => void;
   onError?: (error: string, originalError?: any) => void;
@@ -504,10 +506,10 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
       index: this.currentIndex
     });
 
-    this.emit({
-      type: DataSourceEventNames.dataChanged,
-      data: this.filteredRecords
-    });
+    // NOTA: Removido emit de dataChanged aqui para evitar re-renders desnecessários
+    // em componentes como Grid que não precisam reagir a mudanças de campo individual.
+    // Componentes de formulário usam fieldChanged para atualizar.
+    // dataChanged é emitido apenas em operações bulk (setRecords, insert, remove, refresh).
   }
 
   getFieldValue(fieldName: string): any {
@@ -763,6 +765,37 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
   }
 
   /**
+   * Carrega um registro específico pelo ID.
+   * Útil para cenários onde se deseja editar um registro específico.
+   *
+   * @param id ID do registro a ser carregado
+   * @returns Promise com o registro carregado ou undefined se não encontrado
+   */
+  async loadById(id: any): Promise<T | undefined> {
+    try {
+      console.log('[V2 loadById] Buscando registro com ID:', id);
+
+      const record = await this.service.findOne(id);
+
+      if (record) {
+        console.log('[V2 loadById] Registro encontrado:', record);
+        this.grandTotalRecords = 1;
+        this.setRecords([record]);
+        return record;
+      } else {
+        console.log('[V2 loadById] Registro não encontrado');
+        this.grandTotalRecords = 0;
+        this.setRecords([]);
+        return undefined;
+      }
+    } catch (error) {
+      console.error('[V2 loadById] Erro ao buscar registro:', error);
+      this.handleRemoteError(error);
+      throw error;
+    }
+  }
+
+  /**
    * Carrega dados com filtro RSQL
    */
   private async getDataWithRsqlFilter(page: number, callback?: (() => void) | undefined): Promise<any> {
@@ -861,6 +894,37 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
 
   removeListener(listener: DataSourceListener<T>): void {
     this.listeners.delete(listener);
+  }
+
+  /**
+   * Adiciona um listener para mudanças em um campo específico.
+   * Permite que componentes escutem apenas mudanças no campo que exibem,
+   * evitando re-renders desnecessários.
+   */
+  addFieldChangeListener(
+    fieldName: string,
+    listener: (fieldName: string, oldValue: any, newValue: any) => void
+  ): this {
+    const wrappedListener = (event: DataSourceEvent<T>) => {
+      if (event.type === DataSourceEventNames.fieldChanged &&
+          'fieldName' in event && event.fieldName === fieldName) {
+        listener(fieldName, (event as any).oldValue, (event as any).newValue);
+      }
+    };
+    this.addListener(wrappedListener);
+    return this;
+  }
+
+  /**
+   * Remove um listener de campo específico.
+   * Nota: A remoção exata não é suportada nesta versão simplificada.
+   */
+  removeFieldChangeListener(
+    _fieldName: string,
+    _listener: (fieldName: string, oldValue: any, newValue: any) => void
+  ): this {
+    // V2 simplification - would need to track wrapped listeners for exact removal
+    return this;
   }
 
   private emit(event: DataSourceEvent<T>): void {

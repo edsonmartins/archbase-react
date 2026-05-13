@@ -157,6 +157,90 @@ function extractFormat(dataUri: string | null | undefined): string {
 }
 
 /**
+ * Redimensiona uma imagem se exceder os limites de tamanho
+ * @param dataUri Data URI da imagem original
+ * @param maxWidth Largura máxima em pixels
+ * @param maxHeight Altura máxima em pixels
+ * @param maxSizeKb Tamanho máximo em KB
+ * @param quality Qualidade inicial da compressão (0-100)
+ * @returns Promise com o data URI redimensionado
+ */
+async function resizeImageIfNeeded(
+	dataUri: string,
+	maxWidth?: number,
+	maxHeight?: number,
+	maxSizeKb?: number,
+	quality: number = 80
+): Promise<string> {
+	return new Promise((resolve) => {
+		// Se não há limites definidos, retorna como está
+		if (!maxWidth && !maxHeight && !maxSizeKb) {
+			resolve(dataUri);
+			return;
+		}
+
+		const img = new Image();
+		img.onload = () => {
+			let targetWidth = img.width;
+			let targetHeight = img.height;
+
+			// Calcular novo tamanho se exceder limites
+			if (maxWidth && img.width > maxWidth) {
+				const ratio = maxWidth / img.width;
+				targetWidth = maxWidth;
+				targetHeight = Math.round(img.height * ratio);
+			}
+			if (maxHeight && targetHeight > maxHeight) {
+				const ratio = maxHeight / targetHeight;
+				targetHeight = maxHeight;
+				targetWidth = Math.round(targetWidth * ratio);
+			}
+
+			// Se não precisa redimensionar e não há limite de tamanho, retorna original
+			if (targetWidth === img.width && targetHeight === img.height && !maxSizeKb) {
+				resolve(dataUri);
+				return;
+			}
+
+			// Criar canvas para redimensionar
+			const canvas = document.createElement('canvas');
+			canvas.width = targetWidth;
+			canvas.height = targetHeight;
+			const ctx = canvas.getContext('2d');
+			if (!ctx) {
+				resolve(dataUri);
+				return;
+			}
+
+			ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+			// Determinar formato de saída
+			const format = extractFormat(dataUri);
+			const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+
+			// Função para comprimir até atingir o tamanho desejado
+			const compressToSize = (currentQuality: number): string => {
+				const result = canvas.toDataURL(mimeType, currentQuality / 100);
+				if (maxSizeKb) {
+					const sizeKb = Math.ceil(((3 / 4) * result.split(',')[1].length) / 1024);
+					// Se ainda está grande e qualidade pode ser reduzida
+					if (sizeKb > maxSizeKb && currentQuality > 20) {
+						return compressToSize(currentQuality - 10);
+					}
+				}
+				return result;
+			};
+
+			resolve(compressToSize(quality));
+		};
+		img.onerror = () => {
+			resolve(dataUri);
+		};
+		img.src = dataUri;
+	});
+}
+
+/**
  * Props do ArchbaseImagePickerEditor
  * Mantém compatibilidade total com a versão anterior
  */
@@ -174,6 +258,8 @@ export interface ArchbaseImagePickerEditorProps {
 	imageChanged?: (newDataUri: string | undefined) => void;
 	/** Variante dos botões de ação */
 	variant?: ActionIconVariant;
+	/** Callback quando o estado de processamento muda (útil para desabilitar botões enquanto processa) */
+	onProcessingChange?: (isProcessing: boolean) => void;
 }
 
 /**
@@ -209,6 +295,7 @@ export const ArchbaseImagePickerEditor = memo(
 		color = '#1e88e5',
 		imageChanged,
 		variant = 'transparent',
+		onProcessingChange,
 	}: ArchbaseImagePickerEditorProps) => {
 		const theme = useArchbaseTheme();
 		const { colorScheme } = useMantineColorScheme();
@@ -227,8 +314,18 @@ export const ArchbaseImagePickerEditor = memo(
 		// Ref para a imagem original (antes de normalização) para comparação
 		const originalImagePropRef = useRef<string | undefined>(imageSrcProp);
 
+		// Ref para onProcessingChange para evitar closure stale no debounce
+		const onProcessingChangeRef = useRef(onProcessingChange);
+		onProcessingChangeRef.current = onProcessingChange;
+
 		// Ref para saber se é a primeira renderização
 		const isFirstRender = useRef(true);
+
+		// Ref para saber se já recebemos a imagem inicial (evita que o picker zere antes de carregar)
+		const hasReceivedInitialImage = useRef(false);
+
+		// Timestamp de quando o componente foi montado (para ignorar valores vazios só no início)
+		const mountTimeRef = useRef(Date.now());
 
 		// Configuração padrão
 		const defaultConfig: ArchbaseImagePickerConf = {
@@ -256,6 +353,8 @@ export const ArchbaseImagePickerEditor = memo(
 		const debouncedOnChange = useDebouncedCallback((newDataUri: string | undefined) => {
 			// Verificar se a imagem realmente mudou
 			if (lastReportedImageRef.current === newDataUri) {
+				// Notificar que o processamento terminou (usando ref para evitar closure stale)
+				onProcessingChangeRef.current?.(false);
 				return;
 			}
 
@@ -270,41 +369,76 @@ export const ArchbaseImagePickerEditor = memo(
 			if (imageChanged) {
 				imageChanged(newDataUri);
 			}
+
+			// Notificar que o processamento terminou (usando ref para evitar closure stale)
+			onProcessingChangeRef.current?.(false);
 		}, 300); // 300ms de debounce
 
 		// Sincronizar com prop externa
 		useEffect(() => {
-			// Só atualizar se a prop original realmente mudou
-			if (imageSrcProp !== originalImagePropRef.current) {
-				originalImagePropRef.current = imageSrcProp;
+			// Sempre atualizar quando a prop mudar (mesmo que seja a mesma do ref inicial)
+			const normalizedSrc = normalizeImageSrc(imageSrcProp);
 
-				const normalizedSrc = normalizeImageSrc(imageSrcProp);
+			// Marcar que recebemos a imagem inicial quando receber um valor não vazio
+			if (normalizedSrc && !hasReceivedInitialImage.current) {
+				hasReceivedInitialImage.current = true;
+			}
+
+			// Só atualizar o estado se o valor normalizado for diferente do atual
+			if (normalizedSrc !== imageSrc) {
 				setImageSrc(normalizedSrc);
 				setLoadImage(!!normalizedSrc);
+			}
 
-				// Atualizar a referência sem disparar callback na sincronização inicial
-				if (isFirstRender.current) {
-					lastReportedImageRef.current = normalizedSrc;
-					isFirstRender.current = false;
-				}
+			// Atualizar a referência
+			originalImagePropRef.current = imageSrcProp;
+
+			// Atualizar a referência sem disparar callback na sincronização inicial
+			if (isFirstRender.current) {
+				lastReportedImageRef.current = normalizedSrc;
+				isFirstRender.current = false;
 			}
 		}, [imageSrcProp]);
 
 		// Handler quando a imagem muda no editor
-		const handleImageChanged = useCallback((newDataUri: string) => {
-			const newValue = newDataUri || undefined;
+		const handleImageChanged = useCallback(async (newDataUri: string) => {
+			const timeSinceMount = Date.now() - mountTimeRef.current;
 
 			// Só processa se for diferente do valor atual
 			if (imageSrc === newDataUri) {
 				return;
 			}
 
-			setImageSrc(newDataUri || null);
-			setLoadImage(!!newDataUri);
+			// Ignorar valores vazios APENAS nos primeiros 1000ms após montar
+			// Isso evita que o react-image-picker-editor zere a imagem antes de carregar
+			// Mas permite que o usuário remova a imagem depois
+			if (!newDataUri && timeSinceMount < 1000) {
+				return;
+			}
+
+			// Notificar que o processamento iniciou
+			onProcessingChange?.(true);
+
+			// Redimensionar se necessário
+			let processedDataUri = newDataUri;
+			if (newDataUri && (mergedConfig.maxWidth || mergedConfig.maxHeight || mergedConfig.maxSizeKb)) {
+				processedDataUri = await resizeImageIfNeeded(
+					newDataUri,
+					mergedConfig.maxWidth,
+					mergedConfig.maxHeight,
+					mergedConfig.maxSizeKb,
+					mergedConfig.compressInitial ?? 80
+				);
+			}
+
+			const newValue = processedDataUri || undefined;
+
+			setImageSrc(processedDataUri || null);
+			setLoadImage(!!processedDataUri);
 
 			// Usar callback com debounce
 			debouncedOnChange(newValue);
-		}, [imageSrc, debouncedOnChange]);
+		}, [imageSrc, debouncedOnChange, onProcessingChange, mergedConfig.maxWidth, mergedConfig.maxHeight, mergedConfig.maxSizeKb, mergedConfig.compressInitial]);
 
 		// Calcular tamanho e formato da imagem (apenas para data URIs)
 		const sizeImage = useMemo(() => calculateImageSize(imageSrc), [imageSrc]);
@@ -319,8 +453,39 @@ export const ArchbaseImagePickerEditor = memo(
 			backgroundColor: mergedConfig.imageBackgroundColor ?? (colorScheme === 'dark' ? theme.colors.dark[7] : theme.white),
 		}), [mergedConfig.width, mergedConfig.imageBackgroundColor, colorScheme, theme]);
 
+		// Handler para prevenir submit de formulário e navegação acidental
+		const handleContainerClick = useCallback((e: React.MouseEvent) => {
+			const target = e.target as HTMLElement;
+
+			// Prevenir submit de formulário quando botões são clicados
+			// Os botões do react-image-picker-editor não têm type="button",
+			// então agem como type="submit" quando dentro de um form
+			const button = target.closest('button');
+			if (button && !button.getAttribute('type')) {
+				e.preventDefault();
+			}
+
+			// Prevenir navegação para data URIs em links
+			const anchor = target.closest('a');
+			if (anchor) {
+				const href = anchor.getAttribute('href');
+				if (href && href.startsWith('data:')) {
+					e.preventDefault();
+					// Se for o botão de download, fazer download manualmente
+					if (anchor.hasAttribute('download')) {
+						const link = document.createElement('a');
+						link.href = href;
+						link.download = anchor.getAttribute('download') || 'image';
+						document.body.appendChild(link);
+						link.click();
+						document.body.removeChild(link);
+					}
+				}
+			}
+		}, []);
+
 		return (
-			<div className="ArchbaseImagePickerEditor" style={containerStyle}>
+			<div className="ArchbaseImagePickerEditor" style={containerStyle} onClick={handleContainerClick}>
 				{/* Componente react-image-picker-editor */}
 				<ReactImagePickerEditor
 					config={pickerConfig}

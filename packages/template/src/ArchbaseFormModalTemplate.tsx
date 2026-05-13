@@ -170,7 +170,13 @@ export function ArchbaseFormModalTemplate<T extends object, ID>({
 							setIsInternalError(true);
 							setInternalError(processErrorMessage(e));
 						});
+				} else if (result === true || result === undefined) {
+					// Se retornou true ou undefined, continua com o save
+					if (await save()) {
+						onClickOk && onClickOk();
+					}
 				}
+				// Se retornou false, não faz nada (bloqueia o OK)
 			} else {
 				if (await save()) {
 					onClickOk && onClickOk();

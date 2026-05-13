@@ -103,15 +103,14 @@ describe('ArchbaseDataSourceV2 (New Implementation)', () => {
     test('should emit events on field change', () => {
       const events: any[] = [];
       dataSource.addListener(event => events.push(event));
-      
+
       dataSource.setFieldValue('nome', 'Test');
-      
-      // Should emit fieldChanged and dataChanged
-      expect(events).toHaveLength(2);
+
+      // Should emit only fieldChanged (dataChanged removed for performance)
+      expect(events).toHaveLength(1);
       expect(events[0].type).toBe(DataSourceEventNames.fieldChanged);
       expect(events[0].fieldName).toBe('nome');
       expect(events[0].newValue).toBe('Test');
-      expect(events[1].type).toBe(DataSourceEventNames.dataChanged);
     });
   });
 

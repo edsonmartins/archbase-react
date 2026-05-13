@@ -82,7 +82,8 @@
       "Bash(/Users/edsonmartins/Library/pnpm/.tools/pnpm/9.15.0/bin/pnpm run build)",
       "WebFetch(domain:www.npmjs.com)",
       "Bash(npx vite build:*)",
-      "Bash(NODE_OPTIONS='--max-old-space-size=8192' npx next build:*)"
+      "Bash(NODE_OPTIONS='--max-old-space-size=8192' npx next build:*)",
+      "Bash(npx madge *)"
     ],
     "deny": []
   }

@@ -51,7 +51,15 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	/** Cor de fundo da imagem */
-	imageBackgroundColor?: string
+	imageBackgroundColor?: string;
+	/** Callback quando o estado de processamento muda (útil para desabilitar botões enquanto processa) */
+	onProcessingChange?: (isProcessing: boolean) => void;
+	/** Largura máxima da imagem em pixels (redimensiona automaticamente se exceder) */
+	maxWidth?: number;
+	/** Altura máxima da imagem em pixels (redimensiona automaticamente se exceder) */
+	maxHeight?: number;
+	/** Tamanho máximo da imagem em KB (recomprime se exceder) */
+	maxSizeKb?: number;
 }
 
 export function ArchbaseImageEdit<T, ID>({
@@ -75,6 +83,10 @@ export function ArchbaseImageEdit<T, ID>({
 	innerRef,
 	variant,
 	imageBackgroundColor,
+	onProcessingChange,
+	maxWidth,
+	maxHeight,
+	maxSizeKb,
 	...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
 	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
@@ -120,7 +132,8 @@ export function ArchbaseImageEdit<T, ID>({
 			}
 		}
 
-		if (isBase64(initialValue) && !disabledBase64Convertion) {
+		const wasBase64 = isBase64(initialValue) && !disabledBase64Convertion;
+		if (wasBase64) {
 			initialValue = atob(initialValue);
 		}
 
@@ -199,15 +212,27 @@ useEffect(() => {
 		const changedValue = image;
 		setValue((_prev) => changedValue);
 
-		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
+		if (dataSource && !dataSource.isBrowsing() && dataField) {
+			// ✅ CORRIGIDO: Normalizar valores para comparação
+			const currentFieldValue = dataSource.getFieldValue(dataField);
+
+			// Preparar valor para salvar
 			let valueToSave: string | undefined;
 			if (!changedValue) {
 				valueToSave = undefined;
 			} else {
 				valueToSave = disabledBase64Convertion ? changedValue : btoa(changedValue);
 			}
-			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
-			v1v2Compatibility.handleValueChange(valueToSave);
+
+			// ✅ Normalizar ambos os valores para comparação (null, undefined, '' → undefined)
+			const normalizedCurrent = currentFieldValue || undefined;
+			const normalizedNew = valueToSave || undefined;
+
+			// Só atualiza se realmente mudou
+			if (normalizedCurrent !== normalizedNew) {
+				// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+				v1v2Compatibility.handleValueChange(valueToSave);
+			}
 		}
 		if (onChangeImage) {
 			onChangeImage(image);
@@ -234,6 +259,7 @@ useEffect(() => {
 				<ArchbaseImagePickerEditor
 					imageSrcProp={value}
 					variant={variant}
+					onProcessingChange={onProcessingChange}
 					config={{
 						borderRadius: radius,
 						width,
@@ -247,6 +273,9 @@ useEffect(() => {
 						hideAddBtn: isReadOnly(),
 						onChangeImage: handleChangeImage,
 						imageBackgroundColor,
+						maxWidth,
+						maxHeight,
+						maxSizeKb,
 					}}
 				/>
 			</Input.Wrapper>

@@ -26,10 +26,6 @@ export function useArchbaseDataSourceV2<T, ID = any>(
   const [isEditingState, setIsEditingState] = useState<boolean>(false);
   const [isInsertingState, setIsInsertingState] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  
-  // Estado para forçar re-render quando necessário
-  const [, forceUpdate] = useState({});
-  const forceRender = useCallback(() => forceUpdate({}), []);
 
   // Inicialização do DataSource (apenas uma vez)
   const dataSource = useMemo(() => {
@@ -53,10 +49,10 @@ export function useArchbaseDataSourceV2<T, ID = any>(
         break;
         
       case DataSourceEventNames.fieldChanged:
-        // Para mudanças de campo, forçamos re-render para garantir que
-        // componentes que dependem de campos específicos sejam atualizados
-        setCurrentRecord(dataSource.getCurrentRecord());
-        forceRender();
+        // NÃO atualizar estado aqui - componentes de formulário (ArchbaseEdit, etc.)
+        // têm seus próprios listeners e estado interno (v2Value).
+        // Atualizar estado aqui causaria re-render desnecessário do componente pai,
+        // que por sua vez re-renderizaria todos os filhos (incluindo Grid).
         break;
         
       case DataSourceEventNames.afterScroll:
@@ -84,7 +80,7 @@ export function useArchbaseDataSourceV2<T, ID = any>(
         setIsLoading(false);
         break;
     }
-  }, [dataSource, forceRender]);
+  }, [dataSource]);
 
   // Configurar listener no mount e remover no unmount
   useEffect(() => {

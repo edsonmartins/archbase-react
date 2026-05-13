@@ -126,9 +126,6 @@ export type { ArchbaseAvatarEditProps } from './ArchbaseAvatarEdit'
 export { ArchbaseTagInput } from './ArchbaseTagInput'
 export type { ArchbaseTagInputProps } from './ArchbaseTagInput'
 
-export { ArchbasePhoneInput } from './ArchbasePhoneInput'
-export type { ArchbasePhoneInputProps } from './ArchbasePhoneInput'
-
 export { ArchbaseMultiEmail } from './ArchbaseMultiEmail'
 export type { ArchbaseMultiEmailProps } from './ArchbaseMultiEmail'
 
@@ -137,6 +134,12 @@ export type { ArchbaseMentionInputProps, ArchbaseMentionConfig } from './Archbas
 
 export { ArchbaseSignaturePad } from './ArchbaseSignaturePad'
 export type { ArchbaseSignaturePadProps } from './ArchbaseSignaturePad'
+
+export { ArchbaseMultiSelect, SelectItem, SelectedItem } from './ArchbaseMultiSelect'
+export type { ArchbaseMultiSelectProps } from './ArchbaseMultiSelect'
+
+export { ArchbaseTagInputEdit } from './ArchbaseTagInputEdit'
+export type { ArchbaseTagInputEditProps } from './ArchbaseTagInputEdit'
 
 export { ArchbaseBarcodeScanner } from './ArchbaseBarcodeScanner'
 export type { ArchbaseBarcodeScannerProps } from './ArchbaseBarcodeScanner'

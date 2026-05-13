@@ -10,10 +10,10 @@ import {
 import { useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import type { ArchbaseDataSource, DataSourceEvent } from '../datasource';
-import { DataSourceEventNames } from '../datasource';
-import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '../hooks/lifecycle';
-import type { ComboboxStringData, ComboboxLikeRenderOptionInput, ComboboxStringItem } from '@mantine/core';
+import type { ArchbaseDataSource, DataSourceEvent } from '@archbase/data';
+import { DataSourceEventNames } from '@archbase/data';
+import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/core';
+import type { ComboboxData, ComboboxLikeRenderOptionInput, ComboboxGenericItem } from '@mantine/core';
 import type { InputClearButtonProps, ScrollAreaProps } from '@mantine/core';
 
 export interface ArchbaseTagInputEditProps<T, ID> {
@@ -66,10 +66,10 @@ export interface ArchbaseTagInputEditProps<T, ID> {
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	variant?: ActionIconVariant;
-	
+
 	// Props específicas do TagsInput baseadas na interface oficial
 	/** Dados exibidos no dropdown. Valores devem ser únicos */
-	data?: ComboboxStringData;
+	data?: ComboboxData;
 	/** Valor de busca controlado */
 	searchValue?: string;
 	/** Valor de busca padrão */
@@ -93,7 +93,7 @@ export interface ArchbaseTagInputEditProps<T, ID> {
 	/** Divisor usado para separar valores no atributo `value` do input oculto, `','` por padrão */
 	hiddenInputValuesDivider?: string;
 	/** Função para renderizar o conteúdo da opção */
-	renderOption?: (input: ComboboxLikeRenderOptionInput<ComboboxStringItem>) => React.ReactNode;
+	renderOption?: (input: ComboboxLikeRenderOptionInput<ComboboxGenericItem>) => React.ReactNode;
 	/** Props passadas para o componente `ScrollArea` subjacente no dropdown */
 	scrollAreaProps?: ScrollAreaProps;
 	/** Determina se o valor digitado pelo usuário mas não submetido deve ser aceito quando o input perde o foco, `true` por padrão */
@@ -133,7 +133,7 @@ export function ArchbaseTagInputEdit<T, ID>({
 	onRemove,
 	onClear,
 	variant,
-	
+
 	// Props específicas do TagsInput
 	data,
 	searchValue,
@@ -155,7 +155,7 @@ export function ArchbaseTagInputEdit<T, ID>({
 	inputConverter,
 }: ArchbaseTagInputEditProps<T, ID>) {
 	const [currentValue, setCurrentValue] = useState<string[]>(value || defaultValue || []);
-	const innerComponentRef = useRef<any>();
+	const innerComponentRef = useRef<any>(null);
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
@@ -182,7 +182,7 @@ export function ArchbaseTagInputEdit<T, ID>({
 
 		if (dataSource && dataField) {
 			const fieldValue = dataSource.getFieldValue(dataField);
-			
+
 			// Usa o inputConverter se fornecido
 			if (inputConverter) {
 				initialValue = inputConverter(fieldValue);
@@ -248,7 +248,7 @@ export function ArchbaseTagInputEdit<T, ID>({
 	const handleChange = (changedValue: string[]) => {
 		// Filtra valores vazios ou que contenham apenas espaços
 		const filteredValue = changedValue.filter(value => value && value.trim() !== '');
-		
+
 		setCurrentValue(filteredValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField) {
@@ -265,7 +265,7 @@ export function ArchbaseTagInputEdit<T, ID>({
 	const handleRemove = (removedValue: string) => {
 		const newValue = currentValue.filter(value => value !== removedValue && value && value.trim() !== '');
 		setCurrentValue(newValue);
-		
+
 		if (dataSource && !dataSource.isBrowsing() && dataField) {
 			const valueToSave = outputConverter ? outputConverter(newValue) : newValue;
 			dataSource.setFieldValue(dataField, valueToSave);
@@ -283,7 +283,7 @@ export function ArchbaseTagInputEdit<T, ID>({
 	const handleClear = () => {
 		const emptyValue: string[] = [];
 		setCurrentValue(emptyValue);
-		
+
 		if (dataSource && !dataSource.isBrowsing() && dataField) {
 			// Usa o outputConverter se fornecido, senão salva como array vazio
 			const valueToSave = outputConverter ? outputConverter(emptyValue) : emptyValue;
@@ -350,7 +350,7 @@ export function ArchbaseTagInputEdit<T, ID>({
 			onKeyUp={onKeyUp}
 			label={label}
 			error={internalError}
-			
+
 			// Props específicas do TagsInput
 			data={data}
 			searchValue={searchValue}
@@ -368,7 +368,7 @@ export function ArchbaseTagInputEdit<T, ID>({
 			scrollAreaProps={scrollAreaProps}
 			acceptValueOnBlur={acceptValueOnBlur}
 			limit={limit}
-			
+
 			rightSection={
 				onActionSearchExecute ? (
 					<Tooltip withinPortal withArrow label={tooltipIconSearch}>
