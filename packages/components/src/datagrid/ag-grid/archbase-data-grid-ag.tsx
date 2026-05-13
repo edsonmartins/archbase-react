@@ -287,13 +287,13 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
   );
 
   // Create column definitions from children
-  const columnDefs = useMemo((): ExtendedColDef[] => {
-    const cols: ExtendedColDef[] = [];
+  const columnDefs = useMemo((): ExtendedColDef<T>[] => {
+    const cols: ExtendedColDef<T>[] = [];
 
     // Add expand column if detail panel is enabled
     if (renderDetailPanel) {
       cols.push({
-        field: '__expand__',
+        field: '__expand__' as any,
         headerName: '',
         width: 50,
         maxWidth: 50,
@@ -325,8 +325,8 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
 
     // Add actions column if enabled
     if (enableRowActions && renderRowActions) {
-      const actionsCol: ExtendedColDef = {
-        field: '__actions__',
+      const actionsCol: ExtendedColDef<T> = {
+        field: '__actions__' as any,
         headerName: 'Ações',
         width: actionsColumnWidth,
         sortable: false,
@@ -393,8 +393,8 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
                 }
               : undefined;
 
-            const colDef: ExtendedColDef = {
-              field: columnProps.dataField,
+            const colDef: ExtendedColDef<T> = {
+              field: columnProps.dataField as any,
               headerName: columnProps.header,
               width: columnProps.size || 150,
               minWidth: columnProps.minSize,

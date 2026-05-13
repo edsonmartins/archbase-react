@@ -393,7 +393,7 @@ export function GridToolBarActions(props: GridToolBarActionsProps) {
 /**
  * Internal AG Grid ColDef with extended properties
  */
-export interface ExtendedColDef extends ColDef {
+export interface ExtendedColDef<TData = any, TValue = any> extends ColDef<TData, TValue> {
   enableGlobalFilter?: boolean;
   dataType?: FieldDataType;
 }
