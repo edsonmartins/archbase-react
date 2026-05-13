@@ -137,13 +137,6 @@ export function ArchbaseImageEdit<T, ID>({
 			initialValue = atob(initialValue);
 		}
 
-		console.log('[ArchbaseImageEdit] loadDataSourceFieldValue:', {
-			dataField,
-			rawValue: dataSource?.getFieldValue(dataField)?.substring(0, 50),
-			wasBase64,
-			finalValue: initialValue?.substring(0, 50)
-		});
-
 		setValue(initialValue);
 	};
 
@@ -219,15 +212,27 @@ useEffect(() => {
 		const changedValue = image;
 		setValue((_prev) => changedValue);
 
-		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
+		if (dataSource && !dataSource.isBrowsing() && dataField) {
+			// ✅ CORRIGIDO: Normalizar valores para comparação
+			const currentFieldValue = dataSource.getFieldValue(dataField);
+
+			// Preparar valor para salvar
 			let valueToSave: string | undefined;
 			if (!changedValue) {
 				valueToSave = undefined;
 			} else {
 				valueToSave = disabledBase64Convertion ? changedValue : btoa(changedValue);
 			}
-			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
-			v1v2Compatibility.handleValueChange(valueToSave);
+
+			// ✅ Normalizar ambos os valores para comparação (null, undefined, '' → undefined)
+			const normalizedCurrent = currentFieldValue || undefined;
+			const normalizedNew = valueToSave || undefined;
+
+			// Só atualiza se realmente mudou
+			if (normalizedCurrent !== normalizedNew) {
+				// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+				v1v2Compatibility.handleValueChange(valueToSave);
+			}
 		}
 		if (onChangeImage) {
 			onChangeImage(image);

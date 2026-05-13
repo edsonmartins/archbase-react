@@ -379,14 +379,6 @@ export const ArchbaseImagePickerEditor = memo(
 			// Sempre atualizar quando a prop mudar (mesmo que seja a mesma do ref inicial)
 			const normalizedSrc = normalizeImageSrc(imageSrcProp);
 
-			console.log('[ImagePickerEditor] useEffect sync:', {
-				imageSrcProp: imageSrcProp?.substring(0, 50),
-				normalizedSrc: normalizedSrc?.substring(0, 50),
-				currentImageSrc: imageSrc?.substring(0, 50),
-				willUpdate: normalizedSrc !== imageSrc,
-				hasReceivedInitialImage: hasReceivedInitialImage.current
-			});
-
 			// Marcar que recebemos a imagem inicial quando receber um valor não vazio
 			if (normalizedSrc && !hasReceivedInitialImage.current) {
 				hasReceivedInitialImage.current = true;
@@ -412,14 +404,6 @@ export const ArchbaseImagePickerEditor = memo(
 		const handleImageChanged = useCallback(async (newDataUri: string) => {
 			const timeSinceMount = Date.now() - mountTimeRef.current;
 
-			console.log('[ImagePickerEditor] handleImageChanged:', {
-				newDataUri: newDataUri?.substring(0, 50),
-				currentImageSrc: imageSrc?.substring(0, 50),
-				isDifferent: imageSrc !== newDataUri,
-				hasReceivedInitialImage: hasReceivedInitialImage.current,
-				timeSinceMount
-			});
-
 			// Só processa se for diferente do valor atual
 			if (imageSrc === newDataUri) {
 				return;
@@ -429,7 +413,6 @@ export const ArchbaseImagePickerEditor = memo(
 			// Isso evita que o react-image-picker-editor zere a imagem antes de carregar
 			// Mas permite que o usuário remova a imagem depois
 			if (!newDataUri && timeSinceMount < 1000) {
-				console.log('[ImagePickerEditor] Ignorando valor vazio - componente ainda inicializando');
 				return;
 			}
 
@@ -470,8 +453,30 @@ export const ArchbaseImagePickerEditor = memo(
 			backgroundColor: mergedConfig.imageBackgroundColor ?? (colorScheme === 'dark' ? theme.colors.dark[7] : theme.white),
 		}), [mergedConfig.width, mergedConfig.imageBackgroundColor, colorScheme, theme]);
 
+		// Handler para prevenir navegação acidental em links com data URI
+		const handleContainerClick = useCallback((e: React.MouseEvent) => {
+			const target = e.target as HTMLElement;
+			const anchor = target.closest('a');
+			if (anchor) {
+				const href = anchor.getAttribute('href');
+				// Prevenir navegação para data URIs (podem causar redirect indesejado)
+				if (href && href.startsWith('data:')) {
+					e.preventDefault();
+					// Se for o botão de download, fazer download manualmente
+					if (anchor.hasAttribute('download')) {
+						const link = document.createElement('a');
+						link.href = href;
+						link.download = anchor.getAttribute('download') || 'image';
+						document.body.appendChild(link);
+						link.click();
+						document.body.removeChild(link);
+					}
+				}
+			}
+		}, []);
+
 		return (
-			<div className="ArchbaseImagePickerEditor" style={containerStyle}>
+			<div className="ArchbaseImagePickerEditor" style={containerStyle} onClick={handleContainerClick}>
 				{/* Componente react-image-picker-editor */}
 				<ReactImagePickerEditor
 					config={pickerConfig}
