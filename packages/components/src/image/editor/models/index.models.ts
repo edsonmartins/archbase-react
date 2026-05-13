@@ -12,6 +12,12 @@ export interface ArchbaseImagePickerConf {
   showImageSize?: boolean;
   onChangeImage?: (image: string|undefined) => void;
   imageBackgroundColor?: string;
+  /** Largura máxima da imagem em pixels (redimensiona automaticamente se exceder) */
+  maxWidth?: number;
+  /** Altura máxima da imagem em pixels (redimensiona automaticamente se exceder) */
+  maxHeight?: number;
+  /** Tamanho máximo da imagem em KB (recomprime se exceder) */
+  maxSizeKb?: number;
 }
 
 export interface IState {

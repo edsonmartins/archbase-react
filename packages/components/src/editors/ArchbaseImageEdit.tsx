@@ -51,7 +51,15 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	/** Cor de fundo da imagem */
-	imageBackgroundColor?: string
+	imageBackgroundColor?: string;
+	/** Callback quando o estado de processamento muda (útil para desabilitar botões enquanto processa) */
+	onProcessingChange?: (isProcessing: boolean) => void;
+	/** Largura máxima da imagem em pixels (redimensiona automaticamente se exceder) */
+	maxWidth?: number;
+	/** Altura máxima da imagem em pixels (redimensiona automaticamente se exceder) */
+	maxHeight?: number;
+	/** Tamanho máximo da imagem em KB (recomprime se exceder) */
+	maxSizeKb?: number;
 }
 
 export function ArchbaseImageEdit<T, ID>({
@@ -75,6 +83,10 @@ export function ArchbaseImageEdit<T, ID>({
 	innerRef,
 	variant,
 	imageBackgroundColor,
+	onProcessingChange,
+	maxWidth,
+	maxHeight,
+	maxSizeKb,
 	...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
 	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
@@ -234,6 +246,7 @@ useEffect(() => {
 				<ArchbaseImagePickerEditor
 					imageSrcProp={value}
 					variant={variant}
+					onProcessingChange={onProcessingChange}
 					config={{
 						borderRadius: radius,
 						width,
@@ -247,6 +260,9 @@ useEffect(() => {
 						hideAddBtn: isReadOnly(),
 						onChangeImage: handleChangeImage,
 						imageBackgroundColor,
+						maxWidth,
+						maxHeight,
+						maxSizeKb,
 					}}
 				/>
 			</Input.Wrapper>

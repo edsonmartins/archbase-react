@@ -157,6 +157,90 @@ function extractFormat(dataUri: string | null | undefined): string {
 }
 
 /**
+ * Redimensiona uma imagem se exceder os limites de tamanho
+ * @param dataUri Data URI da imagem original
+ * @param maxWidth Largura máxima em pixels
+ * @param maxHeight Altura máxima em pixels
+ * @param maxSizeKb Tamanho máximo em KB
+ * @param quality Qualidade inicial da compressão (0-100)
+ * @returns Promise com o data URI redimensionado
+ */
+async function resizeImageIfNeeded(
+	dataUri: string,
+	maxWidth?: number,
+	maxHeight?: number,
+	maxSizeKb?: number,
+	quality: number = 80
+): Promise<string> {
+	return new Promise((resolve) => {
+		// Se não há limites definidos, retorna como está
+		if (!maxWidth && !maxHeight && !maxSizeKb) {
+			resolve(dataUri);
+			return;
+		}
+
+		const img = new Image();
+		img.onload = () => {
+			let targetWidth = img.width;
+			let targetHeight = img.height;
+
+			// Calcular novo tamanho se exceder limites
+			if (maxWidth && img.width > maxWidth) {
+				const ratio = maxWidth / img.width;
+				targetWidth = maxWidth;
+				targetHeight = Math.round(img.height * ratio);
+			}
+			if (maxHeight && targetHeight > maxHeight) {
+				const ratio = maxHeight / targetHeight;
+				targetHeight = maxHeight;
+				targetWidth = Math.round(targetWidth * ratio);
+			}
+
+			// Se não precisa redimensionar e não há limite de tamanho, retorna original
+			if (targetWidth === img.width && targetHeight === img.height && !maxSizeKb) {
+				resolve(dataUri);
+				return;
+			}
+
+			// Criar canvas para redimensionar
+			const canvas = document.createElement('canvas');
+			canvas.width = targetWidth;
+			canvas.height = targetHeight;
+			const ctx = canvas.getContext('2d');
+			if (!ctx) {
+				resolve(dataUri);
+				return;
+			}
+
+			ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+			// Determinar formato de saída
+			const format = extractFormat(dataUri);
+			const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+
+			// Função para comprimir até atingir o tamanho desejado
+			const compressToSize = (currentQuality: number): string => {
+				const result = canvas.toDataURL(mimeType, currentQuality / 100);
+				if (maxSizeKb) {
+					const sizeKb = Math.ceil(((3 / 4) * result.split(',')[1].length) / 1024);
+					// Se ainda está grande e qualidade pode ser reduzida
+					if (sizeKb > maxSizeKb && currentQuality > 20) {
+						return compressToSize(currentQuality - 10);
+					}
+				}
+				return result;
+			};
+
+			resolve(compressToSize(quality));
+		};
+		img.onerror = () => {
+			resolve(dataUri);
+		};
+		img.src = dataUri;
+	});
+}
+
+/**
  * Props do ArchbaseImagePickerEditor
  * Mantém compatibilidade total com a versão anterior
  */
@@ -174,6 +258,8 @@ export interface ArchbaseImagePickerEditorProps {
 	imageChanged?: (newDataUri: string | undefined) => void;
 	/** Variante dos botões de ação */
 	variant?: ActionIconVariant;
+	/** Callback quando o estado de processamento muda (útil para desabilitar botões enquanto processa) */
+	onProcessingChange?: (isProcessing: boolean) => void;
 }
 
 /**
@@ -209,6 +295,7 @@ export const ArchbaseImagePickerEditor = memo(
 		color = '#1e88e5',
 		imageChanged,
 		variant = 'transparent',
+		onProcessingChange,
 	}: ArchbaseImagePickerEditorProps) => {
 		const theme = useArchbaseTheme();
 		const { colorScheme } = useMantineColorScheme();
@@ -256,6 +343,8 @@ export const ArchbaseImagePickerEditor = memo(
 		const debouncedOnChange = useDebouncedCallback((newDataUri: string | undefined) => {
 			// Verificar se a imagem realmente mudou
 			if (lastReportedImageRef.current === newDataUri) {
+				// Notificar que o processamento terminou
+				onProcessingChange?.(false);
 				return;
 			}
 
@@ -270,6 +359,9 @@ export const ArchbaseImagePickerEditor = memo(
 			if (imageChanged) {
 				imageChanged(newDataUri);
 			}
+
+			// Notificar que o processamento terminou
+			onProcessingChange?.(false);
 		}, 300); // 300ms de debounce
 
 		// Sincronizar com prop externa
@@ -291,20 +383,35 @@ export const ArchbaseImagePickerEditor = memo(
 		}, [imageSrcProp]);
 
 		// Handler quando a imagem muda no editor
-		const handleImageChanged = useCallback((newDataUri: string) => {
-			const newValue = newDataUri || undefined;
-
+		const handleImageChanged = useCallback(async (newDataUri: string) => {
 			// Só processa se for diferente do valor atual
 			if (imageSrc === newDataUri) {
 				return;
 			}
 
-			setImageSrc(newDataUri || null);
-			setLoadImage(!!newDataUri);
+			// Notificar que o processamento iniciou
+			onProcessingChange?.(true);
+
+			// Redimensionar se necessário
+			let processedDataUri = newDataUri;
+			if (newDataUri && (mergedConfig.maxWidth || mergedConfig.maxHeight || mergedConfig.maxSizeKb)) {
+				processedDataUri = await resizeImageIfNeeded(
+					newDataUri,
+					mergedConfig.maxWidth,
+					mergedConfig.maxHeight,
+					mergedConfig.maxSizeKb,
+					mergedConfig.compressInitial ?? 80
+				);
+			}
+
+			const newValue = processedDataUri || undefined;
+
+			setImageSrc(processedDataUri || null);
+			setLoadImage(!!processedDataUri);
 
 			// Usar callback com debounce
 			debouncedOnChange(newValue);
-		}, [imageSrc, debouncedOnChange]);
+		}, [imageSrc, debouncedOnChange, onProcessingChange, mergedConfig.maxWidth, mergedConfig.maxHeight, mergedConfig.maxSizeKb, mergedConfig.compressInitial]);
 
 		// Calcular tamanho e formato da imagem (apenas para data URIs)
 		const sizeImage = useMemo(() => calculateImageSize(imageSrc), [imageSrc]);
