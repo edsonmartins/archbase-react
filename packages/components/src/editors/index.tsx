@@ -126,9 +126,6 @@ export type { ArchbaseAvatarEditProps } from './ArchbaseAvatarEdit'
 export { ArchbaseTagInput } from './ArchbaseTagInput'
 export type { ArchbaseTagInputProps } from './ArchbaseTagInput'
 
-export { ArchbasePhoneInput } from './ArchbasePhoneInput'
-export type { ArchbasePhoneInputProps } from './ArchbasePhoneInput'
-
 export { ArchbaseMultiEmail } from './ArchbaseMultiEmail'
 export type { ArchbaseMultiEmailProps } from './ArchbaseMultiEmail'
 
