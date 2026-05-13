@@ -17,6 +17,9 @@ import { ArchbaseQueryFilter } from '@archbase/core';
 export function useArchbaseRemoteDataSourceV2<T, ID = any>(
   config: ArchbaseRemoteDataSourceV2Config<T>
 ) {
+  // Extrair id e loadOnStart do config
+  const { id, loadOnStart = true } = config;
+
   // Referência estável para o DataSource
   const dataSourceRef = useRef<ArchbaseRemoteDataSourceV2<T> | null>(null);
   
@@ -119,6 +122,28 @@ export function useArchbaseRemoteDataSourceV2<T, ID = any>(
     };
   }, [dataSource, eventListener]);
 
+  // Carregar por ID ou lista quando loadOnStart é true
+  useEffect(() => {
+    if (!loadOnStart) {
+      return;
+    }
+
+    if (id !== undefined && id !== null) {
+      // Se tem ID, carrega o registro específico
+      setIsLoading(true);
+      setError(null);
+      dataSource.loadById(id).catch((error: any) => {
+        setError(error.message || 'Erro ao carregar registro');
+        setIsLoading(false);
+      });
+    } else {
+      // Se não tem ID, carrega a lista normal
+      setIsLoading(true);
+      setError(null);
+      dataSource.refreshData();
+    }
+  }, [id, loadOnStart, dataSource]);
+
   // Callbacks memoizados para operações básicas do DataSource
   const setFieldValue = useCallback((fieldName: string, value: any) => {
     dataSource.setFieldValue(fieldName, value);
@@ -178,6 +203,20 @@ export function useArchbaseRemoteDataSourceV2<T, ID = any>(
 
   const goToRecord = useCallback((index: number) => {
     dataSource.goToRecord(index);
+  }, [dataSource]);
+
+  // Método para carregar por ID
+  const loadById = useCallback(async (recordId: any) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      return await dataSource.loadById(recordId);
+    } catch (error: any) {
+      setError(error.message || 'Erro ao carregar registro');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   }, [dataSource]);
 
   // Métodos específicos do V2 para arrays
@@ -360,7 +399,8 @@ export function useArchbaseRemoteDataSourceV2<T, ID = any>(
     next,
     prior,
     goToRecord,
-    
+    loadById,
+
     // Operações de array (V2)
     appendToFieldArray,
     updateFieldArrayItem,
@@ -411,6 +451,7 @@ export function useArchbaseRemoteDataSourceV2ReadOnly<T, ID = any>(
     next,
     prior,
     goToRecord,
+    loadById,
     getFieldValue,
     getFieldArray,
     isFieldArray,
@@ -439,6 +480,7 @@ export function useArchbaseRemoteDataSourceV2ReadOnly<T, ID = any>(
     next,
     prior,
     goToRecord,
+    loadById,
     getFieldValue,
     getFieldArray,
     isFieldArray,

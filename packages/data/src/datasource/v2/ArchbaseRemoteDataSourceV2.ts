@@ -27,6 +27,8 @@ export interface ArchbaseRemoteDataSourceV2Config<T> {
   validator?: IDataSourceValidator;
   defaultSortFields?: string[];
   pageSize?: number;
+  id?: any;
+  loadOnStart?: boolean;
   onStateChange?: (prevRecords: T[], newRecords: T[]) => void;
   onFieldError?: (fieldName: string, error: string) => void;
   onError?: (error: string, originalError?: any) => void;
@@ -760,6 +762,37 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
     // Carrega dados sem filtro mas respeitando página e ordenação
     console.log('[V2 refreshData] Chamando getDataWithoutFilter para página:', page);
     this.getDataWithoutFilter(page);
+  }
+
+  /**
+   * Carrega um registro específico pelo ID.
+   * Útil para cenários onde se deseja editar um registro específico.
+   *
+   * @param id ID do registro a ser carregado
+   * @returns Promise com o registro carregado ou undefined se não encontrado
+   */
+  async loadById(id: any): Promise<T | undefined> {
+    try {
+      console.log('[V2 loadById] Buscando registro com ID:', id);
+
+      const record = await this.service.findOne(id);
+
+      if (record) {
+        console.log('[V2 loadById] Registro encontrado:', record);
+        this.grandTotalRecords = 1;
+        this.setRecords([record]);
+        return record;
+      } else {
+        console.log('[V2 loadById] Registro não encontrado');
+        this.grandTotalRecords = 0;
+        this.setRecords([]);
+        return undefined;
+      }
+    } catch (error) {
+      console.error('[V2 loadById] Erro ao buscar registro:', error);
+      this.handleRemoteError(error);
+      throw error;
+    }
   }
 
   /**
