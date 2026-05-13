@@ -113,8 +113,19 @@ export const getAgGridMantineCssVars = (
     '--ag-checkbox-checked-color': theme.colors[theme.primaryColor][6],
     '--ag-checkbox-unchecked-color': isDark ? theme.colors.gray[5] : theme.colors.gray[4],
     '--ag-input-focus-border-color': theme.colors[theme.primaryColor][6],
-    '--ag-range-selection-border-color': theme.colors[theme.primaryColor][6],
-    '--ag-range-selection-background-color': `rgba(${hexToRgb(theme.colors[theme.primaryColor][5])}, 0.2)`,
+    // Cell selection - background color instead of border
+    '--ag-range-selection-border-color': 'transparent',
+    '--ag-range-selection-background-color': isDark
+      ? `rgba(${hexToRgb(theme.colors[theme.primaryColor][7])}, 0.4)`
+      : `rgba(${hexToRgb(theme.colors[theme.primaryColor][4])}, 0.3)`,
+    // Remove cell focus outline/border
+    '--ag-cell-focus-border': 'none',
+    '--ag-focus-shadow': 'none',
+    '--ag-input-focus-box-shadow': 'none',
+    // Selected cell background
+    '--ag-range-selection-highlight-color': isDark
+      ? `rgba(${hexToRgb(theme.colors[theme.primaryColor][7])}, 0.4)`
+      : `rgba(${hexToRgb(theme.colors[theme.primaryColor][4])}, 0.3)`,
   };
 };
 
