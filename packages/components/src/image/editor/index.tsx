@@ -453,13 +453,22 @@ export const ArchbaseImagePickerEditor = memo(
 			backgroundColor: mergedConfig.imageBackgroundColor ?? (colorScheme === 'dark' ? theme.colors.dark[7] : theme.white),
 		}), [mergedConfig.width, mergedConfig.imageBackgroundColor, colorScheme, theme]);
 
-		// Handler para prevenir navegação acidental em links com data URI
+		// Handler para prevenir submit de formulário e navegação acidental
 		const handleContainerClick = useCallback((e: React.MouseEvent) => {
 			const target = e.target as HTMLElement;
+
+			// Prevenir submit de formulário quando botões são clicados
+			// Os botões do react-image-picker-editor não têm type="button",
+			// então agem como type="submit" quando dentro de um form
+			const button = target.closest('button');
+			if (button && !button.getAttribute('type')) {
+				e.preventDefault();
+			}
+
+			// Prevenir navegação para data URIs em links
 			const anchor = target.closest('a');
 			if (anchor) {
 				const href = anchor.getAttribute('href');
-				// Prevenir navegação para data URIs (podem causar redirect indesejado)
 				if (href && href.startsWith('data:')) {
 					e.preventDefault();
 					// Se for o botão de download, fazer download manualmente
