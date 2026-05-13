@@ -321,6 +321,9 @@ export const ArchbaseImagePickerEditor = memo(
 		// Ref para saber se é a primeira renderização
 		const isFirstRender = useRef(true);
 
+		// Ref para saber se já recebemos a imagem inicial (evita que o picker zere antes de carregar)
+		const hasReceivedInitialImage = useRef(false);
+
 		// Configuração padrão
 		const defaultConfig: ArchbaseImagePickerConf = {
 			objectFit: 'cover',
@@ -377,8 +380,14 @@ export const ArchbaseImagePickerEditor = memo(
 				imageSrcProp: imageSrcProp?.substring(0, 50),
 				normalizedSrc: normalizedSrc?.substring(0, 50),
 				currentImageSrc: imageSrc?.substring(0, 50),
-				willUpdate: normalizedSrc !== imageSrc
+				willUpdate: normalizedSrc !== imageSrc,
+				hasReceivedInitialImage: hasReceivedInitialImage.current
 			});
+
+			// Marcar que recebemos a imagem inicial quando receber um valor não vazio
+			if (normalizedSrc && !hasReceivedInitialImage.current) {
+				hasReceivedInitialImage.current = true;
+			}
 
 			// Só atualizar o estado se o valor normalizado for diferente do atual
 			if (normalizedSrc !== imageSrc) {
@@ -401,11 +410,19 @@ export const ArchbaseImagePickerEditor = memo(
 			console.log('[ImagePickerEditor] handleImageChanged:', {
 				newDataUri: newDataUri?.substring(0, 50),
 				currentImageSrc: imageSrc?.substring(0, 50),
-				isDifferent: imageSrc !== newDataUri
+				isDifferent: imageSrc !== newDataUri,
+				hasReceivedInitialImage: hasReceivedInitialImage.current
 			});
 
 			// Só processa se for diferente do valor atual
 			if (imageSrc === newDataUri) {
+				return;
+			}
+
+			// Ignorar valores vazios se ainda não recebemos a imagem inicial do DataSource
+			// Isso evita que o react-image-picker-editor zere a imagem antes de carregar
+			if (!newDataUri && !hasReceivedInitialImage.current) {
+				console.log('[ImagePickerEditor] Ignorando valor vazio - ainda aguardando imagem inicial');
 				return;
 			}
 
