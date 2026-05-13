@@ -504,10 +504,10 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
       index: this.currentIndex
     });
 
-    this.emit({
-      type: DataSourceEventNames.dataChanged,
-      data: this.filteredRecords
-    });
+    // NOTA: Removido emit de dataChanged aqui para evitar re-renders desnecessários
+    // em componentes como Grid que não precisam reagir a mudanças de campo individual.
+    // Componentes de formulário usam fieldChanged para atualizar.
+    // dataChanged é emitido apenas em operações bulk (setRecords, insert, remove, refresh).
   }
 
   getFieldValue(fieldName: string): any {
