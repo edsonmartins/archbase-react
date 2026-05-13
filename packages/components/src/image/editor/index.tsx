@@ -398,8 +398,20 @@ export const ArchbaseImagePickerEditor = memo(
 
 		// Handler quando a imagem muda no editor
 		const handleImageChanged = useCallback(async (newDataUri: string) => {
+			console.log('[ImagePickerEditor] handleImageChanged:', {
+				newDataUri: newDataUri?.substring(0, 50),
+				currentImageSrc: imageSrc?.substring(0, 50),
+				isDifferent: imageSrc !== newDataUri
+			});
+
 			// Só processa se for diferente do valor atual
 			if (imageSrc === newDataUri) {
+				return;
+			}
+
+			// Ignorar se o novo valor for vazio mas já temos uma imagem
+			if (!newDataUri && imageSrc) {
+				console.log('[ImagePickerEditor] Ignorando valor vazio - já temos imagem');
 				return;
 			}
 
