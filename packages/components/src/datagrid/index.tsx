@@ -1,4 +1,4 @@
-// Exportar componentes principais
+// Exportar componentes principais (MUI DataGrid)
 export * from './main';
 // Exportar components
 export * from './components';
@@ -12,3 +12,5 @@ export * from './modals';
 export * from './types';
 // Exportar excel export
 export * from './export';
+// Exportar AG Grid implementation
+export * from './ag-grid';
