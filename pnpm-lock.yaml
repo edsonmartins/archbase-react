@@ -665,9 +665,6 @@ importers:
       react-pdf:
         specifier: ^9.1.0
         version: 9.2.1(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      react-phone-number-input:
-        specifier: ^3.4.0
-        version: 3.4.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react-photo-album:
         specifier: ^3.0.0
         version: 3.6.0(@types/react@19.2.7)(react@19.2.3)
@@ -5193,9 +5190,6 @@ packages:
     resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==}
     engines: {node: '>=10'}
 
-  country-flag-icons@1.6.15:
-    resolution: {integrity: sha512-92HoA8l6DluEidku8tKBftjuFRj4Rv3zDW1lXxCuNnqAxhUSkvso9gM/Afj4F5BnK+wneHIe3ydI+s+4NA29/Q==}
-
   crc-32@1.2.2:
     resolution: {integrity: sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==}
     engines: {node: '>=0.8'}
@@ -6282,7 +6276,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
@@ -6595,17 +6589,6 @@ packages:
 
   inline-style-prefixer@7.0.1:
     resolution: {integrity: sha512-lhYo5qNTQp3EvSSp3sRvXMbVQTLrvGV6DycRMJ5dm2BLMiJ30wpXKdDdgX+GmJZ5uQMucwRKHamXSst3Sj/Giw==}
-
-  input-format@0.3.14:
-    resolution: {integrity: sha512-gHMrgrbCgmT4uK5Um5eVDUohuV9lcs95ZUUN9Px2Y0VIfjTzT2wF8Q3Z4fwLFm7c5Z2OXCm53FHoovj6SlOKdg==}
-    peerDependencies:
-      react: '>=18.1.0'
-      react-dom: '>=18.1.0'
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
 
   inquirer@7.3.3:
     resolution: {integrity: sha512-JG3eIAj5V9CwcGvuOmoo6LB9kbAYT8HXffUl6memuszlwDC/qvFAJw49XJ5NROSFNPxp3iQg1GqkFhaY/CR0IA==}
@@ -7086,9 +7069,6 @@ packages:
 
   libphonenumber-js@1.12.31:
     resolution: {integrity: sha512-Z3IhgVgrqO1S5xPYM3K5XwbkDasU67/Vys4heW+lfSBALcUZjeIIzI8zCLifY+OCzSq+fpDdywMDa7z+4srJPQ==}
-
-  libphonenumber-js@1.12.41:
-    resolution: {integrity: sha512-lsmMmGXBxXIK/VMLEj0kL6MtUs1kBGj1nTCzi6zgQoG1DEwqwt2DQyHxcLykceIxAnfE3hya7NuIh6PpC6S3fA==}
 
   linebreak@1.1.0:
     resolution: {integrity: sha512-MHp03UImeVhB7XZtjd0E4n6+3xr5Dq/9xI/5FptGk5FrbDR3zagPa2DS6U8ks/3HjbKWG9Q1M2ufOzxV2qLYSQ==}
@@ -8911,12 +8891,6 @@ packages:
       '@types/react':
         optional: true
 
-  react-phone-number-input@3.4.16:
-    resolution: {integrity: sha512-ix1+SIyGuLxnlAeW+XQNhwOmmDd4Zmr6Ng1eQl0E2XS8xIuue3gdZeBG4LGTMjTIFneOTO9pUPL+AEDhV6+r+A==}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-
   react-photo-album@3.6.0:
     resolution: {integrity: sha512-W9NgI+0XxOYF/FLQJ/ZiKsizNQtGtgDdiFgojmTmpBKDGeGiWKfSzmbw3v9WAqzimPeiFJ2sEb9DO0nHRHP/OA==}
     engines: {node: '>=18'}
@@ -10525,10 +10499,12 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   v8-compile-cache-lib@3.0.1:
@@ -11777,7 +11753,7 @@ snapshots:
       react-dom: 16.14.0(react@16.14.0)
       tslib: 2.8.1
 
-  '@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(react@16.14.0)':
+  '@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@16.14.0)':
     dependencies:
       '@dnd-kit/core': 6.3.1(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
       '@dnd-kit/utilities': 3.2.2(react@16.14.0)
@@ -12897,7 +12873,7 @@ snapshots:
   '@pdfme/ui@5.5.10(@pdfme/common@5.5.10(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(form-render@2.5.6(@types/react@19.2.7)(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(immer@10.2.0)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)))(@pdfme/schemas@5.5.10(@pdfme/common@5.5.10(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(form-render@2.5.6(@types/react@19.2.7)(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(immer@10.2.0)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))))(@types/react@19.2.7)(date-fns@2.30.0)(immer@10.2.0)(moment@2.30.1)':
     dependencies:
       '@dnd-kit/core': 6.3.1(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
-      '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(react@16.14.0)
+      '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@16.14.0)
       '@pdfme/common': 5.5.10(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(form-render@2.5.6(@types/react@19.2.7)(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(immer@10.2.0)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))
       '@pdfme/converter': 5.5.10(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(form-render@2.5.6(@types/react@19.2.7)(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(immer@10.2.0)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))
       '@pdfme/schemas': 5.5.10(@pdfme/common@5.5.10(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(form-render@2.5.6(@types/react@19.2.7)(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@16.14.0(react@16.14.0))(react@16.14.0))(immer@10.2.0)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)))
@@ -15623,8 +15599,6 @@ snapshots:
       path-type: 4.0.0
       yaml: 1.10.2
 
-  country-flag-icons@1.6.15: {}
-
   crc-32@1.2.2: {}
 
   crc32-stream@6.0.0:
@@ -17268,13 +17242,6 @@ snapshots:
     dependencies:
       css-in-js-utils: 3.1.0
 
-  input-format@0.3.14(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
-    dependencies:
-      prop-types: 15.8.1
-    optionalDependencies:
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
-
   inquirer@7.3.3:
     dependencies:
       ansi-escapes: 4.3.2
@@ -17788,8 +17755,6 @@ snapshots:
       type-check: 0.4.0
 
   libphonenumber-js@1.12.31: {}
-
-  libphonenumber-js@1.12.41: {}
 
   linebreak@1.1.0:
     dependencies:
@@ -20259,16 +20224,6 @@ snapshots:
       warning: 4.0.3
     optionalDependencies:
       '@types/react': 19.2.7
-
-  react-phone-number-input@3.4.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
-    dependencies:
-      classnames: 2.5.1
-      country-flag-icons: 1.6.15
-      input-format: 0.3.14(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      libphonenumber-js: 1.12.41
-      prop-types: 15.8.1
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
 
   react-photo-album@3.6.0(@types/react@19.2.7)(react@19.2.3):
     dependencies:
