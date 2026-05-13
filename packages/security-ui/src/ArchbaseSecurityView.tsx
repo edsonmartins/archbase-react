@@ -5,9 +5,8 @@
 import { ARCHBASE_IOC_API_TYPE, builder, emit, processDetailErrorMessage, processErrorMessage } from '@archbase/core';
 import { ArchbaseDataSource } from '@archbase/data';
 // import { ArchbaseCountdownProgress } from '@archbase/components'; // Temporarily disabled
-import { useArchbaseV1V2Compatibility } from '@archbase/data';
 import {
-	useArchbaseRemoteDataSource,
+	useArchbaseRemoteDataSourceV2,
 	useArchbaseRemoteServiceApi,
 	useArchbaseStore,
 } from '@archbase/data';
@@ -32,7 +31,7 @@ import { IconEdit, IconPlus, IconShieldCheckered, IconTrashX } from '@tabler/ico
 import { ArchbaseDataGridColumn } from '@archbase/components';
 import { ArchbaseDataGrid, ArchbaseDataGridRef, Columns } from '@archbase/components';
 import { useArchbaseTranslation } from '@archbase/core';
-import React, { ReactNode, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { ArchbaseAccessTokenService } from '@archbase/security';
 import { ArchbaseGroupService } from '@archbase/security';
 import { ArchbaseProfileService } from '@archbase/security';
@@ -159,27 +158,6 @@ export function ArchbaseSecurityView({
 	const [openedPermissionsModal, setOpenedPermissionsModal] = useState<string>('');
 	const accessTokenApi = useArchbaseRemoteServiceApi<ArchbaseAccessTokenService>(ARCHBASE_IOC_API_TYPE.AccessToken);
 	const {t} = useArchbaseTranslation();
-	// 🔄 MIGRAÇÃO V1/V2: Compatibilidade para DataSources principais
-	const usersV1V2 = useArchbaseV1V2Compatibility<UserDto>(
-		'ArchbaseSecurityView-Users',
-		undefined, // Will be set when dsUsers is available
-		undefined,
-		undefined
-	);
-
-	const groupsV1V2 = useArchbaseV1V2Compatibility<GroupDto>(
-		'ArchbaseSecurityView-Groups',
-		undefined, // Will be set when dsGroups is available
-		undefined,
-		undefined
-	);
-
-	const profilesV1V2 = useArchbaseV1V2Compatibility<ProfileDto>(
-		'ArchbaseSecurityView-Profiles',
-		undefined, // Will be set when dsProfiles is available
-		undefined,
-		undefined
-	);
 
 	// Referências para os grids
 	const usersGridRef = useRef<ArchbaseDataGridRef | null>(null);
@@ -209,105 +187,92 @@ export function ArchbaseSecurityView({
 		return row.id;
 	};
 
-	const { dataSource: dsAccessTokens, isLoading: isLoadingAccessTokens } = useArchbaseRemoteDataSource<
-		AccessTokenDto,
-		string
-	>({
+	const {
+		dataSource: dsAccessTokens,
+		isLoading: isLoadingAccessTokens,
+		refreshData: refreshAccessTokens
+	} = useArchbaseRemoteDataSourceV2<AccessTokenDto>({
 		name: 'accessTokenApi',
 		service: accessTokenApi,
-		store: templateStore,
 		validator,
 		pageSize: 25,
-		loadOnStart: true,
-		filter: emit(builder.or(builder.eq('revoked', `false`))),
-		sort: ['user.email', 'expirationTime:desc'],
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
+		defaultSortFields: ['user.email', 'expirationTime:desc'],
 		onError: (error, origin) => {
 			setError(error);
 			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
-	const { dataSource: dsUsers, isLoading: isLoadingUsers } = useArchbaseRemoteDataSource<UserDto, string>({
+	const {
+		dataSource: dsUsers,
+		isLoading: isLoadingUsers,
+		refreshData: refreshUsers
+	} = useArchbaseRemoteDataSourceV2<UserDto>({
 		name: 'dsUsers',
 		service: userApi,
-		store: templateStore,
 		validator,
 		pageSize: 25,
-		loadOnStart: true,
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
 		onError: (error, origin) => {
 			setError(error);
 			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
-	const { dataSource: dsGroups, isLoading: isLoadingGroups } = useArchbaseRemoteDataSource<GroupDto, string>({
+	const {
+		dataSource: dsGroups,
+		isLoading: isLoadingGroups,
+		refreshData: refreshGroups
+	} = useArchbaseRemoteDataSourceV2<GroupDto>({
 		name: 'dsGroups',
 		service: groupApi,
-		store: templateStore,
 		validator,
 		pageSize: 25,
-		loadOnStart: true,
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
 		onError: (error, origin) => {
 			setError(error);
 			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
-	const { dataSource: dsProfiles, isLoading: isLoadingProfiles } = useArchbaseRemoteDataSource<ProfileDto, string>({
+	const {
+		dataSource: dsProfiles,
+		isLoading: isLoadingProfiles,
+		refreshData: refreshProfiles
+	} = useArchbaseRemoteDataSourceV2<ProfileDto>({
 		name: 'dsProfile',
 		service: profileApi,
-		store: templateStore,
 		validator,
 		pageSize: 25,
-		loadOnStart: true,
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
 		onError: (error, origin) => {
 			setError(error);
 			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
 
-	const { dataSource: dsResources, isLoading: isLoadingResources } = useArchbaseRemoteDataSource<ResourceDto, string>({
+	const {
+		dataSource: dsResources,
+		isLoading: isLoadingResources,
+		refreshData: refreshResources
+	} = useArchbaseRemoteDataSourceV2<ResourceDto>({
 		name: 'dsResources',
 		service: resourceApi,
-		store: templateStore,
 		validator,
 		pageSize: 25,
-		loadOnStart: true,
-		onLoadComplete: (dataSource) => {
-			//
-		},
-		onDestroy: (dataSource) => {
-			//
-		},
 		onError: (error, origin) => {
 			setError(error);
 			ArchbaseNotifications.showError(`${t('archbase:WARNING')}`, error, origin);
 		},
 	});
+
+	// Carregar dados iniciais
+	useEffect(() => {
+		// AccessTokens with filter
+		refreshAccessTokens({ filter: emit(builder.eq('revoked', 'false')) });
+		// Other data sources
+		refreshUsers();
+		refreshGroups();
+		refreshProfiles();
+		refreshResources();
+	}, []);
 
 	const heightTab = `calc(${height} - 40px)`;
 
@@ -546,17 +511,9 @@ export function ArchbaseSecurityView({
 	const handleAddUserExecute = () => {
 		const user = UserDto.newInstance();
 		if (!createEntitiesWithId) {
-			user.id = undefined;
+			(user as any).id = undefined;
 		}
-		
-		// 🔄 MIGRAÇÃO V1/V2: Inserção com compatibilidade
 		dsUsers.insert(user);
-		
-		// Se for V1, forçar atualização
-		if (dsUsers && !usersV1V2.isDataSourceV2) {
-			usersV1V2.v1State.forceUpdate();
-		}
-		
 		setOpenedModal(SecurityType.USER);
 	};
 
@@ -565,12 +522,6 @@ export function ArchbaseSecurityView({
 			const currentUser = dsUsers.gotoRecordByData(row);
 			if (currentUser) {
 				dsUsers.edit();
-				
-				// 🔄 MIGRAÇÃO V1/V2: Edição com compatibilidade V1
-				if (!usersV1V2.isDataSourceV2) {
-					usersV1V2.v1State.forceUpdate();
-				}
-				
 				setOpenedModal(SecurityType.USER);
 			}
 		}
@@ -585,11 +536,6 @@ export function ArchbaseSecurityView({
 					`${t('archbase:Deseja remover o usuário ')}${row.name} ?`,
 					() => {
 						dsUsers.remove();
-						
-						// 🔄 MIGRAÇÃO V1/V2: Remoção com compatibilidade V1
-						if (!usersV1V2.isDataSourceV2) {
-							usersV1V2.v1State.forceUpdate();
-						}
 					},
 					() => {},
 				);
@@ -630,17 +576,9 @@ export function ArchbaseSecurityView({
 	const handleAddGroupExecute = () => {
 		const group = GroupDto.newInstance();
 		if (!createEntitiesWithId) {
-			group.id = undefined;
+			(group as any).id = undefined;
 		}
-		
-		// 🔄 MIGRAÇÃO V1/V2: Inserção com compatibilidade
 		dsGroups.insert(group);
-		
-		// Se for V1, forçar atualização
-		if (dsGroups && !groupsV1V2.isDataSourceV2) {
-			groupsV1V2.v1State.forceUpdate();
-		}
-		
 		setOpenedModal(SecurityType.GROUP);
 	};
 
@@ -715,17 +653,9 @@ export function ArchbaseSecurityView({
 	const handleAddProfileExecute = () => {
 		const profile = ProfileDto.newInstance();
 		if (!createEntitiesWithId) {
-			profile.id = undefined;
+			(profile as any).id = undefined;
 		}
-		
-		// 🔄 MIGRAÇÃO V1/V2: Inserção com compatibilidade
 		dsProfiles.insert(profile);
-		
-		// Se for V1, forçar atualização
-		if (dsProfiles && !profilesV1V2.isDataSourceV2) {
-			profilesV1V2.v1State.forceUpdate();
-		}
-		
 		setOpenedModal(SecurityType.PROFILE);
 	};
 
@@ -786,13 +716,14 @@ export function ArchbaseSecurityView({
 	};
 
 	const handleAccessTokenRevokeRow = () => {
-		if (dsAccessTokens.getCurrentRecord()) {
+		const currentAccessToken = dsAccessTokens.getCurrentRecord();
+		if (currentAccessToken) {
 			ArchbaseDialog.showConfirmDialogYesNo(
 				`${t('archbase:Confirme')}`,
-				`${t('archbase:Deseja revogar o token de Acesso do usuário ')}${dsAccessTokens.getCurrentRecord().user.name} ?`,
+				`${t('archbase:Deseja revogar o token de Acesso do usuário ')}${currentAccessToken.user.name} ?`,
 				async () => {
 					await accessTokenApi
-						.revoke(dsAccessTokens.getCurrentRecord().token)
+						.revoke(currentAccessToken.token)
 						.then(async () => {
 							ArchbaseNotifications.showSuccess(
 								`${t('mentors:Informação')}`,

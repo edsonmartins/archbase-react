@@ -7,7 +7,7 @@ import { ARCHBASE_IOC_API_TYPE, getKeyByEnumValue, getI18nextInstance } from "@a
 import { ActionIcon, Badge, Button, Grid, Group, Modal, Paper, ScrollArea, Stack, Text, TextInput, Tooltip, Tree, TreeNodeData, useMantineColorScheme, useTree } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight, IconBorderCornerSquare, IconChevronDown } from "@tabler/icons-react";
 import { SecurityType } from "@archbase/security";
-import { useArchbaseRemoteServiceApi, ArchbaseRemoteDataSource } from "@archbase/data";
+import { useArchbaseRemoteServiceApi, IArchbaseDataSourceBase } from "@archbase/data";
 import { ResouceActionPermissionDto, ResoucePermissionsWithTypeDto } from "@archbase/security";
 import { ArchbaseResourceService } from "@archbase/security";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -27,7 +27,7 @@ const translateDelimitedString = (inputString) => {
 };
 
 export interface PermissionsSelectorProps {
-    dataSource: ArchbaseRemoteDataSource<any, any> | null
+    dataSource: IArchbaseDataSourceBase<any> | null
     opened: boolean
     close: () => void
 }

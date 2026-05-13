@@ -7,7 +7,7 @@ import { Grid, ScrollArea, Stack, Modal, Button, Group } from '@mantine/core'
 import { useFocusTrap } from '@mantine/hooks'
 import { getI18nextInstance } from '@archbase/core';
 import { GroupDto } from '@archbase/security'
-import { ArchbaseDataSource } from '@archbase/data'
+import { IArchbaseDataSourceBase } from '@archbase/data'
 import { ArchbaseEdit } from '@archbase/components'
 
 export interface GroupModalOptions {
@@ -17,7 +17,7 @@ export interface GroupModalOptions {
 }
 
 export interface GroupModalProps {
-  dataSource: ArchbaseDataSource<GroupDto, string>
+  dataSource: IArchbaseDataSourceBase<GroupDto>
   opened: boolean
   onClickOk: (record?: GroupDto, result?: any) => void
   onClickCancel: (record?: GroupDto) => void
@@ -34,19 +34,19 @@ export const GroupModal = (props: GroupModalProps) => {
   
   const handleSave = () => {
     if (props.onCustomSave) {
-      props.onCustomSave(props.dataSource.current, (success: boolean) => {
+      props.onCustomSave(props.dataSource.getCurrentRecord()!, (success: boolean) => {
         if (success && props.onAfterSave) {
-          props.onAfterSave(props.dataSource.current);
+          props.onAfterSave(props.dataSource.getCurrentRecord()!);
         }
-        props.onClickOk(props.dataSource.current, success);
+        props.onClickOk(props.dataSource.getCurrentRecord()!, success);
       });
     } else {
-      props.onClickOk(props.dataSource.current, true);
+      props.onClickOk(props.dataSource.getCurrentRecord()!, true);
     }
   };
 
   const handleCancel = () => {
-    props.onClickCancel(props.dataSource.current);
+    props.onClickCancel(props.dataSource.getCurrentRecord()!);
   };
   
   return (
