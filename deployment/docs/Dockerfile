@@ -9,7 +9,7 @@ RUN apk add --no-cache python3 make g++ cairo-dev pango-dev jpeg-dev giflib-dev
 WORKDIR /app
 
 # Copy all necessary config files from root
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json vite.config.shared.mjs ./
 
 # Copy packages and docs-site
 COPY packages/ ./packages/
