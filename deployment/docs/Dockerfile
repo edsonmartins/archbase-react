@@ -14,7 +14,7 @@ LABEL description="Archbase React Documentation"
 COPY . /usr/share/nginx/html
 
 # Copiar configuração customizada do nginx
-COPY nginx.conf /etc/nginx/conf.d/
+COPY deployment/docs/nginx.conf /etc/nginx/conf.d/
 
 EXPOSE 80
 
