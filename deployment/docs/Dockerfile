@@ -2,18 +2,22 @@
 # Stage 1: Build
 FROM node:20-alpine AS builder
 
-# Install pnpm
+# Install pnpm and build tools
 RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+RUN apk add --no-cache python3 make g++ cairo-dev pango-dev jpeg-dev giflib-dev
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Copy all necessary config files from root
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
+
+# Copy packages and docs-site
 COPY packages/ ./packages/
 COPY docs-site/ ./docs-site/
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Install dependencies (ignore optional canvas which requires native build)
+RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm rebuild
 
 # Build all packages first
 RUN pnpm -r --filter "./packages/*" build
