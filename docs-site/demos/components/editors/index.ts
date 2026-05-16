@@ -2855,37 +2855,6 @@ export const tagInputUsage: MantineDemo = {
 };
 
 // ============================================================================
-// ArchbasePhoneInput Demos
-// ============================================================================
-import { ArchbasePhoneInputUsage } from './ArchbasePhoneInputUsage';
-
-const phoneInputUsageCode = `
-import { useState } from 'react';
-import { ArchbasePhoneInput } from '@archbase/components';
-
-function Demo() {
-  const [value, setValue] = useState<string>('');
-
-  return (
-    <ArchbasePhoneInput
-      label="Telefone"
-      placeholder="Digite o telefone..."
-      value={value}
-      onChangeValue={(newValue) => setValue(newValue)}
-      defaultCountry="BR"
-      international
-    />
-  );
-}
-`;
-
-export const phoneInputUsage: MantineDemo = {
-  type: 'code',
-  component: ArchbasePhoneInputUsage,
-  code: phoneInputUsageCode,
-};
-
-// ============================================================================
 // ArchbaseMultiEmail Demos
 // ============================================================================
 import { ArchbaseMultiEmailUsage } from './ArchbaseMultiEmailUsage';
