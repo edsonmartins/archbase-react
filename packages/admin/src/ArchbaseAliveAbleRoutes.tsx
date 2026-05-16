@@ -141,20 +141,24 @@ const getCacheKey = (pathPattern: string, currentPathname: string): string => {
 const KeepAliveVisibilityWrapper = ({ children }: { children: ReactNode }) => {
 	const { active } = useKeepAliveContext();
 	const routerParams = useReactRouterParams();
+	const paramsRef = useRef<Params<string>>(routerParams);
 	const [savedParams, setSavedParams] = useState<Params<string>>(routerParams);
 
+	paramsRef.current = routerParams;
+
 	useEffectOnActive(() => {
-		setSavedParams(routerParams);
-		setTimeout(() => {
+		setSavedParams(paramsRef.current);
+		// Notificar grid/componentes que o layout mudou (AG Grid precisa recalcular)
+		requestAnimationFrame(() => {
 			window.dispatchEvent(new Event('resize'));
-		}, 50);
-	}, [routerParams]);
+		});
+	}, []);
 
 	useEffect(() => {
 		if (active) {
-			setSavedParams(routerParams);
+			setSavedParams(paramsRef.current);
 		}
-	}, [routerParams, active]);
+	}, [active]);
 
 	return (
 		<KeepAliveVisibilityContext.Provider value={{ isVisible: active }}>
@@ -185,25 +189,16 @@ const KeepAliveLayout = React.memo(({ keepAlivePaths, maxKeepAliveTabs, aliveRef
 	const location = useLocation();
 	const outlet = useOutlet();
 
-	// Determina se rota atual é keepAlive e gera cache key
-	const { cacheKey, isKeepAlive } = useMemo(() => {
+	const cacheKey = useMemo(() => {
 		const matchedPattern = keepAlivePaths.find(p =>
 			matchPath({ path: p, end: true }, location.pathname)
 		);
 		if (matchedPattern) {
-			return {
-				cacheKey: getCacheKey(matchedPattern, location.pathname),
-				isKeepAlive: true
-			};
+			return getCacheKey(matchedPattern, location.pathname);
 		}
-		// Rota não-keepAlive: usa prefixo especial que será excluído do cache
-		return {
-			cacheKey: NON_KEEPALIVE_PREFIX + location.pathname,
-			isKeepAlive: false
-		};
+		return NON_KEEPALIVE_PREFIX + location.pathname;
 	}, [keepAlivePaths, location.pathname]);
 
-	// Exclude pattern: rotas com prefixo __nokeep__ nunca são cacheadas
 	const excludePattern = useMemo(() => [/^__nokeep__:/], []);
 
 	return (

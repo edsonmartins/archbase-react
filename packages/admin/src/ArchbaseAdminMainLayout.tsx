@@ -16,7 +16,7 @@ import {
 import { ArchbaseAdvancedSidebar } from './ArchbaseAdvancedSidebar';
 import { ArchbaseMantineSidebar, SidebarVariant } from './sidebar';
 import { ArchbaseAliveAbleRoutes, ArchbaseKeepAliveRoute, KeepAliveCacheProvider, type ArchbaseKeepAliveRouteProps } from './ArchbaseAliveAbleRoutes';
-import { NavigationProgressProvider } from './ArchbaseNavigationProgress';
+import { NavigationProgressProvider, useNavigationProgress } from './ArchbaseNavigationProgress';
 import { buildSetCollapsedButton } from './buildSetCollapsedButton';
 import { ArchbaseCompany, ArchbaseNavigationItem, ArchbaseOwner } from './types';
 import { useArchbaseNavigateParams } from '@archbase/components';
@@ -206,22 +206,22 @@ function ArchbaseAdminMainLayoutContainer({
 		adminLayoutContextValue.navigationData.forEach((item, index) => {
 			if (item.links) {
 				item.links.forEach((item2, indexSub) => {
-					if (item2.keepAlive) {
+					if (item2.keepAlive === false) {
+						routeElements.push(<Route path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component as any} />);
+					} else {
 						routeElements.push(
 							<ArchbaseKeepAliveRoute path={item2.link} key={`${item2.link}_${indexSub}`} component={item2.component} />
 						);
-					} else {
-						routeElements.push(<Route path={item2.link} key={`${item2.link}_${indexSub}`} element={item2.component as any} />);
 					}
 				});
 			} else {
-				if (item.keepAlive) {
+				if (item.keepAlive === false) {
 					routeElements.push(
-						<ArchbaseKeepAliveRoute key={`${item.link}_${index}`} path={item.link} component={item.component} />
+						<Route key={`${item.link}_${index}`} path={item.link} element={item.component as any} />
 					);
 				} else {
 					routeElements.push(
-						<Route key={`${item.link}_${index}`} path={item.link} element={item.component as any} />
+						<ArchbaseKeepAliveRoute key={`${item.link}_${index}`} path={item.link} component={item.component} />
 					);
 				}
 			}
@@ -437,9 +437,7 @@ function ArchbaseAdminMainLayoutContainer({
 				<KeepAliveCacheProvider>
 				<div style={mainDivStyle}>
 					{children}
-					<div style={{ width: '100%', height: 'calc(100% - 48px)' }}>
-						<ArchbaseAliveAbleRoutes maxKeepAliveTabs={maxKeepAliveTabs}>{...routes as any}</ArchbaseAliveAbleRoutes>
-					</div>
+					<ArchbaseRouteContent maxKeepAliveTabs={maxKeepAliveTabs} routes={routes} />
 				</div>
 			</KeepAliveCacheProvider>
 				{showSideBar &&
@@ -461,6 +459,24 @@ function ArchbaseAdminMainLayoutContainer({
 			</AppShell.Footer>
 		</AppShell>
 		</NavigationProgressProvider>
+	);
+}
+
+/**
+ * Componente interno que renderiza o conteúdo das rotas com transição suave.
+ * Usa isNavigating do NavigationProgressProvider para reduzir opacidade durante troca de tab.
+ */
+function ArchbaseRouteContent({ maxKeepAliveTabs, routes }: { maxKeepAliveTabs: number; routes: React.ReactElement[] }) {
+	const { isNavigating } = useNavigationProgress();
+	return (
+		<div style={{
+			width: '100%',
+			height: 'calc(100% - 48px)',
+			opacity: isNavigating ? 0.6 : 1,
+			transition: 'opacity 0.15s ease-out',
+		}}>
+			<ArchbaseAliveAbleRoutes maxKeepAliveTabs={maxKeepAliveTabs}>{...routes as any}</ArchbaseAliveAbleRoutes>
+		</div>
 	);
 }
 

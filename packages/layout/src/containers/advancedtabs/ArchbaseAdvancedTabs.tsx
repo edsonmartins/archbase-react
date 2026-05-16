@@ -61,7 +61,7 @@ const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 		document.addEventListener('mouseup', onDragEnd);
 		return () => {
 			document.removeEventListener('mousemove', onDragMove);
-			document.addEventListener('mouseup', onDragEnd);
+			document.removeEventListener('mouseup', onDragEnd);
 		}
 	});
 

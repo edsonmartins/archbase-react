@@ -12,6 +12,21 @@ export interface AdminState {
   setCollapsed: (collapsed: boolean) => void
 }
 
+/**
+ * @deprecated Use `useTabRegistryStore` de `state/tabRegistryStore` para gerenciar
+ * estado de tabs com persistencia. Este store sera removido em versoes futuras.
+ *
+ * Migracao:
+ * ```tsx
+ * // Antes
+ * const { activeTabId, setActiveTabId } = useArchbaseAdminStore();
+ *
+ * // Depois
+ * import { useTabRegistryStore } from '@archbase/admin';
+ * const activeTabId = useTabRegistryStore((s) => s.activeTabId);
+ * const setActiveTab = useTabRegistryStore((s) => s.setActiveTab);
+ * ```
+ */
 export const useArchbaseAdminStore = create<AdminState>((set) => ({
   nameStore: 'ADMIN_STORE',
   openedTabs: [],

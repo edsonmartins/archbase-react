@@ -19,7 +19,7 @@ const YELLOW = '\x1b[33m';
 const RED = '\x1b[31m';
 const RESET = '\x1b[0m';
 
-const VERDACCIO_URL = 'http://192.168.100.5:4873';
+const VERDACCIO_URL = 'http://192.168.1.110:4873';
 
 function log(message, color = '') {
   console.log(`${color}${message}${RESET}`);
@@ -100,9 +100,10 @@ function cleanupVerdaccioPackage(packageName) {
   
   try {
     // Listar todas as versões do package
-    const result = execSync(`npm view @archbase/${packageName} versions --json --registry=${VERDACCIO_URL}`, { 
+    const result = execSync(`npm view @archbase/${packageName} versions --json --registry=${VERDACCIO_URL}`, {
       stdio: 'pipe',
-      encoding: 'utf8'
+      encoding: 'utf8',
+      timeout: 15000
     });
     
     const versions = JSON.parse(result);
@@ -112,8 +113,9 @@ function cleanupVerdaccioPackage(packageName) {
     for (const version of versionsArray) {
       if (version.includes('-debug')) {
         try {
-          execSync(`npm unpublish @archbase/${packageName}@${version} --registry=${VERDACCIO_URL} --force`, { 
-            stdio: 'pipe' 
+          execSync(`npm unpublish @archbase/${packageName}@${version} --registry=${VERDACCIO_URL} --force`, {
+            stdio: 'pipe',
+            timeout: 15000
           });
           log(`🗑️  Removido @archbase/${packageName}@${version}`, YELLOW);
         } catch (e) {
@@ -149,7 +151,7 @@ function publishDebugPackage(packageName) {
     const debugVersion = updatePackageForDebug(packageName);
     
     // Publicar
-    execSync(`cd ${packageDir} && npm publish --registry=${VERDACCIO_URL}`, { stdio: 'inherit' });
+    execSync(`cd ${packageDir} && npm publish --registry=${VERDACCIO_URL}`, { stdio: 'inherit', timeout: 30000 });
     
     log(`✅ @archbase/${packageName}@${debugVersion} publicado`, GREEN);
     
@@ -169,7 +171,7 @@ function publishDebugPackage(packageName) {
 
 function checkVerdaccioConnection() {
   try {
-    execSync(`npm ping --registry=${VERDACCIO_URL}`, { stdio: 'pipe' });
+    execSync(`curl -s --connect-timeout 5 ${VERDACCIO_URL}/-/ping`, { stdio: 'pipe', timeout: 10000 });
     log(`✅ Verdaccio acessível em ${VERDACCIO_URL}`, GREEN);
     return true;
   } catch (error) {
@@ -194,12 +196,13 @@ function cleanupAllVerdaccioPackages() {
 function parseArgs() {
   const args = process.argv.slice(2);
   return {
-    noDocs: args.includes('--no-docs')
+    noDocs: args.includes('--no-docs'),
+    skipBuild: args.includes('--skip-build')
   };
 }
 
 function main() {
-  const { noDocs } = parseArgs();
+  const { noDocs, skipBuild } = parseArgs();
 
   log(`🚀 Iniciando publicação DEBUG no Verdaccio...`, BLUE);
 
@@ -211,10 +214,14 @@ function main() {
   // Limpar Verdaccio completamente
   cleanupAllVerdaccioPackages();
 
-  // Build em modo debug
-  log(`🔧 Fazendo build debug...`, YELLOW);
-  const noDocsFlag = noDocs ? ' --no-docs' : '';
-  execSync(`node ${path.join(__dirname, 'build-unified.js')} --debug${noDocsFlag}`, { stdio: 'inherit' });
+  // Build em modo debug (pular com --skip-build)
+  if (skipBuild) {
+    log(`⏭️  Build pulado (--skip-build)`, YELLOW);
+  } else {
+    log(`🔧 Fazendo build debug...`, YELLOW);
+    const noDocsFlag = noDocs ? ' --no-docs' : '';
+    execSync(`node ${path.join(__dirname, 'build-unified.js')} --debug${noDocsFlag}`, { stdio: 'inherit' });
+  }
   
   const packages = getAllPackages();
   const publishOrder = [
