@@ -748,12 +748,7 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
 
     if (options?.sort !== undefined) {
       this.currentSort = options.sort;
-      // Atualiza defaultSortFields se sort for fornecido
-      this.defaultSortFields = options.sort.map(s => {
-        // Remove :asc ou :desc se presente
-        const parts = s.split(':');
-        return parts[0];
-      });
+      this.defaultSortFields = options.sort;
     }
 
     // Se tiver filtro, usa os métodos com filtro
@@ -1212,9 +1207,11 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
 
   private async getDataWithoutFilter(page: number, callback?: (() => void) | undefined): Promise<any> {
     try {
+      const sortFields = (this.currentSort && this.currentSort.length > 0) ? this.currentSort : this.defaultSortFields;
+
       let result: any;
-      if (this.defaultSortFields.length > 0) {
-        result = await this.service.findAllWithSort(page, this.getPageSize(), this.defaultSortFields);
+      if (sortFields.length > 0) {
+        result = await this.service.findAllWithSort(page, this.getPageSize(), sortFields);
       } else {
         result = await this.service.findAll(page, this.getPageSize());
       }

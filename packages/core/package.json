@@ -1,6 +1,6 @@
 {
   "name": "@archbase/core",
-  "version": "4.0.19",
+  "version": "4.0.18",
   "description": "Core utilities and foundation for Archbase React v3",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -27,7 +27,7 @@
   },
   "files": [
     "dist",
-    "src"
+    "README.md"
   ],
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build --watch",
@@ -39,12 +39,12 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "peerDependencies": {
-    "@mantine/core": "9.2.1",
-    "@mantine/dates": "9.2.1",
-    "@mantine/hooks": "9.2.1",
-    "@mantine/modals": "9.2.1",
-    "@mantine/notifications": "9.2.1",
-    "@mantine/spotlight": "9.2.1",
+    "@mantine/core": "9.1.1",
+    "@mantine/dates": "9.1.1",
+    "@mantine/hooks": "9.1.1",
+    "@mantine/modals": "9.1.1",
+    "@mantine/notifications": "9.1.1",
+    "@mantine/spotlight": "9.1.1",
     "react": "^18.3.0 || ^19.2.0",
     "react-dom": "^18.3.0 || ^19.2.0"
   },
@@ -85,8 +85,5 @@
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-external": "^6.2.2",
     "vitest": "^2.1.8"
-  },
-  "publishConfig": {
-    "registry": "http://192.168.1.110:4873"
   }
 }

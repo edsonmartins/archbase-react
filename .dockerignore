@@ -1,0 +1,16 @@
+node_modules
+.git
+.github
+.turbo
+.pnpm-store
+*.md
+!README.md
+.DS_Store
+.env*
+*.log
+coverage
+.storybook
+docs
+docs-site-backup
+component-catalog.json
+.tsbuildinfo
