@@ -60,6 +60,19 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
 	maxHeight?: number;
 	/** Tamanho máximo da imagem em KB (recomprime se exceder) */
 	maxSizeKb?: number;
+	/**
+	 * Preserva a transparência da imagem (canal alfa).
+	 *
+	 * Quando true:
+	 *  - desabilita a compressão automática (`compressInitial` é forçado para `null`),
+	 *    impedindo que a biblioteca subjacente reencodifique PNG/WebP como JPEG.
+	 *  - força a saída em PNG (ou WebP, quando a origem já é WebP) ao redimensionar
+	 *    via `maxWidth`/`maxHeight`/`maxSizeKb`.
+	 *
+	 * Útil quando o usuário precisa enviar logos com fundo transparente.
+	 * Default: `false`.
+	 */
+	preserveTransparency?: boolean;
 }
 
 export function ArchbaseImageEdit<T, ID>({
@@ -77,7 +90,7 @@ export function ArchbaseImageEdit<T, ID>({
 	radius = '4px',
 	aspectRatio,
 	objectFit = 'contain',
-	compressInitial = 80,
+	compressInitial = null,
 	onChangeImage,
 	disabledBase64Convertion,
 	innerRef,
@@ -87,6 +100,7 @@ export function ArchbaseImageEdit<T, ID>({
 	maxWidth,
 	maxHeight,
 	maxSizeKb,
+	preserveTransparency = false,
 	...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
 	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
@@ -265,7 +279,9 @@ useEffect(() => {
 						width,
 						height,
 						objectFit,
-						compressInitial,
+						// preserveTransparency desabilita a compressão automática
+						// (que internamente força conversão para JPEG)
+						compressInitial: preserveTransparency ? null : compressInitial,
 						showImageSize: !isReadOnly(),
 						hideDeleteBtn: isReadOnly(),
 						hideDownloadBtn: isReadOnly(),
@@ -276,6 +292,7 @@ useEffect(() => {
 						maxWidth,
 						maxHeight,
 						maxSizeKb,
+						preserveTransparency,
 					}}
 				/>
 			</Input.Wrapper>

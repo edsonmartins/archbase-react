@@ -170,7 +170,8 @@ async function resizeImageIfNeeded(
 	maxWidth?: number,
 	maxHeight?: number,
 	maxSizeKb?: number,
-	quality: number = 80
+	quality: number = 80,
+	preserveTransparency: boolean = false
 ): Promise<string> {
 	return new Promise((resolve) => {
 		// Se não há limites definidos, retorna como está
@@ -214,9 +215,18 @@ async function resizeImageIfNeeded(
 
 			ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
 
-			// Determinar formato de saída
+			// Determinar formato de saída.
+			// PNG e WebP suportam canal alfa; se a origem já está nesses formatos,
+			// ou se o caller solicitou preserveTransparency, manter um formato com
+			// suporte a transparência ao invés de cair em JPEG.
 			const format = extractFormat(dataUri);
-			const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+			const sourceSupportsAlpha = format === 'png' || format === 'webp';
+			let mimeType: string;
+			if (preserveTransparency || sourceSupportsAlpha) {
+				mimeType = format === 'webp' ? 'image/webp' : 'image/png';
+			} else {
+				mimeType = 'image/jpeg';
+			}
 
 			// Função para comprimir até atingir o tamanho desejado
 			const compressToSize = (currentQuality: number): string => {
@@ -341,7 +351,15 @@ export const ArchbaseImagePickerEditor = memo(
 			borderRadius: '8px',
 		};
 
-		const mergedConfig = useMemo(() => ({ ...defaultConfig, ...config }), [config]);
+		const mergedConfig = useMemo(() => {
+			const merged = { ...defaultConfig, ...config };
+			// Quando preserveTransparency está ligado, anulamos qualquer compressInitial
+			// (a lib subjacente reencodifica como JPEG quando esse valor está definido).
+			if (merged.preserveTransparency) {
+				merged.compressInitial = null;
+			}
+			return merged;
+		}, [config]);
 
 		// Converter para configuração do react-image-picker-editor
 		const pickerConfig = useMemo(
@@ -427,7 +445,8 @@ export const ArchbaseImagePickerEditor = memo(
 					mergedConfig.maxWidth,
 					mergedConfig.maxHeight,
 					mergedConfig.maxSizeKb,
-					mergedConfig.compressInitial ?? 80
+					mergedConfig.compressInitial ?? 80,
+					mergedConfig.preserveTransparency ?? false
 				);
 			}
 
@@ -438,7 +457,7 @@ export const ArchbaseImagePickerEditor = memo(
 
 			// Usar callback com debounce
 			debouncedOnChange(newValue);
-		}, [imageSrc, debouncedOnChange, onProcessingChange, mergedConfig.maxWidth, mergedConfig.maxHeight, mergedConfig.maxSizeKb, mergedConfig.compressInitial]);
+		}, [imageSrc, debouncedOnChange, onProcessingChange, mergedConfig.maxWidth, mergedConfig.maxHeight, mergedConfig.maxSizeKb, mergedConfig.compressInitial, mergedConfig.preserveTransparency]);
 
 		// Calcular tamanho e formato da imagem (apenas para data URIs)
 		const sizeImage = useMemo(() => calculateImageSize(imageSrc), [imageSrc]);
