@@ -418,41 +418,34 @@ export const ArchbaseImagePickerEditor = memo(
 								display: 'block',
 							}}
 						/>
-
-						{/* Action bar */}
-						<Group
-							gap={4}
-							style={{
-								position: 'absolute',
-								bottom: 6,
-								right: 6,
-								background: 'rgba(255,255,255,0.85)',
-								borderRadius: 6,
-								padding: 2,
-							}}
-						>
-							{!mergedConfig.hideAddBtn && (
-								<ActionIcon variant={variant} color={color} title={tr('archbase:Trocar imagem', 'Trocar imagem')} onClick={triggerReupload}>
-									<IconPhoto size={18} />
-								</ActionIcon>
-							)}
-							{!mergedConfig.hideEditBtn && (
-								<ActionIcon variant={variant} color={color} title={tr('archbase:Editar', 'Editar')} onClick={handleOpenCrop}>
-									<IconCrop size={18} />
-								</ActionIcon>
-							)}
-							{!mergedConfig.hideDownloadBtn && (
-								<ActionIcon variant={variant} color={color} title={tr('archbase:Baixar', 'Baixar')} onClick={handleDownload}>
-									<IconDownload size={18} />
-								</ActionIcon>
-							)}
-							{!mergedConfig.hideDeleteBtn && (
-								<ActionIcon variant={variant} color="red" title={tr('archbase:Remover', 'Remover')} onClick={handleDelete}>
-									<IconTrash size={18} />
-								</ActionIcon>
-							)}
-						</Group>
 					</Box>
+				)}
+
+				{/* Barra de ações — fora da imagem para não competir por área de clique
+				    em previews pequenos (ex.: favicons 48px). */}
+				{imageSrc && (
+					<Group gap={4} mt={6} justify="flex-start" wrap="nowrap">
+						{!mergedConfig.hideAddBtn && (
+							<ActionIcon variant={variant} color={color} title={tr('archbase:Trocar imagem', 'Trocar imagem')} onClick={triggerReupload}>
+								<IconPhoto size={18} />
+							</ActionIcon>
+						)}
+						{!mergedConfig.hideEditBtn && (
+							<ActionIcon variant={variant} color={color} title={tr('archbase:Editar', 'Editar')} onClick={handleOpenCrop}>
+								<IconCrop size={18} />
+							</ActionIcon>
+						)}
+						{!mergedConfig.hideDownloadBtn && (
+							<ActionIcon variant={variant} color={color} title={tr('archbase:Baixar', 'Baixar')} onClick={handleDownload}>
+								<IconDownload size={18} />
+							</ActionIcon>
+						)}
+						{!mergedConfig.hideDeleteBtn && (
+							<ActionIcon variant={variant} color="red" title={tr('archbase:Remover', 'Remover')} onClick={handleDelete}>
+								<IconTrash size={18} />
+							</ActionIcon>
+						)}
+					</Group>
 				)}
 
 				{showSizeInfo && imageSrc && (
