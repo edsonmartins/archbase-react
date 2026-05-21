@@ -279,7 +279,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 		  event.type === DataSourceEventNames.dataChanged ||
 		  event.type === DataSourceEventNames.recordChanged ||
 		  event.type === DataSourceEventNames.afterScroll ||
-		  event.type === DataSourceEventNames.afterCancel
+		  event.type === DataSourceEventNames.afterCancel ||
+		  event.type === DataSourceEventNames.afterInsert
 		) {
 		  loadDataSourceFieldValue();
 		  // 🔄 MIGRAÇÃO V1/V2: forceUpdate apenas para V1

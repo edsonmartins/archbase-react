@@ -112,30 +112,34 @@ export class ArchbaseRemoteDataSource<T, ID>
         callback()
       }
     } catch (error:any) {
-      if (error.response && error.response.data && error.response.data.apierror) {
-        if (error.response.data.apierror.subErrors) {
-          error.response.data.apierror.subErrors.forEach((element: any) => {
-            if (element.field){
-              // Tenta traduzir a mensagem (se for chave i18n) ou usa a mensagem original
-              const translatedMessage = archbaseI18next.t(element.message, { defaultValue: element.message })
-              this.emitter.emit("onFieldError",element.field, translatedMessage)
-              this.emit({
-                type: DataSourceEventNames.onFieldError,
-                fieldName: element.field,
-                error: translatedMessage,
-                originalError: element.message
-              })
-            }
-          })
-        }
+      let hasFieldErrors = false
+      const apiError = error?.response?.data?.apierror ?? error?.response?.data;
+      const fieldErrorList = apiError?.subErrors ?? apiError?.fieldErrors;
+      if (fieldErrorList) {
+        fieldErrorList.forEach((element: any) => {
+          const fieldName = element.field ?? element.property;
+          if (fieldName){
+            hasFieldErrors = true
+            const translatedMessage = archbaseI18next.t(element.message, { defaultValue: element.message })
+            this.emitter.emit("onFieldError", fieldName, translatedMessage)
+            this.emit({
+              type: DataSourceEventNames.onFieldError,
+              fieldName,
+              error: translatedMessage,
+              originalError: element.message
+            })
+          }
+        })
       }
       const userError = processErrorMessage(error)
-      this.emitter.emit('onError', userError, error)
-      this.emit({
-        type: DataSourceEventNames.onError,
-        error: userError,
-        originalError: error
-      })
+      if (!hasFieldErrors) {
+        this.emitter.emit('onError', userError, error)
+        this.emit({
+          type: DataSourceEventNames.onError,
+          error: userError,
+          originalError: error
+        })
+      }
       if (callback) {
         callback(userError)
       }

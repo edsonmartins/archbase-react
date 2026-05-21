@@ -8,12 +8,15 @@ export function processErrorMessage(error: any) {
   ) {
     return t('archbase:Usuário/senha não encontrados. Não autorizado.')
   }
-  if (error.response && error.response.data && error.response.data.apierror) {
-    msgErro = error.response.data.apierror.message
-    if (error.response.data.apierror.subErrors) {
+  const apiError = error?.response?.data?.apierror ?? error?.response?.data
+  const fieldErrorList = apiError?.subErrors ?? apiError?.fieldErrors
+  if (apiError && (fieldErrorList || apiError.message)) {
+    msgErro = apiError.message
+    if (fieldErrorList) {
       msgErro = []
-      error.response.data.apierror.subErrors.forEach((element: any) => {
-        msgErro.push(`(${element.field}) ${element.message}`)
+      fieldErrorList.forEach((element: any) => {
+        const fieldName = element.field ?? element.property
+        msgErro.push(`(${fieldName}) ${element.message}`)
       })
     }
   } else if (error.response && error.response.status && error.response.status === 404) {
@@ -49,8 +52,9 @@ export function processErrorMessage(error: any) {
 
 export function processDetailErrorMessage(error: any) {
   let msgErro = ''
-  if (error.response && error.response.data && error.response.data.apierror) {
-    msgErro = error.response.data.apierror.debugMessage
+  const apiError = error?.response?.data?.apierror ?? error?.response?.data
+  if (apiError?.debugMessage) {
+    msgErro = apiError.debugMessage
   }
   return `${msgErro}`
 }

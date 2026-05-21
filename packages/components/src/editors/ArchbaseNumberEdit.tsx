@@ -274,6 +274,7 @@ export function ArchbaseNumberEdit<T, ID>({
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
         event.type === DataSourceEventNames.afterCancel ||
+        event.type === DataSourceEventNames.afterInsert ||
         event.type === DataSourceEventNames.afterEdit ||
         event.type === DataSourceEventNames.afterSave
       ) {

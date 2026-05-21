@@ -1099,35 +1099,41 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
   }
 
   private handleSaveError(error: any, callback?: Function): void {
-    if (error.response && error.response.data && error.response.data.apierror) {
-      if (error.response.data.apierror.subErrors) {
-        error.response.data.apierror.subErrors.forEach((element: any) => {
-          if (element.field) {
-            this.emit({
-              type: DataSourceEventNames.onFieldError,
-              fieldName: element.field,
-              error: element.message,
-              originalError: element.message
-            });
-            if (this.onFieldError) {
-              this.onFieldError(element.field, element.message);
-            }
+    let hasFieldErrors = false;
+    const apiError = error?.response?.data?.apierror ?? error?.response?.data;
+    const fieldErrorList = apiError?.subErrors ?? apiError?.fieldErrors;
+    if (fieldErrorList) {
+      fieldErrorList.forEach((element: any) => {
+        const fieldName = element.field ?? element.property;
+        if (fieldName) {
+          hasFieldErrors = true;
+          this.emit({
+            type: DataSourceEventNames.onFieldError,
+            fieldName,
+            error: element.message,
+            originalError: element.message
+          });
+          if (this.onFieldError) {
+            this.onFieldError(fieldName, element.message);
           }
-        });
+        }
+      });
+    }
+
+    const userError = processErrorMessage(error);
+
+    if (!hasFieldErrors) {
+      this.emit({
+        type: DataSourceEventNames.onError,
+        error: userError,
+        originalError: error
+      });
+
+      if (this.onError) {
+        this.onError(userError, error);
       }
     }
-    
-    const userError = processErrorMessage(error);
-    this.emit({
-      type: DataSourceEventNames.onError,
-      error: userError,
-      originalError: error
-    });
-    
-    if (this.onError) {
-      this.onError(userError, error);
-    }
-    
+
     if (callback) {
       callback(userError);
     }

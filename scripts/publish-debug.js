@@ -151,7 +151,7 @@ function publishDebugPackage(packageName) {
     const debugVersion = updatePackageForDebug(packageName);
     
     // Publicar
-    execSync(`cd ${packageDir} && npm publish --registry=${VERDACCIO_URL}`, { stdio: 'inherit', timeout: 30000 });
+    execSync(`cd ${packageDir} && npm publish --tag debug --registry=${VERDACCIO_URL}`, { stdio: 'inherit', timeout: 30000 });
     
     log(`✅ @archbase/${packageName}@${debugVersion} publicado`, GREEN);
     
