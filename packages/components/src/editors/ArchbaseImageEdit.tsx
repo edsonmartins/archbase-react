@@ -60,6 +60,26 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
 	maxHeight?: number;
 	/** Tamanho máximo da imagem em KB (recomprime se exceder) */
 	maxSizeKb?: number;
+	/**
+	 * Preserva a transparência da imagem (canal alfa).
+	 *
+	 * Quando true:
+	 *  - desabilita a compressão automática (`compressInitial` é forçado para `null`),
+	 *    impedindo que a biblioteca subjacente reencodifique PNG/WebP como JPEG.
+	 *  - força a saída em PNG (ou WebP, quando a origem já é WebP) ao redimensionar
+	 *    via `maxWidth`/`maxHeight`/`maxSizeKb`.
+	 *
+	 * Útil quando o usuário precisa enviar logos com fundo transparente.
+	 * Default: `false`.
+	 */
+	preserveTransparency?: boolean;
+	/**
+	 * Habilita logs detalhados do fluxo de processamento da imagem no console
+	 * (formato detectado, decisões de compressão, mime de saída, tamanhos, etc).
+	 * Útil para diagnosticar problemas como perda de transparência.
+	 * Default: `false`.
+	 */
+	debug?: boolean;
 }
 
 export function ArchbaseImageEdit<T, ID>({
@@ -77,7 +97,7 @@ export function ArchbaseImageEdit<T, ID>({
 	radius = '4px',
 	aspectRatio,
 	objectFit = 'contain',
-	compressInitial = 80,
+	compressInitial = null,
 	onChangeImage,
 	disabledBase64Convertion,
 	innerRef,
@@ -87,8 +107,26 @@ export function ArchbaseImageEdit<T, ID>({
 	maxWidth,
 	maxHeight,
 	maxSizeKb,
+	preserveTransparency = false,
+	debug = false,
 	...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
+	// Log inicial das props relevantes — só quando elas realmente mudarem
+	// (evita "loop" de logs causado por re-renders do Mantine/dataSource).
+	useEffect(() => {
+		if (!debug) return;
+		// eslint-disable-next-line no-console
+		console.log('[ArchbaseImageEdit] props', {
+			dataField,
+			preserveTransparency,
+			compressInitial,
+			maxWidth,
+			maxHeight,
+			maxSizeKb,
+			disabledBase64Convertion,
+			effectiveCompressInitial: preserveTransparency ? null : compressInitial,
+		});
+	}, [debug, dataField, preserveTransparency, compressInitial, maxWidth, maxHeight, maxSizeKb, disabledBase64Convertion]);
 	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
 	const v1v2Compatibility = useArchbaseV1V2Compatibility<string | undefined>(
 		'ArchbaseImageEdit',
@@ -203,6 +241,19 @@ useEffect(() => {
 	}, []);
 
 	const handleChangeImage = (image: string | undefined) => {
+		if (debug) {
+			const head = typeof image === 'string' ? image.slice(0, 64) : image;
+			const mimeMatch = typeof image === 'string' ? image.match(/^data:(image\/[a-zA-Z+\-.]+);/) : null;
+			// eslint-disable-next-line no-console
+			console.log('[ArchbaseImageEdit] handleChangeImage', {
+				dataField,
+				incomingMime: mimeMatch?.[1] ?? '(no data uri)',
+				incomingHead: head,
+				lengthChars: image?.length ?? 0,
+				approxSizeKb: image ? Math.ceil(((3 / 4) * image.length) / 1024) : 0,
+			});
+		}
+
 		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
 		const hasError = internalError || contextError;
 		if (hasError) {
@@ -266,7 +317,9 @@ useEffect(() => {
 						width,
 						height,
 						objectFit,
-						compressInitial,
+						// preserveTransparency desabilita a compressão automática
+						// (que internamente força conversão para JPEG)
+						compressInitial: preserveTransparency ? null : compressInitial,
 						showImageSize: !isReadOnly(),
 						hideDeleteBtn: isReadOnly(),
 						hideDownloadBtn: isReadOnly(),
@@ -277,6 +330,8 @@ useEffect(() => {
 						maxWidth,
 						maxHeight,
 						maxSizeKb,
+						preserveTransparency,
+						debug,
 					}}
 				/>
 			</Input.Wrapper>

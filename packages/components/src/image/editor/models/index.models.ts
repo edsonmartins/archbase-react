@@ -18,6 +18,22 @@ export interface ArchbaseImagePickerConf {
   maxHeight?: number;
   /** Tamanho máximo da imagem em KB (recomprime se exceder) */
   maxSizeKb?: number;
+  /**
+   * Preserva a transparência (canal alfa) da imagem enviada.
+   * Quando true:
+   *  - desabilita a compressão automática (compressInitial é forçado para null),
+   *    impedindo que a biblioteca subjacente reencodifique PNG/WebP como JPEG.
+   *  - força o mime de saída para PNG (ou WebP, se a origem já for WebP) ao
+   *    redimensionar via maxWidth/maxHeight/maxSizeKb.
+   * Default: false.
+   */
+  preserveTransparency?: boolean;
+  /**
+   * Habilita logs de diagnóstico no console (formato detectado, mime de saída,
+   * tamanhos, decisões de compressão/redimensionamento).
+   * Default: false.
+   */
+  debug?: boolean;
 }
 
 export interface IState {
