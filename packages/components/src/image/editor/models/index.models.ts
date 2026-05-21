@@ -28,6 +28,12 @@ export interface ArchbaseImagePickerConf {
    * Default: false.
    */
   preserveTransparency?: boolean;
+  /**
+   * Habilita logs de diagnóstico no console (formato detectado, mime de saída,
+   * tamanhos, decisões de compressão/redimensionamento).
+   * Default: false.
+   */
+  debug?: boolean;
 }
 
 export interface IState {

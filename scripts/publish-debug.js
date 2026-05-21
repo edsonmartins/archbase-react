@@ -19,7 +19,7 @@ const YELLOW = '\x1b[33m';
 const RED = '\x1b[31m';
 const RESET = '\x1b[0m';
 
-const VERDACCIO_URL = 'http://192.168.100.5:4873';
+const VERDACCIO_URL = 'http://192.168.1.110:4873';
 
 function log(message, color = '') {
   console.log(`${color}${message}${RESET}`);
@@ -149,7 +149,7 @@ function publishDebugPackage(packageName) {
     const debugVersion = updatePackageForDebug(packageName);
     
     // Publicar
-    execSync(`cd ${packageDir} && npm publish --registry=${VERDACCIO_URL}`, { stdio: 'inherit' });
+    execSync(`cd ${packageDir} && npm publish --tag debug --registry=${VERDACCIO_URL}`, { stdio: 'inherit', timeout: 30000 });
     
     log(`✅ @archbase/${packageName}@${debugVersion} publicado`, GREEN);
     
@@ -194,12 +194,13 @@ function cleanupAllVerdaccioPackages() {
 function parseArgs() {
   const args = process.argv.slice(2);
   return {
-    noDocs: args.includes('--no-docs')
+    noDocs: args.includes('--no-docs'),
+    skipBuild: args.includes('--skip-build')
   };
 }
 
 function main() {
-  const { noDocs } = parseArgs();
+  const { noDocs, skipBuild } = parseArgs();
 
   log(`🚀 Iniciando publicação DEBUG no Verdaccio...`, BLUE);
 
@@ -211,10 +212,14 @@ function main() {
   // Limpar Verdaccio completamente
   cleanupAllVerdaccioPackages();
 
-  // Build em modo debug
-  log(`🔧 Fazendo build debug...`, YELLOW);
-  const noDocsFlag = noDocs ? ' --no-docs' : '';
-  execSync(`node ${path.join(__dirname, 'build-unified.js')} --debug${noDocsFlag}`, { stdio: 'inherit' });
+  // Build em modo debug (pular com --skip-build)
+  if (skipBuild) {
+    log(`⏭️  Build pulado (--skip-build)`, YELLOW);
+  } else {
+    log(`🔧 Fazendo build debug...`, YELLOW);
+    const noDocsFlag = noDocs ? ' --no-docs' : '';
+    execSync(`node ${path.join(__dirname, 'build-unified.js')} --debug${noDocsFlag}`, { stdio: 'inherit' });
+  }
   
   const packages = getAllPackages();
   const publishOrder = [
