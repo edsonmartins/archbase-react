@@ -288,8 +288,6 @@ export function ArchbaseSecurityView({
 		refreshResources();
 	}, []);
 
-	const heightTab = `calc(${height} - 40px)`;
-
 	const accessTokenColumns = (
 		<Columns>
 			<ArchbaseDataGridColumn<AccessTokenDto>
@@ -909,7 +907,6 @@ export function ArchbaseSecurityView({
 				withBorder
 				mt="md"
 				style={{
-					height: heightTab,
 					display: activeTab === 'users' ? 'flex' : 'none',
 					width: '100%',
 					flex: 1,
@@ -944,7 +941,6 @@ export function ArchbaseSecurityView({
 				withBorder
 				mt="md"
 				style={{
-					height: heightTab,
 					display: activeTab === 'groups' ? 'flex' : 'none',
 					flex: 1,
 					minHeight: 0,
@@ -978,7 +974,6 @@ export function ArchbaseSecurityView({
 				withBorder
 				mt="md"
 				style={{
-					height: heightTab,
 					display: activeTab === 'profiles' ? 'flex' : 'none',
 					flex: 1,
 					minHeight: 0,
@@ -1012,7 +1007,6 @@ export function ArchbaseSecurityView({
 				withBorder
 				mt="md"
 				style={{
-					height: heightTab,
 					display: activeTab === 'resources' ? 'flex' : 'none',
 					flex: 1,
 					minHeight: 0,
@@ -1043,7 +1037,6 @@ export function ArchbaseSecurityView({
 				withBorder
 				mt="md"
 				style={{
-					height: heightTab,
 					display: activeTab === 'accessTokens' ? 'flex' : 'none',
 					width: '100%',
 					flex: 1,
