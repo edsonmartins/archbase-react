@@ -100,9 +100,10 @@ function cleanupVerdaccioPackage(packageName) {
   
   try {
     // Listar todas as versões do package
-    const result = execSync(`npm view @archbase/${packageName} versions --json --registry=${VERDACCIO_URL}`, { 
+    const result = execSync(`npm view @archbase/${packageName} versions --json --registry=${VERDACCIO_URL}`, {
       stdio: 'pipe',
-      encoding: 'utf8'
+      encoding: 'utf8',
+      timeout: 15000
     });
     
     const versions = JSON.parse(result);
@@ -112,8 +113,9 @@ function cleanupVerdaccioPackage(packageName) {
     for (const version of versionsArray) {
       if (version.includes('-debug')) {
         try {
-          execSync(`npm unpublish @archbase/${packageName}@${version} --registry=${VERDACCIO_URL} --force`, { 
-            stdio: 'pipe' 
+          execSync(`npm unpublish @archbase/${packageName}@${version} --registry=${VERDACCIO_URL} --force`, {
+            stdio: 'pipe',
+            timeout: 15000
           });
           log(`🗑️  Removido @archbase/${packageName}@${version}`, YELLOW);
         } catch (e) {
@@ -169,7 +171,7 @@ function publishDebugPackage(packageName) {
 
 function checkVerdaccioConnection() {
   try {
-    execSync(`npm ping --registry=${VERDACCIO_URL}`, { stdio: 'pipe' });
+    execSync(`curl -s --connect-timeout 5 ${VERDACCIO_URL}/-/ping`, { stdio: 'pipe', timeout: 10000 });
     log(`✅ Verdaccio acessível em ${VERDACCIO_URL}`, GREEN);
     return true;
   } catch (error) {

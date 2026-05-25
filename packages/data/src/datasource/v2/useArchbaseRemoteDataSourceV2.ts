@@ -5,7 +5,7 @@ import { ArchbaseQueryFilter } from '@archbase/core';
 
 /**
  * Hook para usar ArchbaseRemoteDataSourceV2 de forma reativa no React
- * 
+ *
  * Este hook provê:
  * - Gerenciamento automático do ciclo de vida do RemoteDataSource
  * - Estado reativo baseado em eventos
@@ -22,7 +22,7 @@ export function useArchbaseRemoteDataSourceV2<T, ID = any>(
 
   // Referência estável para o DataSource
   const dataSourceRef = useRef<ArchbaseRemoteDataSourceV2<T> | null>(null);
-  
+
   // Estado reativo baseado nos eventos do DataSource
   const [currentRecord, setCurrentRecord] = useState<T | undefined>(undefined);
   const [currentIndex, setCurrentIndex] = useState<number>(-1);

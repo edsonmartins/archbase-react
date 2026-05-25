@@ -101,8 +101,7 @@ export const ArchbaseDataGridToolbar = React.memo<ArchbaseDataGridToolbarProps>(
         justifyContent: 'space-between',
         padding: finalPadding,
         borderBottom: withBorder ? `1px solid ${theme.colors.gray[theme.colorScheme === 'dark' ? 8 : 3]}` : 'none',
-        borderTopLeftRadius: finalBorderRadius,
-        borderTopRightRadius: finalBorderRadius
+        borderRadius: 0,
       }}
     >
       {/* Lado esquerdo da toolbar */}

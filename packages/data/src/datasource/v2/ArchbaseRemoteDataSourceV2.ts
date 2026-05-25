@@ -717,6 +717,8 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
    *
    * @param options Opções de refresh incluindo página, filtro e ordenação
    */
+  private _isLoadingData: boolean = false;
+
   refreshData(options?: {
     currentPage?: number;
     pageSize?: number;
@@ -725,7 +727,11 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
     originFilter?: any;
     originGlobalFilter?: string;
   }): void {
-    console.log('[V2 refreshData] Chamado com options:', options);
+    // Dedup: se já há uma requisição em andamento, ignora chamada duplicada
+    if (this._isLoadingData) {
+      return;
+    }
+    this._isLoadingData = true;
 
     // Atualiza configurações se fornecidas
     if (options?.pageSize !== undefined) {
@@ -734,12 +740,10 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
 
     const page = options?.currentPage ?? this.currentPage;
     this.currentPage = page;
-    console.log('[V2 refreshData] Página atual definida:', this.currentPage);
 
     // Se filter foi passado nas options (mesmo que seja undefined ou string vazia), atualiza
     if ('filter' in (options || {})) {
       this.currentFilter = options?.filter;
-      console.log('[V2 refreshData] Filtro definido:', this.currentFilter);
     }
 
     if (options?.sort !== undefined) {
@@ -749,13 +753,11 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
 
     // Se tiver filtro, usa os métodos com filtro
     if (this.currentFilter && this.currentFilter.trim() !== '') {
-      console.log('[V2 refreshData] Chamando getDataWithRsqlFilter para página:', page);
       this.getDataWithRsqlFilter(page);
       return;
     }
 
     // Carrega dados sem filtro mas respeitando página e ordenação
-    console.log('[V2 refreshData] Chamando getDataWithoutFilter para página:', page);
     this.getDataWithoutFilter(page);
   }
 
@@ -768,17 +770,14 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
    */
   async loadById(id: any): Promise<T | undefined> {
     try {
-      console.log('[V2 loadById] Buscando registro com ID:', id);
 
       const record = await this.service.findOne(id);
 
       if (record) {
-        console.log('[V2 loadById] Registro encontrado:', record);
         this.grandTotalRecords = 1;
         this.setRecords([record]);
         return record;
       } else {
-        console.log('[V2 loadById] Registro não encontrado');
         this.grandTotalRecords = 0;
         this.setRecords([]);
         return undefined;
@@ -820,7 +819,6 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
       }
 
       if (result && result.content) {
-        // IMPORTANTE: Definir grandTotalRecords ANTES de setRecords
         this.grandTotalRecords = result.totalElements || result.content.length;
         this.setRecords(result.content);
       }
@@ -833,6 +831,8 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
     } catch (error) {
       this.handleRemoteError(error, callback);
       throw error;
+    } finally {
+      this._isLoadingData = false;
     }
   }
 
@@ -1099,35 +1099,41 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
   }
 
   private handleSaveError(error: any, callback?: Function): void {
-    if (error.response && error.response.data && error.response.data.apierror) {
-      if (error.response.data.apierror.subErrors) {
-        error.response.data.apierror.subErrors.forEach((element: any) => {
-          if (element.field) {
-            this.emit({
-              type: DataSourceEventNames.onFieldError,
-              fieldName: element.field,
-              error: element.message,
-              originalError: element.message
-            });
-            if (this.onFieldError) {
-              this.onFieldError(element.field, element.message);
-            }
+    let hasFieldErrors = false;
+    const apiError = error?.response?.data?.apierror ?? error?.response?.data;
+    const fieldErrorList = apiError?.subErrors ?? apiError?.fieldErrors;
+    if (fieldErrorList) {
+      fieldErrorList.forEach((element: any) => {
+        const fieldName = element.field ?? element.property;
+        if (fieldName) {
+          hasFieldErrors = true;
+          this.emit({
+            type: DataSourceEventNames.onFieldError,
+            fieldName,
+            error: element.message,
+            originalError: element.message
+          });
+          if (this.onFieldError) {
+            this.onFieldError(fieldName, element.message);
           }
-        });
+        }
+      });
+    }
+
+    const userError = processErrorMessage(error);
+
+    if (!hasFieldErrors) {
+      this.emit({
+        type: DataSourceEventNames.onError,
+        error: userError,
+        originalError: error
+      });
+
+      if (this.onError) {
+        this.onError(userError, error);
       }
     }
-    
-    const userError = processErrorMessage(error);
-    this.emit({
-      type: DataSourceEventNames.onError,
-      error: userError,
-      originalError: error
-    });
-    
-    if (this.onError) {
-      this.onError(userError, error);
-    }
-    
+
     if (callback) {
       callback(userError);
     }
@@ -1208,7 +1214,6 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
   private async getDataWithoutFilter(page: number, callback?: (() => void) | undefined): Promise<any> {
     try {
       const sortFields = (this.currentSort && this.currentSort.length > 0) ? this.currentSort : this.defaultSortFields;
-      console.log('[V2 getDataWithoutFilter] Buscando página:', page, 'pageSize:', this.getPageSize(), 'sort:', sortFields);
 
       let result: any;
       if (sortFields.length > 0) {
@@ -1217,14 +1222,9 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
         result = await this.service.findAll(page, this.getPageSize());
       }
 
-      console.log('[V2 getDataWithoutFilter] Resultado:', result?.totalElements, 'registros totais,', result?.content?.length, 'na página');
-
       if (result && result.content) {
-        // IMPORTANTE: Definir grandTotalRecords ANTES de setRecords para que o evento
-        // dataChanged seja emitido com o valor correto do total de registros
         this.grandTotalRecords = result.totalElements || result.content.length;
         this.setRecords(result.content);
-        console.log('[V2 getDataWithoutFilter] Após setRecords - currentPage:', this.currentPage, 'grandTotal:', this.grandTotalRecords);
       }
 
       if (callback) {
@@ -1235,6 +1235,8 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
     } catch (error) {
       this.handleRemoteError(error, callback);
       throw error;
+    } finally {
+      this._isLoadingData = false;
     }
   }
 
@@ -1259,8 +1261,6 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
       );
 
       if (result && result.content) {
-        // IMPORTANTE: Definir grandTotalRecords ANTES de setRecords para que o evento
-        // dataChanged seja emitido com o valor correto do total de registros
         this.grandTotalRecords = result.totalElements || result.content.length;
         this.setRecords(result.content);
       }
@@ -1273,6 +1273,8 @@ export class ArchbaseRemoteDataSourceV2<T> implements IArchbaseDataSourceBase<T>
     } catch (error) {
       this.handleRemoteError(error, callback);
       throw error;
+    } finally {
+      this._isLoadingData = false;
     }
   }
 

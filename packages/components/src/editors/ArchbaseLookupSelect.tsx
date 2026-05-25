@@ -115,7 +115,8 @@ export function ArchbaseLookupSelect<T, ID, O>({
 				event.type === DataSourceEventNames.fieldChanged ||
 				event.type === DataSourceEventNames.recordChanged ||
 				event.type === DataSourceEventNames.afterScroll ||
-				event.type === DataSourceEventNames.afterCancel
+				event.type === DataSourceEventNames.afterCancel ||
+				event.type === DataSourceEventNames.afterInsert
 			) {
 				if (lookupDataSource) {
 					setCurrentOptions(rebuildOptions(lookupDataSource, lookupDataFieldText, lookupDataFieldId));

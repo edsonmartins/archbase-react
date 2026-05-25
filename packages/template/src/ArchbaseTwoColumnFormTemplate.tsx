@@ -289,6 +289,8 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 		undefined
 	);
 
+	const validationContext = useValidationErrors();
+
 	// DataSource listener
 	useArchbaseDataSourceListener<T, ID>({
 		dataSource,
@@ -297,6 +299,11 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 				setIsInternalError(true);
 				setInternalError(event.error);
 			}
+			if (event.type === DataSourceEventNames.onFieldError) {
+				if (validationContext && event.fieldName && event.error) {
+					validationContext.setError(event.fieldName, event.error);
+				}
+			}
 			if (event.type === DataSourceEventNames.afterEdit || event.type === DataSourceEventNames.afterInsert) {
 				if (!v1v2Compatibility.isDataSourceV2) {
 					forceUpdate();
@@ -304,8 +311,6 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 			}
 		},
 	});
-
-	const validationContext = useValidationErrors();
 
 	// Navigation listener (para fechar abas)
 	const defaultNavListener = useCallback((_id: string, _onClose: () => void) => ({
