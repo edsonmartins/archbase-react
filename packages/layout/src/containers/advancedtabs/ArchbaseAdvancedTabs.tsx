@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect, CSSProperties, ReactNode } from 'react';
 import { useWindowSize } from 'usehooks-ts';
-import { Menu } from '@mantine/core';
+import { Loader, Menu } from '@mantine/core';
 import { useArchbaseTranslation } from '@archbase/core';
 
 
@@ -10,6 +10,8 @@ export interface ArchbaseAdvancedTabItem {
   favicon: ReactNode | string | undefined;
   title: string;
   customTitle?: string;
+  /** Quando true, mostra um spinner no lugar do X para sinalizar fechamento em andamento. */
+  closing?: boolean;
 }
 
 export interface ArchbaseAdvancedTabProps {
@@ -30,6 +32,8 @@ export interface ArchbaseAdvancedTabProps {
   index : number;
   sorting : boolean;
   showButtonClose: boolean;
+  /** Quando true, substitui o X por um Loader (feedback visual durante o close). */
+  closing?: boolean;
   // Novas props para menu de contexto e dropdown
   onCloseAllTabs?: () => void;
   onCloseLeftTabs?: (tabId: string) => void;
@@ -40,7 +44,7 @@ export interface ArchbaseAdvancedTabProps {
 
 const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 	const { favicon, title, customTitle, activeTab, position, contentWidth, onClick, onClose, setDragging, tabsContentWidth, animateTabMove,
-		isDragging, index, sorting, showButtonClose, onCloseAllTabs, onCloseLeftTabs, onCloseRightTabs, onCloseOtherTabs, totalTabs } = props;
+		isDragging, index, sorting, showButtonClose, closing, onCloseAllTabs, onCloseLeftTabs, onCloseRightTabs, onCloseOtherTabs, totalTabs } = props;
 	const { t } = useArchbaseTranslation('archbase');
 	const [width, setWidth] = useState(0);
 	const [isAdded, setAdd] = useState(false);
@@ -209,9 +213,21 @@ const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 						</Menu.Dropdown>
 					</Menu>
 				)}
-				{showButtonClose?<div className="archbase_tab-close" onClick={(e) => {
-					onClose(e);
-				}}></div>:null}
+				{showButtonClose ? (
+					closing ? (
+						<div
+							className="archbase_tab-close"
+							style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'wait' }}
+							aria-label="closing"
+						>
+							<Loader size={12} />
+						</div>
+					) : (
+						<div className="archbase_tab-close" onClick={(e) => {
+							onClose(e);
+						}}></div>
+					)
+				) : null}
 			</div>
 		</div>
 	);
@@ -374,6 +390,7 @@ export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props)
 									const shouldShow = buttonCloseOnlyActiveTab ? activeTab === m.key : true;
 									return shouldShow;
 								})()}
+								closing={m.closing}
 								tabsContentWidth={tabContentEl.current && tabContentEl.current.clientWidth}
 								animateTabMove={(p: any) => animateTabMove(p, index)}
 								isDragging={isDragging}

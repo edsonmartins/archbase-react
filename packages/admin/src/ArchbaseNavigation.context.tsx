@@ -59,16 +59,21 @@ export const ArchbaseNavigationProvider = ({ children }: ArchbaseNavigationProvi
 
 	const [state, dispatch] = useReducer(reducer, initialState);
 
-	// Timeout para fechar a tab automaticamente se ninguém responder (fallback)
-	// Isso é necessário porque as views podem não estar usando useArchbaseNavigationListener
+	// Timeout para fechar a tab automaticamente se ninguém responder (fallback).
+	// Necessário porque a maioria das views não usa useArchbaseNavigationListener.
+	//
+	// Usa setTimeout(0) em vez de um delay arbitrário: o effect dispara após o
+	// commit do React, e os useEffects dos listeners (síncronos) rodam ANTES do
+	// callback do setTimeout(0). Assim listeners que respondem imediatamente
+	// vencem a corrida; views sem listener fecham praticamente sem delay
+	// perceptível (em vez dos 100ms anteriores que davam sensação de travamento).
 	React.useEffect(() => {
 		let timeoutId: NodeJS.Timeout | null = null;
 
 		if (state.userCloseLinkRequest && !state.linkClosed) {
-			// Se ninguém responder em 100ms, fecha automaticamente
 			timeoutId = setTimeout(() => {
 				dispatch({ type: 'CLOSE_ALLOWED', link: state.userCloseLinkRequest });
-			}, 100);
+			}, 0);
 		}
 
 		return () => {

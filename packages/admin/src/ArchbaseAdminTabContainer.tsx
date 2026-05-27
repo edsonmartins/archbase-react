@@ -283,9 +283,13 @@ export function ArchbaseAdminTabContainer({
 
 	const handleOnCloseRequest = (id: string) => {
 		try {
+			// Feedback visual imediato — sem isso o usuário não vê nada acontecer
+			// entre clicar no X e a aba sumir, dando sensação de "travado".
+			startProgress();
 			dispatch({ type: 'USER_CLOSE_REQUEST', link: id });
 		} catch (error) {
 			console.error('[TabContainer] Dispatch failed:', error);
+			doneProgress();
 		}
 	};
 
@@ -391,13 +395,19 @@ export function ArchbaseAdminTabContainer({
 		}
 	}, [openedTabs, navigate, currentLocation.pathname, keepAliveCache, clearSnapshot, removeTab]);
 
+	// Aba marcada como `closing` é aquela cujo X foi clicado e ainda aguarda
+	// a confirmação do listener (ou do fallback do reducer). Faz o tab trocar
+	// o X por um Loader, dando feedback visual imediato.
+	const closingTabKey = state?.isClosing ? state?.userCloseLinkRequest : undefined;
+
 	const buildAdvancedTabs = (openedTabs: ArchbaseTabItem[]): ArchbaseAdvancedTabItem[] => {
 		return openedTabs.map((tab) => {
 			const result: ArchbaseAdvancedTabItem = {
 				key: tab.id,
 				favicon: tab.iconClass,
 				title: tab.title,
-				customTitle: tab.customTitle
+				customTitle: tab.customTitle,
+				closing: closingTabKey === tab.id,
 			};
 
 			return result;
