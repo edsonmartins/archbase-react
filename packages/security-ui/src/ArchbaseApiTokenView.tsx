@@ -136,7 +136,7 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 				dataField="token"
 				dataType="text"
 				header="Token API"
-				size={260}
+				size={300}
 				inputFilterType="text"
 				enableClickToCopy={true}
 			/>
@@ -144,14 +144,14 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 				dataField="tenantId"
 				dataType="text"
 				header="Tenant ID"
-				size={260}
+				size={300}
 				inputFilterType="text"
 				enableClickToCopy={true}
 			/>
 			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="expirationDate"
 				dataType="text"
-				size={180}
+				size={240}
 				header="Validade"
 				render={(data) => {
 					if (!data.row.expirationDate) {

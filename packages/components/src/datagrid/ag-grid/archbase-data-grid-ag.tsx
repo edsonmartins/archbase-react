@@ -175,7 +175,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
     csvOptions,
     toolbarAlignment = 'right',
     positionActionsColumn = 'first',
-    actionsColumnWidth = 60,
+    actionsColumnWidth = 120,
     toolbarLeftContent,
     bottomToolbarMinHeight,
     paginationLabels,
