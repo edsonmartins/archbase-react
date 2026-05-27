@@ -1,6 +1,6 @@
 {
   "name": "@archbase/advanced",
-  "version": "4.0.22",
+  "version": "4.0.23",
   "description": "Archbase React Advanced Components - Charts, Kanban, QueryBuilder",
   "type": "module",
   "main": "./dist/index.js",

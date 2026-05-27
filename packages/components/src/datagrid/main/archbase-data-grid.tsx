@@ -757,7 +757,11 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
   )
 
   // Configurar estilos personalizados para o grid
-  const getThemedStyles = () => {
+  // Memoizado para evitar regenerar o objeto sx massivo a cada render — sem isso,
+  // o emotion regera centenas de classes CSS sempre que o pai re-renderiza, o que
+  // torna o scroll lento porque cada linha que entra/sai do viewport durante a
+  // virtualização aciona o pipeline de styling pesado.
+  const themedStyles = useMemo(() => {
     return {
       root: {
         height: '100%', // Garante que o DataGrid ocupe toda a altura do container
@@ -1044,7 +1048,23 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
         }
       }
     }
-  }
+  }, [
+    theme,
+    colorScheme,
+    withBorder,
+    withColumnBorders,
+    cellPadding,
+    striped,
+    highlightOnHover,
+    fontSize
+  ])
+
+  // Ref estável para getRowId — evita que o MUI DataGrid reconstrua o mapeamento
+  // interno de linhas a cada render, o que invalida virtualização e performance de scroll.
+  const stableGetRowId = useCallback(
+    (row: any) => safeGetRowId(row, getRowId) || '',
+    [getRowId]
+  )
 
   // Calcular a altura total da grid, incluindo os painéis de detalhes
   const gridHeight = useMemo(() => {
@@ -1614,8 +1634,8 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
           onRowSelectionModelChange={handleSelectionModelChange}
           onCellDoubleClick={handleCellDoubleClick}
           onColumnVisibilityModelChange={setColumnVisibilityModel}
-          getRowId={(row) => safeGetRowId(row, getRowId) || ''}
-          sx={getThemedStyles().root}
+          getRowId={stableGetRowId}
+          sx={themedStyles.root}
           disableColumnFilter={!allowColumnFilters}
           disableColumnMenu={true}
           hideFooter={hideFooter}
