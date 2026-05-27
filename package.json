@@ -3,7 +3,7 @@
   "version": "4.0.26",
   "private": true,
   "type": "module",
-  "description": "Monorepo for Archbase React v3 - Modern TypeScript React Component Library",
+  "description": "Monorepo for Archbase React v4 - Modern TypeScript React Component Library",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
   "repository": {

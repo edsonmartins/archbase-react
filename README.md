@@ -1,16 +1,42 @@
-# Archbase React v3 🚀
+# Archbase React v4 🚀
 
 Uma biblioteca moderna de componentes React TypeScript com arquitetura modular para desenvolvimento rápido de aplicações SAAS.
 
 ## ✨ Principais Melhorias
 
 - **🔧 Stack Moderna**: React 19, TypeScript 5.7+, Vite 6, Vitest
+- **🎨 Mantine 9.2.1**: design system atualizado, novo runtime de estilos
 - **📦 Arquitetura Modular**: 12 pacotes independentes com tree-shaking otimizado
 - **⚡ Performance**: Build 5x mais rápido com Vite 6 e bundles otimizados
 - **🎯 Type Safety**: TypeScript rigoroso com inferência melhorada
 - **🧪 Testing**: Vitest nativo com cobertura completa
 - **🏗️ Monorepo**: pnpm workspaces com Turbo para builds paralelos
 - **🚀 Scripts Simplificados**: Build, empacotamento e publicação automatizados
+
+## 🆕 Novidades na v4
+
+Releases 4.0.x trouxeram, além da migração para Mantine 9, várias melhorias acumulativas:
+
+- **AG-Grid como engine padrão do `ArchbaseDataGrid`** (`@archbase/components`).
+  A implementação MUI X continua disponível para compatibilidade, mas o export
+  default agora vem do AG-Grid Community 35+.
+- **Scroll perf** (release 4.0.25): `AgGridReact` envolvido em `React.memo`,
+  `getRowId` estabilizado, `useStableChildren` evita rebuild de `columnDefs`
+  quando as colunas são estruturalmente iguais; objeto `sx` da DataGrid (MUI X)
+  movido para `useMemo`. Recomendações da [doc oficial AG-Grid](https://www.ag-grid.com/javascript-data-grid/scrolling-performance/).
+- **`truncate` em colunas** (4.0.25): nova prop `truncate?: boolean` em
+  `ArchbaseDataGridColumn` que ativa ellipsis + tooltip nativo do browser,
+  contornando o overflow horizontal causado pelo wrapper flex do AG-Grid.
+- **`actionsColumnWidth` default 120px** (4.0.24): antes era 60px, espremia 3+ ícones.
+- **KeepAlive migrado para `keepalive-for-react`** (4.0.0): preserva estado das
+  tabs entre navegações; expõe `useKeepAliveVisibility`, `useArchbaseRouteParams`,
+  `useKeepAliveCache`.
+- **Feedback visual ao fechar uma aba** (4.0.26): o `X` da aba vira um Loader
+  enquanto o close está em andamento e a barra de progresso (`NavigationProgress`)
+  dispara imediatamente; fallback timeout do reducer reduzido de 100ms para 0ms.
+- **`ArchbaseAdminMainLayout`** ganhou variantes de sidebar (`standard`, `rail`,
+  `minimal`) via `ArchbaseMantineSidebar`.
+- **~60 novos componentes** documentados em [RELEASE_NOTES_v4.0.0.md](./RELEASE_NOTES_v4.0.0.md).
 
 ## 🔧 Scripts Rápidos
 
@@ -58,7 +84,9 @@ pnpm run clean
 - **Vitest** (testing framework)
 - **pnpm workspaces** (monorepo)
 - **Turbo** (build pipeline)
-- **Mantine 8.3.12** (UI components)
+- **Mantine 9.2.1** (UI components)
+- **AG-Grid Community 35+** (DataGrid engine)
+- **Tabler Icons 3.x** (iconografia)
 - **TanStack Query v5** (data fetching)
 - **Zustand 5** (state management)
 - **i18next** (internacionalização)
@@ -123,7 +151,11 @@ pnpm install @mantine/core @mantine/hooks @mantine/form @mantine/dates @mantine/
 
 ## 🏗️ Status do Projeto
 
-✅ **Concluído** - Migração da v2 para v3 finalizada com sucesso!
+✅ **Atual: v4.0.26** — Mantine 9, AG-Grid como engine padrão da DataGrid,
+otimizações de performance e UX (close de tabs com feedback visual).
+
+✅ Migração v3 → v4 estável e em produção. Para detalhes consulte
+[RELEASE_NOTES_v4.0.0.md](./RELEASE_NOTES_v4.0.0.md).
 
 ### ✅ Implementado
 
@@ -531,43 +563,52 @@ const message = archbaseI18next.t('minha-app:Dashboard')
 
 **📖 Documentação Completa**: [LOCALIZATION.md](./LOCALIZATION.md)
 
-## 🔄 Migração da v2
+## 🔄 Migração da v3 para v4
 
-### Principais Mudanças
+### Principais Breaking Changes
 
-1. **Importações**:
-   ```typescript
-   // v2
-   import { ArchbaseEdit } from 'archbase-react';
-   
-   // v3
-   import { ArchbaseEdit } from '@archbase/components';
+1. **Mantine 8 → 9**: peer dependencies sobem para `9.2.1`.
+   ```bash
+   pnpm add @mantine/core@9.2.1 @mantine/hooks@9.2.1 \
+            @mantine/dates@9.2.1 @mantine/form@9.2.1 \
+            @mantine/notifications@9.2.1 @mantine/modals@9.2.1 \
+            @mantine/spotlight@9.2.1 @mantine/charts@9.2.1 \
+            @mantine/code-highlight@9.2.1
    ```
 
-2. **Dependências**:
-   ```json
-   // v2 - Mantine incluído
-   {
-     "dependencies": {
-       "archbase-react": "^2.0.0"
-     }
-   }
-   
-   // v3 - Mantine como peer dependency
-   {
-     "dependencies": {
-       "@archbase/components": "^3.0.0"
-     },
-     "peerDependencies": {
-       "@mantine/core": "8.1.2"
-     }
-   }
-   ```
+2. **Renomes de props do Mantine 9** (aplicar no seu código consumidor):
+   - `<Grid gutter=>` → `<Grid gap=>`
+   - `<Collapse in=>` → `<Collapse expanded=>`
+   - `useFullscreen()` → `useFullscreenDocument()`
+   - `<Text color="...">` continua funcionando mas `c=` é o atalho preferido.
 
-3. **DataSource v2**:
-   - Compatibilidade mantida
-   - Integração com TanStack Query
-   - Performance melhorada
+3. **`@tabler/icons-react` 2.x → 3.x**: peer dep agora `^3.27.0`.
+
+4. **DataGrid passa a ser AG-Grid** (`@archbase/components`).
+   A API de `<ArchbaseDataGrid>` + `<Columns>` + `<ArchbaseDataGridColumn>` foi
+   preservada e funciona como antes. Cell renderers e value formatters
+   continuam funcionando.
+
+5. **KeepAlive interno**: troca de implementação custom para
+   `keepalive-for-react`. Se você usava apenas `keepAlive: true` no
+   `ArchbaseNavigationItem`, nada muda. Se você dependia de APIs internas como
+   `register`/`unregister`/`touchAccess`, migre para `useKeepAliveCache()` —
+   agora exposta com `destroy(cacheKey)`, `destroyAll()`, `destroyOther(...)`.
+
+6. **`actionsColumnWidth` default**: 60 → 120. Caso tenha um override explícito
+   `actionsColumnWidth={60}`, remova para usar o novo default.
+
+### Migração da v2 (legado)
+
+```typescript
+// v2
+import { ArchbaseEdit } from 'archbase-react';
+
+// v4
+import { ArchbaseEdit } from '@archbase/components';
+```
+
+Para mais detalhes consulte [RELEASE_NOTES_v4.0.0.md](./RELEASE_NOTES_v4.0.0.md).
 
 ## 🎯 Próximos Passos
 
@@ -604,15 +645,18 @@ Existem duas formas de criar releases:
 
 ```bash
 # Criar e pushar tag (dispara workflow automático)
-git tag v3.0.47
-git push origin v3.0.47
+git tag v4.0.27
+git push origin v4.0.27
 ```
+
+> ⚠️ A tag DEVE começar com `v` para os workflows (`publish-npm.yml` e
+> `build-and-publish.yml`) dispararem. Eles têm trigger `tags: 'v*'`.
 
 #### Opção 2: Via GitHub Actions (Manual)
 
 1. Vá para: https://github.com/edsonmartins/archbase-react/actions/workflows/release.yml
 2. Clique em "Run workflow"
-3. Informe a versão (ex: 3.0.47)
+3. Informe a versão (ex: 4.0.27)
 4. Selecione se é pre-release
 
 ### O que acontece no Release
@@ -627,9 +671,9 @@ O workflow `.github/workflows/release.yml` executa:
 
 ### Estrutura de Versões
 
-- `v3.0.47` - Release estável
-- `v3.0.47-beta.1` - Pre-release (beta)
-- `v3.0.47-alpha.1` - Pre-release (alpha)
+- `v4.0.26` - Release estável
+- `v4.0.26-beta.1` - Pre-release (beta)
+- `v4.0.26-alpha.1` - Pre-release (alpha)
 
 ### Deploy Automático da Documentação
 
@@ -650,7 +694,7 @@ O projeto foi completamente reorganizado com scripts modernos e simplificados:
 
 ```bash
 # Atualizar versão de todos os packages
-pnpm run version:update 3.0.12
+pnpm run version:update 4.0.26
 
 # Build de todos os packages
 pnpm run build              # Modo release
@@ -675,7 +719,7 @@ pnpm run lint               # Verificar código
 
 ```bash
 # 1. Atualizar versão (quando necessário)
-pnpm run version:update 3.0.12
+pnpm run version:update 4.0.26
 
 # 2. Build completo
 pnpm run build
@@ -739,4 +783,4 @@ MIT © Edson Martins e Mayker Miyanaga
 
 ---
 
-**Archbase React v3** - Desenvolvido com ❤️ para acelerar o desenvolvimento de aplicações SAAS modernas.
+**Archbase React v4** - Desenvolvido com ❤️ para acelerar o desenvolvimento de aplicações SAAS modernas.
