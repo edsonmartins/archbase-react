@@ -90,6 +90,8 @@ export interface ArchbaseDataGridAGColumnProps<T = any> {
   maxSize?: number;
   /** Custom cell renderer */
   render?: (data: any) => ReactNode;
+  /** Truncate long content with ellipsis (and show a native tooltip with the full value) */
+  truncate?: boolean;
   /** Column visibility */
   visible: boolean;
   /** Column width */

@@ -13,8 +13,81 @@ import React, {
   useCallback,
   Children,
   isValidElement,
+  type ReactNode,
+  type ReactElement,
 } from 'react';
+
+/**
+ * Returns a stable reference to `children` as long as the structural shape
+ * (number of valid elements, their `type` and `key`) does not change.
+ *
+ * JSX like `<Comp>{a}{b}</Comp>` creates a NEW children array on every render,
+ * even when `a` and `b` are stable references. That makes useMemo deps that
+ * include `children` recompute on every parent render. For consumers like
+ * AG-Grid where rebuilding column defs invalidates virtualization, this is
+ * expensive. This hook lets the consumer skip recomputation when the
+ * children only "look the same".
+ */
+function useStableChildren(children: ReactNode): ReactNode {
+  const ref = useRef<ReactNode>(children);
+  const prevSignature = useRef<string>('');
+
+  const currentElements = Children.toArray(children).filter(isValidElement) as ReactElement[];
+  const currentSignature = currentElements
+    .map((el) => `${String((el.type as any)?.displayName || (el.type as any)?.name || el.type)}::${String(el.key ?? '')}`)
+    .join('|');
+
+  if (currentSignature !== prevSignature.current) {
+    prevSignature.current = currentSignature;
+    ref.current = children;
+  }
+  return ref.current;
+}
+
+/**
+ * Class applied to AG cells when the user opts into `truncate` on a column.
+ * The companion CSS (injected once per document below) makes the React
+ * container shrink in the cell's flex layout and clips overflow with an
+ * ellipsis. Native `title` attribute on the rendered span shows the full
+ * value on hover.
+ */
+const ARCHBASE_TRUNCATE_CELL_CLASS = 'archbase-ag-truncate-cell';
+const ARCHBASE_TRUNCATE_TEXT_CLASS = 'archbase-ag-truncate-text';
+const ARCHBASE_TRUNCATE_STYLE_ID = 'archbase-ag-truncate-style';
+
+function ensureTruncateStyleInjected(): void {
+  if (typeof document === 'undefined') return;
+  if (document.getElementById(ARCHBASE_TRUNCATE_STYLE_ID)) return;
+  const style = document.createElement('style');
+  style.id = ARCHBASE_TRUNCATE_STYLE_ID;
+  style.textContent = `
+    .ag-cell.${ARCHBASE_TRUNCATE_CELL_CLASS} {
+      overflow: hidden !important;
+    }
+    .ag-cell.${ARCHBASE_TRUNCATE_CELL_CLASS} .ag-react-container,
+    .ag-cell.${ARCHBASE_TRUNCATE_CELL_CLASS} > * {
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      overflow: hidden !important;
+    }
+    .${ARCHBASE_TRUNCATE_TEXT_CLASS} {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  `;
+  document.head.appendChild(style);
+}
 import { AgGridReact } from 'ag-grid-react';
+
+// Memoize AgGridReact — recommended by AG-Grid's official performance demo. This
+// is by far the biggest scroll-perf win: it skips the full AG-Grid re-render when
+// the parent re-renders but every prop reference is the same.
+const AgGridReactMemo = React.memo(AgGridReact);
 import {
   AllCommunityModule,
   ModuleRegistry,
@@ -199,6 +272,11 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
   const gridApiRef = useRef<GridApi | null>(null);
   const gridContainerRef = useRef<HTMLDivElement>(null);
 
+  // Reference-stable children: only changes when the structural shape changes.
+  // Prevents columnDefs useMemo from invalidating on every parent render and
+  // forcing AG-Grid to rebuild all columns (which destroys virtualization perf).
+  const stableChildren = useStableChildren(children);
+
   // Detect DataSource version
   const isV2 = isDataSourceV2(dataSource);
 
@@ -348,8 +426,9 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
       }
     }
 
-    // Extract column definitions from children
-    Children.forEach(children, (child) => {
+    // Extract column definitions from children (using the structurally-stable
+    // reference so this useMemo doesn't recompute on every parent render).
+    Children.forEach(stableChildren, (child) => {
       if (isValidElement(child) && child.type === Columns) {
         Children.forEach((child.props as any).children, (column) => {
           if (isValidElement(column)) {
@@ -361,7 +440,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
             const alignment = getAlignmentByDataType(dataType, columnProps.align);
 
             // Get cell renderer
-            const cellRenderer = getCellRendererByDataType(
+            const baseCellRenderer = getCellRendererByDataType(
               dataType,
               columnProps.render
                 ? (params) =>
@@ -379,6 +458,24 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
                 decimalPlaces: 2,
               }
             );
+
+            // Quando truncate=true, envolve o conteúdo num span que ativa o
+            // ellipsis (cssClass adicionada à cell faz o flex item interno
+            // encolher — ver ensureTruncateStyleInjected).
+            const cellRenderer = columnProps.truncate
+              ? (params: any) => {
+                  const titleValue = params.value == null ? '' : String(params.value);
+                  return (
+                    <span title={titleValue} className={ARCHBASE_TRUNCATE_TEXT_CLASS}>
+                      {baseCellRenderer(params)}
+                    </span>
+                  );
+                }
+              : baseCellRenderer;
+
+            if (columnProps.truncate) {
+              ensureTruncateStyleInjected();
+            }
 
             // Create value getter for nested fields
             const valueGetter = columnProps.dataField.includes('.')
@@ -427,7 +524,9 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
                     : alignment === 'right'
                       ? 'flex-end'
                       : 'center',
+                ...(columnProps.truncate ? { overflow: 'hidden' } : {}),
               },
+              cellClass: columnProps.truncate ? ARCHBASE_TRUNCATE_CELL_CLASS : undefined,
               // Custom properties
               enableGlobalFilter: columnProps.enableGlobalFilter,
               dataType: columnProps.dataType,
@@ -441,7 +540,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
 
     return cols;
   }, [
-    children,
+    stableChildren,
     enableRowActions,
     renderRowActions,
     actionsColumnWidth,
@@ -493,6 +592,18 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
       enableClickSelection: false,
     };
   }, [enableRowSelection]);
+
+  // Estabiliza a referência do getRowId — recomendação da AG-Grid: prop
+  // instável invalida o mapeamento interno de linhas e quebra o React.memo do
+  // AgGridReactMemo. Junto com columnDefs estável (via useStableChildren),
+  // garante que o memo realmente faça o seu trabalho.
+  const stableGetRowIdAG = useCallback(
+    (params: GetRowIdParams<T>) => {
+      const id = safeGetRowId(params.data, getRowId);
+      return id !== undefined ? String(id) : '';
+    },
+    [getRowId]
+  );
 
   // Grid ready handler
   const onGridReady = useCallback((event: GridReadyEvent) => {
@@ -1164,7 +1275,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
 
       {/* AG Grid */}
       <Box style={{ flex: 1, overflow: 'hidden', position: 'relative', minHeight: 0, ...cssVars }}>
-        <AgGridReact
+        <AgGridReactMemo
           theme={agGridTheme}
           rowData={rows}
           columnDefs={columnDefs}
@@ -1175,10 +1286,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
           onCellDoubleClicked={onCellDoubleClicked}
           onSortChanged={onSortChanged}
           onFilterChanged={onFilterChanged}
-          getRowId={(params: GetRowIdParams<T>) => {
-            const id = safeGetRowId(params.data, getRowId);
-            return id !== undefined ? String(id) : '';
-          }}
+          getRowId={stableGetRowIdAG}
           rowHeight={rowHeight}
           headerHeight={40}
           loading={isLoadingInternal || isLoading}
@@ -1190,6 +1298,11 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
           suppressScrollOnNewData={true}
           enableCellTextSelection={true}
           ensureDomOrder={true}
+          // Perf — recomendações da doc oficial AG-Grid (scrolling-performance):
+          // mantém apenas N linhas extra renderizadas fora do viewport.
+          rowBuffer={10}
+          // Desliga o highlight de hover quando o usuário pediu (perf win).
+          suppressRowHoverHighlight={!highlightOnHover}
         />
       </Box>
 
