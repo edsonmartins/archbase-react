@@ -87,7 +87,10 @@ import { AgGridReact } from 'ag-grid-react';
 // Memoize AgGridReact — recommended by AG-Grid's official performance demo. This
 // is by far the biggest scroll-perf win: it skips the full AG-Grid re-render when
 // the parent re-renders but every prop reference is the same.
-const AgGridReactMemo = React.memo(AgGridReact);
+// React.memo apaga o parâmetro genérico de AgGridReact<TData> (TData vira unknown),
+// fazendo columnDefs/getRowId tipados com <T> não baterem. O cast preserva a
+// assinatura genérica original para que TData seja inferido de rowData={rows} (T[]).
+const AgGridReactMemo = React.memo(AgGridReact) as unknown as typeof AgGridReact;
 import {
   AllCommunityModule,
   ModuleRegistry,
