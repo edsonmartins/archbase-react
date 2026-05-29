@@ -144,4 +144,25 @@ export interface IArchbaseDataSourceBase<T> {
    * @param listener Função a ser removida
    */
   removeListener(listener: DataSourceListener<T>): void;
+
+  /**
+   * Adiciona um listener para mudanças em um campo específico.
+   * Permite que componentes escutem apenas mudanças no campo que exibem.
+   * @param fieldName Nome do campo (suporta notação de ponto)
+   * @param listener Função chamada quando o campo mudar
+   */
+  addFieldChangeListener(
+    fieldName: string,
+    listener: (fieldName: string, oldValue: any, newValue: any) => void
+  ): void;
+
+  /**
+   * Remove um listener de mudança de campo previamente registrado.
+   * @param fieldName Nome do campo
+   * @param listener Função a ser removida
+   */
+  removeFieldChangeListener(
+    fieldName: string,
+    listener: (fieldName: string, oldValue: any, newValue: any) => void
+  ): void;
 }
