@@ -1,6 +1,6 @@
 {
   "name": "@archbase/security-ui",
-  "version": "4.0.27",
+  "version": "4.0.28",
   "description": "Security UI components for Archbase React - Forms, Modals, and Views",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -67,11 +67,11 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
-    "@mantine/core": "9.2.2",
-    "@mantine/dates": "9.2.2",
-    "@mantine/hooks": "9.2.2",
-    "@mantine/modals": "9.2.2",
-    "@mantine/notifications": "9.2.2",
+    "@mantine/core": "9.3.0",
+    "@mantine/dates": "9.3.0",
+    "@mantine/hooks": "9.3.0",
+    "@mantine/modals": "9.3.0",
+    "@mantine/notifications": "9.3.0",
     "@tabler/icons-react": "^3.27.0"
   }
 }
