@@ -4,6 +4,7 @@
  * Helper functions for AG Grid implementation.
  */
 import type { ColDef, SortModelItem } from 'ag-grid-community';
+import { builder, emit } from '@archbase/core';
 import type { IArchbaseDataSourceBase } from '@archbase/data';
 import type {
   ArchbaseFilterDefinition,
@@ -182,6 +183,13 @@ export const buildFilterExpression = (
           if (value) {
             filterExpr = `${field}==${value}`;
           }
+      }
+
+      // Handle set filter (enum) — values array from ArchbaseEnumSetFilter
+      if (!filterExpr && values && Array.isArray(values) && values.length > 0) {
+        filterExpr = values.length === 1
+          ? emit(builder.eq(field, String(values[0])))
+          : emit(builder.in(field, values.map(String)));
       }
 
       if (filterExpr) {

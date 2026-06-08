@@ -140,6 +140,7 @@ import {
   getAlignmentByDataType,
   createValueFormatter,
 } from './archbase-data-grid-ag-formatters';
+import { ArchbaseEnumSetFilter } from './archbase-data-grid-ag-enum-filter';
 
 // Import shared components
 import { ArchbaseDataGridToolbar } from '../main/archbase-data-grid-toolbar';
@@ -496,6 +497,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
                 }
               : undefined;
 
+            const isEnumColumn = dataType === 'enum' && (columnProps.enumValues?.length ?? 0) > 0;
             const colDef: ExtendedColDef<T> = {
               field: columnProps.dataField as any,
               headerName: columnProps.header,
@@ -503,7 +505,12 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
               minWidth: columnProps.minSize,
               maxWidth: columnProps.maxSize,
               sortable: columnProps.enableSorting !== false,
-              filter: columnProps.enableColumnFilter !== false && allowColumnFilters,
+              filter: columnProps.enableColumnFilter !== false && allowColumnFilters
+                ? (isEnumColumn ? ArchbaseEnumSetFilter : true)
+                : false,
+              filterParams: isEnumColumn
+                ? { enumValues: columnProps.enumValues, closeOnApply: true }
+                : undefined,
               resizable: enableColumnResizing,
               flex: columnAutoWidth ? 1 : undefined,
               cellRenderer,
