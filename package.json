@@ -1,6 +1,6 @@
 {
   "name": "archbase-react",
-  "version": "4.0.28",
+  "version": "4.0.29",
   "private": true,
   "type": "module",
   "description": "Monorepo for Archbase React v4 - Modern TypeScript React Component Library",
