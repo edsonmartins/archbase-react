@@ -117,3 +117,15 @@ export { NavigationProgressProvider, useNavigationProgress } from './ArchbaseNav
 
 // Hooks
 export * from './hooks';
+
+// Stateful Routes (Zustand per-tab state - alternative to keepalive)
+export { ArchbaseStatefulRoutes } from './ArchbaseStatefulRoutes';
+export type { ArchbaseStatefulRoutesProps, StatefulRouteProps } from './ArchbaseStatefulRoutes';
+
+// Tab State Management
+export { TabStoreProvider, useTabStore, useTabStoreApi, useTabStoreOptional } from './components/TabStoreProvider';
+export type { TabStoreProviderProps } from './components/TabStoreProvider';
+export { useTabRegistryStore } from './state/tabRegistryStore';
+export type { TabSnapshot, TabRegistryState } from './state/tabRegistryStore';
+export { createTabStore } from './state/createTabStore';
+export type { TabStore, TabLocalState, SerializedTabState, GridState } from './state/createTabStore';

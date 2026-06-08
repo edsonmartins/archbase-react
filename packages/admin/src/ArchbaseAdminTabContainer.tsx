@@ -10,6 +10,7 @@ import { ArchbaseNavigationContext, useArchbaseNavigationContext } from './Archb
 import { ArchbaseNavigationItem, ArchbaseTabItem } from './types';
 import { useKeepAliveCache } from './ArchbaseAliveAbleRoutes';
 import { useNavigationProgress } from './ArchbaseNavigationProgress';
+import { useTabRegistryStore } from './state/tabRegistryStore';
 
 export interface ArchbaseAdminTabContainerProps {
 	navigationData: ArchbaseNavigationItem[];
@@ -49,6 +50,10 @@ export function ArchbaseAdminTabContainer({
 	const keepAliveCache = useKeepAliveCache();
 	const { start: startProgress, done: doneProgress } = useNavigationProgress();
 
+	// Store global para limpar snapshots - usar getState() para evitar re-renders
+	const clearSnapshot = useTabRegistryStore((s) => s.clearSnapshot);
+	const removeTab = useTabRegistryStore((s) => s.removeTab);
+
 	// Refs para os callbacks - evita dependências nos useEffects
 	const onChangeOpenedTabsRef = useRef(onChangeOpenedTabs);
 	const onChangeActiveTabIdRef = useRef(onChangeActiveTabId);
@@ -69,15 +74,18 @@ export function ArchbaseAdminTabContainer({
 	const isExternalUpdateRef = useRef(false);
 
 	const handleOnClose = useCallback((id: string, payload?: { redirectUrl?: string }) => {
-		console.log(`[TabContainer] handleOnClose called for: ${id}`);
+
 		startProgress();
 		// Solicita remoção do cache keep-alive quando aba é fechada
 		if (!keepAliveCache) {
 			console.error('[ArchbaseAdminTabContainer] keepAliveCache context not available. Tab cache cleanup will not occur. This may cause memory leaks.');
 		} else {
-			console.log(`[TabContainer] Destroying keepAlive cache for: ${id}`);
 			keepAliveCache.destroy(id);
 		}
+
+		// Limpar snapshot do estado da tab quando fechada
+		clearSnapshot(id);
+		removeTab(id);
 
 		const closedIndex = openedTabs.findIndex((tab) => tab.path === id);
 		// Prioridade: payload.redirectUrl > aba anterior > tab.redirect > próxima aba
@@ -129,11 +137,10 @@ export function ArchbaseAdminTabContainer({
 		}
 		dispatch({ type: 'DONE', link: '' });
 		doneProgress();
-	}, [openedTabs, activeTabId, navigate, adminLayoutContextValue.navigationRootLink, dispatch, keepAliveCache, startProgress, doneProgress]);
+	}, [openedTabs, activeTabId, navigate, adminLayoutContextValue.navigationRootLink, dispatch, keepAliveCache, startProgress, doneProgress, clearSnapshot, removeTab]);
 
 	useEffect(() => {
 		if (state?.linkClosed) {
-			console.log(`[TabContainer] useEffect - linkClosed: ${state?.linkClosed}`);
 			handleOnClose(state?.linkClosed, state?.payload);
 		}
 	}, [state?.linkClosed, state?.payload, handleOnClose]);
@@ -266,26 +273,34 @@ export function ArchbaseAdminTabContainer({
 			if (currentLocation.pathname !== items[0].path) {
 				startProgress();
 				navigate(items[0].path);
-				doneProgress();
 			}
 		}
 		startTransition(() => {
 			setActiveTabId(id);
+			doneProgress();
 		});
 	};
 
 	const handleOnCloseRequest = (id: string) => {
-		console.log(`[TabContainer] handleOnCloseRequest - User clicked close on tab: ${id}`);
 		try {
+			// Feedback visual imediato — sem isso o usuário não vê nada acontecer
+			// entre clicar no X e a aba sumir, dando sensação de "travado".
+			startProgress();
 			dispatch({ type: 'USER_CLOSE_REQUEST', link: id });
 		} catch (error) {
 			console.error('[TabContainer] Dispatch failed:', error);
+			doneProgress();
 		}
 	};
 
 	// Funções para fechar múltiplas abas
 	const handleCloseAllTabs = useCallback(() => {
 		keepAliveCache?.destroyAll();
+		// Limpar todos os snapshots
+		openedTabs.forEach((tab) => {
+			clearSnapshot(tab.id);
+			removeTab(tab.id);
+		});
 		setOpenedTabs([]);
 		setActiveTabId(undefined);
 		if (!adminLayoutContextValue.navigationRootLink) {
@@ -293,7 +308,7 @@ export function ArchbaseAdminTabContainer({
 			return;
 		}
 		navigate(adminLayoutContextValue.navigationRootLink);
-	}, [navigate, adminLayoutContextValue.navigationRootLink, keepAliveCache]);
+	}, [navigate, adminLayoutContextValue.navigationRootLink, keepAliveCache, openedTabs, clearSnapshot, removeTab]);
 
 	const handleCloseLeftTabs = useCallback((tabId: string) => {
 		const currentIndex = openedTabs.findIndex((tab) => tab.id === tabId);
@@ -301,7 +316,11 @@ export function ArchbaseAdminTabContainer({
 
 		// Limpa cache das abas que serão removidas
 		const tabsToRemove = openedTabs.slice(0, currentIndex);
-		tabsToRemove.forEach((tab) => keepAliveCache?.destroy(tab.path));
+		tabsToRemove.forEach((tab) => {
+			keepAliveCache?.destroy(tab.path);
+			clearSnapshot(tab.id);
+			removeTab(tab.id);
+		});
 
 		const tabsToKeep = openedTabs.slice(currentIndex);
 		const tmpCurrent = tabsToKeep.find((tab) => tab.id === activeTabId)?.id || tabsToKeep[0]?.id;
@@ -320,7 +339,7 @@ export function ArchbaseAdminTabContainer({
 				navigate(targetTab.path);
 			}
 		}
-	}, [openedTabs, activeTabId, navigate, currentLocation.pathname, keepAliveCache]);
+	}, [openedTabs, activeTabId, navigate, currentLocation.pathname, keepAliveCache, clearSnapshot, removeTab]);
 
 	const handleCloseRightTabs = useCallback((tabId: string) => {
 		const currentIndex = openedTabs.findIndex((tab) => tab.id === tabId);
@@ -328,7 +347,11 @@ export function ArchbaseAdminTabContainer({
 
 		// Limpa cache das abas que serão removidas
 		const tabsToRemove = openedTabs.slice(currentIndex + 1);
-		tabsToRemove.forEach((tab) => keepAliveCache?.destroy(tab.path));
+		tabsToRemove.forEach((tab) => {
+			keepAliveCache?.destroy(tab.path);
+			clearSnapshot(tab.id);
+			removeTab(tab.id);
+		});
 
 		const tabsToKeep = openedTabs.slice(0, currentIndex + 1);
 		const tmpCurrent = tabsToKeep.find((tab) => tab.id === activeTabId)?.id || tabsToKeep[tabsToKeep.length - 1]?.id;
@@ -347,7 +370,7 @@ export function ArchbaseAdminTabContainer({
 				navigate(targetTab.path);
 			}
 		}
-	}, [openedTabs, activeTabId, navigate, currentLocation.pathname, keepAliveCache]);
+	}, [openedTabs, activeTabId, navigate, currentLocation.pathname, keepAliveCache, clearSnapshot, removeTab]);
 
 	const handleCloseOtherTabs = useCallback((tabId: string) => {
 		const currentTab = openedTabs.find((tab) => tab.id === tabId);
@@ -355,6 +378,13 @@ export function ArchbaseAdminTabContainer({
 
 		// Limpa cache de todas as abas exceto a selecionada
 		keepAliveCache?.destroyOther(currentTab.path);
+		// Limpar snapshots das outras tabs
+		openedTabs.forEach((tab) => {
+			if (tab.id !== tabId) {
+				clearSnapshot(tab.id);
+				removeTab(tab.id);
+			}
+		});
 
 		const nextTabs = [{ ...currentTab, active: true }];
 		setOpenedTabs(nextTabs);
@@ -363,7 +393,12 @@ export function ArchbaseAdminTabContainer({
 		if (currentLocation.pathname !== currentTab.path) {
 			navigate(currentTab.path);
 		}
-	}, [openedTabs, navigate, currentLocation.pathname, keepAliveCache]);
+	}, [openedTabs, navigate, currentLocation.pathname, keepAliveCache, clearSnapshot, removeTab]);
+
+	// Aba marcada como `closing` é aquela cujo X foi clicado e ainda aguarda
+	// a confirmação do listener (ou do fallback do reducer). Faz o tab trocar
+	// o X por um Loader, dando feedback visual imediato.
+	const closingTabKey = state?.isClosing ? state?.userCloseLinkRequest : undefined;
 
 	const buildAdvancedTabs = (openedTabs: ArchbaseTabItem[]): ArchbaseAdvancedTabItem[] => {
 		return openedTabs.map((tab) => {
@@ -371,7 +406,8 @@ export function ArchbaseAdminTabContainer({
 				key: tab.id,
 				favicon: tab.iconClass,
 				title: tab.title,
-				customTitle: tab.customTitle
+				customTitle: tab.customTitle,
+				closing: closingTabKey === tab.id,
 			};
 
 			return result;

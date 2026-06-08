@@ -70,7 +70,8 @@ export function ArchbaseMyProfileModal({ opened, handleClose, userId, updateUser
             //
         },
         onError: (error, origin) => {
-            ArchbaseNotifications.showError(getI18nextInstance().t('archbase:WARNING'), error, origin)
+            const errorMessage = error instanceof Error ? error.message : typeof error === 'string' ? error : JSON.stringify(error)
+            ArchbaseNotifications.showError(getI18nextInstance().t('archbase:WARNING'), errorMessage, origin)
         }
     })
 

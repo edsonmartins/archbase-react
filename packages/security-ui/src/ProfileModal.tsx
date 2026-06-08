@@ -4,7 +4,7 @@
  */
 import React from 'react'
 import { Grid, ScrollArea, Stack, Modal, Button, Group } from '@mantine/core'
-import { ArchbaseDataSource } from '@archbase/data'
+import { IArchbaseDataSourceBase } from '@archbase/data'
 import { getI18nextInstance } from '@archbase/core';
 import { ProfileDto } from '@archbase/security'
 import { ArchbaseEdit } from '@archbase/components'
@@ -15,7 +15,7 @@ export interface ProfileModalOptions {
 }
 
 export interface ProfileModalProps {
-  dataSource: ArchbaseDataSource<ProfileDto, string>
+  dataSource: IArchbaseDataSourceBase<ProfileDto>
   opened: boolean
   onClickOk: (record?: ProfileDto, result?: any) => void
   onClickCancel: (record?: ProfileDto) => void
@@ -29,19 +29,19 @@ export const ProfileModal = (props: ProfileModalProps) => {
   
   const handleSave = () => {
     if (props.onCustomSave) {
-      props.onCustomSave(props.dataSource.getCurrentRecord(), (success: boolean) => {
+      props.onCustomSave(props.dataSource.getCurrentRecord()!, (success: boolean) => {
         if (success && props.onAfterSave) {
-          props.onAfterSave(props.dataSource.getCurrentRecord());
+          props.onAfterSave(props.dataSource.getCurrentRecord()!);
         }
-        props.onClickOk(props.dataSource.getCurrentRecord(), success);
+        props.onClickOk(props.dataSource.getCurrentRecord()!, success);
       });
     } else {
-      props.onClickOk(props.dataSource.getCurrentRecord(), true);
+      props.onClickOk(props.dataSource.getCurrentRecord()!, true);
     }
   };
 
   const handleCancel = () => {
-    props.onClickCancel(props.dataSource.getCurrentRecord());
+    props.onClickCancel(props.dataSource.getCurrentRecord()!);
   };
   
   return (

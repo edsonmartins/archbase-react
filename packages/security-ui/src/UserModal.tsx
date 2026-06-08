@@ -3,7 +3,7 @@
  * @status stable
  */
 import { ARCHBASE_IOC_API_TYPE, getI18nextInstance, builder, emit } from '@archbase/core'
-import { ArchbaseDataSource } from '@archbase/data'
+import { IArchbaseDataSourceBase, ArchbaseDataSource } from '@archbase/data'
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit, ArchbaseAvatarEdit } from '@archbase/components'
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@archbase/data'
 import { ArchbaseNotifications } from '@archbase/components'
@@ -85,7 +85,7 @@ export const defaultUserModalOptions: UserModalOptions = {
 }
 
 export interface UserModalProps {
-  dataSource: ArchbaseDataSource<UserDto, string>
+  dataSource: IArchbaseDataSourceBase<UserDto>
   opened: boolean
   onClickOk: (record?: UserDto, result?: any) => void
   onClickCancel: (record?: UserDto) => void
@@ -109,6 +109,7 @@ export const UserModal = (props: UserModalProps) => {
       ArchbaseNotifications.showError(getI18nextInstance().t('archbase:WARNING'), error, origin)
     }
   })
+  console.log("versão 12/05/2026")
 
   const profileApi = useArchbaseRemoteServiceApi<ArchbaseProfileService>(ARCHBASE_IOC_API_TYPE.Profile)
   const { dataSource: dsProfiles } = useArchbaseRemoteDataSource<ProfileDto, string>({
@@ -152,9 +153,7 @@ export const UserModal = (props: UserModalProps) => {
   }, [props.opened])
 
   const handleSave = () => {
-    const currentRecord = props.dataSource.getCurrentRecord();
-    if (!currentRecord) return;
-
+    const currentRecord = props.dataSource.getCurrentRecord()!;
     if (!currentRecord.password && props.dataSource.isInserting()) {
       setPasswordError(getI18nextInstance().t('archbase:Informe a senha'))
       return;
@@ -173,7 +172,7 @@ export const UserModal = (props: UserModalProps) => {
   };
 
   const handleCancel = () => {
-    props.onClickCancel(props.dataSource.getCurrentRecord());
+    props.onClickCancel(props.dataSource.getCurrentRecord()!);
   };
 
   return (

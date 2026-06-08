@@ -1,9 +1,9 @@
 {
   "name": "archbase-react",
-  "version": "4.0.2",
+  "version": "4.0.28",
   "private": true,
   "type": "module",
-  "description": "Monorepo for Archbase React v3 - Modern TypeScript React Component Library",
+  "description": "Monorepo for Archbase React v4 - Modern TypeScript React Component Library",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
   "repository": {
@@ -33,6 +33,7 @@
     "publish:prod": "node scripts/publish.js",
     "publish:dev": "node scripts/publish-debug.js",
     "publish:dev:no-docs": "node scripts/publish-debug.js --no-docs",
+    "publish:dev:no-build": "node scripts/publish-debug.js --skip-build",
     "test": "turbo test",
     "typecheck": "turbo typecheck",
     "version:update": "node scripts/update-version.js",

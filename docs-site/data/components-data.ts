@@ -541,18 +541,6 @@ export const ARCHBASE_TAG_INPUT_DATA: PageHeaderData = {
   version: '3.0.0',
 };
 
-export const ARCHBASE_PHONE_INPUT_DATA: PageHeaderData = {
-  title: 'ArchbasePhoneInput',
-  description: 'Componente para entrada de números de telefone com formatação internacional e seleção de país. Baseado no react-phone-number-input.',
-  source: '@archbase/components/editors/ArchbasePhoneInput',
-  package: '@archbase/components',
-  docsLink: '/components/editors/new-editors',
-  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
-  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbasePhoneInput.tsx',
-  license: 'MIT',
-  version: '3.0.0',
-};
-
 export const ARCHBASE_MULTI_EMAIL_DATA: PageHeaderData = {
   title: 'ArchbaseMultiEmail',
   description: 'Componente para entrada de múltiplos endereços de e-mail com validação automática. Baseado no react-multi-email.',

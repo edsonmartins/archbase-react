@@ -28,7 +28,7 @@ import React, {
 	useRef,
 	useState
 } from 'react';
-import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames } from '@archbase/data';
+import { ArchbaseDataSource, DataSourceEvent, DataSourceEventNames, IArchbaseDataSourceBase } from '@archbase/data';
 import { useArchbaseDidMount, useArchbaseDidUpdate, useArchbaseWillUnmount } from '@archbase/core';
 
 export interface ArchbaseMultiSelectProps<T, ID, O> {
@@ -36,8 +36,8 @@ export interface ArchbaseMultiSelectProps<T, ID, O> {
   allowDeselect?: boolean;
   /** Indicador se permite limpar o select */
   clearable?: boolean;
-  /** Fonte de dados onde será atribuido o item selecionado */
-  dataSource?: ArchbaseDataSource<T, ID>;
+  /** Fonte de dados onde será atribuido o item selecionado (V1 ou V2) */
+  dataSource?: IArchbaseDataSourceBase<T>;
   /** Campo onde deverá ser atribuido o item selecionado na fonte de dados */
   dataField?: string;
   /** Indicador se o select está desabilitado */
@@ -348,7 +348,8 @@ export function ArchbaseMultiSelect<T, ID, O>({
         event.type === DataSourceEventNames.dataChanged ||
         event.type === DataSourceEventNames.recordChanged ||
         event.type === DataSourceEventNames.afterScroll ||
-        event.type === DataSourceEventNames.afterCancel
+        event.type === DataSourceEventNames.afterCancel ||
+        event.type === DataSourceEventNames.afterInsert
       ) {
         loadDataSourceFieldValue();
       }

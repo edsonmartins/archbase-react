@@ -1,165 +1,105 @@
 /**
- * ArchbaseImagePickerEditor - Wrapper para react-image-picker-editor
- * Componente para seleção, edição e compressão de imagens em png, jpeg e webp
+ * ArchbaseImagePickerEditor — picker + editor de imagens próprio do Archbase.
  *
- * Funcionalidades:
- * - Suporta diferentes tipos de entrada: URL, data URI (base64), blob URL
- * - Debounce para evitar múltiplas chamadas do callback
- * - Mantém compatibilidade total com a API anterior
+ * Implementação:
+ *  - Upload via @mantine/dropzone (drag-and-drop + click). O conteúdo do
+ *    arquivo é lido com FileReader.readAsDataURL(), o que preserva os bytes
+ *    originais — sem nenhum canvas roundtrip. Logo, PNGs/WebPs com canal
+ *    alfa chegam ao callback com a transparência intacta.
+ *  - Preview com <img> nativa, sem any third-party.
+ *  - Botões de adicionar (re-upload), editar (crop/rotate em modal),
+ *    download e deletar — ActionIcons do Mantine.
+ *  - Crop opcional via react-easy-crop, com mime de saída respeitando
+ *    `preserveTransparency` (ver crop-image.ts).
+ *
+ * Mantém a API externa anterior (props `config`, `imageSrcProp`,
+ * `imageChanged`, `variant`, `onProcessingChange`) para compatibilidade
+ * com ArchbaseImageEdit e demais consumidores.
  */
-import { ActionIconVariant, Text, useMantineColorScheme } from '@mantine/core';
-import { useDebouncedCallback } from '@mantine/hooks';
-import { useArchbaseTranslation } from '@archbase/core';
-import React, { memo, useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { useArchbaseTheme } from '@archbase/core';
-import ReactImagePickerEditor, { ImagePickerConf } from 'react-image-picker-editor';
-import 'react-image-picker-editor/dist/index.css';
-import './image_editor_styles.scss';
+import { ActionIcon, ActionIconVariant, Box, Button, Group, Modal, Slider, Stack, Text, useMantineColorScheme } from '@mantine/core';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
+import { useArchbaseTranslation, useArchbaseTheme } from '@archbase/core';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Cropper, { Area } from 'react-easy-crop';
+import {
+	IconCrop,
+	IconDownload,
+	IconPhoto,
+	IconPhotoPlus,
+	IconRotate,
+	IconTrash,
+	IconUpload,
+	IconX,
+} from '@tabler/icons-react';
 import { ArchbaseImagePickerConf } from './models/index.models';
+import { getCroppedImage, resizeDataUri } from './functions/crop-image';
 
 export * from './models/index.models';
 
-// Mapeamento de idiomas para o react-image-picker-editor
-const LANGUAGE_MAP: Record<string, string> = {
-	'pt-BR': 'pt',
-	'pt': 'pt',
-	'en': 'en',
-	'en-US': 'en',
-	'es': 'es',
-	'es-ES': 'es',
-	'fr': 'fr',
-	'fr-FR': 'fr',
-	'de': 'de',
-	'de-DE': 'de',
-	'fa': 'fa',
-};
+// ---------------------------------------------------------------------------
+// Utilidades de detecção de formato — exportadas para uso em outros pontos do
+// pacote (ArchbaseImageEdit, etc).
+// ---------------------------------------------------------------------------
 
-/**
- * Verifica se uma string é um data URI válido (com prefixo data:image/...)
- */
 function isDataUri(str: string | null | undefined): boolean {
-	if (!str) return false;
-	return str.startsWith('data:');
+	return !!str && str.startsWith('data:');
 }
-
-/**
- * Verifica se uma string é um blob URL
- */
 function isBlobUrl(str: string | null | undefined): boolean {
-	if (!str) return false;
-	return str.startsWith('blob:');
+	return !!str && str.startsWith('blob:');
 }
-
-/**
- * Verifica se uma string é uma URL externa (http/https)
- */
 function isExternalUrl(str: string | null | undefined): boolean {
-	if (!str) return false;
-	return str.startsWith('http://') || str.startsWith('https://');
+	return !!str && (str.startsWith('http://') || str.startsWith('https://'));
 }
 
 /**
- * Verifica se uma string parece ser base64 puro (sem prefixo data:)
- * Base64 válido contém apenas A-Z, a-z, 0-9, +, /, = e tem comprimento múltiplo de 4
+ * Verifica se uma string parece ser base64 puro (sem prefixo data:).
  */
 function isRawBase64(str: string | null | undefined): boolean {
-	if (!str || str.length < 100) return false; // Imagens base64 são geralmente grandes
-	// Verificar se não começa com prefixos conhecidos
+	if (!str || str.length < 100) return false;
 	if (isDataUri(str) || isBlobUrl(str) || isExternalUrl(str)) return false;
-	// Verificar padrão de base64
-	const base64Regex = /^[A-Za-z0-9+/]+=*$/;
-	// Verificar apenas os primeiros 100 caracteres para performance
-	return base64Regex.test(str.substring(0, 100));
+	const head = str.substring(0, 100);
+	return /^[A-Za-z0-9+/]+=*$/.test(head);
 }
 
 /**
- * Normaliza a imagem de entrada para um formato que o componente pode exibir
- * Converte base64 puro para data URI se necessário
+ * Normaliza a imagem de entrada para um formato que o componente pode exibir:
+ *  - data URIs, blob URLs e URLs externas são retornados como estão;
+ *  - base64 puro é convertido em data URI, com mime inferido pelos primeiros
+ *    bytes do conteúdo (JPEG/PNG/GIF/WebP).
  */
 function normalizeImageSrc(src: string | null | undefined): string | null {
 	if (!src) return null;
-
-	// Se já é um formato válido, retornar como está
-	if (isDataUri(src) || isBlobUrl(src) || isExternalUrl(src)) {
-		return src;
-	}
-
-	// Se parece ser base64 puro, converter para data URI
+	if (isDataUri(src) || isBlobUrl(src) || isExternalUrl(src)) return src;
 	if (isRawBase64(src)) {
-		// Tentar detectar o tipo da imagem pelo header base64
-		// JPEG começa com /9j/
-		// PNG começa com iVBOR
-		// GIF começa com R0lGOD
-		// WebP começa com UklGR
-		let mimeType = 'image/jpeg'; // Padrão
-		if (src.startsWith('/9j/')) {
-			mimeType = 'image/jpeg';
-		} else if (src.startsWith('iVBOR')) {
-			mimeType = 'image/png';
-		} else if (src.startsWith('R0lGOD')) {
-			mimeType = 'image/gif';
-		} else if (src.startsWith('UklGR')) {
-			mimeType = 'image/webp';
-		}
+		let mimeType = 'image/jpeg';
+		if (src.startsWith('/9j/')) mimeType = 'image/jpeg';
+		else if (src.startsWith('iVBOR')) mimeType = 'image/png';
+		else if (src.startsWith('R0lGOD')) mimeType = 'image/gif';
+		else if (src.startsWith('UklGR')) mimeType = 'image/webp';
 		return `data:${mimeType};base64,${src}`;
 	}
-
-	// Se não reconhecemos o formato, retornar como está (pode ser uma URL relativa)
 	return src;
 }
 
-/**
- * Converte a configuração do Archbase para o formato do react-image-picker-editor
- */
-function toImagePickerConf(
-	config: ArchbaseImagePickerConf,
-	colorScheme: 'light' | 'dark',
-	language: string
-): ImagePickerConf {
-	return {
-		width: typeof config.width === 'number' ? `${config.width}px` : (config.width as string),
-		height: typeof config.height === 'number' ? `${config.height}px` : (config.height as string),
-		borderRadius: typeof config.borderRadius === 'number' ? `${config.borderRadius}px` : (config.borderRadius as string),
-		aspectRatio: config.aspectRatio ?? undefined,
-		objectFit: config.objectFit,
-		compressInitial: config.compressInitial ?? undefined,
-		hideDeleteBtn: config.hideDeleteBtn,
-		hideDownloadBtn: config.hideDownloadBtn,
-		hideEditBtn: config.hideEditBtn,
-		hideAddBtn: config.hideAddBtn,
-		darkMode: colorScheme === 'dark',
-		language: LANGUAGE_MAP[language] || 'en',
-	};
-}
-
-/**
- * Calcula o tamanho da imagem em KB a partir de uma string base64
- */
-function calculateImageSize(dataUri: string | null | undefined): number | null {
-	if (!dataUri || !dataUri.length || !isDataUri(dataUri)) return null;
-	// Remove o header do data URI para calcular apenas o conteúdo base64
+function calculateImageSizeKb(dataUri: string | null | undefined): number | null {
+	if (!dataUri || !isDataUri(dataUri)) return null;
 	const base64 = dataUri.split(',')[1];
 	if (!base64) return null;
-	// Fórmula: (3/4) * length / 1024 para obter KB aproximado
 	return Math.ceil(((3 / 4) * base64.length) / 1024);
 }
 
-/**
- * Extrai o formato da imagem do data URI
- */
 function extractFormat(dataUri: string | null | undefined): string {
 	if (!dataUri || !isDataUri(dataUri)) return '';
-	const match = dataUri.match(/data:image\/([a-zA-Z]+);base64,/);
-	if (match && match[1]) {
-		return match[1] === 'jpeg' ? 'jpeg' : match[1];
-	}
-	return 'png';
+	const match = dataUri.match(/data:image\/([a-zA-Z+\-.]+);base64,/);
+	if (match && match[1]) return match[1] === 'jpeg' ? 'jpeg' : match[1];
+	return '';
 }
 
-/**
- * Props do ArchbaseImagePickerEditor
- * Mantém compatibilidade total com a versão anterior
- */
+// ---------------------------------------------------------------------------
+// Componente
+// ---------------------------------------------------------------------------
+
 export interface ArchbaseImagePickerEditorProps {
 	/** Configuração do editor (interface ArchbaseImagePickerConf) */
 	config?: ArchbaseImagePickerConf;
@@ -174,34 +114,23 @@ export interface ArchbaseImagePickerEditorProps {
 	imageChanged?: (newDataUri: string | undefined) => void;
 	/** Variante dos botões de ação */
 	variant?: ActionIconVariant;
+	/** Callback quando o estado de processamento muda (útil para desabilitar botões enquanto processa) */
+	onProcessingChange?: (isProcessing: boolean) => void;
 }
 
-/**
- * ArchbaseImagePickerEditor - Componente de seleção e edição de imagens
- *
- * Funcionalidades:
- * - Seleção de imagens (upload)
- * - Edição com crop, redimensionamento
- * - Compressão de qualidade (JPEG/WebP)
- * - Conversão de formatos (PNG, JPEG, WebP)
- * - Filtros (contraste, brilho, saturação, sépia, blur)
- * - Suporte a dark mode
- * - Suporte a URL externa, data URI e blob URL
- *
- * @example
- * ```tsx
- * <ArchbaseImagePickerEditor
- *   imageSrcProp={imageValue}
- *   config={{
- *     width: 300,
- *     height: 200,
- *     compressInitial: 80,
- *     objectFit: 'contain',
- *     onChangeImage: (newImage) => setImageValue(newImage),
- *   }}
- * />
- * ```
- */
+const DEFAULT_CONFIG: ArchbaseImagePickerConf = {
+	objectFit: 'cover',
+	hideDeleteBtn: false,
+	hideDownloadBtn: false,
+	hideEditBtn: false,
+	hideAddBtn: false,
+	compressInitial: null,
+	showImageSize: true,
+	width: 330,
+	height: 250,
+	borderRadius: '8px',
+};
+
 export const ArchbaseImagePickerEditor = memo(
 	({
 		config = {},
@@ -209,141 +138,375 @@ export const ArchbaseImagePickerEditor = memo(
 		color = '#1e88e5',
 		imageChanged,
 		variant = 'transparent',
+		onProcessingChange,
 	}: ArchbaseImagePickerEditorProps) => {
 		const theme = useArchbaseTheme();
 		const { colorScheme } = useMantineColorScheme();
-		const { t, i18n } = useArchbaseTranslation();
-
-		// Normalizar a imagem de entrada para formato suportado
-		const normalizedInitialSrc = useMemo(() => normalizeImageSrc(imageSrcProp), [imageSrcProp]);
-
-		const [imageSrc, setImageSrc] = useState<string | null>(normalizedInitialSrc);
-		const [loadImage, setLoadImage] = useState<boolean>(!!normalizedInitialSrc);
-		const imageName = useRef('download');
-
-		// Ref para rastrear a última imagem reportada (evitar callbacks duplicados)
-		const lastReportedImageRef = useRef<string | null | undefined>(undefined);
-
-		// Ref para a imagem original (antes de normalização) para comparação
-		const originalImagePropRef = useRef<string | undefined>(imageSrcProp);
-
-		// Ref para saber se é a primeira renderização
-		const isFirstRender = useRef(true);
-
-		// Configuração padrão
-		const defaultConfig: ArchbaseImagePickerConf = {
-			objectFit: 'cover',
-			hideDeleteBtn: false,
-			hideDownloadBtn: false,
-			hideEditBtn: false,
-			hideAddBtn: false,
-			compressInitial: null,
-			showImageSize: true,
-			width: 330,
-			height: 250,
-			borderRadius: '8px',
-		};
-
-		const mergedConfig = useMemo(() => ({ ...defaultConfig, ...config }), [config]);
-
-		// Converter para configuração do react-image-picker-editor
-		const pickerConfig = useMemo(
-			() => toImagePickerConf(mergedConfig, colorScheme as 'light' | 'dark', i18n.language),
-			[mergedConfig, colorScheme, i18n.language]
+		const { t } = useArchbaseTranslation();
+		// Wrapper para silenciar o tipo `string | object` retornado pelo i18next
+		// e prover fallback ao próprio default em pt-BR quando a chave não existir.
+		const tr = useCallback(
+			(key: string, fallback: string): string => {
+				const out = t(key, { defaultValue: fallback }) as unknown;
+				return typeof out === 'string' ? out : fallback;
+			},
+			[t],
 		);
 
-		// Callback com debounce para evitar múltiplas chamadas rápidas
-		const debouncedOnChange = useDebouncedCallback((newDataUri: string | undefined) => {
-			// Verificar se a imagem realmente mudou
-			if (lastReportedImageRef.current === newDataUri) {
-				return;
-			}
+		const mergedConfig = useMemo<ArchbaseImagePickerConf>(
+			() => ({ ...DEFAULT_CONFIG, ...config }),
+			[config],
+		);
 
-			lastReportedImageRef.current = newDataUri;
+		// ---- Estado --------------------------------------------------------
+		const initialSrc = useMemo(() => normalizeImageSrc(imageSrcProp), [imageSrcProp]);
+		const [imageSrc, setImageSrc] = useState<string | null>(initialSrc);
+		const [isProcessing, setIsProcessing] = useState(false);
 
-			// Chamar callback do config (API principal)
-			if (mergedConfig.onChangeImage) {
-				mergedConfig.onChangeImage(newDataUri);
-			}
+		// Modal de crop
+		const [cropOpen, { open: openCrop, close: closeCrop }] = useDisclosure(false);
+		const [cropPosition, setCropPosition] = useState({ x: 0, y: 0 });
+		const [cropZoom, setCropZoom] = useState(1);
+		const [cropRotation, setCropRotation] = useState(0);
+		const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
-			// Chamar callback legado (para compatibilidade)
-			if (imageChanged) {
-				imageChanged(newDataUri);
-			}
-		}, 300); // 300ms de debounce
+		// Refs auxiliares
+		const fileInputRef = useRef<HTMLInputElement | null>(null);
+		const lastReportedRef = useRef<string | null | undefined>(initialSrc);
+		const onProcessingChangeRef = useRef(onProcessingChange);
+		onProcessingChangeRef.current = onProcessingChange;
 
-		// Sincronizar com prop externa
+		// Sincronizar com prop externa, evitando reentrância do que nós mesmos emitimos.
 		useEffect(() => {
-			// Só atualizar se a prop original realmente mudou
-			if (imageSrcProp !== originalImagePropRef.current) {
-				originalImagePropRef.current = imageSrcProp;
-
-				const normalizedSrc = normalizeImageSrc(imageSrcProp);
-				setImageSrc(normalizedSrc);
-				setLoadImage(!!normalizedSrc);
-
-				// Atualizar a referência sem disparar callback na sincronização inicial
-				if (isFirstRender.current) {
-					lastReportedImageRef.current = normalizedSrc;
-					isFirstRender.current = false;
-				}
-			}
+			const normalized = normalizeImageSrc(imageSrcProp);
+			if (normalized === lastReportedRef.current) return;
+			lastReportedRef.current = normalized;
+			setImageSrc(normalized);
 		}, [imageSrcProp]);
 
-		// Handler quando a imagem muda no editor
-		const handleImageChanged = useCallback((newDataUri: string) => {
-			const newValue = newDataUri || undefined;
+		// Manter ref de processing sincronizada e refletir externamente
+		useEffect(() => {
+			onProcessingChangeRef.current?.(isProcessing);
+		}, [isProcessing]);
 
-			// Só processa se for diferente do valor atual
-			if (imageSrc === newDataUri) {
+		// Notificação debounceada — evita rajadas de callbacks ao redimensionar.
+		const debouncedNotify = useDebouncedCallback((dataUri: string | undefined) => {
+			if (lastReportedRef.current === dataUri) return;
+			lastReportedRef.current = dataUri ?? null;
+			mergedConfig.onChangeImage?.(dataUri);
+			imageChanged?.(dataUri);
+			if (mergedConfig.debug) {
+				const mime = dataUri?.match(/^data:(image\/[a-zA-Z+\-.]+);/)?.[1] ?? null;
+				// eslint-disable-next-line no-console
+				console.log('[ArchbaseImagePickerEditor] notify', {
+					mime,
+					sizeKb: dataUri ? calculateImageSizeKb(dataUri) : null,
+				});
+			}
+		}, 200);
+
+		// ---- Upload -------------------------------------------------------
+		const ingestFile = useCallback(
+			async (file: File) => {
+				setIsProcessing(true);
+				try {
+					// Ler arquivo como data URI puro — preserva bytes originais
+					// (sem canvas roundtrip), garantindo PNG/WebP com alpha intactos.
+					const dataUri = await new Promise<string>((resolve, reject) => {
+						const reader = new FileReader();
+						reader.onload = () => resolve(reader.result as string);
+						reader.onerror = () => reject(reader.error);
+						reader.readAsDataURL(file);
+					});
+
+					// Aplicar limites de tamanho/peso (opcionais).
+					const processed = await resizeDataUri(
+						dataUri,
+						mergedConfig.maxWidth,
+						mergedConfig.maxHeight,
+						mergedConfig.maxSizeKb,
+						mergedConfig.compressInitial ?? 92,
+						mergedConfig.preserveTransparency ?? false,
+					);
+
+					setImageSrc(processed);
+					debouncedNotify(processed);
+				} catch (e) {
+					// eslint-disable-next-line no-console
+					console.error('[ArchbaseImagePickerEditor] failed to read file', e);
+				} finally {
+					setIsProcessing(false);
+				}
+			},
+			[
+				debouncedNotify,
+				mergedConfig.maxWidth,
+				mergedConfig.maxHeight,
+				mergedConfig.maxSizeKb,
+				mergedConfig.compressInitial,
+				mergedConfig.preserveTransparency,
+			],
+		);
+
+		const handleDrop = useCallback(
+			(files: File[]) => {
+				const file = files?.[0];
+				if (file) ingestFile(file);
+			},
+			[ingestFile],
+		);
+
+		const handleHiddenInputChange = useCallback(
+			(e: React.ChangeEvent<HTMLInputElement>) => {
+				const file = e.target.files?.[0];
+				if (file) ingestFile(file);
+				// Permite re-selecionar o mesmo arquivo
+				e.target.value = '';
+			},
+			[ingestFile],
+		);
+
+		const triggerReupload = useCallback(() => {
+			fileInputRef.current?.click();
+		}, []);
+
+		// ---- Actions ------------------------------------------------------
+		const handleDelete = useCallback(() => {
+			setImageSrc(null);
+			debouncedNotify(undefined);
+		}, [debouncedNotify]);
+
+		const handleDownload = useCallback(() => {
+			if (!imageSrc) return;
+			// Para data URI, fazer download manual para evitar bloqueio em alguns browsers
+			const ext = extractFormat(imageSrc) || 'png';
+			const a = document.createElement('a');
+			a.href = imageSrc;
+			a.download = `image.${ext === 'jpeg' ? 'jpg' : ext}`;
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+		}, [imageSrc]);
+
+		// ---- Crop ---------------------------------------------------------
+		const onCropComplete = useCallback((_croppedArea: Area, croppedAreaPx: Area) => {
+			setCroppedAreaPixels(croppedAreaPx);
+		}, []);
+
+		const handleOpenCrop = useCallback(() => {
+			setCropPosition({ x: 0, y: 0 });
+			setCropZoom(1);
+			setCropRotation(0);
+			setCroppedAreaPixels(null);
+			openCrop();
+		}, [openCrop]);
+
+		const handleApplyCrop = useCallback(async () => {
+			if (!imageSrc || !croppedAreaPixels) {
+				closeCrop();
 				return;
 			}
+			setIsProcessing(true);
+			try {
+				const cropped = await getCroppedImage(
+					imageSrc,
+					croppedAreaPixels,
+					cropRotation,
+					mergedConfig.preserveTransparency ?? false,
+					mergedConfig.compressInitial ?? 92,
+				);
+				setImageSrc(cropped);
+				debouncedNotify(cropped);
+			} catch (e) {
+				// eslint-disable-next-line no-console
+				console.error('[ArchbaseImagePickerEditor] crop failed', e);
+			} finally {
+				setIsProcessing(false);
+				closeCrop();
+			}
+		}, [
+			imageSrc,
+			croppedAreaPixels,
+			cropRotation,
+			mergedConfig.preserveTransparency,
+			mergedConfig.compressInitial,
+			closeCrop,
+			debouncedNotify,
+		]);
 
-			setImageSrc(newDataUri || null);
-			setLoadImage(!!newDataUri);
-
-			// Usar callback com debounce
-			debouncedOnChange(newValue);
-		}, [imageSrc, debouncedOnChange]);
-
-		// Calcular tamanho e formato da imagem (apenas para data URIs)
-		const sizeImage = useMemo(() => calculateImageSize(imageSrc), [imageSrc]);
+		// ---- Render -------------------------------------------------------
+		const sizeKb = useMemo(() => calculateImageSizeKb(imageSrc), [imageSrc]);
 		const format = useMemo(() => extractFormat(imageSrc), [imageSrc]);
+		const showSizeInfo = !!(mergedConfig.showImageSize && sizeKb !== null);
 
-		// Verificar se deve mostrar informações de tamanho
-		const showSizeInfo = loadImage && sizeImage !== null && mergedConfig.showImageSize && isDataUri(imageSrc);
+		const widthStyle = typeof mergedConfig.width === 'number' ? `${mergedConfig.width}px` : mergedConfig.width;
+		const heightStyle = typeof mergedConfig.height === 'number' ? `${mergedConfig.height}px` : mergedConfig.height;
+		const borderRadiusStyle =
+			typeof mergedConfig.borderRadius === 'number'
+				? `${mergedConfig.borderRadius}px`
+				: mergedConfig.borderRadius;
 
-		// Estilo do container
-		const containerStyle = useMemo(() => ({
-			width: typeof mergedConfig.width === 'number' ? `${mergedConfig.width}px` : mergedConfig.width,
-			backgroundColor: mergedConfig.imageBackgroundColor ?? (colorScheme === 'dark' ? theme.colors.dark[7] : theme.white),
-		}), [mergedConfig.width, mergedConfig.imageBackgroundColor, colorScheme, theme]);
+		const containerBg =
+			mergedConfig.imageBackgroundColor ??
+			(colorScheme === 'dark' ? theme.colors.dark[7] : theme.white);
+
+		const showPlaceholder = !imageSrc;
 
 		return (
-			<div className="ArchbaseImagePickerEditor" style={containerStyle}>
-				{/* Componente react-image-picker-editor */}
-				<ReactImagePickerEditor
-					config={pickerConfig}
-					imageSrcProp={imageSrc || ''}
-					imageChanged={handleImageChanged}
-					color={color}
+			<Box style={{ width: widthStyle }}>
+				{/* Input file escondido — reaproveitado para botão "Adicionar" */}
+				<input
+					ref={fileInputRef}
+					type="file"
+					accept={IMAGE_MIME_TYPE.join(',')}
+					style={{ display: 'none' }}
+					onChange={handleHiddenInputChange}
 				/>
 
-				{/* Informação de tamanho (quando habilitado, imagem carregada e é data URI) */}
-				{showSizeInfo && (
-					<div
-						className="caption image-caption"
-						style={{
-							color: sizeImage! > 120 ? '#f44336' : 'unset',
-							fontWeight: sizeImage! > 120 ? '500' : 'unset',
-							marginTop: '4px',
-							textAlign: 'center',
+				{showPlaceholder ? (
+					<Dropzone
+						onDrop={handleDrop}
+						accept={IMAGE_MIME_TYPE}
+						maxFiles={1}
+						multiple={false}
+						loading={isProcessing}
+						styles={{
+							root: {
+								width: widthStyle,
+								height: heightStyle,
+								borderRadius: borderRadiusStyle,
+								backgroundColor: containerBg,
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+							},
 						}}
 					>
-						<Text size="sm">{`${t('archbase:size')}: ${sizeImage}Kb ${format}`}</Text>
-					</div>
+						<Stack align="center" gap="xs" justify="center" style={{ pointerEvents: 'none' }}>
+							<Dropzone.Accept>
+								<IconUpload size={32} color={color} />
+							</Dropzone.Accept>
+							<Dropzone.Reject>
+								<IconX size={32} color="var(--mantine-color-red-6)" />
+							</Dropzone.Reject>
+							<Dropzone.Idle>
+								<IconPhotoPlus size={32} color={color} />
+							</Dropzone.Idle>
+							<Text size="sm" c="dimmed" ta="center">
+								{tr('archbase:Arraste uma imagem ou clique para selecionar', 'Arraste uma imagem ou clique para selecionar')}
+							</Text>
+						</Stack>
+					</Dropzone>
+				) : (
+					<Box
+						style={{
+							position: 'relative',
+							width: widthStyle,
+							height: heightStyle,
+							borderRadius: borderRadiusStyle,
+							overflow: 'hidden',
+							backgroundColor: containerBg,
+						}}
+					>
+						<img
+							src={imageSrc}
+							alt=""
+							style={{
+								width: '100%',
+								height: '100%',
+								objectFit: mergedConfig.objectFit ?? 'contain',
+								display: 'block',
+							}}
+						/>
+					</Box>
 				)}
-			</div>
+
+				{/* Barra de ações — fora da imagem para não competir por área de clique
+				    em previews pequenos (ex.: favicons 48px). */}
+				{imageSrc && (
+					<Group gap={4} mt={6} justify="flex-start" wrap="nowrap">
+						{!mergedConfig.hideAddBtn && (
+							<ActionIcon variant={variant} color={color} title={tr('archbase:Trocar imagem', 'Trocar imagem')} onClick={triggerReupload}>
+								<IconPhoto size={18} />
+							</ActionIcon>
+						)}
+						{!mergedConfig.hideEditBtn && (
+							<ActionIcon variant={variant} color={color} title={tr('archbase:Editar', 'Editar')} onClick={handleOpenCrop}>
+								<IconCrop size={18} />
+							</ActionIcon>
+						)}
+						{!mergedConfig.hideDownloadBtn && (
+							<ActionIcon variant={variant} color={color} title={tr('archbase:Baixar', 'Baixar')} onClick={handleDownload}>
+								<IconDownload size={18} />
+							</ActionIcon>
+						)}
+						{!mergedConfig.hideDeleteBtn && (
+							<ActionIcon variant={variant} color="red" title={tr('archbase:Remover', 'Remover')} onClick={handleDelete}>
+								<IconTrash size={18} />
+							</ActionIcon>
+						)}
+					</Group>
+				)}
+
+				{showSizeInfo && imageSrc && (
+					<Text size="xs" c="dimmed" mt={4} ta="center">
+						{`${tr('archbase:size', 'tamanho')}: ${sizeKb}Kb ${format}`}
+					</Text>
+				)}
+
+				{/* Modal de crop/rotate */}
+				<Modal
+					opened={cropOpen}
+					onClose={closeCrop}
+					title={tr('archbase:Editar imagem', 'Editar imagem')}
+					size="xl"
+					centered
+				>
+					{imageSrc && (
+						<Stack>
+							<Box style={{ position: 'relative', width: '100%', height: 400, background: '#333' }}>
+								<Cropper
+									image={imageSrc}
+									crop={cropPosition}
+									zoom={cropZoom}
+									rotation={cropRotation}
+									aspect={mergedConfig.aspectRatio ?? undefined}
+									onCropChange={setCropPosition}
+									onZoomChange={setCropZoom}
+									onRotationChange={setCropRotation}
+									onCropComplete={onCropComplete}
+									restrictPosition={false}
+								/>
+							</Box>
+							<Group grow align="flex-end">
+								<Stack gap={2}>
+									<Text size="xs">{tr('archbase:Zoom', 'Zoom')}</Text>
+									<Slider min={1} max={5} step={0.1} value={cropZoom} onChange={setCropZoom} />
+								</Stack>
+								<Stack gap={2}>
+									<Text size="xs">{tr('archbase:Rotação', 'Rotação')}</Text>
+									<Slider
+										min={0}
+										max={360}
+										step={1}
+										value={cropRotation}
+										onChange={setCropRotation}
+										thumbChildren={<IconRotate size={12} />}
+									/>
+								</Stack>
+							</Group>
+							<Group justify="flex-end">
+								<Button variant="default" onClick={closeCrop} disabled={isProcessing}>
+									{tr('archbase:Cancelar', 'Cancelar')}
+								</Button>
+								<Button onClick={handleApplyCrop} loading={isProcessing}>
+									{tr('archbase:Aplicar', 'Aplicar')}
+								</Button>
+							</Group>
+						</Stack>
+					)}
+				</Modal>
+			</Box>
 		);
 	},
 );

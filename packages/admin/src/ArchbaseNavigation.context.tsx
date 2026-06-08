@@ -43,13 +43,10 @@ export const ArchbaseNavigationProvider = ({ children }: ArchbaseNavigationProvi
 	const reducer = (state: ArchbaseNavigationState, action: ArchbaseNavigationAction) => {
 		switch (action.type) {
 		  case 'USER_CLOSE_REQUEST':
-			console.log(`[Navigation Reducer] USER_CLOSE_REQUEST link: ${action.link}`);
 			return { ...state, userCloseLinkRequest: action.link, isClosing: true };
 		  case 'CLOSE_ALLOWED':
-			console.log(`[Navigation Reducer] CLOSE_ALLOWED link: ${action.link}`);
 			return { ...state, linkClosed: action.link, userCloseLinkRequest: '', isClosing: false, payload: action.payload };
 		  case 'DONE':
-			console.log(`[Navigation Reducer] DONE link: ${action.link}`);
 			return { ...state, linkClosed: action.link, isClosing: false };
 		  case 'CLEAR_PAYLOAD':
 			const newState = {...state};
@@ -62,18 +59,21 @@ export const ArchbaseNavigationProvider = ({ children }: ArchbaseNavigationProvi
 
 	const [state, dispatch] = useReducer(reducer, initialState);
 
-	// Timeout para fechar a tab automaticamente se ninguém responder (fallback)
-	// Isso é necessário porque as views podem não estar usando useArchbaseNavigationListener
+	// Timeout para fechar a tab automaticamente se ninguém responder (fallback).
+	// Necessário porque a maioria das views não usa useArchbaseNavigationListener.
+	//
+	// Usa setTimeout(0) em vez de um delay arbitrário: o effect dispara após o
+	// commit do React, e os useEffects dos listeners (síncronos) rodam ANTES do
+	// callback do setTimeout(0). Assim listeners que respondem imediatamente
+	// vencem a corrida; views sem listener fecham praticamente sem delay
+	// perceptível (em vez dos 100ms anteriores que davam sensação de travamento).
 	React.useEffect(() => {
 		let timeoutId: NodeJS.Timeout | null = null;
 
 		if (state.userCloseLinkRequest && !state.linkClosed) {
-			console.log(`[NavigationProvider] Waiting for close response for: ${state.userCloseLinkRequest}`);
-			// Se ninguém responder em 100ms, fecha automaticamente
 			timeoutId = setTimeout(() => {
-				console.log(`[NavigationProvider] No response received, auto-closing: ${state.userCloseLinkRequest}`);
 				dispatch({ type: 'CLOSE_ALLOWED', link: state.userCloseLinkRequest });
-			}, 100);
+			}, 0);
 		}
 
 		return () => {
@@ -99,25 +99,21 @@ export const useArchbaseNavigationContext = () => {
 export interface ArchbaseNavigationListenerType {
 	closeAllowed: (payload?: any) => void;
 	isClosing: boolean;
-  }
-  
-  export const useArchbaseNavigationListener = (id: string, onUserCloseRequest: () => void) => {
+}
+
+export const useArchbaseNavigationListener = (id: string, onUserCloseRequest: () => void) => {
 	const navigationContext = useArchbaseNavigationContext();
 	const { state, dispatch } = navigationContext;
 
 	const closeAllowed = useCallback((payload?: any) => {
-		console.log(`[useArchbaseNavigationListener] closeAllowed called for: ${id}`);
 	  dispatch({ type: 'CLOSE_ALLOWED', link: id, payload });
 	}, [dispatch, id]);
 
-	// Usamos uma ref para garantir que o callback seja chamado mesmo se o estado mudar
 	const onUserCloseRequestRef = useRef(onUserCloseRequest);
 	onUserCloseRequestRef.current = onUserCloseRequest;
 
 	useEffect(() => {
-		console.log(`[useArchbaseNavigationListener] Effect check - userCloseLinkRequest: ${state?.userCloseLinkRequest}, id: ${id}`);
 	  if (state && state.userCloseLinkRequest && state.userCloseLinkRequest === id) {
-		console.log(`[useArchbaseNavigationListener] Calling onUserCloseRequest for: ${id}`);
 		onUserCloseRequestRef.current();
 	  }
 	}, [state, id]);
@@ -125,4 +121,4 @@ export interface ArchbaseNavigationListenerType {
 	const isClosing = state.isClosing && state.userCloseLinkRequest === id;
 
 	return { closeAllowed, isClosing };
-  };
+};

@@ -173,6 +173,7 @@ export function ArchbaseRadioGroup<T, ID, O>({
 				event.type === DataSourceEventNames.recordChanged ||
 				event.type === DataSourceEventNames.afterScroll ||
 				event.type === DataSourceEventNames.afterCancel ||
+				event.type === DataSourceEventNames.afterInsert ||
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();

@@ -128,7 +128,8 @@ function ArchbaseNumberStepperInner<T extends object, ID>(
           event.type === DataSourceEventNames.dataChanged ||
           event.type === DataSourceEventNames.recordChanged ||
           event.type === DataSourceEventNames.afterScroll ||
-          event.type === DataSourceEventNames.afterCancel
+          event.type === DataSourceEventNames.afterCancel ||
+          event.type === DataSourceEventNames.afterInsert
         ) {
           loadDataSourceFieldValue();
         }

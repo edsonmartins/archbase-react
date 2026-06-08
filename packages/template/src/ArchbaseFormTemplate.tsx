@@ -156,12 +156,20 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 		undefined
 	);
 
+	const validationContext = useValidationErrors();
+
 	useArchbaseDataSourceListener<T, ID>({
 		dataSource,
 		listener: (event: DataSourceEvent<T>): void => {
 			if (event.type === DataSourceEventNames.onError) {
 				setIsInternalError(true);
 				setInternalError(event.error);
+			}
+			if (event.type === DataSourceEventNames.onFieldError) {
+				// Conectar erros de validação do DataSource ao ValidationErrorsProvider
+				if (validationContext && event.fieldName && event.error) {
+					validationContext.setError(event.fieldName, event.error);
+				}
 			}
 			if (event.type === DataSourceEventNames.afterEdit || event.type === DataSourceEventNames.afterInsert) {
 				if (!v1v2Compatibility.isDataSourceV2) {
@@ -170,8 +178,6 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 			}
 		},
 	});
-
-	const validationContext = useValidationErrors();
 
 	// Navigation listener (para fechar abas)
 	const defaultNavListener = useCallback((_id: string, _onClose: () => void) => ({

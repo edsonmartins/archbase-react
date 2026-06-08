@@ -51,7 +51,35 @@ export interface ArchbaseImageEditProps<T, ID> extends ImageProps {
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	/** Cor de fundo da imagem */
-	imageBackgroundColor?: string
+	imageBackgroundColor?: string;
+	/** Callback quando o estado de processamento muda (útil para desabilitar botões enquanto processa) */
+	onProcessingChange?: (isProcessing: boolean) => void;
+	/** Largura máxima da imagem em pixels (redimensiona automaticamente se exceder) */
+	maxWidth?: number;
+	/** Altura máxima da imagem em pixels (redimensiona automaticamente se exceder) */
+	maxHeight?: number;
+	/** Tamanho máximo da imagem em KB (recomprime se exceder) */
+	maxSizeKb?: number;
+	/**
+	 * Preserva a transparência da imagem (canal alfa).
+	 *
+	 * Quando true:
+	 *  - desabilita a compressão automática (`compressInitial` é forçado para `null`),
+	 *    impedindo que a biblioteca subjacente reencodifique PNG/WebP como JPEG.
+	 *  - força a saída em PNG (ou WebP, quando a origem já é WebP) ao redimensionar
+	 *    via `maxWidth`/`maxHeight`/`maxSizeKb`.
+	 *
+	 * Útil quando o usuário precisa enviar logos com fundo transparente.
+	 * Default: `false`.
+	 */
+	preserveTransparency?: boolean;
+	/**
+	 * Habilita logs detalhados do fluxo de processamento da imagem no console
+	 * (formato detectado, decisões de compressão, mime de saída, tamanhos, etc).
+	 * Útil para diagnosticar problemas como perda de transparência.
+	 * Default: `false`.
+	 */
+	debug?: boolean;
 }
 
 export function ArchbaseImageEdit<T, ID>({
@@ -69,14 +97,36 @@ export function ArchbaseImageEdit<T, ID>({
 	radius = '4px',
 	aspectRatio,
 	objectFit = 'contain',
-	compressInitial = 80,
+	compressInitial = null,
 	onChangeImage,
 	disabledBase64Convertion,
 	innerRef,
 	variant,
 	imageBackgroundColor,
+	onProcessingChange,
+	maxWidth,
+	maxHeight,
+	maxSizeKb,
+	preserveTransparency = false,
+	debug = false,
 	...otherProps
 }: ArchbaseImageEditProps<T, ID>) {
+	// Log inicial das props relevantes — só quando elas realmente mudarem
+	// (evita "loop" de logs causado por re-renders do Mantine/dataSource).
+	useEffect(() => {
+		if (!debug) return;
+		// eslint-disable-next-line no-console
+		console.log('[ArchbaseImageEdit] props', {
+			dataField,
+			preserveTransparency,
+			compressInitial,
+			maxWidth,
+			maxHeight,
+			maxSizeKb,
+			disabledBase64Convertion,
+			effectiveCompressInitial: preserveTransparency ? null : compressInitial,
+		});
+	}, [debug, dataField, preserveTransparency, compressInitial, maxWidth, maxHeight, maxSizeKb, disabledBase64Convertion]);
 	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
 	const v1v2Compatibility = useArchbaseV1V2Compatibility<string | undefined>(
 		'ArchbaseImageEdit',
@@ -120,7 +170,8 @@ export function ArchbaseImageEdit<T, ID>({
 			}
 		}
 
-		if (isBase64(initialValue) && !disabledBase64Convertion) {
+		const wasBase64 = isBase64(initialValue) && !disabledBase64Convertion;
+		if (wasBase64) {
 			initialValue = atob(initialValue);
 		}
 
@@ -138,6 +189,7 @@ export function ArchbaseImageEdit<T, ID>({
 				event.type === DataSourceEventNames.recordChanged ||
 				event.type === DataSourceEventNames.afterScroll ||
 				event.type === DataSourceEventNames.afterCancel ||
+				event.type === DataSourceEventNames.afterInsert ||
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
@@ -189,6 +241,19 @@ useEffect(() => {
 	}, []);
 
 	const handleChangeImage = (image: string | undefined) => {
+		if (debug) {
+			const head = typeof image === 'string' ? image.slice(0, 64) : image;
+			const mimeMatch = typeof image === 'string' ? image.match(/^data:(image\/[a-zA-Z+\-.]+);/) : null;
+			// eslint-disable-next-line no-console
+			console.log('[ArchbaseImageEdit] handleChangeImage', {
+				dataField,
+				incomingMime: mimeMatch?.[1] ?? '(no data uri)',
+				incomingHead: head,
+				lengthChars: image?.length ?? 0,
+				approxSizeKb: image ? Math.ceil(((3 / 4) * image.length) / 1024) : 0,
+			});
+		}
+
 		// ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
 		const hasError = internalError || contextError;
 		if (hasError) {
@@ -199,15 +264,27 @@ useEffect(() => {
 		const changedValue = image;
 		setValue((_prev) => changedValue);
 
-		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
+		if (dataSource && !dataSource.isBrowsing() && dataField) {
+			// ✅ CORRIGIDO: Normalizar valores para comparação
+			const currentFieldValue = dataSource.getFieldValue(dataField);
+
+			// Preparar valor para salvar
 			let valueToSave: string | undefined;
 			if (!changedValue) {
 				valueToSave = undefined;
 			} else {
 				valueToSave = disabledBase64Convertion ? changedValue : btoa(changedValue);
 			}
-			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
-			v1v2Compatibility.handleValueChange(valueToSave);
+
+			// ✅ Normalizar ambos os valores para comparação (null, undefined, '' → undefined)
+			const normalizedCurrent = currentFieldValue || undefined;
+			const normalizedNew = valueToSave || undefined;
+
+			// Só atualiza se realmente mudou
+			if (normalizedCurrent !== normalizedNew) {
+				// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
+				v1v2Compatibility.handleValueChange(valueToSave);
+			}
 		}
 		if (onChangeImage) {
 			onChangeImage(image);
@@ -234,12 +311,15 @@ useEffect(() => {
 				<ArchbaseImagePickerEditor
 					imageSrcProp={value}
 					variant={variant}
+					onProcessingChange={onProcessingChange}
 					config={{
 						borderRadius: radius,
 						width,
 						height,
 						objectFit,
-						compressInitial,
+						// preserveTransparency desabilita a compressão automática
+						// (que internamente força conversão para JPEG)
+						compressInitial: preserveTransparency ? null : compressInitial,
 						showImageSize: !isReadOnly(),
 						hideDeleteBtn: isReadOnly(),
 						hideDownloadBtn: isReadOnly(),
@@ -247,6 +327,11 @@ useEffect(() => {
 						hideAddBtn: isReadOnly(),
 						onChangeImage: handleChangeImage,
 						imageBackgroundColor,
+						maxWidth,
+						maxHeight,
+						maxSizeKb,
+						preserveTransparency,
+						debug,
 					}}
 				/>
 			</Input.Wrapper>

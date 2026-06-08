@@ -31,6 +31,10 @@ const withMDX = createMDX({
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
+  // Habilitar ESM externals para resolver conflitos CJS/ESM
+  experimental: {
+    esmExternals: 'loose',
+  },
   // basePath removido para deploy em subdomínio dedicado (react.archbase.dev)
   // Se precisar usar subpath, descomente a linha abaixo:
   // basePath: process.env.NODE_ENV === 'production' ? '/docs' : undefined,
@@ -46,6 +50,8 @@ const nextConfig = {
     'suneditor-react',
     'react-mosaic-component',
     'rdndmb-html5-to-touch',
+    'react-markdown-editor-lite',
+    'sheet-happens',
   ],
   webpack: (config, { isServer }) => {
     // Prevent next/document from being bundled outside of _document

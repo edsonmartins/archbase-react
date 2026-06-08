@@ -202,6 +202,7 @@ export function ArchbaseMaskEdit<T, ID>(props: ArchbaseMaskEditProps<any, any>) 
 				event.type === DataSourceEventNames.recordChanged ||
 				event.type === DataSourceEventNames.afterScroll ||
 				event.type === DataSourceEventNames.afterCancel ||
+				event.type === DataSourceEventNames.afterInsert ||
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();

@@ -141,6 +141,7 @@ export function ArchbaseJsonEdit<T, ID>({
 				event.type === DataSourceEventNames.recordChanged ||
 				event.type === DataSourceEventNames.afterScroll ||
 				event.type === DataSourceEventNames.afterCancel ||
+				event.type === DataSourceEventNames.afterInsert ||
 				event.type === DataSourceEventNames.afterEdit
 			) {
 				loadDataSourceFieldValue();
