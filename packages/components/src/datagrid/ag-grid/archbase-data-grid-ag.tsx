@@ -99,6 +99,7 @@ import {
   type GridReadyEvent,
   type SelectionChangedEvent,
   type CellDoubleClickedEvent,
+  type CellFocusedEvent,
   type SortChangedEvent,
   type FilterChangedEvent,
   type RowSelectionOptions,
@@ -668,6 +669,47 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
       }
     },
     [onSelectedRowsChanged, dataSource]
+  );
+
+  // Cell focus handler — mantém o registro atual (cursor) do DataSource em sincronia
+  // com a linha focada, tanto no clique quanto na navegação por teclado (setas).
+  // A seleção via checkbox (onSelectionChanged) é independente e continua dirigindo
+  // ações em lote; este handler cuida apenas do cursor usado por formulários de edição.
+  // Replica o comportamento da grid anterior (evento cellFocusIn do MUI X DataGrid).
+  const onCellFocused = useCallback(
+    (event: CellFocusedEvent) => {
+      if (syncInProgress.current) return;
+      if (event.rowIndex == null) return;
+
+      const node = event.api.getDisplayedRowAtIndex(event.rowIndex);
+      const data = node?.data as T | undefined;
+      if (!data || !dataSource.gotoRecordByData) return;
+
+      // Evita sincronizar (e emitir afterScroll) quando o registro focado já é o
+      // atual do DataSource — gotoRecordByData emite o evento mesmo sem mudar o
+      // cursor, o que geraria eventos redundantes e risco de loop.
+      const currentRecord = dataSource.getCurrentRecord?.();
+      if (currentRecord) {
+        try {
+          const currentId = safeGetRowId(currentRecord, getRowId);
+          const focusedId = safeGetRowId(data, getRowId);
+          if (String(currentId) === String(focusedId)) return;
+        } catch {
+          // se a comparação falhar, segue com a sincronização
+        }
+      }
+
+      syncInProgress.current = true;
+      try {
+        dataSource.gotoRecordByData(data);
+      } catch (error) {
+        console.error('[CELL FOCUS] Error syncing with DataSource:', error);
+      }
+      setTimeout(() => {
+        syncInProgress.current = false;
+      }, 100);
+    },
+    [dataSource, getRowId]
   );
 
   // Cell double click handler
@@ -1293,6 +1335,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
           rowSelection={rowSelection}
           onGridReady={onGridReady}
           onSelectionChanged={onSelectionChanged}
+          onCellFocused={onCellFocused}
           onCellDoubleClicked={onCellDoubleClicked}
           onSortChanged={onSortChanged}
           onFilterChanged={onFilterChanged}
