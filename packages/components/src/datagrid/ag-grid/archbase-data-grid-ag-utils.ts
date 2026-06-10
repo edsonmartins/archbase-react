@@ -4,6 +4,7 @@
  * Helper functions for AG Grid implementation.
  */
 import type { ColDef, SortModelItem } from 'ag-grid-community';
+import { builder, emit } from '@archbase/core';
 import type { IArchbaseDataSourceBase } from '@archbase/data';
 import type {
   ArchbaseFilterDefinition,
@@ -143,19 +144,22 @@ export const buildFilterExpression = (
       let filterExpr = '';
       switch (type) {
         case 'contains':
-          filterExpr = `${field}==*${value}*`;
+          filterExpr = `${field}==^*${value}*`;
+          break;
+        case 'notContains':
+          filterExpr = `${field}!=^*${value}*`;
           break;
         case 'equals':
-          filterExpr = `${field}==${value}`;
+          filterExpr = emit(builder.eq(field, value));
           break;
         case 'notEqual':
-          filterExpr = `${field}!=${value}`;
+          filterExpr = emit(builder.neq(field, value));
           break;
         case 'startsWith':
-          filterExpr = `${field}==${value}*`;
+          filterExpr = `${field}==^${value}*`;
           break;
         case 'endsWith':
-          filterExpr = `${field}==*${value}`;
+          filterExpr = `${field}==^*${value}`;
           break;
         case 'blank':
           filterExpr = `${field}==null`;
@@ -164,24 +168,31 @@ export const buildFilterExpression = (
           filterExpr = `${field}!=null`;
           break;
         case 'greaterThan':
-          filterExpr = `${field}>${value}`;
+          filterExpr = emit(builder.gt(field, value));
           break;
         case 'greaterThanOrEqual':
-          filterExpr = `${field}>=${value}`;
+          filterExpr = emit(builder.ge(field, value));
           break;
         case 'lessThan':
-          filterExpr = `${field}<${value}`;
+          filterExpr = emit(builder.lt(field, value));
           break;
         case 'lessThanOrEqual':
-          filterExpr = `${field}<=${value}`;
+          filterExpr = emit(builder.le(field, value));
           break;
         case 'inRange':
-          filterExpr = `${field}>=${value};${field}<=${filterTo}`;
+          filterExpr = emit(builder.bt(field, value, filterTo));
           break;
         default:
           if (value) {
-            filterExpr = `${field}==${value}`;
+            filterExpr = emit(builder.eq(field, value));
           }
+      }
+
+      // Handle set filter (enum) — values array from ArchbaseEnumSetFilter
+      if (!filterExpr && values && Array.isArray(values) && values.length > 0) {
+        filterExpr = values.length === 1
+          ? emit(builder.eq(field, String(values[0])))
+          : emit(builder.in(field, values.map(String)));
       }
 
       if (filterExpr) {

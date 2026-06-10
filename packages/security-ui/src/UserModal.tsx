@@ -8,7 +8,6 @@ import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit, A
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@archbase/data'
 import { ArchbaseNotifications } from '@archbase/components'
 import { Grid, Group, Input, ScrollArea, Space, Stack, Text, Modal, Button } from '@mantine/core'
-import { useFocusTrap } from '@mantine/hooks'
 import { useArchbaseTranslation } from '@archbase/core';
 import React, { useEffect, useState } from 'react'
 import { ArchbaseDualListSelector } from './ArchbaseDualListSelector'
