@@ -144,10 +144,10 @@ export const buildFilterExpression = (
       let filterExpr = '';
       switch (type) {
         case 'contains':
-          filterExpr = `${field}==*${value}*`;
+          filterExpr = `${field}==^*${value}*`;
           break;
         case 'notContains':
-          filterExpr = `${field}!=*${value}*`;
+          filterExpr = `${field}!=^*${value}*`;
           break;
         case 'equals':
           filterExpr = emit(builder.eq(field, value));
@@ -156,10 +156,10 @@ export const buildFilterExpression = (
           filterExpr = emit(builder.neq(field, value));
           break;
         case 'startsWith':
-          filterExpr = `${field}==${value}*`;
+          filterExpr = `${field}==^${value}*`;
           break;
         case 'endsWith':
-          filterExpr = `${field}==*${value}`;
+          filterExpr = `${field}==^*${value}`;
           break;
         case 'blank':
           filterExpr = `${field}==null`;
