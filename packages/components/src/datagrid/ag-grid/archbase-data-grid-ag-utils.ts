@@ -146,6 +146,9 @@ export const buildFilterExpression = (
         case 'contains':
           filterExpr = `${field}==*${value}*`;
           break;
+        case 'notContains':
+          filterExpr = `${field}!=*${value}*`;
+          break;
         case 'equals':
           filterExpr = emit(builder.eq(field, value));
           break;
