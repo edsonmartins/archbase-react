@@ -147,10 +147,10 @@ export const buildFilterExpression = (
           filterExpr = `${field}==*${value}*`;
           break;
         case 'equals':
-          filterExpr = `${field}==${value}`;
+          filterExpr = emit(builder.eq(field, value));
           break;
         case 'notEqual':
-          filterExpr = `${field}!=${value}`;
+          filterExpr = emit(builder.neq(field, value));
           break;
         case 'startsWith':
           filterExpr = `${field}==${value}*`;
@@ -165,23 +165,23 @@ export const buildFilterExpression = (
           filterExpr = `${field}!=null`;
           break;
         case 'greaterThan':
-          filterExpr = `${field}>${value}`;
+          filterExpr = emit(builder.gt(field, value));
           break;
         case 'greaterThanOrEqual':
-          filterExpr = `${field}>=${value}`;
+          filterExpr = emit(builder.ge(field, value));
           break;
         case 'lessThan':
-          filterExpr = `${field}<${value}`;
+          filterExpr = emit(builder.lt(field, value));
           break;
         case 'lessThanOrEqual':
-          filterExpr = `${field}<=${value}`;
+          filterExpr = emit(builder.le(field, value));
           break;
         case 'inRange':
-          filterExpr = `${field}>=${value};${field}<=${filterTo}`;
+          filterExpr = emit(builder.bt(field, value, filterTo));
           break;
         default:
           if (value) {
-            filterExpr = `${field}==${value}`;
+            filterExpr = emit(builder.eq(field, value));
           }
       }
 
