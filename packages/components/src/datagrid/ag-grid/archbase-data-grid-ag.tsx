@@ -588,6 +588,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
       filterParams: {
         buttons: ['reset', 'apply'],
         closeOnApply: true,
+        maxNumConditions: 1,
       },
     }),
     [enableColumnResizing, allowColumnFilters]
