@@ -372,6 +372,52 @@ function parseExports(filePath, components) {
       });
     }
   }
+
+  // Handle: export * from './SomeComponent' — barrels que reexportam arquivos planos
+  // (ex.: packages/template usa `export * from './ArchbaseFormTemplate'`).
+  const starRegex = /export\s+\*\s+from\s+['"](\.[^'"]+)['"]/g;
+  let star;
+  while ((star = starRegex.exec(content)) !== null) {
+    const source = star[1];
+    const absSource = path.resolve(path.dirname(filePath), source);
+    const resolved = resolveSourceFile(absSource);
+    if (!resolved) continue;
+    // Diretórios com index.ts já são percorridos pelo walk(); só processamos arquivos planos.
+    if (/index\.tsx?$/.test(path.basename(resolved))) continue;
+    const pkg = derivePackageName(filePath);
+    for (const name of extractExportedNames(resolved)) {
+      const relSource = path.relative(repoRoot, resolved);
+      const tags = deriveTags(name, relSource);
+      const existing = components.get(name);
+      components.set(name, {
+        name,
+        description: existing?.description || '',
+        sourcePath: relSource,
+        exportsFrom: `@archbase/${pkg}`,
+        props: existing?.props || [],
+        examples: existing?.examples || [],
+        tags: tags.length ? tags : existing?.tags || []
+      });
+    }
+  }
+}
+
+// Extrai nomes exportados de um arquivo: `export const/function/class Nome` e `export { A, B }`.
+function extractExportedNames(file) {
+  const text = fs.readFileSync(file, 'utf-8');
+  const names = new Set();
+  const declRe = /export\s+(?:default\s+)?(?:async\s+)?(?:const|function|class)\s+([A-Za-z_$][\w$]*)/g;
+  let m;
+  while ((m = declRe.exec(text)) !== null) names.add(m[1]);
+  const braceRe = /export\s+(?!\*)(?:type\s+)?\{([^}]+)\}(?!\s+from)/g;
+  while ((m = braceRe.exec(text)) !== null) {
+    m[1].split(',').map((n) => n.trim()).filter(Boolean).forEach((nameRaw) => {
+      if (nameRaw.startsWith('type ')) return;
+      const name = nameRaw.includes(' as ') ? nameRaw.split(' as ').pop().trim() : nameRaw;
+      if (name) names.add(name);
+    });
+  }
+  return Array.from(names);
 }
 
 function enrichWithProps(components) {

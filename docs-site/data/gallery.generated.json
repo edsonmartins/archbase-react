@@ -1,0 +1,1412 @@
+{
+  "generatedAt": "2026-06-21",
+  "catalogVersion": "0.6.1",
+  "total": 212,
+  "documented": 57,
+  "categories": [
+    {
+      "id": "template",
+      "label": "Templates (CRUD, Form, Grid)",
+      "components": [
+        {
+          "name": "ArchbaseAdvancedSmartButton",
+          "description": "",
+          "pkg": "@archbase/template",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseConditionalSecurityWrapper",
+          "description": "",
+          "pkg": "@archbase/template",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseFormModalTemplate",
+          "description": "template de formulário em modal com integração a DataSource v1/v2.",
+          "pkg": "@archbase/template",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseFormTemplate",
+          "description": "template de formulário CRUD com integração a DataSource v1/v2.",
+          "pkg": "@archbase/template",
+          "docLink": "/templates/form-template"
+        },
+        {
+          "name": "ArchbaseGridTemplate",
+          "description": "template de grid/data table com integração a DataSource v1/v2.",
+          "pkg": "@archbase/template",
+          "docLink": "/templates/grid-template"
+        },
+        {
+          "name": "ArchbaseLookupDataTemplate",
+          "description": "template de lookup/pesquisa com grid de dados em modal.",
+          "pkg": "@archbase/template",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMasonryTemplate",
+          "description": "template de layout masonry responsivo com integração a DataSource.",
+          "pkg": "@archbase/template",
+          "docLink": "/templates/masonry-template"
+        },
+        {
+          "name": "ArchbaseModalTemplate",
+          "description": "template de modal com ações padrão e binding ao DataSource.",
+          "pkg": "@archbase/template",
+          "docLink": "/templates/modal-template"
+        },
+        {
+          "name": "ArchbasePanelTemplate",
+          "description": "template de painel com toolbar de ações e binding ao DataSource.",
+          "pkg": "@archbase/template",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSearchTemplate",
+          "description": "template de busca com filtros, resultados e binding ao DataSource (placeholder).",
+          "pkg": "@archbase/template",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSmartActionButton",
+          "description": "",
+          "pkg": "@archbase/template",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceTemplate",
+          "description": "template de página com filtros, toolbar e grid/conteúdo, integrado ao DataSource.",
+          "pkg": "@archbase/template",
+          "docLink": "/templates/space-template"
+        },
+        {
+          "name": "ArchbaseTwoColumnFormTemplate",
+          "description": "template de formulário com layout de duas colunas.",
+          "pkg": "@archbase/template",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "editors",
+      "label": "Editores & Inputs",
+      "components": [
+        {
+          "name": "ArchbaseAIPromptInput",
+          "description": "Campo de texto especializado para prompts de IA com histórico, sugestões e voz.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseAsyncMultiSelect",
+          "description": "Seleção múltipla com busca assíncrona, paginação e integração com DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/select-inputs#archbaseasyncmultiselect"
+        },
+        {
+          "name": "ArchbaseAsyncSelect",
+          "description": "Campo de seleção com busca assíncrona, paginação e debounce, ideal para grandes volumes de dados.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/select-inputs#archbaseasyncselect"
+        },
+        {
+          "name": "ArchbaseAvatarEdit",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseBarcodeScanner",
+          "description": "Scanner de códigos de barras e QR codes usando a API nativa BarcodeDetector.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/scanner-grid#archbasebarcodescanner"
+        },
+        {
+          "name": "ArchbaseCepInput",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCheckbox",
+          "description": "Checkbox com integração ao DataSource, suporte a valores customizados (trueValue/falseValue).",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/boolean-inputs#archbasecheckbox"
+        },
+        {
+          "name": "ArchbaseChip",
+          "description": "Chip/toggle para valores booleanos com visual de badge, integração com DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/boolean-inputs#archbasechip"
+        },
+        {
+          "name": "ArchbaseChipGroup",
+          "description": "Grupo de chips para seleção única ou múltipla de valores, ideal para categorias e filtros.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/boolean-inputs#archbasechipgroup"
+        },
+        {
+          "name": "ArchbaseColorGradientPicker",
+          "description": "Seletor de cores avançado com swatches, eyedropper e suporte a alpha.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseColorPicker",
+          "description": "editor de formulários focado em color picker.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCountdownProgress",
+          "description": "editor de formulários focado em countdown progress.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCpfCnpjInput",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCronExpressionEdit",
+          "description": "Editor de expressões cron com modal visual para configurar tarefas agendadas.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/specialized#archbasecronexpressionedit"
+        },
+        {
+          "name": "ArchbaseCronExpressionEditor",
+          "description": "editor de formulários focado em cron expression editor.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCurrencyInput",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDatePickerEdit",
+          "description": "Seletor de data com múltiplos formatos e integração ao DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/date-time#archbasedatepickeredit"
+        },
+        {
+          "name": "ArchbaseDatePickerRange",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDateRangeQuickPicker",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDateTimePickerEdit",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDateTimePickerRange",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDualListbox",
+          "description": "Componente de seleção com duas listas lado a lado para mover itens entre disponíveis e selecionados. Implementado com Mantine puro.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/new-editors#archbaseduallistbox"
+        },
+        {
+          "name": "ArchbaseEdit",
+          "description": "Campo de texto com integração automática ao DataSource v1/v2, suporte a validação e estado controlado.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/text-inputs#archbaseedit"
+        },
+        {
+          "name": "ArchbaseFileAttachment",
+          "description": "Componente para upload de múltiplos arquivos com validação de tipo e tamanho.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/rich-content#archbasefileattachment"
+        },
+        {
+          "name": "ArchbaseFlatColorPicker",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseImageEdit",
+          "description": "Componente para upload e edição de imagens com suporte a DataSource, drag and drop e preview.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/rich-content#archbaseimageedit"
+        },
+        {
+          "name": "ArchbaseInPlaceEditor",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseJsonEdit",
+          "description": "Editor de JSON com syntax highlighting, validação e formatação automática.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/specialized#archbasejsonedit"
+        },
+        {
+          "name": "ArchbaseKeyValueEditor",
+          "description": "Editor de pares chave-valor para configurações, variáveis de ambiente e metadados.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/specialized#archbasekeyvalueeditor"
+        },
+        {
+          "name": "ArchbaseLightGrid",
+          "description": "Grid leve de alta performance baseado em canvas. Baseado em sheet-happens.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/scanner-grid#archbaselightgrid"
+        },
+        {
+          "name": "ArchbaseLookupEdit",
+          "description": "Campo com botão de busca para seleção de valores através de modal/popup.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/specialized#archbaselookupedit"
+        },
+        {
+          "name": "ArchbaseLookupNumber",
+          "description": "Campo de entrada numérica com capacidade de lookup de informações relacionadas.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/number-inputs#archbaselookupnumber"
+        },
+        {
+          "name": "ArchbaseLookupSelect",
+          "description": "Campo de seleção com capacidade de lookup em fontes de dados externas ou internas.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/select-inputs#archbaselookupselect"
+        },
+        {
+          "name": "ArchbaseMarkdownEdit",
+          "description": "editor Markdown (react-markdown-editor-lite) com binding opcional ao dataSource.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMaskEdit",
+          "description": "Campo de texto com máscaras predefinidas (CPF, CNPJ, CEP, telefone, placa) e customizadas, integração com DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/text-inputs#archbasemaskedit"
+        },
+        {
+          "name": "ArchbaseMentionInput",
+          "description": "Componente de entrada de texto com suporte a menções (@usuários, #tags). Baseado no react-mentions.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/new-editors#archbasementioninput"
+        },
+        {
+          "name": "ArchbaseMultiEmail",
+          "description": "Componente para entrada de múltiplos endereços de e-mail com validação automática. Baseado no react-multi-email.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/new-editors#archbasemultiemail"
+        },
+        {
+          "name": "ArchbaseMultiSelect",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMultiViewCalendar",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMultiViewCalendarWithPresets",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseNumberEdit",
+          "description": "Campo numérico com formatação, separadores de milhar/decimal, prefixo/sufixo e integração ao DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/number-inputs#archbasenumberedit"
+        },
+        {
+          "name": "ArchbaseNumberStepper",
+          "description": "Campo numérico com botões de incremento/decremento para quantidades e contadores.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseOperatingHoursEditor",
+          "description": "editor de formulários focado em operating hours editor.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseOTPInput",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbasePasswordEdit",
+          "description": "Campo de senha com toggle de visibilidade, integração com DataSource e suporte a validação.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/text-inputs#archbasepasswordedit"
+        },
+        {
+          "name": "ArchbaseRadioGroup",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseRangeSlider",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseRating",
+          "description": "Componente de avaliação com estrelas, suporte a frações e integração com DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/specialized#archbaserating"
+        },
+        {
+          "name": "ArchbaseRichTextEdit",
+          "description": "Editor de texto rico baseado no SunEditor com formatação, listas, tabelas, imagens e integração com DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/rich-content#archbaserichtextedit"
+        },
+        {
+          "name": "ArchbaseSelect",
+          "description": "Campo de seleção com integração ao DataSource, suporte a lookup e opções dinâmicas.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/select-inputs#archbaseselect"
+        },
+        {
+          "name": "ArchbaseSignaturePad",
+          "description": "Componente para captura de assinaturas digitais com exportação em base64. Baseado no react-signature-canvas.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/new-editors#archbasesignaturepad"
+        },
+        {
+          "name": "ArchbaseSpeechToTextArea",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpeechToTextButton",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpeechToTextInput",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpreadsheet",
+          "description": "Planilha interativa com fórmulas, formatação e edição, baseada em @fortune-sheet/react.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/data-display/advanced-data#archbasespreadsheet"
+        },
+        {
+          "name": "ArchbaseSwitch",
+          "description": "Switch/Toggle com integração ao DataSource, labels on/off customizáveis.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/boolean-inputs#archbaseswitch"
+        },
+        {
+          "name": "ArchbaseTagInput",
+          "description": "Componente de entrada de tags com separadores, limite de tags e integração com DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/new-editors#archbasetaginput"
+        },
+        {
+          "name": "ArchbaseTagInputEdit",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseTextArea",
+          "description": "Campo de texto multilinha com autosize, múltiplos tamanhos e integração com DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/text-inputs#archbasetextarea"
+        },
+        {
+          "name": "ArchbaseTimeEdit",
+          "description": "Seletor de hora com formato 12h/24h, integração com DataSource e suporte a segundos.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/date-time#archbasetimeedit"
+        },
+        {
+          "name": "ArchbaseTimeRangeSelector",
+          "description": "editor de formulários focado em time range selector.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseTreeSelect",
+          "description": "Seleção hierárquica com estrutura de árvore, múltiplos níveis e integração com DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/select-inputs#archbasetreeselect"
+        }
+      ]
+    },
+    {
+      "id": "datagrid",
+      "label": "DataGrid",
+      "components": [
+        {
+          "name": "ArchbaseDataGrid",
+          "description": "Grid de dados poderoso com virtualização, edição inline, ordenação, filtros e integração total ao DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/data-display/datagrid#archbasedatagrid"
+        }
+      ]
+    },
+    {
+      "id": "lists",
+      "label": "Listas & Árvores",
+      "components": [
+        {
+          "name": "ArchbaseList",
+          "description": "lista com seleção opcional e integração com dataSource.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseListViewTable",
+          "description": "Tabela no estilo Finder do macOS com ordenação, redimensionamento de colunas e suporte a hierarquias.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/data-display/list-view#archbaselistviewtable"
+        },
+        {
+          "name": "ArchbaseMasonry",
+          "description": "layout masonry responsivo com provider de contexto.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseTreeList",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseTreeView",
+          "description": "treeview com seleção e expansão, suporta integração com dataSource.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "charts",
+      "label": "Gráficos & Timeline",
+      "components": [
+        {
+          "name": "ArchbaseArcGauge",
+          "description": "Gauge circular (arco) para exibição de métricas e indicadores de performance.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseGantt",
+          "description": "Gráfico de Gantt interativo para cronogramas de projetos com dependências, progresso e integração com DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/data-display/advanced-data#archbasegantt"
+        },
+        {
+          "name": "ArchbaseLinearGauge",
+          "description": "Gauge linear (barra) para exibição de métricas com zonas de cor configuráveis.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseResourceTimeline",
+          "description": "Timeline de recursos para alocação de pessoas, equipamentos e salas, baseada em vis-timeline.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/data-display/advanced-data#archbaseresourcetimeline"
+        },
+        {
+          "name": "ArchbaseSparkline",
+          "description": "Mini gráfico de linha compacto para exibição de tendências em espaços reduzidos.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseTimeline",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseVisTimeline",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "display",
+      "label": "Exibição & Visualização",
+      "components": [
+        {
+          "name": "ArchbaseAnimatedList",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseAnimationWrapper",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseBarcodeGenerator",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCardCarousel",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCarousel",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCodeViewer",
+          "description": "Visualizador de código com syntax highlighting, numeração de linhas e botão de copiar.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/data-display/display-tools#archbasecodeviewer"
+        },
+        {
+          "name": "ArchbaseDiffViewer",
+          "description": "Visualizador de diferenças entre dois textos com modo split e unificado.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/data-display/display-tools#archbasediffviewer"
+        },
+        {
+          "name": "ArchbaseFadeInWhenVisible",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseImageCarousel",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseInfiniteList",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseJsonTree",
+          "description": "Visualizador de JSON em formato de árvore expansível para inspeção interativa de dados.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/data-display/display-tools#archbasejsontree"
+        },
+        {
+          "name": "ArchbaseLightbox",
+          "description": "Visualizador de imagens em tela cheia com zoom, navegação por teclado, thumbnails, slideshow e suporte a captions.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMarquee",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbasePhotoAlbum",
+          "description": "Galeria de fotos responsiva com três layouts: rows (altura uniforme), columns (estilo Pinterest) e masonry (colunas balanceadas).",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseQRCode",
+          "description": "Gerador de QR Code customizável com controle de tamanho, cores e nível de correção de erro.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/data-display/display-tools#archbaseqrcode"
+        },
+        {
+          "name": "ArchbaseTextTicker",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseTooltipRich",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseTooltipUser",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseVirtualGrid",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseVirtualList",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "viewers",
+      "label": "Visualizadores de Documentos",
+      "components": [
+        {
+          "name": "ArchbaseDocViewer",
+          "description": "Visualizador universal de documentos com suporte a PDF, imagens, Office e texto.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/viewers/document-tools#archbasedocviewer"
+        },
+        {
+          "name": "ArchbaseFilePreviewer",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbasePDFViewer",
+          "description": "Visualizador de PDF completo com anotações (destaques, comentários, marcadores), navegação, zoom, rotação e integração com DataSource.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/viewers/pdf-viewer#archbasepdfviewer"
+        },
+        {
+          "name": "ArchbaseXmlViewer",
+          "description": "Visualizador de XML com syntax highlighting, formatação automática e numeração de linhas.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/data-display/display-tools#archbasexmlviewer"
+        }
+      ]
+    },
+    {
+      "id": "media",
+      "label": "Imagem & Mídia",
+      "components": [
+        {
+          "name": "ArchbaseImage",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseImagePickerEditor",
+          "description": "picker + editor de imagens próprio do Archbase.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMicrosoftAvatar",
+          "description": "componente Archbase focado em microsoft avatar.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseVideoPlayer",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "markdown",
+      "label": "Markdown & Código",
+      "components": [
+        {
+          "name": "ArchbaseCodeBlock",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseInlineCode",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseLinkRenderer",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMarkdown",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "forms",
+      "label": "Formulários",
+      "components": [
+        {
+          "name": "ArchbaseFieldArray",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseFormWizard",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseJsonSchemaEditor",
+          "description": "editor visual de JSON Schema (objetos/arrays/avançado).",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseStepper",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "filters",
+      "label": "Filtros",
+      "components": [
+        {
+          "name": "ArchbaseColumnSelector",
+          "description": "Seletor de colunas com checkboxes e reordenação para configurar visibilidade.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/filters/column-tools#archbasecolumnselector"
+        },
+        {
+          "name": "ArchbaseCompositeFilters",
+          "description": "Componente de filtros compostos com interface interativa e saída em formato RSQL para integração com APIs.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/filters/composite-filters#archbasecompositefilters"
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "label": "Filtros Avançados & QueryBuilder",
+      "components": [
+        {
+          "name": "ArchbaseAdvancedFilter",
+          "description": "",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCompositeFilter",
+          "description": "",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDetailedFilter",
+          "description": "",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseFeedback",
+          "description": "componente Archbase focado em feedback.",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseFilterSelectFields",
+          "description": "componente Archbase focado em filter select fields.",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseFilterSelectRange",
+          "description": "componente Archbase focado em filter select range.",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseGlobalFilter",
+          "description": "",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseInputSearch",
+          "description": "componente Archbase focado em input search.",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseQueryBuilder",
+          "description": "componente Archbase focado em query builder.",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSaveFilter",
+          "description": "componente Archbase focado em save filter.",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSimpleFilter",
+          "description": "",
+          "pkg": "@archbase/advanced",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "feedback",
+      "label": "Feedback & Notificações",
+      "components": [
+        {
+          "name": "ArchbaseAlert",
+          "description": "wrapper de alerta (Mantine Alert) para feedback rápido.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCardSkeleton",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseChunkProgressBar",
+          "description": "Barra de progresso segmentada em chunks para visualizar etapas de processos.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDialog",
+          "description": "diálogo de confirmação/erro usando Mantine modals.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseFormSkeleton",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseKanbanSkeleton",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseListSkeleton",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseNotificationCenter",
+          "description": "Centro de notificações com ícone de sino, badge e lista em popover/drawer.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/feedback/notification-center#archbasenotificationcenter"
+        },
+        {
+          "name": "ArchbaseNotifications",
+          "description": "helpers para mostrar notificações Mantine (erro/sucesso/info).",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseOnboardingTour",
+          "description": "Tour interativo de onboarding para introduzir novos usuários às funcionalidades do sistema.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/feedback/onboarding#archbaseonboardingtour"
+        },
+        {
+          "name": "ArchbaseRipple",
+          "description": "Efeito de ondulação (ripple) estilo Material Design para feedback visual.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "navigation",
+      "label": "Navegação",
+      "components": [
+        {
+          "name": "ArchbaseActionSheet",
+          "description": "Bottom sheet para mobile com opções de ação, adaptativo para desktop.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseAppBar",
+          "description": "Barra superior de aplicação responsiva com logo, título, ações e menu burger.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseBottomNavigation",
+          "description": "Barra de navegação fixa na parte inferior para apps mobile/PWA.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseContextMenu",
+          "description": "Menu de contexto ativado por clique direito com suporte a submenus e ícones.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseKeyboardShortcutsModal",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseShortcutHint",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpotlight",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "buttons",
+      "label": "Botões & Ações",
+      "components": [
+        {
+          "name": "ArchbaseActionButtons",
+          "description": "grupo de ações padrão para fluxos CRUD.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpeedDial",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "layout",
+      "label": "Layout & Containers",
+      "components": [
+        {
+          "name": "ArchbaseAdvancedTabs",
+          "description": "",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDockableContainer",
+          "description": "layout estrutural focado em dockable container.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDockLayout",
+          "description": "Layout dockável estilo IDE com drag-and-drop, painéis flexíveis, splitters e presets prontos (dashboard, IDE, analytics, explorer). Baseado em dockview (MIT, zero-dependencies).",
+          "pkg": "@archbase/layout",
+          "docLink": "/components/layout/dock-layout#archbasedocklayout"
+        },
+        {
+          "name": "ArchbaseExpansionPanel",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseFloatingPanel",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseFloatingWindow",
+          "description": "",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseForm",
+          "description": "layout estrutural focado em form.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMosaicLayout",
+          "description": "Layout em mosaico (tiling) com painéis reorganizáveis, redimensionáveis e fecháveis. Baseado em react-mosaic-component.",
+          "pkg": "@archbase/layout",
+          "docLink": "/layout/advanced-layouts#archbasemosaiclayout"
+        },
+        {
+          "name": "ArchbaseResizableLayout",
+          "description": "Layout com painéis redimensionáveis via divisórias arrastáveis, persistência de estado e direção configurável. Baseado em react-resizable-panels.",
+          "pkg": "@archbase/layout",
+          "docLink": "/layout/advanced-layouts#archbaseresizablelayout"
+        },
+        {
+          "name": "ArchbaseSplitPane",
+          "description": "Layout com painéis redimensionáveis (horizontal/vertical), ideal para master-detail, editores com preview e dashboards.",
+          "pkg": "@archbase/layout",
+          "docLink": "/layout/split-pane#archbasesplitpane"
+        }
+      ]
+    },
+    {
+      "id": "printer",
+      "label": "Impressão",
+      "components": [
+        {
+          "name": "ArchbaseThermalPrinter",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "themes",
+      "label": "Temas",
+      "components": [
+        {
+          "name": "ArchbaseThemeColorEditor",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseThemeEditor",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "debug",
+      "label": "Debug & Inspeção",
+      "components": [
+        {
+          "name": "ArchbaseDebugInspector",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseJsonPathPicker",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseJsonView",
+          "description": "ferramenta devtools focado em json view.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseObjectInspector",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "admin",
+      "label": "Admin & Layout Administrativo",
+      "components": [
+        {
+          "name": "ArchbaseAdminLayoutFooter",
+          "description": "rodapé do layout admin.",
+          "pkg": "@archbase/admin",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseAdminLayoutHeader",
+          "description": "header do layout admin com ações de tema/idioma e usuário.",
+          "pkg": "@archbase/admin",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseAdminMainLayout",
+          "description": "layout administrativo base com header/nav/conteúdo.",
+          "pkg": "@archbase/admin",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseAdminTabContainer",
+          "description": "componente Archbase focado em admin tab container.",
+          "pkg": "@archbase/admin",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseAdvancedSidebar",
+          "description": "",
+          "pkg": "@archbase/admin",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseChangeLanguageAction",
+          "description": "componente Archbase focado em change language action.",
+          "pkg": "@archbase/admin",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseColorSchemeAction",
+          "description": "componente Archbase focado em color scheme action.",
+          "pkg": "@archbase/admin",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseHeaderNavAction",
+          "description": "componente Archbase focado em header nav action.",
+          "pkg": "@archbase/admin",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMantineSidebar",
+          "description": "Componente de sidebar moderno baseado em Mantine",
+          "pkg": "@archbase/admin",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMyProfileModal",
+          "description": "",
+          "pkg": "@archbase/admin",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "label": "Segurança",
+      "components": [
+        {
+          "name": "ArchbaseApiTokenView",
+          "description": "listagem e gestão de tokens de API.",
+          "pkg": "@archbase/security-ui",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDualListSelector",
+          "description": "duplo painel para mover itens entre permissões/roles.",
+          "pkg": "@archbase/security-ui",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseLogin",
+          "description": "componente de segurança focado em login.",
+          "pkg": "@archbase/security",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseProtectedComponent",
+          "description": "componente de segurança focado em protected component.",
+          "pkg": "@archbase/security",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseResetPassword",
+          "description": "",
+          "pkg": "@archbase/security",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSecureActionButton",
+          "description": "componente de segurança focado em secure action button.",
+          "pkg": "@archbase/security",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSecureFormField",
+          "description": "componente de segurança focado em secure form field.",
+          "pkg": "@archbase/security",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSecurityView",
+          "description": "visão completa de usuários/grupos/permissões.",
+          "pkg": "@archbase/security-ui",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseUser",
+          "description": "componente de segurança focado em user.",
+          "pkg": "@archbase/security",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseUsernameAndPassword",
+          "description": "componente de segurança focado em username and password.",
+          "pkg": "@archbase/security",
+          "docLink": null
+        }
+      ]
+    },
+    {
+      "id": "outros",
+      "label": "Outros Componentes",
+      "components": [
+        {
+          "name": "ArchbaseSpaceBottom",
+          "description": "layout estrutural focado em space bottom.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceBottomResizable",
+          "description": "layout estrutural focado em space bottom resizable.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceCentered",
+          "description": "layout estrutural focado em space centered.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceCenteredVertically",
+          "description": "layout estrutural focado em space centered vertically.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceCustom",
+          "description": "layout estrutural focado em space custom.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceFill",
+          "description": "layout estrutural focado em space fill.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceFixed",
+          "description": "layout estrutural focado em space fixed.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceInfo",
+          "description": "",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceLayer",
+          "description": "layout estrutural focado em space layer.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceLeft",
+          "description": "layout estrutural focado em space left.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceLeftResizable",
+          "description": "layout estrutural focado em space left resizable.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceOptions",
+          "description": "layout estrutural focado em space options.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpacePositioned",
+          "description": "layout estrutural focado em space positioned.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceRight",
+          "description": "layout estrutural focado em space right.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceRightResizable",
+          "description": "layout estrutural focado em space right resizable.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceTop",
+          "description": "layout estrutural focado em space top.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceTopResizable",
+          "description": "layout estrutural focado em space top resizable.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSpaceViewPort",
+          "description": "layout estrutural focado em space view port.",
+          "pkg": "@archbase/layout",
+          "docLink": null
+        }
+      ]
+    }
+  ]
+}
