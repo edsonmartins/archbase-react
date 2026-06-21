@@ -1,0 +1,195 @@
+.root {
+  width: 100%;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--mantine-radius-lg);
+  padding: 2.25rem 2rem 1.75rem;
+  margin-bottom: 2.5rem;
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  background:
+    radial-gradient(
+      850px circle at 0% -10%,
+      light-dark(rgba(34, 139, 230, 0.12), rgba(34, 139, 230, 0.18)),
+      transparent 42%
+    ),
+    radial-gradient(
+      750px circle at 100% -20%,
+      light-dark(rgba(190, 75, 219, 0.12), rgba(190, 75, 219, 0.2)),
+      transparent 45%
+    ),
+    radial-gradient(
+      700px circle at 60% 120%,
+      light-dark(rgba(21, 170, 191, 0.1), rgba(21, 170, 191, 0.16)),
+      transparent 50%
+    ),
+    light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+
+.heroTitle {
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  background: linear-gradient(
+    120deg,
+    var(--mantine-color-blue-6),
+    var(--mantine-color-violet-6) 50%,
+    var(--mantine-color-cyan-6)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.heroSubtitle {
+  font-size: 0.95rem;
+}
+
+/* ---------- Stat pills ---------- */
+.statPill {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 160px;
+  padding-right: 1.1rem;
+  background: var(--cat-light);
+  border: 1px solid transparent;
+  transition: transform 150ms ease;
+}
+
+.statPill:hover {
+  transform: translateY(-2px);
+}
+
+.statValue {
+  font-variant-numeric: tabular-nums;
+  color: light-dark(var(--mantine-color-dark-7), var(--mantine-color-white));
+}
+
+/* ---------- Search ---------- */
+.search {
+  max-width: 580px;
+}
+
+.search input {
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+/* ---------- Section ---------- */
+.section {
+  margin-bottom: 2.75rem;
+  scroll-margin-top: 80px;
+}
+
+.sectionHeader {
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--cat-light-hover);
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Card ---------- */
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
+  border-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
+/* Barra de destaque colorida no topo do card */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--cat-color);
+  opacity: 0.9;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--cat-color);
+  box-shadow: 0 14px 30px -16px var(--cat-color);
+}
+
+.cardIcon {
+  flex-shrink: 0;
+}
+
+.cardName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: light-dark(var(--mantine-color-dark-8), var(--mantine-color-gray-0));
+}
+
+.cardDescription {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.35;
+  min-height: 2.7em;
+}
+
+.pkgBadge {
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* ---------- Card sem documentação ---------- */
+.cardNoDoc {
+  border-style: dashed;
+  cursor: default;
+  opacity: 0.78;
+}
+
+.cardNoDoc::before {
+  background: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-3));
+  opacity: 0.55;
+}
+
+.cardNoDoc:hover {
+  transform: none;
+  box-shadow: none;
+  opacity: 0.95;
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.noDocBadge {
+  flex-shrink: 0;
+  text-transform: lowercase;
+}
+
+/* ---------- Empty ---------- */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
