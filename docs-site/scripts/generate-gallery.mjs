@@ -149,6 +149,20 @@ function catalogDescription(comp) {
 }
 
 function main() {
+  // Resiliente: se o catálogo não estiver disponível mas já houver um
+  // gallery.generated.json commitado, mantém o existente em vez de falhar o build.
+  if (!fs.existsSync(catalogPath)) {
+    if (fs.existsSync(outPath)) {
+      console.warn(
+        `[gallery] ${path.relative(repoRoot, catalogPath)} ausente — mantendo ${path.relative(repoRoot, outPath)} existente.`,
+      );
+      return;
+    }
+    throw new Error(
+      `component-catalog.json não encontrado em ${catalogPath} e não há gallery.generated.json para usar como fallback.`,
+    );
+  }
+
   const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
   const docMap = buildDocMap();
 
