@@ -11,6 +11,9 @@ WORKDIR /app
 # Copy all necessary config files from root
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json vite.config.shared.mjs ./
 
+# component-catalog.json: fonte da galeria de componentes (lido no prebuild do docs-site)
+COPY component-catalog.json ./
+
 # Copy packages and docs-site
 COPY packages/ ./packages/
 COPY docs-site/ ./docs-site/

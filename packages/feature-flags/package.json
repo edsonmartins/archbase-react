@@ -1,6 +1,6 @@
 {
   "name": "@archbase/feature-flags",
-  "version": "4.0.32",
+  "version": "4.0.34",
   "description": "Feature flags integration for Archbase React v3 using Unleash",
   "license": "MIT",
   "type": "module",
@@ -24,7 +24,7 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@mantine/core": "9.3.2",
+    "@mantine/core": "9.4.0",
     "react": "^18.3.0 || ^19.2.0",
     "react-dom": "^18.3.0 || ^19.2.0"
   },
