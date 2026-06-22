@@ -1,6 +1,6 @@
 {
   "name": "@archbase/layout",
-  "version": "4.0.33",
+  "version": "4.0.34",
   "description": "Layout components for Archbase React",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -59,10 +59,10 @@
     "vitest": "^2.0.0"
   },
   "peerDependencies": {
-    "@mantine/core": "9.3.2",
-    "@mantine/dates": "9.3.2",
-    "@mantine/hooks": "9.3.2",
-    "@mantine/notifications": "9.3.2",
+    "@mantine/core": "9.4.0",
+    "@mantine/dates": "9.4.0",
+    "@mantine/hooks": "9.4.0",
+    "@mantine/notifications": "9.4.0",
     "@tabler/icons-react": "^3.27.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
