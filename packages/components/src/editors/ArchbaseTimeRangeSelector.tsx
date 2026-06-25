@@ -17,6 +17,25 @@ const formatDate = (date: Date | null): string => {
   return date.toLocaleDateString();
 };
 
+// Formata uma data para "YYYY-MM-DD" em horário LOCAL (DatePickerInput do Mantine 9 é string-based).
+// Usar toISOString() aqui desloca o dia em fusos negativos (ex.: 21:00 BRT vira o dia seguinte em UTC).
+const toLocalDateInputValue = (date: Date | null): string | null => {
+  if (!date) return null;
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+// Aplica a data selecionada ("YYYY-MM-DD") preservando a hora já existente (ou a atual), em horário local.
+const applyDateInputValue = (value: string | null, current: Date | null): Date | null => {
+  if (!value) return null;
+  const [year, month, day] = value.split('-').map(Number);
+  const result = current ? new Date(current.getTime()) : new Date();
+  result.setFullYear(year, month - 1, day);
+  return result;
+};
+
 // Função para formatar o intervalo de datas para exibição resumida (versão curta para o botão)
 const formatDateRange = (start: Date | null, end: Date | null): string => {
   if (!start || !end) return 'Selecionar intervalo';
@@ -176,9 +195,7 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
 
   // Atualizar o estado quando o defaultRangeValue muda
   useEffect(() => {
-    console.log('[TimeRangeSelector] useEffect defaultRangeValue=%s, selectedRange=%s', defaultRangeValue, selectedRange);
     if (defaultRangeValue !== undefined) {
-      console.log('[TimeRangeSelector] setSelectedRange(%s)', defaultRangeValue);
       // Atualizar o selectedRange
       setSelectedRange(defaultRangeValue);
 
@@ -236,7 +253,6 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
 
   // Manipular a mudança de range (predefinido ou customizado)
   const handleRangeChange = (value: string | null) => {
-    console.log('[TimeRangeSelector] handleRangeChange value=%s', value);
     setSelectedRange(value);
 
     // Se não for range customizado, aplicar imediatamente
@@ -343,8 +359,8 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
                   <Group grow mt="xs">
                     <DatePickerInput
                       label="Data inicial"
-                      value={customRange.start ? customRange.start.toISOString().split('T')[0] : null}
-                      onChange={(date: string | null) => setCustomRange(prev => ({ ...prev, start: date ? new Date(date) : null }))}
+                      value={toLocalDateInputValue(customRange.start)}
+                      onChange={(date: string | null) => setCustomRange(prev => ({ ...prev, start: applyDateInputValue(date, prev.start) }))}
                       style={{ flex: 1 }}
                       popoverProps={{ withinPortal: false, closeOnClickOutside: false }}
                     />
@@ -365,8 +381,8 @@ export const ArchbaseTimeRangeSelector: FC<ArchbaseTimeRangeSelectorProps> = (pr
                   <Group grow mt="xs">
                     <DatePickerInput
                       label="Data final"
-                      value={customRange.end ? customRange.end.toISOString().split('T')[0] : null}
-                      onChange={(date: string | null) => setCustomRange(prev => ({ ...prev, end: date ? new Date(date) : null }))}
+                      value={toLocalDateInputValue(customRange.end)}
+                      onChange={(date: string | null) => setCustomRange(prev => ({ ...prev, end: applyDateInputValue(date, prev.end) }))}
                       style={{ flex: 1 }}
                       popoverProps={{ withinPortal: false, closeOnClickOutside: false }}
                     />
