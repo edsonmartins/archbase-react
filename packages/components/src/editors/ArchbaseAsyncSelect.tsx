@@ -135,6 +135,8 @@ export interface ArchbaseAsyncSelectProps<T, ID, O> {
 	converter?: (value: O) => any;
 	/** Function que busca o valor original antes de converter pelo valor de retorno do converter */
 	getConvertedOption?: (value: any) => Promise<O>;
+	/** Função que determina se uma opção individual está desabilitada */
+	isOptionDisabled?: (option: O) => boolean;
 }
 function buildOptions<O>(
 	initialOptions: O[],
@@ -210,7 +212,8 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 	innerRef,
 	onSearchChange,
 	converter,
-	getConvertedOption
+	getConvertedOption,
+	isOptionDisabled,
   }: ArchbaseAsyncSelectProps<T, ID, O>) {
 	const forceUpdate = useForceUpdate();
 
@@ -539,7 +542,11 @@ export function ArchbaseAsyncSelect<T, ID, O>({
 				{filteredOptions.slice(0, limit ? limit : filteredOptions.length).map((option) => {
 					const {key, ...rest} = option
 					return (
-					<Combobox.Option value={option.value} key={option.key}>
+					<Combobox.Option
+						value={option.value}
+						key={option.key}
+						disabled={isOptionDisabled ? isOptionDisabled(option.origin) : false}
+					>
 						{ItemComponent ? <ItemComponent {...rest} /> : option.label}
 					</Combobox.Option>
 					)

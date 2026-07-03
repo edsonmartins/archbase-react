@@ -117,6 +117,8 @@ export interface ArchbaseSelectProps<T, ID, O> {
    * Por exemplo: (id) => fetchObjectById(id) para converter ID de volta ao objeto
    */
   getConvertedOption?: (value: any) => Promise<O>
+  /** Função que determina se uma opção individual está desabilitada */
+  isOptionDisabled?: (option: O) => boolean
 }
 
 function buildGroupOptions(
@@ -248,7 +250,8 @@ export function ArchbaseSelect<T, ID, O>({
   classNames,
   styles,
   converter,
-  getConvertedOption
+  getConvertedOption,
+  isOptionDisabled,
 }: ArchbaseSelectProps<T, ID, O>) {
   const forceUpdate = useForceUpdate();
 
@@ -282,7 +285,7 @@ export function ArchbaseSelect<T, ID, O>({
   const contextError = validationContext?.getError(fieldKey);
 
   const currentOptions: any[] = useMemo(() => {
-    return buildOptions<O>(
+    const opts = buildOptions<O>(
       options,
       initialOptions,
       children,
@@ -290,6 +293,19 @@ export function ArchbaseSelect<T, ID, O>({
       getOptionValue,
       optionsLabelField
     )
+    if (!isOptionDisabled) return opts
+    return opts.map((opt: any) => {
+      if (opt.group !== undefined) {
+        return {
+          ...opt,
+          items: opt.items.map((item: any) => ({
+            ...item,
+            disabled: isOptionDisabled(item.origin ?? item),
+          })),
+        }
+      }
+      return { ...opt, disabled: isOptionDisabled(opt.origin ?? opt) }
+    })
   }, [
     updateCounter,
     options,
@@ -297,7 +313,8 @@ export function ArchbaseSelect<T, ID, O>({
     children,
     getOptionLabel,
     getOptionValue,
-    optionsLabelField
+    optionsLabelField,
+    isOptionDisabled,
   ])
 
   const handleConverter = (value) => {
