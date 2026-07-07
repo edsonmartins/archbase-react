@@ -78,14 +78,13 @@ const renderGroups = (user: UserDto) => {
 	return (
 		<div style={{ display: 'flex' }}>
 			{user.groups
-				? user.groups.map((item, index) => {
-						return (
-							<div key={index} style={{ paddingRight: '2px' }}>
-								<Badge color="blue">{item.group?.name}</Badge>
-							</div>
-						);
-				  })
-				: null}
+				.slice()
+				.sort((a, b) => (a.group?.name ?? '').localeCompare(b.group?.name ?? ''))
+				.map((item, index) => (
+					<div key={index} style={{ paddingRight: '2px' }}>
+						<Badge color="blue">{item.group?.name}</Badge>
+					</div>
+				))}
 		</div>
 	);
 };
@@ -413,7 +412,14 @@ export function ArchbaseSecurityView({
 				size={300}
 				header={`${t('archbase:Grupos')}`}
 				render={(data) => renderGroups(data.row)}
-				exportValue={(row) => row.groups?.map((g) => g.group?.name).filter(Boolean).join(', ') || ''}
+				exportValue={(row) =>
+					row.groups
+						?.slice()
+						.sort((a, b) => (a.group?.name ?? '').localeCompare(b.group?.name ?? ''))
+						.map((g) => g.group?.name)
+						.filter(Boolean)
+						.join(', ') || ''
+				}
 				enableSorting={false}
 				enableColumnFilter={false}
 				enableGlobalFilter={false}
