@@ -37,6 +37,16 @@ const getCellValue = (row: any, column: any): any => {
     return value;
   }
   
+  // Usar exportValue se disponível (tem prioridade sobre valueGetter para exportação)
+  if (column.exportValue) {
+    try {
+      return column.exportValue(row);
+    } catch (e) {
+      console.error('Error in exportValue:', e);
+      return '';
+    }
+  }
+
   // Usar valueGetter se disponível
   if (column.valueGetter) {
     try {

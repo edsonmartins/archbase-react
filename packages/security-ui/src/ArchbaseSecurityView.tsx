@@ -411,6 +411,7 @@ export function ArchbaseSecurityView({
 				size={300}
 				header={`${t('archbase:Grupos')}`}
 				render={(data) => renderGroups(data.row)}
+				exportValue={(row) => row.groups?.map((g) => g.group?.name).filter(Boolean).join(', ') || ''}
 				enableSorting={false}
 				enableColumnFilter={false}
 				enableGlobalFilter={false}

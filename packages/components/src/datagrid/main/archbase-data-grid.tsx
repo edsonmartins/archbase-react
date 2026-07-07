@@ -1152,7 +1152,8 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
               // Armazenar metadados personalizados
               columnMetadata[columnProps.dataField] = {
                 enableGlobalFilter: columnProps.enableGlobalFilter,
-                dataType: columnProps.dataType
+                dataType: columnProps.dataType,
+                exportValue: columnProps.exportValue
               }
 
               // Obter o renderizador adequado para o tipo de dados
@@ -1246,6 +1247,7 @@ function ArchbaseDataGrid<T extends object = any, ID = any>(props: ArchbaseDataG
       if (metadata) {
         ;(col as any).enableGlobalFilter = metadata.enableGlobalFilter
         ;(col as any).dataType = metadata.dataType
+        ;(col as any).exportValue = metadata.exportValue
       }
     })
 

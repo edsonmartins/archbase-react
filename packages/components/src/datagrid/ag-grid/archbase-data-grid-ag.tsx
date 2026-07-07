@@ -541,6 +541,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
               // Custom properties
               enableGlobalFilter: columnProps.enableGlobalFilter,
               dataType: columnProps.dataType,
+              exportValue: columnProps.exportValue,
             };
 
             cols.push(colDef);
