@@ -372,6 +372,7 @@ export function ArchbaseSecurityView({
 				size={300}
 				header={`${t('archbase:Nome')}`}
 				inputFilterType="text"
+				truncate={true}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="nickname"
@@ -379,6 +380,7 @@ export function ArchbaseSecurityView({
 				size={120}
 				header={`${t('archbase:Apelido')}`}
 				inputFilterType="text"
+				truncate={true}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="email"
@@ -386,6 +388,7 @@ export function ArchbaseSecurityView({
 				header={`${t('archbase:Email')}`}
 				size={300}
 				inputFilterType="text"
+				truncate={true}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="accountDeactivated"
