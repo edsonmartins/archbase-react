@@ -25,15 +25,20 @@ export function processErrorMessage(error: any) {
     msgErro = t("archbase:metodo_nao_permitido")
   } else if (error.response && error.response.status && error.response.status === 400) {
     msgErro = `${error.response?.data?.message ?? (error.response?.data && typeof error.response?.data === 'string' ? error.response.data : t("archbase:dados_incorretos"))}`
+  } else if (error.response && error.response.status && error.response.status === 403) {
+    msgErro = t('archbase:acesso_negado')
   } else if (error.response && error.response.status && error.response.status === 500) {
     msgErro = t('archbase:erro_servidor', {
       path: error.response.data.path,
       message: error.response.data.message,
     })
   } else if (error.response && error.response.data) {
-    msgErro = error.response.data
+    const data = error.response.data
+    msgErro = typeof data === 'string'
+      ? data
+      : (data?.detail || data?.message || data?.title || data?.error || JSON.stringify(data))
   } else if (error.response) {
-    msgErro = error.response
+    msgErro = error.response.statusText || String(error.response.status)
   } else if (error.message && error.message === 'Network Error') {
     msgErro = t("archbase:servidor_nao_disponivel")
   } else if (error.message) {
@@ -45,6 +50,8 @@ export function processErrorMessage(error: any) {
   if (typeof msgErro === 'object') {
     if (error && (error.code === 'ERR_NETWORK' || error.message === 'Network Error')) {
       msgErro = t("archbase:servidor_nao_disponivel")
+    } else {
+      msgErro = JSON.stringify(msgErro)
     }
   }
   return `${msgErro}`
