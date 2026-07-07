@@ -542,6 +542,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
               enableGlobalFilter: columnProps.enableGlobalFilter,
               dataType: columnProps.dataType,
               exportValue: columnProps.exportValue,
+              exportable: columnProps.exportable !== false,
             };
 
             cols.push(colDef);
@@ -1132,7 +1133,7 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
   // Modal columns for export/print
   const modalColumns = useMemo(() => {
     return columnDefs
-      .filter((col) => col.field && !col.field.startsWith('__'))
+      .filter((col) => col.field && !col.field.startsWith('__') && col.exportable !== false)
       .map((col) => ({
         id: col.field!,
         title: col.headerName || col.field!,

@@ -303,6 +303,7 @@ export function ArchbaseSecurityView({
 				)}
 				inputFilterType="text"
 				align="center"
+				exportable={false}
 			/>
 			<ArchbaseDataGridColumn<AccessTokenDto>
 				dataField="user.userName"
@@ -365,6 +366,7 @@ export function ArchbaseSecurityView({
 				enableColumnFilter={false}
 				enableGlobalFilter={false}
 				align="center"
+				exportable={false}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="name"
