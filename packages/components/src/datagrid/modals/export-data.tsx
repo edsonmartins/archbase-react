@@ -2,6 +2,8 @@
 import { saveAs } from 'file-saver';
 import { utils, write } from 'xlsx';
 import { format } from 'date-fns';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 // Tipos de exportação suportados
 export type ExportFormat = 'csv' | 'excel' | 'pdf';
@@ -186,8 +188,22 @@ async function exportToExcel(data: any[], config: ExportConfig): Promise<void> {
   saveAs(blob, `${config.filename || 'export'}.xlsx`);
 }
 
-// Exportação para PDF (placeholder - necessita implementação específica)
+// Exportação para PDF
 async function exportToPDF(data: any[], config: ExportConfig): Promise<void> {
-  console.warn('Exportação para PDF ainda não implementada. Considere usar a função printData em seu lugar.');
-  // Implementar lógica de exportação PDF ou usar a função printData
+  if (!data || data.length === 0) return;
+
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'A4' }) as any;
+
+  const headers = Object.keys(data[0]);
+  const tableData = data.map(row => headers.map(h => (row[h] !== null && row[h] !== undefined ? row[h] : '')));
+
+  autoTable(doc, {
+    head: [headers],
+    body: tableData,
+    theme: 'grid',
+    styles: { fontSize: 9, cellPadding: 2, font: 'helvetica', overflow: 'linebreak' },
+    headStyles: { fillColor: [51, 51, 51], textColor: 255, fontStyle: 'bold', halign: 'center' },
+  });
+
+  saveAs(doc.output('blob'), `${config.filename || 'export'}.pdf`);
 }
