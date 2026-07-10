@@ -1,10 +1,10 @@
 import { Shell } from '../../components/Shell';
-import Content from '../../content/components/overview.mdx';
+import { ComponentGallery } from '../../components/ComponentGallery/ComponentGallery';
 
 export default function Page() {
   return (
     <Shell currentPath="/components/overview">
-      <Content />
+      <ComponentGallery />
     </Shell>
   );
 }

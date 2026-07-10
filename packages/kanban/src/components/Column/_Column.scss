@@ -1,0 +1,44 @@
+@use "./../../global/assets/styles/abstracts/variables" as *;
+
+.#{$prefix}-column-outer {
+  min-width: 264px;
+  max-width: 264px;
+  height: 100%; // Changed from max-height to height for proper cascading
+  display: flex;
+  flex-direction: column;
+  transition: all 0.1s ease;
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  -ms-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+
+  .#{$prefix}-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    position: relative;
+    overflow: hidden;
+
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 16px;
+      max-height: 100%;
+    }
+  }
+}
+
+.#{$prefix}-column-shadow-container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.#{$prefix}-column-shadow {
+  border-radius: 10px;
+  background-color: #ffffffb7;
+  border: 1px solid var(--Schemes-Outline-Variant, #e8ecf5);
+}

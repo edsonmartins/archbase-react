@@ -457,7 +457,7 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 						style={{
 							flexShrink: 0,
 							padding: '16px 24px',
-							borderBottom: '1px solid var(--mantine-color-gray-2)',
+							borderBottom: '1px solid var(--mantine-color-default-border)',
 						}}
 					>
 						<Flex justify="space-between" align="center">
@@ -469,7 +469,7 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 										color="gray"
 										size="lg"
 										onClick={onBack}
-										style={{ border: '1px solid var(--mantine-color-gray-3)' }}
+										style={{ border: '1px solid var(--mantine-color-default-border)' }}
 									>
 										<IconArrowLeft size={18} />
 									</ActionIcon>
@@ -506,7 +506,7 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 										color="red"
 										size="lg"
 										onClick={onDelete}
-										style={{ border: '1px solid var(--mantine-color-gray-3)' }}
+										style={{ border: '1px solid var(--mantine-color-default-border)' }}
 									>
 										<IconTrash size={18} />
 									</ActionIcon>
@@ -561,7 +561,7 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 										height: '100%',
 										display: 'flex',
 										flexDirection: 'column',
-										backgroundColor: 'var(--mantine-color-white)',
+										backgroundColor: 'var(--mantine-color-body)',
 									}}
 								>
 									{/* Form Header */}
@@ -570,7 +570,7 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 											style={{
 												flexShrink: 0,
 												padding: '16px 20px',
-												borderBottom: tabs ? '1px solid var(--mantine-color-gray-2)' : 'none',
+												borderBottom: tabs ? '1px solid var(--mantine-color-default-border)' : 'none',
 											}}
 										>
 											<Flex justify="space-between" align="flex-start">
@@ -637,7 +637,7 @@ export function ArchbaseTwoColumnFormTemplate<T extends object, ID>({
 							style={{
 								flexShrink: 0,
 								padding: '16px 24px',
-								borderTop: '1px solid var(--mantine-color-gray-2)',
+								borderTop: '1px solid var(--mantine-color-default-border)',
 								display: 'flex',
 								justifyContent: 'flex-end',
 							}}
@@ -726,7 +726,7 @@ export function FormImageGallery({ images, onAddImage, onRemoveImage, onSetCover
 							height: 200,
 							objectFit: 'cover',
 							borderRadius: 'var(--mantine-radius-md)',
-							border: '1px solid var(--mantine-color-gray-3)',
+							border: '1px solid var(--mantine-color-default-border)',
 						}}
 					/>
 					<Badge
@@ -754,7 +754,7 @@ export function FormImageGallery({ images, onAddImage, onRemoveImage, onSetCover
 									height: 80,
 									objectFit: 'cover',
 									borderRadius: 'var(--mantine-radius-sm)',
-									border: '1px solid var(--mantine-color-gray-3)',
+									border: '1px solid var(--mantine-color-default-border)',
 								}}
 							/>
 						</Box>
@@ -768,13 +768,13 @@ export function FormImageGallery({ images, onAddImage, onRemoveImage, onSetCover
 							style={{
 								width: '100%',
 								height: 80,
-								border: '2px dashed var(--mantine-color-gray-4)',
+								border: '2px dashed var(--mantine-color-default-border)',
 								borderRadius: 'var(--mantine-radius-sm)',
 								display: 'flex',
 								alignItems: 'center',
 								justifyContent: 'center',
 								cursor: 'pointer',
-								backgroundColor: 'var(--mantine-color-gray-0)',
+								backgroundColor: 'var(--mantine-color-default-hover)',
 							}}
 						>
 							<Text size="xl" c="dimmed">+</Text>

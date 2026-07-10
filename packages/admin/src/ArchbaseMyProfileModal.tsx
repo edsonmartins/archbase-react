@@ -20,6 +20,8 @@ export interface MyProfileModalOptions {
     avatarMaxSizeKB?: number;
     /** Qualidade da compressão da imagem do avatar (0 a 1), sendo 1 melhor qualidade */
     avatarImageQuality?: number;
+    /** Maior dimensão (px) do avatar final — a imagem é redimensionada automaticamente. 0 mantém a resolução original */
+    avatarMaxOutputSizePx?: number;
 }
 
 export const defaultMyProfileModalOptions: MyProfileModalOptions = {
@@ -29,7 +31,8 @@ export const defaultMyProfileModalOptions: MyProfileModalOptions = {
     // Configurações de campos obrigatórios
     requiredNickname: true,
     avatarMaxSizeKB: 2000,
-    avatarImageQuality: 1
+    avatarImageQuality: 1,
+    avatarMaxOutputSizePx: 512
 }
 
 export interface ArchbaseMyProfileModalProps {
@@ -110,6 +113,7 @@ export function ArchbaseMyProfileModal({ opened, handleClose, userId, updateUser
                             height={200}
                             maxSizeKB={options.avatarMaxSizeKB}
                             imageQuality={options.avatarImageQuality}
+                            maxOutputSizePx={options.avatarMaxOutputSizePx}
                         />
                     </Stack>
                     <ArchbaseEdit

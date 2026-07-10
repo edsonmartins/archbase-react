@@ -133,6 +133,20 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 				inputFilterType="text"
 			/>
 			<ArchbaseDataGridColumn<ApiTokenDto>
+				dataField="name"
+				dataType="text"
+				header="Nome"
+				size={240}
+				inputFilterType="text"
+			/>
+			<ArchbaseDataGridColumn<ApiTokenDto>
+				dataField="description"
+				dataType="text"
+				header="Descrição"
+				size={300}
+				inputFilterType="text"
+			/>
+			<ArchbaseDataGridColumn<ApiTokenDto>
 				dataField="token"
 				dataType="text"
 				header="Token API"

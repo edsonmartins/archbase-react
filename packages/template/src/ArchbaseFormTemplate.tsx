@@ -387,7 +387,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 							style={{
 								flexShrink: 0,
 								padding: '16px 24px',
-								borderBottom: '1px solid var(--mantine-color-gray-2)',
+								borderBottom: '1px solid var(--mantine-color-default-border)',
 							}}
 						>
 							<Flex justify="space-between" align="center">
@@ -399,7 +399,7 @@ export function ArchbaseFormTemplate<T extends object, ID>({
 											color="gray"
 											size="lg"
 											onClick={onBack}
-											style={{ border: '1px solid var(--mantine-color-gray-3)' }}
+											style={{ border: '1px solid var(--mantine-color-default-border)' }}
 										>
 											<IconArrowLeft size={18} />
 										</ActionIcon>

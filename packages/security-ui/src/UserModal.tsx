@@ -42,6 +42,8 @@ export interface UserModalOptions {
   avatarMaxSizeKB?: number;
   /** Qualidade da compressão da imagem do avatar (0 a 1), sendo 1 melhor qualidade */
   avatarImageQuality?: number;
+  /** Maior dimensão (px) do avatar final — a imagem é redimensionada automaticamente. 0 mantém a resolução original */
+  avatarMaxOutputSizePx?: number;
 
   /** Configuração de permissão de edição de campos */
   allowEditEmail?: boolean;
@@ -80,6 +82,7 @@ export const defaultUserModalOptions: UserModalOptions = {
 
   avatarMaxSizeKB: 2000,
   avatarImageQuality: 1,
+  avatarMaxOutputSizePx: 512,
 
   allowEditEmail: true,
 }
@@ -338,6 +341,7 @@ export const UserModal = (props: UserModalProps) => {
                   height={120}
                   maxSizeKB={options.avatarMaxSizeKB}
                   imageQuality={options.avatarImageQuality}
+                  maxOutputSizePx={options.avatarMaxOutputSizePx}
                 />
               </Stack>
             </Grid.Col>
