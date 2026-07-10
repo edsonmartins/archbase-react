@@ -52,6 +52,10 @@ export interface ArchbaseAvatarEditProps<T, ID> {
     maxSizeKB?: number;
     /** Qualidade da compressão da imagem (0 a 1), sendo 1 melhor qualidade */
     imageQuality?: number;
+    /** Maior dimensão (px) da imagem final: o recorte é redimensionado automaticamente
+     * para caber neste limite antes da compressão, independente do tamanho da foto
+     * enviada pelo usuário. 0 mantém a resolução original do recorte. */
+    maxOutputSizePx?: number;
 }
 
 export function ArchbaseAvatarEdit<T, ID>({
@@ -75,6 +79,7 @@ export function ArchbaseAvatarEdit<T, ID>({
     hoverBackgroundColor = 'rgba(0, 0, 0, 0.6)',
     maxSizeKB = 0, // 0 significa sem limite
     imageQuality = 0.95,
+    maxOutputSizePx = 512, // avatar não precisa de resolução maior que isso
     ...otherProps
 }: ArchbaseAvatarEditProps<T, ID>) {
     const [value, setValue] = useState<string | undefined>(undefined);
@@ -341,6 +346,24 @@ export function ArchbaseAvatarEdit<T, ID>({
 
         // Colocar os dados da imagem rotacionada de volta no canvas
         ctx.putImageData(data, -pixelCrop.x, - pixelCrop.y);
+
+        // Redimensionar para a dimensão máxima de saída: reduzir a resolução (e não só a
+        // qualidade JPEG) garante arquivos pequenos mesmo para fotos de celular gigantes,
+        // sem o usuário precisar escolher uma "imagem menor"
+        const maiorDimensao = Math.max(pixelCrop.width, pixelCrop.height);
+        if (maxOutputSizePx > 0 && maiorDimensao > maxOutputSizePx) {
+            const escala = maxOutputSizePx / maiorDimensao;
+            const canvasSaida = document.createElement('canvas');
+            canvasSaida.width = Math.max(1, Math.round(pixelCrop.width * escala));
+            canvasSaida.height = Math.max(1, Math.round(pixelCrop.height * escala));
+            const ctxSaida = canvasSaida.getContext('2d');
+            if (ctxSaida) {
+                ctxSaida.imageSmoothingEnabled = true;
+                ctxSaida.imageSmoothingQuality = 'high';
+                ctxSaida.drawImage(canvas, 0, 0, canvasSaida.width, canvasSaida.height);
+                return canvasSaida.toDataURL('image/jpeg', quality);
+            }
+        }
 
         // Retornar como base64 com a qualidade especificada
         return canvas.toDataURL('image/jpeg', quality);
