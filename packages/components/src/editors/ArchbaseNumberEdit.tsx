@@ -448,6 +448,48 @@ export function ArchbaseNumberEdit<T, ID>({
     }
   };
 
+  const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    event.preventDefault();
+
+    let pastedText = event.clipboardData.getData('text').trim();
+
+    if (!allowNegative) {
+      pastedText = pastedText.replace(/-/g, '');
+    }
+
+    // Normaliza separador decimal: aceita tanto '.' quanto ',' como entrada
+    const otherSeparator = decimalSeparator === '.' ? ',' : '.';
+    pastedText = pastedText
+      .replace(new RegExp(`\\${thousandSeparator}`, 'g'), '')
+      .replace(otherSeparator, decimalSeparator);
+
+    const { maskedValue: newMaskedValue, value: newValue } = formatNumber(
+      pastedText,
+      precision,
+      decimalSeparator,
+      thousandSeparator,
+      allowNegative,
+      prefix,
+      suffix,
+      minValue,
+      maxValue,
+      false
+    );
+
+    if (newMaskedValue === null && newValue === null) return;
+
+    setMaskedValue(newMaskedValue);
+    setCurrentValue(newValue);
+
+    if (dataSource && !dataSource.isBrowsing() && dataField) {
+      v1v2Compatibility.handleValueChange(newValue);
+    }
+
+    if (onChangeValue) {
+      onChangeValue(newMaskedValue, newValue, event as any);
+    }
+  };
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const input = event.currentTarget;
     const selectionStart = input.selectionStart || 0;
@@ -601,6 +643,7 @@ export function ArchbaseNumberEdit<T, ID>({
       onBlur={handleFocusExit}
       onFocus={handleFocusEnter}
       onKeyDown={handleKeyDown}
+      onPaste={handlePaste}
       styles={{
         input: {
           textAlign: 'right',

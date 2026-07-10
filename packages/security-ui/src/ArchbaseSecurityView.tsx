@@ -78,14 +78,13 @@ const renderGroups = (user: UserDto) => {
 	return (
 		<div style={{ display: 'flex' }}>
 			{user.groups
-				? user.groups.map((item, index) => {
-						return (
-							<div key={index} style={{ paddingRight: '2px' }}>
-								<Badge color="blue">{item.group?.name}</Badge>
-							</div>
-						);
-				  })
-				: null}
+				.slice()
+				.sort((a, b) => (a.group?.name ?? '').localeCompare(b.group?.name ?? ''))
+				.map((item, index) => (
+					<div key={index} style={{ paddingRight: '2px' }}>
+						<Badge color="blue">{item.group?.name}</Badge>
+					</div>
+				))}
 		</div>
 	);
 };
@@ -303,6 +302,7 @@ export function ArchbaseSecurityView({
 				)}
 				inputFilterType="text"
 				align="center"
+				exportable={false}
 			/>
 			<ArchbaseDataGridColumn<AccessTokenDto>
 				dataField="user.userName"
@@ -365,6 +365,7 @@ export function ArchbaseSecurityView({
 				enableColumnFilter={false}
 				enableGlobalFilter={false}
 				align="center"
+				exportable={false}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="name"
@@ -372,6 +373,7 @@ export function ArchbaseSecurityView({
 				size={300}
 				header={`${t('archbase:Nome')}`}
 				inputFilterType="text"
+				truncate={true}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="nickname"
@@ -379,6 +381,7 @@ export function ArchbaseSecurityView({
 				size={120}
 				header={`${t('archbase:Apelido')}`}
 				inputFilterType="text"
+				truncate={true}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="email"
@@ -386,6 +389,7 @@ export function ArchbaseSecurityView({
 				header={`${t('archbase:Email')}`}
 				size={300}
 				inputFilterType="text"
+				truncate={true}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
 				dataField="accountDeactivated"
@@ -408,6 +412,14 @@ export function ArchbaseSecurityView({
 				size={300}
 				header={`${t('archbase:Grupos')}`}
 				render={(data) => renderGroups(data.row)}
+				exportValue={(row) =>
+					row.groups
+						?.slice()
+						.sort((a, b) => (a.group?.name ?? '').localeCompare(b.group?.name ?? ''))
+						.map((g) => g.group?.name)
+						.filter(Boolean)
+						.join(', ') || ''
+				}
 				enableSorting={false}
 				enableColumnFilter={false}
 				enableGlobalFilter={false}

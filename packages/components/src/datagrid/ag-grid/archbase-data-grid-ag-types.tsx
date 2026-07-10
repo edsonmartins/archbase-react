@@ -118,6 +118,12 @@ export interface ArchbaseDataGridAGColumnProps<T = any> {
   hideWhenNoPermission?: boolean;
   /** Auto-register column permission */
   autoRegisterPermission?: boolean;
+
+  /** Função para formatar o valor da célula para exportação (CSV/Excel). Útil quando render usa componentes React (ex: badges, arrays de objetos). */
+  exportValue?: (row: T) => string;
+
+  /** Se false, a coluna não aparece nas opções de exportação/impressão (ex: colunas de imagem). Padrão: true. */
+  exportable?: boolean;
 }
 
 /**
@@ -412,4 +418,6 @@ export function GridToolBarActions(props: GridToolBarActionsProps) {
 export interface ExtendedColDef<TData = any, TValue = any> extends ColDef<TData, TValue> {
   enableGlobalFilter?: boolean;
   dataType?: FieldDataType;
+  exportValue?: (row: TData) => string;
+  exportable?: boolean;
 }

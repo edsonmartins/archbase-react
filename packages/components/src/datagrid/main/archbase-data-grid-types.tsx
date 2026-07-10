@@ -358,4 +358,7 @@ export interface ArchbaseDataGridColumnProps<T = any> {
   
   /** Auto-registra a permissão da coluna (padrão: true) */
   autoRegisterPermission?: boolean;
+
+  /** Função para formatar o valor da célula para exportação (CSV/Excel). Útil quando render usa componentes React (ex: badges, arrays de objetos). */
+  exportValue?: (row: T) => string;
 }
