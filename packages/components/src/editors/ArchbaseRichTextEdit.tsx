@@ -17,6 +17,21 @@ let SunEditorComponent: React.ComponentType<any> | null = null;
 let langModules: { en: any; es: any; ptBR: any } = { en: {}, es: {}, ptBR: {} };
 let loadPromise: Promise<void> | null = null;
 
+/**
+ * Resolve o componente de um módulo importado dinamicamente lidando com o
+ * interop CJS→ESM. `suneditor-react` é publicado como CJS (`exports.default = SunEditor`
+ * com `__esModule: true`); dependendo do empacotador (ex.: build de produção com Rollup),
+ * `mod.default` pode chegar como o objeto `{ default: SunEditor, __esModule: true }` em vez
+ * do próprio componente, fazendo o React lançar "Element type is invalid ... got: object".
+ */
+function resolveDefaultComponent(mod: any): any {
+	const candidate = mod?.default ?? mod;
+	if (candidate && typeof candidate !== 'function' && candidate.__esModule && candidate.default) {
+		return candidate.default;
+	}
+	return candidate;
+}
+
 // Função para carregar suneditor e dependências
 async function loadSunEditor(): Promise<void> {
 	if (loadPromise) return loadPromise;
@@ -31,7 +46,7 @@ async function loadSunEditor(): Promise<void> {
 			import('suneditor/src/lang/es'),
 			import('suneditor/src/lang/pt_br'),
 		]);
-		SunEditorComponent = sunEditorModule.default;
+		SunEditorComponent = resolveDefaultComponent(sunEditorModule);
 		langModules = {
 			en: enModule.default,
 			es: esModule.default,
