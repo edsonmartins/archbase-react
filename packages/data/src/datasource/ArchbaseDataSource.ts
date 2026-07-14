@@ -1146,10 +1146,6 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T>, IArchbaseData
 		if (value === undefined) {
 			return undefined;
 		}
-		if (isDate(value)) {
-			return parseISO(value);
-		}
-
 		return value;
 	}
 
@@ -1166,9 +1162,6 @@ export class ArchbaseDataSource<T, _ID> implements IDataSource<T>, IArchbaseData
 
 		let newValue: any = value;
 		const oldValue: any = ArchbaseObjectHelper.getNestedProperty(this.currentRecord, fieldName);
-		if (isDate(value)) {
-			newValue = parseISO(value);
-		}
 		const split = fieldName.split('.');
 		if (split.length > 1) {
 			ArchbaseObjectHelper.setNestedProperty(this.currentRecord, fieldName, newValue);

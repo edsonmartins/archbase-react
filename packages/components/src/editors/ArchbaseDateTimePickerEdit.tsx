@@ -9,7 +9,7 @@ import {
   import { DataSourceEventNames } from '@archbase/data';
   import { useArchbaseDidUpdate } from '@archbase/data';
   import { useArchbaseV1V2Compatibility } from '@archbase/data';
-  import { useValidationErrors } from '@archbase/core';
+  import { convertISOStringToDate, convertDateToISOString, useValidationErrors } from '@archbase/core';
   
   type OmittedDateTimePickerProps = Omit<DateTimePickerProps, 'value' | 'onChange'>;
   
@@ -67,6 +67,9 @@ import {
 	const [currentValue, setCurrentValue] = useState<Date | null>(value || null);
 	const [internalError, setInternalError] = useState<string | undefined>(undefined);
 	const forceUpdate = useForceUpdate();
+	// Previne que eventos síncronos do datasource (disparados durante setFieldValue)
+	// sobrescrevam o valor recém-definido pelo usuário com o valor antigo
+	const isUserChanging = useRef(false);
 
 	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
 	const v1v2Compatibility = useArchbaseV1V2Compatibility<Date | null>(
@@ -98,6 +101,10 @@ import {
 	}, [error]);
   
 	const loadDataSourceFieldValue = () => {
+	  // Não recarregar durante uma mudança iniciada pelo usuário — evita que eventos
+	  // síncronos do datasource sobrescrevam o valor recém-definido com o valor antigo
+	  if (isUserChanging.current) return;
+
 	  let initialValue: Date | null = currentValue;
 
 	  if (dataSource && dataField) {
@@ -108,9 +115,9 @@ import {
 		  // Verificar se é uma data válida
 		  initialValue = isNaN(rawValue.getTime()) ? null : rawValue;
 		} else if (typeof rawValue === 'string') {
-		  // Converter string ISO para Date
-		  const date = new Date(rawValue);
-		  initialValue = isNaN(date.getTime()) ? null : date;
+		  // Converter string para Date (trata formato ISO e formato Mantine "YYYY-MM-DD HH:mm:ss")
+		  const date = convertISOStringToDate(rawValue);
+		  initialValue = date && !isNaN(date.getTime()) ? date : null;
 		} else {
 		  initialValue = null;
 		}
@@ -182,22 +189,32 @@ useEffect(() => {
 	  loadDataSourceFieldValue();
 	}, []);
 
-	const handleChange = (changedValue: string | null) => {
-	  // ✅ Limpa erro quando usuário edita o campo (tanto do estado local quanto do contexto)
+	const handleChange = (changedValue: string | Date | null) => {
 	  const hasError = internalError || contextError;
 	  if (hasError) {
 		setInternalError(undefined);
 		validationContext?.clearError(fieldKey);
 	  }
 
-	  // Mantine DateTimePicker retorna string | null, converter para Date
-	  const dateValue = changedValue ? new Date(changedValue) : null;
-	  // Validar se a data é válida
-	  const validDate = dateValue && !isNaN(dateValue.getTime()) ? dateValue : null;
+	  // Mantine 9.x passa string "YYYY-MM-DD HH:mm:ss" via assignTime; por segurança trata também Date
+	  let validDate: Date | null = null;
+	  if (changedValue instanceof Date) {
+		validDate = !isNaN(changedValue.getTime()) ? changedValue : null;
+	  } else if (typeof changedValue === 'string' && changedValue) {
+		const parsed = convertISOStringToDate(changedValue);
+		validDate = parsed && !isNaN(parsed.getTime()) ? parsed : null;
+	  }
+
 	  setCurrentValue(validDate);
 
-	  // 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
-	  v1v2Compatibility.handleValueChange(validDate);
+	  // Armazena ISO string no datasource (campos de data são string, não Date)
+	  // Evita o bug do V1 datasource onde parseISO(Date) produz Invalid Date → null na serialização
+	  const isoValue = validDate ? convertDateToISOString(validDate) : null;
+	  isUserChanging.current = true;
+	  if (dataSource && !dataSource.isBrowsing() && dataField) {
+		dataSource.setFieldValue(dataField, isoValue);
+	  }
+	  isUserChanging.current = false;
 
 	  if (onChange) {
 		onChange(validDate);

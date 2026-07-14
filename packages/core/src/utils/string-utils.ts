@@ -405,11 +405,13 @@ export function convertISOStringToDate(isoString: string): Date {
   if (!isoString || isoString === ''){
     return undefined
   }
-  const hasTimeInfo = isoString.includes('T')
+  // Normaliza formato Mantine "YYYY-MM-DD HH:mm:ss" (espaço) para ISO "YYYY-MM-DDTHH:mm:ss"
+  const normalized = isoString.replace(' ', 'T')
+  const hasTimeInfo = normalized.includes('T')
   if (!hasTimeInfo) {
-    isoString += 'T00:00:00' // Adiciona hora padrão '00:00:00' se não houver informação de hora
+    return parseISO(normalized + 'T00:00:00')
   }
-  return parseISO(isoString)
+  return parseISO(normalized)
 }
 
 export function convertDateToISOString(date: Date): string {
