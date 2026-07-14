@@ -346,7 +346,19 @@ export function ArchbaseRichTextEdit<T, ID>({
 			onChangeValue(content);
 		}
 	};
-	const handleOnBlur = (event: FocusEvent, _editorContents: string) => {
+	const handleOnBlur = (event: FocusEvent, editorContents: string) => {
+		// Garante que o conteúdo final seja salvo ao perder foco (ex: troca rápida de aba),
+		// pois o SunEditor pode não ter disparado onChange para os últimos keystrokes.
+		if (dataSource && !dataSource.isBrowsing() && dataField) {
+			const valueToSave = disabledBase64Convertion ? editorContents : btoa(editorContents);
+			if (dataSource.getFieldValue(dataField) !== valueToSave) {
+				v1v2Compatibility.handleValueChange(valueToSave);
+				setCurrentValue(editorContents);
+			}
+		}
+		if (onChangeValue) {
+			onChangeValue(editorContents);
+		}
 		if (onFocusExit) {
 			onFocusExit(event);
 		}
