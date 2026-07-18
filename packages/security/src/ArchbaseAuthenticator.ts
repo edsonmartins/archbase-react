@@ -18,6 +18,13 @@ export interface ArchbaseAuthenticator {
   resetPassword(email: string, passwordResetToken: string, newPassword: string): Promise<void>
   
   // Métodos opcionais para autenticação avançada
+  /**
+   * Completa o login em duas etapas quando o usuário tem MFA/2FA: recebe o token de desafio
+   * (retornado no `login`/`loginWithContext` como `mfa_required`) + o código do segundo fator
+   * (TOTP ou código de recuperação) e devolve os tokens reais.
+   */
+  verifyMfa?(challengeToken: string, code: string): Promise<ArchbaseAccessToken>
+
   /** Login contextual com suporte a enrichers específicos da aplicação */
   loginWithContext?(request: ContextualAuthenticationRequest): Promise<ContextualAuthenticationResponse>
   
