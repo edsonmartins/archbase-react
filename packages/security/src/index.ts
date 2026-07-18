@@ -27,6 +27,7 @@ export * from './ArchbaseResourceService';
 
 // UI Components (non-modal components)
 export * from './ArchbaseLogin';
+export * from './ArchbaseMfaSetup';
 export * from './ArchbaseResetPassword';
 
 // Security types and domains

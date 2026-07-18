@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Anchor, Button, Card, CardProps, Checkbox, Divider, Group, Loader, PasswordInput, Select, Text, TextInput, Tooltip } from "@mantine/core";
+import { Anchor, Button, Card, CardProps, Checkbox, Divider, Group, Loader, PasswordInput, Select, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import { useFocusTrap } from "@mantine/hooks";
 import { getI18nextInstance, useArchbasePasswordRemember } from "@archbase/core";
 import { IconCopy } from "@tabler/icons-react";
@@ -35,6 +35,16 @@ export interface ArchbaseLoginProps {
   disabledLogin?: boolean
   isCheckingUsername?: boolean
   showSignIn?: boolean
+  /** Login em duas etapas (MFA): quando `true`, exibe o painel de código em vez do formulário. */
+  mfaRequired?: boolean
+  /** Valida o código do segundo fator (TOTP ou de recuperação). */
+  onVerifyMfa?: (code: string) => Promise<void>
+  /** Mensagem de erro específica da etapa de MFA. */
+  mfaError?: string
+  /** Volta do painel de MFA para o formulário de login. */
+  onCancelMfa?: () => void
+  /** Indica verificação em andamento (desabilita o botão). */
+  isVerifyingMfa?: boolean
 }
 
 export function ArchbaseLogin({
@@ -52,6 +62,11 @@ export function ArchbaseLogin({
   disabledLogin = false,
   isCheckingUsername = false,
   showSignIn = true,
+  mfaRequired = false,
+  onVerifyMfa,
+  mfaError,
+  onCancelMfa,
+  isVerifyingMfa = false,
 }: ArchbaseLoginProps) {
   const focusTrapRef = useFocusTrap();
 
@@ -66,6 +81,7 @@ export function ArchbaseLogin({
   const [rememberMe, setRememberMe] = useState<boolean>(remember);
   const [showError, setShowError] = useState<boolean>(false);
   const [selectedMockUser, setSelectedMockUser] = useState<string | null>(null);
+  const [mfaCode, setMfaCode] = useState<string>("");
 
   useEffect(() => {
     setShowError(!!error);
@@ -91,6 +107,13 @@ export function ArchbaseLogin({
   const handleLogin = () => {
     if (usernameInput && passwordInput) {
       onLogin(usernameInput, passwordInput, rememberMe).finally(() => setShowError(true));
+    }
+  };
+
+  const handleVerifyMfa = () => {
+    const code = mfaCode.trim();
+    if (code && onVerifyMfa) {
+      onVerifyMfa(code);
     }
   };
 
@@ -167,6 +190,55 @@ export function ArchbaseLogin({
       }
       {options?.customContentBefore}
 
+      {mfaRequired && (
+        <Stack gap="md">
+          <div>
+            <Text fw={700} fz="lg">
+              {getI18nextInstance().t("archbase:mfa.title", "Verificação em duas etapas")}
+            </Text>
+            <Text c="dimmed" fz="sm">
+              {getI18nextInstance().t(
+                "archbase:mfa.subtitle",
+                "Digite o código do seu aplicativo autenticador (ou um código de recuperação).")}
+            </Text>
+          </div>
+          <TextInput
+            label={getI18nextInstance().t("archbase:mfa.code", "Código de verificação")}
+            placeholder="000000"
+            value={mfaCode}
+            autoFocus
+            onChange={(event) => setMfaCode(event.currentTarget.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                handleVerifyMfa();
+              }
+            }}
+          />
+          {mfaError && <Text c="red" fz="sm">{mfaError}</Text>}
+          <Button
+            fullWidth
+            disabled={!mfaCode.trim() || isVerifyingMfa}
+            loading={isVerifyingMfa}
+            onClick={handleVerifyMfa}
+          >
+            {getI18nextInstance().t("archbase:mfa.verify", "Verificar")}
+          </Button>
+          {onCancelMfa && (
+            <Anchor
+              component="button"
+              c="var(--mantine-text-color)"
+              fz={14}
+              ta="center"
+              styles={{ root: { cursor: "pointer" } }}
+              onClick={onCancelMfa}
+            >
+              {getI18nextInstance().t("archbase:mfa.back", "Voltar ao login")}
+            </Anchor>
+          )}
+        </Stack>
+      )}
+
+      {!mfaRequired && (<>
       {showMockUsersSelector && (
         <>
           <Group gap="sm" mb="md">
@@ -251,6 +323,7 @@ export function ArchbaseLogin({
       >
         {getI18nextInstance().t("archbase:signIn")}
       </Button>
+      </>)}
       {options?.customContentAfter}
       {showError && error && <Text c="red" mt="sm">{error}</Text>}
     </Card>
