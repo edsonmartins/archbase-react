@@ -30,6 +30,11 @@ export interface AuthenticationManagerReturnType {
   clearError: () => void
   accessToken?: string | null
   
+  // MFA / segundo fator (2 passos)
+  mfaRequired: boolean
+  verifyMfa?: (code: string) => Promise<void>
+  cancelMfa: () => void
+
   // Novos métodos opcionais para autenticação avançada
   loginWithContext?: (request: ContextualAuthenticationRequest, rememberMe?: boolean) => Promise<void>
   loginFlexible?: (request: FlexibleLoginRequest, rememberMe?: boolean) => Promise<void>
@@ -74,6 +79,8 @@ export const useArchbaseAuthenticationManager = ({
   const [error, setError] = useState<string>('')
   const [username, setUsername] = useState<string>('')
   const [context, setContext] = useState<ContextObject | null>(null)
+  const [mfaRequired, setMfaRequired] = useState<boolean>(false)
+  const [mfaChallengeToken, setMfaChallengeToken] = useState<string | null>(null)
   const securityStore = useArchbaseStore(ARCHBASE_SECURITY_MANAGER_STORE)
 
   // Detectar capacidades do authenticator
@@ -175,7 +182,17 @@ export const useArchbaseAuthenticationManager = ({
       
       // Desestruturação direta - separa context/user do resto (que é o access_token)
       const { context, user, ...tokenData } = await authenticator.loginWithContext(request)
-      
+
+      // Segundo fator pendente (MFA): a senha conferiu, mas falta o código. Não autentica
+      // ainda — guarda o desafio e sinaliza mfaRequired; o app completa via verifyMfa().
+      if ((tokenData as any).mfa_required) {
+        setMfaChallengeToken((tokenData as any).challenge_token ?? null)
+        setMfaRequired(true)
+        setUsername(request.email)
+        setAuthenticating(false)
+        return
+      }
+
       // Adicionar campos obrigatórios que podem estar faltando
       const access_token: ArchbaseAccessToken = {
         scope: '',
@@ -209,6 +226,40 @@ export const useArchbaseAuthenticationManager = ({
       setIsError(true)
       throw error
     }
+  }
+
+  const verifyMfa = async (code: string) => {
+    if (!authenticator.verifyMfa) {
+      throw new Error('verifyMfa não suportado por esta implementação do ArchbaseAuthenticator')
+    }
+    if (!mfaChallengeToken) {
+      throw new Error('Nenhum desafio de MFA pendente')
+    }
+    try {
+      setAuthenticating(true)
+      setError('')
+      setIsError(false)
+      const access_token = await authenticator.verifyMfa(mfaChallengeToken, code)
+      tokenManager.saveToken(access_token)
+      tokenManager.saveUsername(username)
+      setAccessToken(access_token)
+      setMfaRequired(false)
+      setMfaChallengeToken(null)
+      setAuthenticating(false)
+      setAuthenticated(true)
+    } catch (error) {
+      setAuthenticating(false)
+      setError(processErrorMessage(error))
+      setIsError(true)
+      throw error
+    }
+  }
+
+  const cancelMfa = () => {
+    setMfaRequired(false)
+    setMfaChallengeToken(null)
+    setError('')
+    setIsError(false)
   }
 
   const loginFlexible = async (request: FlexibleLoginRequest, rememberMe: boolean = false) => {
@@ -377,10 +428,15 @@ export const useArchbaseAuthenticationManager = ({
     register: capabilities.hasRegistration ? register : undefined,
     getSupportedContexts: getSupportedContextsMethod,
     validateContext: validateContextMethod,
-    
+
+    // MFA / segundo fator (2 passos)
+    mfaRequired,
+    verifyMfa: typeof authenticator.verifyMfa === 'function' ? verifyMfa : undefined,
+    cancelMfa,
+
     // Informações de contexto
     context,
-    
+
     // Detecção de capacidades
     capabilities
   }
