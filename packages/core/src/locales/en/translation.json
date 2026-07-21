@@ -620,5 +620,19 @@
   "Before": "Before",
   "After": "After",
   "In": "In",
-  "Not in": "Not in"
+  "Not in": "Not in",
+  "Mínimo de {{min}} caracteres": "Minimum of {{min}} characters",
+  "Máximo de {{min}} caracteres": "Maximum of {{min}} characters",
+  "Pelo menos {{min}} letra minúscula": "At least {{min}} lowercase letter",
+  "Pelo menos {{min}} letra maiúscula": "At least {{min}} uppercase letter",
+  "Pelo menos {{min}} número": "At least {{min}} number",
+  "Pelo menos {{min}} símbolo": "At least {{min}} symbol",
+  "Não pode conter espaços": "Cannot contain spaces",
+  "Não pode repetir o mesmo caractere {{min}} vezes seguidas": "Cannot repeat the same character {{min}} times in a row",
+  "Não pode conter sequências de {{min}} caracteres": "Cannot contain sequences of {{min}} characters",
+  "Não pode conter dados pessoais ou termos comuns": "Cannot contain personal data or common terms",
+  "Senha fraca": "Weak password",
+  "Senha razoável": "Fair password",
+  "Senha boa": "Good password",
+  "Senha forte": "Strong password"
 }

@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { Button, Card, CSSProperties, Divider, PasswordInput, Text, TextInput, useMantineColorScheme } from "@mantine/core";
 import { useFocusTrap } from "@mantine/hooks";
 import { useArchbaseTheme, isEmailValidate, getI18nextInstance } from "@archbase/core";
-import { ArchbaseDialog } from "@archbase/components";
+import type { ArchbasePasswordPolicy } from "@archbase/core";
+import { resolveArchbasePasswordPolicy, validateArchbasePassword } from "@archbase/core";
+import { ArchbaseDialog, ArchbasePasswordStrengthMeter } from "@archbase/components";
 import { useArchbaseTranslation } from '@archbase/core';
 
 export interface ArchbaseResetPasswordProps {
@@ -12,8 +14,17 @@ export interface ArchbaseResetPasswordProps {
   onSendResetPasswordEmail: (email: string) => Promise<void>
   onResetPassword: (email: string, passwordResetToken: string, newPassword: string) => Promise<void>
   onClickBackToLogin: () => void
-  validatePassword?: () => string
-  validateToken?: () => string
+  /** Validação customizada da nova senha. Deve retornar a mensagem de erro ou string vazia */
+  validatePassword?: (newPassword: string) => string
+  validateToken?: (passwordResetToken: string) => string
+  /**
+   * Critérios de senha forte aplicados na nova senha.
+   * `true` aplica a política padrão do Archbase; um objeto permite ajustar cada critério.
+   * Quando ausente somente a confirmação de senha é verificada.
+   */
+  passwordPolicy?: ArchbasePasswordPolicy | boolean
+  /** Indicador se a lista de critérios deve ser exibida abaixo do campo. Padrão: true */
+  showPasswordRequirements?: boolean
   /** Estilo do card */
 	style?: CSSProperties;
 }
@@ -26,7 +37,7 @@ const defaultStyle: CSSProperties = {
   marginTop: 30,
 };
 
-export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onResetPassword, onClickBackToLogin, validatePassword, validateToken, initialEmail = "", description, style }: ArchbaseResetPasswordProps) {
+export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onResetPassword, onClickBackToLogin, validatePassword, validateToken, initialEmail = "", description, style, passwordPolicy, showPasswordRequirements = true }: ArchbaseResetPasswordProps) {
   const focusTrapRef = useFocusTrap();
   const theme = useArchbaseTheme();
   const { colorScheme } = useMantineColorScheme();
@@ -41,6 +52,8 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
   const [tokenError, setTokenError] = useState<string>("");
   const [newPasswordError, setNewPasswordError] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
+
+  const resolvedPolicy = resolveArchbasePasswordPolicy(passwordPolicy);
 
 
   async function handleSendResetPasswordEmail(email: string) {
@@ -63,19 +76,24 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
       let confirmPasswordError = "";
 
       if (validateToken) {
-        tokenErrorResult = validateToken()
-        setNewPasswordError(tokenErrorResult)
+        tokenErrorResult = validateToken(passwordResetToken)
+        setTokenError(tokenErrorResult)
       }
-      if (validatePassword) {
-        passwordErrorResult = validatePassword()
-        setNewPasswordError(passwordErrorResult)
+      // Pré-validação da política de senha forte antes de qualquer validação customizada.
+      if (resolvedPolicy) {
+        passwordErrorResult = validateArchbasePassword(newPassword, resolvedPolicy).error ?? ""
       }
+      if (!passwordErrorResult && validatePassword) {
+        passwordErrorResult = validatePassword(newPassword)
+      }
+      setNewPasswordError(passwordErrorResult)
+
       if (newPassword !== confirmPassword) {
         confirmPasswordError = `${getI18nextInstance().t("archbase:A nova senha e a confirmação devem ser iguais.")}`
         setConfirmPasswordError(confirmPasswordError);
       }
 
-      if (!passwordErrorResult && !tokenErrorResult) {
+      if (!passwordErrorResult && !tokenErrorResult && !confirmPasswordError) {
         await onResetPassword(email, passwordResetToken, newPassword).then(() => {
           ArchbaseDialog.showSuccess(`${getI18nextInstance().t("archbase:Senha redefinida com sucesso.")}`)
           onClickBackToLogin()
@@ -195,6 +213,13 @@ export function ArchbaseResetPassword({ error, onSendResetPasswordEmail, onReset
               required
               error={newPasswordError}
             />
+            {resolvedPolicy && (
+              <ArchbasePasswordStrengthMeter
+                value={newPasswordInput}
+                policy={resolvedPolicy}
+                showRequirements={showPasswordRequirements}
+              />
+            )}
             <PasswordInput
               label={getI18nextInstance().t("archbase:Confirmar senha")}
               placeholder={getI18nextInstance().t("archbase:Confirmar senha")}

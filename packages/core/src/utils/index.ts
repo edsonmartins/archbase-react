@@ -60,5 +60,20 @@ export {
 	decompressString,
 } from './string-utils';
 
+export {
+	ARCHBASE_DEFAULT_PASSWORD_POLICY,
+	validateArchbasePassword,
+	isArchbasePasswordValid,
+	getArchbasePasswordStrengthLabel,
+	resolveArchbasePasswordPolicy,
+} from './passwordPolicy';
+export type {
+	ArchbasePasswordPolicy,
+	ArchbasePasswordStrength,
+	ArchbasePasswordRequirement,
+	ArchbasePasswordRequirementKey,
+	ArchbasePasswordValidationResult,
+} from './passwordPolicy';
+
 export { getKeyByEnumValue } from './enum-utils';
 export { ArchbaseFilterDSL } from './ArchbaseFilterDSL';
