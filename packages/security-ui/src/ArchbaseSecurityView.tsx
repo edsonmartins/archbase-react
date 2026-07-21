@@ -459,6 +459,13 @@ export function ArchbaseSecurityView({
 				size={120}
 			/>
 			<ArchbaseDataGridColumn<UserDto>
+				dataField="passwordChangedAt"
+				dataType="datetime"
+				header={`${t('archbase:Última troca de senha')}`}
+				inputFilterType="date-range"
+				size={160}
+			/>
+			<ArchbaseDataGridColumn<UserDto>
 				dataField="accountLocked"
 				dataType="boolean"
 				header={`${t('archbase:Bloqueado?')}`}
