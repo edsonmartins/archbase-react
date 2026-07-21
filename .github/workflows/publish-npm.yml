@@ -51,11 +51,19 @@ jobs:
         run: |
           VERSION=${{ github.ref_name }}
 
-          # Tentar obter mensagem da tag anotada
-          TAG_MESSAGE=$(git tag -l --format='%(contents)' "$VERSION" 2>/dev/null || echo "")
+          # O actions/checkout cria a ref da tag apontando direto para o commit, sem trazer
+          # o objeto da tag anotada. Sem este fetch, '%(contents)' devolve a mensagem do
+          # COMMIT — foi o que fez o release da 4.0.41 sair com "chore(release): versão
+          # 4.0.41" no lugar das notas reais.
+          git fetch --tags --force --depth=1 2>/dev/null || true
 
-          # Se a tag tem mensagem (é anotada), usar ela
-          if [ -n "$TAG_MESSAGE" ] && [ "$TAG_MESSAGE" != "$VERSION" ]; then
+          # Só usa a mensagem se for de fato uma tag anotada (objeto do tipo 'tag').
+          TAG_MESSAGE=""
+          if [ "$(git cat-file -t "$VERSION" 2>/dev/null)" = "tag" ]; then
+            TAG_MESSAGE=$(git tag -l --format='%(contents)' "$VERSION" 2>/dev/null || echo "")
+          fi
+
+          if [ -n "$TAG_MESSAGE" ]; then
             echo "Using annotated tag message"
             echo "$TAG_MESSAGE" > release_notes.md
           else
@@ -120,6 +128,8 @@ jobs:
         uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2.6.1
         with:
           body_path: release_notes.md
+          # Acrescenta ao corpo acima a lista de PRs e commits desde a release anterior.
+          generate_release_notes: true
           draft: false
           prerelease: false
         env:
