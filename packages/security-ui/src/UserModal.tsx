@@ -28,6 +28,8 @@ export interface UserModalOptions {
   showChangePasswordOnNextLogin?: boolean; // changePasswordOnNextLogin
   showAllowPasswordChange?: boolean; // allowPasswordChange
   showPasswordNeverExpires?: boolean; // passwordNeverExpires
+  /** Exibe, somente leitura, a data da última troca de senha (passwordChangedAt) */
+  showPasswordChangedAt?: boolean;
 
   // Campos de status da conta
   showAccountConfigLabel?: boolean;
@@ -70,6 +72,7 @@ export const defaultUserModalOptions: UserModalOptions = {
   showChangePasswordOnNextLogin: true,
   showAllowPasswordChange: true,
   showPasswordNeverExpires: true,
+  showPasswordChangedAt: true,
 
   // Campos de status da conta
   showAccountConfigLabel: true,
@@ -100,6 +103,14 @@ export interface UserModalProps {
 export const UserModal = (props: UserModalProps) => {
   const [passwordError, setPasswordError] = useState("")
   const options = { ...defaultUserModalOptions, ...(props.options ?? {}) }
+
+  // Somente leitura: o backend atualiza passwordChangedAt a cada troca de senha.
+  const rawPasswordChangedAt = props.dataSource.getFieldValue('passwordChangedAt') as string | undefined
+  const parsedPasswordChangedAt = rawPasswordChangedAt ? new Date(rawPasswordChangedAt) : undefined
+  const passwordChangedAt =
+    parsedPasswordChangedAt && !Number.isNaN(parsedPasswordChangedAt.getTime())
+      ? parsedPasswordChangedAt.toLocaleString()
+      : undefined
 
   const groupApi = useArchbaseRemoteServiceApi<ArchbaseGroupService>(ARCHBASE_IOC_API_TYPE.Group)
   const { dataSource: dsGroups } = useArchbaseRemoteDataSource<GroupDto, string>({
@@ -296,7 +307,17 @@ export const UserModal = (props: UserModalProps) => {
                       dataField="passwordNeverExpires"
                       label={`${getI18nextInstance().t('archbase:Senha nunca expira ?')}`}
                     />
+                    <Text fz={12} c="dimmed">
+                      {getI18nextInstance().t(
+                        'archbase:Desmarcado, a senha expira conforme a política de validade do servidor. Para exigir a troca agora, use "Deve alterar senha próximo login".'
+                      )}
+                    </Text>
                   </Input.Wrapper>
+                )}
+                {options.showPasswordChangedAt && passwordChangedAt && (
+                  <Text fz={12} c="dimmed">
+                    {`${getI18nextInstance().t('archbase:Última troca de senha')}: ${passwordChangedAt}`}
+                  </Text>
                 )}
               </Stack>
             </Grid.Col>

@@ -326,6 +326,14 @@ export class UserDto extends SecurityDto {
   @IsBoolean()
   passwordNeverExpires: boolean
 
+  /**
+   * Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração
+   * periódica quando `archbase.security.password.expiration-days` está configurado.
+   * Somente leitura — o backend a atualiza sozinho a cada troca de senha.
+   */
+  @IsOptional()
+  passwordChangedAt?: string
+
   @IsBoolean()
   accountDeactivated: boolean
 
@@ -372,6 +380,7 @@ export class UserDto extends SecurityDto {
     this.allowPasswordChange = data.allowPasswordChange || false
     this.allowMultipleLogins = data.allowMultipleLogins || false
     this.passwordNeverExpires = data.passwordNeverExpires || false
+    this.passwordChangedAt = data.passwordChangedAt || undefined
     this.accountDeactivated = data.accountDeactivated || false
     this.accountLocked = data.accountLocked || false
     this.unlimitedAccessHours = data.unlimitedAccessHours || false

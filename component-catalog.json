@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-06-21",
+  "generatedAt": "2026-07-18",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -2919,6 +2919,12 @@
           "type": "(value: any) => Promise<O>",
           "required": false,
           "description": "Function que busca o valor original antes de converter pelo valor de retorno do converter"
+        },
+        {
+          "name": "isOptionDisabled",
+          "type": "(option: O) => boolean",
+          "required": false,
+          "description": "Função que determina se uma opção individual está desabilitada"
         }
       ],
       "examples": [],
@@ -3110,6 +3116,12 @@
           "type": "number",
           "required": false,
           "description": "Qualidade da compressão da imagem (0 a 1), sendo 1 melhor qualidade"
+        },
+        {
+          "name": "maxOutputSizePx",
+          "type": "number",
+          "required": false,
+          "description": "Maior dimensão (px) da imagem final: o recorte é redimensionado automaticamente\npara caber neste limite antes da compressão, independente do tamanho da foto\nenviada pelo usuário. 0 mantém a resolução original do recorte."
         }
       ],
       "examples": [],
@@ -5427,6 +5439,18 @@
           "type": "boolean",
           "required": false,
           "description": "Auto-register column permission"
+        },
+        {
+          "name": "exportValue",
+          "type": "(row: T) => string",
+          "required": false,
+          "description": "Função para formatar o valor da célula para exportação (CSV/Excel). Útil quando render usa componentes React (ex: badges, arrays de objetos)."
+        },
+        {
+          "name": "exportable",
+          "type": "boolean",
+          "required": false,
+          "description": "Se false, a coluna não aparece nas opções de exportação/impressão (ex: colunas de imagem). Padrão: true."
         }
       ],
       "examples": [],
@@ -5590,6 +5614,12 @@
           "type": "boolean",
           "required": false,
           "description": "Auto-registra a permissão da coluna (padrão: true)"
+        },
+        {
+          "name": "exportValue",
+          "type": "(row: T) => string",
+          "required": false,
+          "description": "Função para formatar o valor da célula para exportação (CSV/Excel). Útil quando render usa componentes React (ex: badges, arrays de objetos)."
         }
       ],
       "examples": [],
@@ -11952,7 +11982,7 @@
     },
     {
       "name": "ArchbaseLogin",
-      "description": "ArchbaseLogin — componente de segurança focado em login.",
+      "description": "Login em duas etapas (MFA): quando `true`, exibe o painel de código em vez do formulário.",
       "sourcePath": "packages/security/src/ArchbaseLogin.tsx",
       "exportsFrom": "@archbase/security",
       "props": [
@@ -12039,6 +12069,36 @@
           "type": "boolean",
           "required": false,
           "description": "Define show sign in. (boolean)"
+        },
+        {
+          "name": "mfaRequired",
+          "type": "boolean",
+          "required": false,
+          "description": "Login em duas etapas (MFA): quando `true`, exibe o painel de código em vez do formulário."
+        },
+        {
+          "name": "onVerifyMfa",
+          "type": "(code: string) => Promise<void>",
+          "required": false,
+          "description": "Valida o código do segundo fator (TOTP ou de recuperação)."
+        },
+        {
+          "name": "mfaError",
+          "type": "string",
+          "required": false,
+          "description": "Mensagem de erro específica da etapa de MFA."
+        },
+        {
+          "name": "onCancelMfa",
+          "type": "() => void",
+          "required": false,
+          "description": "Volta do painel de MFA para o formulário de login."
+        },
+        {
+          "name": "isVerifyingMfa",
+          "type": "boolean",
+          "required": false,
+          "description": "Indica verificação em andamento (desabilita o botão)."
         }
       ],
       "examples": [],
@@ -13416,6 +13476,49 @@
         "editor"
       ],
       "canonicalUrl": "packages/components/src/editors/ArchbaseMentionInput"
+    },
+    {
+      "name": "ArchbaseMfaSetup",
+      "description": "Resultado do início da configuração de MFA (espelha o backend MfaSetup).",
+      "sourcePath": "packages/security/src/ArchbaseMfaSetup.tsx",
+      "exportsFrom": "@archbase/security",
+      "props": [
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "required": true,
+          "description": "Estado atual do MFA do usuário (vindo de GET /mfa/status)."
+        },
+        {
+          "name": "onSetup",
+          "type": "() => Promise<ArchbaseMfaSetupData>",
+          "required": true,
+          "description": "Inicia a configuração: POST /mfa/setup → segredo + URI do QR."
+        },
+        {
+          "name": "onEnable",
+          "type": "(code: string) => Promise<string[]>",
+          "required": true,
+          "description": "Confirma o primeiro código: POST /mfa/enable → códigos de recuperação."
+        },
+        {
+          "name": "onDisable",
+          "type": "() => Promise<void>",
+          "required": true,
+          "description": "Desativa o MFA: POST /mfa/disable."
+        },
+        {
+          "name": "onStatusChange",
+          "type": "(enabled: boolean) => void",
+          "required": false,
+          "description": "Notifica o app quando o estado de habilitação muda."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/ArchbaseMfaSetup.tsx"
     },
     {
       "name": "ArchbaseMicrosoftAvatar",
@@ -17362,6 +17465,12 @@
           "type": "(value: any) => Promise<O>",
           "required": false,
           "description": "Function que busca o valor original antes de converter pelo valor de retorno do converter\nPor exemplo: (id) => fetchObjectById(id) para converter ID de volta ao objeto"
+        },
+        {
+          "name": "isOptionDisabled",
+          "type": "(option: O) => boolean",
+          "required": false,
+          "description": "Função que determina se uma opção individual está desabilitada"
         }
       ],
       "examples": [],
@@ -22219,6 +22328,16 @@
       "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
+      "name": "Column",
+      "description": "Column — componente Archbase focado em column.",
+      "sourcePath": "packages/kanban/src/components/Column/Column",
+      "exportsFrom": "@archbase/kanban",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/kanban/src/components/Column/Column"
+    },
+    {
       "name": "Columns",
       "description": "DataGrid Types - V1/V2 Compatible\n\nThese types support both V1 and V2 DataSource versions.\nThe actual V1/V2 compatibility logic is handled in the \ncomponents that use these types (like ArchbaseDataGrid and useGridData).",
       "sourcePath": "packages/components/src/datagrid/main/archbase-data-grid-types.tsx",
@@ -22820,6 +22939,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/utils/deepMap"
+    },
+    {
+      "name": "default",
+      "description": "default — componente Archbase focado em default.",
+      "sourcePath": "packages/kanban/src/components/GenericItem/GenericItem",
+      "exportsFrom": "@archbase/kanban",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/kanban/src/components/GenericItem/GenericItem"
     },
     {
       "name": "DEFAULT_AVATAR",
@@ -24950,6 +25079,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/rsql/ast/Node.ts"
+    },
+    {
+      "name": "Kanban",
+      "description": "Kanban — componente Archbase focado em kanban.",
+      "sourcePath": "packages/kanban/src/components/Kanban",
+      "exportsFrom": "@archbase/kanban",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/kanban/src/components/Kanban"
     },
     {
       "name": "KeepAliveCacheProvider",

@@ -17,6 +17,16 @@ import {
   ContextObject
 } from '../types/ContextualAuthentication'
 
+/**
+ * Reconhece a recusa de login por credenciais expiradas devolvida pelo archbase-security:
+ * HTTP 403 com `{ error: 'CREDENTIALS_EXPIRED', requirePasswordChange: true }`. Aceita tanto o
+ * erro do axios quanto o corpo já desembrulhado.
+ */
+export function isCredentialsExpiredError(error: any): boolean {
+  const payload = error?.response?.data ?? error?.data ?? error
+  return payload?.error === 'CREDENTIALS_EXPIRED' || payload?.requirePasswordChange === true
+}
+
 export interface AuthenticationManagerReturnType {
   // Métodos básicos (compatibilidade)
   login: (username: string, password: string, rememberMe: boolean) => void
@@ -30,6 +40,19 @@ export interface AuthenticationManagerReturnType {
   clearError: () => void
   accessToken?: string | null
   
+  // MFA / segundo fator (2 passos)
+  mfaRequired: boolean
+  verifyMfa?: (code: string) => Promise<void>
+  cancelMfa: () => void
+
+  /**
+   * O backend recusou o login com CREDENTIALS_EXPIRED: há troca de senha obrigatória pendente
+   * ou a senha venceu pela política de validade. O app deve levar o usuário ao fluxo de
+   * redefinição de senha (ArchbaseResetPassword) em vez de só exibir o erro.
+   */
+  passwordChangeRequired: boolean
+  clearPasswordChangeRequired: () => void
+
   // Novos métodos opcionais para autenticação avançada
   loginWithContext?: (request: ContextualAuthenticationRequest, rememberMe?: boolean) => Promise<void>
   loginFlexible?: (request: FlexibleLoginRequest, rememberMe?: boolean) => Promise<void>
@@ -74,6 +97,9 @@ export const useArchbaseAuthenticationManager = ({
   const [error, setError] = useState<string>('')
   const [username, setUsername] = useState<string>('')
   const [context, setContext] = useState<ContextObject | null>(null)
+  const [mfaRequired, setMfaRequired] = useState<boolean>(false)
+  const [passwordChangeRequired, setPasswordChangeRequired] = useState<boolean>(false)
+  const [mfaChallengeToken, setMfaChallengeToken] = useState<string | null>(null)
   const securityStore = useArchbaseStore(ARCHBASE_SECURITY_MANAGER_STORE)
 
   // Detectar capacidades do authenticator
@@ -120,6 +146,10 @@ export const useArchbaseAuthenticationManager = ({
     setError('')
   }
 
+  const clearPasswordChangeRequired = () => {
+    setPasswordChangeRequired(false)
+  }
+
   const logout = (clearRememberMe?: boolean) => {
     setAuthenticating(false)
     setAuthenticated(false)
@@ -137,6 +167,7 @@ export const useArchbaseAuthenticationManager = ({
     setContext(null)
     setError('')
     setIsError(false)
+    setPasswordChangeRequired(false)
     securityStore.clearAllValues()
   }
 
@@ -157,6 +188,12 @@ export const useArchbaseAuthenticationManager = ({
     } catch (error) {
       setAuthenticating(false)
       setAuthenticated(false)
+      // Troca de senha obrigatória: não é credencial inválida — o app precisa redirecionar
+      // para a redefinição de senha, senão o usuário fica preso na tela de login.
+      if (isCredentialsExpiredError(error)) {
+        setUsername(username)
+        setPasswordChangeRequired(true)
+      }
       setError(processErrorMessage(error))
       setIsError(true)
     }
@@ -175,7 +212,17 @@ export const useArchbaseAuthenticationManager = ({
       
       // Desestruturação direta - separa context/user do resto (que é o access_token)
       const { context, user, ...tokenData } = await authenticator.loginWithContext(request)
-      
+
+      // Segundo fator pendente (MFA): a senha conferiu, mas falta o código. Não autentica
+      // ainda — guarda o desafio e sinaliza mfaRequired; o app completa via verifyMfa().
+      if ((tokenData as any).mfa_required) {
+        setMfaChallengeToken((tokenData as any).challenge_token ?? null)
+        setMfaRequired(true)
+        setUsername(request.email)
+        setAuthenticating(false)
+        return
+      }
+
       // Adicionar campos obrigatórios que podem estar faltando
       const access_token: ArchbaseAccessToken = {
         scope: '',
@@ -205,10 +252,48 @@ export const useArchbaseAuthenticationManager = ({
     } catch (error) {
       setAuthenticating(false)
       setAuthenticated(false)
+      if (isCredentialsExpiredError(error)) {
+        setUsername(request.email)
+        setPasswordChangeRequired(true)
+      }
       setError(processErrorMessage(error))
       setIsError(true)
       throw error
     }
+  }
+
+  const verifyMfa = async (code: string) => {
+    if (!authenticator.verifyMfa) {
+      throw new Error('verifyMfa não suportado por esta implementação do ArchbaseAuthenticator')
+    }
+    if (!mfaChallengeToken) {
+      throw new Error('Nenhum desafio de MFA pendente')
+    }
+    try {
+      setAuthenticating(true)
+      setError('')
+      setIsError(false)
+      const access_token = await authenticator.verifyMfa(mfaChallengeToken, code)
+      tokenManager.saveToken(access_token)
+      tokenManager.saveUsername(username)
+      setAccessToken(access_token)
+      setMfaRequired(false)
+      setMfaChallengeToken(null)
+      setAuthenticating(false)
+      setAuthenticated(true)
+    } catch (error) {
+      setAuthenticating(false)
+      setError(processErrorMessage(error))
+      setIsError(true)
+      throw error
+    }
+  }
+
+  const cancelMfa = () => {
+    setMfaRequired(false)
+    setMfaChallengeToken(null)
+    setError('')
+    setIsError(false)
   }
 
   const loginFlexible = async (request: FlexibleLoginRequest, rememberMe: boolean = false) => {
@@ -250,6 +335,10 @@ export const useArchbaseAuthenticationManager = ({
     } catch (error) {
       setAuthenticating(false)
       setAuthenticated(false)
+      if (isCredentialsExpiredError(error)) {
+        setUsername(request.identifier)
+        setPasswordChangeRequired(true)
+      }
       setError(processErrorMessage(error))
       setIsError(true)
       throw error
@@ -377,10 +466,19 @@ export const useArchbaseAuthenticationManager = ({
     register: capabilities.hasRegistration ? register : undefined,
     getSupportedContexts: getSupportedContextsMethod,
     validateContext: validateContextMethod,
-    
+
+    // MFA / segundo fator (2 passos)
+    mfaRequired,
+    verifyMfa: typeof authenticator.verifyMfa === 'function' ? verifyMfa : undefined,
+    cancelMfa,
+
+    // Troca de senha obrigatória (CREDENTIALS_EXPIRED)
+    passwordChangeRequired,
+    clearPasswordChangeRequired,
+
     // Informações de contexto
     context,
-    
+
     // Detecção de capacidades
     capabilities
   }
