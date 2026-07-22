@@ -47,6 +47,7 @@ function StandardSidebarContent({
 	skeletonItemCount = 8,
 	backgroundDarkColor,
 	backgroundLightColor,
+	backgroundImage,
 	textDarkColor,
 	textLightColor,
 	iconDarkColor,
@@ -56,6 +57,9 @@ function StandardSidebarContent({
 	withShadow = false,
 	highlightActiveItem = true,
 	onMenuItemClick,
+	itemBorderRadius,
+	itemHorizontalGap,
+	itemActiveBackground,
 }: StandardSidebarContentProps) {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
@@ -78,6 +82,13 @@ function StandardSidebarContent({
 	const itemHoverColor = activeColor
 		? theme.colors[activeColor]?.[6] ?? theme.colors[theme.primaryColor][6]
 		: theme.colors[theme.primaryColor][6];
+
+	// Props de estilo dos itens, repassadas a cada SidebarItem.
+	const itemStyleProps = { itemBorderRadius, itemHorizontalGap, activeBackground: itemActiveBackground };
+
+	// Com `backgroundImage` (gradiente): raiz o pinta, internos transparentes.
+	const rootBgStyle = backgroundImage ? { background: backgroundImage } : { backgroundColor };
+	const innerBg = backgroundImage ? 'transparent' : backgroundColor;
 
 	// Hook de busca
 	const {
@@ -163,6 +174,7 @@ function StandardSidebarContent({
 					textColor={textColor}
 					iconColor={iconColor}
 					hoverColor={itemHoverColor}
+					{...itemStyleProps}
 				/>
 			));
 		};
@@ -186,6 +198,8 @@ function StandardSidebarContent({
 							onClick={navigateToItem}
 							textColor={textColor}
 							iconColor={iconColor}
+						hoverColor={itemHoverColor}
+						{...itemStyleProps}
 						/>
 					))}
 				</SidebarGroup>
@@ -205,6 +219,8 @@ function StandardSidebarContent({
 							onClick={navigateToItem}
 							textColor={textColor}
 							iconColor={iconColor}
+						hoverColor={itemHoverColor}
+						{...itemStyleProps}
 						/>
 					))}
 					{Array.from(groupedItems.groups.values()).flat().map((item, index) => (
@@ -216,6 +232,8 @@ function StandardSidebarContent({
 							onClick={navigateToItem}
 							textColor={textColor}
 							iconColor={iconColor}
+						hoverColor={itemHoverColor}
+						{...itemStyleProps}
 						/>
 					))}
 				</Stack>
@@ -252,7 +270,7 @@ function StandardSidebarContent({
 						width: px(currentWidth),
 						height: typeof height === 'number' ? px(height) : height,
 						minHeight: typeof height === 'number' ? px(height) : height,
-						backgroundColor,
+						...rootBgStyle,
 						display: 'flex',
 						flexDirection: 'column',
 						overflow: 'hidden',
@@ -308,7 +326,7 @@ function StandardSidebarContent({
 							style={{
 								flexShrink: 0,
 								height: footerHeight,
-								backgroundColor,
+							backgroundColor: innerBg,
 								borderTop: withBorder ? `1px solid ${colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]}` : undefined,
 							}}
 						>

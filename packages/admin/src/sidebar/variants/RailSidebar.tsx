@@ -46,6 +46,7 @@ function RailSidebarContent({
 	skeletonGroupCount = 3,
 	backgroundDarkColor,
 	backgroundLightColor,
+	backgroundImage,
 	textDarkColor,
 	textLightColor,
 	iconDarkColor,
@@ -59,6 +60,9 @@ function RailSidebarContent({
 	withBorder = false,
 	highlightActiveItem = true,
 	onMenuItemClick,
+	itemBorderRadius,
+	itemHorizontalGap,
+	itemActiveBackground,
 }: RailSidebarContentProps & { skeletonGroupCount?: number }) {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
@@ -74,6 +78,11 @@ function RailSidebarContent({
 		? (backgroundDarkColor ?? theme.colors.dark[7])
 		: (backgroundLightColor ?? theme.white);
 
+	// Com `backgroundImage` (gradiente): o contêiner raiz o pinta e os internos
+	// ficam transparentes, para o gradiente aparecer inteiro; senão, cor sólida.
+	const rootBgStyle = backgroundImage ? { background: backgroundImage } : { backgroundColor };
+	const innerBg = backgroundImage ? 'transparent' : backgroundColor;
+
 	const textColor = colorScheme === 'dark'
 		? (textDarkColor ?? theme.colors.gray[3])
 		: (textLightColor ?? theme.colors.gray[7]);
@@ -86,6 +95,9 @@ function RailSidebarContent({
 	const itemHoverColor = activeColor
 		? theme.colors[activeColor]?.[6] ?? theme.colors[theme.primaryColor][6]
 		: theme.colors[theme.primaryColor][6];
+
+	// Props de estilo dos itens, repassadas a cada SidebarItem.
+	const itemStyleProps = { itemBorderRadius, itemHorizontalGap, activeBackground: itemActiveBackground };
 
 	// Cores dos grupos
 	const groupBgColor = groupBackgroundColor
@@ -258,6 +270,7 @@ function RailSidebarContent({
 						textColor={textColor}
 						iconColor={iconColor}
 						hoverColor={itemHoverColor}
+							{...itemStyleProps}
 					/>
 				))}
 			</Stack>
@@ -269,13 +282,13 @@ function RailSidebarContent({
 	// Se só tem um grupo, renderizar como Standard
 	if (groups.length <= 1) {
 		return (
-			<Flex direction="column" w={collapsed ? collapsedWidth : width} h="100%" style={{ backgroundColor }}>
+			<Flex direction="column" w={collapsed ? collapsedWidth : width} h="100%" style={rootBgStyle}>
 				{header && <Box style={{ width: '100%', flexShrink: 0 }}>{header}</Box>}
 				<Box
 					style={{
 						flex: 1,
 						width: '100%',
-						backgroundColor,
+						backgroundColor: innerBg,
 						display: 'flex',
 						flexDirection: 'column',
 						overflow: 'hidden',
@@ -302,6 +315,7 @@ function RailSidebarContent({
 												textColor={textColor}
 												iconColor={iconColor}
 												hoverColor={itemHoverColor}
+							{...itemStyleProps}
 											/>
 										))}
 								</Stack>
@@ -311,14 +325,14 @@ function RailSidebarContent({
 						</Box>
 					</ScrollArea>
 				</Box>
-				{footer && <Box style={{ width: '100%', backgroundColor, flexShrink: 0 }}>{footer}</Box>}
+				{footer && <Box style={{ width: '100%', backgroundColor: innerBg, flexShrink: 0 }}>{footer}</Box>}
 			</Flex>
 		);
 	}
 
 	// Layout com múltiplos grupos
 	return (
-		<Flex direction="column" w={collapsed ? groupColumnWidth : width} h="100%" style={{ backgroundColor }}>
+		<Flex direction="column" w={collapsed ? groupColumnWidth : width} h="100%" style={rootBgStyle}>
 			{header && <Box style={{ width: '100%', flexShrink: 0 }}>{header}</Box>}
 			<Box
 				style={{
@@ -337,7 +351,7 @@ function RailSidebarContent({
 					style={{
 						width: collapsed ? 0 : menuWidth,
 						height: '100%',
-						backgroundColor,
+						backgroundColor: innerBg,
 						overflow: 'hidden',
 						transition: 'width 200ms ease',
 						borderLeft: groups.length > 1 ? `1px solid ${colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]}` : undefined,
@@ -352,7 +366,7 @@ function RailSidebarContent({
 					)}
 				</Box>
 			</Box>
-			{footer && <Box style={{ width: '100%', backgroundColor, flexShrink: 0 }}>{footer}</Box>}
+			{footer && <Box style={{ width: '100%', backgroundColor: innerBg, flexShrink: 0 }}>{footer}</Box>}
 		</Flex>
 	);
 }

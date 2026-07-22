@@ -89,6 +89,23 @@ export interface ArchbaseAdminMainLayoutProps {
 	sideBarTextLightColor?: string;
 	sideBarIconDarkColor?: string;
 	sideBarIconLightColor?: string;
+	/**
+	 * Imagem/gradiente de fundo do sidebar (ex: `linear-gradient(...)`). Aceita
+	 * qualquer valor de `background`. Quando definido, é usado no lugar da cor
+	 * sólida de `sideBarBackground*Color`. @default undefined
+	 */
+	sideBarBackgroundImage?: string;
+	/**
+	 * Background da área de conteúdo principal. Aceita cor OU gradiente. Quando
+	 * definido, substitui o cinza padrão derivado do tema. @default undefined
+	 */
+	mainBackground?: string;
+	/** Raio das bordas dos itens do sidebar (px). Pílulas arredondadas. @default 0 */
+	sideBarItemBorderRadius?: string | number;
+	/** Recuo horizontal dos itens do sidebar (px). @default 0 */
+	sideBarItemHorizontalGap?: string | number;
+	/** Background do item ativo do sidebar. Aceita cor OU gradiente. @default undefined */
+	sideBarItemActiveBackground?: string;
 	sideBarCollapsedSubmenuWidth?: string | number;
 	/** Cor de destaque/hover dos items do sidebar (nome da cor do tema, ex: 'blue', 'appPrimary') */
 	sidebarActiveColor?: string;
@@ -143,6 +160,11 @@ function ArchbaseAdminMainLayoutContainer({
 	sideBarTextLightColor,
 	sideBarIconDarkColor,
 	sideBarIconLightColor,
+	sideBarBackgroundImage,
+	mainBackground,
+	sideBarItemBorderRadius,
+	sideBarItemHorizontalGap,
+	sideBarItemActiveBackground,
 	sideBarCollapsedSubmenuWidth,
 	sidebarActiveColor,
 	maxKeepAliveTabs = 10,
@@ -330,6 +352,7 @@ function ArchbaseAdminMainLayoutContainer({
 				highlightActiveItem={highlightActiveMenuItem}
 				backgroundDarkColor={sideBarBackgroundDarkColor}
 				backgroundLightColor={sideBarBackgroundLightColor}
+				backgroundImage={sideBarBackgroundImage}
 				textDarkColor={sideBarTextDarkColor}
 				textLightColor={sideBarTextLightColor}
 				iconDarkColor={sideBarIconDarkColor}
@@ -340,6 +363,9 @@ function ArchbaseAdminMainLayoutContainer({
 				groupLabelDarkColor={groupLabelDarkColor}
 				groupLabelLightColor={groupLabelLightColor}
 				activeColor={sidebarActiveColor}
+				itemBorderRadius={sideBarItemBorderRadius}
+				itemHorizontalGap={sideBarItemHorizontalGap}
+				itemActiveBackground={sideBarItemActiveBackground}
 				withBorder={false}
 				sidebarRef={sidebarRef}
 			/>
@@ -361,19 +387,24 @@ function ArchbaseAdminMainLayoutContainer({
 		collapsed: { mobile: isHidden || !showSideBar, desktop: isHidden || !showSideBar },
 	};
 
+	// `mainBackground`/`sideBarBackgroundImage` (aceitam gradiente) têm
+	// precedência sobre os padrões derivados do tema.
+	const mainBg = mainBackground ?? (colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]);
+	const navbarBg = sideBarBackgroundImage ?? navbarBackground;
+
 	// Estilos condicionais
 	const appShellStyles = isLegacyVariant ? {
 		main: {
-			background: colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+			background: mainBg,
 			overflow: 'hidden',
 		},
 	} : {
 		main: {
-			background: colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+			background: mainBg,
 			overflow: 'hidden',
 		},
 		navbar: {
-			background: navbarBackground,
+			background: navbarBg,
 			border: 'none',
 		},
 	};
@@ -525,6 +556,11 @@ export function ArchbaseAdminMainLayout({
 	sideBarTextLightColor,
 	sideBarIconDarkColor,
 	sideBarIconLightColor,
+	sideBarBackgroundImage,
+	mainBackground,
+	sideBarItemBorderRadius,
+	sideBarItemHorizontalGap,
+	sideBarItemActiveBackground,
 	sideBarCollapsedSubmenuWidth,
 	sidebarActiveColor,
 	maxKeepAliveTabs = 10,
@@ -583,6 +619,11 @@ export function ArchbaseAdminMainLayout({
 				sideBarTextLightColor={sideBarTextLightColor}
 				sideBarIconDarkColor={sideBarIconDarkColor}
 				sideBarIconLightColor={sideBarIconLightColor}
+				sideBarBackgroundImage={sideBarBackgroundImage}
+				mainBackground={mainBackground}
+				sideBarItemBorderRadius={sideBarItemBorderRadius}
+				sideBarItemHorizontalGap={sideBarItemHorizontalGap}
+				sideBarItemActiveBackground={sideBarItemActiveBackground}
 				sideBarCollapsedSubmenuWidth={sideBarCollapsedSubmenuWidth}
 				sidebarActiveColor={sidebarActiveColor}
 				maxKeepAliveTabs={maxKeepAliveTabs}
