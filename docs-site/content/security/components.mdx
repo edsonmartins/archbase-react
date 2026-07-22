@@ -41,6 +41,58 @@ import { ProtectedComponent } from '@archbase/security';
 </ProtectedComponent>
 ```
 
+## ArchbaseResetPassword
+
+Formulário de redefinição de senha em duas etapas: primeiro o envio do e-mail com
+o código de segurança, depois a troca da senha.
+
+```tsx
+import { ArchbaseResetPassword } from '@archbase/security';
+
+<ArchbaseResetPassword
+  onSendResetPasswordEmail={enviarEmailDeReset}
+  onResetPassword={redefinirSenha}
+  onClickBackToLogin={() => navigate('/login')}
+/>
+```
+
+### Exigindo senha forte
+
+```tsx
+<ArchbaseResetPassword
+  passwordPolicy={{ minLength: 10 }}
+  onSendResetPasswordEmail={enviarEmailDeReset}
+  onResetPassword={redefinirSenha}
+  onClickBackToLogin={() => navigate('/login')}
+/>
+```
+
+`passwordPolicy` aceita `true` para a política padrão ou um objeto com os
+critérios desejados. A nova senha passa a exibir barra de força e lista de
+critérios, e a redefinição é bloqueada enquanto a política não for atendida.
+
+### Props
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `onSendResetPasswordEmail` | `(email: string) => Promise<void>` | - | Envia o e-mail com o código de segurança |
+| `onResetPassword` | `(email: string, token: string, newPassword: string) => Promise<void>` | - | Efetiva a troca da senha |
+| `onClickBackToLogin` | `() => void` | - | Volta para a tela de login |
+| `passwordPolicy` | `ArchbasePasswordPolicy \| boolean` | - | Critérios de senha forte |
+| `showPasswordRequirements` | `boolean` | `true` | Exibe a lista de critérios |
+| `validatePassword` | `(newPassword: string) => string` | - | Validação adicional da nova senha; retorne a mensagem de erro ou string vazia |
+| `validateToken` | `(passwordResetToken: string) => string` | - | Validação adicional do código de segurança |
+| `initialEmail` | `string` | `''` | E-mail pré-preenchido |
+| `description` | `string` | - | Texto exibido acima do campo de e-mail |
+| `error` | `string` | - | Mensagem de erro externa |
+
+A confirmação de senha é validada pelo próprio componente: a redefinição não é
+enviada se a nova senha e a confirmação forem diferentes.
+
+**Mudança na 4.0.42:** `validatePassword` e `validateToken` passaram a receber o
+valor a validar. Antes eram declarados como `() => string` e não recebiam
+argumento, o que impedia validar o que o usuário tinha digitado.
+
 ## Próximos Passos
 
 - [UI Components](/security/ui-components) - Modais de gerenciamento

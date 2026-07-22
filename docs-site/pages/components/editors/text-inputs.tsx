@@ -22,6 +22,11 @@ const ArchbasePasswordEditDocs = dynamic(() => import('../../../content/componen
   loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
 });
 
+const ArchbasePasswordStrengthMeterDocs = dynamic(() => import('../../../content/components/editors/archbase-password-strength-meter.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
 const ArchbaseTextAreaDocs = dynamic(() => import('../../../content/components/editors/archbase-textarea.mdx'), {
   ssr: false,
   loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
@@ -33,13 +38,14 @@ export default function TextInputsPage() {
       <PageHeader data={ARCHBASE_EDIT_DATA} />
       <DocsTabs
         docgen={docgen}
-        componentsProps={['ArchbaseEdit', 'ArchbaseMaskEdit', 'ArchbasePasswordEdit', 'ArchbaseTextArea']}
+        componentsProps={['ArchbaseEdit', 'ArchbaseMaskEdit', 'ArchbasePasswordEdit', 'ArchbasePasswordStrengthMeter', 'ArchbaseTextArea']}
         componentsStyles={['ArchbaseEdit', 'ArchbaseMaskEdit', 'ArchbasePasswordEdit', 'ArchbaseTextArea']}
         stylesApiData={STYLES_API_DATA}
       >
         <ArchbaseEditDocs />
         <ArchbaseMaskEditDocs />
         <ArchbasePasswordEditDocs />
+        <ArchbasePasswordStrengthMeterDocs />
         <ArchbaseTextAreaDocs />
       </DocsTabs>
     </Shell>

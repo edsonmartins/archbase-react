@@ -24,9 +24,21 @@ export const ARCHBASE_MASK_EDIT_DATA: PageHeaderData = {
   version: '3.0.0',
 };
 
+export const ARCHBASE_PASSWORD_STRENGTH_METER_DATA: PageHeaderData = {
+  title: 'ArchbasePasswordStrengthMeter',
+  description: 'Medidor de força de senha com barra de progresso e lista de critérios atendidos.',
+  source: '@archbase/components/editors/ArchbasePasswordStrengthMeter',
+  package: '@archbase/components',
+  docsLink: '/components/editors/text-inputs',
+  npmUrl: 'https://www.npmjs.com/package/@archbase/components',
+  sourceUrl: 'https://github.com/edsonmartins/archbase-react/blob/main/packages/components/src/editors/ArchbasePasswordStrengthMeter.tsx',
+  license: 'MIT',
+  version: '4.0.42',
+};
+
 export const ARCHBASE_PASSWORD_EDIT_DATA: PageHeaderData = {
   title: 'ArchbasePasswordEdit',
-  description: 'Campo de senha com toggle de visibilidade, integração com DataSource e suporte a validação.',
+  description: 'Campo de senha com toggle de visibilidade, integração com DataSource e validação opcional de senha forte.',
   source: '@archbase/components/editors/ArchbasePasswordEdit',
   package: '@archbase/components',
   docsLink: '/components/editors/text-inputs',

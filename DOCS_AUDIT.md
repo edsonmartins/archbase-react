@@ -184,9 +184,9 @@ Para wrappers diretos do Mantine (ArchbaseButton, ArchbaseActionIcon, ArchbaseFi
 ### Security & Security-UI
 - ArchbaseSecurityProvider/ArchbaseViewSecurityProvider: props `authenticator`, `tokenManager`, `permissions`, `onLogin`, `onLogout`.
 - Hooks: `useArchbaseSecurity`, `useArchbasePermissionCheck`, `useArchbaseSecureForm`.
-- Components: `ArchbaseLogin` (props `onLogin`, `loading`, `errorMessage`), `ArchbaseResetPassword`.
+- Components: `ArchbaseLogin` (props `onLogin`, `error`, `onClickForgotPassword`, `mfaRequired`), `ArchbaseResetPassword` (props `onSendResetPasswordEmail`, `onResetPassword`, `onClickBackToLogin`, `passwordPolicy`).
 - Secure wrappers: `ArchbaseProtectedComponent` (props `permission`, `fallback`), `ArchbaseSecureActionButton`, `ArchbaseSecureFormField`.
-- Security UI modals: `UserModal`, `GroupModal`, `ProfileModal`, `ApiTokenModal`, `PermissionsSelectorModal`; props incluem `opened`, `onClose`, `record`, `onSave`, `services`.
+- Security UI modals: `UserModal`, `GroupModal`, `ProfileModal`, `ApiTokenModal`, `PermissionsSelectorModal`; props incluem `dataSource`, `opened`, `onClickOk`, `onClickCancel`, `options` (o `UserModal` aceita `options.passwordPolicy`).
 - Views: `ArchbaseSecurityView`, `ArchbaseApiTokenView`.
 
 ### Admin

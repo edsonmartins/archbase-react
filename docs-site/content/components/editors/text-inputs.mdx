@@ -90,7 +90,7 @@ function MeuFormulario() {
 
 ## ArchbasePasswordEdit
 
-Campo de senha com toggle de visibilidade.
+Campo de senha com toggle de visibilidade e validação opcional de senha forte.
 
 ### Exemplo
 
@@ -104,11 +104,26 @@ Campo de senha com toggle de visibilidade.
 />
 ```
 
+### Senha forte
+
+```tsx
+<ArchbasePasswordEdit
+  dataSource={dataSource}
+  dataField="senha"
+  label="Senha"
+  passwordPolicy
+/>
+```
+
 ### Props Específicas
 
 | Prop | Tipo | Padrão | Descrição |
 |------|------|--------|-----------|
-| `visibilityToggleIcon` | `ReactNode` | - | Ícone customizado para toggle |
+| `passwordPolicy` | `ArchbasePasswordPolicy \| boolean` | - | Critérios de senha forte. `true` aplica a política padrão |
+| `showPasswordRequirements` | `boolean` | `true` | Exibe a lista de critérios |
+| `showPasswordStrengthBar` | `boolean` | `true` | Exibe a barra de força |
+| `passwordRequirementsVisibility` | `'always' \| 'onFocus' \| 'whenInvalid'` | `'onFocus'` | Quando o feedback fica visível |
+| `onPasswordValidation` | `(result: ArchbasePasswordValidationResult) => void` | - | Disparado a cada mudança no resultado |
 
 ---
 

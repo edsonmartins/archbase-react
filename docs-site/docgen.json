@@ -160,7 +160,167 @@
     }
   },
   "ArchbaseMaskEdit": { "displayName": "ArchbaseMaskEdit", "description": "Campo de texto com máscaras", "props": {} },
-  "ArchbasePasswordEdit": { "displayName": "ArchbasePasswordEdit", "description": "Campo de senha", "props": {} },
+  "ArchbasePasswordEdit": {
+    "displayName": "ArchbasePasswordEdit",
+    "description": "Campo de senha com toggle de visibilidade, integração com DataSource e validação opcional de senha forte",
+    "props": {
+      "dataSource": {
+        "name": "dataSource",
+        "required": false,
+        "type": { "name": "IArchbaseDataSourceBase<T>" },
+        "description": "Fonte de dados onde será atribuido o valor do edit (V1 ou V2)"
+      },
+      "dataField": {
+        "name": "dataField",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Campo onde deverá ser atribuido o valor do edit na fonte de dados"
+      },
+      "disabled": {
+        "name": "disabled",
+        "required": false,
+        "type": { "name": "boolean" },
+        "defaultValue": { "value": "false" },
+        "description": "Indicador se o edit está desabilitado"
+      },
+      "readOnly": {
+        "name": "readOnly",
+        "required": false,
+        "type": { "name": "boolean" },
+        "defaultValue": { "value": "false" },
+        "description": "Indicador se o edit é somente leitura. Obs: usado em conjunto com o status da fonte de dados"
+      },
+      "required": {
+        "name": "required",
+        "required": false,
+        "type": { "name": "boolean" },
+        "description": "Indicador se o preenchimento do edit é obrigatório"
+      },
+      "value": {
+        "name": "value",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Valor inicial"
+      },
+      "style": {
+        "name": "style",
+        "required": false,
+        "type": { "name": "CSSProperties" },
+        "description": "Estilo do edit"
+      },
+      "size": {
+        "name": "size",
+        "required": false,
+        "type": { "name": "MantineSize" },
+        "description": "Tamanho do edit"
+      },
+      "width": {
+        "name": "width",
+        "required": false,
+        "type": { "name": "string | number | undefined" },
+        "description": "Largura do edit"
+      },
+      "placeholder": {
+        "name": "placeholder",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Texto sugestão do edit"
+      },
+      "label": {
+        "name": "label",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Título do edit"
+      },
+      "description": {
+        "name": "description",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Descrição do edit"
+      },
+      "error": {
+        "name": "error",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Último erro ocorrido no edit"
+      },
+      "onFocusExit": {
+        "name": "onFocusExit",
+        "required": false,
+        "type": { "name": "(event: React.FocusEvent<HTMLInputElement>) => void" },
+        "description": "Evento quando o foco sai do edit"
+      },
+      "onFocusEnter": {
+        "name": "onFocusEnter",
+        "required": false,
+        "type": { "name": "(event: React.FocusEvent<HTMLInputElement>) => void" },
+        "description": "Evento quando o edit recebe o foco"
+      },
+      "onChangeValue": {
+        "name": "onChangeValue",
+        "required": false,
+        "type": { "name": "(value: any, event: any) => void" },
+        "description": "Evento quando o valor do edit é alterado"
+      },
+      "onKeyDown": {
+        "name": "onKeyDown",
+        "required": false,
+        "type": { "name": "(event: any) => void" },
+        "description": "Callback acionado quando key down. ((event: any) => void)"
+      },
+      "onKeyUp": {
+        "name": "onKeyUp",
+        "required": false,
+        "type": { "name": "(event: any) => void" },
+        "description": "Callback acionado quando key up. ((event: any) => void)"
+      },
+      "innerRef": {
+        "name": "innerRef",
+        "required": false,
+        "type": { "name": "React.RefObject<HTMLInputElement> | undefined" },
+        "description": "Referência para o componente interno"
+      },
+      "variant": {
+        "name": "variant",
+        "required": false,
+        "type": { "name": "InputVariant" },
+        "description": "Variação visual (filled, outlined, light, subtle)."
+      },
+      "passwordPolicy": {
+        "name": "passwordPolicy",
+        "required": false,
+        "type": { "name": "ArchbasePasswordPolicy | boolean" },
+        "description": "Critérios de senha forte aplicados como pré-validação no próprio componente. `true` aplica a política padrão do Archbase; um objeto permite ajustar cada critério. Quando ausente nenhuma validação de força é feita (comportamento original)."
+      },
+      "showPasswordRequirements": {
+        "name": "showPasswordRequirements",
+        "required": false,
+        "type": { "name": "boolean" },
+        "defaultValue": { "value": "true" },
+        "description": "Indicador se a lista de critérios deve ser exibida. Padrão: true quando há política"
+      },
+      "showPasswordStrengthBar": {
+        "name": "showPasswordStrengthBar",
+        "required": false,
+        "type": { "name": "boolean" },
+        "defaultValue": { "value": "true" },
+        "description": "Indicador se a barra de força deve ser exibida. Padrão: true quando há política"
+      },
+      "passwordRequirementsVisibility": {
+        "name": "passwordRequirementsVisibility",
+        "required": false,
+        "type": { "name": "'always' | 'onFocus' | 'whenInvalid'" },
+        "defaultValue": { "value": "'onFocus'" },
+        "description": "Quando os critérios ficam visíveis: `onFocus` (padrão) enquanto o campo tem foco ou está inválido, `always` sempre, `whenInvalid` somente quando algum critério falha."
+      },
+      "onPasswordValidation": {
+        "name": "onPasswordValidation",
+        "required": false,
+        "type": { "name": "(result: ArchbasePasswordValidationResult) => void" },
+        "description": "Evento disparado a cada mudança no resultado da pré-validação"
+      }
+    }
+  },
   "ArchbaseTextArea": { "displayName": "ArchbaseTextArea", "description": "Campo de texto multilinha", "props": {} },
   "ArchbaseSelect": { "displayName": "ArchbaseSelect", "description": "Campo de seleção", "props": {} },
   "ArchbaseAsyncSelect": { "displayName": "ArchbaseAsyncSelect", "description": "Campo de seleção assíncrona", "props": {} },
@@ -184,5 +344,64 @@
   "ArchbaseRating": { "displayName": "ArchbaseRating", "description": "Componente de avaliação", "props": {} },
   "ArchbaseJsonEdit": { "displayName": "ArchbaseJsonEdit", "description": "Editor de JSON", "props": {} },
   "ArchbaseOperationHoursEditor": { "displayName": "ArchbaseOperationHoursEditor", "description": "Editor de horários", "props": {} },
-  "ArchbaseCronExpressionEdit": { "displayName": "ArchbaseCronExpressionEdit", "description": "Editor de expressões cron", "props": {} }
+  "ArchbaseCronExpressionEdit": { "displayName": "ArchbaseCronExpressionEdit", "description": "Editor de expressões cron", "props": {} },
+  "ArchbasePasswordStrengthMeter": {
+    "displayName": "ArchbasePasswordStrengthMeter",
+    "description": "Medidor de força de senha com barra de progresso e lista de critérios atendidos",
+    "props": {
+      "value": {
+        "name": "value",
+        "required": false,
+        "type": { "name": "string" },
+        "description": "Senha a ser avaliada"
+      },
+      "policy": {
+        "name": "policy",
+        "required": false,
+        "type": { "name": "ArchbasePasswordPolicy | boolean" },
+        "defaultValue": { "value": "true" },
+        "description": "Critérios de senha forte. `true` aplica a política padrão do Archbase"
+      },
+      "showStrengthBar": {
+        "name": "showStrengthBar",
+        "required": false,
+        "type": { "name": "boolean" },
+        "defaultValue": { "value": "true" },
+        "description": "Indicador se a barra de força deve ser exibida"
+      },
+      "showRequirements": {
+        "name": "showRequirements",
+        "required": false,
+        "type": { "name": "boolean" },
+        "defaultValue": { "value": "true" },
+        "description": "Indicador se a lista de critérios deve ser exibida"
+      },
+      "onlyUnmetRequirements": {
+        "name": "onlyUnmetRequirements",
+        "required": false,
+        "type": { "name": "boolean" },
+        "defaultValue": { "value": "false" },
+        "description": "Exibe somente os critérios ainda não atendidos"
+      },
+      "size": {
+        "name": "size",
+        "required": false,
+        "type": { "name": "MantineSize" },
+        "defaultValue": { "value": "'xs'" },
+        "description": "Tamanho do texto dos critérios"
+      },
+      "onValidationChange": {
+        "name": "onValidationChange",
+        "required": false,
+        "type": { "name": "(result: ArchbasePasswordValidationResult) => void" },
+        "description": "Evento disparado sempre que o resultado da validação muda"
+      },
+      "style": {
+        "name": "style",
+        "required": false,
+        "type": { "name": "CSSProperties" },
+        "description": "Estilo do container"
+      }
+    }
+  }
 }

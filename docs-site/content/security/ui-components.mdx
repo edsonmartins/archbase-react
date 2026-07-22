@@ -3,43 +3,72 @@
 
 Modais e formulários para gerenciamento de segurança.
 
-## ArchbaseLoginForm
+## ArchbaseLogin
+
+Formulário de login, exportado por `@archbase/security`.
 
 ```tsx
-import { ArchbaseLoginForm } from '@archbase/security-ui';
+import { ArchbaseLogin } from '@archbase/security';
 
-<ArchbaseLoginForm
-  onSubmit={handleLogin}
-  logo="/logo.png"
-  title="Bem-vindo"
-  showRememberMe
-  showForgotPassword
+<ArchbaseLogin
+  onLogin={handleLogin}
+  error={loginError}
+  onClickForgotPassword={() => navigate('/reset-password')}
 />
 ```
 
-## ArchbaseUserModal
+## UserModal
+
+Modal de cadastro e edição de usuários. Os modais de segurança são orientados a
+DataSource: recebem `dataSource`, `opened` e os callbacks `onClickOk` /
+`onClickCancel`.
 
 ```tsx
-import { ArchbaseUserModal } from '@archbase/security-ui';
+import { UserModal } from '@archbase/security-ui';
 
-<ArchbaseUserModal
+<UserModal
+  dataSource={dsUsuario}
   opened={userModalOpened}
-  onClose={() => setUserModalOpened(false)}
-  user={selectedUser}
-  onSave={handleSaveUser}
+  onClickOk={(record) => salvarUsuario(record)}
+  onClickCancel={() => setUserModalOpened(false)}
 />
 ```
 
-## ArchbaseGroupModal
+### Exigindo senha forte
+
+A option `passwordPolicy` liga a validação de senha forte no campo de senha,
+com barra de força e lista de critérios:
 
 ```tsx
-import { ArchbaseGroupModal } from '@archbase/security-ui';
+<UserModal
+  dataSource={dsUsuario}
+  opened={userModalOpened}
+  onClickOk={(record) => salvarUsuario(record)}
+  onClickCancel={() => setUserModalOpened(false)}
+  options={{ passwordPolicy: true }}
+/>
+```
 
-<ArchbaseGroupModal
+| Option | Tipo | Padrão | Descrição |
+|--------|------|--------|-----------|
+| `passwordPolicy` | `ArchbasePasswordPolicy \| boolean` | - | Critérios de senha forte. `true` aplica a política padrão |
+| `showPasswordRequirements` | `boolean` | `true` | Exibe a lista de critérios abaixo do campo |
+| `forbidPersonalDataInPassword` | `boolean` | `true` | Impede que a senha contenha o nome, o apelido ou o e-mail do usuário |
+
+`forbidPersonalDataInPassword` só tem efeito quando `passwordPolicy` está ativa.
+Na **edição**, senha em branco continua significando "manter a senha atual" e não
+é validada.
+
+## GroupModal
+
+```tsx
+import { GroupModal } from '@archbase/security-ui';
+
+<GroupModal
+  dataSource={dsGrupo}
   opened={groupModalOpened}
-  onClose={() => setGroupModalOpened(false)}
-  group={selectedGroup}
-  onSave={handleSaveGroup}
+  onClickOk={(record) => salvarGrupo(record)}
+  onClickCancel={() => setGroupModalOpened(false)}
 />
 ```
 
