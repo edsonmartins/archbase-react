@@ -96,9 +96,6 @@ function RailSidebarContent({
 		? theme.colors[activeColor]?.[6] ?? theme.colors[theme.primaryColor][6]
 		: theme.colors[theme.primaryColor][6];
 
-	// Props de estilo dos itens, repassadas a cada SidebarItem.
-	const itemStyleProps = { itemBorderRadius, itemHorizontalGap, activeBackground: itemActiveBackground };
-
 	// Cores dos grupos
 	const groupBgColor = groupBackgroundColor
 		? groupBackgroundColor
@@ -117,6 +114,20 @@ function RailSidebarContent({
 		navigationData,
 		onMenuItemClick,
 	});
+
+	// Props de estilo dos itens, repassadas a cada SidebarItem. `isActive` vai
+	// junto para que os subitens resolvam o próprio destaque em vez de herdarem
+	// o do pai.
+	const resolveItemActive = useCallback(
+		(item: ArchbaseNavigationItem) => !!highlightActiveItem && isItemActive(item),
+		[highlightActiveItem, isItemActive],
+	);
+	const itemStyleProps = {
+		itemBorderRadius,
+		itemHorizontalGap,
+		activeBackground: itemActiveBackground,
+		isActive: resolveItemActive,
+	};
 
 	// Hook de teclado
 	useSidebarKeyboard({

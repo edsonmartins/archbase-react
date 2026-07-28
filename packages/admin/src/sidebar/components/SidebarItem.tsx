@@ -22,6 +22,7 @@ export function SidebarItem({
 	itemBorderRadius = 0,
 	itemHorizontalGap = 0,
 	activeBackground,
+	isActive,
 }: SidebarItemProps) {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
@@ -111,6 +112,16 @@ export function SidebarItem({
 			return null;
 		}
 
+		// Cada filho resolve o próprio estado ativo. Herdar o `active` do pai
+		// marcava todos os irmãos como ativos quando o pai estava na rota atual.
+		const resolveActive = (link: ArchbaseNavigationItem) =>
+			isActive ? isActive(link) : active;
+
+		// O grupo abre sozinho quando um descendente é o item da rota atual —
+		// caso contrário o item destacado ficaria escondido.
+		const hasActiveDescendant = (links: ArchbaseNavigationItem[]): boolean =>
+			links.some((link) => resolveActive(link) || (link.links ? hasActiveDescendant(link.links) : false));
+
 		// Se está colapsado, mostrar como menu flutuante
 		if (collapsed) {
 			return (
@@ -197,7 +208,7 @@ export function SidebarItem({
 					</Box>
 				}
 				childrenOffset={28}
-				defaultOpened={item.initiallyOpened || active}
+				defaultOpened={item.initiallyOpened || active || hasActiveDescendant(visibleLinks)}
 				disabled={isDisabled}
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={() => setIsHovered(false)}
@@ -226,7 +237,7 @@ export function SidebarItem({
 						item={link}
 						depth={depth + 1}
 						collapsed={collapsed}
-						active={active}
+						active={resolveActive(link)}
 						onClick={onClick}
 						textColor={textColor}
 						iconColor={iconColor}
@@ -235,6 +246,7 @@ export function SidebarItem({
 						itemBorderRadius={itemBorderRadius}
 						itemHorizontalGap={itemHorizontalGap}
 						activeBackground={activeBackground}
+						isActive={isActive}
 					/>
 				))}
 			</NavLink>

@@ -455,7 +455,11 @@ function ArchbaseAdminMainLayoutContainer({
 					{renderSidebar(getSideBarHeight(), false)}
 				</AppShell.Navbar>
 			)}
-			<AppShell.Main bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}>
+			{/* Sem `bg` aqui: o style prop vira inline e venceria o `background`
+			    definido em `appShellStyles.main`, anulando `mainBackground` (que
+			    também aceita gradiente, algo que `bg` não suporta). O fallback
+			    para o cinza do tema já está em `mainBg`. */}
+			<AppShell.Main>
 				{!isHidden && showCollapsedButton &&
 					buildSetCollapsedButton(
 						colorScheme,

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
 	Box,
 	ScrollArea,
@@ -83,9 +83,6 @@ function StandardSidebarContent({
 		? theme.colors[activeColor]?.[6] ?? theme.colors[theme.primaryColor][6]
 		: theme.colors[theme.primaryColor][6];
 
-	// Props de estilo dos itens, repassadas a cada SidebarItem.
-	const itemStyleProps = { itemBorderRadius, itemHorizontalGap, activeBackground: itemActiveBackground };
-
 	// Com `backgroundImage` (gradiente): raiz o pinta, internos transparentes.
 	const rootBgStyle = backgroundImage ? { background: backgroundImage } : { backgroundColor };
 	const innerBg = backgroundImage ? 'transparent' : backgroundColor;
@@ -107,6 +104,20 @@ function StandardSidebarContent({
 		navigationData,
 		onMenuItemClick,
 	});
+
+	// Props de estilo dos itens, repassadas a cada SidebarItem. `isActive` vai
+	// junto para que os subitens resolvam o próprio destaque em vez de herdarem
+	// o do pai.
+	const resolveItemActive = useCallback(
+		(item: ArchbaseNavigationItem) => !!highlightActiveItem && isItemActive(item),
+		[highlightActiveItem, isItemActive],
+	);
+	const itemStyleProps = {
+		itemBorderRadius,
+		itemHorizontalGap,
+		activeBackground: itemActiveBackground,
+		isActive: resolveItemActive,
+	};
 
 	// Hook de teclado
 	useSidebarKeyboard({

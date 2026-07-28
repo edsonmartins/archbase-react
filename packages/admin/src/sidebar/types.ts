@@ -278,6 +278,12 @@ export interface SidebarItemProps {
 	 * definido, tem precedência sobre `hoverColor` no estado ativo. @default undefined
 	 */
 	activeBackground?: string;
+	/**
+	 * Resolve o estado ativo de um subitem. Sem isto os filhos herdam o `active`
+	 * do pai, e todos aparecem destacados quando o pai está na rota atual. As
+	 * variantes passam o `isItemActive` do `useSidebarNavigation`.
+	 */
+	isActive?: (item: ArchbaseNavigationItem) => boolean;
 }
 
 /**
