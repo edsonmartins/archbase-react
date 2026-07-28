@@ -530,5 +530,19 @@
     "closeLeft": "Cerrar a la izquierda",
     "closeRight": "Cerrar a la derecha",
     "closeOthers": "Cerrar otras"
-  }
+  },
+  "Mínimo de {{min}} caracteres": "Mínimo de {{min}} caracteres",
+  "Máximo de {{min}} caracteres": "Máximo de {{min}} caracteres",
+  "Pelo menos {{min}} letra minúscula": "Al menos {{min}} letra minúscula",
+  "Pelo menos {{min}} letra maiúscula": "Al menos {{min}} letra mayúscula",
+  "Pelo menos {{min}} número": "Al menos {{min}} número",
+  "Pelo menos {{min}} símbolo": "Al menos {{min}} símbolo",
+  "Não pode conter espaços": "No puede contener espacios",
+  "Não pode repetir o mesmo caractere {{min}} vezes seguidas": "No puede repetir el mismo carácter {{min}} veces seguidas",
+  "Não pode conter sequências de {{min}} caracteres": "No puede contener secuencias de {{min}} caracteres",
+  "Não pode conter dados pessoais ou termos comuns": "No puede contener datos personales o términos comunes",
+  "Senha fraca": "Contraseña débil",
+  "Senha razoável": "Contraseña aceptable",
+  "Senha boa": "Contraseña buena",
+  "Senha forte": "Contraseña fuerte"
 }

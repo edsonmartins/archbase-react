@@ -14,3 +14,54 @@ Sistema de layout administrativo.
 | `ArchbaseUserDropdown` | Menu do usuário |
 | `ArchbaseBreadcrumbs` | Breadcrumbs |
 | `ArchbaseFilterDrawer` | Drawer de filtros |
+| `ArchbaseAliveAbleRoutes` | Rotas com abas mantidas em cache (keepAlive) |
+| `ArchbaseKeepAliveRoute` | Declaração de rota com keepAlive |
+
+## Hooks
+
+| Hook | Retorno | Descrição |
+|------|---------|-----------|
+| `useKeepAliveVisibility` | `{ isVisible, wasRestored, restoreCount }` | Estado de visibilidade da aba keepAlive atual |
+| `useKeepAliveCache` | `{ destroy, destroyAll, destroyOther, getCacheNodes }` | Controle do cache de abas |
+| `useArchbaseRouteParams` | `Params` | Parâmetros da rota preservados pela aba |
+
+### useKeepAliveVisibility
+
+Com keepAlive, uma aba que sai de foco continua montada — seu estado é preservado
+e os efeitos não são executados novamente ao voltar. Use este hook para saber que
+a aba voltou do cache e reinicializar o que precisar.
+
+```tsx
+import { useKeepAliveVisibility } from '@archbase/admin';
+
+function MinhaView() {
+  const { isVisible, wasRestored, restoreCount } = useKeepAliveVisibility();
+
+  useEffect(() => {
+    if (restoreCount > 0) {
+      recarregarDados();
+    }
+  }, [restoreCount]);
+
+  return <Conteudo pausado={!isVisible} />;
+}
+```
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `isVisible` | `boolean` | A aba está em foco |
+| `wasRestored` | `boolean` | A aba já voltou do cache ao menos uma vez |
+| `restoreCount` | `number` | Quantas vezes voltou do cache. Use como dependência de efeito |
+
+A primeira exibição não conta como restauração: `wasRestored` só se torna `true`
+quando a aba realmente volta do cache.
+
+**Novo na 4.0.42:** `wasRestored` e `restoreCount`. Antes o hook retornava apenas
+`isVisible`, e não havia como distinguir a primeira exibição de um retorno.
+
+### Location dentro de uma aba keepAlive
+
+Também a partir da 4.0.42, `useLocation`, `useSearchParams` e `useParams` dentro
+de uma aba em cache refletem a rota **daquela aba**, e não a da aba ativa. Antes,
+uma aba inativa enxergava o pathname e a query da aba em foco enquanto mantinha
+os próprios parâmetros de rota, o que produzia dados de rota inconsistentes.

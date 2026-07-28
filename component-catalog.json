@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-07-18",
+  "generatedAt": "2026-07-22",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -144,7 +144,7 @@
     },
     {
       "name": "AccessIntervalDto",
-      "description": "AccessIntervalDto — componente de segurança focado em access interval dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -156,7 +156,7 @@
     },
     {
       "name": "AccessScheduleDto",
-      "description": "AccessScheduleDto — componente de segurança focado em access schedule dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -168,7 +168,7 @@
     },
     {
       "name": "AccessTokenDto",
-      "description": "AccessTokenDto — componente de segurança focado em access token dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -180,7 +180,7 @@
     },
     {
       "name": "ActionDto",
-      "description": "ActionDto — componente de segurança focado em action dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -459,7 +459,7 @@
     },
     {
       "name": "ApiTokenDto",
-      "description": "ApiTokenDto — componente de segurança focado em api token dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -537,6 +537,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/utils/dom"
+    },
+    {
+      "name": "ARCHBASE_DEFAULT_PASSWORD_POLICY",
+      "description": "Critérios que definem o que é uma senha forte.\nTodos os campos são opcionais: um critério ausente (ou zero) simplesmente não é avaliado.",
+      "sourcePath": "packages/core/src/utils/passwordPolicy",
+      "exportsFrom": "@archbase/core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/core/src/utils/passwordPolicy"
     },
     {
       "name": "ARCHBASE_IOC_API_TYPE",
@@ -1896,7 +1906,7 @@
     },
     {
       "name": "ArchbaseAliveAbleRoutes",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
+      "description": "Indica que o componente já voltou do cache pelo menos uma vez, ou seja,\nnão está mais na sua primeira exibição.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [
@@ -10901,7 +10911,7 @@
     },
     {
       "name": "ArchbaseKeepAliveRoute",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
+      "description": "Indica que o componente já voltou do cache pelo menos uma vez, ou seja,\nnão está mais na sua primeira exibição.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [
@@ -15222,6 +15232,36 @@
           "type": "InputVariant",
           "required": false,
           "description": "Variação visual (filled, outlined, light, subtle)."
+        },
+        {
+          "name": "passwordPolicy",
+          "type": "ArchbasePasswordPolicy | boolean",
+          "required": false,
+          "description": "Critérios de senha forte aplicados como pré-validação no próprio componente.\n`true` aplica a política padrão do Archbase; um objeto permite ajustar cada critério.\nQuando ausente nenhuma validação de força é feita (comportamento original)."
+        },
+        {
+          "name": "showPasswordRequirements",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se a lista de critérios deve ser exibida. Padrão: true quando há política"
+        },
+        {
+          "name": "showPasswordStrengthBar",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se a barra de força deve ser exibida. Padrão: true quando há política"
+        },
+        {
+          "name": "passwordRequirementsVisibility",
+          "type": "'always' | 'onFocus' | 'whenInvalid'",
+          "required": false,
+          "description": "Quando os critérios ficam visíveis:\n`onFocus` (padrão) enquanto o campo tem foco ou está inválido,\n`always` sempre, `whenInvalid` somente quando algum critério falha."
+        },
+        {
+          "name": "onPasswordValidation",
+          "type": "(result: ArchbasePasswordValidationResult) => void",
+          "required": false,
+          "description": "Evento disparado a cada mudança no resultado da pré-validação"
         }
       ],
       "examples": [],
@@ -15229,6 +15269,67 @@
         "editor"
       ],
       "canonicalUrl": "packages/components/src/editors/ArchbasePasswordEdit"
+    },
+    {
+      "name": "ArchbasePasswordStrengthMeter",
+      "description": "Senha a ser avaliada",
+      "sourcePath": "packages/components/src/editors/ArchbasePasswordStrengthMeter",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Senha a ser avaliada"
+        },
+        {
+          "name": "policy",
+          "type": "ArchbasePasswordPolicy | boolean",
+          "required": false,
+          "description": "Critérios de senha forte. `true` aplica a política padrão do Archbase"
+        },
+        {
+          "name": "showStrengthBar",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se a barra de força deve ser exibida"
+        },
+        {
+          "name": "showRequirements",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se a lista de critérios deve ser exibida"
+        },
+        {
+          "name": "onlyUnmetRequirements",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibe somente os critérios ainda não atendidos"
+        },
+        {
+          "name": "size",
+          "type": "MantineSize",
+          "required": false,
+          "description": "Tamanho do texto dos critérios"
+        },
+        {
+          "name": "onValidationChange",
+          "type": "(result: ArchbasePasswordValidationResult) => void",
+          "required": false,
+          "description": "Evento disparado sempre que o resultado da validação muda"
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Estilo do container"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbasePasswordStrengthMeter"
     },
     {
       "name": "ArchbasePDFAnnotations",
@@ -16142,7 +16243,7 @@
     },
     {
       "name": "ArchbaseResetPassword",
-      "description": "Estilo do card",
+      "description": "Validação customizada da nova senha. Deve retornar a mensagem de erro ou string vazia",
       "sourcePath": "packages/security/src/ArchbaseResetPassword.tsx",
       "exportsFrom": "@archbase/security",
       "props": [
@@ -16184,15 +16285,27 @@
         },
         {
           "name": "validatePassword",
-          "type": "() => string",
+          "type": "(newPassword: string) => string",
           "required": false,
-          "description": "Define validate password. (() => string)"
+          "description": "Validação customizada da nova senha. Deve retornar a mensagem de erro ou string vazia"
         },
         {
           "name": "validateToken",
-          "type": "() => string",
+          "type": "(passwordResetToken: string) => string",
           "required": false,
-          "description": "Define validate token. (() => string)"
+          "description": "Define validate token. ((passwordResetToken: string) => string)"
+        },
+        {
+          "name": "passwordPolicy",
+          "type": "ArchbasePasswordPolicy | boolean",
+          "required": false,
+          "description": "Critérios de senha forte aplicados na nova senha.\n`true` aplica a política padrão do Archbase; um objeto permite ajustar cada critério.\nQuando ausente somente a confirmação de senha é verificada."
+        },
+        {
+          "name": "showPasswordRequirements",
+          "type": "boolean",
+          "required": false,
+          "description": "Indicador se a lista de critérios deve ser exibida abaixo do campo. Padrão: true"
         },
         {
           "name": "style",
@@ -24097,6 +24210,16 @@
       "canonicalUrl": "packages/components/src/datagrid/ag-grid/archbase-data-grid-ag-utils"
     },
     {
+      "name": "getArchbasePasswordStrengthLabel",
+      "description": "Critérios que definem o que é uma senha forte.\nTodos os campos são opcionais: um critério ausente (ou zero) simplesmente não é avaliado.",
+      "sourcePath": "packages/core/src/utils/passwordPolicy",
+      "exportsFrom": "@archbase/core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/core/src/utils/passwordPolicy"
+    },
+    {
       "name": "getCellRendererByDataType",
       "description": "ArchbaseDataGridAG Cell Renderers\nAG Grid cell renderer components for various data types.",
       "sourcePath": "packages/components/src/datagrid/ag-grid/archbase-data-grid-ag-formatters",
@@ -24693,7 +24816,7 @@
     },
     {
       "name": "GroupDto",
-      "description": "GroupDto — componente de segurança focado em group dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -24907,6 +25030,16 @@
       "canonicalUrl": "packages/core/src/ioc/ArchbaseIOCHelper"
     },
     {
+      "name": "isArchbasePasswordValid",
+      "description": "Critérios que definem o que é uma senha forte.\nTodos os campos são opcionais: um critério ausente (ou zero) simplesmente não é avaliado.",
+      "sourcePath": "packages/core/src/utils/passwordPolicy",
+      "exportsFrom": "@archbase/core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/core/src/utils/passwordPolicy"
+    },
+    {
       "name": "isBase64",
       "description": "isBase64 — componente Archbase focado em is base64.",
       "sourcePath": "packages/core/src/utils/isBase64",
@@ -24947,6 +25080,18 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/rsql/ast/ComparisonOperator.ts"
+    },
+    {
+      "name": "isCredentialsExpiredError",
+      "description": "Reconhece a recusa de login por credenciais expiradas devolvida pelo archbase-security:\nHTTP 403 com `{ error: 'CREDENTIALS_EXPIRED', requirePasswordChange: true }`. Aceita tanto o\nerro do axios quanto o corpo já desembrulhado.",
+      "sourcePath": "packages/security/src/hooks/useArchbaseAuthenticationManager.ts",
+      "exportsFrom": "@archbase/security",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/hooks/useArchbaseAuthenticationManager.ts"
     },
     {
       "name": "isEmail",
@@ -25092,7 +25237,7 @@
     },
     {
       "name": "KeepAliveCacheProvider",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
+      "description": "Indica que o componente já voltou do cache pelo menos uma vez, ou seja,\nnão está mais na sua primeira exibição.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -25737,7 +25882,7 @@
     },
     {
       "name": "PermissionDto",
-      "description": "PermissionDto — componente de segurança focado em permission dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -25860,7 +26005,7 @@
     },
     {
       "name": "ProfileDto",
-      "description": "ProfileDto — componente de segurança focado em profile dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -26435,8 +26580,18 @@
       "canonicalUrl": "packages/layout/src/spaces/core-types"
     },
     {
+      "name": "resolveArchbasePasswordPolicy",
+      "description": "Critérios que definem o que é uma senha forte.\nTodos os campos são opcionais: um critério ausente (ou zero) simplesmente não é avaliado.",
+      "sourcePath": "packages/core/src/utils/passwordPolicy",
+      "exportsFrom": "@archbase/core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/core/src/utils/passwordPolicy"
+    },
+    {
       "name": "ResourceDto",
-      "description": "ResourceDto — componente de segurança focado em resource dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -27139,7 +27294,7 @@
     },
     {
       "name": "useArchbaseAuthenticationManager",
-      "description": "useArchbaseAuthenticationManager — hook utilitário focado em use archbase authentication manager.",
+      "description": "Reconhece a recusa de login por credenciais expiradas devolvida pelo archbase-security:\nHTTP 403 com `{ error: 'CREDENTIALS_EXPIRED', requirePasswordChange: true }`. Aceita tanto o\nerro do axios quanto o corpo já desembrulhado.",
       "sourcePath": "packages/security/src/hooks/useArchbaseAuthenticationManager.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -27917,7 +28072,7 @@
     },
     {
       "name": "useArchbaseRouteParams",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
+      "description": "Indica que o componente já voltou do cache pelo menos uma vez, ou seja,\nnão está mais na sua primeira exibição.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -28391,7 +28546,7 @@
     },
     {
       "name": "useKeepAliveCache",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
+      "description": "Indica que o componente já voltou do cache pelo menos uma vez, ou seja,\nnão está mais na sua primeira exibição.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -28403,7 +28558,7 @@
     },
     {
       "name": "useKeepAliveVisibility",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
+      "description": "Indica que o componente já voltou do cache pelo menos uma vez, ou seja,\nnão está mais na sua primeira exibição.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -28441,7 +28596,7 @@
     },
     {
       "name": "useParams",
-      "description": "Hook para acessar o estado de visibilidade do componente keep-alive.",
+      "description": "Indica que o componente já voltou do cache pelo menos uma vez, ou seja,\nnão está mais na sua primeira exibição.",
       "sourcePath": "packages/admin/src/ArchbaseAliveAbleRoutes",
       "exportsFrom": "@archbase/admin",
       "props": [],
@@ -28479,7 +28634,7 @@
     },
     {
       "name": "UserDto",
-      "description": "UserDto — hook utilitário focado em user dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -28504,7 +28659,7 @@
     },
     {
       "name": "UserGroupDto",
-      "description": "UserGroupDto — hook utilitário focado em user group dto.",
+      "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -28754,6 +28909,16 @@
         "data"
       ],
       "canonicalUrl": "packages/components/src/datagrid/ag-grid/archbase-data-grid-ag-formatters"
+    },
+    {
+      "name": "validateArchbasePassword",
+      "description": "Critérios que definem o que é uma senha forte.\nTodos os campos são opcionais: um critério ausente (ou zero) simplesmente não é avaliado.",
+      "sourcePath": "packages/core/src/utils/passwordPolicy",
+      "exportsFrom": "@archbase/core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/core/src/utils/passwordPolicy"
     },
     {
       "name": "validateCNPJ",

@@ -63,6 +63,8 @@ export type { ArchbaseNumberEditProps } from './ArchbaseNumberEdit';
 
 export { ArchbasePasswordEdit } from './ArchbasePasswordEdit';
 export type { ArchbasePasswordEditProps } from './ArchbasePasswordEdit';
+export { ArchbasePasswordStrengthMeter } from './ArchbasePasswordStrengthMeter';
+export type { ArchbasePasswordStrengthMeterProps } from './ArchbasePasswordStrengthMeter';
 
 export { ArchbaseRadioGroup } from './ArchbaseRadioGroup';
 export type { ArchbaseRadioGroupProps } from './ArchbaseRadioGroup';

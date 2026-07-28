@@ -1,6 +1,16 @@
 import React, { createContext, useContext, ReactElement, ReactNode, useRef, useState, useMemo, useEffect, useCallback } from 'react';
 import type { RouteProps, RoutesProps } from 'react-router';
-import { Route, Routes, useLocation, matchPath, Params, useParams as useReactRouterParams, useOutlet } from 'react-router-dom';
+import {
+	Route,
+	Routes,
+	useLocation,
+	matchPath,
+	Params,
+	useParams as useReactRouterParams,
+	useOutlet,
+	useNavigationType,
+	UNSAFE_LocationContext,
+} from 'react-router-dom';
 import { KeepAlive, useKeepAliveContext, useKeepAliveRef, useEffectOnActive } from 'keepalive-for-react';
 import type { KeepAliveRef } from 'keepalive-for-react';
 
@@ -10,10 +20,22 @@ import type { KeepAliveRef } from 'keepalive-for-react';
 
 interface KeepAliveVisibilityContextValue {
 	isVisible: boolean;
+	/**
+	 * Indica que o componente já voltou do cache pelo menos uma vez, ou seja,
+	 * não está mais na sua primeira exibição.
+	 */
+	wasRestored: boolean;
+	/**
+	 * Quantidade de vezes que o componente foi restaurado do cache. Use como
+	 * dependência de efeito para reinicializar estado a cada retorno à aba.
+	 */
+	restoreCount: number;
 }
 
 const KeepAliveVisibilityContext = createContext<KeepAliveVisibilityContextValue>({
-	isVisible: true
+	isVisible: true,
+	wasRestored: false,
+	restoreCount: 0
 });
 
 /**
@@ -141,10 +163,30 @@ const getCacheKey = (pathPattern: string, currentPathname: string): string => {
 const KeepAliveVisibilityWrapper = ({ children }: { children: ReactNode }) => {
 	const { active } = useKeepAliveContext();
 	const routerParams = useReactRouterParams();
+	const location = useLocation();
+	const navigationType = useNavigationType();
 	const paramsRef = useRef<Params<string>>(routerParams);
 	const [savedParams, setSavedParams] = useState<Params<string>>(routerParams);
 
 	paramsRef.current = routerParams;
+
+	// As abas em cache continuam montadas e, por serem consumidoras do contexto de
+	// location do router, enxergariam a rota da aba ATIVA a cada navegação — enquanto
+	// os params, presos ao RouteContext capturado, permanecem os da própria aba.
+	// Essa combinação entrega dados de rota inconsistentes (params de uma rota,
+	// pathname/query de outra), então congelamos a location junto com os params.
+	const lastActiveLocationRef = useRef({ location, navigationType });
+	if (active) {
+		lastActiveLocationRef.current = { location, navigationType };
+	}
+
+	const locationContextValue = useMemo(
+		() => (active ? { location, navigationType } : lastActiveLocationRef.current),
+		[active, location, navigationType]
+	);
+
+	const [restoreCount, setRestoreCount] = useState<number>(0);
+	const wasActiveRef = useRef<boolean>(active);
 
 	useEffectOnActive(() => {
 		setSavedParams(paramsRef.current);
@@ -157,15 +199,27 @@ const KeepAliveVisibilityWrapper = ({ children }: { children: ReactNode }) => {
 	useEffect(() => {
 		if (active) {
 			setSavedParams(paramsRef.current);
+			// Só conta como restauração quando a aba volta do cache, não na primeira exibição.
+			if (!wasActiveRef.current) {
+				setRestoreCount((count) => count + 1);
+			}
 		}
+		wasActiveRef.current = active;
 	}, [active]);
 
+	const visibilityContextValue = useMemo<KeepAliveVisibilityContextValue>(
+		() => ({ isVisible: active, wasRestored: restoreCount > 0, restoreCount }),
+		[active, restoreCount]
+	);
+
 	return (
-		<KeepAliveVisibilityContext.Provider value={{ isVisible: active }}>
-			<ArchbaseRouteParamsContext.Provider value={{ params: savedParams }}>
-				{children}
-			</ArchbaseRouteParamsContext.Provider>
-		</KeepAliveVisibilityContext.Provider>
+		<UNSAFE_LocationContext.Provider value={locationContextValue}>
+			<KeepAliveVisibilityContext.Provider value={visibilityContextValue}>
+				<ArchbaseRouteParamsContext.Provider value={{ params: savedParams }}>
+					{children}
+				</ArchbaseRouteParamsContext.Provider>
+			</KeepAliveVisibilityContext.Provider>
+		</UNSAFE_LocationContext.Provider>
 	);
 };
 

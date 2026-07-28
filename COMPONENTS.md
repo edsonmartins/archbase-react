@@ -117,7 +117,8 @@ Maior pacote do monorepo com 150+ componentes de UI para formulários, grids, vi
 | `ArchbaseLookupSelect` | Lookup com select integrado |
 | `ArchbaseMaskEdit` | Campo com máscara de entrada |
 | `ArchbaseNumberEdit` | Campo numérico |
-| `ArchbasePasswordEdit` | Campo de senha |
+| `ArchbasePasswordEdit` | Campo de senha com validação opcional de senha forte |
+| `ArchbasePasswordStrengthMeter` | Medidor de força de senha |
 | `ArchbaseRadioGroup` | Grupo de radio buttons |
 | `ArchbaseRadioItem` | Radio button individual |
 | `ArchbaseRating` | Componente de avaliação (estrelas) |
@@ -363,6 +364,7 @@ Utilitários, serviços e hooks fundamentais (não são componentes visuais).
 | `ArchbaseRSQLParser` | Parser de queries RSQL |
 | `ArchbaseJsonHelper` | Utilitários de manipulação JSON |
 | `ArchbaseMask` | Utilitários de máscara de dados |
+| `validateArchbasePassword` | Avaliação de senha forte contra uma `ArchbasePasswordPolicy` |
 
 ### Hooks
 

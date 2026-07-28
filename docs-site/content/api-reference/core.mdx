@@ -35,6 +35,39 @@ Pacote fundamental com providers, hooks e utilitários base.
 | `@IsURL()` | Formato de URL |
 | `@Matches(regex)` | Expressão regular |
 
+## Política de senha
+
+Avaliação de senha forte usada por `ArchbasePasswordEdit`,
+`ArchbasePasswordStrengthMeter`, `ArchbaseResetPassword` e `UserModal`.
+Disponível a partir da 4.0.42.
+
+| Export | Descrição |
+|--------|-----------|
+| `ArchbasePasswordPolicy` | Tipo com os critérios exigidos |
+| `ARCHBASE_DEFAULT_PASSWORD_POLICY` | Política padrão: 8 caracteres, 1 minúscula, 1 maiúscula, 1 número, 1 símbolo, sem espaços |
+| `validateArchbasePassword` | Avalia a senha e devolve o resultado detalhado |
+| `isArchbasePasswordValid` | Retorna apenas se a senha atende à política |
+| `getArchbasePasswordStrengthLabel` | Rótulo traduzido da classificação de força |
+| `resolveArchbasePasswordPolicy` | Normaliza o atalho `true` para a política padrão |
+
+```tsx
+import { validateArchbasePassword } from '@archbase/core';
+
+const resultado = validateArchbasePassword('senha');
+
+resultado.valid;    // false
+resultado.error;    // 'Mínimo de 8 caracteres' — primeiro critério não atendido
+resultado.strength; // 'empty' | 'weak' | 'fair' | 'good' | 'strong'
+resultado.score;    // 0 a 100
+resultado.unmetRequirements.map((criterio) => criterio.key);
+```
+
+Chamando com string vazia, `requirements` traz a lista completa de critérios com
+`satisfied: false` — útil para exibir os requisitos antes de o usuário digitar.
+
+Esta validação roda no navegador e é contornável: aplique a mesma política
+também no backend.
+
 ## i18n
 
 | Export | Descrição |

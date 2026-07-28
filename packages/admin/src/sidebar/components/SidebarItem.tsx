@@ -19,6 +19,10 @@ export function SidebarItem({
 	iconColor,
 	hoverColor,
 	itemHeight = 40,
+	itemBorderRadius = 0,
+	itemHorizontalGap = 0,
+	activeBackground,
+	isActive,
 }: SidebarItemProps) {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
@@ -44,6 +48,14 @@ export function SidebarItem({
 		: (active ? hoverBgColor : 'transparent');
 	const currentTextColor = (isHovered || active) ? theme.white : computedTextColor;
 	const currentIconColor = (isHovered || active) ? theme.white : computedIconColor;
+
+	// `activeBackground` pode ser um gradiente CSS, que precisa da shorthand
+	// `background` (não `backgroundColor`). Quando presente e o item está ativo,
+	// tem precedência sobre a cor de hover derivada acima.
+	const useActiveBg = active && !isHovered && !!activeBackground;
+	const rootBackground = useActiveBg
+		? { background: activeBackground, backgroundColor: undefined as string | undefined }
+		: { background: undefined as string | undefined, backgroundColor: currentBgColor };
 
 	// Verificar se item está desabilitado
 	const isDisabled = typeof item.disabled === 'function' ? item.disabled() : item.disabled;
@@ -99,6 +111,16 @@ export function SidebarItem({
 		if (visibleLinks.length === 0 && isDisabled && item.hideDisabledItem) {
 			return null;
 		}
+
+		// Cada filho resolve o próprio estado ativo. Herdar o `active` do pai
+		// marcava todos os irmãos como ativos quando o pai estava na rota atual.
+		const resolveActive = (link: ArchbaseNavigationItem) =>
+			isActive ? isActive(link) : active;
+
+		// O grupo abre sozinho quando um descendente é o item da rota atual —
+		// caso contrário o item destacado ficaria escondido.
+		const hasActiveDescendant = (links: ArchbaseNavigationItem[]): boolean =>
+			links.some((link) => resolveActive(link) || (link.links ? hasActiveDescendant(link.links) : false));
 
 		// Se está colapsado, mostrar como menu flutuante
 		if (collapsed) {
@@ -186,18 +208,20 @@ export function SidebarItem({
 					</Box>
 				}
 				childrenOffset={28}
-				defaultOpened={item.initiallyOpened || active}
+				defaultOpened={item.initiallyOpened || active || hasActiveDescendant(visibleLinks)}
 				disabled={isDisabled}
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={() => setIsHovered(false)}
 				style={{
 					height: itemHeight,
-					backgroundColor: currentBgColor,
-					transition: 'background-color 150ms ease',
+					marginInline: itemHorizontalGap,
+					width: itemHorizontalGap ? 'auto' : undefined,
+					...rootBackground,
+					transition: 'background 150ms ease, background-color 150ms ease',
 				}}
 				styles={{
 					root: {
-						borderRadius: 0,
+						borderRadius: itemBorderRadius,
 					},
 					label: {
 						color: currentTextColor,
@@ -213,12 +237,16 @@ export function SidebarItem({
 						item={link}
 						depth={depth + 1}
 						collapsed={collapsed}
-						active={active}
+						active={resolveActive(link)}
 						onClick={onClick}
 						textColor={textColor}
 						iconColor={iconColor}
 						hoverColor={hoverColor}
 						itemHeight={itemHeight}
+						itemBorderRadius={itemBorderRadius}
+						itemHorizontalGap={itemHorizontalGap}
+						activeBackground={activeBackground}
+						isActive={isActive}
 					/>
 				))}
 			</NavLink>
@@ -235,22 +263,28 @@ export function SidebarItem({
 			>
 				<Center
 					style={{
-						width: '100%',
+						width: itemHorizontalGap ? 'auto' : '100%',
+						marginInline: itemHorizontalGap,
+						borderRadius: itemBorderRadius,
 						cursor: isDisabled ? 'not-allowed' : 'pointer',
 						opacity: isDisabled ? 0.5 : 1,
-						backgroundColor: active ? hoverBgColor : 'transparent',
-						transition: 'background-color 150ms ease',
+						// Gradiente (activeBackground) via shorthand; senão a cor sólida.
+						...(active && activeBackground
+							? { background: activeBackground }
+							: { backgroundColor: active ? hoverBgColor : 'transparent' }),
+						transition: 'background 150ms ease, background-color 150ms ease',
 						padding: '2px 0',
 					}}
 					onClick={handleClick}
 					onMouseEnter={(e) => {
 						if (!isDisabled) {
-							// Se ativo, usa cor mais escura; se não, usa cor padrão de hover
+							// activeBackground é fixo (não escurece no hover); os demais seguem a lógica anterior.
+							if (active && activeBackground) return;
 							e.currentTarget.style.backgroundColor = active ? hoverActiveBgColor : hoverBgColor;
 						}
 					}}
 					onMouseLeave={(e) => {
-						// Volta para o estado original
+						if (active && activeBackground) return;
 						e.currentTarget.style.backgroundColor = active ? hoverBgColor : 'transparent';
 					}}
 				>
@@ -297,12 +331,14 @@ export function SidebarItem({
 			style={{
 				height: itemHeight,
 				paddingLeft: depth > 0 ? depth * 16 + 12 : undefined,
-				backgroundColor: currentBgColor,
-				transition: 'background-color 150ms ease',
+				marginInline: itemHorizontalGap,
+				width: itemHorizontalGap ? 'auto' : undefined,
+				...rootBackground,
+				transition: 'background 150ms ease, background-color 150ms ease',
 			}}
 			styles={{
 				root: {
-					borderRadius: 0,
+					borderRadius: itemBorderRadius,
 				},
 				label: {
 					color: currentTextColor,

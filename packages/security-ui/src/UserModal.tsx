@@ -3,6 +3,8 @@
  * @status stable
  */
 import { ARCHBASE_IOC_API_TYPE, getI18nextInstance, builder, emit } from '@archbase/core'
+import type { ArchbasePasswordPolicy } from '@archbase/core'
+import { resolveArchbasePasswordPolicy, validateArchbasePassword } from '@archbase/core'
 import { IArchbaseDataSourceBase, ArchbaseDataSource } from '@archbase/data'
 import { ArchbaseCheckbox, ArchbaseEdit, ArchbaseSelect, ArchbasePasswordEdit, ArchbaseAvatarEdit } from '@archbase/components'
 import { useArchbaseRemoteDataSource, useArchbaseRemoteServiceApi } from '@archbase/data'
@@ -30,6 +32,19 @@ export interface UserModalOptions {
   showPasswordNeverExpires?: boolean; // passwordNeverExpires
   /** Exibe, somente leitura, a data da última troca de senha (passwordChangedAt) */
   showPasswordChangedAt?: boolean;
+  /**
+   * Critérios de senha forte exigidos no cadastro.
+   * `true` aplica a política padrão do Archbase; um objeto permite ajustar cada critério.
+   * Quando ausente a senha é apenas obrigatória na inclusão (comportamento original).
+   */
+  passwordPolicy?: ArchbasePasswordPolicy | boolean;
+  /** Indicador se a lista de critérios deve ser exibida abaixo do campo senha. Padrão: true */
+  showPasswordRequirements?: boolean;
+  /**
+   * Inclui login, e-mail e nome do usuário na lista de termos proibidos dentro da senha.
+   * Só tem efeito quando `passwordPolicy` está ativa. Padrão: true
+   */
+  forbidPersonalDataInPassword?: boolean;
 
   // Campos de status da conta
   showAccountConfigLabel?: boolean;
@@ -73,6 +88,8 @@ export const defaultUserModalOptions: UserModalOptions = {
   showAllowPasswordChange: true,
   showPasswordNeverExpires: true,
   showPasswordChangedAt: true,
+  showPasswordRequirements: true,
+  forbidPersonalDataInPassword: true,
 
   // Campos de status da conta
   showAccountConfigLabel: true,
@@ -111,6 +128,24 @@ export const UserModal = (props: UserModalProps) => {
     parsedPasswordChangedAt && !Number.isNaN(parsedPasswordChangedAt.getTime())
       ? parsedPasswordChangedAt.toLocaleString()
       : undefined
+
+  // Política de senha forte: quando ativa, acrescenta os dados pessoais do usuário à blocklist.
+  const basePasswordPolicy = resolveArchbasePasswordPolicy(options.passwordPolicy)
+  const personalTerms = options.forbidPersonalDataInPassword
+    ? (['name', 'nickname', 'email'] as const)
+        .map((field) => {
+          const term = props.dataSource.getFieldValue(field) as string | undefined
+          // Do e-mail interessa apenas a parte local: o domínio é comum a todos os usuários.
+          return field === 'email' && term ? term.split('@')[0] : term
+        })
+        .filter((term): term is string => typeof term === 'string' && term.trim().length >= 3)
+    : []
+  const passwordPolicy: ArchbasePasswordPolicy | undefined = basePasswordPolicy
+    ? {
+        ...basePasswordPolicy,
+        blocklist: [...(basePasswordPolicy.blocklist ?? []), ...personalTerms],
+      }
+    : undefined
 
   const groupApi = useArchbaseRemoteServiceApi<ArchbaseGroupService>(ARCHBASE_IOC_API_TYPE.Group)
   const { dataSource: dsGroups } = useArchbaseRemoteDataSource<GroupDto, string>({
@@ -172,7 +207,16 @@ export const UserModal = (props: UserModalProps) => {
       setPasswordError(getI18nextInstance().t('archbase:Informe a senha'))
       return;
     }
-    
+
+    // Na edição a senha em branco significa "manter a senha atual", então não é validada.
+    if (passwordPolicy && currentRecord.password) {
+      const result = validateArchbasePassword(currentRecord.password, passwordPolicy)
+      if (!result.valid) {
+        setPasswordError(result.error!)
+        return;
+      }
+    }
+
     if (props.onCustomSave) {
       props.onCustomSave(currentRecord, (success: boolean) => {
         if (success && props.onAfterSave) {
@@ -255,6 +299,8 @@ export const UserModal = (props: UserModalProps) => {
                 dataField="password"
                 error={passwordError}
                 required={props.dataSource.getFieldValue("isNewUser")}
+                passwordPolicy={passwordPolicy}
+                showPasswordRequirements={options.showPasswordRequirements}
               />
             </Grid.Col>
           </Grid>

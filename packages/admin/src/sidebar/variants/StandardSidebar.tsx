@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
 	Box,
 	ScrollArea,
@@ -47,6 +47,7 @@ function StandardSidebarContent({
 	skeletonItemCount = 8,
 	backgroundDarkColor,
 	backgroundLightColor,
+	backgroundImage,
 	textDarkColor,
 	textLightColor,
 	iconDarkColor,
@@ -56,6 +57,9 @@ function StandardSidebarContent({
 	withShadow = false,
 	highlightActiveItem = true,
 	onMenuItemClick,
+	itemBorderRadius,
+	itemHorizontalGap,
+	itemActiveBackground,
 }: StandardSidebarContentProps) {
 	const theme = useMantineTheme();
 	const { colorScheme } = useMantineColorScheme();
@@ -79,6 +83,10 @@ function StandardSidebarContent({
 		? theme.colors[activeColor]?.[6] ?? theme.colors[theme.primaryColor][6]
 		: theme.colors[theme.primaryColor][6];
 
+	// Com `backgroundImage` (gradiente): raiz o pinta, internos transparentes.
+	const rootBgStyle = backgroundImage ? { background: backgroundImage } : { backgroundColor };
+	const innerBg = backgroundImage ? 'transparent' : backgroundColor;
+
 	// Hook de busca
 	const {
 		query: searchQuery,
@@ -96,6 +104,20 @@ function StandardSidebarContent({
 		navigationData,
 		onMenuItemClick,
 	});
+
+	// Props de estilo dos itens, repassadas a cada SidebarItem. `isActive` vai
+	// junto para que os subitens resolvam o próprio destaque em vez de herdarem
+	// o do pai.
+	const resolveItemActive = useCallback(
+		(item: ArchbaseNavigationItem) => !!highlightActiveItem && isItemActive(item),
+		[highlightActiveItem, isItemActive],
+	);
+	const itemStyleProps = {
+		itemBorderRadius,
+		itemHorizontalGap,
+		activeBackground: itemActiveBackground,
+		isActive: resolveItemActive,
+	};
 
 	// Hook de teclado
 	useSidebarKeyboard({
@@ -163,6 +185,7 @@ function StandardSidebarContent({
 					textColor={textColor}
 					iconColor={iconColor}
 					hoverColor={itemHoverColor}
+					{...itemStyleProps}
 				/>
 			));
 		};
@@ -186,6 +209,8 @@ function StandardSidebarContent({
 							onClick={navigateToItem}
 							textColor={textColor}
 							iconColor={iconColor}
+						hoverColor={itemHoverColor}
+						{...itemStyleProps}
 						/>
 					))}
 				</SidebarGroup>
@@ -205,6 +230,8 @@ function StandardSidebarContent({
 							onClick={navigateToItem}
 							textColor={textColor}
 							iconColor={iconColor}
+						hoverColor={itemHoverColor}
+						{...itemStyleProps}
 						/>
 					))}
 					{Array.from(groupedItems.groups.values()).flat().map((item, index) => (
@@ -216,6 +243,8 @@ function StandardSidebarContent({
 							onClick={navigateToItem}
 							textColor={textColor}
 							iconColor={iconColor}
+						hoverColor={itemHoverColor}
+						{...itemStyleProps}
 						/>
 					))}
 				</Stack>
@@ -252,7 +281,7 @@ function StandardSidebarContent({
 						width: px(currentWidth),
 						height: typeof height === 'number' ? px(height) : height,
 						minHeight: typeof height === 'number' ? px(height) : height,
-						backgroundColor,
+						...rootBgStyle,
 						display: 'flex',
 						flexDirection: 'column',
 						overflow: 'hidden',
@@ -308,7 +337,7 @@ function StandardSidebarContent({
 							style={{
 								flexShrink: 0,
 								height: footerHeight,
-								backgroundColor,
+							backgroundColor: innerBg,
 								borderTop: withBorder ? `1px solid ${colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]}` : undefined,
 							}}
 						>

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-21",
+  "generatedAt": "2026-07-22",
   "catalogVersion": "0.6.1",
-  "total": 212,
-  "documented": 57,
+  "total": 214,
+  "documented": 58,
   "categories": [
     {
       "id": "template",
@@ -358,9 +358,15 @@
         },
         {
           "name": "ArchbasePasswordEdit",
-          "description": "Campo de senha com toggle de visibilidade, integração com DataSource e suporte a validação.",
+          "description": "Campo de senha com toggle de visibilidade, integração com DataSource e validação opcional de senha forte.",
           "pkg": "@archbase/components",
           "docLink": "/components/editors/text-inputs#archbasepasswordedit"
+        },
+        {
+          "name": "ArchbasePasswordStrengthMeter",
+          "description": "Medidor de força de senha com barra de progresso e lista de critérios atendidos.",
+          "pkg": "@archbase/components",
+          "docLink": "/components/editors/text-inputs#archbasepasswordstrengthmeter"
         },
         {
           "name": "ArchbaseRadioGroup",
@@ -1246,7 +1252,13 @@
         },
         {
           "name": "ArchbaseLogin",
-          "description": "componente de segurança focado em login.",
+          "description": "",
+          "pkg": "@archbase/security",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMfaSetup",
+          "description": "",
           "pkg": "@archbase/security",
           "docLink": null
         },

@@ -674,18 +674,21 @@ import { SecureButton } from '@archbase/security';
 ```tsx
 import { UserModal, GroupModal, PermissionsSelectorModal } from '@archbase/security-ui';
 
-// Modal de usuário
+// Modal de usuário — com validação de senha forte
 <UserModal
+  dataSource={dsUsuario}
   opened={userModalOpen}
-  onClose={() => setUserModalOpen(false)}
-  userId={selectedUserId}
+  onClickOk={(record) => salvarUsuario(record)}
+  onClickCancel={() => setUserModalOpen(false)}
+  options={{ passwordPolicy: true }}
 />
 
 // Modal de grupo
 <GroupModal
+  dataSource={dsGrupo}
   opened={groupModalOpen}
-  onClose={() => setGroupModalOpen(false)}
-  groupId={selectedGroupId}
+  onClickOk={(record) => salvarGrupo(record)}
+  onClickCancel={() => setGroupModalOpen(false)}
 />
 
 // Seletor de permissões

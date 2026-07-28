@@ -127,6 +127,13 @@ export interface ArchbaseMantineSidebarProps {
 	backgroundDarkColor?: string;
 	/** Cor de fundo (light mode) */
 	backgroundLightColor?: string;
+	/**
+	 * Imagem/gradiente de fundo do sidebar. Quando definido, é pintado no
+	 * contêiner raiz e os contêineres internos ficam transparentes, para o
+	 * gradiente aparecer inteiro. Tem precedência sobre `background*Color`.
+	 * @default undefined
+	 */
+	backgroundImage?: string;
 	/** Cor do texto (dark mode) */
 	textDarkColor?: string;
 	/** Cor do texto (light mode) */
@@ -157,6 +164,22 @@ export interface ArchbaseMantineSidebarProps {
 	withBorder?: boolean;
 	/** Mostrar sombra */
 	withShadow?: boolean;
+	/**
+	 * Raio das bordas dos itens de menu (px). Permite pílulas arredondadas em
+	 * vez do quadrado padrão. @default 0
+	 */
+	itemBorderRadius?: string | number;
+	/**
+	 * Recuo horizontal dos itens de menu (px). Descola as pílulas das bordas
+	 * do sidebar. @default 0
+	 */
+	itemHorizontalGap?: string | number;
+	/**
+	 * Background do item ativo. Aceita cor sólida OU gradiente CSS. Tem
+	 * precedência sobre `activeColor`/`hoverColor` no estado ativo.
+	 * @default undefined
+	 */
+	itemActiveBackground?: string;
 
 	// === Acessibilidade ===
 	/** Aria label para o sidebar */
@@ -240,6 +263,27 @@ export interface SidebarItemProps {
 	hoverColor?: string;
 	/** Altura do item */
 	itemHeight?: string | number;
+	/**
+	 * Raio das bordas do item (px). Permite pílulas arredondadas em vez do
+	 * quadrado padrão. @default 0
+	 */
+	itemBorderRadius?: string | number;
+	/**
+	 * Recuo horizontal do item dentro do sidebar (margin lateral, px). Usado
+	 * para descolar as pílulas das bordas. @default 0
+	 */
+	itemHorizontalGap?: string | number;
+	/**
+	 * Background do item ativo. Aceita cor sólida OU gradiente CSS. Quando
+	 * definido, tem precedência sobre `hoverColor` no estado ativo. @default undefined
+	 */
+	activeBackground?: string;
+	/**
+	 * Resolve o estado ativo de um subitem. Sem isto os filhos herdam o `active`
+	 * do pai, e todos aparecem destacados quando o pai está na rota atual. As
+	 * variantes passam o `isItemActive` do `useSidebarNavigation`.
+	 */
+	isActive?: (item: ArchbaseNavigationItem) => boolean;
 }
 
 /**

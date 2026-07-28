@@ -9,12 +9,17 @@ import {
 } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler, ReactNode } from 'react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ArchbaseDataSource, DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames } from '@archbase/data';
 import { useArchbaseDidUpdate } from '@archbase/data';
 import { useArchbaseV1V2Compatibility } from '@archbase/data';
-import { useValidationErrors } from '@archbase/core';
+import type {
+	ArchbasePasswordPolicy,
+	ArchbasePasswordValidationResult,
+} from '@archbase/core';
+import { resolveArchbasePasswordPolicy, useValidationErrors, validateArchbasePassword } from '@archbase/core';
+import { ArchbasePasswordStrengthMeter } from './ArchbasePasswordStrengthMeter';
 
 export interface ArchbasePasswordEditProps<T, ID> {
 	/** Fonte de dados onde será atribuido o valor do edit (V1 ou V2) */
@@ -54,6 +59,24 @@ export interface ArchbasePasswordEditProps<T, ID> {
 	/** Referência para o componente interno */
 	innerRef?: React.RefObject<HTMLInputElement> | undefined;
 	variant?: InputVariant;
+	/**
+	 * Critérios de senha forte aplicados como pré-validação no próprio componente.
+	 * `true` aplica a política padrão do Archbase; um objeto permite ajustar cada critério.
+	 * Quando ausente nenhuma validação de força é feita (comportamento original).
+	 */
+	passwordPolicy?: ArchbasePasswordPolicy | boolean;
+	/** Indicador se a lista de critérios deve ser exibida. Padrão: true quando há política */
+	showPasswordRequirements?: boolean;
+	/** Indicador se a barra de força deve ser exibida. Padrão: true quando há política */
+	showPasswordStrengthBar?: boolean;
+	/**
+	 * Quando os critérios ficam visíveis:
+	 * `onFocus` (padrão) enquanto o campo tem foco ou está inválido,
+	 * `always` sempre, `whenInvalid` somente quando algum critério falha.
+	 */
+	passwordRequirementsVisibility?: 'always' | 'onFocus' | 'whenInvalid';
+	/** Evento disparado a cada mudança no resultado da pré-validação */
+	onPasswordValidation?: (result: ArchbasePasswordValidationResult) => void;
 }
 
 export function ArchbasePasswordEdit<T, ID>({
@@ -77,6 +100,11 @@ export function ArchbasePasswordEdit<T, ID>({
 	onFocusEnter = () => {},
 	onChangeValue = () => {},
 	variant,
+	passwordPolicy,
+	showPasswordRequirements = true,
+	showPasswordStrengthBar = true,
+	passwordRequirementsVisibility = 'onFocus',
+	onPasswordValidation,
 }: ArchbasePasswordEditProps<T, ID>) {
 	// 🔄 MIGRAÇÃO V1/V2: Hook de compatibilidade
 	const v1v2Compatibility = useArchbaseV1V2Compatibility<string>(
@@ -104,6 +132,22 @@ export function ArchbasePasswordEdit<T, ID>({
 	const theme = useMantineTheme();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
+
+	// Pré-validação de senha forte: só entra em ação quando uma política é informada.
+	const resolvedPolicy = useMemo(() => resolveArchbasePasswordPolicy(passwordPolicy), [passwordPolicy]);
+	const [isFocused, setIsFocused] = useState<boolean>(false);
+	const [policyError, setPolicyError] = useState<string | undefined>(undefined);
+
+	const policyResult = useMemo(
+		() => (resolvedPolicy ? validateArchbasePassword(currentValue, resolvedPolicy) : undefined),
+		[currentValue, resolvedPolicy]
+	);
+
+	useEffect(() => {
+		if (policyResult && onPasswordValidation) {
+			onPasswordValidation(policyResult);
+		}
+	}, [policyResult]);
 
 	// ❌ REMOVIDO: Não limpar erro automaticamente quando valor muda
 	// O erro deve ser limpo apenas quando o usuário EDITA o campo (no handleChange)
@@ -208,6 +252,11 @@ useEffect(() => {
 			validationContext?.clearError(fieldKey);
 		}
 
+		// O erro de política reaparece no blur; enquanto digita o feedback fica na lista de critérios.
+		if (policyError) {
+			setPolicyError(undefined);
+		}
+
 		setCurrentValue((_prev) => changedValue);
 
 		if (dataSource && !dataSource.isBrowsing() && dataField && dataSource.getFieldValue(dataField) !== changedValue) {
@@ -221,12 +270,18 @@ useEffect(() => {
 	};
 
 	const handleOnFocusExit = (event) => {
+		setIsFocused(false);
+		// Só acusa erro depois que o usuário terminou de digitar e o campo tem conteúdo.
+		if (policyResult && currentValue) {
+			setPolicyError(policyResult.error);
+		}
 		if (onFocusExit) {
 			onFocusExit(event);
 		}
 	};
 
 	const handleOnFocusEnter = (event) => {
+		setIsFocused(true);
 		if (onFocusEnter) {
 			onFocusEnter(event);
 		}
@@ -237,10 +292,24 @@ useEffect(() => {
 		return readOnly || v1v2Compatibility.isReadOnly;
 	};
 
-	// Erro a ser exibido: local ou do contexto
-	const displayError = internalError || contextError;
+	// Erro a ser exibido: local, do contexto ou da política de senha
+	const displayError = internalError || contextError || policyError;
 
-	return (
+	const shouldShowPolicyFeedback = (): boolean => {
+		if (!policyResult || isReadOnly() || disabled) {
+			return false;
+		}
+		switch (passwordRequirementsVisibility) {
+			case 'always':
+				return true;
+			case 'whenInvalid':
+				return currentValue.length > 0 && !policyResult.valid;
+			default:
+				return isFocused || (currentValue.length > 0 && !policyResult.valid);
+		}
+	};
+
+	const passwordInput = (
 		<PasswordInput
 			disabled={disabled}
 			readOnly={isReadOnly()}
@@ -262,5 +331,23 @@ useEffect(() => {
 			label={label}
 			error={displayError}
 		/>
+	);
+
+	if (!resolvedPolicy) {
+		return passwordInput;
+	}
+
+	return (
+		<div style={{ width }}>
+			{passwordInput}
+			{shouldShowPolicyFeedback() && (
+				<ArchbasePasswordStrengthMeter
+					value={currentValue}
+					policy={resolvedPolicy}
+					showStrengthBar={showPasswordStrengthBar}
+					showRequirements={showPasswordRequirements}
+				/>
+			)}
+		</div>
 	);
 }

@@ -23,6 +23,7 @@
 - `ArchbaseDataGrid` — grid data-aware (`packages/components/src/datagrid/main/archbase-data-grid.tsx`)
 - `ArchbaseFormTemplate` — template CRUD (`packages/template/src/ArchbaseFormTemplate.tsx`)
 - `ArchbaseSecurityProvider` — segurança/roles (`packages/security/src/ArchbaseSecurityContext.tsx`)
+- `validateArchbasePassword` — política de senha forte, usada por `ArchbasePasswordEdit`/`ArchbasePasswordStrengthMeter` (`packages/core/src/utils/passwordPolicy.ts`)
 - `ArchbaseDebugPanel` — painel de debug (`packages/tools/src/debug/ArchbaseDebugPanel.tsx`)
 - `ArchbaseSSRProvider` — utilidades SSR (`packages/ssr/src/providers/ArchbaseSSRProvider.tsx`)
 
