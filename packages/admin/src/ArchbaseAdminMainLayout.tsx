@@ -100,6 +100,18 @@ export interface ArchbaseAdminMainLayoutProps {
 	 * definido, substitui o cinza padrão derivado do tema. @default undefined
 	 */
 	mainBackground?: string;
+	/**
+	 * Raio das bordas do container que envolve as abas e o conteúdo. Aceita
+	 * número (px) ou string CSS. Sem valor mantém os 4px históricos, que
+	 * destoam quando o tema usa um `defaultRadius` maior — o conteúdo arredonda
+	 * mais que o container e sobra uma cunha no canto. @default '4px'
+	 */
+	mainBorderRadius?: string | number;
+	/**
+	 * Cor da borda desse mesmo container. Sem valor mantém o cinza fixo
+	 * (`#e4e9ef` no claro, `dark[4]` no escuro). @default undefined
+	 */
+	mainBorderColor?: string;
 	/** Raio das bordas dos itens do sidebar (px). Pílulas arredondadas. @default 0 */
 	sideBarItemBorderRadius?: string | number;
 	/** Recuo horizontal dos itens do sidebar (px). @default 0 */
@@ -162,6 +174,8 @@ function ArchbaseAdminMainLayoutContainer({
 	sideBarIconLightColor,
 	sideBarBackgroundImage,
 	mainBackground,
+	mainBorderRadius,
+	mainBorderColor,
 	sideBarItemBorderRadius,
 	sideBarItemHorizontalGap,
 	sideBarItemActiveBackground,
@@ -409,14 +423,23 @@ function ArchbaseAdminMainLayoutContainer({
 		},
 	};
 
+	// Borda do container que envolve abas + conteúdo. Os valores históricos (4px
+	// e cinza fixo) continuam como default; `mainBorderRadius` existe para o
+	// container acompanhar temas com `defaultRadius` maior, senão o conteúdo
+	// arredonda mais que ele e sobra uma cunha nos cantos de baixo.
+	const mainBorderRadiusValue =
+		typeof mainBorderRadius === 'number' ? `${mainBorderRadius}px` : mainBorderRadius ?? '4px';
+	const mainBorderColorValue =
+		mainBorderColor ?? (colorScheme === 'dark' ? theme.colors.dark[4] : '#e4e9ef');
+
 	// Estilos do div principal - legacy usa cálculos manuais, Mantine usa 100%
 	const mainDivStyle: React.CSSProperties = isLegacyVariant ? {
 		height: `calc(100vh - var(--app-shell-header-offset, 0px) - var(--app-shell-footer-offset, 0px) - var(--app-shell-padding) - 1rem)`,
 		width: `calc(100vw - var(--app-shell-padding) - calc(${isHidden ? '0px' : currentSidebarWidth} + 1rem))`,
 		marginTop: '0.5rem',
 		marginLeft: `calc(${isHidden ? '0px' : currentSidebarWidth} + 0.5rem)`,
-		border: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : '#e4e9ef'}`,
-		borderRadius: '4px',
+		border: `1px solid ${mainBorderColorValue}`,
+		borderRadius: mainBorderRadiusValue,
 		overflow: 'hidden',
 	} : {
 		height: 'calc(100vh - var(--app-shell-header-offset, 0px) - var(--app-shell-footer-offset, 0px) - 1rem)',
@@ -424,8 +447,8 @@ function ArchbaseAdminMainLayoutContainer({
 		marginTop: '0.5rem',
 		marginLeft: '0.5rem',
 		marginRight: '0.5rem',
-		border: `1px solid ${colorScheme === 'dark' ? theme.colors.dark[4] : '#e4e9ef'}`,
-		borderRadius: '4px',
+		border: `1px solid ${mainBorderColorValue}`,
+		borderRadius: mainBorderRadiusValue,
 		overflow: 'hidden',
 	};
 
@@ -562,6 +585,8 @@ export function ArchbaseAdminMainLayout({
 	sideBarIconLightColor,
 	sideBarBackgroundImage,
 	mainBackground,
+	mainBorderRadius,
+	mainBorderColor,
 	sideBarItemBorderRadius,
 	sideBarItemHorizontalGap,
 	sideBarItemActiveBackground,
@@ -625,6 +650,8 @@ export function ArchbaseAdminMainLayout({
 				sideBarIconLightColor={sideBarIconLightColor}
 				sideBarBackgroundImage={sideBarBackgroundImage}
 				mainBackground={mainBackground}
+				mainBorderRadius={mainBorderRadius}
+				mainBorderColor={mainBorderColor}
 				sideBarItemBorderRadius={sideBarItemBorderRadius}
 				sideBarItemHorizontalGap={sideBarItemHorizontalGap}
 				sideBarItemActiveBackground={sideBarItemActiveBackground}
