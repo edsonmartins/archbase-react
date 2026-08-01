@@ -3,7 +3,7 @@ import useComponentSize from '@rehooks/component-size';
 import React, { ReactNode, useContext, useEffect, useRef, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { matchPath } from 'react-router';
-import { ArchbaseAdvancedTabItem, ArchbaseAdvancedTabs } from '@archbase/layout';
+import { ArchbaseAdvancedTabItem, ArchbaseAdvancedTabs, ArchbaseAdvancedTabsColors } from '@archbase/layout';
 import { getI18nextInstance, useArchbaseTranslation } from '@archbase/core';
 import { ArchbaseAdminLayoutContext, ArchbaseAdminLayoutContextValue } from './ArchbaseAdminLayout.context';
 import { ArchbaseNavigationContext, useArchbaseNavigationContext } from './ArchbaseNavigation.context';
@@ -18,6 +18,12 @@ export interface ArchbaseAdminTabContainerProps {
 	onChangeOpenedTabs?: (openedTabs: ArchbaseTabItem[]) => void;
 	activeTabId?: any;
 	openedTabs?: ArchbaseTabItem[];
+	/**
+	 * Cores do tab strip. Omitir mantém a paleta cinza padrão do componente.
+	 * As cores valem para os dois esquemas, então passe o conjunto do esquema
+	 * atual quando quiser tons distintos entre claro e escuro.
+	 */
+	colors?: ArchbaseAdvancedTabsColors;
 }
 
 interface ResultItem {
@@ -34,6 +40,7 @@ export function ArchbaseAdminTabContainer({
 	onChangeActiveTabId,
 	activeTabId: defaultActiveTabId,
 	openedTabs: defaultOpenedTabs = [],
+	colors,
 }: ArchbaseAdminTabContainerProps) {
 	const [isPending, startTransition] = React.useTransition();
 	const navigate = useNavigate();
@@ -428,6 +435,7 @@ export function ArchbaseAdminTabContainer({
 				onCloseOtherTabs={handleCloseOtherTabs}
 				currentTabs={buildAdvancedTabs(openedTabs)}
 				activeTab={activeTabId}
+				colors={colors}
 				dark={colorScheme === 'dark'}
 			></ArchbaseAdvancedTabs>
 		</div>

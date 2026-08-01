@@ -2,5 +2,6 @@ export { ArchbaseAdvancedTabs } from './ArchbaseAdvancedTabs'
 export type {
   ArchbaseAdvancedTabItem,
   ArchbaseAdvancedTabProps,
-  ArchbaseAdvancedTabsProps
+  ArchbaseAdvancedTabsProps,
+  ArchbaseAdvancedTabsColors
 } from './ArchbaseAdvancedTabs'
