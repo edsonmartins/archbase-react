@@ -30,6 +30,7 @@ const withMDX = createMDX({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  reactCompiler: true,
   output: 'export',
   // Habilitar ESM externals para resolver conflitos CJS/ESM
   experimental: {
