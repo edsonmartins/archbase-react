@@ -15,6 +15,9 @@ export type { ArchbaseAdminMainLayoutProps, AdminSidebarVariant, ArchbaseCustomS
 export { ArchbaseAdminMainLayout } from './ArchbaseAdminMainLayout';
 export type { ArchbaseAdminTabContainerProps } from './ArchbaseAdminTabContainer';
 export { ArchbaseAdminTabContainer } from './ArchbaseAdminTabContainer';
+// Reexportado aqui para quem monta o layout admin não precisar importar de
+// @archbase/layout só por causa do tipo das cores do tab strip.
+export type { ArchbaseAdvancedTabsColors } from '@archbase/layout';
 export { ArchbaseChangeLanguageAction } from './ArchbaseChangeLanguageAction';
 export { ArchbaseColorSchemeAction } from './ArchbaseColorSchemeAction';
 export type { ArchbaseHeaderNavActionProps } from './ArchbaseHeaderNavAction';

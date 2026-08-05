@@ -233,6 +233,33 @@ const ArchbaseAdvancedTab : React.FC<ArchbaseAdvancedTabProps> = (props) => {
 	);
 }
 
+/**
+ * Cores do tab strip. Cada campo omitido mantém o tom padrão do componente
+ * (cinza estilo Chrome), então dá para trocar só o que interessa.
+ *
+ * Os valores viram custom properties inline no elemento `.archbase_tabs`, o que
+ * os faz valer tanto no tema claro quanto no escuro — passe o conjunto
+ * correspondente ao esquema atual quando quiser tons diferentes por tema.
+ */
+export interface ArchbaseAdvancedTabsColors {
+  /** Fundo da faixa que contém as abas. */
+  barBackground?: string;
+  /** Fundo das abas inativas. */
+  tabBackground?: string;
+  /** Fundo da aba ativa. */
+  tabActiveBackground?: string;
+  /** Cor do título das abas inativas. */
+  titleColor?: string;
+  /** Cor do título da aba ativa. */
+  titleActiveColor?: string;
+  /** Traço de destaque no topo da aba ativa. Sem valor, nenhum traço é desenhado. */
+  activeAccentColor?: string;
+  /** Cor dos divisores verticais entre abas. */
+  dividerColor?: string;
+  /** Faixa inferior, que emenda o strip com a área de conteúdo. */
+  bottomBarBackground?: string;
+}
+
 export interface ArchbaseAdvancedTabsProps {
   currentTabs: ArchbaseAdvancedTabItem[]
   buttonCloseOnlyActiveTab: boolean
@@ -243,6 +270,8 @@ export interface ArchbaseAdvancedTabsProps {
   style?: CSSProperties,
   dark: boolean,
   onClick: Function,
+  /** Cores do strip. Omitir mantém a paleta cinza padrão. */
+  colors?: ArchbaseAdvancedTabsColors,
   // Novas props para fechar múltiplas abas
   onCloseAllTabs?: () => void;
   onCloseLeftTabs?: (tabId: string) => void;
@@ -250,8 +279,30 @@ export interface ArchbaseAdvancedTabsProps {
   onCloseOtherTabs?: (tabId: string) => void;
 }
 
+/** Converte as cores informadas nas custom properties consumidas pelo SCSS. */
+const buildTabsColorVars = (colors?: ArchbaseAdvancedTabsColors): CSSProperties => {
+  if (!colors) return {};
+  const entries: Array<[string, string | undefined]> = [
+    ['--archbase-tabs-bar-bg', colors.barBackground],
+    ['--archbase-tabs-tab-bg', colors.tabBackground],
+    ['--archbase-tabs-tab-active-bg', colors.tabActiveBackground],
+    ['--archbase-tabs-title', colors.titleColor],
+    ['--archbase-tabs-title-active', colors.titleActiveColor],
+    ['--archbase-tabs-tab-active-accent', colors.activeAccentColor],
+    ['--archbase-tabs-divider', colors.dividerColor],
+    ['--archbase-tabs-bottom-bar-bg', colors.bottomBarBackground],
+  ];
+
+  return entries.reduce((style, [cssVar, value]) => {
+    if (value) {
+      (style as Record<string, string>)[cssVar] = value;
+    }
+    return style;
+  }, {} as CSSProperties);
+}
+
 export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props) => {
-	const { currentTabs, onTabChange: onChange, activeTab, onTabClose: onClose, className, style, dark, onClick, buttonCloseOnlyActiveTab = false, onCloseAllTabs, onCloseLeftTabs, onCloseRightTabs, onCloseOtherTabs } = props;
+	const { currentTabs, onTabChange: onChange, activeTab, onTabClose: onClose, className, style, dark, onClick, colors, buttonCloseOnlyActiveTab = false, onCloseAllTabs, onCloseLeftTabs, onCloseRightTabs, onCloseOtherTabs } = props;
 	const [tabContentWidths, setTabContentWidths] = useState<number[]>([]);
 	const [positions, setPositions] = useState<number[]>([]);
 	const [tabs, setTabs] = useState(currentTabs || []);
@@ -370,6 +421,7 @@ export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props)
 		<div className={className} style={style}>
 			<div
 				className={`archbase_tabs${!!dark ? " archbase_tabs-dark-theme" : ""}${!isDragging ? " archbase_tabs-is-sorting" : ""}`}
+				style={buildTabsColorVars(colors)}
 			>
 				<div className={`archbase_tabs_content`} ref={tabContentEl} >
 					{
