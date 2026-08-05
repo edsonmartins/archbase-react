@@ -54,6 +54,9 @@ import {
 	type ArchbaseSecurityProps,
 	type UserItemProps,
 	SecurityGridPanel,
+	SecurityRowActions,
+	SecurityToolbarActions,
+	useSecurityEntityActions,
 	buildAccessTokenColumns,
 	buildGroupColumns,
 	buildProfileColumns,
@@ -212,266 +215,86 @@ export function ArchbaseSecurityView({
 	const profileColumns = buildProfileColumns(t);
 	const resourceColumns = buildResourceColumns(t);
 
-	const handleAddUserExecute = () => {
-		const user = UserDto.newInstance();
-		if (!createEntitiesWithId) {
-			(user as any).id = undefined;
-		}
-		dsUsers.insert(user);
-		setOpenedModal(SecurityType.USER);
-	};
-
-	const handleUserEditRow = (row: any) => {
-		if (!dsUsers.isEmpty()) {
-			const currentUser = dsUsers.gotoRecordByData(row);
-			if (currentUser) {
-				dsUsers.edit();
-				setOpenedModal(SecurityType.USER);
-			}
-		}
-	};
-
-	const handleUserRemoveRow = (row: any) => {
-		if (!dsUsers.isEmpty()) {
-			const currentUser = dsUsers.gotoRecordByData(row);
-			if (currentUser) {
-				ArchbaseDialog.showConfirmDialogYesNo(
-					`${t('archbase:Confirme')}`,
-					`${t('archbase:Deseja remover o usuário ')}${row.name} ?`,
-					() => {
-						dsUsers.remove();
-					},
-					() => {},
-				);
-			}
-		}
-	};
-
-	const handleUserViewRow = (row: any) => {
-		if (!dsUsers.isEmpty()) {
-			const currentUser = dsUsers.gotoRecordByData(row);
-			if (currentUser) {
-				setOpenedModal(SecurityType.USER);
-			}
-		}
-	};
-
-	const buildUserRowActions = (row: UserDto): ReactNode => {
-		return (
-			<Group gap={1} wrap="nowrap">
-				{options?.beforeDefaultUserActions?.(row)}
-				<ActionIcon variant="transparent" onClick={() => handleUserViewRow(row)}>
-					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleUserEditRow(row)}>
-					<IconEdit size={20} color={colorScheme === 'dark' ? theme.colors.yellow[8] : theme.colors.yellow[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleUserRemoveRow(row)}>
-					<IconTrashX size={20} color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
-				</ActionIcon>
-				<Tooltip withinPortal withArrow position="left" label={`${t('archbase:Edit permissions')}`}>
-					<ActionIcon variant="transparent" onClick={handleOpenUserPermissionsModal}>
-						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
-					</ActionIcon>
-				</Tooltip>
-				{options?.afterDefaultUserActions?.(row)}
-			</Group>
-		);
-	};
-
-	const handleAddGroupExecute = () => {
-		const group = GroupDto.newInstance();
-		if (!createEntitiesWithId) {
-			(group as any).id = undefined;
-		}
-		dsGroups.insert(group);
-		setOpenedModal(SecurityType.GROUP);
-	};
-
-	const handleGroupEditRow = (row: any) => {
-		if (!dsGroups.isEmpty()) {
-			const currentGroup = dsGroups.gotoRecordByData(row);
-			if (currentGroup) {
-				if (!dsGroups.isEditing()) {
-					dsGroups.edit();
-				}
-				setOpenedModal(SecurityType.GROUP);
-			}
-		}
-	};
-
-	const handleGroupRemoveRow = (row: any) => {
-		if (!dsGroups.isEmpty()) {
-			const currentGroup = dsGroups.gotoRecordByData(row);
-			if (currentGroup) {
-				ArchbaseDialog.showConfirmDialogYesNo(
-					`${t('archbase:Confirme')}`,
-					`${t('archbase:Deseja remover o grupo ')}${row.name} ?`,
-					() => {
-						dsGroups.remove();
-					},
-					() => {},
-				);
-			}
-		}
-	};
-
-	const handleGroupViewRow = (row: any) => {
-		if (!dsGroups.isEmpty()) {
-			const currentGroup = dsGroups.gotoRecordByData(row);
-			if (currentGroup) {
-				setOpenedModal(SecurityType.GROUP);
-			}
-		}
-	};
-
-	const buildGroupRowActions = (row: GroupDto): ReactNode => {
-		return (
-			<Group gap={1} wrap="nowrap">
-				{options?.beforeDefaultGroupActions?.(row)}
-				<ActionIcon variant="transparent" onClick={() => handleGroupViewRow(row)}>
-					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleGroupEditRow(row)}>
-					<IconEdit size={20} color={colorScheme === 'dark' ? theme.colors.yellow[8] : theme.colors.yellow[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleGroupRemoveRow(row)}>
-					<IconTrashX size={20} color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
-				</ActionIcon>
-				<Tooltip withinPortal withArrow position="left" label={`${t('archbase:Edit permissions')}`}>
-					<ActionIcon variant="transparent" onClick={handleOpenGroupPermissionsModal}>
-						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
-					</ActionIcon>
-				</Tooltip>
-				{options?.afterDefaultGroupActions?.(row)}
-			</Group>
-		);
-	};
-
 	const validationContext = useValidationErrors();
 
-	const handleSaveUserModal = async () => {
-		try {
-			await dsUsers.save();
-		} catch (_error) {
-			return;
-		}
-		setOpenedModal('');
-		validationContext?.clearAll();
-	};
+	// Os gestos de cada entidade saem do mesmo hook. As cinco famílias de handler que
+	// existiam aqui divergiam em detalhes que compilam igual — ver o cabeçalho de
+	// securityView/useSecurityEntityActions.
+	const userActions = useSecurityEntityActions<UserDto>({
+		dataSource: dsUsers,
+		securityType: SecurityType.USER,
+		newInstance: () => UserDto.newInstance(),
+		createEntitiesWithId,
+		removeMessageKey: 'archbase:Deseja remover o usuário ',
+		setOpenedModal,
+		setOpenedPermissionsModal,
+		validationContext,
+		t,
+	});
 
-	const handleCancelUserModal = () => {
-		setOpenedModal('');
-		if (!dsUsers.isBrowsing()) {
-			dsUsers.cancel();
-		}
-		validationContext?.clearAll();
-	};
+	const groupActions = useSecurityEntityActions<GroupDto>({
+		dataSource: dsGroups,
+		securityType: SecurityType.GROUP,
+		newInstance: () => GroupDto.newInstance(),
+		createEntitiesWithId,
+		removeMessageKey: 'archbase:Deseja remover o grupo ',
+		setOpenedModal,
+		setOpenedPermissionsModal,
+		validationContext,
+		t,
+	});
 
-	const handleSaveGroupModal = async () => {
-		try {
-			await dsGroups.save();
-		} catch (_error) {
-			return;
-		}
-		setOpenedModal('');
-		validationContext?.clearAll();
-	};
+	const profileActions = useSecurityEntityActions<ProfileDto>({
+		dataSource: dsProfiles,
+		securityType: SecurityType.PROFILE,
+		newInstance: () => ProfileDto.newInstance(),
+		createEntitiesWithId,
+		removeMessageKey: 'archbase:Deseja remover o perfil ',
+		setOpenedModal,
+		setOpenedPermissionsModal,
+		validationContext,
+		t,
+	});
 
-	const handleCancelGroupModal = () => {
-		setOpenedModal('');
-		if (!dsGroups.isBrowsing()) {
-			dsGroups.cancel();
-		}
-		validationContext?.clearAll();
-	};
+	const buildUserRowActions = (row: UserDto): ReactNode => (
+		<SecurityRowActions<UserDto>
+			row={row}
+			onView={userActions.handleViewRow}
+			onEdit={userActions.handleEditRow}
+			onRemove={userActions.handleRemoveRow}
+			onEditPermissions={userActions.handleOpenPermissionsModal}
+			before={options?.beforeDefaultUserActions}
+			after={options?.afterDefaultUserActions}
+			t={t}
+		/>
+	);
 
-	const handleSaveProfileModal = async () => {
-		try {
-			await dsProfiles.save();
-		} catch (_error) {
-			return;
-		}
-		setOpenedModal('');
-		validationContext?.clearAll();
-	};
+	const buildGroupRowActions = (row: GroupDto): ReactNode => (
+		<SecurityRowActions<GroupDto>
+			row={row}
+			onView={groupActions.handleViewRow}
+			onEdit={groupActions.handleEditRow}
+			onRemove={groupActions.handleRemoveRow}
+			onEditPermissions={groupActions.handleOpenPermissionsModal}
+			before={options?.beforeDefaultGroupActions}
+			after={options?.afterDefaultGroupActions}
+			t={t}
+		/>
+	);
 
-	const handleCancelProfileModal = () => {
-		setOpenedModal('');
-		if (!dsProfiles.isBrowsing()) {
-			dsProfiles.cancel();
-		}
-		validationContext?.clearAll();
-	};
+	const buildProfileRowActions = (row: ProfileDto): ReactNode => (
+		<SecurityRowActions<ProfileDto>
+			row={row}
+			onView={profileActions.handleViewRow}
+			onEdit={profileActions.handleEditRow}
+			onRemove={profileActions.handleRemoveRow}
+			onEditPermissions={profileActions.handleOpenPermissionsModal}
+			before={options?.beforeDefaultProfileActions}
+			after={options?.afterDefaultProfileActions}
+			t={t}
+		/>
+	);
 
-	const handleAddProfileExecute = () => {
-		const profile = ProfileDto.newInstance();
-		if (!createEntitiesWithId) {
-			(profile as any).id = undefined;
-		}
-		dsProfiles.insert(profile);
-		setOpenedModal(SecurityType.PROFILE);
-	};
-
-	const handleProfileEditRow = (row: any) => {
-		if (!dsProfiles.isEmpty()) {
-			const currentProfile = dsProfiles.gotoRecordByData(row);
-			if (currentProfile) {
-				if (!dsProfiles.isEditing()) {
-					dsProfiles.edit();
-				}
-				setOpenedModal(SecurityType.PROFILE);
-			}
-		}
-	};
-
-	const handleProfileRemoveRow = (row: any) => {
-		if (!dsProfiles.isEmpty()) {
-			const currentProfile = dsProfiles.gotoRecordByData(row);
-			if (currentProfile) {
-				ArchbaseDialog.showConfirmDialogYesNo(
-					`${t('archbase:Confirme')}`,
-					`${t('archbase:Deseja remover o perfil ')}${row.name} ?`,
-					() => {
-						dsProfiles.remove();
-					},
-					() => {},
-				);
-			}
-		}
-	};
-
-	const handleProfileViewRow = (row: any) => {
-		if (!dsProfiles.isEmpty()) {
-			const currentProfile = dsProfiles.gotoRecordByData(row);
-			if (currentProfile) {
-				setOpenedModal(SecurityType.PROFILE);
-			}
-		}
-	};
-
-	const buildProfileRowActions = (row: ProfileDto): ReactNode => {
-		return (
-			<Group gap={1} wrap="nowrap">
-				{options?.beforeDefaultProfileActions?.(row)}
-				<ActionIcon variant="transparent" onClick={() => handleProfileViewRow(row)}>
-					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleProfileEditRow(row)}>
-					<IconEdit size={20} color={colorScheme === 'dark' ? theme.colors.yellow[8] : theme.colors.yellow[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleProfileRemoveRow(row)}>
-					<IconTrashX size={20} color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
-				</ActionIcon>
-				<Tooltip withinPortal withArrow position="left" label={`${t('archbase:Edit permissions')}`}>
-					<ActionIcon variant="transparent" onClick={handleOpenProfilePermissionsModal}>
-						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
-					</ActionIcon>
-				</Tooltip>
-				{options?.afterDefaultProfileActions?.(row)}
-			</Group>
-		);
-	};
 
 	const handleAccessTokenRevokeRow = () => {
 		const currentAccessToken = dsAccessTokens.getCurrentRecord();
@@ -502,71 +325,11 @@ export function ArchbaseSecurityView({
 		}
 	};
 
-	const handleOpenUserPermissionsModal = () => {
-		setOpenedPermissionsModal(SecurityType.USER);
-	};
-
-	const handleOpenGroupPermissionsModal = () => {
-		setOpenedPermissionsModal(SecurityType.GROUP);
-	};
-
-	const handleOpenProfilePermissionsModal = () => {
-		setOpenedPermissionsModal(SecurityType.PROFILE);
-	};
-
 	const handleClosePermissionsModal = () => {
 		setOpenedPermissionsModal('');
 	};
 
 	// Componentes de ações da barra de ferramentas para cada grid
-	const renderUsersToolbarActions = () : ReactNode => {
-		return (
-			<Flex justify={'space-between'} style={{ width: '50%' }}>
-				<Group align="end" gap={'4px'} wrap="nowrap">
-					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddUserExecute}>
-						{`${t('archbase:New')}`}
-					</Button>
-					<Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenUserPermissionsModal}>
-						{`${t('archbase:Edit permissions')}`}
-					</Button>
-				</Group>
-				<Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
-			</Flex>
-		);
-	};
-
-	const renderGroupsToolbarActions = () : ReactNode => {
-		return (
-			<Flex justify={'space-between'} style={{ width: '50%' }}>
-				<Group align="end" gap={'4px'} wrap="nowrap">
-					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddGroupExecute}>
-						{`${t('archbase:New')}`}
-					</Button>
-					<Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenGroupPermissionsModal}>
-						{`${t('archbase:Edit permissions')}`}
-					</Button>
-				</Group>
-				<Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
-			</Flex>
-		);
-	};
-
-	const renderProfilesToolbarActions = ()  : ReactNode => {
-		return (
-			<Flex justify={'space-between'} style={{ width: '50%' }}>
-				<Group align="end" gap={'4px'} wrap='nowrap'>
-					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddProfileExecute}>
-						{`${t('archbase:New')}`}
-					</Button>
-					<Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenProfilePermissionsModal}>
-						{`${t('archbase:Edit permissions')}`}
-					</Button>
-				</Group>
-				<Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
-			</Flex>
-		);
-	};
-
 	const renderAccessTokensToolbarActions = () : ReactNode => {
 		return (
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
@@ -604,7 +367,13 @@ export function ArchbaseSecurityView({
 				error={error}
 				getRowId={getUserRowId}
 				striped={true}
-				toolbarLeftContent={renderUsersToolbarActions()}
+				toolbarLeftContent={
+					<SecurityToolbarActions
+						onAdd={userActions.handleAdd}
+						onEditPermissions={userActions.handleOpenPermissionsModal}
+						t={t}
+					/>
+				}
 				renderRowActions={buildUserRowActions}
 				actionsColumnWidth={options?.userActionsColumnWidth}
 				children={userColumns}
@@ -617,7 +386,13 @@ export function ArchbaseSecurityView({
 				isLoading={isLoadingGroups}
 				error={error}
 				getRowId={getGroupRowId}
-				toolbarLeftContent={renderGroupsToolbarActions()}
+				toolbarLeftContent={
+					<SecurityToolbarActions
+						onAdd={groupActions.handleAdd}
+						onEditPermissions={groupActions.handleOpenPermissionsModal}
+						t={t}
+					/>
+				}
 				renderRowActions={buildGroupRowActions}
 				actionsColumnWidth={options?.groupActionsColumnWidth}
 				children={groupColumns}
@@ -630,7 +405,13 @@ export function ArchbaseSecurityView({
 				isLoading={isLoadingProfiles}
 				error={error}
 				getRowId={getProfileRowId}
-				toolbarLeftContent={renderProfilesToolbarActions()}
+				toolbarLeftContent={
+					<SecurityToolbarActions
+						onAdd={profileActions.handleAdd}
+						onEditPermissions={profileActions.handleOpenPermissionsModal}
+						t={t}
+					/>
+				}
 				renderRowActions={buildProfileRowActions}
 				actionsColumnWidth={options?.profileActionsColumnWidth}
 				children={profileColumns}
@@ -661,28 +442,28 @@ export function ArchbaseSecurityView({
 			/>
 			{openedModal === SecurityType.USER ? (
 				<UserModal
-					onClickOk={handleSaveUserModal}
+					onClickOk={userActions.handleSaveModal}
 					opened={true}
 					dataSource={dsUsers}
-					onClickCancel={handleCancelUserModal}
+					onClickCancel={userActions.handleCancelModal}
 					options={userModalOptions}
 				/>
 			) : null}
 			{openedModal === SecurityType.GROUP ? (
 				<GroupModal
-					onClickOk={handleSaveGroupModal}
+					onClickOk={groupActions.handleSaveModal}
 					opened={true}
 					dataSource={dsGroups}
-					onClickCancel={handleCancelGroupModal}
+					onClickCancel={groupActions.handleCancelModal}
 					options={groupModalOptions}
 				/>
 			) : null}
 			{openedModal === SecurityType.PROFILE ? (
 				<ProfileModal
-					onClickOk={handleSaveProfileModal}
+					onClickOk={profileActions.handleSaveModal}
 					opened={true}
 					dataSource={dsProfiles}
-					onClickCancel={handleCancelProfileModal}
+					onClickCancel={profileActions.handleCancelModal}
 					options={profileModalOptions}
 				/>
 			) : null}

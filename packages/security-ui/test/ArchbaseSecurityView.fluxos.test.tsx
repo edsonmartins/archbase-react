@@ -8,8 +8,8 @@
  * diferente. Estes testes fixam o comportamento <b>atual</b>, incluindo as divergências,
  * para que o colapso as preserve de propósito ou as remova de propósito — nunca por acidente.
  *
- * <p>A divergência mais importante já está documentada em
- * "editar duas vezes": usuário chama {@code edit()} de novo, grupo e perfil não.
+ * <p>A divergência que motivou a suíte — usuário sem a guarda isEditing() que grupo e
+ * perfil tinham — foi uniformizada no colapso, e o teste correspondente registra isso.
  *
  * <p>Não testam aparência. Testam o que cada gesto faz no datasource, que é o que o colapso
  * pode quebrar.
@@ -227,12 +227,14 @@ describe('ArchbaseSecurityView — fluxos de entidade', () => {
 		});
 
 		/**
-		 * A DIVERGÊNCIA. Grupo e perfil guardam com isEditing() antes de chamar edit();
-		 * usuário não. Este teste existe para que o colapso dos handlers não uniformize isso
-		 * sem alguém decidir — e para tornar visível que provavelmente é um esquecimento:
-		 * a guarda foi acrescentada em dois dos três.
+		 * A guarda, agora igual para as três entidades.
+		 *
+		 * <p>Até o colapso dos handlers, usuário chamava edit() mesmo já estando em edição —
+		 * grupo e perfil não. A guarda tinha sido acrescentada em dois dos três e nunca
+		 * retroportada. Este teste nasceu fixando essa divergência e falhou no colapso, que é
+		 * exatamente o que se esperava dele: a uniformização foi decidida, não acidental.
 		 */
-		it('usuário chama edit() mesmo já estando em edição — grupo e perfil não', () => {
+		it('nenhuma entidade chama edit() quando o datasource já está em edição', () => {
 			ds.users.isEditing.mockReturnValue(true);
 			ds.groups.isEditing.mockReturnValue(true);
 			ds.profiles.isEditing.mockReturnValue(true);
@@ -242,7 +244,7 @@ describe('ArchbaseSecurityView — fluxos de entidade', () => {
 			fireEvent.click(acoesDaLinha('Grupos', 'g1')[ACAO.editar]);
 			fireEvent.click(acoesDaLinha('Perfis', 'p1')[ACAO.editar]);
 
-			expect(ds.users.edit).toHaveBeenCalledTimes(1);
+			expect(ds.users.edit).not.toHaveBeenCalled();
 			expect(ds.groups.edit).not.toHaveBeenCalled();
 			expect(ds.profiles.edit).not.toHaveBeenCalled();
 		});
