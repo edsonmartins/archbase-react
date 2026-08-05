@@ -24,6 +24,7 @@ export * from './ArchbaseProfileService';
 export * from './ArchbaseApiTokenService';
 export * from './ArchbaseAccessTokenService';
 export * from './ArchbaseResourceService';
+export * from './ArchbaseSecurityDiagnosticsService';
 
 // UI Components (non-modal components)
 export * from './ArchbaseLogin';
@@ -33,6 +34,7 @@ export * from './ArchbaseResetPassword';
 // Security types and domains
 export * from './SecurityType';
 export * from './SecurityDomain';
+export * from './SecurityDiagnosticsDomain';
 
 // Security hooks
 export * from './hooks';
