@@ -36,11 +36,11 @@ export const renderProfile = (user: UserDto) => {
 export interface UserItemProps extends ArchbaseListCustomItemProps<UserDto, string> {}
 
 export const UserItem = (props: UserItemProps) => {
-	const theme = useArchbaseTheme();
+	// A chamada a useArchbaseTheme() saiu na separação: o valor nunca era usado.
 	const listContextValue = useArchbaseListContext<UserDto, string>();
 	const itemRef = useRef<any>(null);
 
-	const handleClick = (event) => {
+	const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
 		event.preventDefault();
 		if (!props.disabled) {
 			if (listContextValue.handleSelectItem) {
