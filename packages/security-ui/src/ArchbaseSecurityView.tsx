@@ -53,6 +53,7 @@ import {
 	type ArchbaseSecurityManagerProps,
 	type ArchbaseSecurityProps,
 	type UserItemProps,
+	SecurityGridPanel,
 	buildAccessTokenColumns,
 	buildGroupColumns,
 	buildProfileColumns,
@@ -594,168 +595,70 @@ export function ArchbaseSecurityView({
 					<Tabs.Tab value="accessTokens">{`${t('Tokens Acesso')}`}</Tabs.Tab>
 				</Tabs.List>
 			</Tabs>
-			<Paper
-				withBorder
-				mt="md"
-				style={{
-					display: activeTab === 'users' ? 'flex' : 'none',
-					width: '100%',
-					flex: 1,
-					minHeight: 0,
-					overflow: 'auto'
-				}}
-			>
-				<ArchbaseDataGrid<UserDto, string>
-					gridRef={usersGridRef}
-					printTitle={'Usuários'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsUsers}
-					withColumnBorders={true}
-					striped={true}
-					enableTopToolbar={true}
-					enableRowActions={true}
-					pageSize={50}
-					isLoading={isLoadingUsers}
-					isError={!!error}
-					error={error}
-					enableGlobalFilter={true}
-					getRowId={getUserRowId}
-					toolbarLeftContent={renderUsersToolbarActions()}
-					renderRowActions={buildUserRowActions}
-					actionsColumnWidth={options?.userActionsColumnWidth}
-					children={userColumns}
-				/>
-			</Paper>
-			<Paper
-				withBorder
-				mt="md"
-				style={{
-					display: activeTab === 'groups' ? 'flex' : 'none',
-					flex: 1,
-					minHeight: 0,
-					overflow: 'auto'
-				}}
-			>
-				<ArchbaseDataGrid<GroupDto, string>
-					gridRef={groupsGridRef}
-					printTitle={'Grupos'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsGroups}
-					withColumnBorders={true}
-					striped={false}
-					enableTopToolbar={true}
-					enableRowActions={true}
-					pageSize={50}
-					isLoading={isLoadingGroups}
-					isError={!!error}
-					error={error}
-					enableGlobalFilter={true}
-					getRowId={getGroupRowId}
-					renderRowActions={buildGroupRowActions}
-					actionsColumnWidth={options?.groupActionsColumnWidth}
-					children={groupColumns}
-					toolbarLeftContent={renderGroupsToolbarActions()}
-				/>
-			</Paper>
-			<Paper
-				withBorder
-				mt="md"
-				style={{
-					display: activeTab === 'profiles' ? 'flex' : 'none',
-					flex: 1,
-					minHeight: 0,
-					overflow: 'auto'
-				}}
-			>
-				<ArchbaseDataGrid<ProfileDto, string>
-					gridRef={profilesGridRef}
-					printTitle={'Perfis'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsProfiles}
-					withColumnBorders={true}
-					striped={false}
-					enableTopToolbar={true}
-					enableRowActions={true}
-					pageSize={50}
-					isLoading={isLoadingProfiles}
-					isError={!!error}
-					error={error}
-					enableGlobalFilter={true}
-					getRowId={getProfileRowId}
-					toolbarLeftContent={renderProfilesToolbarActions()}
-					renderRowActions={buildProfileRowActions}
-					actionsColumnWidth={options?.profileActionsColumnWidth}
-					children={profileColumns}
-				/>
-			</Paper>
-			<Paper
-				withBorder
-				mt="md"
-				style={{
-					display: activeTab === 'resources' ? 'flex' : 'none',
-					flex: 1,
-					minHeight: 0,
-					overflow: 'auto'
-				}}
-			>
-				<ArchbaseDataGrid<ResourceDto, string>
-					gridRef={resourcesGridRef}
-					printTitle={'Recursos'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsResources}
-					withColumnBorders={true}
-					striped={false}
-					enableTopToolbar={true}
-					enableRowActions={false}
-					pageSize={50}
-					isLoading={isLoadingResources}
-					isError={!!error}
-					error={error}
-					enableGlobalFilter={true}
-					getRowId={getResourceRowId}
-					children={resourceColumns}
-				/>
-			</Paper>
-			<Paper
-				withBorder
-				mt="md"
-				style={{
-					display: activeTab === 'accessTokens' ? 'flex' : 'none',
-					width: '100%',
-					flex: 1,
-					minHeight: 0,
-					overflow: 'auto'
-				}}
-			>
-				<ArchbaseDataGrid<AccessTokenDto, string>
-					gridRef={accessTokensGridRef}
-					printTitle={'Tokens de API'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsAccessTokens}
-					withColumnBorders={true}
-					striped={true}
-					enableTopToolbar={true}
-					enableRowActions={false}
-					pageSize={50}
-					isLoading={isLoadingAccessTokens}
-					isError={!!error}
-					error={error}
-					enableGlobalFilter={true}
-					getRowId={getAccessTokenRowId}
-					toolbarLeftContent={renderAccessTokensToolbarActions()}
-					children={accessTokenColumns}
-				/>
-			</Paper>
+			<SecurityGridPanel<UserDto>
+				active={activeTab === 'users'}
+				printTitle={'Usuários'}
+				gridRef={usersGridRef}
+				dataSource={dsUsers}
+				isLoading={isLoadingUsers}
+				error={error}
+				getRowId={getUserRowId}
+				striped={true}
+				toolbarLeftContent={renderUsersToolbarActions()}
+				renderRowActions={buildUserRowActions}
+				actionsColumnWidth={options?.userActionsColumnWidth}
+				children={userColumns}
+			/>
+			<SecurityGridPanel<GroupDto>
+				active={activeTab === 'groups'}
+				printTitle={'Grupos'}
+				gridRef={groupsGridRef}
+				dataSource={dsGroups}
+				isLoading={isLoadingGroups}
+				error={error}
+				getRowId={getGroupRowId}
+				toolbarLeftContent={renderGroupsToolbarActions()}
+				renderRowActions={buildGroupRowActions}
+				actionsColumnWidth={options?.groupActionsColumnWidth}
+				children={groupColumns}
+			/>
+			<SecurityGridPanel<ProfileDto>
+				active={activeTab === 'profiles'}
+				printTitle={'Perfis'}
+				gridRef={profilesGridRef}
+				dataSource={dsProfiles}
+				isLoading={isLoadingProfiles}
+				error={error}
+				getRowId={getProfileRowId}
+				toolbarLeftContent={renderProfilesToolbarActions()}
+				renderRowActions={buildProfileRowActions}
+				actionsColumnWidth={options?.profileActionsColumnWidth}
+				children={profileColumns}
+			/>
+			<SecurityGridPanel<ResourceDto>
+				active={activeTab === 'resources'}
+				printTitle={'Recursos'}
+				gridRef={resourcesGridRef}
+				dataSource={dsResources}
+				isLoading={isLoadingResources}
+				error={error}
+				getRowId={getResourceRowId}
+				enableRowActions={false}
+				children={resourceColumns}
+			/>
+			<SecurityGridPanel<AccessTokenDto>
+				active={activeTab === 'accessTokens'}
+				printTitle={'Tokens de API'}
+				gridRef={accessTokensGridRef}
+				dataSource={dsAccessTokens}
+				isLoading={isLoadingAccessTokens}
+				error={error}
+				getRowId={getAccessTokenRowId}
+				striped={true}
+				enableRowActions={false}
+				toolbarLeftContent={renderAccessTokensToolbarActions()}
+				children={accessTokenColumns}
+			/>
 			{openedModal === SecurityType.USER ? (
 				<UserModal
 					onClickOk={handleSaveUserModal}
