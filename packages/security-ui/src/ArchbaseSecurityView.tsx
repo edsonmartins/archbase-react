@@ -45,108 +45,29 @@ import { SecurityType } from '@archbase/security';
 import { UserModal, UserModalOptions } from './UserModal';
 import { IconEye } from '@tabler/icons-react';
 
-export interface ArchbaseSecurityProps {
-	beforeDefaultUserActions?: (row: UserDto) => ReactNode;
-	afterDefaultUserActions?: (row: UserDto) => ReactNode;
-	beforeDefaultProfileActions?: (row: ProfileDto) => ReactNode;
-	afterDefaultProfileActions?: (row: ProfileDto) => ReactNode;
-	beforeDefaultGroupActions?: (row: GroupDto) => ReactNode;
-	afterDefaultGroupActions?: (row: GroupDto) => ReactNode;
-	userActionsColumnWidth?: number;
-	profileActionsColumnWidth?: number;
-	groupActionsColumnWidth?: number;
-}
+import {
+	NO_USER,
+	renderGroups,
+	renderProfile,
+	UserItem,
+	type ArchbaseSecurityManagerProps,
+	type ArchbaseSecurityProps,
+	type UserItemProps,
+	SecurityGridPanel,
+	SecurityRowActions,
+	SecurityToolbarActions,
+	useSecurityEntityActions,
+	buildAccessTokenColumns,
+	buildGroupColumns,
+	buildProfileColumns,
+	buildResourceColumns,
+	buildUserColumns,
+} from './securityView';
 
-interface ArchbaseSecurityManagerProps {
-	height?: any;
-	width?: any;
-	dataSourceUsers?: ArchbaseDataSource<UserDto, string>;
-	createEntitiesWithId?: boolean;
-	userModalOptions?: UserModalOptions;
-	groupModalOptions?: GroupModalOptions;
-	profileModalOptions?: ProfileModalOptions;
-	options?: ArchbaseSecurityProps;
-}
-
-export const NO_USER =
-	'data:image/png;base64,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';
-
-const renderGroups = (user: UserDto) => {
-	if (!user.groups) {
-		return null;
-	}
-	return (
-		<div style={{ display: 'flex' }}>
-			{user.groups
-				.slice()
-				.sort((a, b) => (a.group?.name ?? '').localeCompare(b.group?.name ?? ''))
-				.map((item, index) => (
-					<div key={index} style={{ paddingRight: '2px' }}>
-						<Badge color="blue">{item.group?.name}</Badge>
-					</div>
-				))}
-		</div>
-	);
-};
-
-const renderProfile = (user: UserDto) => {
-	if (!user.profile) {
-		return null;
-	}
-	return <Badge color="green">{user.profile?.name}</Badge>;
-};
-
-export interface UserItemProps extends ArchbaseListCustomItemProps<UserDto, string> {}
-
-export const UserItem = (props: UserItemProps) => {
-	const theme = useArchbaseTheme();
-	const listContextValue = useArchbaseListContext<UserDto, string>();
-	const itemRef = useRef<any>(null);
-
-	const handleClick = (event) => {
-		event.preventDefault();
-		if (!props.disabled) {
-			if (listContextValue.handleSelectItem) {
-				listContextValue.handleSelectItem(props.index, props.recordData!);
-			}
-		}
-	};
-
-	const avatar =
-		props.recordData && props.recordData.avatar && isBase64Validate(props.recordData.avatar)
-			? atob(props.recordData.avatar)
-			: NO_USER;
-	const backgroundColor = props.active ? listContextValue.activeBackgroundColor : '';
-	const color = props.active ? listContextValue.activeColor : '';
-
-	return (
-		<div
-			onClick={handleClick}
-			style={{
-				padding: '8px',
-				backgroundColor,
-				color,
-				cursor: props.disabled ? 'not-allowed' : 'pointer',
-			}}
-			ref={itemRef}
-			tabIndex={-1}
-		>
-			<Group wrap="nowrap">
-				<img
-					style={{ width: '48px', borderRadius: 50 }}
-					src={avatar}
-					alt={props.recordData ? props.recordData.userName : ''}
-				/>
-				<div>
-					<Text size="sm">{props.recordData.name}</Text>
-					<Text size="xs" opacity={0.65}>
-						{props.recordData.email}
-					</Text>
-				</div>
-			</Group>
-		</div>
-	);
-};
+// Reexportados daqui porque eram declarados neste arquivo antes da separação: quem já
+// importava estes nomes de 'ArchbaseSecurityView' continua importando.
+export { NO_USER, UserItem, renderGroups, renderProfile };
+export type { ArchbaseSecurityProps, ArchbaseSecurityManagerProps, UserItemProps };
 
 export function ArchbaseSecurityView({
 	height = '400px',
@@ -287,518 +208,93 @@ export function ArchbaseSecurityView({
 		refreshResources();
 	}, []);
 
-	const accessTokenColumns = (
-		<Columns>
-			<ArchbaseDataGridColumn<AccessTokenDto>
-				dataField="user.avatar"
-				dataType="image"
-				size={80}
-				header={`${t('archbase:Foto')}`}
-				render={(data) => (
-					<img
-						style={{ borderRadius: 50, height: '32px', maxHeight: '32px' }}
-						src={data.row.user && data.row.user.avatar ? atob(data.row.user.avatar) : NO_USER}
-					/>
-				)}
-				inputFilterType="text"
-				align="center"
-				exportable={false}
-			/>
-			<ArchbaseDataGridColumn<AccessTokenDto>
-				dataField="user.userName"
-				dataType="text"
-				size={300}
-				header={`${t('archbase:Nome de Usuário')}`}
-				inputFilterType="text"
-			/>
-			<ArchbaseDataGridColumn<AccessTokenDto>
-				dataField="user.email"
-				dataType="text"
-				header={`${t('archbase:Email')}`}
-				size={300}
-				inputFilterType="text"
-			/>
-			<ArchbaseDataGridColumn<AccessTokenDto>
-				dataField="expirationDate"
-				dataType="text"
-				size={300}
-				header={`${t('archbase:Expira em')}`}
-				render={(data) => <Text size="sm">{data.row.expirationDate}</Text>}
-				inputFilterType="text"
-			/>
-			<ArchbaseDataGridColumn<AccessTokenDto>
-				dataField="revoked"
-				dataType="boolean"
-				header={`${t('archbase:Revogado ?')}`}
-				inputFilterType="checkbox"
-			/>
-			<ArchbaseDataGridColumn<AccessTokenDto>
-				dataField="expired"
-				dataType="boolean"
-				header={`${t('archbase:Expirado ?')}`}
-				inputFilterType="checkbox"
-			/>
-			<ArchbaseDataGridColumn<AccessTokenDto>
-				dataField="token"
-				dataType="text"
-				header={`${t('archbase:Token Acesso')}`}
-				size={300}
-				inputFilterType="text"
-			/>
-		</Columns>
-	);
-
-	const userColumns = (
-		<Columns>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="avatar"
-				dataType="image"
-				size={80}
-				header={`${t('archbase:Foto')}`}
-				render={(data) => (
-					<img
-						style={{ borderRadius: 50, height: '32px', maxHeight: '32px' }}
-						src={data.row.avatar ? atob(data.row.avatar) : NO_USER}
-					/>
-				)}
-				enableSorting={false}
-				enableColumnFilter={false}
-				enableGlobalFilter={false}
-				align="center"
-				exportable={false}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="name"
-				dataType="text"
-				size={300}
-				header={`${t('archbase:Nome')}`}
-				inputFilterType="text"
-				truncate={true}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="nickname"
-				dataType="text"
-				size={120}
-				header={`${t('archbase:Apelido')}`}
-				inputFilterType="text"
-				truncate={true}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="email"
-				dataType="text"
-				header={`${t('archbase:Email')}`}
-				size={300}
-				inputFilterType="text"
-				truncate={true}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="accountDeactivated"
-				dataType="boolean"
-				header={`${t('archbase:Desativado?')}`}
-				inputFilterType="checkbox"
-				size={120}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="profile.name"
-				dataType="text"
-				header={`${t('archbase:Perfil')}`}
-				size={200}
-				render={(data) => renderProfile(data.row)}
-				inputFilterType="text"
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="groups"
-				dataType="text"
-				size={300}
-				header={`${t('archbase:Grupos')}`}
-				render={(data) => renderGroups(data.row)}
-				exportValue={(row) =>
-					row.groups
-						?.slice()
-						.sort((a, b) => (a.group?.name ?? '').localeCompare(b.group?.name ?? ''))
-						.map((g) => g.group?.name)
-						.filter(Boolean)
-						.join(', ') || ''
-				}
-				enableSorting={false}
-				enableColumnFilter={false}
-				enableGlobalFilter={false}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="isAdministrator"
-				dataType="boolean"
-				header={`${t('archbase:Admin ?')}`}
-				inputFilterType="checkbox"
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="changePasswordOnNextLogin"
-				dataType="boolean"
-				header={`${t('archbase:Alt.senha próximo login?')}`}
-				inputFilterType="checkbox"
-				size={120}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="allowPasswordChange"
-				dataType="boolean"
-				header={`${t('archbase:Pode alterar senha?')}`}
-				inputFilterType="checkbox"
-				size={120}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="allowMultipleLogins"
-				dataType="boolean"
-				header={`${t('archbase:Permite multiplos logins?')}`}
-				inputFilterType="checkbox"
-				size={120}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="passwordNeverExpires"
-				dataType="boolean"
-				header={`${t('archbase:Senha nunca expira?')}`}
-				inputFilterType="checkbox"
-				size={120}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="passwordChangedAt"
-				dataType="datetime"
-				header={`${t('archbase:Última troca de senha')}`}
-				inputFilterType="date-range"
-				size={160}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="accountLocked"
-				dataType="boolean"
-				header={`${t('archbase:Bloqueado?')}`}
-				inputFilterType="checkbox"
-				size={120}
-			/>
-			<ArchbaseDataGridColumn<UserDto>
-				dataField="unlimitedAccessHours"
-				dataType="boolean"
-				header={`${t('archbase:Horário acesso ilimitado?')}`}
-				inputFilterType="checkbox"
-				size={140}
-			/>
-		</Columns>
-	);
-
-	const groupColumns = (
-		<Columns>
-			<ArchbaseDataGridColumn<GroupDto>
-				dataField="name"
-				dataType="text"
-				size={300}
-				header={`${t('archbase:Nome do grupo')}`}
-				inputFilterType="text"
-			/>
-			<ArchbaseDataGridColumn<GroupDto>
-				dataField="description"
-				dataType="text"
-				header={`${t('archbase:Descrição')}`}
-				size={800}
-				inputFilterType="text"
-			/>
-		</Columns>
-	);
-
-	const profileColumns = (
-		<Columns>
-			<ArchbaseDataGridColumn<ProfileDto>
-				dataField="name"
-				dataType="text"
-				size={300}
-				header={`${t('archbase:Nome do perfil')}`}
-				inputFilterType="text"
-			/>
-			<ArchbaseDataGridColumn<ProfileDto>
-				dataField="description"
-				dataType="text"
-				header={`${t('archbase:Descrição')}`}
-				size={800}
-				inputFilterType="text"
-			/>
-		</Columns>
-	);
-
-	const resourceColumns = (
-		<Columns>
-			<ArchbaseDataGridColumn<ResourceDto>
-				dataField="name"
-				dataType="text"
-				size={300}
-				header={`${t('archbase:Nome do recurso')}`}
-				inputFilterType="text"
-			/>
-			<ArchbaseDataGridColumn<ResourceDto>
-				dataField="description"
-				dataType="text"
-				header={`${t('archbase:Descrição')}`}
-				size={800}
-				inputFilterType="text"
-			/>
-		</Columns>
-	);
-
-	const handleAddUserExecute = () => {
-		const user = UserDto.newInstance();
-		if (!createEntitiesWithId) {
-			(user as any).id = undefined;
-		}
-		dsUsers.insert(user);
-		setOpenedModal(SecurityType.USER);
-	};
-
-	const handleUserEditRow = (row: any) => {
-		if (!dsUsers.isEmpty()) {
-			const currentUser = dsUsers.gotoRecordByData(row);
-			if (currentUser) {
-				dsUsers.edit();
-				setOpenedModal(SecurityType.USER);
-			}
-		}
-	};
-
-	const handleUserRemoveRow = (row: any) => {
-		if (!dsUsers.isEmpty()) {
-			const currentUser = dsUsers.gotoRecordByData(row);
-			if (currentUser) {
-				ArchbaseDialog.showConfirmDialogYesNo(
-					`${t('archbase:Confirme')}`,
-					`${t('archbase:Deseja remover o usuário ')}${row.name} ?`,
-					() => {
-						dsUsers.remove();
-					},
-					() => {},
-				);
-			}
-		}
-	};
-
-	const handleUserViewRow = (row: any) => {
-		if (!dsUsers.isEmpty()) {
-			const currentUser = dsUsers.gotoRecordByData(row);
-			if (currentUser) {
-				setOpenedModal(SecurityType.USER);
-			}
-		}
-	};
-
-	const buildUserRowActions = (row: UserDto): ReactNode => {
-		return (
-			<Group gap={1} wrap="nowrap">
-				{options?.beforeDefaultUserActions?.(row)}
-				<ActionIcon variant="transparent" onClick={() => handleUserViewRow(row)}>
-					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleUserEditRow(row)}>
-					<IconEdit size={20} color={colorScheme === 'dark' ? theme.colors.yellow[8] : theme.colors.yellow[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleUserRemoveRow(row)}>
-					<IconTrashX size={20} color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
-				</ActionIcon>
-				<Tooltip withinPortal withArrow position="left" label={`${t('archbase:Edit permissions')}`}>
-					<ActionIcon variant="transparent" onClick={handleOpenUserPermissionsModal}>
-						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
-					</ActionIcon>
-				</Tooltip>
-				{options?.afterDefaultUserActions?.(row)}
-			</Group>
-		);
-	};
-
-	const handleAddGroupExecute = () => {
-		const group = GroupDto.newInstance();
-		if (!createEntitiesWithId) {
-			(group as any).id = undefined;
-		}
-		dsGroups.insert(group);
-		setOpenedModal(SecurityType.GROUP);
-	};
-
-	const handleGroupEditRow = (row: any) => {
-		if (!dsGroups.isEmpty()) {
-			const currentGroup = dsGroups.gotoRecordByData(row);
-			if (currentGroup) {
-				if (!dsGroups.isEditing()) {
-					dsGroups.edit();
-				}
-				setOpenedModal(SecurityType.GROUP);
-			}
-		}
-	};
-
-	const handleGroupRemoveRow = (row: any) => {
-		if (!dsGroups.isEmpty()) {
-			const currentGroup = dsGroups.gotoRecordByData(row);
-			if (currentGroup) {
-				ArchbaseDialog.showConfirmDialogYesNo(
-					`${t('archbase:Confirme')}`,
-					`${t('archbase:Deseja remover o grupo ')}${row.name} ?`,
-					() => {
-						dsGroups.remove();
-					},
-					() => {},
-				);
-			}
-		}
-	};
-
-	const handleGroupViewRow = (row: any) => {
-		if (!dsGroups.isEmpty()) {
-			const currentGroup = dsGroups.gotoRecordByData(row);
-			if (currentGroup) {
-				setOpenedModal(SecurityType.GROUP);
-			}
-		}
-	};
-
-	const buildGroupRowActions = (row: GroupDto): ReactNode => {
-		return (
-			<Group gap={1} wrap="nowrap">
-				{options?.beforeDefaultGroupActions?.(row)}
-				<ActionIcon variant="transparent" onClick={() => handleGroupViewRow(row)}>
-					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleGroupEditRow(row)}>
-					<IconEdit size={20} color={colorScheme === 'dark' ? theme.colors.yellow[8] : theme.colors.yellow[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleGroupRemoveRow(row)}>
-					<IconTrashX size={20} color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
-				</ActionIcon>
-				<Tooltip withinPortal withArrow position="left" label={`${t('archbase:Edit permissions')}`}>
-					<ActionIcon variant="transparent" onClick={handleOpenGroupPermissionsModal}>
-						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
-					</ActionIcon>
-				</Tooltip>
-				{options?.afterDefaultGroupActions?.(row)}
-			</Group>
-		);
-	};
+	// Colunas em securityView/columns.tsx — ver o porquê no cabeçalho daquele arquivo.
+	const accessTokenColumns = buildAccessTokenColumns(t);
+	const userColumns = buildUserColumns(t);
+	const groupColumns = buildGroupColumns(t);
+	const profileColumns = buildProfileColumns(t);
+	const resourceColumns = buildResourceColumns(t);
 
 	const validationContext = useValidationErrors();
 
-	const handleSaveUserModal = async () => {
-		try {
-			await dsUsers.save();
-		} catch (_error) {
-			return;
-		}
-		setOpenedModal('');
-		validationContext?.clearAll();
-	};
+	// Os gestos de cada entidade saem do mesmo hook. As cinco famílias de handler que
+	// existiam aqui divergiam em detalhes que compilam igual — ver o cabeçalho de
+	// securityView/useSecurityEntityActions.
+	const userActions = useSecurityEntityActions<UserDto>({
+		dataSource: dsUsers,
+		securityType: SecurityType.USER,
+		newInstance: () => UserDto.newInstance(),
+		createEntitiesWithId,
+		removeMessageKey: 'archbase:Deseja remover o usuário ',
+		setOpenedModal,
+		setOpenedPermissionsModal,
+		validationContext,
+		t,
+	});
 
-	const handleCancelUserModal = () => {
-		setOpenedModal('');
-		if (!dsUsers.isBrowsing()) {
-			dsUsers.cancel();
-		}
-		validationContext?.clearAll();
-	};
+	const groupActions = useSecurityEntityActions<GroupDto>({
+		dataSource: dsGroups,
+		securityType: SecurityType.GROUP,
+		newInstance: () => GroupDto.newInstance(),
+		createEntitiesWithId,
+		removeMessageKey: 'archbase:Deseja remover o grupo ',
+		setOpenedModal,
+		setOpenedPermissionsModal,
+		validationContext,
+		t,
+	});
 
-	const handleSaveGroupModal = async () => {
-		try {
-			await dsGroups.save();
-		} catch (_error) {
-			return;
-		}
-		setOpenedModal('');
-		validationContext?.clearAll();
-	};
+	const profileActions = useSecurityEntityActions<ProfileDto>({
+		dataSource: dsProfiles,
+		securityType: SecurityType.PROFILE,
+		newInstance: () => ProfileDto.newInstance(),
+		createEntitiesWithId,
+		removeMessageKey: 'archbase:Deseja remover o perfil ',
+		setOpenedModal,
+		setOpenedPermissionsModal,
+		validationContext,
+		t,
+	});
 
-	const handleCancelGroupModal = () => {
-		setOpenedModal('');
-		if (!dsGroups.isBrowsing()) {
-			dsGroups.cancel();
-		}
-		validationContext?.clearAll();
-	};
+	const buildUserRowActions = (row: UserDto): ReactNode => (
+		<SecurityRowActions<UserDto>
+			row={row}
+			onView={userActions.handleViewRow}
+			onEdit={userActions.handleEditRow}
+			onRemove={userActions.handleRemoveRow}
+			onEditPermissions={userActions.handleOpenPermissionsModal}
+			before={options?.beforeDefaultUserActions}
+			after={options?.afterDefaultUserActions}
+			t={t}
+		/>
+	);
 
-	const handleSaveProfileModal = async () => {
-		try {
-			await dsProfiles.save();
-		} catch (_error) {
-			return;
-		}
-		setOpenedModal('');
-		validationContext?.clearAll();
-	};
+	const buildGroupRowActions = (row: GroupDto): ReactNode => (
+		<SecurityRowActions<GroupDto>
+			row={row}
+			onView={groupActions.handleViewRow}
+			onEdit={groupActions.handleEditRow}
+			onRemove={groupActions.handleRemoveRow}
+			onEditPermissions={groupActions.handleOpenPermissionsModal}
+			before={options?.beforeDefaultGroupActions}
+			after={options?.afterDefaultGroupActions}
+			t={t}
+		/>
+	);
 
-	const handleCancelProfileModal = () => {
-		setOpenedModal('');
-		if (!dsProfiles.isBrowsing()) {
-			dsProfiles.cancel();
-		}
-		validationContext?.clearAll();
-	};
+	const buildProfileRowActions = (row: ProfileDto): ReactNode => (
+		<SecurityRowActions<ProfileDto>
+			row={row}
+			onView={profileActions.handleViewRow}
+			onEdit={profileActions.handleEditRow}
+			onRemove={profileActions.handleRemoveRow}
+			onEditPermissions={profileActions.handleOpenPermissionsModal}
+			before={options?.beforeDefaultProfileActions}
+			after={options?.afterDefaultProfileActions}
+			t={t}
+		/>
+	);
 
-	const handleAddProfileExecute = () => {
-		const profile = ProfileDto.newInstance();
-		if (!createEntitiesWithId) {
-			(profile as any).id = undefined;
-		}
-		dsProfiles.insert(profile);
-		setOpenedModal(SecurityType.PROFILE);
-	};
-
-	const handleProfileEditRow = (row: any) => {
-		if (!dsProfiles.isEmpty()) {
-			const currentProfile = dsProfiles.gotoRecordByData(row);
-			if (currentProfile) {
-				if (!dsProfiles.isEditing()) {
-					dsProfiles.edit();
-				}
-				setOpenedModal(SecurityType.PROFILE);
-			}
-		}
-	};
-
-	const handleProfileRemoveRow = (row: any) => {
-		if (!dsProfiles.isEmpty()) {
-			const currentProfile = dsProfiles.gotoRecordByData(row);
-			if (currentProfile) {
-				ArchbaseDialog.showConfirmDialogYesNo(
-					`${t('archbase:Confirme')}`,
-					`${t('archbase:Deseja remover o perfil ')}${row.name} ?`,
-					() => {
-						dsProfiles.remove();
-					},
-					() => {},
-				);
-			}
-		}
-	};
-
-	const handleProfileViewRow = (row: any) => {
-		if (!dsProfiles.isEmpty()) {
-			const currentProfile = dsProfiles.gotoRecordByData(row);
-			if (currentProfile) {
-				setOpenedModal(SecurityType.PROFILE);
-			}
-		}
-	};
-
-	const buildProfileRowActions = (row: ProfileDto): ReactNode => {
-		return (
-			<Group gap={1} wrap="nowrap">
-				{options?.beforeDefaultProfileActions?.(row)}
-				<ActionIcon variant="transparent" onClick={() => handleProfileViewRow(row)}>
-					<IconEye size={20} color={colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleProfileEditRow(row)}>
-					<IconEdit size={20} color={colorScheme === 'dark' ? theme.colors.yellow[8] : theme.colors.yellow[4]} />
-				</ActionIcon>
-				<ActionIcon variant="transparent" onClick={() => handleProfileRemoveRow(row)}>
-					<IconTrashX size={20} color={colorScheme === 'dark' ? theme.colors.red[8] : theme.colors.red[4]} />
-				</ActionIcon>
-				<Tooltip withinPortal withArrow position="left" label={`${t('archbase:Edit permissions')}`}>
-					<ActionIcon variant="transparent" onClick={handleOpenProfilePermissionsModal}>
-						<IconShieldCheckered size={20} color={colorScheme === 'dark' ? theme.colors.green[8] : theme.colors.green[4]} />
-					</ActionIcon>
-				</Tooltip>
-				{options?.afterDefaultProfileActions?.(row)}
-			</Group>
-		);
-	};
 
 	const handleAccessTokenRevokeRow = () => {
 		const currentAccessToken = dsAccessTokens.getCurrentRecord();
@@ -829,71 +325,11 @@ export function ArchbaseSecurityView({
 		}
 	};
 
-	const handleOpenUserPermissionsModal = () => {
-		setOpenedPermissionsModal(SecurityType.USER);
-	};
-
-	const handleOpenGroupPermissionsModal = () => {
-		setOpenedPermissionsModal(SecurityType.GROUP);
-	};
-
-	const handleOpenProfilePermissionsModal = () => {
-		setOpenedPermissionsModal(SecurityType.PROFILE);
-	};
-
 	const handleClosePermissionsModal = () => {
 		setOpenedPermissionsModal('');
 	};
 
 	// Componentes de ações da barra de ferramentas para cada grid
-	const renderUsersToolbarActions = () : ReactNode => {
-		return (
-			<Flex justify={'space-between'} style={{ width: '50%' }}>
-				<Group align="end" gap={'4px'} wrap="nowrap">
-					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddUserExecute}>
-						{`${t('archbase:New')}`}
-					</Button>
-					<Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenUserPermissionsModal}>
-						{`${t('archbase:Edit permissions')}`}
-					</Button>
-				</Group>
-				<Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
-			</Flex>
-		);
-	};
-
-	const renderGroupsToolbarActions = () : ReactNode => {
-		return (
-			<Flex justify={'space-between'} style={{ width: '50%' }}>
-				<Group align="end" gap={'4px'} wrap="nowrap">
-					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddGroupExecute}>
-						{`${t('archbase:New')}`}
-					</Button>
-					<Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenGroupPermissionsModal}>
-						{`${t('archbase:Edit permissions')}`}
-					</Button>
-				</Group>
-				<Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
-			</Flex>
-		);
-	};
-
-	const renderProfilesToolbarActions = ()  : ReactNode => {
-		return (
-			<Flex justify={'space-between'} style={{ width: '50%' }}>
-				<Group align="end" gap={'4px'} wrap='nowrap'>
-					<Button color={'green'} leftSection={<IconPlus />} onClick={handleAddProfileExecute}>
-						{`${t('archbase:New')}`}
-					</Button>
-					<Button color={'blue'} leftSection={<IconEdit />} onClick={handleOpenProfilePermissionsModal}>
-						{`${t('archbase:Edit permissions')}`}
-					</Button>
-				</Group>
-				<Flex align={'flex-start'} justify={'flex-end'} style={{ width: '200px' }}></Flex>
-			</Flex>
-		);
-	};
-
 	const renderAccessTokensToolbarActions = () : ReactNode => {
 		return (
 			<Flex justify={'space-between'} style={{ width: '50%' }}>
@@ -922,192 +358,112 @@ export function ArchbaseSecurityView({
 					<Tabs.Tab value="accessTokens">{`${t('Tokens Acesso')}`}</Tabs.Tab>
 				</Tabs.List>
 			</Tabs>
-			<Paper
-				withBorder
-				mt="md"
-				style={{
-					display: activeTab === 'users' ? 'flex' : 'none',
-					width: '100%',
-					flex: 1,
-					minHeight: 0,
-					overflow: 'auto'
-				}}
-			>
-				<ArchbaseDataGrid<UserDto, string>
-					gridRef={usersGridRef}
-					printTitle={'Usuários'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsUsers}
-					withColumnBorders={true}
-					striped={true}
-					enableTopToolbar={true}
-					enableRowActions={true}
-					pageSize={50}
-					isLoading={isLoadingUsers}
-					isError={!!error}
-					error={error}
-					enableGlobalFilter={true}
-					getRowId={getUserRowId}
-					toolbarLeftContent={renderUsersToolbarActions()}
-					renderRowActions={buildUserRowActions}
-					actionsColumnWidth={options?.userActionsColumnWidth}
-					children={userColumns}
-				/>
-			</Paper>
-			<Paper
-				withBorder
-				mt="md"
-				style={{
-					display: activeTab === 'groups' ? 'flex' : 'none',
-					flex: 1,
-					minHeight: 0,
-					overflow: 'auto'
-				}}
-			>
-				<ArchbaseDataGrid<GroupDto, string>
-					gridRef={groupsGridRef}
-					printTitle={'Grupos'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsGroups}
-					withColumnBorders={true}
-					striped={false}
-					enableTopToolbar={true}
-					enableRowActions={true}
-					pageSize={50}
-					isLoading={isLoadingGroups}
-					isError={!!error}
-					error={error}
-					enableGlobalFilter={true}
-					getRowId={getGroupRowId}
-					renderRowActions={buildGroupRowActions}
-					actionsColumnWidth={options?.groupActionsColumnWidth}
-					children={groupColumns}
-					toolbarLeftContent={renderGroupsToolbarActions()}
-				/>
-			</Paper>
-			<Paper
-				withBorder
-				mt="md"
-				style={{
-					display: activeTab === 'profiles' ? 'flex' : 'none',
-					flex: 1,
-					minHeight: 0,
-					overflow: 'auto'
-				}}
-			>
-				<ArchbaseDataGrid<ProfileDto, string>
-					gridRef={profilesGridRef}
-					printTitle={'Perfis'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsProfiles}
-					withColumnBorders={true}
-					striped={false}
-					enableTopToolbar={true}
-					enableRowActions={true}
-					pageSize={50}
-					isLoading={isLoadingProfiles}
-					isError={!!error}
-					error={error}
-					enableGlobalFilter={true}
-					getRowId={getProfileRowId}
-					toolbarLeftContent={renderProfilesToolbarActions()}
-					renderRowActions={buildProfileRowActions}
-					actionsColumnWidth={options?.profileActionsColumnWidth}
-					children={profileColumns}
-				/>
-			</Paper>
-			<Paper
-				withBorder
-				mt="md"
-				style={{
-					display: activeTab === 'resources' ? 'flex' : 'none',
-					flex: 1,
-					minHeight: 0,
-					overflow: 'auto'
-				}}
-			>
-				<ArchbaseDataGrid<ResourceDto, string>
-					gridRef={resourcesGridRef}
-					printTitle={'Recursos'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsResources}
-					withColumnBorders={true}
-					striped={false}
-					enableTopToolbar={true}
-					enableRowActions={false}
-					pageSize={50}
-					isLoading={isLoadingResources}
-					isError={!!error}
-					error={error}
-					enableGlobalFilter={true}
-					getRowId={getResourceRowId}
-					children={resourceColumns}
-				/>
-			</Paper>
-			<Paper
-				withBorder
-				mt="md"
-				style={{
-					display: activeTab === 'accessTokens' ? 'flex' : 'none',
-					width: '100%',
-					flex: 1,
-					minHeight: 0,
-					overflow: 'auto'
-				}}
-			>
-				<ArchbaseDataGrid<AccessTokenDto, string>
-					gridRef={accessTokensGridRef}
-					printTitle={'Tokens de API'}
-					width={'100%'}
-					height={'100%'}
-					withBorder={false}
-					dataSource={dsAccessTokens}
-					withColumnBorders={true}
-					striped={true}
-					enableTopToolbar={true}
-					enableRowActions={false}
-					pageSize={50}
-					isLoading={isLoadingAccessTokens}
-					isError={!!error}
-					error={error}
-					enableGlobalFilter={true}
-					getRowId={getAccessTokenRowId}
-					toolbarLeftContent={renderAccessTokensToolbarActions()}
-					children={accessTokenColumns}
-				/>
-			</Paper>
+			<SecurityGridPanel<UserDto>
+				active={activeTab === 'users'}
+				printTitle={'Usuários'}
+				gridRef={usersGridRef}
+				dataSource={dsUsers}
+				isLoading={isLoadingUsers}
+				error={error}
+				getRowId={getUserRowId}
+				striped={true}
+				toolbarLeftContent={
+					<SecurityToolbarActions
+						onAdd={userActions.handleAdd}
+						onEditPermissions={userActions.handleOpenPermissionsModal}
+						t={t}
+					/>
+				}
+				renderRowActions={buildUserRowActions}
+				actionsColumnWidth={options?.userActionsColumnWidth}
+				children={userColumns}
+			/>
+			<SecurityGridPanel<GroupDto>
+				active={activeTab === 'groups'}
+				printTitle={'Grupos'}
+				gridRef={groupsGridRef}
+				dataSource={dsGroups}
+				isLoading={isLoadingGroups}
+				error={error}
+				getRowId={getGroupRowId}
+				toolbarLeftContent={
+					<SecurityToolbarActions
+						onAdd={groupActions.handleAdd}
+						onEditPermissions={groupActions.handleOpenPermissionsModal}
+						t={t}
+					/>
+				}
+				renderRowActions={buildGroupRowActions}
+				actionsColumnWidth={options?.groupActionsColumnWidth}
+				children={groupColumns}
+			/>
+			<SecurityGridPanel<ProfileDto>
+				active={activeTab === 'profiles'}
+				printTitle={'Perfis'}
+				gridRef={profilesGridRef}
+				dataSource={dsProfiles}
+				isLoading={isLoadingProfiles}
+				error={error}
+				getRowId={getProfileRowId}
+				toolbarLeftContent={
+					<SecurityToolbarActions
+						onAdd={profileActions.handleAdd}
+						onEditPermissions={profileActions.handleOpenPermissionsModal}
+						t={t}
+					/>
+				}
+				renderRowActions={buildProfileRowActions}
+				actionsColumnWidth={options?.profileActionsColumnWidth}
+				children={profileColumns}
+			/>
+			<SecurityGridPanel<ResourceDto>
+				active={activeTab === 'resources'}
+				printTitle={'Recursos'}
+				gridRef={resourcesGridRef}
+				dataSource={dsResources}
+				isLoading={isLoadingResources}
+				error={error}
+				getRowId={getResourceRowId}
+				enableRowActions={false}
+				children={resourceColumns}
+			/>
+			<SecurityGridPanel<AccessTokenDto>
+				active={activeTab === 'accessTokens'}
+				printTitle={'Tokens de API'}
+				gridRef={accessTokensGridRef}
+				dataSource={dsAccessTokens}
+				isLoading={isLoadingAccessTokens}
+				error={error}
+				getRowId={getAccessTokenRowId}
+				striped={true}
+				enableRowActions={false}
+				toolbarLeftContent={renderAccessTokensToolbarActions()}
+				children={accessTokenColumns}
+			/>
 			{openedModal === SecurityType.USER ? (
 				<UserModal
-					onClickOk={handleSaveUserModal}
+					onClickOk={userActions.handleSaveModal}
 					opened={true}
 					dataSource={dsUsers}
-					onClickCancel={handleCancelUserModal}
+					onClickCancel={userActions.handleCancelModal}
 					options={userModalOptions}
 				/>
 			) : null}
 			{openedModal === SecurityType.GROUP ? (
 				<GroupModal
-					onClickOk={handleSaveGroupModal}
+					onClickOk={groupActions.handleSaveModal}
 					opened={true}
 					dataSource={dsGroups}
-					onClickCancel={handleCancelGroupModal}
+					onClickCancel={groupActions.handleCancelModal}
 					options={groupModalOptions}
 				/>
 			) : null}
 			{openedModal === SecurityType.PROFILE ? (
 				<ProfileModal
-					onClickOk={handleSaveProfileModal}
+					onClickOk={profileActions.handleSaveModal}
 					opened={true}
 					dataSource={dsProfiles}
-					onClickCancel={handleCancelProfileModal}
+					onClickCancel={profileActions.handleCancelModal}
 					options={profileModalOptions}
 				/>
 			) : null}
