@@ -30,11 +30,40 @@ export const severityColor = (severity: ArchbaseDiagnosticSeverity): string => {
 
 export interface MetricCardProps {
 	card: ArchbaseDiagnosticCard;
+	/**
+	 * Abre o detalhe do card. Ausente quando a métrica não tem lista por trás — e aí o cartão não
+	 * fica clicável, para não prometer uma navegação que não existe.
+	 */
+	onOpen?: (card: ArchbaseDiagnosticCard) => void;
 }
 
 /** Cartão de métrica: valor grande, denominador, rótulo e o porquê importa. */
-export const MetricCard = ({ card }: MetricCardProps) => (
-	<Paper withBorder radius="md" p="sm" style={{ borderLeft: `3px solid var(--mantine-color-${severityColor(card.severity)}-6)` }}>
+export const MetricCard = ({ card, onOpen }: MetricCardProps) => {
+	const clicavel = Boolean(onOpen && card.metric);
+	return (
+	<Paper
+		withBorder
+		radius="md"
+		p="sm"
+		role={clicavel ? 'button' : undefined}
+		tabIndex={clicavel ? 0 : undefined}
+		aria-label={clicavel ? `Ver os itens de ${card.label}` : undefined}
+		onClick={clicavel ? () => onOpen?.(card) : undefined}
+		onKeyDown={
+			clicavel
+				? (event) => {
+						// Teclado precisa alcançar o mesmo que o mouse: o cartão virou controle.
+						if (event.key === 'Enter' || event.key === ' ') {
+							event.preventDefault();
+							onOpen?.(card);
+						}
+					}
+				: undefined
+		}
+		style={{
+			borderLeft: `3px solid var(--mantine-color-${severityColor(card.severity)}-6)`,
+			cursor: clicavel ? 'pointer' : undefined,
+		}}>
 		<Stack gap={4}>
 			<Group gap={8} align="baseline" wrap="wrap">
 				<Text fw={600} size="1.7rem" lh={1.05} c={severityColor(card.severity)}>
@@ -56,16 +85,18 @@ export const MetricCard = ({ card }: MetricCardProps) => (
 			) : null}
 		</Stack>
 	</Paper>
-);
+	);
+};
 
 export interface MetricCardsProps {
 	cards: ArchbaseDiagnosticCard[];
+	onOpenCard?: (card: ArchbaseDiagnosticCard) => void;
 }
 
-export const MetricCards = ({ cards }: MetricCardsProps) => (
+export const MetricCards = ({ cards, onOpenCard }: MetricCardsProps) => (
 	<SimpleGrid cols={{ base: 1, sm: 2, lg: 3, xl: 4 }} spacing="xs">
 		{cards.map((card, index) => (
-			<MetricCard key={`${card.label}-${index}`} card={card} />
+			<MetricCard key={`${card.label}-${index}`} card={card} onOpen={onOpenCard} />
 		))}
 	</SimpleGrid>
 );

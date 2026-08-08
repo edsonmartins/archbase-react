@@ -4,6 +4,10 @@ import type {
 	ArchbaseAccessOverview,
 	ArchbaseEffectiveAccessReport,
 	ArchbaseEffectiveCapability,
+	ArchbaseGroupMember,
+	ArchbaseGroupReport,
+	ArchbaseOverviewMetric,
+	ArchbaseReachEntry,
 } from '@archbase/security';
 
 /**
@@ -30,6 +34,14 @@ export interface ArchbaseDiagnosticCard {
 	of?: string;
 	label: string;
 	description?: string;
+	/**
+	 * A métrica cujos itens este cartão representa.
+	 *
+	 * Presente, o cartão fica clicável e abre a lista do que forma o número — que é o que permite
+	 * agir: "29 ações inativas" não diz quais. Ausente (caso dos cartões de negócio injetados por
+	 * slot, que o framework não sabe detalhar), o cartão continua só de leitura.
+	 */
+	metric?: ArchbaseOverviewMetric;
 }
 
 /** Indicador de proteção ligada/desligada, na faixa do topo do Panorama. */
@@ -73,10 +85,15 @@ export interface ArchbaseSecurityDiagnosticsSlots {
 	// ─────────── Efetivo do usuário ───────────
 
 	/**
-	 * Substitui o seletor de usuário inteiro.
+	 * Uma segunda porta de entrada para chegar a uma pessoa, acima da árvore.
 	 *
-	 * <p>É por aqui que entra "buscar pessoa por departamento": o framework identifica alguém
-	 * por id ou e-mail e não tem como saber o que é departamento.
+	 * <p>É por aqui que entra "buscar pessoa por departamento": o framework identifica alguém por id
+	 * ou e-mail e não tem como saber o que é departamento.
+	 *
+	 * <p><b>Mudou de lugar, não de propósito.</b> Quando a tela era um formulário, este slot
+	 * substituía a caixa de busca. Agora a árvore é a navegação, e o que a aplicação oferece aparece
+	 * ao lado dela — as duas convivem, porque quem sabe o e-mail usa a árvore e quem sabe só o
+	 * departamento usa isto.
 	 */
 	renderUserSearch?: (onSelect: (userIdOrEmail: string) => void) => ReactNode;
 	/** Selos ao lado do nome — "terceirizado", "afastado", "contrato vencido". */
@@ -90,6 +107,31 @@ export interface ArchbaseSecurityDiagnosticsSlots {
 		header: string;
 		render: (capability: ArchbaseEffectiveCapability, report: ArchbaseEffectiveAccessReport) => ReactNode;
 	}>;
+
+	// ─────────── Grupo e perfil ───────────
+
+	/**
+	 * Colunas extras na tabela de membros — o lugar do departamento, do centro de custo.
+	 *
+	 * <p>Mesma convenção da tabela de capacidades: a aplicação entrega cabeçalho e conteúdo por
+	 * linha, e o framework desenha.
+	 */
+	additionalMemberColumns?: Array<{
+		header: string;
+		render: (member: ArchbaseGroupMember, report: ArchbaseGroupReport) => ReactNode;
+	}>;
+	/** Região livre no fim do painel de grupo ou perfil. */
+	afterGroupMembers?: (report: ArchbaseGroupReport) => ReactNode;
+
+	// ─────────── Quem alcança ───────────
+
+	/**
+	 * Região livre depois da lista de quem alcança uma capacidade.
+	 *
+	 * <p>O lugar de um "exportar para auditoria" ou de um aviso próprio da aplicação sobre aquela
+	 * capacidade.
+	 */
+	afterReachList?: (actionId: string, entries: ArchbaseReachEntry[]) => ReactNode;
 
 	// ─────────────── Simular ───────────────
 
@@ -105,14 +147,17 @@ export interface ArchbaseSecurityDiagnosticsSlots {
 	afterDecision?: (decision: ArchbaseAccessDecision) => ReactNode;
 }
 
-/** Props da view de diagnóstico. */
+/**
+ * Props da view de diagnóstico.
+ *
+ * <p>Não há mais {@code defaultTab} nem {@code tabs}: a tela deixou de ser um conjunto de abas
+ * paralelas e virou um explorador de árvore. Panorama e Simular continuam existindo, como nós — e
+ * restringir quais nós aparecem seria esconder objetos de segurança de quem está auditando, que é o
+ * oposto do que a tela existe para fazer.
+ */
 export interface ArchbaseSecurityDiagnosticsViewProps {
 	height?: string | number;
 	width?: string | number;
-	/** Aba inicial. */
-	defaultTab?: 'overview' | 'effective' | 'simulate';
-	/** Abas a exibir. Omitido = todas. */
-	tabs?: Array<'overview' | 'effective' | 'simulate'>;
 	slots?: ArchbaseSecurityDiagnosticsSlots;
 	onError?: (message: string) => void;
 }

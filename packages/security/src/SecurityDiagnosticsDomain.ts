@@ -131,3 +131,128 @@ export interface ArchbaseSimulationRequest {
 	companyId?: string;
 	projectId?: string;
 }
+
+/**
+ * As métricas do panorama que têm detalhe navegável.
+ *
+ * <p>Espelha o enum do backend. Um número sozinho diz que há um problema; não diz qual — é o
+ * detalhe que permite agir.
+ */
+export type ArchbaseOverviewMetric =
+	| 'PERMISSIONS_POINTING_TO_INACTIVE'
+	| 'ADMINISTRATORS'
+	| 'ACTIONS_INACTIVE'
+	| 'API_RESOURCES_INACTIVE'
+	| 'RESOURCES_WITHOUT_ACTION'
+	| 'ACTIONS_WITHOUT_PERMISSION';
+
+/**
+ * Um item por trás de um número do panorama.
+ *
+ * A forma é a mesma para todas as métricas — permissões, usuários, ações, recursos — de propósito:
+ * uma forma só significa uma tela só, em vez de seis listas que divergem com o tempo.
+ */
+export interface ArchbaseOverviewItem {
+	id: string;
+	/** O nome pelo qual a pessoa reconhece o item. */
+	label: string;
+	/** Onde ele vive: o recurso da ação, o e-mail do usuário, o destinatário da concessão. */
+	detail: string;
+	/** Por que está nesta lista. É o que transforma número em explicação. */
+	reason: string;
+}
+
+/** Página do detalhe. Reflete a Page do Spring, só com o que a tela usa. */
+export interface ArchbaseOverviewItemPage {
+	content: ArchbaseOverviewItem[];
+	totalElements: number;
+	totalPages: number;
+	number: number;
+	size: number;
+}
+
+/* ------------------------------------------------------------------ árvore */
+
+/** Os ramos que a árvore sabe abrir. Espelha o enum do backend. */
+export type ArchbaseTreeBranch =
+	| 'USERS'
+	| 'GROUPS'
+	| 'PROFILES'
+	| 'RESOURCES'
+	| 'ACTIONS_OF_RESOURCE';
+
+/** A classe de objeto de um nó — decide o ícone e o painel que abre. */
+export type ArchbaseTreeNodeKind = 'USER' | 'GROUP' | 'PROFILE' | 'RESOURCE' | 'ACTION';
+
+/**
+ * Um nó da árvore.
+ *
+ * Forma uniforme para as cinco classes de objeto, de propósito: uma forma só significa um
+ * componente de árvore só, em vez de cinco listas que divergem com o tempo.
+ */
+export interface ArchbaseTreeNode {
+	id: string;
+	kind: ArchbaseTreeNodeKind;
+	label: string;
+	/** O número à direita — membros do grupo, ações do recurso. Ausente quando não ajuda. */
+	badge?: string | null;
+	/** Se pode ser aberto. Vem do servidor: só ele sabe, e sem isso a árvore põe seta em folha. */
+	hasChildren: boolean;
+	/** `warning` ou `critical` — o marcador que leva o olho até o problema sem abrir ramo a ramo. */
+	severity?: string | null;
+}
+
+export interface ArchbaseTreeNodePage {
+	content: ArchbaseTreeNode[];
+	totalElements: number;
+	totalPages: number;
+	number: number;
+	size: number;
+}
+
+/* ------------------------------------------------- grupo, perfil e reversa */
+
+/** Uma capacidade concedida por um grupo ou perfil. */
+export interface ArchbaseGrantLine {
+	resource: string;
+	action: string;
+	situation: string;
+}
+
+/**
+ * Um membro, com o que ele acumula de TODAS as origens.
+ *
+ * O total não é o do grupo: a pessoa soma o perfil, os outros grupos e as concessões diretas.
+ */
+export interface ArchbaseGroupMember {
+	userId: string;
+	name: string;
+	email: string;
+	profileName?: string | null;
+	administrator: boolean;
+	enabled: boolean;
+	total: number;
+	effective: number;
+	inert: number;
+	denied: number;
+}
+
+/** Relatório de um grupo ou perfil — a mesma forma para os dois, de propósito. */
+export interface ArchbaseGroupReport {
+	groupId: string;
+	groupName: string;
+	description?: string | null;
+	grants: ArchbaseGrantLine[];
+	members: ArchbaseGroupMember[];
+}
+
+/** Quem alcança uma capacidade, e por qual via. A consulta reversa. */
+export interface ArchbaseReachEntry {
+	userId: string;
+	userName: string;
+	email: string;
+	/** O nome do grupo, do perfil, "concessão direta" ou "administrador". */
+	via: string;
+	kind: string;
+	situation: string;
+}

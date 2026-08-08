@@ -4,7 +4,7 @@
  * <p>A coluna <b>Origem</b> é a razão de a tela existir: a consulta de autorização devolve
  * sim/não, e sem saber de onde veio o acesso o diagnóstico vira tentativa e erro.
  */
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Badge, Button, Chip, Group, Loader, Paper, SimpleGrid, Stack, Table, Text, TextInput } from '@mantine/core';
 import { ARCHBASE_IOC_API_TYPE, processErrorMessage } from '@archbase/core';
 import { useArchbaseRemoteServiceApi } from '@archbase/data';
@@ -19,6 +19,13 @@ import type { ArchbaseDiagnosticAttribute, ArchbaseSecurityDiagnosticsSlots } fr
 export interface EffectiveAccessPanelProps {
 	slots?: ArchbaseSecurityDiagnosticsSlots;
 	onError?: (message: string) => void;
+	/**
+	 * Pessoa escolhida fora do painel — na árvore do explorador.
+	 *
+	 * Quando presente, o painel consulta sozinho e a caixa de busca some: escolher na árvore já é a
+	 * busca, e deixar as duas na tela faria a pessoa se perguntar qual das duas vale.
+	 */
+	userId?: string;
 }
 
 type Filtro = 'all' | ArchbaseCapabilitySituation | 'inherited';
@@ -39,7 +46,7 @@ const FILTROS: Array<{ value: Filtro; label: string }> = [
 	{ value: 'inherited', label: 'Só herdadas' },
 ];
 
-export const EffectiveAccessPanel = ({ slots, onError }: EffectiveAccessPanelProps) => {
+export const EffectiveAccessPanel = ({ slots, onError, userId }: EffectiveAccessPanelProps) => {
 	const api = useArchbaseRemoteServiceApi<ArchbaseSecurityDiagnosticsService>(
 		ARCHBASE_IOC_API_TYPE.SecurityDiagnostics,
 	);
@@ -48,6 +55,7 @@ export const EffectiveAccessPanel = ({ slots, onError }: EffectiveAccessPanelPro
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | undefined>(undefined);
 	const [filtro, setFiltro] = useState<Filtro>('all');
+	const externo = Boolean(userId);
 
 	const consultar = useCallback(
 		async (identificador: string) => {
@@ -99,10 +107,20 @@ export const EffectiveAccessPanel = ({ slots, onError }: EffectiveAccessPanelPro
 		return report.capabilities.filter((c) => c.situation === filtro);
 	}, [report, filtro]);
 
+	// Escolher na árvore já é a busca: consultar sozinho evita o passo redundante de clicar em
+	// "Consultar" logo depois de clicar na pessoa.
+	useEffect(() => {
+		if (userId) {
+			setFiltro('all');
+			void consultar(userId);
+		}
+	}, [userId, consultar]);
+
 	const colunasExtras = slots?.additionalCapabilityColumns ?? [];
 
 	return (
 		<Stack gap="lg">
+			{externo ? null : (
 			<Section title="Consultar" hint="por e-mail ou id do usuário">
 				{slots?.renderUserSearch ? (
 					slots.renderUserSearch((identificador) => {
@@ -129,6 +147,7 @@ export const EffectiveAccessPanel = ({ slots, onError }: EffectiveAccessPanelPro
 					</Group>
 				)}
 			</Section>
+			)}
 
 			{error ? (
 				<Alert color="red" title="Não foi possível ler o efetivo">

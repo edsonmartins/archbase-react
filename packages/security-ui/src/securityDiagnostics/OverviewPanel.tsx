@@ -11,6 +11,7 @@ import { ARCHBASE_IOC_API_TYPE, processErrorMessage } from '@archbase/core';
 import { useArchbaseRemoteServiceApi } from '@archbase/data';
 import type { ArchbaseAccessOverview, ArchbaseSecurityDiagnosticsService } from '@archbase/security';
 import { FlagStrip, MetricCards, Section } from './DiagnosticPrimitives';
+import { OverviewItemsDrawer } from './OverviewItemsDrawer';
 import type { ArchbaseDiagnosticCard, ArchbaseDiagnosticFlag, ArchbaseSecurityDiagnosticsSlots } from './types';
 
 export interface OverviewPanelProps {
@@ -68,6 +69,7 @@ const buildCards = (overview: ArchbaseAccessOverview): ArchbaseDiagnosticCard[] 
 	{
 		severity: 'critical',
 		value: overview.permissionsPointingToInactive,
+		metric: 'PERMISSIONS_POINTING_TO_INACTIVE',
 		of: `de ${overview.permissions}${percent(overview.permissionsPointingToInactive, overview.permissions)}`,
 		label: 'Permissões inertes',
 		description: 'Apontam para ação ou recurso inativo. É o acesso que o operador acredita ter concedido.',
@@ -75,6 +77,7 @@ const buildCards = (overview: ArchbaseAccessOverview): ArchbaseDiagnosticCard[] 
 	{
 		severity: 'warning',
 		value: overview.administrators,
+		metric: 'ADMINISTRATORS',
 		of: `de ${overview.users} usuários`,
 		label: 'Administradores',
 		description: 'Passam direto pelo portão GRANT. Nada configurado nesta tela se aplica a eles.',
@@ -82,6 +85,7 @@ const buildCards = (overview: ArchbaseAccessOverview): ArchbaseDiagnosticCard[] 
 	{
 		severity: 'warning',
 		value: overview.actionsInactive,
+		metric: 'ACTIONS_INACTIVE',
 		of: `de ${overview.actions} ações`,
 		label: 'Ações inativas',
 		description: 'Capacidades do catálogo que não valem. São a origem das permissões inertes.',
@@ -89,6 +93,7 @@ const buildCards = (overview: ArchbaseAccessOverview): ArchbaseDiagnosticCard[] 
 	{
 		severity: 'warning',
 		value: overview.apiResourcesInactive,
+		metric: 'API_RESOURCES_INACTIVE',
 		of: `de ${overview.apiResources} recursos API`,
 		label: 'Recursos API desativados',
 		description: 'Desativados pela varredura por não terem @HasPermission correspondente.',
@@ -96,6 +101,7 @@ const buildCards = (overview: ArchbaseAccessOverview): ArchbaseDiagnosticCard[] 
 	{
 		severity: 'neutral',
 		value: overview.resourcesWithoutAction,
+		metric: 'RESOURCES_WITHOUT_ACTION',
 		of: `de ${overview.resources} recursos`,
 		label: 'Recursos sem ação',
 		description: 'Telas ainda não abertas neste tenant. Indicador operacional, não alerta.',
@@ -103,6 +109,7 @@ const buildCards = (overview: ArchbaseAccessOverview): ArchbaseDiagnosticCard[] 
 	{
 		severity: 'warning',
 		value: overview.actionsWithoutPermission,
+		metric: 'ACTIONS_WITHOUT_PERMISSION',
 		of: 'ações',
 		label: 'Ninguém tem',
 		description: 'Capacidade existe no catálogo e não foi concedida a ninguém.',
@@ -116,6 +123,8 @@ export const OverviewPanel = ({ slots, onError }: OverviewPanelProps) => {
 	const [overview, setOverview] = useState<ArchbaseAccessOverview | undefined>(undefined);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | undefined>(undefined);
+	// O cartão cuja lista está aberta. Null = painel fechado.
+	const [cartaoAberto, setCartaoAberto] = useState<ArchbaseDiagnosticCard | null>(null);
 
 	useEffect(() => {
 		let vivo = true;
@@ -178,10 +187,12 @@ export const OverviewPanel = ({ slots, onError }: OverviewPanelProps) => {
 			</Section>
 
 			<Section title="Catálogo e concessões" hint="contagens vivas">
-				<MetricCards cards={cards} />
+				<MetricCards cards={cards} onOpenCard={setCartaoAberto} />
 			</Section>
 
 			{slots?.afterOverview?.(overview)}
+
+			<OverviewItemsDrawer card={cartaoAberto} onClose={() => setCartaoAberto(null)} />
 		</Stack>
 	);
 };

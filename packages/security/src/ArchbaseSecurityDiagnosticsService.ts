@@ -5,6 +5,12 @@ import { ArchbaseTenantManager } from './ArchbaseTenantManager';
 import type {
 	ArchbaseAccessDecision,
 	ArchbaseAccessOverview,
+	ArchbaseOverviewItemPage,
+	ArchbaseOverviewMetric,
+	ArchbaseGroupReport,
+	ArchbaseReachEntry,
+	ArchbaseTreeBranch,
+	ArchbaseTreeNodePage,
 	ArchbaseEffectiveAccessReport,
 	ArchbaseSimulationRequest,
 } from './SecurityDiagnosticsDomain';
@@ -39,6 +45,74 @@ export class ArchbaseSecurityDiagnosticsService {
 	/** Retrato do tenant: contagens do catálogo e o estado das proteções configuráveis. */
 	public async getOverview(): Promise<ArchbaseAccessOverview> {
 		return this.client.get<ArchbaseAccessOverview>(`${this.getEndpoint()}/overview`, this.configureHeaders());
+	}
+
+	/**
+	 * Os itens por trás de um número do panorama.
+	 *
+	 * Um card diz "29 ações inativas"; sozinho, isso não permite agir. Aqui vêm quais são, com o
+	 * motivo de cada uma estar na lista.
+	 */
+	public async getOverviewItems(
+		metric: ArchbaseOverviewMetric,
+		page = 0,
+		size = 25,
+	): Promise<ArchbaseOverviewItemPage> {
+		return this.client.get<ArchbaseOverviewItemPage>(
+			`${this.getEndpoint()}/overview/${metric}?page=${page}&size=${size}`,
+			this.configureHeaders(),
+		);
+	}
+
+	/**
+	 * Um ramo da árvore, buscado ao abrir.
+	 *
+	 * Não existe "carregar a árvore": um tenant real tem centenas de ações e recursos, e a carga
+	 * única trava o navegador. O filtro também vai para o servidor — buscar no cliente exigiria ter
+	 * carregado tudo antes.
+	 */
+	public async browse(
+		branch: ArchbaseTreeBranch,
+		options: { parentId?: string; q?: string; page?: number; size?: number } = {},
+	): Promise<ArchbaseTreeNodePage> {
+		const params = new URLSearchParams();
+		if (options.parentId) params.set('parentId', options.parentId);
+		if (options.q) params.set('q', options.q);
+		params.set('page', String(options.page ?? 0));
+		params.set('size', String(options.size ?? 50));
+		return this.client.get<ArchbaseTreeNodePage>(
+			`${this.getEndpoint()}/tree/${branch}?${params.toString()}`,
+			this.configureHeaders(),
+		);
+	}
+
+	/** Quem está no grupo e o que cada pessoa acumula de todas as origens. */
+	public async getGroup(groupId: string): Promise<ArchbaseGroupReport> {
+		return this.client.get<ArchbaseGroupReport>(
+			`${this.getEndpoint()}/groups/${encodeURIComponent(groupId)}`,
+			this.configureHeaders(),
+		);
+	}
+
+	/** Idem para perfil — a via mais ampla, que vale para todo mundo que o tem. */
+	public async getProfile(profileId: string): Promise<ArchbaseGroupReport> {
+		return this.client.get<ArchbaseGroupReport>(
+			`${this.getEndpoint()}/profiles/${encodeURIComponent(profileId)}`,
+			this.configureHeaders(),
+		);
+	}
+
+	/**
+	 * Quem alcança uma capacidade — a consulta reversa.
+	 *
+	 * Inclui administrador, com a via marcada: ele alcança sem concessão nenhuma, e omiti-lo daria
+	 * a resposta errada para a pergunta "quem pode".
+	 */
+	public async getReach(actionId: string): Promise<ArchbaseReachEntry[]> {
+		return this.client.get<ArchbaseReachEntry[]>(
+			`${this.getEndpoint()}/actions/${encodeURIComponent(actionId)}/reach`,
+			this.configureHeaders(),
+		);
 	}
 
 	/** O que a pessoa pode, com a origem de cada concessão. */

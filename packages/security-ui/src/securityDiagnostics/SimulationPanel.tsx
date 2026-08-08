@@ -4,7 +4,7 @@
  * <p>O valor da tela não é o sim/não: é a <b>cadeia</b>. Saber que parou em LEVEL manda ajustar
  * nível; saber que parou em GRANT manda conceder. Sem isso, o operador tenta ao acaso.
  */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Badge, Button, Group, Loader, Paper, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import { ARCHBASE_IOC_API_TYPE, processErrorMessage } from '@archbase/core';
 import { useArchbaseRemoteServiceApi } from '@archbase/data';
@@ -19,6 +19,16 @@ import type { ArchbaseSecurityDiagnosticsSlots } from './types';
 export interface SimulationPanelProps {
 	slots?: ArchbaseSecurityDiagnosticsSlots;
 	onError?: (message: string) => void;
+	/**
+	 * Sujeito e capacidade escolhidos na árvore.
+	 *
+	 * <p><b>Escolher substitui lembrar.</b> Digitar {@code tms.ordemservico} de cabeça é a origem do
+	 * falso negativo: errar uma letra devolve "não pode", indistinguível de uma negação real. Com a
+	 * escolha vinda da árvore, a resposta passa a significar o que diz.
+	 *
+	 * <p>Os campos continuam editáveis — a árvore preenche, não tranca.
+	 */
+	initial?: { userId?: string; resource?: string; action?: string };
 }
 
 /**
@@ -36,7 +46,7 @@ const PORTOES: Array<{ gate: ArchbaseAccessGate; titulo: string; papel: string; 
 	{ gate: 'GRANT', titulo: 'Concessão', papel: 'concede', pergunta: 'Existe permissão, sem negação explícita?' },
 ];
 
-export const SimulationPanel = ({ slots, onError }: SimulationPanelProps) => {
+export const SimulationPanel = ({ slots, onError, initial }: SimulationPanelProps) => {
 	const api = useArchbaseRemoteServiceApi<ArchbaseSecurityDiagnosticsService>(
 		ARCHBASE_IOC_API_TYPE.SecurityDiagnostics,
 	);
@@ -47,6 +57,19 @@ export const SimulationPanel = ({ slots, onError }: SimulationPanelProps) => {
 	const [decision, setDecision] = useState<ArchbaseAccessDecision | undefined>(undefined);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | undefined>(undefined);
+
+	// A árvore preenche o que foi escolhido, sem apagar o que a pessoa já digitou nos outros campos.
+	useEffect(() => {
+		if (!initial) {
+			return;
+		}
+		if (initial.userId) setUsuario(initial.userId);
+		if (initial.resource) setRecurso(initial.resource);
+		if (initial.action) setAcao(initial.action);
+		// Escolha nova invalida o resultado anterior: deixá-lo na tela faria a resposta parecer
+		// referente ao que acabou de ser escolhido.
+		setDecision(undefined);
+	}, [initial?.userId, initial?.resource, initial?.action]);
 
 	const simular = useCallback(async () => {
 		if (!usuario.trim() || !recurso.trim() || !acao.trim()) {

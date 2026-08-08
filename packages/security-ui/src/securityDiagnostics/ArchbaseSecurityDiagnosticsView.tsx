@@ -1,74 +1,157 @@
-/**
- * ArchbaseSecurityDiagnosticsView — o <b>leitor</b> da segurança.
- *
- * <p>Deliberadamente separada da {@link ArchbaseSecurityView}, que é o <b>editor</b>: aquela
- * tem uma aba por tabela e serve para mudar o estado; esta responde perguntas e não escreve
- * nada. Misturá-las produziria uma tela com dois motivos para mudar.
- *
- * <p>Extensão pelo objeto {@code slots} — ver {@link ArchbaseSecurityDiagnosticsSlots} para a
- * regra dos três verbos ({@code before}/{@code after}, {@code additional}, {@code render}).
- *
- * @status experimental
- */
-import React, { useState } from 'react';
-import { Paper, Tabs } from '@mantine/core';
-import { IconChartBar, IconListSearch, IconShieldSearch } from '@tabler/icons-react';
-import { OverviewPanel } from './OverviewPanel';
+import { Box, Paper, ScrollArea, Stack, Text, UnstyledButton } from '@mantine/core';
+import { useCallback, useState } from 'react';
 import { EffectiveAccessPanel } from './EffectiveAccessPanel';
+import { ActionNodePanel } from './explorer/ActionNodePanel';
+import { GroupNodePanel } from './explorer/GroupNodePanel';
+import { SecurityTree } from './explorer/SecurityTree';
+import type { ExplorerSelection } from './explorer/selection';
+import { OverviewPanel } from './OverviewPanel';
 import { SimulationPanel } from './SimulationPanel';
 import type { ArchbaseSecurityDiagnosticsViewProps } from './types';
 
-const TODAS: Array<'overview' | 'effective' | 'simulate'> = ['overview', 'effective', 'simulate'];
+const PANORAMA: ExplorerSelection = { kind: 'OVERVIEW', id: 'overview', label: 'Panorama' };
+const SIMULAR: ExplorerSelection = { kind: 'SIMULATE', id: 'simulate', label: 'Simular acesso' };
 
-export function ArchbaseSecurityDiagnosticsView({
+/**
+ * A segurança do tenant como um diretório navegável — o <b>leitor</b>.
+ *
+ * <p>Deliberadamente separada da {@link ArchbaseSecurityView}, que é o <b>editor</b>: aquela tem uma
+ * aba por tabela e serve para mudar o estado; esta responde perguntas e não escreve nada. Misturá-las
+ * produziria uma tela com dois motivos para mudar.
+ *
+ * <p><b>Por que árvore, e não abas.</b> As três abas anteriores — panorama, efetivo e simulação —
+ * respondiam três perguntas sem se conversarem: descobrir uma permissão inerte no panorama não
+ * levava a lugar nenhum, e simular exigia digitar de cabeça o nome do recurso. Uma árvore de
+ * objetos, no espírito de um AD, dá <b>uma</b> navegação: seleciona-se o objeto e se vê tudo sobre
+ * ele, incluindo o caminho para o próximo.
+ *
+ * <p>Panorama e Simular continuam existindo — como nós da mesma árvore, não como abas paralelas. É
+ * o que permite a simulação receber sujeito e capacidade por clique, em vez de digitação: <b>escolher
+ * substitui lembrar</b>, e errar uma letra deixa de produzir um "não pode" indistinguível de uma
+ * negação real.
+ */
+export const ArchbaseSecurityDiagnosticsView = ({
 	height = '100%',
 	width = '100%',
-	defaultTab = 'overview',
-	tabs = TODAS,
 	slots,
 	onError,
-}: ArchbaseSecurityDiagnosticsViewProps) {
-	const [abaAtiva, setAbaAtiva] = useState<string | null>(defaultTab);
+}: ArchbaseSecurityDiagnosticsViewProps) => {
+	const [selecao, setSelecao] = useState<ExplorerSelection>(PANORAMA);
+	const [simulacao, setSimulacao] = useState<{ userId?: string; resource?: string; action?: string }>({});
 
-	const mostra = (aba: 'overview' | 'effective' | 'simulate') => tabs.includes(aba);
+	/**
+	 * Navegar guarda o contexto para a simulação.
+	 *
+	 * <p>Clicar numa pessoa e depois numa ação monta o par a ser testado sem que ninguém digite nada
+	 * — e sem obrigar a pessoa a decidir de antemão que ia simular.
+	 */
+	const selecionar = useCallback((s: ExplorerSelection) => {
+		setSelecao(s);
+		if (s.kind === 'USER') {
+			setSimulacao((atual) => ({ ...atual, userId: s.id }));
+		}
+		if (s.kind === 'ACTION') {
+			// O rótulo do nó é o nome da ação; o recurso é o pai na árvore e vem no próprio painel.
+			setSimulacao((atual) => ({ ...atual, action: s.label }));
+		}
+	}, []);
+
+	const irParaPessoa = useCallback(
+		(userId: string, label: string) => selecionar({ kind: 'USER', id: userId, label }),
+		[selecionar],
+	);
+
+	const atalho = (alvo: ExplorerSelection) => (
+		<UnstyledButton
+			key={alvo.id}
+			onClick={() => setSelecao(alvo)}
+			aria-current={selecao.kind === alvo.kind ? 'true' : undefined}
+			style={{
+				display: 'block',
+				width: '100%',
+				padding: '6px 8px',
+				borderRadius: 5,
+				background: selecao.kind === alvo.kind ? 'var(--mantine-color-blue-light)' : undefined,
+			}}>
+			<Text size="sm" fw={selecao.kind === alvo.kind ? 600 : 500}>
+				{alvo.label}
+			</Text>
+		</UnstyledButton>
+	);
+
+	const painel = () => {
+		switch (selecao.kind) {
+			case 'OVERVIEW':
+				return <OverviewPanel slots={slots} onError={onError} />;
+			case 'SIMULATE':
+				return <SimulationPanel slots={slots} onError={onError} initial={simulacao} />;
+			case 'USER':
+				return <EffectiveAccessPanel slots={slots} onError={onError} userId={selecao.id} />;
+			case 'GROUP':
+				return <GroupNodePanel id={selecao.id} kind="GROUP" slots={slots} onSelectUser={irParaPessoa} />;
+			case 'PROFILE':
+				return <GroupNodePanel id={selecao.id} kind="PROFILE" slots={slots} onSelectUser={irParaPessoa} />;
+			case 'ACTION':
+				return (
+					<ActionNodePanel
+						id={selecao.id}
+						label={selecao.label}
+						slots={slots}
+						onSelectUser={irParaPessoa}
+						onSimulate={() => setSelecao(SIMULAR)}
+					/>
+				);
+			case 'RESOURCE':
+				return (
+					<Stack gap="xs">
+						<Text fw={620} size="xl" ff="monospace">
+							{selecao.label}
+						</Text>
+						<Text size="sm" c="dimmed">
+							Abra o recurso na árvore para ver as ações. Cada ação responde quem alcança.
+						</Text>
+					</Stack>
+				);
+			default:
+				return <OverviewPanel slots={slots} onError={onError} />;
+		}
+	};
 
 	return (
-		<Paper style={{ height, width }} p="md" withBorder={false}>
-			<Tabs value={abaAtiva} onChange={setAbaAtiva} variant="pills" keepMounted={false}>
-				<Tabs.List mb="md">
-					{mostra('overview') ? (
-						<Tabs.Tab value="overview" leftSection={<IconChartBar size="1rem" />}>
-							Panorama
-						</Tabs.Tab>
+		// Grid CSS explícito em vez do <Grid> do Mantine: a coluna da árvore tem largura própria e
+		// não uma fração de doze, e o `minmax(0, 1fr)` é o que impede uma tabela larga no painel de
+		// empurrar a árvore para fora da tela.
+		<Box
+			style={{
+				height,
+				width,
+				display: 'grid',
+				gridTemplateColumns: 'minmax(240px, 300px) minmax(0, 1fr)',
+				gap: 'var(--mantine-spacing-md)',
+				alignItems: 'start',
+			}}
+			className="archbase-security-explorer">
+			<Paper withBorder radius="md" p="xs">
+				<Stack gap={2}>
+					{slots?.renderUserSearch ? (
+						<Box mb={4}>
+							{slots.renderUserSearch((idOuEmail) =>
+								selecionar({ kind: 'USER', id: idOuEmail, label: idOuEmail }),
+							)}
+						</Box>
 					) : null}
-					{mostra('effective') ? (
-						<Tabs.Tab value="effective" leftSection={<IconListSearch size="1rem" />}>
-							Efetivo do usuário
-						</Tabs.Tab>
-					) : null}
-					{mostra('simulate') ? (
-						<Tabs.Tab value="simulate" leftSection={<IconShieldSearch size="1rem" />}>
-							Simular
-						</Tabs.Tab>
-					) : null}
-				</Tabs.List>
+					{atalho(PANORAMA)}
+					{atalho(SIMULAR)}
+					<Box my={6} style={{ borderTop: '1px solid var(--mantine-color-default-border)' }} />
+					<ScrollArea.Autosize mah={620} type="hover">
+						<SecurityTree selected={selecao} onSelect={selecionar} />
+					</ScrollArea.Autosize>
+				</Stack>
+			</Paper>
 
-				{mostra('overview') ? (
-					<Tabs.Panel value="overview">
-						<OverviewPanel slots={slots} onError={onError} />
-					</Tabs.Panel>
-				) : null}
-				{mostra('effective') ? (
-					<Tabs.Panel value="effective">
-						<EffectiveAccessPanel slots={slots} onError={onError} />
-					</Tabs.Panel>
-				) : null}
-				{mostra('simulate') ? (
-					<Tabs.Panel value="simulate">
-						<SimulationPanel slots={slots} onError={onError} />
-					</Tabs.Panel>
-				) : null}
-			</Tabs>
-		</Paper>
+			<Paper withBorder radius="md" p="md" style={{ minWidth: 0 }}>
+				{painel()}
+			</Paper>
+		</Box>
 	);
-}
+};
