@@ -124,16 +124,24 @@ export const ArchbaseSecurityDiagnosticsView = ({
 		// empurrar a árvore para fora da tela.
 		<Box
 			style={{
-				height,
 				width,
+				// `height` só resolve quando o contêiner de cima tem altura definida — e o padrão de
+				// quem embute a view é não ter. O minHeight em vh garante que a árvore ocupe a tela
+				// mesmo assim; sem ele o painel encolhe até o conteúdo e sobra metade da tela vazia.
+				height,
+				minHeight: 'calc(100vh - 190px)',
 				display: 'grid',
 				gridTemplateColumns: 'minmax(240px, 300px) minmax(0, 1fr)',
 				gap: 'var(--mantine-spacing-md)',
-				alignItems: 'start',
+				alignItems: 'stretch',
 			}}
 			className="archbase-security-explorer">
-			<Paper withBorder radius="md" p="xs">
-				<Stack gap={2}>
+			<Paper
+				withBorder
+				radius="md"
+				p="xs"
+				style={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+				<Stack gap={2} style={{ flex: 1, minHeight: 0 }}>
 					{slots?.renderUserSearch ? (
 						<Box mb={4}>
 							{slots.renderUserSearch((idOuEmail) =>
@@ -144,13 +152,19 @@ export const ArchbaseSecurityDiagnosticsView = ({
 					{atalho(PANORAMA)}
 					{atalho(SIMULAR)}
 					<Box my={6} style={{ borderTop: '1px solid var(--mantine-color-default-border)' }} />
-					<ScrollArea.Autosize mah={620} type="hover">
+					{/* flex:1 em vez de altura fixa: a árvore acompanha a janela, e a rolagem fica
+					    NELA — rolar a página inteira levaria o painel de propriedades junto. */}
+					<ScrollArea type="hover" style={{ flex: 1, minHeight: 0 }}>
 						<SecurityTree selected={selecao} onSelect={selecionar} />
-					</ScrollArea.Autosize>
+					</ScrollArea>
 				</Stack>
 			</Paper>
 
-			<Paper withBorder radius="md" p="md" style={{ minWidth: 0 }}>
+			<Paper
+				withBorder
+				radius="md"
+				p="md"
+				style={{ minWidth: 0, minHeight: 0, overflowY: 'auto' }}>
 				{painel()}
 			</Paper>
 		</Box>

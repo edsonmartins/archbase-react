@@ -5,7 +5,7 @@ import type {
 	ArchbaseTreeBranch,
 	ArchbaseTreeNode,
 } from '@archbase/security';
-import { ActionIcon, Badge, Box, Group, Loader, Text, TextInput, UnstyledButton } from '@mantine/core';
+import { Badge, Box, Group, Loader, Text, TextInput, UnstyledButton } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ExplorerSelection } from './selection';
@@ -29,6 +29,40 @@ interface EstadoDoRamo {
 }
 
 const VAZIO: EstadoDoRamo = { nodes: [], total: 0, carregando: false, carregouTudo: false };
+
+/**
+ * A seta de abrir e fechar.
+ *
+ * <p>Desenhada, e não um caractere de texto: o glifo ▸ herda o tamanho da fonte e sai minúsculo,
+ * quase invisível numa árvore de linhas compactas. Um triângulo em CSS tem tamanho próprio, gira
+ * suave ao abrir e respeita quem pediu menos animação.
+ */
+const Seta = ({ aberta }: { aberta: boolean }) => (
+	<Box
+		aria-hidden
+		style={{
+			width: 14,
+			height: 14,
+			flex: 'none',
+			display: 'flex',
+			alignItems: 'center',
+			justifyContent: 'center',
+		}}>
+		<Box
+			style={{
+				width: 0,
+				height: 0,
+				borderLeft: '5px solid currentColor',
+				borderTop: '4px solid transparent',
+				borderBottom: '4px solid transparent',
+				opacity: 0.55,
+				transform: aberta ? 'rotate(90deg)' : 'none',
+				transformOrigin: '2px 4px',
+				transition: 'transform 130ms ease',
+			}}
+		/>
+	</Box>
+);
 
 export interface SecurityTreeProps {
 	selected: ExplorerSelection | null;
@@ -192,7 +226,8 @@ export const SecurityTree = ({ selected, onSelect }: SecurityTreeProps) => {
 								</Text>
 							</Group>
 						) : null}
-						{filhos && !filhos.carregouTudo && !filhos.carregando ? (
+						{filhos && !filhos.erro && !filhos.carregouTudo && !filhos.carregando
+							&& filhos.total > filhos.nodes.length ? (
 							<UnstyledButton
 								onClick={() => void carregar('ACTIONS_OF_RESOURCE', node.id, true)}
 								style={{ paddingLeft: 8 + (nivel + 1) * 14, paddingTop: 3, paddingBottom: 3 }}>
@@ -236,11 +271,7 @@ export const SecurityTree = ({ selected, onSelect }: SecurityTreeProps) => {
 							aria-expanded={aberto}
 							style={{ display: 'block', width: '100%', padding: '5px 8px', borderRadius: 5 }}>
 							<Group gap={7} wrap="nowrap">
-								<ActionIcon variant="transparent" size="xs" component="span" aria-hidden>
-									<Text size="xs" c="dimmed">
-										{aberto ? '▾' : '▸'}
-									</Text>
-								</ActionIcon>
+								<Seta aberta={aberto} />
 								<Text size="sm" fw={600} style={{ flex: 1 }}>
 									{r.label}
 								</Text>
@@ -268,7 +299,8 @@ export const SecurityTree = ({ selected, onSelect }: SecurityTreeProps) => {
 										</Text>
 									</Group>
 								) : null}
-								{estado && !estado.carregouTudo && !estado.carregando ? (
+								{estado && !estado.erro && !estado.carregouTudo && !estado.carregando
+								&& estado.total > estado.nodes.length ? (
 									<UnstyledButton
 										onClick={() => void carregar(r.branch, undefined, true)}
 										style={{ paddingLeft: 22, paddingTop: 3, paddingBottom: 3 }}>
@@ -277,7 +309,7 @@ export const SecurityTree = ({ selected, onSelect }: SecurityTreeProps) => {
 										</Text>
 									</UnstyledButton>
 								) : null}
-								{estado && estado.nodes.length === 0 && !estado.carregando ? (
+								{estado && !estado.erro && estado.nodes.length === 0 && !estado.carregando ? (
 									<Text size="xs" c="dimmed" pl={22} py={4}>
 										{buscaAplicada ? 'Nada encontrado.' : 'Vazio.'}
 									</Text>
