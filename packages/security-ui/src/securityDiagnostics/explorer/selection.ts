@@ -14,4 +14,12 @@ export interface ExplorerSelection {
 	kind: ExplorerSelectionKind;
 	id: string;
 	label: string;
+	/**
+	 * O rótulo do nó pai — para uma ação, o nome do recurso.
+	 *
+	 * <p>Sem ele a simulação ficava pela metade: sabia a ação e não o recurso, e quem testava
+	 * continuava digitando "tms.ordemservico" de cabeça — exatamente o que a árvore existe para
+	 * evitar, porque errar uma letra devolve "não pode" igual a uma negação real.
+	 */
+	parentLabel?: string;
 }

@@ -10,3 +10,4 @@ export * from './explorer/GroupNodePanel';
 export * from './explorer/ActionNodePanel';
 export * from './explorer/selection';
 export * from './explorer/situacao';
+export * from './explorer/TabelaRolavel';

@@ -51,8 +51,9 @@ export const ArchbaseSecurityDiagnosticsView = ({
 			setSimulacao((atual) => ({ ...atual, userId: s.id }));
 		}
 		if (s.kind === 'ACTION') {
-			// O rótulo do nó é o nome da ação; o recurso é o pai na árvore e vem no próprio painel.
-			setSimulacao((atual) => ({ ...atual, action: s.label }));
+			// O par completo: a ação é o rótulo do nó, o recurso é o pai na árvore. Sem os dois,
+			// quem testa continua digitando — e digitar é a origem do falso negativo.
+			setSimulacao((atual) => ({ ...atual, action: s.label, resource: s.parentLabel }));
 		}
 	}, []);
 
@@ -95,7 +96,7 @@ export const ArchbaseSecurityDiagnosticsView = ({
 				return (
 					<ActionNodePanel
 						id={selecao.id}
-						label={selecao.label}
+						label={selecao.parentLabel ? `${selecao.parentLabel} · ${selecao.label}` : selecao.label}
 						slots={slots}
 						onSelectUser={irParaPessoa}
 						onSimulate={() => setSelecao(SIMULAR)}

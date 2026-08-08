@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Section } from '../DiagnosticPrimitives';
 import type { ArchbaseSecurityDiagnosticsSlots } from '../types';
 import { situacaoBadge } from './situacao';
+import { TabelaRolavel } from './TabelaRolavel';
 
 export interface GroupNodePanelProps {
 	id: string;
@@ -101,7 +102,8 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 						Ninguém está {kind === 'GROUP' ? 'neste grupo' : 'com este perfil'}.
 					</Text>
 				) : (
-					<Table striped highlightOnHover withTableBorder>
+					<TabelaRolavel>
+					<Table striped highlightOnHover withTableBorder stickyHeader>
 						<Table.Thead>
 							<Table.Tr>
 								<Table.Th>Pessoa</Table.Th>
@@ -165,6 +167,7 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 							))}
 						</Table.Tbody>
 					</Table>
+					</TabelaRolavel>
 				)}
 				<Text size="xs" c="dimmed" lh={1.5}>
 					O total do membro não é o total {kind === 'GROUP' ? 'do grupo' : 'do perfil'}: ele soma o
@@ -178,7 +181,8 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 						Nada concedido por esta via.
 					</Text>
 				) : (
-					<Table striped withTableBorder>
+					<TabelaRolavel>
+					<Table striped withTableBorder stickyHeader>
 						<Table.Thead>
 							<Table.Tr>
 								<Table.Th>Capacidade</Table.Th>
@@ -198,6 +202,7 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 							))}
 						</Table.Tbody>
 					</Table>
+					</TabelaRolavel>
 				)}
 			</Section>
 

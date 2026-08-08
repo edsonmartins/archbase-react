@@ -135,7 +135,7 @@ export const SecurityTree = ({ selected, onSelect }: SecurityTreeProps) => {
 	const corDaSeveridade = (s?: string | null) =>
 		s === 'critical' ? 'red' : s === 'warning' ? 'yellow' : undefined;
 
-	const renderNo = (node: ArchbaseTreeNode, nivel: number) => {
+	const renderNo = (node: ArchbaseTreeNode, nivel: number, paiLabel?: string) => {
 		const chaveFilhos = chaveDe('ACTIONS_OF_RESOURCE', node.id);
 		const aberto = Boolean(abertos[chaveFilhos]);
 		const filhos = ramos[chaveFilhos];
@@ -146,7 +146,7 @@ export const SecurityTree = ({ selected, onSelect }: SecurityTreeProps) => {
 			<Box key={`${node.kind}-${node.id}`}>
 				<UnstyledButton
 					onClick={() => {
-						onSelect({ kind: node.kind, id: node.id, label: node.label });
+						onSelect({ kind: node.kind, id: node.id, label: node.label, parentLabel: paiLabel });
 						if (node.hasChildren) {
 							alternar(chaveFilhos);
 							if (!filhos) {
@@ -183,7 +183,7 @@ export const SecurityTree = ({ selected, onSelect }: SecurityTreeProps) => {
 
 				{node.hasChildren && aberto ? (
 					<Box>
-						{filhos?.nodes.map((f) => renderNo(f, nivel + 1))}
+						{filhos?.nodes.map((f) => renderNo(f, nivel + 1, node.label))}
 						{filhos?.carregando ? (
 							<Group gap={6} pl={8 + (nivel + 1) * 14} py={4}>
 								<Loader size="xs" />

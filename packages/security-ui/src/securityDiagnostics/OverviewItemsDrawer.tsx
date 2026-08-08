@@ -7,6 +7,7 @@ import type {
 } from '@archbase/security';
 import { Alert, Badge, Drawer, Group, Loader, Pagination, Stack, Table, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
+import { TabelaRolavel } from './explorer/TabelaRolavel';
 import type { ArchbaseDiagnosticCard } from './types';
 
 const TAMANHO_DA_PAGINA = 25;
@@ -117,7 +118,11 @@ export const OverviewItemsDrawer = ({ card, onClose }: OverviewItemsDrawerProps)
 				) : null}
 
 				{itens.length > 0 ? (
-					<Table striped highlightOnHover withTableBorder>
+					// O scroll fica NA TABELA, não no drawer: rolando o drawer, o cabeçalho some e
+					// uma coluna de valores sem cabeçalho deixa de dizer o que é. Aqui o cabeçalho
+					// gruda e o título, a contagem e a paginação ficam onde estavam.
+					<TabelaRolavel maxHeight="calc(100vh - 260px)">
+					<Table striped highlightOnHover withTableBorder stickyHeader>
 						<Table.Thead>
 							<Table.Tr>
 								<Table.Th>Item</Table.Th>
@@ -145,6 +150,7 @@ export const OverviewItemsDrawer = ({ card, onClose }: OverviewItemsDrawerProps)
 							))}
 						</Table.Tbody>
 					</Table>
+					</TabelaRolavel>
 				) : null}
 
 				{totalDePaginas > 1 ? (

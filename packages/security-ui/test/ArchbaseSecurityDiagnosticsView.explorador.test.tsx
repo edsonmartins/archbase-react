@@ -358,6 +358,9 @@ describe('simulação alimentada pela árvore', () => {
 			expect(usuario.value).toBe('u1');
 		});
 		expect((screen.getByLabelText('Ação') as HTMLInputElement).value).toBe('aprovar_custo');
+		// O RECURSO também: sem ele a simulação fica pela metade e quem testa continua digitando
+		// "tms.ordemservico" de cabeça — que é exatamente o que a árvore existe para evitar.
+		expect((screen.getByLabelText('Recurso') as HTMLInputElement).value).toBe('tms.ordemservico');
 	});
 });
 

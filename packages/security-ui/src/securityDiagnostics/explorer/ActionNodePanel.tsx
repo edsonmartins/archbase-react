@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Section } from '../DiagnosticPrimitives';
 import type { ArchbaseSecurityDiagnosticsSlots } from '../types';
 import { situacaoBadge } from './situacao';
+import { TabelaRolavel } from './TabelaRolavel';
 
 export interface ActionNodePanelProps {
 	id: string;
@@ -83,7 +84,8 @@ export const ActionNodePanel = ({ id, label, slots, onSelectUser, onSimulate }: 
 					</Text>
 				) : (
 					<>
-						<Table striped highlightOnHover withTableBorder>
+						<TabelaRolavel>
+					<Table striped highlightOnHover withTableBorder stickyHeader>
 							<Table.Thead>
 								<Table.Tr>
 									<Table.Th>Pessoa</Table.Th>
@@ -124,6 +126,7 @@ export const ActionNodePanel = ({ id, label, slots, onSelectUser, onSimulate }: 
 								))}
 							</Table.Tbody>
 						</Table>
+					</TabelaRolavel>
 
 						{porAtalho > 0 ? (
 							<Text size="xs" c="dimmed" lh={1.5}>
