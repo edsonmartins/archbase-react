@@ -1,0 +1,45 @@
+{
+  "name": "@archbase/scheduler",
+  "version": "4.2.4",
+  "description": "Linha do tempo por recurso — agenda de jornadas, veículos, salas. Fork de mantine-resource-timeline (MIT), migrado para Mantine 9.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./dist/index.css": "./dist/index.css"
+  },
+  "files": [
+    "dist",
+    "src",
+    "LICENSE.upstream"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@date-fns/tz": "^1.4.1",
+    "@tanstack/react-virtual": "^3.9.0",
+    "@use-gesture/react": "^10.3.1",
+    "date-fns": "^4.1.0",
+    "valtio": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@mantine/core": "9.5.1",
+    "@mantine/hooks": "9.5.1",
+    "react": "^18.3.0 || ^19.2.0",
+    "react-dom": "^18.3.0 || ^19.2.0"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

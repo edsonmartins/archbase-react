@@ -1,0 +1,6 @@
+.schedulerMoment {
+  &:where([data-selected="true"]) {
+    background-color: var(--mantine-primary-color-7);
+    opacity: 20%;
+  }
+}

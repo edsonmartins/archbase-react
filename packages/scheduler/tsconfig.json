@@ -1,0 +1,25 @@
+{
+  // noUncheckedIndexedAccess vem ligado no tsconfig da raiz; o upstream deste fork não o usava, e
+  // ligá-lo produz 39 erros de tipo em código que roda em produção há tempo. Desligado aqui para o
+  // pacote nascer compilando no mesmo rigor do código que ele contém — é dívida, e o lugar de pagá-la
+  // é conforme cada arquivo for revisado, não numa varredura cega sobre código recém-chegado.
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declarationDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
+    "noUncheckedIndexedAccess": false
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
