@@ -6,6 +6,8 @@
  */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Badge, Button, Chip, Group, Loader, Paper, SimpleGrid, Stack, Table, Text, TextInput } from '@mantine/core';
+import { FiltroDeLista, useFiltroDeTexto } from './explorer/FiltroDeLista';
+import { TabelaRolavel } from './explorer/TabelaRolavel';
 import { ARCHBASE_IOC_API_TYPE, processErrorMessage } from '@archbase/core';
 import { useArchbaseRemoteServiceApi } from '@archbase/data';
 import type {
@@ -107,6 +109,14 @@ export const EffectiveAccessPanel = ({ slots, onError, userId }: EffectiveAccess
 		return report.capabilities.filter((c) => c.situation === filtro);
 	}, [report, filtro]);
 
+	// O texto procura no nome do recurso, da ação e de quem concedeu: as três formas pelas quais
+	// alguém se lembra de uma capacidade ("aprovar", "ordemservico", "o perfil do Comercial").
+	const {
+		filtro: textoDoFiltro,
+		setFiltro: setTextoDoFiltro,
+		filtrados: porTexto,
+	} = useFiltroDeTexto(capacidades, (c) => [c.resource, c.action, c.grantedByName]);
+
 	// Escolher na árvore já é a busca: consultar sozinho evita o passo redundante de clicar em
 	// "Consultar" logo depois de clicar na pessoa.
 	useEffect(() => {
@@ -202,7 +212,7 @@ export const EffectiveAccessPanel = ({ slots, onError, userId }: EffectiveAccess
 
 					{slots?.afterEffectiveTally?.(report)}
 
-					<Section title="Capacidades" hint={`${capacidades.length} de ${report.capabilities.length}`}>
+					<Section title="Capacidades" hint={`${report.capabilities.length} no total`}>
 						<Chip.Group multiple={false} value={filtro} onChange={(v) => setFiltro(v as Filtro)}>
 							<Group gap={6}>
 								{FILTROS.map((f) => (
@@ -213,8 +223,19 @@ export const EffectiveAccessPanel = ({ slots, onError, userId }: EffectiveAccess
 							</Group>
 						</Chip.Group>
 
-						<Table.ScrollContainer minWidth={640}>
-							<Table striped highlightOnHover withTableBorder>
+						{/* Os dois filtros se combinam: os chips recortam por situação, este por texto.
+						    Uma pessoa com muitos perfis passa de cem capacidades, e aí rolar não é
+						    procurar. */}
+						<FiltroDeLista
+							value={textoDoFiltro}
+							onChange={setTextoDoFiltro}
+							assunto="capacidades"
+							visiveis={porTexto.length}
+							total={capacidades.length}
+						/>
+
+						<TabelaRolavel maxHeight="calc(100vh - 460px)">
+							<Table striped highlightOnHover withTableBorder stickyHeader>
 								<Table.Thead>
 									<Table.Tr>
 										<Table.Th>Capacidade</Table.Th>
@@ -226,7 +247,7 @@ export const EffectiveAccessPanel = ({ slots, onError, userId }: EffectiveAccess
 									</Table.Tr>
 								</Table.Thead>
 								<Table.Tbody>
-									{capacidades.map((capacidade, indice) => (
+									{porTexto.map((capacidade, indice) => (
 										<Table.Tr key={`${capacidade.resource}:${capacidade.action}:${indice}`}>
 											<Table.Td>
 												<Text size="sm" ff="monospace">
@@ -262,7 +283,7 @@ export const EffectiveAccessPanel = ({ slots, onError, userId }: EffectiveAccess
 									) : null}
 								</Table.Tbody>
 							</Table>
-						</Table.ScrollContainer>
+						</TabelaRolavel>
 					</Section>
 				</>
 			) : null}

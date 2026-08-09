@@ -6,6 +6,7 @@
  */
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Badge, Button, Group, Loader, Paper, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { SeletorEmArvore } from './explorer/SeletorEmArvore';
 import { ARCHBASE_IOC_API_TYPE, processErrorMessage } from '@archbase/core';
 import { useArchbaseRemoteServiceApi } from '@archbase/data';
 import type {
@@ -28,7 +29,7 @@ export interface SimulationPanelProps {
 	 *
 	 * <p>Os campos continuam editáveis — a árvore preenche, não tranca.
 	 */
-	initial?: { userId?: string; resource?: string; action?: string };
+	initial?: { userId?: string; userLabel?: string; resource?: string; action?: string };
 }
 
 /**
@@ -51,6 +52,13 @@ export const SimulationPanel = ({ slots, onError, initial }: SimulationPanelProp
 		ARCHBASE_IOC_API_TYPE.SecurityDiagnostics,
 	);
 	const [usuario, setUsuario] = useState<string>('');
+	/**
+	 * O que se mostra no campo do usuário.
+	 *
+	 * <p>Separado do id porque é ele que a simulação envia: mostrar o identificador para quem
+	 * escolheu "Maria Silva" na árvore não ajuda ninguém a conferir se escolheu a pessoa certa.
+	 */
+	const [rotuloDoUsuario, setRotuloDoUsuario] = useState<string>('');
 	const [recurso, setRecurso] = useState<string>('');
 	const [acao, setAcao] = useState<string>('');
 	const [escopo, setEscopo] = useState<{ companyId?: string; projectId?: string }>({});
@@ -64,12 +72,15 @@ export const SimulationPanel = ({ slots, onError, initial }: SimulationPanelProp
 			return;
 		}
 		if (initial.userId) setUsuario(initial.userId);
+		// O nome vem junto do id: quem escolheu "Helena Braga" na árvore não confere nada
+		// olhando para um uuid no campo.
+		if (initial.userLabel) setRotuloDoUsuario(initial.userLabel);
 		if (initial.resource) setRecurso(initial.resource);
 		if (initial.action) setAcao(initial.action);
 		// Escolha nova invalida o resultado anterior: deixá-lo na tela faria a resposta parecer
 		// referente ao que acabou de ser escolhido.
 		setDecision(undefined);
-	}, [initial?.userId, initial?.resource, initial?.action]);
+	}, [initial?.userId, initial?.userLabel, initial?.resource, initial?.action]);
 
 	const simular = useCallback(async () => {
 		if (!usuario.trim() || !recurso.trim() || !acao.trim()) {
@@ -111,23 +122,32 @@ export const SimulationPanel = ({ slots, onError, initial }: SimulationPanelProp
 			<Paper withBorder radius="md" p="md">
 				<Stack gap="sm">
 					<SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="xs">
-						<TextInput
+						{/* Escolher, não digitar: o nome errado devolve "não pode" igual a uma negação
+						    real, e quem simula fica sem saber qual dos dois aconteceu. */}
+						<SeletorEmArvore
 							label="Usuário"
-							placeholder="e-mail ou id"
-							value={usuario}
-							onChange={(e) => setUsuario(e.currentTarget.value)}
+							placeholder="escolher pessoa"
+							branch="USERS"
+							valor={rotuloDoUsuario || usuario}
+							onSelecionar={(no) => {
+								setUsuario(no.id);
+								setRotuloDoUsuario(no.label);
+							}}
 						/>
-						<TextInput
-							label="Recurso"
-							placeholder="tms.ordemservico"
-							value={recurso}
-							onChange={(e) => setRecurso(e.currentTarget.value)}
-						/>
-						<TextInput
-							label="Ação"
-							placeholder="aprovar_custo"
-							value={acao}
-							onChange={(e) => setAcao(e.currentTarget.value)}
+						{/* Um seletor para os dois campos: a ação só existe dentro de um recurso, e
+						    escolher os dois em separado permite combinar par que não existe. */}
+						<SeletorEmArvore
+							label="Recurso e ação"
+							placeholder="escolher capacidade"
+							branch="RESOURCES"
+							somenteFolhas
+							valor={recurso && acao ? `${recurso} · ${acao}` : ''}
+							onSelecionar={(no, pai) => {
+								setAcao(no.label);
+								if (pai) {
+									setRecurso(pai.label);
+								}
+							}}
 						/>
 						<TextInput
 							label="Empresa (opcional)"

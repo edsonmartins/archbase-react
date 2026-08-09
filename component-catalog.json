@@ -27652,7 +27652,7 @@
         },
         {
           "name": "initial",
-          "type": "{ userId?: string; resource?: string; action?: string }",
+          "type": "{ userId?: string; userLabel?: string; resource?: string; action?: string }",
           "required": false,
           "description": "Sujeito e capacidade escolhidos na árvore.\n<p><b>Escolher substitui lembrar.</b> Digitar {@code tms.ordemservico} de cabeça é a origem do\nfalso negativo: errar uma letra devolve \"não pode\", indistinguível de uma negação real. Com a\nescolha vinda da árvore, a resposta passa a significar o que diz.\n<p>Os campos continuam editáveis — a árvore preenche, não tranca."
         }

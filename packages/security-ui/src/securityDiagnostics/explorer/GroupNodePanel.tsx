@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Section } from '../DiagnosticPrimitives';
 import type { ArchbaseSecurityDiagnosticsSlots } from '../types';
 import { situacaoBadge } from './situacao';
+import { FiltroDeLista, useFiltroDeTexto } from './FiltroDeLista';
 import { TabelaRolavel } from './TabelaRolavel';
 
 export interface GroupNodePanelProps {
@@ -33,6 +34,20 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 	const [relatorio, setRelatorio] = useState<ArchbaseGroupReport | undefined>();
 	const [carregando, setCarregando] = useState(true);
 	const [erro, setErro] = useState<string | undefined>();
+
+	// Dois filtros separados: um perfil grande tem dezenas de pessoas e dezenas de capacidades, e
+	// procurar numa lista não deveria mexer na outra.
+	const {
+		filtro: filtroDeMembros,
+		setFiltro: setFiltroDeMembros,
+		filtrados: membros,
+	} = useFiltroDeTexto(relatorio?.members ?? [], (m) => [m.name, m.email, m.profileName ?? undefined]);
+
+	const {
+		filtro: filtroDeConcessoes,
+		setFiltro: setFiltroDeConcessoes,
+		filtrados: concessoes,
+	} = useFiltroDeTexto(relatorio?.grants ?? [], (g) => [g.resource, g.action]);
 
 	useEffect(() => {
 		let cancelado = false;
@@ -102,6 +117,14 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 						Ninguém está {kind === 'GROUP' ? 'neste grupo' : 'com este perfil'}.
 					</Text>
 				) : (
+					<>
+					<FiltroDeLista
+						value={filtroDeMembros}
+						onChange={setFiltroDeMembros}
+						assunto="pessoas"
+						visiveis={membros.length}
+						total={relatorio.members.length}
+					/>
 					<TabelaRolavel>
 					<Table striped highlightOnHover withTableBorder stickyHeader>
 						<Table.Thead>
@@ -118,7 +141,7 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 							</Table.Tr>
 						</Table.Thead>
 						<Table.Tbody>
-							{relatorio.members.map((m) => (
+							{membros.map((m) => (
 								<Table.Tr
 									key={m.userId}
 									style={{ cursor: onSelectUser ? 'pointer' : undefined }}
@@ -168,6 +191,7 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 						</Table.Tbody>
 					</Table>
 					</TabelaRolavel>
+					</>
 				)}
 				<Text size="xs" c="dimmed" lh={1.5}>
 					O total do membro não é o total {kind === 'GROUP' ? 'do grupo' : 'do perfil'}: ele soma o
@@ -181,6 +205,14 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 						Nada concedido por esta via.
 					</Text>
 				) : (
+					<>
+					<FiltroDeLista
+						value={filtroDeConcessoes}
+						onChange={setFiltroDeConcessoes}
+						assunto="capacidades"
+						visiveis={concessoes.length}
+						total={relatorio.grants.length}
+					/>
 					<TabelaRolavel>
 					<Table striped withTableBorder stickyHeader>
 						<Table.Thead>
@@ -190,7 +222,7 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 							</Table.Tr>
 						</Table.Thead>
 						<Table.Tbody>
-							{relatorio.grants.map((g, i) => (
+							{concessoes.map((g, i) => (
 								<Table.Tr key={`${g.resource}-${g.action}-${i}`}>
 									<Table.Td>
 										<Text size="sm" ff="monospace">
@@ -203,6 +235,7 @@ export const GroupNodePanel = ({ id, kind, slots, onSelectUser }: GroupNodePanel
 						</Table.Tbody>
 					</Table>
 					</TabelaRolavel>
+					</>
 				)}
 			</Section>
 

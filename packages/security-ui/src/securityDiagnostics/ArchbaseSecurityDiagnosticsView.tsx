@@ -1,4 +1,4 @@
-import { Box, Paper, ScrollArea, Stack, Text, UnstyledButton } from '@mantine/core';
+import { Box, Button, Group, Paper, ScrollArea, Stack, Text, UnstyledButton } from '@mantine/core';
 import { useCallback, useState } from 'react';
 import { EffectiveAccessPanel } from './EffectiveAccessPanel';
 import { ActionNodePanel } from './explorer/ActionNodePanel';
@@ -8,6 +8,19 @@ import type { ExplorerSelection } from './explorer/selection';
 import { OverviewPanel } from './OverviewPanel';
 import { SimulationPanel } from './SimulationPanel';
 import type { ArchbaseSecurityDiagnosticsViewProps } from './types';
+
+const Seta = () => (
+	<Box
+		aria-hidden
+		style={{
+			width: 0,
+			height: 0,
+			borderRight: '5px solid currentColor',
+			borderTop: '4px solid transparent',
+			borderBottom: '4px solid transparent',
+		}}
+	/>
+);
 
 const PANORAMA: ExplorerSelection = { kind: 'OVERVIEW', id: 'overview', label: 'Panorama' };
 const SIMULAR: ExplorerSelection = { kind: 'SIMULATE', id: 'simulate', label: 'Simular acesso' };
@@ -37,7 +50,21 @@ export const ArchbaseSecurityDiagnosticsView = ({
 	onError,
 }: ArchbaseSecurityDiagnosticsViewProps) => {
 	const [selecao, setSelecao] = useState<ExplorerSelection>(PANORAMA);
-	const [simulacao, setSimulacao] = useState<{ userId?: string; resource?: string; action?: string }>({});
+	/**
+	 * Por onde se passou até aqui.
+	 *
+	 * <p>Boa parte da navegação desta tela é lateral: de um perfil se clica num membro, do membro
+	 * numa capacidade, e daí em quem mais a alcança. Sem histórico, olhar o segundo membro do mesmo
+	 * perfil obrigava a refazer o caminho desde a árvore — o painel sabia mostrar o destino e não
+	 * sabia voltar.
+	 */
+	const [historico, setHistorico] = useState<ExplorerSelection[]>([]);
+	const [simulacao, setSimulacao] = useState<{
+		userId?: string;
+		userLabel?: string;
+		resource?: string;
+		action?: string;
+	}>({});
 
 	/**
 	 * Navegar guarda o contexto para a simulação.
@@ -46,15 +73,34 @@ export const ArchbaseSecurityDiagnosticsView = ({
 	 * — e sem obrigar a pessoa a decidir de antemão que ia simular.
 	 */
 	const selecionar = useCallback((s: ExplorerSelection) => {
-		setSelecao(s);
+		setSelecao((anterior) => {
+			// Reclicar no mesmo nó não é navegação e não entra na pilha; sem esta guarda, "voltar"
+			// gastaria vários cliques parado no mesmo lugar.
+			if (anterior.kind === s.kind && anterior.id === s.id) {
+				return anterior;
+			}
+			setHistorico((h) => [...h, anterior]);
+			return s;
+		});
 		if (s.kind === 'USER') {
-			setSimulacao((atual) => ({ ...atual, userId: s.id }));
+			setSimulacao((atual) => ({ ...atual, userId: s.id, userLabel: s.label }));
 		}
 		if (s.kind === 'ACTION') {
 			// O par completo: a ação é o rótulo do nó, o recurso é o pai na árvore. Sem os dois,
 			// quem testa continua digitando — e digitar é a origem do falso negativo.
 			setSimulacao((atual) => ({ ...atual, action: s.label, resource: s.parentLabel }));
 		}
+	}, []);
+
+	const voltar = useCallback(() => {
+		setHistorico((h) => {
+			const anterior = h[h.length - 1];
+			if (!anterior) {
+				return h;
+			}
+			setSelecao(anterior);
+			return h.slice(0, -1);
+		});
 	}, []);
 
 	const irParaPessoa = useCallback(
@@ -65,7 +111,7 @@ export const ArchbaseSecurityDiagnosticsView = ({
 	const atalho = (alvo: ExplorerSelection) => (
 		<UnstyledButton
 			key={alvo.id}
-			onClick={() => setSelecao(alvo)}
+			onClick={() => selecionar(alvo)}
 			aria-current={selecao.kind === alvo.kind ? 'true' : undefined}
 			style={{
 				display: 'block',
@@ -99,7 +145,7 @@ export const ArchbaseSecurityDiagnosticsView = ({
 						label={selecao.parentLabel ? `${selecao.parentLabel} · ${selecao.label}` : selecao.label}
 						slots={slots}
 						onSelectUser={irParaPessoa}
-						onSimulate={() => setSelecao(SIMULAR)}
+						onSimulate={() => selecionar(SIMULAR)}
 					/>
 				);
 			case 'RESOURCE':
@@ -160,12 +206,31 @@ export const ArchbaseSecurityDiagnosticsView = ({
 				</Stack>
 			</Paper>
 
+			{/* Coluna, não bloco rolável: o painel de dentro fixa o próprio cabeçalho e rola só a
+			    lista. Com overflow aqui, rolar para ver a última capacidade levava junto o nome da
+			    pessoa e o cabeçalho da tabela — some justamente a informação que diz o que se está
+			    lendo. */}
 			<Paper
 				withBorder
 				radius="md"
 				p="md"
-				style={{ minWidth: 0, minHeight: 0, overflowY: 'auto' }}>
-				{painel()}
+				style={{ minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+				{historico.length > 0 ? (
+					<Group gap={6} mb="xs" style={{ flexShrink: 0 }}>
+						<Button
+							size="compact-sm"
+							variant="subtle"
+							onClick={voltar}
+							leftSection={<Seta />}
+							aria-label="Voltar para o item anterior">
+							Voltar
+						</Button>
+						<Text size="xs" c="dimmed" truncate>
+							para {historico[historico.length - 1]?.label}
+						</Text>
+					</Group>
+				) : null}
+				<Box style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>{painel()}</Box>
 			</Paper>
 		</Box>
 	);

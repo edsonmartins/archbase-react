@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Section } from '../DiagnosticPrimitives';
 import type { ArchbaseSecurityDiagnosticsSlots } from '../types';
 import { situacaoBadge } from './situacao';
+import { FiltroDeLista, useFiltroDeTexto } from './FiltroDeLista';
 import { TabelaRolavel } from './TabelaRolavel';
 
 export interface ActionNodePanelProps {
@@ -31,6 +32,14 @@ export const ActionNodePanel = ({ id, label, slots, onSelectUser, onSimulate }: 
 		ARCHBASE_IOC_API_TYPE.SecurityDiagnostics,
 	);
 	const [quem, setQuem] = useState<ArchbaseReachEntry[]>([]);
+
+	// Uma ação usada por muita gente devolve uma lista longa, e a pergunta costuma ser sobre uma
+	// pessoa ou uma via específica — procurar pelo nome é mais direto que percorrer.
+	const {
+		filtro: filtroDeQuem,
+		setFiltro: setFiltroDeQuem,
+		filtrados: quemFiltrado,
+	} = useFiltroDeTexto(quem, (q) => [q.userName, q.email, q.via]);
 	const [carregando, setCarregando] = useState(true);
 	const [erro, setErro] = useState<string | undefined>();
 
@@ -84,6 +93,13 @@ export const ActionNodePanel = ({ id, label, slots, onSelectUser, onSimulate }: 
 					</Text>
 				) : (
 					<>
+						<FiltroDeLista
+							value={filtroDeQuem}
+							onChange={setFiltroDeQuem}
+							assunto="pessoas"
+							visiveis={quemFiltrado.length}
+							total={quem.length}
+						/>
 						<TabelaRolavel>
 					<Table striped highlightOnHover withTableBorder stickyHeader>
 							<Table.Thead>
@@ -94,7 +110,7 @@ export const ActionNodePanel = ({ id, label, slots, onSelectUser, onSimulate }: 
 								</Table.Tr>
 							</Table.Thead>
 							<Table.Tbody>
-								{quem.map((q) => (
+								{quemFiltrado.map((q) => (
 									<Table.Tr
 										key={q.userId}
 										style={{ cursor: onSelectUser ? 'pointer' : undefined }}

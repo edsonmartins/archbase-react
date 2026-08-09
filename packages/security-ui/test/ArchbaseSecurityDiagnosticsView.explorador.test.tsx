@@ -353,14 +353,16 @@ describe('simulação alimentada pela árvore', () => {
 
 		// É o ponto do explorador: digitar "tms.ordemservico" de cabeça e errar uma letra devolve
 		// "não pode", igual a uma negação real. Escolher substitui lembrar.
+		// O campo do usuário mostra o nome; o id é o que segue para o backend.
 		await waitFor(() => {
 			const usuario = screen.getByLabelText('Usuário') as HTMLInputElement;
-			expect(usuario.value).toBe('u1');
+			expect(usuario.value).toBe('Helena Braga');
 		});
-		expect((screen.getByLabelText('Ação') as HTMLInputElement).value).toBe('aprovar_custo');
-		// O RECURSO também: sem ele a simulação fica pela metade e quem testa continua digitando
-		// "tms.ordemservico" de cabeça — que é exatamente o que a árvore existe para evitar.
-		expect((screen.getByLabelText('Recurso') as HTMLInputElement).value).toBe('tms.ordemservico');
+		// Recurso e ação num campo só: a ação não existe fora de um recurso, e escolhê-los em
+		// separado permitiria montar um par que não existe.
+		expect((screen.getByLabelText('Recurso e ação') as HTMLInputElement).value).toBe(
+			'tms.ordemservico · aprovar_custo',
+		);
 	});
 });
 
