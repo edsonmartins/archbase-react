@@ -1,6 +1,6 @@
 {
   "name": "@archbase/template",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "description": "Template components for Archbase React v3 - High-level templates and layouts",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build --watch",
     "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . --max-warnings 0",

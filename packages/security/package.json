@@ -1,6 +1,6 @@
 {
   "name": "@archbase/security",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "description": "Security and authentication components for Archbase React",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -18,7 +18,7 @@
   "scripts": {
     "build": "NODE_OPTIONS=\"--max-old-space-size=8192\" vite build",
     "dev": "vite build --watch",
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "lint": "eslint src/**/*.{ts,tsx}",

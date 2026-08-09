@@ -1,6 +1,6 @@
 {
   "name": "@archbase/kanban",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "description": "Kanban board components for Archbase React, based on react-kanban-kit with Archbase packaging",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
@@ -27,7 +27,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build --watch",
     "build": "NODE_OPTIONS=\"--max-old-space-size=16384\" vite build",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . --max-warnings 0",
