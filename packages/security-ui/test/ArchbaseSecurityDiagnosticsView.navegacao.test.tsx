@@ -88,7 +88,11 @@ const servico = {
 				{ id: 'u2', kind: 'USER', label: 'Joana Prado', hasChildren: false },
 			]);
 		}
-		if (branch === 'RESOURCES' && opts?.parentId) {
+		// As ações vêm em ramo próprio; RESOURCES com parentId devolveria recursos de novo.
+		if (branch === 'ACTIONS_OF_RESOURCE') {
+			if (!opts?.parentId) {
+				throw new Error('ACTIONS_OF_RESOURCE exige o recurso pai');
+			}
 			return pagina([{ id: 'a1', kind: 'ACTION', label: 'aprovar_custo', hasChildren: false }]);
 		}
 		if (branch === 'RESOURCES') {

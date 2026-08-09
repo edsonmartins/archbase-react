@@ -140,6 +140,7 @@ export const SimulationPanel = ({ slots, onError, initial }: SimulationPanelProp
 							label="Recurso e ação"
 							placeholder="escolher capacidade"
 							branch="RESOURCES"
+							branchDosFilhos="ACTIONS_OF_RESOURCE"
 							somenteFolhas
 							valor={recurso && acao ? `${recurso} · ${acao}` : ''}
 							onSelecionar={(no, pai) => {

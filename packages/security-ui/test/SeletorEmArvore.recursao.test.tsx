@@ -13,11 +13,18 @@ const pagina = (c: any[]) => ({ content: c, totalElements: c.length, totalPages:
 
 // O caso patológico: o filho repete o id do pai.
 const servico = {
-	browse: vi.fn(async (_b: string, opts: any) =>
-		opts?.parentId
-			? pagina([{ id: 'r1', kind: 'ACTION', label: 'aprovar_custo', hasChildren: false }])
-			: pagina([{ id: 'r1', kind: 'RESOURCE', label: 'tms.ordemservico', hasChildren: true }]),
-	),
+	// Espelha o contrato do servidor: as ações de um recurso só vêm em ACTIONS_OF_RESOURCE, e
+	// RESOURCES com parentId devolve os recursos de novo, ignorando o pai. Um dublê que aceitasse
+	// qualquer ramo esconderia exatamente o defeito que deixou o seletor sem poder selecionar.
+	browse: vi.fn(async (branch: string, opts: any) => {
+		if (branch === 'ACTIONS_OF_RESOURCE') {
+			if (!opts?.parentId) {
+				throw new Error('ACTIONS_OF_RESOURCE exige o recurso pai');
+			}
+			return pagina([{ id: 'r1', kind: 'ACTION', label: 'aprovar_custo', hasChildren: false }]);
+		}
+		return pagina([{ id: 'r1', kind: 'RESOURCE', label: 'tms.ordemservico', hasChildren: true }]);
+	}),
 };
 
 vi.mock('@archbase/core', async (o) => ({ ...(await o<any>()), processErrorMessage: (e: any) => String(e) }));
@@ -39,7 +46,7 @@ describe('seletor em árvore', () => {
 		const escolhido = vi.fn();
 		render(
 			<MantineProvider>
-				<SeletorEmArvore label="Recurso e ação" branch="RESOURCES" somenteFolhas onSelecionar={escolhido} />
+				<SeletorEmArvore label="Recurso e ação" branch="RESOURCES" branchDosFilhos="ACTIONS_OF_RESOURCE" somenteFolhas onSelecionar={escolhido} />
 			</MantineProvider>,
 		);
 
@@ -54,7 +61,7 @@ describe('seletor em árvore', () => {
 		const escolhido = vi.fn();
 		render(
 			<MantineProvider>
-				<SeletorEmArvore label="Recurso e ação" branch="RESOURCES" somenteFolhas onSelecionar={escolhido} />
+				<SeletorEmArvore label="Recurso e ação" branch="RESOURCES" branchDosFilhos="ACTIONS_OF_RESOURCE" somenteFolhas onSelecionar={escolhido} />
 			</MantineProvider>,
 		);
 		fireEvent.click(screen.getByLabelText('Recurso e ação'));

@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-08-09",
   "catalogVersion": "0.6.1",
-  "total": 215,
+  "total": 217,
   "documented": 58,
   "categories": [
     {
@@ -1316,6 +1316,18 @@
       "id": "outros",
       "label": "Outros Componentes",
       "components": [
+        {
+          "name": "ArchbaseScheduler",
+          "description": "componente Archbase focado em scheduler.",
+          "pkg": "@archbase/scheduler",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSchedulerBody",
+          "description": "componente Archbase focado em scheduler body.",
+          "pkg": "@archbase/scheduler",
+          "docLink": null
+        },
         {
           "name": "ArchbaseSpaceBottom",
           "description": "layout estrutural focado em space bottom.",

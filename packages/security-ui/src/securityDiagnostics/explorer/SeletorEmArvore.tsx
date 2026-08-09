@@ -19,6 +19,14 @@ export interface SeletorEmArvoreProps {
 	 * um recurso sem ação não é uma pergunta que o backend saiba responder.
 	 */
 	somenteFolhas?: boolean;
+	/**
+	 * O ramo a pedir ao abrir um nó.
+	 *
+	 * <p>Não é o mesmo do nível de cima: as ações de um recurso vivem em ACTIONS_OF_RESOURCE, e
+	 * pedir RESOURCES com parentId faz o servidor ignorar o pai e devolver os recursos de novo —
+	 * o nó abria mostrando recursos e nunca chegava numa ação para escolher.
+	 */
+	branchDosFilhos?: ArchbaseTreeBranch;
 	/** Devolve o nó escolhido e, quando existir, o pai — é dele que sai o nome do recurso. */
 	onSelecionar: (no: ArchbaseTreeNode, pai?: ArchbaseTreeNode) => void;
 }
@@ -42,6 +50,7 @@ export const SeletorEmArvore = ({
 	placeholder,
 	branch,
 	somenteFolhas,
+	branchDosFilhos,
 	onSelecionar,
 }: SeletorEmArvoreProps) => {
 	const service = useArchbaseRemoteServiceApi<ArchbaseSecurityDiagnosticsService>(
@@ -93,13 +102,17 @@ export const SeletorEmArvore = ({
 				return;
 			}
 			try {
-				const pagina = await service.browse(branch, { parentId: no.id, page: 0, size: TAMANHO });
+				const pagina = await service.browse(branchDosFilhos ?? branch, {
+					parentId: no.id,
+					page: 0,
+					size: TAMANHO,
+				});
 				setFilhos((atual) => ({ ...atual, [no.id]: pagina.content ?? [] }));
 			} catch (e: unknown) {
 				setErro(e instanceof Error ? e.message : 'Não foi possível abrir.');
 			}
 		},
-		[service, branch, expandido, filhos],
+		[service, branch, branchDosFilhos, expandido, filhos],
 	);
 
 	const escolher = (no: ArchbaseTreeNode, pai?: ArchbaseTreeNode) => {
