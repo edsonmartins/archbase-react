@@ -17218,6 +17218,26 @@
       "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseSaveFilter"
     },
     {
+      "name": "ArchbaseScheduler",
+      "description": "ArchbaseScheduler — componente Archbase focado em scheduler.",
+      "sourcePath": "packages/scheduler/src/Scheduler/Scheduler",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/scheduler/src/Scheduler/Scheduler"
+    },
+    {
+      "name": "ArchbaseSchedulerBody",
+      "description": "ArchbaseSchedulerBody — componente Archbase focado em scheduler body.",
+      "sourcePath": "packages/scheduler/src/SchedulerBody/SchedulerBody",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/scheduler/src/SchedulerBody/SchedulerBody"
+    },
+    {
       "name": "ArchbaseSearchTemplate",
       "description": "ArchbaseSearchTemplate — template de busca com filtros, resultados e binding ao DataSource (placeholder).\n@status experimental",
       "sourcePath": "packages/template/src/ArchbaseSearchTemplate.tsx",
@@ -23363,6 +23383,16 @@
       "canonicalUrl": "packages/components/src/editors/ArchbaseMultiViewCalendar"
     },
     {
+      "name": "DefaultMomentLabel",
+      "description": "DefaultMomentLabel — componente Archbase focado em default moment label.",
+      "sourcePath": "packages/scheduler/src/SchedulerHeader/DefaultMomentLabel",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/scheduler/src/SchedulerHeader/DefaultMomentLabel"
+    },
+    {
       "name": "defaultMyProfileModalOptions",
       "description": "Tamanho máximo da imagem do avatar em kilobytes",
       "sourcePath": "packages/admin/src/ArchbaseMyProfileModal",
@@ -23371,6 +23401,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/admin/src/ArchbaseMyProfileModal"
+    },
+    {
+      "name": "DefaultNowMarker",
+      "description": "DefaultNowMarker — componente Archbase focado em default now marker.",
+      "sourcePath": "packages/scheduler/src/SchedulerBody/NowMarker",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/scheduler/src/SchedulerBody/NowMarker"
     },
     {
       "name": "defaultOperators",
@@ -23391,6 +23431,26 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/data/src/service/ArchbaseRemoteApiService"
+    },
+    {
+      "name": "DefaultResourceLabel",
+      "description": "DefaultResourceLabel — componente Archbase focado em default resource label.",
+      "sourcePath": "packages/scheduler/src/SchedulerBody/ResourceLabel",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/scheduler/src/SchedulerBody/ResourceLabel"
+    },
+    {
+      "name": "DefaultSchedulerEntry",
+      "description": "DefaultSchedulerEntry — componente Archbase focado em default scheduler entry.",
+      "sourcePath": "packages/scheduler/src/SchedulerBody/SchedulerEntry/SchedulerEntry",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/scheduler/src/SchedulerBody/SchedulerEntry/SchedulerEntry"
     },
     {
       "name": "DefaultSecurityLoading",
@@ -23477,6 +23537,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
+    },
+    {
+      "name": "determineDisplayUnit",
+      "description": "determineDisplayUnit — componente Archbase focado em determine display unit.",
+      "sourcePath": "packages/scheduler/src/controller/controller",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/scheduler/src/controller/controller"
     },
     {
       "name": "DiffMethod",
@@ -27118,6 +27188,208 @@
       "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
+      "name": "Scheduler",
+      "description": "Scheduler — componente Archbase focado em scheduler.",
+      "sourcePath": "packages/scheduler/src/Scheduler/Scheduler",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [
+        {
+          "name": "width",
+          "type": "MantineStyleProps[\"w\"]",
+          "required": false,
+          "description": "Define width. (MantineStyleProps[\"w\"])"
+        },
+        {
+          "name": "height",
+          "type": "MantineStyleProps[\"h\"]",
+          "required": false,
+          "description": "Define height. (MantineStyleProps[\"h\"])"
+        },
+        {
+          "name": "rowHeight",
+          "type": "SchedulerBodyProps<TData, TResource>[\"rowHeight\"]",
+          "required": false,
+          "description": "Define row height. (SchedulerBodyProps<TData, TResource>[\"rowHeight\"])"
+        },
+        {
+          "name": "gridLabelSize",
+          "type": "number",
+          "required": false,
+          "description": "Define grid label size. (number)"
+        },
+        {
+          "name": "totalGridSize",
+          "type": "number",
+          "required": false,
+          "description": "Define total grid size. (number)"
+        },
+        {
+          "name": "headerOnClick",
+          "type": "SchedulerHeaderProps<TData, TResource>[\"onClick\"]",
+          "required": false,
+          "description": "Define header on click. (SchedulerHeaderProps<TData, TResource>[\"onClick\"])"
+        },
+        {
+          "name": "momentLabelComponent",
+          "type": "SchedulerHeaderProps<\n    TData,\n    TResource\n  >[\"momentLabelComponent\"]",
+          "required": false,
+          "description": "Define moment label component. (SchedulerHeaderProps<\n    TData,\n    TResource\n  >[\"momentLabelComponent\"])"
+        },
+        {
+          "name": "stickyHeader",
+          "type": "SchedulerHeaderProps<TData, TResource>[\"stickyHeader\"]",
+          "required": false,
+          "description": "Define sticky header. (SchedulerHeaderProps<TData, TResource>[\"stickyHeader\"])"
+        },
+        {
+          "name": "stickyHeaderOffset",
+          "type": "SchedulerHeaderProps<\n    TData,\n    TResource\n  >[\"stickyHeaderOffset\"]",
+          "required": false,
+          "description": "Define sticky header offset. (SchedulerHeaderProps<\n    TData,\n    TResource\n  >[\"stickyHeaderOffset\"])"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/scheduler/src/Scheduler/Scheduler"
+    },
+    {
+      "name": "SchedulerBody",
+      "description": "SchedulerBody — componente Archbase focado em scheduler body.",
+      "sourcePath": "packages/scheduler/src/SchedulerBody/SchedulerBody",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [
+        {
+          "name": "startDate",
+          "type": "Date",
+          "required": false,
+          "description": "Define start date. (Date)"
+        },
+        {
+          "name": "endDate",
+          "type": "Date",
+          "required": false,
+          "description": "Define end date. (Date)"
+        },
+        {
+          "name": "data",
+          "type": "TData[]",
+          "required": true,
+          "description": "Define data. (TData[])"
+        },
+        {
+          "name": "resources",
+          "type": "TResource[]",
+          "required": true,
+          "description": "Define resources. (TResource[])"
+        },
+        {
+          "name": "startDateAccessor",
+          "type": "DataFieldAccessor<TData, Date>",
+          "required": true,
+          "description": "Define start date accessor. (DataFieldAccessor<TData, Date>)"
+        },
+        {
+          "name": "endDateAccessor",
+          "type": "DataFieldAccessor<TData, Date>",
+          "required": true,
+          "description": "Define end date accessor. (DataFieldAccessor<TData, Date>)"
+        },
+        {
+          "name": "dataIdAccessor",
+          "type": "DataFieldAccessor<TData, string | number>",
+          "required": true,
+          "description": "Define data id accessor. (DataFieldAccessor<TData, string | number>)"
+        },
+        {
+          "name": "dataResourceIdAccessor",
+          "type": "DataFieldAccessor<\n    TData,\n    string | number | string[] | number[]\n  >",
+          "required": true,
+          "description": "Define data resource id accessor. (DataFieldAccessor<\n    TData,\n    string | number | string[] | number[]\n  >)"
+        },
+        {
+          "name": "resourceIdAccessor",
+          "type": "DataFieldAccessor<TResource, string | number>",
+          "required": true,
+          "description": "Define resource id accessor. (DataFieldAccessor<TResource, string | number>)"
+        },
+        {
+          "name": "controller",
+          "type": "SchedulerController<TData, TResource>",
+          "required": true,
+          "description": "Define controller. (SchedulerController<TData, TResource>)"
+        },
+        {
+          "name": "rowHeight",
+          "type": "number",
+          "required": true,
+          "description": "Define row height. (number)"
+        },
+        {
+          "name": "resourceLabelComponent",
+          "type": "React.FC<ResourceLabelProps<TResource>>",
+          "required": false,
+          "description": "Define resource label component. (React.FC<ResourceLabelProps<TResource>>)"
+        },
+        {
+          "name": "entryComponent",
+          "type": "React.FC<SchedulerEntryProps<TData, TResource>>",
+          "required": false,
+          "description": "Define entry component. (React.FC<SchedulerEntryProps<TData, TResource>>)"
+        },
+        {
+          "name": "nowMarkerComponent",
+          "type": "React.FC<NowMarkerProps>",
+          "required": false,
+          "description": "Define now marker component. (React.FC<NowMarkerProps>)"
+        },
+        {
+          "name": "momentStyle",
+          "type": "MomentStyleFn<TData, TResource>",
+          "required": false,
+          "description": "Define moment style. (MomentStyleFn<TData, TResource>)"
+        },
+        {
+          "name": "enableVirtualizer",
+          "type": "boolean",
+          "required": false,
+          "description": "Define enable virtualizer. (boolean)"
+        },
+        {
+          "name": "gridLabelSize",
+          "type": "number",
+          "required": true,
+          "description": "Define grid label size. (number)"
+        },
+        {
+          "name": "totalGridSize",
+          "type": "number",
+          "required": true,
+          "description": "Define total grid size. (number)"
+        },
+        {
+          "name": "tz",
+          "type": "string",
+          "required": false,
+          "description": "Define tz. (string)"
+        },
+        {
+          "name": "enableGestures",
+          "type": "boolean",
+          "required": false,
+          "description": "Define enable gestures. (boolean)"
+        },
+        {
+          "name": "theme",
+          "type": "MantineTheme",
+          "required": true,
+          "description": "Objeto MantineThemeOverride para personalizar tema."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/scheduler/src/SchedulerBody/SchedulerBody"
+    },
+    {
       "name": "Section",
       "description": "Peças de apresentação compartilhadas pelas três abas do diagnóstico.\n<p>Ficam aqui, e não dentro de cada painel, porque são o que garante que um cartão vindo\nde {@code additionalOverviewCards} saia idêntico a um cartão do framework. É a coerência\nvisual que faz valer a pena a aplicação entregar dado em vez de JSX.",
       "sourcePath": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx",
@@ -28845,6 +29117,18 @@
       "canonicalUrl": "packages/core/src/fallback/ArchbaseSafeMigrationWrapper.tsx"
     },
     {
+      "name": "useArchbaseSchedulerController",
+      "description": "useArchbaseSchedulerController — hook utilitário focado em use archbase scheduler controller.",
+      "sourcePath": "packages/scheduler/src/controller/controller",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/scheduler/src/controller/controller"
+    },
+    {
       "name": "useArchbaseScrollRestore",
       "description": "Hook para persistir scroll automaticamente.\nBasta passar a ref - restaura e salva automaticamente.\n@example\n```tsx\nconst scrollRef = useRef<HTMLDivElement>(null);\nuseArchbaseScrollRestore(scrollRef);\nreturn <div ref={scrollRef} style={{ overflow: 'auto' }}>...</div>;\n```",
       "sourcePath": "packages/admin/src/hooks/useArchbasePersistedState",
@@ -29488,6 +29772,18 @@
         "security"
       ],
       "canonicalUrl": "packages/security-ui/src/UserModal"
+    },
+    {
+      "name": "useSchedulerController",
+      "description": "useSchedulerController — hook utilitário focado em use scheduler controller.",
+      "sourcePath": "packages/scheduler/src/controller/controller",
+      "exportsFrom": "@archbase/scheduler",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/scheduler/src/controller/controller"
     },
     {
       "name": "useSecurityEntityActions",
