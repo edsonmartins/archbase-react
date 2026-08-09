@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-22",
+  "generatedAt": "2026-08-09",
   "catalogVersion": "0.6.1",
-  "total": 214,
+  "total": 215,
   "documented": 58,
   "categories": [
     {
@@ -1192,7 +1192,7 @@
         },
         {
           "name": "ArchbaseAdminTabContainer",
-          "description": "componente Archbase focado em admin tab container.",
+          "description": "",
           "pkg": "@archbase/admin",
           "docLink": null
         },
@@ -1284,6 +1284,12 @@
           "name": "ArchbaseSecureFormField",
           "description": "componente de segurança focado em secure form field.",
           "pkg": "@archbase/security",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSecurityDiagnosticsView",
+          "description": "",
+          "pkg": "@archbase/security-ui",
           "docLink": null
         },
         {

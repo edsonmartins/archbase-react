@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-07-22",
+  "generatedAt": "2026-08-09",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -189,6 +189,49 @@
         "security"
       ],
       "canonicalUrl": "packages/security/src/SecurityDomain.ts"
+    },
+    {
+      "name": "ActionNodePanel",
+      "description": "Quem alcança esta capacidade — a consulta reversa.\n<p><b>A pergunta que antes não tinha resposta.</b> \"Quem consegue aprovar custo?\" só se\nrespondia abrindo grupo por grupo no admin e cruzando na cabeça, com resultado que dependia de\nquem cruzou.\n<p>Administrador aparece na lista com a via marcada. Ele alcança sem concessão nenhuma, e\nomiti-lo daria a resposta errada justamente para as contas que mais importam numa auditoria.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/explorer/ActionNodePanel.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true,
+          "description": "Define id. (string)"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Texto principal exibido acima do controle."
+        },
+        {
+          "name": "slots",
+          "type": "ArchbaseSecurityDiagnosticsSlots",
+          "required": false,
+          "description": "Define slots. (ArchbaseSecurityDiagnosticsSlots)"
+        },
+        {
+          "name": "onSelectUser",
+          "type": "(userId: string, label: string) => void",
+          "required": false,
+          "description": "Callback acionado quando select user. ((userId: string, label: string) => void)"
+        },
+        {
+          "name": "onSimulate",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback acionado quando simulate. (() => void)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/explorer/ActionNodePanel.tsx"
     },
     {
       "name": "ADVANCED",
@@ -550,7 +593,7 @@
     },
     {
       "name": "ARCHBASE_IOC_API_TYPE",
-      "description": "ARCHBASE_IOC_API_TYPE — componente Archbase focado em ioc api type.",
+      "description": "Leitura do diagnóstico de acesso — panorama, efetivo do usuário e simulação.\nServiço somente leitura; não é o CRUD de nenhuma entidade.",
       "sourcePath": "packages/core/src/ioc/ArchbaseIOCTypes",
       "exportsFrom": "@archbase/core",
       "props": [],
@@ -1129,6 +1172,55 @@
           "description": "Define side bar icon light color. (string)"
         },
         {
+          "name": "sideBarBackgroundImage",
+          "type": "string",
+          "required": false,
+          "description": "Imagem/gradiente de fundo do sidebar (ex: `linear-gradient(...)`). Aceita\nqualquer valor de `background`. Quando definido, é usado no lugar da cor\nsólida de `sideBarBackground*Color`. @default undefined",
+          "default": "undefined"
+        },
+        {
+          "name": "mainBackground",
+          "type": "string",
+          "required": false,
+          "description": "Background da área de conteúdo principal. Aceita cor OU gradiente. Quando\ndefinido, substitui o cinza padrão derivado do tema. @default undefined",
+          "default": "undefined"
+        },
+        {
+          "name": "mainBorderRadius",
+          "type": "string | number",
+          "required": false,
+          "description": "Raio das bordas do container que envolve as abas e o conteúdo. Aceita\nnúmero (px) ou string CSS. Sem valor mantém os 4px históricos, que\ndestoam quando o tema usa um `defaultRadius` maior — o conteúdo arredonda\nmais que o container e sobra uma cunha no canto. @default '4px'",
+          "default": "'4px'"
+        },
+        {
+          "name": "mainBorderColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor da borda desse mesmo container. Sem valor mantém o cinza fixo\n(`#e4e9ef` no claro, `dark[4]` no escuro). @default undefined",
+          "default": "undefined"
+        },
+        {
+          "name": "sideBarItemBorderRadius",
+          "type": "string | number",
+          "required": false,
+          "description": "Raio das bordas dos itens do sidebar (px). Pílulas arredondadas. @default 0",
+          "default": "0"
+        },
+        {
+          "name": "sideBarItemHorizontalGap",
+          "type": "string | number",
+          "required": false,
+          "description": "Recuo horizontal dos itens do sidebar (px). @default 0",
+          "default": "0"
+        },
+        {
+          "name": "sideBarItemActiveBackground",
+          "type": "string",
+          "required": false,
+          "description": "Background do item ativo do sidebar. Aceita cor OU gradiente. @default undefined",
+          "default": "undefined"
+        },
+        {
           "name": "sideBarCollapsedSubmenuWidth",
           "type": "string | number",
           "required": false,
@@ -1168,7 +1260,7 @@
     },
     {
       "name": "ArchbaseAdminTabContainer",
-      "description": "ArchbaseAdminTabContainer — componente Archbase focado em admin tab container.",
+      "description": "Cores do tab strip. Omitir mantém a paleta cinza padrão do componente.\nAs cores valem para os dois esquemas, então passe o conjunto do esquema\natual quando quiser tons distintos entre claro e escuro.",
       "sourcePath": "packages/admin/src/ArchbaseAdminTabContainer",
       "exportsFrom": "@archbase/admin",
       "props": [
@@ -1201,6 +1293,12 @@
           "type": "ArchbaseTabItem[]",
           "required": false,
           "description": "Define opened tabs. (ArchbaseTabItem[])"
+        },
+        {
+          "name": "colors",
+          "type": "ArchbaseAdvancedTabsColors",
+          "required": false,
+          "description": "Cores do tab strip. Omitir mantém a paleta cinza padrão do componente.\nAs cores valem para os dois esquemas, então passe o conjunto do esquema\natual quando quiser tons distintos entre claro e escuro."
         }
       ],
       "examples": [],
@@ -1640,6 +1738,12 @@
           "type": "Function",
           "required": true,
           "description": "Callback acionado quando click. (Function)"
+        },
+        {
+          "name": "colors",
+          "type": "ArchbaseAdvancedTabsColors",
+          "required": false,
+          "description": "Cores do strip. Omitir mantém a paleta cinza padrão."
         },
         {
           "name": "onCloseAllTabs",
@@ -17254,6 +17358,30 @@
       "canonicalUrl": "packages/security/src/ArchbaseSecurityComponents"
     },
     {
+      "name": "ArchbaseSecurityDiagnosticsService",
+      "description": "Leitura do diagnóstico de acesso — `/api/v1/security/diagnostics/*`.\n<p><b>Por que não estende `ArchbaseRemoteApiService`.</b> A classe base modela um CRUD de\nentidade: exige `getId`, `isNewRecord` e `transform`. Aqui não há entidade — há três\nperguntas (o retrato do tenant, o que uma pessoa pode, e se ela pode uma coisa). Implementar\naqueles métodos com retorno inventado só para herdar seria mentir sobre o que este serviço é.\nO que importava da base — o cliente HTTP injetado e os cabeçalhos de tenant — está preservado.\n<p>Todos os endpoints são <b>somente leitura</b> e exigem, no servidor,\n`archbase.security.diagnostics.enabled=true` e usuário administrador.",
+      "sourcePath": "packages/security/src/ArchbaseSecurityDiagnosticsService.ts",
+      "exportsFrom": "@archbase/security",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityDiagnosticsService.ts"
+    },
+    {
+      "name": "ArchbaseSecurityDiagnosticsView",
+      "description": "A segurança do tenant como um diretório navegável — o <b>leitor</b>.\n<p>Deliberadamente separada da {@link ArchbaseSecurityView}, que é o <b>editor</b>: aquela tem uma\naba por tabela e serve para mudar o estado; esta responde perguntas e não escreve nada. Misturá-las\nproduziria uma tela com dois motivos para mudar.\n<p><b>Por que árvore, e não abas.</b> As três abas anteriores — panorama, efetivo e simulação —\nrespondiam três perguntas sem se conversarem: descobrir uma permissão inerte no panorama não\nlevava a lugar nenhum, e simular exigia digitar de cabeça o nome do recurso. Uma árvore de\nobjetos, no espírito de um AD, dá <b>uma</b> navegação: seleciona-se o objeto e se vê tudo sobre\nele, incluindo o caminho para o próximo.\n<p>Panorama e Simular continuam existindo — como nós da mesma árvore, não como abas paralelas. É\no que permite a simulação receber sujeito e capacidade por clique, em vez de digitação: <b>escolher\nsubstitui lembrar</b>, e errar uma letra deixa de produzir um \"não pode\" indistinguível de uma\nnegação real.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/ArchbaseSecurityDiagnosticsView.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/ArchbaseSecurityDiagnosticsView.tsx"
+    },
+    {
       "name": "ArchbaseSecurityManager",
       "description": "Retorna todas as permissões atuais",
       "sourcePath": "packages/security/src/ArchbaseSecurityManager.tsx",
@@ -22233,6 +22361,25 @@
       "canonicalUrl": "packages/components/src/viewers/ArchbaseXmlViewer"
     },
     {
+      "name": "AttributeList",
+      "description": "Peças de apresentação compartilhadas pelas três abas do diagnóstico.\n<p>Ficam aqui, e não dentro de cada painel, porque são o que garante que um cartão vindo\nde {@code additionalOverviewCards} saia idêntico a um cartão do framework. É a coerência\nvisual que faz valer a pena a aplicação entregar dado em vez de JSX.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "attributes",
+          "type": "ArchbaseDiagnosticAttribute[]",
+          "required": true,
+          "description": "Define attributes. (ArchbaseDiagnosticAttribute[])"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx"
+    },
+    {
       "name": "BinaryNode",
       "description": "BinaryNode — componente Archbase focado em binary node.",
       "sourcePath": "packages/core/src/rsql/ast/Node.ts",
@@ -22264,6 +22411,18 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/rsql/ast/ComparisonOperator.ts"
+    },
+    {
+      "name": "buildAccessTokenColumns",
+      "description": "Definições de coluna dos grids da {@link ArchbaseSecurityView}.\n<p>Eram 250 das 1047 linhas da view — JSX declarativo que empurrava a lógica para longe\nde quem a lia. Dependiam apenas da função de tradução, então saem como fábricas que a\nrecebem, e passam a poder ser reusadas por outras telas do pacote.",
+      "sourcePath": "packages/security-ui/src/securityView/columns.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/columns.tsx"
     },
     {
       "name": "buildFilterExpression",
@@ -22298,6 +22457,54 @@
         "data"
       ],
       "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-utils.ts"
+    },
+    {
+      "name": "buildGroupColumns",
+      "description": "Definições de coluna dos grids da {@link ArchbaseSecurityView}.\n<p>Eram 250 das 1047 linhas da view — JSX declarativo que empurrava a lógica para longe\nde quem a lia. Dependiam apenas da função de tradução, então saem como fábricas que a\nrecebem, e passam a poder ser reusadas por outras telas do pacote.",
+      "sourcePath": "packages/security-ui/src/securityView/columns.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/columns.tsx"
+    },
+    {
+      "name": "buildProfileColumns",
+      "description": "Definições de coluna dos grids da {@link ArchbaseSecurityView}.\n<p>Eram 250 das 1047 linhas da view — JSX declarativo que empurrava a lógica para longe\nde quem a lia. Dependiam apenas da função de tradução, então saem como fábricas que a\nrecebem, e passam a poder ser reusadas por outras telas do pacote.",
+      "sourcePath": "packages/security-ui/src/securityView/columns.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/columns.tsx"
+    },
+    {
+      "name": "buildResourceColumns",
+      "description": "Definições de coluna dos grids da {@link ArchbaseSecurityView}.\n<p>Eram 250 das 1047 linhas da view — JSX declarativo que empurrava a lógica para longe\nde quem a lia. Dependiam apenas da função de tradução, então saem como fábricas que a\nrecebem, e passam a poder ser reusadas por outras telas do pacote.",
+      "sourcePath": "packages/security-ui/src/securityView/columns.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/columns.tsx"
+    },
+    {
+      "name": "buildUserColumns",
+      "description": "Definições de coluna dos grids da {@link ArchbaseSecurityView}.\n<p>Eram 250 das 1047 linhas da view — JSX declarativo que empurrava a lógica para longe\nde quem a lia. Dependiam apenas da função de tradução, então saem como fábricas que a\nrecebem, e passam a poder ser reusadas por outras telas do pacote.",
+      "sourcePath": "packages/security-ui/src/securityView/columns.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/columns.tsx"
     },
     {
       "name": "camelCase",
@@ -23302,6 +23509,37 @@
       "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
+      "name": "EffectiveAccessPanel",
+      "description": "Efetivo do usuário — o que a pessoa realmente pode, com a origem de cada concessão.\n<p>A coluna <b>Origem</b> é a razão de a tela existir: a consulta de autorização devolve\nsim/não, e sem saber de onde veio o acesso o diagnóstico vira tentativa e erro.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/EffectiveAccessPanel.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "slots",
+          "type": "ArchbaseSecurityDiagnosticsSlots",
+          "required": false,
+          "description": "Define slots. (ArchbaseSecurityDiagnosticsSlots)"
+        },
+        {
+          "name": "onError",
+          "type": "(message: string) => void",
+          "required": false,
+          "description": "Callback acionado quando error. ((message: string) => void)"
+        },
+        {
+          "name": "userId",
+          "type": "string",
+          "required": false,
+          "description": "Pessoa escolhida fora do painel — na árvore do explorador.\nQuando presente, o painel consulta sozinho e a caixa de busca some: escolher na árvore já é a\nbusca, e deixar as duas na tela faria a pessoa se perguntar qual das duas vale."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/EffectiveAccessPanel.tsx"
+    },
+    {
       "name": "emitDebugInfo",
       "description": "ArchbaseDebugPanel — painel de debug com eventos/inspeção para desenvolvimento.\n@status stable",
       "sourcePath": "packages/tools/src/debug/ArchbaseDebugPanel",
@@ -23811,6 +24049,25 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/components/src/filters/components/FilterPill"
+    },
+    {
+      "name": "FlagStrip",
+      "description": "Peças de apresentação compartilhadas pelas três abas do diagnóstico.\n<p>Ficam aqui, e não dentro de cada painel, porque são o que garante que um cartão vindo\nde {@code additionalOverviewCards} saia idêntico a um cartão do framework. É a coerência\nvisual que faz valer a pena a aplicação entregar dado em vez de JSX.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "flags",
+          "type": "ArchbaseDiagnosticFlag[]",
+          "required": true,
+          "description": "Define flags. (ArchbaseDiagnosticFlag[])"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx"
     },
     {
       "name": "FloatCellRenderer",
@@ -24882,6 +25139,43 @@
       "canonicalUrl": "packages/security-ui/src/GroupModal"
     },
     {
+      "name": "GroupNodePanel",
+      "description": "`PROFILE` troca o endpoint e o texto; a forma da resposta é a mesma de propósito.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/explorer/GroupNodePanel.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true,
+          "description": "Define id. (string)"
+        },
+        {
+          "name": "slots",
+          "type": "ArchbaseSecurityDiagnosticsSlots",
+          "required": false,
+          "description": "Define slots. (ArchbaseSecurityDiagnosticsSlots)"
+        },
+        {
+          "name": "kind",
+          "type": "'GROUP' | 'PROFILE'",
+          "required": true,
+          "description": "`PROFILE` troca o endpoint e o texto; a forma da resposta é a mesma de propósito."
+        },
+        {
+          "name": "onSelectUser",
+          "type": "(userId: string, label: string) => void",
+          "required": false,
+          "description": "Callback acionado quando select user. ((userId: string, label: string) => void)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/explorer/GroupNodePanel.tsx"
+    },
+    {
       "name": "GT",
       "description": "GT — componente Archbase focado em gt.",
       "sourcePath": "packages/core/src/rsql/ast/ComparisonOperator.ts",
@@ -25486,6 +25780,56 @@
       "canonicalUrl": "packages/core/src/validator/metadata/MetadataStorage.ts"
     },
     {
+      "name": "MetricCard",
+      "description": "Peças de apresentação compartilhadas pelas três abas do diagnóstico.\n<p>Ficam aqui, e não dentro de cada painel, porque são o que garante que um cartão vindo\nde {@code additionalOverviewCards} saia idêntico a um cartão do framework. É a coerência\nvisual que faz valer a pena a aplicação entregar dado em vez de JSX.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "card",
+          "type": "ArchbaseDiagnosticCard",
+          "required": true,
+          "description": "Define card. (ArchbaseDiagnosticCard)"
+        },
+        {
+          "name": "onOpen",
+          "type": "(card: ArchbaseDiagnosticCard) => void",
+          "required": false,
+          "description": "Abre o detalhe do card. Ausente quando a métrica não tem lista por trás — e aí o cartão não\nfica clicável, para não prometer uma navegação que não existe."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx"
+    },
+    {
+      "name": "MetricCards",
+      "description": "Peças de apresentação compartilhadas pelas três abas do diagnóstico.\n<p>Ficam aqui, e não dentro de cada painel, porque são o que garante que um cartão vindo\nde {@code additionalOverviewCards} saia idêntico a um cartão do framework. É a coerência\nvisual que faz valer a pena a aplicação entregar dado em vez de JSX.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "cards",
+          "type": "ArchbaseDiagnosticCard[]",
+          "required": true,
+          "description": "Define cards. (ArchbaseDiagnosticCard[])"
+        },
+        {
+          "name": "onOpenCard",
+          "type": "(card: ArchbaseDiagnosticCard) => void",
+          "required": false,
+          "description": "Callback acionado quando open card. ((card: ArchbaseDiagnosticCard) => void)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx"
+    },
+    {
       "name": "MigrationMetrics",
       "description": "ArchbaseSafeMigrationWrapper\n\nSistema de fallback seguro para migração V1/V2.\nGarante que se V2 falhar, automaticamente volta para V1.\n\n⚠️ CRITICAL: Este wrapper é obrigatório para todos os componentes migrados.",
       "sourcePath": "packages/core/src/fallback/ArchbaseSafeMigrationWrapper.tsx",
@@ -25576,6 +25920,18 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/types/querybuilder.ts"
+    },
+    {
+      "name": "NO_USER",
+      "description": "Avatar exibido quando o usuário não tem imagem.\nMora em arquivo próprio porque são ~2 KB de base64 no meio do código: dentro da view\nele empurrava a lógica para baixo da dobra em qualquer editor.",
+      "sourcePath": "packages/security-ui/src/securityView/noUserAvatar.ts",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/noUserAvatar.ts"
     },
     {
       "name": "Node",
@@ -25844,6 +26200,56 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/rsql/ast/ComparisonOperator.ts"
+    },
+    {
+      "name": "OverviewItemsDrawer",
+      "description": "O cartão clicado. `null` mantém o painel fechado.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/OverviewItemsDrawer.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "card",
+          "type": "ArchbaseDiagnosticCard | null",
+          "required": true,
+          "description": "O cartão clicado. `null` mantém o painel fechado."
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback disparado ao fechar modal/drawer."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/OverviewItemsDrawer.tsx"
+    },
+    {
+      "name": "OverviewPanel",
+      "description": "Panorama — o estado da segurança do tenant.\n<p>A ordem da tela é uma afirmação: as <b>proteções</b> vêm antes das contagens. Um número\nalto de permissões não diz nada quando o portão correspondente está desligado, e essa é\nexatamente a leitura que a auditoria mostrou faltar.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/OverviewPanel.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "slots",
+          "type": "ArchbaseSecurityDiagnosticsSlots",
+          "required": false,
+          "description": "Define slots. (ArchbaseSecurityDiagnosticsSlots)"
+        },
+        {
+          "name": "onError",
+          "type": "(message: string) => void",
+          "required": false,
+          "description": "Callback acionado quando error. ((message: string) => void)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/OverviewPanel.tsx"
     },
     {
       "name": "pascalCase",
@@ -26390,6 +26796,18 @@
       "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters.tsx"
     },
     {
+      "name": "renderGroups",
+      "description": "Item de usuário para listas — avatar, nome e e-mail.",
+      "sourcePath": "packages/security-ui/src/securityView/UserItem.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/UserItem.tsx"
+    },
+    {
       "name": "renderInteger",
       "description": "Renderers padrão para cada tipo de dados no ArchbaseDataGrid",
       "sourcePath": "packages/components/src/datagrid/main/archbase-data-grid-formatters.tsx",
@@ -26414,6 +26832,18 @@
         "data"
       ],
       "canonicalUrl": "packages/components/src/datagrid/main/archbase-data-grid-formatters.tsx"
+    },
+    {
+      "name": "renderProfile",
+      "description": "Item de usuário para listas — avatar, nome e e-mail.",
+      "sourcePath": "packages/security-ui/src/securityView/UserItem.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/UserItem.tsx"
     },
     {
       "name": "RenderProfileUserItem",
@@ -26688,6 +27118,246 @@
       "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
+      "name": "Section",
+      "description": "Peças de apresentação compartilhadas pelas três abas do diagnóstico.\n<p>Ficam aqui, e não dentro de cada painel, porque são o que garante que um cartão vindo\nde {@code additionalOverviewCards} saia idêntico a um cartão do framework. É a coerência\nvisual que faz valer a pena a aplicação entregar dado em vez de JSX.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Define title. (string)"
+        },
+        {
+          "name": "hint",
+          "type": "string",
+          "required": false,
+          "description": "Define hint. (string)"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Elementos React renderizados dentro do componente."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx"
+    },
+    {
+      "name": "SecurityGridPanel",
+      "description": "O painel de uma aba da {@link ArchbaseSecurityView}.\n<p>As cinco abas eram o mesmo bloco escrito cinco vezes: um {@code Paper} que se esconde por\n{@code display} e um {@code ArchbaseDataGrid} com quinze props idênticas. Só seis coisas\nmudavam de uma para outra — e eram justamente elas que ficavam difíceis de achar no meio da\nrepetição.\n<p>A aba inativa é escondida por {@code display: none} em vez de desmontada, de propósito:\né o que preserva rolagem, filtro e seleção ao trocar de aba. Era assim antes e continua.",
+      "sourcePath": "packages/security-ui/src/securityView/SecurityGridPanel.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "active",
+          "type": "boolean",
+          "required": true,
+          "description": "Aba visível. A escondida permanece montada."
+        },
+        {
+          "name": "printTitle",
+          "type": "string",
+          "required": true,
+          "description": "Define print title. (string)"
+        },
+        {
+          "name": "gridRef",
+          "type": "React.MutableRefObject<ArchbaseDataGridRef | null>",
+          "required": true,
+          "description": "Define grid ref. (React.MutableRefObject<ArchbaseDataGridRef | null>)"
+        },
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": true,
+          "description": "Instância do ArchbaseDataSource (v1 ou v2) usada para sincronizar registros, validações e payloads."
+        },
+        {
+          "name": "isLoading",
+          "type": "boolean",
+          "required": true,
+          "description": "Indica se is loading está habilitado. (boolean)"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Define error. (string)"
+        },
+        {
+          "name": "getRowId",
+          "type": "(row: T) => string",
+          "required": true,
+          "description": "Define get row id. ((row: T) => string)"
+        },
+        {
+          "name": "striped",
+          "type": "boolean",
+          "required": false,
+          "description": "Define striped. (boolean)"
+        },
+        {
+          "name": "enableRowActions",
+          "type": "boolean",
+          "required": false,
+          "description": "Recursos e tokens de acesso não têm ações por linha."
+        },
+        {
+          "name": "toolbarLeftContent",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Define toolbar left content. (ReactNode)"
+        },
+        {
+          "name": "renderRowActions",
+          "type": "(row: T) => ReactNode",
+          "required": false,
+          "description": "Função para renderizar row actions. ((row: T) => ReactNode)"
+        },
+        {
+          "name": "actionsColumnWidth",
+          "type": "number",
+          "required": false,
+          "description": "Define actions column width. (number)"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "As colunas, no formato declarativo do grid."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "data",
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/SecurityGridPanel.tsx"
+    },
+    {
+      "name": "SecurityRowActions",
+      "description": "As ações de uma linha: ver, editar, remover e permissões — na ordem em que aparecem.\n<p>Eram três blocos idênticos, um por entidade, diferindo só nos handlers e no slot. A\nordem dos ícones é parte do contrato da tela e está fixada em\n{@code test/ArchbaseSecurityView.fluxos.test.tsx}, que localiza os botões por posição.",
+      "sourcePath": "packages/security-ui/src/securityView/SecurityRowActions.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "row",
+          "type": "T",
+          "required": true,
+          "description": "Define row. (T)"
+        },
+        {
+          "name": "onView",
+          "type": "(row: T) => void",
+          "required": true,
+          "description": "Callback acionado quando view. ((row: T) => void)"
+        },
+        {
+          "name": "onEdit",
+          "type": "(row: T) => void",
+          "required": true,
+          "description": "Callback acionado quando edit. ((row: T) => void)"
+        },
+        {
+          "name": "onRemove",
+          "type": "(row: T) => void",
+          "required": true,
+          "description": "Callback acionado quando remove. ((row: T) => void)"
+        },
+        {
+          "name": "onEditPermissions",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando edit permissions. (() => void)"
+        },
+        {
+          "name": "before",
+          "type": "(row: T) => ReactNode",
+          "required": false,
+          "description": "Slot: entra antes das ações padrão."
+        },
+        {
+          "name": "after",
+          "type": "(row: T) => ReactNode",
+          "required": false,
+          "description": "Slot: entra depois das ações padrão."
+        },
+        {
+          "name": "t",
+          "type": "TranslateFn",
+          "required": true,
+          "description": "Define t. (TranslateFn)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/SecurityRowActions.tsx"
+    },
+    {
+      "name": "SecurityToolbarActions",
+      "description": "A barra de ferramentas das abas de usuários, grupos e perfis: \"Novo\" e \"Editar permissões\".\n<p>A aba de tokens de acesso <b>não</b> usa este componente, de propósito: ela tem um botão\nde revogar com estado desabilitado próprio, e forçá-la aqui produziria uma abstração com\nmais exceções do que regra.",
+      "sourcePath": "packages/security-ui/src/securityView/SecurityToolbarActions.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "onAdd",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando add. (() => void)"
+        },
+        {
+          "name": "onEditPermissions",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando edit permissions. (() => void)"
+        },
+        {
+          "name": "t",
+          "type": "TranslateFn",
+          "required": true,
+          "description": "Define t. (TranslateFn)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/SecurityToolbarActions.tsx"
+    },
+    {
+      "name": "SecurityTree",
+      "description": "Os ramos fixos do topo. A ordem é a de quem investiga: pessoa primeiro, catálogo por último.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/explorer/SecurityTree.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "selected",
+          "type": "ExplorerSelection | null",
+          "required": true,
+          "description": "Define selected. (ExplorerSelection | null)"
+        },
+        {
+          "name": "onSelect",
+          "type": "(selecao: ExplorerSelection) => void",
+          "required": true,
+          "description": "Callback acionado quando select. ((selecao: ExplorerSelection) => void)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/explorer/SecurityTree.tsx"
+    },
+    {
       "name": "SelectedItem",
       "description": "Permite ou não desselecionar um item",
       "sourcePath": "packages/components/src/editors/ArchbaseMultiSelect",
@@ -26795,6 +27465,18 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/utils/nestedObject"
+    },
+    {
+      "name": "severityColor",
+      "description": "Peças de apresentação compartilhadas pelas três abas do diagnóstico.\n<p>Ficam aqui, e não dentro de cada painel, porque são o que garante que um cartão vindo\nde {@code additionalOverviewCards} saia idêntico a um cartão do framework. É a coerência\nvisual que faz valer a pena a aplicação entregar dado em vez de JSX.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx"
     },
     {
       "name": "SidebarBadge",
@@ -26951,6 +27633,49 @@
       "canonicalUrl": "packages/admin/src/sidebar/components/SidebarSkeleton"
     },
     {
+      "name": "SimulationPanel",
+      "description": "Simular — \"esta pessoa consegue fazer isto?\", e em qual portão parou quando não consegue.\n<p>O valor da tela não é o sim/não: é a <b>cadeia</b>. Saber que parou em LEVEL manda ajustar\nnível; saber que parou em GRANT manda conceder. Sem isso, o operador tenta ao acaso.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/SimulationPanel.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "slots",
+          "type": "ArchbaseSecurityDiagnosticsSlots",
+          "required": false,
+          "description": "Define slots. (ArchbaseSecurityDiagnosticsSlots)"
+        },
+        {
+          "name": "onError",
+          "type": "(message: string) => void",
+          "required": false,
+          "description": "Callback acionado quando error. ((message: string) => void)"
+        },
+        {
+          "name": "initial",
+          "type": "{ userId?: string; resource?: string; action?: string }",
+          "required": false,
+          "description": "Sujeito e capacidade escolhidos na árvore.\n<p><b>Escolher substitui lembrar.</b> Digitar {@code tms.ordemservico} de cabeça é a origem do\nfalso negativo: errar uma letra devolve \"não pode\", indistinguível de uma negação real. Com a\nescolha vinda da árvore, a resposta passa a significar o que diz.\n<p>Os campos continuam editáveis — a árvore preenche, não tranca."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/SimulationPanel.tsx"
+    },
+    {
+      "name": "situacaoBadge",
+      "description": "A situação de uma concessão, em linguagem de quem opera.\n<p>O backend fala {@code EFFECTIVE}, {@code INERT} e {@code DENIED} — vocabulário do modelo. Quem\nlê a tela quer saber se a permissão <b>vale</b>. \"Inerte\" não é palavra que alguém use para\ndecidir o que fazer; \"não vale\" é.\n<p>A tradução fica num lugar só de propósito: repetida em cada painel, uma tela acabaria dizendo\n\"inerte\" e outra \"não vale\" para a mesma coisa.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/explorer/situacao.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/explorer/situacao.tsx"
+    },
+    {
       "name": "slugify",
       "description": "eslint-disable",
       "sourcePath": "packages/core/src/utils/string-utils",
@@ -27029,6 +27754,31 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/context/ArchbaseGlobalProvider"
+    },
+    {
+      "name": "TabelaRolavel",
+      "description": "Altura máxima antes de rolar.",
+      "sourcePath": "packages/security-ui/src/securityDiagnostics/explorer/TabelaRolavel.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "maxHeight",
+          "type": "number | string",
+          "required": false,
+          "description": "Altura máxima antes de rolar."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityDiagnostics/explorer/TabelaRolavel.tsx"
     },
     {
       "name": "TabStoreProvider",
@@ -28671,6 +29421,19 @@
       "canonicalUrl": "packages/security/src/SecurityDomain.ts"
     },
     {
+      "name": "UserItem",
+      "description": "Item de usuário para listas — avatar, nome e e-mail.",
+      "sourcePath": "packages/security-ui/src/securityView/UserItem.tsx",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook",
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/UserItem.tsx"
+    },
+    {
       "name": "UserModal",
       "description": "UserModal — modal de cadastro/edição de usuários com roles e ações.\n@status stable",
       "sourcePath": "packages/security-ui/src/UserModal",
@@ -28725,6 +29488,19 @@
         "security"
       ],
       "canonicalUrl": "packages/security-ui/src/UserModal"
+    },
+    {
+      "name": "useSecurityEntityActions",
+      "description": "Os gestos de uma entidade da {@link ArchbaseSecurityView}: adicionar, ver, editar, remover,\nsalvar, cancelar e abrir permissões.\n<p><b>Por que existe.</b> A view tinha cinco famílias destes handlers, uma por entidade,\nquase idênticas. \"Quase\" era o problema: {@code handleUserEditRow} chamava {@code edit()}\nsem a guarda {@code isEditing()} que grupo e perfil tinham — a guarda foi acrescentada em\ndois dos três e nunca retroportada. Diferenças assim compilam igual e se comportam\ndiferente, e ninguém as vê enquanto o código está repetido cinco vezes.\n<p>A guarda agora vale para todos. É mudança de comportamento no fluxo de usuário, feita de\npropósito: chamar {@code edit()} sobre uma edição em curso não tinha intenção por trás.\n<p>Coberto por {@code test/ArchbaseSecurityView.fluxos.test.tsx}.",
+      "sourcePath": "packages/security-ui/src/securityView/useSecurityEntityActions.ts",
+      "exportsFrom": "@archbase/security-ui",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook",
+        "security"
+      ],
+      "canonicalUrl": "packages/security-ui/src/securityView/useSecurityEntityActions.ts"
     },
     {
       "name": "useSidebar",
