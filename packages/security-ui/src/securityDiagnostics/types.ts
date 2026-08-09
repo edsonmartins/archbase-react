@@ -73,6 +73,13 @@ export interface ArchbaseDiagnosticFlag {
  * de todos os produtos parecidas entre si.
  */
 export interface ArchbaseSecurityDiagnosticsSlots {
+	/**
+	 * Abaixo da lista da trilha.
+	 *
+	 * <p>Existe para a aplicação acrescentar o que só ela sabe — exportar para o time de
+	 * compliance, cruzar com o próprio log de negócio — sem precisar de outra tela.
+	 */
+	afterAuditTrail?: (eventos: unknown[]) => React.ReactNode;
 	// ─────────────── Panorama ───────────────
 
 	/** Indicadores de proteção da própria aplicação, ao lado dos do framework. */

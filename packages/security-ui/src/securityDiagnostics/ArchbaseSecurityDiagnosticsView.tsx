@@ -6,6 +6,7 @@ import { GroupNodePanel } from './explorer/GroupNodePanel';
 import { SecurityTree } from './explorer/SecurityTree';
 import type { ExplorerSelection } from './explorer/selection';
 import { OverviewPanel } from './OverviewPanel';
+import { AuditTrailPanel } from './AuditTrailPanel';
 import { SimulationPanel } from './SimulationPanel';
 import type { ArchbaseSecurityDiagnosticsViewProps } from './types';
 
@@ -24,6 +25,10 @@ const Seta = () => (
 
 const PANORAMA: ExplorerSelection = { kind: 'OVERVIEW', id: 'overview', label: 'Panorama' };
 const SIMULAR: ExplorerSelection = { kind: 'SIMULATE', id: 'simulate', label: 'Simular acesso' };
+// A trilha entra como os outros dois: nó da mesma árvore, e não aba paralela. Investigar começa
+// olhando o que aconteceu e termina olhando quem tem o quê — separar em telas obrigaria a refazer
+// o caminho a cada troca.
+const TRILHA: ExplorerSelection = { kind: 'AUDIT', id: 'audit', label: 'Trilha de auditoria' };
 
 /**
  * A segurança do tenant como um diretório navegável — o <b>leitor</b>.
@@ -132,6 +137,8 @@ export const ArchbaseSecurityDiagnosticsView = ({
 				return <OverviewPanel slots={slots} onError={onError} />;
 			case 'SIMULATE':
 				return <SimulationPanel slots={slots} onError={onError} initial={simulacao} />;
+			case 'AUDIT':
+				return <AuditTrailPanel slots={slots} onError={onError} />;
 			case 'USER':
 				return <EffectiveAccessPanel slots={slots} onError={onError} userId={selecao.id} />;
 			case 'GROUP':
@@ -197,6 +204,7 @@ export const ArchbaseSecurityDiagnosticsView = ({
 					) : null}
 					{atalho(PANORAMA)}
 					{atalho(SIMULAR)}
+					{atalho(TRILHA)}
 					<Box my={6} style={{ borderTop: '1px solid var(--mantine-color-default-border)' }} />
 					{/* flex:1 em vez de altura fixa: a árvore acompanha a janela, e a rolagem fica
 					    NELA — rolar a página inteira levaria o painel de propriedades junto. */}

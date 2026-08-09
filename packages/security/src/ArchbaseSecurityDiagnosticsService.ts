@@ -3,6 +3,9 @@ import * as inversify from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from '@archbase/core';
 import { ArchbaseTenantManager } from './ArchbaseTenantManager';
 import type {
+	ArchbaseSecurityEvent,
+	ArchbaseSecurityEventPage,
+	ArchbaseSecurityEventType,
 	ArchbaseAccessDecision,
 	ArchbaseAccessOverview,
 	ArchbaseOverviewItemPage,
@@ -40,6 +43,14 @@ export class ArchbaseSecurityDiagnosticsService {
 
 	protected getEndpoint(): string {
 		return '/api/v1/security/diagnostics';
+	}
+
+	/**
+	 * Base própria: a trilha vive fora do diagnóstico porque tem chave própria no backend
+	 * ({@code archbase.security.audit.enabled}) e some inteira quando ela está desligada.
+	 */
+	protected getAuditEndpoint(): string {
+		return '/api/v1/security/audit';
 	}
 
 	/** Retrato do tenant: contagens do catálogo e o estado das proteções configuráveis. */
@@ -141,6 +152,36 @@ export class ArchbaseSecurityDiagnosticsService {
 		return this.client.post<ArchbaseSimulationRequest, ArchbaseAccessDecision>(
 			`${this.getEndpoint()}/simulate`,
 			request,
+			this.configureHeaders(),
+		);
+	}
+
+	/**
+	 * Os acontecimentos de segurança, do mais recente para o mais antigo.
+	 *
+	 * <p>Sem período informado o servidor assume os últimos trinta dias — a primeira consulta de
+	 * quem abre a tela não deve varrer a tabela inteira.
+	 *
+	 * <p>Devolve 403 para quem não é administrador, e 404 quando a trilha está desligada: os dois
+	 * casos precisam ser distinguidos na tela, porque significam coisas diferentes.
+	 */
+	public async getAuditEvents(options: {
+		usuario?: string;
+		tipo?: ArchbaseSecurityEventType;
+		inicio?: string;
+		fim?: string;
+		page?: number;
+		size?: number;
+	} = {}): Promise<ArchbaseSecurityEventPage> {
+		const params = new URLSearchParams();
+		if (options.usuario) params.set('usuario', options.usuario);
+		if (options.tipo) params.set('tipo', options.tipo);
+		if (options.inicio) params.set('inicio', options.inicio);
+		if (options.fim) params.set('fim', options.fim);
+		params.set('page', String(options.page ?? 0));
+		params.set('size', String(options.size ?? 50));
+		return this.client.get<ArchbaseSecurityEventPage>(
+			`${this.getAuditEndpoint()}/events?${params.toString()}`,
 			this.configureHeaders(),
 		);
 	}

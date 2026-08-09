@@ -8,7 +8,7 @@ import type { ArchbaseTreeNodeKind } from '@archbase/security';
  * de duas — e é o que permite a simulação receber o sujeito e a capacidade por clique, em vez de
  * digitação.
  */
-export type ExplorerSelectionKind = ArchbaseTreeNodeKind | 'OVERVIEW' | 'SIMULATE';
+export type ExplorerSelectionKind = ArchbaseTreeNodeKind | 'OVERVIEW' | 'SIMULATE' | 'AUDIT';
 
 export interface ExplorerSelection {
 	kind: ExplorerSelectionKind;

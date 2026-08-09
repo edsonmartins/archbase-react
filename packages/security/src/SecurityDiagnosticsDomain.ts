@@ -256,3 +256,41 @@ export interface ArchbaseReachEntry {
 	kind: string;
 	situation: string;
 }
+
+
+/**
+ * O que a trilha registra além das alterações.
+ *
+ * <p>Entrar, errar a senha e ter acesso negado não mudam tabela nenhuma — a trilha de alterações,
+ * por construção, não os vê. São eles que respondem "quem tentou o quê", enquanto a outra metade
+ * responde "quem mudou o quê".
+ */
+export type ArchbaseSecurityEventType =
+	| 'LOGIN'
+	| 'LOGIN_FALHOU'
+	| 'LOGOUT'
+	| 'ACESSO_NEGADO'
+	| 'SIMULACAO';
+
+export interface ArchbaseSecurityEvent {
+	id: string;
+	tipo: ArchbaseSecurityEventType;
+	dataHora: string;
+	/** Pode não corresponder a ninguém: numa tentativa com e-mail inexistente é esse o dado útil. */
+	usuario?: string | null;
+	tenantId?: string | null;
+	origem?: string | null;
+	recurso?: string | null;
+	acao?: string | null;
+	/** O porquê: o portão que recusou, ou o tipo da falha de autenticação. */
+	detalhe?: string | null;
+	sucesso: boolean;
+}
+
+export interface ArchbaseSecurityEventPage {
+	content: ArchbaseSecurityEvent[];
+	totalElements: number;
+	totalPages: number;
+	number: number;
+	size: number;
+}
