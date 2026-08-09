@@ -107,37 +107,52 @@ export const SeletorEmArvore = ({
 		setAberto(false);
 	};
 
+	/**
+	 * Uma linha, sem recursão.
+	 *
+	 * <p>A versão anterior chamava a si mesma para desenhar os filhos e parava quando
+	 * {@code expandido === no.id}. Como {@code expandido} é um estado só, compartilhado por todos os
+	 * níveis, bastava o servidor devolver um filho com o mesmo id do pai para a parada nunca
+	 * acontecer: a tela morria com "Maximum call stack size exceeded" ao abrir o recurso.
+	 *
+	 * <p>A árvore aqui tem exatamente dois níveis — recurso e ação. Escrever os dois explicitamente
+	 * elimina a classe inteira do problema: não há recursão que possa não terminar, e ids repetidos
+	 * deixam de importar.
+	 */
 	const linha = (no: ArchbaseTreeNode, pai?: ArchbaseTreeNode) => {
 		const podeAbrir = no.hasChildren;
 		const selecionavel = !somenteFolhas || !podeAbrir;
 		return (
-			<Box key={`${pai?.id ?? 'raiz'}:${no.id}`}>
-				<UnstyledButton
-					onClick={() => (podeAbrir && somenteFolhas ? void abrirNo(no) : escolher(no, pai))}
-					style={{
-						display: 'block',
-						width: '100%',
-						padding: '5px 8px',
-						paddingLeft: pai ? 24 : 8,
-						borderRadius: 4,
-					}}>
-					<Group gap={6} wrap="nowrap">
-						<Text size="sm" fw={selecionavel ? 500 : 600} truncate>
-							{no.label}
+			<UnstyledButton
+				key={`${pai?.id ?? 'raiz'}:${no.id}`}
+				onClick={() => (podeAbrir && somenteFolhas ? void abrirNo(no) : escolher(no, pai))}
+				style={{
+					display: 'block',
+					width: '100%',
+					padding: '5px 8px',
+					paddingLeft: pai ? 24 : 8,
+					borderRadius: 4,
+				}}>
+				<Group gap={6} wrap="nowrap">
+					<Text size="sm" fw={selecionavel ? 500 : 600} truncate>
+						{no.label}
+					</Text>
+					{no.badge ? (
+						<Text size="xs" c="dimmed">
+							{no.badge}
 						</Text>
-						{no.badge ? (
-							<Text size="xs" c="dimmed">
-								{no.badge}
-							</Text>
-						) : null}
-					</Group>
-				</UnstyledButton>
-				{expandido === no.id
-					? (filhos[no.id] ?? []).map((f) => linha(f, no))
-					: null}
-			</Box>
+					) : null}
+				</Group>
+			</UnstyledButton>
 		);
 	};
+
+	const ramo = (no: ArchbaseTreeNode) => (
+		<Box key={`ramo:${no.id}`}>
+			{linha(no)}
+			{expandido === no.id ? (filhos[no.id] ?? []).map((f) => linha(f, no)) : null}
+		</Box>
+	);
 
 	return (
 		<Popover opened={aberto} onChange={setAberto} width={340} position="bottom-start" withinPortal shadow="md">
@@ -179,7 +194,7 @@ export const SeletorEmArvore = ({
 					</Text>
 				) : null}
 				<ScrollArea.Autosize mah={280} type="hover">
-					{raiz.map((no) => linha(no))}
+					{raiz.map((no) => ramo(no))}
 				</ScrollArea.Autosize>
 			</Popover.Dropdown>
 		</Popover>
