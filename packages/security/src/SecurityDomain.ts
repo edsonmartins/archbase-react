@@ -371,6 +371,32 @@ export class UserDto extends SecurityDto {
 
   isNewUser: boolean
 
+  /**
+   * Matrícula do funcionário na empresa: o número pelo qual o RH e a folha identificam a pessoa,
+   * e que costuma ser o elo com ponto, crachá e folha de pagamento.
+   *
+   * Opcional de propósito — contas de serviço e usuários que não são funcionários não têm uma.
+   * Não é única: bases herdadas de sistemas antigos costumam ter matrícula repetida, e quem
+   * precisar exigir unicidade cria o índice decidindo o escopo (global ou por tenant).
+   *
+   * Não confundir com {@link externalId}, que identifica a conta num provedor de identidade
+   * (Keycloak, LDAP). Uma é o vínculo empregatício, a outra é a credencial — convivem.
+   *
+   * Requer archbase-security 3.1.20 ou superior no backend.
+   */
+  @IsOptional()
+  employeeId?: string
+
+  /**
+   * ID da conta num provedor de identidade externo (Keycloak, LDAP e afins).
+   *
+   * Existe no backend desde antes da matrícula, mas nunca esteve neste DTO — então a tela lia e
+   * devolvia o usuário sem ele. Declarado aqui para que o valor sobreviva a uma edição, junto com
+   * a correção do lado do servidor que passou a gravá-lo.
+   */
+  @IsOptional()
+  externalId?: string
+
   constructor(data: any) {
     super(data)
     this.type = SecurityType.USER;
@@ -392,6 +418,10 @@ export class UserDto extends SecurityDto {
     this.avatar = data.avatar || undefined
     this.isNewUser = data.isNewUser || false
     this.nickname = data.nickname
+    // `undefined` e não '': o backend distingue "sem matrícula" de "matrícula vazia", e mandar
+    // string vazia gravaria um valor em branco onde deveria ficar nulo.
+    this.employeeId = data.employeeId || undefined
+    this.externalId = data.externalId || undefined
   }
 
   static newInstance = () => {

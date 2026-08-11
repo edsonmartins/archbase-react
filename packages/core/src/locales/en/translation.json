@@ -488,6 +488,8 @@
   "Foto": "Photo",
   "Nome": "Name",
   "Apelido": "Nickname",
+  "Matrícula": "Employee ID",
+  "Matrícula do funcionário": "Employee ID",
   "Email": "Email",
   "Grupos": "Groups",
   "Admin ?": "Admin?",

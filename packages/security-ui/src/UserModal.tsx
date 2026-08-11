@@ -21,6 +21,17 @@ import { GroupDto, ProfileDto, UserDto, UserGroupDto } from '@archbase/security'
 export interface UserModalOptions {
   // Campos de identificação
   showNickname?: boolean; // nickname - Apelido
+  /**
+   * Exibe a matrícula do funcionário na empresa (employeeId) — o número pelo qual o RH e a folha
+   * identificam a pessoa.
+   *
+   * Padrão `false`: nem toda aplicação cadastra funcionários, e um campo a mais na tela de quem
+   * não usa matrícula é ruído. Quem precisa liga explicitamente.
+   *
+   * Requer archbase-security 3.1.20 ou superior no backend; contra versões anteriores o valor é
+   * ignorado ao salvar.
+   */
+  showEmployeeId?: boolean; // employeeId - Matrícula do funcionário
 
   // Campos de perfil e grupos
   showProfile?: boolean; // profile - Perfil do usuário
@@ -78,6 +89,8 @@ export interface UserModalOptions {
 export const defaultUserModalOptions: UserModalOptions = {
   // Campos de identificação
   showNickname: true,
+  // Desligada por padrão: ver a justificativa em UserModalOptions.showEmployeeId.
+  showEmployeeId: false,
 
   // Campos de perfil e grupos
   showProfile: true,
@@ -271,13 +284,24 @@ export const UserModal = (props: UserModalProps) => {
               </Group>
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-              <ArchbaseEdit
-                label={`${getI18nextInstance().t('archbase:Descrição do usuário')}`}
-                placeholder={`${getI18nextInstance().t('archbase:Informe a descrição do usuário')}`}
-                dataSource={props.dataSource}
-                dataField="description"
-                required
-              />
+              <Group>
+                <ArchbaseEdit
+                  label={`${getI18nextInstance().t('archbase:Descrição do usuário')}`}
+                  placeholder={`${getI18nextInstance().t('archbase:Informe a descrição do usuário')}`}
+                  dataSource={props.dataSource}
+                  dataField="description"
+                  required
+                  width={options.showEmployeeId ? 'calc(100% - 208px)' : undefined}
+                />
+                {options.showEmployeeId && (
+                  <ArchbaseEdit
+                    label={`${getI18nextInstance().t('archbase:Matrícula')}`}
+                    placeholder={`${getI18nextInstance().t('archbase:Matrícula do funcionário')}`}
+                    dataSource={props.dataSource}
+                    dataField="employeeId"
+                  />
+                )}
+              </Group>
             </Grid.Col>
           </Grid>
           <Grid>
