@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArchbaseAccessToken } from '../ArchbaseAccessToken'
 import { useContainer } from 'inversify-react'
 import { ArchbaseAuthenticator } from '../ArchbaseAuthenticator'
@@ -100,6 +100,8 @@ export const useArchbaseAuthenticationManager = ({
   const [mfaRequired, setMfaRequired] = useState<boolean>(false)
   const [passwordChangeRequired, setPasswordChangeRequired] = useState<boolean>(false)
   const [mfaChallengeToken, setMfaChallengeToken] = useState<string | null>(null)
+  /** Trava de renovação em curso — ref, e não state, para não reagendar o intervalo a cada troca. */
+  const renovacaoEmCurso = useRef<boolean>(false)
   const securityStore = useArchbaseStore(ARCHBASE_SECURITY_MANAGER_STORE)
 
   // Detectar capacidades do authenticator
@@ -153,6 +155,12 @@ export const useArchbaseAuthenticationManager = ({
   const logout = (clearRememberMe?: boolean) => {
     setAuthenticating(false)
     setAuthenticated(false)
+    // Sem isto o token continua no estado depois do logout, e o intervalo que vigia a expiração
+    // -- que depende de `accessToken` -- segue vivo tentando renovar um token que já morreu. Como
+    // a renovação que falha chama justamente este logout, o ciclo se realimenta: falha, desloga,
+    // tenta de novo, para sempre. Em produção isso apareceu como um erro de refresh se repetindo
+    // de minuto em minuto, sem ninguém nunca ser deslogado de fato.
+    setAccessToken(null)
     tokenManager.clearToken()
     if (clearRememberMe) {
       tokenManager.clearUsernameAndPassword()
@@ -434,15 +442,28 @@ export const useArchbaseAuthenticationManager = ({
   }, [accessToken])
 
   const renovarToken = async () => {
-    if (accessToken) {
-      try {
-        const response = await authenticator.refreshToken(accessToken?.refresh_token)
-        tokenManager.saveToken(response)
-        setAccessToken(response)
-      } catch (error) {
-        console.error('Erro ao renovar o token:', error)
-        logout()
-      }
+    if (!accessToken) {
+      return
+    }
+    // A verificação roda em intervalo fixo e a renovação é uma ida à rede: sem esta trava, um
+    // servidor lento acumula chamadas sobrepostas, cada uma tentando rotacionar o mesmo refresh
+    // token. Como a rotação invalida o token apresentado, a segunda chamada em diante seria negada
+    // por um motivo que a primeira criou.
+    if (renovacaoEmCurso.current) {
+      return
+    }
+    renovacaoEmCurso.current = true
+    try {
+      const response = await authenticator.refreshToken(accessToken?.refresh_token)
+      tokenManager.saveToken(response)
+      setAccessToken(response)
+    } catch (error) {
+      // Renovação negada é definitiva: o refresh token não volta a valer sozinho. Insistir só
+      // produz o mesmo erro indefinidamente -- deslogar é a única saída que leva a algum lugar.
+      console.error('Erro ao renovar o token:', error)
+      logout()
+    } finally {
+      renovacaoEmCurso.current = false
     }
   }
 
