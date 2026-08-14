@@ -18,6 +18,13 @@
       "import": "./dist/charts.js"
     }
   },
+  "typesVersions": {
+    "*": {
+      "charts": [
+        "./dist/charts.d.ts"
+      ]
+    }
+  },
   "files": [
     "dist",
     "src"
