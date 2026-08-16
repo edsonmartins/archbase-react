@@ -54,15 +54,36 @@ export default [
   // @archbase/core, por exemplo); a correcao esta escopada aqui para nao alterar
   // o resultado de lint de pacotes fora deste trabalho.
   {
-    files: ['packages/analytics-core/**/*.{ts,tsx}', 'packages/analytics-mantine/**/*.{ts,tsx}'],
+    files: [
+      'packages/analytics-core/**/*.{ts,tsx}',
+      'packages/analytics-mantine/**/*.{ts,tsx}',
+      'packages/effects/**/*.{ts,tsx}',
+    ],
     languageOptions: {
       globals: {
         AbortController: 'readonly',
         AbortSignal: 'readonly',
         DOMException: 'readonly',
+        Element: 'readonly',
+        FrameRequestCallback: 'readonly',
+        HTMLCanvasElement: 'readonly',
+        HTMLDivElement: 'readonly',
         HTMLElement: 'readonly',
+        WebGLBuffer: 'readonly',
         Headers: 'readonly',
+        IntersectionObserver: 'readonly',
+        IntersectionObserverCallback: 'readonly',
+        IntersectionObserverEntry: 'readonly',
         ResizeObserver: 'readonly',
+        ResizeObserverCallback: 'readonly',
+        WebGLProgram: 'readonly',
+        WebGLRenderingContext: 'readonly',
+        WebGLShader: 'readonly',
+        WebGLUniformLocation: 'readonly',
+        cancelAnimationFrame: 'readonly',
+        getComputedStyle: 'readonly',
+        performance: 'readonly',
+        requestAnimationFrame: 'readonly',
         Request: 'readonly',
         RequestInit: 'readonly',
         Response: 'readonly',
