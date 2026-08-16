@@ -217,8 +217,8 @@ type Preset = 'padrao' | 'lateral' | 'dashboard'
 type PresetSel = Preset | 'custom'
 
 const PRESETS: { value: Preset; label: string }[] = [
-  { value: 'padrao', label: 'Padrão (métricas | consulta/resultado)' },
-  { value: 'lateral', label: 'Lateral (métricas+consulta | resultado)' },
+  { value: 'padrao', label: 'Padrão (resultado · métricas/filtro à direita)' },
+  { value: 'lateral', label: 'Lateral (métricas/filtro à esquerda · resultado)' },
   { value: 'dashboard', label: 'Dashboard (KPIs + gráfico + tabela)' },
 ]
 
@@ -227,31 +227,46 @@ const PRESETS_SEL: { value: PresetSel; label: string }[] = [
   { value: 'custom', label: 'Personalizado (layout salvo)' },
 ]
 
-/** Padrao: Metricas a esquerda; Consulta e Resultado empilhados a direita. */
+/**
+ * Largura do painel de controles (métricas/filtro): ~20% da tela, com piso para
+ * seguir usável em telas estreitas. O dado é o foco e fica com o espaço maior.
+ */
+function larguraControles(api: DockviewApi): number {
+  const total = api.width || 1600
+  return Math.max(260, Math.round(total * 0.2))
+}
+
+/** Padrao: Resultado ocupa o grosso (esquerda); Metricas+Consulta numa faixa
+ *  estreita a direita. O dado tem o maior espaco. */
 function layoutPadrao(api: DockviewApi) {
-  api.addPanel({ id: 'metricas', component: 'metricas', title: 'Métricas' })
+  const sidebar = larguraControles(api)
+  api.addPanel({ id: 'resultado', component: 'resultado', title: 'Resultado' })
+  api.addPanel({
+    id: 'metricas',
+    component: 'metricas',
+    title: 'Métricas',
+    position: { referencePanel: 'resultado', direction: 'right' },
+    initialWidth: sidebar,
+  })
   api.addPanel({
     id: 'consulta',
     component: 'consulta',
     title: 'Consulta',
-    position: { referencePanel: 'metricas', direction: 'right' },
-  })
-  api.addPanel({
-    id: 'resultado',
-    component: 'resultado',
-    title: 'Resultado',
-    position: { referencePanel: 'consulta', direction: 'below' },
+    position: { referencePanel: 'metricas', direction: 'below' },
   })
 }
 
-/** Lateral: Metricas e Consulta empilhados a esquerda; Resultado a direita. */
+/** Lateral: Metricas+Consulta numa faixa estreita a esquerda; Resultado a
+ *  direita com o maior espaco. */
 function layoutLateral(api: DockviewApi) {
-  api.addPanel({ id: 'metricas', component: 'metricas', title: 'Métricas' })
+  const sidebar = larguraControles(api)
+  api.addPanel({ id: 'resultado', component: 'resultado', title: 'Resultado' })
   api.addPanel({
-    id: 'resultado',
-    component: 'resultado',
-    title: 'Resultado',
-    position: { referencePanel: 'metricas', direction: 'right' },
+    id: 'metricas',
+    component: 'metricas',
+    title: 'Métricas',
+    position: { referencePanel: 'resultado', direction: 'left' },
+    initialWidth: sidebar,
   })
   api.addPanel({
     id: 'consulta',
@@ -261,22 +276,23 @@ function layoutLateral(api: DockviewApi) {
   })
 }
 
-/** Dashboard: Metricas+Consulta a esquerda; KPIs, Grafico e Tabela como widgets
- *  do mesmo resultado a direita (cada painel com uma viz fixa via params). */
+/** Dashboard: KPIs, Grafico e Tabela ocupam o grosso da tela (cada painel com
+ *  uma viz fixa via params); Metricas+Consulta numa faixa estreita a direita. */
 function layoutDashboard(api: DockviewApi) {
-  api.addPanel({ id: 'metricas', component: 'metricas', title: 'Métricas' })
+  const sidebar = larguraControles(api)
+  api.addPanel({ id: 'kpis', component: 'resultado', title: 'KPIs', params: { viz: 'number' } })
+  api.addPanel({
+    id: 'metricas',
+    component: 'metricas',
+    title: 'Métricas',
+    position: { referencePanel: 'kpis', direction: 'right' },
+    initialWidth: sidebar,
+  })
   api.addPanel({
     id: 'consulta',
     component: 'consulta',
     title: 'Consulta',
     position: { referencePanel: 'metricas', direction: 'below' },
-  })
-  api.addPanel({
-    id: 'kpis',
-    component: 'resultado',
-    title: 'KPIs',
-    params: { viz: 'number' },
-    position: { referencePanel: 'metricas', direction: 'right' },
   })
   api.addPanel({
     id: 'grafico',
