@@ -4,6 +4,7 @@ import {
   Box,
   Divider,
   Grid,
+  Group,
   Paper,
   ScrollArea,
   Stack,
@@ -30,6 +31,7 @@ import { TimeDimensionControl } from '../components/TimeDimensionControl';
 import { ResultTable } from '../components/ResultTable';
 import { ResultChart } from '../components/ResultChart';
 import { SavedQueryBar } from '../components/SavedQueryBar';
+import { ExportButton } from '../components/ExportButton';
 import {
   DegradedNotice,
   EmptyState,
@@ -290,14 +292,25 @@ export function AnalyticsExplorer({
 
       <Grid.Col span={{ base: 12, sm: 9 }} style={{ height: '100%' }}>
         <Stack gap="sm" style={{ height: '100%', minHeight: 0 }}>
-          <SavedQueryBar
-            store={ports.savedQueryStore}
-            currentId={state.savedQueryId}
-            onOpen={abrirRegistro}
-            onSave={salvar}
-            canSave={runnable}
-            labels={{ save: strings.save }}
-          />
+          <Group justify="space-between" align="flex-start" wrap="nowrap" gap="sm">
+            <Box style={{ flex: 1, minWidth: 0 }}>
+              <SavedQueryBar
+                store={ports.savedQueryStore}
+                currentId={state.savedQueryId}
+                onOpen={abrirRegistro}
+                onSave={salvar}
+                canSave={runnable}
+                labels={{ save: strings.save }}
+              />
+            </Box>
+            <ExportButton
+              result={result}
+              meta={meta}
+              formatter={ports.formatter}
+              labeler={labeler}
+              locale={config.locale}
+            />
+          </Group>
 
           <Accordion defaultValue="consulta" variant="contained">
             <Accordion.Item value="consulta">

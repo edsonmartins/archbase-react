@@ -10,6 +10,7 @@ export {
 export { ResultTable, type ResultTableProps } from './components/ResultTable';
 export { ResultChart, type ResultChartProps } from './components/ResultChart';
 export { SavedQueryBar, type SavedQueryBarProps } from './components/SavedQueryBar';
+export { ExportButton, type ExportButtonProps } from './components/ExportButton';
 export {
   DegradedNotice,
   EmptyState,
