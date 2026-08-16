@@ -17,6 +17,7 @@ import { PainelPoeira } from './paineis/PainelPoeira';
 import { PainelGrade } from './paineis/PainelGrade';
 import { PainelLoader } from './paineis/PainelLoader';
 import { PainelBeamGrid, PainelVectorFlow, PainelElementos } from './paineis/PainelLote2';
+import { PainelWave, PainelNeural, PainelAscii } from './paineis/PainelLote3';
 
 export function App() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -91,6 +92,9 @@ export function App() {
             <PainelBeamGrid />
             <PainelVectorFlow />
             <PainelElementos />
+            <PainelWave />
+            <PainelNeural />
+            <PainelAscii />
 
             <Text size="xs" c="dimmed" ta="center" pb="xl">
               Efeitos adaptados de Lightswind UI (MIT, Muhilan / codewithMUHILAN).

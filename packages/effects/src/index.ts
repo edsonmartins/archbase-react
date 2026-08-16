@@ -13,6 +13,12 @@ export {
 } from './backgrounds/ArchbaseNebulaFlow';
 export { ArchbaseVectorFlow, type ArchbaseVectorFlowProps } from './backgrounds/ArchbaseVectorFlow';
 export { ArchbaseBeamGrid, type ArchbaseBeamGridProps } from './backgrounds/ArchbaseBeamGrid';
+export { ArchbaseAsciiWave, type ArchbaseAsciiWaveProps } from './backgrounds/ArchbaseAsciiWave';
+export { ArchbaseNeuralLink, type ArchbaseNeuralLinkProps } from './backgrounds/ArchbaseNeuralLink';
+export {
+  ArchbaseWaveBackground,
+  type ArchbaseWaveBackgroundProps,
+} from './backgrounds/ArchbaseWaveBackground';
 
 // Efeitos de elemento
 export {
@@ -28,6 +34,12 @@ export {
 export { ArchbaseMagicLoader, type ArchbaseMagicLoaderProps } from './loaders/ArchbaseMagicLoader';
 
 // Base para efeitos proprios
+export {
+  useArchbaseShader,
+  type UseArchbaseShaderOptions,
+  type UseArchbaseShaderResult,
+  type ValorUniforme,
+} from './hooks/useArchbaseShader';
 export {
   useArchbaseCanvasAnimation,
   type CanvasSize,

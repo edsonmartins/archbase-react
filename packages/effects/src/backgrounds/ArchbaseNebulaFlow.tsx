@@ -1,15 +1,8 @@
-import { useCallback, useRef, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
-import { useArchbaseCanvasAnimation } from '../hooks/useArchbaseCanvasAnimation';
+import { useCallback, type CSSProperties, type ReactNode } from 'react';
+import { useArchbaseShader } from '../hooks/useArchbaseShader';
 import { parseColor, toShaderColor } from '../theme/resolveColors';
 
-const VERTEX_SHADER = `
-attribute vec4 a_position;
-void main() {
-  gl_Position = a_position;
-}
-`;
-
-const FRAGMENT_SHADER = `
+const FRAGMENT = `
 precision mediump float;
 
 uniform vec2 iResolution;
@@ -107,49 +100,14 @@ export interface ArchbaseNebulaFlowProps {
 
 const CORES_PADRAO = ['#0b0a2a', '#3b1e6e', '#a855f7'];
 
-interface Recursos {
-  gl: WebGLRenderingContext;
-  program: WebGLProgram;
-  buffer: WebGLBuffer;
-  uniforms: Record<string, WebGLUniformLocation | null>;
-}
-
-function compilar(
-  gl: WebGLRenderingContext,
-  tipo: number,
-  fonte: string,
-): WebGLShader | null {
-  const shader = gl.createShader(tipo);
-  if (!shader) return null;
-  gl.shaderSource(shader, fonte);
-  gl.compileShader(shader);
-
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.warn('[archbase-effects] Falha ao compilar shader:', gl.getShaderInfoLog(shader));
-    }
-    gl.deleteShader(shader);
-    return null;
-  }
-  return shader;
-}
-
 /**
  * Fundo de nebula em shader.
  *
  * Adaptado de Lightswind UI (MIT, Muhilan / codewithMUHILAN). O shader e
- * reproduzido fielmente; o que muda e o ciclo de vida em volta dele.
- *
- * Correcoes em relacao ao original:
- *
- * - Os recursos de GPU — programa, shaders e buffer — nao eram liberados ao
- *   desmontar. Numa aplicacao de navegacao intensa, cada visita vazava um
- *   contexto, ate o navegador comecar a descartar os mais antigos e outros
- *   canvas apagarem sem explicacao.
- * - Sem WebGL disponivel, o original deixava um canvas preto; aqui ha
- *   `fallback` explicito.
- * - Pausa fora da viewport e sob `prefers-reduced-motion`. Shader em laco
- *   continuo atras de uma tela de CRUD e consumo de bateria sem contrapartida.
+ * reproduzido fielmente; o ciclo de vida vem de `useArchbaseShader`, que
+ * concentra compilacao, uniforms e liberacao de recursos para todos os efeitos
+ * WebGL do pacote — inclusive a regra de nao descartar o contexto na limpeza,
+ * que custou um defeito quando estava escrita aqui.
  */
 export function ArchbaseNebulaFlow({
   colors = CORES_PADRAO,
@@ -162,151 +120,35 @@ export function ArchbaseNebulaFlow({
   children,
   fallback = null,
 }: ArchbaseNebulaFlowProps) {
-  const recursos = useRef<Recursos | null>(null);
-  const ponteiro = useRef({ x: 0, y: 0, forca: 0 });
-  const semWebgl = useRef(false);
+  const uniforms = useCallback(() => {
+    const lista = colors.length >= 3 ? colors : CORES_PADRAO;
+    const resolver = (indice: number) => {
+      const rgb = parseColor(lista[indice] ?? '') ?? parseColor(CORES_PADRAO[indice] ?? '#000000');
+      return rgb ? toShaderColor(rgb) : ([0, 0, 0] as [number, number, number]);
+    };
 
-  const preparar = useCallback(
-    (canvas: HTMLCanvasElement) => {
-      const gl =
-        (canvas.getContext('webgl', { antialias: false, alpha: false }) as WebGLRenderingContext | null) ??
-        (canvas.getContext('experimental-webgl') as WebGLRenderingContext | null);
+    return {
+      uColor1: resolver(0),
+      uColor2: resolver(1),
+      uColor3: resolver(2),
+      uSpeed: speed,
+      uScale: scale,
+      uDensity: density,
+      uInteractive: interactive ? 1 : 0,
+    };
+  }, [colors, speed, scale, density, interactive]);
 
-      if (!gl) {
-        semWebgl.current = true;
-        return undefined;
-      }
-
-      const vertex = compilar(gl, gl.VERTEX_SHADER, VERTEX_SHADER);
-      const fragment = compilar(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER);
-      const program = gl.createProgram();
-      if (!vertex || !fragment || !program) {
-        semWebgl.current = true;
-        return undefined;
-      }
-
-      gl.attachShader(program, vertex);
-      gl.attachShader(program, fragment);
-      gl.linkProgram(program);
-
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        semWebgl.current = true;
-        return undefined;
-      }
-
-      // Os shaders ja estao no programa ligado; manter os objetos apenas adia
-      // a liberacao da memoria da GPU.
-      gl.deleteShader(vertex);
-      gl.deleteShader(fragment);
-
-      const buffer = gl.createBuffer();
-      if (!buffer) return undefined;
-
-      // Dois triangulos cobrindo a tela inteira.
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-        gl.STATIC_DRAW,
-      );
-
-      const posicao = gl.getAttribLocation(program, 'a_position');
-      gl.enableVertexAttribArray(posicao);
-      gl.vertexAttribPointer(posicao, 2, gl.FLOAT, false, 0, 0);
-
-      const nomes = [
-        'iResolution',
-        'iTime',
-        'iMouse',
-        'iMouseStrength',
-        'uColor1',
-        'uColor2',
-        'uColor3',
-        'uSpeed',
-        'uScale',
-        'uDensity',
-        'uInteractive',
-      ];
-      const uniforms: Record<string, WebGLUniformLocation | null> = {};
-      for (const nome of nomes) uniforms[nome] = gl.getUniformLocation(program, nome);
-
-      recursos.current = { gl, program, buffer, uniforms };
-
-      // Libera o que foi alocado na GPU. O contexto em si NAO e descartado
-      // aqui: `setup` roda de novo a cada redimensionamento, e
-      // `WEBGL_lose_context.loseContext()` mata o contexto do canvas em
-      // definitivo — o segundo setup recebia um contexto morto, os shaders nao
-      // compilavam e o fundo ficava branco. O sintoma so aparece depois de um
-      // resize, o que o torna facil de nao ver no primeiro carregamento.
-      return () => {
-        gl.deleteBuffer(buffer);
-        gl.deleteProgram(program);
-        recursos.current = null;
-      };
-    },
-    [],
-  );
-
-  const desenharQuadro = useCallback(
-    (canvas: HTMLCanvasElement, estado: { time: number }) => {
-      const atual = recursos.current;
-      if (!atual) return;
-
-      const { gl, program, uniforms } = atual;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.useProgram(program);
-
-      const resolvidas = (colors.length >= 3 ? colors : CORES_PADRAO)
-        .slice(0, 3)
-        .map((cor, indice) => {
-          const rgb = parseColor(cor) ?? parseColor(CORES_PADRAO[indice] ?? '#000000');
-          return rgb ? toShaderColor(rgb) : ([0, 0, 0] as [number, number, number]);
-        });
-
-      gl.uniform2f(uniforms.iResolution ?? null, canvas.width, canvas.height);
-      gl.uniform1f(uniforms.iTime ?? null, estado.time / 1000);
-      gl.uniform2f(uniforms.iMouse ?? null, ponteiro.current.x, ponteiro.current.y);
-      gl.uniform1f(uniforms.iMouseStrength ?? null, ponteiro.current.forca);
-      gl.uniform3fv(uniforms.uColor1 ?? null, resolvidas[0] ?? [0, 0, 0]);
-      gl.uniform3fv(uniforms.uColor2 ?? null, resolvidas[1] ?? [0, 0, 0]);
-      gl.uniform3fv(uniforms.uColor3 ?? null, resolvidas[2] ?? [0, 0, 0]);
-      gl.uniform1f(uniforms.uSpeed ?? null, speed);
-      gl.uniform1f(uniforms.uScale ?? null, scale);
-      gl.uniform1f(uniforms.uDensity ?? null, density);
-      gl.uniform1f(uniforms.uInteractive ?? null, interactive ? 1 : 0);
-
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-      // A influencia do ponteiro decai sozinha: sem isso o redemoinho ficaria
-      // congelado no ultimo ponto tocado.
-      ponteiro.current.forca *= 0.96;
-    },
-    [colors, speed, scale, density, interactive],
-  );
-
-  const { containerRef, canvasRef } = useArchbaseCanvasAnimation({
-    setup: preparar,
-    frame: desenharQuadro,
+  const { containerRef, canvasRef, supported, onPointerMove } = useArchbaseShader({
+    fragment: FRAGMENT,
+    uniforms,
+    interactive,
   });
-
-  const aoMoverPonteiro = useCallback(
-    (evento: ReactPointerEvent<HTMLDivElement>) => {
-      if (!interactive) return;
-      const rect = evento.currentTarget.getBoundingClientRect();
-      const dpr = Math.min(2, globalThis.devicePixelRatio || 1);
-      ponteiro.current.x = (evento.clientX - rect.left) * dpr;
-      // WebGL conta a altura de baixo para cima.
-      ponteiro.current.y = (rect.height - (evento.clientY - rect.top)) * dpr;
-      ponteiro.current.forca = 1;
-    },
-    [interactive],
-  );
 
   return (
     <div
       ref={containerRef}
       className={className}
-      onPointerMove={aoMoverPonteiro}
+      onPointerMove={onPointerMove}
       style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', ...style }}
     >
       <canvas
@@ -314,7 +156,7 @@ export function ArchbaseNebulaFlow({
         aria-hidden
         style={{ position: 'absolute', inset: 0, display: 'block' }}
       />
-      {semWebgl.current ? fallback : null}
+      {!supported ? fallback : null}
       {children ? (
         <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
           {children}
