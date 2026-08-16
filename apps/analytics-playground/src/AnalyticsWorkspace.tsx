@@ -13,6 +13,7 @@ import {
   Button,
   Divider,
   Group,
+  Menu,
   SegmentedControl,
   Select,
   Stack,
@@ -22,8 +23,9 @@ import {
 } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks'
 import { DatePickerInput } from '@mantine/dates'
-import { IconRefresh } from '@tabler/icons-react'
+import { IconDownload, IconRefresh } from '@tabler/icons-react'
 import {
+  resultToCsv,
   useAnalyticsContext,
   useExploration,
   useMemberValues,
@@ -393,6 +395,34 @@ export function AnalyticsWorkspace() {
     [aplicarRange],
   )
 
+  // Exporta o resultado atual em CSV (formatado ou valores crus) e dispara o
+  // download com BOM UTF-8 para o Excel respeitar acentos.
+  const exportarCsv = useCallback(
+    (raw: boolean) => {
+      if (!result || !meta) return
+      const csv = resultToCsv(result, {
+        formatter: ports.formatter,
+        labeler,
+        meta,
+        locale: config.locale,
+        raw,
+      })
+      const agora = new Date()
+      const z = (n: number) => String(n).padStart(2, '0')
+      const stamp = `${agora.getFullYear()}${z(agora.getMonth() + 1)}${z(agora.getDate())}-${z(agora.getHours())}${z(agora.getMinutes())}`
+      const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `analytics-${stamp}.csv`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    },
+    [result, meta, ports, labeler, config.locale],
+  )
+
   const selecionados = [
     ...(state.query.measures ?? []),
     ...(state.query.dimensions ?? []),
@@ -581,6 +611,23 @@ export function AnalyticsWorkspace() {
             checked={bordas}
             onChange={(e) => setBordas(e.currentTarget.checked)}
           />
+          <Menu shadow="md" position="bottom-start" disabled={!result}>
+            <Menu.Target>
+              <Button
+                size="compact-xs"
+                variant="default"
+                leftSection={<IconDownload size={14} />}
+                disabled={!result}
+              >
+                Exportar
+              </Button>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>CSV</Menu.Label>
+              <Menu.Item onClick={() => exportarCsv(false)}>Formatado (como na tela)</Menu.Item>
+              <Menu.Item onClick={() => exportarCsv(true)}>Valores crus (planilha)</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
           {timeDimMember && (
             <>
               <Divider orientation="vertical" />

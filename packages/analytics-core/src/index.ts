@@ -108,6 +108,9 @@ export {
   type DeepLinkRead,
 } from './deeplink/deepLink';
 
+// Exportacao de dados
+export { resultToCsv, type CsvOptions } from './export/csv';
+
 // Strings da biblioteca
 export { DEFAULT_STRINGS, interpolate, type AnalyticsStrings } from './strings';
 
