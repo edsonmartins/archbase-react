@@ -28,7 +28,7 @@ export function PainelPoeira() {
         speedMultiplier={velocidade}
         particleSize={tamanho}
         interactive={interativo}
-        style={{ height: 300, borderRadius: 8, background: '#05050f' }}
+        style={{ height: 300, borderRadius: 8, background: '#05050f', color: '#fff' }}
       />
     </Painel>
   );

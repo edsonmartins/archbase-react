@@ -26,6 +26,7 @@ import {
   PainelGlowingCards,
   PainelDeviceFrame,
 } from './paineis/PainelInteracao';
+import { PainelBorderBeam, PainelStickyBar } from './paineis/PainelLote6';
 
 export function App() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -105,6 +106,7 @@ export function App() {
             <PainelAscii />
             <PainelAurora />
             <PainelGooey />
+            <PainelBorderBeam />
 
             <Title order={3} mt="xl">
               Componentes de interação
@@ -120,6 +122,7 @@ export function App() {
             <PainelDock />
             <PainelGlowingCards />
             <PainelDeviceFrame />
+            <PainelStickyBar />
 
             <Text size="xs" c="dimmed" ta="center" pb="xl">
               Efeitos adaptados de Lightswind UI (MIT, Muhilan / codewithMUHILAN).

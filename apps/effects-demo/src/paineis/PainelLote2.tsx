@@ -33,7 +33,7 @@ export function PainelBeamGrid() {
         beamCount={feixes}
         glow={halo}
         interactive={interativo}
-        style={{ height: 300, borderRadius: 8, background: '#08080f' }}
+        style={{ height: 300, borderRadius: 8, background: '#08080f', color: '#fff' }}
       />
     </Painel>
   );
@@ -89,7 +89,7 @@ export function PainelElementos() {
         </>
       }
     >
-      <Center style={{ height: 300, borderRadius: 8, background: '#08080f' }}>
+      <Center style={{ height: 300, borderRadius: 8, background: '#08080f', color: '#fff' }}>
         <Group gap="xl">
           <ArchbaseStardustButton particleCount={particulas}>Publicar</ArchbaseStardustButton>
           <ArchbaseElectroBorder color={cor} distortion={distorcao} radius={12}>

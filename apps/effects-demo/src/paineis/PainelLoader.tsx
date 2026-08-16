@@ -26,7 +26,7 @@ export function PainelLoader() {
         </>
       }
     >
-      <Center style={{ height: 300, borderRadius: 8, background: '#05050f' }}>
+      <Center style={{ height: 300, borderRadius: 8, background: '#05050f', color: '#fff' }}>
         <ArchbaseMagicLoader size={tamanho} particleCount={particulas} speed={velocidade} label={rotulo} showLabel={mostrarRotulo} />
       </Center>
     </Painel>

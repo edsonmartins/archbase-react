@@ -24,3 +24,5 @@ export type {
 
 export { ArchbaseRipple, useArchbaseRipple } from './ArchbaseRipple';
 export type { ArchbaseRippleProps, UseArchbaseRippleOptions, UseArchbaseRippleReturn } from './ArchbaseRipple';
+export { ArchbaseStickyTopBar } from './ArchbaseStickyTopBar';
+export type { ArchbaseStickyTopBarProps } from './ArchbaseStickyTopBar';

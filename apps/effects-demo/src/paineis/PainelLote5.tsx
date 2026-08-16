@@ -26,7 +26,7 @@ export function PainelAurora() {
         duration={duracao}
         blur={desfoque}
         opacity={opacidade}
-        style={{ height: 300, borderRadius: 8, background: '#0b1020' }}
+        style={{ height: 300, borderRadius: 8, background: '#0b1020', color: '#fff' }}
       >
         <Center h="100%">
           <Text fw={700} size="xl" c="white">
@@ -67,7 +67,7 @@ export function PainelGooey() {
         size={tamanho}
         blur={desfoque}
         colors={[c1, c2, c3]}
-        style={{ height: 300, borderRadius: 8, background: '#08080f' }}
+        style={{ height: 300, borderRadius: 8, background: '#08080f', color: '#fff' }}
       />
     </Painel>
   );

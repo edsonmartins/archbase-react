@@ -1,7 +1,5 @@
-11:55:33 [vite] (client) Re-optimizing dependencies because lockfile has changed
 
-  VITE v6.4.1  ready in 185 ms
+  VITE v6.4.1  ready in 386 ms
 
   ➜  Local:   http://localhost:4301/
   ➜  Network: use --host to expose
-11:56:58 [vite] changed tsconfig file detected: /Volumes/DevCache/desenvolvimento/archbase-effects-demo/apps/effects-demo/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.

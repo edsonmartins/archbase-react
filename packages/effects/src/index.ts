@@ -33,6 +33,7 @@ export {
   ArchbaseStardustButton,
   type ArchbaseStardustButtonProps,
 } from './elements/ArchbaseStardustButton';
+export { ArchbaseBorderBeam, type ArchbaseBorderBeamProps } from './elements/ArchbaseBorderBeam';
 export {
   ArchbaseElectroBorder,
   type ArchbaseElectroBorderProps,
