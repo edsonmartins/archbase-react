@@ -18,6 +18,7 @@ import {
   Text,
   useComputedColorScheme,
 } from '@mantine/core';
+import { useElementSize } from '@mantine/hooks'
 import {
   useAnalyticsContext,
   useExploration,
@@ -25,6 +26,7 @@ import {
   type AnalyticsMember,
   type ResultColumn,
   type ResultRow,
+  type VizType,
 } from '@archbase/analytics-core'
 import {
   EmptyState,
@@ -62,6 +64,8 @@ interface WorkspaceValue {
   filtrarPorValor: (member: string, values: string[] | null) => void
   salvar: (name: string) => Promise<void>
   corpo: () => ReactNode
+  /** Renderiza uma viz fixa (widget de dashboard) do mesmo resultado. */
+  renderWidget: (viz: VizType, height: number) => ReactNode
 }
 
 const WorkspaceContext = createContext<WorkspaceValue | null>(null)
@@ -149,11 +153,15 @@ function PainelConsulta(_props: IDockviewPanelProps) {
   )
 }
 
-function PainelResultado(_props: IDockviewPanelProps) {
-  const { corpo } = useWorkspace()
+function PainelResultado(props: IDockviewPanelProps) {
+  const { corpo, renderWidget } = useWorkspace()
+  const viz = (props.params as { viz?: VizType } | undefined)?.viz
+  const { ref, height } = useElementSize()
   return (
-    <Box p="xs" style={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-      <Box style={{ flex: 1, minHeight: 0 }}>{corpo()}</Box>
+    <Box style={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+      <Box ref={ref} style={{ flex: 1, minHeight: 0, padding: 8 }}>
+        {viz ? renderWidget(viz, height) : corpo()}
+      </Box>
     </Box>
   )
 }
@@ -164,11 +172,12 @@ const components = {
   resultado: PainelResultado,
 }
 
-type Preset = 'padrao' | 'lateral'
+type Preset = 'padrao' | 'lateral' | 'dashboard'
 
 const PRESETS: { value: Preset; label: string }[] = [
   { value: 'padrao', label: 'Padrão (métricas | consulta/resultado)' },
   { value: 'lateral', label: 'Lateral (métricas+consulta | resultado)' },
+  { value: 'dashboard', label: 'Dashboard (KPIs + gráfico + tabela)' },
 ]
 
 /** Padrao: Metricas a esquerda; Consulta e Resultado empilhados a direita. */
@@ -205,9 +214,43 @@ function layoutLateral(api: DockviewApi) {
   })
 }
 
+/** Dashboard: Metricas+Consulta a esquerda; KPIs, Grafico e Tabela como widgets
+ *  do mesmo resultado a direita (cada painel com uma viz fixa via params). */
+function layoutDashboard(api: DockviewApi) {
+  api.addPanel({ id: 'metricas', component: 'metricas', title: 'Métricas' })
+  api.addPanel({
+    id: 'consulta',
+    component: 'consulta',
+    title: 'Consulta',
+    position: { referencePanel: 'metricas', direction: 'below' },
+  })
+  api.addPanel({
+    id: 'kpis',
+    component: 'resultado',
+    title: 'KPIs',
+    params: { viz: 'number' },
+    position: { referencePanel: 'metricas', direction: 'right' },
+  })
+  api.addPanel({
+    id: 'grafico',
+    component: 'resultado',
+    title: 'Gráfico',
+    params: { viz: 'bar' },
+    position: { referencePanel: 'kpis', direction: 'below' },
+  })
+  api.addPanel({
+    id: 'tabela',
+    component: 'resultado',
+    title: 'Tabela',
+    params: { viz: 'table' },
+    position: { referencePanel: 'grafico', direction: 'right' },
+  })
+}
+
 function aplicarPreset(api: DockviewApi, preset: Preset) {
   api.clear()
   if (preset === 'lateral') layoutLateral(api)
+  else if (preset === 'dashboard') layoutDashboard(api)
   else layoutPadrao(api)
 }
 
@@ -334,9 +377,52 @@ export function AnalyticsWorkspace() {
     )
   }, [runnable, loading, result, error, strings, viz, availableViz, ports, config.locale, tabela, dispatch, state.query])
 
+  const renderWidget = useCallback(
+    (vizAlvo: VizType, altura: number) => {
+      if (!runnable) return <EmptyState strings={strings} />
+      if (loading && !result) return <LoadingState strings={strings} />
+      if (error) return <ErrorState error={error} strings={strings} />
+      if (result && result.rows.length === 0) return <NoResultsState strings={strings} />
+      if (!result) return null
+      if (vizAlvo === 'table') return tabela(altura)
+      if (ports.chartRenderer) {
+        return ports.chartRenderer.render({
+          viz: vizAlvo,
+          result,
+          formatter: ports.formatter,
+          locale: config.locale,
+        })
+      }
+      return null
+    },
+    [runnable, loading, error, result, strings, tabela, ports, config.locale],
+  )
+
   const value = useMemo<WorkspaceValue>(
-    () => ({ ctx, exploration, suggest, selecionados, activeValueFilters, alternarMembro, filtrarPorValor, salvar, corpo }),
-    [ctx, exploration, suggest, selecionados, activeValueFilters, alternarMembro, filtrarPorValor, salvar, corpo],
+    () => ({
+      ctx,
+      exploration,
+      suggest,
+      selecionados,
+      activeValueFilters,
+      alternarMembro,
+      filtrarPorValor,
+      salvar,
+      corpo,
+      renderWidget,
+    }),
+    [
+      ctx,
+      exploration,
+      suggest,
+      selecionados,
+      activeValueFilters,
+      alternarMembro,
+      filtrarPorValor,
+      salvar,
+      corpo,
+      renderWidget,
+    ],
   )
 
   const onReady = (event: DockviewReadyEvent) => {
