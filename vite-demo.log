@@ -9,3 +9,6 @@
 10:43:04 [vite] (client) hmr update /src/App.tsx
 10:56:14 [vite] (client) hmr update /@fs/Volumes/DevCache/desenvolvimento/archbase-effects-demo/packages/effects/src/loaders/ArchbaseMagicLoader.tsx
 10:56:28 [vite] (client) hmr update /@fs/Volumes/DevCache/desenvolvimento/archbase-effects-demo/packages/effects/src/loaders/ArchbaseMagicLoader.tsx
+11:38:38 [vite] (client) hmr update /src/paineis/PainelGrade.tsx, /src/paineis/PainelPoeira.tsx, /src/paineis/PainelNebula.tsx, /src/paineis/PainelLoader.tsx, /src/paineis/PainelLote2.tsx, /src/paineis/PainelLote3.tsx
+11:39:52 [vite] (client) hmr update /src/App.tsx
+11:39:58 [vite] (client) hmr update /src/App.tsx

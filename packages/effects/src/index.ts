@@ -16,6 +16,14 @@ export { ArchbaseBeamGrid, type ArchbaseBeamGridProps } from './backgrounds/Arch
 export { ArchbaseAsciiWave, type ArchbaseAsciiWaveProps } from './backgrounds/ArchbaseAsciiWave';
 export { ArchbaseNeuralLink, type ArchbaseNeuralLinkProps } from './backgrounds/ArchbaseNeuralLink';
 export {
+  ArchbaseAuroraBackground,
+  type ArchbaseAuroraBackgroundProps,
+} from './backgrounds/ArchbaseAuroraBackground';
+export {
+  ArchbaseGooeyBlobs,
+  type ArchbaseGooeyBlobsProps,
+} from './backgrounds/ArchbaseGooeyBlobs';
+export {
   ArchbaseWaveBackground,
   type ArchbaseWaveBackgroundProps,
 } from './backgrounds/ArchbaseWaveBackground';
