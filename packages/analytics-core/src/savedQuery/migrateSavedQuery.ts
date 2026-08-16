@@ -60,6 +60,9 @@ function migrateV0(input: Record<string, unknown>): SavedQueryV1 {
       ownerId: typeof rawMeta.ownerId === 'string' ? rawMeta.ownerId : String(input.ownerId ?? ''),
       scope: toScope(rawMeta.scope ?? input.scope),
     },
+    // Estado de UI e opaco: preserva-se intacto entre gravar e abrir (a migracao
+    // reconstroi o registro, entao sem isto o layout do workspace se perderia).
+    ...(input.ui !== undefined ? { ui: asRecord(input.ui) } : {}),
   };
 }
 

@@ -6,6 +6,7 @@ import type {
   MemberLabeler,
   ValueFormatter,
 } from '@archbase/analytics-core';
+import { ValueFilterMenu } from './ValueFilterMenu';
 
 const SEM_GRUPO = '—';
 
@@ -19,6 +20,12 @@ export interface MemberPaletteProps {
   locale: string;
   searchPlaceholder?: string;
   emptyLabel?: string;
+  /** Distintos de um membro, para o menu de filtro por valor. */
+  onSuggestValues?: (member: string) => Promise<string[]>;
+  /** Aplica/limpa um filtro `equals` a partir do menu de valores (`null` limpa). */
+  onFilterValues?: (member: string, values: string[] | null) => void;
+  /** Filtros de valor ativos por membro (para marcar o icone e pre-selecionar). */
+  activeValueFilters?: Map<string, string[]>;
 }
 
 /**
@@ -37,6 +44,9 @@ export function MemberPalette({
   locale,
   searchPlaceholder = 'Buscar',
   emptyLabel = 'Nenhum membro encontrado.',
+  onSuggestValues,
+  onFilterValues,
+  activeValueFilters,
 }: MemberPaletteProps) {
   const [search, setSearch] = useState('');
   const selectedSet = useMemo(() => new Set(selected), [selected]);
@@ -99,6 +109,9 @@ export function MemberPalette({
                     description={labeler.description?.(member, locale)}
                     active={selectedSet.has(member.name)}
                     onToggle={onToggle}
+                    onSuggestValues={onSuggestValues}
+                    onFilterValues={onFilterValues}
+                    filterValues={activeValueFilters?.get(member.name)}
                   />
                 ))}
               </Stack>
@@ -116,28 +129,59 @@ interface MemberRowProps {
   description: string | undefined;
   active: boolean;
   onToggle: (member: AnalyticsMember) => void;
+  onSuggestValues?: (member: string) => Promise<string[]>;
+  onFilterValues?: (member: string, values: string[] | null) => void;
+  filterValues?: string[];
 }
 
-function MemberRow({ member, label, description, active, onToggle }: MemberRowProps) {
+function MemberRow({
+  member,
+  label,
+  description,
+  active,
+  onToggle,
+  onSuggestValues,
+  onFilterValues,
+  filterValues,
+}: MemberRowProps) {
+  // Filtro por valor so faz sentido para dimensoes categoricas; tempo usa faixa.
+  const mostrarFiltro = onFilterValues !== undefined && member.kind === 'dimension';
   return (
-    <UnstyledButton
-      onClick={() => onToggle(member)}
-      title={description}
+    <Group
+      gap={2}
+      wrap="nowrap"
       px="xs"
       py={4}
+      // Fundo ativo pela variavel de cor do Mantine (adapta claro/escuro), em vez
+      // de `blue[0]` (clarinho fixo, ruim no tema escuro).
       style={(theme) => ({
         borderRadius: theme.radius.sm,
-        backgroundColor: active ? theme.colors.blue[0] : undefined,
+        backgroundColor: active ? 'var(--mantine-color-blue-light)' : undefined,
       })}
     >
-      <Group gap="xs" wrap="nowrap" justify="space-between">
-        <Text size="sm" truncate>
-          {label}
-        </Text>
-        <Badge size="xs" variant="light" color={member.kind === 'measure' ? 'blue' : 'gray'}>
-          {member.kind === 'measure' ? 'M' : member.kind === 'timeDimension' ? 'T' : 'D'}
-        </Badge>
-      </Group>
-    </UnstyledButton>
+      <UnstyledButton
+        onClick={() => onToggle(member)}
+        title={description}
+        style={{ flex: 1, minWidth: 0 }}
+      >
+        <Group gap="xs" wrap="nowrap" justify="space-between">
+          <Text size="sm" truncate>
+            {label}
+          </Text>
+          <Badge size="xs" variant="light" color={member.kind === 'measure' ? 'blue' : 'gray'}>
+            {member.kind === 'measure' ? 'M' : member.kind === 'timeDimension' ? 'T' : 'D'}
+          </Badge>
+        </Group>
+      </UnstyledButton>
+      {mostrarFiltro && (
+        <ValueFilterMenu
+          member={member.name}
+          label={label}
+          selectedValues={filterValues}
+          onSuggestValues={onSuggestValues}
+          onApply={(values) => onFilterValues?.(member.name, values)}
+        />
+      )}
+    </Group>
   );
 }

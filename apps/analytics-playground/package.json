@@ -1,0 +1,33 @@
+{
+  "name": "@archbase/analytics-playground",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@archbase/analytics-core": "workspace:*",
+    "@archbase/analytics-dockview": "workspace:*",
+    "@archbase/analytics-mantine": "workspace:*",
+    "@archbase/analytics-vtable": "workspace:*",
+    "@visactor/vtable": "^1.26.0",
+    "@mantine/charts": "^9.4.0",
+    "@mantine/core": "^9.4.0",
+    "@mantine/dates": "^9.4.0",
+    "@mantine/hooks": "^9.4.0",
+    "@tabler/icons-react": "^3.27.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "dockview-react": "^4.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.6",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.8.0",
+    "vite": "^6.4.1"
+  }
+}

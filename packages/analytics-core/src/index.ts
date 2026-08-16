@@ -22,6 +22,8 @@ export type {
   SavedQueryScope,
   SavedQueryStore,
   SavedQueryV1,
+  TableRenderProps,
+  TableRenderer,
   ValueFormatter,
   VizType,
 } from './ports/types';
@@ -105,6 +107,9 @@ export {
   writeDeepLink,
   type DeepLinkRead,
 } from './deeplink/deepLink';
+
+// Exportacao de dados
+export { resultToCsv, type CsvOptions } from './export/csv';
 
 // Strings da biblioteca
 export { DEFAULT_STRINGS, interpolate, type AnalyticsStrings } from './strings';

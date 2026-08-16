@@ -1,5 +1,11 @@
 import type { ReactNode } from 'react';
-import type { AnalyticsMember, NormalizedResult } from '../meta/types';
+import type {
+  AnalyticsMember,
+  AnalyticsMeta,
+  NormalizedResult,
+  ResultColumn,
+  ResultRow,
+} from '../meta/types';
 import type { AnalyticsQuery, PivotConfig, SeriesConfig } from '../exploration/types';
 
 /**
@@ -55,6 +61,12 @@ export interface SavedQueryV1 {
   query: AnalyticsQuery;
   viz: { type: VizType; pivot?: PivotConfig; series?: SeriesConfig };
   meta: { name: string; ownerId: string; scope: SavedQueryScope };
+  /**
+   * Estado de UI opcional, opaco para o nucleo: persistido e devolvido tal e
+   * qual, sem interpretacao. Usado pelo workspace dockview para gravar o layout
+   * dos paineis junto da consulta (chave `workspaceLayout`).
+   */
+  ui?: Record<string, unknown>;
 }
 
 export interface SavedQueryRecord extends SavedQueryV1 {
@@ -145,12 +157,43 @@ export function isVizAvailable(viz: VizType, chartRenderer?: ChartRenderer): boo
   return chartRenderer?.supports(viz) ?? false;
 }
 
+export interface TableRenderProps {
+  result: NormalizedResult;
+  meta: AnalyticsMeta;
+  formatter: ValueFormatter;
+  labeler: MemberLabeler;
+  locale: string;
+  /**
+   * Altura sugerida pela composicao. O renderizador pode honrar (tabela
+   * virtualizada de altura fixa) ou ignorar (grade que preenche o container).
+   */
+  height?: number;
+  /**
+   * Esquema de cores do hospedeiro. Quando ausente, o renderizador pode inferir
+   * (ex.: `prefers-color-scheme`); quando presente, deve segui-lo — e o que faz
+   * a grade acompanhar o toggle de tema claro/escuro do host.
+   */
+  colorScheme?: 'light' | 'dark';
+  onDrill?: (row: ResultRow, column: ResultColumn) => void;
+}
+
+/**
+ * Renderizador de tabela injetavel. Diferente do `ChartRenderer`, nao ha
+ * `supports`: existe uma unica visualizacao de tabela; ausencia do port faz a
+ * biblioteca usar a tabela Mantine embutida. Este e o ponto de extensao para
+ * grades ricas de BI (VTable etc.) sem trazer o peso delas ao pacote base.
+ */
+export interface TableRenderer {
+  render(props: TableRenderProps): ReactNode;
+}
+
 export interface AnalyticsPorts {
   tokenProvider: () => Promise<string>;
   savedQueryStore: SavedQueryStore;
   formatter: ValueFormatter;
   labeler?: MemberLabeler;
   chartRenderer?: ChartRenderer;
+  tableRenderer?: TableRenderer;
   telemetry?: (event: AnalyticsEvent) => void;
 }
 

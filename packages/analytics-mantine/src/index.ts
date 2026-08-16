@@ -2,6 +2,7 @@
 export { MemberPalette, type MemberPaletteProps } from './components/MemberPalette';
 export { QueryCanvas, type QueryCanvasProps } from './components/QueryCanvas';
 export { FilterBuilder, type FilterBuilderProps } from './components/FilterBuilder';
+export { ValueFilterMenu, type ValueFilterMenuProps } from './components/ValueFilterMenu';
 export {
   TimeDimensionControl,
   type TimeDimensionControlProps,
@@ -9,6 +10,7 @@ export {
 export { ResultTable, type ResultTableProps } from './components/ResultTable';
 export { ResultChart, type ResultChartProps } from './components/ResultChart';
 export { SavedQueryBar, type SavedQueryBarProps } from './components/SavedQueryBar';
+export { ExportButton, type ExportButtonProps } from './components/ExportButton';
 export {
   DegradedNotice,
   EmptyState,

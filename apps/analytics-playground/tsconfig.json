@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    // Espelha os alias do vite.config.ts. Sem isto o tsc resolve os pacotes
+    // pelo `dist`, que envelhece a cada edicao no `src`, enquanto o Vite serve
+    // o `src` — os dois discordam e o typecheck passa a acusar props que
+    // existem, ou a deixar passar as que nao existem mais.
+    "paths": {
+      "@archbase/analytics-core": ["../../packages/analytics-core/src/index.ts"],
+      "@archbase/analytics-mantine": ["../../packages/analytics-mantine/src/index.ts"],
+      "@archbase/analytics-mantine/charts": ["../../packages/analytics-mantine/src/charts.ts"],
+      "@archbase/analytics-vtable": ["../../packages/analytics-vtable/src/index.ts"]
+    }
+  },
+  "include": ["src", "vite.config.ts"]
+}

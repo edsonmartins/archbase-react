@@ -1,7 +1,7 @@
 {
-  "name": "@archbase/analytics-core",
+  "name": "@archbase/analytics-vtable",
   "version": "4.5.0",
-  "description": "Headless core for Archbase Analytics - ports, transport and exploration state over a semantic layer",
+  "description": "VisActor VTable table renderer for Archbase Analytics",
   "license": "MIT",
   "author": "Edson Martins",
   "type": "module",
@@ -22,33 +22,26 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": [
-    "react",
-    "typescript",
-    "analytics",
-    "semantic-layer",
-    "headless",
-    "archbase"
-  ],
+  "dependencies": {
+    "@visactor/vtable": "^1.26.0"
+  },
   "peerDependencies": {
+    "@archbase/analytics-core": "^4.5.0",
     "react": "^18.3.0 || ^19.2.0",
     "react-dom": "^18.3.0 || ^19.2.0"
   },
   "devDependencies": {
-    "@testing-library/react": "^16.3.0",
+    "@archbase/analytics-core": "workspace:*",
     "@types/react": "^19.0.6",
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^4.3.4",
-    "jsdom": "^26.1.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "typescript": "^5.8.0",
     "vite": "^6.4.1",
-    "vite-plugin-dts": "^4.5.0",
-    "vitest": "^2.1.8"
+    "vite-plugin-dts": "^4.5.0"
   }
 }

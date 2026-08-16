@@ -7,7 +7,7 @@ import { DEFAULT_VIZ, VIZ_TYPES, isVizAvailable, type ChartRenderer, type VizTyp
 import { normalizeResult } from '../result/normalizeResult';
 import { reconcileWithMeta, type ReconcileResult } from '../savedQuery/reconcileWithMeta';
 import { EMPTY_EXPLORATION, explorationReducer, type ExplorationAction } from './explorationReducer';
-import type { AnalyticsQuery, ExplorationState } from './types';
+import type { AnalyticsQuery, ExplorationState, FilterOperator, QueryFilter } from './types';
 
 /** Membros efetivamente referenciados pela consulta, para telemetria. */
 function membersOf(query: AnalyticsQuery): string[] {
@@ -25,6 +25,24 @@ export function isRunnable(query: AnalyticsQuery): boolean {
     (query.dimensions?.length ?? 0) > 0 ||
     (query.timeDimensions?.length ?? 0) > 0
   );
+}
+
+/** Operadores que nao dependem de valor. */
+const OPERADORES_SEM_VALOR: readonly FilterOperator[] = ['set', 'notSet'];
+
+/** Um filtro so entra na carga quando esta completo: operador sem valor, ou com
+ *  ao menos um valor nao-vazio. Assim uma linha de filtro recem-adicionada (ou
+ *  a meio caminho) nao zera o resultado ate o usuario informar o valor. */
+export function isFilterComplete(filter: QueryFilter): boolean {
+  if (OPERADORES_SEM_VALOR.includes(filter.operator)) return true;
+  return (filter.values ?? []).some((value) => value !== '' && value !== null && value !== undefined);
+}
+
+/** Consulta para a carga: descarta filtros incompletos, preservando o resto. */
+export function queryForLoad(query: AnalyticsQuery): AnalyticsQuery {
+  const filters = query.filters ?? [];
+  const completos = filters.filter(isFilterComplete);
+  return completos.length === filters.length ? query : { ...query, filters: completos };
 }
 
 /**
@@ -125,7 +143,7 @@ export function useExploration(options: UseExplorationOptions = {}): UseExplorat
 
     const startedAt = Date.now();
     try {
-      const response = await client.load(effectiveQuery, controller.signal);
+      const response = await client.load(queryForLoad(effectiveQuery), controller.signal);
       if (controller.signal.aborted) return;
 
       const normalized = normalizeResult(response, meta ?? emptyMeta(), effectiveQuery);

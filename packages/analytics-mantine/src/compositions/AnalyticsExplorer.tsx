@@ -1,5 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Box, Divider, Grid, Paper, Stack } from '@mantine/core';
+import {
+  Accordion,
+  Box,
+  Divider,
+  Grid,
+  Group,
+  Paper,
+  ScrollArea,
+  Stack,
+  useComputedColorScheme,
+} from '@mantine/core';
 import {
   migrateSavedQuery,
   readDeepLink,
@@ -10,6 +20,8 @@ import {
   writeDeepLink,
   type AnalyticsMember,
   type ExplorationState,
+  type ResultColumn,
+  type ResultRow,
   type SavedQueryRecord,
 } from '@archbase/analytics-core';
 import { MemberPalette } from '../components/MemberPalette';
@@ -19,6 +31,7 @@ import { TimeDimensionControl } from '../components/TimeDimensionControl';
 import { ResultTable } from '../components/ResultTable';
 import { ResultChart } from '../components/ResultChart';
 import { SavedQueryBar } from '../components/SavedQueryBar';
+import { ExportButton } from '../components/ExportButton';
 import {
   DegradedNotice,
   EmptyState,
@@ -47,12 +60,13 @@ export interface AnalyticsExplorerProps {
 export function AnalyticsExplorer({
   deepLink,
   ownerId = '',
-  height = 420,
+  height,
   onDrill,
 }: AnalyticsExplorerProps) {
   const { config, ports, labeler, strings } = useAnalyticsContext();
   const exploration = useExploration({ origin: 'explorer' });
   const { suggest } = useMemberValues();
+  const colorScheme = useComputedColorScheme('dark');
 
   const {
     state,
@@ -68,6 +82,32 @@ export function AnalyticsExplorer({
     availableViz,
     reconciliation,
   } = exploration;
+
+  // Filtros de valor ativos (operador `equals`), por membro — para o menu de
+  // filtro por valor na paleta marcar o icone e pre-selecionar os checkboxes.
+  const activeValueFilters = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const f of state.query.filters ?? []) {
+      if (f.operator === 'equals' && (f.values?.length ?? 0) > 0) map.set(f.member, f.values ?? []);
+    }
+    return map;
+  }, [state.query.filters]);
+
+  // Aplica/atualiza/remove o filtro `equals` de um membro a partir do menu.
+  const filtrarPorValor = useCallback(
+    (member: string, values: string[] | null) => {
+      const filtros = state.query.filters ?? [];
+      const idx = filtros.findIndex((f) => f.member === member && f.operator === 'equals');
+      if (values === null) {
+        if (idx >= 0) dispatch({ type: 'removeFilter', index: idx });
+        return;
+      }
+      const filter = { member, operator: 'equals' as const, values };
+      if (idx >= 0) dispatch({ type: 'updateFilter', index: idx, filter });
+      else dispatch({ type: 'addFilter', filter });
+    },
+    [state.query.filters, dispatch],
+  );
 
   const abrirRegistro = useCallback(
     (record: SavedQueryRecord) => {
@@ -168,18 +208,37 @@ export function AnalyticsExplorer({
     ...(state.query.timeDimensions ?? []).map((item) => item.dimension),
   ];
 
-  const tabela = () =>
-    result ? (
+  const tabela = (altura: number) => {
+    if (!result) return null;
+    const drill = onDrill ? (row: ResultRow, column: ResultColumn) => onDrill(row, column.member) : undefined;
+    // Altura da area de conteudo medida pelo ResultChart; fallback antes da 1a medicao.
+    const alturaCorpo = altura > 0 ? Math.floor(altura) : (height ?? 420);
+    // Port injetado (ex.: VTable) tem precedencia; sem ele, a tabela Mantine
+    // embutida e o default. A biblioteca base nao depende de nenhuma grade rica.
+    if (ports.tableRenderer) {
+      return ports.tableRenderer.render({
+        result,
+        meta,
+        formatter: ports.formatter,
+        labeler,
+        locale: config.locale,
+        height: alturaCorpo,
+        colorScheme,
+        onDrill: drill,
+      });
+    }
+    return (
       <ResultTable
         result={result}
         meta={meta}
         formatter={ports.formatter}
         labeler={labeler}
         locale={config.locale}
-        height={height}
-        onDrill={onDrill ? (row, column) => onDrill(row, column.member) : undefined}
+        height={alturaCorpo}
+        onDrill={drill}
       />
-    ) : null;
+    );
+  };
 
   const corpo = () => {
     if (!runnable) return <EmptyState strings={strings} />;
@@ -202,38 +261,62 @@ export function AnalyticsExplorer({
   };
 
   return (
-    <Grid gap="md">
-      <Grid.Col span={{ base: 12, sm: 3 }}>
-        <Paper withBorder p="xs" h="100%">
+    <Grid gap="md" style={{ height: height ?? '100%', minHeight: 0 }} styles={{ inner: { height: '100%' } }}>
+      <Grid.Col span={{ base: 12, sm: 3 }} style={{ height: '100%' }}>
+        <Paper
+          withBorder
+          p="xs"
+          h="100%"
+          style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}
+        >
           {metaLoading && !meta ? (
             <LoadingState strings={strings} />
           ) : (
-            <MemberPalette
-              meta={meta}
-              selected={selecionados}
-              onToggle={alternarMembro}
-              labeler={labeler}
-              formatter={ports.formatter}
-              locale={config.locale}
-              searchPlaceholder={strings.searchMembers}
-            />
+            <ScrollArea type="hover" style={{ flex: 1, minHeight: 0 }}>
+              <MemberPalette
+                meta={meta}
+                selected={selecionados}
+                onToggle={alternarMembro}
+                labeler={labeler}
+                formatter={ports.formatter}
+                locale={config.locale}
+                searchPlaceholder={strings.searchMembers}
+                onSuggestValues={suggest}
+                onFilterValues={filtrarPorValor}
+                activeValueFilters={activeValueFilters}
+              />
+            </ScrollArea>
           )}
         </Paper>
       </Grid.Col>
 
-      <Grid.Col span={{ base: 12, sm: 9 }}>
-        <Stack gap="sm">
-          <SavedQueryBar
-            store={ports.savedQueryStore}
-            currentId={state.savedQueryId}
-            onOpen={abrirRegistro}
-            onSave={salvar}
-            canSave={runnable}
-            labels={{ save: strings.save }}
-          />
+      <Grid.Col span={{ base: 12, sm: 9 }} style={{ height: '100%' }}>
+        <Stack gap="sm" style={{ height: '100%', minHeight: 0 }}>
+          <Group justify="space-between" align="flex-start" wrap="nowrap" gap="sm">
+            <Box style={{ flex: 1, minWidth: 0 }}>
+              <SavedQueryBar
+                store={ports.savedQueryStore}
+                currentId={state.savedQueryId}
+                onOpen={abrirRegistro}
+                onSave={salvar}
+                canSave={runnable}
+                labels={{ save: strings.save }}
+              />
+            </Box>
+            <ExportButton
+              result={result}
+              meta={meta}
+              formatter={ports.formatter}
+              labeler={labeler}
+              locale={config.locale}
+            />
+          </Group>
 
-          <Paper withBorder p="sm">
-            <Stack gap="sm">
+          <Accordion defaultValue="consulta" variant="contained">
+            <Accordion.Item value="consulta">
+              <Accordion.Control>{strings.queryPanel}</Accordion.Control>
+              <Accordion.Panel>
+                <Stack gap="sm">
               <QueryCanvas
                 query={state.query}
                 meta={meta}
@@ -272,15 +355,17 @@ export function AnalyticsExplorer({
                 onRemove={(index) => dispatch({ type: 'removeFilter', index })}
                 onSuggestValues={suggest}
               />
-            </Stack>
-          </Paper>
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
 
           {reconciliation && (
             <DegradedNotice reconciliation={reconciliation} strings={strings} />
           )}
           {result?.truncated && <TruncatedNotice strings={strings} />}
 
-          <Box>{corpo()}</Box>
+          <Box style={{ flex: 1, minHeight: 0 }}>{corpo()}</Box>
         </Stack>
       </Grid.Col>
     </Grid>
