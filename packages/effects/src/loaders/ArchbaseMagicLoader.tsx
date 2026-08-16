@@ -60,18 +60,43 @@ export function ArchbaseMagicLoader({
   const tick = useRef(0);
   const rotacao = useRef(0);
 
-  const preparar = useCallback((canvas: HTMLCanvasElement, tamanho: { dpr: number }) => {
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return undefined;
-    ctx.setTransform(tamanho.dpr, 0, 0, tamanho.dpr, 0, 0);
-    // `lighter` faz os rastros somarem luz onde se cruzam.
-    ctx.globalCompositeOperation = 'lighter';
+  const preparar = useCallback(
+    (canvas: HTMLCanvasElement, tamanho: { width: number; height: number; dpr: number }) => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return undefined;
+      ctx.setTransform(tamanho.dpr, 0, 0, tamanho.dpr, 0, 0);
+      // `lighter` faz os rastros somarem luz onde se cruzam.
+      ctx.globalCompositeOperation = 'lighter';
 
-    particulas.current = [];
-    tick.current = 0;
-    rotacao.current = 0;
-    return undefined;
-  }, []);
+      particulas.current = [];
+      tick.current = 0;
+      rotacao.current = 0;
+
+      // Semeia o anel inicial aqui, e nao so no primeiro quadro. Um indicador
+      // de carregamento que leva dezenas de quadros para aparecer nao cumpre a
+      // funcao — quem esperava sinal ficou sem sinal justamente no instante em
+      // que ele mais importa.
+      const centroX = tamanho.width / 2;
+      const centroY = tamanho.height / 2;
+      const raio = Math.min(tamanho.width, tamanho.height) * 0.25;
+
+      for (let i = 0; i < 24; i += 1) {
+        const angulo = (i / 24) * TAU;
+        particulas.current.push({
+          x: centroX + Math.cos(angulo) * raio,
+          y: centroY + Math.sin(angulo) * raio,
+          angulo,
+          velocidade: 0,
+          aceleracao: 0.01,
+          decaimento: 0.01,
+          vida: 1 - (i / 24) * 0.6,
+          raio: 7,
+        });
+      }
+      return undefined;
+    },
+    [],
+  );
 
   const desenharQuadro = useCallback(
     (canvas: HTMLCanvasElement, estado: { size: { width: number; height: number } }) => {
@@ -175,7 +200,15 @@ export function ArchbaseMagicLoader({
         // animacao, o usuario ainda precisa saber que algo esta carregando.
         <span style={{ fontSize: 14, opacity: 0.75 }}>{label}…</span>
       ) : (
-        <canvas ref={canvasRef} aria-hidden style={{ display: 'block' }} />
+        // Posicionado como em todo efeito do pacote. Era o unico canvas em
+        // fluxo normal, e um canvas dimensionado por JS dentro de um flex
+        // container e exatamente o arranjo em que uma diferenca de layout
+        // aparece so em certos navegadores.
+        <canvas
+          ref={canvasRef}
+          aria-hidden
+          style={{ position: 'absolute', inset: 0, display: 'block' }}
+        />
       )}
     </div>
   );
