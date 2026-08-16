@@ -4,28 +4,60 @@
   "concurrency": "50",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
-      "env": ["NODE_ENV"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ],
+      "env": [
+        "NODE_ENV"
+      ]
     },
     "test": {
-      "dependsOn": ["build"],
-      "inputs": ["$TURBO_DEFAULT$", "test/**", "tests/**", "__tests__/**"],
-      "outputs": ["coverage/**"],
-      "env": ["NODE_ENV"]
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "test/**",
+        "tests/**",
+        "__tests__/**"
+      ],
+      "outputs": [
+        "coverage/**"
+      ],
+      "env": [
+        "NODE_ENV"
+      ]
     },
     "test:watch": {
       "cache": false,
       "persistent": true
     },
     "test:coverage": {
-      "dependsOn": ["build"],
-      "outputs": ["coverage/**"]
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": [
+        "coverage/**"
+      ]
     },
     "lint": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".eslintrc*", "eslint.config.*"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".eslintrc*",
+        "eslint.config.*"
+      ]
     },
     "dev": {
       "cache": false,
@@ -33,6 +65,15 @@
     },
     "clean": {
       "cache": false
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "tsconfig*.json"
+      ]
     }
   }
 }

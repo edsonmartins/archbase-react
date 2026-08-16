@@ -55,3 +55,8 @@ storybook-static
 *.tsbuildinfo
 src/**/*.d.ts
 **/src/**/*.d.ts
+# Corpus de governanca (OpenSpec/ADR/RFC). Mantido fora do repositorio de
+# proposito: cada arvore pertence ao repositorio do produto correspondente, e
+# versionar aqui traria nome de cliente para dentro da biblioteca. Sem esta
+# linha, um `git add -A` o engole como repositorio embutido.
+/spec/

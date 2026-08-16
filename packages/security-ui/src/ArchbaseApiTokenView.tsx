@@ -261,13 +261,17 @@ export function ArchbaseApiTokenView({ height = '400px', width = '100%' }: Archb
 	};
 
 	const handleApiTokenRevokeRow = () => {
-		if (dsApiTokens.getCurrentRecord()) {
+		// Capturado uma vez: chamar getCurrentRecord() de novo dentro do guarda
+		// impede o estreitamento de tipo e, pior, o registro corrente pode mudar
+		// entre a confirmação do diálogo e a revogação.
+		const record = dsApiTokens.getCurrentRecord();
+		if (record) {
 			ArchbaseDialog.showConfirmDialogYesNo(
 				`${getI18nextInstance().t('archbase:Confirme')}`,
-				`${getI18nextInstance().t('archbase:Deseja revogar o token de API do usuário ')}${dsApiTokens.getCurrentRecord().user.name} ?`,
+				`${getI18nextInstance().t('archbase:Deseja revogar o token de API do usuário ')}${record.user.name} ?`,
 				async () => {
 					await apiTokenApi
-						.revoke(dsApiTokens.getCurrentRecord().token)
+						.revoke(record.token)
 						.then(async () => {
 							ArchbaseNotifications.showSuccess(
 								`${getI18nextInstance().t('mentors:Informação')}`,

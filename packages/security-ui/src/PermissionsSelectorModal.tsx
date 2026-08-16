@@ -13,12 +13,12 @@ import { ArchbaseResourceService } from "@archbase/security";
 import { useDebouncedValue } from "@mantine/hooks";
 import { ArchbaseSpaceBottom, ArchbaseSpaceFill, ArchbaseSpaceFixed } from "@archbase/layout";
 
-const translateDelimitedString = (inputString) => {
+const translateDelimitedString = (inputString: string) => {
     const delimiter = "->"
     if (inputString.includes(delimiter)) {
-        const parts = inputString.split(delimiter).map(part => part.trim());
+        const parts = inputString.split(delimiter).map((part: string) => part.trim());
 
-        const translatedParts = parts.map(part => getI18nextInstance().t(part));
+        const translatedParts = parts.map((part: string) => getI18nextInstance().t(part));
 
         return translatedParts.join(` ${delimiter} `);
     }

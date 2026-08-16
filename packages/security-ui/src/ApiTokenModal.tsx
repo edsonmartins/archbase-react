@@ -18,7 +18,13 @@ import { NO_USER } from './ArchbaseSecurityView';
 import { ArchbaseUserService } from '@archbase/security';
 import { ApiTokenDto, GroupDto, UserDto } from '@archbase/security';
 
-export const UserSelectItem = ({ image, label, description, ...others }) => (
+export interface UserSelectItemProps extends React.ComponentPropsWithoutRef<'div'> {
+	image?: string;
+	label?: string;
+	description?: string;
+}
+
+export const UserSelectItem = ({ image, label, description, ...others }: UserSelectItemProps) => (
 	<div {...others}>
 		<Group grow>
 			<img style={{maxWidth:'32px'}} src={image} />
@@ -61,8 +67,10 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 
 	const handleChange = (value: DateValue) => {
 		if (!value) {
-			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade
-			v1v2Compatibility.handleValueChange(undefined);
+			// 🔄 MIGRAÇÃO V1/V2: Usar handleValueChange do padrão de compatibilidade.
+			// O hook foi instanciado com T = string e valor vazio '', que é o
+			// que representa "sem data" aqui; `undefined` não satisfaz T.
+			v1v2Compatibility.handleValueChange('');
 		} else {
 			// Convert string to Date if needed before calling convertDateToISOString
 			const dateValue = typeof value === 'string' ? new Date(value) : value;
@@ -89,21 +97,25 @@ export const ApiTokenModal = (props: ApiTokenModalProps) => {
 		});
 	};
 
+	// `ArchbaseDataSource` expõe `getCurrentRecord()`; nunca houve propriedade
+	// `current`. Enquanto o typecheck deste pacote não rodava, `props.dataSource.current`
+	// resolvia para `undefined` em runtime e o modal salvava um registro vazio.
 	const handleSave = () => {
+		const record = props.dataSource.getCurrentRecord();
 		if (props.onCustomSave) {
-			props.onCustomSave(props.dataSource.current, (success: boolean) => {
+			props.onCustomSave(record, (success: boolean) => {
 				if (success && props.onAfterSave) {
-					props.onAfterSave(props.dataSource.current);
+					props.onAfterSave(record);
 				}
-				props.onClickOk(props.dataSource.current, success);
+				props.onClickOk(record, success);
 			});
 		} else {
-			props.onClickOk(props.dataSource.current, true);
+			props.onClickOk(record, true);
 		}
 	};
 
 	const handleCancel = () => {
-		props.onClickCancel(props.dataSource.current);
+		props.onClickCancel(props.dataSource.getCurrentRecord());
 	};
 
 	return (
