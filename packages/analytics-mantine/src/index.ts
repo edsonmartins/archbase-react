@@ -2,6 +2,7 @@
 export { MemberPalette, type MemberPaletteProps } from './components/MemberPalette';
 export { QueryCanvas, type QueryCanvasProps } from './components/QueryCanvas';
 export { FilterBuilder, type FilterBuilderProps } from './components/FilterBuilder';
+export { ValueFilterMenu, type ValueFilterMenuProps } from './components/ValueFilterMenu';
 export {
   TimeDimensionControl,
   type TimeDimensionControlProps,

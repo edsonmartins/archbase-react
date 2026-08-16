@@ -71,6 +71,32 @@ export function AnalyticsExplorer({
     reconciliation,
   } = exploration;
 
+  // Filtros de valor ativos (operador `equals`), por membro — para o menu de
+  // filtro por valor na paleta marcar o icone e pre-selecionar os checkboxes.
+  const activeValueFilters = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const f of state.query.filters ?? []) {
+      if (f.operator === 'equals' && (f.values?.length ?? 0) > 0) map.set(f.member, f.values ?? []);
+    }
+    return map;
+  }, [state.query.filters]);
+
+  // Aplica/atualiza/remove o filtro `equals` de um membro a partir do menu.
+  const filtrarPorValor = useCallback(
+    (member: string, values: string[] | null) => {
+      const filtros = state.query.filters ?? [];
+      const idx = filtros.findIndex((f) => f.member === member && f.operator === 'equals');
+      if (values === null) {
+        if (idx >= 0) dispatch({ type: 'removeFilter', index: idx });
+        return;
+      }
+      const filter = { member, operator: 'equals' as const, values };
+      if (idx >= 0) dispatch({ type: 'updateFilter', index: idx, filter });
+      else dispatch({ type: 'addFilter', filter });
+    },
+    [state.query.filters, dispatch],
+  );
+
   const abrirRegistro = useCallback(
     (record: SavedQueryRecord) => {
       const migrada = migrateSavedQuery(record);
@@ -242,6 +268,9 @@ export function AnalyticsExplorer({
                 formatter={ports.formatter}
                 locale={config.locale}
                 searchPlaceholder={strings.searchMembers}
+                onSuggestValues={suggest}
+                onFilterValues={filtrarPorValor}
+                activeValueFilters={activeValueFilters}
               />
             </ScrollArea>
           )}
