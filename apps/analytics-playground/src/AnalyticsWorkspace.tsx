@@ -153,12 +153,37 @@ function PainelConsulta(_props: IDockviewPanelProps) {
   )
 }
 
+const VIZ_OPCOES: { value: VizType; label: string }[] = [
+  { value: 'number', label: 'Indicador' },
+  { value: 'table', label: 'Tabela' },
+  { value: 'bar', label: 'Barras' },
+  { value: 'line', label: 'Linhas' },
+  { value: 'area', label: 'Área' },
+  { value: 'pie', label: 'Pizza' },
+]
+
 function PainelResultado(props: IDockviewPanelProps) {
   const { corpo, renderWidget } = useWorkspace()
   const viz = (props.params as { viz?: VizType } | undefined)?.viz
   const { ref, height } = useElementSize()
+  // Troca a viz do widget e persiste nos params do painel (entra no toJSON).
+  const trocarViz = (v: string | null) => {
+    if (v) props.api.updateParameters({ ...props.params, viz: v })
+  }
   return (
     <Box style={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+      {viz && (
+        <Group justify="flex-end" px={6} pt={6} style={{ flex: '0 0 auto' }}>
+          <Select
+            size="xs"
+            w={120}
+            data={VIZ_OPCOES}
+            value={viz}
+            onChange={trocarViz}
+            allowDeselect={false}
+          />
+        </Group>
+      )}
       <Box ref={ref} style={{ flex: 1, minHeight: 0, padding: 8 }}>
         {viz ? renderWidget(viz, height) : corpo()}
       </Box>
