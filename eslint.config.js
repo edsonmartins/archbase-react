@@ -67,6 +67,7 @@ export default [
         Element: 'readonly',
         FrameRequestCallback: 'readonly',
         HTMLCanvasElement: 'readonly',
+        HTMLButtonElement: 'readonly',
         HTMLDivElement: 'readonly',
         HTMLElement: 'readonly',
         WebGLBuffer: 'readonly',

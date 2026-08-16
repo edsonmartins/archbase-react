@@ -11,6 +11,18 @@ export {
   ArchbaseNebulaFlow,
   type ArchbaseNebulaFlowProps,
 } from './backgrounds/ArchbaseNebulaFlow';
+export { ArchbaseVectorFlow, type ArchbaseVectorFlowProps } from './backgrounds/ArchbaseVectorFlow';
+export { ArchbaseBeamGrid, type ArchbaseBeamGridProps } from './backgrounds/ArchbaseBeamGrid';
+
+// Efeitos de elemento
+export {
+  ArchbaseStardustButton,
+  type ArchbaseStardustButtonProps,
+} from './elements/ArchbaseStardustButton';
+export {
+  ArchbaseElectroBorder,
+  type ArchbaseElectroBorderProps,
+} from './elements/ArchbaseElectroBorder';
 
 // Indicadores
 export { ArchbaseMagicLoader, type ArchbaseMagicLoaderProps } from './loaders/ArchbaseMagicLoader';
@@ -23,6 +35,7 @@ export {
   type UseArchbaseCanvasAnimationOptions,
   type UseArchbaseCanvasAnimationResult,
 } from './hooks/useArchbaseCanvasAnimation';
+export { criarRuidoPerlin, type RuidoPerlin } from './math/perlin';
 export {
   parseColor,
   readColorScheme,
