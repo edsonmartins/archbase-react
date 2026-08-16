@@ -15,7 +15,9 @@
     "@mantine/core": "9.5.1",
     "@mantine/hooks": "9.5.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "@archbase/components": "workspace:*",
+    "@tabler/icons-react": "^3.34.1"
   },
   "devDependencies": {
     "@types/react": "^19.0.6",

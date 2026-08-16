@@ -19,6 +19,13 @@ import { PainelLoader } from './paineis/PainelLoader';
 import { PainelBeamGrid, PainelVectorFlow, PainelElementos } from './paineis/PainelLote2';
 import { PainelWave, PainelNeural, PainelAscii } from './paineis/PainelLote3';
 import { PainelAurora, PainelGooey } from './paineis/PainelLote5';
+import {
+  PainelSlideToConfirm,
+  PainelReorderList,
+  PainelDock,
+  PainelGlowingCards,
+  PainelDeviceFrame,
+} from './paineis/PainelInteracao';
 
 export function App() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -98,6 +105,21 @@ export function App() {
             <PainelAscii />
             <PainelAurora />
             <PainelGooey />
+
+            <Title order={3} mt="xl">
+              Componentes de interação
+            </Title>
+            <Text size="sm" c="dimmed" mt={-12}>
+              Estes não são efeitos: vão para <b>@archbase/components</b>. Todos foram portados
+              para Mantine e ganharam operação por teclado, que os originais não tinham. Navegue
+              com Tab para verificar.
+            </Text>
+
+            <PainelSlideToConfirm />
+            <PainelReorderList />
+            <PainelDock />
+            <PainelGlowingCards />
+            <PainelDeviceFrame />
 
             <Text size="xs" c="dimmed" ta="center" pb="xl">
               Efeitos adaptados de Lightswind UI (MIT, Muhilan / codewithMUHILAN).

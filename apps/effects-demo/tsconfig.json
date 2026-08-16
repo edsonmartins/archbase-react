@@ -4,8 +4,15 @@
     "noEmit": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    // Espelha os alias do vite.config.ts. Sem isto o tsc resolve pelo `dist`,
+    // que envelhece a cada edicao no `src`, enquanto o Vite serve o `src`: os
+    // dois discordam e o typecheck passa a mentir nas duas direcoes.
     "paths": {
-      "@archbase/effects": ["../../packages/effects/src/index.ts"]
+      "@archbase/effects": ["../../packages/effects/src/index.ts"],
+      "@archbase/components": ["../../packages/components/src/index.ts"],
+      "@archbase/core": ["../../packages/core/src/index.ts"],
+      "@archbase/data": ["../../packages/data/src/index.ts"],
+      "@archbase/layout": ["../../packages/layout/src/index.ts"]
     }
   },
   "include": ["src/**/*"]

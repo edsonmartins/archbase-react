@@ -10,8 +10,19 @@ export interface ArchbaseMagicLoaderProps {
   speed?: number;
   /** Faixa de matiz percorrida, em graus. */
   hueRange?: [number, number];
-  /** Rotulo acessivel. */
+  /**
+   * Nome acessivel do indicador. Sempre anunciado por leitores de tela; use
+   * `showLabel` para exibi-lo tambem em tela.
+   */
   label?: string;
+  /**
+   * Exibe o rotulo abaixo da animacao.
+   *
+   * Vale considerar ligar: "Carregando relatorio" informa **o que** esta
+   * acontecendo, e isso serve a qualquer usuario, nao so a quem usa leitor de
+   * tela. Fica desligado por padrao para nao alterar layouts existentes.
+   */
+  showLabel?: boolean;
   className?: string;
   style?: CSSProperties;
 }
@@ -53,6 +64,7 @@ export function ArchbaseMagicLoader({
   speed = 1,
   hueRange = [0, 360],
   label = 'Carregando',
+  showLabel = false,
   className,
   style,
 }: ArchbaseMagicLoaderProps) {
@@ -180,35 +192,41 @@ export function ArchbaseMagicLoader({
 
   return (
     <div
-      ref={containerRef}
       className={className}
       role="status"
       aria-live="polite"
       aria-label={label}
       style={{
-        position: 'relative',
         display: 'inline-flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        width: size,
-        height: size,
+        gap: showLabel ? 8 : 0,
         ...style,
       }}
     >
       {reducedMotion ? (
         // Movimento reduzido nao pode significar ausencia de sinal: sem a
         // animacao, o usuario ainda precisa saber que algo esta carregando.
-        <span style={{ fontSize: 14, opacity: 0.75 }}>{label}…</span>
+        <span style={{ fontSize: 14, opacity: 0.75, minHeight: 20 }}>{label}…</span>
       ) : (
-        // Posicionado como em todo efeito do pacote. Era o unico canvas em
-        // fluxo normal, e um canvas dimensionado por JS dentro de um flex
-        // container e exatamente o arranjo em que uma diferenca de layout
-        // aparece so em certos navegadores.
-        <canvas
-          ref={canvasRef}
-          aria-hidden
-          style={{ position: 'absolute', inset: 0, display: 'block' }}
-        />
+        // A caixa de tamanho fixo e o que o laco mede; o rotulo fica fora dela,
+        // senao o canvas seria dimensionado incluindo a altura do texto.
+        <div ref={containerRef} style={{ position: 'relative', width: size, height: size }}>
+          <canvas
+            ref={canvasRef}
+            aria-hidden
+            style={{ position: 'absolute', inset: 0, display: 'block' }}
+          />
+        </div>
+      )}
+
+      {showLabel && !reducedMotion && (
+        // `aria-hidden` de proposito: o container ja carrega o nome acessivel,
+        // e sem isto o leitor de tela anunciaria o mesmo texto duas vezes.
+        <span aria-hidden style={{ fontSize: 14, opacity: 0.75 }}>
+          {label}
+        </span>
       )}
     </div>
   );
