@@ -91,17 +91,17 @@ function MantineChart({ viz, result, formatter, locale }: ChartRenderProps) {
   switch (viz) {
     case 'bar':
       return moldura(
-        <BarChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} withLegend />,
+        <BarChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} />,
       );
 
     case 'line':
       return moldura(
-        <LineChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} withLegend />,
+        <LineChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} />,
       );
 
     case 'area':
       return moldura(
-        <AreaChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} withLegend />,
+        <AreaChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} />,
       );
 
     case 'pie': {
