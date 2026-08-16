@@ -102,3 +102,6 @@ export type {
   ArchbaseGlowingCardsProps,
   ArchbaseGlowingCardProps,
 } from './ArchbaseGlowingCards';
+
+export { ArchbaseDeviceFrame } from './ArchbaseDeviceFrame';
+export type { ArchbaseDeviceFrameProps, ArchbaseDeviceVariant } from './ArchbaseDeviceFrame';
