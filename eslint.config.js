@@ -30,6 +30,15 @@ export default [
       ...reactHooks.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
+      // Desligada em TypeScript por recomendacao do proprio typescript-eslint.
+      // O compilador ja acusa identificador indefinido, e a regra nao entende
+      // referencia em posicao de tipo (`useRef<HTMLLIElement>`), nem globais de
+      // plataforma sem uma lista manual que envelhece.
+      //
+      // Mantida ligada, ela produzia 1512 erros neste repositorio — todos
+      // falsos. Volume assim nao e rigor: e ruido que faz a equipe parar de ler
+      // a saida do lint, e junto com ele passam os erros verdadeiros.
+      'no-undef': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': [
