@@ -1,6 +1,6 @@
 {
   "name": "@archbase/analytics-core",
-  "version": "4.5.0",
+  "version": "4.6.0",
   "description": "Headless core for Archbase Analytics - ports, transport and exploration state over a semantic layer",
   "license": "MIT",
   "author": "Edson Martins",

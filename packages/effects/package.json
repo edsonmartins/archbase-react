@@ -1,6 +1,6 @@
 {
   "name": "@archbase/effects",
-  "version": "4.4.0",
+  "version": "4.6.0",
   "description": "Visual effects for Archbase React - canvas and WebGL backgrounds, loaders and motion",
   "license": "MIT",
   "author": "Edson Martins",
