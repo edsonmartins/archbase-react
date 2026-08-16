@@ -1,5 +1,6 @@
 import { AreaChart, BarChart, LineChart, PieChart } from '@mantine/charts';
-import { Center, Text } from '@mantine/core';
+import { Box, Center, Paper, SimpleGrid, Text } from '@mantine/core';
+import type { ReactNode } from 'react';
 import type {
   ChartRenderProps,
   ChartRenderer,
@@ -9,7 +10,7 @@ import type {
   VizType,
 } from '@archbase/analytics-core';
 
-const SUPORTADAS: readonly VizType[] = ['bar', 'line', 'area', 'pie'];
+const SUPORTADAS: readonly VizType[] = ['bar', 'line', 'area', 'pie', 'number'];
 
 /**
  * Renderizador de referencia sobre `@mantine/charts`.
@@ -34,6 +35,10 @@ function categoryColumn(result: NormalizedResult): ResultColumn | undefined {
   return result.columns.find((column) => column.kind !== 'measure');
 }
 
+function contexto(column: ResultColumn, locale: string) {
+  return { format: column.format, precision: column.precision, memberName: column.member, locale };
+}
+
 /** Formata o eixo pela porta: nenhuma conversao de unidade acontece aqui. */
 function axisFormatter(
   formatter: ValueFormatter,
@@ -41,13 +46,22 @@ function axisFormatter(
   locale: string,
 ) {
   if (!column) return undefined;
-  return (value: number) =>
-    formatter.format(value, {
-      format: column.format,
-      precision: column.precision,
-      memberName: column.member,
-      locale,
-    });
+  return (value: number) => formatter.format(value, contexto(column, locale));
+}
+
+/** Agrega uma medida sobre as linhas: media para razao (`percent`), soma senao. */
+function agregar(result: NormalizedResult, column: ResultColumn): number {
+  const valores = result.rows
+    .map((row) => Number(row[column.member]))
+    .filter((v) => Number.isFinite(v));
+  if (valores.length === 0) return 0;
+  const soma = valores.reduce((a, b) => a + b, 0);
+  return column.format === 'percent' ? soma / valores.length : soma;
+}
+
+/** Envolve o conteudo com padding e altura cheia — o grafico nao cola nas bordas. */
+function moldura(node: ReactNode): ReactNode {
+  return <Box p="md" style={{ height: '100%', minHeight: 0 }}>{node}</Box>;
 }
 
 function MantineChart({ viz, result, formatter, locale }: ChartRenderProps) {
@@ -56,7 +70,7 @@ function MantineChart({ viz, result, formatter, locale }: ChartRenderProps) {
 
   if (measures.length === 0 || result.rows.length === 0) {
     return (
-      <Center p="xl">
+      <Center p="xl" style={{ height: '100%' }}>
         <Text size="sm" c="dimmed">
           Sem dados para exibir.
         </Text>
@@ -76,34 +90,71 @@ function MantineChart({ viz, result, formatter, locale }: ChartRenderProps) {
 
   switch (viz) {
     case 'bar':
-      return (
-        <BarChart h={320} data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} />
+      return moldura(
+        <BarChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} withLegend />,
       );
 
     case 'line':
-      return (
-        <LineChart h={320} data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} />
+      return moldura(
+        <LineChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} withLegend />,
       );
 
     case 'area':
-      return (
-        <AreaChart h={320} data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} />
+      return moldura(
+        <AreaChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} withLegend />,
       );
 
     case 'pie': {
       const measure = measures[0];
       if (!measure) return null;
-      const fatias = result.rows.map((row, index) => ({
-        name: String(row[dataKey] ?? ''),
-        value: Number(row[measure.member] ?? 0),
+      // Agrega por valor da categoria: sem isso, uma consulta com 2 dimensoes
+      // vira dezenas de fatias minusculas com nomes repetidos.
+      const porCategoria = new Map<string, number>();
+      for (const row of result.rows) {
+        const nome = String(row[dataKey] ?? '');
+        porCategoria.set(nome, (porCategoria.get(nome) ?? 0) + (Number(row[measure.member]) || 0));
+      }
+      const fatias = [...porCategoria.entries()].map(([name, value], index) => ({
+        name,
+        value,
         color: PALETA[index % PALETA.length] ?? 'blue.6',
       }));
-      return <PieChart h={320} data={fatias} withTooltip valueFormatter={valueFormatter} />;
+      return moldura(
+        <Center style={{ height: '100%' }}>
+          <PieChart
+            data={fatias}
+            withTooltip
+            withLabelsLine
+            withLabels
+            labelsType="percent"
+            size={260}
+            valueFormatter={valueFormatter}
+          />
+        </Center>,
+      );
     }
 
+    case 'number':
+      // Indicador: um card de KPI por medida (total agregado, formatado).
+      return moldura(
+        <SimpleGrid
+          cols={{ base: 1, xs: 2, sm: Math.min(Math.max(measures.length, 1), 4) }}
+          spacing="md"
+        >
+          {measures.map((m) => (
+            <Paper key={m.member} withBorder p="md" radius="md">
+              <Text size="xs" c="dimmed" fw={600} tt="uppercase">
+                {m.title}
+              </Text>
+              <Text fw={700} fz={28} mt={4}>
+                {formatter.format(agregar(result, m), contexto(m, locale))}
+              </Text>
+            </Paper>
+          ))}
+        </SimpleGrid>,
+      );
+
     default:
-      // `table` e `number` nao passam pelo renderizador; `supports` ja os
-      // exclui, e chegar aqui indicaria chamada fora do contrato.
       return null;
   }
 }
