@@ -1,6 +1,6 @@
 {
   "name": "@archbase/analytics-vtable",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "description": "VisActor VTable table renderer for Archbase Analytics",
   "license": "MIT",
   "author": "Edson Martins",
@@ -14,7 +14,10 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "vite build",
@@ -26,7 +29,7 @@
     "@visactor/vtable": "^1.26.0"
   },
   "peerDependencies": {
-    "@archbase/analytics-core": "^4.4.0",
+    "@archbase/analytics-core": "^4.5.0",
     "react": "^18.3.0 || ^19.2.0",
     "react-dom": "^18.3.0 || ^19.2.0"
   },

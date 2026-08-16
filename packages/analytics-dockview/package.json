@@ -1,6 +1,6 @@
 {
   "name": "@archbase/analytics-dockview",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "description": "Dockable BI workspace (dockview) for Archbase Analytics",
   "license": "MIT",
   "author": "Edson Martins",
@@ -14,7 +14,10 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
@@ -25,8 +28,8 @@
     "dockview-react": "^4.6.0"
   },
   "peerDependencies": {
-    "@archbase/analytics-core": "^4.4.0",
-    "@archbase/analytics-mantine": "^4.4.0",
+    "@archbase/analytics-core": "^4.5.0",
+    "@archbase/analytics-mantine": "^4.5.0",
     "@mantine/core": "^9.4.0",
     "@mantine/dates": "^9.4.0",
     "@mantine/hooks": "^9.4.0",

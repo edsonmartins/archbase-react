@@ -9,8 +9,8 @@ import {
 } from '@archbase/analytics-core';
 
 export interface ExportButtonProps {
-  /** Resultado atual; `null`/vazio desabilita o botao. */
-  result: NormalizedResult | null;
+  /** Resultado atual; ausente/vazio desabilita o botao. */
+  result: NormalizedResult | null | undefined;
   meta: AnalyticsMeta;
   formatter: ValueFormatter;
   labeler?: MemberLabeler;
