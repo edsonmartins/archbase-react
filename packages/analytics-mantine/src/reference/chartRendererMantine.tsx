@@ -49,6 +49,31 @@ function axisFormatter(
   return (value: number) => formatter.format(value, contexto(column, locale));
 }
 
+/**
+ * Largura reservada ao eixo Y, a partir do maior rotulo formatado. Sem isso o
+ * Recharts fixa ~60px e rotulos largos (ex.: "R$ 140.000,00") transbordam a
+ * esquerda e o card os corta. Estimativa por caractere (fonte ~12px), com piso
+ * e teto para nao comer a area do grafico.
+ */
+function larguraEixoY(
+  result: NormalizedResult,
+  measures: ResultColumn[],
+  formatter: ValueFormatter,
+  locale: string,
+): number {
+  const base = measures[0];
+  if (!base) return 60;
+  let max = 0;
+  for (const row of result.rows) {
+    for (const m of measures) {
+      const v = Math.abs(Number(row[m.member]));
+      if (Number.isFinite(v) && v > max) max = v;
+    }
+  }
+  const rotulo = formatter.format(max, contexto(base, locale));
+  return Math.min(140, Math.max(56, rotulo.length * 7 + 16));
+}
+
 /** Agrega uma medida sobre as linhas: media para nao-aditivas (razao `percent`
  *  ou `aggType` de media, ex.: ticket medio), soma para as aditivas. */
 function agregar(result: NormalizedResult, column: ResultColumn): number {
@@ -89,22 +114,44 @@ function MantineChart({ viz, result, formatter, locale }: ChartRenderProps) {
   }));
 
   const valueFormatter = axisFormatter(formatter, measures[0], locale);
+  const larguraY = larguraEixoY(result, measures, formatter, locale);
   const data = result.rows as unknown as Array<Record<string, unknown>>;
 
   switch (viz) {
     case 'bar':
       return moldura(
-        <BarChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} />,
+        <BarChart
+          h="100%"
+          data={data}
+          dataKey={dataKey}
+          series={series}
+          valueFormatter={valueFormatter}
+          yAxisProps={{ width: larguraY }}
+        />,
       );
 
     case 'line':
       return moldura(
-        <LineChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} />,
+        <LineChart
+          h="100%"
+          data={data}
+          dataKey={dataKey}
+          series={series}
+          valueFormatter={valueFormatter}
+          yAxisProps={{ width: larguraY }}
+        />,
       );
 
     case 'area':
       return moldura(
-        <AreaChart h="100%" data={data} dataKey={dataKey} series={series} valueFormatter={valueFormatter} />,
+        <AreaChart
+          h="100%"
+          data={data}
+          dataKey={dataKey}
+          series={series}
+          valueFormatter={valueFormatter}
+          yAxisProps={{ width: larguraY }}
+        />,
       );
 
     case 'pie': {
