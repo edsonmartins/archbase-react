@@ -56,7 +56,7 @@ import {
 } from 'dockview-react'
 import 'dockview-react/dist/styles/dockview.css'
 
-const LAYOUT_KEY = 'analytics-workspace-layout'
+const DEFAULT_LAYOUT_KEY = 'analytics-workspace-layout'
 
 // ─── Contexto: os paineis do dockview consomem o mesmo estado de exploracao ──
 
@@ -325,20 +325,34 @@ function rangeDoPeriodo(p: Periodo): [string, string] | null {
 
 // ─── Workspace ───────────────────────────────────────────────────────────────
 
+export interface AnalyticsWorkspaceProps {
+  /** Chave de persistencia do layout no localStorage. Namespeie por pagina para
+   *  isolar layouts. Default `analytics-workspace-layout`. */
+  storageKey?: string
+  /** Identidade do autor, gravada na consulta salva. */
+  ownerId?: string
+  /** Preset inicial quando nao ha layout salvo. Default `padrao`. */
+  initialPreset?: Preset
+}
+
 /**
  * Explorador em workspace dockavel (dockview): Metricas, Consulta e Resultado
  * como paineis que o usuario arrasta, redimensiona (sashes), flutua e esconde.
  * O layout persiste no localStorage; a mesma fiacao de exploracao alimenta os
  * tres paineis via contexto.
  */
-export function AnalyticsWorkspace() {
+export function AnalyticsWorkspace({
+  storageKey = DEFAULT_LAYOUT_KEY,
+  ownerId = '',
+  initialPreset = 'padrao',
+}: AnalyticsWorkspaceProps = {}) {
   const ctx = useAnalyticsContext()
   const exploration = useExploration({ origin: 'explorer' })
   const { suggest } = useMemberValues()
   const colorScheme = useComputedColorScheme('dark')
   const apiRef = useRef<DockviewApi | null>(null)
   const [bordas, setBordas] = useState(true)
-  const [preset, setPreset] = useState<Preset>('padrao')
+  const [preset, setPreset] = useState<Preset>(initialPreset)
   const { labeler, ports, config, strings } = ctx
 
   const aplicar = useCallback((p: Preset) => {
@@ -347,9 +361,9 @@ export function AnalyticsWorkspace() {
   }, [])
 
   const resetarLayout = useCallback(() => {
-    localStorage.removeItem(LAYOUT_KEY)
+    localStorage.removeItem(storageKey)
     if (apiRef.current) aplicarPreset(apiRef.current, preset)
-  }, [preset])
+  }, [preset, storageKey])
   const { state, dispatch, meta, result, loading, error, runnable, viz, availableViz } = exploration
 
   // Barra de periodo: aplica o intervalo ao 1o timeDimension como FILTRO
@@ -469,11 +483,11 @@ export function AnalyticsWorkspace() {
         schemaVersion: 1,
         query: state.query,
         viz: { ...state.viz, type: viz },
-        meta: { name, ownerId: '', scope: 'private' },
+        meta: { name, ownerId, scope: 'private' },
       })
       dispatch({ type: 'replace', state: { ...state, savedQueryId: gravada.id } })
     },
-    [ports, state, viz, dispatch],
+    [ports, state, viz, ownerId, dispatch],
   )
 
   const tabela = useCallback(
@@ -567,7 +581,7 @@ export function AnalyticsWorkspace() {
 
   const onReady = (event: DockviewReadyEvent) => {
     apiRef.current = event.api
-    const salvo = localStorage.getItem(LAYOUT_KEY)
+    const salvo = localStorage.getItem(storageKey)
     let restaurou = false
     if (salvo) {
       try {
@@ -577,10 +591,10 @@ export function AnalyticsWorkspace() {
         restaurou = false
       }
     }
-    if (!restaurou) aplicarPreset(event.api, 'padrao')
+    if (!restaurou) aplicarPreset(event.api, initialPreset)
     event.api.onDidLayoutChange(() => {
       try {
-        localStorage.setItem(LAYOUT_KEY, JSON.stringify(event.api.toJSON()))
+        localStorage.setItem(storageKey, JSON.stringify(event.api.toJSON()))
       } catch {
         /* quota/serializacao — ignora */
       }

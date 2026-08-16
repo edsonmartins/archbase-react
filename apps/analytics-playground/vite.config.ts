@@ -20,6 +20,10 @@ export default defineConfig({
         replacement: src('../../packages/analytics-vtable/src/index.ts'),
       },
       {
+        find: /^@archbase\/analytics-dockview$/,
+        replacement: src('../../packages/analytics-dockview/src/index.ts'),
+      },
+      {
         find: '@archbase/analytics-mantine/charts',
         replacement: src('../../packages/analytics-mantine/src/charts.ts'),
       },

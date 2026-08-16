@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@archbase/analytics-core": "workspace:*",
+    "@archbase/analytics-dockview": "workspace:*",
     "@archbase/analytics-mantine": "workspace:*",
     "@archbase/analytics-vtable": "workspace:*",
     "@visactor/vtable": "^1.26.0",

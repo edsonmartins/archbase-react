@@ -19,7 +19,7 @@ import {
 import { AnalyticsExplorer } from '@archbase/analytics-mantine'
 import { createMantineChartRenderer } from '@archbase/analytics-mantine/charts'
 import { createVTableRenderer } from '@archbase/analytics-vtable'
-import { AnalyticsWorkspace } from './AnalyticsWorkspace'
+import { AnalyticsWorkspace } from '@archbase/analytics-dockview'
 import { mockFetch } from './mockModel'
 
 /**
