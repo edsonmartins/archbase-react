@@ -8,10 +8,12 @@ import {
   type ReactNode,
 } from 'react';
 import {
+  ActionIcon,
   Box,
   Button,
   Divider,
   Group,
+  SegmentedControl,
   Select,
   Stack,
   Switch,
@@ -19,6 +21,8 @@ import {
   useComputedColorScheme,
 } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks'
+import { DatePickerInput } from '@mantine/dates'
+import { IconRefresh } from '@tabler/icons-react'
 import {
   useAnalyticsContext,
   useExploration,
@@ -279,6 +283,44 @@ function aplicarPreset(api: DockviewApi, preset: Preset) {
   else layoutPadrao(api)
 }
 
+// ─── Periodo (filtro de tempo) ───────────────────────────────────────────────
+
+type Periodo = 'tudo' | 'ano' | '90' | '30' | '7' | 'mes' | 'custom'
+
+const PERIODOS: { value: Periodo; label: string }[] = [
+  { value: 'tudo', label: 'Tudo' },
+  { value: 'ano', label: 'Ano' },
+  { value: '90', label: '90 dias' },
+  { value: '30', label: '30 dias' },
+  { value: '7', label: '7 dias' },
+  { value: 'mes', label: 'Mês' },
+  { value: 'custom', label: 'Personalizado' },
+]
+
+function fmtData(d: Date): string {
+  return d.toISOString().slice(0, 10)
+}
+
+// DatePickerInput devolve Date ou string ISO conforme a versao do Mantine.
+type CustomData = string | Date | null
+function normData(v: CustomData): string | null {
+  if (v == null) return null
+  return typeof v === 'string' ? v.slice(0, 10) : fmtData(v)
+}
+
+/** Intervalo [inicio, fim] do preset relativo a hoje; null p/ "Tudo"/"Personalizado". */
+function rangeDoPeriodo(p: Periodo): [string, string] | null {
+  if (p === 'tudo' || p === 'custom') return null
+  const hoje = new Date()
+  const inicio = new Date(hoje)
+  if (p === '7') inicio.setDate(hoje.getDate() - 7)
+  else if (p === '30') inicio.setDate(hoje.getDate() - 30)
+  else if (p === '90') inicio.setDate(hoje.getDate() - 90)
+  else if (p === 'mes') inicio.setDate(1)
+  else if (p === 'ano') inicio.setMonth(0, 1)
+  return [fmtData(inicio), fmtData(hoje)]
+}
+
 // ─── Workspace ───────────────────────────────────────────────────────────────
 
 /**
@@ -307,6 +349,49 @@ export function AnalyticsWorkspace() {
     if (apiRef.current) aplicarPreset(apiRef.current, preset)
   }, [preset])
   const { state, dispatch, meta, result, loading, error, runnable, viz, availableViz } = exploration
+
+  // Barra de periodo: aplica o intervalo ao 1o timeDimension como FILTRO
+  // (dateRange sem granularidade), preservando a granularidade se o usuario
+  // ja estiver agrupando por tempo. "Tudo" limpa o intervalo.
+  const [periodo, setPeriodo] = useState<Periodo>('tudo')
+  const [custom, setCustom] = useState<[CustomData, CustomData]>([null, null])
+  const timeDimMember = meta?.timeDimensions?.[0]?.name
+
+  const aplicarRange = useCallback(
+    (range: [string, string] | null) => {
+      if (!timeDimMember) return
+      const gran = state.query.timeDimensions?.[0]?.granularity
+      if (range === null) {
+        dispatch({
+          type: 'setTimeDimension',
+          dimension: gran ? timeDimMember : null,
+          granularity: gran,
+          dateRange: undefined,
+        })
+      } else {
+        dispatch({ type: 'setTimeDimension', dimension: timeDimMember, granularity: gran, dateRange: range })
+      }
+    },
+    [timeDimMember, state.query.timeDimensions, dispatch],
+  )
+
+  const trocarPeriodo = useCallback(
+    (p: Periodo) => {
+      setPeriodo(p)
+      if (p !== 'custom') aplicarRange(rangeDoPeriodo(p))
+    },
+    [aplicarRange],
+  )
+
+  const trocarCustom = useCallback(
+    (val: [CustomData, CustomData]) => {
+      setCustom(val)
+      const a = normData(val[0])
+      const b = normData(val[1])
+      if (a && b) aplicarRange([a, b])
+    },
+    [aplicarRange],
+  )
 
   const selecionados = [
     ...(state.query.measures ?? []),
@@ -496,6 +581,41 @@ export function AnalyticsWorkspace() {
             checked={bordas}
             onChange={(e) => setBordas(e.currentTarget.checked)}
           />
+          {timeDimMember && (
+            <>
+              <Divider orientation="vertical" />
+              <Text size="xs" c="dimmed" fw={600}>
+                Período
+              </Text>
+              <SegmentedControl
+                size="xs"
+                value={periodo}
+                onChange={(v) => trocarPeriodo(v as Periodo)}
+                data={PERIODOS}
+              />
+              {periodo === 'custom' && (
+                <DatePickerInput
+                  size="xs"
+                  type="range"
+                  value={custom as unknown as [string | null, string | null]}
+                  onChange={(v) => trocarCustom(v as unknown as [CustomData, CustomData])}
+                  placeholder="Intervalo"
+                  valueFormat="DD/MM/YYYY"
+                  w={220}
+                  clearable
+                />
+              )}
+              <ActionIcon
+                size="md"
+                variant="default"
+                onClick={() => aplicarRange(rangeDoPeriodo(periodo))}
+                aria-label="Atualizar"
+                title="Atualizar"
+              >
+                <IconRefresh size={15} />
+              </ActionIcon>
+            </>
+          )}
         </Group>
         <div
           style={{

@@ -179,7 +179,7 @@ interface MockFilter {
 interface MockQuery {
   measures?: string[]
   dimensions?: string[]
-  timeDimensions?: Array<{ dimension: string; granularity?: string }>
+  timeDimensions?: Array<{ dimension: string; granularity?: string; dateRange?: [string, string] }>
   filters?: MockFilter[]
 }
 
@@ -219,17 +219,25 @@ function corresponde(valor: string, f: MockFilter): boolean {
 
 function gerarLinhas(query: MockQuery): Array<Record<string, string>> {
   const dims = query.dimensions ?? []
-  const timeDims = (query.timeDimensions ?? []).map((t) => t.dimension)
+  const timeDimsAll = query.timeDimensions ?? []
+  // So agrupa por tempo quando ha granularidade; dateRange sozinho e filtro.
+  const timeGroupCols = timeDimsAll.filter((t) => t.granularity).map((t) => t.dimension)
   const measures = query.measures ?? []
   const filtros = query.filters ?? []
-  const grupoCols = [...dims, ...timeDims]
+  const grupoCols = [...dims, ...timeGroupCols]
 
-  // 1) Filtra os fatos base — vale para qualquer dimensao, agrupada ou nao.
-  const filtrados = FATOS.filter((f) =>
-    filtros.every((flt) => {
-      const val = valorDimensao(f, flt.member)
-      return val === undefined ? true : corresponde(val, flt)
-    }),
+  // 1) Filtra os fatos: filtros de dimensao + intervalo (dateRange) do tempo.
+  const filtrados = FATOS.filter(
+    (f) =>
+      filtros.every((flt) => {
+        const val = valorDimensao(f, flt.member)
+        return val === undefined ? true : corresponde(val, flt)
+      }) &&
+      timeDimsAll.every((td) => {
+        if (!td.dateRange) return true
+        const val = valorDimensao(f, td.dimension)
+        return val === undefined ? true : val >= td.dateRange[0] && val <= td.dateRange[1]
+      }),
   )
 
   // 2) Agrupa pelas colunas pedidas e acumula as measures aditivas.
