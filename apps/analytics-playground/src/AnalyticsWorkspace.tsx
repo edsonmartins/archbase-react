@@ -12,6 +12,7 @@ import {
   Button,
   Divider,
   Group,
+  Select,
   Stack,
   Switch,
   Text,
@@ -163,8 +164,15 @@ const components = {
   resultado: PainelResultado,
 }
 
-/** Arranjo default: Metricas a esquerda, Consulta e Resultado empilhados a direita. */
-function adicionarPaineisPadrao(api: DockviewApi) {
+type Preset = 'padrao' | 'lateral'
+
+const PRESETS: { value: Preset; label: string }[] = [
+  { value: 'padrao', label: 'Padrão (métricas | consulta/resultado)' },
+  { value: 'lateral', label: 'Lateral (métricas+consulta | resultado)' },
+]
+
+/** Padrao: Metricas a esquerda; Consulta e Resultado empilhados a direita. */
+function layoutPadrao(api: DockviewApi) {
   api.addPanel({ id: 'metricas', component: 'metricas', title: 'Métricas' })
   api.addPanel({
     id: 'consulta',
@@ -178,6 +186,29 @@ function adicionarPaineisPadrao(api: DockviewApi) {
     title: 'Resultado',
     position: { referencePanel: 'consulta', direction: 'below' },
   })
+}
+
+/** Lateral: Metricas e Consulta empilhados a esquerda; Resultado a direita. */
+function layoutLateral(api: DockviewApi) {
+  api.addPanel({ id: 'metricas', component: 'metricas', title: 'Métricas' })
+  api.addPanel({
+    id: 'resultado',
+    component: 'resultado',
+    title: 'Resultado',
+    position: { referencePanel: 'metricas', direction: 'right' },
+  })
+  api.addPanel({
+    id: 'consulta',
+    component: 'consulta',
+    title: 'Consulta',
+    position: { referencePanel: 'metricas', direction: 'below' },
+  })
+}
+
+function aplicarPreset(api: DockviewApi, preset: Preset) {
+  api.clear()
+  if (preset === 'lateral') layoutLateral(api)
+  else layoutPadrao(api)
 }
 
 // ─── Workspace ───────────────────────────────────────────────────────────────
@@ -195,15 +226,18 @@ export function AnalyticsWorkspace() {
   const colorScheme = useComputedColorScheme('dark')
   const apiRef = useRef<DockviewApi | null>(null)
   const [bordas, setBordas] = useState(true)
+  const [preset, setPreset] = useState<Preset>('padrao')
   const { labeler, ports, config, strings } = ctx
+
+  const aplicar = useCallback((p: Preset) => {
+    setPreset(p)
+    if (apiRef.current) aplicarPreset(apiRef.current, p)
+  }, [])
 
   const resetarLayout = useCallback(() => {
     localStorage.removeItem(LAYOUT_KEY)
-    const api = apiRef.current
-    if (!api) return
-    api.clear()
-    adicionarPaineisPadrao(api)
-  }, [])
+    if (apiRef.current) aplicarPreset(apiRef.current, preset)
+  }, [preset])
   const { state, dispatch, meta, result, loading, error, runnable, viz, availableViz } = exploration
 
   const selecionados = [
@@ -271,11 +305,12 @@ export function AnalyticsWorkspace() {
           labeler,
           locale: config.locale,
           height: alturaCorpo,
+          colorScheme,
         })
       }
       return null
     },
-    [result, meta, ports, labeler, config.locale],
+    [result, meta, ports, labeler, config.locale, colorScheme],
   )
 
   const corpo = useCallback(() => {
@@ -316,7 +351,7 @@ export function AnalyticsWorkspace() {
         restaurou = false
       }
     }
-    if (!restaurou) adicionarPaineisPadrao(event.api)
+    if (!restaurou) aplicarPreset(event.api, 'padrao')
     event.api.onDidLayoutChange(() => {
       try {
         localStorage.setItem(LAYOUT_KEY, JSON.stringify(event.api.toJSON()))
@@ -332,6 +367,15 @@ export function AnalyticsWorkspace() {
     <WorkspaceContext.Provider value={value}>
       <Stack gap={6} style={{ height: '100%', minHeight: 0 }}>
         <Group gap="md">
+          <Select
+            size="xs"
+            w={300}
+            value={preset}
+            onChange={(v) => v && aplicar(v as Preset)}
+            data={PRESETS}
+            allowDeselect={false}
+            aria-label="Layout"
+          />
           <Button size="compact-xs" variant="default" onClick={resetarLayout}>
             Resetar layout
           </Button>

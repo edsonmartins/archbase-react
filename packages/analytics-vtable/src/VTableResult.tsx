@@ -298,7 +298,7 @@ function construirOpcoesPlano(
     autoFillWidth: true,
     heightMode: 'standard',
     frozenColCount: 1,
-    theme: escolherTema(),
+    theme: escolherTema(props.colorScheme),
   };
 }
 
@@ -361,14 +361,17 @@ function construirOpcoesPivot(
     },
     widthMode: 'autoWidth',
     autoFillWidth: true,
-    theme: escolherTema(),
+    theme: escolherTema(props.colorScheme),
   } as PivotTableConstructorOptions;
 }
 
-// Tema basico por color-scheme; o polimento dark/light fica para depois.
-function escolherTema() {
+// Tema do host quando informado (`colorScheme`); senao infere do SO.
+function escolherTema(colorScheme?: 'light' | 'dark') {
   const dark =
-    typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+    colorScheme === 'dark' ||
+    (colorScheme === undefined &&
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-color-scheme: dark)').matches);
   return dark ? themes.DARK : themes.DEFAULT;
 }
 
@@ -435,7 +438,16 @@ function VTableResult(props: TableRenderProps) {
       table.release();
       tableRef.current = null;
     };
-  }, [props.result, props.locale, props.formatter, props.labeler, pivotEfetivo, heatmap, valueMode]);
+  }, [
+    props.result,
+    props.locale,
+    props.formatter,
+    props.labeler,
+    props.colorScheme,
+    pivotEfetivo,
+    heatmap,
+    valueMode,
+  ]);
 
   // Reajusta o canvas quando a altura disponivel muda (ex.: painel recolhido).
   useEffect(() => {

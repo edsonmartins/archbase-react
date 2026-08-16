@@ -162,6 +162,12 @@ export interface TableRenderProps {
    * virtualizada de altura fixa) ou ignorar (grade que preenche o container).
    */
   height?: number;
+  /**
+   * Esquema de cores do hospedeiro. Quando ausente, o renderizador pode inferir
+   * (ex.: `prefers-color-scheme`); quando presente, deve segui-lo — e o que faz
+   * a grade acompanhar o toggle de tema claro/escuro do host.
+   */
+  colorScheme?: 'light' | 'dark';
   onDrill?: (row: ResultRow, column: ResultColumn) => void;
 }
 

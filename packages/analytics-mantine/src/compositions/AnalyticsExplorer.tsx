@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Accordion, Box, Divider, Grid, Paper, ScrollArea, Stack } from '@mantine/core';
+import {
+  Accordion,
+  Box,
+  Divider,
+  Grid,
+  Paper,
+  ScrollArea,
+  Stack,
+  useComputedColorScheme,
+} from '@mantine/core';
 import {
   migrateSavedQuery,
   readDeepLink,
@@ -55,6 +64,7 @@ export function AnalyticsExplorer({
   const { config, ports, labeler, strings } = useAnalyticsContext();
   const exploration = useExploration({ origin: 'explorer' });
   const { suggest } = useMemberValues();
+  const colorScheme = useComputedColorScheme('dark');
 
   const {
     state,
@@ -211,6 +221,7 @@ export function AnalyticsExplorer({
         labeler,
         locale: config.locale,
         height: alturaCorpo,
+        colorScheme,
         onDrill: drill,
       });
     }
