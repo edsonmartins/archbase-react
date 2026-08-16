@@ -49,3 +49,5 @@ export type {
   UseArchbaseShortcutScopeReturn,
   ArchbaseShortcutHintProps,
 } from './ArchbaseKeyboardShortcuts';
+export { ArchbaseMagnifyDock } from './ArchbaseMagnifyDock';
+export type { ArchbaseMagnifyDockProps, ArchbaseMagnifyDockItem } from './ArchbaseMagnifyDock';

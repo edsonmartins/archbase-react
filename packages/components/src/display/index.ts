@@ -96,3 +96,9 @@ export type {
   ArchbasePhotoAlbumLayout,
 } from './ArchbasePhotoAlbum';
 
+
+export { ArchbaseGlowingCards, ArchbaseGlowingCard } from './ArchbaseGlowingCards';
+export type {
+  ArchbaseGlowingCardsProps,
+  ArchbaseGlowingCardProps,
+} from './ArchbaseGlowingCards';
