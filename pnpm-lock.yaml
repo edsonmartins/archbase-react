@@ -116,6 +116,9 @@ importers:
       '@visactor/vtable':
         specifier: ^1.26.0
         version: 1.26.6
+      dockview-react:
+        specifier: ^4.6.0
+        version: 4.12.0(react@19.2.3)
       react:
         specifier: ^19.2.0
         version: 19.2.3
