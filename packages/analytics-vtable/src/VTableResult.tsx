@@ -150,11 +150,85 @@ function fundoDaMedida(props: TableRenderProps, member: string, mode: HeatmapMod
   };
 }
 
+// ─── Modo de valor (R$ / %) ─────────────────────────────────────────────────
+
+type ValueMode = 'valor' | 'total' | 'linha' | 'coluna';
+
+interface Totais {
+  grand: number;
+  porLinha: Map<string, number>;
+  porColuna: Map<string, number>;
+}
+
+/** Totais (soma) de uma medida: global, por linha e por coluna — base do modo %. */
+function calcularTotais(props: TableRenderProps, member: string): Totais {
+  const { colDim, rowDims } = eixos(props);
+  let grand = 0;
+  const porLinha = new Map<string, number>();
+  const porColuna = new Map<string, number>();
+  const soma = (mapa: Map<string, number>, chave: string, v: number) =>
+    mapa.set(chave, (mapa.get(chave) ?? 0) + v);
+  for (const row of props.result.rows) {
+    const v = Number(row[member]);
+    if (!Number.isFinite(v)) continue;
+    grand += v;
+    if (colDim) soma(porColuna, String(row[colDim] ?? ''), v);
+    soma(porLinha, rowDims.map((d) => String(row[d] ?? '')).join('¦'), v);
+  }
+  return { grand, porLinha, porColuna };
+}
+
+function formatarPercent(props: TableRenderProps, member: string, ratio: number): string {
+  if (!Number.isFinite(ratio)) return '';
+  return props.formatter.format(ratio, {
+    format: 'percent',
+    precision: 1,
+    memberName: member,
+    locale: props.locale,
+  });
+}
+
+/** Base do percentual conforme o modo, a partir dos caminhos de cabecalho da
+ *  celula (formato { colHeaderPaths, rowHeaderPaths } do getCellHeaderPaths).
+ *  Sem os caminhos (indisponiveis), degrada para o total geral. */
+function basePercentual(
+  totais: Totais,
+  valueMode: ValueMode,
+  colDim: string | undefined,
+  rowDims: string[],
+  headerPaths: unknown,
+): number {
+  const p = (headerPaths ?? {}) as { colHeaderPaths?: DimInfo[]; rowHeaderPaths?: DimInfo[] };
+  if (valueMode === 'coluna' && colDim) {
+    const v = (p.colHeaderPaths ?? []).find((d) => d?.dimensionKey === colDim)?.value ?? '';
+    return totais.porColuna.get(v) ?? totais.grand;
+  }
+  if (valueMode === 'linha') {
+    const path = p.rowHeaderPaths ?? [];
+    const rk = rowDims.map((d) => path.find((x) => x?.dimensionKey === d)?.value ?? '').join('¦');
+    return totais.porLinha.get(rk) ?? totais.grand;
+  }
+  return totais.grand;
+}
+
 // ─── Tabela plana (ListTable) ──────────────────────────────────────────────
 
-function formatarCelula(formatter: ValueFormatter, column: ResultColumn, locale: string) {
-  return (record: Record<string, unknown>): string =>
-    formatter.format(record[column.member] ?? null, contexto(column, locale));
+/** Formata a celula da tabela plana: valor (moeda/etc.) ou % do total geral.
+ *  Na tabela plana so `% total` faz sentido (uma coluna por medida). */
+function formatarCelula(
+  props: TableRenderProps,
+  column: ResultColumn,
+  valueMode: ValueMode,
+  grandTotal: number,
+) {
+  return (record: Record<string, unknown>): string => {
+    const raw = record[column.member] ?? null;
+    if (valueMode === 'valor' || column.kind !== 'measure') {
+      return props.formatter.format(raw, contexto(column, props.locale));
+    }
+    const v = Number(raw);
+    return formatarPercent(props, column.member, grandTotal ? v / grandTotal : 0);
+  };
 }
 
 /**
@@ -162,11 +236,20 @@ function formatarCelula(formatter: ValueFormatter, column: ResultColumn, locale:
  * exibe o rotulo "Total": COUNT e numerico-seguro e o `formatFun` fixo troca o
  * numero pelo rotulo. (CUSTOM com retorno de string quebra a linha no VTable.)
  */
-function aggregacaoDaColuna(props: TableRenderProps, column: ResultColumn, index: number) {
+function aggregacaoDaColuna(
+  props: TableRenderProps,
+  column: ResultColumn,
+  index: number,
+  valueMode: ValueMode,
+  grandTotal: number,
+) {
   if (column.kind === 'measure') {
     return {
       aggregationType: tipoAgregacao(props, column),
-      formatFun: (value: number) => props.formatter.format(value, contexto(column, props.locale)),
+      formatFun: (value: number) =>
+        valueMode === 'valor'
+          ? props.formatter.format(value, contexto(column, props.locale))
+          : formatarPercent(props, column.member, grandTotal ? value / grandTotal : 0),
     };
   }
   if (index === 0) {
@@ -175,31 +258,40 @@ function aggregacaoDaColuna(props: TableRenderProps, column: ResultColumn, index
   return undefined;
 }
 
-function construirColunas(props: TableRenderProps, mode: HeatmapMode): VTableColumns {
+function construirColunas(
+  props: TableRenderProps,
+  mode: HeatmapMode,
+  valueMode: ValueMode,
+): VTableColumns {
   // Na tabela plana cada medida e uma unica coluna: col/row nao se aplicam,
   // caem em `full` (ou `off`).
   const modoPlano: HeatmapMode = mode === 'off' ? 'off' : 'full';
   return props.result.columns.map((column, index) => {
     const medida = column.kind === 'measure';
+    const grandTotal = medida ? calcularTotais(props, column.member).grand : 0;
     return {
       field: column.member,
       title: rotulo(props, column),
       // VTable ordena pelo valor bruto do registro — nunca pelo texto formatado.
       sort: true,
-      fieldFormat: formatarCelula(props.formatter, column, props.locale),
+      fieldFormat: formatarCelula(props, column, valueMode, grandTotal),
       style: medida
         ? { textAlign: 'right', bgColor: fundoDaMedida(props, column.member, modoPlano) }
         : { textAlign: 'left' },
       headerStyle: { textAlign: medida ? 'right' : 'left' },
-      aggregation: aggregacaoDaColuna(props, column, index),
+      aggregation: aggregacaoDaColuna(props, column, index, valueMode, grandTotal),
     };
   }) as VTableColumns;
 }
 
-function construirOpcoesPlano(props: TableRenderProps, mode: HeatmapMode): ListTableConstructorOptions {
+function construirOpcoesPlano(
+  props: TableRenderProps,
+  mode: HeatmapMode,
+  valueMode: ValueMode,
+): ListTableConstructorOptions {
   return {
     records: props.result.rows,
-    columns: construirColunas(props, mode),
+    columns: construirColunas(props, mode, valueMode),
     // Largura por conteudo (nunca trunca) + estica para preencher; scroll
     // horizontal quando ha colunas demais. Altura fixa, scroll vertical interno.
     widthMode: 'autoWidth',
@@ -215,11 +307,17 @@ function construirOpcoesPlano(props: TableRenderProps, mode: HeatmapMode): ListT
 // A ultima dimensao vira o eixo de colunas; as demais, o eixo de linhas; as
 // medidas, os indicadores das celulas (agregadas por VTable).
 
-function construirOpcoesPivot(props: TableRenderProps, mode: HeatmapMode): PivotTableConstructorOptions {
+function construirOpcoesPivot(
+  props: TableRenderProps,
+  mode: HeatmapMode,
+  valueMode: ValueMode,
+): PivotTableConstructorOptions {
   const grupos = agrupamentos(props);
   const eixoLinha = grupos.slice(0, -1);
   const eixoColuna = grupos[grupos.length - 1];
   const measuresList = medidas(props);
+  const { colDim, rowDims } = eixos(props);
+  const totaisPorMedida = new Map(measuresList.map((m) => [m.member, calcularTotais(props, m.member)]));
 
   return {
     records: props.result.rows,
@@ -229,12 +327,25 @@ function construirOpcoesPivot(props: TableRenderProps, mode: HeatmapMode): Pivot
       indicatorKey: m.member,
       title: rotulo(props, m),
       aggregation: { aggregationType: tipoAgregacao(props, m) },
-      // `format` do indicador formata a celula; recebe o valor agregado.
-      format: (value: unknown) => {
+      // `format` do indicador formata a celula; recebe o valor agregado e a
+      // posicao (col,row,table) — usada para o percentual por linha/coluna.
+      format: (value: unknown, col?: number, row?: number, table?: unknown) => {
         const numero = typeof value === 'number' ? value : Number(value);
-        return Number.isFinite(numero)
-          ? props.formatter.format(numero, contexto(m, props.locale))
-          : String(value ?? '');
+        if (!Number.isFinite(numero)) return String(value ?? '');
+        if (valueMode === 'valor') return props.formatter.format(numero, contexto(m, props.locale));
+        const totais = totaisPorMedida.get(m.member);
+        // getCellHeaderPaths pode lancar durante o calculo de largura (tabela
+        // ainda nao montada). Protegido: nesse momento cai no total geral; no
+        // render real entrega o caminho e o % por linha/coluna sai correto.
+        let paths: unknown;
+        try {
+          const t = table as { getCellHeaderPaths?: (c: number, r: number) => unknown };
+          paths = t?.getCellHeaderPaths?.(col ?? 0, row ?? 0);
+        } catch {
+          paths = undefined;
+        }
+        const base = totais ? basePercentual(totais, valueMode, colDim, rowDims, paths) : 0;
+        return formatarPercent(props, m.member, base ? numero / base : 0);
       },
       style: { textAlign: 'right', bgColor: fundoDaMedida(props, m.member, mode) },
     })),
@@ -305,6 +416,7 @@ function VTableResult(props: TableRenderProps) {
   const temMedidas = medidas(props).length > 0;
   const [override, setOverride] = useState<boolean | null>(null);
   const [heatmap, setHeatmap] = useState<HeatmapMode>('full');
+  const [valueMode, setValueMode] = useState<ValueMode>('valor');
   const pivotEfetivo = podePivotar && (override ?? true);
   const temToolbar = podePivotar || temMedidas;
 
@@ -316,14 +428,14 @@ function VTableResult(props: TableRenderProps) {
     if (!containerRef.current) return undefined;
     const p = propsRef.current;
     const table = pivotEfetivo
-      ? new PivotTable(containerRef.current, construirOpcoesPivot(p, heatmap))
-      : new ListTable(containerRef.current, construirOpcoesPlano(p, heatmap));
+      ? new PivotTable(containerRef.current, construirOpcoesPivot(p, heatmap, valueMode))
+      : new ListTable(containerRef.current, construirOpcoesPlano(p, heatmap, valueMode));
     tableRef.current = table;
     return () => {
       table.release();
       tableRef.current = null;
     };
-  }, [props.result, props.locale, props.formatter, props.labeler, pivotEfetivo, heatmap]);
+  }, [props.result, props.locale, props.formatter, props.labeler, pivotEfetivo, heatmap, valueMode]);
 
   // Reajusta o canvas quando a altura disponivel muda (ex.: painel recolhido).
   useEffect(() => {
@@ -371,6 +483,25 @@ function VTableResult(props: TableRenderProps) {
             <BotaoModo ativo={heatmap === 'off'} onClick={() => setHeatmap('off')}>
               Off
             </BotaoModo>
+          </div>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <span style={{ fontSize: 12, opacity: 0.55 }}>Valores</span>
+            <BotaoModo ativo={valueMode === 'valor'} onClick={() => setValueMode('valor')}>
+              Valor
+            </BotaoModo>
+            <BotaoModo ativo={valueMode === 'total'} onClick={() => setValueMode('total')}>
+              % total
+            </BotaoModo>
+            {pivotEfetivo && (
+              <BotaoModo ativo={valueMode === 'linha'} onClick={() => setValueMode('linha')}>
+                % linha
+              </BotaoModo>
+            )}
+            {pivotEfetivo && (
+              <BotaoModo ativo={valueMode === 'coluna'} onClick={() => setValueMode('coluna')}>
+                % coluna
+              </BotaoModo>
+            )}
           </div>
         </div>
       )}
