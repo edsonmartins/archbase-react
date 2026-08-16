@@ -22,6 +22,8 @@ export type {
   SavedQueryScope,
   SavedQueryStore,
   SavedQueryV1,
+  TableRenderProps,
+  TableRenderer,
   ValueFormatter,
   VizType,
 } from './ports/types';

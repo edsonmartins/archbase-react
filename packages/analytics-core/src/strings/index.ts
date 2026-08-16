@@ -25,6 +25,8 @@ export interface AnalyticsStrings {
   searchMembers: string;
   save: string;
   cancel: string;
+  /** Titulo do painel recolhivel de metricas, dimensoes e filtros. */
+  queryPanel: string;
 }
 
 export const DEFAULT_STRINGS: AnalyticsStrings = {
@@ -46,6 +48,7 @@ export const DEFAULT_STRINGS: AnalyticsStrings = {
   searchMembers: 'Buscar',
   save: 'Salvar',
   cancel: 'Cancelar',
+  queryPanel: 'Metricas, dimensoes e filtros',
 };
 
 export function interpolate(template: string, values: Record<string, string | number>): string {

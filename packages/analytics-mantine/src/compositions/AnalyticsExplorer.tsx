@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Box, Divider, Grid, Paper, Stack } from '@mantine/core';
+import { Accordion, Box, Divider, Grid, Paper, ScrollArea, Stack } from '@mantine/core';
 import {
   migrateSavedQuery,
   readDeepLink,
@@ -10,6 +10,8 @@ import {
   writeDeepLink,
   type AnalyticsMember,
   type ExplorationState,
+  type ResultColumn,
+  type ResultRow,
   type SavedQueryRecord,
 } from '@archbase/analytics-core';
 import { MemberPalette } from '../components/MemberPalette';
@@ -47,7 +49,7 @@ export interface AnalyticsExplorerProps {
 export function AnalyticsExplorer({
   deepLink,
   ownerId = '',
-  height = 420,
+  height,
   onDrill,
 }: AnalyticsExplorerProps) {
   const { config, ports, labeler, strings } = useAnalyticsContext();
@@ -168,18 +170,36 @@ export function AnalyticsExplorer({
     ...(state.query.timeDimensions ?? []).map((item) => item.dimension),
   ];
 
-  const tabela = () =>
-    result ? (
+  const tabela = (altura: number) => {
+    if (!result) return null;
+    const drill = onDrill ? (row: ResultRow, column: ResultColumn) => onDrill(row, column.member) : undefined;
+    // Altura da area de conteudo medida pelo ResultChart; fallback antes da 1a medicao.
+    const alturaCorpo = altura > 0 ? Math.floor(altura) : (height ?? 420);
+    // Port injetado (ex.: VTable) tem precedencia; sem ele, a tabela Mantine
+    // embutida e o default. A biblioteca base nao depende de nenhuma grade rica.
+    if (ports.tableRenderer) {
+      return ports.tableRenderer.render({
+        result,
+        meta,
+        formatter: ports.formatter,
+        labeler,
+        locale: config.locale,
+        height: alturaCorpo,
+        onDrill: drill,
+      });
+    }
+    return (
       <ResultTable
         result={result}
         meta={meta}
         formatter={ports.formatter}
         labeler={labeler}
         locale={config.locale}
-        height={height}
-        onDrill={onDrill ? (row, column) => onDrill(row, column.member) : undefined}
+        height={alturaCorpo}
+        onDrill={drill}
       />
-    ) : null;
+    );
+  };
 
   const corpo = () => {
     if (!runnable) return <EmptyState strings={strings} />;
@@ -202,27 +222,34 @@ export function AnalyticsExplorer({
   };
 
   return (
-    <Grid gap="md">
-      <Grid.Col span={{ base: 12, sm: 3 }}>
-        <Paper withBorder p="xs" h="100%">
+    <Grid gap="md" style={{ height: height ?? '100%', minHeight: 0 }} styles={{ inner: { height: '100%' } }}>
+      <Grid.Col span={{ base: 12, sm: 3 }} style={{ height: '100%' }}>
+        <Paper
+          withBorder
+          p="xs"
+          h="100%"
+          style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}
+        >
           {metaLoading && !meta ? (
             <LoadingState strings={strings} />
           ) : (
-            <MemberPalette
-              meta={meta}
-              selected={selecionados}
-              onToggle={alternarMembro}
-              labeler={labeler}
-              formatter={ports.formatter}
-              locale={config.locale}
-              searchPlaceholder={strings.searchMembers}
-            />
+            <ScrollArea type="hover" style={{ flex: 1, minHeight: 0 }}>
+              <MemberPalette
+                meta={meta}
+                selected={selecionados}
+                onToggle={alternarMembro}
+                labeler={labeler}
+                formatter={ports.formatter}
+                locale={config.locale}
+                searchPlaceholder={strings.searchMembers}
+              />
+            </ScrollArea>
           )}
         </Paper>
       </Grid.Col>
 
-      <Grid.Col span={{ base: 12, sm: 9 }}>
-        <Stack gap="sm">
+      <Grid.Col span={{ base: 12, sm: 9 }} style={{ height: '100%' }}>
+        <Stack gap="sm" style={{ height: '100%', minHeight: 0 }}>
           <SavedQueryBar
             store={ports.savedQueryStore}
             currentId={state.savedQueryId}
@@ -232,8 +259,11 @@ export function AnalyticsExplorer({
             labels={{ save: strings.save }}
           />
 
-          <Paper withBorder p="sm">
-            <Stack gap="sm">
+          <Accordion defaultValue="consulta" variant="contained">
+            <Accordion.Item value="consulta">
+              <Accordion.Control>{strings.queryPanel}</Accordion.Control>
+              <Accordion.Panel>
+                <Stack gap="sm">
               <QueryCanvas
                 query={state.query}
                 meta={meta}
@@ -272,15 +302,17 @@ export function AnalyticsExplorer({
                 onRemove={(index) => dispatch({ type: 'removeFilter', index })}
                 onSuggestValues={suggest}
               />
-            </Stack>
-          </Paper>
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
 
           {reconciliation && (
             <DegradedNotice reconciliation={reconciliation} strings={strings} />
           )}
           {result?.truncated && <TruncatedNotice strings={strings} />}
 
-          <Box>{corpo()}</Box>
+          <Box style={{ flex: 1, minHeight: 0 }}>{corpo()}</Box>
         </Stack>
       </Grid.Col>
     </Grid>

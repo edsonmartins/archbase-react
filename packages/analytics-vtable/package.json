@@ -1,0 +1,44 @@
+{
+  "name": "@archbase/analytics-vtable",
+  "version": "4.4.0",
+  "description": "VisActor VTable table renderer for Archbase Analytics",
+  "license": "MIT",
+  "author": "Edson Martins",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "src"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@visactor/vtable": "^1.26.0"
+  },
+  "peerDependencies": {
+    "@archbase/analytics-core": "^4.4.0",
+    "react": "^18.3.0 || ^19.2.0",
+    "react-dom": "^18.3.0 || ^19.2.0"
+  },
+  "devDependencies": {
+    "@archbase/analytics-core": "workspace:*",
+    "@types/react": "^19.0.6",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "^5.8.0",
+    "vite": "^6.4.1",
+    "vite-plugin-dts": "^4.5.0"
+  }
+}
