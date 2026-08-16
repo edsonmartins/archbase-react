@@ -344,6 +344,7 @@ export function normalizeResult(
       format: member?.format ?? 'text',
       precision: member?.precision,
       granularity,
+      aggType: member?.aggType,
     };
   });
 

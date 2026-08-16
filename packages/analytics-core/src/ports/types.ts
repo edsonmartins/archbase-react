@@ -61,6 +61,12 @@ export interface SavedQueryV1 {
   query: AnalyticsQuery;
   viz: { type: VizType; pivot?: PivotConfig; series?: SeriesConfig };
   meta: { name: string; ownerId: string; scope: SavedQueryScope };
+  /**
+   * Estado de UI opcional, opaco para o nucleo: persistido e devolvido tal e
+   * qual, sem interpretacao. Usado pelo workspace dockview para gravar o layout
+   * dos paineis junto da consulta (chave `workspaceLayout`).
+   */
+  ui?: Record<string, unknown>;
 }
 
 export interface SavedQueryRecord extends SavedQueryV1 {

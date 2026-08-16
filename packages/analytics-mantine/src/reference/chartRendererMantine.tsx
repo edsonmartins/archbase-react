@@ -49,14 +49,17 @@ function axisFormatter(
   return (value: number) => formatter.format(value, contexto(column, locale));
 }
 
-/** Agrega uma medida sobre as linhas: media para razao (`percent`), soma senao. */
+/** Agrega uma medida sobre as linhas: media para nao-aditivas (razao `percent`
+ *  ou `aggType` de media, ex.: ticket medio), soma para as aditivas. */
 function agregar(result: NormalizedResult, column: ResultColumn): number {
   const valores = result.rows
     .map((row) => Number(row[column.member]))
     .filter((v) => Number.isFinite(v));
   if (valores.length === 0) return 0;
   const soma = valores.reduce((a, b) => a + b, 0);
-  return column.format === 'percent' ? soma / valores.length : soma;
+  const aggType = column.aggType?.toLowerCase();
+  const media = column.format === 'percent' || aggType === 'avg' || aggType === 'avgdistinct';
+  return media ? soma / valores.length : soma;
 }
 
 /** Envolve o conteudo com padding e altura cheia — o grafico nao cola nas bordas. */

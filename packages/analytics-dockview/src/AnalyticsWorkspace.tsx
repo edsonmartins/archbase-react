@@ -24,12 +24,15 @@ import { useElementSize } from '@mantine/hooks'
 import { DatePickerInput } from '@mantine/dates'
 import { IconRefresh } from '@tabler/icons-react'
 import {
+  migrateSavedQuery,
   useAnalyticsContext,
   useExploration,
   useMemberValues,
   type AnalyticsMember,
+  type ExplorationState,
   type ResultColumn,
   type ResultRow,
+  type SavedQueryRecord,
   type VizType,
 } from '@archbase/analytics-core'
 import {
@@ -68,6 +71,7 @@ interface WorkspaceValue {
   alternarMembro: (member: AnalyticsMember) => void
   filtrarPorValor: (member: string, values: string[] | null) => void
   salvar: (name: string) => Promise<void>
+  abrir: (record: SavedQueryRecord) => void
   corpo: () => ReactNode
   /** Renderiza uma viz fixa (widget de dashboard) do mesmo resultado. */
   renderWidget: (viz: VizType, height: number) => ReactNode
@@ -106,7 +110,7 @@ function PainelMetricas(_props: IDockviewPanelProps) {
 }
 
 function PainelConsulta(_props: IDockviewPanelProps) {
-  const { ctx, exploration, suggest, salvar } = useWorkspace()
+  const { ctx, exploration, suggest, salvar, abrir } = useWorkspace()
   const { labeler, ports, config, strings } = ctx
   const { state, dispatch, meta, canCompare, runnable } = exploration
   if (!meta) return <LoadingState strings={strings} />
@@ -116,6 +120,7 @@ function PainelConsulta(_props: IDockviewPanelProps) {
         <SavedQueryBar
           store={ports.savedQueryStore}
           currentId={state.savedQueryId}
+          onOpen={abrir}
           onSave={salvar}
           canSave={runnable}
           labels={{ save: strings.save }}
@@ -171,9 +176,13 @@ function PainelResultado(props: IDockviewPanelProps) {
   const { corpo, renderWidget } = useWorkspace()
   const viz = (props.params as { viz?: VizType } | undefined)?.viz
   const { ref, height } = useElementSize()
-  // Troca a viz do widget e persiste nos params do painel (entra no toJSON).
+  // Troca a viz do widget: persiste nos params (entra no toJSON) e renomeia a
+  // aba para acompanhar a viz escolhida.
   const trocarViz = (v: string | null) => {
-    if (v) props.api.updateParameters({ ...props.params, viz: v })
+    if (!v) return
+    props.api.updateParameters({ ...props.params, viz: v })
+    const label = VIZ_OPCOES.find((o) => o.value === v)?.label
+    if (label) props.api.setTitle(label)
   }
   return (
     <Box style={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
@@ -203,11 +212,19 @@ const components = {
 }
 
 type Preset = 'padrao' | 'lateral' | 'dashboard'
+// Estado do seletor: um preset conhecido ou 'custom' (layout restaurado do
+// storage ou modificado pelo usuario a mao — nao corresponde a nenhum preset).
+type PresetSel = Preset | 'custom'
 
 const PRESETS: { value: Preset; label: string }[] = [
   { value: 'padrao', label: 'Padrão (métricas | consulta/resultado)' },
   { value: 'lateral', label: 'Lateral (métricas+consulta | resultado)' },
   { value: 'dashboard', label: 'Dashboard (KPIs + gráfico + tabela)' },
+]
+
+const PRESETS_SEL: { value: PresetSel; label: string }[] = [
+  ...PRESETS,
+  { value: 'custom', label: 'Personalizado (layout salvo)' },
 ]
 
 /** Padrao: Metricas a esquerda; Consulta e Resultado empilhados a direita. */
@@ -350,19 +367,32 @@ export function AnalyticsWorkspace({
   const { suggest } = useMemberValues()
   const colorScheme = useComputedColorScheme('dark')
   const apiRef = useRef<DockviewApi | null>(null)
+  // Marca que a mudanca de layout em curso veio da aplicacao de um preset (nao
+  // de um arraste do usuario) — evita marcar 'custom' indevidamente.
+  const aplicandoRef = useRef(false)
   const [bordas, setBordas] = useState(true)
-  const [preset, setPreset] = useState<Preset>(initialPreset)
+  const [preset, setPreset] = useState<PresetSel>(initialPreset)
   const { labeler, ports, config, strings } = ctx
 
   const aplicar = useCallback((p: Preset) => {
+    aplicandoRef.current = true
     setPreset(p)
     if (apiRef.current) aplicarPreset(apiRef.current, p)
+    setTimeout(() => {
+      aplicandoRef.current = false
+    }, 0)
   }, [])
 
   const resetarLayout = useCallback(() => {
     localStorage.removeItem(storageKey)
-    if (apiRef.current) aplicarPreset(apiRef.current, preset)
-  }, [preset, storageKey])
+    const alvo: Preset = preset === 'custom' ? initialPreset : preset
+    aplicandoRef.current = true
+    setPreset(alvo)
+    if (apiRef.current) aplicarPreset(apiRef.current, alvo)
+    setTimeout(() => {
+      aplicandoRef.current = false
+    }, 0)
+  }, [preset, storageKey, initialPreset])
   const { state, dispatch, meta, result, loading, error, runnable, viz, availableViz } = exploration
 
   // Barra de periodo: aplica o intervalo ao 1o timeDimension como FILTRO
@@ -449,16 +479,50 @@ export function AnalyticsWorkspace({
 
   const salvar = useCallback(
     async (name: string) => {
+      // Grava o layout dos paineis junto da consulta (campo `ui`, opaco ao
+      // nucleo) para que abrir a consulta restaure tambem a disposicao.
+      const layout = apiRef.current?.toJSON()
       const gravada = await ports.savedQueryStore.save({
         id: state.savedQueryId,
         schemaVersion: 1,
         query: state.query,
         viz: { ...state.viz, type: viz },
         meta: { name, ownerId, scope: 'private' },
+        ...(layout ? { ui: { workspaceLayout: layout } } : {}),
       })
       dispatch({ type: 'replace', state: { ...state, savedQueryId: gravada.id } })
     },
     [ports, state, viz, ownerId, dispatch],
+  )
+
+  const abrir = useCallback(
+    (record: SavedQueryRecord) => {
+      const migrada = migrateSavedQuery(record)
+      const proximo: ExplorationState = {
+        query: migrada.query,
+        viz: migrada.viz,
+        vizAuto: false,
+        savedQueryId: record.id,
+      }
+      dispatch({ type: 'replace', state: proximo })
+      // Restaura o layout salvo, se houver; marca 'custom' (nao e um preset).
+      const layout = (record.ui?.workspaceLayout ?? migrada.ui?.workspaceLayout) as
+        | Parameters<DockviewApi['fromJSON']>[0]
+        | undefined
+      if (layout && apiRef.current) {
+        try {
+          aplicandoRef.current = true
+          apiRef.current.fromJSON(layout)
+          setPreset('custom')
+          setTimeout(() => {
+            aplicandoRef.current = false
+          }, 0)
+        } catch {
+          /* layout invalido — mantem o atual */
+        }
+      }
+    },
+    [dispatch],
   )
 
   const tabela = useCallback(
@@ -533,6 +597,7 @@ export function AnalyticsWorkspace({
       alternarMembro,
       filtrarPorValor,
       salvar,
+      abrir,
       corpo,
       renderWidget,
     }),
@@ -545,6 +610,7 @@ export function AnalyticsWorkspace({
       alternarMembro,
       filtrarPorValor,
       salvar,
+      abrir,
       corpo,
       renderWidget,
     ],
@@ -562,13 +628,24 @@ export function AnalyticsWorkspace({
         restaurou = false
       }
     }
-    if (!restaurou) aplicarPreset(event.api, initialPreset)
+    if (restaurou) {
+      // Layout veio do storage: nao corresponde a um preset conhecido.
+      setPreset('custom')
+    } else {
+      aplicandoRef.current = true
+      aplicarPreset(event.api, initialPreset)
+      setTimeout(() => {
+        aplicandoRef.current = false
+      }, 0)
+    }
     event.api.onDidLayoutChange(() => {
       try {
         localStorage.setItem(storageKey, JSON.stringify(event.api.toJSON()))
       } catch {
         /* quota/serializacao — ignora */
       }
+      // Mudanca fora da aplicacao de preset = usuario arrastou/fechou paineis.
+      if (!aplicandoRef.current) setPreset('custom')
     })
   }
 
@@ -582,8 +659,10 @@ export function AnalyticsWorkspace({
             size="xs"
             w={300}
             value={preset}
-            onChange={(v) => v && aplicar(v as Preset)}
-            data={PRESETS}
+            onChange={(v) => {
+              if (v && v !== 'custom') aplicar(v as Preset)
+            }}
+            data={PRESETS_SEL}
             allowDeselect={false}
             aria-label="Layout"
           />

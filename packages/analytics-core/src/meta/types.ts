@@ -96,6 +96,12 @@ export interface ResultColumn {
   format: MetaFormat;
   precision?: number;
   granularity?: Granularity;
+  /**
+   * Tipo de agregacao declarado no metadado (`avg`, `sum`, ...). Propagado do
+   * membro para que quem agrega no cliente (KPI, grafico) some medidas aditivas
+   * mas faca media das nao-aditivas (ex.: ticket medio) — sem re-consultar meta.
+   */
+  aggType?: string;
 }
 
 export type ResultCell = string | number | boolean | null;
