@@ -232,11 +232,15 @@ export function ArchbaseNebulaFlow({
 
       recursos.current = { gl, program, buffer, uniforms };
 
-      // Liberacao explicita: sem isto cada montagem deixa um contexto para tras.
+      // Libera o que foi alocado na GPU. O contexto em si NAO e descartado
+      // aqui: `setup` roda de novo a cada redimensionamento, e
+      // `WEBGL_lose_context.loseContext()` mata o contexto do canvas em
+      // definitivo — o segundo setup recebia um contexto morto, os shaders nao
+      // compilavam e o fundo ficava branco. O sintoma so aparece depois de um
+      // resize, o que o torna facil de nao ver no primeiro carregamento.
       return () => {
         gl.deleteBuffer(buffer);
         gl.deleteProgram(program);
-        gl.getExtension('WEBGL_lose_context')?.loseContext();
         recursos.current = null;
       };
     },
