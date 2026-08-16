@@ -10,3 +10,6 @@ export * from './treeview';
 
 export { ArchbaseTreeList } from './ArchbaseTreeList';
 export type { ArchbaseTreeListProps, ArchbaseTreeListColumn } from './ArchbaseTreeList';
+
+export { ArchbaseReorderList } from './ArchbaseReorderList';
+export type { ArchbaseReorderListProps } from './ArchbaseReorderList';
