@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - 'v*'
+  # Disparo manual: a reexecucao de uma tag usa o workflow congelado no commit dela,
+  # entao sem isto nao ha como rodar uma versao corrigida do pipeline sem mover a tag.
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -40,6 +43,31 @@ jobs:
 
       - name: Pack packages
         run: pnpm run pack
+
+      # Diagnostico da credencial, antes de tentar publicar.
+      #
+      # O publish vinha falhando com E404 no PUT — que o npm devolve no lugar de 403 para
+      # nao revelar existencia de pacote a quem nao tem escrita. Sem saber se o token chega
+      # ao npm, se ele autentica e se alcanca o escopo, o conserto vira tentativa e erro.
+      #
+      # O token nao aparece na saida: setup-node grava o placeholder ${NODE_AUTH_TOKEN} no
+      # userconfig, e o sed mascara o valor de qualquer forma. Nenhum comando aqui falha o
+      # job — o objetivo e chegar ao publish com as tres respostas ja no log.
+      - name: Diagnostico de autenticacao no npm
+        run: |
+          echo "== userconfig: ${NPM_CONFIG_USERCONFIG:-(nao definido)}"
+          if [ -n "$NPM_CONFIG_USERCONFIG" ] && [ -f "$NPM_CONFIG_USERCONFIG" ]; then
+            sed 's/\(_authToken=\).*/\1***/' "$NPM_CONFIG_USERCONFIG"
+          else
+            echo ">>> userconfig AUSENTE — a credencial nao chega ao npm"
+          fi
+          echo "== NODE_AUTH_TOKEN definido: $([ -n "$NODE_AUTH_TOKEN" ] && echo sim || echo NAO)"
+          echo "== whoami:"
+          npm whoami --registry=https://registry.npmjs.org || echo ">>> whoami FALHOU"
+          echo "== pacotes que este token alcanca em @archbase:"
+          npm access list packages @archbase 2>&1 | head -5 || true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to NPM
         run: pnpm publish -r --no-git-checks --access public
