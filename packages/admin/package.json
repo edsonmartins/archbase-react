@@ -1,6 +1,6 @@
 {
   "name": "@archbase/admin",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "description": "Admin interface components for Archbase React",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -68,12 +68,12 @@
     "vitest": "^2.0.0"
   },
   "peerDependencies": {
-    "@mantine/core": "9.5.1",
-    "@mantine/dates": "9.5.1",
-    "@mantine/hooks": "9.5.1",
-    "@mantine/modals": "9.5.1",
-    "@mantine/notifications": "9.5.1",
-    "@mantine/spotlight": "9.5.1",
+    "@mantine/core": "9.5.2",
+    "@mantine/dates": "9.5.2",
+    "@mantine/hooks": "9.5.2",
+    "@mantine/modals": "9.5.2",
+    "@mantine/notifications": "9.5.2",
+    "@mantine/spotlight": "9.5.2",
     "@tabler/icons-react": "^3.27.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"

@@ -32,21 +32,38 @@ export class ArchbaseSecurityManager implements ISecurityManager {
     }
   }
 
-  public async apply(callback?: Function) {
-    if (!this.alreadyApplied) {
-      this.alreadyApplied = true;
-      this.resourceService.registerResource({ resource: this.resource, actions: this.actions })
-        .then((resourcePermissions) => {
-          this.permissions = resourcePermissions.permissions;
-          this.error = "";
-          if (callback) {
-            callback();
-          }
-        })
-        .catch((error) => {
-          this.alreadyApplied = false;
-          this.error = processErrorMessage(error)
-        })
+  /**
+   * Envia o recurso e as ações registradas, e guarda o que o usuário pode neste recurso.
+   *
+   * <p><b>Aguarda de verdade.</b> Antes o método era `async` mas devolvia antes de a requisição
+   * terminar — o `.then` era encadeado sem `return`. Quem escrevia `await manager.apply()` seguia
+   * em frente com `permissions` ainda vazio, e o `catch` de quem chamava nunca era alcançado
+   * porque a falha morria no `.catch` interno, virando o campo `error` que ninguém lia.
+   *
+   * <p>A exceção volta a ser lançada, além de gravada em `error`: quem prefere o campo continua
+   * podendo lê-lo, e quem espera um `catch` finalmente o recebe.
+   */
+  public async apply(callback?: Function): Promise<void> {
+    if (this.alreadyApplied) {
+      return;
+    }
+    this.alreadyApplied = true;
+    try {
+      const resourcePermissions = await this.resourceService.registerResource({
+        resource: this.resource,
+        actions: this.actions,
+      });
+      this.permissions = resourcePermissions.permissions;
+      this.error = "";
+      if (callback) {
+        callback();
+      }
+    } catch (error) {
+      // Libera para nova tentativa: a falha costuma ser de rede, e travar `alreadyApplied` em
+      // true condenaria a tela a nunca mais carregar permissão nenhuma.
+      this.alreadyApplied = false;
+      this.error = processErrorMessage(error);
+      throw error;
     }
   }
 

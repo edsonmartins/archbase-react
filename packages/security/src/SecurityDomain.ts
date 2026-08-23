@@ -632,3 +632,17 @@ export interface ResourcePermissionsDto {
   resourceName: string
   permissions: string[]
 }
+
+/**
+ * Tudo que o usuário autenticado alcança, agrupado por recurso.
+ *
+ * Devolvido por `GET /api/v1/resource/my-permissions`, disponível a partir do
+ * archbase-security 3.2.3. Em backend anterior o caminho não existe — ver
+ * `ArchbaseResourceService.findLoggedUserPermissions`.
+ */
+export interface LoggedUserPermissionsDto {
+  /** Administrador não depende do catálogo; sem este campo um mapa vazio seria lido como "não pode nada". */
+  administrator: boolean
+  /** Nome do recurso para os nomes das ações concedidas nele. */
+  permissions: Record<string, string[]>
+}

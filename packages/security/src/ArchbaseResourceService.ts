@@ -1,5 +1,5 @@
 import { ArchbaseEntityTransformer, ArchbaseRemoteApiClient, ArchbaseRemoteApiService } from "@archbase/data";
-import { GrantPermissionDto, ResouceActionPermissionDto, ResoucePermissionsWithTypeDto, ResourceDto, ResourcePermissionsDto, ResourceRegisterDto } from "./SecurityDomain";
+import { GrantPermissionDto, LoggedUserPermissionsDto, ResouceActionPermissionDto, ResoucePermissionsWithTypeDto, ResourceDto, ResourcePermissionsDto, ResourceRegisterDto } from "./SecurityDomain";
 import * as inversify from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from "@archbase/core";
 import { SecurityType } from "./SecurityType";
@@ -68,6 +68,34 @@ export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDt
       `${this.getEndpoint()}/permissions/${permissionId}`,
       this.configureHeaders(),
     );
+  }
+
+  /**
+   * Tudo que o usuário logado alcança, em uma requisição.
+   *
+   * <p>Existe porque a pergunta "o que esta pessoa pode?" não tinha resposta barata: o caminho por
+   * recurso (`/permissions/{resourceName}`) obriga uma requisição por recurso, e quem monta um menu
+   * precisa da resposta para dezenas deles. Sem isto, o produto desiste de perguntar e mostra tudo
+   * para todo mundo.
+   *
+   * <p><b>Devolve `null` quando o backend não tem o endpoint</b> (archbase-security anterior a
+   * 3.2.3), em vez de estourar. Quem chama distingue "não pode nada" de "não deu para saber" — os
+   * dois viram mapa vazio se a diferença for engolida, e é assim que uma tela passa a esconder o
+   * que deveria mostrar.
+   */
+  public async findLoggedUserPermissions(): Promise<LoggedUserPermissionsDto | null> {
+    try {
+      return await this.client.get<LoggedUserPermissionsDto>(
+        `${this.getEndpoint()}/my-permissions`,
+        this.configureHeaders(),
+      );
+    } catch (error: any) {
+      const status = error?.response?.status ?? error?.status;
+      if (status === 404 || status === 405) {
+        return null;
+      }
+      throw error;
+    }
   }
 
   public registerResource(resourceRegister: ResourceRegisterDto) {

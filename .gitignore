@@ -57,3 +57,7 @@ src/**/*.d.ts
 **/src/**/*.d.ts
 # Log do servidor de desenvolvimento do demo
 vite-demo.log
+
+# Tarballs gerados por `pnpm pack` antes de publicar. Artefato de build:
+# versionar significa carregar no histórico um .tgz por pacote a cada release.
+dist-publish/
