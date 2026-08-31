@@ -1,6 +1,6 @@
 {
   "name": "@archbase/analytics-mantine",
-  "version": "4.7.0",
+  "version": "4.8.0",
   "description": "Mantine components and compositions for Archbase Analytics",
   "license": "MIT",
   "author": "Edson Martins",
@@ -51,9 +51,9 @@
     "@archbase/analytics-core": "workspace:*"
   },
   "peerDependencies": {
-    "@mantine/core": "9.5.2",
-    "@mantine/dates": "9.5.2",
-    "@mantine/hooks": "9.5.2",
+    "@mantine/core": "9.6.0",
+    "@mantine/dates": "9.6.0",
+    "@mantine/hooks": "9.6.0",
     "@tabler/icons-react": "^3.27.0",
     "react": "^18.3.0 || ^19.2.0",
     "react-dom": "^18.3.0 || ^19.2.0"
@@ -64,7 +64,7 @@
     }
   },
   "devDependencies": {
-    "@mantine/charts": "9.5.2",
+    "@mantine/charts": "9.6.0",
     "@testing-library/react": "^16.3.0",
     "@types/react": "^19.0.6",
     "@types/react-dom": "^19.0.2",

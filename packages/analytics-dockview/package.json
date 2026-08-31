@@ -1,6 +1,6 @@
 {
   "name": "@archbase/analytics-dockview",
-  "version": "4.7.0",
+  "version": "4.8.0",
   "description": "Dockable BI workspace (dockview) for Archbase Analytics",
   "license": "MIT",
   "author": "Edson Martins",
@@ -30,9 +30,9 @@
   "peerDependencies": {
     "@archbase/analytics-core": "^4.5.0",
     "@archbase/analytics-mantine": "^4.5.0",
-    "@mantine/core": "9.5.2",
-    "@mantine/dates": "9.5.2",
-    "@mantine/hooks": "9.5.2",
+    "@mantine/core": "9.6.0",
+    "@mantine/dates": "9.6.0",
+    "@mantine/hooks": "9.6.0",
     "@tabler/icons-react": "^3.27.0",
     "react": "^18.3.0 || ^19.2.0",
     "react-dom": "^18.3.0 || ^19.2.0"
@@ -40,9 +40,9 @@
   "devDependencies": {
     "@archbase/analytics-core": "workspace:*",
     "@archbase/analytics-mantine": "workspace:*",
-    "@mantine/core": "9.5.2",
-    "@mantine/dates": "9.5.2",
-    "@mantine/hooks": "9.5.2",
+    "@mantine/core": "9.6.0",
+    "@mantine/dates": "9.6.0",
+    "@mantine/hooks": "9.6.0",
     "@tabler/icons-react": "^3.27.0",
     "@types/react": "^19.0.6",
     "@types/react-dom": "^19.0.2",

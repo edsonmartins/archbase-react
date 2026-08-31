@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@archbase/effects": "workspace:*",
-    "@mantine/core": "9.5.2",
-    "@mantine/hooks": "9.5.2",
+    "@mantine/core": "9.6.0",
+    "@mantine/hooks": "9.6.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "@archbase/components": "workspace:*",
