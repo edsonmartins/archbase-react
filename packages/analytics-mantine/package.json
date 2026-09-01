@@ -1,6 +1,6 @@
 {
   "name": "@archbase/analytics-mantine",
-  "version": "4.8.0",
+  "version": "4.9.0",
   "description": "Mantine components and compositions for Archbase Analytics",
   "license": "MIT",
   "author": "Edson Martins",

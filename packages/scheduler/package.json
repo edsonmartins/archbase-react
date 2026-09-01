@@ -1,6 +1,6 @@
 {
   "name": "@archbase/scheduler",
-  "version": "4.8.0",
+  "version": "4.9.0",
   "description": "Linha do tempo por recurso — agenda de jornadas, veículos, salas. Fork de mantine-resource-timeline (MIT), migrado para Mantine 9.",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@archbase/analytics-dockview",
-  "version": "4.8.0",
+  "version": "4.9.0",
   "description": "Dockable BI workspace (dockview) for Archbase Analytics",
   "license": "MIT",
   "author": "Edson Martins",

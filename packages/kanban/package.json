@@ -1,6 +1,6 @@
 {
   "name": "@archbase/kanban",
-  "version": "4.8.0",
+  "version": "4.9.0",
   "description": "Kanban board components for Archbase React, based on react-kanban-kit with Archbase packaging",
   "author": "Edson Martins <edsonmartins2005@gmail.com>",
   "license": "MIT",
