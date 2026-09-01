@@ -98,6 +98,26 @@ export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDt
     }
   }
 
+  /**
+   * O que o usuário logado pode NESTE recurso — **a leitura que o `registerResource` não é**.
+   *
+   * <p>O backend marca esta rota como `selfService`: qualquer autenticado lê as próprias
+   * permissões sem ser administrador. É a contraparte de leitura do `POST /register`, que
+   * <b>escreve o catálogo</b> e por isso exige admin (`ArchbaseSecurityAdminEndpoint` sem
+   * `selfService`).</p>
+   *
+   * <p>Devolve o mesmo `ResourcePermissionsDto` do registro, de propósito: quem chama troca um
+   * pelo outro sem tocar em mais nada. Recurso ainda não cadastrado responde `permissions: []` em
+   * vez de 404 — para quem só quer saber o que pode, "nada concedido" e "nada cadastrado" dão no
+   * mesmo.</p>
+   */
+  public findLoggedUserResourcePermissions(resourceName: string) {
+    return this.client.get<ResourcePermissionsDto>(
+      `${this.getEndpoint()}/permissions/${encodeURIComponent(resourceName)}`,
+      this.configureHeaders(),
+    );
+  }
+
   public registerResource(resourceRegister: ResourceRegisterDto) {
     return this.client.post<ResourceRegisterDto, ResourcePermissionsDto>(
       `${this.getEndpoint()}/register`,

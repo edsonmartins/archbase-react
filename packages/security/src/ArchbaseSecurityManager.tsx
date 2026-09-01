@@ -42,6 +42,30 @@ export class ArchbaseSecurityManager implements ISecurityManager {
    *
    * <p>A exceção volta a ser lançada, além de gravada em `error`: quem prefere o campo continua
    * podendo lê-lo, e quem espera um `catch` finalmente o recebe.
+   *
+   * <h2>Quem registra é o administrador; os demais apenas leem</h2>
+   *
+   * <p>Antes, TODO usuário chamava `POST /resource/register` ao abrir cada tela. Esse endpoint
+   * <b>escreve o catálogo de segurança</b> e o backend o marca como administrativo — então, em
+   * qualquer projeto com `archbase.security.admin-endpoints.policy=admin-only`, todo não-admin
+   * tomava <b>403 em toda tela</b>: `permissions` ficava vazio, `hasPermission` respondia `false`
+   * para tudo, e o menu inteiro aparecia desabilitado. Nenhuma permissão concedida no banco
+   * mudava isso, porque a resposta que as carregaria nunca chegava.</p>
+   *
+   * <p>O efeito colateral era pior que a tela cinza: dois projetos voltaram a política para
+   * `permit` para destravar o produto, e `permit` deixa qualquer autenticado alcançar
+   * <b>criar usuário</b> e <b>conceder permissão</b>. Um método que só precisava LER estava
+   * cobrando poder de ESCRITA, e o preço foi pago afrouxando a autorização inteira.</p>
+   *
+   * <p>A separação já existia no backend e não estava sendo usada: `GET /permissions/{recurso}` é
+   * `selfService` e devolve o mesmo DTO. Agora o administrador registra — que é quando o catálogo
+   * de fato precisa ser escrito — e os demais leem o que podem.</p>
+   *
+   * <p><b>O que isto exige em troca:</b> o catálogo de um recurso passa a nascer quando um
+   * administrador abre aquela tela. Tela que nenhum admin abriu não tem ação cadastrada, e sem ação
+   * cadastrada não há o que conceder. É o comportamento correto — o catálogo descreve o sistema,
+   * não quem passou por ele —, mas quem esconde telas do admin por papel precisa saber que está
+   * escondendo também o registro delas.</p>
    */
   public async apply(callback?: Function): Promise<void> {
     if (this.alreadyApplied) {
@@ -49,10 +73,12 @@ export class ArchbaseSecurityManager implements ISecurityManager {
     }
     this.alreadyApplied = true;
     try {
-      const resourcePermissions = await this.resourceService.registerResource({
-        resource: this.resource,
-        actions: this.actions,
-      });
+      const resourcePermissions = this.isAdmin
+        ? await this.resourceService.registerResource({
+            resource: this.resource,
+            actions: this.actions,
+          })
+        : await this.resourceService.findLoggedUserResourcePermissions(this.resource.resourceName);
       this.permissions = resourcePermissions.permissions;
       this.error = "";
       if (callback) {
