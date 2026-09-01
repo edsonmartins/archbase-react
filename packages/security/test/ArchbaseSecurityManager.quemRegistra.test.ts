@@ -120,3 +120,151 @@ describe('apply — quem escreve o catálogo e quem só lê', () => {
     expect(m.getPermissions()).toEqual(['ACEITAR']);
   });
 });
+
+/**
+ * <b>"Já dá para ler `permissions`?" — e o menu inteiro nascia desabilitado.</b>
+ *
+ * <p>`isLoading()` devolvia `!alreadyApplied`, e `alreadyApplied` vira `true` no INÍCIO do
+ * `apply()`, antes do `await`: respondia <i>"pronto"</i> no instante em que a requisição
+ * <b>partia</b>.</p>
+ *
+ * <p>O `ArchbaseAdvancedSidebar` decide com <code>!isLoading() && !isError()</code>, monta o menu
+ * com <code>disabled: !hasPermission(label)</code> e então TRAVA — não recalcula quando a resposta
+ * chega. Lia a lista vazia e desabilitava tudo, permanentemente.</p>
+ *
+ * <p>Só aparecia para quem não é administrador, porque `hasPermission` termina em
+ * <code>|| this.isAdmin</code>. E era uma corrida: com a resposta rápida, funcionava. Por isso o
+ * teste segura a promessa em vez de confiar no relógio — defeito de tempo que se mede com tempo
+ * volta a passar despercebido na máquina de outra pessoa.</p>
+ */
+describe('isLoading — pronto é quando a resposta chega, não quando o pedido sai', () => {
+  it('continua carregando enquanto a requisição está em voo', async () => {
+    let liberar!: (v: unknown) => void;
+    findLoggedUserResourcePermissions.mockReturnValue(
+      new Promise((resolve) => {
+        liberar = resolve;
+      })
+    );
+
+    const m = manager(NAO_ADMIN);
+    const emVoo = m.apply();
+
+    // O ponto exato do defeito: aqui o sidebar montava o menu.
+    expect(m.isLoading()).toBe(true);
+    expect(m.hasPermission('ACEITAR')).toBe(false);
+
+    liberar({ resourceName: 'Cockpit', permissions: ['ACEITAR'] });
+    await emVoo;
+
+    expect(m.isLoading()).toBe(false);
+    expect(m.hasPermission('ACEITAR')).toBe(true);
+  });
+
+  // Antes de `apply()` também não há o que ler — quem perguntar deve esperar, não receber
+  // uma lista vazia como se fosse resposta.
+  it('antes de apply, carregando', () => {
+    expect(manager(NAO_ADMIN).isLoading()).toBe(true);
+  });
+
+  /**
+   * <b>O controle que impede a correção de travar a tela.</b>
+   *
+   * <p>Se `loading` só fosse desligado no caminho feliz, uma falha de rede deixaria o sidebar
+   * esperando para sempre — trocaríamos "menu desabilitado" por "menu que nunca aparece". Quem diz
+   * o que aconteceu é o `isError()`.</p>
+   */
+  it('controle: falha também termina o carregamento', async () => {
+    findLoggedUserResourcePermissions.mockRejectedValueOnce(new Error('rede'));
+    const m = manager(NAO_ADMIN);
+
+    await expect(m.apply()).rejects.toThrow('rede');
+
+    expect(m.isLoading()).toBe(false);
+    expect(m.isError()).toBe(true);
+  });
+});
+
+/**
+ * <b>Todo chamador é respondido</b> — e este é o defeito que habilitou o menu inteiro.
+ *
+ * <p>O `ArchbaseAdvancedSidebar` monta a navegação DENTRO do callback do `apply()`:</p>
+ *
+ * <pre>return L.apply(() =&gt; { clearTimeout(K); V(); }), () =&gt; { ... }</pre>
+ *
+ * <p>Com <code>if (alreadyApplied) return</code>, o segundo chamador saía sem esperar, sem erro e
+ * <b>sem executar o callback</b>. O sidebar ficava esperando um aviso que nunca vinha e caía no
+ * timeout de 3s — que carrega a navegação <b>sem filtro de segurança</b>. Uma vendedora com duas
+ * permissões via o menu administrativo inteiro habilitado.</p>
+ *
+ * <p>E não era caso raro: o React monta o efeito duas vezes em desenvolvimento, e o hook guarda o
+ * manager no store — a segunda montagem sempre encontrava `alreadyApplied === true`.</p>
+ *
+ * <p><b>Falhar aberto é pior que falhar fechado</b>, e as duas versões deste defeito mostram os
+ * dois lados: antes o menu vinha todo desabilitado (irritante, visível na hora); depois, todo
+ * habilitado (silencioso, e mostra o que não devia).</p>
+ */
+describe('apply — a segunda montagem também é avisada', () => {
+  it('o callback dispara mesmo quando a requisição já está em curso', async () => {
+    let liberar!: (v: unknown) => void;
+    findLoggedUserResourcePermissions.mockReturnValue(
+      new Promise((resolve) => {
+        liberar = resolve;
+      })
+    );
+
+    const m = manager(NAO_ADMIN);
+    const primeira = vi.fn();
+    const segunda = vi.fn();
+
+    const voo1 = m.apply(primeira); // montagem 1: dispara
+    const voo2 = m.apply(segunda); // montagem 2: encontra em curso
+
+    liberar({ resourceName: 'Cockpit', permissions: ['ACEITAR'] });
+    await Promise.all([voo1, voo2]);
+
+    expect(primeira).toHaveBeenCalled();
+    expect(segunda).toHaveBeenCalled();
+  });
+
+  /**
+   * <b>O controle que impede a correção de multiplicar requisições.</b>
+   *
+   * <p>Responder todo mundo não pode virar "pedir uma vez por chamador": o `alreadyApplied` existe
+   * para que várias telas montando juntas não disparem N requisições. Uma só, e todos avisados.</p>
+   */
+  it('controle: a requisição acontece UMA vez, por mais chamadores que haja', async () => {
+    const m = manager(NAO_ADMIN);
+
+    await Promise.all([m.apply(), m.apply(), m.apply()]);
+
+    expect(findLoggedUserResourcePermissions).toHaveBeenCalledTimes(1);
+  });
+
+  // Quem chega depois de tudo pronto também é respondido — resolve na hora, sem nova requisição.
+  it('quem pede com as permissões já carregadas é atendido na hora', async () => {
+    const m = manager(NAO_ADMIN);
+    await m.apply();
+
+    const tardio = vi.fn();
+    await m.apply(tardio);
+
+    expect(tardio).toHaveBeenCalled();
+    expect(findLoggedUserResourcePermissions).toHaveBeenCalledTimes(1);
+  });
+
+  // Depois de uma falha, a tentativa seguinte pede DE NOVO em vez de reaproveitar a promessa
+  // rejeitada — senão a tela ficaria presa no primeiro erro de rede.
+  it('depois de falhar, a próxima tentativa refaz a requisição', async () => {
+    findLoggedUserResourcePermissions.mockRejectedValueOnce(new Error('rede'));
+    const m = manager(NAO_ADMIN);
+
+    await expect(m.apply()).rejects.toThrow('rede');
+
+    const depois = vi.fn();
+    await m.apply(depois);
+
+    expect(depois).toHaveBeenCalled();
+    expect(m.getPermissions()).toEqual(['ACEITAR']);
+    expect(findLoggedUserResourcePermissions).toHaveBeenCalledTimes(2);
+  });
+});
