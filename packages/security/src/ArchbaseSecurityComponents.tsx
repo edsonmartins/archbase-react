@@ -9,6 +9,17 @@ export interface ArchbaseProtectedComponentProps {
   requiredPermissions?: string[];
   requireAll?: boolean;
   actionDescription?: string;
+  /** Rótulo curto — "Aprovar". Ausente significa "use a descrição". */
+  actionLabel?: string;
+  /** Agrupamento dentro do recurso — "Operação". */
+  actionCategory?: string;
+  /**
+   * As capacidades sem as quais este gesto não funciona — os endpoints que ele chama.
+   *
+   * `'view'` resolve contra o recurso da própria tela; `'tms.ordemservico:aprovar_custo'` aponta
+   * para outro.
+   */
+  actionRequires?: string[];
   fallback?: ReactNode;
   autoRegister?: boolean;
 }
@@ -19,6 +30,9 @@ export const ArchbaseProtectedComponent: React.FC<ArchbaseProtectedComponentProp
   requiredPermissions = [],
   requireAll = true,
   actionDescription,
+  actionLabel,
+  actionCategory,
+  actionRequires,
   fallback = null,
   autoRegister = true
 }) => {
@@ -27,9 +41,13 @@ export const ArchbaseProtectedComponent: React.FC<ArchbaseProtectedComponentProp
   // Auto-registra a ação se necessário
   useEffect(() => {
     if (autoRegister && actionName && actionDescription) {
-      registerAction(actionName, actionDescription);
+      registerAction(actionName, actionDescription, {
+        label: actionLabel,
+        category: actionCategory,
+        requires: actionRequires,
+      });
     }
-  }, [actionName, actionDescription, autoRegister, registerAction]);
+  }, [actionName, actionDescription, actionLabel, actionCategory, actionRequires, autoRegister, registerAction]);
 
   // Determina se tem acesso
   let hasAccess = false;

@@ -1,5 +1,5 @@
 import { ArchbaseEntityTransformer, ArchbaseRemoteApiClient, ArchbaseRemoteApiService } from "@archbase/data";
-import { GrantPermissionDto, LoggedUserPermissionsDto, ResouceActionPermissionDto, ResoucePermissionsWithTypeDto, ResourceDto, ResourcePermissionsDto, ResourceRegisterDto } from "./SecurityDomain";
+import { CapabilityDependencyTreeDto, GrantPermissionDto, LoggedUserPermissionsDto, ResouceActionPermissionDto, ResoucePermissionsWithTypeDto, ResourceDto, ResourcePermissionsDto, ResourceRegisterDto } from "./SecurityDomain";
 import * as inversify from 'inversify';
 import { ARCHBASE_IOC_API_TYPE } from "@archbase/core";
 import { SecurityType } from "./SecurityType";
@@ -49,6 +49,32 @@ export class ArchbaseResourceService extends ArchbaseRemoteApiService<ResourceDt
         }
       }
     );
+  }
+
+  /**
+   * Tudo de que uma capacidade depende, direta e indiretamente.
+   *
+   * <p>Sob demanda, e não dentro do catálogo: o fecho de centenas de capacidades numa resposta só
+   * custaria mais do que a informação vale. As dependências **diretas** já vêm em
+   * `PermissionWithTypesDto.requires`.
+   *
+   * <p>Devolve `null` quando o backend não tem o endpoint (archbase-security anterior a 3.4), em vez
+   * de estourar. Quem chama distingue "não depende de nada" de "não deu para saber" — se a diferença
+   * for engolida, a tela deixa de oferecer as dependências e ninguém entende por quê.
+   */
+  public async getCapabilityDependencies(actionId: string): Promise<CapabilityDependencyTreeDto | null> {
+    try {
+      return await this.client.get<CapabilityDependencyTreeDto>(
+        `${this.getEndpoint()}/permissions/dependencies/${encodeURIComponent(actionId)}`,
+        this.configureHeaders(),
+      );
+    } catch (error: any) {
+      const status = error?.response?.status ?? error?.status;
+      if (status === 404 || status === 405) {
+        return null;
+      }
+      throw error;
+    }
   }
 
   public createPermission(securityId: string, actionId: string, type: SecurityType) {

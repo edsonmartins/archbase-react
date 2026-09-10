@@ -3,8 +3,33 @@ import { ArchbaseResourceService } from './ArchbaseResourceService';
 import { ResourcePermissionsDto, SimpleActionDto, SimpleResourceDto } from './SecurityDomain';
 
 
+/**
+ * O que uma tela pode declarar sobre uma capacidade, além do nome e da descrição.
+ *
+ * <p>Tudo opcional, e omitir tudo é o comportamento de sempre. Cada campo tem uma regra própria de
+ * semeadura no servidor — ver {@link ISecurityManager#registerAction}.
+ */
+export interface RegisterActionOptions {
+  /** Rótulo curto — "Aprovar". Ausente significa "use a descrição". */
+  label?: string
+  /** Agrupamento dentro do recurso — "Operação". */
+  category?: string
+  /**
+   * As capacidades sem as quais este gesto não funciona — tipicamente os endpoints que ele chama.
+   *
+   * <p>`'view'` resolve contra o recurso da própria tela; `'tms.ordemservico:aprovar_custo'` aponta
+   * para outro. É o que permite à tela de permissões oferecer as dependências junto no momento da
+   * concessão, e avisar ao revogar.
+   *
+   * <p>**Ausente e lista vazia são coisas diferentes.** Ausente significa "não declarei" e não toca
+   * em nada — é o que todo cliente anterior envia. Lista vazia significa "declaro que não há
+   * nenhuma", e remove as que existirem.
+   */
+  requires?: string[]
+}
+
 export interface ISecurityManager {
-  registerAction(actionName: string, actionDescription: string): void
+  registerAction(actionName: string, actionDescription: string, opcoes?: RegisterActionOptions): void
 }
 
 export class ArchbaseSecurityManager implements ISecurityManager {
@@ -47,9 +72,23 @@ export class ArchbaseSecurityManager implements ISecurityManager {
     this.isAdmin = isAdmin
   }
 
-  public registerAction(actionName: string, actionDescription: string) {
+  /**
+   * Declara uma capacidade desta tela.
+   *
+   * <p>Rótulo e categoria são **semeados**: o servidor os grava apenas quando a capacidade ainda não
+   * os tem, para que o texto não oscile entre duas telas que registram a mesma ação. `requires` é
+   * **reconciliado** por ação: o que a tela declara substitui o que ela havia declarado antes, sem
+   * tocar nas ações que não vieram no payload nem nas arestas que o `@HasPermission` declarou.
+   */
+  public registerAction(actionName: string, actionDescription: string, opcoes?: RegisterActionOptions) {
     if (!this.alreadyApplied && this.actions.findIndex(action => action.actionName === actionName) < 0) {
-      this.actions.push({ actionName, actionDescription })
+      this.actions.push({
+        actionName,
+        actionDescription,
+        actionLabel: opcoes?.label,
+        actionCategory: opcoes?.category,
+        requires: opcoes?.requires,
+      })
     }
   }
 
@@ -221,16 +260,18 @@ export class ArchbaseSecurityManager implements ISecurityManager {
   /**
    * Registra múltiplas ações de uma vez
    */
-  public registerActions(actions: Array<{ actionName: string; actionDescription: string }>): void {
-    actions.forEach(({ actionName, actionDescription }) => {
-      this.registerAction(actionName, actionDescription);
+  public registerActions(
+    actions: Array<{ actionName: string; actionDescription: string } & RegisterActionOptions>,
+  ): void {
+    actions.forEach(({ actionName, actionDescription, label, category, requires }) => {
+      this.registerAction(actionName, actionDescription, { label, category, requires });
     });
   }
 
   /**
    * Retorna todas as ações registradas
    */
-  public getRegisteredActions(): Array<{ actionName: string; actionDescription: string }> {
+  public getRegisteredActions(): SimpleActionDto[] {
     return [...this.actions];
   }
 }

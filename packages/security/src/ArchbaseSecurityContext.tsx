@@ -5,7 +5,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState, useCallback, ReactNode } from 'react';
 import { Box, Stack, Group, Skeleton, Loader, Text } from '@mantine/core';
 import { ARCHBASE_IOC_API_TYPE, IOCContainer, processErrorMessage } from '@archbase/core';
-import { ArchbaseSecurityManager } from './ArchbaseSecurityManager';
+import { ArchbaseSecurityManager, RegisterActionOptions } from './ArchbaseSecurityManager';
 import { ArchbaseResourceService } from './ArchbaseResourceService';
 import { UserDto } from './SecurityDomain';
 
@@ -228,7 +228,7 @@ export interface ArchbaseViewSecurityContextType {
   hasPermission: (actionName: string) => boolean;
   hasAnyPermission: (actions: string[]) => boolean;
   hasAllPermissions: (actions: string[]) => boolean;
-  registerAction: (actionName: string, actionDescription: string) => void;
+  registerAction: (actionName: string, actionDescription: string, opcoes?: RegisterActionOptions) => void;
   isLoading: boolean;
   error: string | null;
 }
@@ -346,8 +346,8 @@ export const ArchbaseViewSecurityProvider: React.FC<ArchbaseViewSecurityProvider
     hasPermission: (actionName: string) => viewSecurityManager.hasPermission(actionName),
     hasAnyPermission: (actions: string[]) => actions.some((a) => viewSecurityManager.hasPermission(a)),
     hasAllPermissions: (actions: string[]) => actions.every((a) => viewSecurityManager.hasPermission(a)),
-    registerAction: (actionName: string, actionDescription: string) =>
-      viewSecurityManager.registerAction(actionName, actionDescription),
+    registerAction: (actionName: string, actionDescription: string, opcoes?: RegisterActionOptions) =>
+      viewSecurityManager.registerAction(actionName, actionDescription, opcoes),
     isLoading: isViewLoading,
     error: viewError
   }), [viewSecurityManager, isViewLoading, viewError]);

@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { RegisterActionOptions } from './ArchbaseSecurityManager';
 import { 
   ArchbaseSecurityContext, 
   ArchbaseViewSecurityContext,
@@ -29,7 +30,7 @@ export interface UseArchbaseSecureFormReturn {
   hasPermission: (actionName: string) => boolean;
   hasAnyPermission: (actions: string[]) => boolean;
   hasAllPermissions: (actions: string[]) => boolean;
-  registerAction: (actionName: string, actionDescription: string) => void;
+  registerAction: (actionName: string, actionDescription: string, opcoes?: RegisterActionOptions) => void;
   securityManager: any; // ArchbaseSecurityManager
   canCreate: boolean;
   canEdit: boolean;
@@ -50,11 +51,18 @@ export const useArchbaseSecureForm = (
   // Registra ações básicas automaticamente se fornecido nome do recurso
   React.useEffect(() => {
     if (resourceName && resourceDescription) {
-      registerAction('create', `Criar ${resourceDescription}`);
-      registerAction('edit', `Editar ${resourceDescription}`);
-      registerAction('delete', `Deletar ${resourceDescription}`);
-      registerAction('view', `Visualizar ${resourceDescription}`);
-      registerAction('list', `Listar ${resourceDescription}`);
+      // O RÓTULO É O VERBO; a descrição continua sendo a frase inteira.
+      //
+      // Estas cinco linhas são a origem do problema que o rótulo veio resolver: elas geram a
+      // descrição de TODA capacidade de tela do sistema, e o resultado é um catálogo com centenas de
+      // "Criar X", "Editar X", "Listar X" — o único texto que a tela de permissões exibia. Separando
+      // os dois, a lista passa a mostrar "Criar" sob o recurso, que é o que quem administra procura,
+      // sem perder a frase completa, que continua explicando.
+      registerAction('create', `Criar ${resourceDescription}`, { label: 'Criar' });
+      registerAction('edit', `Editar ${resourceDescription}`, { label: 'Editar' });
+      registerAction('delete', `Deletar ${resourceDescription}`, { label: 'Deletar' });
+      registerAction('view', `Visualizar ${resourceDescription}`, { label: 'Visualizar' });
+      registerAction('list', `Listar ${resourceDescription}`, { label: 'Listar' });
     }
   }, [resourceName, resourceDescription, registerAction]);
 

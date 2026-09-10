@@ -78,6 +78,14 @@ export interface ArchbaseEffectiveCapability {
 	actionActive: boolean;
 	resourceActive: boolean;
 	situation: ArchbaseCapabilitySituation;
+	/**
+	 * As capacidades que esta declara precisar e a pessoa **não** alcança — diretas apenas.
+	 *
+	 * A situação continua `EFFECTIVE`: é o que a decisão faz com ela, deixa passar. O que falta é a
+	 * pessoa conseguir chegar até lá pela interface. Vazia (ou ausente, em backends anteriores a
+	 * 3.4) quando não há nenhuma.
+	 */
+	unmetDependencies?: string[];
 }
 
 /** O que a pessoa pode — `GET /diagnostics/users/{id}/effective`. */

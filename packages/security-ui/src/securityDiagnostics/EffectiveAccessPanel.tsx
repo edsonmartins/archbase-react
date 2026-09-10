@@ -263,9 +263,27 @@ export const EffectiveAccessPanel = ({ slots, onError, userId }: EffectiveAccess
 												</Text>
 											</Table.Td>
 											<Table.Td>
-												<Badge color={SITUACAO[capacidade.situation].color} variant="light">
-													{SITUACAO[capacidade.situation].label}
-												</Badge>
+												<Group gap={6}>
+													<Badge color={SITUACAO[capacidade.situation].color} variant="light">
+														{SITUACAO[capacidade.situation].label}
+													</Badge>
+													{/*
+													  * Concedida e valendo, e ainda assim inútil: a pessoa
+													  * passa na autorização do endpoint e não chega até ele
+													  * porque não tem o pré-requisito. Fica ao lado da
+													  * situação, e não no lugar dela — a situação descreve o
+													  * que a decisão faz, e a decisão deixa passar.
+													  */}
+													{(capacidade.unmetDependencies?.length ?? 0) > 0 ? (
+														<Badge
+															color="orange"
+															variant="outline"
+															title={`Depende de: ${capacidade.unmetDependencies!.join(', ')}`}
+														>
+															falta {capacidade.unmetDependencies!.length}
+														</Badge>
+													) : null}
+												</Group>
 											</Table.Td>
 											{colunasExtras.map((coluna) => (
 												<Table.Td key={coluna.header}>{coluna.render(capacidade, report)}</Table.Td>

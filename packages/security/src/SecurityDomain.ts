@@ -593,29 +593,130 @@ export interface GrantPermissionDto {
 }
 
 export interface PermissionWithTypesDto {
+  /**
+   * A concessão a remover — **ausente quando a capacidade chega por herança**.
+   *
+   * Sem ela não há o que apagar: a permissão é do grupo ou do perfil, e removê-la a partir da tela
+   * de uma pessoa tiraria o acesso de todo mundo. A interface precisa **dizer isso**; apenas
+   * desabilitar o botão faz quem administra clicar sem entender por que nada acontece.
+   */
   permissionId?: string
   actionId: string
+  /**
+   * O identificador estável da capacidade — `aprovar_custo`.
+   *
+   * Opcional porque backends anteriores a 3.4 não o enviam. Quando faltar, só a descrição está
+   * disponível, e é ela que a tela mostra — o comportamento de antes.
+   */
+  actionName?: string
+  /**
+   * O rótulo curto — "Aprovar custo".
+   *
+   * Ausente quando a capacidade não tem rótulo, que é o caso de todo catálogo existente. A tela
+   * mostra `actionLabel ?? actionDescription`: enquanto ninguém declarar rótulo, ela exibe
+   * exatamente o que exibe hoje.
+   */
+  actionLabel?: string
   actionDescription: string
+  /**
+   * O agrupamento dentro do recurso — "Custos".
+   *
+   * Substitui o `->` que era embutido na descrição e que o cliente quebrava na exibição para
+   * simular hierarquia. Ausente quando não há.
+   */
+  actionCategory?: string
   types?: string[]
+  /**
+   * As capacidades que esta declara precisar — **apenas as diretas**, em texto `recurso:acao`.
+   *
+   * Vêm junto do catálogo porque a tela precisa delas no momento da concessão: é o que permite
+   * oferecer as dependências junto e avisar ao revogar. O fecho transitivo não vem aqui — para ele
+   * existe `getCapabilityDependencies`.
+   *
+   * Ausente quando não há nenhuma, e em backends anteriores a 3.4.
+   */
+  requires?: string[]
+}
+
+/** Uma capacidade alcançada pelo fecho de dependências, e por onde se chegou nela. */
+export interface CapabilityDependencyNodeDto {
+  capability: string
+  /** Nulo quando a capacidade **não existe** no catálogo — estado legítimo, não erro. */
+  actionId?: string | null
+  resourceName?: string
+  actionName?: string
+  actionDescription?: string
+  /** 1 para as diretas, 2 para as dependências das diretas, e assim por diante. */
+  depth: number
+  /** A capacidade do nível anterior — o caminho até aqui. */
+  requiredBy?: string
+  resolved: boolean
+}
+
+/** Tudo de que uma capacidade depende, direta e indiretamente. */
+export interface CapabilityDependencyTreeDto {
+  actionId: string
+  capability: string
+  dependencies: CapabilityDependencyNodeDto[]
+  /** `true` quando o teto de profundidade foi atingido e há dependências não exploradas. */
+  truncated: boolean
 }
 
 export interface ResoucePermissionsWithTypeDto {
   resourceId: string
+  /** O identificador estável do recurso — `tms.ordemservico`. Ausente em backends < 3.4. */
+  resourceName?: string
   resourceDescription: string
+  /**
+   * `VIEW` para recurso registrado por uma tela, `API` para o que a varredura do `@HasPermission`
+   * cadastrou.
+   *
+   * Ausente em backends anteriores a 3.4, e **nulo** para recurso criado antes de a coluna
+   * existir. Nos dois casos a tela agrupa como "sem classificação", em vez de empurrar para um dos
+   * baldes e mentir sobre o que aquilo é.
+   */
+  resourceType?: TipoRecurso | null
+  /**
+   * Se o recurso está ativo.
+   *
+   * A lista **não** filtra por isto. Uma capacidade sobre ação ativa de recurso inativo é concedível
+   * hoje e funciona hoje no `@HasPermission`, que não consulta `active` — e deixará de funcionar
+   * quando `archbase.security.permission.require-active` for ligado. Escondê-la tiraria do admin a
+   * chance de arrumar antes; então ela aparece, marcada.
+   *
+   * Ausente em backends que ainda não enviam o campo; a tela trata ausente como ativo.
+   */
+  resourceActive?: boolean
   permissions: PermissionWithTypesDto[]
 }
 
 export interface ResouceActionPermissionDto {
   resourceId: string
+  resourceName?: string
   resourceDescription: string
+  resourceType?: TipoRecurso | null
   permissionId: string
   actionId: string
+  actionName?: string
+  actionLabel?: string
   actionDescription: string
+  actionCategory?: string
 }
 
 export interface SimpleActionDto {
   actionName: string
   actionDescription: string
+  /**
+   * O rótulo curto, distinto da descrição que explica a ação.
+   *
+   * Ausente significa "use a descrição" — o comportamento de todo cliente anterior. É semeado
+   * apenas quando a capacidade ainda não tem rótulo: quem já tem não é sobrescrito, para o texto
+   * não oscilar entre duas telas que registram a mesma ação.
+   */
+  actionLabel?: string
+  /** O agrupamento dentro do recurso. Mesma regra de semeadura do rótulo. */
+  actionCategory?: string
+  requires?: string[]
 }
 
 export interface SimpleResourceDto {
