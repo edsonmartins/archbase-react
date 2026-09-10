@@ -201,7 +201,20 @@ export type ArchbaseTreeNodeKind = 'USER' | 'GROUP' | 'PROFILE' | 'RESOURCE' | '
 export interface ArchbaseTreeNode {
 	id: string;
 	kind: ArchbaseTreeNodeKind;
+	/**
+	 * O identificador. Para recurso e ação é o nome técnico — e continua sendo, porque é ele que a
+	 * simulação envia ao servidor.
+	 */
 	label: string;
+	/**
+	 * O texto secundário — o que distingue quando o rótulo não basta.
+	 *
+	 * Descrição, para recurso e ação: a árvore mostrava só `label` e quem administra lia
+	 * `ArchbaseAdvancedSidebar` onde deveria ler "Navegação". E-mail, para pessoa: numa base com
+	 * homônimos, escolher entre dois "Marcos" pelo nome é chute. Ausente para grupo e perfil, e em
+	 * backends anteriores a 3.4.
+	 */
+	description?: string | null;
 	/** O número à direita — membros do grupo, ações do recurso. Ausente quando não ajuda. */
 	badge?: string | null;
 	/** Se pode ser aberto. Vem do servidor: só ele sabe, e sem isso a árvore põe seta em folha. */

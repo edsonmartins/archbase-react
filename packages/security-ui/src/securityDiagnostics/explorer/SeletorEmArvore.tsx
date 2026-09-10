@@ -1,4 +1,4 @@
-import { ARCHBASE_IOC_API_TYPE } from '@archbase/core';
+import { ARCHBASE_IOC_API_TYPE, getI18nextInstance } from '@archbase/core';
 import { useArchbaseRemoteServiceApi } from '@archbase/data';
 import type {
 	ArchbaseSecurityDiagnosticsService,
@@ -32,6 +32,48 @@ export interface SeletorEmArvoreProps {
 }
 
 const TAMANHO = 40;
+
+/**
+ * O que o número à direita conta — depende do que o nó é.
+ *
+ * <p>Sem isto o seletor mostrava `aprovar 4` e `ticket.kanban 14` lado a lado, com significados
+ * diferentes e nenhuma legenda: o primeiro conta concessões, o segundo conta ações.
+ */
+const LEGENDA_DO_BADGE: Record<string, string> = {
+	USER: 'grupos de que participa',
+	GROUP: 'pessoas no grupo',
+	PROFILE: 'pessoas com este perfil',
+	RESOURCE: 'ações neste recurso',
+	ACTION: 'concessões que alcançam esta capacidade',
+};
+
+/** Recurso e ação têm identificador técnico no `label`; pessoa, grupo e perfil têm o nome. */
+const ehTecnico = (no: ArchbaseTreeNode) => no.kind === 'RESOURCE' || no.kind === 'ACTION';
+
+/**
+ * O texto grande da linha.
+ *
+ * <p>Para recurso e ação é a DESCRIÇÃO, quando existe — é o que quem administra reconhece. Para
+ * pessoa é o nome. A descrição pode ser uma chave de tradução (`archbase:Navegação` é o que está
+ * gravado no catálogo do gestor-rq), então passa pelo i18n antes de aparecer.
+ */
+const principal = (no: ArchbaseTreeNode) =>
+	ehTecnico(no) && no.description ? traduzir(no.description) : no.label;
+
+/** O texto pequeno ao lado: o identificador técnico, ou o e-mail que distingue homônimos. */
+const secundario = (no: ArchbaseTreeNode) =>
+	ehTecnico(no) ? (no.description ? no.label : undefined) : (no.description ?? undefined);
+
+/** A descrição pode vir como chave de i18n; sem entrada, o próprio texto vale. */
+const traduzir = (texto: string) => {
+	try {
+		const traduzido = getI18nextInstance().t(texto);
+		return typeof traduzido === 'string' ? traduzido : texto;
+	} catch {
+		return texto;
+	}
+};
+
 
 /**
  * Escolher na árvore em vez de digitar.
@@ -115,9 +157,27 @@ export const SeletorEmArvore = ({
 		[service, branch, branchDosFilhos, expandido, filhos],
 	);
 
+	/**
+	 * Devolve o seletor ao estado inicial ao fechar.
+	 *
+	 * <p>Sem isto a busca ficava presa na consulta anterior: quem já tinha escolhido
+	 * `tms.abastecimento` reabria o seletor e via a lista daquele recurso, com o campo interno ainda
+	 * preenchido. Digitar no campo de cima não ajuda — ele é `readOnly`, só exibe o escolhido —,
+	 * então trocar de capacidade exigia achar a caixa de dentro e limpá-la à mão.
+	 *
+	 * <p>O ramo aberto e os filhos carregados vão junto: reabrir mostrando um recurso expandido do
+	 * uso anterior sugere que aquela é a escolha corrente, e não é.
+	 */
+	const fechar = useCallback(() => {
+		setAberto(false);
+		setBusca('');
+		setExpandido(undefined);
+		setFilhos({});
+	}, []);
+
 	const escolher = (no: ArchbaseTreeNode, pai?: ArchbaseTreeNode) => {
 		onSelecionar(no, pai);
-		setAberto(false);
+		fechar();
 	};
 
 	/**
@@ -148,10 +208,15 @@ export const SeletorEmArvore = ({
 				}}>
 				<Group gap={6} wrap="nowrap">
 					<Text size="sm" fw={selecionavel ? 500 : 600} truncate>
-						{no.label}
+						{principal(no)}
 					</Text>
+					{secundario(no) ? (
+						<Text size="xs" c="dimmed" ff="monospace" truncate>
+							{secundario(no)}
+						</Text>
+					) : null}
 					{no.badge ? (
-						<Text size="xs" c="dimmed">
+						<Text size="xs" c="dimmed" title={LEGENDA_DO_BADGE[no.kind] ?? undefined}>
 							{no.badge}
 						</Text>
 					) : null}
@@ -168,14 +233,20 @@ export const SeletorEmArvore = ({
 	);
 
 	return (
-		<Popover opened={aberto} onChange={setAberto} width={340} position="bottom-start" withinPortal shadow="md">
+		<Popover
+			opened={aberto}
+			onChange={(v) => (v ? setAberto(true) : fechar())}
+			width={340}
+			position="bottom-start"
+			withinPortal
+			shadow="md">
 			<Popover.Target>
 				<TextInput
 					label={label}
 					placeholder={placeholder}
 					value={valor ?? ''}
 					readOnly
-					onClick={() => setAberto((v) => !v)}
+					onClick={() => (aberto ? fechar() : setAberto(true))}
 					styles={{ input: { cursor: 'pointer' } }}
 				/>
 			</Popover.Target>

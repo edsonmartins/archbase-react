@@ -34,6 +34,10 @@ const translateDelimitedString = (inputString) => {
  * e eram desenhados lado a lado, indistinguíveis. Quem administra via "Ordens de serviço" duas
  * vezes, uma vinda da tela e outra do controller, sem nada que dissesse qual era qual.
  *
+ * <p>O rótulo da segunda é <b>Serviços</b>, e não "Endpoints": endpoint é vocabulário de quem
+ * escreve o código, e esta tela é operada por quem administra acesso. O tipo no banco continua
+ * {@code API} — o que muda é só o que a pessoa lê.
+ *
  * <p>O terceiro balde não é enfeite: {@code TIPO_RECURSO} é nulável e chegou depois de muita gente
  * já ter catálogo. Recurso sem tipo é mostrado como sem tipo, em vez de ser empurrado para um dos
  * dois — empurrar seria a interface afirmando algo que ela não sabe. Eles se classificam sozinhos
@@ -41,7 +45,7 @@ const translateDelimitedString = (inputString) => {
  */
 const CLASSIFICACOES: Array<{ chave: string; tipo: TipoRecurso | null; rotulo: string }> = [
     { chave: "view", tipo: TipoRecurso.VIEW, rotulo: "archbase:Screens" },
-    { chave: "api", tipo: TipoRecurso.API, rotulo: "archbase:Endpoints" },
+    { chave: "api", tipo: TipoRecurso.API, rotulo: "archbase:Services" },
     { chave: "sem-tipo", tipo: null, rotulo: "archbase:Unclassified" },
 ];
 
@@ -88,7 +92,7 @@ const folhasDe = (nos: TreeNodeData[]): TreeNodeData[] =>
 /**
  * Envolve os nós de recurso nas seções de classificação.
  *
- * <p>Seção vazia não é renderizada: numa instalação só de telas, "Endpoints" vazio seria uma pasta
+ * <p>Seção vazia não é renderizada: numa instalação só de telas, "Serviços" vazio seria uma pasta
  * que nunca abre. E backend anterior a 3.4 não envia {@code resourceType} nenhum — tudo cai em
  * "sem classificação", que é exatamente o que se deve dizer nesse caso, e a árvore continua
  * funcionando com um nível a mais em vez de quebrar.
@@ -111,16 +115,30 @@ const agruparPorClassificacao = (nosDeRecurso: TreeNodeData[]): TreeNodeData[] =
  * chave. `recurso:acao` é estável: sobrevive a mudança de texto, e é o mesmo identificador que o
  * backend usa em toda parte.
  *
- * <p>**Aditivo.** Sem entrada para a chave estável, o i18next devolve a própria chave, e a função cai
- * no caminho de sempre — inclusive no `->`, que continua funcionando para quem depende dele. Nenhuma
- * tradução existente deixa de valer.
+ * <p><b>Os dois separadores são desligados na chamada, e isso não é detalhe.</b> O i18next do
+ * archbase roda com `keySeparator: '.'` e o `nsSeparator: ':'` padrão — e a capacidade contém os
+ * dois. Sem desligá-los, `tms.abastecimento:aprovar` é lido como namespace `tms`, caminho aninhado
+ * `abastecimento:aprovar`, e nunca casa com a chave plana do arquivo de tradução.
+ *
+ * <p><b>E a ausência é detectada com `exists`, não comparando o retorno.</b> Para chave ausente o
+ * i18next devolve a chave **sem o namespace** — então comparar o retorno contra a chave completa
+ * dava sempre "diferente", e esta função devolvia o identificador cru no lugar da descrição. Era
+ * exatamente o que aparecia na tela: `tms.abastecimento.aprovar` onde deveria estar
+ * "aprovar em Abastecimentos".
  */
 const traduzir = (chaveEstavel: string | undefined, texto: string): string => {
     if (chaveEstavel) {
-        const chave = `archbase:${chaveEstavel}`;
-        const traduzido = getI18nextInstance().t(chave);
-        if (typeof traduzido === "string" && traduzido !== chave) {
-            return traduzido;
+        const i18n: any = getI18nextInstance();
+        const opcoes = { ns: "archbase", keySeparator: false, nsSeparator: false };
+        try {
+            if (typeof i18n?.exists === "function" && i18n.exists(chaveEstavel, opcoes)) {
+                const traduzido = i18n.t(chaveEstavel, opcoes);
+                if (typeof traduzido === "string" && traduzido !== chaveEstavel) {
+                    return traduzido;
+                }
+            }
+        } catch {
+            // i18next não inicializado, ou instância sem `exists`: o texto humano segue valendo.
         }
     }
     return translateDelimitedString(texto);

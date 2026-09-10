@@ -30,8 +30,21 @@ const getCapabilityDependencies = vi.fn();
 
 vi.mock('@archbase/core', async (importOriginal) => ({
     ...(await importOriginal<any>()),
-    // Sem i18n inicializado, t() estoura. A identidade basta: o teste procura pelas chaves.
-    getI18nextInstance: () => ({ t: (chave: string) => chave }),
+    /**
+     * Dublê FIEL ao i18next, não uma identidade.
+     *
+     * O dublê anterior devolvia a chave inteira em `t()` e não tinha `exists`. Com ele, o defeito
+     * que trocava a descrição da capacidade pelo identificador cru passava despercebido: a
+     * comparação errada dava "igual" por acaso e a tela caía no caminho certo.
+     *
+     * O i18next de verdade faz duas coisas que importam aqui: para chave ausente devolve a chave
+     * SEM o namespace, e é `exists` que diz se ela existe. Reproduzir isso é o que faz a suíte
+     * proteger o comportamento em vez de descrevê-lo.
+     */
+    getI18nextInstance: () => ({
+        t: (chave: string) => (typeof chave === 'string' ? chave.replace(/^archbase:/, '') : chave),
+        exists: () => false,
+    }),
 }));
 
 vi.mock('@archbase/data', async (importOriginal) => ({
@@ -151,19 +164,19 @@ describe('classificação do catálogo', () => {
     it('separa telas, endpoints e o que ainda não tem classificação', async () => {
         renderizar();
 
-        expect(await screen.findAllByText('archbase:Screens')).not.toHaveLength(0);
-        expect(await screen.findAllByText('archbase:Endpoints')).not.toHaveLength(0);
-        expect(await screen.findAllByText('archbase:Unclassified')).not.toHaveLength(0);
+        expect(await screen.findAllByText('Screens')).not.toHaveLength(0);
+        expect(await screen.findAllByText('Services')).not.toHaveLength(0);
+        expect(await screen.findAllByText('Unclassified')).not.toHaveLength(0);
     });
 
     it('seção sem nenhum recurso não é desenhada', async () => {
         getAllPermissionsAvailable.mockResolvedValue([CATALOGO[0]]);
         renderizar();
 
-        expect(await screen.findAllByText('archbase:Screens')).not.toHaveLength(0);
+        expect(await screen.findAllByText('Screens')).not.toHaveLength(0);
         // Pasta que nunca abre é ruído: só existe seção que tem conteúdo.
-        expect(screen.queryByText('archbase:Endpoints')).toBeNull();
-        expect(screen.queryByText('archbase:Unclassified')).toBeNull();
+        expect(screen.queryByText('Services')).toBeNull();
+        expect(screen.queryByText('Unclassified')).toBeNull();
     });
 
     it('backend anterior a 3.3.3 não envia tipo — tudo cai em "sem classificação", e a árvore funciona', async () => {
@@ -172,9 +185,9 @@ describe('classificação do catálogo', () => {
         );
         renderizar();
 
-        expect(await screen.findAllByText('archbase:Unclassified')).not.toHaveLength(0);
-        expect(screen.queryByText('archbase:Screens')).toBeNull();
-        expect(screen.queryByText('archbase:Endpoints')).toBeNull();
+        expect(await screen.findAllByText('Unclassified')).not.toHaveLength(0);
+        expect(screen.queryByText('Screens')).toBeNull();
+        expect(screen.queryByText('Services')).toBeNull();
     });
 });
 
@@ -182,7 +195,7 @@ describe('identificador técnico', () => {
     it('mostra o nome do recurso ao lado da descrição', async () => {
         renderizar();
 
-        await expandir('archbase:Endpoints');
+        await expandir('Services');
         expect(await screen.findByText('Ordens de serviço')).toBeTruthy();
         // O que está no @ArchbaseResource, e que a tela nunca mostrou.
         expect(await screen.findByText('tms.ordemservico')).toBeTruthy();
@@ -191,7 +204,7 @@ describe('identificador técnico', () => {
     it('mostra o nome da ação ao lado da descrição gerada', async () => {
         renderizar();
 
-        await expandir('archbase:Endpoints');
+        await expandir('Services');
         await expandir('Ordens de serviço');
 
         expect(await screen.findByText('Aprovar o custo da OS')).toBeTruthy();
@@ -205,7 +218,7 @@ describe('identificador técnico', () => {
         }]);
         renderizar();
 
-        await expandir('archbase:Endpoints');
+        await expandir('Services');
         expect(await screen.findAllByText('tms.ordemservico')).toHaveLength(1);
     });
 });
@@ -252,24 +265,24 @@ describe('dependências entre capacidades', () => {
         getAllPermissionsAvailable.mockResolvedValue(COM_DEPENDENCIA);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[0]);
         const recursos = await screen.findAllByText('Ordens de serviço');
         fireEvent.click(recursos[0]);
 
-        expect(await screen.findByText('archbase:used by 1')).toBeTruthy();
+        expect(await screen.findByText('used by 1')).toBeTruthy();
     });
 
     it('marca quantas dependências diretas a capacidade tem', async () => {
         getAllPermissionsAvailable.mockResolvedValue(COM_DEPENDENCIA);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[0]);
         const recursos = await screen.findAllByText('Ordens de serviço');
         fireEvent.click(recursos[0]);
 
-        expect(await screen.findByText('archbase:depends on 1')).toBeTruthy();
+        expect(await screen.findByText('depends on 1')).toBeTruthy();
     });
 
     it('capacidade sem dependência é concedida direto, sem perguntar ao servidor', async () => {
@@ -281,7 +294,7 @@ describe('dependências entre capacidades', () => {
         });
         renderizar();
 
-        await abrirCapacidadeDisponivel('archbase:Endpoints', 'Ordens de serviço', 'Ver OS');
+        await abrirCapacidadeDisponivel('Services', 'Ordens de serviço', 'Ver OS');
         fireEvent.click(botao('arrow-right'));
 
         await waitFor(() => expect(createPermission).toHaveBeenCalledWith('u1', 'a9', 'user'));
@@ -303,10 +316,10 @@ describe('dependências entre capacidades', () => {
         });
         renderizar();
 
-        await abrirCapacidadeDisponivel('archbase:Endpoints', 'Ordens de serviço', 'Aprovar o custo da OS');
+        await abrirCapacidadeDisponivel('Services', 'Ordens de serviço', 'Aprovar o custo da OS');
         fireEvent.click(botao('arrow-right'));
 
-        expect(await screen.findByText('archbase:This permission depends on others')).toBeTruthy();
+        expect(await screen.findByText('This permission depends on others')).toBeTruthy();
         expect(createPermission).not.toHaveBeenCalled();
     });
 
@@ -329,9 +342,9 @@ describe('dependências entre capacidades', () => {
         }));
         renderizar();
 
-        await abrirCapacidadeDisponivel('archbase:Endpoints', 'Ordens de serviço', 'Aprovar o custo da OS');
+        await abrirCapacidadeDisponivel('Services', 'Ordens de serviço', 'Aprovar o custo da OS');
         fireEvent.click(botao('arrow-right'));
-        fireEvent.click(await screen.findByText('archbase:Grant together'));
+        fireEvent.click(await screen.findByText('Grant together'));
 
         await waitFor(() => expect(createPermission).toHaveBeenCalledTimes(2));
         // Se a última chamada falhar, o que ficou concedido é o pré-requisito — não a capacidade
@@ -359,9 +372,9 @@ describe('dependências entre capacidades', () => {
         });
         renderizar();
 
-        await abrirCapacidadeDisponivel('archbase:Endpoints', 'Ordens de serviço', 'Aprovar o custo da OS');
+        await abrirCapacidadeDisponivel('Services', 'Ordens de serviço', 'Aprovar o custo da OS');
         fireEvent.click(botao('arrow-right'));
-        fireEvent.click(await screen.findByText('archbase:Grant only this one'));
+        fireEvent.click(await screen.findByText('Grant only this one'));
 
         await waitFor(() => expect(createPermission).toHaveBeenCalledTimes(1));
         expect(createPermission.mock.calls[0][1]).toBe('a2');
@@ -394,12 +407,12 @@ describe('dependências entre capacidades', () => {
         });
         renderizar();
 
-        await abrirCapacidadeDisponivel('archbase:Endpoints', 'Ordens de serviço', 'Aprovar o custo da OS');
+        await abrirCapacidadeDisponivel('Services', 'Ordens de serviço', 'Aprovar o custo da OS');
         fireEvent.click(botao('arrow-right'));
 
         // Nada falta: concede direto, sem diálogo.
         await waitFor(() => expect(createPermission).toHaveBeenCalledTimes(1));
-        expect(screen.queryByText('archbase:This permission depends on others')).toBeNull();
+        expect(screen.queryByText('This permission depends on others')).toBeNull();
     });
 
     it('avisa ao remover uma capacidade da qual outras concedidas dependem', async () => {
@@ -422,7 +435,7 @@ describe('dependências entre capacidades', () => {
         }]);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[secoes.length - 1]);
         const recursos = await screen.findAllByText('Ordens de serviço');
         fireEvent.click(recursos[recursos.length - 1]);
@@ -431,7 +444,7 @@ describe('dependências entre capacidades', () => {
 
         fireEvent.click(botao('arrow-left'));
 
-        expect(await screen.findByText('archbase:Other permissions depend on this one')).toBeTruthy();
+        expect(await screen.findByText('Other permissions depend on this one')).toBeTruthy();
         // Aviso, não bloqueio: nada foi removido ainda.
         expect(deletePermission).not.toHaveBeenCalled();
     });
@@ -457,7 +470,7 @@ describe('dependências entre capacidades', () => {
         deletePermission.mockResolvedValue(undefined);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[secoes.length - 1]);
         const recursos = await screen.findAllByText('Ordens de serviço');
         fireEvent.click(recursos[recursos.length - 1]);
@@ -465,7 +478,7 @@ describe('dependências entre capacidades', () => {
         fireEvent.click(linhas[linhas.length - 1]);
 
         fireEvent.click(botao('arrow-left'));
-        fireEvent.click(await screen.findByText('archbase:Remove anyway'));
+        fireEvent.click(await screen.findByText('Remove anyway'));
 
         await waitFor(() => expect(deletePermission).toHaveBeenCalledWith('p9'));
     });
@@ -485,7 +498,7 @@ describe('dependências entre capacidades', () => {
         deletePermission.mockResolvedValue(undefined);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[secoes.length - 1]);
         const recursos = await screen.findAllByText('Ordens de serviço');
         fireEvent.click(recursos[recursos.length - 1]);
@@ -495,7 +508,7 @@ describe('dependências entre capacidades', () => {
         fireEvent.click(botao('arrow-left'));
 
         await waitFor(() => expect(deletePermission).toHaveBeenCalledWith('p2'));
-        expect(screen.queryByText('archbase:Other permissions depend on this one')).toBeNull();
+        expect(screen.queryByText('Other permissions depend on this one')).toBeNull();
     });
 });
 
@@ -523,7 +536,7 @@ describe('rótulo, descrição e categoria', () => {
     }];
 
     const abrirRecurso = async () => {
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[0]);
         const recursos = await screen.findAllByText('Ordens de serviço');
         fireEvent.click(recursos[0]);
@@ -580,7 +593,7 @@ describe('rótulo, descrição e categoria', () => {
         fireEvent.click(await screen.findByText('Custos'));
         expect(await screen.findByText('Aprovar custo')).toBeTruthy();
 
-        const filtro = screen.getByPlaceholderText('archbase:Filter available permissions');
+        const filtro = screen.getByPlaceholderText('Filter available permissions');
         // 'estornar' é o actionName; o rótulo é 'Estornar' e a descrição é outra frase. O filtro
         // precisa alcançar os três.
         fireEvent.change(filtro, { target: { value: 'estornar' } });
@@ -624,22 +637,22 @@ describe('recurso desativado e catálogo incompleto', () => {
         }]);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[0]);
 
         expect(await screen.findByText('Ordens de serviço')).toBeTruthy();
-        expect(await screen.findByText('archbase:inactive resource')).toBeTruthy();
+        expect(await screen.findByText('inactive resource')).toBeTruthy();
     });
 
     it('recurso ativo não ganha a marca', async () => {
         getAllPermissionsAvailable.mockResolvedValue([{ ...CATALOGO[1], resourceActive: true }]);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[0]);
 
         await screen.findByText('Ordens de serviço');
-        expect(screen.queryByText('archbase:inactive resource')).toBeNull();
+        expect(screen.queryByText('inactive resource')).toBeNull();
     });
 
     it('backend que não envia o campo se comporta como antes', async () => {
@@ -648,11 +661,11 @@ describe('recurso desativado e catálogo incompleto', () => {
         getAllPermissionsAvailable.mockResolvedValue([CATALOGO[1]]);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[0]);
 
         await screen.findByText('Ordens de serviço');
-        expect(screen.queryByText('archbase:inactive resource')).toBeNull();
+        expect(screen.queryByText('inactive resource')).toBeNull();
     });
 
     it('explica como o catálogo de uma tela nasce', async () => {
@@ -660,8 +673,39 @@ describe('recurso desativado e catálogo incompleto', () => {
         // tela que nenhum admin abriu não tem capacidade cadastrada — e a lista parece completa.
         renderizar();
 
-        expect(await screen.findByText('archbase:Available')).toBeTruthy();
+        expect(await screen.findByText('Available')).toBeTruthy();
         expect(document.querySelector('svg.tabler-icon-info-circle')).toBeTruthy();
+    });
+});
+
+describe('tradução por chave estável', () => {
+    const COM_DESCRICAO = [{
+        resourceId: 'r-api',
+        resourceName: 'tms.abastecimento',
+        resourceDescription: 'Abastecimentos',
+        resourceType: 'API',
+        permissions: [{
+            actionId: 'a1', actionName: 'aprovar',
+            actionDescription: 'aprovar em Abastecimentos',
+        }],
+    }];
+
+    it('sem tradução para a chave estável, mostra a DESCRIÇÃO — nunca o identificador', async () => {
+        // O defeito que isto tranca: a checagem de "chave ausente" comparava o retorno do i18next
+        // contra a chave COM namespace, e o i18next devolve SEM. A comparação nunca batia, e a
+        // linha exibia `tms.abastecimento:aprovar` no lugar de "aprovar em Abastecimentos".
+        getAllPermissionsAvailable.mockResolvedValue(COM_DESCRICAO);
+        renderizar();
+
+        const secoes = await screen.findAllByText('Services');
+        fireEvent.click(secoes[0]);
+        const recursos = await screen.findAllByText('Abastecimentos');
+        fireEvent.click(recursos[0]);
+
+        expect(await screen.findByText('aprovar em Abastecimentos')).toBeTruthy();
+        expect(screen.queryByText('tms.abastecimento:aprovar')).toBeNull();
+        // O identificador da AÇÃO continua ao lado, que é outra coisa.
+        expect(screen.getByText('aprovar')).toBeTruthy();
     });
 });
 
@@ -685,19 +729,19 @@ describe('permissão herdada', () => {
         renderizar();
 
         // O painel das concedidas é o segundo; a etiqueta aparece na linha da ação.
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[secoes.length - 1]);
         const recursos = await screen.findAllByText('Ordens de serviço');
         fireEvent.click(recursos[recursos.length - 1]);
 
-        expect(await screen.findByText('archbase:inherited')).toBeTruthy();
+        expect(await screen.findByText('inherited')).toBeTruthy();
     });
 
     it('selecionar a linha herdada não habilita remover, e nada é apagado', async () => {
         getPermissionsBySecurityId.mockResolvedValue(HERDADA);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[secoes.length - 1]);
         const recursos = await screen.findAllByText('Ordens de serviço');
         fireEvent.click(recursos[recursos.length - 1]);
@@ -707,7 +751,7 @@ describe('permissão herdada', () => {
 
         // A explicação fica na própria linha — o tooltip do botão é reforço, e só aparece no
         // hover; testar por ele seria testar o Mantine, não a tela.
-        expect(await screen.findByText('archbase:inherited')).toBeTruthy();
+        expect(await screen.findByText('inherited')).toBeTruthy();
 
         const remover = botao('arrow-left');
         expect(remover.hasAttribute('disabled')).toBe(true);
@@ -723,7 +767,7 @@ describe('permissão herdada', () => {
         deletePermission.mockResolvedValue(undefined);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[secoes.length - 1]);
         const recursos = await screen.findAllByText('Ordens de serviço');
         fireEvent.click(recursos[recursos.length - 1]);
@@ -731,7 +775,7 @@ describe('permissão herdada', () => {
         const linhas = await screen.findAllByText('Aprovar o custo da OS');
         fireEvent.click(linhas[linhas.length - 1]);
 
-        expect(screen.queryByText('archbase:inherited')).toBeNull();
+        expect(screen.queryByText('inherited')).toBeNull();
         const remover = botao('arrow-left');
         expect(remover.hasAttribute('disabled')).toBe(false);
         fireEvent.click(remover);
@@ -742,13 +786,13 @@ describe('permissão herdada', () => {
         getPermissionsBySecurityId.mockResolvedValue(HERDADA);
         renderizar();
 
-        const secoes = await screen.findAllByText('archbase:Endpoints');
+        const secoes = await screen.findAllByText('Services');
         fireEvent.click(secoes[0]);
         const recursos = await screen.findAllByText('Ordens de serviço');
         fireEvent.click(recursos[0]);
 
         // Antes a mesma capacidade aparecia sem marca nenhuma à esquerda e com etiqueta "grupo" à
         // direita — a tela se contradizendo na mesma linha.
-        expect(await screen.findByText('archbase:already inherited')).toBeTruthy();
+        expect(await screen.findByText('already inherited')).toBeTruthy();
     });
 });
