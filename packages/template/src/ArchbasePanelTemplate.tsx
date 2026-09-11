@@ -155,10 +155,11 @@ export function ArchbasePanelTemplate<T extends object, ID>({
 
 		// 🔐 SEGURANÇA: Função helper para verificar se tem permissão
 		const hasActionPermission = (actionName: string): boolean => {
-			if (!security.isAvailable) return true; // Sem contexto de segurança = permite tudo
-			// Por enquanto registra e permite - lógica completa será implementada posteriormente
-			security.registerAction();
-			return security.hasPermission();
+			// A permissão da ação, agora perguntada de verdade. O hook é quem decide quando NÃO dá
+			// para responder — sem contexto, carregando, com falha, ou capacidade fora do catálogo —
+			// e nesses casos permite. Aqui só se pergunta.
+			security.registerAction(actionName);
+			return security.hasPermission(actionName);
 		};
 
 		const defaultActions: ArchbaseAction[] = [];

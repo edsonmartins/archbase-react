@@ -38,10 +38,13 @@ export const ArchbaseSmartActionButton: React.FC<ArchbaseSmartActionButtonProps>
   
   // Auto-registra a ação se necessário
   React.useEffect(() => {
-    if (autoRegister && actionName && actionDescription && security.isAvailable) {
-      security.registerAction();
+    // Registra assim que houver contexto — sem esperar o `isAvailable`, que só fica verdadeiro
+    // depois das permissões chegarem. Declarar a capacidade é o que a põe no catálogo; adiar isso
+    // até a resposta chegar é justamente o que deixava a ação invisível para quem concede.
+    if (autoRegister && actionName && actionDescription) {
+      security.registerAction(actionName, actionDescription);
     }
-  }, [actionName, actionDescription, autoRegister, security.isAvailable, security.registerAction]);
+  }, [actionName, actionDescription, autoRegister, security.registerAction]);
 
   // A marcação da capacidade, para o inspetor saber onde desenhar o realce. É inerte: não
   // protege nada, e vai junto sempre que houver um actionName — inclusive quando não há contexto
@@ -54,7 +57,7 @@ export const ArchbaseSmartActionButton: React.FC<ArchbaseSmartActionButtonProps>
   }
 
   // Se tem contexto de segurança, verifica permissão
-  if (!security.hasPermission()) {
+  if (!security.hasPermission(actionName)) {
     return <>{fallback}</>;
   }
 

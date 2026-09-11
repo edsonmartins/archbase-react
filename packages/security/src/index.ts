@@ -49,7 +49,12 @@ export * from './hooks';
 export {
   ArchbaseSecurityProvider,
   ArchbaseViewSecurityProvider,
-  DefaultSecurityLoading
+  DefaultSecurityLoading,
+  // O contexto em si, para quem precisa consultá-lo SEM exigir que ele exista. O
+  // `useArchbaseViewSecurity` lança quando não há provider, e há consumidores legítimos fora dele
+  // — os templates, que funcionam com ou sem segurança em volta.
+  ArchbaseViewSecurityContext,
+  ArchbaseSecurityContext
 } from './ArchbaseSecurityContext';
 
 export { 
