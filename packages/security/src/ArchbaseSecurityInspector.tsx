@@ -399,11 +399,26 @@ export const ArchbaseSecurityInspector: React.FC<ArchbaseSecurityInspectorProps>
 
                     <Switch
                         size="xs"
-                        mb="xs"
+                        mb={realcar ? 4 : 'xs'}
                         checked={realcar}
                         onChange={evento => setRealcar(evento.currentTarget.checked)}
                         label={t('Highlight on screen')}
                     />
+
+                    {/* Realce ligado e nada desenhado é o caso comum numa tela ainda não marcada, e
+                        sem uma palavra aqui é indistinguível de defeito: liga-se o interruptor e a
+                        tela não muda. Quem vê isto precisa saber que falta a marcação, não que o
+                        inspetor quebrou. */}
+                    {realcar && realces.length === 0 && (
+                        <Text size="10px" c="dimmed" mb="xs">
+                            {t('No control marked on this screen')}
+                        </Text>
+                    )}
+                    {realcar && realces.length > 0 && (
+                        <Text size="10px" c="dimmed" mb="xs">
+                            {`${realces.length} ${t('marked controls')}`}
+                        </Text>
+                    )}
 
                     <ScrollArea style={{ flex: 1 }}>
                         {grupos.length === 0 && (

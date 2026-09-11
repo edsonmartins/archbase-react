@@ -666,5 +666,7 @@
   "Capability not granted": "Not granted",
   "Not declared by this screen": "Not declared by this screen",
   "Copy capability": "Copy capability",
-  "Copied": "Copied"
+  "Copied": "Copied",
+  "No control marked on this screen": "No control is marked on this screen. Mark one with archbaseActionProps('actionName') to see it highlighted.",
+  "marked controls": "marked controls"
 }

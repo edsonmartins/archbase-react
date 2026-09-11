@@ -576,5 +576,7 @@
   "Capability not granted": "No concedida",
   "Not declared by this screen": "No declarada por esta pantalla",
   "Copy capability": "Copiar capacidad",
-  "Copied": "Copiado"
+  "Copied": "Copiado",
+  "No control marked on this screen": "Ningún control está marcado en esta pantalla. Marque uno con archbaseActionProps('nombreDeAccion') para verlo resaltado.",
+  "marked controls": "controles marcados"
 }

@@ -11,7 +11,7 @@
  */
 import React from 'react';
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
-import { render, screen, cleanup, act } from '@testing-library/react';
+import { render, screen, cleanup, act, fireEvent, waitFor } from '@testing-library/react';
 import { MantineProvider } from '@mantine/core';
 
 vi.mock('@archbase/core', async (importOriginal) => ({
@@ -291,6 +291,41 @@ describe('o atalho', () => {
 
         act(() => teclar({ key: 'a', code: 'KeyA', ctrlKey: true, altKey: true }));
         expect(screen.queryByText('Action inspector')).toBeNull();
+    });
+});
+
+describe('o realce', () => {
+    /**
+     * <b>A queixa:</b> "abri o inspetor na tela de tickets, liguei o realce, nada ficou realçado."
+     *
+     * <p>O comportamento estava certo — aquela tela não tem nenhum controle marcado — e a interface
+     * não dizia nada. Ligar um interruptor e a tela não mudar é indistinguível de defeito.
+     */
+    it('avisa quando não há nenhum controle marcado na tela', () => {
+        montar(true);
+        expect(screen.queryByText(/No control marked on this screen/)).toBeNull();
+
+        fireEvent.click(screen.getByLabelText('Highlight on screen'));
+
+        expect(screen.getByText(/No control marked on this screen/)).toBeTruthy();
+    });
+
+    it('havendo controle marcado, conta em vez de avisar', () => {
+        render(<button {...archbaseActionProps('concluir')}>ok</button>);
+        // jsdom devolve caixa zerada; o realce descarta elemento sem dimensão para não desenhar
+        // badge solto no canto. Sem isto o teste mediria o descarte, não a contagem.
+        Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
+            configurable: true,
+            value: () => ({ top: 10, left: 10, width: 80, height: 30, right: 90, bottom: 40, x: 10, y: 10, toJSON: () => ({}) }),
+        });
+
+        montar(true);
+        fireEvent.click(screen.getByLabelText('Highlight on screen'));
+
+        return waitFor(() => {
+            expect(screen.queryByText(/No control marked on this screen/)).toBeNull();
+            expect(screen.getByText(/marked controls/)).toBeTruthy();
+        });
     });
 });
 
