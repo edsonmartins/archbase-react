@@ -30,7 +30,7 @@ vi.mock('@archbase/core', async (importOriginal) => ({
 
 const { ArchbaseSecurityInspector } = await import('../src/ArchbaseSecurityInspector');
 const { registrarTelaInspecionada } = await import('../src/registroDeTelasInspecionadas');
-const { archbaseActionProps, ATRIBUTO_DE_ACAO } = await import('../src/marcacaoDeAcao');
+const { archbaseActionProps, ATRIBUTO_DE_ACAO } = await import('@archbase/core');
 const { ArchbaseSecurityContext } = await import('../src/ArchbaseSecurityContext');
 
 /**

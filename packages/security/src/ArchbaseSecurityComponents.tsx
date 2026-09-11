@@ -1,7 +1,7 @@
 import React, { useEffect, ReactNode } from 'react';
 import { useArchbaseViewSecurity } from './ArchbaseSecurityHooks';
 import { ArchbaseViewSecurityProvider } from './ArchbaseSecurityContext';
-import { archbaseActionProps } from './marcacaoDeAcao';
+import { archbaseActionProps } from '@archbase/core';
 
 /**
  * Devolve os filhos carregando a marcação da capacidade que os governa.

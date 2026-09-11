@@ -31,7 +31,7 @@ vi.mock('./../src/ArchbaseSecurityHooks', () => ({
 }));
 
 const { ArchbaseProtectedComponent } = await import('../src/ArchbaseSecurityComponents');
-const { ATRIBUTO_DE_ACAO } = await import('../src/marcacaoDeAcao');
+const { ATRIBUTO_DE_ACAO } = await import('@archbase/core');
 
 beforeEach(() => {
     hasPermission.mockReset();

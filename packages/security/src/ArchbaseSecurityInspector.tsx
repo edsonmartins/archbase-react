@@ -21,7 +21,7 @@ import {
 import { IconCheck, IconCopy, IconGripVertical, IconX } from '@tabler/icons-react';
 import { ArchbaseSecurityManager } from './ArchbaseSecurityManager';
 import { useTelasInspecionadas } from './registroDeTelasInspecionadas';
-import { ATRIBUTO_DE_ACAO } from './marcacaoDeAcao';
+import { ATRIBUTO_DE_ACAO } from '@archbase/core';
 import { useArchbaseSecurity } from './ArchbaseSecurityHooks';
 
 const t = (chave: string): string => {
@@ -101,17 +101,17 @@ const ATRIBUTO_DE_CONCESSAO = 'data-archbase-granted';
  */
 const CSS_DO_REALCE = `
 [${ATRIBUTO_DE_ACAO}] {
-    outline: 2px solid #e03131 !important;
-    outline-offset: 1px;
+    /* Anel POR DENTRO, e não outline.
+       Outline e border desenham fora da caixa, e qualquer ancestral com overflow:hidden os come —
+       foi o que aconteceu na grade, onde o span.ag-cell-value recorta a célula e o realce sumia
+       justamente nas listas, que são a maior parte das telas. Sombra interna nunca é recortada. */
+    box-shadow: inset 0 0 0 2px #e03131 !important;
     border-radius: 4px;
     position: relative;
-    /* O Button do Mantine recorta o conteúdo, e o recorte engole o pseudo-elemento do rótulo:
-       a borda aparecia e o nome da capacidade nao. O !important porque a regra do componente e
-       mais especifica que um seletor de atributo. */
     overflow: visible !important;
 }
 [${ATRIBUTO_DE_ACAO}][${ATRIBUTO_DE_CONCESSAO}="true"] {
-    outline-color: #2f9e44 !important;
+    box-shadow: inset 0 0 0 2px #2f9e44 !important;
 }
 [${ATRIBUTO_DE_ACAO}]::after {
     content: attr(${ATRIBUTO_DE_ACAO});
@@ -131,12 +131,30 @@ const CSS_DO_REALCE = `
 [${ATRIBUTO_DE_ACAO}][${ATRIBUTO_DE_CONCESSAO}="true"]::after {
     background: #2f9e44;
 }
-/* Vizinhos adjacentes põem os rótulos na mesma linha e um cobre o outro. Passar o mouse traz o
-   de baixo para a frente, que é o gesto natural de quem está lendo um deles. */
+/* Vizinhos adjacentes poem os rotulos na mesma linha e um cobre o outro. Passar o mouse traz o
+   de baixo para a frente, que e o gesto natural de quem esta lendo um deles. */
 [${ATRIBUTO_DE_ACAO}]:hover::after {
     z-index: 9998;
 }
 `;
+/** Onde o `title` que já existia é guardado enquanto o realce o empresta. */
+const ATRIBUTO_DE_TITULO_ORIGINAL = 'data-archbase-title';
+
+/** Devolve os controles ao estado anterior — inclusive o `title` de quem já tinha um. */
+function desanotar() {
+    document.querySelectorAll<HTMLElement>(`[${ATRIBUTO_DE_CONCESSAO}]`).forEach(elemento => {
+        elemento.removeAttribute(ATRIBUTO_DE_CONCESSAO);
+        const original = elemento.getAttribute(ATRIBUTO_DE_TITULO_ORIGINAL);
+        if (original !== null) {
+            if (original) {
+                elemento.setAttribute('title', original);
+            } else {
+                elemento.removeAttribute('title');
+            }
+            elemento.removeAttribute(ATRIBUTO_DE_TITULO_ORIGINAL);
+        }
+    });
+}
 
 /**
  * Anota em cada controle marcado se o usuário alcança a capacidade, e conta quantos são.
@@ -151,8 +169,7 @@ function useMarcados(ativo: boolean, managers: ArchbaseSecurityManager[]): numbe
 
     useEffect(() => {
         if (!ativo) {
-            document.querySelectorAll(`[${ATRIBUTO_DE_CONCESSAO}]`)
-                .forEach(elemento => elemento.removeAttribute(ATRIBUTO_DE_CONCESSAO));
+            desanotar();
             setQuantidade(0);
             return;
         }
@@ -166,6 +183,13 @@ function useMarcados(ativo: boolean, managers: ArchbaseSecurityManager[]): numbe
                 if (!actionName) return;
                 const concedida = managersRef.current.some(m => m.hasPermission(actionName));
                 elemento.setAttribute(ATRIBUTO_DE_CONCESSAO, String(concedida));
+                // O rotulo do ::after fica preso dentro de ancestral que recorta — numa celula de
+                // grade, por exemplo. O title nativo nao: o navegador o desenha fora da pagina.
+                // Guarda o original para devolver ao desligar; sobrescrever e perder nao serviria.
+                if (!elemento.hasAttribute(ATRIBUTO_DE_TITULO_ORIGINAL)) {
+                    elemento.setAttribute(ATRIBUTO_DE_TITULO_ORIGINAL, elemento.getAttribute('title') ?? '');
+                }
+                elemento.setAttribute('title', actionName);
             });
             setQuantidade(marcados.length);
         };
@@ -187,8 +211,7 @@ function useMarcados(ativo: boolean, managers: ArchbaseSecurityManager[]): numbe
         return () => {
             observador.disconnect();
             if (agendado) cancelAnimationFrame(agendado);
-            document.querySelectorAll(`[${ATRIBUTO_DE_CONCESSAO}]`)
-                .forEach(elemento => elemento.removeAttribute(ATRIBUTO_DE_CONCESSAO));
+            desanotar();
         };
     }, [ativo]);
 

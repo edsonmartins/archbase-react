@@ -24,6 +24,10 @@ export { ArchbaseValidator } from './validator/ArchbaseValidator';
 export type { ValidationError, ValidatorOptions } from './validator';
 export * from './validator';
 export * from './locales';
+// Marcação de capacidade nos controles — mora aqui, e não no @archbase/security, porque quem
+// precisa dela são os componentes padrão (@archbase/components), e components não pode depender
+// de security: a dependência é a outra. O @archbase/core é a base que todos já consomem.
+export * from './security/marcacaoDeAcao';
 export * from './fallback/ArchbaseSafeMigrationWrapper'
 
 // Temporary export for migration compatibility

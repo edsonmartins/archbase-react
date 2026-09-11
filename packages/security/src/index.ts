@@ -38,7 +38,8 @@ export * from './SecurityDiagnosticsDomain';
 
 // Inspetor de capacidades (ferramenta de administração; não participa de autorização)
 export * from './ArchbaseSecurityInspector';
-export * from './marcacaoDeAcao';
+// Reexportado do @archbase/core, onde passou a morar: quem já importava daqui continua valendo.
+export { archbaseActionProps, ATRIBUTO_DE_ACAO } from '@archbase/core';
 export * from './registroDeTelasInspecionadas';
 
 // Security hooks
