@@ -189,6 +189,24 @@ export interface ArchbaseSecurityInspectorProps {
     defaultOpened?: boolean;
 }
 
+/**
+ * Se o evento é a tecla pedida — pela POSIÇÃO física, não pelo caractere produzido.
+ *
+ * <p>No macOS, Option é uma tecla de composição: `Option+A` produz `'å'`, `Option+C` produz `'ç'`.
+ * Comparar `event.key` com `'a'` faz o atalho nunca casar em nenhum Mac. `event.code` descreve a
+ * tecla física (`'KeyA'`) e não muda com modificador nem com layout.
+ *
+ * <p>`event.key` fica como reserva, para o que não é letra (`'Escape'`, `'F2'`) e para teclados cujo
+ * `code` não siga o padrão.
+ */
+function ehATecla(evento: KeyboardEvent, tecla: string): boolean {
+    if (tecla.length === 1 && /[a-z0-9]/i.test(tecla)) {
+        const esperado = /[0-9]/.test(tecla) ? `Digit${tecla}` : `Key${tecla.toUpperCase()}`;
+        if (evento.code === esperado) return true;
+    }
+    return evento.key.toLowerCase() === tecla.toLowerCase();
+}
+
 /** A faixa por onde a janela é arrastada. Classe, porque o Mantine a localiza por seletor CSS. */
 const CLASSE_DA_ALCA = 'archbase-inspector-alca';
 
@@ -234,7 +252,7 @@ export const ArchbaseSecurityInspector: React.FC<ArchbaseSecurityInspectorProps>
         if (!permitido) return;
 
         const aoTeclar = (evento: KeyboardEvent) => {
-            if (evento.key.toLowerCase() !== atalho.tecla.toLowerCase()) return;
+            if (!ehATecla(evento, atalho.tecla)) return;
             if (!!atalho.ctrl !== (evento.ctrlKey || evento.metaKey)) return;
             if (!!atalho.alt !== evento.altKey) return;
             if (!!atalho.shift !== evento.shiftKey) return;

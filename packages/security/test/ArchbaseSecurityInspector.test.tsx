@@ -11,7 +11,7 @@
  */
 import React from 'react';
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, act } from '@testing-library/react';
 import { MantineProvider } from '@mantine/core';
 
 vi.mock('@archbase/core', async (importOriginal) => ({
@@ -206,6 +206,91 @@ describe('o que o painel diz sobre a tela', () => {
     it('sem tela montada, diz isso em vez de ficar em branco', () => {
         montar(true);
         expect(screen.getByText('No screen registered')).toBeTruthy();
+    });
+});
+
+describe('o atalho', () => {
+    /**
+     * <b>O defeito:</b> o atalho nunca abria em nenhum Mac.
+     *
+     * <p>Option é tecla de composição no macOS: `Option+A` produz `'å'`, não `'a'`. A verificação
+     * comparava `event.key` com a letra pedida, e a comparação falhava sempre. O teste de navegador
+     * não pegou porque a automação SINTETIZA o evento com `key: 'a'` — ela não passa pelo layout do
+     * teclado, então reproduzia um Mac que não existe.
+     *
+     * <p>Por isso estes testes disparam o evento do jeito que o sistema operacional o entrega.
+     */
+    function teclar(init: KeyboardEventInit) {
+        window.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, ...init }));
+    }
+
+    it('abre com Ctrl+Alt+A num teclado que produz a letra', () => {
+        render(
+            <MantineProvider>
+                <ArchbaseSecurityContext.Provider value={contextoGlobal(true)}>
+                    <ArchbaseSecurityInspector />
+                </ArchbaseSecurityContext.Provider>
+            </MantineProvider>,
+        );
+        expect(screen.queryByText('Action inspector')).toBeNull();
+
+        act(() => teclar({ key: 'a', code: 'KeyA', ctrlKey: true, altKey: true }));
+        expect(screen.getByText('Action inspector')).toBeTruthy();
+    });
+
+    it('abre no macOS, onde Option+A produz "å"', () => {
+        render(
+            <MantineProvider>
+                <ArchbaseSecurityContext.Provider value={contextoGlobal(true)}>
+                    <ArchbaseSecurityInspector />
+                </ArchbaseSecurityContext.Provider>
+            </MantineProvider>,
+        );
+
+        act(() => teclar({ key: 'å', code: 'KeyA', ctrlKey: true, altKey: true }));
+        expect(screen.getByText('Action inspector')).toBeTruthy();
+    });
+
+    it('o mesmo atalho fecha', () => {
+        render(
+            <MantineProvider>
+                <ArchbaseSecurityContext.Provider value={contextoGlobal(true)}>
+                    <ArchbaseSecurityInspector defaultOpened />
+                </ArchbaseSecurityContext.Provider>
+            </MantineProvider>,
+        );
+        expect(screen.getByText('Action inspector')).toBeTruthy();
+
+        act(() => teclar({ key: 'å', code: 'KeyA', ctrlKey: true, altKey: true }));
+        expect(screen.queryByText('Action inspector')).toBeNull();
+    });
+
+    it('não abre sem os modificadores, nem com a tecla errada', () => {
+        render(
+            <MantineProvider>
+                <ArchbaseSecurityContext.Provider value={contextoGlobal(true)}>
+                    <ArchbaseSecurityInspector />
+                </ArchbaseSecurityContext.Provider>
+            </MantineProvider>,
+        );
+
+        act(() => teclar({ key: 'a', code: 'KeyA' }));
+        act(() => teclar({ key: 'a', code: 'KeyA', ctrlKey: true }));
+        act(() => teclar({ key: 'b', code: 'KeyB', ctrlKey: true, altKey: true }));
+        expect(screen.queryByText('Action inspector')).toBeNull();
+    });
+
+    it('quem não administra não abre nem com o atalho certo', () => {
+        render(
+            <MantineProvider>
+                <ArchbaseSecurityContext.Provider value={contextoGlobal(false)}>
+                    <ArchbaseSecurityInspector />
+                </ArchbaseSecurityContext.Provider>
+            </MantineProvider>,
+        );
+
+        act(() => teclar({ key: 'a', code: 'KeyA', ctrlKey: true, altKey: true }));
+        expect(screen.queryByText('Action inspector')).toBeNull();
     });
 });
 
