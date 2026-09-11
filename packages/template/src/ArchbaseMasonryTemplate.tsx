@@ -348,7 +348,7 @@ export function ArchbaseMasonryTemplate<T extends object, ID>({
 								: null}
 							{userActions?.allowAdd !== false && userActions?.onAddExecute ? (
 								<ArchbaseSmartActionButton
-									actionName="add"
+									actionName="create"
 									actionDescription={`Adicionar novo ${resourceDescription || 'registro'}`}
 									color="green"
 									variant={variant ?? appContext.variant}

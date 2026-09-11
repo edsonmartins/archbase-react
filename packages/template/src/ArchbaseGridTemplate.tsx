@@ -561,7 +561,7 @@ function ArchbaseGridTemplateImpl<T extends object, ID>(
                       : null}
                     {userActions.onAddExecute ? (
                       <ArchbaseSmartActionButton
-                        actionName="add"
+                        actionName="create"
                         actionDescription={`Adicionar novo ${resourceDescription || 'registro'}`}
                         color={'green'}
                         variant={variant ?? appContext.variant}

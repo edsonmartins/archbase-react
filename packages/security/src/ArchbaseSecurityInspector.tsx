@@ -113,6 +113,11 @@ const CSS_DO_REALCE = `
 [${ATRIBUTO_DE_ACAO}][${ATRIBUTO_DE_CONCESSAO}="true"] {
     box-shadow: inset 0 0 0 2px #2f9e44 !important;
 }
+/* Cinza: o controle anuncia uma capacidade que nenhuma tela registrou. Nao e falta de permissao,
+   e nome que nao existe no catalogo — quase sempre erro de digitacao ou de sincronia. */
+[${ATRIBUTO_DE_ACAO}][${ATRIBUTO_DE_CONCESSAO}="unknown"] {
+    box-shadow: inset 0 0 0 2px #868e96 !important;
+}
 [${ATRIBUTO_DE_ACAO}]::after {
     content: attr(${ATRIBUTO_DE_ACAO});
     position: absolute;
@@ -131,12 +136,35 @@ const CSS_DO_REALCE = `
 [${ATRIBUTO_DE_ACAO}][${ATRIBUTO_DE_CONCESSAO}="true"]::after {
     background: #2f9e44;
 }
+[${ATRIBUTO_DE_ACAO}][${ATRIBUTO_DE_CONCESSAO}="unknown"]::after {
+    background: #868e96;
+    content: attr(${ATRIBUTO_DE_ACAO}) " ?";
+}
 /* Vizinhos adjacentes poem os rotulos na mesma linha e um cobre o outro. Passar o mouse traz o
    de baixo para a frente, que e o gesto natural de quem esta lendo um deles. */
 [${ATRIBUTO_DE_ACAO}]:hover::after {
     z-index: 9998;
 }
 `;
+/**
+ * O que se sabe da capacidade que um controle anuncia.
+ *
+ * <p>O terceiro valor é o que mais ensina. Um controle pode declarar um nome que <b>nenhuma tela
+ * registrou</b> — foi assim que apareceu que a barra do {@code ArchbaseGridTemplate} pedia
+ * `"add"` enquanto o catálogo só conhece `create`. Pintar isso de vermelho diria "você não tem
+ * essa permissão", quando a verdade é "essa capacidade não existe". São problemas diferentes e
+ * levam a ações diferentes.
+ */
+function situacaoDe(actionName: string, managers: ArchbaseSecurityManager[]): string {
+    if (managers.some(m => m.hasPermission(actionName))) {
+        return 'true';
+    }
+    const conhecida = managers.some(m =>
+        m.getRegisteredActions().some(acao => acao.actionName === actionName)
+        || m.getPermissions().includes(actionName));
+    return conhecida ? 'false' : 'unknown';
+}
+
 /** Onde o `title` que já existia é guardado enquanto o realce o empresta. */
 const ATRIBUTO_DE_TITULO_ORIGINAL = 'data-archbase-title';
 
@@ -181,8 +209,7 @@ function useMarcados(ativo: boolean, managers: ArchbaseSecurityManager[]): numbe
             marcados.forEach(elemento => {
                 const actionName = elemento.getAttribute(ATRIBUTO_DE_ACAO);
                 if (!actionName) return;
-                const concedida = managersRef.current.some(m => m.hasPermission(actionName));
-                elemento.setAttribute(ATRIBUTO_DE_CONCESSAO, String(concedida));
+                elemento.setAttribute(ATRIBUTO_DE_CONCESSAO, situacaoDe(actionName, managersRef.current));
                 // O rotulo do ::after fica preso dentro de ancestral que recorta — numa celula de
                 // grade, por exemplo. O title nativo nao: o navegador o desenha fora da pagina.
                 // Guarda o original para devolver ao desligar; sobrescrever e perder nao serviria.

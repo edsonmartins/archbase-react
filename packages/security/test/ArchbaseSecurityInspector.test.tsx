@@ -329,6 +329,61 @@ describe('o realce', () => {
     });
 });
 
+describe('capacidade que o catálogo não conhece', () => {
+    /**
+     * <b>Como isto apareceu:</b> a barra do ArchbaseGridTemplate declarava `actionName="add"`
+     * enquanto o catálogo registra `create` — nome que não existe em tela nenhuma. Pintar de
+     * vermelho diria "você não tem essa permissão"; a verdade é "essa capacidade não existe", e as
+     * duas levam a ações diferentes de quem administra.
+     */
+    it('marca como desconhecida, e não como negada', async () => {
+        Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
+            configurable: true,
+            value: () => ({ top: 10, left: 10, width: 80, height: 30, right: 90, bottom: 40, x: 10, y: 10, toJSON: () => ({}) }),
+        });
+        render(
+            <>
+                <button {...archbaseActionProps('create')}>existe</button>
+                <button {...archbaseActionProps('add')}>nao existe</button>
+            </>,
+        );
+
+        desregistrar.push(registrarTelaInspecionada(
+            managerFalso('frota.veiculo', 'Veículos',
+                [{ actionName: 'create', actionDescription: 'Criar' }], [])));
+
+        montar(true);
+        fireEvent.click(screen.getByLabelText('Highlight on screen'));
+
+        await waitFor(() => {
+            expect(document.querySelector('[data-archbase-action="create"]')
+                ?.getAttribute('data-archbase-granted')).toBe('false');
+            expect(document.querySelector('[data-archbase-action="add"]')
+                ?.getAttribute('data-archbase-granted')).toBe('unknown');
+        });
+    });
+
+    it('concedida vence as duas', async () => {
+        Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
+            configurable: true,
+            value: () => ({ top: 10, left: 10, width: 80, height: 30, right: 90, bottom: 40, x: 10, y: 10, toJSON: () => ({}) }),
+        });
+        render(<button {...archbaseActionProps('editar')}>ok</button>);
+
+        desregistrar.push(registrarTelaInspecionada(
+            managerFalso('frota.veiculo', 'Veículos',
+                [{ actionName: 'editar', actionDescription: 'Editar' }], ['editar'])));
+
+        montar(true);
+        fireEvent.click(screen.getByLabelText('Highlight on screen'));
+
+        await waitFor(() => {
+            expect(document.querySelector('[data-archbase-action="editar"]')
+                ?.getAttribute('data-archbase-granted')).toBe('true');
+        });
+    });
+});
+
 describe('registro de telas', () => {
     it('desregistrar remove a tela do painel', () => {
         const cancelar = registrarTelaInspecionada(

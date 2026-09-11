@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Button, ButtonProps } from '@mantine/core';
+import { archbaseActionProps } from '@archbase/core';
 import { useOptionalTemplateSecurity } from '../hooks';
 
 /**
@@ -42,18 +43,23 @@ export const ArchbaseSmartActionButton: React.FC<ArchbaseSmartActionButtonProps>
     }
   }, [actionName, actionDescription, autoRegister, security.isAvailable, security.registerAction]);
 
+  // A marcação da capacidade, para o inspetor saber onde desenhar o realce. É inerte: não
+  // protege nada, e vai junto sempre que houver um actionName — inclusive quando não há contexto
+  // de segurança, porque a pergunta "que capacidade é esta?" continua valendo.
+  const marcacao = actionName ? archbaseActionProps(actionName) : {};
+
   // Se não especificou ação OU não tem contexto de segurança, renderiza normalmente
   if (!actionName || !security.isAvailable) {
-    return <Button onClick={onClick} {...buttonProps}>{children}</Button>;
+    return <Button onClick={onClick} {...marcacao} {...buttonProps}>{children}</Button>;
   }
-  
+
   // Se tem contexto de segurança, verifica permissão
   if (!security.hasPermission()) {
     return <>{fallback}</>;
   }
-  
+
   return (
-    <Button onClick={onClick} {...buttonProps}>
+    <Button onClick={onClick} {...marcacao} {...buttonProps}>
       {children}
     </Button>
   );
