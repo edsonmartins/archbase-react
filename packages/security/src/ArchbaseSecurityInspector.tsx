@@ -10,8 +10,8 @@ import {
     ActionIcon,
     Badge,
     Box,
+    FloatingWindow,
     Group,
-    Paper,
     ScrollArea,
     Stack,
     Switch,
@@ -19,7 +19,7 @@ import {
     TextInput,
     Tooltip,
 } from '@mantine/core';
-import { IconCheck, IconCopy, IconX } from '@tabler/icons-react';
+import { IconCheck, IconCopy, IconGripVertical, IconX } from '@tabler/icons-react';
 import { ArchbaseSecurityManager } from './ArchbaseSecurityManager';
 import { useTelasInspecionadas } from './registroDeTelasInspecionadas';
 import { ATRIBUTO_DE_ACAO } from './marcacaoDeAcao';
@@ -189,6 +189,9 @@ export interface ArchbaseSecurityInspectorProps {
     defaultOpened?: boolean;
 }
 
+/** A faixa por onde a janela é arrastada. Classe, porque o Mantine a localiza por seletor CSS. */
+const CLASSE_DA_ALCA = 'archbase-inspector-alca';
+
 const ATALHO_PADRAO = { ctrl: true, alt: true, shift: false, tecla: 'a' };
 
 /**
@@ -222,6 +225,7 @@ export const ArchbaseSecurityInspector: React.FC<ArchbaseSecurityInspectorProps>
     const [realcar, setRealcar] = useState<boolean>(false);
     const [busca, setBusca] = useState<string>('');
     const [copiada, setCopiada] = useState<string | null>(null);
+    const [sobPonteiro, setSobPonteiro] = useState<boolean>(false);
 
     const telas = useTelasInspecionadas();
     const realces = useRealces(permitido && aberto && realcar, telas);
@@ -319,24 +323,49 @@ export const ArchbaseSecurityInspector: React.FC<ArchbaseSecurityInspectorProps>
             )}
 
             {aberto && (
-                <Paper
+                <FloatingWindow
                     shadow="md"
                     withBorder
                     p="sm"
+                    /* O arraste, o limite de viewport e o redimensionamento são do Mantine. A mão
+                       escrita que estava aqui reimplementava os três, pior e com mais código. */
+                    dragHandleSelector={`.${CLASSE_DA_ALCA}`}
+                    excludeDragHandleSelector="button"
+                    constrainToViewport
+                    constrainOffset={8}
+                    initialPosition={{ right: 16, bottom: 16 }}
+                    dimensions={{
+                        initialWidth: 420,
+                        minWidth: 280,
+                        maxWidth: 720,
+                        initialHeight: 420,
+                        minHeight: 160,
+                        maxHeight: 800,
+                    }}
+                    zIndex={9999}
+                    /* Com o realce ligado, a janela apaga até o toque do mouse: o controle que se
+                       quer inspecionar pode estar exatamente embaixo dela, e uma janela opaca
+                       esconderia a resposta que ela mesma acabou de desenhar. */
+                    onMouseEnter={() => setSobPonteiro(true)}
+                    onMouseLeave={() => setSobPonteiro(false)}
                     style={{
-                        position: 'fixed',
-                        right: 16,
-                        bottom: 16,
-                        width: 420,
-                        maxWidth: 'calc(100vw - 32px)',
-                        maxHeight: 'min(60vh, 520px)',
                         display: 'flex',
                         flexDirection: 'column',
-                        zIndex: 9999,
+                        opacity: realcar && !sobPonteiro ? 0.25 : 1,
+                        transition: 'opacity 120ms ease',
                     }}
                 >
-                    <Group justify="space-between" wrap="nowrap" mb="xs">
-                        <Text fw={600} size="sm">{t('Action inspector')}</Text>
+                    <Group
+                        justify="space-between"
+                        wrap="nowrap"
+                        mb="xs"
+                        className={CLASSE_DA_ALCA}
+                        style={{ cursor: 'move', touchAction: 'none', userSelect: 'none' }}
+                    >
+                        <Group gap={6} wrap="nowrap">
+                            <IconGripVertical size={14} opacity={0.5} />
+                            <Text fw={600} size="sm">{t('Action inspector')}</Text>
+                        </Group>
                         <ActionIcon variant="subtle" size="sm" onClick={() => setAberto(false)} aria-label={t('Close')}>
                             <IconX size={16} />
                         </ActionIcon>
@@ -424,7 +453,9 @@ export const ArchbaseSecurityInspector: React.FC<ArchbaseSecurityInspectorProps>
                             ))}
                         </Stack>
                     </ScrollArea>
-                </Paper>
+
+                    <FloatingWindow.ResizeHandle />
+                </FloatingWindow>
             )}
         </>,
         document.body,
