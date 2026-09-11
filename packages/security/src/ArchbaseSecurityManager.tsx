@@ -274,4 +274,14 @@ export class ArchbaseSecurityManager implements ISecurityManager {
   public getRegisteredActions(): SimpleActionDto[] {
     return [...this.actions];
   }
+
+  /**
+   * O recurso que este manager representa — nome técnico e descrição.
+   *
+   * <p>Existe para o inspetor de ações: sem ele, quem tem o manager em mãos sabe QUAIS ações a tela
+   * declarou, mas não A QUAL recurso elas pertencem, e é o par `recurso:acao` que se concede.
+   */
+  public getResource(): SimpleResourceDto {
+    return { ...this.resource };
+  }
 }

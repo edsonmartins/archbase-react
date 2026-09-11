@@ -658,5 +658,14 @@
   "Remove anyway": "Remover mesmo assim",
   "inactive resource": "recurso desativado",
   "Grants here stop working when require-active is enabled": "Este recurso está desativado. As concessões nele funcionam hoje, e deixam de funcionar quando archbase.security.permission.require-active for ligado.",
-  "The catalog of a screen is created when an administrator opens it": "O catálogo de uma tela é criado na primeira vez que um administrador a abre. Telas que nenhum administrador abriu ainda não aparecem nesta lista."
+  "The catalog of a screen is created when an administrator opens it": "O catálogo de uma tela é criado na primeira vez que um administrador a abre. Telas que nenhum administrador abriu ainda não aparecem nesta lista.",
+  "Action inspector": "Inspetor de ações",
+  "Filter actions": "Filtrar ações",
+  "Highlight on screen": "Realçar na tela",
+  "No screen registered": "Nenhuma tela registrada",
+  "Capability granted": "Concedida",
+  "Capability not granted": "Não concedida",
+  "Not declared by this screen": "Não declarada por esta tela",
+  "Copy capability": "Copiar capacidade",
+  "Copied": "Copiado"
 }

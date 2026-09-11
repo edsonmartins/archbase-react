@@ -657,5 +657,14 @@
   "Remove anyway": "Remove anyway",
   "inactive resource": "inactive resource",
   "Grants here stop working when require-active is enabled": "This resource is deactivated. Grants on it work today, and stop working when archbase.security.permission.require-active is enabled.",
-  "The catalog of a screen is created when an administrator opens it": "The catalog of a screen is created the first time an administrator opens it. Screens no administrator has opened yet do not appear in this list."
+  "The catalog of a screen is created when an administrator opens it": "The catalog of a screen is created the first time an administrator opens it. Screens no administrator has opened yet do not appear in this list.",
+  "Action inspector": "Action inspector",
+  "Filter actions": "Filter actions",
+  "Highlight on screen": "Highlight on screen",
+  "No screen registered": "No screen registered",
+  "Capability granted": "Granted",
+  "Capability not granted": "Not granted",
+  "Not declared by this screen": "Not declared by this screen",
+  "Copy capability": "Copy capability",
+  "Copied": "Copied"
 }

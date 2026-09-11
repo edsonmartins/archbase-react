@@ -36,6 +36,11 @@ export * from './SecurityType';
 export * from './SecurityDomain';
 export * from './SecurityDiagnosticsDomain';
 
+// Inspetor de capacidades (ferramenta de administração; não participa de autorização)
+export * from './ArchbaseSecurityInspector';
+export * from './marcacaoDeAcao';
+export * from './registroDeTelasInspecionadas';
+
 // Security hooks
 export * from './hooks';
 

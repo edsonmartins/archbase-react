@@ -3,6 +3,7 @@
  * @status stable
  */
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState, useCallback, ReactNode } from 'react';
+import { registrarTelaInspecionada } from './registroDeTelasInspecionadas';
 import { Box, Stack, Group, Skeleton, Loader, Text } from '@mantine/core';
 import { ARCHBASE_IOC_API_TYPE, IOCContainer, processErrorMessage } from '@archbase/core';
 import { ArchbaseSecurityManager, RegisterActionOptions } from './ArchbaseSecurityManager';
@@ -390,6 +391,16 @@ export const ArchbaseViewSecurityProvider: React.FC<ArchbaseViewSecurityProvider
   // sem eles montados não há registro de ação. Enquanto carrega, `hasPermission` responde false,
   // então controle vigiado nasce desabilitado e habilita quando a resposta chega. Quem não quiser
   // esse instante usa `isLoading` para segurar o próprio conteúdo.
+  /**
+   * Anuncia a tela ao inspetor de ações enquanto este provider estiver montado.
+   *
+   * <p>Puramente observacional: o inspetor lê o manager para mostrar quais capacidades a tela
+   * declarou e quais o usuário alcança. Nada aqui participa de decisão de acesso, e o efeito não
+   * tem nenhuma outra consequência — se o inspetor não for renderizado, o registro fica sem
+   * leitores.
+   */
+  useEffect(() => registrarTelaInspecionada(viewSecurityManager), [viewSecurityManager]);
+
   return (
     <ArchbaseViewSecurityContext.Provider value={viewValue}>
       {children}
