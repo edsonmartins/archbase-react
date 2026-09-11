@@ -1,6 +1,29 @@
 import React, { useEffect, ReactNode } from 'react';
 import { useArchbaseViewSecurity } from './ArchbaseSecurityHooks';
 import { ArchbaseViewSecurityProvider } from './ArchbaseSecurityContext';
+import { archbaseActionProps } from './marcacaoDeAcao';
+
+/**
+ * Devolve os filhos carregando a marcação da capacidade que os governa.
+ *
+ * <p><b>Por que clonar em vez de envolver.</b> Este componente renderiza um fragmento de propósito:
+ * envolver o filho numa `div` mudaria o layout de quem já o usa — um botão dentro de um `Group` do
+ * Mantine deixaria de ser filho direto e perderia o espaçamento. Clonar acrescenta um atributo ao
+ * elemento que já existe, sem tocar na árvore.
+ *
+ * <p>O atributo é <b>inerte</b>: serve para o inspetor de capacidades saber onde desenhar o realce.
+ * Filho que não repasse props desconhecidas ao DOM simplesmente não é marcado, e continua
+ * aparecendo na lista do inspetor como qualquer outra capacidade.
+ */
+function comMarcacao(children: ReactNode, actionName?: string): ReactNode {
+    if (!actionName) {
+        return children;
+    }
+    return React.Children.map(children, filho =>
+        React.isValidElement(filho)
+            ? React.cloneElement(filho, archbaseActionProps(actionName) as Partial<unknown>)
+            : filho);
+}
 
 // Componente de proteção genérico
 export interface ArchbaseProtectedComponentProps {
@@ -67,7 +90,7 @@ export const ArchbaseProtectedComponent: React.FC<ArchbaseProtectedComponentProp
     return <>{fallback}</>;
   }
 
-  return <>{children}</>;
+  return <>{comMarcacao(children, actionName)}</>;
 };
 
 // Botão de ação protegido

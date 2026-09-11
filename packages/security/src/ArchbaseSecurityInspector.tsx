@@ -9,7 +9,6 @@ import { getI18nextInstance } from '@archbase/core';
 import {
     ActionIcon,
     Badge,
-    Box,
     FloatingWindow,
     Group,
     ScrollArea,
@@ -85,87 +84,115 @@ function linhasDe(manager: ArchbaseSecurityManager): LinhaDeAcao[] {
     return linhas.sort((a, b) => a.actionName.localeCompare(b.actionName));
 }
 
-/** Um retângulo a desenhar sobre um controle marcado. */
-interface Realce {
-    chave: string;
-    actionName: string;
-    concedida: boolean;
-    topo: number;
-    esquerda: number;
-    largura: number;
-    altura: number;
-}
+/** Marca, no elemento, se o usuário alcança a capacidade — é o que dá a cor ao realce. */
+const ATRIBUTO_DE_CONCESSAO = 'data-archbase-granted';
 
 /**
- * Mede os controles marcados com {@link archbaseActionProps}.
+ * O realce inteiro, em CSS.
  *
- * <p>A medição roda em `requestAnimationFrame` enquanto o realce está ligado, em vez de reagir a
- * scroll, resize e mutação separadamente. É mais trabalho por quadro e é o certo aqui: o realce é
- * um momento deliberado de inspeção, dura segundos, e qualquer conjunto de ouvintes deixaria de
- * fora algum caso — menu que abre, linha de tabela que entra, painel que anima.
+ * <p><b>Por que não medir.</b> A primeira versão percorria os elementos marcados a cada quadro,
+ * lia `getBoundingClientRect` e desenhava caixas absolutas por cima. Funcionava e era trabalho
+ * desperdiçado: o navegador já sabe onde cada elemento está, e mantê-lo em sincronia por conta
+ * própria significa reagir a scroll, resize, menu que abre, painel que anima — tudo o que o
+ * `position` de um pseudo-elemento resolve de graça.
+ *
+ * <p>`outline` e não `border`: outline não ocupa espaço, então o realce não empurra o layout.
+ * `::after` com `attr()` põe o nome da capacidade sem nenhum nó novo na árvore.
  */
-function useRealces(ativo: boolean, managers: ArchbaseSecurityManager[]): Realce[] {
-    const [realces, setRealces] = useState<Realce[]>([]);
+const CSS_DO_REALCE = `
+[${ATRIBUTO_DE_ACAO}] {
+    outline: 2px solid #e03131 !important;
+    outline-offset: 1px;
+    border-radius: 4px;
+    position: relative;
+    /* O Button do Mantine recorta o conteúdo, e o recorte engole o pseudo-elemento do rótulo:
+       a borda aparecia e o nome da capacidade nao. O !important porque a regra do componente e
+       mais especifica que um seletor de atributo. */
+    overflow: visible !important;
+}
+[${ATRIBUTO_DE_ACAO}][${ATRIBUTO_DE_CONCESSAO}="true"] {
+    outline-color: #2f9e44 !important;
+}
+[${ATRIBUTO_DE_ACAO}]::after {
+    content: attr(${ATRIBUTO_DE_ACAO});
+    position: absolute;
+    bottom: 100%;
+    left: -2px;
+    margin-bottom: 3px;
+    padding: 0 4px;
+    border-radius: 3px;
+    font: 10px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: nowrap;
+    color: #fff;
+    background: #e03131;
+    pointer-events: none;
+    z-index: 9997;
+}
+[${ATRIBUTO_DE_ACAO}][${ATRIBUTO_DE_CONCESSAO}="true"]::after {
+    background: #2f9e44;
+}
+/* Vizinhos adjacentes põem os rótulos na mesma linha e um cobre o outro. Passar o mouse traz o
+   de baixo para a frente, que é o gesto natural de quem está lendo um deles. */
+[${ATRIBUTO_DE_ACAO}]:hover::after {
+    z-index: 9998;
+}
+`;
+
+/**
+ * Anota em cada controle marcado se o usuário alcança a capacidade, e conta quantos são.
+ *
+ * <p>É o único trabalho de JavaScript que sobrou, e ele não é por quadro: roda uma vez ao ligar e
+ * de novo quando a árvore muda. O CSS faz o resto.
+ */
+function useMarcados(ativo: boolean, managers: ArchbaseSecurityManager[]): number {
+    const [quantidade, setQuantidade] = useState(0);
     const managersRef = useRef(managers);
     managersRef.current = managers;
 
     useEffect(() => {
         if (!ativo) {
-            setRealces([]);
+            document.querySelectorAll(`[${ATRIBUTO_DE_CONCESSAO}]`)
+                .forEach(elemento => elemento.removeAttribute(ATRIBUTO_DE_CONCESSAO));
+            setQuantidade(0);
             return;
         }
 
-        let vivo = true;
-        let quadro = 0;
+        let agendado = 0;
 
-        const medir = () => {
-            if (!vivo) return;
-
-            const encontrados: Realce[] = [];
-            document.querySelectorAll<HTMLElement>(`[${ATRIBUTO_DE_ACAO}]`).forEach((elemento, indice) => {
+        const anotar = () => {
+            const marcados = document.querySelectorAll<HTMLElement>(`[${ATRIBUTO_DE_ACAO}]`);
+            marcados.forEach(elemento => {
                 const actionName = elemento.getAttribute(ATRIBUTO_DE_ACAO);
                 if (!actionName) return;
-
-                const caixa = elemento.getBoundingClientRect();
-                // Elemento oculto mede zero. Desenhar sobre ele produziria um badge solto no canto
-                // superior esquerdo, sem nada por baixo.
-                if (caixa.width === 0 && caixa.height === 0) return;
-
                 const concedida = managersRef.current.some(m => m.hasPermission(actionName));
-                encontrados.push({
-                    chave: `${actionName}:${indice}`,
-                    actionName,
-                    concedida,
-                    topo: caixa.top,
-                    esquerda: caixa.left,
-                    largura: caixa.width,
-                    altura: caixa.height,
-                });
+                elemento.setAttribute(ATRIBUTO_DE_CONCESSAO, String(concedida));
             });
-
-            setRealces(anteriores =>
-                anteriores.length === encontrados.length &&
-                anteriores.every((a, i) =>
-                    a.chave === encontrados[i].chave &&
-                    a.topo === encontrados[i].topo &&
-                    a.esquerda === encontrados[i].esquerda &&
-                    a.largura === encontrados[i].largura &&
-                    a.altura === encontrados[i].altura &&
-                    a.concedida === encontrados[i].concedida)
-                    ? anteriores
-                    : encontrados);
-
-            quadro = requestAnimationFrame(medir);
+            setQuantidade(marcados.length);
         };
 
-        quadro = requestAnimationFrame(medir);
+        anotar();
+
+        // Agrupa rajadas de mutação num quadro: abrir um modal produz dezenas de alterações, e
+        // reanotar em cada uma percorreria a árvore dezenas de vezes pelo mesmo resultado.
+        const observador = new MutationObserver(() => {
+            if (agendado) return;
+            agendado = requestAnimationFrame(() => {
+                agendado = 0;
+                anotar();
+            });
+        });
+        observador.observe(document.body, { childList: true, subtree: true, attributes: true,
+            attributeFilter: [ATRIBUTO_DE_ACAO] });
+
         return () => {
-            vivo = false;
-            cancelAnimationFrame(quadro);
+            observador.disconnect();
+            if (agendado) cancelAnimationFrame(agendado);
+            document.querySelectorAll(`[${ATRIBUTO_DE_CONCESSAO}]`)
+                .forEach(elemento => elemento.removeAttribute(ATRIBUTO_DE_CONCESSAO));
         };
     }, [ativo]);
 
-    return realces;
+    return quantidade;
 }
 
 export interface ArchbaseSecurityInspectorProps {
@@ -246,7 +273,7 @@ export const ArchbaseSecurityInspector: React.FC<ArchbaseSecurityInspectorProps>
     const [sobPonteiro, setSobPonteiro] = useState<boolean>(false);
 
     const telas = useTelasInspecionadas();
-    const realces = useRealces(permitido && aberto && realcar, telas);
+    const marcados = useMarcados(permitido && aberto && realcar, telas);
 
     useEffect(() => {
         if (!permitido) return;
@@ -296,49 +323,7 @@ export const ArchbaseSecurityInspector: React.FC<ArchbaseSecurityInspectorProps>
 
     return createPortal(
         <>
-            {realcar && (
-                <Box
-                    style={{
-                        position: 'fixed',
-                        inset: 0,
-                        pointerEvents: 'none',
-                        zIndex: 9998,
-                    }}
-                >
-                    {realces.map(realce => (
-                        <Box
-                            key={realce.chave}
-                            style={{
-                                position: 'absolute',
-                                top: realce.topo,
-                                left: realce.esquerda,
-                                width: realce.largura,
-                                height: realce.altura,
-                                border: `2px solid ${realce.concedida ? '#2f9e44' : '#e03131'}`,
-                                borderRadius: 4,
-                                boxShadow: '0 0 0 1px rgba(255,255,255,0.6)',
-                            }}
-                        >
-                            <Text
-                                size="10px"
-                                style={{
-                                    position: 'absolute',
-                                    top: -16,
-                                    left: -2,
-                                    padding: '0 4px',
-                                    borderRadius: 3,
-                                    whiteSpace: 'nowrap',
-                                    fontFamily: 'monospace',
-                                    color: '#fff',
-                                    backgroundColor: realce.concedida ? '#2f9e44' : '#e03131',
-                                }}
-                            >
-                                {realce.actionName}
-                            </Text>
-                        </Box>
-                    ))}
-                </Box>
-            )}
+            {realcar && <style>{CSS_DO_REALCE}</style>}
 
             {aberto && (
                 <FloatingWindow
@@ -409,14 +394,14 @@ export const ArchbaseSecurityInspector: React.FC<ArchbaseSecurityInspectorProps>
                         sem uma palavra aqui é indistinguível de defeito: liga-se o interruptor e a
                         tela não muda. Quem vê isto precisa saber que falta a marcação, não que o
                         inspetor quebrou. */}
-                    {realcar && realces.length === 0 && (
+                    {realcar && marcados === 0 && (
                         <Text size="10px" c="dimmed" mb="xs">
                             {t('No control marked on this screen')}
                         </Text>
                     )}
-                    {realcar && realces.length > 0 && (
+                    {realcar && marcados > 0 && (
                         <Text size="10px" c="dimmed" mb="xs">
-                            {`${realces.length} ${t('marked controls')}`}
+                            {`${marcados} ${t('marked controls')}`}
                         </Text>
                     )}
 
