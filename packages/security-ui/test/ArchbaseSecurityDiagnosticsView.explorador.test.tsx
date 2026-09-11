@@ -366,6 +366,82 @@ describe('simulação alimentada pela árvore', () => {
 	});
 });
 
+describe('o que a árvore mostra em cada linha', () => {
+	it('recurso aparece pela DESCRIÇÃO, com o identificador ao lado', async () => {
+		// Quem administra lia `ArchbaseAdvancedSidebar` onde deveria ler "Navegação". O
+		// identificador não some: é por ele que se procura quando se conhece o código.
+		servico.browse.mockImplementation(async (branch: string) => ({
+			content:
+				branch === 'RESOURCES'
+					? [no({ id: 'r1', kind: 'RESOURCE', label: 'ArchbaseAdvancedSidebar', description: 'Navegação', badge: '80' })]
+					: [],
+			totalElements: 1,
+			totalPages: 1,
+			number: 0,
+			size: 50,
+		}));
+		montar();
+
+		fireEvent.click(await screen.findByText('Recursos'));
+
+		expect(await screen.findByText('Navegação')).toBeTruthy();
+		expect(screen.getByText('ArchbaseAdvancedSidebar')).toBeTruthy();
+	});
+
+	it('recurso sem descrição continua pelo identificador, sem duplicá-lo', async () => {
+		servico.browse.mockImplementation(async (branch: string) => ({
+			content: branch === 'RESOURCES' ? [no({ id: 'r1', kind: 'RESOURCE', label: 'tms.pneu' })] : [],
+			totalElements: 1,
+			totalPages: 1,
+			number: 0,
+			size: 50,
+		}));
+		montar();
+
+		fireEvent.click(await screen.findByText('Recursos'));
+
+		expect(await screen.findAllByText('tms.pneu')).toHaveLength(1);
+	});
+
+	it('pessoa leva o e-mail ao lado — é o que distingue homônimos', async () => {
+		servico.browse.mockImplementation(async (branch: string) => ({
+			content:
+				branch === 'USERS'
+					? [
+							no({ id: 'u1', label: 'Marcos', description: 'marcos@exemplo.test' }),
+							no({ id: 'u2', label: 'Marcos', description: 'marcos.marinho@rioquality.com.br' }),
+						]
+					: [],
+			totalElements: 2,
+			totalPages: 1,
+			number: 0,
+			size: 50,
+		}));
+		montar();
+
+		fireEvent.click(await screen.findByText('Pessoas'));
+
+		expect(await screen.findAllByText('Marcos')).toHaveLength(2);
+		expect(screen.getByText('marcos@exemplo.test')).toBeTruthy();
+		expect(screen.getByText('marcos.marinho@rioquality.com.br')).toBeTruthy();
+	});
+
+	it('o número à direita diz o que conta', async () => {
+		servico.browse.mockImplementation(async (branch: string) => ({
+			content: branch === 'RESOURCES' ? [no({ id: 'r1', kind: 'RESOURCE', label: 'tms.pneu', badge: '4' })] : [],
+			totalElements: 1,
+			totalPages: 1,
+			number: 0,
+			size: 50,
+		}));
+		montar();
+
+		fireEvent.click(await screen.findByText('Recursos'));
+
+		expect((await screen.findByText('4')).getAttribute('title')).toBe('ações neste recurso');
+	});
+});
+
 describe('pontos de inserção', () => {
 	it('a busca própria da aplicação continua alcançável, ao lado da árvore', async () => {
 		// Este slot existe porque o framework identifica alguém por id ou e-mail e não sabe o que é

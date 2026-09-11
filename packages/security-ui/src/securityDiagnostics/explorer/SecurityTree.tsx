@@ -1,4 +1,4 @@
-import { ARCHBASE_IOC_API_TYPE } from '@archbase/core';
+import { ARCHBASE_IOC_API_TYPE, getI18nextInstance } from '@archbase/core';
 import { useArchbaseRemoteServiceApi } from '@archbase/data';
 import type {
 	ArchbaseSecurityDiagnosticsService,
@@ -82,6 +82,47 @@ export interface SecurityTreeProps {
  * achar um recurso com ação desativada entre uma centena exige abrir ramo por ramo — e ninguém faz
  * isso.
  */
+/**
+ * O que o número à direita conta — depende do que o nó é.
+ *
+ * <p>`aprovar 4` e `ticket.kanban 14` apareciam lado a lado, com significados diferentes e nenhuma
+ * legenda: o primeiro conta concessões, o segundo conta ações.
+ */
+const LEGENDA_DO_BADGE: Record<string, string> = {
+	USER: 'grupos de que participa',
+	GROUP: 'pessoas no grupo',
+	PROFILE: 'pessoas com este perfil',
+	RESOURCE: 'ações neste recurso',
+	ACTION: 'concessões que alcançam esta capacidade',
+};
+
+/** Recurso e ação têm identificador técnico no `label`; pessoa, grupo e perfil têm o nome. */
+const ehTecnico = (no: ArchbaseTreeNode) => no.kind === 'RESOURCE' || no.kind === 'ACTION';
+
+/**
+ * O texto grande da linha — a mesma regra do seletor da simulação.
+ *
+ * <p>A árvore mostrava só `label`, que para recurso e ação é o identificador técnico: quem
+ * administra lia `ArchbaseAdvancedSidebar` onde deveria ler "Navegação". A descrição pode vir como
+ * chave de i18n, que é o que está gravado no catálogo do gestor-rq.
+ */
+const principalDoNo = (no: ArchbaseTreeNode) =>
+	ehTecnico(no) && no.description ? traduzirTexto(no.description) : no.label;
+
+/** O texto pequeno ao lado: o identificador técnico, ou o e-mail que distingue homônimos. */
+const secundarioDoNo = (no: ArchbaseTreeNode) =>
+	ehTecnico(no) ? (no.description ? no.label : undefined) : (no.description ?? undefined);
+
+const traduzirTexto = (texto: string) => {
+	try {
+		const traduzido = getI18nextInstance().t(texto);
+		return typeof traduzido === 'string' ? traduzido : texto;
+	} catch {
+		return texto;
+	}
+};
+
+
 export const SecurityTree = ({ selected, onSelect }: SecurityTreeProps) => {
 	const service = useArchbaseRemoteServiceApi<ArchbaseSecurityDiagnosticsService>(
 		ARCHBASE_IOC_API_TYPE.SecurityDiagnostics,
@@ -205,10 +246,15 @@ export const SecurityTree = ({ selected, onSelect }: SecurityTreeProps) => {
 							<Box w={8} />
 						)}
 						<Text size="sm" fw={selecionado ? 600 : 400} truncate style={{ flex: 1 }}>
-							{node.label}
+							{principalDoNo(node)}
 						</Text>
+						{secundarioDoNo(node) ? (
+							<Text size="xs" c="dimmed" ff="monospace" truncate>
+								{secundarioDoNo(node)}
+							</Text>
+						) : null}
 						{node.badge ? (
-							<Text size="xs" c="dimmed" ff="monospace">
+							<Text size="xs" c="dimmed" ff="monospace" title={LEGENDA_DO_BADGE[node.kind] ?? undefined}>
 								{node.badge}
 							</Text>
 						) : null}

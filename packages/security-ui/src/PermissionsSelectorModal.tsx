@@ -85,6 +85,19 @@ const agruparPorCategoria = (nosDeAcao: TreeNodeData[], resourceId: string): Tre
     return [...agrupadas, ...semCategoria];
 };
 
+/**
+ * Descarta o recurso que ficou sem nenhuma capacidade depois do filtro.
+ *
+ * <p>O filtro reduz as ações DENTRO de cada recurso, e sem isto o recurso continuava na lista com
+ * zero filhos: filtrar por `aprovar_custo` deixava os 154 recursos na tela, e quem procurava tinha
+ * de rolar a lista inteira até achar o único que interessava — exatamente o trabalho que o filtro
+ * existe para poupar.
+ *
+ * <p>Com o filtro vazio nada é escondido: toda ação passa, e todo recurso mantém filhos.
+ */
+const comCapacidades = (nosDeRecurso: TreeNodeData[]): TreeNodeData[] =>
+    nosDeRecurso.filter(no => (no.children?.length ?? 0) > 0);
+
 /** As folhas de ação de um nó, atravessando os agrupamentos de categoria. */
 const folhasDe = (nos: TreeNodeData[]): TreeNodeData[] =>
     nos.flatMap(no => (no?.nodeProps?.kind === "action" ? [no] : folhasDe(no.children ?? [])));
@@ -360,9 +373,11 @@ export function PermissionsSelectorModal({ dataSource, opened, close }: Permissi
 
     /** As duas árvores exibidas — os mesmos nós de recurso, agrupados por classificação. */
     const allPermissionsTreeData = useMemo(
-        () => agruparPorClassificacao(allPermissionsData as TreeNodeData[]), [allPermissionsData])
+        () => agruparPorClassificacao(comCapacidades(allPermissionsData as TreeNodeData[])),
+        [allPermissionsData])
     const grantedPermissionsTreeData = useMemo(
-        () => agruparPorClassificacao(permissionsGrantedData as TreeNodeData[]), [permissionsGrantedData])
+        () => agruparPorClassificacao(comCapacidades(permissionsGrantedData as TreeNodeData[])),
+        [permissionsGrantedData])
 
     const loadPermissions = useCallback(async () => {
         if (securityId) {

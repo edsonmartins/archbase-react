@@ -709,6 +709,72 @@ describe('tradução por chave estável', () => {
     });
 });
 
+describe('filtro', () => {
+    it('esconde o recurso que ficou sem capacidade nenhuma', async () => {
+        // O filtro reduz as ações DENTRO de cada recurso. Sem descartar o recurso vazio, filtrar
+        // por uma capacidade deixava os 154 recursos do tenant na tela, e quem procurava rolava a
+        // lista inteira até achar o único que interessava.
+        getAllPermissionsAvailable.mockResolvedValue([
+            {
+                resourceId: 'r-api', resourceName: 'tms.ordemservico',
+                resourceDescription: 'Ordens de serviço', resourceType: 'API',
+                permissions: [{ actionId: 'a2', actionName: 'aprovar_custo', actionDescription: 'Aprovar o custo' }],
+            },
+            {
+                resourceId: 'r-pneu', resourceName: 'tms.pneu',
+                resourceDescription: 'Pneus', resourceType: 'API',
+                permissions: [{ actionId: 'a5', actionName: 'trocar', actionDescription: 'Trocar pneu' }],
+            },
+        ]);
+        renderizar();
+
+        const secoes = await screen.findAllByText('Services');
+        fireEvent.click(secoes[0]);
+        expect(await screen.findByText('Pneus')).toBeTruthy();
+
+        const filtro = screen.getByPlaceholderText('Filter available permissions');
+        fireEvent.change(filtro, { target: { value: 'aprovar_custo' } });
+
+        // O recurso sem correspondência sai da lista; o que tem fica.
+        await waitFor(() => expect(screen.queryByText('Pneus')).toBeNull());
+        expect(screen.getByText('Ordens de serviço')).toBeTruthy();
+    });
+
+    it('a seção inteira some quando nenhum recurso dela sobra', async () => {
+        getAllPermissionsAvailable.mockResolvedValue([
+            {
+                resourceId: 'r-view', resourceName: 'Cockpit',
+                resourceDescription: 'Cockpit do vendedor', resourceType: 'VIEW',
+                permissions: [{ actionId: 'a1', actionName: 'abrir', actionDescription: 'Abrir cockpit' }],
+            },
+            {
+                resourceId: 'r-api', resourceName: 'tms.ordemservico',
+                resourceDescription: 'Ordens de serviço', resourceType: 'API',
+                permissions: [{ actionId: 'a2', actionName: 'aprovar_custo', actionDescription: 'Aprovar o custo' }],
+            },
+        ]);
+        renderizar();
+
+        expect(await screen.findAllByText('Screens')).not.toHaveLength(0);
+
+        const filtro = screen.getByPlaceholderText('Filter available permissions');
+        fireEvent.change(filtro, { target: { value: 'aprovar_custo' } });
+
+        // Sem recurso sobrando, "Telas" deixa de ser uma pasta que nunca abre.
+        await waitFor(() => expect(screen.queryByText('Screens')).toBeNull());
+        expect(screen.getAllByText('Services')).not.toHaveLength(0);
+    });
+
+    it('filtro vazio não esconde nada', async () => {
+        getAllPermissionsAvailable.mockResolvedValue(CATALOGO);
+        renderizar();
+
+        expect(await screen.findAllByText('Screens')).not.toHaveLength(0);
+        expect(screen.getAllByText('Services')).not.toHaveLength(0);
+        expect(screen.getAllByText('Unclassified')).not.toHaveLength(0);
+    });
+});
+
 describe('permissão herdada', () => {
     const HERDADA = [{
         resourceId: 'r-api',
