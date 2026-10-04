@@ -39,6 +39,11 @@ export interface ArchbaseAdminLayoutContextProps {
 	securityOptions?: ArchbaseAdminMainLayoutSecurityOptions;
 	onNavigationDataChange?: (navigationData: ArchbaseNavigationItem[]) => void;
 	initialSidebarCollapsed?: boolean;
+	/**
+	 * Comportamento quando as permissões não carregam: 'closed' (padrão) desabilita os itens;
+	 * 'open' mantém o menu sem filtro.
+	 */
+	securityFailMode?: 'closed' | 'open';
 }
 
 const ArchbaseAdminLayoutContext = React.createContext<ArchbaseAdminLayoutContextValue>({});
@@ -54,6 +59,7 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 	securityOptions,
 	onNavigationDataChange,
 	initialSidebarCollapsed,
+	securityFailMode = 'closed',
 }) => {
 	const [collapsed, setCollapsed] = useState<boolean>(initialSidebarCollapsed);
 	const [hidden, setHidden] = useState<boolean>(false);
@@ -106,6 +112,21 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 			item?.links?.forEach(itemChild => securityManager.registerAction(`${item.label} -> ${itemChild.label}`, `${item.label} -> ${itemChild.label}`));
 		});
 
+		// Na falha o menu fecha (itens desabilitados); só 'open' devolve o menu sem filtro
+		const applyFailure = () => {
+			if (securityFailMode === 'open') {
+				setNavigationData(initialNavigationData);
+				return;
+			}
+			setNavigationData(
+				initialNavigationData.map(item => ({
+					...item,
+					disabled: true,
+					links: item.links && item.links.map(itemChild => ({ ...itemChild, disabled: true })),
+				})),
+			);
+		};
+
 		// Função para processar as permissões e atualizar o navigationData
 		const processPermissions = () => {
 			permissionsProcessedRef.current = true;
@@ -136,7 +157,7 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 			const errorMessage = securityManager.getError() || 'Erro ao carregar permissões de navegação';
 			setPermissionsError(errorMessage);
 			setIsLoadingPermissions(false);
-			setNavigationData(initialNavigationData);
+			applyFailure();
 			return;
 		}
 
@@ -162,24 +183,18 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 				const errorMessage = securityManager.getError() || 'Erro ao carregar permissões de navegação';
 				setPermissionsError(errorMessage);
 				setIsLoadingPermissions(false);
-				setNavigationData(initialNavigationData);
+				applyFailure();
 			}
 		}, 100);
 
-		// Timeout máximo para evitar loading infinito (3 segundos)
+		// Passados 3 s o menu fecha, mas a resposta que chegar depois ainda é aplicada
 		const timeoutId = setTimeout(() => {
 			if (isCancelled) return;
 
 			clearInterval(errorCheckInterval);
-			setIsLoadingPermissions((currentLoading) => {
-				if (currentLoading) {
-					permissionsProcessedRef.current = true;
-					console.warn('[ArchbaseAdminLayout] Timeout ao carregar permissões - carregando menu sem filtro de segurança');
-					setNavigationData(initialNavigationData);
-					return false;
-				}
-				return currentLoading;
-			});
+			console.warn('[ArchbaseAdminLayout] Timeout ao carregar permissões - aguardando a resposta com o menu fechado');
+			applyFailure();
+			setIsLoadingPermissions(false);
 		}, 3000);
 
 		securityManager.apply(() => {
@@ -197,7 +212,7 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 			clearInterval(errorCheckInterval);
 			clearTimeout(timeoutId);
 		};
-	}, [user?.id, enableSecurity, initialNavigationData, securityManager, setNavigationData]);
+	}, [user?.id, enableSecurity, initialNavigationData, securityManager, setNavigationData, securityFailMode]);
 
 	return (
 		<ArchbaseAdminLayoutContext.Provider

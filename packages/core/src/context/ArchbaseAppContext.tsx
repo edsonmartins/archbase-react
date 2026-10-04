@@ -9,10 +9,9 @@ import {
 } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { useLocalStorage } from '@mantine/hooks';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, type BrowserRouterProps } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
-import { ProSidebarProvider } from 'react-pro-sidebar';
 import queryString from 'query-string';
 import { ArchbaseUser } from '../types';
 
@@ -90,7 +89,14 @@ interface ArchbaseAppProviderProps {
 	languages?: ArchbaseLanguage[];
 	setCustomTheme?: (dark: MantineThemeOverride, light: MantineThemeOverride) => void;
 	navigationProvider?: React.ComponentType<{ children: React.ReactNode }>;
+	/** Future flags do React Router; o padrão adota as flags da v7 e silencia os avisos de depreciação. */
+	routerFuture?: BrowserRouterProps['future'];
 }
+
+const DEFAULT_ROUTER_FUTURE: BrowserRouterProps['future'] = {
+	v7_startTransition: true,
+	v7_relativeSplatPath: true,
+};
 
 const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 	user,
@@ -109,6 +115,7 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 	],
 	setCustomTheme,
 	navigationProvider,
+	routerFuture = DEFAULT_ROUTER_FUTURE,
 }) => {
 	// Determina qual NavigationProvider usar
 	const FinalNavigationProvider = navigationProvider || DefaultNavigationProvider;
@@ -163,9 +170,8 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 					},
 				}}
 			>
-				<ProSidebarProvider>
 					<FinalNavigationProvider>
-						<BrowserRouter>
+						<BrowserRouter future={routerFuture}>
 							<QueryParamProvider
 								adapter={ReactRouter6Adapter}
 								options={{
@@ -177,7 +183,6 @@ const ArchbaseAppProvider: React.FC<ArchbaseAppProviderProps> = ({
 							</QueryParamProvider>
 						</BrowserRouter>
 					</FinalNavigationProvider>
-				</ProSidebarProvider>
 			</ModalsProvider>
 		</ArchbaseAppContext.Provider>
 	);
