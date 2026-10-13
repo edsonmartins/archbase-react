@@ -279,6 +279,28 @@ export interface ArchbaseAdvancedTabsProps {
   onCloseOtherTabs?: (tabId: string) => void;
 }
 
+/**
+ * Assinatura das abas para as dependências dos efeitos: só campos estáveis, nunca o item inteiro.
+ *
+ * Antes era `JSON.stringify(tabs)`. O item carrega `favicon`, que pode ser um elemento React, e em
+ * desenvolvimento o React 19 grava no elemento o dono dele (o fiber), que tem referência circular:
+ * a primeira aba aberta derrubava a aplicação com "Converting circular structure to JSON". Em
+ * produção o dono não é gravado, por isso só o modo dev quebrava.
+ *
+ * `JSON.stringify` do array, e não `join`, para que um separador dentro do título não faça duas
+ * listas diferentes produzirem a mesma assinatura.
+ */
+export const buildTabsSignature = (tabs?: ArchbaseAdvancedTabItem[]): string =>
+  JSON.stringify(
+    (tabs || []).map((tab) => [
+      String(tab.key),
+      tab.title,
+      tab.customTitle ?? null,
+      !!tab.closing,
+      typeof tab.favicon === 'string' ? tab.favicon : null,
+    ])
+  );
+
 /** Converte as cores informadas nas custom properties consumidas pelo SCSS. */
 const buildTabsColorVars = (colors?: ArchbaseAdvancedTabsColors): CSSProperties => {
   if (!colors) return {};
@@ -324,11 +346,11 @@ export const ArchbaseAdvancedTabs: React.FC<ArchbaseAdvancedTabsProps> = (props)
 
 	useEffect(() => {
 		handleResize();
-	}, [JSON.stringify(tabs), width, height]);
+	}, [buildTabsSignature(tabs), width, height]);
 
 	useEffect(() => {
 		!!currentTabs && setTabs(currentTabs);
-	}, [JSON.stringify(currentTabs)]);
+	}, [buildTabsSignature(currentTabs)]);
 
 	const handleResize = () => {
 		const widths = getContentWidths();

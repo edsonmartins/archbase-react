@@ -204,6 +204,10 @@ const ArchbaseAdminLayoutProvider: React.FC<ArchbaseAdminLayoutContextProps> = (
 			clearTimeout(timeoutId);
 
 			processPermissions();
+		}).catch(() => {
+			// A falha já é tratada pelo intervalo acima, que lê `isError()` e fecha o menu. O catch
+			// existe para a rejeição não escapar como `unhandledrejection`: o `apply()` repassa o
+			// erro da consulta a quem chamou, e aqui ninguém o recebia.
 		});
 
 		// Cleanup
