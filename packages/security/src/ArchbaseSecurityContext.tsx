@@ -342,6 +342,21 @@ export const ArchbaseViewSecurityProvider: React.FC<ArchbaseViewSecurityProvider
     }
   }, [loadingComponent]);
 
+  /**
+   * Anuncia a tela ao inspetor de ações enquanto este provider estiver montado.
+   *
+   * <p>Puramente observacional: o inspetor lê o manager para mostrar quais capacidades a tela
+   * declarou e quais o usuário alcança. Nada aqui participa de decisão de acesso, e o efeito não
+   * tem nenhuma outra consequência — se o inspetor não for renderizado, o registro fica sem
+   * leitores.
+   *
+   * <p>Fica AQUI, antes de qualquer `return`. Ele morava logo acima do retorno de sucesso, depois
+   * dos retornos de "sem usuário", erro e acesso negado: o render carregando passava por ele e o
+   * render seguinte, com a consulta de permissão falha, saía antes — um hook a menos, React #300,
+   * e a barreira de erro da aplicação derrubava tudo em vez de este provider negar só a tela.
+   */
+  useEffect(() => registrarTelaInspecionada(viewSecurityManager), [viewSecurityManager]);
+
   const viewValue = useMemo<ArchbaseViewSecurityContextType>(() => ({
     securityManager: viewSecurityManager,
     hasPermission: (actionName: string) => viewSecurityManager.hasPermission(actionName),
@@ -391,16 +406,6 @@ export const ArchbaseViewSecurityProvider: React.FC<ArchbaseViewSecurityProvider
   // sem eles montados não há registro de ação. Enquanto carrega, `hasPermission` responde false,
   // então controle vigiado nasce desabilitado e habilita quando a resposta chega. Quem não quiser
   // esse instante usa `isLoading` para segurar o próprio conteúdo.
-  /**
-   * Anuncia a tela ao inspetor de ações enquanto este provider estiver montado.
-   *
-   * <p>Puramente observacional: o inspetor lê o manager para mostrar quais capacidades a tela
-   * declarou e quais o usuário alcança. Nada aqui participa de decisão de acesso, e o efeito não
-   * tem nenhuma outra consequência — se o inspetor não for renderizado, o registro fica sem
-   * leitores.
-   */
-  useEffect(() => registrarTelaInspecionada(viewSecurityManager), [viewSecurityManager]);
-
   return (
     <ArchbaseViewSecurityContext.Provider value={viewValue}>
       {children}

@@ -79,6 +79,8 @@ export interface ArchbaseAdminMainLayoutProps {
 	highlightActiveMenuItem?: boolean;
 	enableSecurity?: boolean;
 	securityOptions?: ArchbaseAdminMainLayoutSecurityOptions;
+	/** Comportamento quando as permissões falham ou demoram: 'closed' (padrão) desabilita os itens. */
+	securityFailMode?: 'closed' | 'open';
 	customRenderSidebar?: (props: ArchbaseCustomSidebarProps) => ReactNode;
 	onNavigationDataChange?: (navigationData: ArchbaseNavigationItem[]) => void;
 	showCollapsedButton?: boolean;
@@ -573,6 +575,7 @@ export function ArchbaseAdminMainLayout({
 	highlightActiveMenuItem,
 	enableSecurity = false,
 	securityOptions,
+	securityFailMode,
 	customRenderSidebar,
 	onNavigationDataChange,
 	showCollapsedButton,
@@ -605,6 +608,7 @@ export function ArchbaseAdminMainLayout({
 			company={company}
 			enableSecurity={enableSecurity}
 			securityOptions={securityOptions}
+			securityFailMode={securityFailMode}
 			onNavigationDataChange={onNavigationDataChange}
 			initialSidebarCollapsed={initialSidebarCollapsed}
 		>
