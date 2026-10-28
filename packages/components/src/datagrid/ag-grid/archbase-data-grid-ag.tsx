@@ -649,14 +649,20 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
   // Selection changed handler
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
-      if (syncInProgress.current) return;
-
+      // A seleção (checkboxes) é sempre repassada, mesmo durante uma sincronização
+      // de cursor. Clicar no checkbox de uma linha também foca a célula, e o
+      // onCellFocused liga o syncInProgress por 100 ms; quando este evento chegava
+      // nessa janela, a seleção nova era descartada e quem ouvia
+      // onSelectedRowsChanged ficava com a lista antiga — em seleção múltipla, só o
+      // primeiro item marcado sobrevivia (lookup de usuários do departamento).
       const selected = event.api.getSelectedRows() as T[];
       setSelectedRows(selected);
 
       if (onSelectedRowsChanged) {
         onSelectedRowsChanged(selected);
       }
+
+      if (syncInProgress.current) return;
 
       // Sync single selection with DataSource
       if (selected.length === 1 && dataSource.gotoRecordByData) {
@@ -1096,6 +1102,20 @@ function ArchbaseDataGridAG<T extends object = any, ID = any>(
           try {
             const currentId = safeGetRowId(currentRecord, getRowId);
             if (currentId !== undefined) {
+              // Seguir o cursor do DataSource só faz sentido enquanto a seleção é de
+              // uma linha. Com várias marcadas, o usuário está montando uma seleção
+              // em lote: mover o cursor (navegação do formulário, clique em outra
+              // linha) não pode apagá-la. Só garante que o registro atual fique visível.
+              if (gridApiRef.current.getSelectedRows().length > 1) {
+                gridApiRef.current.forEachNode((node) => {
+                  const nodeId = safeGetRowId(node.data, getRowId);
+                  if (String(nodeId) === String(currentId)) {
+                    gridApiRef.current?.ensureNodeVisible(node);
+                  }
+                });
+                return;
+              }
+
               syncInProgress.current = true;
 
               gridApiRef.current.deselectAll();
