@@ -516,6 +516,7 @@
   "Selecionados": "Selecionados",
   "Nenhum resultado...": "Nenhum resultado...",
   "Usuário/senha não encontrados. Não autorizado.": "Usuário/senha não encontrados. Não autorizado.",
+  "sessao_encerrada": "Sua sessão foi encerrada: houve outro login com este usuário, ou a sessão foi encerrada. Entre novamente.",
   "recurso_nao_encontrado": "Recurso não encontrado no servidor ou a URL está incorreta. Erro 404",
   "metodo_nao_permitido": "Método não permitido no servidor ou a URL está incorreta. Erro 405",
   "dados_incorretos": "Dados incorretos.",

@@ -6,6 +6,12 @@ export function processErrorMessage(error: any) {
     (error && error.response && error.response.status && error.response.status === 401) ||
     (error && error.status && error.status === 401)
   ) {
+    // O archbase-security (3.4.5+) diz quando o token foi revogado: logout, ou outro login do
+    // mesmo usuário de sessão única. Sem isso a tela culpava a senha, e a causa era o outro login.
+    const corpo = error?.response?.data ?? error?.data
+    if (corpo?.error === 'SESSAO_ENCERRADA') {
+      return t('archbase:sessao_encerrada')
+    }
     return t('archbase:Usuário/senha não encontrados. Não autorizado.')
   }
   const apiError = error?.response?.data?.apierror ?? error?.response?.data
