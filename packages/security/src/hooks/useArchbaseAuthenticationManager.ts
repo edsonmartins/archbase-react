@@ -5,7 +5,7 @@ import { ArchbaseAuthenticator } from '../ArchbaseAuthenticator'
 import { ARCHBASE_IOC_API_TYPE } from '@archbase/core'
 import { ArchbaseTokenManager } from '../ArchbaseTokenManager'
 import { processErrorMessage } from '@archbase/core'
-import { useArchbaseStore } from '@archbase/data'
+import { useArchbaseStore, registerArchbaseTokenRenewer } from '@archbase/data'
 import { ARCHBASE_SECURITY_MANAGER_STORE } from './useArchbaseSecurityManager'
 import { 
   ContextualAuthenticationRequest,
@@ -100,9 +100,37 @@ export const useArchbaseAuthenticationManager = ({
   const [mfaRequired, setMfaRequired] = useState<boolean>(false)
   const [passwordChangeRequired, setPasswordChangeRequired] = useState<boolean>(false)
   const [mfaChallengeToken, setMfaChallengeToken] = useState<string | null>(null)
-  /** Trava de renovação em curso — ref, e não state, para não reagendar o intervalo a cada troca. */
-  const renovacaoEmCurso = useRef<boolean>(false)
+  /**
+   * A renovação em curso, compartilhada: o intervalo e todo pedido que recebe 401 esperam a mesma. Com sessão única,
+   * duas renovações concorrentes rotacionam o mesmo refresh token e a segunda é negada por causa da primeira. Ref, e
+   * não state, para não reagendar o intervalo a cada troca.
+   */
+  const renovacaoEmCurso = useRef<Promise<ArchbaseAccessToken | null> | null>(null)
+  /** O token do estado, legível de dentro de listeners e do renovador sem closure velha. */
+  const tokenAtual = useRef<ArchbaseAccessToken | null>(null)
+  /**
+   * O login em curso. Um segundo envio enquanto o primeiro não voltou (clique e Enter, duplo clique) recebe a mesma
+   * promessa: com sessão única, dois logins no mesmo milissegundo revogam os tokens um do outro (VEN-1126, 15/11).
+   */
+  const loginEmCurso = useRef<Promise<any> | null>(null)
   const securityStore = useArchbaseStore(ARCHBASE_SECURITY_MANAGER_STORE)
+
+  const definirToken = (token: ArchbaseAccessToken | null) => {
+    tokenAtual.current = token
+    setAccessToken(token)
+  }
+
+  /** Um login por vez: a chamada que chega com outro em curso espera o mesmo resultado em vez de mandar outro. */
+  const umPorVez = <A extends any[], R>(fn: (...args: A) => Promise<R>) => (...args: A): Promise<R> => {
+    if (loginEmCurso.current) {
+      return loginEmCurso.current
+    }
+    const p = fn(...args).finally(() => {
+      loginEmCurso.current = null
+    })
+    loginEmCurso.current = p
+    return p
+  }
 
   // Detectar capacidades do authenticator
   const capabilities = {
@@ -138,7 +166,7 @@ export const useArchbaseAuthenticationManager = ({
       setAuthenticated(true)
       setError('')
       setIsError(false)
-      setAccessToken(token)
+      definirToken(token)
     }
     setIsInitializing(false)
   }, [])
@@ -160,7 +188,7 @@ export const useArchbaseAuthenticationManager = ({
     // a renovação que falha chama justamente este logout, o ciclo se realimenta: falha, desloga,
     // tenta de novo, para sempre. Em produção isso apareceu como um erro de refresh se repetindo
     // de minuto em minuto, sem ninguém nunca ser deslogado de fato.
-    setAccessToken(null)
+    definirToken(null)
     tokenManager.clearToken()
     if (clearRememberMe) {
       tokenManager.clearUsernameAndPassword()
@@ -190,7 +218,7 @@ export const useArchbaseAuthenticationManager = ({
       }
       tokenManager.saveUsername(username)
       setUsername(username)
-      setAccessToken(access_token)
+      definirToken(access_token)
       setAuthenticating(false)
       setAuthenticated(true)
     } catch (error) {
@@ -254,7 +282,7 @@ export const useArchbaseAuthenticationManager = ({
       }
 
       setUsername(request.email)
-      setAccessToken(access_token)
+      definirToken(access_token)
       setAuthenticating(false)
       setAuthenticated(true)
     } catch (error) {
@@ -284,7 +312,7 @@ export const useArchbaseAuthenticationManager = ({
       const access_token = await authenticator.verifyMfa(mfaChallengeToken, code)
       tokenManager.saveToken(access_token)
       tokenManager.saveUsername(username)
-      setAccessToken(access_token)
+      definirToken(access_token)
       setMfaRequired(false)
       setMfaChallengeToken(null)
       setAuthenticating(false)
@@ -337,7 +365,7 @@ export const useArchbaseAuthenticationManager = ({
       }
 
       setUsername(user.email || request.identifier)
-      setAccessToken(access_token)
+      definirToken(access_token)
       setAuthenticating(false)
       setAuthenticated(true)
     } catch (error) {
@@ -383,7 +411,7 @@ export const useArchbaseAuthenticationManager = ({
       }
 
       setUsername(user.email)
-      setAccessToken(access_token)
+      definirToken(access_token)
       setAuthenticating(false)
       setAuthenticated(true)
     } catch (error) {
@@ -441,35 +469,114 @@ export const useArchbaseAuthenticationManager = ({
     }
   }, [accessToken])
 
-  const renovarToken = async () => {
-    if (!accessToken) {
-      return
-    }
-    // A verificação roda em intervalo fixo e a renovação é uma ida à rede: sem esta trava, um
-    // servidor lento acumula chamadas sobrepostas, cada uma tentando rotacionar o mesmo refresh
-    // token. Como a rotação invalida o token apresentado, a segunda chamada em diante seria negada
-    // por um motivo que a primeira criou.
-    if (renovacaoEmCurso.current) {
-      return
-    }
-    renovacaoEmCurso.current = true
-    try {
-      const response = await authenticator.refreshToken(accessToken?.refresh_token)
-      tokenManager.saveToken(response)
-      setAccessToken(response)
-    } catch (error) {
-      // Renovação negada é definitiva: o refresh token não volta a valer sozinho. Insistir só
-      // produz o mesmo erro indefinidamente -- deslogar é a única saída que leva a algum lugar.
-      console.error('Erro ao renovar o token:', error)
-      logout()
-    } finally {
-      renovacaoEmCurso.current = false
-    }
+  /** Adota o token que outra aba (ou outro login) gravou, sem ir à rede. */
+  const adotar = (guardado: ArchbaseAccessToken) => {
+    definirToken(guardado)
+    setAuthenticated(true)
+    setError('')
+    setIsError(false)
   }
+
+  /**
+   * A renovação negada encerra a sessão: o refresh token não volta a valer sozinho, e insistir só repete o erro. A
+   * tela de login diz por quê (SESSAO_ENCERRADA), em vez de aparecer sem explicação.
+   */
+  const encerrarSessao = () => {
+    logout()
+    setError(processErrorMessage({ response: { status: 401, data: { error: 'SESSAO_ENCERRADA' } } }))
+    setIsError(true)
+  }
+
+  /**
+   * Renova a sessão uma vez só, para o intervalo e para os pedidos que receberam 401.
+   *
+   * Antes de ir à rede, olha o armazenamento: se outra aba já fez login ou renovou, o token guardado é outro e
+   * ainda vale, e renovar de novo com o refresh velho seria negado (ou, pior, revogaria o token da outra aba). Se a
+   * renovação for negada mas o armazenamento tiver ganhado um token novo no meio-tempo, adota esse em vez de sair.
+   *
+   * @param recusado o access token que o servidor recusou (do 401); sem ele, o do estado
+   * @returns o token em vigor depois da renovação, ou null quando a sessão acabou
+   */
+  const renovarToken = (recusado?: string): Promise<ArchbaseAccessToken | null> => {
+    if (renovacaoEmCurso.current) {
+      return renovacaoEmCurso.current
+    }
+    const emUso = recusado ?? tokenAtual.current?.access_token
+    const guardado = tokenManager.getToken()
+    if (guardado && guardado.access_token !== emUso && !tokenManager.isTokenExpired(guardado, expirationThresholdOfToken)) {
+      adotar(guardado)
+      return Promise.resolve(guardado)
+    }
+    const base = guardado ?? tokenAtual.current
+    if (!base?.refresh_token) {
+      return Promise.resolve(null)
+    }
+    const renovacao = (async () => {
+      try {
+        const response = await authenticator.refreshToken(base.refresh_token)
+        tokenManager.saveToken(response)
+        definirToken(response)
+        return response
+      } catch (error) {
+        const agora = tokenManager.getToken()
+        if (agora && agora.access_token !== base.access_token) {
+          adotar(agora)
+          return agora
+        }
+        console.error('Erro ao renovar o token:', error)
+        encerrarSessao()
+        return null
+      } finally {
+        renovacaoEmCurso.current = null
+      }
+    })()
+    renovacaoEmCurso.current = renovacao
+    return renovacao
+  }
+
+  // O cliente HTTP chama isto no 401 (ArchbaseAxiosRemoteApiClient.comSessao).
+  useEffect(() => {
+    return registerArchbaseTokenRenewer(async (recusado) => (await renovarToken(recusado))?.access_token ?? null)
+  }, [])
+
+  /**
+   * A aba acompanha o armazenamento. O token é um só por navegador (localStorage), mas cada aba guardava o seu na
+   * memória: depois de um login em outra aba, esta seguia renovando com o refresh revogado, e a renovação negada
+   * limpava o armazenamento, derrubando a aba boa também (VEN-1126). O evento `storage` só chega às OUTRAS abas; o
+   * foco cobre o navegador que suspendeu a aba e perdeu o evento.
+   */
+  useEffect(() => {
+    const sincronizar = () => {
+      const guardado = tokenManager.getToken()
+      const atual = tokenAtual.current
+      if (guardado?.access_token === atual?.access_token) {
+        return
+      }
+      if (guardado) {
+        adotar(guardado)
+      } else if (atual) {
+        // Outra aba saiu: o armazenamento está vazio, e esta não tem mais com o que falar com o servidor.
+        logout()
+      }
+    }
+    const aoVoltar = () => {
+      if (document.visibilityState === 'visible') {
+        sincronizar()
+      }
+    }
+    window.addEventListener('storage', sincronizar)
+    window.addEventListener('focus', sincronizar)
+    document.addEventListener('visibilitychange', aoVoltar)
+    return () => {
+      window.removeEventListener('storage', sincronizar)
+      window.removeEventListener('focus', sincronizar)
+      document.removeEventListener('visibilitychange', aoVoltar)
+    }
+  }, [])
 
   return {
     // Métodos básicos (compatibilidade)
-    login,
+    login: umPorVez(login),
     logout,
     username,
     isAuthenticated,
@@ -481,9 +588,9 @@ export const useArchbaseAuthenticationManager = ({
     accessToken: accessToken ? accessToken.access_token : null,
     
     // Métodos opcionais para autenticação avançada
-    loginWithContext: capabilities.hasContextualLogin ? loginWithContext : undefined,
-    loginFlexible: capabilities.hasFlexibleLogin ? loginFlexible : undefined,
-    loginSocial: capabilities.hasSocialLogin ? loginSocial : undefined,
+    loginWithContext: capabilities.hasContextualLogin ? umPorVez(loginWithContext) : undefined,
+    loginFlexible: capabilities.hasFlexibleLogin ? umPorVez(loginFlexible) : undefined,
+    loginSocial: capabilities.hasSocialLogin ? umPorVez(loginSocial) : undefined,
     register: capabilities.hasRegistration ? register : undefined,
     getSupportedContexts: getSupportedContextsMethod,
     validateContext: validateContextMethod,

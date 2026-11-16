@@ -3,6 +3,7 @@ import 'reflect-metadata'
 import axios from 'axios'
 import * as inversify from 'inversify'
 import { ARCHBASE_IOC_API_TYPE, ArchbaseJacksonParser, ArchbaseTokenManager, ArchbaseAccessToken } from '@archbase/core'
+import { getArchbaseTokenRenewer } from './ArchbaseTokenRenewal'
 
 export interface Page<T> {
   content: T[]
@@ -79,11 +80,44 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
     return finalHeaders;
   }
 
+  /**
+   * Faz o pedido e, se o servidor responder 401 a um pedido que levou token, tenta UMA vez de novo:
+   * - com o token guardado, se ele não é o que foi recusado. Outra aba pode ter feito login ou renovado, e o
+   *   armazenamento já tem o token novo;
+   * - senão, com o token que o renovador registrado devolver (uma renovação só, compartilhada entre os pedidos).
+   *
+   * Sem token novo (renovação negada ou nenhum renovador), o 401 original volta para quem chamou.
+   */
+  protected async comSessao<R>(
+    headers: Record<string, string>,
+    withoutToken: boolean | undefined,
+    enviar: (headers: Record<string, string>) => Promise<R>
+  ): Promise<R> {
+    try {
+      return await enviar(headers)
+    } catch (error: any) {
+      const recusado = headers['Authorization']
+      if (withoutToken || !recusado || (error?.response?.status ?? error?.status) !== 401) {
+        throw error
+      }
+      const tokenRecusado = recusado.replace(/^Bearer\s+/, '')
+      let novo: string | null | undefined = this.tokenManager.getToken()?.access_token
+      if (!novo || novo === tokenRecusado) {
+        const renovador = getArchbaseTokenRenewer()
+        novo = renovador ? await renovador(tokenRecusado).catch(() => null) : null
+      }
+      if (!novo || novo === tokenRecusado) {
+        throw error
+      }
+      return enviar({ ...headers, Authorization: `Bearer ${novo}` })
+    }
+  }
+
 
   async get<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<T> {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
-      const response = await axios.get(url, { headers: finalHeaders, ...options })
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.get(url, { headers: h, ...options }))
       return ArchbaseJacksonParser.convertJsonToObject(response.data)
     } catch (error) {
       return Promise.reject(error);
@@ -93,14 +127,11 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   async post<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
-      const response = await axios.post(
-        url,
-        ArchbaseJacksonParser.convertObjectToJson(data),
-        {
-          headers: finalHeaders,
-          ...options
-        }
-      )
+      const corpo = ArchbaseJacksonParser.convertObjectToJson(data)
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.post(url, corpo, {
+        headers: h,
+        ...options
+      }))
       return ArchbaseJacksonParser.convertJsonToObject(response.data)
     } catch (error) {
       return Promise.reject(error);
@@ -110,14 +141,10 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   async postNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
-      const response = await axios.post(
-        url,
-        data,
-        {
-          headers: finalHeaders,
-          ...options
-        }
-      )
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.post(url, data, {
+        headers: h,
+        ...options
+      }))
       return response.data
     } catch (error) {
       return Promise.reject(error);
@@ -127,10 +154,11 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   async put<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
-      const response = await axios.put(url, ArchbaseJacksonParser.convertObjectToJson(data), {
-        headers: finalHeaders,
+      const corpo = ArchbaseJacksonParser.convertObjectToJson(data)
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.put(url, corpo, {
+        headers: h,
         ...options
-      })
+      }))
       return ArchbaseJacksonParser.convertJsonToObject(response.data)
     } catch (error) {
       return Promise.reject(error);
@@ -140,10 +168,10 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   async putNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
-      const response = await axios.put(url, data, {
-        headers: finalHeaders,
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.put(url, data, {
+        headers: h,
         ...options
-      })
+      }))
       return response.data
     } catch (error) {
       return Promise.reject(error);
@@ -154,10 +182,10 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
       options = options || {}
-      const response = await axios.put(url, data, {
-        headers: finalHeaders,
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.put(url, data, {
+        headers: h,
         ...options
-      })
+      }))
       return response.data
     } catch (error) {
       return Promise.reject(error);
@@ -167,7 +195,7 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   async delete<T>(url: string, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<T> {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
-      const response = await axios.delete(url, { headers: finalHeaders, ...options })
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.delete(url, { headers: h, ...options }))
       return ArchbaseJacksonParser.convertJsonToObject(response.data)
     } catch (error) {
       return Promise.reject(error);
@@ -177,10 +205,11 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   async patch<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
-      const response = await axios.patch(url, ArchbaseJacksonParser.convertObjectToJson(data), {
-        headers: finalHeaders,
+      const corpo = ArchbaseJacksonParser.convertObjectToJson(data)
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.patch(url, corpo, {
+        headers: h,
         ...options
-      })
+      }))
       return ArchbaseJacksonParser.convertJsonToObject(response.data)
     } catch (error) {
       return Promise.reject(error);
@@ -190,10 +219,10 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   async patchNoConvertId<T, R>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean, options?: any): Promise<R> {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
-      const response = await axios.patch(url, data, {
-        headers: finalHeaders,
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.patch(url, data, {
+        headers: h,
         ...options
-      })
+      }))
       return response.data
     } catch (error) {
       return Promise.reject(error);
@@ -207,10 +236,10 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   async getBlob(url: string, headers?: Record<string, string>, withoutToken?: boolean): Promise<Blob> {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
-      const response = await axios.get(url, {
-        headers: finalHeaders,
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.get(url, {
+        headers: h,
         responseType: 'blob'
-      })
+      }))
       return response.data
     } catch (error) {
       return Promise.reject(error);
@@ -224,10 +253,10 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
   async postBlob<T>(url: string, data: T, headers?: Record<string, string>, withoutToken?: boolean): Promise<Blob> {
     try {
       const finalHeaders = this.prepareHeaders(headers, withoutToken);
-      const response = await axios.post(url, data, {
-        headers: finalHeaders,
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.post(url, data, {
+        headers: h,
         responseType: 'blob'
-      })
+      }))
       return response.data
     } catch (error) {
       return Promise.reject(error);
@@ -249,7 +278,7 @@ export class ArchbaseAxiosRemoteApiClient implements ArchbaseRemoteApiClient {
         }
       }
 
-      const response = await axios.post(url, data, { headers: finalHeaders });
+      const response = await this.comSessao(finalHeaders, withoutToken, (h) => axios.post(url, data, { headers: h }));
       return response.data;
     } catch (error) {
       return Promise.reject(error);
