@@ -1,0 +1,51 @@
+## Inputs do Mantine 9.8
+
+Componentes ligados ao DataSource (v1/v2) sobre os inputs que o Mantine passou a oferecer na 9.8. Todos seguem o padrão dos demais editores: com o DataSource em navegação ficam somente leitura, gravam só em edição/inserção e exibem os erros de campo e de validação.
+
+> Status **beta**: a API pode receber ajustes nas próximas versões.
+
+### ArchbasePhoneInput
+
+Telefone internacional com seletor de país, detecção automática e máscara. País padrão: Brasil.
+
+```tsx
+<ArchbasePhoneInput dataSource={dataSource} dataField="telefone" label="Telefone" />
+```
+
+O valor gravado é o número em **E.164 cru**: `+5511987654321`. Isso é diferente do `ArchbaseMaskEdit` com `ArchbaseMaskPattern.PHONE`, que grava o texto formatado (`(11) 98765-4321`). Para campos que já guardam o formato brasileiro, continue usando o `ArchbaseMaskEdit`.
+
+`onChangeValue(valor, detalhes)` recebe também o país e o valor formatado.
+
+### ArchbaseMaskedDateEdit
+
+Data digitada em campos separados de dia, mês e ano, com calendário.
+
+```tsx
+<ArchbaseMaskedDateEdit dataSource={dataSource} dataField="nascimento" label="Nascimento" />
+
+// Grava Date em vez de string
+<ArchbaseMaskedDateEdit dataSource={dataSource} dataField="nascimento" valueType="date" />
+```
+
+É uma alternativa ao `ArchbaseDatePickerEdit`, que continua disponível. Como não há um `<input>` único, este componente não tem `innerRef`, `placeholderChar` nem `dateParser`. Enquanto a data está incompleta, nada é gravado.
+
+### ArchbaseWeekPickerInput e ArchbaseQuarterPickerInput
+
+Seleção de semana (clicar num dia seleciona a semana inteira) e de trimestre.
+
+```tsx
+<ArchbaseWeekPickerInput dataSource={dataSource} dataField="semana" label="Semana" firstDayOfWeek={0} />
+
+<ArchbaseQuarterPickerInput dataSource={dataSource} dataField="trimestre" label="Trimestre" />
+```
+
+O valor é o **primeiro dia** do período: o primeiro dia da semana, conforme `firstDayOfWeek`, ou o primeiro dia do trimestre.
+
+### Formato das datas
+
+`ArchbaseMaskedDateEdit`, `ArchbaseWeekPickerInput` e `ArchbaseQuarterPickerInput` leem do campo tanto `Date` quanto string ISO. De uma string com hora (`2024-05-15T00:00:00Z`) usam só a parte da data, então o dia não muda por causa do fuso. Para gravar, usam `valueType`:
+
+| valueType | Gravado no DataSource |
+|-----------|-----------------------|
+| `'string'` (padrão) | `'2024-05-15'` |
+| `'date'` | `Date` à meia-noite local |
