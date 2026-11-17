@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MantineProvider, getMentions } from '@mantine/core';
 import { ArchbaseDataSource } from '@archbase/data';
@@ -222,5 +222,146 @@ describe('ArchbaseMentionInput', () => {
 			['1', 'Maria Souza'],
 			['3', 'Joana Reis'],
 		]);
+	});
+
+	/**
+	 * Paridade com a implementação antiga. Os valores esperados abaixo foram OBSERVADOS na versão
+	 * baseada em react-mentions (rodando o mesmo cenário nas duas) — não são o que achamos certo, são
+	 * o que já funcionava. As teclas levam `key` e `keyCode`: o react-mentions lia keyCode, o Mantine
+	 * lê key, e o user-event não preenche keyCode.
+	 */
+	describe('paridade com a versão react-mentions', () => {
+		const KEY_CODES: Record<string, number> = { Enter: 13, Tab: 9, Escape: 27, ArrowDown: 40, ArrowUp: 38 };
+		const tecla = async (key: string) => {
+			fireEvent.keyDown(campo(), { key, code: key, keyCode: KEY_CODES[key], which: KEY_CODES[key] });
+			await act(() => new Promise((r) => setTimeout(r, 50)));
+		};
+		const textosDasOpcoes = () => screen.queryAllByRole('option', { hidden: true }).map((o) => o.textContent);
+
+		async function montar(props: Partial<React.ComponentProps<typeof ArchbaseMentionInput>> = {}) {
+			const user = userEvent.setup();
+			const onChangeValue = vi.fn();
+			render(<ArchbaseMentionInput mentions={[{ trigger: '@', data: usuarios }]} onChangeValue={onChangeValue} {...(props as any)} />, {
+				wrapper,
+			});
+			await user.click(campo());
+			const digitar = async (texto: string) => {
+				await user.keyboard(texto);
+				await act(() => new Promise((r) => setTimeout(r, 50)));
+			};
+			return { digitar, valor: () => onChangeValue.mock.lastCall?.[0] ?? null, onChangeValue };
+		}
+
+		it('Enter seleciona a primeira sugestão', async () => {
+			const { digitar, valor } = await montar();
+			await digitar('@Ma');
+			await tecla('Enter');
+			expect([valor(), campo().value]).toEqual(['[Maria Souza](1)', 'Maria Souza']);
+			expect(textosDasOpcoes()).toEqual([]);
+		});
+
+		it('setas navegam (com volta ao início/fim) e Tab também seleciona', async () => {
+			const { digitar, valor } = await montar();
+			await digitar('@Ma');
+			await tecla('ArrowDown');
+			await tecla('Enter');
+			expect(valor()).toBe('[Mario Lima](2)');
+			await digitar(' @Ma');
+			await tecla('ArrowUp');
+			await tecla('Tab');
+			expect(valor()).toBe('[Mario Lima](2) [Mario Lima](2)');
+		});
+
+		it('Escape fecha a lista sem inserir', async () => {
+			const { digitar, valor } = await montar();
+			await digitar('@Ma');
+			await tecla('Escape');
+			expect(textosDasOpcoes()).toEqual([]);
+			expect(valor()).toBe('@Ma');
+		});
+
+		it('texto continua após a menção e o cursor fica no fim dela', async () => {
+			const { digitar, valor } = await montar();
+			await digitar('oi @Jo');
+			await tecla('Enter');
+			expect(campo().selectionStart).toBe('oi Joana Reis'.length);
+			await digitar(' tudo bem');
+			expect([valor(), campo().value]).toEqual(['oi [Joana Reis](3) tudo bem', 'oi Joana Reis tudo bem']);
+		});
+
+		it('vários gatilhos no mesmo campo', async () => {
+			const { digitar, valor } = await montar({
+				mentions: [
+					{ trigger: '@', data: usuarios },
+					{ trigger: '#', data: [{ id: 'urgente', display: 'urgente' }] },
+				],
+			});
+			await digitar('@Jo');
+			await tecla('Enter');
+			await digitar(' #ur');
+			await tecla('Enter');
+			expect([valor(), campo().value]).toEqual(['[Joana Reis](3) [urgente](urgente)', 'Joana Reis urgente']);
+		});
+
+		it('displayTransform muda só o texto exibido', async () => {
+			const { digitar, valor } = await montar({
+				mentions: [{ trigger: '@', data: usuarios, displayTransform: (_id: string, d: string) => `@${d}` }],
+			});
+			await digitar('@Jo');
+			await tecla('Enter');
+			expect([valor(), campo().value]).toEqual(['[Joana Reis](3)', '@Joana Reis']);
+		});
+
+		it('busca: contém, sem diferenciar maiúsculas; e-mail não abre; espaço encerra', async () => {
+			const { digitar } = await montar();
+			await digitar('@souza');
+			expect(textosDasOpcoes()).toEqual(['Maria Souza']);
+			await tecla('Escape');
+			await digitar(' @MARI');
+			expect(textosDasOpcoes()).toEqual(['Maria Souza', 'Mario Lima']);
+			await digitar(' x');
+			expect(textosDasOpcoes()).toEqual([]);
+			await digitar(' joao@mar');
+			expect(textosDasOpcoes()).toEqual([]);
+		});
+
+		it('função `data` é chamada a cada tecla, começando pela consulta vazia', async () => {
+			const consultas: string[] = [];
+			const { digitar } = await montar({
+				mentions: [
+					{
+						trigger: '@',
+						data: (q: string, cb: (d: typeof usuarios) => void) => {
+							consultas.push(q);
+							cb(usuarios.filter((u) => u.display.toLowerCase().includes(q.toLowerCase())));
+						},
+					},
+				],
+			});
+			await digitar('@Mar');
+			expect([...new Set(consultas)]).toEqual(['', 'M', 'Ma', 'Mar']);
+		});
+
+		it('onChangeValue uma vez por tecla; Enter fora da lista quebra linha', async () => {
+			const { digitar, onChangeValue, valor } = await montar();
+			await digitar('ab');
+			expect(onChangeValue.mock.calls.map((c) => c[0])).toEqual(['a', 'ab']);
+			await digitar('{Enter}c');
+			expect(valor()).toBe('ab\nc');
+		});
+
+		it('backspace no fim de uma menção a remove inteira', async () => {
+			const { valor } = await montar({ defaultValue: 'Olá [Joana Reis](3)' });
+			const user = userEvent.setup();
+			await user.keyboard('{End}{Backspace}');
+			expect([valor(), campo().value]).toEqual(['Olá ', 'Olá ']);
+		});
+
+		it('readOnly não abre sugestões nem altera o valor', async () => {
+			const { digitar, onChangeValue } = await montar({ readOnly: true, value: 'x' });
+			await digitar('@');
+			expect(textosDasOpcoes()).toEqual([]);
+			expect(onChangeValue).not.toHaveBeenCalled();
+		});
 	});
 });
