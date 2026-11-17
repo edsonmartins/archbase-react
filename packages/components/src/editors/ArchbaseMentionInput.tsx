@@ -1,24 +1,79 @@
 /**
  * ArchbaseMentionInput — input com suporte a mentions (@user, #tag, etc.) integrado ao DataSource (v1/v2).
- * Wrapper sobre react-mentions com tema Mantine e validacao.
+ * Wrapper sobre o `Mentions` do @mantine/core (9.8+) com validacao.
+ *
+ * Ate a 4.13 era construido sobre react-mentions. A troca preserva o contrato publico:
+ * - o markup padrao continua `[__display__](__id__)` (SEM o gatilho). O padrao do Mantine e
+ *   `@[__display__](__id__)`; adota-lo silenciosamente faria as mencoes ja gravadas deixarem de ser
+ *   reconhecidas;
+ * - `data` como funcao continua aceitando a assinatura de callback do react-mentions
+ *   `(search, callback) => void`, alem da forma do Mantine que retorna array/Promise;
+ * - `onChangeValue(value, event)` continua recebendo `event.target.value`.
  * @status stable
  */
-import { Input, MantineSize, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { Mentions, MantineSize } from '@mantine/core';
+import type { MentionDataFn, MentionItem, MentionsChangePayload } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import type { CSSProperties, FocusEventHandler } from 'react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { DataSourceEvent, IArchbaseDataSourceBase } from '@archbase/data';
 import { DataSourceEventNames, useArchbaseDidUpdate, useArchbaseV1V2Compatibility } from '@archbase/data';
 import { useValidationErrors } from '@archbase/core';
-import { MentionsInput, Mention } from 'react-mentions';
+
+/** Markup gravado por padrao. Mantido igual ao da versao baseada em react-mentions. */
+export const ARCHBASE_MENTION_DEFAULT_MARKUP = '[__display__](__id__)';
+
+export type ArchbaseMentionItem = { id: string; display: string };
+
+export type ArchbaseMentionDataFn =
+	| ((search: string, callback: (data: ArchbaseMentionItem[]) => void) => void)
+	| ((search: string) => ArchbaseMentionItem[] | Promise<ArchbaseMentionItem[]>);
+
+/**
+ * Converte `data` para a forma do Mantine. Funcoes no estilo react-mentions entregam o resultado
+ * pelo callback e retornam undefined; funcoes no estilo Mantine retornam o array (ou a Promise).
+ * Aceitamos as duas: o que chegar primeiro resolve.
+ */
+export function toMantineMentionData(
+	data: ArchbaseMentionItem[] | ArchbaseMentionDataFn,
+): MentionItem[] | MentionDataFn {
+	if (typeof data !== 'function') {
+		return data;
+	}
+	return (query: string) =>
+		new Promise<MentionItem[]>((resolve, reject) => {
+			let settled = false;
+			const done = (items: ArchbaseMentionItem[] | undefined | null) => {
+				if (!settled) {
+					settled = true;
+					resolve(items ?? []);
+				}
+			};
+			try {
+				const result = (data as any)(query, done);
+				if (result !== undefined) {
+					Promise.resolve(result).then(done, (err) => {
+						if (!settled) {
+							settled = true;
+							reject(err);
+						}
+					});
+				}
+			} catch (err) {
+				settled = true;
+				reject(err);
+			}
+		});
+}
 
 export interface ArchbaseMentionConfig {
 	/** Caractere gatilho da mention (ex: '@', '#') */
 	trigger: string;
-	/** Lista estatica ou funcao async que retorna sugestoes */
-	data:
-		| Array<{ id: string; display: string }>
-		| ((search: string, callback: (data: Array<{ id: string; display: string }>) => void) => void);
+	/**
+	 * Lista estatica, ou funcao de busca: `(search, callback) => void` (estilo react-mentions) ou
+	 * `(search) => itens | Promise<itens>`.
+	 */
+	data: ArchbaseMentionItem[] | ArchbaseMentionDataFn;
 	/** Markup template. Padrao: '[__display__](__id__)' */
 	markup?: string;
 	/** Funcao para transformar exibicao */
@@ -27,6 +82,8 @@ export interface ArchbaseMentionConfig {
 	allowSpaceInQuery?: boolean;
 	/** Estilos customizados para a mention */
 	style?: React.CSSProperties;
+	/** Classe CSS aplicada as mencoes deste gatilho */
+	className?: string;
 }
 
 export interface ArchbaseMentionInputProps<T, ID> {
@@ -112,16 +169,12 @@ export function ArchbaseMentionInput<T, ID>({
 
 	const [currentValue, setCurrentValue] = useState<string>(valueProp ?? defaultValue ?? '');
 	const innerComponentRef = useRef<any>(null);
-	const theme = useMantineTheme();
-	const { colorScheme } = useMantineColorScheme();
 	const [internalError, setInternalError] = useState<string | undefined>(error);
 	const forceUpdate = useForceUpdate();
 
 	const validationContext = useValidationErrors();
 	const fieldKey = `${dataField}`;
 	const contextError = validationContext?.getError(fieldKey);
-
-	const isDark = colorScheme === 'dark';
 
 	useEffect(() => {
 		if (error !== undefined && error !== internalError) {
@@ -213,7 +266,8 @@ export function ArchbaseMentionInput<T, ID>({
 		loadDataSourceFieldValue();
 	}, []);
 
-	const handleChange = (event: any, newValue: string, newPlainTextValue: string, mentions: any[]) => {
+	const handleChange = (payload: MentionsChangePayload) => {
+		const newValue = payload.value;
 		const hasError = internalError || contextError;
 		if (hasError) {
 			setInternalError(undefined);
@@ -227,7 +281,9 @@ export function ArchbaseMentionInput<T, ID>({
 		}
 
 		if (onChangeValue) {
-			onChangeValue(newValue, event);
+			// Mesmo formato de evento que o react-mentions entregava (`event.target.value`), com o
+			// payload completo do Mantine anexado para quem quiser mentions/plainTextValue.
+			onChangeValue(newValue, { target: { value: newValue }, payload });
 		}
 	};
 
@@ -249,136 +305,49 @@ export function ArchbaseMentionInput<T, ID>({
 
 	const displayError = internalError || contextError;
 
-	// Tamanhos baseados no MantineSize
-	const sizeMap: Record<string, { fontSize: number; minHeight: number; padding: string }> = {
-		xs: { fontSize: 12, minHeight: 28, padding: '4px 8px' },
-		sm: { fontSize: 14, minHeight: 34, padding: '6px 10px' },
-		md: { fontSize: 14, minHeight: 36, padding: '8px 12px' },
-		lg: { fontSize: 16, minHeight: 42, padding: '10px 14px' },
-		xl: { fontSize: 18, minHeight: 48, padding: '12px 16px' },
-	};
-
-	const currentSize = sizeMap[size || 'sm'] || sizeMap.sm;
-
-	const borderColor = displayError
-		? (theme.colors.red[isDark ? 4 : 6])
-		: (isDark ? theme.colors.dark[4] : theme.colors.gray[4]);
-
-	const focusBorderColor = displayError
-		? (theme.colors.red[isDark ? 4 : 6])
-		: (theme.colors[theme.primaryColor][isDark ? 5 : 6]);
-
-	const mentionsInputStyle: any = {
-		control: {
-			fontSize: currentSize.fontSize,
-			fontWeight: 'normal',
-		},
-		'&multiLine': {
-			control: {
-				minHeight: height || currentSize.minHeight,
-			},
-			highlighter: {
-				padding: currentSize.padding,
-				border: '1px solid transparent',
-				minHeight: height || currentSize.minHeight,
-			},
-			input: {
-				padding: currentSize.padding,
-				border: `1px solid ${borderColor}`,
-				borderRadius: theme.radius.sm,
-				backgroundColor: isDark ? theme.colors.dark[6] : theme.white,
-				color: isDark ? theme.colors.dark[0] : theme.black,
-				minHeight: height || currentSize.minHeight,
-				outline: 'none',
-				'&:focus': {
-					borderColor: focusBorderColor,
-				},
-			},
-		},
-		'&singleLine': {
-			display: 'inline-block',
-			width: '100%',
-			highlighter: {
-				padding: currentSize.padding,
-				border: '1px solid transparent',
-			},
-			input: {
-				padding: currentSize.padding,
-				border: `1px solid ${borderColor}`,
-				borderRadius: theme.radius.sm,
-				backgroundColor: isDark ? theme.colors.dark[6] : theme.white,
-				color: isDark ? theme.colors.dark[0] : theme.black,
-				height: height || currentSize.minHeight,
-				outline: 'none',
-				'&:focus': {
-					borderColor: focusBorderColor,
-				},
-			},
-		},
-		suggestions: {
-			list: {
-				backgroundColor: isDark ? theme.colors.dark[7] : theme.white,
-				border: `1px solid ${isDark ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-				borderRadius: theme.radius.sm,
-				fontSize: currentSize.fontSize,
-				maxHeight: 200,
-				overflowY: 'auto',
-				boxShadow: theme.shadows.md,
-				zIndex: 1000,
-			},
-			item: {
-				padding: '6px 12px',
-				color: isDark ? theme.colors.dark[0] : theme.black,
-				'&focused': {
-					backgroundColor: isDark ? theme.colors.dark[4] : theme.colors[theme.primaryColor][0],
-					color: isDark ? theme.white : theme.black,
-				},
-			},
-		},
-	};
-
-	const defaultMentionStyle: React.CSSProperties = {
-		backgroundColor: isDark
-			? `${theme.colors[theme.primaryColor][9]}40`
-			: `${theme.colors[theme.primaryColor][1]}`,
-		borderRadius: '2px',
-	};
+	const mentionSources = useMemo(
+		() =>
+			mentions.map((config) => ({
+				config,
+				data: toMantineMentionData(config.data),
+			})),
+		[mentions],
+	);
 
 	return (
-		<Input.Wrapper
+		<Mentions
 			label={label}
 			description={description}
 			error={displayError}
 			required={required}
 			size={size}
+			value={currentValue}
+			onChange={handleChange}
+			onBlur={handleOnFocusExit}
+			onFocus={handleOnFocusEnter}
+			placeholder={placeholder}
+			disabled={disabled}
+			readOnly={isReadOnly()}
+			singleLine={singleLine}
+			suggestionsPlacement={allowSuggestionsAboveCursor ? 'auto' : 'below'}
+			ref={(innerRef || innerComponentRef) as any}
+			className={className}
 			style={{ width, ...style }}
+			styles={height !== undefined ? { input: { minHeight: height } } : undefined}
 		>
-			<MentionsInput
-				value={currentValue}
-				onChange={handleChange}
-				onBlur={handleOnFocusExit as any}
-				onFocus={handleOnFocusEnter as any}
-				placeholder={placeholder}
-				disabled={disabled}
-				readOnly={isReadOnly()}
-				singleLine={singleLine}
-				allowSuggestionsAboveCursor={allowSuggestionsAboveCursor}
-				inputRef={innerRef || innerComponentRef}
-				className={className}
-				style={mentionsInputStyle}
-			>
-				{mentions.map((mentionConfig, index) => (
-					<Mention
-						key={`${mentionConfig.trigger}-${index}`}
-						trigger={mentionConfig.trigger}
-						data={mentionConfig.data}
-						markup={mentionConfig.markup || '[__display__](__id__)'}
-						displayTransform={mentionConfig.displayTransform}
-						style={mentionConfig.style || defaultMentionStyle}
-					/>
-				))}
-			</MentionsInput>
-		</Input.Wrapper>
+			{mentionSources.map(({ config, data }, index) => (
+				<Mentions.Mention
+					key={`${config.trigger}-${index}`}
+					trigger={config.trigger}
+					data={data}
+					markup={config.markup || ARCHBASE_MENTION_DEFAULT_MARKUP}
+					displayTransform={config.displayTransform}
+					allowSpaceInQuery={config.allowSpaceInQuery}
+					style={config.style}
+					className={config.className}
+				/>
+			))}
+		</Mentions>
 	);
 }
 

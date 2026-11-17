@@ -579,7 +579,7 @@ export const ARCHBASE_SIGNATURE_PAD_DATA: PageHeaderData = {
 
 export const ARCHBASE_MENTION_INPUT_DATA: PageHeaderData = {
   title: 'ArchbaseMentionInput',
-  description: 'Componente de entrada de texto com suporte a menções (@usuários, #tags). Baseado no react-mentions.',
+  description: 'Componente de entrada de texto com suporte a menções (@usuários, #tags). Construído sobre o Mentions do Mantine.',
   source: '@archbase/components/editors/ArchbaseMentionInput',
   package: '@archbase/components',
   docsLink: '/components/editors/new-editors',
