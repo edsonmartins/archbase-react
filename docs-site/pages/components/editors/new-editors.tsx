@@ -33,6 +33,11 @@ const ArchbaseMentionInputDocs = dynamic(() => import('../../../content/componen
   loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
 });
 
+const ArchbaseMantine98InputsDocs = dynamic(() => import('../../../content/components/editors/archbase-mantine-98-inputs.mdx'), {
+  ssr: false,
+  loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
+});
+
 const ArchbaseDualListboxDocs = dynamic(() => import('../../../content/components/editors/archbase-dual-listbox.mdx'), {
   ssr: false,
   loading: () => <div style={{ padding: '1rem' }}>Carregando...</div>
@@ -50,6 +55,10 @@ export default function NewEditorsPage() {
           'ArchbaseSignaturePad',
           'ArchbaseMentionInput',
           'ArchbaseDualListbox',
+          'ArchbasePhoneInput',
+          'ArchbaseMaskedDateEdit',
+          'ArchbaseWeekPickerInput',
+          'ArchbaseQuarterPickerInput',
         ]}
         componentsStyles={[
           'ArchbaseTagInput',
@@ -57,6 +66,10 @@ export default function NewEditorsPage() {
           'ArchbaseSignaturePad',
           'ArchbaseMentionInput',
           'ArchbaseDualListbox',
+          'ArchbasePhoneInput',
+          'ArchbaseMaskedDateEdit',
+          'ArchbaseWeekPickerInput',
+          'ArchbaseQuarterPickerInput',
         ]}
         stylesApiData={STYLES_API_DATA}
       >
@@ -65,6 +78,7 @@ export default function NewEditorsPage() {
         <ArchbaseSignaturePadDocs />
         <ArchbaseMentionInputDocs />
         <ArchbaseDualListboxDocs />
+        <ArchbaseMantine98InputsDocs />
       </DocsTabs>
     </Shell>
   );

@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom/vitest';
+
 /**
  * O jsdom nao implementa as APIs que o Mantine consulta ao montar. Sem estes
  * duplos, os componentes lancam antes de qualquer asercao — e o erro aparece

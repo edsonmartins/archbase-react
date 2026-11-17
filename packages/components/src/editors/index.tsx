@@ -216,3 +216,14 @@ export type {
   DateRangePreset,
 } from './ArchbaseMultiViewCalendar'
 
+
+// Componentes sobre os inputs novos do Mantine 9.8
+export { ArchbasePhoneInput } from './ArchbasePhoneInput'
+export type { ArchbasePhoneInputProps } from './ArchbasePhoneInput'
+export { ArchbaseMaskedDateEdit } from './ArchbaseMaskedDateEdit'
+export type { ArchbaseMaskedDateEditProps } from './ArchbaseMaskedDateEdit'
+export { ArchbaseWeekPickerInput } from './ArchbaseWeekPickerInput'
+export type { ArchbaseWeekPickerInputProps } from './ArchbaseWeekPickerInput'
+export { ArchbaseQuarterPickerInput } from './ArchbaseQuarterPickerInput'
+export type { ArchbaseQuarterPickerInputProps } from './ArchbaseQuarterPickerInput'
+export type { ArchbaseDateFieldValueType } from './archbaseDateField'
