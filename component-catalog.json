@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-08-09",
+  "generatedAt": "2026-11-17",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -85,6 +85,19 @@
         "data"
       ],
       "canonicalUrl": "packages/components/src/datagrid/main"
+    },
+    {
+      "name": "// O contexto em si",
+      "description": "ArchbaseSecurityProvider — provider de segurança com autenticação, tokens e permissões.\n@status stable",
+      "sourcePath": "packages/security/src/ArchbaseSecurityContext",
+      "exportsFrom": "@archbase/security",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider",
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityContext"
     },
     {
       "name": "// Persistir scroll automaticamente\n  useArchbaseTabActive",
@@ -437,6 +450,216 @@
       "canonicalUrl": "packages/components/src/datagrid/ag-grid/archbase-data-grid-ag-utils"
     },
     {
+      "name": "AnalyticsClient",
+      "description": "Cabecalhos de truncamento. RFC de contratos, secao 3.2.",
+      "sourcePath": "packages/analytics-core/src/client/AnalyticsClient",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/client/AnalyticsClient"
+    },
+    {
+      "name": "AnalyticsContext",
+      "description": "Parametro que carrega o estado de exploracao. Default `aq`.",
+      "sourcePath": "packages/analytics-core/src/provider/AnalyticsContext",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/provider/AnalyticsContext"
+    },
+    {
+      "name": "AnalyticsError",
+      "description": "Falha de analytics.\nA biblioteca trata exclusivamente `code`. A mensagem textual do servidor nunca\ne interpretada: fica em `serverMessage`, exibivel apenas em desenvolvimento.\nRFC de contratos, secao 3.3.",
+      "sourcePath": "packages/analytics-core/src/client/errors",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/client/errors"
+    },
+    {
+      "name": "AnalyticsExplorer",
+      "description": "Sincronizacao de deep link. Omitido, o explorador nao toca na URL: o\nroteamento pertence ao produto consumidor, e a biblioteca so le e escreve\nos parametros configurados quando o host pede.",
+      "sourcePath": "packages/analytics-mantine/src/compositions/AnalyticsExplorer",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "deepLink",
+          "type": "{\n    search: string;\n    onChange: (search: string) => void;\n  }",
+          "required": false,
+          "description": "Sincronizacao de deep link. Omitido, o explorador nao toca na URL: o\nroteamento pertence ao produto consumidor, e a biblioteca so le e escreve\nos parametros configurados quando o host pede."
+        },
+        {
+          "name": "ownerId",
+          "type": "string",
+          "required": false,
+          "description": "Identidade do autor, gravada na consulta salva."
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "required": false,
+          "description": "Define height. (number)"
+        },
+        {
+          "name": "onDrill",
+          "type": "(row: Record<string, unknown>, member: string) => void",
+          "required": false,
+          "description": "Callback acionado quando drill. ((row: Record<string, unknown>, member: string) => void)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/compositions/AnalyticsExplorer"
+    },
+    {
+      "name": "AnalyticsProvider",
+      "description": "Prefixo do backend do hospedeiro. A biblioteca acrescenta `v1/meta` e\n`v1/load` e nunca monta prefixo proprio. RFC de contratos, secao 3.1.",
+      "sourcePath": "packages/analytics-core/src/provider/AnalyticsProvider",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [
+        {
+          "name": "baseUrl",
+          "type": "string",
+          "required": true,
+          "description": "Prefixo do backend do hospedeiro. A biblioteca acrescenta `v1/meta` e\n`v1/load` e nunca monta prefixo proprio. RFC de contratos, secao 3.1."
+        },
+        {
+          "name": "ports",
+          "type": "AnalyticsPorts",
+          "required": true,
+          "description": "Define ports. (AnalyticsPorts)"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "Define locale. (string)"
+        },
+        {
+          "name": "defaultLocale",
+          "type": "string",
+          "required": false,
+          "description": "Define default locale. (string)"
+        },
+        {
+          "name": "deepLinkParams",
+          "type": "{ query?: string; savedQueryId?: string }",
+          "required": false,
+          "description": "Define deep link params. ({ query?: string; savedQueryId?: string })"
+        },
+        {
+          "name": "metaCacheTtlMs",
+          "type": "number",
+          "required": false,
+          "description": "Define meta cache ttl ms. (number)"
+        },
+        {
+          "name": "strings",
+          "type": "Partial<AnalyticsStrings>",
+          "required": false,
+          "description": "Define strings. (Partial<AnalyticsStrings>)"
+        },
+        {
+          "name": "fetchImpl",
+          "type": "typeof fetch",
+          "required": false,
+          "description": "Define fetch impl. (typeof fetch)"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Elementos React renderizados dentro do componente."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "provider"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/provider/AnalyticsProvider"
+    },
+    {
+      "name": "AnalyticsWidget",
+      "description": "Consulta salva a exibir. Alternativa a `query`.",
+      "sourcePath": "packages/analytics-mantine/src/compositions/AnalyticsWidget",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "savedQueryId",
+          "type": "string",
+          "required": false,
+          "description": "Consulta salva a exibir. Alternativa a `query`."
+        },
+        {
+          "name": "query",
+          "type": "AnalyticsQuery",
+          "required": false,
+          "description": "Consulta direta, para painel montado em codigo."
+        },
+        {
+          "name": "viz",
+          "type": "VizType",
+          "required": false,
+          "description": "Define viz. (VizType)"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": "Define title. (string)"
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "required": false,
+          "description": "Define height. (number)"
+        },
+        {
+          "name": "withFrame",
+          "type": "boolean",
+          "required": false,
+          "description": "Cabecalho e moldura proprios. Falso para embutir em layout do host."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/compositions/AnalyticsWidget"
+    },
+    {
+      "name": "AnalyticsWorkspace",
+      "description": "Renderiza uma viz fixa (widget de dashboard) do mesmo resultado.",
+      "sourcePath": "packages/analytics-dockview/src/AnalyticsWorkspace",
+      "exportsFrom": "@archbase/analytics-dockview",
+      "props": [
+        {
+          "name": "storageKey",
+          "type": "string",
+          "required": false,
+          "description": "Chave de persistencia do layout no localStorage. Namespeie por pagina para\n isolar layouts. Default `analytics-workspace-layout`."
+        },
+        {
+          "name": "ownerId",
+          "type": "string",
+          "required": false,
+          "description": "Identidade do autor, gravada na consulta salva."
+        },
+        {
+          "name": "initialPreset",
+          "type": "Preset",
+          "required": false,
+          "description": "Preset inicial quando nao ha layout salvo. Default `padrao`."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-dockview/src/AnalyticsWorkspace"
+    },
+    {
       "name": "anchoredProps",
       "description": "anchoredProps — layout estrutural focado em anchored props.",
       "sourcePath": "packages/layout/src/spaces/components/ArchbaseSpaceAnchored.tsx",
@@ -671,6 +894,18 @@
       "canonicalUrl": "packages/components/src/buttons/ArchbaseActionButtons"
     },
     {
+      "name": "archbaseActionProps",
+      "description": "A marcação que liga um elemento da tela à capacidade que o governa.\n<p><b>Por que um atributo, e não um componente.</b> O inspetor precisa saber qual botão pertence a\nqual ação, e nada no DOM diz isso: a proteção mora em `disabled={!can('aprovar_custo')}`, dentro\ndo JSX, e desaparece na renderização. Envolver cada controle num componente de guarda resolveria,\nao preço de reescrever telas inteiras. Um atributo é uma linha por controle, não muda a árvore\nrenderizada e não interfere em estilo, layout ou acessibilidade.\n<p><b>É opcional e não protege nada.</b> Marcar um botão não o torna seguro, e deixar de marcar\nnão o torna inseguro — a autorização continua sendo o `can()`. O atributo serve para o realce\nsaber onde desenhar. O que não estiver marcado continua aparecendo na lista do inspetor.\n@example\n```tsx\n<Button\n  disabled={!can('aprovar_custo')}\n  {...archbaseActionProps('aprovar_custo')}\n>\n  Aprovar custo\n</Button>\n```",
+      "sourcePath": "packages/core/src/security/marcacaoDeAcao.ts",
+      "exportsFrom": "@archbase/core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/core/src/security/marcacaoDeAcao.ts"
+    },
+    {
       "name": "ArchbaseActionSheet",
       "description": "Chave única",
       "sourcePath": "packages/components/src/navigation/ArchbaseActionSheet",
@@ -842,6 +1077,12 @@
           "type": "boolean",
           "required": false,
           "description": "Define initial sidebar collapsed. (boolean)"
+        },
+        {
+          "name": "securityFailMode",
+          "type": "'closed' | 'open'",
+          "required": false,
+          "description": "Comportamento quando as permissões não carregam: 'closed' (padrão) desabilita os itens;\n'open' mantém o menu sem filtro."
         }
       ],
       "examples": [],
@@ -1110,6 +1351,12 @@
           "type": "ArchbaseAdminMainLayoutSecurityOptions",
           "required": false,
           "description": "Define security options. (ArchbaseAdminMainLayoutSecurityOptions)"
+        },
+        {
+          "name": "securityFailMode",
+          "type": "'closed' | 'open'",
+          "required": false,
+          "description": "Comportamento quando as permissões falham ou demoram: 'closed' (padrão) desabilita os itens."
         },
         {
           "name": "customRenderSidebar",
@@ -2536,6 +2783,65 @@
       "canonicalUrl": "packages/components/src/charts/ArchbaseArcGauge"
     },
     {
+      "name": "ArchbaseAsciiWave",
+      "description": "Cor dos caracteres. Ausente, usa a cor primaria do tema.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseAsciiWave",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "color",
+          "type": "string",
+          "required": false,
+          "description": "Cor dos caracteres. Ausente, usa a cor primaria do tema."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "required": false,
+          "description": "Define speed. (number)"
+        },
+        {
+          "name": "fontSize",
+          "type": "number",
+          "required": false,
+          "description": "Corpo da fonte monoespacada, em pixels."
+        },
+        {
+          "name": "columnWidth",
+          "type": "number",
+          "required": false,
+          "description": "Largura da coluna. Menor adensa o desenho e custa mais."
+        },
+        {
+          "name": "ramp",
+          "type": "string",
+          "required": false,
+          "description": "Rampa de densidade, do mais claro ao mais denso."
+        },
+        {
+          "name": "dropoutChance",
+          "type": "number",
+          "required": false,
+          "description": "Probabilidade de buraco por celula, entre 0 e 1."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseAsciiWave"
+    },
+    {
       "name": "ArchbaseAsyncMultiSelect",
       "description": "Permite ou não desselecionar um item",
       "sourcePath": "packages/components/src/editors/ArchbaseAsyncMultiSelect",
@@ -3074,6 +3380,65 @@
       "canonicalUrl": "packages/components/src/editors/ArchbaseAsyncSelect.context"
     },
     {
+      "name": "ArchbaseAuroraBackground",
+      "description": "Cores das faixas da aurora.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseAuroraBackground",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "colors",
+          "type": "string[]",
+          "required": false,
+          "description": "Cores das faixas da aurora."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "description": "Duracao de um ciclo completo, em segundos."
+        },
+        {
+          "name": "blur",
+          "type": "number",
+          "required": false,
+          "description": "Desfoque das faixas, em pixels. Menor deixa o listrado aparente."
+        },
+        {
+          "name": "opacity",
+          "type": "number",
+          "required": false,
+          "description": "Opacidade da camada."
+        },
+        {
+          "name": "fadeEdges",
+          "type": "boolean",
+          "required": false,
+          "description": "Esmaece as bordas, para a aurora nao terminar em linha reta."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseAuroraBackground"
+    },
+    {
       "name": "ArchbaseAuthContext",
       "description": "eslint-disable",
       "sourcePath": "packages/security/src/oauth2/AuthContext",
@@ -3535,6 +3900,174 @@
         "editor"
       ],
       "canonicalUrl": "packages/components/src/editors/ArchbaseBarcodeScanner"
+    },
+    {
+      "name": "ArchbaseBeamGrid",
+      "description": "Lado da celula, em pixels.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseBeamGrid",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "gridSize",
+          "type": "number",
+          "required": false,
+          "description": "Lado da celula, em pixels."
+        },
+        {
+          "name": "gridColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor das linhas da grade. Ausente, deriva do tema."
+        },
+        {
+          "name": "beamColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor dos feixes."
+        },
+        {
+          "name": "beamSpeed",
+          "type": "number",
+          "required": false,
+          "description": "Define beam speed. (number)"
+        },
+        {
+          "name": "beamThickness",
+          "type": "number",
+          "required": false,
+          "description": "Define beam thickness. (number)"
+        },
+        {
+          "name": "beamCount",
+          "type": "number",
+          "required": false,
+          "description": "Define beam count. (number)"
+        },
+        {
+          "name": "glow",
+          "type": "boolean",
+          "required": false,
+          "description": "Halo em volta do feixe. Custa desempenho: `shadowBlur` e caro."
+        },
+        {
+          "name": "glowIntensity",
+          "type": "number",
+          "required": false,
+          "description": "Define glow intensity. (number)"
+        },
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "description": "Ilumina celulas proximas ao ponteiro."
+        },
+        {
+          "name": "interactionRadius",
+          "type": "number",
+          "required": false,
+          "description": "Raio de influencia do ponteiro, em pixels."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Elementos React renderizados dentro do componente."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "data"
+      ],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseBeamGrid"
+    },
+    {
+      "name": "ArchbaseBorderBeam",
+      "description": "Espessura da borda, em pixels.",
+      "sourcePath": "packages/effects/src/elements/ArchbaseBorderBeam",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "thickness",
+          "type": "number",
+          "required": false,
+          "description": "Espessura da borda, em pixels."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "description": "Duracao de uma volta completa, em segundos."
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "required": false,
+          "description": "Atraso inicial, em segundos. Util para dessincronizar varios cartoes."
+        },
+        {
+          "name": "colorFrom",
+          "type": "string",
+          "required": false,
+          "description": "Cor onde o feixe comeca."
+        },
+        {
+          "name": "colorTo",
+          "type": "string",
+          "required": false,
+          "description": "Cor onde o feixe termina."
+        },
+        {
+          "name": "length",
+          "type": "number",
+          "required": false,
+          "description": "Fracao da volta ocupada pelo feixe, entre 0 e 1."
+        },
+        {
+          "name": "reverse",
+          "type": "boolean",
+          "required": false,
+          "description": "Inverte o sentido."
+        },
+        {
+          "name": "radius",
+          "type": "number | string",
+          "required": false,
+          "description": "Raio da borda. Ausente, herda do elemento pai."
+        },
+        {
+          "name": "opacity",
+          "type": "number",
+          "required": false,
+          "description": "Define opacity. (number)"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/elements/ArchbaseBorderBeam"
     },
     {
       "name": "ArchbaseBottomNavigation",
@@ -5195,6 +5728,65 @@
         "provider"
       ],
       "canonicalUrl": "packages/components/src/navigation/ArchbaseContextMenu"
+    },
+    {
+      "name": "ArchbaseCosmicDust",
+      "description": "Quantidade de particulas em cena.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseCosmicDust",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "particleCount",
+          "type": "number",
+          "required": false,
+          "description": "Quantidade de particulas em cena."
+        },
+        {
+          "name": "speedMultiplier",
+          "type": "number",
+          "required": false,
+          "description": "Multiplicador de velocidade."
+        },
+        {
+          "name": "particleSize",
+          "type": "number",
+          "required": false,
+          "description": "Tamanho base da particula."
+        },
+        {
+          "name": "colors",
+          "type": "string[]",
+          "required": false,
+          "description": "Paleta explicita. Ausente, decide pelo esquema de cor do tema."
+        },
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "description": "Reage ao ponteiro sobre o proprio elemento."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Elementos React renderizados dentro do componente."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseCosmicDust"
     },
     {
       "name": "ArchbaseCountdownProgress",
@@ -6941,6 +7533,77 @@
       "canonicalUrl": "packages/components/src/datagrid/main/archbase-grid-popover.tsx"
     },
     {
+      "name": "ArchbaseDeviceFrame",
+      "description": "Conteudo exibido na tela. Aceita imagem, video ou aplicacao viva.",
+      "sourcePath": "packages/components/src/display/ArchbaseDeviceFrame",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Conteudo exibido na tela. Aceita imagem, video ou aplicacao viva."
+        },
+        {
+          "name": "variant",
+          "type": "ArchbaseDeviceVariant",
+          "required": false,
+          "description": "Variação visual (filled, outlined, light, subtle)."
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "required": false,
+          "description": "Largura da moldura em pixels. A altura segue a proporcao do aparelho."
+        },
+        {
+          "name": "frameColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor do corpo. Ausente, acompanha o esquema de cor."
+        },
+        {
+          "name": "showNotch",
+          "type": "boolean",
+          "required": false,
+          "description": "Recorte superior (a \"ilha\"), so em telefone."
+        },
+        {
+          "name": "showButtons",
+          "type": "boolean",
+          "required": false,
+          "description": "Botoes laterais desenhados no corpo."
+        },
+        {
+          "name": "shadow",
+          "type": "boolean",
+          "required": false,
+          "description": "Define shadow. (boolean)"
+        },
+        {
+          "name": "'aria-label'",
+          "type": "string",
+          "required": false,
+          "description": "Descricao para leitores de tela. A moldura em si e decorativa."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/display/ArchbaseDeviceFrame"
+    },
+    {
       "name": "ArchbaseDialog",
       "description": "ArchbaseDialog — diálogo de confirmação/erro usando Mantine modals.\n@status stable",
       "sourcePath": "packages/components/src/notification/ArchbaseDialog",
@@ -7281,6 +7944,85 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/components/src/viewers/ArchbaseDocViewer"
+    },
+    {
+      "name": "ArchbaseDotGridBackground",
+      "description": "Diametro do ponto, em pixels.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseDotGridBackground",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "dotSize",
+          "type": "number",
+          "required": false,
+          "description": "Diametro do ponto, em pixels."
+        },
+        {
+          "name": "dotSpacing",
+          "type": "number",
+          "required": false,
+          "description": "Espacamento entre pontos, como multiplo do diametro."
+        },
+        {
+          "name": "dotColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor dos pontos. Ausente, herda a cor de texto do tema."
+        },
+        {
+          "name": "scaleFactor",
+          "type": "number",
+          "required": false,
+          "description": "Expoente da atenuacao radial: maior concentra o brilho no centro."
+        },
+        {
+          "name": "minScale",
+          "type": "number",
+          "required": false,
+          "description": "Escala minima do ponto nas bordas."
+        },
+        {
+          "name": "draggable",
+          "type": "boolean",
+          "required": false,
+          "description": "Permite arrastar a grade."
+        },
+        {
+          "name": "inertia",
+          "type": "boolean",
+          "required": false,
+          "description": "Mantem o movimento apos soltar."
+        },
+        {
+          "name": "inertiaDamping",
+          "type": "number",
+          "required": false,
+          "description": "Atrito da inercia, entre 0 e 1."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Elementos React renderizados dentro do componente."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "data"
+      ],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseDotGridBackground"
     },
     {
       "name": "ArchbaseDrawerContent",
@@ -7745,6 +8487,77 @@
         "editor"
       ],
       "canonicalUrl": "packages/components/src/editors/ArchbaseEdit"
+    },
+    {
+      "name": "ArchbaseElectroBorder",
+      "description": "Cor da borda e do halo.",
+      "sourcePath": "packages/effects/src/elements/ArchbaseElectroBorder",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "required": false,
+          "description": "Cor da borda e do halo."
+        },
+        {
+          "name": "borderWidth",
+          "type": "number",
+          "required": false,
+          "description": "Espessura da borda, em pixels."
+        },
+        {
+          "name": "distortion",
+          "type": "number",
+          "required": false,
+          "description": "Intensidade da distorcao. Zero deixa a borda reta."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "required": false,
+          "description": "Multiplicador de velocidade da animacao."
+        },
+        {
+          "name": "radius",
+          "type": "number | string",
+          "required": false,
+          "description": "Define radius. (number | string)"
+        },
+        {
+          "name": "glow",
+          "type": "boolean",
+          "required": false,
+          "description": "Halo externo."
+        },
+        {
+          "name": "glowBlur",
+          "type": "number",
+          "required": false,
+          "description": "Define glow blur. (number)"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/elements/ArchbaseElectroBorder"
     },
     {
       "name": "ArchbaseError",
@@ -9566,8 +10379,179 @@
       "canonicalUrl": "packages/core/src/context/ArchbaseGlobalProvider"
     },
     {
+      "name": "ArchbaseGlowingCard",
+      "description": "Raio do brilho que acompanha o ponteiro, em pixels.",
+      "sourcePath": "packages/components/src/display/ArchbaseGlowingCards",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "glowColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor do brilho deste cartao."
+        },
+        {
+          "name": "hoverEffect",
+          "type": "boolean",
+          "required": false,
+          "description": "Eleva o cartao ao passar o ponteiro."
+        },
+        {
+          "name": "onClick",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback acionado quando click. (() => void)"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/display/ArchbaseGlowingCards"
+    },
+    {
+      "name": "ArchbaseGlowingCards",
+      "description": "Raio do brilho que acompanha o ponteiro, em pixels.",
+      "sourcePath": "packages/components/src/display/ArchbaseGlowingCards",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "glowRadius",
+          "type": "number",
+          "required": false,
+          "description": "Raio do brilho que acompanha o ponteiro, em pixels."
+        },
+        {
+          "name": "glowOpacity",
+          "type": "number",
+          "required": false,
+          "description": "Opacidade do brilho, entre 0 e 1."
+        },
+        {
+          "name": "gap",
+          "type": "number | string",
+          "required": false,
+          "description": "Define gap. (number | string)"
+        },
+        {
+          "name": "columns",
+          "type": "number",
+          "required": false,
+          "description": "Colunas fixas. Ausente, ajusta ao espaco disponivel."
+        },
+        {
+          "name": "minCardWidth",
+          "type": "number",
+          "required": false,
+          "description": "Largura minima do cartao quando as colunas sao automaticas."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/display/ArchbaseGlowingCards"
+    },
+    {
+      "name": "ArchbaseGooeyBlobs",
+      "description": "Cores das bolhas. A quantidade de bolhas segue a quantidade de cores.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseGooeyBlobs",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "colors",
+          "type": "string[]",
+          "required": false,
+          "description": "Cores das bolhas. A quantidade de bolhas segue a quantidade de cores."
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "required": false,
+          "description": "Diametro base, em pixels. Cada bolha varia em torno dele."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "description": "Duracao do ciclo mais lento, em segundos."
+        },
+        {
+          "name": "gooeyness",
+          "type": "number",
+          "required": false,
+          "description": "Intensidade da fusao. Valores altos derretem as bolhas umas nas outras;\nzero as deixa separadas."
+        },
+        {
+          "name": "blur",
+          "type": "number",
+          "required": false,
+          "description": "Desfoque aplicado antes da fusao."
+        },
+        {
+          "name": "opacity",
+          "type": "number",
+          "required": false,
+          "description": "Define opacity. (number)"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseGooeyBlobs"
+    },
+    {
       "name": "ArchbaseGridRowActions",
-      "description": "ArchbaseGridRowActions — componente de visualização de dados focado em grid row actions.",
+      "description": "As três ações de linha carregam a capacidade padrão que as governa.\n<p>Ver, editar e excluir são as mesmas capacidades em toda tela — `view`, `edit` e `delete`, as\nque o {@code useArchbaseCrudSecurity} registra no catálogo. Marcá-las aqui faz o realce do\ninspetor de capacidades acender em qualquer grade, sem que nenhuma tela precise mudar; marcar à\nmão em cada uma seria o mesmo trabalho repetido dezenas de vezes, e esquecido em algumas.\n<p>A marcação é <b>inerte</b>: não protege nada e não altera o comportamento. Quem decide se o\nbotão aparece continua sendo quem passa (ou não) o `onEditRow` correspondente.",
       "sourcePath": "packages/components/src/datagrid/main/grid-row-actions.tsx",
       "exportsFrom": "@archbase/components",
       "props": [
@@ -12663,6 +13647,118 @@
       "canonicalUrl": "packages/components/src/editors/ArchbaseLookupSelect"
     },
     {
+      "name": "ArchbaseMagicLoader",
+      "description": "Lado do canvas, em pixels.",
+      "sourcePath": "packages/effects/src/loaders/ArchbaseMagicLoader",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "size",
+          "type": "number",
+          "required": false,
+          "description": "Lado do canvas, em pixels."
+        },
+        {
+          "name": "particleCount",
+          "type": "number",
+          "required": false,
+          "description": "Particulas emitidas por quadro."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "required": false,
+          "description": "Multiplicador de velocidade."
+        },
+        {
+          "name": "hueRange",
+          "type": "[number, number]",
+          "required": false,
+          "description": "Faixa de matiz percorrida, em graus."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Nome acessivel do indicador. Sempre anunciado por leitores de tela; use\n`showLabel` para exibi-lo tambem em tela."
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "required": false,
+          "description": "Exibe o rotulo abaixo da animacao.\nVale considerar ligar: \"Carregando relatorio\" informa **o que** esta\nacontecendo, e isso serve a qualquer usuario, nao so a quem usa leitor de\ntela. Fica desligado por padrao para nao alterar layouts existentes."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/loaders/ArchbaseMagicLoader"
+    },
+    {
+      "name": "ArchbaseMagnifyDock",
+      "description": "Icone do item.",
+      "sourcePath": "packages/components/src/navigation/ArchbaseMagnifyDock",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "items",
+          "type": "ArchbaseMagnifyDockItem[]",
+          "required": true,
+          "description": "Array com os dados/itens exibidos pela lista."
+        },
+        {
+          "name": "baseSize",
+          "type": "number",
+          "required": false,
+          "description": "Tamanho do item em repouso, em pixels."
+        },
+        {
+          "name": "magnification",
+          "type": "number",
+          "required": false,
+          "description": "Tamanho maximo sob o ponteiro."
+        },
+        {
+          "name": "distance",
+          "type": "number",
+          "required": false,
+          "description": "Alcance da magnificacao, em pixels."
+        },
+        {
+          "name": "spring",
+          "type": "{ mass: number; stiffness: number; damping: number }",
+          "required": false,
+          "description": "Define spring. ({ mass: number; stiffness: number; damping: number })"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "'aria-label'",
+          "type": "string",
+          "required": false,
+          "description": "Define 'aria label'. (string)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/navigation/ArchbaseMagnifyDock"
+    },
+    {
       "name": "ArchbaseMantineSidebar",
       "description": "ArchbaseMantineSidebar - Componente de sidebar moderno baseado em Mantine\nEste componente substitui o ArchbaseAdvancedSidebar (baseado em react-pro-sidebar)\noferecendo 3 variantes de design:\n- **standard**: Menu completo com accordion, nested menus, search integrado (Notion/Slack style)\n- **minimal**: Icon-only com tooltips e menus flutuantes (VSCode/Outlook style)\n- **rail**: Double panel com coluna de grupos e menu detalhado (Discord/Supabase style)\n@example\n```tsx\n// Variante Standard (padrão)\n<ArchbaseMantineSidebar\n  navigationData={navigationData}\n  variant=\"standard\"\n  showSearch\n  header={<Logo />}\n  footer={<UserProfile />}\n/>\n// Variante Minimal\n<ArchbaseMantineSidebar\n  navigationData={navigationData}\n  variant=\"minimal\"\n  width={60}\n/>\n// Variante Rail (similar ao ArchbaseAdvancedSidebar)\n<ArchbaseMantineSidebar\n  navigationData={navigationData}\n  variant=\"rail\"\n  groupColumnWidth={80}\n  showGroupLabels\n/>\n```",
       "sourcePath": "packages/admin/src/sidebar/ArchbaseMantineSidebar",
@@ -12955,6 +14051,62 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/components/src/display/ArchbaseMarquee"
+    },
+    {
+      "name": "ArchbaseMaskedDateEdit",
+      "description": "ArchbaseMaskedDateEdit — data com campos mascarados separados (dia / mês / ano) e calendário,\nintegrada ao DataSource (v1/v2). Wrapper sobre o `MaskedDateInput` do @mantine/dates (9.8+).\nAlternativa ao ArchbaseDatePickerEdit (input único com react-imask), que continua disponível:\neste não expõe um `<input>` único, então não tem `innerRef`, `placeholderChar` nem `dateParser`.\n@status beta",
+      "sourcePath": "packages/components/src/editors/ArchbaseMaskedDateEdit",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde será atribuído o valor (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo da fonte de dados. Lê `Date` ou string ISO."
+        },
+        {
+          "name": "valueType",
+          "type": "ArchbaseDateFieldValueType",
+          "required": false,
+          "description": "Formato gravado no DataSource @default 'string' (`YYYY-MM-DD`)",
+          "default": "'string' (`YYYY-MM-DD`)"
+        },
+        {
+          "name": "value",
+          "type": "Date | string | null",
+          "required": false,
+          "description": "Valor controlado (standalone): `Date` ou `YYYY-MM-DD`"
+        },
+        {
+          "name": "defaultValue",
+          "type": "Date | string | null",
+          "required": false,
+          "description": "Valor inicial (standalone)"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Mensagem de erro"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: Date | string | null) => void",
+          "required": false,
+          "description": "Chamado quando a data fica completa ou é limpa, já no formato de `valueType`"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseMaskedDateEdit"
     },
     {
       "name": "ArchbaseMaskEdit",
@@ -13442,7 +14594,7 @@
     },
     {
       "name": "ArchbaseMentionInput",
-      "description": "ArchbaseMentionInput — input com suporte a mentions (@user, #tag, etc.) integrado ao DataSource (v1/v2).\nWrapper sobre react-mentions com tema Mantine e validacao.\n@status stable",
+      "description": "ArchbaseMentionInput — input com suporte a mentions (@user, #tag, etc.) integrado ao DataSource (v1/v2).\nWrapper sobre o `Mentions` do @mantine/core (9.8+) com validacao.\nAte a 4.13 era construido sobre react-mentions. A troca preserva o contrato publico:\n- o markup padrao continua `[__display__](__id__)` (SEM o gatilho). O padrao do Mantine e\n  `@[__display__](__id__)`; adota-lo silenciosamente faria as mencoes ja gravadas deixarem de ser\n  reconhecidas;\n- `data` como funcao continua aceitando a assinatura de callback do react-mentions\n  `(search, callback) => void`, alem da forma do Mantine que retorna array/Promise;\n- `onChangeValue(value, event)` continua recebendo `event.target.value`.\n@status stable",
       "sourcePath": "packages/components/src/editors/ArchbaseMentionInput",
       "exportsFrom": "@archbase/components",
       "props": [
@@ -14330,6 +15482,71 @@
       "canonicalUrl": "packages/admin/src/ArchbaseNavigation.context"
     },
     {
+      "name": "ArchbaseNebulaFlow",
+      "description": "Tres cores das camadas de gas. Menos de tres completa com o padrao.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseNebulaFlow",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "colors",
+          "type": "[string, string, string] | string[]",
+          "required": false,
+          "description": "Tres cores das camadas de gas. Menos de tres completa com o padrao."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "required": false,
+          "description": "Define speed. (number)"
+        },
+        {
+          "name": "scale",
+          "type": "number",
+          "required": false,
+          "description": "Define scale. (number)"
+        },
+        {
+          "name": "density",
+          "type": "number",
+          "required": false,
+          "description": "Densidade dos pontos brilhantes."
+        },
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "description": "Reage ao ponteiro sobre o elemento."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "fallback",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Renderizado quando o navegador nao tem WebGL."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseNebulaFlow"
+    },
+    {
       "name": "ArchbaseNetworkMonitor",
       "description": "ArchbaseNetworkMonitor — monitor de requisições de rede para desenvolvimento.\n@status stable",
       "sourcePath": "packages/tools/src/dev-utils/ArchbaseNetworkMonitor",
@@ -14359,6 +15576,77 @@
         "devtools"
       ],
       "canonicalUrl": "packages/tools/src/dev-utils/ArchbaseNetworkMonitor"
+    },
+    {
+      "name": "ArchbaseNeuralLink",
+      "description": "Quantidade de nos. O custo cresce ao quadrado — veja a nota abaixo.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseNeuralLink",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "nodeColor",
+          "type": "string",
+          "required": false,
+          "description": "Define node color. (string)"
+        },
+        {
+          "name": "lineColor",
+          "type": "string",
+          "required": false,
+          "description": "Define line color. (string)"
+        },
+        {
+          "name": "packetColor",
+          "type": "string",
+          "required": false,
+          "description": "Define packet color. (string)"
+        },
+        {
+          "name": "nodeCount",
+          "type": "number",
+          "required": false,
+          "description": "Quantidade de nos. O custo cresce ao quadrado — veja a nota abaixo."
+        },
+        {
+          "name": "maxDistance",
+          "type": "number",
+          "required": false,
+          "description": "Distancia maxima para ligar dois nos, em pixels."
+        },
+        {
+          "name": "packetInterval",
+          "type": "number",
+          "required": false,
+          "description": "Intervalo medio entre pacotes, em milissegundos. Zero desliga."
+        },
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "description": "Nos sao atraidos pelo ponteiro."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Elementos React renderizados dentro do componente."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseNeuralLink"
     },
     {
       "name": "ArchbaseNotificationCenter",
@@ -15653,6 +16941,55 @@
       "canonicalUrl": "packages/tools/src/performance/ArchbasePerformanceMonitor"
     },
     {
+      "name": "ArchbasePhoneInput",
+      "description": "ArchbasePhoneInput — telefone internacional (seletor de país, detecção e máscara) integrado ao\nDataSource (v1/v2). Wrapper sobre o `PhoneInput` do @mantine/core (9.8+).\nO valor gravado é o número em formato E.164 cru: `+5511987654321` (com sufixo `x1234` quando\n`withExtension`). Para telefone brasileiro com máscara fixa e valor formatado, continue usando o\nArchbaseMaskEdit com `ArchbaseMaskPattern.PHONE`.\n@status beta",
+      "sourcePath": "packages/components/src/editors/ArchbasePhoneInput",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde será atribuído o valor (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo da fonte de dados"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Valor controlado (standalone), E.164: `+5511987654321`"
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Valor inicial (standalone)"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Mensagem de erro"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: string, details: PhoneInputChangeDetails) => void",
+          "required": false,
+          "description": "Chamado a cada alteração com o valor E.164 e os detalhes do Mantine (país, valor formatado)"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbasePhoneInput"
+    },
+    {
       "name": "ArchbasePhotoAlbum",
       "description": "Título da foto",
       "sourcePath": "packages/components/src/display/ArchbasePhotoAlbum",
@@ -15773,7 +17110,7 @@
     },
     {
       "name": "ArchbaseProtectedComponent",
-      "description": "ArchbaseProtectedComponent — componente de segurança focado em protected component.",
+      "description": "Devolve os filhos carregando a marcação da capacidade que os governa.\n<p><b>Por que clonar em vez de envolver.</b> Este componente renderiza um fragmento de propósito:\nenvolver o filho numa `div` mudaria o layout de quem já o usa — um botão dentro de um `Group` do\nMantine deixaria de ser filho direto e perderia o espaçamento. Clonar acrescenta um atributo ao\nelemento que já existe, sem tocar na árvore.\n<p>O atributo é <b>inerte</b>: serve para o inspetor de capacidades saber onde desenhar o realce.\nFilho que não repasse props desconhecidas ao DOM simplesmente não é marcado, e continua\naparecendo na lista do inspetor como qualquer outra capacidade.",
       "sourcePath": "packages/security/src/ArchbaseSecurityComponents",
       "exportsFrom": "@archbase/security",
       "props": [
@@ -15806,6 +17143,24 @@
           "type": "string",
           "required": false,
           "description": "Define action description. (string)"
+        },
+        {
+          "name": "actionLabel",
+          "type": "string",
+          "required": false,
+          "description": "Rótulo curto — \"Aprovar\". Ausente significa \"use a descrição\"."
+        },
+        {
+          "name": "actionCategory",
+          "type": "string",
+          "required": false,
+          "description": "Agrupamento dentro do recurso — \"Operação\"."
+        },
+        {
+          "name": "actionRequires",
+          "type": "string[]",
+          "required": false,
+          "description": "As capacidades sem as quais este gesto não funciona — os endpoints que ele chama.\n`'view'` resolve contra o recurso da própria tela; `'tms.ordemservico:aprovar_custo'` aponta\npara outro."
         },
         {
           "name": "fallback",
@@ -15926,6 +17281,62 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/components/src/display/ArchbaseQRCode"
+    },
+    {
+      "name": "ArchbaseQuarterPickerInput",
+      "description": "ArchbaseQuarterPickerInput — seleção de trimestre (o valor é o primeiro dia do trimestre), integrada ao DataSource (v1/v2).\nWrapper sobre o `QuarterPickerInput` do @mantine/dates (9.8+), no modo de valor único.\n@status beta",
+      "sourcePath": "packages/components/src/editors/ArchbaseQuarterPickerInput",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde será atribuído o valor (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo da fonte de dados. Lê `Date` ou string ISO."
+        },
+        {
+          "name": "valueType",
+          "type": "ArchbaseDateFieldValueType",
+          "required": false,
+          "description": "Formato gravado no DataSource @default 'string' (`YYYY-MM-DD`)",
+          "default": "'string' (`YYYY-MM-DD`)"
+        },
+        {
+          "name": "value",
+          "type": "Date | string | null",
+          "required": false,
+          "description": "Valor controlado (standalone): `Date` ou `YYYY-MM-DD`"
+        },
+        {
+          "name": "defaultValue",
+          "type": "Date | string | null",
+          "required": false,
+          "description": "Valor inicial (standalone)"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Mensagem de erro"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: Date | string | null) => void",
+          "required": false,
+          "description": "Chamado ao escolher ou limpar, já no formato de `valueType`"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseQuarterPickerInput"
     },
     {
       "name": "ArchbaseQueryBuilder",
@@ -16346,6 +17757,83 @@
       "canonicalUrl": "packages/data/src/datasource/ArchbaseRemoteFilterDataSource"
     },
     {
+      "name": "ArchbaseReorderList",
+      "description": "Itens na ordem corrente. Componente controlado.",
+      "sourcePath": "packages/components/src/list/ArchbaseReorderList",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "items",
+          "type": "T[]",
+          "required": true,
+          "description": "Itens na ordem corrente. Componente controlado."
+        },
+        {
+          "name": "getItemId",
+          "type": "(item: T) => string | number",
+          "required": true,
+          "description": "Identidade estavel do item."
+        },
+        {
+          "name": "onReorder",
+          "type": "(items: T[]) => void",
+          "required": true,
+          "description": "Nova ordem. Sem isto o componente nao teria como refletir o arrasto."
+        },
+        {
+          "name": "renderItem",
+          "type": "(item: T, estado: { arrastando: boolean; indice: number }) => ReactNode",
+          "required": false,
+          "description": "Conteudo do item. Ausente, usa `getItemLabel`."
+        },
+        {
+          "name": "getItemLabel",
+          "type": "(item: T) => string",
+          "required": false,
+          "description": "Rotulo textual, usado no conteudo padrao e nos anuncios de acessibilidade."
+        },
+        {
+          "name": "getItemDescription",
+          "type": "(item: T) => string | undefined",
+          "required": false,
+          "description": "Descricao secundaria no conteudo padrao."
+        },
+        {
+          "name": "onRemove",
+          "type": "(item: T) => void",
+          "required": false,
+          "description": "Callback acionado quando remove. ((item: T) => void)"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Bloqueia interações quando verdadeiro."
+        },
+        {
+          "name": "gap",
+          "type": "number",
+          "required": false,
+          "description": "Define gap. (number)"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "labels",
+          "type": "{\n    dragHandle?: string;\n    remove?: string;\n    /** `{item}`, `{de}` e `{para}` sao substituidos. */\n    moved?: string;\n    instructions?: string;\n  }",
+          "required": false,
+          "description": "Define labels. ({\n    dragHandle?: string;\n    remove?: string;\n    /** `{item}`, `{de}` e `{para}` sao substituidos. */\n    moved?: string;\n    instructions?: string;\n  })"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/list/ArchbaseReorderList"
+    },
+    {
       "name": "ArchbaseResetPassword",
       "description": "Validação customizada da nova senha. Deve retornar a mensagem de erro ou string vazia",
       "sourcePath": "packages/security/src/ArchbaseResetPassword.tsx",
@@ -16615,7 +18103,7 @@
     },
     {
       "name": "ArchbaseResourceService",
-      "description": "ArchbaseResourceService — componente de segurança focado em resource service.",
+      "description": "Tudo de que uma capacidade depende, direta e indiretamente.\n<p>Sob demanda, e não dentro do catálogo: o fecho de centenas de capacidades numa resposta só\ncustaria mais do que a informação vale. As dependências **diretas** já vêm em\n`PermissionWithTypesDto.requires`.\n<p>Devolve `null` quando o backend não tem o endpoint (archbase-security anterior a 3.4), em vez\nde estourar. Quem chama distingue \"não depende de nada\" de \"não deu para saber\" — se a diferença\nfor engolida, a tela deixa de oferecer as dependências e ninguém entende por quê.",
       "sourcePath": "packages/security/src/ArchbaseResourceService.ts",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -17251,7 +18739,7 @@
     },
     {
       "name": "ArchbaseSecureActionButton",
-      "description": "ArchbaseSecureActionButton — componente de segurança focado em secure action button.",
+      "description": "Devolve os filhos carregando a marcação da capacidade que os governa.\n<p><b>Por que clonar em vez de envolver.</b> Este componente renderiza um fragmento de propósito:\nenvolver o filho numa `div` mudaria o layout de quem já o usa — um botão dentro de um `Group` do\nMantine deixaria de ser filho direto e perderia o espaçamento. Clonar acrescenta um atributo ao\nelemento que já existe, sem tocar na árvore.\n<p>O atributo é <b>inerte</b>: serve para o inspetor de capacidades saber onde desenhar o realce.\nFilho que não repasse props desconhecidas ao DOM simplesmente não é marcado, e continua\naparecendo na lista do inspetor como qualquer outra capacidade.",
       "sourcePath": "packages/security/src/ArchbaseSecurityComponents",
       "exportsFrom": "@archbase/security",
       "props": [
@@ -17324,7 +18812,7 @@
     },
     {
       "name": "ArchbaseSecureFormField",
-      "description": "ArchbaseSecureFormField — componente de segurança focado em secure form field.",
+      "description": "Devolve os filhos carregando a marcação da capacidade que os governa.\n<p><b>Por que clonar em vez de envolver.</b> Este componente renderiza um fragmento de propósito:\nenvolver o filho numa `div` mudaria o layout de quem já o usa — um botão dentro de um `Group` do\nMantine deixaria de ser filho direto e perderia o espaçamento. Clonar acrescenta um atributo ao\nelemento que já existe, sem tocar na árvore.\n<p>O atributo é <b>inerte</b>: serve para o inspetor de capacidades saber onde desenhar o realce.\nFilho que não repasse props desconhecidas ao DOM simplesmente não é marcado, e continua\naparecendo na lista do inspetor como qualquer outra capacidade.",
       "sourcePath": "packages/security/src/ArchbaseSecurityComponents",
       "exportsFrom": "@archbase/security",
       "props": [
@@ -17378,6 +18866,19 @@
       "canonicalUrl": "packages/security/src/ArchbaseSecurityComponents"
     },
     {
+      "name": "ArchbaseSecurityContext",
+      "description": "ArchbaseSecurityProvider — provider de segurança com autenticação, tokens e permissões.\n@status stable",
+      "sourcePath": "packages/security/src/ArchbaseSecurityContext",
+      "exportsFrom": "@archbase/security",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider",
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityContext"
+    },
+    {
       "name": "ArchbaseSecurityDiagnosticsService",
       "description": "Leitura do diagnóstico de acesso — `/api/v1/security/diagnostics/*`.\n<p><b>Por que não estende `ArchbaseRemoteApiService`.</b> A classe base modela um CRUD de\nentidade: exige `getId`, `isNewRecord` e `transform`. Aqui não há entidade — há três\nperguntas (o retrato do tenant, o que uma pessoa pode, e se ela pode uma coisa). Implementar\naqueles métodos com retorno inventado só para herdar seria mentir sobre o que este serviço é.\nO que importava da base — o cliente HTTP injetado e os cabeçalhos de tenant — está preservado.\n<p>Todos os endpoints são <b>somente leitura</b> e exigem, no servidor,\n`archbase.security.diagnostics.enabled=true` e usuário administrador.",
       "sourcePath": "packages/security/src/ArchbaseSecurityDiagnosticsService.ts",
@@ -17402,8 +18903,39 @@
       "canonicalUrl": "packages/security-ui/src/securityDiagnostics/ArchbaseSecurityDiagnosticsView.tsx"
     },
     {
+      "name": "ArchbaseSecurityInspector",
+      "description": "ArchbaseSecurityInspector — mostra, sobre a aplicação rodando, quais capacidades cada tela\ndeclara e quais o usuário alcança.\n@status stable",
+      "sourcePath": "packages/security/src/ArchbaseSecurityInspector.tsx",
+      "exportsFrom": "@archbase/security",
+      "props": [
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Se o inspetor pode ser aberto.\n<p>Ausente significa \"apenas para administradores\", que é o padrão deliberado: o inspetor\nexiste para descobrir o nome da capacidade que se vai conceder, e quem concede é quem\nadministra. Passar `true` o libera para qualquer usuário — útil em desenvolvimento, e uma\ndecisão consciente em produção, já que ele revela a malha de capacidades da aplicação."
+        },
+        {
+          "name": "atalho",
+          "type": "{ ctrl?: boolean; alt?: boolean; shift?: boolean; tecla: string }",
+          "required": false,
+          "description": "O atalho que abre e fecha. Padrão: `Ctrl+Alt+A`.\n<p>`Ctrl+Alt` em vez de `Ctrl+Shift` porque a segunda combinação é reivindicada pelos\nnavegadores em quase toda letra útil."
+        },
+        {
+          "name": "defaultOpened",
+          "type": "boolean",
+          "required": false,
+          "description": "Começa aberto. Útil para quem prefere um botão próprio em vez do atalho."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityInspector.tsx"
+    },
+    {
       "name": "ArchbaseSecurityManager",
-      "description": "Retorna todas as permissões atuais",
+      "description": "O que uma tela pode declarar sobre uma capacidade, além do nome e da descrição.\n<p>Tudo opcional, e omitir tudo é o comportamento de sempre. Cada campo tem uma regra própria de\nsemeadura no servidor — ver {@link ISecurityManager#registerAction}.",
       "sourcePath": "packages/security/src/ArchbaseSecurityManager.tsx",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -18087,6 +19619,83 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseSimpleFilter"
+    },
+    {
+      "name": "ArchbaseSlideToConfirm",
+      "description": "Texto exibido antes da confirmacao.",
+      "sourcePath": "packages/components/src/buttons/ArchbaseSlideToConfirm",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Texto exibido antes da confirmacao."
+        },
+        {
+          "name": "successLabel",
+          "type": "string",
+          "required": false,
+          "description": "Texto exibido apos confirmar."
+        },
+        {
+          "name": "onConfirm",
+          "type": "() => Promise<void> | void",
+          "required": true,
+          "description": "Executada ao completar o gesto. Rejeitar volta o controle ao inicio."
+        },
+        {
+          "name": "onError",
+          "type": "(erro: unknown) => void",
+          "required": false,
+          "description": "Chamada quando `onConfirm` rejeita."
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "required": false,
+          "description": "Define width. (number)"
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "required": false,
+          "description": "Define height. (number)"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Bloqueia interações quando verdadeiro."
+        },
+        {
+          "name": "resetAfter",
+          "type": "number",
+          "required": false,
+          "description": "Volta ao estado inicial apos confirmar, em milissegundos. Zero mantem."
+        },
+        {
+          "name": "threshold",
+          "type": "number",
+          "required": false,
+          "description": "Fracao do curso necessaria para confirmar, entre 0 e 1."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "'aria-label'",
+          "type": "string",
+          "required": false,
+          "description": "Define 'aria label'. (string)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/buttons/ArchbaseSlideToConfirm"
     },
     {
       "name": "ArchbaseSmartActionButton",
@@ -19323,6 +20932,41 @@
       "canonicalUrl": "packages/ssr/src/providers/ArchbaseSSRProvider"
     },
     {
+      "name": "ArchbaseStardustButton",
+      "description": "Paleta das particulas.",
+      "sourcePath": "packages/effects/src/elements/ArchbaseStardustButton",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "colors",
+          "type": "string[]",
+          "required": false,
+          "description": "Paleta das particulas."
+        },
+        {
+          "name": "particleCount",
+          "type": "number",
+          "required": false,
+          "description": "Particulas em repouso. Ao passar o ponteiro, triplica."
+        },
+        {
+          "name": "particleSpeed",
+          "type": "number",
+          "required": false,
+          "description": "Define particle speed. (number)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/elements/ArchbaseStardustButton"
+    },
+    {
       "name": "ArchbaseStatefulRoutes",
       "description": "Lista de rotas a serem renderizadas com estado persistente",
       "sourcePath": "packages/admin/src/ArchbaseStatefulRoutes",
@@ -19466,6 +21110,101 @@
         "form"
       ],
       "canonicalUrl": "packages/components/src/forms/ArchbaseStepper"
+    },
+    {
+      "name": "ArchbaseStickyTopBar",
+      "description": "Visibilidade controlada. Ignorada quando `showOnScroll` esta ligado.",
+      "sourcePath": "packages/components/src/feedback/ArchbaseStickyTopBar",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "visible",
+          "type": "boolean",
+          "required": false,
+          "description": "Visibilidade controlada. Ignorada quando `showOnScroll` esta ligado."
+        },
+        {
+          "name": "showOnScroll",
+          "type": "boolean",
+          "required": false,
+          "description": "Aparece depois de rolar; util para barra de acao que so importa adiante."
+        },
+        {
+          "name": "scrollThreshold",
+          "type": "number",
+          "required": false,
+          "description": "Rolagem, em pixels, a partir da qual a barra aparece."
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "required": false,
+          "description": "Botao de fechar."
+        },
+        {
+          "name": "onDismiss",
+          "type": "() => void",
+          "required": false,
+          "description": "Callback acionado quando dismiss. (() => void)"
+        },
+        {
+          "name": "dismissStorageKey",
+          "type": "string",
+          "required": false,
+          "description": "Chave de persistencia da dispensa. Definida, a barra nao volta a aparecer\npara quem ja a fechou — mensagem de sistema que reaparece a cada\nnavegacao vira ruido e ensina o usuario a ignorar o lugar todo."
+        },
+        {
+          "name": "color",
+          "type": "MantineColor",
+          "required": false,
+          "description": "Define color. (MantineColor)"
+        },
+        {
+          "name": "sticky",
+          "type": "boolean",
+          "required": false,
+          "description": "Fixa no topo da janela. Desligado, acompanha o fluxo da pagina."
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "required": false,
+          "description": "Altura reservada, em pixels."
+        },
+        {
+          "name": "zIndex",
+          "type": "number",
+          "required": false,
+          "description": "Define z index. (number)"
+        },
+        {
+          "name": "role",
+          "type": "'status' | 'region' | 'alert'",
+          "required": false,
+          "description": "Papel semantico. `status` para informacao passageira; `region` para\nconteudo que o usuario pode querer reencontrar."
+        },
+        {
+          "name": "'aria-label'",
+          "type": "string",
+          "required": false,
+          "description": "Define 'aria label'. (string)"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/components/src/feedback/ArchbaseStickyTopBar"
     },
     {
       "name": "ArchbaseSwitch",
@@ -21989,6 +23728,71 @@
       "canonicalUrl": "packages/core/src/validator/ArchbaseValidator"
     },
     {
+      "name": "ArchbaseVectorFlow",
+      "description": "Cores sorteadas por particula.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseVectorFlow",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "colors",
+          "type": "string[]",
+          "required": false,
+          "description": "Cores sorteadas por particula."
+        },
+        {
+          "name": "particleCount",
+          "type": "number",
+          "required": false,
+          "description": "Define particle count. (number)"
+        },
+        {
+          "name": "particleSpeed",
+          "type": "number",
+          "required": false,
+          "description": "Define particle speed. (number)"
+        },
+        {
+          "name": "particleSize",
+          "type": "number",
+          "required": false,
+          "description": "Define particle size. (number)"
+        },
+        {
+          "name": "trailFade",
+          "type": "number",
+          "required": false,
+          "description": "Opacidade do rastro: menor deixa cauda mais longa."
+        },
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "required": false,
+          "description": "Cor do fundo sobre o qual o rastro se dissolve."
+        },
+        {
+          "name": "seed",
+          "type": "number",
+          "required": false,
+          "description": "Semente do campo. Mesma semente, mesmo desenho."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseVectorFlow"
+    },
+    {
       "name": "ArchbaseVideoPlayer",
       "description": "Formata tempo em segundos para MM:SS ou HH:MM:SS",
       "sourcePath": "packages/components/src/video/ArchbaseVideoPlayer",
@@ -22283,6 +24087,115 @@
       "canonicalUrl": "packages/components/src/charts/vis-timeline/ArchbaseVisTimeline"
     },
     {
+      "name": "ArchbaseWaveBackground",
+      "description": "Tres cores da faixa. Menos de tres completa com o padrao.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseWaveBackground",
+      "exportsFrom": "@archbase/effects",
+      "props": [
+        {
+          "name": "colors",
+          "type": "string[]",
+          "required": false,
+          "description": "Tres cores da faixa. Menos de tres completa com o padrao."
+        },
+        {
+          "name": "amplitude",
+          "type": "number",
+          "required": false,
+          "description": "Intensidade da dobra."
+        },
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "description": "Define interactive. (boolean)"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Classe CSS adicionada ao wrapper principal."
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "required": false,
+          "description": "Define style. (CSSProperties)"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Elementos React renderizados dentro do componente."
+        },
+        {
+          "name": "fallback",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Renderizado quando o navegador nao tem WebGL."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseWaveBackground"
+    },
+    {
+      "name": "ArchbaseWeekPickerInput",
+      "description": "ArchbaseWeekPickerInput — seleção de semana (clicar num dia seleciona a semana inteira; o valor é o primeiro dia da semana conforme `firstDayOfWeek`), integrada ao DataSource (v1/v2).\nWrapper sobre o `WeekPickerInput` do @mantine/dates (9.8+), no modo de valor único.\n@status beta",
+      "sourcePath": "packages/components/src/editors/ArchbaseWeekPickerInput",
+      "exportsFrom": "@archbase/components",
+      "props": [
+        {
+          "name": "dataSource",
+          "type": "IArchbaseDataSourceBase<T>",
+          "required": false,
+          "description": "Fonte de dados onde será atribuído o valor (V1 ou V2)"
+        },
+        {
+          "name": "dataField",
+          "type": "string",
+          "required": false,
+          "description": "Campo da fonte de dados. Lê `Date` ou string ISO."
+        },
+        {
+          "name": "valueType",
+          "type": "ArchbaseDateFieldValueType",
+          "required": false,
+          "description": "Formato gravado no DataSource @default 'string' (`YYYY-MM-DD`)",
+          "default": "'string' (`YYYY-MM-DD`)"
+        },
+        {
+          "name": "value",
+          "type": "Date | string | null",
+          "required": false,
+          "description": "Valor controlado (standalone): `Date` ou `YYYY-MM-DD`"
+        },
+        {
+          "name": "defaultValue",
+          "type": "Date | string | null",
+          "required": false,
+          "description": "Valor inicial (standalone)"
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Mensagem de erro"
+        },
+        {
+          "name": "onChangeValue",
+          "type": "(value: Date | string | null) => void",
+          "required": false,
+          "description": "Chamado ao escolher ou limpar, já no formato de `valueType`"
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "editor"
+      ],
+      "canonicalUrl": "packages/components/src/editors/ArchbaseWeekPickerInput"
+    },
+    {
       "name": "ArchbaseXmlViewer",
       "description": "DataSource to read the XML string value from",
       "sourcePath": "packages/components/src/viewers/ArchbaseXmlViewer",
@@ -22381,6 +24294,18 @@
       "canonicalUrl": "packages/components/src/viewers/ArchbaseXmlViewer"
     },
     {
+      "name": "ATRIBUTO_DE_ACAO",
+      "description": "A marcação que liga um elemento da tela à capacidade que o governa.\n<p><b>Por que um atributo, e não um componente.</b> O inspetor precisa saber qual botão pertence a\nqual ação, e nada no DOM diz isso: a proteção mora em `disabled={!can('aprovar_custo')}`, dentro\ndo JSX, e desaparece na renderização. Envolver cada controle num componente de guarda resolveria,\nao preço de reescrever telas inteiras. Um atributo é uma linha por controle, não muda a árvore\nrenderizada e não interfere em estilo, layout ou acessibilidade.\n<p><b>É opcional e não protege nada.</b> Marcar um botão não o torna seguro, e deixar de marcar\nnão o torna inseguro — a autorização continua sendo o `can()`. O atributo serve para o realce\nsaber onde desenhar. O que não estiver marcado continua aparecendo na lista do inspetor.\n@example\n```tsx\n<Button\n  disabled={!can('aprovar_custo')}\n  {...archbaseActionProps('aprovar_custo')}\n>\n  Aprovar custo\n</Button>\n```",
+      "sourcePath": "packages/core/src/security/marcacaoDeAcao.ts",
+      "exportsFrom": "@archbase/core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/core/src/security/marcacaoDeAcao.ts"
+    },
+    {
       "name": "AttributeList",
       "description": "Peças de apresentação compartilhadas pelas três abas do diagnóstico.\n<p>Ficam aqui, e não dentro de cada painel, porque são o que garante que um cartão vindo\nde {@code additionalOverviewCards} saia idêntico a um cartão do framework. É a coerência\nvisual que faz valer a pena a aplicação entregar dado em vez de JSX.",
       "sourcePath": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx",
@@ -22398,6 +24323,16 @@
         "security"
       ],
       "canonicalUrl": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx"
+    },
+    {
+      "name": "baseLanguage",
+      "description": "Idioma base de um locale BCP 47: `pt-BR` -> `pt`.",
+      "sourcePath": "packages/analytics-core/src/meta/resolveLabel",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/resolveLabel"
     },
     {
       "name": "BinaryNode",
@@ -22431,6 +24366,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/rsql/ast/ComparisonOperator.ts"
+    },
+    {
+      "name": "bucketOffset",
+      "description": "Coercao do valor cru. A camada semantica emite numeros como string; converter\naqui evita que cada componente refaca o mesmo palpite.\nNenhuma transformacao de unidade ocorre: `currency_cents` permanece inteiro em\nunidade minima ate a porta `formatter`.",
+      "sourcePath": "packages/analytics-core/src/result/normalizeResult",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/result/normalizeResult"
     },
     {
       "name": "buildAccessTokenColumns",
@@ -22619,6 +24564,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/utils/onlyText"
+    },
+    {
+      "name": "clearMetaCache",
+      "description": "Requisicoes em voo, para que varios widgets montando juntos compartilhem uma\nunica chamada de introspeccao em vez de multiplica-la.",
+      "sourcePath": "packages/analytics-core/src/meta/useAnalyticsMeta",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/useAnalyticsMeta"
     },
     {
       "name": "clientOnly",
@@ -22939,7 +24894,7 @@
     },
     {
       "name": "createDataTableRowActions",
-      "description": "createDataTableRowActions — componente de visualização de dados focado em create data table row actions.",
+      "description": "As três ações de linha carregam a capacidade padrão que as governa.\n<p>Ver, editar e excluir são as mesmas capacidades em toda tela — `view`, `edit` e `delete`, as\nque o {@code useArchbaseCrudSecurity} registra no catálogo. Marcá-las aqui faz o realce do\ninspetor de capacidades acender em qualquer grade, sem que nenhuma tela precise mudar; marcar à\nmão em cada uma seria o mesmo trabalho repetido dezenas de vezes, e esquecido em algumas.\n<p>A marcação é <b>inerte</b>: não protege nada e não altera o comportamento. Quem decide se o\nbotão aparece continua sendo quem passa (ou não) o `onEditRow` correspondente.",
       "sourcePath": "packages/components/src/datagrid/main/grid-row-actions.tsx",
       "exportsFrom": "@archbase/components",
       "props": [],
@@ -22960,6 +24915,16 @@
         "editor"
       ],
       "canonicalUrl": "packages/components/src/editors/ArchbaseMultiViewCalendar"
+    },
+    {
+      "name": "createDefaultLabeler",
+      "description": "Implementacao default da porta `labeler`. O hospedeiro pode substitui-la para\nintegrar ao i18n proprio da aplicacao. RFC de metadados, secao 6.5.",
+      "sourcePath": "packages/analytics-core/src/meta/defaultLabeler",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/defaultLabeler"
     },
     {
       "name": "createElementFromHTML",
@@ -22996,6 +24961,16 @@
       "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
     },
     {
+      "name": "createInMemorySavedQueryStore",
+      "description": "Store de referencia, em memoria. Material de exemplo e de teste — a\npersistencia de producao pertence ao produto consumidor.",
+      "sourcePath": "packages/analytics-core/src/reference/inMemorySavedQueryStore",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/reference/inMemorySavedQueryStore"
+    },
+    {
       "name": "createInternalConfig",
       "description": "eslint-disable",
       "sourcePath": "packages/security/src/oauth2/authConfig",
@@ -23016,6 +24991,18 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/rsql/ast/Node.ts"
+    },
+    {
+      "name": "createPtBrFormatter",
+      "description": "Formatador de referencia para pt-BR.\nEste arquivo e a **unica** fronteira onde a conversao de unidade minima\nacontece, e acontece porque isto e a implementacao de uma porta, nao logica de\nbiblioteca: o invariante proibe divisao no nucleo justamente para que ela\nfique concentrada aqui, visivel e substituivel.\nImplementacao de referencia — material de exemplo e de teste. A de producao\npertence ao produto consumidor.",
+      "sourcePath": "packages/analytics-core/src/reference/formatterPtBR",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "form"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/reference/formatterPtBR"
     },
     {
       "name": "createSelectorNode",
@@ -23073,6 +25060,26 @@
       "canonicalUrl": "packages/core/src/rsql/ast/Node.ts"
     },
     {
+      "name": "createVTableRenderer",
+      "description": "Modo do heatmap: escala global, por coluna, por linha, ou desligado.",
+      "sourcePath": "packages/analytics-vtable/src/VTableResult",
+      "exportsFrom": "@archbase/analytics-vtable",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-vtable/src/VTableResult"
+    },
+    {
+      "name": "criarRuidoPerlin",
+      "description": "Ruido de Perlin 2D classico.\nVive no pacote em vez de virar dependencia: sao 40 linhas, e qualquer\nbiblioteca de ruido traria consigo APIs 3D e simplex que nenhum efeito daqui\nusa. A tabela de permutacao e gerada uma vez por semente.",
+      "sourcePath": "packages/effects/src/math/perlin",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/math/perlin"
+    },
+    {
       "name": "crop",
       "description": "eslint-disable",
       "sourcePath": "packages/core/src/utils/string-utils",
@@ -23094,6 +25101,16 @@
         "data"
       ],
       "canonicalUrl": "packages/components/src/datagrid/ag-grid/archbase-data-grid-ag-formatters"
+    },
+    {
+      "name": "CURRENT_SAVED_QUERY_VERSION",
+      "description": "Consulta pre-versionada (v0): payload gravado antes de `schemaVersion`\nexistir. Consumidor 1 nao chegou a produzir nenhuma, mas a funcao de migracao\nso tem valor se existir desde a primeira release — retrofit de migracao e\nexatamente o que invalida o acervo do usuario.",
+      "sourcePath": "packages/analytics-core/src/savedQuery/migrateSavedQuery",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/savedQuery/migrateSavedQuery"
     },
     {
       "name": "CustomSelectScrollArea",
@@ -23241,6 +25258,16 @@
       "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
+      "name": "DEEP_LINK_VERSION",
+      "description": "Prefixo de versao do payload. RFC de contratos, secao 5.",
+      "sourcePath": "packages/analytics-core/src/deeplink/deepLink",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/deeplink/deepLink"
+    },
+    {
       "name": "deepFilter",
       "description": "deepFilter — componente Archbase focado em deep filter.",
       "sourcePath": "packages/core/src/utils/deepFilter",
@@ -23301,6 +25328,36 @@
       "canonicalUrl": "packages/components/src/image/ArchbaseMicrosoftAvatar"
     },
     {
+      "name": "DEFAULT_DECIMAL_PRECISION",
+      "description": "Vocabulario de metadados. RFC de contratos de transporte e portas, secao 2.",
+      "sourcePath": "packages/analytics-core/src/ports/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/ports/types"
+    },
+    {
+      "name": "DEFAULT_META_FORMAT",
+      "description": "Vocabulario de metadados. RFC de contratos de transporte e portas, secao 2.",
+      "sourcePath": "packages/analytics-core/src/ports/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/ports/types"
+    },
+    {
+      "name": "DEFAULT_STRINGS",
+      "description": "Dicionario nivel 1: strings da propria biblioteca.\nNivel 2 (rotulos de membros) vem do data model e e resolvido pela porta\n`labeler`; nivel 3 (valores de dados) pertence ao schema do produto. RFC de\nmetadados, secao 6.2.",
+      "sourcePath": "packages/analytics-core/src/strings",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/strings"
+    },
+    {
       "name": "DEFAULT_TIMELINE_OPTIONS",
       "description": "Opções padrão para a timeline",
       "sourcePath": "packages/components/src/charts/vis-timeline/utils/timelineOptions",
@@ -23311,6 +25368,16 @@
         "chart"
       ],
       "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
+    },
+    {
+      "name": "DEFAULT_VIZ",
+      "description": "Vocabulario de metadados. RFC de contratos de transporte e portas, secao 2.",
+      "sourcePath": "packages/analytics-core/src/ports/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/ports/types"
     },
     {
       "name": "defaultAGColumnProps",
@@ -23465,6 +25532,36 @@
       "canonicalUrl": "packages/security/src/ArchbaseSecurityContext"
     },
     {
+      "name": "DegradedNotice",
+      "description": "Mensagem de falha derivada exclusivamente do codigo.\nA mensagem textual do servidor nunca e interpretada nem exibida ao usuario:\no conjunto de codigos e fechado justamente para que a interface possa reagir\nsem ler texto livre.",
+      "sourcePath": "packages/analytics-mantine/src/components/States",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/States"
+    },
+    {
+      "name": "deriveDefaultViz",
+      "description": "Membros efetivamente referenciados pela consulta, para telemetria.",
+      "sourcePath": "packages/analytics-core/src/exploration/useExploration",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/useExploration"
+    },
+    {
+      "name": "deserializeExploration",
+      "description": "Prefixo de versao do payload. RFC de contratos, secao 5.",
+      "sourcePath": "packages/analytics-core/src/deeplink/deepLink",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/deeplink/deepLink"
+    },
+    {
       "name": "deserializeFromSSR",
       "description": "Utility functions for Server-Side Rendering with Archbase React",
       "sourcePath": "packages/ssr/src/utils/ArchbaseSSRUtils",
@@ -23579,6 +25676,19 @@
       "canonicalUrl": "packages/components/src/theme-editor/utils/themeExport"
     },
     {
+      "name": "e há consumidores legítimos fora dele\n  // — os templates",
+      "description": "ArchbaseSecurityProvider — provider de segurança com autenticação, tokens e permissões.\n@status stable",
+      "sourcePath": "packages/security/src/ArchbaseSecurityContext",
+      "exportsFrom": "@archbase/security",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "template",
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityContext"
+    },
+    {
       "name": "EffectiveAccessPanel",
       "description": "Efetivo do usuário — o que a pessoa realmente pode, com a origem de cada concessão.\n<p>A coluna <b>Origem</b> é a razão de a tela existir: a consulta de autorização devolve\nsim/não, e sem saber de onde veio o acesso o diagnóstico vira tentativa e erro.",
       "sourcePath": "packages/security-ui/src/securityDiagnostics/EffectiveAccessPanel.tsx",
@@ -23620,6 +25730,26 @@
         "devtools"
       ],
       "canonicalUrl": "packages/tools/src/debug/ArchbaseDebugPanel"
+    },
+    {
+      "name": "EMPTY_EXPLORATION",
+      "description": "EMPTY_EXPLORATION — componente Archbase focado em empty exploration.",
+      "sourcePath": "packages/analytics-core/src/exploration/explorationReducer",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/explorationReducer"
+    },
+    {
+      "name": "EmptyState",
+      "description": "Mensagem de falha derivada exclusivamente do codigo.\nA mensagem textual do servidor nunca e interpretada nem exibida ao usuario:\no conjunto de codigos e fechado justamente para que a interface possa reagir\nsem ler texto livre.",
+      "sourcePath": "packages/analytics-mantine/src/components/States",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/States"
     },
     {
       "name": "enabledSsrSupport",
@@ -23691,6 +25821,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/rsql/ast/ComparisonOperator.ts"
+    },
+    {
+      "name": "ErrorState",
+      "description": "Mensagem de falha derivada exclusivamente do codigo.\nA mensagem textual do servidor nunca e interpretada nem exibida ao usuario:\no conjunto de codigos e fechado justamente para que a interface possa reagir\nsem ler texto livre.",
+      "sourcePath": "packages/analytics-mantine/src/components/States",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/States"
     },
     {
       "name": "escapeHtml",
@@ -23831,6 +25971,69 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "explorationReducer",
+      "description": "explorationReducer — componente Archbase focado em exploration reducer.",
+      "sourcePath": "packages/analytics-core/src/exploration/explorationReducer",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/explorationReducer"
+    },
+    {
+      "name": "ExportButton",
+      "description": "Resultado atual; ausente/vazio desabilita o botao.",
+      "sourcePath": "packages/analytics-mantine/src/components/ExportButton",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "result",
+          "type": "NormalizedResult | null | undefined",
+          "required": true,
+          "description": "Resultado atual; ausente/vazio desabilita o botao."
+        },
+        {
+          "name": "meta",
+          "type": "AnalyticsMeta",
+          "required": true,
+          "description": "Define meta. (AnalyticsMeta)"
+        },
+        {
+          "name": "formatter",
+          "type": "ValueFormatter",
+          "required": true,
+          "description": "Define formatter. (ValueFormatter)"
+        },
+        {
+          "name": "labeler",
+          "type": "MemberLabeler",
+          "required": false,
+          "description": "Define labeler. (MemberLabeler)"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true,
+          "description": "Define locale. (string)"
+        },
+        {
+          "name": "filenamePrefix",
+          "type": "string",
+          "required": false,
+          "description": "Prefixo do nome do arquivo. Default `analytics`."
+        },
+        {
+          "name": "labels",
+          "type": "{ export?: string; csvFormatted?: string; csvRaw?: string }",
+          "required": false,
+          "description": "Define labels. ({ export?: string; csvFormatted?: string; csvRaw?: string })"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/ExportButton"
     },
     {
       "name": "exportData",
@@ -24004,6 +26207,16 @@
       "canonicalUrl": "packages/components/src/viewers/file-preview/utils/fileTypeDetector"
     },
     {
+      "name": "fillValueFor",
+      "description": "Coercao do valor cru. A camada semantica emite numeros como string; converter\naqui evita que cada componente refaca o mesmo palpite.\nNenhuma transformacao de unidade ocorre: `currency_cents` permanece inteiro em\nunidade minima ate a porta `formatter`.",
+      "sourcePath": "packages/analytics-core/src/result/normalizeResult",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/result/normalizeResult"
+    },
+    {
       "name": "filter",
       "description": "filter — componente Archbase focado em filter.",
       "sourcePath": "packages/core/src/utils/filter",
@@ -24022,6 +26235,77 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/types/filter.ts"
+    },
+    {
+      "name": "FilterBuilder",
+      "description": "Operadores que dispensam valor.",
+      "sourcePath": "packages/analytics-mantine/src/components/FilterBuilder",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "filters",
+          "type": "QueryFilter[]",
+          "required": true,
+          "description": "Valores e controles aplicados ao filtro dos dados."
+        },
+        {
+          "name": "meta",
+          "type": "AnalyticsMeta",
+          "required": true,
+          "description": "Define meta. (AnalyticsMeta)"
+        },
+        {
+          "name": "labeler",
+          "type": "MemberLabeler",
+          "required": true,
+          "description": "Define labeler. (MemberLabeler)"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true,
+          "description": "Define locale. (string)"
+        },
+        {
+          "name": "onAdd",
+          "type": "(filter: QueryFilter) => void",
+          "required": true,
+          "description": "Callback acionado quando add. ((filter: QueryFilter) => void)"
+        },
+        {
+          "name": "onUpdate",
+          "type": "(index: number, filter: QueryFilter) => void",
+          "required": true,
+          "description": "Callback acionado quando update. ((index: number, filter: QueryFilter) => void)"
+        },
+        {
+          "name": "onRemove",
+          "type": "(index: number) => void",
+          "required": true,
+          "description": "Callback acionado quando remove. ((index: number) => void)"
+        },
+        {
+          "name": "onSuggestValues",
+          "type": "(member: string) => Promise<string[]>",
+          "required": false,
+          "description": "Sugestao de valores para um membro. Opcional: sem ela o campo continua\naceitando digitacao livre, apenas sem sugerir."
+        },
+        {
+          "name": "addLabel",
+          "type": "string",
+          "required": false,
+          "description": "Define add label. (string)"
+        },
+        {
+          "name": "emptyLabel",
+          "type": "string",
+          "required": false,
+          "description": "Define empty label. (string)"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/FilterBuilder"
     },
     {
       "name": "FilterField",
@@ -24547,6 +26831,16 @@
       "canonicalUrl": "packages/core/src/utils/passwordPolicy"
     },
     {
+      "name": "getArchbaseTokenRenewer",
+      "description": "Quem renova a sessão quando um pedido recebe 401.\nO cliente HTTP ({@link ArchbaseAxiosRemoteApiClient}) não conhece o autenticador: o autenticador é que usa o\ncliente. Quem sabe renovar é o `useArchbaseAuthenticationManager`, que se registra aqui ao montar. Sem\nrenovador registrado, o 401 volta como sempre voltou.\nO renovador recebe o access token que o servidor recusou e devolve o novo, ou `null` quando a sessão acabou (o\nrefresh também foi negado). Ele é responsável por fazer UMA renovação só para todos os pedidos que pedirem ao\nmesmo tempo: com sessão única, duas renovações concorrentes revogam uma à outra.",
+      "sourcePath": "packages/data/src/service/ArchbaseTokenRenewal",
+      "exportsFrom": "@archbase/data",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/data/src/service/ArchbaseTokenRenewal"
+    },
+    {
       "name": "getCellRendererByDataType",
       "description": "ArchbaseDataGridAG Cell Renderers\nAG Grid cell renderer components for various data types.",
       "sourcePath": "packages/components/src/datagrid/ag-grid/archbase-data-grid-ag-formatters",
@@ -25022,6 +27316,16 @@
       "canonicalUrl": "packages/components/src/datagrid/components/toolbar/global-search-input"
     },
     {
+      "name": "GRANULARITIES",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
       "name": "GridPagination",
       "description": "Componente de paginação para o grid",
       "sourcePath": "packages/components/src/datagrid/components/pagination/grid-pagination",
@@ -25394,6 +27698,16 @@
       "canonicalUrl": "packages/core/src/ioc/ArchbaseIOCHelper"
     },
     {
+      "name": "isAnalyticsError",
+      "description": "Falha de analytics.\nA biblioteca trata exclusivamente `code`. A mensagem textual do servidor nunca\ne interpretada: fica em `serverMessage`, exibivel apenas em desenvolvimento.\nRFC de contratos, secao 3.3.",
+      "sourcePath": "packages/analytics-core/src/client/errors",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/client/errors"
+    },
+    {
       "name": "isArchbasePasswordValid",
       "description": "Critérios que definem o que é uma senha forte.\nTodos os campos são opcionais: um critério ausente (ou zero) simplesmente não é avaliado.",
       "sourcePath": "packages/core/src/utils/passwordPolicy",
@@ -25538,6 +27852,16 @@
       "canonicalUrl": "packages/core/src/validator/utils/is-promise.util.ts"
     },
     {
+      "name": "isRunnable",
+      "description": "Membros efetivamente referenciados pela consulta, para telemetria.",
+      "sourcePath": "packages/analytics-core/src/exploration/useExploration",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/useExploration"
+    },
+    {
       "name": "isSelectorNode",
       "description": "isSelectorNode — componente Archbase focado em is selector node.",
       "sourcePath": "packages/core/src/rsql/ast/Node.ts",
@@ -25588,6 +27912,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/rsql/ast/Node.ts"
+    },
+    {
+      "name": "isVizAvailable",
+      "description": "Vocabulario de metadados. RFC de contratos de transporte e portas, secao 2.",
+      "sourcePath": "packages/analytics-core/src/ports/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/ports/types"
     },
     {
       "name": "Kanban",
@@ -25650,6 +27984,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/components/src/printer/utils/escpos"
+    },
+    {
+      "name": "LoadingState",
+      "description": "Mensagem de falha derivada exclusivamente do codigo.\nA mensagem textual do servidor nunca e interpretada nem exibida ao usuario:\no conjunto de codigos e fechado justamente para que a interface possa reagir\nsem ler texto livre.",
+      "sourcePath": "packages/analytics-mantine/src/components/States",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/States"
     },
     {
       "name": "LocalFilter",
@@ -25796,6 +28140,83 @@
       "canonicalUrl": "packages/components/src/editors/ArchbaseMaskEdit"
     },
     {
+      "name": "MemberPalette",
+      "description": "Membros ja presentes na consulta.",
+      "sourcePath": "packages/analytics-mantine/src/components/MemberPalette",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "meta",
+          "type": "AnalyticsMeta",
+          "required": true,
+          "description": "Define meta. (AnalyticsMeta)"
+        },
+        {
+          "name": "selected",
+          "type": "string[]",
+          "required": true,
+          "description": "Membros ja presentes na consulta."
+        },
+        {
+          "name": "onToggle",
+          "type": "(member: AnalyticsMember) => void",
+          "required": true,
+          "description": "Callback acionado quando toggle. ((member: AnalyticsMember) => void)"
+        },
+        {
+          "name": "labeler",
+          "type": "MemberLabeler",
+          "required": true,
+          "description": "Define labeler. (MemberLabeler)"
+        },
+        {
+          "name": "formatter",
+          "type": "ValueFormatter",
+          "required": true,
+          "description": "Define formatter. (ValueFormatter)"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true,
+          "description": "Define locale. (string)"
+        },
+        {
+          "name": "searchPlaceholder",
+          "type": "string",
+          "required": false,
+          "description": "Define search placeholder. (string)"
+        },
+        {
+          "name": "emptyLabel",
+          "type": "string",
+          "required": false,
+          "description": "Define empty label. (string)"
+        },
+        {
+          "name": "onSuggestValues",
+          "type": "(member: string) => Promise<string[]>",
+          "required": false,
+          "description": "Distintos de um membro, para o menu de filtro por valor."
+        },
+        {
+          "name": "onFilterValues",
+          "type": "(member: string, values: string[] | null) => void",
+          "required": false,
+          "description": "Aplica/limpa um filtro `equals` a partir do menu de valores (`null` limpa)."
+        },
+        {
+          "name": "activeValueFilters",
+          "type": "Map<string, string[]>",
+          "required": false,
+          "description": "Filtros de valor ativos por membro (para marcar o icone e pre-selecionar)."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/MemberPalette"
+    },
+    {
       "name": "memoryLeakDetector",
       "description": "ArchbaseMemoryLeakDetector — detector simples de vazamentos de memória (dev).\n@status stable",
       "sourcePath": "packages/tools/src/dev-utils/ArchbaseMemoryLeakDetector",
@@ -25838,6 +28259,16 @@
         "chart"
       ],
       "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
+    },
+    {
+      "name": "META_FORMATS",
+      "description": "Vocabulario de metadados. RFC de contratos de transporte e portas, secao 2.",
+      "sourcePath": "packages/analytics-core/src/ports/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/ports/types"
     },
     {
       "name": "MetadataStorage",
@@ -25900,6 +28331,16 @@
       "canonicalUrl": "packages/security-ui/src/securityDiagnostics/DiagnosticPrimitives.tsx"
     },
     {
+      "name": "migrateSavedQuery",
+      "description": "Consulta pre-versionada (v0): payload gravado antes de `schemaVersion`\nexistir. Consumidor 1 nao chegou a produzir nenhuma, mas a funcao de migracao\nso tem valor se existir desde a primeira release — retrofit de migracao e\nexatamente o que invalida o acervo do usuario.",
+      "sourcePath": "packages/analytics-core/src/savedQuery/migrateSavedQuery",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/savedQuery/migrateSavedQuery"
+    },
+    {
       "name": "MigrationMetrics",
       "description": "ArchbaseSafeMigrationWrapper\n\nSistema de fallback seguro para migração V1/V2.\nGarante que se V2 falhar, automaticamente volta para V1.\n\n⚠️ CRITICAL: Este wrapper é obrigatório para todos os componentes migrados.",
       "sourcePath": "packages/core/src/fallback/ArchbaseSafeMigrationWrapper.tsx",
@@ -25928,6 +28369,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/admin/src/sidebar/variants/MinimalSidebar"
+    },
+    {
+      "name": "missingPorts",
+      "description": "Falha explicita em desenvolvimento; em producao registra e segue.\nDerrubar a aplicacao inteira do hospedeiro por causa de um painel mal\nconfigurado seria desproporcional em producao, onde o defeito ja escapou.",
+      "sourcePath": "packages/analytics-core/src/provider/validatePorts",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/provider/validatePorts"
     },
     {
       "name": "MyComponent",
@@ -26014,6 +28465,16 @@
       "canonicalUrl": "packages/core/src/rsql/ast/Node.ts"
     },
     {
+      "name": "NoResultsState",
+      "description": "Mensagem de falha derivada exclusivamente do codigo.\nA mensagem textual do servidor nunca e interpretada nem exibida ao usuario:\no conjunto de codigos e fechado justamente para que a interface possa reagir\nsem ler texto livre.",
+      "sourcePath": "packages/analytics-mantine/src/components/States",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/States"
+    },
+    {
       "name": "NORMAL",
       "description": "Filter and Query types for Archbase Core",
       "sourcePath": "packages/core/src/types/filter.ts",
@@ -26046,6 +28507,16 @@
       "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
+      "name": "normalizeMeta",
+      "description": "RFC de contratos, secao 2.1: ausencia equivale a `text`; valor desconhecido e\ntratado como `text`, com aviso em desenvolvimento — nunca lanca.\nLancar aqui deixaria a interface inteira refem de um typo no data model.",
+      "sourcePath": "packages/analytics-core/src/meta/normalizeMeta",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/normalizeMeta"
+    },
+    {
       "name": "normalizeRange",
       "description": "Opções padrão para a timeline",
       "sourcePath": "packages/components/src/charts/vis-timeline/utils/timelineOptions",
@@ -26056,6 +28527,16 @@
         "chart"
       ],
       "canonicalUrl": "packages/components/src/charts/vis-timeline/utils/timelineOptions"
+    },
+    {
+      "name": "normalizeResult",
+      "description": "Coercao do valor cru. A camada semantica emite numeros como string; converter\naqui evita que cada componente refaca o mesmo palpite.\nNenhuma transformacao de unidade ocorre: `currency_cents` permanece inteiro em\nunidade minima ate a porta `formatter`.",
+      "sourcePath": "packages/analytics-core/src/result/normalizeResult",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/result/normalizeResult"
     },
     {
       "name": "normalizeTimelineGroups",
@@ -26322,6 +28803,29 @@
       "canonicalUrl": "packages/security-ui/src/securityDiagnostics/OverviewPanel.tsx"
     },
     {
+      "name": "para quem precisa consultá-lo SEM exigir que ele exista. O\n  // `useArchbaseViewSecurity` lança quando não há provider",
+      "description": "ArchbaseSecurityProvider — provider de segurança com autenticação, tokens e permissões.\n@status stable",
+      "sourcePath": "packages/security/src/ArchbaseSecurityContext",
+      "exportsFrom": "@archbase/security",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider",
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityContext"
+    },
+    {
+      "name": "parseColor",
+      "description": "Resolucao de cor sem depender do Mantine.\nO pacote nao importa @mantine/core de proposito: sao componentes de canvas e\nWebGL, e arrastar uma biblioteca de UI inteira para ler quatro cores seria\ndesproporcional. O Mantine ja publica seu tema como custom properties no\ndocumento (`--mantine-color-blue-6`, `--mantine-color-text`), entao ler dali\nentrega integracao de tema com dependencia zero.\nEm hospedeiro sem Mantine, o fallback assume o controle e nada quebra.",
+      "sourcePath": "packages/effects/src/theme/resolveColors",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/theme/resolveColors"
+    },
+    {
       "name": "pascalCase",
       "description": "eslint-disable",
       "sourcePath": "packages/core/src/utils/string-utils",
@@ -26557,6 +29061,90 @@
       "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
+      "name": "ptBrFormatter",
+      "description": "Formatador de referencia para pt-BR.\nEste arquivo e a **unica** fronteira onde a conversao de unidade minima\nacontece, e acontece porque isto e a implementacao de uma porta, nao logica de\nbiblioteca: o invariante proibe divisao no nucleo justamente para que ela\nfique concentrada aqui, visivel e substituivel.\nImplementacao de referencia — material de exemplo e de teste. A de producao\npertence ao produto consumidor.",
+      "sourcePath": "packages/analytics-core/src/reference/formatterPtBR",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "form"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/reference/formatterPtBR"
+    },
+    {
+      "name": "que funcionam com ou sem segurança em volta.\n  ArchbaseViewSecurityContext",
+      "description": "ArchbaseSecurityProvider — provider de segurança com autenticação, tokens e permissões.\n@status stable",
+      "sourcePath": "packages/security/src/ArchbaseSecurityContext",
+      "exportsFrom": "@archbase/security",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider",
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/ArchbaseSecurityContext"
+    },
+    {
+      "name": "QueryCanvas",
+      "description": "Superficie que mostra a consulta corrente e permite retirar membros dela.\nControlado: nao guarda estado de consulta. Toda alteracao sobe para o hook de\nexploracao, que e a fonte unica — a mesma que alimenta o deep link e a\nconsulta salva.",
+      "sourcePath": "packages/analytics-mantine/src/components/QueryCanvas",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "query",
+          "type": "AnalyticsQuery",
+          "required": true,
+          "description": "Define query. (AnalyticsQuery)"
+        },
+        {
+          "name": "meta",
+          "type": "AnalyticsMeta",
+          "required": true,
+          "description": "Define meta. (AnalyticsMeta)"
+        },
+        {
+          "name": "labeler",
+          "type": "MemberLabeler",
+          "required": true,
+          "description": "Define labeler. (MemberLabeler)"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true,
+          "description": "Define locale. (string)"
+        },
+        {
+          "name": "onRemoveMeasure",
+          "type": "(member: string) => void",
+          "required": true,
+          "description": "Callback acionado quando remove measure. ((member: string) => void)"
+        },
+        {
+          "name": "onRemoveDimension",
+          "type": "(member: string) => void",
+          "required": true,
+          "description": "Callback acionado quando remove dimension. ((member: string) => void)"
+        },
+        {
+          "name": "onRemoveTimeDimension",
+          "type": "() => void",
+          "required": true,
+          "description": "Callback acionado quando remove time dimension. (() => void)"
+        },
+        {
+          "name": "labels",
+          "type": "{ measures?: string; dimensions?: string; time?: string; empty?: string }",
+          "required": false,
+          "description": "Define labels. ({ measures?: string; dimensions?: string; time?: string; empty?: string })"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/QueryCanvas"
+    },
+    {
       "name": "QueryField",
       "description": "eslint-disable",
       "sourcePath": "packages/advanced/src/querybuilder/ArchbaseFilterCommons",
@@ -26724,6 +29312,56 @@
       "canonicalUrl": "packages/admin/src/sidebar/variants/RailSidebar"
     },
     {
+      "name": "readColorScheme",
+      "description": "Resolucao de cor sem depender do Mantine.\nO pacote nao importa @mantine/core de proposito: sao componentes de canvas e\nWebGL, e arrastar uma biblioteca de UI inteira para ler quatro cores seria\ndesproporcional. O Mantine ja publica seu tema como custom properties no\ndocumento (`--mantine-color-blue-6`, `--mantine-color-text`), entao ler dali\nentrega integracao de tema com dependencia zero.\nEm hospedeiro sem Mantine, o fallback assume o controle e nada quebra.",
+      "sourcePath": "packages/effects/src/theme/resolveColors",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/theme/resolveColors"
+    },
+    {
+      "name": "readCssColor",
+      "description": "Resolucao de cor sem depender do Mantine.\nO pacote nao importa @mantine/core de proposito: sao componentes de canvas e\nWebGL, e arrastar uma biblioteca de UI inteira para ler quatro cores seria\ndesproporcional. O Mantine ja publica seu tema como custom properties no\ndocumento (`--mantine-color-blue-6`, `--mantine-color-text`), entao ler dali\nentrega integracao de tema com dependencia zero.\nEm hospedeiro sem Mantine, o fallback assume o controle e nada quebra.",
+      "sourcePath": "packages/effects/src/theme/resolveColors",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/theme/resolveColors"
+    },
+    {
+      "name": "readCssVariable",
+      "description": "Resolucao de cor sem depender do Mantine.\nO pacote nao importa @mantine/core de proposito: sao componentes de canvas e\nWebGL, e arrastar uma biblioteca de UI inteira para ler quatro cores seria\ndesproporcional. O Mantine ja publica seu tema como custom properties no\ndocumento (`--mantine-color-blue-6`, `--mantine-color-text`), entao ler dali\nentrega integracao de tema com dependencia zero.\nEm hospedeiro sem Mantine, o fallback assume o controle e nada quebra.",
+      "sourcePath": "packages/effects/src/theme/resolveColors",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/theme/resolveColors"
+    },
+    {
+      "name": "readDeepLink",
+      "description": "Prefixo de versao do payload. RFC de contratos, secao 5.",
+      "sourcePath": "packages/analytics-core/src/deeplink/deepLink",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/deeplink/deepLink"
+    },
+    {
+      "name": "reconcileWithMeta",
+      "description": "Quantidade de membros distintos removidos.\nDeliberadamente quantitativo: identificar o que foi removido revelaria a\nexistencia de dados restritos ao leitor, que e o vazamento de metadado que\no ADR de arquitetura, secao 2.6, proibe.",
+      "sourcePath": "packages/analytics-core/src/savedQuery/reconcileWithMeta",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/savedQuery/reconcileWithMeta"
+    },
+    {
       "name": "redirectToLogin",
       "description": "eslint-disable",
       "sourcePath": "packages/security/src/oauth2/authentication",
@@ -26748,6 +29386,16 @@
       "canonicalUrl": "packages/security/src/oauth2/authentication"
     },
     {
+      "name": "registerArchbaseTokenRenewer",
+      "description": "Quem renova a sessão quando um pedido recebe 401.\nO cliente HTTP ({@link ArchbaseAxiosRemoteApiClient}) não conhece o autenticador: o autenticador é que usa o\ncliente. Quem sabe renovar é o `useArchbaseAuthenticationManager`, que se registra aqui ao montar. Sem\nrenovador registrado, o 401 volta como sempre voltou.\nO renovador recebe o access token que o servidor recusou e devolve o novo, ou `null` quando a sessão acabou (o\nrefresh também foi negado). Ele é responsável por fazer UMA renovação só para todos os pedidos que pedirem ao\nmesmo tempo: com sessão única, duas renovações concorrentes revogam uma à outra.",
+      "sourcePath": "packages/data/src/service/ArchbaseTokenRenewal",
+      "exportsFrom": "@archbase/data",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/data/src/service/ArchbaseTokenRenewal"
+    },
+    {
       "name": "registerDecorator",
       "description": "Target object to be validated.",
       "sourcePath": "packages/core/src/validator/register-decorator.ts",
@@ -26756,6 +29404,18 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/core/src/validator/register-decorator.ts"
+    },
+    {
+      "name": "registrarTelaInspecionada",
+      "description": "As telas montadas agora, para o inspetor de ações.\n<p><b>Por que um registro de módulo e não um contexto.</b> O inspetor é renderizado uma vez, no\ntopo da aplicação; as telas ficam abaixo dele, em abas que montam e desmontam. Contexto só desce,\nentão o inspetor nunca enxergaria os providers de view por baixo dele. Um registro de módulo é o\ncaminho de volta — cada {@link ArchbaseViewSecurityProvider} se anuncia ao montar e se retira ao\ndesmontar.\n<p><b>Por que uma lista e não \"a tela atual\".</b> Aplicações com abas mantêm várias telas montadas\nao mesmo tempo. Eleger uma como \"a atual\" exigiria saber qual aba está visível — informação que o\nmódulo de segurança não tem e não deveria ter. O inspetor mostra todas e deixa a escolha para\nquem olha.\n<p>O registro é <b>puramente observacional</b>: nada aqui participa de decisão de acesso. Se este\narquivo sumisse, a autorização continuaria idêntica.",
+      "sourcePath": "packages/security/src/registroDeTelasInspecionadas.ts",
+      "exportsFrom": "@archbase/security",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/registroDeTelasInspecionadas.ts"
     },
     {
       "name": "RemoteFilter",
@@ -27012,6 +29672,28 @@
       "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
+      "name": "requireChartRenderer",
+      "description": "Falha explicita em desenvolvimento; em producao registra e segue.\nDerrubar a aplicacao inteira do hospedeiro por causa de um painel mal\nconfigurado seria desproporcional em producao, onde o defeito ja escapou.",
+      "sourcePath": "packages/analytics-core/src/provider/validatePorts",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/provider/validatePorts"
+    },
+    {
+      "name": "REQUIRED_PORTS",
+      "description": "Vocabulario de metadados. RFC de contratos de transporte e portas, secao 2.",
+      "sourcePath": "packages/analytics-core/src/ports/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/ports/types"
+    },
+    {
       "name": "ReservedChar",
       "description": "ReservedChar — componente Archbase focado em reserved char.",
       "sourcePath": "packages/core/src/rsql/ast/ReservedChars.ts",
@@ -27090,6 +29772,46 @@
       "canonicalUrl": "packages/core/src/utils/passwordPolicy"
     },
     {
+      "name": "resolveDefaultViz",
+      "description": "RFC de contratos, secao 2.1: ausencia equivale a `text`; valor desconhecido e\ntratado como `text`, com aviso em desenvolvimento — nunca lanca.\nLancar aqui deixaria a interface inteira refem de um typo no data model.",
+      "sourcePath": "packages/analytics-core/src/meta/normalizeMeta",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/normalizeMeta"
+    },
+    {
+      "name": "resolveDescription",
+      "description": "Idioma base de um locale BCP 47: `pt-BR` -> `pt`.",
+      "sourcePath": "packages/analytics-core/src/meta/resolveLabel",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/resolveLabel"
+    },
+    {
+      "name": "resolveFormat",
+      "description": "RFC de contratos, secao 2.1: ausencia equivale a `text`; valor desconhecido e\ntratado como `text`, com aviso em desenvolvimento — nunca lanca.\nLancar aqui deixaria a interface inteira refem de um typo no data model.",
+      "sourcePath": "packages/analytics-core/src/meta/normalizeMeta",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/normalizeMeta"
+    },
+    {
+      "name": "resolveLabel",
+      "description": "Idioma base de um locale BCP 47: `pt-BR` -> `pt`.",
+      "sourcePath": "packages/analytics-core/src/meta/resolveLabel",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/resolveLabel"
+    },
+    {
       "name": "ResourceDto",
       "description": "Data da última troca de senha, preenchida pelo backend. Base de cálculo da expiração\nperiódica quando `archbase.security.password.expiration-days` está configurado.\nSomente leitura — o backend a atualiza sozinho a cada troca de senha.",
       "sourcePath": "packages/security/src/SecurityDomain.ts",
@@ -27100,6 +29822,130 @@
         "security"
       ],
       "canonicalUrl": "packages/security/src/SecurityDomain.ts"
+    },
+    {
+      "name": "ResultChart",
+      "description": "Renderizacao da visualizacao `table`, delegada ao hospedeiro da composicao.\nRecebe a altura medida da area de conteudo (abaixo do seletor), para que a\ntabela virtualizada preencha o espaco exato e role internamente.",
+      "sourcePath": "packages/analytics-mantine/src/components/ResultChart",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "result",
+          "type": "NormalizedResult",
+          "required": true,
+          "description": "Define result. (NormalizedResult)"
+        },
+        {
+          "name": "viz",
+          "type": "VizType",
+          "required": true,
+          "description": "Define viz. (VizType)"
+        },
+        {
+          "name": "availableViz",
+          "type": "VizType[]",
+          "required": true,
+          "description": "Define available viz. (VizType[])"
+        },
+        {
+          "name": "onChangeViz",
+          "type": "(viz: VizType) => void",
+          "required": true,
+          "description": "Callback acionado quando change viz. ((viz: VizType) => void)"
+        },
+        {
+          "name": "formatter",
+          "type": "ValueFormatter",
+          "required": true,
+          "description": "Define formatter. (ValueFormatter)"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true,
+          "description": "Define locale. (string)"
+        },
+        {
+          "name": "chartRenderer",
+          "type": "ChartRenderer",
+          "required": false,
+          "description": "Função para renderizar chart er. (ChartRenderer)"
+        },
+        {
+          "name": "renderTable",
+          "type": "(height: number) => ReactNode",
+          "required": false,
+          "description": "Renderizacao da visualizacao `table`, delegada ao hospedeiro da composicao.\nRecebe a altura medida da area de conteudo (abaixo do seletor), para que a\ntabela virtualizada preencha o espaco exato e role internamente."
+        }
+      ],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/analytics-mantine/src/components/ResultChart"
+    },
+    {
+      "name": "ResultTable",
+      "description": "Detalhamento de uma celula. A biblioteca oferece a afordancia; o que\n\"detalhar\" significa pertence ao produto consumidor, que conhece o modelo.",
+      "sourcePath": "packages/analytics-mantine/src/components/ResultTable",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "result",
+          "type": "NormalizedResult",
+          "required": true,
+          "description": "Define result. (NormalizedResult)"
+        },
+        {
+          "name": "meta",
+          "type": "AnalyticsMeta",
+          "required": true,
+          "description": "Define meta. (AnalyticsMeta)"
+        },
+        {
+          "name": "formatter",
+          "type": "ValueFormatter",
+          "required": true,
+          "description": "Define formatter. (ValueFormatter)"
+        },
+        {
+          "name": "labeler",
+          "type": "MemberLabeler",
+          "required": true,
+          "description": "Define labeler. (MemberLabeler)"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true,
+          "description": "Define locale. (string)"
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "required": false,
+          "description": "Define height. (number)"
+        },
+        {
+          "name": "onDrill",
+          "type": "(row: ResultRow, column: ResultColumn) => void",
+          "required": false,
+          "description": "Detalhamento de uma celula. A biblioteca oferece a afordancia; o que\n\"detalhar\" significa pertence ao produto consumidor, que conhece o modelo."
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/ResultTable"
+    },
+    {
+      "name": "resultToCsv",
+      "description": "Formata os valores de celula (moeda, %, data) por membro.",
+      "sourcePath": "packages/analytics-core/src/export/csv",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/export/csv"
     },
     {
       "name": "revokeFileUrl",
@@ -27186,6 +30032,53 @@
         "ssr"
       ],
       "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
+    },
+    {
+      "name": "SavedQueryBar",
+      "description": "Abre uma consulta salva. Omitida, o seletor de abertura nao e exibido — a\nbarra fica so de gravacao, que e uso legitimo quando a abertura acontece\npor outro caminho (deep link, menu proprio do hospedeiro).",
+      "sourcePath": "packages/analytics-mantine/src/components/SavedQueryBar",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "store",
+          "type": "SavedQueryStore",
+          "required": true,
+          "description": "Define store. (SavedQueryStore)"
+        },
+        {
+          "name": "currentId",
+          "type": "string",
+          "required": false,
+          "description": "Define current id. (string)"
+        },
+        {
+          "name": "onOpen",
+          "type": "(record: SavedQueryRecord) => void",
+          "required": false,
+          "description": "Abre uma consulta salva. Omitida, o seletor de abertura nao e exibido — a\nbarra fica so de gravacao, que e uso legitimo quando a abertura acontece\npor outro caminho (deep link, menu proprio do hospedeiro)."
+        },
+        {
+          "name": "onSave",
+          "type": "(name: string) => Promise<void> | void",
+          "required": true,
+          "description": "Callback acionado quando save. ((name: string) => Promise<void> | void)"
+        },
+        {
+          "name": "canSave",
+          "type": "boolean",
+          "required": true,
+          "description": "Falso enquanto a consulta nao tem o que salvar."
+        },
+        {
+          "name": "labels",
+          "type": "{ save?: string; namePlaceholder?: string; openPlaceholder?: string }",
+          "required": false,
+          "description": "Define labels. ({ save?: string; namePlaceholder?: string; openPlaceholder?: string })"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/SavedQueryBar"
     },
     {
       "name": "Scheduler",
@@ -27674,6 +30567,16 @@
       "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
+      "name": "serializeExploration",
+      "description": "Prefixo de versao do payload. RFC de contratos, secao 5.",
+      "sourcePath": "packages/analytics-core/src/deeplink/deepLink",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/deeplink/deepLink"
+    },
+    {
       "name": "serializeForSSR",
       "description": "Utility functions for Server-Side Rendering with Archbase React",
       "sourcePath": "packages/ssr/src/utils/ArchbaseSSRUtils",
@@ -28114,6 +31017,75 @@
       "canonicalUrl": "packages/components/src/datagrid/ag-grid/archbase-data-grid-ag-formatters"
     },
     {
+      "name": "TimeDimensionControl",
+      "description": "Falso quando a consulta nao tem dimensao temporal.",
+      "sourcePath": "packages/analytics-mantine/src/components/TimeDimensionControl",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "timeDimension",
+          "type": "QueryTimeDimension | undefined",
+          "required": true,
+          "description": "Define time dimension. (QueryTimeDimension | undefined)"
+        },
+        {
+          "name": "meta",
+          "type": "AnalyticsMeta",
+          "required": true,
+          "description": "Define meta. (AnalyticsMeta)"
+        },
+        {
+          "name": "labeler",
+          "type": "MemberLabeler",
+          "required": true,
+          "description": "Define labeler. (MemberLabeler)"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true,
+          "description": "Define locale. (string)"
+        },
+        {
+          "name": "onChange",
+          "type": "(dimension: string | null, granularity?: Granularity, dateRange?: DateRange) => void",
+          "required": true,
+          "description": "Callback nativo acionado quando o campo muda."
+        },
+        {
+          "name": "onChangeCompare",
+          "type": "(ranges: DateRange[]) => void",
+          "required": true,
+          "description": "Callback acionado quando change compare. ((ranges: DateRange[]) => void)"
+        },
+        {
+          "name": "canCompare",
+          "type": "boolean",
+          "required": true,
+          "description": "Falso quando a consulta nao tem dimensao temporal."
+        },
+        {
+          "name": "labels",
+          "type": "{ dimension?: string; granularity?: string; period?: string; addCompare?: string }",
+          "required": false,
+          "description": "Define labels. ({ dimension?: string; granularity?: string; period?: string; addCompare?: string })"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/TimeDimensionControl"
+    },
+    {
+      "name": "toAnalyticsError",
+      "description": "Falha de analytics.\nA biblioteca trata exclusivamente `code`. A mensagem textual do servidor nunca\ne interpretada: fica em `serverMessage`, exibivel apenas em desenvolvimento.\nRFC de contratos, secao 3.3.",
+      "sourcePath": "packages/analytics-core/src/client/errors",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/client/errors"
+    },
+    {
       "name": "TOKEN_COOKIE_NAME",
       "description": "TOKEN_COOKIE_NAME — componente de segurança focado em token cookie name.",
       "sourcePath": "packages/security/src/DefaultArchbaseTokenManager.ts",
@@ -28124,6 +31096,16 @@
         "security"
       ],
       "canonicalUrl": "packages/security/src/DefaultArchbaseTokenManager.ts"
+    },
+    {
+      "name": "toShaderColor",
+      "description": "Resolucao de cor sem depender do Mantine.\nO pacote nao importa @mantine/core de proposito: sao componentes de canvas e\nWebGL, e arrastar uma biblioteca de UI inteira para ler quatro cores seria\ndesproporcional. O Mantine ja publica seu tema como custom properties no\ndocumento (`--mantine-color-blue-6`, `--mantine-color-text`), entao ler dali\nentrega integracao de tema com dependencia zero.\nEm hospedeiro sem Mantine, o fallback assume o controle e nada quebra.",
+      "sourcePath": "packages/effects/src/theme/resolveColors",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/theme/resolveColors"
     },
     {
       "name": "trim",
@@ -28146,6 +31128,16 @@
       "canonicalUrl": "packages/core/src/utils/string-utils"
     },
     {
+      "name": "TruncatedNotice",
+      "description": "Mensagem de falha derivada exclusivamente do codigo.\nA mensagem textual do servidor nunca e interpretada nem exibida ao usuario:\no conjunto de codigos e fechado justamente para que a interface possa reagir\nsem ler texto livre.",
+      "sourcePath": "packages/analytics-mantine/src/components/States",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/States"
+    },
+    {
       "name": "Type",
       "description": "Type — layout estrutural focado em type.",
       "sourcePath": "packages/layout/src/spaces/core-types",
@@ -28156,6 +31148,174 @@
         "layout"
       ],
       "canonicalUrl": "packages/layout/src/spaces/core-types"
+    },
+    {
+      "name": "type AnalyticsConfig",
+      "description": "Parametro que carrega o estado de exploracao. Default `aq`.",
+      "sourcePath": "packages/analytics-core/src/provider/AnalyticsContext",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/provider/AnalyticsContext"
+    },
+    {
+      "name": "type AnalyticsContextValue",
+      "description": "Parametro que carrega o estado de exploracao. Default `aq`.",
+      "sourcePath": "packages/analytics-core/src/provider/AnalyticsContext",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/provider/AnalyticsContext"
+    },
+    {
+      "name": "type AnalyticsExplorerProps",
+      "description": "Sincronizacao de deep link. Omitido, o explorador nao toca na URL: o\nroteamento pertence ao produto consumidor, e a biblioteca so le e escreve\nos parametros configurados quando o host pede.",
+      "sourcePath": "packages/analytics-mantine/src/compositions/AnalyticsExplorer",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/compositions/AnalyticsExplorer"
+    },
+    {
+      "name": "type AnalyticsProviderProps",
+      "description": "Prefixo do backend do hospedeiro. A biblioteca acrescenta `v1/meta` e\n`v1/load` e nunca monta prefixo proprio. RFC de contratos, secao 3.1.",
+      "sourcePath": "packages/analytics-core/src/provider/AnalyticsProvider",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "provider"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/provider/AnalyticsProvider"
+    },
+    {
+      "name": "type AnalyticsQuery",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
+      "name": "type AnalyticsStrings",
+      "description": "Dicionario nivel 1: strings da propria biblioteca.\nNivel 2 (rotulos de membros) vem do data model e e resolvido pela porta\n`labeler`; nivel 3 (valores de dados) pertence ao schema do produto. RFC de\nmetadados, secao 6.2.",
+      "sourcePath": "packages/analytics-core/src/strings",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/strings"
+    },
+    {
+      "name": "type AnalyticsWidgetProps",
+      "description": "Consulta salva a exibir. Alternativa a `query`.",
+      "sourcePath": "packages/analytics-mantine/src/compositions/AnalyticsWidget",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/compositions/AnalyticsWidget"
+    },
+    {
+      "name": "type AnalyticsWorkspaceProps",
+      "description": "Renderiza uma viz fixa (widget de dashboard) do mesmo resultado.",
+      "sourcePath": "packages/analytics-dockview/src/AnalyticsWorkspace",
+      "exportsFrom": "@archbase/analytics-dockview",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-dockview/src/AnalyticsWorkspace"
+    },
+    {
+      "name": "type ArchbaseAsciiWaveProps",
+      "description": "Cor dos caracteres. Ausente, usa a cor primaria do tema.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseAsciiWave",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseAsciiWave"
+    },
+    {
+      "name": "type ArchbaseAuroraBackgroundProps",
+      "description": "Cores das faixas da aurora.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseAuroraBackground",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseAuroraBackground"
+    },
+    {
+      "name": "type ArchbaseBeamGridProps",
+      "description": "Lado da celula, em pixels.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseBeamGrid",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "data"
+      ],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseBeamGrid"
+    },
+    {
+      "name": "type ArchbaseBorderBeamProps",
+      "description": "Espessura da borda, em pixels.",
+      "sourcePath": "packages/effects/src/elements/ArchbaseBorderBeam",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/elements/ArchbaseBorderBeam"
+    },
+    {
+      "name": "type ArchbaseCosmicDustProps",
+      "description": "Quantidade de particulas em cena.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseCosmicDust",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseCosmicDust"
+    },
+    {
+      "name": "type ArchbaseDotGridBackgroundProps",
+      "description": "Diametro do ponto, em pixels.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseDotGridBackground",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "data"
+      ],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseDotGridBackground"
+    },
+    {
+      "name": "type ArchbaseElectroBorderProps",
+      "description": "Cor da borda e do halo.",
+      "sourcePath": "packages/effects/src/elements/ArchbaseElectroBorder",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/elements/ArchbaseElectroBorder"
+    },
+    {
+      "name": "type ArchbaseGooeyBlobsProps",
+      "description": "Cores das bolhas. A quantidade de bolhas segue a quantidade de cores.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseGooeyBlobs",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseGooeyBlobs"
     },
     {
       "name": "type ArchbaseGridState",
@@ -28170,6 +31330,208 @@
       "canonicalUrl": "packages/components/src/datagrid/hooks/use-grid-data"
     },
     {
+      "name": "type ArchbaseMagicLoaderProps",
+      "description": "Lado do canvas, em pixels.",
+      "sourcePath": "packages/effects/src/loaders/ArchbaseMagicLoader",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/loaders/ArchbaseMagicLoader"
+    },
+    {
+      "name": "type ArchbaseNebulaFlowProps",
+      "description": "Tres cores das camadas de gas. Menos de tres completa com o padrao.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseNebulaFlow",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseNebulaFlow"
+    },
+    {
+      "name": "type ArchbaseNeuralLinkProps",
+      "description": "Quantidade de nos. O custo cresce ao quadrado — veja a nota abaixo.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseNeuralLink",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseNeuralLink"
+    },
+    {
+      "name": "type ArchbaseStardustButtonProps",
+      "description": "Paleta das particulas.",
+      "sourcePath": "packages/effects/src/elements/ArchbaseStardustButton",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/elements/ArchbaseStardustButton"
+    },
+    {
+      "name": "type ArchbaseVectorFlowProps",
+      "description": "Cores sorteadas por particula.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseVectorFlow",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseVectorFlow"
+    },
+    {
+      "name": "type ArchbaseWaveBackgroundProps",
+      "description": "Tres cores da faixa. Menos de tres completa com o padrao.",
+      "sourcePath": "packages/effects/src/backgrounds/ArchbaseWaveBackground",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/backgrounds/ArchbaseWaveBackground"
+    },
+    {
+      "name": "type CanvasSize",
+      "description": "Largura em pixels de CSS.",
+      "sourcePath": "packages/effects/src/hooks/useArchbaseCanvasAnimation",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/hooks/useArchbaseCanvasAnimation"
+    },
+    {
+      "name": "type CsvOptions",
+      "description": "Formata os valores de celula (moeda, %, data) por membro.",
+      "sourcePath": "packages/analytics-core/src/export/csv",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/export/csv"
+    },
+    {
+      "name": "type DateRange",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
+      "name": "type DeepLinkParams",
+      "description": "Parametro que carrega o estado de exploracao. Default `aq`.",
+      "sourcePath": "packages/analytics-core/src/provider/AnalyticsContext",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/provider/AnalyticsContext"
+    },
+    {
+      "name": "type DeepLinkRead",
+      "description": "Prefixo de versao do payload. RFC de contratos, secao 5.",
+      "sourcePath": "packages/analytics-core/src/deeplink/deepLink",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/deeplink/deepLink"
+    },
+    {
+      "name": "type ExplorationAction",
+      "description": "type ExplorationAction — componente Archbase focado em type exploration action.",
+      "sourcePath": "packages/analytics-core/src/exploration/explorationReducer",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/explorationReducer"
+    },
+    {
+      "name": "type ExplorationState",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
+      "name": "type ExportButtonProps",
+      "description": "Resultado atual; ausente/vazio desabilita o botao.",
+      "sourcePath": "packages/analytics-mantine/src/components/ExportButton",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/ExportButton"
+    },
+    {
+      "name": "type FilterBuilderProps",
+      "description": "Operadores que dispensam valor.",
+      "sourcePath": "packages/analytics-mantine/src/components/FilterBuilder",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/FilterBuilder"
+    },
+    {
+      "name": "type FilterOperator",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
+      "name": "type FormatterOptions",
+      "description": "Formatador de referencia para pt-BR.\nEste arquivo e a **unica** fronteira onde a conversao de unidade minima\nacontece, e acontece porque isto e a implementacao de uma porta, nao logica de\nbiblioteca: o invariante proibe divisao no nucleo justamente para que ela\nfique concentrada aqui, visivel e substituivel.\nImplementacao de referencia — material de exemplo e de teste. A de producao\npertence ao produto consumidor.",
+      "sourcePath": "packages/analytics-core/src/reference/formatterPtBR",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "form"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/reference/formatterPtBR"
+    },
+    {
+      "name": "type FrameState",
+      "description": "Largura em pixels de CSS.",
+      "sourcePath": "packages/effects/src/hooks/useArchbaseCanvasAnimation",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/hooks/useArchbaseCanvasAnimation"
+    },
+    {
+      "name": "type Granularity",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
+      "name": "type LoadResponse",
+      "description": "Cabecalhos de truncamento. RFC de contratos, secao 3.2.",
+      "sourcePath": "packages/analytics-core/src/client/AnalyticsClient",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/client/AnalyticsClient"
+    },
+    {
       "name": "type MediaQueryResult",
       "description": "Utility functions for Server-Side Rendering with Archbase React",
       "sourcePath": "packages/ssr/src/utils/ArchbaseSSRUtils",
@@ -28180,6 +31542,298 @@
         "ssr"
       ],
       "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
+    },
+    {
+      "name": "type MemberPaletteProps",
+      "description": "Membros ja presentes na consulta.",
+      "sourcePath": "packages/analytics-mantine/src/components/MemberPalette",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/MemberPalette"
+    },
+    {
+      "name": "type PivotConfig",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
+      "name": "type QueryCanvasProps",
+      "description": "Superficie que mostra a consulta corrente e permite retirar membros dela.\nControlado: nao guarda estado de consulta. Toda alteracao sobe para o hook de\nexploracao, que e a fonte unica — a mesma que alimenta o deep link e a\nconsulta salva.",
+      "sourcePath": "packages/analytics-mantine/src/components/QueryCanvas",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/QueryCanvas"
+    },
+    {
+      "name": "type QueryFilter",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
+      "name": "type QueryTimeDimension",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
+      "name": "type RawResultSet",
+      "description": "Cabecalhos de truncamento. RFC de contratos, secao 3.2.",
+      "sourcePath": "packages/analytics-core/src/client/AnalyticsClient",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/client/AnalyticsClient"
+    },
+    {
+      "name": "type ReconcileResult",
+      "description": "Quantidade de membros distintos removidos.\nDeliberadamente quantitativo: identificar o que foi removido revelaria a\nexistencia de dados restritos ao leitor, que e o vazamento de metadado que\no ADR de arquitetura, secao 2.6, proibe.",
+      "sourcePath": "packages/analytics-core/src/savedQuery/reconcileWithMeta",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/savedQuery/reconcileWithMeta"
+    },
+    {
+      "name": "type ResultChartProps",
+      "description": "Renderizacao da visualizacao `table`, delegada ao hospedeiro da composicao.\nRecebe a altura medida da area de conteudo (abaixo do seletor), para que a\ntabela virtualizada preencha o espaco exato e role internamente.",
+      "sourcePath": "packages/analytics-mantine/src/components/ResultChart",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "chart"
+      ],
+      "canonicalUrl": "packages/analytics-mantine/src/components/ResultChart"
+    },
+    {
+      "name": "type ResultTableProps",
+      "description": "Detalhamento de uma celula. A biblioteca oferece a afordancia; o que\n\"detalhar\" significa pertence ao produto consumidor, que conhece o modelo.",
+      "sourcePath": "packages/analytics-mantine/src/components/ResultTable",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/ResultTable"
+    },
+    {
+      "name": "type RgbColor",
+      "description": "Resolucao de cor sem depender do Mantine.\nO pacote nao importa @mantine/core de proposito: sao componentes de canvas e\nWebGL, e arrastar uma biblioteca de UI inteira para ler quatro cores seria\ndesproporcional. O Mantine ja publica seu tema como custom properties no\ndocumento (`--mantine-color-blue-6`, `--mantine-color-text`), entao ler dali\nentrega integracao de tema com dependencia zero.\nEm hospedeiro sem Mantine, o fallback assume o controle e nada quebra.",
+      "sourcePath": "packages/effects/src/theme/resolveColors",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/theme/resolveColors"
+    },
+    {
+      "name": "type RuidoPerlin",
+      "description": "Ruido de Perlin 2D classico.\nVive no pacote em vez de virar dependencia: sao 40 linhas, e qualquer\nbiblioteca de ruido traria consigo APIs 3D e simplex que nenhum efeito daqui\nusa. A tabela de permutacao e gerada uma vez por semente.",
+      "sourcePath": "packages/effects/src/math/perlin",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/math/perlin"
+    },
+    {
+      "name": "type SavedQueryBarProps",
+      "description": "Abre uma consulta salva. Omitida, o seletor de abertura nao e exibido — a\nbarra fica so de gravacao, que e uso legitimo quando a abertura acontece\npor outro caminho (deep link, menu proprio do hospedeiro).",
+      "sourcePath": "packages/analytics-mantine/src/components/SavedQueryBar",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/SavedQueryBar"
+    },
+    {
+      "name": "type SeriesConfig",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
+      "name": "type SortDirection",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
+    },
+    {
+      "name": "type TimeDimensionControlProps",
+      "description": "Falso quando a consulta nao tem dimensao temporal.",
+      "sourcePath": "packages/analytics-mantine/src/components/TimeDimensionControl",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/TimeDimensionControl"
+    },
+    {
+      "name": "type UseAnalyticsMetaResult",
+      "description": "Requisicoes em voo, para que varios widgets montando juntos compartilhem uma\nunica chamada de introspeccao em vez de multiplica-la.",
+      "sourcePath": "packages/analytics-core/src/meta/useAnalyticsMeta",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/useAnalyticsMeta"
+    },
+    {
+      "name": "type UseArchbaseCanvasAnimationOptions",
+      "description": "Largura em pixels de CSS.",
+      "sourcePath": "packages/effects/src/hooks/useArchbaseCanvasAnimation",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/hooks/useArchbaseCanvasAnimation"
+    },
+    {
+      "name": "type UseArchbaseCanvasAnimationResult",
+      "description": "Largura em pixels de CSS.",
+      "sourcePath": "packages/effects/src/hooks/useArchbaseCanvasAnimation",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/hooks/useArchbaseCanvasAnimation"
+    },
+    {
+      "name": "type UseArchbaseShaderOptions",
+      "description": "Corpo do fragment shader. Recebe iResolution, iTime, iMouse e iMouseStrength.",
+      "sourcePath": "packages/effects/src/hooks/useArchbaseShader",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/hooks/useArchbaseShader"
+    },
+    {
+      "name": "type UseArchbaseShaderResult",
+      "description": "Corpo do fragment shader. Recebe iResolution, iTime, iMouse e iMouseStrength.",
+      "sourcePath": "packages/effects/src/hooks/useArchbaseShader",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/hooks/useArchbaseShader"
+    },
+    {
+      "name": "type UseExplorationOptions",
+      "description": "Membros efetivamente referenciados pela consulta, para telemetria.",
+      "sourcePath": "packages/analytics-core/src/exploration/useExploration",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/useExploration"
+    },
+    {
+      "name": "type UseExplorationResult",
+      "description": "Membros efetivamente referenciados pela consulta, para telemetria.",
+      "sourcePath": "packages/analytics-core/src/exploration/useExploration",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/useExploration"
+    },
+    {
+      "name": "type UseMemberValuesOptions",
+      "description": "Teto de sugestoes. Lista longa nao ajuda a escolher e custa consulta.",
+      "sourcePath": "packages/analytics-core/src/meta/useMemberValues",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/useMemberValues"
+    },
+    {
+      "name": "type UseMemberValuesResult",
+      "description": "Teto de sugestoes. Lista longa nao ajuda a escolher e custa consulta.",
+      "sourcePath": "packages/analytics-core/src/meta/useMemberValues",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/meta/useMemberValues"
+    },
+    {
+      "name": "type ValorUniforme",
+      "description": "Corpo do fragment shader. Recebe iResolution, iTime, iMouse e iMouseStrength.",
+      "sourcePath": "packages/effects/src/hooks/useArchbaseShader",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/effects/src/hooks/useArchbaseShader"
+    },
+    {
+      "name": "type ValueFilterMenuProps",
+      "description": "Valores atualmente incluidos (filtro `equals`); `undefined` = sem filtro.",
+      "sourcePath": "packages/analytics-mantine/src/components/ValueFilterMenu",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/ValueFilterMenu"
+    },
+    {
+      "name": "type VirtualRows",
+      "description": "Linhas renderizadas alem do visivel, para o scroll nao piscar.",
+      "sourcePath": "packages/analytics-mantine/src/components/useVirtualRows",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/useVirtualRows"
+    },
+    {
+      "name": "type VirtualRowsOptions",
+      "description": "Linhas renderizadas alem do visivel, para o scroll nao piscar.",
+      "sourcePath": "packages/analytics-mantine/src/components/useVirtualRows",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/useVirtualRows"
+    },
+    {
+      "name": "type VizState",
+      "description": "Filtro de membro. A v0.1 emite apenas filtros planos: a composicao logica\naninhada da camada semantica existe no protocolo, mas nao e oferecida pela\ninterface, e por isso nao e modelada aqui — `reconcileWithMeta` depende de\npoder inspecionar todo membro referenciado sem recursao.",
+      "sourcePath": "packages/analytics-core/src/exploration/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/exploration/types"
     },
     {
       "name": "unCamelCase",
@@ -28242,6 +31896,31 @@
       "canonicalUrl": "packages/data/src/datasource/ArchbaseV1V2CompatibilityPattern.tsx"
     },
     {
+      "name": "useAnalyticsContext",
+      "description": "Parametro que carrega o estado de exploracao. Default `aq`.",
+      "sourcePath": "packages/analytics-core/src/provider/AnalyticsContext",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook",
+        "provider"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/provider/AnalyticsContext"
+    },
+    {
+      "name": "useAnalyticsMeta",
+      "description": "Requisicoes em voo, para que varios widgets montando juntos compartilhem uma\nunica chamada de introspeccao em vez de multiplica-la.",
+      "sourcePath": "packages/analytics-core/src/meta/useAnalyticsMeta",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/meta/useAnalyticsMeta"
+    },
+    {
       "name": "useArchbaseAccordionState",
       "description": "Estado de TreeView/Arvore que deve persistir.",
       "sourcePath": "packages/admin/src/hooks/useArchbaseTreeState",
@@ -28291,7 +31970,7 @@
     },
     {
       "name": "useArchbaseAppContext",
-      "description": "useArchbaseAppContext — provider de contexto focado em use archbase app context.",
+      "description": "Future flags do React Router; o padrão adota as flags da v7 e silencia os avisos de depreciação.",
       "sourcePath": "packages/core/src/context/ArchbaseAppContext",
       "exportsFrom": "@archbase/core",
       "props": [],
@@ -28338,6 +32017,18 @@
         "hook"
       ],
       "canonicalUrl": "packages/core/src/hooks/useArchbaseBool.ts"
+    },
+    {
+      "name": "useArchbaseCanvasAnimation",
+      "description": "Largura em pixels de CSS.",
+      "sourcePath": "packages/effects/src/hooks/useArchbaseCanvasAnimation",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/effects/src/hooks/useArchbaseCanvasAnimation"
     },
     {
       "name": "useArchbaseCarousel",
@@ -29180,6 +32871,18 @@
       "canonicalUrl": "packages/security/src/hooks/useArchbaseSecurityManager.ts"
     },
     {
+      "name": "useArchbaseShader",
+      "description": "Corpo do fragment shader. Recebe iResolution, iTime, iMouse e iMouseStrength.",
+      "sourcePath": "packages/effects/src/hooks/useArchbaseShader",
+      "exportsFrom": "@archbase/effects",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/effects/src/hooks/useArchbaseShader"
+    },
+    {
       "name": "useArchbaseShortcutScope",
       "description": "Identificador único",
       "sourcePath": "packages/components/src/navigation/ArchbaseKeyboardShortcuts",
@@ -29553,6 +33256,18 @@
       "canonicalUrl": "packages/components/src/datagrid/hooks/use-grid-details-panel"
     },
     {
+      "name": "useExploration",
+      "description": "Membros efetivamente referenciados pela consulta, para telemetria.",
+      "sourcePath": "packages/analytics-core/src/exploration/useExploration",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/exploration/useExploration"
+    },
+    {
       "name": "useGridData",
       "description": "Interface para o estado do grid",
       "sourcePath": "packages/components/src/datagrid/hooks/use-grid-data",
@@ -29603,6 +33318,18 @@
       "canonicalUrl": "packages/admin/src/ArchbaseAliveAbleRoutes"
     },
     {
+      "name": "useMemberValues",
+      "description": "Teto de sugestoes. Lista longa nao ajuda a escolher e custa consulta.",
+      "sourcePath": "packages/analytics-core/src/meta/useMemberValues",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/analytics-core/src/meta/useMemberValues"
+    },
+    {
       "name": "useNavigationProgress",
       "description": "useNavigationProgress — hook utilitário focado em use navigation progress.",
       "sourcePath": "packages/admin/src/ArchbaseNavigationProgress",
@@ -29616,7 +33343,7 @@
     },
     {
       "name": "useOptionalTemplateSecurity",
-      "description": "Hook que funciona com ou sem contexto de segurança\nSe não há contexto de segurança, sempre retorna true (permite tudo)\nSe há contexto de segurança, usa as verificações reais\nIMPORTANTE: Retorna objeto estável para evitar re-renders infinitos",
+      "description": "A segurança da tela, para quem pode estar fora dela.\n<p><b>O que este hook era.</b> Um esqueleto: {@code isAvailable} nascia `false`,\n{@code hasPermission} devolvia `true` e {@code registerAction} não fazia nada, com o comentário\n\"a integração será implementada posteriormente\". Nove componentes de template o consumiam, e\nportanto a segurança deles inteira era decorativa — o botão aparecia sempre, e a ação nunca\nchegava ao catálogo. Não foi regressão: nasceu assim, no commit que criou o pacote.\n<h2>As duas travas</h2>\n<p>Ligar uma verificação que estava inerte esconde botões que hoje aparecem, e é assim que se\nquebra um produto em produção. Duas regras impedem que isso aconteça por acidente:\n<ol>\n  <li><b>Sem contexto, sem opinião.</b> Fora de um {@code ArchbaseViewSecurityProvider} o hook\n      responde exatamente como antes: permite tudo. Template usado solto não muda em nada.</li>\n  <li><b>Nunca negar pelo que o catálogo não conhece.</b> Enquanto as permissões carregam, se a\n      carga falhou, ou se a capacidade não está no catálogo da tela, a resposta é permitir.\n      Negar nesses três casos confundiria \"você não pode\" com \"ainda não sei\" — e foi assim que\n      uma política de endpoint administrativo deixou telas inteiras cinzas quando o que faltava\n      era a resposta chegar.</li>\n</ol>\n<p>Ou seja: só há negação quando existe contexto, as permissões chegaram, a capacidade está\ndeclarada, e ela não foi concedida. Em qualquer outra combinação, permite.",
       "sourcePath": "packages/template/src/hooks/useOptionalTemplateSecurity.ts",
       "exportsFrom": "@archbase/template",
       "props": [],
@@ -29920,8 +33647,21 @@
       "canonicalUrl": "packages/admin/src/components/TabStoreProvider"
     },
     {
+      "name": "useTelasInspecionadas",
+      "description": "As telas montadas agora, para o inspetor de ações.\n<p><b>Por que um registro de módulo e não um contexto.</b> O inspetor é renderizado uma vez, no\ntopo da aplicação; as telas ficam abaixo dele, em abas que montam e desmontam. Contexto só desce,\nentão o inspetor nunca enxergaria os providers de view por baixo dele. Um registro de módulo é o\ncaminho de volta — cada {@link ArchbaseViewSecurityProvider} se anuncia ao montar e se retira ao\ndesmontar.\n<p><b>Por que uma lista e não \"a tela atual\".</b> Aplicações com abas mantêm várias telas montadas\nao mesmo tempo. Eleger uma como \"a atual\" exigiria saber qual aba está visível — informação que o\nmódulo de segurança não tem e não deveria ter. O inspetor mostra todas e deixa a escolha para\nquem olha.\n<p>O registro é <b>puramente observacional</b>: nada aqui participa de decisão de acesso. Se este\narquivo sumisse, a autorização continuaria idêntica.",
+      "sourcePath": "packages/security/src/registroDeTelasInspecionadas.ts",
+      "exportsFrom": "@archbase/security",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook",
+        "security"
+      ],
+      "canonicalUrl": "packages/security/src/registroDeTelasInspecionadas.ts"
+    },
+    {
       "name": "useTemplateSecurityAvailable",
-      "description": "Hook que funciona com ou sem contexto de segurança\nSe não há contexto de segurança, sempre retorna true (permite tudo)\nSe há contexto de segurança, usa as verificações reais\nIMPORTANTE: Retorna objeto estável para evitar re-renders infinitos",
+      "description": "A segurança da tela, para quem pode estar fora dela.\n<p><b>O que este hook era.</b> Um esqueleto: {@code isAvailable} nascia `false`,\n{@code hasPermission} devolvia `true` e {@code registerAction} não fazia nada, com o comentário\n\"a integração será implementada posteriormente\". Nove componentes de template o consumiam, e\nportanto a segurança deles inteira era decorativa — o botão aparecia sempre, e a ação nunca\nchegava ao catálogo. Não foi regressão: nasceu assim, no commit que criou o pacote.\n<h2>As duas travas</h2>\n<p>Ligar uma verificação que estava inerte esconde botões que hoje aparecem, e é assim que se\nquebra um produto em produção. Duas regras impedem que isso aconteça por acidente:\n<ol>\n  <li><b>Sem contexto, sem opinião.</b> Fora de um {@code ArchbaseViewSecurityProvider} o hook\n      responde exatamente como antes: permite tudo. Template usado solto não muda em nada.</li>\n  <li><b>Nunca negar pelo que o catálogo não conhece.</b> Enquanto as permissões carregam, se a\n      carga falhou, ou se a capacidade não está no catálogo da tela, a resposta é permitir.\n      Negar nesses três casos confundiria \"você não pode\" com \"ainda não sei\" — e foi assim que\n      uma política de endpoint administrativo deixou telas inteiras cinzas quando o que faltava\n      era a resposta chegar.</li>\n</ol>\n<p>Ou seja: só há negação quando existe contexto, as permissões chegaram, a capacidade está\ndeclarada, e ela não foi concedida. Em qualquer outra combinação, permite.",
       "sourcePath": "packages/template/src/hooks/useOptionalTemplateSecurity.ts",
       "exportsFrom": "@archbase/template",
       "props": [],
@@ -29968,6 +33708,18 @@
         "hook"
       ],
       "canonicalUrl": "packages/components/src/display/ArchbaseVirtualList"
+    },
+    {
+      "name": "useVirtualRows",
+      "description": "Linhas renderizadas alem do visivel, para o scroll nao piscar.",
+      "sourcePath": "packages/analytics-mantine/src/components/useVirtualRows",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "hook"
+      ],
+      "canonicalUrl": "packages/analytics-mantine/src/components/useVirtualRows"
     },
     {
       "name": "UUIDCellRenderer",
@@ -30037,6 +33789,16 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/components/src/filters/ArchbaseCompositeFilters.utils"
+    },
+    {
+      "name": "validatePorts",
+      "description": "Falha explicita em desenvolvimento; em producao registra e segue.\nDerrubar a aplicacao inteira do hospedeiro por causa de um painel mal\nconfigurado seria desproporcional em producao, onde o defeito ja escapou.",
+      "sourcePath": "packages/analytics-core/src/provider/validatePorts",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/provider/validatePorts"
     },
     {
       "name": "validateState",
@@ -30182,6 +33944,53 @@
       "canonicalUrl": "packages/advanced/src/querybuilder/ArchbaseAdvancedFilter"
     },
     {
+      "name": "ValueFilterMenu",
+      "description": "Valores atualmente incluidos (filtro `equals`); `undefined` = sem filtro.",
+      "sourcePath": "packages/analytics-mantine/src/components/ValueFilterMenu",
+      "exportsFrom": "@archbase/analytics-mantine",
+      "props": [
+        {
+          "name": "member",
+          "type": "string",
+          "required": true,
+          "description": "Define member. (string)"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Texto principal exibido acima do controle."
+        },
+        {
+          "name": "selectedValues",
+          "type": "string[]",
+          "required": false,
+          "description": "Valores atualmente incluidos (filtro `equals`); `undefined` = sem filtro."
+        },
+        {
+          "name": "onSuggestValues",
+          "type": "(member: string) => Promise<string[]>",
+          "required": false,
+          "description": "Distintos do membro; sem ela, o menu nao tem o que listar."
+        },
+        {
+          "name": "onApply",
+          "type": "(values: string[] | null) => void",
+          "required": true,
+          "description": "`null` limpa o filtro; lista aplica um `equals` com os valores marcados."
+        },
+        {
+          "name": "labels",
+          "type": "{ search?: string; all?: string; none?: string; apply?: string; clear?: string }",
+          "required": false,
+          "description": "Define labels. ({ search?: string; all?: string; none?: string; apply?: string; clear?: string })"
+        }
+      ],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-mantine/src/components/ValueFilterMenu"
+    },
+    {
       "name": "ValueNode",
       "description": "ValueNode — componente Archbase focado em value node.",
       "sourcePath": "packages/core/src/rsql/ast/Node.ts",
@@ -30244,6 +34053,16 @@
       "canonicalUrl": "packages/components/src/charts/ArchbaseGantt"
     },
     {
+      "name": "VIZ_TYPES",
+      "description": "Vocabulario de metadados. RFC de contratos de transporte e portas, secao 2.",
+      "sourcePath": "packages/analytics-core/src/ports/types",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/ports/types"
+    },
+    {
       "name": "withArchbaseErrorBoundary",
       "description": "withArchbaseErrorBoundary — componente Archbase focado em with archbase error boundary.",
       "sourcePath": "packages/core/src/errorboundary/withArchbaseErrorBoundary.ts",
@@ -30255,7 +34074,7 @@
     },
     {
       "name": "withArchbaseSecurity",
-      "description": "withArchbaseSecurity — componente de segurança focado em with archbase security.",
+      "description": "Devolve os filhos carregando a marcação da capacidade que os governa.\n<p><b>Por que clonar em vez de envolver.</b> Este componente renderiza um fragmento de propósito:\nenvolver o filho numa `div` mudaria o layout de quem já o usa — um botão dentro de um `Group` do\nMantine deixaria de ser filho direto e perderia o espaçamento. Clonar acrescenta um atributo ao\nelemento que já existe, sem tocar na árvore.\n<p>O atributo é <b>inerte</b>: serve para o inspetor de capacidades saber onde desenhar o realce.\nFilho que não repasse props desconhecidas ao DOM simplesmente não é marcado, e continua\naparecendo na lista do inspetor como qualquer outra capacidade.",
       "sourcePath": "packages/security/src/ArchbaseSecurityComponents",
       "exportsFrom": "@archbase/security",
       "props": [],
@@ -30298,6 +34117,16 @@
         "ssr"
       ],
       "canonicalUrl": "packages/ssr/src/utils/ArchbaseSSRUtils"
+    },
+    {
+      "name": "writeDeepLink",
+      "description": "Prefixo de versao do payload. RFC de contratos, secao 5.",
+      "sourcePath": "packages/analytics-core/src/deeplink/deepLink",
+      "exportsFrom": "@archbase/analytics-core",
+      "props": [],
+      "examples": [],
+      "tags": [],
+      "canonicalUrl": "packages/analytics-core/src/deeplink/deepLink"
     }
   ],
   "recipes": [
