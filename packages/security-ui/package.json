@@ -67,11 +67,11 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
-    "@mantine/core": "9.8.1",
-    "@mantine/dates": "9.8.1",
-    "@mantine/hooks": "9.8.1",
-    "@mantine/modals": "9.8.1",
-    "@mantine/notifications": "9.8.1",
+    "@mantine/core": "9.8.2",
+    "@mantine/dates": "9.8.2",
+    "@mantine/hooks": "9.8.2",
+    "@mantine/modals": "9.8.2",
+    "@mantine/notifications": "9.8.2",
     "@tabler/icons-react": "^3.27.0"
   }
 }
