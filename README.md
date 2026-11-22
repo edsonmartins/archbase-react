@@ -152,7 +152,7 @@ pnpm install @mantine/core @mantine/hooks @mantine/form @mantine/dates @mantine/
 
 ## 🏗️ Status do Projeto
 
-✅ **Atual: v4.15.0** — Mantine 9, beautiful-grid como engine padrão da DataGrid,
+✅ **Atual: v4.15.1** — Mantine 9, beautiful-grid como engine padrão da DataGrid,
 otimizações de performance e UX (close de tabs com feedback visual).
 
 ✅ Migração v3 → v4 estável e em produção. Para detalhes consulte
