@@ -5,9 +5,9 @@
  * Also exports with original names (ArchbaseDataGrid, etc.) to replace MUI DataGrid implementation.
  */
 
-// Main component - export as both ArchbaseDataGridAG and ArchbaseDataGrid
+// Main component. `ArchbaseDataGrid` passou a ser a implementação sobre a
+// beautiful-grid (ver ../bgrid); `ArchbaseDataGridAG` continua sendo a do AG Grid.
 export { default as ArchbaseDataGridAG } from './archbase-data-grid-ag';
-export { default as ArchbaseDataGrid } from './archbase-data-grid-ag';
 
 // Types - export with AG suffix and original names for compatibility
 export type {
