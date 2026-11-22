@@ -17,9 +17,10 @@ Uma biblioteca moderna de componentes React TypeScript com arquitetura modular p
 
 Releases 4.0.x trouxeram, além da migração para Mantine 9, várias melhorias acumulativas:
 
-- **AG-Grid como engine padrão do `ArchbaseDataGrid`** (`@archbase/components`).
-  A implementação MUI X continua disponível para compatibilidade, mas o export
-  default agora vem do AG-Grid Community 35+.
+- **beautiful-grid como engine do `ArchbaseDataGrid`** (`@archbase/components`).
+  Props, events e ref foram preservados; a aparência muda. Exige React 19.2+.
+  `ArchbaseDataGridAG` mantém a implementação sobre AG-Grid Community 35+ com
+  as mesmas props (use-o em projetos React 18).
 - **Scroll perf** (release 4.0.25): `AgGridReact` envolvido em `React.memo`,
   `getRowId` estabilizado, `useStableChildren` evita rebuild de `columnDefs`
   quando as colunas são estruturalmente iguais; objeto `sx` da DataGrid (MUI X)
@@ -85,7 +86,7 @@ pnpm run clean
 - **pnpm workspaces** (monorepo)
 - **Turbo** (build pipeline)
 - **Mantine 9.2.1** (UI components)
-- **AG-Grid Community 35+** (DataGrid engine)
+- **beautiful-grid 1.x** (engine do `ArchbaseDataGrid`) e **AG-Grid Community 35+** (`ArchbaseDataGridAG`)
 - **Tabler Icons 3.x** (iconografia)
 - **TanStack Query v5** (data fetching)
 - **Zustand 5** (state management)
@@ -151,7 +152,7 @@ pnpm install @mantine/core @mantine/hooks @mantine/form @mantine/dates @mantine/
 
 ## 🏗️ Status do Projeto
 
-✅ **Atual: v4.0.26** — Mantine 9, AG-Grid como engine padrão da DataGrid,
+✅ **Atual: v4.14.0** — Mantine 9, beautiful-grid como engine padrão da DataGrid,
 otimizações de performance e UX (close de tabs com feedback visual).
 
 ✅ Migração v3 → v4 estável e em produção. Para detalhes consulte
@@ -584,10 +585,11 @@ const message = archbaseI18next.t('minha-app:Dashboard')
 
 3. **`@tabler/icons-react` 2.x → 3.x**: peer dep agora `^3.27.0`.
 
-4. **DataGrid passa a ser AG-Grid** (`@archbase/components`).
+4. **DataGrid passa a usar a beautiful-grid** (`@archbase/components`).
    A API de `<ArchbaseDataGrid>` + `<Columns>` + `<ArchbaseDataGridColumn>` foi
-   preservada e funciona como antes. Cell renderers e value formatters
-   continuam funcionando.
+   preservada (props, events e ref). Requer React 19.2+; em React 18 importe
+   `ArchbaseDataGridAG`, que continua sobre AG-Grid. `gridRef.getGridApi()`
+   devolve `null` na nova engine.
 
 5. **KeepAlive interno**: troca de implementação custom para
    `keepalive-for-react`. Se você usava apenas `keepAlive: true` no

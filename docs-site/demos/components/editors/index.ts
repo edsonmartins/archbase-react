@@ -2770,7 +2770,12 @@ export const compositeFiltersUsage: MantineDemo = {
 
 const compositeFiltersWithDataSourceCode = `
 import { useState } from 'react';
-import { ArchbaseCompositeFilters, ArchbaseDataGrid } from '@archbase/components';
+import {
+  ArchbaseCompositeFilters,
+  ArchbaseDataGrid,
+  ArchbaseDataGridColumn,
+  Columns,
+} from '@archbase/components';
 
 const quickFilters = [
   {
@@ -2810,10 +2815,13 @@ function Demo() {
         quickFilters={quickFilters}
       />
 
-      <ArchbaseDataGrid
-        dataSource={{ records: filteredData }}
-        columns={colunas}
-      />
+      {/* dataSource: ArchbaseDataSource alimentado com filteredData */}
+      <ArchbaseDataGrid dataSource={dataSource} height={400}>
+        <Columns>
+          <ArchbaseDataGridColumn dataField="nome" header="Nome" dataType="text" size={200} />
+          <ArchbaseDataGridColumn dataField="idade" header="Idade" dataType="integer" size={100} />
+        </Columns>
+      </ArchbaseDataGrid>
     </>
   );
 }

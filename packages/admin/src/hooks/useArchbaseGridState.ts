@@ -42,27 +42,33 @@ const DEFAULT_GRID_STATE: ArchbaseGridPersistedState = {
 
 /**
  * Hook para persistir estado completo de um DataGrid.
- * Pode ser usado diretamente ou integrado em componentes de Grid.
+ *
+ * O ArchbaseDataGrid não persiste estado sozinho (não existe prop `stateKey`) e
+ * não emite events de paginação nem de ordenação: página e ordenação vivem no
+ * DataSource. Este hook guarda o estado; a ligação com a grid é feita pelas
+ * props e events que ela realmente expõe, como no exemplo.
  *
  * @param gridId Identificador unico do grid na tela
  * @param initialState Estado inicial customizado (opcional)
  *
  * @example
  * ```tsx
- * // Uso direto
  * const grid = useArchbaseGridState('customersGrid');
  *
- * <ArchbaseDataGridAG
+ * <ArchbaseDataGrid
+ *   dataSource={dataSource}
+ *   getRowId={(row) => row.id}
  *   pageIndex={grid.state.page}
  *   pageSize={grid.state.pageSize}
- *   sortModel={grid.state.sortModel}
- *   onPaginationChange={(page, pageSize) => grid.update({ page, pageSize })}
- *   onSortModelChange={(sortModel) => grid.update({ sortModel })}
- *   onSelectionChange={(ids) => grid.update({ selectedRowIds: ids })}
- * />
+ *   onSelectedRowsChanged={(rows) => grid.setSelectedRowIds(rows.map((row) => String(row.id)))}
+ *   onFilterModelChange={(filterModel) => grid.setFilterModel(filterModel)}
+ *   onDetailPanelChange={(ids) => grid.update({ expandedRowIds: ids.map(String) })}
+ * >
+ *   <Columns>...</Columns>
+ * </ArchbaseDataGrid>
  *
- * // Ou o componente pode aceitar stateKey e fazer isso internamente
- * <ArchbaseDataGridAG stateKey="customersGrid" />
+ * // Página e ordenação: leia do DataSource ao recarregar e grave com
+ * // grid.setPage(...) / grid.setSortModel(...).
  * ```
  */
 export function useArchbaseGridState(

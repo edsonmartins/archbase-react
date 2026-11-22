@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-09",
+  "generatedAt": "2026-11-22",
   "catalogVersion": "0.6.1",
-  "total": 217,
+  "total": 243,
   "documented": 58,
   "categories": [
     {
@@ -297,6 +297,12 @@
           "docLink": null
         },
         {
+          "name": "ArchbaseMaskedDateEdit",
+          "description": "data com campos mascarados separados (dia / mês / ano) e calendário,",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
           "name": "ArchbaseMaskEdit",
           "description": "Campo de texto com máscaras predefinidas (CPF, CNPJ, CEP, telefone, placa) e customizadas, integração com DataSource.",
           "pkg": "@archbase/components",
@@ -304,7 +310,7 @@
         },
         {
           "name": "ArchbaseMentionInput",
-          "description": "Componente de entrada de texto com suporte a menções (@usuários, #tags). Baseado no react-mentions.",
+          "description": "Componente de entrada de texto com suporte a menções (@usuários, #tags). Construído sobre o Mentions do Mantine.",
           "pkg": "@archbase/components",
           "docLink": "/components/editors/new-editors#archbasementioninput"
         },
@@ -367,6 +373,18 @@
           "description": "Medidor de força de senha com barra de progresso e lista de critérios atendidos.",
           "pkg": "@archbase/components",
           "docLink": "/components/editors/text-inputs#archbasepasswordstrengthmeter"
+        },
+        {
+          "name": "ArchbasePhoneInput",
+          "description": "telefone internacional (seletor de país, detecção e máscara) integrado ao",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseQuarterPickerInput",
+          "description": "seleção de trimestre (o valor é o primeiro dia do trimestre), integrada ao DataSource (v1/v2).",
+          "pkg": "@archbase/components",
+          "docLink": null
         },
         {
           "name": "ArchbaseRadioGroup",
@@ -469,6 +487,12 @@
           "description": "Seleção hierárquica com estrutura de árvore, múltiplos níveis e integração com DataSource.",
           "pkg": "@archbase/components",
           "docLink": "/components/editors/select-inputs#archbasetreeselect"
+        },
+        {
+          "name": "ArchbaseWeekPickerInput",
+          "description": "seleção de semana (clicar num dia seleciona a semana inteira; o valor é o primeiro dia da semana conforme `firstDayOfWeek`), integrada ao DataSource (v1/v2).",
+          "pkg": "@archbase/components",
+          "docLink": null
         }
       ]
     },
@@ -503,6 +527,12 @@
         {
           "name": "ArchbaseMasonry",
           "description": "layout masonry responsivo com provider de contexto.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseReorderList",
+          "description": "",
           "pkg": "@archbase/components",
           "docLink": null
         },
@@ -609,6 +639,12 @@
           "docLink": "/components/data-display/display-tools#archbasecodeviewer"
         },
         {
+          "name": "ArchbaseDeviceFrame",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
           "name": "ArchbaseDiffViewer",
           "description": "Visualizador de diferenças entre dois textos com modo split e unificado.",
           "pkg": "@archbase/components",
@@ -616,6 +652,18 @@
         },
         {
           "name": "ArchbaseFadeInWhenVisible",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseGlowingCard",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseGlowingCards",
           "description": "",
           "pkg": "@archbase/components",
           "docLink": null
@@ -973,6 +1021,12 @@
           "description": "Efeito de ondulação (ripple) estilo Material Design para feedback visual.",
           "pkg": "@archbase/components",
           "docLink": null
+        },
+        {
+          "name": "ArchbaseStickyTopBar",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
         }
       ]
     },
@@ -1011,6 +1065,12 @@
           "docLink": null
         },
         {
+          "name": "ArchbaseMagnifyDock",
+          "description": "",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
           "name": "ArchbaseShortcutHint",
           "description": "",
           "pkg": "@archbase/components",
@@ -1031,6 +1091,12 @@
         {
           "name": "ArchbaseActionButtons",
           "description": "grupo de ações padrão para fluxos CRUD.",
+          "pkg": "@archbase/components",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSlideToConfirm",
+          "description": "",
           "pkg": "@archbase/components",
           "docLink": null
         },
@@ -1264,7 +1330,7 @@
         },
         {
           "name": "ArchbaseProtectedComponent",
-          "description": "componente de segurança focado em protected component.",
+          "description": "",
           "pkg": "@archbase/security",
           "docLink": null
         },
@@ -1276,13 +1342,13 @@
         },
         {
           "name": "ArchbaseSecureActionButton",
-          "description": "componente de segurança focado em secure action button.",
+          "description": "",
           "pkg": "@archbase/security",
           "docLink": null
         },
         {
           "name": "ArchbaseSecureFormField",
-          "description": "componente de segurança focado em secure form field.",
+          "description": "",
           "pkg": "@archbase/security",
           "docLink": null
         },
@@ -1290,6 +1356,12 @@
           "name": "ArchbaseSecurityDiagnosticsView",
           "description": "",
           "pkg": "@archbase/security-ui",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseSecurityInspector",
+          "description": "mostra, sobre a aplicação rodando, quais capacidades cada tela",
+          "pkg": "@archbase/security",
           "docLink": null
         },
         {
@@ -1316,6 +1388,72 @@
       "id": "outros",
       "label": "Outros Componentes",
       "components": [
+        {
+          "name": "ArchbaseAsciiWave",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseAuroraBackground",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseBeamGrid",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseBorderBeam",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseCosmicDust",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseDotGridBackground",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseElectroBorder",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseGooeyBlobs",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseMagicLoader",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseNebulaFlow",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseNeuralLink",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
         {
           "name": "ArchbaseScheduler",
           "description": "componente Archbase focado em scheduler.",
@@ -1434,6 +1572,24 @@
           "name": "ArchbaseSpaceViewPort",
           "description": "layout estrutural focado em space view port.",
           "pkg": "@archbase/layout",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseStardustButton",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseVectorFlow",
+          "description": "",
+          "pkg": "@archbase/effects",
+          "docLink": null
+        },
+        {
+          "name": "ArchbaseWaveBackground",
+          "description": "",
+          "pkg": "@archbase/effects",
           "docLink": null
         }
       ]

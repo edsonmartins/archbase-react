@@ -1,17 +1,26 @@
 /**
  * DataGrid Exports
  *
- * A implementação principal agora é AG Grid.
- * Os exports principais (ArchbaseDataGrid, ArchbaseDataGridColumn, etc.) vêm do AG Grid.
+ * `ArchbaseDataGrid` é a implementação sobre a beautiful-grid (./bgrid).
+ * `ArchbaseDataGridAG` continua disponível sobre o AG Grid, com o mesmo contrato
+ * de props/ref — os tipos públicos (ArchbaseDataGridProps, ArchbaseDataGridRef,
+ * ArchbaseDataGridColumn, Columns, ...) são compartilhados pelas duas.
  * Utilitários auxiliares da implementação antiga ainda são exportados para compatibilidade.
  */
 
 // ============================================================
-// AG Grid Implementation (PRINCIPAL)
+// Tipos, colunas e utilitários compartilhados + ArchbaseDataGridAG
 // ============================================================
-// Exporta: ArchbaseDataGrid, ArchbaseDataGridColumn, Columns,
-// GridToolBarActions, ArchbaseDataGridProps, etc.
 export * from './ag-grid';
+
+// ============================================================
+// beautiful-grid Implementation (PRINCIPAL)
+// ============================================================
+export {
+  ArchbaseDataGridBGrid,
+  ArchbaseDataGridBGrid as ArchbaseDataGrid,
+  BGRID_LOCALE_PTBR,
+} from './bgrid';
 
 // ============================================================
 // Componentes auxiliares (compatibilidade)

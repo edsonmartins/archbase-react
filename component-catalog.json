@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "generatedAt": "2026-11-17",
+  "generatedAt": "2026-11-22",
   "foundations": {
     "providers": [
       "ArchbaseGlobalProvider",
@@ -6164,6 +6164,18 @@
         "data"
       ],
       "canonicalUrl": "packages/components/src/datagrid/ag-grid/archbase-data-grid-ag-types"
+    },
+    {
+      "name": "ArchbaseDataGridBGrid",
+      "description": "Implementação do ArchbaseDataGrid sobre a beautiful-grid.\nUsa os mesmos tipos públicos da versão AG Grid (props, ref, colunas).",
+      "sourcePath": "packages/components/src/datagrid/bgrid",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "data"
+      ],
+      "canonicalUrl": "packages/components/src/datagrid/bgrid"
     },
     {
       "name": "ArchbaseDataGridColumn",
@@ -24333,6 +24345,18 @@
       "examples": [],
       "tags": [],
       "canonicalUrl": "packages/analytics-core/src/meta/resolveLabel"
+    },
+    {
+      "name": "BGRID_LOCALE_PTBR",
+      "description": "Implementação do ArchbaseDataGrid sobre a beautiful-grid.\nUsa os mesmos tipos públicos da versão AG Grid (props, ref, colunas).",
+      "sourcePath": "packages/components/src/datagrid/bgrid",
+      "exportsFrom": "@archbase/components",
+      "props": [],
+      "examples": [],
+      "tags": [
+        "data"
+      ],
+      "canonicalUrl": "packages/components/src/datagrid/bgrid"
     },
     {
       "name": "BinaryNode",
