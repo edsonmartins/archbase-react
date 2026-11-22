@@ -53,9 +53,12 @@ function buildWithTurbo(isDebug, noDocs = false) {
     NODE_ENV: isDebug ? 'development' : 'production'
   };
 
-  const filter = noDocs ? " --filter='!archbase-react-docs'" : '';
+  // --no-docs é o build de release: só o que é publicado. O docs-site e os apps de
+  // demonstração (apps/*, privados) ficam de fora — o build do analytics-playground
+  // estourava a memória do runner e derrubava a publicação antes do `pnpm publish`.
+  const filter = noDocs ? " --filter='!archbase-react-docs' --filter='!./apps/*'" : '';
   if (noDocs) {
-    log(`📝 Excluindo docs-site do build`, YELLOW);
+    log(`📝 Excluindo docs-site e apps de demonstração do build`, YELLOW);
   }
 
   execSync(`turbo build${filter}`, { stdio: 'inherit', env });
