@@ -1,12 +1,32 @@
-
 # ArchbaseDataGrid
 
-O DataGrid é um componente avançado para exibição e manipulação de dados tabulares.
+O `ArchbaseDataGrid` é a grid data-aware do Archbase: liga-se a um DataSource (V1 ou V2) e cuida de
+ordenação, filtros, paginação, seleção, painel de detalhes, exportação e impressão.
+
+As colunas são declaradas como filhos (`<Columns>` + `<ArchbaseDataGridColumn>`), não por uma prop `columns`.
+
+## Engine interna
+
+A partir desta versão o `ArchbaseDataGrid` é renderizado pela [beautiful-grid](https://github.com/axisj/beautiful-grid).
+Props, events e o ref são os mesmos de antes; o que muda é a aparência.
+
+- **Requer React 19.2 ou superior.** Em projetos com React 18, use `ArchbaseDataGridAG`, que mantém a
+  implementação sobre AG Grid com exatamente as mesmas props.
+- O estilo da grid (`beautiful-grid/style.css`) é importado pelo próprio componente.
+- As cores seguem o tema e o color scheme do Mantine.
+
+```tsx
+// React 19.2+ (padrão)
+import { ArchbaseDataGrid } from '@archbase/components';
+
+// React 18, ou para continuar no AG Grid
+import { ArchbaseDataGridAG } from '@archbase/components';
+```
 
 ## Exemplo Básico
 
 ```tsx
-import { ArchbaseDataGrid } from '@archbase/components';
+import { ArchbaseDataGrid, ArchbaseDataGridColumn, Columns } from '@archbase/components';
 import { useArchbaseDataSourceV2 } from '@archbase/data';
 
 interface Pessoa {
@@ -23,140 +43,150 @@ function PessoasGrid() {
   });
 
   return (
-    <ArchbaseDataGrid
+    <ArchbaseDataGrid<Pessoa, number>
       dataSource={dataSource}
-      columns={[
-        { field: 'id', header: 'ID', width: 80 },
-        { field: 'nome', header: 'Nome', width: 200 },
-        { field: 'email', header: 'E-mail', width: 250 },
-        { field: 'idade', header: 'Idade', width: 100 },
-      ]}
+      getRowId={(row) => row.id}
       height={400}
-    />
+    >
+      <Columns>
+        <ArchbaseDataGridColumn<Pessoa> dataField="id" header="ID" dataType="integer" size={80} />
+        <ArchbaseDataGridColumn<Pessoa> dataField="nome" header="Nome" dataType="text" size={200} />
+        <ArchbaseDataGridColumn<Pessoa> dataField="email" header="E-mail" dataType="text" size={250} />
+        <ArchbaseDataGridColumn<Pessoa> dataField="idade" header="Idade" dataType="integer" size={100} />
+      </Columns>
+    </ArchbaseDataGrid>
   );
 }
 ```
 
+`height` e `width` aceitam número ou string (padrão `'100%'`). Com `'100%'`, o elemento pai precisa ter altura definida.
+
 ## Props Principais
+
+### Dados
 
 | Prop | Tipo | Padrão | Descrição |
 |------|------|--------|-----------|
-| `dataSource` | `ArchbaseDataSource<T>` | - | Fonte de dados |
-| `columns` | `Column[]` | - | Definição das colunas |
-| `height` | `number \| string` | `'auto'` | Altura do grid |
-| `width` | `number \| string` | `'100%'` | Largura do grid |
-| `selectable` | `boolean` | `true` | Permite seleção de linhas |
-| `multiSelect` | `boolean` | `false` | Seleção múltipla |
-| `striped` | `boolean` | `false` | Linhas zebradas |
-| `highlightOnHover` | `boolean` | `true` | Destaca linha no hover |
+| `dataSource` | `IArchbaseDataSourceBase<T>` | - | Fonte de dados (V1 ou V2). Obrigatória |
+| `getRowId` | `(row: T) => ID` | `row.id` | Identificador da linha |
+| `isLoading` | `boolean` | `false` | Exibe o estado de carregamento |
+| `pageSize` | `number` | `15` | Tamanho inicial da página (máximo 100; o DataSource prevalece) |
+| `pageIndex` | `number` | `0` | Página inicial |
 
-## Definição de Colunas
+### Recursos
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `enableRowSelection` | `boolean` | `true` | Coluna de checkbox para seleção múltipla |
+| `enableRowNumbers` | `boolean` | `false` | Coluna com o número da linha |
+| `enableRowActions` | `boolean` | `true` | Coluna de ações (exige `renderRowActions`) |
+| `enableColumnResizing` | `boolean` | `true` | Redimensionar colunas arrastando o cabeçalho |
+| `allowColumnFilters` | `boolean` | `true` | Filtro por coluna no cabeçalho |
+| `enableGlobalFilter` | `boolean` | `true` | Campo de busca global na toolbar |
+| `enableTopToolbar` | `boolean` | `true` | Exibe a toolbar |
+| `enableTopToolbarActions` | `boolean` | `true` | Botões de atualizar, exportar e imprimir |
+| `showPagination` | `boolean` | `true` | Exibe a paginação |
+| `allowExportData` / `allowPrintData` | `boolean` | `true` | Habilita exportar / imprimir |
+| `manualSorting` / `manualFiltering` / `manualPagination` | `boolean` | `true` | Operação feita no servidor, via `refreshData` do DataSource |
+
+### Aparência
+
+| Prop | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `height` / `width` | `number \| string` | `'100%'` | Dimensões da grid |
+| `rowHeight` | `number` | `40` | Altura da linha em pixels |
+| `striped` | `boolean` | `false` | Linhas zebradas |
+| `highlightOnHover` | `boolean` | `true` | Destaca a linha sob o cursor |
+| `withBorder` | `boolean` | `true` | Borda externa |
+| `withColumnBorders` | `boolean` | `true` | Bordas verticais entre colunas |
+| `fontSize` | `number \| string` | tema | Tamanho da fonte das células |
+| `headerFontWeight` | `number \| 'normal' \| 'bold'` | `600` | Peso da fonte do cabeçalho |
+| `columnAutoWidth` | `boolean` | `false` | Expande as colunas para ocupar a largura disponível |
+| `autoSizeStrategy` | `'fitCellContents' \| 'fitGridWidth'` | - | Ajuste automático de largura ao carregar |
+| `className` | `string` | `''` | Classe CSS do container |
+
+### Events
+
+| Prop | Assinatura | Descrição |
+|------|------------|-----------|
+| `onSelectedRowsChanged` | `(rows: T[]) => void` | Mudança na seleção por checkbox |
+| `onCellDoubleClick` | `({ id, columnName, rowData }) => void` | Duplo clique em uma célula |
+| `onFilterModelChange` | `(filterModel) => void` | Mudança na busca global (`{ items, quickFilterValues }`) |
+| `onFiltersChange` | `(filters, rsql?) => void` | Mudança nos filtros compostos |
+| `onDetailPanelChange` | `(expandedRowIds) => void` | Abertura/fechamento de painéis de detalhe |
+| `onExport` / `onPrint` | `(open: () => void) => void` | Recebe a função que abre o modal de exportar / imprimir |
+
+## Colunas
 
 ```tsx
-const columns = [
-  {
-    field: 'id',
-    header: 'ID',
-    width: 80,
-    align: 'center',
-    sortable: true,
-  },
-  {
-    field: 'nome',
-    header: 'Nome',
-    width: 200,
-    sortable: true,
-    filterable: true,
-  },
-  {
-    field: 'preco',
-    header: 'Preço',
-    width: 120,
-    align: 'right',
-    formatter: (value) => `R$ ${value.toFixed(2)}`,
-  },
-  {
-    field: 'status',
-    header: 'Status',
-    width: 100,
-    render: (record) => (
-      <Badge color={record.status === 'ativo' ? 'green' : 'red'}>
-        {record.status}
-      </Badge>
-    ),
-  },
-  {
-    field: 'acoes',
-    header: 'Ações',
-    width: 100,
-    render: (record) => (
-      <Group>
-        <ActionIcon onClick={() => handleEdit(record)}>
-          <IconEdit size={16} />
-        </ActionIcon>
-        <ActionIcon color="red" onClick={() => handleDelete(record)}>
-          <IconTrash size={16} />
-        </ActionIcon>
-      </Group>
-    ),
-  },
-];
+<Columns>
+  <ArchbaseDataGridColumn<Produto> dataField="id" header="ID" dataType="integer" size={80} align="center" />
+  <ArchbaseDataGridColumn<Produto> dataField="nome" header="Nome" dataType="text" size={200} truncate />
+  <ArchbaseDataGridColumn<Produto> dataField="preco" header="Preço" dataType="currency" size={120} />
+  <ArchbaseDataGridColumn<Produto> dataField="categoria.nome" header="Categoria" dataType="text" size={160} />
+  <ArchbaseDataGridColumn<Produto>
+    dataField="status"
+    header="Status"
+    dataType="enum"
+    enumValues={[
+      { label: 'Disponível', value: 'disponivel' },
+      { label: 'Esgotado', value: 'esgotado' },
+    ]}
+    size={130}
+    render={({ getValue, row }) => (
+      <Badge color={row.status === 'disponivel' ? 'green' : 'red'}>{getValue()}</Badge>
+    )}
+    exportValue={(row) => row.status}
+  />
+</Columns>
 ```
 
-## Propriedades de Coluna
+### Propriedades de Coluna
 
 | Prop | Tipo | Descrição |
 |------|------|-----------|
-| `field` | `string` | Nome do campo no objeto |
+| `dataField` | `string` | Campo do registro; aceita caminho aninhado (`endereco.cidade`) |
 | `header` | `string` | Título da coluna |
-| `width` | `number` | Largura em pixels |
-| `minWidth` | `number` | Largura mínima |
-| `maxWidth` | `number` | Largura máxima |
-| `align` | `'left' \| 'center' \| 'right'` | Alinhamento |
-| `sortable` | `boolean` | Permite ordenação |
-| `filterable` | `boolean` | Permite filtro |
-| `resizable` | `boolean` | Permite redimensionar |
-| `visible` | `boolean` | Visibilidade |
-| `formatter` | `(value) => string` | Formatador de valor |
-| `render` | `(record) => ReactNode` | Renderização customizada |
+| `dataType` | `FieldDataType` | `text`, `integer`, `float`, `currency`, `boolean`, `date`, `datetime`, `time`, `enum`, `image`, `uuid` |
+| `size` | `number` | Largura em pixels (padrão `150`) |
+| `minSize` / `maxSize` | `number` | Limites aplicados ao redimensionar e nos ajustes automáticos |
+| `align` / `headerAlign` | `'left' \| 'center' \| 'right'` | Alinhamento da célula / do cabeçalho |
+| `visible` | `boolean` | `false` remove a coluna |
+| `enableSorting` | `boolean` | Permite ordenar pela coluna |
+| `enableColumnFilter` | `boolean` | Permite filtro por coluna |
+| `enableGlobalFilter` | `boolean` | Inclui a coluna na busca global |
+| `enumValues` | `{ label, value }[]` | Opções para colunas `enum` |
+| `maskOptions` | `any` | Máscara para colunas de texto |
+| `render` | `({ getValue, row }) => ReactNode` | Renderização customizada |
+| `truncate` | `boolean` | Corta o texto com reticências e mostra o valor completo no tooltip |
+| `exportValue` | `(row: T) => string` | Valor usado na exportação/impressão |
+| `exportable` | `boolean` | `false` tira a coluna da exportação/impressão |
 
 ## Funcionalidades
 
 ### Ordenação
 
-```tsx
-<ArchbaseDataGrid
-  dataSource={dataSource}
-  columns={columns}
-  defaultSortField="nome"
-  defaultSortDirection="asc"
-  onSort={(field, direction) => {
-    console.log(`Ordenar por ${field} ${direction}`);
-  }}
-/>
-```
+Clique no cabeçalho para ordenar pela coluna (uma coluna por vez). Com `manualSorting` (padrão),
+a grid chama `refreshData` do DataSource com `sort: ['campo:asc']`.
 
-### Filtro
+### Filtro por coluna
 
-```tsx
-<ArchbaseDataGrid
-  dataSource={dataSource}
-  columns={columns}
-  showFilter
-  filterDelay={300}
-  onFilter={(filters) => {
-    console.log('Filtros aplicados:', filters);
-  }}
-/>
-```
+O menu do cabeçalho oferece o filtro adequado ao `dataType` da coluna:
+
+| `dataType` | Filtro |
+|------------|--------|
+| `text`, `uuid` | Texto: contém, igual, diferente |
+| `integer`, `float`, `currency` | Número: igual, diferente, maior, menor, entre |
+| `boolean`, `enum` | Lista de valores |
+| `date`, `datetime`, `time`, `image` | Sem filtro de coluna (use os filtros compostos) |
+
+Com `manualFiltering` (padrão), os filtros viram uma expressão RSQL enviada ao DataSource.
 
 ### Filtros Compostos (ArchbaseCompositeFilters)
 
-O ArchbaseDataGrid suporta filtros compostos avançados através do `ArchbaseCompositeFilters`, gerando saída RSQL para integração com APIs REST.
-
 ```tsx
-import { ArchbaseDataGrid } from '@archbase/components';
-import type { ArchbaseFilterDefinition } from '@archbase/components';
+import { ArchbaseDataGrid, ArchbaseDataGridColumn, Columns } from '@archbase/components';
+import type { ArchbaseActiveFilter, ArchbaseFilterDefinition } from '@archbase/components';
 
 const filterDefinitions: ArchbaseFilterDefinition[] = [
   { key: 'nome', label: 'Nome', type: 'text' },
@@ -174,212 +204,221 @@ const filterDefinitions: ArchbaseFilterDefinition[] = [
 ];
 
 function GridComFiltros() {
-  const [activeFilters, setActiveFilters] = useState([]);
+  const [activeFilters, setActiveFilters] = useState<ArchbaseActiveFilter[]>([]);
 
   return (
     <ArchbaseDataGrid
       dataSource={dataSource}
-      columns={columns}
-      useCompositeFilters={true}
+      useCompositeFilters
       filterDefinitions={filterDefinitions}
       activeFilters={activeFilters}
       onFiltersChange={(filters, rsql) => {
         setActiveFilters(filters);
         console.log('RSQL gerado:', rsql);
-        /* Exemplo: "nome=like=*João*;idade>18;status==ativo" */
       }}
-      hideMuiFilters={true}
-    />
+      hideAgGridFilters
+    >
+      <Columns>{/* colunas */}</Columns>
+    </ArchbaseDataGrid>
   );
 }
 ```
 
-#### Tipos de Dados Suportados
-
-**Tipos de dados suportados pelo sistema de filtros:**
-
-- **text** - Texto simples: `contains`, `starts_with`, `ends_with`, `=`, `!=`
-- **integer** - Números inteiros: `=`, `!=`, `>`, `<`, `>=`, `<=`, `between`
-- **float** - Números decimais: `=`, `!=`, `>`, `<`, `>=`, `<=`, `between`
-- **currency** - Valores monetários: `=`, `!=`, `>`, `<`, `>=`, `<=`, `between`
-- **boolean** - Verdadeiro/Falso: `=`, `!=`
-- **date** - Data: `=`, `!=`, `>`, `<`, `>=`, `<=`, `date_before`, `date_after`
-- **datetime** - Data e hora: `=`, `!=`, `>`, `<`, `>=`, `<=`, `date_before`, `date_after`
-- **time** - Horário: `=`, `!=`, `>`, `<`, `>=`, `<=`
-- **enum** - Lista de opções: `=`, `!=`, `in`, `not_in`
-- **uuid** - Identificador único: `=`, `!=`
-
-#### Auto-geração de Filtros
-
-Se você não fornecer `filterDefinitions`, o DataGrid gera automaticamente a partir das colunas:
-
-```tsx
-<ArchbaseDataGrid
-  dataSource={dataSource}
-  columns={columns}
-  useCompositeFilters={true}
-  // filterDefinitions será gerado automaticamente das colunas
-/>
-```
-
-#### Quick Filters
-
-Filtros pré-definidos podem ser configurados:
-
-```tsx
-const quickFilters = [
-  {
-    id: 'ativos',
-    name: 'Usuários Ativos',
-    filters: [
-      { key: 'ativo', label: 'Status', type: 'boolean', operator: '=', value: true },
-    ],
-  },
-];
-
-<ArchbaseDataGrid
-  useCompositeFilters={true}
-  filterDefinitions={filterDefinitions}
-  quickFilters={quickFilters}
-/>
-```
+- Sem `filterDefinitions`, as definições são geradas a partir das colunas.
+- `hideAgGridFilters` esconde o filtro por coluna e a busca global, deixando só os filtros compostos.
+  O nome da prop foi mantido por compatibilidade.
 
 Veja a documentação completa de [ArchbaseCompositeFilters](/components/filters/archbase-composite-filters).
 
 ### Paginação
 
+A paginação é controlada pelo DataSource (`getCurrentPage`, `getPageSize`, `getGrandTotalRecords`).
+Ao trocar de página, a grid chama `refreshData` com `currentPage` e `pageSize`.
+
 ```tsx
 <ArchbaseDataGrid
   dataSource={dataSource}
-  columns={columns}
-  paginated
-  pageSize={10}
-  pageSizeOptions={[10, 25, 50, 100]}
-  onPageChange={(page, pageSize) => {
-    console.log(`Página ${page}, ${pageSize} registros`);
-  }}
-/>
+  pageSize={25}
+  showPagination
+  paginationLabels={{ totalRecords: 'Total', pageSize: 'Por página' }}
+>
+  <Columns>{/* colunas */}</Columns>
+</ArchbaseDataGrid>
 ```
 
-### Seleção
+### Seleção e registro corrente
+
+- Os checkboxes controlam a seleção em lote, entregue em `onSelectedRowsChanged`.
+- Clicar em uma célula move o registro corrente do DataSource; com ordenação e filtro no servidor
+  (padrão), a navegação pelo teclado também.
+- Quando o DataSource muda de registro, a grid rola até a linha e a destaca.
 
 ```tsx
 <ArchbaseDataGrid
   dataSource={dataSource}
-  columns={columns}
-  selectable
-  multiSelect
-  selectedRows={selectedIds}
-  onSelectionChange={(selected) => {
-    setSelectedIds(selected);
-  }}
-/>
+  enableRowSelection
+  onSelectedRowsChanged={(rows) => setSelecionados(rows)}
+  onCellDoubleClick={({ id, columnName, rowData }) => abrirEdicao(rowData)}
+>
+  <Columns>{/* colunas */}</Columns>
+</ArchbaseDataGrid>
 ```
 
-### Exportação
+### Ações por linha
 
 ```tsx
 <ArchbaseDataGrid
   dataSource={dataSource}
-  columns={columns}
-  exportable
-  exportFormats={['csv', 'excel', 'pdf']}
-  exportFilename="relatorio-pessoas"
-/>
-```
-
-## Toolbar Customizada
-
-```tsx
-<ArchbaseDataGrid
-  dataSource={dataSource}
-  columns={columns}
-  toolbar={
-    <Group>
-      <Button onClick={handleNovo}>Novo</Button>
-      <Button onClick={handleRefresh}>Atualizar</Button>
-      <TextInput placeholder="Buscar..." />
+  renderRowActions={(row) => (
+    <Group gap="xs">
+      <ActionIcon variant="subtle" onClick={() => handleEdit(row)}>
+        <IconEdit size={16} />
+      </ActionIcon>
+      <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(row)}>
+        <IconTrash size={16} />
+      </ActionIcon>
     </Group>
-  }
-/>
+  )}
+  positionActionsColumn="first"
+  actionsColumnWidth={120}
+>
+  <Columns>{/* colunas */}</Columns>
+</ArchbaseDataGrid>
 ```
+
+### Painel de detalhes
+
+```tsx
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  renderDetailPanel={({ row }) => <DetalhesDoPedido pedido={row} />}
+  detailPanelDisplayMode="auto"
+  detailPanelTitle={(rowId, row) => `Pedido ${row.numero}`}
+>
+  <Columns>{/* colunas */}</Columns>
+</ArchbaseDataGrid>
+```
+
+`detailPanelDisplayMode` aceita `'auto'`, `'inline'`, `'modal'` ou `'drawer'`.
+
+### Exportação e impressão
+
+Os botões da toolbar abrem os modais de exportar e imprimir. `printTitle` define o título e o nome
+do arquivo; `exportValue` e `exportable`, na coluna, controlam o que sai.
+
+### Toolbar
+
+```tsx
+<ArchbaseDataGrid
+  dataSource={dataSource}
+  toolbarLeftContent={<Button onClick={handleNovo}>Novo</Button>}
+  renderToolbarActions={() => <Button variant="light">Importar</Button>}
+  toolbarAlignment="right"
+>
+  <Columns>{/* colunas */}</Columns>
+</ArchbaseDataGrid>
+```
+
+## Ref (`gridRef`)
+
+```tsx
+const gridRef = useRef<ArchbaseDataGridRef<Pessoa>>(null);
+
+<ArchbaseDataGrid gridRef={gridRef} dataSource={dataSource}>
+  <Columns>{/* colunas */}</Columns>
+</ArchbaseDataGrid>;
+
+gridRef.current?.refreshData();
+```
+
+| Método | Descrição |
+|--------|-----------|
+| `refreshData()` | Recarrega os dados mantendo filtros e página |
+| `getSelectedRows()` | Linhas marcadas nos checkboxes |
+| `clearSelection()` | Limpa a seleção |
+| `exportData()` / `printData()` | Abre o modal de exportar / imprimir |
+| `expandRow(id)` / `collapseRow(id)` / `collapseAllRows()` | Controla os painéis de detalhe |
+| `getExpandedRows()` | Ids das linhas com painel aberto |
+| `getFilterModel()` | Filtro atual da toolbar (`{ items, quickFilterValues }`) |
+| `sizeColumnsToFit()` | Distribui as colunas na largura disponível |
+| `autoSizeAllColumns(skipHeader?)` | Ajusta as larguras por uma estimativa do conteúdo |
+| `getGridApi()` | Devolve `null` no `ArchbaseDataGrid`; no `ArchbaseDataGridAG`, o `GridApi` do AG Grid |
+
+## Migração da engine AG Grid
+
+Nenhuma mudança de código é necessária em quem usa só as props, os events e o ref documentados acima.
+Pontos de atenção:
+
+- **React 18**: troque o import para `ArchbaseDataGridAG`.
+- **`getGridApi()`** devolve `null`. Código que chamava a API do AG Grid diretamente deve usar os
+  métodos do ref ou continuar no `ArchbaseDataGridAG`.
+- **`renderToolbarInternalActions({ table })`**: `table` deixa de ser o `GridApi` do AG Grid.
+- **Filtro por coluna em datas** não existe na nova engine; use os filtros compostos.
+- **`enableRowNumbers`, `striped` e `withColumnBorders`** passaram a ter efeito visual.
+- Os utilitários, cell renderers e o tema específicos do AG Grid (`createArchbaseAgGridTheme`,
+  `AG_GRID_LOCALE_PTBR`, `*CellRenderer`) continuam exportados e servem ao `ArchbaseDataGridAG`.
 
 ## Exemplo Completo
 
 ```tsx
-import { ArchbaseDataGrid } from '@archbase/components';
+import { useRef } from 'react';
+import {
+  ArchbaseDataGrid,
+  ArchbaseDataGridColumn,
+  Columns,
+  type ArchbaseDataGridRef,
+} from '@archbase/components';
 import { useArchbaseDataSourceV2 } from '@archbase/data';
-import { Badge, ActionIcon, Group } from '@mantine/core';
+import { ActionIcon, Badge, Group } from '@mantine/core';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 
 function ProdutosGrid() {
-  const { dataSource, remove, goTo } = useArchbaseDataSourceV2<Produto>({
+  const gridRef = useRef<ArchbaseDataGridRef<Produto>>(null);
+  const { dataSource } = useArchbaseDataSourceV2<Produto>({
     initialData: produtos,
     name: 'produtos-ds',
   });
 
-  const handleEdit = (record: Produto) => {
-    const index = dataSource.data.findIndex(p => p.id === record.id);
-    goTo(index);
-    // Abrir modal de edição
-  };
-
-  const handleDelete = (record: Produto) => {
-    if (confirm('Excluir este produto?')) {
-      const index = dataSource.data.findIndex(p => p.id === record.id);
-      goTo(index);
-      remove();
-    }
-  };
-
-  const columns = [
-    { field: 'id', header: 'ID', width: 80, sortable: true },
-    { field: 'nome', header: 'Nome', width: 200, sortable: true, filterable: true },
-    {
-      field: 'preco',
-      header: 'Preço',
-      width: 120,
-      align: 'right' as const,
-      formatter: (value: number) => `R$ ${value.toFixed(2)}`,
-    },
-    {
-      field: 'status',
-      header: 'Status',
-      width: 100,
-      render: (record: Produto) => (
-        <Badge color={record.status === 'disponivel' ? 'green' : 'red'}>
-          {record.status}
-        </Badge>
-      ),
-    },
-    {
-      field: 'acoes',
-      header: 'Ações',
-      width: 100,
-      render: (record: Produto) => (
+  return (
+    <ArchbaseDataGrid<Produto, number>
+      gridRef={gridRef}
+      dataSource={dataSource}
+      getRowId={(row) => row.id}
+      height={500}
+      pageSize={10}
+      striped
+      printTitle="Produtos"
+      onCellDoubleClick={({ rowData }) => handleEdit(rowData)}
+      renderRowActions={(row) => (
         <Group gap="xs">
-          <ActionIcon variant="subtle" onClick={() => handleEdit(record)}>
+          <ActionIcon variant="subtle" onClick={() => handleEdit(row)}>
             <IconEdit size={16} />
           </ActionIcon>
-          <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(record)}>
+          <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(row)}>
             <IconTrash size={16} />
           </ActionIcon>
         </Group>
-      ),
-    },
-  ];
-
-  return (
-    <ArchbaseDataGrid
-      dataSource={dataSource}
-      columns={columns}
-      height={500}
-      paginated
-      pageSize={10}
-      striped
-      highlightOnHover
-      exportable
-    />
+      )}
+    >
+      <Columns>
+        <ArchbaseDataGridColumn<Produto> dataField="id" header="ID" dataType="integer" size={80} />
+        <ArchbaseDataGridColumn<Produto> dataField="nome" header="Nome" dataType="text" size={220} />
+        <ArchbaseDataGridColumn<Produto> dataField="preco" header="Preço" dataType="currency" size={120} />
+        <ArchbaseDataGridColumn<Produto>
+          dataField="status"
+          header="Status"
+          dataType="enum"
+          enumValues={[
+            { label: 'Disponível', value: 'disponivel' },
+            { label: 'Esgotado', value: 'esgotado' },
+          ]}
+          size={130}
+          render={({ getValue, row }) => (
+            <Badge color={row.status === 'disponivel' ? 'green' : 'red'}>{getValue()}</Badge>
+          )}
+        />
+      </Columns>
+    </ArchbaseDataGrid>
   );
 }
 ```
